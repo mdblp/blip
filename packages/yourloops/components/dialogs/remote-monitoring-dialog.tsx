@@ -47,7 +47,7 @@ import { useNotification } from '../../lib/notifications/hook'
 import { MonitoringStatus } from '../../models/monitoring'
 import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
 import { useAlert } from '../utils/snackbar'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -92,7 +92,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   const classes = useStyles()
   const { t } = useTranslation('yourloops')
   const notificationHook = useNotification()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const alert = useAlert()
   const [teamId] = useState<string | undefined>(action === RemoteMonitoringDialogAction.renew ? PatientUtils.getRemoteMonitoringTeam(patient).teamId : undefined)
   const [physician, setPhysician] = useState<string | undefined>(patient.profile?.referringDoctor)

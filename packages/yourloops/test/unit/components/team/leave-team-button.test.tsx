@@ -29,7 +29,7 @@ import React from 'react'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 
 import * as teamHookMock from '../../../../lib/team'
-import * as patientHookMock from '../../../../lib/patient/hook'
+import * as patientHookMock from '../../../../lib/patient/provider'
 import * as authHookMock from '../../../../lib/auth'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { buildTeam, buildTeamMember } from '../../common/utils'
@@ -40,7 +40,7 @@ import { createMemoryHistory } from 'history'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/patient/hook')
+jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../lib/auth')
 describe('TeamMembers', () => {
   const leaveTeamMock = jest.fn()
@@ -60,7 +60,7 @@ describe('TeamMembers', () => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { leaveTeam: leaveTeamMock, getTeam: jest.fn().mockReturnValue(team) }
     });
-    (patientHookMock.usePatient as jest.Mock).mockImplementation(() => {
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return { leaveTeam: patientLeaveTeamMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({

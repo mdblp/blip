@@ -49,7 +49,7 @@ import ChatWidget from './chat/chat-widget'
 import { Patient } from '../lib/data/patient'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
-import { usePatient } from '../lib/patient/hook'
+import { usePatientContext } from '../lib/patient/provider'
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -81,7 +81,7 @@ function PatientDataPage(): JSX.Element | null {
   const { t } = useTranslation('yourloops')
   const paramHook = useParams()
   const authHook = useAuth()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const dataHook = useData()
   const classes = patientDataStyles()
 

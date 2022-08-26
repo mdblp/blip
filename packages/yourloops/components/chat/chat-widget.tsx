@@ -44,7 +44,7 @@ import { useTranslation } from 'react-i18next'
 import { UserRoles } from '../../models/user'
 import { Patient } from '../../lib/data/patient'
 import { useTeam } from '../../lib/team'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
@@ -136,7 +136,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const classes = chatWidgetStyles()
   const authHook = useAuth()
   const teamHook = useTeam()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const [showPicker, setShowPicker] = useState(false)
   const [privateMessage, setPrivateMessage] = useState(false)
   const [inputText, setInputText] = useState('')

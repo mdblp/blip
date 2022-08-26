@@ -25,68 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { act, render, waitFor } from '@testing-library/react'
 import { PatientFilterTypes, UserInvitationStatus } from '../../../../models/generic'
-import { TeamMemberRole } from '../../../../models/team'
-import { buildTeam, buildTeamMember, createPatient, createPatientTeam } from '../../common/utils'
-import * as authHookMock from '../../../../lib/auth'
-import { Monitoring, MonitoringStatus } from '../../../../models/monitoring'
-import { APINotificationType } from '../../../../models/notification'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
-import { PatientContextResult, PatientProvider, usePatient } from '../../../../lib/patient/hook'
-import PatientApi from '../../../../lib/patient/patient-api'
+import usePatientProviderCustomHook from '../../../../lib/patient/hook'
+import { renderHook } from '@testing-library/react-hooks/dom'
 import PatientUtils from '../../../../lib/patient/utils'
-import { UNITS_TYPE } from '../../../../lib/units/utils'
+import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
+import { Monitoring, MonitoringStatus } from '../../../../models/monitoring'
 import * as notificationHookMock from '../../../../lib/notifications/hook'
 import * as teamHookMock from '../../../../lib/team'
+import * as authHookMock from '../../../../lib/auth'
+import { act, waitFor } from '@testing-library/react'
+import { Patient } from '../../../../lib/data/patient'
+import { UNITS_TYPE } from '../../../../lib/units/utils'
+import PatientApi from '../../../../lib/patient/patient-api'
+import { APINotificationType } from '../../../../models/notification'
+import DirectShareApi from '../../../../lib/share/direct-share-api'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/notifications/hook')
 describe('Patient hook', () => {
-  let patientHook: PatientContextResult
-  const patientTeam1 = createPatientTeam('team1Id', UserInvitationStatus.accepted, MonitoringStatus.accepted)
-  const patientTeam2 = createPatientTeam('team2Id', UserInvitationStatus.accepted)
-  const pendingPatientTeam = createPatientTeam('pendingTeam1Id', UserInvitationStatus.pending)
-  const patientTeamPrivatePractice = createPatientTeam('private', UserInvitationStatus.pending)
-  const pendingPatient1 = createPatient('pendingPatient1', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
-  const unknownPatient = createPatient('nigma')
-  const monitoredPatient1 = createPatient('monitoredPatient1', [patientTeam1, patientTeam2, pendingPatientTeam], undefined, undefined, {} as Monitoring)
-  const monitoredPatient2 = createPatient('monitoredPatient2', [patientTeam2], undefined, undefined, {} as Monitoring)
-  const loggedInUserAsPatient = createPatient('loggedInUserAsPatient', [patientTeam2], undefined, undefined, undefined)
-  const patientToRemove = createPatient('patientToRemove', [patientTeam2], undefined, undefined, undefined)
-  const patientToRemove2 = createPatient('patientToRemove2', [patientTeam2], undefined, undefined, undefined)
-  const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', [patientTeamPrivatePractice, patientTeam2], undefined, undefined, undefined)
-  const unmonitoredPatient = createPatient('unmonitoredPatient', [patientTeam2], undefined, undefined, undefined)
-  const bigBrain = createPatient('big brain', [patientTeam1])
-  bigBrain.profile.firstName = 'big brain'
-  const allPatients = [pendingPatient1, monitoredPatient1, monitoredPatient2, unmonitoredPatient, bigBrain, patientToRemove, patientToRemove2, loggedInUserAsPatient, patientToRemovePrivatePractice]
-  const memberHcp1 = buildTeamMember('team1Id', 'memberHcp', undefined, TeamMemberRole.member)
-  const team1 = buildTeam('team1Id', [memberHcp1])
+  const basicTeam = createPatientTeam('basicTeam1Id', UserInvitationStatus.accepted)
+  const loggedInUserAsPatient = createPatient('loggedInUserAsPatient', [basicTeam])
+  const patientToRemove = createPatient('patientToRemove', [basicTeam])
   const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue([patientToRemove.userid])
   const authHookFlagPatientMock = jest.fn()
   const getInvitationMock = jest.fn()
   const removeTeamFromListMock = jest.fn()
 
-  async function mountComponent() {
-    const DummyComponent = (): JSX.Element => {
-      patientHook = usePatient()
-      return (<div />)
-    }
-    await act(async () => {
-      render(
-        <PatientProvider>
-          <DummyComponent />
-        </PatientProvider>
-      )
-      await waitFor(() => expect(patientHook.patients.length).toBeGreaterThan(0))
-    })
-  }
-
-  beforeAll(async () => {
-    jest.spyOn(PatientUtils, 'computePatients').mockResolvedValue(allPatients);
+  beforeAll(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: { id: loggedInUserAsPatient.userid },
@@ -105,29 +73,61 @@ describe('Patient hook', () => {
         removeTeamFromList: removeTeamFromListMock
       }
     })
-    await mountComponent()
   })
 
+  async function renderPatientHook(patients: Patient[]) {
+    let hook
+    jest.spyOn(PatientUtils, 'computePatients').mockResolvedValue(patients)
+    await act(async () => {
+      hook = renderHook(() => usePatientProviderCustomHook())
+      await waitFor(() => expect(hook.result.current.patients).toEqual(patients))
+    })
+    return hook
+  }
+
   describe('filterPatients', () => {
+    const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
+    const basicPatient = createPatient('basicPatient1', [basicTeam])
+    const bigBrainPatient = createPatient('big brain', [basicTeam])
+    bigBrainPatient.profile.firstName = 'big brain'
+    const allPatients = [pendingPatient, basicPatient, bigBrainPatient]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
     it('should return correct patients when filter is pending', () => {
-      const patientsReceived = patientHook.filterPatients(PatientFilterTypes.pending, '', [])
-      expect(patientsReceived).toEqual([pendingPatient1, monitoredPatient1, patientToRemovePrivatePractice])
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.pending, '', [])
+      expect(patientsReceived).toEqual([pendingPatient])
     })
 
     it('should return correct patients when provided a flag list', () => {
-      const patientsReceived = patientHook.filterPatients(PatientFilterTypes.flagged, '', [monitoredPatient1.userid])
-      expect(patientsReceived).toEqual([monitoredPatient1])
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.flagged, '', [basicPatient.userid])
+      expect(patientsReceived).toEqual([basicPatient])
     })
 
     it('should return correct patients when provided a search filter', () => {
-      const patientsReceived = patientHook.filterPatients(PatientFilterTypes.all, 'big brain', [])
-      expect(patientsReceived).toEqual([bigBrain])
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, 'big brain', [])
+      expect(patientsReceived).toEqual([bigBrainPatient])
     })
   })
 
   describe('editPatientRemoteMonitoring', () => {
+    const unknownPatient = createPatient('unknownPatient')
+    const unmonitoredPatient = createPatient('unmonitoredPatient', [basicTeam])
+    const allPatients = [unmonitoredPatient]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
     it('should throw an error if patient is not found', () => {
-      expect(() => patientHook.editPatientRemoteMonitoring(unknownPatient)).toThrowError()
+      expect(() => customHook.editPatientRemoteMonitoring(unknownPatient)).toThrowError()
     })
 
     it('should update patient monitoring', () => {
@@ -149,29 +149,47 @@ describe('Patient hook', () => {
       expect(unmonitoredPatient.monitoring).toBeUndefined()
       unmonitoredPatient.monitoring = monitoring
       act(() => {
-        patientHook.editPatientRemoteMonitoring(monitoredPatient1)
+        customHook.editPatientRemoteMonitoring(unmonitoredPatient)
       })
-      expect(patientHook.getPatient(unmonitoredPatient.userid).monitoring).toEqual(monitoring)
+      expect(customHook.getPatient(unmonitoredPatient.userid).monitoring).toEqual(monitoring)
     })
   })
 
   describe('getPatient', () => {
-    it('should return a patient if existing in a team or null if not', () => {
-      let patient = patientHook.getPatient(monitoredPatient1.userid)
-      expect(patient).toBeTruthy()
-      patient = patientHook.getPatient('unknownId')
-      expect(patient).toBeFalsy()
-    })
-  })
+    const unknownPatient = createPatient('unknownPatient')
+    const existingPatient = createPatient('existingPatient', [basicTeam])
+    const allPatients = [existingPatient]
+    let customHook
 
-  describe('patients', () => {
-    it('should be a correct array of patients', () => {
-      expect(patientHook.patients).toEqual(allPatients)
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
+    it('should return a patient when the patient is present in the patient state', () => {
+      const patient = customHook.getPatient(existingPatient.userid)
+      expect(patient).toBeDefined()
+    })
+
+    it('should return null when patient is not present in the patient state', () => {
+      const patient = customHook.getPatient(unknownPatient.userid)
+      expect(patient).toBeUndefined()
     })
   })
 
   describe('invitePatient', () => {
-    it('should invite and add a patient', async () => {
+    const basicPatient = createPatient('basicPatient1', [basicTeam])
+    basicPatient.profile.email = 'simple@basic.com'
+    const allPatients = [basicPatient]
+    const team1 = buildTeam('team1Id')
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
+    it('should invite and add a patient when the patient is not already present in the patient list', async () => {
       jest.spyOn(PatientApi, 'invitePatient').mockResolvedValueOnce({
         key: 'key',
         type: APINotificationType.medicalTeamPatientInvitation,
@@ -181,47 +199,90 @@ describe('Patient hook', () => {
         shortKey: 'short',
         creator: { userid: 'currentUserId' }
       })
-      const initialPatientsLength = patientHook.patients.length
+      const initialPatientsLength: number = customHook.patients.length
 
       await act(async () => {
-        await patientHook.invitePatient(team1, 'new-patient@mail.com')
+        await customHook.invitePatient(team1, 'new-patient@mail.com')
+        await waitFor(() => expect(customHook.patients.length).toEqual(initialPatientsLength + 1))
       })
-      expect(patientHook.patients.length).toEqual(initialPatientsLength + 1)
+    })
+
+    it('should invite and update a patient when the patient is already present in the patient list', async () => {
+      jest.spyOn(PatientApi, 'invitePatient').mockResolvedValueOnce({
+        key: 'key',
+        type: APINotificationType.medicalTeamPatientInvitation,
+        email: basicPatient.profile.email,
+        creatorId: 'currentUserId',
+        created: 'now',
+        shortKey: 'short',
+        creator: { userid: 'currentUserId' }
+      })
+      expect(customHook.getPatient(basicPatient.userid).teams.find(t => t.id === team1.id)).toBeUndefined()
+
+      const initialPatientsLength: number = customHook.patients.length
+      await act(async () => {
+        await customHook.invitePatient(team1, basicPatient.profile.email)
+        await waitFor(() => expect(customHook.patients.length).toEqual(initialPatientsLength))
+      })
+      expect(customHook.getPatient(basicPatient.userid).teams.find(t => t.teamId === team1.id)).toBeDefined()
     })
   })
 
   describe('updatePatientMonitoring', () => {
-    it('should throw an error if patient is not monitored', async () => {
-      await expect(async () => {
-        await patientHook.updatePatientMonitoring(unknownPatient)
-      }).rejects.toThrowError('Cannot update patient monitoring with undefined')
+    const basicPatient = createPatient('basicPatient1', [basicTeam])
+    const monitoredTeam = createPatientTeam('monitoredTeam', UserInvitationStatus.accepted, MonitoringStatus.pending)
+    const monitoredPatient = createPatient('monitoredPatient', [monitoredTeam])
+    monitoredPatient.monitoring = { status: MonitoringStatus.accepted } as Monitoring
+    const allPatients = [basicPatient, monitoredPatient]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
     })
 
-    it('should throw an error if patient team does not exists', async () => {
-      const patientWithUnknownTeam = createPatient('id', [createPatientTeam('id', UserInvitationStatus.accepted)])
-      patientWithUnknownTeam.monitoring = { enabled: true }
-
+    it('should throw an error if patient is not monitored', async () => {
       await expect(async () => {
-        await patientHook.updatePatientMonitoring(patientWithUnknownTeam)
-      }).rejects.toThrowError(`Cannot find monitoring team in which patient ${patientWithUnknownTeam.profile.email} is in`)
+        await customHook.updatePatientMonitoring(basicPatient)
+      }).rejects.toThrowError('Cannot update patient monitoring with "undefined"')
     })
 
     it('should update patient alerts', async () => {
-      await mountComponent()
       const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
       await act(async () => {
-        await patientHook.updatePatientMonitoring(monitoredPatient1)
+        await customHook.updatePatientMonitoring(monitoredPatient)
+        expect(updatePatientAlertsMock).toHaveBeenCalled()
+        expect(customHook.getPatient(monitoredPatient.userid).teams.find(t => t.teamId === monitoredTeam.teamId).monitoringStatus).toEqual(MonitoringStatus.accepted)
       })
+    })
+
+    it('should throw error when could not updated patient alerts', async () => {
+      const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientAlerts').mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+      await expect(async () => {
+        await customHook.updatePatientMonitoring(monitoredPatient)
+      }).rejects.toThrowError(`Failed to update patient with id ${monitoredPatient.userid}`)
       expect(updatePatientAlertsMock).toHaveBeenCalled()
     })
   })
 
   describe('removePatient', () => {
+    const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
+    const patientTeamPrivatePractice = createPatientTeam('private', UserInvitationStatus.pending)
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
+    const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', [patientTeamPrivatePractice])
+    const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
     it('should call notification hook cancel method if invitation is pending and call removePatient method', async () => {
       const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
-        await patientHook.removePatient(monitoredPatient1, pendingPatientTeam)
-        expect(patientHook.getPatient(monitoredPatient1.userid).teams.includes(pendingPatientTeam)).toBeFalsy()
+        await customHook.removePatient(pendingPatient, pendingPatientTeam)
+        expect(customHook.getPatient(pendingPatient.userid).teams.includes(pendingPatientTeam)).toBeFalsy()
       })
       expect(notificationHookCancelMock).toHaveBeenCalled()
       expect(removePatientMock).toHaveBeenCalled()
@@ -230,35 +291,20 @@ describe('Patient hook', () => {
     it('should call removeDirectShare API method if private practics', async () => {
       const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
       await act(async () => {
-        await patientHook.removePatient(patientToRemovePrivatePractice, patientTeamPrivatePractice)
-        expect(patientHook.getPatient(patientToRemovePrivatePractice.userid).teams.includes(patientTeamPrivatePractice)).toBeFalsy()
+        await customHook.removePatient(patientToRemovePrivatePractice, patientTeamPrivatePractice)
+        expect(customHook.getPatient(patientToRemovePrivatePractice.userid).teams.includes(patientTeamPrivatePractice)).toBeFalsy()
       })
       expect(removeDirectShareMock).toHaveBeenCalled()
     })
 
-    it.skip('should unflag a patient when he no longer belong to a team', async () => {
+    it('should unflag a patient when he no longer belong to a team', async () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
-      const patientsLength = patientHook.patients.length
       await act(async () => {
-        await patientHook.removePatient(patientToRemove, patientTeam2)
-        await waitFor(() => expect(patientHook.patients).toEqual(patientsLength - 1))
+        await customHook.removePatient(patientToRemove, basicTeam)
+        expect(customHook.getPatient(patientToRemove)).toBeUndefined()
+        expect(authHookGetFlagPatientMock).toHaveBeenCalled()
+        expect(authHookFlagPatientMock).toHaveBeenCalled()
       })
-      expect(authHookGetFlagPatientMock).toHaveBeenCalled()
-      expect(authHookFlagPatientMock).toHaveBeenCalled()
-    })
-  })
-
-  describe('leaveTeam', () => {
-    it('should remove patient if user is a patient', async () => {
-      const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
-      const team = loggedInUserAsPatient.teams[0]
-
-      await act(async () => {
-        await patientHook.leaveTeam(team.teamId)
-      })
-      expect(patientHook.getPatient(loggedInUserAsPatient.userid).teams.includes(team)).toBeFalsy()
-      expect(removePatientMock).toHaveBeenCalled()
-      expect(removeTeamFromListMock).toHaveBeenCalled()
     })
   })
 })

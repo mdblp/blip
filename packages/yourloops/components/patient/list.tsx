@@ -44,7 +44,7 @@ import PatientsTable from './table'
 import { Patient } from '../../lib/data/patient'
 import { PatientListProps } from './models'
 import { comparePatients } from './utils'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
 const log = bows('PatientListPage')
@@ -57,7 +57,7 @@ function PatientList(props: PatientListProps): JSX.Element {
   const historyHook = useHistory()
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
   const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName)

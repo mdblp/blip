@@ -48,7 +48,7 @@ import TeamCodeDialog from '../components/patient/team-code-dialog'
 import { Patient } from '../lib/data/patient'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
-import { usePatient } from '../lib/patient/hook'
+import { usePatientContext } from '../lib/patient/provider'
 
 const log = bows('PatientListPage')
 
@@ -57,7 +57,7 @@ const throttledMetrics = _.throttle(metrics.send, 60000) // No more than one per
 function HomePage(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const alert = useAlert()
   const { search } = useLocation()
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)

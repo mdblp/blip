@@ -29,7 +29,7 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import * as authHookMock from '../../../lib/auth'
 import { User } from '../../../lib/auth'
-import * as patientHookMock from '../../../lib/patient/hook'
+import * as patientHookMock from '../../../lib/patient/provider'
 import * as notificationsHookMock from '../../../lib/notifications/hook'
 import { UserRoles } from '../../../models/user'
 import { Router } from 'react-router-dom'
@@ -52,7 +52,7 @@ const allTestIds = [
 /* eslint-disable react/display-name */
 jest.mock('../../../lib/auth')
 jest.mock('../../../lib/notifications/hook')
-jest.mock('../../../lib/patient/hook')
+jest.mock('../../../lib/patient/provider')
 jest.mock('../../../components/layouts/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })

@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Teams management & helpers - hook version
  *
  * All rights reserved.
  *
@@ -33,7 +32,6 @@ import { Patient, PatientTeam } from '../data/patient'
 import { Team, useTeam } from '../team'
 import { useNotification } from '../notifications/hook'
 import PatientUtils from './utils'
-import { PatientFilterStats } from '../team/models'
 import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
 import { notificationConversion } from '../notifications/utils'
 import PatientApi from './patient-api'
@@ -43,45 +41,9 @@ import metrics from '../metrics'
 import { MedicalData } from '../../models/device-data'
 import { Alarm } from '../../models/alarm'
 import { errorTextFromException } from '../utils'
-import { CircularProgress } from '@material-ui/core'
+import { PatientContextResult } from './provider'
 
-export interface PatientContextResult {
-  patients: Patient[]
-  patientsFilterStats: PatientFilterStats
-  errorMessage: string | null
-  getPatient: (userId: string) => Patient
-  filterPatients: (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => Patient[]
-  invitePatient: (team: Team, username: string) => Promise<void>
-  editPatientRemoteMonitoring: (patient: Patient) => void
-  markPatientMessagesAsRead: (patient: Patient) => void
-  updatePatientMonitoring: (patient: Patient) => Promise<void>
-  removePatient: (patient: Patient, patientTeam: PatientTeam) => Promise<void>
-  leaveTeam: (team: string) => Promise<void>
-  setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
-  refresh: () => void
-}
-
-const PatientContext = React.createContext<PatientContextResult>({
-  patients: [],
-  patientsFilterStats: {} as PatientFilterStats,
-  errorMessage: null,
-  getPatient: () => ({} as Patient),
-  filterPatients: () => [],
-  invitePatient: async () => await Promise.resolve(),
-  editPatientRemoteMonitoring: () => {
-  },
-  markPatientMessagesAsRead: () => {
-  },
-  updatePatientMonitoring: async () => await Promise.resolve(),
-  removePatient: async () => await Promise.resolve(),
-  leaveTeam: async () => await Promise.resolve(),
-  setPatientMedicalData: () => {
-  },
-  refresh: () => {
-  }
-})
-
-export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
+export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation } = useNotification()
   const { removeTeamFromList } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
@@ -194,12 +156,9 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
 
   const updatePatientMonitoring = useCallback(async (patient: Patient) => {
     if (!patient.monitoring) {
-      throw Error('Cannot update patient monitoring with undefined')
+      throw Error('Cannot update patient monitoring with "undefined"')
     }
-    const monitoredTeam = patient.teams.find(team => team.monitoringStatus !== undefined)
-    if (!monitoredTeam) {
-      throw Error(`Cannot find monitoring team in which patient ${patient.profile.email} is in`)
-    }
+    const monitoredTeam = PatientUtils.getRemoteMonitoringTeam(patient)
     try {
       await PatientApi.updatePatientAlerts(monitoredTeam.teamId, patient.userid, patient.monitoring)
       monitoredTeam.monitoringStatus = patient.monitoring?.status
@@ -269,10 +228,11 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     }
   }, [errorMessage, initialized, user])
 
-  const shared = useMemo(() => ({
+  return useMemo(() => ({
     patients,
     patientsFilterStats,
     errorMessage,
+    initialized,
     getPatient,
     filterPatients,
     invitePatient,
@@ -287,6 +247,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     patients,
     patientsFilterStats,
     errorMessage,
+    initialized,
     getPatient,
     filterPatients,
     invitePatient,
@@ -298,16 +259,4 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     setPatientMedicalData,
     refresh
   ])
-  return initialized ? (
-    <PatientContext.Provider value={shared}>
-      {children}
-    </PatientContext.Provider>
-  ) : <CircularProgress
-    disableShrink
-    style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
-  />
-}
-
-export function usePatient(): PatientContextResult {
-  return React.useContext(PatientContext)
 }

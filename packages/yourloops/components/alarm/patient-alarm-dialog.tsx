@@ -39,7 +39,7 @@ import { useAlert } from '../utils/snackbar'
 import { Patient } from '../../lib/data/patient'
 import { commonComponentStyles } from '../common'
 import AlarmsContentConfiguration from './alarms-content-configuration'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -57,7 +57,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   const commonClasses = commonComponentStyles()
   const classes = useStyles()
   const { t } = useTranslation('yourloops')
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const alert = useAlert()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 

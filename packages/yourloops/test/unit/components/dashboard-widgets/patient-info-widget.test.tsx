@@ -35,7 +35,7 @@ import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
-import * as patientHookMock from '../../../../lib/patient/hook'
+import * as patientHookMock from '../../../../lib/patient/provider'
 import * as notificationsHookMock from '../../../../lib/notifications/hook'
 import User from '../../../../lib/auth/user'
 import { genderLabels } from '../../../../lib/auth/helpers'
@@ -57,7 +57,7 @@ jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: Confirm
 jest.mock('../../../../components/dialogs/remote-monitoring-dialog')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/patient/hook')
+jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../lib/notifications/hook')
 describe('PatientInfoWidget', () => {
   const patient = createPatient('fakePatientId', [])
@@ -81,7 +81,7 @@ describe('PatientInfoWidget', () => {
         getRemoteMonitoringTeams: () => [remoteMonitoringTeam]
       }
     });
-    (patientHookMock.usePatient as jest.Mock).mockImplementation(() => {
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return {
         updatePatientMonitoring: updatePatientMonitoringMock,
         getPatient: getPatientMock

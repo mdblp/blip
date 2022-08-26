@@ -70,7 +70,7 @@ export const createPatient = (
       firstName: 'fakeFirstname',
       fullName,
       lastName: 'fakeLastname',
-      email: 'fakeUsername',
+      email: 'fake@email.com',
       sex: 'M'
     },
     settings: {

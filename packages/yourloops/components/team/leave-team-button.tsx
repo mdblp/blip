@@ -37,7 +37,7 @@ import { useHistory } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
 import TeamUtils from '../../lib/team/utils'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 
 export interface LeaveTeamButtonProps {
   team: Team
@@ -46,7 +46,7 @@ export interface LeaveTeamButtonProps {
 function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { team } = props
   const teamHook = useTeam()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const alert = useAlert()
   const { user } = useAuth()
   const historyHook = useHistory()

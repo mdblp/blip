@@ -29,7 +29,7 @@ import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import WeeklyReportDialog from '../../../../../components/dialogs/weekly-report-dialog'
 import { WeeklyReport } from '../../../../../lib/medical-files/model'
-import * as patientHookMock from '../../../../../lib/patient/hook'
+import * as patientHookMock from '../../../../../lib/patient/provider'
 import * as teamHookMock from '../../../../../lib/team'
 import { buildTeam, createPatient, createPatientTeam } from '../../../common/utils'
 import { UserInvitationStatus } from '../../../../../models/generic'
@@ -37,7 +37,7 @@ import { UNITS_TYPE } from '../../../../../lib/units/utils'
 import { Alarm } from '../../../../../models/alarm'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../../../../lib/utils'
 
-jest.mock('../../../../../lib/patient/hook')
+jest.mock('../../../../../lib/patient/provider')
 jest.mock('../../../../../lib/team')
 describe('Weekly report dialog', () => {
   const teamId = 'teamId'
@@ -72,7 +72,7 @@ describe('Weekly report dialog', () => {
   }
 
   beforeAll(() => {
-    (patientHookMock.usePatient as jest.Mock).mockImplementation(() => {
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return { getPatient: () => patient }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {

@@ -47,7 +47,7 @@ import { makeButtonsStyles } from '../theme'
 import { useAlert } from '../utils/snackbar'
 import { UserInvitationStatus } from '../../models/generic'
 import { Patient } from '../../lib/data/patient'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 import { Team, useTeam } from '../../lib/team'
 
 interface RemoveDialogProps {
@@ -62,7 +62,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const { isOpen, onClose, patient } = props
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const teamHook = useTeam()
   const buttonClasses = makeButtonClasses()
 

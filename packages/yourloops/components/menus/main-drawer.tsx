@@ -54,7 +54,7 @@ import PendingIcon from '../icons/PendingIcon'
 import { useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import { PatientFilterTypes } from '../../models/generic'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 
 interface MainDrawerProps {
   miniVariant?: boolean
@@ -146,7 +146,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const [fullDrawer, setFullDrawer] = useState<boolean>(!miniVariant)
   const [onHover, setOnHover] = useState<boolean>(false)
   const teamHook = useTeam()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const authHook = useAuth()
   const patientFiltersStats = patientHook.patientsFilterStats
   const numberOfFlaggedPatients = authHook.getFlagPatients().length

@@ -51,7 +51,7 @@ import { useNotification } from '../../lib/notifications/hook'
 import { useTeam } from '../../lib/team'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import { TeamMemberRole } from '../../models/team'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
@@ -85,7 +85,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const authHook = useAuth()
   const notificationHook = useNotification()
   const teamHook = useTeam()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const [patient, setPatient] = useState(props.patient)
   const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false)
   const [showRenewRemoteMonitoringDialog, setShowRenewRemoteMonitoringDialog] = useState(false)

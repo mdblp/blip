@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import * as patientHookMock from '../../../../lib/patient/hook'
+import * as patientHookMock from '../../../../lib/patient/provider'
 import * as notificationsHookMock from '../../../../lib/notifications/hook'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import RemoteMonitoringPatientDialog, {
@@ -58,7 +58,7 @@ jest.mock('../../../../components/patient/patient-monitoring-prescription', () =
 })
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/notifications/hook')
-jest.mock('../../../../lib/patient/hook')
+jest.mock('../../../../lib/patient/provider')
 describe('RemoteMonitoringPatientDialog', () => {
   const inviteRemoteMonitoringMock = jest.fn()
   const editPatientRemoteMonitoringMock = jest.fn()
@@ -74,7 +74,7 @@ describe('RemoteMonitoringPatientDialog', () => {
 
   beforeAll(() => {
     jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam);
-    (patientHookMock.usePatient as jest.Mock).mockImplementation(() => {
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return {
         editPatientRemoteMonitoring: editPatientRemoteMonitoringMock,
         updatePatientMonitoring: updatePatientMonitoringMock

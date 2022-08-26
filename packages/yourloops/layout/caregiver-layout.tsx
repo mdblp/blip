@@ -28,7 +28,7 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
-import { PatientProvider } from '../lib/patient/hook'
+import { PatientProvider } from '../lib/patient/provider'
 import DashboardLayout from '../components/layouts/dashboard-layout'
 import HomePage from '../pages/home-page'
 import InvalidRoute from '../components/invalid-route'

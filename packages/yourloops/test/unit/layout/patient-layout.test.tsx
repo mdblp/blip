@@ -34,7 +34,7 @@ import * as notificationsHookMock from '../../../lib/notifications/hook'
 import { UserRoles } from '../../../models/user'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory, MemoryHistory } from 'history'
-import * as patientHookMock from '../../../lib/patient/hook'
+import * as patientHookMock from '../../../lib/patient/provider'
 import { PatientLayout } from '../../../layout/patient-layout'
 
 const profilePageTestId = 'mock-profile-page'

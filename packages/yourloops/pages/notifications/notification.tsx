@@ -48,7 +48,7 @@ import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
 import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
-import { usePatient } from '../../lib/patient/hook'
+import { usePatientContext } from '../../lib/patient/provider'
 import { useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 
@@ -211,7 +211,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const alert = useAlert()
   const teamHook = useTeam()
   const { user } = useAuth()
-  const patientHook = usePatient()
+  const patientHook = usePatientContext()
   const [_sharedUsersContext, sharedUsersDispatch] = useSharedUser() // eslint-disable-line no-unused-vars,@typescript-eslint/no-unused-vars
   const [inProgress, setInProgress] = React.useState(false)
   const classes = useStyles()
