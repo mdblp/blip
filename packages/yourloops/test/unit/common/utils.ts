@@ -58,13 +58,6 @@ export const createPatient = (
   flagged: boolean | undefined = undefined
 ): Patient => {
   return {
-    metadata: {
-      alarm,
-      flagged,
-      medicalData: null,
-      unreadMessagesSent: 0
-    },
-    monitoring,
     profile: {
       birthdate: new Date(),
       firstName: 'fakeFirstname',
@@ -77,6 +70,13 @@ export const createPatient = (
       a1c: { date: new Date().toJSON(), value: 'fakeA1cValue' },
       system
     },
+    metadata: {
+      alarm,
+      flagged,
+      medicalData: null,
+      unreadMessagesSent: 0
+    },
+    monitoring,
     teams,
     userid: id
   }

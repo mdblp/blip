@@ -36,9 +36,24 @@ export default class PatientUtils {
     patientsWithDuplicates.forEach(patient => {
       if (!patientsWithoutDuplicates.find(mergedPatient => mergedPatient.userid === patient.userid)) {
         const patientDuplicates = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid)
-        patient.monitoring = patientDuplicates.find(p => p.monitoring !== undefined).monitoring ?? undefined
-        patient.teams = patientDuplicates.map(p => p.teams[0]) // TODO TIM Can a team be null?
-        patientsWithoutDuplicates.push(patient)
+        const patientWithMonitoring = patientDuplicates.find(p => p.monitoring !== undefined)
+        patient.monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
+        const monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
+        const teams = []
+        patientDuplicates.forEach(p => {
+          if (p.teams.length > 0) {
+            teams.push(p.teams[0])
+          }
+        })
+        const patientToAdd: Patient = {
+          profile: patient.profile,
+          settings: patient.settings,
+          metadata: patient.metadata,
+          monitoring,
+          teams,
+          userid: patient.userid
+        }
+        patientsWithoutDuplicates.push(patientToAdd)
       }
     })
     return patientsWithoutDuplicates

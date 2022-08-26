@@ -30,6 +30,7 @@ import { createPatient, createPatientTeam } from '../../common/utils'
 import { Patient } from '../../../../lib/data/patient'
 import PatientUtils from '../../../../lib/patient/utils'
 import { Monitoring, MonitoringStatus } from '../../../../models/monitoring'
+import { UNITS_TYPE } from '../../../../lib/units/utils'
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
@@ -78,6 +79,56 @@ describe('Patient utils', () => {
     it('should return the patient monitored team', () => {
       const team = PatientUtils.getRemoteMonitoringTeam(monitoredPatient1)
       expect(team).toEqual(patientTeam1)
+    })
+  })
+
+  describe('removeDuplicates', () => {
+    it('should return correct patient list', () => {
+      const monitoring: Monitoring = {
+        enabled: true,
+        status: MonitoringStatus.pending,
+        monitoringEnd: new Date(),
+        parameters: {
+          bgUnit: UNITS_TYPE.MGDL,
+          lowBg: 1,
+          highBg: 2,
+          outOfRangeThreshold: 3,
+          veryLowBg: 4,
+          hypoThreshold: 5,
+          nonDataTxThreshold: 6,
+          reportingPeriod: 7
+        }
+      }
+      const patientTeamAccepted = createPatientTeam('patientTeamAccepted', UserInvitationStatus.accepted)
+      const patientTeamPending = createPatientTeam('patientTeamPending', UserInvitationStatus.pending)
+      const patientTeamMonitoringAccepted = createPatientTeam('patientTeamMonitoringAccepted', UserInvitationStatus.accepted, MonitoringStatus.accepted)
+      const firstPatient1 = createPatient('patient1', [])
+      const firstPatient2 = createPatient(firstPatient1.userid, [patientTeamAccepted])
+      const secondPatient1 = createPatient('patient2', [patientTeamPending])
+      const secondPatient2 = createPatient(secondPatient1.userid, [patientTeamAccepted])
+      const secondPatient3 = createPatient(secondPatient1.userid, [])
+      const thirdPatient1 = createPatient('patient3', [patientTeamPending])
+      const thirdPatient2 = createPatient(thirdPatient1.userid, [patientTeamMonitoringAccepted], undefined, undefined, monitoring)
+      const patientWithNoDuplicates = createPatient('patientWithNoDuplicates', [patientTeamAccepted])
+      const allPatients = [firstPatient1, firstPatient2, secondPatient1, secondPatient2, secondPatient3, thirdPatient1, thirdPatient2, patientWithNoDuplicates]
+
+      const firstPatientExpected = createPatient(firstPatient1.userid, [patientTeamAccepted])
+      firstPatientExpected.profile.birthdate = firstPatient1.profile.birthdate
+      firstPatientExpected.settings.a1c = firstPatient1.settings.a1c
+      const secondPatientExpected = createPatient(secondPatient1.userid, [patientTeamPending, patientTeamAccepted])
+      secondPatientExpected.profile.birthdate = secondPatient1.profile.birthdate
+      secondPatientExpected.settings.a1c = secondPatient1.settings.a1c
+      const thirdPatientExpected = createPatient(thirdPatient1.userid, [patientTeamPending, patientTeamMonitoringAccepted], undefined, undefined, monitoring)
+      thirdPatientExpected.profile.birthdate = thirdPatient1.profile.birthdate
+      thirdPatientExpected.settings.a1c = thirdPatient1.settings.a1c
+      const patientWithNoDuplicatesExpected = createPatient(patientWithNoDuplicates.userid, [patientTeamAccepted])
+      patientWithNoDuplicatesExpected.profile.birthdate = patientWithNoDuplicates.profile.birthdate
+      patientWithNoDuplicatesExpected.settings.a1c = patientWithNoDuplicates.settings.a1c
+      const expected = [firstPatientExpected, secondPatientExpected, thirdPatientExpected, patientWithNoDuplicatesExpected]
+
+      const actual = PatientUtils.removeDuplicates(allPatients)
+
+      expect(JSON.stringify(actual)).toEqual(JSON.stringify(expected))
     })
   })
 })
