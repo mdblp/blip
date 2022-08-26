@@ -270,7 +270,8 @@ describe('Patient hook', () => {
     const patientTeamPrivatePractice = createPatientTeam('private', UserInvitationStatus.pending)
     const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
     const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', [patientTeamPrivatePractice])
-    const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove]
+    const patientToRemove2 = createPatient('patientToRemove2', [basicTeam, pendingPatientTeam])
+    const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]
     let customHook
 
     beforeAll(async () => {
@@ -297,13 +298,59 @@ describe('Patient hook', () => {
       expect(removeDirectShareMock).toHaveBeenCalled()
     })
 
-    it('should unflag a patient when he no longer belong to a team', async () => {
+    it.skip('should unflag a patient when he no longer belongs to a team', async () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemove, basicTeam)
-        expect(customHook.getPatient(patientToRemove)).toBeUndefined()
+        await waitFor(() => expect(customHook.getPatient(patientToRemove.userid)).toBeUndefined())
         expect(authHookGetFlagPatientMock).toHaveBeenCalled()
         expect(authHookFlagPatientMock).toHaveBeenCalled()
+      })
+    })
+
+    it('should update patient when he still belongs to a team', async () => {
+      jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
+      await act(async () => {
+        await customHook.removePatient(patientToRemove2, basicTeam)
+        expect(customHook.getPatient(patientToRemove2.userid).teams).toEqual([pendingPatientTeam])
+      })
+    })
+  })
+
+  describe('markPatientMessagesAsRead', () => {
+    const basicPatient = createPatient('basicPatient1', [basicTeam])
+    basicPatient.metadata.unreadMessagesSent = 23
+    const allPatients = [basicPatient]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
+    it('should update patient unread messages to 0', () => {
+      act(() => {
+        customHook.markPatientMessagesAsRead(basicPatient)
+        expect(customHook.getPatient(basicPatient.userid).metadata.unreadMessagesSent).toBe(0)
+      })
+    })
+  })
+
+  describe('leaveTeam', () => {
+    const allPatients = [loggedInUserAsPatient]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
+    it('should call API and refresh team list', async () => {
+      const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
+      await act(async () => {
+        customHook.leaveTeam(basicTeam.teamId)
+        expect(removePatientMock).toBeCalled()
+        await waitFor(() => expect(removeTeamFromListMock).toBeCalled())
       })
     })
   })

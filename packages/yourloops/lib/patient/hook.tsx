@@ -130,11 +130,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       setPatients(patients)
     } else {
       const patientsUpdated = patients.filter(patient => patient.profile.email !== invitation.email)
-      if (patient.teams) {
-        patient.teams.push(patientTeam)
-      } else {
-        patient.teams = [patientTeam]
-      }
+      patient.teams.push(patientTeam)
       patientsUpdated.push(patient)
       setPatients(patientsUpdated)
     }
