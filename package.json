@@ -36,6 +36,7 @@
     "test-blip-debug": "lerna --stream --scope=blip run test-debug",
     "test-yourloops-integration": "bash -c 'source config/.env.sh && lerna --stream  --scope=yourloops run integration-test'",
     "test-yourloops-unit": "bash -c 'source config/.env.sh && lerna --stream  --scope=yourloops run unit-test'",
+    "test-yourloops": "npm run test-yourloops-unit && npm run test-yourloops-integration",
     "test-locales": "mocha --recursive test/locales",
     "test-lambda": "bash test-lambda.sh",
     "build-yourloops": "lerna --stream --scope yourloops run build",
