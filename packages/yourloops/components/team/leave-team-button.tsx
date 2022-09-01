@@ -78,6 +78,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   return (
     <React.Fragment>
       <Button
+        data-testid="leave-team-button"
         className={commonTeamClasses.button}
         variant="contained"
         color="primary"

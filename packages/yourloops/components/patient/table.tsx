@@ -164,6 +164,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
               </StyledTableCell>
               <StyledTableCell
                 id="patients-list-header-full-name"
+                data-testid="patient-list-header-full-name"
                 className={`${classes.tableCellHeader} ${patientListCommonClasses.largeCell}`}
               >
                 <TableSortLabel

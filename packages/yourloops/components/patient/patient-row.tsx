@@ -227,10 +227,12 @@ function PatientRow(props: PatientElementProps): JSX.Element {
           : (<IconActionButton
             icon={isFlagged ? <FlagIcon
               titleAccess="flag-icon-active"
+              aria-label="flag-icon-active"
               id={`${rowId}-flagged`}
             />
               : <FlagOutlineIcon
                 titleAccess="flag-icon-inactive"
+                aria-label="flag-icon-inactive"
                 id={`${rowId}-un-flagged`}
               />}
             id={`${rowId}-icon-button-flag`}
@@ -242,7 +244,11 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         id={`${rowId}-patient-full-name`} className={patientFullNameClasses}
       >
         <Tooltip title={tooltipText}>
-          <Typography id={`${rowId}-patient-full-name-value`} className={classes.typography}>
+          <Typography
+            id={`${rowId}-patient-full-name-value`}
+            data-testid="patient-full-name-value"
+            className={classes.typography}
+          >
             {patientFullName}
           </Typography>
         </Tooltip>

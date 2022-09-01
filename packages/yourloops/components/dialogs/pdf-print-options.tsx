@@ -158,7 +158,6 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
 
   const [openState, setOpenState] = React.useState(false)
   const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate))
-  const [outputFormat, setOutputFormat] = React.useState('pdf')
   const { start, end, displayedDates } = React.useMemo(() => {
     const startDate = customStartDate ?? dayjs(pdfOptions.start, { utc: true })
     const endDate = customStartDate ?? dayjs(pdfOptions.end, { utc: true })
@@ -187,7 +186,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
     if (customStartDate) {
       const startDate = customStartDate.isBefore(d) ? customStartDate.format('YYYY-MM-DD') : d.format('YYYY-MM-DD')
       const endDate = customStartDate.isBefore(d) ? d.format('YYYY-MM-DD') : customStartDate.format('YYYY-MM-DD')
-      setPDFOptions({ start: startDate, end: endDate, format: outputFormat as OutputFormat })
+      setPDFOptions({ start: startDate, end: endDate, format: pdfOptions.format })
       setCustomStartDate(null)
     } else {
       setCustomStartDate(d)
@@ -196,8 +195,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
 
   const presetSelected = pdfOptions.preset
   const handleOutputFormat = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    pdfOptions.format = event.target.value as OutputFormat
-    setOutputFormat((event.target as HTMLInputElement).value)
+    setPDFOptions({ ...pdfOptions, format: event.target.value as OutputFormat })
   }
 
   return (
@@ -288,7 +286,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
 
           <RadioGroup
             id="pdf-options-output-format"
-            value={outputFormat}
+            value={pdfOptions.format}
             row
             onChange={handleOutputFormat}
           >
@@ -301,7 +299,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
             <FormControlLabel
               value="csv"
               control={
-                <Radio id="dialog-pdf-options-selector-csv" color="primary" />
+                <Radio id="dialog-pdf-options-selector-csv" data-testid="dialog-pdf-options-selector-csv" color="primary" />
               }
               label={t('dialog-pdf-options-output-format-csv')} />
           </RadioGroup>

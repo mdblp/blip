@@ -167,6 +167,7 @@ function TeamMenu(): JSX.Element {
       >
         <Badge
           id="team-menu-count-badge"
+          aria-label={t('open-team-menu')}
           badgeContent={filteredTeams.length}
           overlap="circular"
           className={teamIcon}

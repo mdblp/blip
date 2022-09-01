@@ -139,6 +139,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             {isUserAdmin &&
               <Button
                 name="add-member"
+                data-testid="add-member-button"
                 className={`${commonTeamClasses.button} ${classes.addTeamMemberButton}`}
                 variant="contained"
                 color="primary"

@@ -40,7 +40,6 @@ import PatientConsentPage from '../pages/patient/patient-consent'
 import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage, LoginPage } from '../pages/login'
 import { MainLayout } from '../pages/main-layout'
-import InvalidRoute from '../components/invalid-route'
 
 const RENEW_CONSENT_PATH = '/renew-consent'
 const NEW_CONSENT_PATH = '/new-consent'
@@ -119,7 +118,6 @@ export function MainLobby(): JSX.Element {
                   <Route exact path="/complete-signup" component={CompleteSignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />
                   <Route exact path="/new-consent" component={PatientConsentPage} />
-                  <Route exact path="/not-found" component={InvalidRoute} />
                   <Route component={MainLayout} />
                 </Switch>
               </div>

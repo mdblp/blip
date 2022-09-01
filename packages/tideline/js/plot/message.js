@@ -197,6 +197,7 @@ function plotMessage(pool, opts = {}) {
     }
 
     var newNote = d3.select('#tidelineLabels').append('image').attr({
+      'id': 'newNoteIcon',
       'class': 'newNoteIcon',
       'xlink:href': newNoteImg,
       'cursor': 'pointer',

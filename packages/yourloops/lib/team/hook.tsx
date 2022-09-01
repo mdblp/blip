@@ -207,10 +207,7 @@ function TeamContextImpl(): TeamContext {
   const invitePatient = async (team: Team, username: string): Promise<void> => {
     const apiInvitation = await TeamApi.invitePatient({ teamId: team.id, email: username })
     const invitation = notificationConversion(apiInvitation)
-    if (invitation === null) {
-      // Should not be possible
-      throw new Error('Invalid invitation type')
-    }
+
     let user = TeamUtils.getUserByEmail(teams, invitation.email)
     if (user === null) {
       user = {
@@ -236,10 +233,7 @@ function TeamContextImpl(): TeamContext {
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     const apiInvitation = await TeamApi.inviteMember({ teamId: team.id, email: username, role })
     const invitation = notificationConversion(apiInvitation)
-    if (invitation === null) {
-      // Should not be possible
-      throw new Error('Invalid invitation type')
-    }
+
     let user = TeamUtils.getUserByEmail(teams, invitation.email)
     if (user === null) {
       user = {
@@ -425,7 +419,7 @@ function TeamContextImpl(): TeamContext {
       email: member.user.username,
       role
     })
-    member.role = role as TeamMemberRole
+    member.role = role
     setTeams(teams)
     metrics.send('team_management', 'manage_admin_permission', role === 'admin' ? 'grant' : 'revoke')
   }
@@ -443,7 +437,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const joinTeam = async (teamId: string): Promise<void> => {
-    await TeamApi.joinTeam(user.id, teamId)
+    await TeamApi.joinTeam(teamId, user.id)
     refresh(true)
   }
 
@@ -535,7 +529,7 @@ function TeamContextImpl(): TeamContext {
  * @param props for team provider & children
  */
 export function TeamContextProvider({ children }: { children: JSX.Element }): JSX.Element {
-  const context = TeamContextImpl() // eslint-disable-line new-cap
+  const context = TeamContextImpl()
   return <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
 }
 

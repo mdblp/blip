@@ -73,7 +73,7 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
       <div className={commonTeamClasses.categoryHeader}>
         <div>
           <TuneIcon />
-          <Typography className={commonTeamClasses.title}>
+          <Typography className={commonTeamClasses.title} data-testid="alarm-configuration-section">
             {t('events-configuration')}
           </Typography>
         </div>

@@ -129,6 +129,12 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
     closeMedicalRecordDeleteDialog()
   }
 
+  const buildFileName = (date: string, index: number): string => {
+    const fileDate = new Date(date).toLocaleDateString()
+    const previousFileDate = index > 0 ? new Date(medicalRecords[index - 1].creationDate).toLocaleDateString() : null
+    return `${fileDate}${fileDate === previousFileDate ? `_${index}` : ''}`
+  }
+
   useEffect(() => {
     (async () => {
       setMedicalRecords(await MedicalFilesApi.getMedicalRecords(patientId, teamId))
@@ -156,29 +162,29 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
               <DescriptionOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t('medical-record-pdf')}{new Date(medicalRecord.creationDate).toLocaleDateString()}
+              {t('medical-record-pdf')}{buildFileName(medicalRecord.creationDate, index)}
             </ListItemText>
             {user.isUserHcp() && medicalRecord.id === hoveredItem &&
               <ListItemSecondaryAction>
-                <Tooltip title={t('edit') }>
+                <Tooltip title={t('edit')}>
                   <IconButton
                     edge="end"
                     size="small"
                     disableRipple
                     disableFocusRipple
-                    aria-label="edit-button"
+                    aria-label={t('edit')}
                     onClick={() => onEditMedicalRecord(medicalRecord)}
                   >
                     <CreateOutlinedIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title={t('delete') }>
+                <Tooltip title={t('delete')}>
                   <IconButton
                     edge="end"
                     size="small"
                     disableRipple
                     disableFocusRipple
-                    aria-label="delete-button"
+                    aria-label={t('delete')}
                     onClick={() => onDeleteMedicalRecord(medicalRecord)}
                   >
                     <TrashCanOutlined />

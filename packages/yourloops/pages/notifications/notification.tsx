@@ -28,10 +28,10 @@
 
 import React from 'react'
 import _ from 'lodash'
-import { TFunction, useTranslation, Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import GroupIcon from '@material-ui/icons/Group'
 import PersonIcon from '@material-ui/icons/Person'
 import HelpIcon from '@material-ui/icons/Help'
@@ -51,11 +51,9 @@ import { useAlert } from '../../components/utils/snackbar'
 import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
 
-interface NotificationSpanProps {
+export interface NotificationSpanProps {
   id: string
-  t: TFunction<'yourloops'>
   notification: INotification
-  className: string
 }
 
 interface NotificationProps {
@@ -98,56 +96,84 @@ const useStyles = makeStyles((theme: Theme) =>
   }), { name: 'ylp-page-notification' }
 )
 
-const NotificationSpan = ({ t, notification, className, id }: NotificationSpanProps): JSX.Element => {
+export const NotificationSpan = ({ notification, id }: NotificationSpanProps): JSX.Element => {
+  const { t } = useTranslation('yourloops')
   const { creator, type } = notification
   const firstName = getUserFirstName(creator as IUser)
   const lastName = getUserLastName(creator as IUser)
-  const careteam = notification.target?.name ?? ''
-  const values = { firstName, lastName, careteam }
+  const careTeam = notification.target?.name ?? ''
+  const values = { firstName, lastName, careteam: careTeam }
+  const classes = useStyles()
 
   let notificationText: JSX.Element
   switch (type) {
     case NotificationType.directInvitation:
       notificationText = (
-      <Trans t={t} i18nKey="notification-caregiver-invitation-by-patient" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
-        <strong>{firstName} {lastName}</strong> wants to share their diabetes data with you.
-      </Trans>
+        <Trans
+          t={t}
+          i18nKey="notification-caregiver-invitation-by-patient"
+          components={{ strong: <strong /> }}
+          values={values} parent={React.Fragment}
+        >
+          <strong>{firstName} {lastName}</strong> wants to share their diabetes data with you.
+        </Trans>
       )
       break
     case NotificationType.careTeamProInvitation:
       notificationText = (
-      <Trans t={t} i18nKey="notification-hcp-invitation-by-team" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
-        <strong>{firstName} {lastName}</strong> invites you to join <strong>{careteam}</strong>.
-      </Trans>
+        <Trans
+          t={t}
+          i18nKey="notification-hcp-invitation-by-team"
+          components={{ strong: <strong /> }}
+          values={values}
+          parent={React.Fragment}
+        >
+          <strong>{firstName} {lastName}</strong> invites you to join <strong>{careTeam}</strong>.
+        </Trans>
       )
       break
     case NotificationType.careTeamPatientInvitation:
       notificationText = (
-      <Trans t={t} i18nKey="notification-patient-invitation-by-team" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
-        You&apos;re invited to share your diabetes data with <strong>{careteam}</strong>.
-      </Trans>
+        <Trans
+          t={t}
+          i18nKey="notification-patient-invitation-by-team"
+          components={{ strong: <strong /> }}
+          values={values} parent={React.Fragment}
+        >
+          You&apos;re invited to share your diabetes data with <strong>{careTeam}</strong>.
+        </Trans>
       )
       break
     case NotificationType.careTeamMonitoringInvitation:
       notificationText = (
-      <Trans t={t} i18nKey="notification-patient-remote-monitoring" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
-        {t('invite-join-monitoring-team')} <strong>{careteam}</strong>.
-      </Trans>
+        <Trans
+          t={t}
+          i18nKey="notification-patient-remote-monitoring"
+          components={{ strong: <strong /> }}
+          values={values} parent={React.Fragment}
+        >
+          {t('invite-join-monitoring-team')} <strong>{careTeam}</strong>.
+        </Trans>
       )
       break
     default:
       notificationText = <i>Invalid invitation type</i>
   }
 
-  return <span id={id} className={className}>{notificationText}</span>
+  return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({
+  id,
+  type,
+  className
+}: { id: string, type: NotificationType, className: string }): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
       return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
     case NotificationType.careTeamPatientInvitation:
-      return <MedicalServiceIcon id={`medical-service-icon-${id}`} titleAccess="care-team-invitation-icon" className={className} />
+      return <MedicalServiceIcon id={`medical-service-icon-${id}`} titleAccess="care-team-invitation-icon"
+                                 className={className} />
     case NotificationType.careTeamProInvitation:
     default:
       return <GroupIcon id={`group-icon-${id}`} titleAccess="default-icon" className={className} />
@@ -250,19 +276,24 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   }
 
   return (
-    <div id={`notification-line-${id}`} className={`${classes.container} notification-line`} data-notificationid={id}>
+    <div id={`notification-line-${id}`} data-testid="notification-line" className={`${classes.container} notification-line`} data-notificationid={id}>
       <NotificationIcon id={id} className="notification-icon" type={notification.type} />
-      <NotificationSpan id={`notification-text-${id}`} t={t} notification={notification} className={`${classes.notificationSpan} notification-text`} />
+      <NotificationSpan id={`notification-text-${id}`} notification={notification} />
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
         {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
           <AddTeamDialog
             error={t('notification-patient-invitation-wrong-code', { careteam: notification.target.name })}
             teamName={notification.target.name}
-            actions={{ onDialogResult: (teamId) => { closeTeamAcceptDialog(teamId) } }}
+            actions={{
+              onDialogResult: (teamId) => {
+                closeTeamAcceptDialog(teamId)
+              }
+            }}
           />}
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => setDisplayMonitoringTerms(false)} teamName={notification.target.name}/>
+          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => setDisplayMonitoringTerms(false)}
+                                   teamName={notification.target.name} />
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
           <IconButton

@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.1-RC1 - 2022-06-24
+## 3.0.1-BETA18 - 2022-08-22
 ### Engineering use
 - YLP-1317 Renaming Shoreline model to a generic name
 - YLP-1626 Refactor team hook to only keep functions impacting the state
@@ -12,7 +12,9 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-1634 Fix missing UTs
 - YLP-1645 A patient can create, edit and delete a medical record
+- YLP-1658 Creating a note does not create it at the time selected
 - YLP-1659 Language is not updated with user preferences
+- YLP-1694 Disable save button in medical record dialog for a patient
 
 ## 3.0.0 - 2022-06-16
 ### Added

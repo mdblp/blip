@@ -55,6 +55,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
 
   return (
     <Dialog
+      data-testid="confirm-dialog"
       open
       fullWidth
       maxWidth="sm"
@@ -72,6 +73,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
 
       <DialogActions>
         <Button
+          data-testid="confirm-dialog-cancel-button"
           disableElevation
           onClick={onClose}
         >
@@ -79,6 +81,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
         </Button>
         <ProgressIconButtonWrapper inProgress={inProgress ?? false}>
           <Button
+            data-testid="confirm-dialog-confirm-button"
             variant="contained"
             disableElevation
             disabled={inProgress}

@@ -67,7 +67,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   const navigatedDelay = 200
   const minHeight = 400
   const minWidth = 300
-  const axisGutter = 40
+  const axisGutter = 35
   /** The number of days we pre-render the SVG */
   const renderDaysBuffer = 2
 
@@ -147,7 +147,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.tooltips = null
   container.annotations = null
   /** @type {d3.AxisScale<Date>} */
-  container.xScale = d3.time.scale.utc()
+  container.xScale = d3.time.scale()
   /** @type {TidelineData} */
   container.tidelineData = null
   container.throttleTrackMetric = _.throttle(options.trackMetric, 10000)
@@ -162,11 +162,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.emitter.on('clickInPool', ({ offsetX /*, datum */ }) => {
     // Event use when we want to add a message (note)
     /** @type {Date} */
-    const date = container.xScale.invert(offsetX - axisGutter)
-    // For some reason, d3 seems to apply the current locale date offset
-    // to this date, so we need to substract it.
-    const now = new Date()
-    const m = moment.utc(date).subtract(now.getTimezoneOffset(), 'minutes')
+    const date = container.xScale.invert(offsetX + axisGutter)
+    const m = moment.utc(date)
     container.emitter.emit('clickToDate', m)
   })
 
