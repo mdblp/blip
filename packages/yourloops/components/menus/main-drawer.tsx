@@ -27,7 +27,6 @@
 
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined'
@@ -54,6 +53,8 @@ import PendingIcon from '../icons/PendingIcon'
 import { useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import { PatientFilterTypes } from '../../models/generic'
+import { useQueryParams } from '../../lib/custom-hooks'
+import DrawerLinkItem from './drawer-link-item'
 
 interface MainDrawerProps {
   miniVariant?: boolean
@@ -63,19 +64,6 @@ export const mainDrawerDefaultWidth = '300px'
 export const mainDrawerMiniVariantWidth = '57px'
 
 const styles = makeStyles((theme: Theme) => ({
-  countLabel: {
-    borderRadius: '50%',
-    marginLeft: 'auto',
-    backgroundColor: theme.palette.primary.main,
-    width: '24px',
-    lineHeight: '24px',
-    textAlign: 'center',
-    color: 'white',
-    fontSize: '14px'
-  },
-  monitoringBackgroundColor: {
-    backgroundColor: theme.palette.warning.main
-  },
   monitoringFilters: {
     marginTop: 20
   },
@@ -126,12 +114,10 @@ const styles = makeStyles((theme: Theme) => ({
 
 function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const {
-    countLabel,
     divider,
     drawer,
     drawerPaper,
     messagingTitle,
-    monitoringBackgroundColor,
     monitoringFilters,
     monitoringTitleIcon,
     miniDrawer,
@@ -146,10 +132,11 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const [onHover, setOnHover] = useState<boolean>(false)
   const teamHook = useTeam()
   const authHook = useAuth()
+  const queryParams = useQueryParams()
   const patientFiltersStats = teamHook.patientsFilterStats
   const numberOfFlaggedPatients = authHook.getFlagPatients().length
   const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id))
-
+  const selectedFilter: string | null = queryParams.get('filter')
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`
   const paperClass = fullDrawer || onHover
     ? `${drawerPaper} ${enterTransition} ${onHover && !fullDrawer ? drawerBoxShadow : ''}`
@@ -182,6 +169,21 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     }
   ]
 
+  const drawerRemoteMonitoringIcons = [
+    {
+      icon: <SupervisedUserCircleIcon />,
+      text: `${t('monitored-patients')} (${patientFiltersStats.remoteMonitored})`,
+      filter: PatientFilterTypes.remoteMonitored,
+      ariaLabel: PatientFilterTypes.remoteMonitored
+    },
+    {
+      icon: <HistoryIcon />,
+      count: patientFiltersStats.renew,
+      text: t('incoming-renewal'),
+      filter: PatientFilterTypes.renew
+    }
+  ]
+
   const drawerEventsItems = [
     {
       icon: <HourglassEmptyIcon />,
@@ -203,6 +205,15 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     }
   ]
 
+  const drawerMessagingItems = [
+    {
+      icon: <EmailIcon />,
+      count: patientFiltersStats.unread,
+      text: t('unread-messages'),
+      filter: PatientFilterTypes.unread
+    }
+  ]
+
   useEffect(() => setFullDrawer(!miniVariant), [miniVariant])
 
   return (
@@ -218,17 +229,13 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       <Toolbar />
       <List>
         {drawerItems.map((item, index) => (
-          <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
-            <ListItem button>
-              <ListItemIcon aria-label={item.ariaLabel}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText>
-                {item.text}
-              </ListItemText>
-            </ListItem>
-          </Link>
+          <DrawerLinkItem
+            key={index}
+            selectedFilter={selectedFilter}
+            {...item}
+          />
         ))}
+
         {loggedUserIsHcpInMonitoring &&
           <Box bgcolor="var(--monitoring-filter-bg-color)" className={monitoringFilters}>
             <ListItem>
@@ -241,37 +248,17 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </Box>
               </ListItemText>
             </ListItem>
-            <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}
-                  aria-label={PatientFilterTypes.remoteMonitored}>
-              <ListItem button>
-                <ListItemIcon aria-label={t('remote-monitoring-patients-filter')}>
-                  <SupervisedUserCircleIcon />
-                </ListItemIcon>
-                <ListItemText>
-                  <Box display="flex">
-                    {t('monitored-patients')} ({patientFiltersStats.remoteMonitored})
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
-            <Link to={`/home?filter=${PatientFilterTypes.renew}`} aria-label={PatientFilterTypes.renew}>
-              <ListItem button>
-                <ListItemIcon>
-                  <HistoryIcon />
-                </ListItemIcon>
-                <ListItemText>
-                  <Box display="flex">
-                    {t('incoming-renewal')}
-                    {patientFiltersStats.renew > 0 &&
-                      <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
-                        {patientFiltersStats.renew}
-                      </Box>
-                    }
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
+
+            {drawerRemoteMonitoringIcons.map((item, index) => (
+              <DrawerLinkItem
+                key={index}
+                selectedFilter={selectedFilter}
+                {...item}
+              />
+            ))}
+
             <Divider variant="middle" className={divider} />
+
             <ListItem>
               <ListItemIcon>
                 <FeedbackIcon className={monitoringTitleIcon} />
@@ -282,26 +269,17 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </Box>
               </ListItemText>
             </ListItem>
+
             {drawerEventsItems.map((item, index) => (
-              <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
-                <ListItem button>
-                  <ListItemIcon>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText>
-                    <Box display="flex">
-                      {item.text}
-                      {item.count > 0 &&
-                        <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
-                          {item.count}
-                        </Box>
-                      }
-                    </Box>
-                  </ListItemText>
-                </ListItem>
-              </Link>
+              <DrawerLinkItem
+                key={index}
+                selectedFilter={selectedFilter}
+                {...item}
+              />
             ))}
+
             <Divider variant="middle" className={divider} />
+
             <ListItem>
               <ListItemIcon>
                 <ContactMailIcon className={monitoringTitleIcon} />
@@ -312,23 +290,14 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </Box>
               </ListItemText>
             </ListItem>
-            <Link to={`/home?filter=${PatientFilterTypes.unread}`} aria-label={PatientFilterTypes.unread}>
-              <ListItem button>
-                <ListItemIcon>
-                  <EmailIcon />
-                </ListItemIcon>
-                <ListItemText>
-                  <Box display="flex">
-                    {t('unread-messages')}
-                    {patientFiltersStats.unread > 0 &&
-                      <Box className={countLabel}>
-                        {patientFiltersStats.unread}
-                      </Box>
-                    }
-                  </Box>
-                </ListItemText>
-              </ListItem>
-            </Link>
+
+            {drawerMessagingItems.map((item, index) => (
+              <DrawerLinkItem
+                key={index}
+                selectedFilter={selectedFilter}
+                {...item}
+              />
+            ))}
           </Box>
         }
       </List>
