@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
@@ -112,7 +112,7 @@ const styles = makeStyles((theme: Theme) => ({
   }
 }))
 
-function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
+const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
   const {
     divider,
     drawer,
@@ -174,7 +174,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       icon: <SupervisedUserCircleIcon />,
       text: `${t('monitored-patients')} (${patientFiltersStats.remoteMonitored})`,
       filter: PatientFilterTypes.remoteMonitored,
-      ariaLabel: PatientFilterTypes.remoteMonitored
+      ariaLabel: t('remote-monitoring-patients-filter')
     },
     {
       icon: <HistoryIcon />,
