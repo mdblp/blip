@@ -35,7 +35,7 @@ import { Router } from 'react-router-dom'
 import MainDrawer, {
   mainDrawerDefaultWidth,
   mainDrawerMiniVariantWidth
-} from '../../../../components/menus/main-drawer'
+} from '../../../../components/menus/drawer/main-drawer'
 import { buildTeam, buildTeamMember, triggerMouseEvent } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'

@@ -26,7 +26,6 @@
  */
 
 import React, { FunctionComponent, ReactElement } from 'react'
-import { Link } from 'react-router-dom'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
@@ -34,67 +33,37 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import { PatientFilterTypes } from '../../models/generic'
-
 const classes = makeStyles((theme: Theme) => ({
-  countLabel: {
-    borderRadius: '50%',
-    marginLeft: 'auto',
-    backgroundColor: theme.palette.primary.main,
-    width: '24px',
-    lineHeight: '24px',
-    textAlign: 'center',
-    color: 'white',
-    fontSize: '14px'
+  messagingTitle: {
+    fontWeight: 700,
+    lineHeight: '20px',
+    textTransform: 'uppercase'
   },
-  listItemRoot: {
-    '&.Mui-selected': {
-      backgroundColor: theme.palette.primary.main,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main
-      }
-    }
-  },
-  monitoringBackgroundColor: {
-    backgroundColor: theme.palette.warning.main
-  },
-  selectedColor: {
-    color: theme.palette.common.white
+  monitoringTitleIcon: {
+    color: theme.palette.grey[600]
   }
 }))
 
-interface DrawerLinkItemProps {
-  ariaLabel?: string
-  count?: number
+interface DrawerCategoryItemProps {
   icon: ReactElement
-  filter: PatientFilterTypes
-  selectedFilter: string
   text: string
 }
 
-const DrawerLinkItem: FunctionComponent<DrawerLinkItemProps> = (props) => {
-  const { selectedColor, listItemRoot, countLabel, monitoringBackgroundColor } = classes()
-  const selected = props.filter === props.selectedFilter
+const DrawerCategoryItem: FunctionComponent<DrawerCategoryItemProps> = (props) => {
+  const { messagingTitle, monitoringTitleIcon } = classes()
 
   return (
-    <Link to={`/home?filter=${props.filter}`} aria-label={props.filter}>
-      <ListItem button selected={selected} classes={{ root: listItemRoot }}>
-        <ListItemIcon aria-label={props.ariaLabel} className={selected ? selectedColor : undefined}>
-          {props.icon}
-        </ListItemIcon>
-        <ListItemText className={selected ? selectedColor : undefined}>
-          <Box display="flex">
-            {props.text}
-            {props.count > 0 &&
-              <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
-                {props.count}
-              </Box>
-            }
-          </Box>
-        </ListItemText>
-      </ListItem>
-    </Link>
+    <ListItem>
+      <ListItemIcon>
+        {props.icon}
+      </ListItemIcon>
+      <ListItemText className={monitoringTitleIcon}>
+        <Box className={messagingTitle}>
+          {props.text}
+        </Box>
+      </ListItemText>
+    </ListItem>
   )
 }
 
-export default DrawerLinkItem
+export default DrawerCategoryItem

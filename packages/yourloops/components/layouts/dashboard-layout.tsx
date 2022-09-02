@@ -33,7 +33,7 @@ import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 
 import MainHeader from '../header-bars/main-header'
-import MainDrawer from '../menus/main-drawer'
+import MainDrawer from '../menus/drawer/main-drawer'
 import { useAuth } from '../../lib/auth'
 
 const dashboardLayoutStyle = makeStyles((theme: Theme) => ({

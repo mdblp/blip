@@ -34,9 +34,6 @@ import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
 import Drawer from '@material-ui/core/Drawer'
 import Toolbar from '@material-ui/core/Toolbar'
 import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import EmailIcon from '@material-ui/icons/Email'
 import ContactMailIcon from '@material-ui/icons/ContactMail'
 import TimelineIcon from '@material-ui/icons/Timeline'
@@ -48,11 +45,12 @@ import HistoryIcon from '@material-ui/icons/History'
 import Divider from '@material-ui/core/Divider'
 import Box from '@material-ui/core/Box'
 
-import MedicalServiceIcon from '../icons/MedicalServiceIcon'
-import PendingIcon from '../icons/PendingIcon'
-import { PatientFilterTypes } from '../../models/generic'
+import MedicalServiceIcon from '../../icons/MedicalServiceIcon'
+import PendingIcon from '../../icons/PendingIcon'
+import { PatientFilterTypes } from '../../../models/generic'
 import DrawerLinkItem from './drawer-link-item'
 import useMainDrawer from './main-drawer.hook'
+import DrawerCategoryItem from './drawer-category-item'
 
 export interface MainDrawerProps {
   miniVariant?: boolean
@@ -62,9 +60,6 @@ export const mainDrawerDefaultWidth = '300px'
 export const mainDrawerMiniVariantWidth = '57px'
 
 const styles = makeStyles((theme: Theme) => ({
-  monitoringFilters: {
-    marginTop: 20
-  },
   divider: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2)
@@ -79,14 +74,6 @@ const styles = makeStyles((theme: Theme) => ({
   },
   drawerBoxShadow: {
     boxShadow: theme.shadows[5]
-  },
-  messagingTitle: {
-    fontWeight: 700,
-    lineHeight: '20px',
-    textTransform: 'uppercase'
-  },
-  monitoringTitleIcon: {
-    color: theme.palette.grey[600]
   },
   miniDrawer: {
     width: mainDrawerMiniVariantWidth,
@@ -116,9 +103,6 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     divider,
     drawer,
     drawerPaper,
-    messagingTitle,
-    monitoringFilters,
-    monitoringTitleIcon,
     miniDrawer,
     miniDrawerPaper,
     enterTransition,
@@ -234,18 +218,11 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
         ))}
 
         {loggedUserIsHcpInMonitoring &&
-          <Box bgcolor="var(--monitoring-filter-bg-color)" className={monitoringFilters}>
-            <ListItem>
-              <ListItemIcon>
-                <DesktopMacIcon className={monitoringTitleIcon} />
-              </ListItemIcon>
-              <ListItemText>
-                <Box className={messagingTitle}>
-                  {t('remote-monitoring')}
-                </Box>
-              </ListItemText>
-            </ListItem>
-
+          <Box bgcolor="var(--monitoring-filter-bg-color)" marginTop={2}>
+            <DrawerCategoryItem
+              icon={<DesktopMacIcon />}
+              text={t('remote-monitoring')}
+            />
             {drawerRemoteMonitoringItems.map((item, index) => (
               <DrawerLinkItem
                 key={index}
@@ -256,17 +233,10 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
 
             <Divider variant="middle" className={divider} />
 
-            <ListItem>
-              <ListItemIcon>
-                <FeedbackIcon className={monitoringTitleIcon} />
-              </ListItemIcon>
-              <ListItemText>
-                <Box className={messagingTitle}>
-                  {t('events')}
-                </Box>
-              </ListItemText>
-            </ListItem>
-
+            <DrawerCategoryItem
+              icon={<FeedbackIcon />}
+              text={t('events')}
+            />
             {drawerEventsItems.map((item, index) => (
               <DrawerLinkItem
                 key={index}
@@ -277,17 +247,10 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
 
             <Divider variant="middle" className={divider} />
 
-            <ListItem>
-              <ListItemIcon>
-                <ContactMailIcon className={monitoringTitleIcon} />
-              </ListItemIcon>
-              <ListItemText>
-                <Box className={messagingTitle}>
-                  {t('messaging')}
-                </Box>
-              </ListItemText>
-            </ListItem>
-
+            <DrawerCategoryItem
+              icon={<ContactMailIcon />}
+              text={t('messaging')}
+            />
             {drawerMessagingItems.map((item, index) => (
               <DrawerLinkItem
                 key={index}
