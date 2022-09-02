@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
@@ -50,13 +50,11 @@ import Box from '@material-ui/core/Box'
 
 import MedicalServiceIcon from '../icons/MedicalServiceIcon'
 import PendingIcon from '../icons/PendingIcon'
-import { useTeam } from '../../lib/team'
-import { useAuth } from '../../lib/auth'
 import { PatientFilterTypes } from '../../models/generic'
-import { useQueryParams } from '../../lib/custom-hooks'
 import DrawerLinkItem from './drawer-link-item'
+import useMainDrawer from './main-drawer.hook'
 
-interface MainDrawerProps {
+export interface MainDrawerProps {
   miniVariant?: boolean
 }
 
@@ -113,6 +111,7 @@ const styles = makeStyles((theme: Theme) => ({
 }))
 
 const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
+  const { t } = useTranslation('yourloops')
   const {
     divider,
     drawer,
@@ -126,23 +125,23 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     leaveTransition,
     drawerBoxShadow
   } = styles()
-  const { t } = useTranslation('yourloops')
 
-  const [fullDrawer, setFullDrawer] = useState<boolean>(!miniVariant)
-  const [onHover, setOnHover] = useState<boolean>(false)
-  const teamHook = useTeam()
-  const authHook = useAuth()
-  const queryParams = useQueryParams()
-  const patientFiltersStats = teamHook.patientsFilterStats
-  const numberOfFlaggedPatients = authHook.getFlagPatients().length
-  const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id))
-  const selectedFilter: string | null = queryParams.get('filter')
+  const {
+    fullDrawer,
+    onHover,
+    setOnHover,
+    patientFiltersStats,
+    numberOfFlaggedPatients,
+    loggedUserIsHcpInMonitoring,
+    selectedFilter
+  } = useMainDrawer({ miniVariant })
+
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`
   const paperClass = fullDrawer || onHover
     ? `${drawerPaper} ${enterTransition} ${onHover && !fullDrawer ? drawerBoxShadow : ''}`
     : `${miniDrawerPaper} ${enterTransition}`
 
-  const drawerItems = [
+  const drawerCommonItems = [
     {
       icon: <SupervisedUserCircleIcon />,
       text: `${t('all-patients')} (${patientFiltersStats.all})`,
@@ -169,7 +168,7 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     }
   ]
 
-  const drawerRemoteMonitoringIcons = [
+  const drawerRemoteMonitoringItems = [
     {
       icon: <SupervisedUserCircleIcon />,
       text: `${t('monitored-patients')} (${patientFiltersStats.remoteMonitored})`,
@@ -214,8 +213,6 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     }
   ]
 
-  useEffect(() => setFullDrawer(!miniVariant), [miniVariant])
-
   return (
     <Drawer
       id="main-left-drawer"
@@ -228,7 +225,7 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     >
       <Toolbar />
       <List>
-        {drawerItems.map((item, index) => (
+        {drawerCommonItems.map((item, index) => (
           <DrawerLinkItem
             key={index}
             selectedFilter={selectedFilter}
@@ -249,7 +246,7 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
               </ListItemText>
             </ListItem>
 
-            {drawerRemoteMonitoringIcons.map((item, index) => (
+            {drawerRemoteMonitoringItems.map((item, index) => (
               <DrawerLinkItem
                 key={index}
                 selectedFilter={selectedFilter}
