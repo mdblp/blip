@@ -40,6 +40,6 @@
     "sundial": "file:../sundial",
     "tideline": "file:../tideline",
     "tidepool-viz": "file:../viz",
-    "medical-domain": "file:../medical-domain/dist"
+    "medical-domain": "file:../medical-domain"
   }
 }
