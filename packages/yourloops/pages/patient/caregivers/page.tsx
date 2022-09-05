@@ -31,6 +31,7 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 
+import Box from '@material-ui/core/Box'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 
@@ -159,8 +160,7 @@ function PatientCaregiversPage(): JSX.Element {
     return (
       <CircularProgress
         id="patient-page-loading-progress"
-        disableShrink
-        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
+        className="centered-spinning-loader"
       />
     )
   }
@@ -168,8 +168,10 @@ function PatientCaregiversPage(): JSX.Element {
   return (
     <React.Fragment>
       <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
-      <Container maxWidth="lg" style={{ marginTop: '4em', marginBottom: '2em' }}>
-        <CaregiverTable userShares={caregivers} onRemoveCaregiver={handleRemoveCaregiver} />
+      <Container maxWidth="lg">
+        <Box marginTop={4}>
+          <CaregiverTable userShares={caregivers} onRemoveCaregiver={handleRemoveCaregiver} />
+        </Box>
       </Container>
 
       <AddCaregiverDialog actions={caregiverToAdd} />

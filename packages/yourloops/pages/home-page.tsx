@@ -32,6 +32,7 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 
 import Alert from '@material-ui/lab/Alert'
+import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 
@@ -139,10 +140,12 @@ function HomePage(): JSX.Element {
 
   if (errorMessage !== null) {
     return (
-      <div id="div-api-error-message" className="api-error-message">
-        <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: '1em' }}>
-          {errorMessage}
-        </Alert>
+      <Box id="div-api-error-message" className="api-error-message">
+        <Box marginBottom={1}>
+          <Alert id="alert-api-error-message" severity="error">
+            {errorMessage}
+          </Alert>
+        </Box>
         <Button
           id="button-api-error-message"
           variant="contained"
@@ -152,21 +155,19 @@ function HomePage(): JSX.Element {
         >
           {t('button-refresh-page-on-error')}
         </Button>
-      </div>
+      </Box>
     )
   }
 
   return (
     <React.Fragment>
-      <PatientsSecondaryBar
-        filter={filter}
-        onFilter={handleFilter}
-        onInvitePatient={handleInvitePatient}
-      />
-      <Grid container direction="row" justifyContent="center" alignItems="center"
-            style={{ marginTop: '1.5em', marginBottom: '1.5em' }}>
-        <Alert severity="info">{t('secondary-bar-period-text')}</Alert>
-      </Grid>
+      <Box marginTop={2} marginBottom={3}>
+        <PatientsSecondaryBar
+          filter={filter}
+          onFilter={handleFilter}
+          onInvitePatient={handleInvitePatient}
+        />
+      </Box>
       <PatientList filter={filter} filterType={filterType} />
       <AddPatientDialog actions={patientToAdd} />
       <TeamCodeDialog
