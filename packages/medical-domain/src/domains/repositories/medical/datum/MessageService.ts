@@ -6,6 +6,7 @@ import MedicalDataOptions from '../../../models/medical/MedicalDataOptions'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Message => {
   rawData.time = rawData.timestamp
+  rawData.timezone = rawData.timezone ?? 'UTC'
   const base = BaseDatumService.normalize(rawData, opts)
   const rawUser = (rawData?.user ?? {}) as Record<string, unknown>
   const message: Message = {
