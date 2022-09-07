@@ -12,6 +12,7 @@ import PumpSettingsService from './datum/PumpSettingsService'
 import ReservoirChangeService from './datum/ReservoirChangeService'
 import SmbgService from './datum/SmbgService'
 import UploadService from './datum/UploadService'
+import WarmUpService from './datum/WarmUpService'
 import WizardService from './datum/WizardService'
 import ZenModeService from './datum/ZenModeService'
 
@@ -37,6 +38,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
           return ReservoirChangeService.normalize(rawData, opts)
         case 'zen':
           return ZenModeService.normalize(rawData, opts)
+        case 'warmup':
+          return WarmUpService.normalize(rawData, opts)
         default:
           throw new Error(`Unknown deviceEvent subType ${rawData.subType as string}`)
       }
