@@ -5,12 +5,15 @@ import Fill from '../../models/medical/datum/Fill'
 import MedicalData from '../../models/medical/MedicalData'
 import Message from '../../models/medical/datum/Message'
 import ReservoirChange from '../../models/medical/datum/ReservoirChange'
+import WarmUp from '../../models/medical/datum/WarmUp'
 import Wizard from '../../models/medical/datum/Wizard'
+
 import ZenMode from '../../models/medical/datum/ZenMode'
 
 import BasicsData, { generateBasicsData } from './BasicsDataService'
 import BasalService from './datum/BasalService'
 import BolusService from './datum/BolusService'
+import DeviceParameterChangeService from './datum/DeviceParameterChangeService'
 import FillService from './datum/FillService'
 import MessageService from './datum/MessageService'
 import PhysicalActivityService from './datum/PhysicalActivityService'
@@ -41,6 +44,7 @@ class MedicalDataService {
     reservoirChanges: [],
     smbg: [],
     uploads: [],
+    warmUps: [],
     wizards: [],
     zenModes: [],
     timezoneChanges: []
@@ -80,6 +84,9 @@ class MedicalDataService {
                 break
               case 'reservoirChange':
                 this.medicalData.reservoirChanges.push(datum as ReservoirChange)
+                break
+              case 'warmup':
+                this.medicalData.warmUps.push(datum as WarmUp)
                 break
               case 'zen':
                 this.medicalData.zenModes.push(datum as ZenMode)
@@ -150,12 +157,16 @@ class MedicalDataService {
     })
   }
 
-  private getAllData(): Datum[] {
+  private group(): void {
+    this.medicalData.deviceParametersChanges = DeviceParameterChangeService.groupData(this.medicalData.deviceParametersChanges)
+  }
+
+  private getAllData(excludeKeys: string[] = []): Datum[] {
     let fullList: Datum[] = []
     const medicalDataKeys = Object.keys(this.medicalData)
     const medicalDataValues = Object.values(this.medicalData)
     medicalDataKeys.forEach((key, idx) => {
-      if (key !== 'timezoneChanges') {
+      if (!excludeKeys.includes(key)) {
         fullList = fullList.concat(medicalDataValues[idx] as Datum[])
       }
     })
@@ -191,7 +202,7 @@ class MedicalDataService {
   }
 
   private setTimeZones(): void {
-    const allData = this.getAllData()
+    const allData = this.getAllData(['timezoneChanges'])
     if (allData.length === 0) {
       this.timezoneList = []
       this.medicalData.timezoneChanges = []
@@ -267,9 +278,9 @@ class MedicalDataService {
     let fillDateTime = substractAtTimezone(this.endpoints[0], firstTimezone, 3, 'hour')
     const lastDateTime = epochAtTimezone(this.endpoints[1], lastTimezone)
 
-    const fillData = []
+    const fillData: Fill[] = []
     let timezone = firstTimezone
-    let prevFill = null
+    let prevFill: null | Fill = null
     while (fillDateTime < lastDateTime) {
       const timezoneAt = this.getTimezoneAt(fillDateTime)
       if (timezone !== timezoneAt) {
@@ -343,6 +354,7 @@ class MedicalDataService {
     this.deduplicate()
     this.join()
     this.setTimeZones()
+    this.group()
     this.setEndPoints()
     this.generateFillData()
     this.generateBasicsData()

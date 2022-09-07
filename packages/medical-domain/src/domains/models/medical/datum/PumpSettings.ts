@@ -38,6 +38,14 @@ interface PumpConfig {
   swVersion: string
 }
 
+interface ParameterConfig {
+  effectiveDate: string
+  level: number
+  name: string
+  unit: string
+  value: string
+}
+
 type PumpSettings = BaseDatum & {
   type: 'pumpSettings'
   uploadId: string
@@ -49,10 +57,11 @@ type PumpSettings = BaseDatum & {
     basalsecurityprofile: object
     cgm: CgmConfig
     device: DeviceConfig
+    parameters: ParameterConfig[]
     history: ParametersChange[]
     pump: PumpConfig
   }
 }
 
 export default PumpSettings
-export { CgmConfig, DeviceConfig, ParametersChange, PumpConfig }
+export { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig }

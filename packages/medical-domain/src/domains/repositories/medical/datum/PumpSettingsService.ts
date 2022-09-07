@@ -1,4 +1,4 @@
-import PumpSettings, { CgmConfig, DeviceConfig, ParametersChange, PumpConfig } from '../../../models/medical/datum/PumpSettings'
+import PumpSettings, { CgmConfig, DeviceConfig, ParameterConfig, ParametersChange, PumpConfig } from '../../../models/medical/datum/PumpSettings'
 import { DatumProcessor } from '../../../models/medical/Datum'
 import BaseDatumService from './basics/BaseDatumService'
 import DatumService from '../DatumService'
@@ -53,6 +53,18 @@ const normalizePump = (rawPump: Record<string, unknown>): PumpConfig => {
   }
 }
 
+const normalizeParameters = (rawParams: Array<Record<string, unknown>>): ParameterConfig[] => {
+  return rawParams.map(rawParam => {
+    return {
+      effectiveDate: (rawParam?.effectiveDate ?? '') as string,
+      level: (rawParam?.level ?? 1) as number,
+      name: (rawParam?.name ?? '') as string,
+      unit: (rawParam?.unit ?? '') as string,
+      value: (rawParam?.value ?? '') as string
+    }
+  })
+}
+
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PumpSettings => {
   const base = BaseDatumService.normalize(rawData, opts)
   const payload = (rawData?.payload ?? {}) as Record<string, unknown>
@@ -60,6 +72,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const rawDevice = (payload?.device ?? {}) as Record<string, unknown>
   const rawPump = (payload?.pump ?? {}) as Record<string, unknown>
   const rawHistory = (payload?.history ?? []) as Array<Record<string, unknown>>
+  const rawParams = (payload?.parameters ?? []) as Array<Record<string, unknown>>
 
   const pumpSettings: PumpSettings = {
     ...base,
@@ -74,7 +87,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       cgm: normalizeCgm(rawCgm),
       device: normalizeDevice(rawDevice),
       pump: normalizePump(rawPump),
-      history: normalizeHistory(rawHistory)
+      history: normalizeHistory(rawHistory),
+      parameters: normalizeParameters(rawParams)
     }
   }
   return pumpSettings
