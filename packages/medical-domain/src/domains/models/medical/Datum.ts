@@ -12,13 +12,14 @@ import ReservoirChange from './datum/ReservoirChange'
 import Smbg from './datum/Smbg'
 import TimeZoneChange from './datum/TimeZoneChange'
 import Upload from './datum/Upload'
+import WarmUp from './datum/WarmUp'
 import Wizard from './datum/Wizard'
 import ZenMode from './datum/ZenMode'
 import MedicalDataOptions from './MedicalDataOptions'
 
 type Datum = Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
 Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Upload | Wizard |
-ZenMode | TimeZoneChange
+ZenMode | TimeZoneChange | WarmUp
 
 interface DatumProcessor<T> {
   normalize: (rawData: Record<string, unknown>, opts: MedicalDataOptions) => T

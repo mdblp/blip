@@ -11,6 +11,7 @@ import ReservoirChange from './datum/ReservoirChange'
 import Smbg from './datum/Smbg'
 import TimeZoneChange from './datum/TimeZoneChange'
 import Upload from './datum/Upload'
+import WarmUp from './datum/WarmUp'
 import Wizard from './datum/Wizard'
 import ZenMode from './datum/ZenMode'
 
@@ -27,6 +28,7 @@ interface MedicalData {
   reservoirChanges: ReservoirChange[]
   smbg: Smbg[]
   uploads: Upload[]
+  warmUps: WarmUp[]
   wizards: Wizard[]
   zenModes: ZenMode[]
   timezoneChanges: TimeZoneChange[]
