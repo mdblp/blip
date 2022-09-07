@@ -48,7 +48,7 @@ function plotZenMode(pool, opts = {}) {
   function zenModeEvent(selection) {
     opts.xScale = pool.xScale().copy()
     selection.each(function() {
-      const zenEvents = pool.filterDataForRender(opts.tidelineData.zenEvents)
+      const zenEvents = pool.filterDataForRender(opts.tidelineData.medicalData.zenModes)
       if (zenEvents.length < 1) {
         d3.select(this).selectAll('g.d3-event-group').remove()
         return
