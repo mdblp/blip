@@ -130,14 +130,12 @@ const webpackConfig = {
   mode,
   stats: 'minimal', // See https://webpack.js.org/configuration/stats/
 
-  // Enable sourcemaps for debugging webpack's output.
+  // Enable sourcemaps for debugging webpack output.
   devtool: isTest || isDev ? 'inline-source-map' : 'source-map',
-  // todo: enhance this part
   devServer: {
     allowedHosts: 'auto',
     compress: false,
     port: 3001,
-    http2: false,
     historyApiFallback: {
       rewrites: [
         {
@@ -156,7 +154,6 @@ const webpackConfig = {
         }
       ]
     },
-    hot: true,
     devMiddleware: {
       publicPath: '/'
     },
@@ -196,12 +193,8 @@ const webpackConfig = {
         extractComments: isProduction,
         terserOptions: {
           // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
-          ie8: false,
-          safari10: false,
           toplevel: true,
-          sourceMap: true,
-          ecma: 2017,
-          compress: {},
+          ecma: 2020,
           output: {
             comments: false,
             beautify: false

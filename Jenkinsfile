@@ -21,6 +21,17 @@ pipeline {
                 }
             }
         }
+        stage('Verify translations') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.build'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'npm run test-locales'
+            }
+        }
         stage('Test') {
             agent {
                 dockerfile {
@@ -30,7 +41,6 @@ pipeline {
             }
             steps {
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
-                    sh 'npm run clean-coverage'
                     sh 'npm run lint'
                     sh 'npm run test-sundial'
                     sh 'npm run test-tideline'
@@ -107,17 +117,6 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-        stage('Verify translations') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile.build'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh 'npm run test-locales'
             }
         }
         stage('Publish') {
