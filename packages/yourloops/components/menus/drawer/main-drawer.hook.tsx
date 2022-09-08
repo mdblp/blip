@@ -28,9 +28,11 @@
 import { useEffect, useState } from 'react'
 import { useTeam } from '../../../lib/team'
 import { useAuth } from '../../../lib/auth'
+import { useLocation } from 'react-router-dom'
 import { useQueryParams } from '../../../lib/custom-hooks'
 import { MainDrawerProps } from './main-drawer'
 import { PatientFilterStats } from '../../../lib/team/models'
+import { PatientFilterTypes } from '../../../models/generic'
 
 interface MainDrawerHookReturn {
   fullDrawer: boolean
@@ -48,10 +50,13 @@ const useMainDrawer = ({ miniVariant }: MainDrawerProps): MainDrawerHookReturn =
   const teamHook = useTeam()
   const authHook = useAuth()
   const queryParams = useQueryParams()
+  const { pathname } = useLocation()
+
   const patientFiltersStats = teamHook.patientsFilterStats
   const numberOfFlaggedPatients = authHook.getFlagPatients().length
   const loggedUserIsHcpInMonitoring = !!(authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id)))
-  const selectedFilter: string | null = queryParams.get('filter')
+  const queryParam: string | null = queryParams.get('filter')
+  const selectedFilter: string | null = queryParam ?? (pathname === '/home' ? PatientFilterTypes.all : null)
 
   useEffect(() => setFullDrawer(!miniVariant), [miniVariant])
 

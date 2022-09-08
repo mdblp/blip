@@ -235,4 +235,16 @@ describe('Main Drawer', () => {
     fireEvent.click(link)
     expect(item).toHaveClass('Mui-selected')
   })
+
+  it('should highlight "all" filter by default when on home page', async () => {
+    await mountComponent()
+    history.push('/preferences')
+
+    const link = await screen.findByRole('link', { name: PatientFilterTypes.all.toString() })
+    const item = await within(link).findByRole('button')
+
+    expect(item).not.toHaveClass('Mui-selected')
+    history.push('/home')
+    expect(item).toHaveClass('Mui-selected')
+  })
 })
