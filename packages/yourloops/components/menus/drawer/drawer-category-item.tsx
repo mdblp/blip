@@ -34,12 +34,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
 const classes = makeStyles((theme: Theme) => ({
-  messagingTitle: {
+  title: {
     fontWeight: 700,
     lineHeight: '20px',
     textTransform: 'uppercase'
   },
-  monitoringTitleIcon: {
+  icon: {
     color: theme.palette.grey[600]
   }
 }))
@@ -50,15 +50,15 @@ interface DrawerCategoryItemProps {
 }
 
 const DrawerCategoryItem: FunctionComponent<DrawerCategoryItemProps> = (props) => {
-  const { messagingTitle, monitoringTitleIcon } = classes()
+  const { title, icon } = classes()
 
   return (
     <ListItem>
-      <ListItemIcon>
+      <ListItemIcon className={icon}>
         {props.icon}
       </ListItemIcon>
-      <ListItemText className={monitoringTitleIcon}>
-        <Box className={messagingTitle}>
+      <ListItemText>
+        <Box className={title}>
           {props.text}
         </Box>
       </ListItemText>
