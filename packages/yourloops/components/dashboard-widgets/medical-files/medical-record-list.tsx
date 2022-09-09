@@ -29,7 +29,6 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined'
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 
@@ -82,24 +81,17 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
   const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined)
   const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecord | undefined>(undefined)
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
-  const [readonly, setReadonly] = useState<boolean>(false)
 
   const closeMedicalRecordEditDialog = (): void => {
     setHoveredItem(undefined)
     setIsEditDialogOpen(false)
     setMedicalRecordToEdit(undefined)
-    setReadonly(false)
   }
 
   const closeMedicalRecordDeleteDialog = (): void => {
     setHoveredItem(undefined)
     setIsDeleteDialogOpen(false)
     setMedicalRecordToDelete(undefined)
-  }
-
-  const onEditMedicalRecord = (medicalRecord: MedicalRecord): void => {
-    setMedicalRecordToEdit(medicalRecord)
-    setIsEditDialogOpen(true)
   }
 
   const onDeleteMedicalRecord = (medicalRecord: MedicalRecord): void => {
@@ -109,7 +101,6 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
 
   const onClickMedicalRecord = (medicalRecord: MedicalRecord): void => {
     setMedicalRecordToEdit(medicalRecord)
-    setReadonly(true)
     setIsEditDialogOpen(true)
   }
 
@@ -166,18 +157,6 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
             </ListItemText>
             {user.isUserHcp() && medicalRecord.id === hoveredItem &&
               <ListItemSecondaryAction>
-                <Tooltip title={t('edit')}>
-                  <IconButton
-                    edge="end"
-                    size="small"
-                    disableRipple
-                    disableFocusRipple
-                    aria-label={t('edit')}
-                    onClick={() => onEditMedicalRecord(medicalRecord)}
-                  >
-                    <CreateOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
                 <Tooltip title={t('delete')}>
                   <IconButton
                     edge="end"
@@ -214,7 +193,6 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
         <MedicalRecordEditDialog
           {...props}
           medicalRecord={medicalRecordToEdit}
-          readonly={readonly}
           onClose={closeMedicalRecordEditDialog}
           onSaved={updateMedicalRecordList}
         />
