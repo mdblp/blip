@@ -50,6 +50,7 @@ import MedicalRecordEditDialog from '../../dialogs/medical-record-edit-dialog'
 import MedicalRecordDeleteDialog from '../../dialogs/medical-record-delete-dialog'
 import TrashCanOutlined from '../../icons/TrashCanOutlined'
 import { CategoryProps } from './medical-files-widget'
+import { commonComponentStyles } from '../../common'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -74,6 +75,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
   const classes = useStyle()
   const { teamId, patientId } = props
   const authHook = useAuth()
+  const commonStyles = commonComponentStyles()
   const user = authHook.user as User
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([])
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
@@ -180,7 +182,9 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
           <Button
             variant="contained"
             color="primary"
+            size="small"
             disableElevation
+            className={commonStyles.button}
             startIcon={<NoteAddIcon />}
             onClick={() => setIsEditDialogOpen(true)}
           >
