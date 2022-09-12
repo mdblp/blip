@@ -38,11 +38,6 @@ import i18next from 'i18next'
 
 const t = i18next.t.bind(i18next)
 
-const simpleAnnotationMessages = {
-  'animas/bolus/extended-equal-split':
-    t("* Animas pumps don't capture the details of how combo boluses are split between the normal and extended amounts.")
-}
-
 /**
  * getAnnotations
  *
@@ -52,17 +47,6 @@ const simpleAnnotationMessages = {
  */
 export function getAnnotations(datum) {
   return _.get(datum, 'annotations', [])
-}
-
-/**
- * getAnnotationCodes
- *
- * @export
- * @param {Object} datum - data object potentially containing annotations
- * @returns {Array} array of annotation codes or empty array
- */
-export function getAnnotationCodes(datum) {
-  return _.map(getAnnotations(datum), 'code')
 }
 
 /**
@@ -88,35 +72,6 @@ export function getOutOfRangeAnnotationMessage(datum) {
         _.assign({}, annotation, {
           message: {
             value: message
-          }
-        })
-      )
-    }
-  })
-  return messages
-}
-
-/**
- * getAnnotationMessages
- *
- * @export
- * @param {Object} datum - data object potentially containing annotations
- * @returns {Array} array of objects with string values and potentially labels or empty array
- */
-export function getAnnotationMessages(datum) {
-  const annotations = getAnnotations(datum)
-  let messages = []
-  messages = messages.concat(
-    getOutOfRangeAnnotationMessage(datum)
-  )
-
-  _.forEach(annotations, annotation => {
-    const code = _.get(annotation, 'code')
-    if (_.has(simpleAnnotationMessages, code)) {
-      messages.push(
-        _.assign({}, annotation, {
-          message: {
-            value: simpleAnnotationMessages[code]
           }
         })
       )
