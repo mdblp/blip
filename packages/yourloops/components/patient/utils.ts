@@ -27,9 +27,8 @@
  */
 
 import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
-import { TFunction } from 'i18next'
 
-import { PatientTableSortFields, SortFields } from '../../models/generic'
+import { PatientTableSortFields } from '../../models/generic'
 import { MedicalData } from '../../models/device-data'
 import { MedicalTableValues } from './models'
 import { Patient } from '../../lib/data/patient'
