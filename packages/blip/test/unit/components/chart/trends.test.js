@@ -46,7 +46,10 @@ describe('Trends', () => {
   }
 
   const patient = {
-    userid: '1234'
+    userid: '1234',
+    profile: {
+      fullName: 'Jone Dah'
+    }
   }
   const baseProps = {
     bgPrefs: {

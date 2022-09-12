@@ -174,11 +174,11 @@ class TidelineHeader extends React.Component {
               textColor="primary"
               indicatorColor="primary"
             >
-              <Tab data-testId="dashboard-tab" className={'subnav-tab'} data-testid="dashboard" href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
+              <Tab className={'subnav-tab'} data-testid="dashboard" href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
                 onClick={this.props.onClickDashboard}/>
               <Tab label="" className={'dashboard-divider'} disabled />
-              <Tab data-testId="daily-tab" className={'subnav-tab'} data-testid="daily" href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
-              <Tab data-testId="trends-tab" className={'subnav-tab'} data-testid="trends" href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
+              <Tab className={'subnav-tab'} data-testid="daily" href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab className={'subnav-tab'} data-testid="trends" href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
                 onClick={this.props.onClickTrends} />
             </Tabs>
           </div>
