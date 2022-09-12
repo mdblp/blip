@@ -225,7 +225,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     }
   }, [errorMessage, initialized, user])
 
-  return {
+  return useMemo(() => ({
     patients,
     patientsFilterStats,
     errorMessage,
@@ -240,5 +240,20 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     leaveTeam,
     setPatientMedicalData,
     refresh
-  }
+  }), [
+    editPatientRemoteMonitoring,
+    errorMessage,
+    filterPatients,
+    getPatient,
+    initialized,
+    invitePatient,
+    leaveTeam,
+    markPatientMessagesAsRead,
+    patients,
+    patientsFilterStats,
+    refresh,
+    removePatient,
+    setPatientMedicalData,
+    updatePatientMonitoring
+  ])
 }
