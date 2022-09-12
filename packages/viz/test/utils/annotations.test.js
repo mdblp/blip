@@ -16,7 +16,6 @@
  */
 
 /* eslint-disable max-len */
-import _ from 'lodash'
 import { expect, assert } from 'chai'
 import * as annotations from '../../src/utils/annotations'
 
@@ -76,50 +75,6 @@ describe('annotation utilities', () => {
       expect(annotations.getAnnotations(veryHigh)).to.deep.equal(veryHigh.annotations)
       expect(annotations.getAnnotations(veryLow)).to.deep.equal(veryLow.annotations)
       expect(annotations.getAnnotations(animasBolus)).to.deep.equal(animasBolus.annotations)
-    })
-  })
-
-  describe('getAnnotationCodes', () => {
-    it('should be a function', () => {
-      assert.isFunction(annotations.getAnnotationCodes)
-    })
-
-    it('should return empty aray for non-annotated datum', () => {
-      expect(annotations.getAnnotationCodes(noAnnotations)).to.deep.equal([])
-    })
-
-    it('should return annotation codes for annotated datum', () => {
-      expect(annotations.getAnnotationCodes(veryHigh)).to.deep.equal(
-        _.map(veryHigh.annotations, 'code')
-      )
-      expect(annotations.getAnnotationCodes(veryLow)).to.deep.equal(
-        _.map(veryLow.annotations, 'code')
-      )
-      expect(annotations.getAnnotationCodes(animasBolus)).to.deep.equal(
-        _.map(animasBolus.annotations, 'code')
-      )
-    })
-  })
-
-  describe('getAnnotationMessages', () => {
-    it('should be a function', () => {
-      assert.isFunction(annotations.getAnnotationMessages)
-    })
-
-    it('should return empty aray for non-annotated datum', () => {
-      expect(annotations.getAnnotationMessages(noAnnotations)).to.deep.equal([])
-    })
-
-    it('should return annotation messages for annotated datum', () => {
-      expect(annotations.getAnnotationMessages(veryHigh)[0].message.value).to.equal(
-        '* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.'
-      )
-      expect(annotations.getAnnotationMessages(veryLow)[0].message.value).to.equal(
-        '* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.'
-      )
-      expect(annotations.getAnnotationMessages(animasBolus)[0].message.value).to.equal(
-        "* Animas pumps don't capture the details of how combo boluses are split between the normal and extended amounts."
-      )
     })
   })
 

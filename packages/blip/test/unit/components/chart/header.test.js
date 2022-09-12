@@ -23,7 +23,6 @@ describe.skip('Header', function () {
       iconNext: true,
       iconMostRecent: true,
       onClickBack: sinon.stub(),
-      onClickBasics: sinon.stub(),
       onClickTrends: sinon.stub(),
       onClickMostRecent: sinon.stub(),
       onClickNext: sinon.stub(),
@@ -43,7 +42,6 @@ describe.skip('Header', function () {
       expect(console.error.callCount).to.be.eq(0)
       console.error.resetHistory()
       props.onClickBack.resetHistory()
-      props.onClickBasics.resetHistory()
       props.onClickMostRecent.resetHistory()
       props.onClickNext.resetHistory()
       props.onClickOneDay.resetHistory()
@@ -149,18 +147,6 @@ describe.skip('Header', function () {
       expect(props.onClickNext.callCount).to.equal(0)
       TestUtils.Simulate.click(nextButton)
       expect(props.onClickNext.callCount).to.equal(0)
-    })
-
-    it('should trigger onClickBasics when basics button is clicked', () => {
-      const dailyElem = React.createElement(Header, props)
-      const elem = TestUtils.renderIntoDocument(dailyElem)
-      expect(elem).to.be.ok
-
-      const basicsButton = TestUtils.findRenderedDOMComponentWithClass(elem, 'js-basics')
-
-      expect(props.onClickBasics.callCount).to.equal(0)
-      TestUtils.Simulate.click(basicsButton)
-      expect(props.onClickBasics.callCount).to.equal(1)
     })
 
     it('should trigger onClickOneDay when daily button is clicked', () => {
