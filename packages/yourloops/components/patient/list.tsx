@@ -100,8 +100,8 @@ function PatientList(props: PatientListProps): JSX.Element {
     if (!teamHook.initialized) {
       return []
     }
-    return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order)
-  }, [teamHook, flagged, filter, filterType, orderBy, order])
+    return updatePatientList(flagged, filter, filterType, orderBy, order)
+  }, [teamHook.initialized, updatePatientList, flagged, filter, filterType, orderBy, order])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))
