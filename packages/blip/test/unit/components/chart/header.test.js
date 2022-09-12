@@ -7,7 +7,7 @@ import * as sinon from 'sinon'
 
 import Header from '../../../../app/components/chart/header'
 
-describe.skip('Header', function () {
+describe('Header', function () {
   describe('render', () => {
     const props = {
       patient: {
@@ -30,7 +30,9 @@ describe.skip('Header', function () {
       onClickOneDay: sinon.stub(),
       onClickSettings: sinon.stub(),
       ProfileDialog: sinon.stub().returns(null),
-      trackMetric: sinon.stub()
+      trackMetric: sinon.stub(),
+      userIsHCP: false,
+      onSwitchPatient: sinon.stub()
     }
 
     before(() => {
@@ -49,6 +51,7 @@ describe.skip('Header', function () {
       props.onClickOneDay.resetHistory()
       props.onClickSettings.resetHistory()
       props.onClickTrends.resetHistory()
+      props.onSwitchPatient.resetHistory()
     })
 
     const renderIntoDocument = (elem) => {

@@ -25,6 +25,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Divider from '@material-ui/core/Divider'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import Face from '@material-ui/icons/Face'
 import ArrowBack from '@material-ui/icons/ArrowBack'
@@ -174,8 +175,8 @@ class TidelineHeader extends React.Component {
               indicatorColor="primary"
             >
               <Tab data-testId="dashboard-tab" className={'subnav-tab'} href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
-                onClick={this.props.onClickDashboard} />
-              <div className={'dashboard-divider'}></div>
+                onClick={this.props.onClickDashboard}/>
+              <Tab label="" className={'dashboard-divider'} disabled />
               <Tab data-testId="daily-tab" className={'subnav-tab'} href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
               <Tab data-testId="trends-tab" className={'subnav-tab'} href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
                 onClick={this.props.onClickTrends} />
