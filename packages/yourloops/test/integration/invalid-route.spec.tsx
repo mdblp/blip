@@ -36,6 +36,8 @@ import { checkDrawer } from './utils/drawer'
 import { checkFooter } from './utils/footer'
 import { mockAuth0 } from './utils/auth0'
 import { mockUserDataFetch } from './utils/auth'
+import PatientApi from '../../lib/patient/patient-api'
+import TeamApi from '../../lib/team/team-api'
 
 jest.mock('@auth0/auth0-react')
 describe('Invalid Route', () => {
@@ -60,6 +62,8 @@ describe('Invalid Route', () => {
   }
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {
+    jest.spyOn(TeamApi, 'getTeams').mockResolvedValue([])
+    jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([])
     act(() => {
       render(getInvalidRoutePage())
     })

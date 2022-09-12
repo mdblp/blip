@@ -26,14 +26,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { LoadTeams, Team, TEAM_CODE_LENGTH, TeamMember, TeamUser } from './models'
+import { Team, TEAM_CODE_LENGTH, TeamMember, TeamUser } from './models'
 import TeamApi from './team-api'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
 import bows from 'bows'
 import { UserRoles } from '../../models/user'
 import { fixYLP878Settings } from '../utils'
-import { Patient, PatientTeam } from '../data/patient'
-import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
+import { UserInvitationStatus } from '../../models/generic'
 import User from '../auth/user'
 
 const log = bows('TeamUtils')
@@ -57,51 +56,6 @@ export function getDisplayTeamCode(code: string): string {
 }
 
 export default class TeamUtils {
-  static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
-    return patients.map(patient => {
-      return { ...patient, metadata: { ...patient.metadata, flagged: flaggedPatients.includes(patient.userid) } }
-    })
-  }
-
-  static extractPatients = (patients: Patient[], filterType: PatientFilterTypes, flaggedPatients: string[]): Patient[] => {
-    const twoWeeksFromNow = new Date()
-    switch (filterType) {
-      case PatientFilterTypes.all:
-        return patients.filter((patient) => !TeamUtils.isOnlyPendingInvitation(patient))
-      case PatientFilterTypes.pending:
-        return patients.filter((patient) => TeamUtils.isInvitationPending(patient))
-      case PatientFilterTypes.flagged:
-        return patients.filter(patient => flaggedPatients.includes(patient.userid))
-      case PatientFilterTypes.unread:
-        return patients.filter(patient => patient.metadata.unreadMessagesSent > 0)
-      case PatientFilterTypes.outOfRange:
-        return patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive)
-      case PatientFilterTypes.severeHypoglycemia:
-        return patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive)
-      case PatientFilterTypes.dataNotTransferred:
-        return patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive)
-      case PatientFilterTypes.remoteMonitored:
-        return patients.filter(patient => patient.monitoring?.enabled)
-      case PatientFilterTypes.private:
-        return patients.filter(patient => TeamUtils.isInTeam(patient, filterType))
-      case PatientFilterTypes.renew:
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
-        return patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
-      default:
-        return patients
-    }
-  }
-
-  static isInTeam = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId)
-    return typeof tm === 'object'
-  }
-
-  static isInAtLeastATeam = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.accepted)
-    return !!tm
-  }
-
   static isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
     const admins = team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted)
     return admins.length === 1 && admins[0].user.userid === userId
@@ -121,16 +75,6 @@ export default class TeamUtils {
     return team.members.reduce<number>((num, member) => {
       return member.role === TeamMemberRole.patient ? num : num + 1
     }, 0)
-  }
-
-  static isInvitationPending = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending)
-    return typeof tm === 'object'
-  }
-
-  static isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending)
-    return typeof tm === 'undefined'
   }
 
   static iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map<string, TeamUser>): TeamMember {
@@ -196,20 +140,11 @@ export default class TeamUtils {
     return null
   }
 
-  static async loadTeams(user: User): Promise<LoadTeams> {
-    const getFlagPatients = (): string[] => {
-      const flagged = user.preferences?.patientsStarred
-      if (Array.isArray(flagged)) {
-        return Array.from(flagged)
-      }
-      return []
-    }
-
+  static async loadTeams(user: User): Promise<Team[]> {
     const users = new Map<string, TeamUser>()
-    const [apiTeams, apiPatients] = await Promise.all([TeamApi.getTeams(), TeamApi.getPatients()])
+    const apiTeams = await TeamApi.getTeams()
 
-    const nPatients = apiPatients.length
-    log.debug('loadTeams', { nPatients, nTeams: apiTeams.length })
+    log.debug('loadTeams', { nTeams: apiTeams.length })
 
     const privateTeam: Team = {
       code: TeamType.private,
@@ -226,29 +161,8 @@ export default class TeamUtils {
       teams.push(team)
     })
 
-    const flaggedNotInResult = getFlagPatients()
-
-    // Merge patients
-    for (let i = 0; i < nPatients; i++) {
-      const apiPatient = apiPatients[i]
-      const userId = apiPatient.userId
-
-      if (flaggedNotInResult.includes(userId)) {
-        flaggedNotInResult.splice(flaggedNotInResult.indexOf(userId), 1)
-      }
-
-      let team = teams.find((t) => t.id === apiPatient.teamId)
-      if (typeof team === 'undefined') {
-        log.error(`Missing teamId ${apiPatient.teamId} for patient member`, apiPatient)
-        // Use the private team
-        team = privateTeam
-      }
-
-      TeamUtils.iMemberToMember(apiPatient, team, users)
-    }
-
     // End, cleanup to help the garbage collector
     users.clear()
-    return { teams, flaggedNotInResult }
+    return teams
   }
 }

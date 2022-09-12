@@ -25,50 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from '../../models/device-data'
-import { Alarm } from '../../models/alarm'
-import { UserInvitationStatus } from '../../models/generic'
-import { Monitoring, MonitoringStatus } from '../../models/monitoring'
+import React, { useState } from 'react'
 
-interface PatientTeam {
-  status: UserInvitationStatus
-  teamId: string
-  monitoringStatus?: MonitoringStatus
-}
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-interface PatientProfile {
-  birthdate?: Date
-  firstName?: string
-  fullName: string
-  lastName?: string
-  email: string
-  sex: string
-  referringDoctor?: string
-}
+import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
 
-interface PatientSettings {
-  a1c?: {
-    date: string
-    value: string
+import MainHeader from '../components/header-bars/main-header'
+import MainDrawer from '../components/menus/main-drawer'
+import { useAuth } from '../lib/auth'
+
+const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
+  toolbar: { ...theme.mixins.toolbar },
+  container: {
+    padding: '0px'
   }
-  system?: string
+}))
+
+function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
+  const classes = dashboardLayoutStyle()
+  const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true)
+  const authHook = useAuth()
+  const isUserPatient = authHook.user?.isUserPatient()
+
+  const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant)
+
+  return (
+    <Box display="flex">
+      <MainHeader withShrinkIcon={!isUserPatient} onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
+      {!isUserPatient &&
+        <MainDrawer miniVariant={drawerMiniVariant} />
+      }
+      <Container maxWidth={false} className={classes.container}>
+        <div className={classes.toolbar} />
+        {children}
+      </Container>
+    </Box>
+  )
 }
 
-interface PatientMetadata {
-  alarm: Alarm
-  flagged?: boolean
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null
-  unreadMessagesSent: number
-}
-
-interface Patient {
-  profile: PatientProfile
-  settings: PatientSettings
-  metadata: PatientMetadata
-  monitoring?: Monitoring
-  teams: PatientTeam[]
-  readonly userid: string
-}
-
-export { Patient, PatientTeam }
+export default DashboardLayout

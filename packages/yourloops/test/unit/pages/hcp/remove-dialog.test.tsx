@@ -33,14 +33,22 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import RemoveDialog from '../../../../components/patient/remove-dialog'
 import { waitTimeout } from '../../../../lib/utils'
 import { Patient, PatientTeam } from '../../../../lib/data/patient'
-import { createPatient, createPatientTeam } from '../../common/utils'
+import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
 import { UserInvitationStatus } from '../../../../models/generic'
 import * as teamHookMock from '../../../../lib/team'
+import * as patientHookMock from '../../../../lib/patient/provider'
+import { MonitoringStatus } from '../../../../models/monitoring'
 
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/patient/provider')
 describe('RemoveDialog', () => {
   let container: HTMLElement | null = null
   let patient: Patient | undefined
+  const patientTeams: PatientTeam[] = [
+    createPatientTeam('fakePatientTeam1Id', UserInvitationStatus.accepted, MonitoringStatus.accepted),
+    createPatientTeam('fakePatientTeam2Id', UserInvitationStatus.accepted, MonitoringStatus.accepted)
+  ]
+  const teams = [buildTeam('fakePatientTeam1Id'), buildTeam('fakePatientTeam2Id')]
   const onCloseStub = jest.fn()
 
   function mountComponent(props: { dialogOpened: boolean }): void {
@@ -70,6 +78,9 @@ describe('RemoveDialog', () => {
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { teams, getTeam: jest.fn().mockReturnValue(teams[0]) }
+    });
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return { removePatient: jest.fn() }
     })
   })
@@ -93,10 +104,6 @@ describe('RemoveDialog', () => {
   })
 
   it('should be able to remove patient after selecting a team', async () => {
-    const patientTeams: PatientTeam[] = [
-      createPatientTeam('fakePatientTeam1Id', UserInvitationStatus.accepted, 'team1'),
-      createPatientTeam('fakePatientTeam2Id', UserInvitationStatus.accepted, 'team2')
-    ]
     patient = createPatient('fakePatientId', patientTeams)
     mountComponent({ dialogOpened: true })
     const validateButton: HTMLButtonElement = document.querySelector('#remove-patient-dialog-validate-button')
