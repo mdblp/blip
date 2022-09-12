@@ -34,22 +34,30 @@ import { MainLobby } from '../../app/main-lobby'
 import { checkHeader } from './utils/header'
 import { checkDrawer } from './utils/drawer'
 import { checkFooter } from './utils/footer'
-import { mockAuth0Hook } from './utils/mockAuth0Hook'
 import { mockUserDataFetch } from './utils/auth'
+import { mockAuth0Hook } from './utils/mockAuth0Hook'
+import { mockTeamAPI } from './utils/mockTeamAPI'
+import { mockDataAPI } from './utils/mockDataAPI'
+import { mockNotificationAPI } from './utils/mockNotificationAPI'
 
 jest.mock('@auth0/auth0-react')
-describe('Invalid Route', () => {
-  const unknownRoute = '/unknown-route'
-  const firstName = 'firstName'
-  const lastName = 'lastName'
-  const history = createMemoryHistory({ initialEntries: [unknownRoute] })
+jest.setTimeout(10000)
+
+describe('Patient dashboard for HCP', () => {
+  const patientDashboardRoute = '/patient/1db524f3b65f2/dashboard'
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
+  const history = createMemoryHistory({ initialEntries: [patientDashboardRoute] })
 
   beforeAll(() => {
     mockAuth0Hook()
+    mockNotificationAPI()
+    mockTeamAPI()
+    mockDataAPI()
     mockUserDataFetch(firstName, lastName)
   })
 
-  function getInvalidRoutePage() {
+  function getPatientDashboardForHCP() {
     return (
       <Router history={history}>
         <AuthContextProvider>
@@ -59,20 +67,30 @@ describe('Invalid Route', () => {
     )
   }
 
-  it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {
+  it('should render correct components when navigating to patient dashboard as an HCP', async () => {
     act(() => {
-      render(getInvalidRoutePage())
+      render(getPatientDashboardForHCP())
     })
 
-    await waitFor(() => expect(history.location.pathname).toBe('/not-found'))
-
-    expect(screen.getByText('page-not-found')).toBeVisible()
-    const homeLink = screen.getByText('breadcrumb-home')
-    expect(homeLink).toBeVisible()
-    expect(homeLink).toHaveAttribute('href', '/')
-
+    await waitFor(() => expect(history.location.pathname).toBe('/patient/1db524f3b65f2/dashboard'))
+    await waitFor(() => {
+      const dashboardLink = screen.getByText('dashboard')
+      const dailyLink = screen.getByText('Daily')
+      const trendsLink = screen.getByText('Trends')
+      expect(dashboardLink).toBeVisible()
+      expect(dailyLink).toBeVisible()
+      expect(trendsLink).toBeVisible()
+      expect(dashboardLink.parentElement).toHaveAttribute('href', '/patient/1db524f3b65f2/dashboard')
+      expect(dailyLink.parentElement).toHaveAttribute('href', '/patient/1db524f3b65f2/daily')
+      expect(trendsLink.parentElement).toHaveAttribute('href', '/patient/1db524f3b65f2/trends')
+    }, { timeout: 5000 })
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
+
+    /* TODO check widgets based on monitoring or not */
   })
+
+  /* TODO test case to switch patient */
+  /* TODO test case to click on nav bar and see if page is changing (daily/trends) */
 })
