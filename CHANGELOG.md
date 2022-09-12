@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.1-BETA19 - 2022-08-25
+## 3.0.1-BETA20 - 2022-09-12
 ### Engineering use
 - YLP-1317 Renaming Shoreline model to a generic name
 - YLP-1626 Refactor team hook to only keep functions impacting the state
