@@ -47,7 +47,7 @@ import { PatientElementProps } from './models'
 import { getMedicalValues } from './utils'
 import { patientListCommonStyle } from './table'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
-import TeamUtils from '../../lib/team/utils'
+import PatientUtils from '../../lib/patient/utils'
 
 interface ComputedRow {
   patientSystem: string
@@ -187,8 +187,8 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   // wdio used in the system tests do not accept "@"" in selectors
   // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
   const rowId = `patients-list-row-${userId.replace(/@/g, '_')}`
-  const hasPendingInvitation = TeamUtils.isInvitationPending(patient)
-  const isAlreadyInATeam = TeamUtils.isInAtLeastATeam(patient)
+  const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
+  const isAlreadyInATeam = PatientUtils.isInAtLeastATeam(patient)
 
   const isEllipsisActive = (element: HTMLElement | null): boolean | undefined => {
     return element ? element.offsetWidth < element.scrollWidth : undefined
@@ -216,7 +216,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         {filter === FilterType.pending && hasPendingInvitation
           ? (<Tooltip
             id={`${rowId}-tooltip-pending`}
-            title={t('pending-invitation') }
+            title={t('pending-invitation')}
             aria-label={t('pending-invitation')}
             placement="bottom"
           >
@@ -226,10 +226,10 @@ function PatientRow(props: PatientElementProps): JSX.Element {
           </Tooltip>)
           : (<IconActionButton
             icon={isFlagged ? <FlagIcon
-              titleAccess="flag-icon-active"
-              aria-label="flag-icon-active"
-              id={`${rowId}-flagged`}
-            />
+                titleAccess="flag-icon-active"
+                aria-label="flag-icon-active"
+                id={`${rowId}-flagged`}
+              />
               : <FlagOutlineIcon
                 titleAccess="flag-icon-inactive"
                 aria-label="flag-icon-inactive"
