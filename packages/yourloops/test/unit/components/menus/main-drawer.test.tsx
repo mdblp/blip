@@ -37,6 +37,7 @@ import MainDrawer, {
   mainDrawerMiniVariantWidth
 } from '../../../../components/menus/main-drawer'
 import { buildTeam, buildTeamMember, triggerMouseEvent } from '../../common/utils'
+import * as patientHookMock from '../../../../lib/patient/provider'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { PatientFilterStats } from '../../../../lib/team/models'
@@ -44,6 +45,7 @@ import User from '../../../../lib/auth/user'
 import { PatientFilterTypes } from '../../../../models/generic'
 
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../lib/auth')
 describe('Main Drawer', () => {
   let container: HTMLElement | null = null
@@ -85,7 +87,10 @@ describe('Main Drawer', () => {
     container = document.createElement('div')
     document.body.appendChild(container);
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { patientsFilterStats, getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock }
+      return { getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock }
+    });
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
+      return { patientsFilterStats }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserHcp: () => true, id: userId } as User, getFlagPatients: getFlagPatientsMock }

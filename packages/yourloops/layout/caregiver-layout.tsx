@@ -25,50 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from '../../models/device-data'
-import { Alarm } from '../../models/alarm'
-import { UserInvitationStatus } from '../../models/generic'
-import { Monitoring, MonitoringStatus } from '../../models/monitoring'
+import React from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import PatientDataPage from '../components/patient-data'
+import { PatientProvider } from '../lib/patient/provider'
+import DashboardLayout from './dashboard-layout'
+import HomePage from '../pages/home-page'
+import InvalidRoute from '../components/invalid-route'
+import ProfilePage from '../pages/profile'
+import NotificationsPage from '../pages/notifications'
 
-interface PatientTeam {
-  status: UserInvitationStatus
-  teamId: string
-  monitoringStatus?: MonitoringStatus
+export function CaregiverLayout(): JSX.Element {
+  return (
+    <PatientProvider>
+      <DashboardLayout>
+        <Switch>
+          <Route exact path="/not-found" component={InvalidRoute} />
+          <Route exact path="/preferences" component={ProfilePage} />
+          <Route exact path="/notifications" component={NotificationsPage} />
+          <Route path="/patient/:patientId" component={PatientDataPage} />
+          <Route exact path="/home" component={HomePage} />
+          <Redirect exact from="/" to="/home" />
+          <Redirect to="/not-found" />
+        </Switch>
+      </DashboardLayout>
+    </PatientProvider>
+  )
 }
-
-interface PatientProfile {
-  birthdate?: Date
-  firstName?: string
-  fullName: string
-  lastName?: string
-  email: string
-  sex: string
-  referringDoctor?: string
-}
-
-interface PatientSettings {
-  a1c?: {
-    date: string
-    value: string
-  }
-  system?: string
-}
-
-interface PatientMetadata {
-  alarm: Alarm
-  flagged?: boolean
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null
-  unreadMessagesSent: number
-}
-
-interface Patient {
-  profile: PatientProfile
-  settings: PatientSettings
-  metadata: PatientMetadata
-  monitoring?: Monitoring
-  teams: PatientTeam[]
-  readonly userid: string
-}
-
-export { Patient, PatientTeam }

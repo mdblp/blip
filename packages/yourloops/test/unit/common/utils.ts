@@ -29,10 +29,10 @@
 import { UserInvitationStatus } from '../../../models/generic'
 import { Patient, PatientTeam } from '../../../lib/data/patient'
 import { Alarm } from '../../../models/alarm'
-import { Team, TeamMember, TeamUser } from '../../../lib/team'
-import { Profile, UserRoles } from '../../../models/user'
+import { Team, TeamMember } from '../../../lib/team'
+import { UserRoles } from '../../../models/user'
 import { TeamMemberRole, TeamType } from '../../../models/team'
-import { Monitoring } from '../../../models/monitoring'
+import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
 import { UNITS_TYPE } from '../../../lib/units/utils'
 import { INotification, NotificationType } from '../../../lib/notifications/models'
 
@@ -58,6 +58,18 @@ export const createPatient = (
   flagged: boolean | undefined = undefined
 ): Patient => {
   return {
+    profile: {
+      birthdate: new Date(),
+      firstName: 'fakeFirstname',
+      fullName,
+      lastName: 'fakeLastname',
+      email: 'fake@email.com',
+      sex: 'M'
+    },
+    settings: {
+      a1c: { date: new Date().toJSON(), value: 'fakeA1cValue' },
+      system
+    },
     metadata: {
       alarm,
       flagged,
@@ -65,28 +77,20 @@ export const createPatient = (
       unreadMessagesSent: 0
     },
     monitoring,
-    profile: {
-      birthdate: new Date(),
-      firstName: 'fakeFirstname',
-      fullName,
-      lastName: 'fakeLastname',
-      email: 'fakeUsername',
-      sex: 'M'
-    },
-    settings: {
-      a1c: { date: new Date().toJSON(), value: 'fakeA1cValue' },
-      system
-    },
     teams,
     userid: id
   }
 }
 
-export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = 'fakeTeamName'): PatientTeam => {
+export const createPatientTeam = (
+  id: string,
+  status: UserInvitationStatus,
+  monitoringStatus: MonitoringStatus | undefined = undefined
+): PatientTeam => {
   return {
     teamId: id,
     status,
-    teamName
+    monitoringStatus
   } as PatientTeam
 }
 export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
@@ -94,37 +98,6 @@ export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSeve
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate
   } as Alarm
-}
-
-export const createTeamUser = (
-  id: string,
-  members: TeamMember[],
-  profile: Profile | undefined = undefined,
-  alarms: Alarm = {
-    timeSpentAwayFromTargetRate: 10,
-    timeSpentAwayFromTargetActive: true,
-    frequencyOfSevereHypoglycemiaRate: 10,
-    frequencyOfSevereHypoglycemiaActive: true,
-    nonDataTransmissionRate: 10,
-    nonDataTransmissionActive: true
-  },
-  username: string = 'fakeUsername'
-): TeamUser => {
-  return {
-    userid: id,
-    members,
-    profile,
-    alarms,
-    username,
-    monitoring: { enabled: false }
-  } as TeamUser
-}
-
-export const createTeamMember = (id: string, name: string, teamCode: string, status: UserInvitationStatus): TeamMember => {
-  return {
-    team: { id, name, code: teamCode } as Team,
-    status
-  } as TeamMember
 }
 
 export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name'): Team {
