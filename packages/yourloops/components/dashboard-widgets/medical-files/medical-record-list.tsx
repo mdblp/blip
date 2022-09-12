@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
@@ -34,6 +34,7 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd'
 
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -51,6 +52,7 @@ import MedicalRecordDeleteDialog from '../../dialogs/medical-record-delete-dialo
 import TrashCanOutlined from '../../icons/TrashCanOutlined'
 import { CategoryProps } from './medical-files-widget'
 import { commonComponentStyles } from '../../common'
+import { useAlert } from '../../utils/snackbar'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -70,14 +72,15 @@ const useStyle = makeStyles((theme: Theme) => ({
   }
 }))
 
-export default function MedicalRecordList(props: CategoryProps): JSX.Element {
+const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const classes = useStyle()
   const { teamId, patientId } = props
   const authHook = useAuth()
+  const alert = useAlert()
   const commonStyles = commonComponentStyles()
   const user = authHook.user as User
-  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([])
+  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
   const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined)
@@ -130,52 +133,60 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      setMedicalRecords(await MedicalFilesApi.getMedicalRecords(patientId, teamId))
+      try {
+        setMedicalRecords(await MedicalFilesApi.getMedicalRecords(patientId, teamId))
+      } catch (err) {
+        setMedicalRecords([])
+        alert.error(t('medical-records-get-failed'))
+      }
     })()
-  }, [patientId, teamId])
+  }, [alert, patientId, t, teamId])
 
   return (
     <React.Fragment>
       <Typography className={classes.categoryTitle}>
         {t('medical-records')}
       </Typography>
-      <List className={classes.list}>
-        {medicalRecords.map((medicalRecord, index) => (
-          <ListItem
-            dense
-            divider
-            key={index}
-            aria-label={`record-${medicalRecord.id}`}
-            className={`${classes.hoveredItem} ${medicalRecord.id === hoveredItem ? 'selected' : ''}`}
-            onClick={() => onClickMedicalRecord(medicalRecord)}
-            onMouseOver={() => setHoveredItem(medicalRecord.id)}
-            onMouseOut={() => setHoveredItem(undefined)}
-          >
-            <ListItemIcon>
-              <DescriptionOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText>
-              {t('medical-record-pdf')}{buildFileName(medicalRecord.creationDate, index)}
-            </ListItemText>
-            {user.isUserHcp() && medicalRecord.id === hoveredItem &&
-              <ListItemSecondaryAction>
-                <Tooltip title={t('delete')}>
-                  <IconButton
-                    edge="end"
-                    size="small"
-                    disableRipple
-                    disableFocusRipple
-                    aria-label={t('delete')}
-                    onClick={() => onDeleteMedicalRecord(medicalRecord)}
-                  >
-                    <TrashCanOutlined />
-                  </IconButton>
-                </Tooltip>
-              </ListItemSecondaryAction>
-            }
-          </ListItem>
-        ))}
-      </List>
+      {medicalRecords
+        ? <List className={classes.list}>
+          {medicalRecords.map((medicalRecord, index) => (
+            <ListItem
+              dense
+              divider
+              key={index}
+              aria-label={`record-${medicalRecord.id}`}
+              className={`${classes.hoveredItem} ${medicalRecord.id === hoveredItem ? 'selected' : ''}`}
+              onClick={() => onClickMedicalRecord(medicalRecord)}
+              onMouseOver={() => setHoveredItem(medicalRecord.id)}
+              onMouseOut={() => setHoveredItem(undefined)}
+            >
+              <ListItemIcon>
+                <DescriptionOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText>
+                {t('medical-record-pdf')}{buildFileName(medicalRecord.creationDate, index)}
+              </ListItemText>
+              {user.isUserHcp() && medicalRecord.id === hoveredItem &&
+                <ListItemSecondaryAction>
+                  <Tooltip title={t('delete')}>
+                    <IconButton
+                      edge="end"
+                      size="small"
+                      disableRipple
+                      disableFocusRipple
+                      aria-label={t('delete')}
+                      onClick={() => onDeleteMedicalRecord(medicalRecord)}
+                    >
+                      <TrashCanOutlined />
+                    </IconButton>
+                  </Tooltip>
+                </ListItemSecondaryAction>
+              }
+            </ListItem>
+          ))}
+        </List>
+        : <CircularProgress size={20} className="centered-spinning-loader" />
+      }
 
       {user.isUserHcp() &&
         <Box display="flex" justifyContent="end" marginTop={2}>
@@ -212,3 +223,5 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
     </React.Fragment>
   )
 }
+
+export default MedicalRecordList
