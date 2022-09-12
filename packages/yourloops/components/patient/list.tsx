@@ -28,18 +28,16 @@
 
 import _ from 'lodash'
 import React, { useCallback } from 'react'
-import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import Alert from '@material-ui/lab/Alert'
-import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 
 import { PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
 import metrics from '../../lib/metrics'
 import { useAuth } from '../../lib/auth'
-import { errorTextFromException, setPageTitle } from '../../lib/utils'
+import { setPageTitle } from '../../lib/utils'
+import { useTeam } from '../../lib/team'
 import PatientsTable from './table'
 import { Patient } from '../../lib/data/patient'
 import { PatientListProps } from './models'
@@ -47,9 +45,6 @@ import { comparePatients } from './utils'
 import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
-const log = bows('PatientListPage')
-
-// eslint-disable-next-line no-magic-numbers
 const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true })
 
 function PatientList(props: PatientListProps): JSX.Element {
@@ -57,8 +52,8 @@ function PatientList(props: PatientListProps): JSX.Element {
   const historyHook = useHistory()
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
+  const teamHook = useTeam()
   const patientHook = usePatientContext()
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
   const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName)
   const flagged = authHook.getFlagPatients()
@@ -85,18 +80,6 @@ function PatientList(props: PatientListProps): JSX.Element {
       return filteredPatients
     }, [patientHook])
 
-  const handleRefresh = async (force = false): Promise<void> => {
-    log.debug('handleRefresh:', { force })
-    setErrorMessage(null)
-    try {
-      await patientHook.refresh()
-    } catch (reason: unknown) {
-      log.error('handleRefresh', reason)
-      const errorMessage = t('error-failed-display-patients', { errorMessage: errorTextFromException(reason) })
-      setErrorMessage(errorMessage)
-    }
-  }
-
   const handleSelectPatient = (patient: Patient): void => {
     metrics.send('patient_selection', 'select_patient', flagged.includes(patient.userid) ? 'flagged' : 'not_flagged')
     historyHook.push(`/patient/${patient.userid}`)
@@ -114,34 +97,16 @@ function PatientList(props: PatientListProps): JSX.Element {
   }
 
   const patients = React.useMemo(() => {
-    if (errorMessage !== null) {
+    if (!teamHook.initialized) {
       return []
     }
     return updatePatientList(flagged, filter, filterType, orderBy, order)
-  }, [errorMessage, updatePatientList, flagged, filter, filterType, orderBy, order])
+  }, [teamHook.initialized, updatePatientList, flagged, filter, filterType, orderBy, order])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))
   }, [t])
 
-  if (errorMessage !== null) {
-    return (
-      <div id="div-api-error-message" className="api-error-message">
-        <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: '1em' }}>
-          {errorMessage}
-        </Alert>
-        <Button
-          id="button-api-error-message"
-          variant="contained"
-          color="secondary"
-          disableElevation
-          onClick={async () => await handleRefresh(true)}
-        >
-          {t('button-refresh-page-on-error')}
-        </Button>
-      </div>
-    )
-  }
   return (
     <Container id="patient-list-container" maxWidth={false}>
       <PatientsTable
