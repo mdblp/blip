@@ -80,31 +80,6 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
   }
 }
 
-export const translateSortField = (t: TFunction, field: SortFields): string => {
-  let trOrderBy: string
-  switch (field) {
-    case SortFields.firstname:
-      trOrderBy = t('firstname')
-      break
-    case SortFields.lastname:
-      trOrderBy = t('lastname')
-      break
-    case SortFields.tir:
-      trOrderBy = t('list-patient-tir')
-      break
-    case SortFields.tbr:
-      trOrderBy = t('list-patient-tbr')
-      break
-    case SortFields.upload:
-      trOrderBy = t('list-patient-upload')
-      break
-    case SortFields.email:
-      trOrderBy = t('email')
-      break
-  }
-  return trOrderBy
-}
-
 export const compareNumbers = (a: number, b: number): number => {
   return a - b
 }

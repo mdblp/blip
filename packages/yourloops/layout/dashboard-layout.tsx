@@ -32,9 +32,9 @@ import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 
-import MainHeader from '../header-bars/main-header'
-import MainDrawer from '../menus/main-drawer'
-import { useAuth } from '../../lib/auth'
+import MainHeader from '../components/header-bars/main-header'
+import MainDrawer from '../components/menus/main-drawer'
+import { useAuth } from '../lib/auth'
 
 const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
   toolbar: { ...theme.mixins.toolbar },

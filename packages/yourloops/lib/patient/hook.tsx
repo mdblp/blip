@@ -213,18 +213,19 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     if (!initialized && user) {
       PatientUtils.computePatients().then(computedPatients => {
         setPatients(computedPatients)
-        setInitialized(true)
         setErrorMessage(null)
       }).catch((reason: unknown) => {
         const message = errorTextFromException(reason)
         if (message !== errorMessage) {
           setErrorMessage(message)
         }
+      }).finally(() => {
+        setInitialized(true)
       })
     }
   }, [errorMessage, initialized, user])
 
-  return useMemo(() => ({
+  return {
     patients,
     patientsFilterStats,
     errorMessage,
@@ -239,20 +240,5 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     leaveTeam,
     setPatientMedicalData,
     refresh
-  }), [
-    patients,
-    patientsFilterStats,
-    errorMessage,
-    initialized,
-    getPatient,
-    filterPatients,
-    invitePatient,
-    editPatientRemoteMonitoring,
-    markPatientMessagesAsRead,
-    updatePatientMonitoring,
-    removePatient,
-    leaveTeam,
-    setPatientMedicalData,
-    refresh
-  ])
+  }
 }

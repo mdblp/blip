@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 
 import { Patient, PatientTeam } from '../data/patient'
 import { Team } from '../team'
@@ -52,28 +52,9 @@ export interface PatientContextResult {
   refresh: () => void
 }
 
-const PatientContext = React.createContext<PatientContextResult>({
-  patients: [],
-  patientsFilterStats: {} as PatientFilterStats,
-  errorMessage: null,
-  initialized: false,
-  getPatient: () => ({} as Patient),
-  filterPatients: () => [],
-  invitePatient: async () => await Promise.resolve(),
-  editPatientRemoteMonitoring: () => {
-  },
-  markPatientMessagesAsRead: () => {
-  },
-  updatePatientMonitoring: async () => await Promise.resolve(),
-  removePatient: async () => await Promise.resolve(),
-  leaveTeam: async () => await Promise.resolve(),
-  setPatientMedicalData: () => {
-  },
-  refresh: () => {
-  }
-})
+const PatientContext = React.createContext<PatientContextResult>({} as PatientContextResult)
 
-export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
+export const PatientProvider: FunctionComponent = ({ children }) => {
   const patientProviderCustomHook = usePatientProviderCustomHook()
 
   return patientProviderCustomHook.initialized ? (

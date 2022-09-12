@@ -81,8 +81,14 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   }
 
   return (
-    <Dialog id="patient-alarm-dialog-id" fullWidth={true} maxWidth="lg" open={true} onClose={onClose}
-            data-testid="patient-alarm-dialog">
+    <Dialog
+      id="patient-alarm-dialog-id"
+      fullWidth={true}
+      maxWidth="lg"
+      open={true}
+      onClose={onClose}
+      data-testid="patient-alarm-dialog"
+    >
       <div className={commonClasses.root}>
         <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
           <div className={commonClasses.categoryHeader}>

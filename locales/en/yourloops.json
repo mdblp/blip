@@ -134,7 +134,7 @@
   "edit": "Edit",
   "edit-information": "Edit information",
   "email": "Email",
-  "error-failed-display-teams": "Impossible to display teams: {{errorMessage}}",
+  "error-failed-display-patients": "Impossible to display patients: {{errorMessage}}",
   "error-http-40x": "An error occurred. Please contact support for assistance",
   "error-http-500": "Something went wrong. Please try again in a few moments. If problem persists, contact support for assistance",
   "error-joining-team": "Failed to join the team with the given code.",

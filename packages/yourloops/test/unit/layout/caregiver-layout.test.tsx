@@ -53,7 +53,7 @@ const allTestIds = [
 jest.mock('../../../lib/auth')
 jest.mock('../../../lib/notifications/hook')
 jest.mock('../../../lib/patient/provider')
-jest.mock('../../../components/layouts/dashboard-layout', () => (props: { children: JSX.Element }) => {
+jest.mock('../../../layout/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })
 jest.mock('../../../pages/profile', () => () => {

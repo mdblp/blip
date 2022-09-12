@@ -29,8 +29,8 @@
 import { UserInvitationStatus } from '../../../models/generic'
 import { Patient, PatientTeam } from '../../../lib/data/patient'
 import { Alarm } from '../../../models/alarm'
-import { Team, TeamMember, TeamUser } from '../../../lib/team'
-import { Profile, UserRoles } from '../../../models/user'
+import { Team, TeamMember } from '../../../lib/team'
+import { UserRoles } from '../../../models/user'
 import { TeamMemberRole, TeamType } from '../../../models/team'
 import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
 import { UNITS_TYPE } from '../../../lib/units/utils'
@@ -98,37 +98,6 @@ export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSeve
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate
   } as Alarm
-}
-
-export const createTeamUser = (
-  id: string,
-  members: TeamMember[],
-  profile: Profile | undefined = undefined,
-  alarms: Alarm = {
-    timeSpentAwayFromTargetRate: 10,
-    timeSpentAwayFromTargetActive: true,
-    frequencyOfSevereHypoglycemiaRate: 10,
-    frequencyOfSevereHypoglycemiaActive: true,
-    nonDataTransmissionRate: 10,
-    nonDataTransmissionActive: true
-  },
-  username: string = 'fakeUsername'
-): TeamUser => {
-  return {
-    userid: id,
-    members,
-    profile,
-    alarms,
-    username,
-    monitoring: { enabled: false }
-  } as TeamUser
-}
-
-export const createTeamMember = (id: string, name: string, teamCode: string, status: UserInvitationStatus): TeamMember => {
-  return {
-    team: { id, name, code: teamCode } as Team,
-    status
-  } as TeamMember
 }
 
 export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name'): Team {

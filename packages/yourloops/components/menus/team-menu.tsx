@@ -44,7 +44,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography'
 
 import { Team, useTeam } from '../../lib/team'
-import MenuLayout from '../layouts/menu-layout'
+import MenuLayout from '../../layout/menu-layout'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
 import { TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'

@@ -81,11 +81,11 @@ function NotificationContextImpl(): NotificationContext {
   }
 
   const getInvitation = (teamId: string): INotification => {
-    const inviation = sentInvitations.find(invitation => invitation.target.id === teamId)
-    if (!inviation) {
+    const invitation = sentInvitations.find(invitation => invitation.target.id === teamId)
+    if (!invitation) {
       throw Error(`Could not find invitation for team ${teamId}`)
     }
-    return inviation
+    return invitation
   }
 
   const initHook = (): void => {

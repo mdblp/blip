@@ -36,14 +36,17 @@ import { Patient, PatientTeam } from '../../../../lib/data/patient'
 import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
 import { UserInvitationStatus } from '../../../../models/generic'
 import * as teamHookMock from '../../../../lib/team'
+import * as patientHookMock from '../../../../lib/patient/provider'
+import { MonitoringStatus } from '../../../../models/monitoring'
 
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/patient/provider')
 describe('RemoveDialog', () => {
   let container: HTMLElement | null = null
   let patient: Patient | undefined
   const patientTeams: PatientTeam[] = [
-    createPatientTeam('fakePatientTeam1Id', UserInvitationStatus.accepted, 'team1'),
-    createPatientTeam('fakePatientTeam2Id', UserInvitationStatus.accepted, 'team2')
+    createPatientTeam('fakePatientTeam1Id', UserInvitationStatus.accepted, MonitoringStatus.accepted),
+    createPatientTeam('fakePatientTeam2Id', UserInvitationStatus.accepted, MonitoringStatus.accepted)
   ]
   const teams = [buildTeam('fakePatientTeam1Id'), buildTeam('fakePatientTeam2Id')]
   const onCloseStub = jest.fn()
@@ -75,7 +78,10 @@ describe('RemoveDialog', () => {
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { teams, removePatient: jest.fn(), getTeam: jest.fn().mockReturnValue(teams[0]) }
+      return { teams, getTeam: jest.fn().mockReturnValue(teams[0]) }
+    });
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
+      return { removePatient: jest.fn() }
     })
   })
 

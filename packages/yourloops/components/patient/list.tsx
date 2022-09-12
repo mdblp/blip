@@ -92,7 +92,7 @@ function PatientList(props: PatientListProps): JSX.Element {
       await patientHook.refresh()
     } catch (reason: unknown) {
       log.error('handleRefresh', reason)
-      const errorMessage = t('error-failed-display-teams', { errorMessage: errorTextFromException(reason) })
+      const errorMessage = t('error-failed-display-patients', { errorMessage: errorTextFromException(reason) })
       setErrorMessage(errorMessage)
     }
   }

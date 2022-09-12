@@ -89,17 +89,17 @@ export default class PatientUtils {
 
   static isInvitationPending = (patient: Patient): boolean => {
     const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending)
-    return typeof tm === 'object'
+    return !!tm
   }
 
   static isOnlyPendingInvitation = (patient: Patient): boolean => {
     const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending)
-    return typeof tm === 'undefined'
+    return !tm
   }
 
   static isInTeam = (patient: Patient, teamId: string): boolean => {
     const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId)
-    return typeof tm === 'object'
+    return !!tm
   }
 
   static extractPatients = (patients: Patient[], filterType: PatientFilterTypes, flaggedPatients: string[]): Patient[] => {
