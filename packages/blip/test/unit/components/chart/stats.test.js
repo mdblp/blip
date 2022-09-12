@@ -74,7 +74,7 @@ describe('Stats', () => {
       },
       bgLog: {}
     },
-    chartType: 'basics',
+    chartType: 'daily',
     dataUtil: new DataUtilStub(),
     endpoints: [
       '2018-01-15T00:00:00.000Z',
@@ -123,72 +123,6 @@ describe('Stats', () => {
 
     after(() => {
       console.error.restore()
-    })
-
-    context('basics', () => {
-      beforeEach(() => {
-        wrapper = shallow(<Stats {...baseProps} />)
-      })
-
-      it('should render without errors when provided all required props', () => {
-        expect(wrapper.find('.Stats')).to.have.length(1)
-        expect(console.error.callCount).to.equal(0)
-      })
-
-      it('should show all expected stats when bgSource prop is `cbg`', () => {
-        wrapper.setProps({
-          ...wrapper.props(),
-          bgSource: 'cbg'
-        })
-
-        const expectedStats = [
-          'timeInRange',
-          'averageGlucose',
-          'sensorUsage',
-          'totalInsulin',
-          'carbs',
-          'averageDailyDose',
-          'glucoseManagementIndicator'
-        ]
-
-        _.forEach(expectedStats, statId => {
-          expect(wrapper.find(`#Stat--${statId}`), statId).to.have.length(1)
-        })
-        expect(wrapper.find('.Stats').children()).to.have.length(7)
-      })
-
-      it('should show all expected stats when bgSource prop is `smbg`', () => {
-        const smbgProps = {...baseProps, bgSource: 'smbg' }
-        wrapper = shallow(<Stats {...smbgProps} />)
-
-        const expectedStats = [
-          'readingsInRange',
-          'averageDailyDose',
-          'totalInsulin',
-          'carbs',
-          'averageGlucose'
-        ]
-
-        _.forEach(expectedStats, statId => {
-          expect(wrapper.find(`#Stat--${statId}`), statId).to.have.length(1)
-        })
-        expect(wrapper.find('.Stats').children()).to.have.length(5)
-      })
-
-      it('should render the Time in Auto stat for automated basal devices', () => {
-        wrapper = shallow(<Stats {..._.assign({}, baseProps, {
-          chartType: 'basics',
-          dataUtil: new DataUtilStub([], {
-            latestPump: {
-              deviceModel: '1780',
-              manufacturer: 'medtronic'
-            }
-          })
-        })} />)
-
-        expect(wrapper.find('.Stats').children()).to.have.length(8)
-        expect(wrapper.find('#Stat--timeInAuto')).to.have.length(1)
-      })
     })
 
     context('daily', () => {
@@ -466,80 +400,6 @@ describe('Stats', () => {
   })
 
   describe('getStatsByChartType', () => {
-    context('basics', () => {
-      beforeEach(() => {
-        wrapper = mount(<Stats {..._.assign({}, baseProps, {
-          chartType: 'basics'
-        })} />)
-        instance = wrapper.instance()
-      })
-      afterEach(() => {
-        if (wrapper) {
-          wrapper.unmount()
-          wrapper = null
-          instance = null
-        }
-      })
-
-      it('should show all expected stats when bgSource prop is `cbg`', () => {
-        wrapper.setProps({
-          ...wrapper.props(),
-          bgSource: 'cbg'
-        })
-        wrapper.update()
-        const stats = instance.getStatsByChartType()
-
-        const expectedStats = [
-          'timeInRange',
-          'averageGlucose',
-          'sensorUsage',
-          'totalInsulin',
-          'carbs',
-          'averageDailyDose',
-          'glucoseManagementIndicator'
-        ]
-
-        expect(_.map(stats, 'id')).to.have.ordered.members(expectedStats)
-      })
-
-      it('should show all expected stats when bgSource prop is `smbg`', () => {
-        wrapper.setProps({
-          ...wrapper.props(),
-          bgSource: 'smbg'
-        })
-        wrapper.update()
-        const stats = instance.getStatsByChartType()
-
-        const expectedStats = [
-          'readingsInRange',
-          'averageGlucose',
-          'totalInsulin',
-          'carbs',
-          'averageDailyDose'
-        ]
-
-        expect(_.map(stats, 'id')).to.have.ordered.members(expectedStats)
-      })
-
-      it('should render the Time in Auto stat for automated basal devices', () => {
-        wrapper.setProps({
-          ...wrapper.props(),
-          dataUtil: new DataUtilStub([], {
-            latestPump: {
-              deviceModel: '1780',
-              manufacturer: 'medtronic'
-            }
-          })
-        })
-        wrapper.update()
-        const stats = instance.getStatsByChartType()
-
-        const expectedStats = ['timeInAuto']
-
-        expect(_.map(stats, 'id')).to.include.members(expectedStats)
-      })
-    })
-
     context('daily', () => {
       beforeEach(() => {
         wrapper = mount(<Stats {..._.assign({}, baseProps, {
@@ -959,13 +819,13 @@ describe('Stats', () => {
       const setStateSpy = sinon.spy(instance, 'setState')
       sinon.assert.callCount(setStateSpy, 0)
 
-      expect(instance.state.stats.length).to.equal(7)
+      expect(instance.state.stats.length).to.equal(6)
 
       instance.updateStatData()
 
-      sinon.assert.callCount(vizUtils.stat.getStatAnnotations, 7)
-      sinon.assert.callCount(vizUtils.stat.getStatData, 7)
-      sinon.assert.callCount(vizUtils.stat.getStatTitle, 7)
+      sinon.assert.callCount(vizUtils.stat.getStatAnnotations, 6)
+      sinon.assert.callCount(vizUtils.stat.getStatData, 6)
+      sinon.assert.callCount(vizUtils.stat.getStatTitle, 6)
 
       _.forEach(instance.state.stats, stat => {
         sinon.assert.calledWith(vizUtils.stat.getStatAnnotations, sinon.match.object, stat.id)
