@@ -17,13 +17,21 @@
 
 import _ from 'lodash'
 
-import guid from './guid'
 import dt from '../../js/data/util/datetime'
 
 // constants
 import { MGDL_UNITS, MS_IN_DAY } from '../../js/data/util/constants'
 const APPEND = '.000Z'
 const timezone = 'Europe/Paris'
+
+function guid() {
+  var g = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    var r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+  return g
+}
 
 const common = {
   deviceId: 'Test Page Data - 123',
