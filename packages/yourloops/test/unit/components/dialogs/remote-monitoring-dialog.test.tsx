@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import * as teamHookMock from '../../../../lib/team'
+import * as patientHookMock from '../../../../lib/patient/provider'
 import * as notificationsHookMock from '../../../../lib/notifications/hook'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import RemoteMonitoringPatientDialog, {
@@ -35,11 +35,15 @@ import RemoteMonitoringPatientDialog, {
   RemoteMonitoringPatientDialogProps
 } from '../../../../components/dialogs/remote-monitoring-dialog'
 import { createPatient } from '../../common/utils'
-import { PatientMonitoringPrescriptionProps, PrescriptionInfo } from '../../../../components/patient/patient-monitoring-prescription'
+import {
+  PatientMonitoringPrescriptionProps,
+  PrescriptionInfo
+} from '../../../../components/patient/patient-monitoring-prescription'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { PatientTeam } from '../../../../lib/data/patient'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files-api'
 import { Prescription } from '../../../../lib/medical-files/model'
+import PatientUtils from '../../../../lib/patient/utils'
 
 const mockCorrectPrescription: PrescriptionInfo = {
   teamId: 'fakeTeamId',
@@ -53,10 +57,9 @@ jest.mock('../../../../components/patient/patient-monitoring-prescription', () =
   return <button onClick={() => props.setPrescriptionInfo(mockCorrectPrescription)}>set-correct-prescription</button>
 })
 jest.mock('../../../../components/utils/snackbar')
-jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/notifications/hook')
+jest.mock('../../../../lib/patient/provider')
 describe('RemoteMonitoringPatientDialog', () => {
-  const getPatientRemoteMonitoringTeamMock = jest.fn().mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam)
   const inviteRemoteMonitoringMock = jest.fn()
   const editPatientRemoteMonitoringMock = jest.fn()
   const updatePatientMonitoringMock = jest.fn()
@@ -70,10 +73,10 @@ describe('RemoteMonitoringPatientDialog', () => {
   }
 
   beforeAll(() => {
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam);
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return {
         editPatientRemoteMonitoring: editPatientRemoteMonitoringMock,
-        getPatientRemoteMonitoringTeam: getPatientRemoteMonitoringTeamMock,
         updatePatientMonitoring: updatePatientMonitoringMock
       }
     });

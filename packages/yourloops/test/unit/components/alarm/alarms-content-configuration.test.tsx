@@ -44,11 +44,11 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
 import { PatientTeam } from '../../../../lib/data/patient'
 import { Monitoring } from '../../../../models/monitoring'
+import PatientUtils from '../../../../lib/patient/utils'
 
 jest.mock('../../../../lib/team')
 describe('AlarmsContentConfiguration', () => {
   const onSave = jest.fn()
-  const getPatientRemoteMonitoringTeamMock = jest.fn()
   const getTeamMock = jest.fn()
   const monitoring = {
     enabled: true,
@@ -98,7 +98,6 @@ describe('AlarmsContentConfiguration', () => {
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
-        getPatientRemoteMonitoringTeam: getPatientRemoteMonitoringTeamMock,
         getTeam: getTeamMock
       }
     })
@@ -130,7 +129,7 @@ describe('AlarmsContentConfiguration', () => {
   }
 
   function initRenderingWithPatient() {
-    getPatientRemoteMonitoringTeamMock.mockReturnValue({ teamId } as PatientTeam)
+    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ teamId } as PatientTeam)
     getTeamMock.mockReturnValue(team)
     render(getTeamAlarmsContentJSX({ monitoring, onSave, saveInProgress: false, patient }))
   }

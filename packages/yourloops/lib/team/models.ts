@@ -26,12 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus, PostalAddress, PatientFilterTypes } from '../../models/generic'
-import { MedicalData } from '../../models/device-data'
+import { PostalAddress, UserInvitationStatus } from '../../models/generic'
 import { IUser } from '../../models/user'
 import { INotification } from '../notifications/models'
-import { TeamType, TeamMemberRole, TypeTeamMemberRole } from '../../models/team'
-import { Patient, PatientTeam } from '../data/patient'
+import { TeamMemberRole, TeamType, TypeTeamMemberRole } from '../../models/team'
 import { Monitoring } from '../../models/monitoring'
 
 export const TEAM_CODE_LENGTH = 9
@@ -72,7 +70,6 @@ export interface TeamContext {
   initialized: boolean
   /** The error message set if there is any error */
   errorMessage: string | null
-  patientsFilterStats: PatientFilterStats
   /**
    * Refresh the team list & members.
    *
@@ -98,38 +95,6 @@ export interface TeamContext {
    * @param userId The user we want
    */
   getUser: (userId: string) => Readonly<TeamUser> | null
-  /**
-   * Return the patient which the userId belongs to.
-   * *All your base are belong to us*
-   * @param userId The user we want
-   */
-  getPatient: (userId: string) => Readonly<Patient> | null
-  /**
-   * Return all patients (team user) we have
-   */
-  getPatientsAsTeamUsers: () => Array<Readonly<TeamUser>>
-  /**
-   * Return all patients
-   */
-  getPatients: () => Array<Readonly<Patient>>
-  /**
-   * Return the remote monitoring team the patient is in
-   */
-  getPatientRemoteMonitoringTeam: (patient: Patient) => PatientTeam
-  /**
-   * Return all patients filtered on the given params
-   * @param filterType a FilterType value or a team id
-   * @param filter a patient name
-   * @param flagged the list of flagged patients
-   */
-  filterPatients: (filterType: PatientFilterTypes, filter: string, flagged: string[]) => Patient[]
-
-  /**
-   * As an HCP invite a patient to a team.
-   * @param team The team to invite the patient
-   * @param username The patient email
-   */
-  invitePatient: (team: Team, username: string) => Promise<void>
 
   /**
    * As an HCP invite a member (non patient)
@@ -152,26 +117,11 @@ export interface TeamContext {
   editTeam: (team: Team) => Promise<void>
 
   /**
-   * @param patient the patient to update
-   */
-  editPatientRemoteMonitoring: (patient: Patient) => void
-
-  /**
-   * @param patient The patient to update
-   */
-  markPatientMessagesAsRead: (patient: Patient) => void
-
-  /**
    * Update team alarm configuration
    * @param team The updated team
    */
   updateTeamAlerts: (team: Team) => Promise<void>
 
-  /**
-   * Update patient monitoring configuration
-   * @param team The updated team
-   */
-  updatePatientMonitoring: (patient: Patient) => Promise<void>
   /**
    * Leave a team
    * @param team The team to leave
@@ -185,26 +135,11 @@ export interface TeamContext {
   removeMember: (member: TeamMember) => Promise<void>
 
   /**
-   * Remove a patient from HCP patient list
-   * @param patient the patient to remove
-   * @param member
-   * @param teamId id of the team ("private" if it's a private practice)
-   */
-  removePatient: (patient: Patient, member: PatientTeam, teamId: string) => Promise<void>
-
-  /**
    * Change a member role
    * @param member The concerned member
    * @param role The new role
    */
   changeMemberRole: (member: TeamMember, role: Exclude<TypeTeamMemberRole, 'patient'>) => Promise<void>
-
-  /**
-   * Update a patient medical data
-   * @param userId Patient's userId
-   * @param medicalData The medical data to set
-   */
-  setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
 
   /**
    * Retreive a team from it's 9 digit code.
@@ -215,11 +150,10 @@ export interface TeamContext {
    * Join a specific team.
    */
   joinTeam: (teamId: string) => Promise<void>
-}
-
-export interface LoadTeams {
-  teams: Team[]
-  flaggedNotInResult: string[]
+  /**
+   * Remove a team (no api call is done)
+   */
+  removeTeamFromList: (teamId: string) => void
 }
 
 export interface PatientFilterStats {

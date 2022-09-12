@@ -36,8 +36,8 @@ import { PatientElementProps } from '../../../../components/patient/models'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
-import TeamUtils from '../../../../lib/team/utils'
 import userEvent from '@testing-library/user-event'
+import PatientUtils from '../../../../lib/patient/utils'
 
 jest.mock('../../../../lib/auth')
 describe('Patient row', () => {
@@ -88,7 +88,7 @@ describe('Patient row', () => {
   })
 
   it('should show pending icon when patient is pending and filter is pending', () => {
-    jest.spyOn(TeamUtils, 'isInvitationPending').mockReturnValue(true)
+    jest.spyOn(PatientUtils, 'isInvitationPending').mockReturnValue(true)
     const componentProps: PatientElementProps = {
       patient,
       flagged: [],

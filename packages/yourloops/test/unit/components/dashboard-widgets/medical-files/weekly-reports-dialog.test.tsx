@@ -29,13 +29,15 @@ import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import WeeklyReportDialog from '../../../../../components/dialogs/weekly-report-dialog'
 import { WeeklyReport } from '../../../../../lib/medical-files/model'
+import * as patientHookMock from '../../../../../lib/patient/provider'
 import * as teamHookMock from '../../../../../lib/team'
-import { createPatient, createPatientTeam } from '../../../common/utils'
+import { buildTeam, createPatient, createPatientTeam } from '../../../common/utils'
 import { UserInvitationStatus } from '../../../../../models/generic'
 import { UNITS_TYPE } from '../../../../../lib/units/utils'
 import { Alarm } from '../../../../../models/alarm'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../../../../lib/utils'
 
+jest.mock('../../../../../lib/patient/provider')
 jest.mock('../../../../../lib/team')
 describe('Weekly report dialog', () => {
   const teamId = 'teamId'
@@ -59,6 +61,7 @@ describe('Weekly report dialog', () => {
     alarms: {} as Alarm,
     creationDate: '2022-02-02'
   }
+  const teams = [buildTeam(weeklyReport.teamId)]
 
   const endDatePeriod = new Date(weeklyReport.creationDate)
   const startDatePeriod = new Date(weeklyReport.creationDate)
@@ -69,8 +72,11 @@ describe('Weekly report dialog', () => {
   }
 
   beforeAll(() => {
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return { getPatient: () => patient }
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { teams }
     })
   })
 
@@ -87,7 +93,7 @@ describe('Weekly report dialog', () => {
     expect(screen.getByLabelText('birthdate')).toHaveTextContent(formatDateWithMomentLongFormat(patient.profile.birthdate))
     expect(screen.getByLabelText('gender')).toHaveTextContent(patient.profile.sex)
     expect(screen.getByLabelText('email')).toHaveTextContent(patient.profile.email)
-    expect(screen.getByLabelText('monitoring-team')).toHaveTextContent('fakeTeamName')
+    expect(screen.getByLabelText('monitoring-team')).toHaveTextContent(teams[0].name)
     expect(screen.getByLabelText('created-at')).toHaveTextContent(formatDateWithMomentLongFormat(endDatePeriod))
     expect(screen.getByLabelText('monitoring-period')).toHaveTextContent(`${formatDateWithMomentLongFormat(startDatePeriod)} - ${formatDateWithMomentLongFormat(endDatePeriod)}`)
     expect(screen.getByLabelText('time-out-of-range-target')).toHaveTextContent(formatAlarmSettingThreshold(weeklyReport.alarms.timeSpentAwayFromTargetRate))

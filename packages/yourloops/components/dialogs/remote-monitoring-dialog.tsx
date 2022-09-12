@@ -44,10 +44,11 @@ import { Patient } from '../../lib/data/patient'
 import PatientInfo from '../patient/patient-info'
 import PatientMonitoringPrescription, { PrescriptionInfo } from '../patient/patient-monitoring-prescription'
 import { useNotification } from '../../lib/notifications/hook'
-import { useTeam } from '../../lib/team'
 import { MonitoringStatus } from '../../models/monitoring'
 import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
 import { useAlert } from '../utils/snackbar'
+import { usePatientContext } from '../../lib/patient/provider'
+import PatientUtils from '../../lib/patient/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -91,9 +92,9 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   const classes = useStyles()
   const { t } = useTranslation('yourloops')
   const notificationHook = useNotification()
-  const teamHook = useTeam()
+  const patientHook = usePatientContext()
   const alert = useAlert()
-  const [teamId] = useState<string | undefined>(action === RemoteMonitoringDialogAction.renew ? teamHook.getPatientRemoteMonitoringTeam(patient).teamId : undefined)
+  const [teamId] = useState<string | undefined>(action === RemoteMonitoringDialogAction.renew ? PatientUtils.getRemoteMonitoringTeam(patient).teamId : undefined)
   const [physician, setPhysician] = useState<string | undefined>(patient.profile?.referringDoctor)
   const [prescriptionInfo, setPrescriptionInfo] = useState<PrescriptionInfo>({
     teamId: undefined,
@@ -121,7 +122,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
           await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd, physician)
           break
         case RemoteMonitoringDialogAction.renew:
-        // enable and status are required
+          // enable and status are required
           patient.monitoring =
             {
               enabled: true,
@@ -129,13 +130,13 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
               monitoringEnd,
               parameters: patient.monitoring?.parameters
             }
-          await teamHook.updatePatientMonitoring(patient)
+          await patientHook.updatePatientMonitoring(patient)
           break
         default:
           break
       }
 
-      teamHook.editPatientRemoteMonitoring(patient)
+      patientHook.editPatientRemoteMonitoring(patient)
       await MedicalFilesApi.uploadPrescription(
         prescriptionInfo.teamId,
         patient.userid,

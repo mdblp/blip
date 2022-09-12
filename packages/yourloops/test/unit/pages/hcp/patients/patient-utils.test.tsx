@@ -25,14 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createAlarm, createPatient, createTeamMember, createTeamUser } from '../../../common/utils'
-import { comparePatients, mapTeamMemberToPatientTeam, mapTeamUserToPatient } from '../../../../../components/patient/utils'
+import { createAlarm, createPatient } from '../../../common/utils'
+import { comparePatients, mapITeamMemberToPatient } from '../../../../../components/patient/utils'
 import { PatientTableSortFields, UserInvitationStatus } from '../../../../../models/generic'
-import { Patient, PatientTeam } from '../../../../../lib/data/patient'
-import { INotification } from '../../../../../lib/notifications/models'
+import { Patient } from '../../../../../lib/data/patient'
 import { Profile } from '../../../../../models/user'
 import { Monitoring } from '../../../../../models/monitoring'
-import { Alarm } from '../../../../../models/alarm'
+import { ITeamMember, TeamMemberRole } from '../../../../../models/team'
 
 describe('Patient utils', () => {
   describe('comparePatients', () => {
@@ -276,22 +275,6 @@ describe('Patient utils', () => {
     })
   })
 
-  describe('mapMembersToPatientTeamStatus', () => {
-    it('should map correctly', () => {
-      const member = createTeamMember('fakeTeamMember', 'teamName', 'fakeTeamCode', UserInvitationStatus.accepted)
-      member.invitation = { id: 'invitationId' } as INotification
-      const patientTeam: PatientTeam = {
-        code: member.team.code,
-        invitation: member.invitation,
-        status: member.status,
-        teamId: member.team.id,
-        teamName: member.team.name
-      }
-      const res = mapTeamMemberToPatientTeam(member)
-      expect(res).toStrictEqual(patientTeam)
-    })
-  })
-
   describe('mapTeamUserToPatient', () => {
     it('should map correctly', () => {
       const profile: Profile = {
@@ -299,15 +282,31 @@ describe('Patient utils', () => {
         firstName: 'fake full',
         lastName: 'name'
       }
-      const member = createTeamMember('fakeTeamMember', 'teamName', 'fakeTeamCode', UserInvitationStatus.accepted)
-      const teamUser = createTeamUser('fakeTeamMember', [member], profile)
-      teamUser.unreadMessages = 4
+      const teamMember: ITeamMember = {
+        idVerified: false,
+        invitationStatus: UserInvitationStatus.pending,
+        role: TeamMemberRole.patient,
+        teamId: 'fakeTeamId',
+        userId: 'fakeTeamMember',
+        email: 'fake@email.com',
+        profile,
+        alarms: {
+          timeSpentAwayFromTargetRate: 10,
+          timeSpentAwayFromTargetActive: true,
+          frequencyOfSevereHypoglycemiaRate: 10,
+          frequencyOfSevereHypoglycemiaActive: true,
+          nonDataTransmissionRate: 10,
+          nonDataTransmissionActive: true
+        },
+        unreadMessages: 5
+      }
+      teamMember.unreadMessages = 4
       const patient: Patient = {
         metadata: {
-          alarm: teamUser.alarms,
+          alarm: teamMember.alarms,
           flagged: undefined,
           medicalData: null,
-          unreadMessagesSent: teamUser.unreadMessages
+          unreadMessagesSent: teamMember.unreadMessages
         },
         monitoring: undefined,
         profile: {
@@ -315,7 +314,7 @@ describe('Patient utils', () => {
           firstName: profile.firstName,
           fullName: profile.fullName,
           lastName: profile.lastName,
-          email: teamUser.username,
+          email: teamMember.email,
           referringDoctor: undefined,
           sex: ''
         },
@@ -323,45 +322,14 @@ describe('Patient utils', () => {
           a1c: undefined,
           system: 'DBLG1'
         },
-        teams: [mapTeamMemberToPatientTeam(teamUser.members[0])],
-        userid: teamUser.userid
+        teams: [{
+          teamId: teamMember.teamId,
+          status: teamMember.invitationStatus,
+          monitoringStatus: teamMember.monitoring?.status
+        }],
+        userid: teamMember.userId
       }
-      const res = mapTeamUserToPatient(teamUser)
-      patient.monitoring = res.monitoring
-      expect(res).toStrictEqual(patient)
-    })
-
-    it('should correctly map alarm, unread messages, birthdate, sex and fullname ', () => {
-      const member = createTeamMember('fakeTeamMember', 'teamName', 'fakeTeamCode', UserInvitationStatus.accepted)
-      const teamUser = createTeamUser('fakeTeamMember', [member], undefined, undefined, 'fakeUsername')
-      teamUser.alarms = undefined
-      teamUser.unreadMessages = undefined
-      teamUser.profile = { patient: { sex: 'helicopter', birthday: new Date().toString() } } as Profile
-      const patient: Patient = {
-        metadata: {
-          alarm: {} as Alarm,
-          flagged: undefined,
-          medicalData: null,
-          unreadMessagesSent: 0
-        },
-        monitoring: undefined,
-        profile: {
-          birthdate: new Date(teamUser.profile.patient.birthday),
-          firstName: undefined,
-          fullName: teamUser.username,
-          lastName: undefined,
-          email: teamUser.username,
-          referringDoctor: undefined,
-          sex: teamUser.profile.patient.sex
-        },
-        settings: {
-          a1c: undefined,
-          system: 'DBLG1'
-        },
-        teams: [mapTeamMemberToPatientTeam(teamUser.members[0])],
-        userid: teamUser.userid
-      }
-      const res = mapTeamUserToPatient(teamUser)
+      const res = mapITeamMemberToPatient(teamMember)
       patient.monitoring = res.monitoring
       expect(res).toStrictEqual(patient)
     })

@@ -34,13 +34,12 @@ import TuneIcon from '@material-ui/icons/Tune'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { makeStyles } from '@material-ui/core/styles'
-
-import { useTeam } from '../../lib/team'
 import { Monitoring } from '../../models/monitoring'
 import { useAlert } from '../utils/snackbar'
 import { Patient } from '../../lib/data/patient'
 import { commonComponentStyles } from '../common'
 import AlarmsContentConfiguration from './alarms-content-configuration'
+import { usePatientContext } from '../../lib/patient/provider'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -58,7 +57,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   const commonClasses = commonComponentStyles()
   const classes = useStyles()
   const { t } = useTranslation('yourloops')
-  const teamHook = useTeam()
+  const patientHook = usePatientContext()
   const alert = useAlert()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
@@ -70,7 +69,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
     patient.monitoring = monitoring
     setSaveInProgress(true)
     try {
-      await teamHook.updatePatientMonitoring(patient)
+      await patientHook.updatePatientMonitoring(patient)
       alert.success(t('patient-update-success'))
       setSaveInProgress(false)
       onClose()
@@ -82,7 +81,14 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   }
 
   return (
-    <Dialog id="patient-alarm-dialog-id" fullWidth={true} maxWidth="lg" open={true} onClose={onClose} data-testid="patient-alarm-dialog">
+    <Dialog
+      id="patient-alarm-dialog-id"
+      fullWidth={true}
+      maxWidth="lg"
+      open={true}
+      onClose={onClose}
+      data-testid="patient-alarm-dialog"
+    >
       <div className={commonClasses.root}>
         <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
           <div className={commonClasses.categoryHeader}>
