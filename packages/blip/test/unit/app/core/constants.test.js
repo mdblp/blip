@@ -25,16 +25,4 @@ describe('constants', function() {
       'smbg'
     ])
   })
-
-  it('should define the list of diabetes data types', function() {
-    expect(Constants.DIABETES_DATA_TYPES).to.eql([
-      'cbg',
-      'smbg',
-      'basal',
-      'bolus',
-      'wizard',
-      'food',
-      'physicalActivity'
-    ])
-  })
 })
