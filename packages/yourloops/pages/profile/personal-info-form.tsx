@@ -77,7 +77,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
   return (
     <React.Fragment>
       <Box className={props.classes.categoryLabel}>
-        <AccountCircle color="primary" style={{ margin: '0' }} />
+        <AccountCircle color="primary" />
         <strong className={props.classes.uppercase}>{t('personal-information')}</strong>
         {props.user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${props.user.id}`} />}
       </Box>

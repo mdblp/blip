@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
@@ -72,9 +72,9 @@ const NotificationsPage = (): JSX.Element => {
   const classes = useStyles()
   const { user } = useAuth()
   const notificationsHook = useNotification()
-  const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false)
+  const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setPageTitle(t('breadcrumb-notifications'))
   }, [t])
 
@@ -89,8 +89,7 @@ const NotificationsPage = (): JSX.Element => {
     return (
       <CircularProgress
         id="notification-page-loading-progress"
-        disableShrink
-        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
+        className="centered-spinning-loader"
       />
     )
   }
@@ -105,18 +104,18 @@ const NotificationsPage = (): JSX.Element => {
 
   return (
     <React.Fragment>
-      <Container maxWidth="lg" style={{ marginTop: '1em' }}>
+      <Container maxWidth="lg">
         <List>
           {notifications.length > 0 ? (
             notifications.map((notification: INotification, index: number) => (
               <ListItem
                 key={notification.id}
-                style={{ padding: '8px 0' }}
-                divider={index !== notifications.length - 1}>
+                disableGutters
+                divider={index !== notifications.length - 1}
+              >
                 <Notification
                   notification={notification}
                   userRole={user.role}
-                  // onRemove={handleRemove}
                   onHelp={handleSwitchRoleOpen}
                 />
               </ListItem>
@@ -126,7 +125,8 @@ const NotificationsPage = (): JSX.Element => {
               className={classes.noNotificationMessage}
               id="typography-no-pending-invitation-message"
               variant="body2"
-              gutterBottom>
+              gutterBottom
+            >
               {t('notification-no-pending-invitation')}
             </Typography>
           )}
