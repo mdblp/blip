@@ -50,7 +50,6 @@ import { useAuth } from '../../lib/auth'
 export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void
   onSaved: (payload: MedicalRecord) => void
-  readonly: boolean
   medicalRecord?: MedicalRecord
 }
 
@@ -68,7 +67,10 @@ const classes = makeStyles((theme: Theme) => ({
   },
   textArea: {
     marginTop: theme.spacing(1),
-    paddingLeft: theme.spacing(2)
+    paddingLeft: theme.spacing(2),
+    '& textarea:disabled': {
+      color: theme.palette.text.primary
+    }
   }
 }))
 
@@ -76,7 +78,8 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
   const { title, textArea, divider } = classes()
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
-  const { onClose, onSaved, medicalRecord, teamId, patientId, readonly } = props
+  const { onClose, onSaved, medicalRecord, teamId, patientId } = props
+  const readonly = user.isUserPatient()
   const {
     diagnosis,
     setDiagnosis,
@@ -87,7 +90,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
     setTrainingSubject,
     disabled,
     saveMedicalRecord
-  } = useMedicalRecordEditDialog({ onSaved, readonly, medicalRecord, teamId, patientId })
+  } = useMedicalRecordEditDialog({ onSaved, medicalRecord, teamId, patientId })
 
   return (
     <Dialog
