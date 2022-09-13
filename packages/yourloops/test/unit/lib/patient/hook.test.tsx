@@ -52,9 +52,11 @@ describe('Patient hook', () => {
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue([patientToRemove.userid])
   const authHookFlagPatientMock = jest.fn()
   const getInvitationMock = jest.fn()
-  const removeTeamFromListMock = jest.fn()
+  const refreshTeamsMock = jest.fn()
+  const computePatientsSpy = jest.spyOn(PatientUtils, 'computePatients')
 
   beforeAll(() => {
+    computePatientsSpy.mockReset();
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: { id: loggedInUserAsPatient.userid },
@@ -70,7 +72,7 @@ describe('Patient hook', () => {
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
-        removeTeamFromList: removeTeamFromListMock
+        refresh: refreshTeamsMock
       }
     })
   })
@@ -199,11 +201,10 @@ describe('Patient hook', () => {
         shortKey: 'short',
         creator: { userid: 'currentUserId' }
       })
-      const initialPatientsLength: number = customHook.patients.length
 
       await act(async () => {
         await customHook.invitePatient(team1, 'new-patient@mail.com')
-        await waitFor(() => expect(customHook.patients.length).toEqual(initialPatientsLength + 1))
+        expect(computePatientsSpy).toBeCalledTimes(1)
       })
     })
 
@@ -222,9 +223,11 @@ describe('Patient hook', () => {
       const initialPatientsLength: number = customHook.patients.length
       await act(async () => {
         await customHook.invitePatient(team1, basicPatient.profile.email)
-        await waitFor(() => expect(customHook.patients.length).toEqual(initialPatientsLength))
+        await waitFor(() => {
+          expect(customHook.patients.length).toEqual(initialPatientsLength)
+          expect(computePatientsSpy).toBeCalledTimes(1)
+        })
       })
-      expect(customHook.getPatient(basicPatient.userid).teams.find(t => t.teamId === team1.id)).toBeDefined()
     })
   })
 
@@ -252,7 +255,7 @@ describe('Patient hook', () => {
       await act(async () => {
         await customHook.updatePatientMonitoring(monitoredPatient)
         expect(updatePatientAlertsMock).toHaveBeenCalled()
-        expect(customHook.getPatient(monitoredPatient.userid).teams.find(t => t.teamId === monitoredTeam.teamId).monitoringStatus).toEqual(MonitoringStatus.accepted)
+        expect(computePatientsSpy).toBeCalledTimes(1)
       })
     })
 
@@ -350,7 +353,10 @@ describe('Patient hook', () => {
       await act(async () => {
         customHook.leaveTeam(basicTeam.teamId)
         expect(removePatientMock).toBeCalled()
-        await waitFor(() => expect(removeTeamFromListMock).toBeCalled())
+        await waitFor(() => {
+          expect(refreshTeamsMock).toBeCalled()
+          expect(computePatientsSpy).toBeCalledTimes(1)
+        })
       })
     })
   })

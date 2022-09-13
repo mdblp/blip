@@ -11,6 +11,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1653 Support RTL jest dom for unit tests
 - YLP-1697 Split patients and team members management
 - YLP-1719 Remove inline CSS
+- YLP-1740 Make HTTP calls to back instead of computing data in the front
 ### Fixed
 - YLP-1634 Fix missing UTs
 - YLP-1645 A patient can create, edit and delete a medical record

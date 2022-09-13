@@ -40,6 +40,7 @@ export interface PatientContextResult {
   patientsFilterStats: PatientFilterStats
   errorMessage: string | null
   initialized: boolean
+  refreshInProgress: boolean
   getPatient: (userId: string) => Patient
   filterPatients: (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => Patient[]
   invitePatient: (team: Team, username: string) => Promise<void>

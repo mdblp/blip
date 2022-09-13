@@ -26,12 +26,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 
 import { UserInvitationStatus } from '../../models/generic'
-import { UserRoles } from '../../models/user'
 import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
 
 import { errorTextFromException } from '../utils'
@@ -41,21 +40,17 @@ import { useNotification } from '../notifications/hook'
 import { Team, TeamContext, TeamMember, TeamUser } from './models'
 import TeamApi from './team-api'
 import TeamUtils from './utils'
-import { notificationConversion } from '../notifications/utils'
 import { CircularProgress } from '@material-ui/core'
 
 const log = bows('TeamHook')
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext)
-/** hackish way to prevent 2 or more consecutive loading */
-let lock = false
 
 function TeamContextImpl(): TeamContext {
-  // hooks (private or public variables)
-  // TODO: Transform the React.useState with React.useReducer
   const authHook = useAuth()
   const notificationHook = useNotification()
   const [teams, setTeams] = React.useState<Team[]>([])
   const [initialized, setInitialized] = React.useState<boolean>(false)
+  const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const user = authHook.user
@@ -83,185 +78,7 @@ function TeamContextImpl(): TeamContext {
     return null
   }
 
-  const getMapUsers = (): Map<string, TeamUser> => {
-    const users = new Map<string, TeamUser>()
-    for (const team of teams) {
-      for (const member of team.members) {
-        if (!users.has(member.user.userid)) {
-          users.set(member.user.userid, member.user)
-        }
-      }
-    }
-    return users
-  }
-
-  const refresh = (forceRefresh: boolean): void => {
-    if (initialized || forceRefresh) {
-      setInitialized(false)
-    }
-  }
-
-  const getMedicalTeams = (): Team[] => {
-    return teams.filter((team: Team): boolean => team.type === TeamType.medical)
-  }
-
-  const getRemoteMonitoringTeams = (): Team[] => {
-    return teams.filter(team => team.monitoring?.enabled)
-  }
-
-  const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
-    const apiInvitation = await TeamApi.inviteMember({ teamId: team.id, email: username, role })
-    const invitation = notificationConversion(apiInvitation)
-
-    let user = TeamUtils.getUserByEmail(teams, invitation.email)
-    if (user === null) {
-      user = {
-        userid: invitation.id,
-        role: UserRoles.hcp,
-        username,
-        emails: [username],
-        members: []
-      }
-    }
-    const member: TeamMember = {
-      role: role as TeamMemberRole,
-      status: UserInvitationStatus.pending,
-      team,
-      user,
-      invitation
-    }
-    user.members.push(member)
-    team.members.push(member)
-    setTeams(teams)
-  }
-
-  const createTeam = async (team: Partial<Team>): Promise<void> => {
-    const apiTeam: Partial<ITeam> = {
-      address: team.address,
-      description: team.description,
-      email: team.email,
-      name: team.name,
-      phone: team.phone,
-      type: team.type
-    }
-    const iTeam = await TeamApi.createTeam(apiTeam)
-    const users = getMapUsers()
-    const newTeam = TeamUtils.iTeamToTeam(iTeam, users)
-    teams.push(newTeam)
-    setTeams(teams)
-    metrics.send('team_management', 'create_care_team', _.isEmpty(team.email) ? 'email_not_filled' : 'email_filled')
-  }
-
-  const editTeam = async (team: Team): Promise<void> => {
-    const apiTeam: ITeam = {
-      ...team,
-      members: []
-    }
-    await TeamApi.editTeam(apiTeam)
-    const cachedTeam = teams.find((t: Team) => t.id === team.id)
-    if (typeof cachedTeam === 'object') {
-      cachedTeam.name = team.name
-      cachedTeam.phone = team.phone
-      cachedTeam.address = team.address
-      if (typeof team.email === 'string') {
-        cachedTeam.email = team.email
-      }
-      setTeams(teams)
-    } else {
-      log.warn('editTeam(): Team not found', team)
-    }
-    metrics.send('team_management', 'edit_care_team')
-  }
-
-  const updateTeamAlerts = async (team: Team): Promise<void> => {
-    if (!team.monitoring) {
-      throw Error('Cannot update team monitoring with undefined')
-    }
-    try {
-      await TeamApi.updateTeamAlerts(team.id, team.monitoring)
-    } catch (error) {
-      console.error(error)
-      throw Error(`Failed to update team with id ${team.id}`)
-    }
-    refresh(true)
-  }
-
-  const removeTeamFromList = useCallback((teamId: string) => {
-    const idx = teams.findIndex((t: Team) => t.id === teamId)
-    if (idx > -1) {
-      teams.splice(idx, 1)
-      setTeams(teams)
-    }
-  }, [teams])
-
-  const leaveTeam = async (team: Team): Promise<void> => {
-    const ourselve = team.members.find((member) => member.user.userid === user.id)
-    if (_.isNil(ourselve)) {
-      throw new Error('We are not a member of the team!')
-    }
-    log.info('leaveTeam', { ourselve, team })
-    if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
-      await TeamApi.deleteTeam(team.id)
-      metrics.send('team_management', 'delete_team')
-    } else {
-      await TeamApi.leaveTeam(user.id, team.id)
-      metrics.send('team_management', 'leave_team')
-    }
-    removeTeamFromList(team.id)
-  }
-
-  const removeMember = async (member: TeamMember): Promise<void> => {
-    if (member.status === UserInvitationStatus.pending) {
-      if (!member.invitation || member.team.id !== member.invitation.target?.id) {
-        throw new Error('Missing invitation!')
-      }
-      await notificationHook.cancel(member.invitation)
-    } else {
-      await TeamApi.removeMember({
-        teamId: member.team.id,
-        userId: member.user.userid,
-        email: member.user.username
-      })
-    }
-    const { team } = member
-    const idx = team.members.findIndex((m: TeamMember) => m.user.userid === member.user.userid)
-    if (idx > -1) {
-      team.members.splice(idx, 1)
-      setTeams(teams)
-    } else {
-      log.warn('removeMember(): Member not found', member)
-    }
-  }
-
-  const changeMemberRole = async (member: TeamMember, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
-    await TeamApi.changeMemberRole({
-      teamId: member.team.id,
-      userId: member.user.userid,
-      email: member.user.username,
-      role
-    })
-    member.role = role
-    setTeams(teams)
-    metrics.send('team_management', 'manage_admin_permission', role === 'admin' ? 'grant' : 'revoke')
-  }
-
-  const getTeamFromCode = async (code: string): Promise<Readonly<Team> | null> => {
-    const iTeam = await TeamApi.getTeamFromCode(code)
-    return iTeam ? { ...iTeam, members: [] } : null
-  }
-
-  const joinTeam = async (teamId: string): Promise<void> => {
-    await TeamApi.joinTeam(teamId, user.id)
-    refresh(true)
-  }
-
-  const initHook = (): void => {
-    if (initialized || lock || !notificationHook.initialized) {
-      return
-    }
-    log.info('init')
-    lock = true
-
+  const fetchTeams = useCallback(() => {
     TeamUtils.loadTeams(user)
       .then((teams: Team[]) => {
         log.debug('Loaded teams: ', teams)
@@ -291,17 +108,130 @@ function TeamContextImpl(): TeamContext {
       .finally(() => {
         log.debug('Initialized !')
         setInitialized(true)
-        // Clear the lock
-        lock = false
+        setRefreshInProgress(false)
       })
+  }, [errorMessage, notificationHook.sentInvitations, user])
+
+  const refresh = (): void => {
+    setRefreshInProgress(true)
+    fetchTeams()
   }
 
-  React.useEffect(initHook, [initialized, errorMessage, teams, authHook, notificationHook, user])
+  const getMedicalTeams = (): Team[] => {
+    return teams.filter((team: Team): boolean => team.type === TeamType.medical)
+  }
+
+  const getRemoteMonitoringTeams = (): Team[] => {
+    return teams.filter(team => team.monitoring?.enabled)
+  }
+
+  const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
+    await TeamApi.inviteMember({ teamId: team.id, email: username, role })
+    refresh()
+  }
+
+  const createTeam = async (team: Partial<Team>): Promise<void> => {
+    const apiTeam: Partial<ITeam> = {
+      address: team.address,
+      description: team.description,
+      email: team.email,
+      name: team.name,
+      phone: team.phone,
+      type: team.type
+    }
+    await TeamApi.createTeam(apiTeam)
+    refresh()
+    metrics.send('team_management', 'create_care_team', _.isEmpty(team.email) ? 'email_not_filled' : 'email_filled')
+  }
+
+  const editTeam = async (team: Team): Promise<void> => {
+    const apiTeam: ITeam = {
+      ...team,
+      members: []
+    }
+    await TeamApi.editTeam(apiTeam)
+    refresh()
+    metrics.send('team_management', 'edit_care_team')
+  }
+
+  const updateTeamAlerts = async (team: Team): Promise<void> => {
+    if (!team.monitoring) {
+      throw Error('Cannot update team monitoring with undefined')
+    }
+    try {
+      await TeamApi.updateTeamAlerts(team.id, team.monitoring)
+    } catch (error) {
+      console.error(error)
+      throw Error(`Failed to update team with id ${team.id}`)
+    }
+    refresh()
+  }
+
+  const leaveTeam = async (team: Team): Promise<void> => {
+    const ourselve = team.members.find((member) => member.user.userid === user.id)
+    if (_.isNil(ourselve)) {
+      throw new Error('We are not a member of the team!')
+    }
+    log.info('leaveTeam', { ourselve, team })
+    if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
+      await TeamApi.deleteTeam(team.id)
+      metrics.send('team_management', 'delete_team')
+    } else {
+      await TeamApi.leaveTeam(user.id, team.id)
+      metrics.send('team_management', 'leave_team')
+    }
+    refresh()
+  }
+
+  const removeMember = async (member: TeamMember): Promise<void> => {
+    if (member.status === UserInvitationStatus.pending) {
+      if (!member.invitation || member.team.id !== member.invitation.target?.id) {
+        throw new Error('Missing invitation!')
+      }
+      await notificationHook.cancel(member.invitation)
+    } else {
+      await TeamApi.removeMember({
+        teamId: member.team.id,
+        userId: member.user.userid,
+        email: member.user.username
+      })
+    }
+    refresh()
+  }
+
+  const changeMemberRole = async (member: TeamMember, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
+    await TeamApi.changeMemberRole({
+      teamId: member.team.id,
+      userId: member.user.userid,
+      email: member.user.username,
+      role
+    })
+    metrics.send('team_management', 'manage_admin_permission', role === 'admin' ? 'grant' : 'revoke')
+    refresh()
+  }
+
+  const getTeamFromCode = async (code: string): Promise<Readonly<Team> | null> => {
+    const iTeam = await TeamApi.getTeamFromCode(code)
+    return iTeam ? { ...iTeam, members: [] } : null
+  }
+
+  const joinTeam = async (teamId: string): Promise<void> => {
+    await TeamApi.joinTeam(teamId, user.id)
+    refresh()
+  }
+
+  React.useEffect(() => {
+    if (!initialized && notificationHook.initialized) {
+      log.info('init')
+      fetchTeams()
+    }
+  }, [initialized, notificationHook, fetchTeams])
 
   return {
     teams,
     initialized,
     errorMessage,
+    refreshInProgress,
     refresh,
     getTeam,
     getUser,
@@ -315,8 +245,7 @@ function TeamContextImpl(): TeamContext {
     removeMember,
     changeMemberRole,
     getTeamFromCode,
-    joinTeam,
-    removeTeamFromList
+    joinTeam
   }
 }
 
