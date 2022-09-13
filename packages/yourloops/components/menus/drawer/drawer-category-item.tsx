@@ -25,44 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import React, { FunctionComponent, ReactElement } from 'react'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
-
 import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
 
-import MainHeader from '../components/header-bars/main-header'
-import MainDrawer from '../components/menus/drawer/main-drawer'
-import { useAuth } from '../lib/auth'
-
-const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
-  toolbar: { ...theme.mixins.toolbar },
-  container: {
-    padding: '0px'
+const classes = makeStyles((theme: Theme) => ({
+  title: {
+    fontWeight: 700,
+    lineHeight: '20px',
+    textTransform: 'uppercase'
+  },
+  icon: {
+    color: theme.palette.grey[600]
   }
 }))
 
-function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
-  const classes = dashboardLayoutStyle()
-  const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true)
-  const authHook = useAuth()
-  const isUserPatient = authHook.user?.isUserPatient()
+interface DrawerCategoryItemProps {
+  icon: ReactElement
+  text: string
+}
 
-  const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant)
+const DrawerCategoryItem: FunctionComponent<DrawerCategoryItemProps> = (props) => {
+  const { title, icon } = classes()
 
   return (
-    <Box display="flex">
-      <MainHeader withShrinkIcon={!isUserPatient} onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
-      {!isUserPatient &&
-        <MainDrawer miniVariant={drawerMiniVariant} />
-      }
-      <Container maxWidth={false} className={classes.container}>
-        <div className={classes.toolbar} />
-        {children}
-      </Container>
-    </Box>
+    <ListItem>
+      <ListItemIcon className={icon}>
+        {props.icon}
+      </ListItemIcon>
+      <ListItemText>
+        <Box className={title}>
+          {props.text}
+        </Box>
+      </ListItemText>
+    </ListItem>
   )
 }
 
-export default DashboardLayout
+export default DrawerCategoryItem
