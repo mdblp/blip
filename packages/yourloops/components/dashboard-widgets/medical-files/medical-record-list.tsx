@@ -34,7 +34,6 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd'
 
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -53,6 +52,7 @@ import TrashCanOutlined from '../../icons/TrashCanOutlined'
 import { CategoryProps } from './medical-files-widget'
 import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
+import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -185,9 +185,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
             </ListItem>
           ))}
         </List>
-        : <Box display="flex" justifyContent="center">
-          <CircularProgress size={20} />
-        </Box>
+        : <CenteredSpinningLoader size={20} />
       }
 
       {user.isUserHcp() &&

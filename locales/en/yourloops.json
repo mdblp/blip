@@ -131,7 +131,6 @@
   "dialog-pdf-options-output-format-pdf": "PDF",
   "dialog-pdf-options-presets": "Choose a fixed period",
   "download-prescription-error": "Cannot download the prescription",
-  "edit": "Edit",
   "edit-information": "Edit information",
   "email": "Email",
   "error-failed-display-patients": "Impossible to display patients: {{errorMessage}}",

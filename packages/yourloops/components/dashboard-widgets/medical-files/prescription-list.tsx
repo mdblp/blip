@@ -29,8 +29,6 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import Box from '@material-ui/core/Box'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -42,6 +40,7 @@ import { Prescription } from '../../../lib/medical-files/model'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
 import { CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
+import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -123,9 +122,7 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
             </ListItem>
           ))}
         </List>
-        : <Box display="flex" justifyContent="center">
-          <CircularProgress size={20} />
-        </Box>
+        : <CenteredSpinningLoader size={20} />
       }
 
     </React.Fragment>
