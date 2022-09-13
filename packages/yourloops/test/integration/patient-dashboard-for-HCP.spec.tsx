@@ -39,6 +39,7 @@ import { mockAuth0Hook } from './utils/mockAuth0Hook'
 import { mockTeamAPI } from './utils/mockTeamAPI'
 import { mockDataAPI } from './utils/mockDataAPI'
 import { mockNotificationAPI } from './utils/mockNotificationAPI'
+import { mockPatientAPI } from './utils/mockPatientAPI'
 
 jest.mock('@auth0/auth0-react')
 jest.setTimeout(10000)
@@ -53,7 +54,8 @@ describe('Patient dashboard for HCP', () => {
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
-    mockTeamAPI(patientId)
+    mockTeamAPI()
+    mockPatientAPI(patientId)
     mockDataAPI(patientId)
     mockUserDataFetch(firstName, lastName)
   })
