@@ -29,6 +29,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
+import Box from '@material-ui/core/Box'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -122,7 +123,9 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
             </ListItem>
           ))}
         </List>
-        : <CircularProgress size={20} className="centered-spinning-loader" />
+        : <Box display="flex" justifyContent="center">
+          <CircularProgress size={20} />
+        </Box>
       }
 
     </React.Fragment>

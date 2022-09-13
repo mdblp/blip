@@ -185,7 +185,9 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
             </ListItem>
           ))}
         </List>
-        : <CircularProgress size={20} className="centered-spinning-loader" />
+        : <Box display="flex" justifyContent="center">
+          <CircularProgress size={20} />
+        </Box>
       }
 
       {user.isUserHcp() &&
