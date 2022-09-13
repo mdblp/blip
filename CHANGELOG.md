@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1635 Modify CSP to enable refresh once logged in
 - YLP-1653 Support RTL jest dom for unit tests
 - YLP-1697 Split patients and team members management
+- YLP-1719 Remove inline CSS
 ### Fixed
 - YLP-1634 Fix missing UTs
 - YLP-1645 A patient can create, edit and delete a medical record

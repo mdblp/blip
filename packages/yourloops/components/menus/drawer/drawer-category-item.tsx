@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Main App file
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,37 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
+import React, { FunctionComponent, ReactElement } from 'react'
 
-import '@fontsource/roboto'
-import 'branding/theme.css'
-import 'classes.css'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
 
-import appConfig from '../lib/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
+const classes = makeStyles((theme: Theme) => ({
+  title: {
+    fontWeight: 700,
+    lineHeight: '20px',
+    textTransform: 'uppercase'
+  },
+  icon: {
+    color: theme.palette.grey[600]
+  }
+}))
 
-const Yourloops = (): JSX.Element => {
+interface DrawerCategoryItemProps {
+  icon: ReactElement
+  text: string
+}
+
+const DrawerCategoryItem: FunctionComponent<DrawerCategoryItemProps> = (props) => {
+  const { title, icon } = classes()
+
   return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      useRefreshTokens
-      audience="https://api-ext.your-loops.com"
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
+    <ListItem>
+      <ListItemIcon className={icon}>
+        {props.icon}
+      </ListItemIcon>
+      <ListItemText>
+        <Box className={title}>
+          {props.text}
+        </Box>
+      </ListItemText>
+    </ListItem>
   )
 }
 
-export default Yourloops
+export default DrawerCategoryItem

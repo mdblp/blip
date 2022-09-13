@@ -44,12 +44,8 @@ const formStyles = makeStyles(
   (theme: Theme) => {
     return {
       formControlLabel: {
-        color: theme.palette.text.primary,
-        textAlign: 'start',
         marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1)
+        marginBottom: theme.spacing(2)
       },
       formGroup: {
         textAlign: 'left'
@@ -58,14 +54,14 @@ const formStyles = makeStyles(
         marginBottom: 'auto'
       },
       labelMandatory: {
-        marginLeft: theme.spacing(1) + 9 // eslint-disable-line no-magic-numbers
+        marginLeft: theme.spacing(1) + 9
       }
     }
   },
   { name: 'ylp-form-consents' }
 )
 
-export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
+export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
   const { t, i18n } = useTranslation('yourloops')
   const classes = formStyles()
 
@@ -101,13 +97,12 @@ export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }:
       id={`${id}-label-privacy-policy`}
       control={checkboxPolicy}
       label={labelPrivacyPolicy}
-      style={style}
       className={classes.formControlLabel}
     />
   )
 }
 
-export function ConsentTerms({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
+export function ConsentTerms({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
   const { t, i18n } = useTranslation('yourloops')
   const classes = formStyles()
 
@@ -143,13 +138,12 @@ export function ConsentTerms({ id, userRole, style, checked, onChange }: Consent
       id={`${id}-label-terms`}
       control={checkboxTerms}
       label={labelTerms}
-      style={style}
       className={classes.formControlLabel}
     />
   )
 }
 
-export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseConsentCheck): JSX.Element {
+export function ConsentMonitoringTerms({ id, checked, onChange }: BaseConsentCheck): JSX.Element {
   const { t, i18n } = useTranslation('yourloops')
   const classes = formStyles()
 
@@ -186,13 +180,12 @@ export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseCon
       id={`${id}-label-terms`}
       control={checkboxTerms}
       label={labelTerms}
-      style={style}
       className={classes.formControlLabel}
     />
   )
 }
 
-export function ConsentFeedback({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
+export function ConsentFeedback({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
   const { t } = useTranslation('yourloops')
   const classes = formStyles()
 
@@ -218,7 +211,6 @@ export function ConsentFeedback({ id, userRole, style, checked, onChange }: Cons
       id={`${id}-label-feedback`}
       control={checkboxFeedback}
       label={labelFeedback}
-      style={style}
       className={classes.formControlLabel}
     />
   )
