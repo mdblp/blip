@@ -5,8 +5,8 @@
   "author": "Cedric Perotto <cedric.perotto@diabeloop.fr>",
   "homepage": "https://github.com/mdblp/blip#readme",
   "license": "ISC",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "directories": {
     "lib": "dist",
     "dist": "dist",

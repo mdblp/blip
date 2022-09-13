@@ -20,6 +20,11 @@
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true
   },
-  "exclude": ["node_modules", "test"],
-  "include": ["**/*"]
+  "exclude": ["node_modules", "test", "dist"],
+  "include": ["**/*"],
+  "references": [
+    {
+        "path": "../medical-domain"
+    }
+  ]
 }
