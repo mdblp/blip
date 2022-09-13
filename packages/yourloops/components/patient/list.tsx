@@ -37,7 +37,6 @@ import { PatientFilterTypes, PatientTableSortFields, SortDirection } from '../..
 import metrics from '../../lib/metrics'
 import { useAuth } from '../../lib/auth'
 import { setPageTitle } from '../../lib/utils'
-import { useTeam } from '../../lib/team'
 import PatientsTable from './table'
 import { Patient } from '../../lib/data/patient'
 import { PatientListProps } from './models'
@@ -52,7 +51,6 @@ function PatientList(props: PatientListProps): JSX.Element {
   const historyHook = useHistory()
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
-  const teamHook = useTeam()
   const patientHook = usePatientContext()
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
   const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName)
@@ -97,11 +95,8 @@ function PatientList(props: PatientListProps): JSX.Element {
   }
 
   const patients = React.useMemo(() => {
-    if (!teamHook.initialized) {
-      return []
-    }
     return updatePatientList(flagged, filter, filterType, orderBy, order)
-  }, [teamHook.initialized, updatePatientList, flagged, filter, filterType, orderBy, order])
+  }, [updatePatientList, flagged, filter, filterType, orderBy, order])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))
