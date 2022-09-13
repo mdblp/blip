@@ -181,7 +181,7 @@ class Message extends React.Component {
         <div className="message-body">
           <div className="message-header">
             {title}
-            <div data-testId="message-timestamp" className="message-timestamp">{when}</div>
+            <div data-testid="message-timestamp" className="message-timestamp">{when}</div>
           </div>
           <div className="message-note">{note}</div>
         </div>

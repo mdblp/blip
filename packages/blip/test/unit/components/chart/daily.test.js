@@ -77,12 +77,13 @@ describe('Daily', () => {
     onSwitchToDaily: sinon.stub(),
     onSwitchToSettings: sinon.stub(),
     onSwitchToTrends: sinon.stub(),
+    onSwitchPatient: sinon.stub(),
     onDatetimeLocationChange: sinon.stub().resolves(false),
     trackMetric: sinon.stub(),
     updateChartPrefs: sinon.stub(),
     patient,
     patients: [patient],
-    isUserHCP: true,
+    userIsHCP: true,
     onClickNavigationBack: sinon.stub(),
     tidelineData: {
       opts: {
