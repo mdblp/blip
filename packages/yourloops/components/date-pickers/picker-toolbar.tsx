@@ -58,6 +58,9 @@ const toolbarStyles = makeStyles((theme: Theme) => {
     landscape: {
       width: 200
     },
+    marginTopAuto: {
+      marginTop: 'auto'
+    },
     text: {
       backgroundColor: 'transparent',
       color: theme.palette.primary.contrastText,
@@ -130,7 +133,7 @@ function RangePickerToolbar(props: PickerToolbarProps): JSX.Element {
         {selected.end.format(dateFormat)}
       </Typography>
 
-      <Typography id="date-picker-toolbar-days-range" variant="body2" className={classes.text} style={{ marginTop: 'auto' }}>
+      <Typography id="date-picker-toolbar-days-range" variant="body2" className={`${classes.text} ${classes.marginTopAuto}`}>
         {t('date-picker-days-range', { numDays })}
       </Typography>
 

@@ -60,7 +60,7 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
   return (
     <React.Fragment>
       <Box className={props.classes.categoryLabel}>
-        <Tune color="primary" style={{ margin: '0' }} />
+        <Tune color="primary" />
         <strong className={props.classes.uppercase}>{t('preferences')}</strong>
       </Box>
 
@@ -88,7 +88,8 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
             labelId="locale-selector"
             id="profile-locale-selector"
             value={props.lang}
-            onChange={event => props.setLang(event.target.value as LanguageCodes)}>
+            onChange={event => props.setLang(event.target.value as LanguageCodes)}
+          >
             {availableLanguageCodes.map((languageCode) => (
               <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
                 {getLangName(languageCode)}
@@ -99,13 +100,14 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
       </Box>
 
       {props.role === UserRoles.hcp &&
-        <ConsentFeedback
-          id="profile"
-          userRole={props.role}
-          checked={props.feedbackAccepted}
-          style={{ marginLeft: -9, marginRight: 0, marginTop: '1em', marginBottom: 0 }}
-          onChange={() => props.setFeedbackAccepted(!props.feedbackAccepted)}
-        />
+        <Box marginTop={1}>
+          <ConsentFeedback
+            id="profile"
+            userRole={props.role}
+            checked={props.feedbackAccepted}
+            onChange={() => props.setFeedbackAccepted(!props.feedbackAccepted)}
+          />
+        </Box>
       }
     </React.Fragment>
   )
