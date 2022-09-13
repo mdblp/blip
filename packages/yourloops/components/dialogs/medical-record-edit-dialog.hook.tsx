@@ -35,7 +35,6 @@ import { useAlert } from '../utils/snackbar'
 
 interface MedicalRecordEditDialogHookProps extends CategoryProps {
   onSaved: (payload: MedicalRecord) => void
-  readonly: boolean
   medicalRecord?: MedicalRecord
 }
 
@@ -55,13 +54,13 @@ interface MedicalRecordEditDialogHookReturn {
 export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialogHookProps): MedicalRecordEditDialogHookReturn {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { onSaved, medicalRecord, teamId, patientId, readonly } = props
+  const { onSaved, medicalRecord, teamId, patientId } = props
 
   const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || '')
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || '')
   const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || '')
   const [inProgress, setInProgress] = useState<boolean>(false)
-  const disabled = readonly || inProgress || (!diagnosis && !trainingSubject && !progressionProposal)
+  const disabled = inProgress || (!diagnosis && !trainingSubject && !progressionProposal)
 
   const saveMedicalRecord = async (): Promise<void> => {
     try {

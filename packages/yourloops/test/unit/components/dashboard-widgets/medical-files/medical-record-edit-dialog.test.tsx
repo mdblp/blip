@@ -66,11 +66,10 @@ describe('Medical record edit dialog', () => {
     }
   }
 
-  function getDialogJSX(readonly: boolean): JSX.Element {
+  function getDialogJSX(): JSX.Element {
     const props: MedicalRecordEditDialogProps = {
       onClose,
       onSaved,
-      readonly,
       medicalRecord,
       teamId: 'teamId',
       patientId: 'patientId'
@@ -78,8 +77,8 @@ describe('Medical record edit dialog', () => {
     return <MedicalRecordEditDialog {...props} />
   }
 
-  function mountComponent(readonly = false) {
-    render(getDialogJSX(readonly))
+  function mountComponent() {
+    render(getDialogJSX())
     diagnosisTextArea = within(screen.getByTestId('diagnosis')).getByRole('textbox')
     progressionProposalTextArea = within(screen.getByTestId('progression-proposal')).getByRole('textbox')
     trainingSubjectTextArea = within(screen.getByTestId('training-subject')).getByRole('textbox')
@@ -137,9 +136,12 @@ describe('Medical record edit dialog', () => {
     expect(onSaved).toHaveBeenCalled()
   })
 
-  it('should not be editable when opening with readonly', async () => {
+  it('should not be editable when opening with a patient account', async () => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { role: UserRoles.patient, isUserPatient: () => true } as User }
+    })
     medicalRecord = getMedicalRecord()
-    mountComponent(true)
+    mountComponent()
     await userEvent.type(diagnosisTextArea, 'new diag')
     await userEvent.type(progressionProposalTextArea, 'new proposal')
     await userEvent.type(trainingSubjectTextArea, 'new training')
@@ -147,7 +149,7 @@ describe('Medical record edit dialog', () => {
     expect(diagnosisTextArea.value).toBe('diag1')
     expect(progressionProposalTextArea.value).toBe('proposal1')
     expect(trainingSubjectTextArea.value).toBe('training1')
-    fireEvent.click(saveButton)
+    expect(saveButton).not.toBeInTheDocument()
     expect(createMedicalRecordSpy).not.toHaveBeenCalled()
   })
 
@@ -155,7 +157,7 @@ describe('Medical record edit dialog', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { role: UserRoles.patient, isUserPatient: () => true } as User }
     })
-    mountComponent(true)
+    mountComponent()
     expect(saveButton).not.toBeInTheDocument()
   })
 })
