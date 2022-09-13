@@ -144,6 +144,7 @@ class TidelineHeader extends React.Component {
               <span>{ t('patient') } :</span>
               <FormControl id="subnav-patient-list" variant="outlined">
                 <Select
+                  data-testid="drop-down-patient"
                   defaultValue={this.props.patient.userid}
                   onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
                 >
@@ -173,11 +174,11 @@ class TidelineHeader extends React.Component {
               textColor="primary"
               indicatorColor="primary"
             >
-              <Tab data-testId="dashboard-tab" className={'subnav-tab'} href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
-                onClick={this.props.onClickDashboard} />
-              <div className={'dashboard-divider'}></div>
-              <Tab data-testId="daily-tab" className={'subnav-tab'} href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
-              <Tab data-testId="trends-tab" className={'subnav-tab'} href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
+              <Tab className={'subnav-tab'} data-testid="dashboard" href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
+                onClick={this.props.onClickDashboard}/>
+              <Tab label="" className={'dashboard-divider'} disabled />
+              <Tab className={'subnav-tab'} data-testid="daily" href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab className={'subnav-tab'} data-testid="trends" href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
                 onClick={this.props.onClickTrends} />
             </Tabs>
           </div>

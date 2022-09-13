@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1631 Install react testing library
 - YLP-1635 Modify CSP to enable refresh once logged in
 - YLP-1653 Support RTL jest dom for unit tests
+- YLP-1692 Improve user-friendliness of medical widget
 - YLP-1697 Split patients and team members management
 - YLP-1719 Remove inline CSS
 ### Fixed
