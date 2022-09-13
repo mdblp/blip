@@ -44,7 +44,8 @@ jest.mock('@auth0/auth0-react')
 jest.setTimeout(10000)
 
 describe('Patient dashboard for HCP', () => {
-  const patientDashboardRoute = '/patient/1db524f3b65f2/dashboard'
+  const patientId = '1db524f3b65f2'
+  const patientDashboardRoute = `/patient/${patientId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
   const history = createMemoryHistory({ initialEntries: [patientDashboardRoute] })
@@ -52,8 +53,8 @@ describe('Patient dashboard for HCP', () => {
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
-    mockTeamAPI()
-    mockDataAPI()
+    mockTeamAPI(patientId)
+    mockDataAPI(patientId)
     mockUserDataFetch(firstName, lastName)
   })
 
@@ -72,8 +73,8 @@ describe('Patient dashboard for HCP', () => {
       render(getPatientDashboardForHCP())
     })
 
-    await waitFor(() => expect(history.location.pathname).toBe('/patient/1db524f3b65f2/dashboard'))
     await waitFor(() => {
+      expect(history.location.pathname).toBe('/patient/1db524f3b65f2/dashboard')
       const dashboardLink = screen.getByText('dashboard')
       const dailyLink = screen.getByText('Daily')
       const trendsLink = screen.getByText('Trends')
@@ -87,10 +88,5 @@ describe('Patient dashboard for HCP', () => {
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
-
-    /* TODO check widgets based on monitoring or not */
   })
-
-  /* TODO test case to switch patient */
-  /* TODO test case to click on nav bar and see if page is changing (daily/trends) */
 })
