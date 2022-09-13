@@ -33,6 +33,7 @@ import { useQueryParams } from '../../../lib/custom-hooks/useQueryParams'
 import { MainDrawerProps } from './main-drawer'
 import { PatientFilterStats } from '../../../lib/team/models'
 import { PatientFilterTypes } from '../../../models/generic'
+import { usePatientContext } from '../../../lib/patient/provider'
 
 interface MainDrawerHookReturn {
   fullDrawer: boolean
@@ -49,10 +50,11 @@ const useMainDrawer = ({ miniVariant }: MainDrawerProps): MainDrawerHookReturn =
   const [onHover, setOnHover] = useState<boolean>(false)
   const teamHook = useTeam()
   const authHook = useAuth()
+  const patientHook = usePatientContext()
   const queryParams = useQueryParams()
   const { pathname } = useLocation()
 
-  const patientFiltersStats = teamHook.patientsFilterStats
+  const patientFiltersStats = patientHook.patientsFilterStats
   const numberOfFlaggedPatients = authHook.getFlagPatients().length
   const loggedUserIsHcpInMonitoring = !!(authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id)))
   const queryParam: string | null = queryParams.get('filter')
