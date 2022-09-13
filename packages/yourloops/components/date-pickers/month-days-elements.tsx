@@ -136,7 +136,11 @@ function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
         const month = day.month()
         const dayISO = day.format('YYYY-MM-DD')
         if (month !== currentMonth && selection.mode === 'range') {
-          return <span id={`hidden-calendar-day-${dayISO}`} key={`day-${dayISO}`} style={{ visibility: 'hidden' }}>{dateOfMonth}</span>
+          return (
+            <span id={`hidden-calendar-day-${dayISO}`} key={`day-${dayISO}`} className="visibility-hidden">
+              {dateOfMonth}
+            </span>
+          )
         }
         return getADay(index, day, dateOfMonth, month, dayISO)
       })}

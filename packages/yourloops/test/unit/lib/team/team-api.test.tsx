@@ -28,10 +28,9 @@
 import TeamApi from '../../../../lib/team/team-api'
 import { Monitoring } from '../../../../models/monitoring'
 import HttpService, { ErrorMessageStatus } from '../../../../services/http'
-import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../../../models/team'
+import { ITeam, TeamMemberRole, TeamType } from '../../../../models/team'
 import { AxiosResponse } from 'axios'
 import { INotificationAPI } from '../../../../models/notification'
-import { UserRoles } from '../../../../models/user'
 import { HttpHeaderKeys } from '../../../../models/api'
 import { getCurrentLang } from '../../../../lib/language'
 import { PostalAddress } from '../../../../models/generic'
@@ -41,8 +40,6 @@ describe('TeamApi', () => {
   const teamId = 'teamId'
   const email = 'email@test.com'
   const role = TeamMemberRole.admin
-  const patientId = 'patientId'
-  const monitoring = { enabled: true } as Monitoring
 
   describe('getTeams', () => {
     it('should get a list a teams', async () => {
@@ -68,48 +65,6 @@ describe('TeamApi', () => {
       await expect(async () => {
         await TeamApi.getTeams()
       }).rejects.toThrowError('This error was thrown by a mock on purpose')
-    })
-  })
-
-  describe('getPatients', () => {
-    it('should get a list a patients', async () => {
-      const data: ITeamMember[] = [
-        { email: 'member1@team.com' } as ITeamMember,
-        { email: 'member2@team.com' } as ITeamMember
-      ]
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-
-      const patients = await TeamApi.getPatients()
-      expect(patients).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: '/v0/my-patients' })
-    })
-
-    it('should return an empty array if not found', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await TeamApi.getPatients()
-      expect(response).toBeInstanceOf(Array)
-    })
-
-    it('should throw an error if http call failed', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
-      await expect(async () => {
-        await TeamApi.getPatients()
-      }).rejects.toThrowError('This error was thrown by a mock on purpose')
-    })
-  })
-
-  describe('invitePatient', () => {
-    it('should invite a new patient in a team and get a notification if success', async () => {
-      const data = { creatorId: 'creatorId' } as INotificationAPI
-      jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data } as AxiosResponse)
-
-      const notification = await TeamApi.invitePatient({ teamId, email })
-      expect(notification).toEqual(data)
-      expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/confirm/send/team/invite',
-        payload: { teamId, email, role: UserRoles.patient },
-        config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
-      })
     })
   })
 
@@ -175,17 +130,6 @@ describe('TeamApi', () => {
     })
   })
 
-  describe('updatePatientAlerts', () => {
-    it('should update patient alerts', async () => {
-      jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
-      await TeamApi.updatePatientAlerts(teamId, patientId, monitoring)
-      expect(HttpService.put).toHaveBeenCalledWith({
-        url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`,
-        payload: monitoring
-      })
-    })
-  })
-
   describe('updateTeamAlerts', () => {
     it('should make correct http call', () => {
       const teamId = 'fakeTeamId'
@@ -226,14 +170,6 @@ describe('TeamApi', () => {
         url: `confirm/send/team/leave/${teamId}/${userId}`,
         config: { params: { email } }
       })
-    })
-  })
-
-  describe('removePatient', () => {
-    it('should remove a patient from a team', async () => {
-      jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
-      await TeamApi.removePatient(teamId, userId)
-      expect(HttpService.delete).toHaveBeenCalledWith({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
     })
   })
 

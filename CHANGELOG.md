@@ -2,13 +2,15 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.1-BETA18 - 2022-08-22
+## 3.0.1-BETA20 - 2022-09-12
 ### Engineering use
 - YLP-1317 Renaming Shoreline model to a generic name
 - YLP-1626 Refactor team hook to only keep functions impacting the state
 - YLP-1631 Install react testing library
 - YLP-1635 Modify CSP to enable refresh once logged in
 - YLP-1653 Support RTL jest dom for unit tests
+- YLP-1697 Split patients and team members management
+- YLP-1719 Remove inline CSS
 ### Fixed
 - YLP-1634 Fix missing UTs
 - YLP-1645 A patient can create, edit and delete a medical record

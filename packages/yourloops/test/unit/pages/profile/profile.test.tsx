@@ -200,7 +200,6 @@ describe('Profile', () => {
         user: patient
       }
     })
-    console.log(patient)
     await mountProfilePage()
     const insInput = container.querySelector('#profile-textfield-ins')
     expect(insInput?.value).toBe(patient.profile?.patient?.ins)

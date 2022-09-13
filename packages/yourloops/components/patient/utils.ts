@@ -27,14 +27,13 @@
  */
 
 import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
-import { TFunction } from 'i18next'
 
-import { PatientTableSortFields, SortFields } from '../../models/generic'
+import { PatientTableSortFields } from '../../models/generic'
 import { MedicalData } from '../../models/device-data'
 import { MedicalTableValues } from './models'
-import { TeamMember, TeamUser } from '../../lib/team'
-import { Patient, PatientTeam } from '../../lib/data/patient'
+import { Patient } from '../../lib/data/patient'
 import { Alarm } from '../../models/alarm'
+import { ITeamMember } from '../../models/team'
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
   let tir = '-'
@@ -78,31 +77,6 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
     tbrNumber,
     lastUploadEpoch
   }
-}
-
-export const translateSortField = (t: TFunction, field: SortFields): string => {
-  let trOrderBy: string
-  switch (field) {
-    case SortFields.firstname:
-      trOrderBy = t('firstname')
-      break
-    case SortFields.lastname:
-      trOrderBy = t('lastname')
-      break
-    case SortFields.tir:
-      trOrderBy = t('list-patient-tir')
-      break
-    case SortFields.tbr:
-      trOrderBy = t('list-patient-tbr')
-      break
-    case SortFields.upload:
-      trOrderBy = t('list-patient-upload')
-      break
-    case SortFields.email:
-      trOrderBy = t('email')
-      break
-  }
-  return trOrderBy
 }
 
 export const compareNumbers = (a: number, b: number): number => {
@@ -186,40 +160,38 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
   return compareValues(aValue, bValue)
 }
 
-export const mapTeamMemberToPatientTeam = (member: TeamMember): PatientTeam => {
+export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
+  const birthdate = iTeamMember.profile?.patient?.birthday
   return {
-    code: member.team.code,
-    invitation: member.invitation,
-    status: member.status,
-    teamId: member.team.id,
-    teamName: member.team.name
-  }
-}
-
-export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
-  const birthdate = teamUser.profile?.patient?.birthday
-  return {
-    metadata: {
-      alarm: teamUser.alarms ?? {} as Alarm,
-      flagged: undefined,
-      medicalData: null,
-      unreadMessagesSent: teamUser.unreadMessages ?? 0
-    },
-    monitoring: teamUser.monitoring,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
-      sex: teamUser.profile?.patient?.sex ? teamUser.profile?.patient?.sex : '',
-      firstName: teamUser.profile?.firstName,
-      fullName: teamUser.profile?.fullName ?? teamUser.username,
-      lastName: teamUser.profile?.lastName,
-      email: teamUser.username,
-      referringDoctor: teamUser.profile?.patient?.referringDoctor
+      sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
+      firstName: iTeamMember.profile?.firstName,
+      fullName: iTeamMember.profile?.fullName ?? iTeamMember.email,
+      lastName: iTeamMember.profile?.lastName,
+      email: iTeamMember.email,
+      referringDoctor: iTeamMember.profile?.patient?.referringDoctor
     },
     settings: {
-      a1c: teamUser.settings?.a1c,
+      a1c: iTeamMember.settings?.a1c,
       system: 'DBLG1'
     },
-    teams: teamUser.members.map(member => mapTeamMemberToPatientTeam(member)),
-    userid: teamUser.userid
+    metadata: {
+      alarm: iTeamMember.alarms ?? {} as Alarm,
+      flagged: undefined,
+      medicalData: null,
+      unreadMessagesSent: iTeamMember.unreadMessages ?? 0
+    },
+    monitoring: iTeamMember.monitoring,
+    teams: iTeamMember.teamId === ''
+      ? []
+      : [
+          {
+            teamId: iTeamMember.teamId,
+            status: iTeamMember.invitationStatus,
+            monitoringStatus: iTeamMember.monitoring?.status
+          }
+        ],
+    userid: iTeamMember.userId
   }
 }

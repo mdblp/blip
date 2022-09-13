@@ -41,6 +41,7 @@ import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { convertBG, UNITS_TYPE } from '../../lib/units/utils'
 import { useTeam } from '../../lib/team'
 import { Patient } from '../../lib/data/patient'
+import PatientUtils from '../../lib/patient/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   cancelButton: {
@@ -199,7 +200,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     if (!patient) {
       throw Error('This action cannot be done if the patient is undefined')
     }
-    const monitoredTeam = teamHook.getPatientRemoteMonitoringTeam(patient)
+    const monitoredTeam = PatientUtils.getRemoteMonitoringTeam(patient)
     const team = teamHook.getTeam(monitoredTeam.teamId)
     if (!team) {
       throw Error(`Cannot find team with id ${monitoredTeam.teamId}`)

@@ -25,44 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { UserRoles } from '../models/user'
+import { useAuth } from '../lib/auth'
+import { NotificationContextProvider } from '../lib/notifications/hook'
+import { Redirect } from 'react-router-dom'
+import { HcpLayout } from './hcp-layout'
+import { CaregiverLayout } from './caregiver-layout'
+import { PatientLayout } from './patient-layout'
+import { DataContextProvider, DefaultDataContext } from '../lib/data/hook'
 
-import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
+export function MainLayout(): JSX.Element {
+  const { user } = useAuth()
 
-import MainHeader from '../header-bars/main-header'
-import MainDrawer from '../menus/drawer/main-drawer'
-import { useAuth } from '../../lib/auth'
-
-const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
-  toolbar: { ...theme.mixins.toolbar },
-  container: {
-    padding: '0px'
+  const getUserLayout = (): JSX.Element => {
+    switch (user?.role) {
+      case UserRoles.hcp:
+        return <HcpLayout />
+      case UserRoles.caregiver:
+        return <CaregiverLayout />
+      case UserRoles.patient:
+        return <PatientLayout />
+      default:
+        console.error(`no layout found for role ${user?.role}`)
+        return <Redirect to="/not-found" />
+    }
   }
-}))
-
-function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
-  const classes = dashboardLayoutStyle()
-  const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true)
-  const authHook = useAuth()
-  const isUserPatient = authHook.user?.isUserPatient()
-
-  const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant)
 
   return (
-    <Box display="flex">
-      <MainHeader withShrinkIcon={!isUserPatient} onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
-      {!isUserPatient &&
-        <MainDrawer miniVariant={drawerMiniVariant} />
+    <React.Fragment>
+      {user &&
+        <NotificationContextProvider>
+          <DataContextProvider context={DefaultDataContext}>
+            {getUserLayout()}
+          </DataContextProvider>
+        </NotificationContextProvider>
       }
-      <Container maxWidth={false} className={classes.container}>
-        <div className={classes.toolbar} />
-        {children}
-      </Container>
-    </Box>
+    </React.Fragment>
   )
 }
-
-export default DashboardLayout

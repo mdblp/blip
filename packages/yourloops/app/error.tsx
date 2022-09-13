@@ -68,7 +68,6 @@ function OnError(props: OnErrorProps): JSX.Element {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleOK = (): void => {
-    // Then reload the page
     window.location.replace('/')
   }
 
@@ -76,29 +75,51 @@ function OnError(props: OnErrorProps): JSX.Element {
     setShowMore(true)
   }
 
-  let moreInfos: JSX.Element | null = null
+  let moreInfos: JSX.Element | null
   if (showMore) {
     const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'N/A'
     const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
     moreInfos = (
       <React.Fragment>
-        <DialogContentText style={{ marginTop: '1em', marginBottom: '0px' }} color="textSecondary">{t('app-crash-info')}</DialogContentText>
-        <TextField id="dialog-app-crash-technical-info" style={{ width: '100%' }} inputProps={{ color: 'grey' }} color="secondary" multiline rows={4} value={info}/>
+        <DialogContentText className="no-margin-bottom">
+          {t('app-crash-info')}
+        </DialogContentText>
+        <TextField
+          id="dialog-app-crash-technical-info"
+          inputProps={{ color: 'grey' }}
+          fullWidth
+          multiline
+          rows={5}
+          value={info}
+        />
       </React.Fragment>
     )
   } else {
     moreInfos = (
-      <Button id="dialog-app-button-more-info" variant="text" color="primary" style={{ marginTop: '1em' }} onClick={handleShowMore}>
+      <Button
+        id="dialog-app-button-more-info"
+        variant="text"
+        color="primary"
+        onClick={handleShowMore}
+      >
         {t('app-crash-button-more-info')}
       </Button>
     )
   }
 
   return (
-    <Dialog id="dialog-app-crash" open fullScreen={fullScreen} fullWidth maxWidth="sm">
+    <Dialog
+      id="dialog-app-crash"
+      open
+      fullScreen={fullScreen}
+      fullWidth
+      maxWidth="sm"
+    >
       <DialogTitle id="dialog-app-crash-title">{t('app-crash-title')}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="dialog-app-crash-explanation" color="textPrimary">{t('app-crash-text')}</DialogContentText>
+        <DialogContentText id="dialog-app-crash-explanation" color="textPrimary">
+          {t('app-crash-text')}
+        </DialogContentText>
         {moreInfos}
       </DialogContent>
       <DialogActions>

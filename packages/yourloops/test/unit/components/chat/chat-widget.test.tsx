@@ -32,10 +32,10 @@ import { act, Simulate } from 'react-dom/test-utils'
 import ChatWidget from '../../../../components/chat/chat-widget'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { Patient, PatientTeam } from '../../../../lib/data/patient'
-import * as teamHookMock from '../../../../lib/team'
 import { IMessage } from '../../../../models/chat'
 import User from '../../../../lib/auth/user'
 import ChatApi from '../../../../lib/chat/api'
+import PatientUtils from '../../../../lib/patient/utils'
 
 jest.mock('../../../../lib/team')
 describe('Chat widget', () => {
@@ -58,10 +58,8 @@ describe('Chat widget', () => {
   }
 
   beforeAll(() => {
-    Element.prototype.scroll = jest.fn();
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { getPatientRemoteMonitoringTeam: jest.fn().mockReturnValue(patientTeam) }
-    })
+    Element.prototype.scroll = jest.fn()
+    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue(patientTeam)
   })
 
   beforeEach(() => {
