@@ -222,7 +222,6 @@ function TeamContextImpl(): TeamContext {
 
   React.useEffect(() => {
     if (!initialized && notificationHook.initialized) {
-      log.info('init')
       fetchTeams()
     }
   }, [initialized, notificationHook, fetchTeams])
