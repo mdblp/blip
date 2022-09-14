@@ -61,6 +61,7 @@ describe('Team hook', () => {
   const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue(['flaggedPatient'])
   const authHookFlagPatientMock = jest.fn()
+  const loadTeamsSpy = jest.spyOn(TeamUtils, 'loadTeams')
 
   async function mountComponent() {
     const DummyComponent = (): JSX.Element => {
@@ -78,7 +79,8 @@ describe('Team hook', () => {
   }
 
   beforeAll(async () => {
-    jest.spyOn(TeamUtils, 'loadTeams').mockResolvedValue(teams);
+    loadTeamsSpy.mockReset()
+    loadTeamsSpy.mockResolvedValue(teams);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: { id: 'memberPatientAccepted1' },
@@ -133,7 +135,7 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.updateTeamAlerts(team1)
         expect(updateTeamAlertsSpy).toHaveBeenCalled()
-        await waitFor(() => expect(TeamUtils.loadTeams).toHaveBeenCalledTimes(2))
+        await waitFor(() => expect(TeamUtils.loadTeams).toHaveBeenCalledTimes(3))
       })
     })
   })
@@ -176,7 +178,7 @@ describe('Team hook', () => {
       expect(teams).toHaveLength(initialTeamsLength)
       await act(async () => {
         await teamHook.createTeam(newTeam)
-        expect(teams).toHaveLength(initialTeamsLength + 1)
+        expect(loadTeamsSpy).toBeCalledTimes(1)
       })
     })
   })
@@ -198,7 +200,7 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.inviteMember(team1, 'new-hcp@mail.com', TeamMemberRole.admin)
       })
-      expect(team1.members.length).toEqual(initialTeamMembersLength + 1)
+      expect(loadTeamsSpy).toBeCalledTimes(1)
     })
   })
 
@@ -208,7 +210,7 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.changeMemberRole(memberHcp1, TeamMemberRole.admin)
       })
-      expect(team1.members[team1.members.length - 1].role).toEqual(TeamMemberRole.admin)
+      expect(loadTeamsSpy).toBeCalledTimes(1)
     })
   })
 

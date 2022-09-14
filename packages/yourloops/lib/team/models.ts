@@ -68,14 +68,14 @@ export interface TeamContext {
   teams: Array<Readonly<Team>>
   /** true if an initial team fetch has been done */
   initialized: boolean
+  /** true if the teams are being retrieved */
+  refreshInProgress: boolean
   /** The error message set if there is any error */
   errorMessage: string | null
   /**
    * Refresh the team list & members.
-   *
-   * @param forceRefresh if true, re-fetch the team
    */
-  refresh: (forceRefresh: boolean) => void
+  refresh: () => void
   /**
    * Return the medical teams only
    */
@@ -150,10 +150,6 @@ export interface TeamContext {
    * Join a specific team.
    */
   joinTeam: (teamId: string) => Promise<void>
-  /**
-   * Remove a team (no api call is done)
-   */
-  removeTeamFromList: (teamId: string) => void
 }
 
 export interface PatientFilterStats {
