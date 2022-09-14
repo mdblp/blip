@@ -116,7 +116,7 @@ describe('Header', function () {
       const elem = renderIntoDocument(dailyElem)
       expect(elem).to.be.ok
 
-      const trendsButton = elem.querySelector('[data-testid="trends"]')
+      const trendsButton = elem.querySelector('[data-testid="trends-tab"]')
 
       expect(props.onClickTrends.callCount).to.equal(0)
       TestUtils.Simulate.click(trendsButton)
@@ -128,7 +128,7 @@ describe('Header', function () {
       const elem = renderIntoDocument(dailyElem)
       expect(elem).to.be.ok
 
-      const dashboardButton = elem.querySelector('[data-testid="dashboard"]')
+      const dashboardButton = elem.querySelector('[data-testid="dashboard-tab"]')
 
       expect(props.onClickDashboard.callCount).to.equal(0)
       TestUtils.Simulate.click(dashboardButton)
@@ -140,7 +140,7 @@ describe('Header', function () {
       const elem = renderIntoDocument(dailyElem)
       expect(elem).to.be.ok
 
-      const dailyButton = elem.querySelector('[data-testid="daily"]')
+      const dailyButton = elem.querySelector('[data-testid="daily-tab"]')
 
       expect(props.onClickOneDay.callCount).to.equal(0)
       TestUtils.Simulate.click(dailyButton)
