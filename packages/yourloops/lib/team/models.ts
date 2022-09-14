@@ -38,7 +38,7 @@ export const REGEX_TEAM_CODE_DISPLAY = /^[0-9]{3} - [0-9]{3} - [0-9]{3}$/
 
 export interface TeamMember {
   userId: string
-  teamId: string
+  teamId: 'private' | string
   email: string
   profile?: Profile | null
   role: TeamMemberRole

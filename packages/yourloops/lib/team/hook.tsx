@@ -61,19 +61,8 @@ function TeamContextImpl(): TeamContext {
   }
 
   const fetchTeams = useCallback(() => {
-    TeamUtils.loadTeams(user)
+    TeamUtils.loadTeams(user, notificationHook.sentInvitations)
       .then((teams: Team[]) => {
-        for (const invitation of notificationHook.sentInvitations) {
-          const members = TeamUtils.getMembersByEmail(teams, invitation.email)
-          if (members.length > 0) {
-            for (const member of members) {
-              if (member.status === UserInvitationStatus.pending) {
-                member.invitation = invitation
-              }
-            }
-          }
-        }
-
         setTeams(teams)
         if (errorMessage !== null) {
           setErrorMessage(null)

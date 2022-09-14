@@ -29,11 +29,9 @@
 import { Team, TEAM_CODE_LENGTH, TeamMember } from './models'
 import TeamApi from './team-api'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
-import bows from 'bows'
 import { UserInvitationStatus } from '../../models/generic'
 import User from '../auth/user'
-
-const log = bows('TeamUtils')
+import { INotification } from '../notifications/models'
 
 /**
  * Get the team code for display - Can be use with partial code.
@@ -75,7 +73,7 @@ export default class TeamUtils {
     }, 0)
   }
 
-  static iMemberToMember(iTeamMember: ITeamMember, team: Team): TeamMember {
+  static iMemberToMember(iTeamMember: ITeamMember, team: Team, invitations: INotification[]): TeamMember {
     const {
       userId,
       invitationStatus,
@@ -84,42 +82,20 @@ export default class TeamUtils {
       profile,
       idVerified
     } = iTeamMember
-    const teamMember: TeamMember = {
+    return {
       teamId: team.id,
       userId,
       email,
       profile,
       role,
       status: invitationStatus,
-      idVerified
+      idVerified,
+      invitation: invitations.find(invitation => invitation.target.id === team.id && invitation.email === email)
     }
-    team.members.push(teamMember)
-    return teamMember
   }
 
-  static iTeamToTeam(iTeam: ITeam): Team {
-    const team: Team = { ...iTeam, members: [] }
-    // Detect duplicate users, and update the member if needed
-    iTeam.members.forEach(iTeamMember => TeamUtils.iMemberToMember(iTeamMember, team))
-    return team
-  }
-
-  static getMembersByEmail(teams: Team[], email: string): TeamMember[] {
-    const members = []
-    teams.forEach(team => {
-      team.members.forEach(member => {
-        if (member.email === email) {
-          members.push(member)
-        }
-      })
-    })
-    return members
-  }
-
-  static async loadTeams(user: User): Promise<Team[]> {
-    const apiTeams = await TeamApi.getTeams()
-
-    log.debug('loadTeams', { nTeams: apiTeams.length })
+  static async loadTeams(user: User, invitations: INotification[]): Promise<Team[]> {
+    const iTeams = await TeamApi.getTeams()
 
     const privateTeam: Team = {
       code: TeamType.private,
@@ -131,8 +107,21 @@ export default class TeamUtils {
     }
 
     const teams: Team[] = [privateTeam]
-    apiTeams.forEach((apiTeam: ITeam) => {
-      const team = TeamUtils.iTeamToTeam(apiTeam)
+    iTeams.forEach((iTeam: ITeam) => {
+      const members = iTeam.members.map(iTeamMember => TeamUtils.iMemberToMember(iTeamMember, team, invitations))
+      const team: Team = {
+        id: iTeam.id,
+        name: iTeam.name,
+        code: iTeam.code,
+        type: iTeam.type,
+        owner: iTeam.owner,
+        phone: iTeam.phone,
+        email: iTeam.email,
+        address: iTeam.address,
+        description: iTeam.description,
+        members,
+        monitoring: iTeam.monitoring
+      }
       teams.push(team)
     })
 
