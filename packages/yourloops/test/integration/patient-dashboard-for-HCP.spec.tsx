@@ -45,22 +45,21 @@ jest.mock('@auth0/auth0-react')
 jest.setTimeout(10000)
 
 describe('Patient dashboard for HCP', () => {
-  const patientId = '1db524f3b65f2'
-  const patientDashboardRoute = `/patient/${patientId}/dashboard`
+  const patientNonMonitoredId = '1db524f3b65f2'
+  const patientMonitoredId = '2db524f3b65f2'
+  const patientNonMonitoredDashboardRoute = `/patient/${patientNonMonitoredId}/dashboard`
+  const patientMonitoredDashboardRoute = `/patient/${patientMonitoredId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
-  const history = createMemoryHistory({ initialEntries: [patientDashboardRoute] })
 
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockTeamAPI()
-    mockPatientAPI(patientId)
-    mockDataAPI(patientId)
     mockUserDataFetch(firstName, lastName)
   })
 
-  function getPatientDashboardForHCP() {
+  function getPatientDashboardForHCP(history) {
     return (
       <Router history={history}>
         <AuthContextProvider>
@@ -70,22 +69,64 @@ describe('Patient dashboard for HCP', () => {
     )
   }
 
-  it('should render correct components when navigating to patient dashboard as an HCP', async () => {
+  function getByTextAndExpectVisible(text: string) {
+    const element = screen.getByText(text)
+    expect(element).toBeVisible()
+    return element
+  }
+
+  function getByTestIdAndExpectVisible(testid: string) {
+    const element = screen.getByTestId(testid)
+    expect(element).toBeVisible()
+    return element
+  }
+
+  function testCommonDisplayForPatient(patientId: string) {
+    getByTestIdAndExpectVisible('subnav-arrow-back')
+    getByTestIdAndExpectVisible('subnav-patient-list')
+    getByTextAndExpectVisible('dashboard-header-period-text')
+    const dashboardLink = getByTextAndExpectVisible('dashboard')
+    const dailyLink = getByTextAndExpectVisible('Daily')
+    const trendsLink = getByTextAndExpectVisible('Trends')
+    expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
+    expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/daily`)
+    expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/trends`)
+    getByTextAndExpectVisible('pdf-generate-report')
+    getByTextAndExpectVisible('patient-info')
+    getByTextAndExpectVisible('patient-statistics')
+    getByTextAndExpectVisible('device-usage')
+  }
+
+  it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
+    mockPatientAPI(patientNonMonitoredId, false)
+    mockDataAPI(patientNonMonitoredId)
+    const history = createMemoryHistory({ initialEntries: [patientNonMonitoredDashboardRoute] })
+
     act(() => {
-      render(getPatientDashboardForHCP())
+      render(getPatientDashboardForHCP(history))
     })
 
     await waitFor(() => {
-      expect(history.location.pathname).toBe(`/patient/${patientId}/dashboard`)
-      const dashboardLink = screen.getByText('Dashboard')
-      const dailyLink = screen.getByText('Daily')
-      const trendsLink = screen.getByText('Trends')
-      expect(dashboardLink).toBeVisible()
-      expect(dailyLink).toBeVisible()
-      expect(trendsLink).toBeVisible()
-      expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
-      expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/daily`)
-      expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/trends`)
+      expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
+      testCommonDisplayForPatient(patientNonMonitoredId)
+    }, { timeout: 5000 })
+    checkHeader(`${firstName} ${lastName}`)
+    checkDrawer()
+    checkFooter()
+  })
+
+  it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
+    mockPatientAPI(patientMonitoredId, true)
+    mockDataAPI(patientMonitoredId)
+    const history = createMemoryHistory({ initialEntries: [patientMonitoredDashboardRoute] })
+
+    act(() => {
+      render(getPatientDashboardForHCP(history))
+    })
+
+    await waitFor(() => {
+      expect(history.location.pathname).toBe(patientMonitoredDashboardRoute)
+      testCommonDisplayForPatient(patientMonitoredId)
     }, { timeout: 5000 })
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
