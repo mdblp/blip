@@ -28,7 +28,7 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { act, prettyDOM, render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import { AuthContextProvider } from '../../lib/auth'
 import { MainLobby } from '../../app/main-lobby'
 import { checkHeader } from './utils/header'
