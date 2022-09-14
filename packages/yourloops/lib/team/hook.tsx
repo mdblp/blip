@@ -28,7 +28,6 @@
 
 import React, { useCallback, useState } from 'react'
 import _ from 'lodash'
-import bows from 'bows'
 
 import { UserInvitationStatus } from '../../models/generic'
 import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
@@ -42,7 +41,6 @@ import TeamApi from './team-api'
 import TeamUtils from './utils'
 import { CircularProgress } from '@material-ui/core'
 
-const log = bows('TeamHook')
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext)
 
 function TeamContextImpl(): TeamContext {
@@ -81,7 +79,6 @@ function TeamContextImpl(): TeamContext {
   const fetchTeams = useCallback(() => {
     TeamUtils.loadTeams(user)
       .then((teams: Team[]) => {
-        log.debug('Loaded teams: ', teams)
         for (const invitation of notificationHook.sentInvitations) {
           const user = TeamUtils.getUserByEmail(teams, invitation.email)
           if (user) {
@@ -99,14 +96,12 @@ function TeamContextImpl(): TeamContext {
         }
       })
       .catch((reason: unknown) => {
-        log.error(reason)
         const message = errorTextFromException(reason)
         if (message !== errorMessage) {
           setErrorMessage(message)
         }
       })
       .finally(() => {
-        log.debug('Initialized !')
         setInitialized(true)
         setRefreshInProgress(false)
       })
@@ -172,7 +167,6 @@ function TeamContextImpl(): TeamContext {
     if (_.isNil(ourselve)) {
       throw new Error('We are not a member of the team!')
     }
-    log.info('leaveTeam', { ourselve, team })
     if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
       await TeamApi.deleteTeam(team.id)
       metrics.send('team_management', 'delete_team')
