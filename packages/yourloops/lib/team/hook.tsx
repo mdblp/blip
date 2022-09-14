@@ -64,21 +64,17 @@ function TeamContextImpl(): TeamContext {
     TeamUtils.loadTeams(user, notificationHook.sentInvitations)
       .then((teams: Team[]) => {
         setTeams(teams)
-        if (errorMessage !== null) {
-          setErrorMessage(null)
-        }
+        setErrorMessage(null)
       })
       .catch((reason: unknown) => {
         const message = errorTextFromException(reason)
-        if (message !== errorMessage) {
-          setErrorMessage(message)
-        }
+        setErrorMessage(message)
       })
       .finally(() => {
         setInitialized(true)
         setRefreshInProgress(false)
       })
-  }, [errorMessage, notificationHook.sentInvitations, user])
+  }, [notificationHook.sentInvitations, user])
 
   const refresh = (): void => {
     setRefreshInProgress(true)

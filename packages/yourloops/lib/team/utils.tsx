@@ -73,7 +73,7 @@ export default class TeamUtils {
     }, 0)
   }
 
-  static iMemberToMember(iTeamMember: ITeamMember, team: Team, invitations: INotification[]): TeamMember {
+  static iMemberToMember(iTeamMember: ITeamMember, teamId: string, invitations: INotification[]): TeamMember {
     const {
       userId,
       invitationStatus,
@@ -83,14 +83,14 @@ export default class TeamUtils {
       idVerified
     } = iTeamMember
     return {
-      teamId: team.id,
+      teamId,
       userId,
       email,
       profile,
       role,
       status: invitationStatus,
       idVerified,
-      invitation: invitations.find(invitation => invitation.target.id === team.id && invitation.email === email)
+      invitation: invitations.find(invitation => invitation.target.id === teamId && invitation.email === email)
     }
   }
 
@@ -108,7 +108,7 @@ export default class TeamUtils {
 
     const teams: Team[] = [privateTeam]
     iTeams.forEach((iTeam: ITeam) => {
-      const members = iTeam.members.map(iTeamMember => TeamUtils.iMemberToMember(iTeamMember, team, invitations))
+      const members = iTeam.members.map(iTeamMember => TeamUtils.iMemberToMember(iTeamMember, iTeam.id, invitations))
       const team: Team = {
         id: iTeam.id,
         name: iTeam.name,
