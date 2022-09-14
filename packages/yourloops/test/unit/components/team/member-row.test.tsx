@@ -161,7 +161,7 @@ describe('MemberRow', () => {
 
   beforeEach(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { id: loggedInUserAdmin.user.userid } as User }
+      return { user: { id: loggedInUserAdmin.userId } as User }
     })
   })
 
@@ -204,7 +204,7 @@ describe('MemberRow', () => {
     const roleCheckbox = within(cells[3]).getByRole('checkbox')
     expect(cells[0].innerHTML).toEqual('--')
     expect(screen.queryByTitle('pending-user-icon')).not.toBeNull()
-    expect(cells[2].innerHTML).toEqual(teamMember.user.username)
+    expect(cells[2].innerHTML).toEqual(teamMember.email)
     expect(roleCheckbox).toBeChecked()
     expect(roleCheckbox).toBeDisabled()
     expect(screen.queryByRole('button', { name: 'remove-member-button' })).toBeNull()
@@ -236,9 +236,9 @@ describe('MemberRow', () => {
     const cells = screen.getAllByRole('cell')
     expect(cells).toHaveLength(4)
     const roleCheckbox = within(cells[3]).getByRole('checkbox')
-    expect(cells[0].innerHTML).toEqual(teamMember.user.profile.fullName)
+    expect(cells[0].innerHTML).toEqual(teamMember.profile.fullName)
     expect(screen.queryByTitle('pending-user-icon')).toBeNull()
-    expect(cells[2].innerHTML).toEqual(teamMember.user.username)
+    expect(cells[2].innerHTML).toEqual(teamMember.email)
     expect(roleCheckbox).not.toBeChecked()
     expect(roleCheckbox).toBeDisabled()
     expect(screen.queryByRole('button', { name: 'remove-member-button' })).toBeNull()
@@ -256,9 +256,9 @@ describe('MemberRow', () => {
     const cells = screen.getAllByRole('cell')
     expect(cells).toHaveLength(5)
     const roleCheckbox = within(cells[3]).getByRole('checkbox')
-    expect(cells[0].innerHTML).toEqual(teamMember.user.profile.fullName)
+    expect(cells[0].innerHTML).toEqual(teamMember.profile.fullName)
     expect(screen.queryByTitle('pending-user-icon')).toBeNull()
-    expect(cells[2].innerHTML).toEqual(teamMember.user.username)
+    expect(cells[2].innerHTML).toEqual(teamMember.email)
     expect(roleCheckbox).not.toBeChecked()
     expect(roleCheckbox).toBeEnabled()
     expect(screen.queryByRole('button', { name: 'remove-member-button' })).not.toBeNull()

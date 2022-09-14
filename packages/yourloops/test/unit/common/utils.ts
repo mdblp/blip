@@ -30,7 +30,6 @@ import { UserInvitationStatus } from '../../../models/generic'
 import { Patient, PatientTeam } from '../../../lib/data/patient'
 import { Alarm } from '../../../models/alarm'
 import { Team, TeamMember } from '../../../lib/team'
-import { UserRoles } from '../../../models/user'
 import { TeamMemberRole, TeamType } from '../../../models/team'
 import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
 import { UNITS_TYPE } from '../../../lib/units/utils'
@@ -130,31 +129,19 @@ export function buildTeamMember(
   userId = 'fakeUserId',
   invitation: INotification | undefined = undefined,
   role: TeamMemberRole = TeamMemberRole.admin,
-  username = 'fake@username.com',
+  email = 'fake@username.com',
   fullName = 'fake full name',
-  status = UserInvitationStatus.pending,
-  userRole: UserRoles = UserRoles.hcp
+  status = UserInvitationStatus.pending
 ): TeamMember {
   return {
-    team: { id: teamId } as Team,
+    userId,
+    teamId,
+    email,
+    profile: { fullName },
     role,
     status,
-    user: {
-      role: userRole,
-      userid: userId,
-      username,
-      members: [
-        {
-          invitation: {} as INotification,
-          status,
-          team: { id: teamId, code: 'fakeCode', name: 'fakeTeamName' }
-        } as TeamMember
-      ],
-      profile: {
-        fullName
-      }
-    },
-    invitation
+    invitation,
+    idVerified: undefined
   }
 }
 

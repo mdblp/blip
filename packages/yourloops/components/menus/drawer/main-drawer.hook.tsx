@@ -56,7 +56,7 @@ const useMainDrawer = ({ miniVariant }: MainDrawerProps): MainDrawerHookReturn =
 
   const patientFiltersStats = patientHook.patientsFilterStats
   const numberOfFlaggedPatients = authHook.getFlagPatients().length
-  const loggedUserIsHcpInMonitoring = !!(authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id)))
+  const loggedUserIsHcpInMonitoring = !!(authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.userId === authHook.user?.id)))
   const queryParam: string | null = queryParams.get('filter')
   const selectedFilter: string | null = queryParam ?? (pathname === '/home' ? PatientFilterTypes.all : null)
 

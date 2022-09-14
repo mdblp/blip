@@ -27,7 +27,7 @@
  */
 
 import { PostalAddress, UserInvitationStatus } from '../../models/generic'
-import { IUser } from '../../models/user'
+import { Profile } from '../../models/user'
 import { INotification } from '../notifications/models'
 import { TeamMemberRole, TeamType, TypeTeamMemberRole } from '../../models/team'
 import { Monitoring } from '../../models/monitoring'
@@ -36,16 +36,13 @@ export const TEAM_CODE_LENGTH = 9
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/
 export const REGEX_TEAM_CODE_DISPLAY = /^[0-9]{3} - [0-9]{3} - [0-9]{3}$/
 
-export interface TeamUser extends IUser {
-  members: TeamMember[]
-}
-
 export interface TeamMember {
-  team: Team
+  userId: string
+  teamId: string
+  email: string
+  profile?: Profile | null
   role: TeamMemberRole
   status: UserInvitationStatus
-  user: TeamUser
-  /** Invitations for roles = pending */
   invitation?: INotification
   idVerified?: boolean
 }
@@ -89,12 +86,6 @@ export interface TeamContext {
    * @param teamId The technical team id
    */
   getTeam: (teamId: string) => Readonly<Team> | null
-  /**
-   * Return the user which the userId belongs to.
-   * *All your base are belong to us*
-   * @param userId The user we want
-   */
-  getUser: (userId: string) => Readonly<TeamUser> | null
 
   /**
    * As an HCP invite a member (non patient)

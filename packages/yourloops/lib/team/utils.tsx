@@ -26,12 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Team, TEAM_CODE_LENGTH, TeamMember, TeamUser } from './models'
+import { Team, TEAM_CODE_LENGTH, TeamMember } from './models'
 import TeamApi from './team-api'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
 import bows from 'bows'
-import { UserRoles } from '../../models/user'
-import { fixYLP878Settings } from '../utils'
 import { UserInvitationStatus } from '../../models/generic'
 import User from '../auth/user'
 
@@ -58,11 +56,11 @@ export function getDisplayTeamCode(code: string): string {
 export default class TeamUtils {
   static isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
     const admins = team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted)
-    return admins.length === 1 && admins[0].user.userid === userId
+    return admins.length === 1 && admins[0].userId === userId
   }
 
   static isUserAdministrator = (team: Team, userId: string): boolean => {
-    const result = team.members.find((member) => member.role === TeamMemberRole.admin && member.user.userid === userId)
+    const result = team.members.find((member) => member.role === TeamMemberRole.admin && member.userId === userId)
     return typeof result === 'object'
   }
 
@@ -77,71 +75,48 @@ export default class TeamUtils {
     }, 0)
   }
 
-  static iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map<string, TeamUser>): TeamMember {
+  static iMemberToMember(iTeamMember: ITeamMember, team: Team): TeamMember {
     const {
       userId,
       invitationStatus,
       role,
       email,
-      preferences,
       profile,
-      settings,
-      idVerified,
-      alarms,
-      monitoring,
-      unreadMessages
+      idVerified
     } = iTeamMember
-
-    let teamUser = users.get(userId)
-    if (!teamUser) {
-      teamUser = {
-        role: role === TeamMemberRole.patient ? UserRoles.patient : UserRoles.hcp,
-        userid: userId,
-        username: email,
-        emails: [email],
-        preferences,
-        profile,
-        settings: fixYLP878Settings(settings),
-        members: [],
-        idVerified,
-        alarms,
-        monitoring,
-        unreadMessages
-      }
-      users.set(userId, teamUser)
-    }
-
     const teamMember: TeamMember = {
-      team,
+      teamId: team.id,
+      userId,
+      email,
+      profile,
       role,
       status: invitationStatus,
-      user: teamUser
+      idVerified
     }
-    teamUser.members.push(teamMember)
     team.members.push(teamMember)
     return teamMember
   }
 
-  static iTeamToTeam(iTeam: ITeam, users: Map<string, TeamUser>): Team {
+  static iTeamToTeam(iTeam: ITeam): Team {
     const team: Team = { ...iTeam, members: [] }
     // Detect duplicate users, and update the member if needed
-    iTeam.members.forEach(iTeamMember => TeamUtils.iMemberToMember(iTeamMember, team, users))
+    iTeam.members.forEach(iTeamMember => TeamUtils.iMemberToMember(iTeamMember, team))
     return team
   }
 
-  static getUserByEmail(teams: Team[], email: string): TeamUser | null {
-    for (const team of teams) {
-      for (const member of team.members) {
-        if (member.user.username === email) {
-          return member.user
+  static getMembersByEmail(teams: Team[], email: string): TeamMember[] {
+    const members = []
+    teams.forEach(team => {
+      team.members.forEach(member => {
+        if (member.email === email) {
+          members.push(member)
         }
-      }
-    }
-    return null
+      })
+    })
+    return members
   }
 
   static async loadTeams(user: User): Promise<Team[]> {
-    const users = new Map<string, TeamUser>()
     const apiTeams = await TeamApi.getTeams()
 
     log.debug('loadTeams', { nTeams: apiTeams.length })
@@ -157,12 +132,10 @@ export default class TeamUtils {
 
     const teams: Team[] = [privateTeam]
     apiTeams.forEach((apiTeam: ITeam) => {
-      const team = TeamUtils.iTeamToTeam(apiTeam, users)
+      const team = TeamUtils.iTeamToTeam(apiTeam)
       teams.push(team)
     })
 
-    // End, cleanup to help the garbage collector
-    users.clear()
     return teams
   }
 }
