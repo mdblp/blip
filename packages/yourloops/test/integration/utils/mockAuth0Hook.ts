@@ -28,7 +28,7 @@
 import * as auth0Mock from '@auth0/auth0-react'
 import { UserMetadata } from '../../../models/user'
 
-export const mockAuth0 = () => {
+export const mockAuth0Hook = () => {
   (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
     isAuthenticated: true,
     isLoading: false,
