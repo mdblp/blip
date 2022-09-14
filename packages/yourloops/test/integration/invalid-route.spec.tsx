@@ -70,8 +70,8 @@ describe('Invalid Route', () => {
 
     await waitFor(() => expect(history.location.pathname).toBe('/not-found'))
 
-    expect(screen.getByText('page-not-found')).toBeVisible()
-    const homeLink = screen.getByText('breadcrumb-home')
+    expect(screen.getByText('Page not found')).toBeVisible()
+    const homeLink = screen.getByText('Home')
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')
 

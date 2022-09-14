@@ -43,7 +43,7 @@ const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
   return { code: key, name: item.name } as Country
 })
 
-let language: LanguageCodes
+let language: LanguageCodes = (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
 
 function refreshLanguage(language: LanguageCodes): void {
   zendeskLocale(language)
@@ -52,38 +52,36 @@ function refreshLanguage(language: LanguageCodes): void {
   metrics.setLanguage(language)
 }
 
-async function init(): Promise<void> {
-  language = (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
+export const i18nOptions: InitOptions = {
+  fallbackLng: locales.fallback,
+  lng: language,
 
-  const i18nOptions: InitOptions = {
-    fallbackLng: locales.fallback,
-    lng: language,
+  // To allow . in keys
+  keySeparator: false,
+  // To allow : in keys
+  nsSeparator: '|',
 
-    // To allow . in keys
-    keySeparator: false,
-    // To allow : in keys
-    nsSeparator: '|',
+  debug: false,
 
-    debug: false,
+  interpolation: {
+    escapeValue: false // not needed for react!!
+  },
 
-    interpolation: {
-      escapeValue: false // not needed for react!!
-    },
+  // If the translation is empty, return the key instead
+  returnEmptyString: false,
 
-    // If the translation is empty, return the key instead
-    returnEmptyString: false,
+  react: {
+    useSuspense: true,
+    transSupportBasicHtmlNodes: true // allow <br/> and simple html elements in translations
+  },
+  ns: locales.namespaces,
+  defaultNS: locales.defaultNS,
+  fallbackNS: locales.fallbackNS,
 
-    react: {
-      useSuspense: true,
-      transSupportBasicHtmlNodes: true // allow <br/> and simple html elements in translations
-    },
-    ns: locales.namespaces,
-    defaultNS: locales.defaultNS,
-    fallbackNS: locales.fallbackNS,
+  resources: locales.resources
+}
 
-    resources: locales.resources
-  }
-
+async function init(options = i18nOptions): Promise<void> {
   i18n.use(initReactI18next)
 
   // Update moment with the right language, for date display
@@ -96,7 +94,7 @@ async function init(): Promise<void> {
   })
 
   refreshLanguage(language)
-  await i18n.init(i18nOptions)
+  await i18n.init(options)
 }
 
 /**
