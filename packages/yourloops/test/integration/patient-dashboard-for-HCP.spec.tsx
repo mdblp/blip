@@ -28,7 +28,7 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, prettyDOM, render, screen, waitFor } from '@testing-library/react'
 import { AuthContextProvider } from '../../lib/auth'
 import { MainLobby } from '../../app/main-lobby'
 import { checkHeader } from './utils/header'
@@ -77,7 +77,7 @@ describe('Patient dashboard for HCP', () => {
 
     await waitFor(() => {
       expect(history.location.pathname).toBe(`/patient/${patientId}/dashboard`)
-      const dashboardLink = screen.getByText('dashboard')
+      const dashboardLink = screen.getByText('Dashboard')
       const dailyLink = screen.getByText('Daily')
       const trendsLink = screen.getByText('Trends')
       expect(dashboardLink).toBeVisible()
