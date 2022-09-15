@@ -41,23 +41,22 @@ import PatientUtils from '../../../../lib/patient/utils'
 
 jest.mock('../../../../lib/auth')
 describe('Patient row', () => {
-  const onClickPatient = jest.fn()
-  const onFlagPatient = jest.fn()
-
+  const flagPatientMock = jest.fn()
   const teamId = 'teamId'
   const teams = [createPatientTeam(teamId, UserInvitationStatus.accepted)]
   const patient = createPatient('id1', teams)
   const props: PatientRowProps = {
     patient,
-    flagged: [],
-    filter: undefined,
-    onClickPatient,
-    onFlagPatient
+    filter: undefined
   }
 
   beforeEach(() => {
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
-      return { user: { isUserHcp: () => true } as User }
+      return {
+        flagPatient: flagPatientMock,
+        getFlagPatients: jest.fn().mockReturnValue([]),
+        user: { isUserHcp: () => true } as User
+      }
     })
   })
 
@@ -67,10 +66,7 @@ describe('Patient row', () => {
         <TableBody>
           <PatientRow
             patient={patientElementProps.patient}
-            flagged={patientElementProps.flagged}
             filter={patientElementProps.filter}
-            onClickPatient={patientElementProps.onClickPatient}
-            onFlagPatient={patientElementProps.onFlagPatient}
           />
         </TableBody>
       </Table>
@@ -84,17 +80,14 @@ describe('Patient row', () => {
     expect(screen.queryByTitle('pending-icon')).toBeNull()
     const flagButton = screen.getByRole('button', { name: 'flag-icon-inactive' })
     fireEvent.click(flagButton)
-    expect(onFlagPatient).toHaveBeenCalledTimes(1)
+    expect(flagPatientMock).toHaveBeenCalledTimes(1)
   })
 
   it('should show pending icon when patient is pending and filter is pending', () => {
     jest.spyOn(PatientUtils, 'isInvitationPending').mockReturnValue(true)
     const componentProps: PatientRowProps = {
       patient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     expect(screen.queryByTitle('flag-icon-active')).toBeNull()
@@ -124,7 +117,11 @@ describe('Patient row', () => {
 
   it('should display correct fields when logged in user is caregiver', () => {
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
-      return { user: { isUserHcp: () => false } as User }
+      return {
+        flagPatient: flagPatientMock,
+        getFlagPatients: jest.fn().mockReturnValue([]),
+        user: { isUserHcp: () => false } as User
+      }
     })
     render(getPatientRowJSX())
     const cells = screen.getAllByRole('cell')
@@ -142,10 +139,7 @@ describe('Patient row', () => {
     remoteMonitoredPatient.monitoring = { enabled: true }
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -157,10 +151,7 @@ describe('Patient row', () => {
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -173,10 +164,7 @@ describe('Patient row', () => {
     remoteMonitoredPatient.metadata.alarm.timeSpentAwayFromTargetActive = true
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -191,10 +179,7 @@ describe('Patient row', () => {
     remoteMonitoredPatient.metadata.alarm.frequencyOfSevereHypoglycemiaActive = true
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -209,10 +194,7 @@ describe('Patient row', () => {
     remoteMonitoredPatient.metadata.alarm.nonDataTransmissionActive = true
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -227,10 +209,7 @@ describe('Patient row', () => {
     remoteMonitoredPatient.metadata.unreadMessagesSent = 3
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
