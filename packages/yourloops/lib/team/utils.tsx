@@ -30,7 +30,6 @@ import { Team, TEAM_CODE_LENGTH, TeamMember } from './models'
 import TeamApi from './team-api'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
 import { UserInvitationStatus } from '../../models/generic'
-import User from '../auth/user'
 import { INotification } from '../notifications/models'
 
 /**
@@ -83,7 +82,6 @@ export default class TeamUtils {
       idVerified
     } = iTeamMember
     return {
-      teamId,
       userId,
       email,
       profile,
@@ -94,7 +92,7 @@ export default class TeamUtils {
     }
   }
 
-  static async loadTeams(user: User, invitations: INotification[]): Promise<Team[]> {
+  static async loadTeams(userId: string, invitations: INotification[]): Promise<Team[]> {
     const iTeams = await TeamApi.getTeams()
 
     const privateTeam: Team = {
@@ -102,7 +100,7 @@ export default class TeamUtils {
       id: TeamType.private,
       members: [],
       name: TeamType.private,
-      owner: user.id,
+      owner: userId,
       type: TeamType.private
     }
 

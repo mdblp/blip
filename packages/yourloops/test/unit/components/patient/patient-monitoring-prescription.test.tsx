@@ -49,10 +49,10 @@ describe('PatientMonitoringPrescription', () => {
   const member2Id = 'Member2Id'
   const member1FullName = 'Member 1 full name'
   const member2FullName = 'Member 2 full name'
-  const member1 = buildTeamMember(teamId1, member1Id, undefined, TeamMemberRole.patient, 'fakeUserName', member1FullName)
-  const member2 = buildTeamMember(teamId2, member2Id, undefined, TeamMemberRole.patient, 'fakeUserName', member2FullName)
-  const team1 = buildTeam('teamId1', [member1], teamName1)
-  const team2 = buildTeam('teamId2', [member2], teamName2)
+  const member1 = buildTeamMember(member1Id, undefined, TeamMemberRole.patient, 'fakeUserName', member1FullName)
+  const member2 = buildTeamMember(member2Id, undefined, TeamMemberRole.patient, 'fakeUserName', member2FullName)
+  const team1 = buildTeam(teamId1, [member1], teamName1)
+  const team2 = buildTeam(teamId2, [member2], teamName2)
   const file = new File(['hello'], 'hello.png', { type: 'image/png' })
 
   const setPrescriptionInfoMock = jest.fn()

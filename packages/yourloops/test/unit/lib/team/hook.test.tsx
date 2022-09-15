@@ -43,8 +43,8 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/notifications/hook')
 describe('Team hook', () => {
   let teamHook: TeamContext
-  const memberHcp1 = buildTeamMember('team1Id', 'memberHcp', undefined, TeamMemberRole.member)
-  const memberHcp2 = buildTeamMember('team3Id', 'memberHcpAdmin', undefined, TeamMemberRole.admin, undefined, undefined, UserInvitationStatus.accepted)
+  const memberHcp1 = buildTeamMember('memberHcp', undefined, TeamMemberRole.member)
+  const memberHcp2 = buildTeamMember('memberHcpAdmin', undefined, TeamMemberRole.admin, undefined, undefined, UserInvitationStatus.accepted)
   const team1 = buildTeam('team1Id', [memberHcp1])
   const team2 = buildTeam('team2Id', [])
   const team3 = buildTeam('team3Id', [memberHcp2])
@@ -97,14 +97,14 @@ describe('Team hook', () => {
     it('should throw an error when there is no invitation', async () => {
       const teamMember = buildTeamMember()
       await expect(async () => {
-        await teamHook.removeMember(teamMember)
+        await teamHook.removeMember(teamMember, 'fakeTeamId')
       }).rejects.toThrow()
     })
 
     it('should throw an error when there is no invitation for the member team', async () => {
-      const teamMember = buildTeamMember('fakeTeamId', 'fakeUserId', buildInvite('wrongTeam'))
+      const teamMember = buildTeamMember('fakeUserId', buildInvite('wrongTeam'))
       await expect(async () => {
-        await teamHook.removeMember(teamMember)
+        await teamHook.removeMember(teamMember, 'fakeTeamId')
       }).rejects.toThrow()
     })
   })
@@ -203,7 +203,7 @@ describe('Team hook', () => {
     it('should change the member role', async () => {
       jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValue(undefined)
       await act(async () => {
-        await teamHook.changeMemberRole(memberHcp1, TeamMemberRole.admin)
+        await teamHook.changeMemberRole(memberHcp1, TeamMemberRole.admin, 'fakeTeamId')
       })
       expect(loadTeamsSpy).toBeCalledTimes(1)
     })

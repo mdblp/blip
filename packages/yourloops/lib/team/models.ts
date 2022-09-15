@@ -38,7 +38,6 @@ export const REGEX_TEAM_CODE_DISPLAY = /^[0-9]{3} - [0-9]{3} - [0-9]{3}$/
 
 export interface TeamMember {
   userId: string
-  teamId: 'private' | string
   email: string
   profile?: Profile | null
   role: TeamMemberRole
@@ -122,15 +121,17 @@ export interface TeamContext {
   /**
    * Remove a team member from a team
    * @param member The member to remove
+   * @param teamId The id of the team the member should be removed from
    */
-  removeMember: (member: TeamMember) => Promise<void>
+  removeMember: (member: TeamMember, teamId: string) => Promise<void>
 
   /**
    * Change a member role
    * @param member The concerned member
    * @param role The new role
+   * @param teamId The id of the team the member should have his role changed
    */
-  changeMemberRole: (member: TeamMember, role: Exclude<TypeTeamMemberRole, 'patient'>) => Promise<void>
+  changeMemberRole: (member: TeamMember, role: Exclude<TypeTeamMemberRole, 'patient'>, teamId: string) => Promise<void>
 
   /**
    * Retreive a team from it's 9 digit code.

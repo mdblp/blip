@@ -61,7 +61,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const fetchTeams = useCallback(() => {
-    TeamUtils.loadTeams(user, notificationHook.sentInvitations)
+    TeamUtils.loadTeams(user.id, notificationHook.sentInvitations)
       .then((teams: Team[]) => {
         setTeams(teams)
         setErrorMessage(null)
@@ -146,15 +146,15 @@ function TeamContextImpl(): TeamContext {
     refresh()
   }
 
-  const removeMember = async (member: TeamMember): Promise<void> => {
+  const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
-      if (!member.invitation || member.teamId !== member.invitation.target?.id) {
+      if (!member.invitation || teamId !== member.invitation.target?.id) {
         throw new Error('Missing invitation!')
       }
       await notificationHook.cancel(member.invitation)
     } else {
       await TeamApi.removeMember({
-        teamId: member.teamId,
+        teamId,
         userId: member.userId,
         email: member.email
       })
@@ -162,9 +162,9 @@ function TeamContextImpl(): TeamContext {
     refresh()
   }
 
-  const changeMemberRole = async (member: TeamMember, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
+  const changeMemberRole = async (member: TeamMember, role: TeamMemberRole.admin | TeamMemberRole.member, teamId: string): Promise<void> => {
     await TeamApi.changeMemberRole({
-      teamId: member.teamId,
+      teamId,
       userId: member.userId,
       email: member.email,
       role

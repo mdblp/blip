@@ -97,14 +97,14 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
     userUpdateInProgress
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
-    (teamMember.status === UserInvitationStatus.pending && (!teamMember.invitation || teamMember.teamId !== teamMember.invitation.target?.id)) // This condition basically means that the logged in user did not invite the pending user
+    (teamMember.status === UserInvitationStatus.pending && (!teamMember.invitation || team.id !== teamMember.invitation.target?.id)) // This condition basically means that the logged in user did not invite the pending user
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked
     setUserUpdateInProgress(true)
 
     try {
-      await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member)
+      await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member, team.id)
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t('team-page-failed-update-role', { errorMessage }))
@@ -117,7 +117,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const deleteMember = async (): Promise<void> => {
     setUserUpdateInProgress(true)
     try {
-      await teamHook.removeMember(teamMember)
+      await teamHook.removeMember(teamMember, team.id)
       alert.success(t('remove-member-success'))
     } catch (reason: unknown) {
       console.error(reason)
