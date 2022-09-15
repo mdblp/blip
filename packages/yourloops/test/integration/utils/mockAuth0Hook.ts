@@ -35,7 +35,7 @@ export const mockAuth0Hook = () => {
     user: {
       email: 'john.doe@example.com',
       email_verified: true,
-      sub: 'auth0|fakeUserId',
+      sub: 'auth0|919b1575bad58',
       [UserMetadata.Roles]: ['hcp']
     }
   })

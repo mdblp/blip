@@ -45,7 +45,7 @@ const PatientDashboard = (props) => {
 
   const endpoints = getEndpoints()
   return (
-    <div id="patient-dashboard" className="patient-dashboard">
+    <div id="patient-dashboard" className="patient-dashboard" data-testid="patient-dashboard">
       <Header
         id="dashboard-header"
         profileDialog={profileDialog}

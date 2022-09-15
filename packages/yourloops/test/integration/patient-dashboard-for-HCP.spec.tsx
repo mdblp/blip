@@ -28,7 +28,7 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, BoundFunctions, render, screen, waitFor, within } from '@testing-library/react'
 import { AuthContextProvider } from '../../lib/auth'
 import { MainLobby } from '../../app/main-lobby'
 import { checkHeader } from './utils/header'
@@ -40,6 +40,10 @@ import { mockTeamAPI } from './utils/mockTeamAPI'
 import { mockDataAPI } from './utils/mockDataAPI'
 import { mockNotificationAPI } from './utils/mockNotificationAPI'
 import { mockPatientAPI } from './utils/mockPatientAPI'
+import { mockChatAPI } from './utils/mockChatAPI'
+import { mockMedicalFilesAPI } from './utils/mockMedicalFilesAPI'
+import { queries } from '@testing-library/dom'
+import { mockDirectShareApi } from './utils/mockDirectShareAPI'
 
 jest.mock('@auth0/auth0-react')
 jest.setTimeout(10000)
@@ -55,6 +59,7 @@ describe('Patient dashboard for HCP', () => {
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
+    mockDirectShareApi()
     mockTeamAPI()
     mockUserDataFetch(firstName, lastName)
   })
@@ -69,32 +74,25 @@ describe('Patient dashboard for HCP', () => {
     )
   }
 
-  function getByTextAndExpectVisible(text: string) {
-    const element = screen.getByText(text)
-    expect(element).toBeVisible()
-    return element
-  }
+  function testCommonDisplayForPatient(dashboard: BoundFunctions<typeof queries>, patientId: string) {
+    expect(dashboard.getByTestId('subnav-arrow-back')).toBeVisible()
+    expect(dashboard.getByTestId('subnav-patient-list')).toBeVisible()
+    expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
 
-  function getByTestIdAndExpectVisible(testid: string) {
-    const element = screen.getByTestId(testid)
-    expect(element).toBeVisible()
-    return element
-  }
-
-  function testCommonDisplayForPatient(patientId: string) {
-    getByTestIdAndExpectVisible('subnav-arrow-back')
-    getByTestIdAndExpectVisible('subnav-patient-list')
-    getByTextAndExpectVisible('dashboard-header-period-text')
-    const dashboardLink = getByTextAndExpectVisible('dashboard')
-    const dailyLink = getByTextAndExpectVisible('Daily')
-    const trendsLink = getByTextAndExpectVisible('Trends')
+    const dashboardLink = dashboard.getByText('Dashboard')
+    const dailyLink = dashboard.getByText('Daily')
+    const trendsLink = dashboard.getByText('Trends')
     expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
+    expect(dashboardLink).toBeVisible()
     expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/daily`)
+    expect(dailyLink).toBeVisible()
     expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/trends`)
-    getByTextAndExpectVisible('pdf-generate-report')
-    getByTextAndExpectVisible('patient-info')
-    getByTextAndExpectVisible('patient-statistics')
-    getByTextAndExpectVisible('device-usage')
+    expect(trendsLink).toBeVisible()
+
+    expect(dashboard.getByText('Generate report')).toBeVisible()
+    expect(dashboard.getByText('Patient Information')).toBeVisible()
+    expect(dashboard.getByText('Patient statistics')).toBeVisible()
+    expect(dashboard.getByText('Device Usage')).toBeVisible()
   }
 
   it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
@@ -108,7 +106,8 @@ describe('Patient dashboard for HCP', () => {
 
     await waitFor(() => {
       expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
-      testCommonDisplayForPatient(patientNonMonitoredId)
+      const dashboard = within(screen.getByTestId('patient-dashboard'))
+      testCommonDisplayForPatient(dashboard, patientNonMonitoredId)
     }, { timeout: 5000 })
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
@@ -118,18 +117,29 @@ describe('Patient dashboard for HCP', () => {
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
     mockPatientAPI(patientMonitoredId, true)
     mockDataAPI(patientMonitoredId)
+    mockChatAPI()
+    mockMedicalFilesAPI(patientMonitoredId)
     const history = createMemoryHistory({ initialEntries: [patientMonitoredDashboardRoute] })
 
-    act(() => {
+    await act(async () => {
       render(getPatientDashboardForHCP(history))
-    })
 
-    await waitFor(() => {
-      expect(history.location.pathname).toBe(patientMonitoredDashboardRoute)
-      testCommonDisplayForPatient(patientMonitoredId)
-    }, { timeout: 5000 })
-    checkHeader(`${firstName} ${lastName}`)
-    checkDrawer()
-    checkFooter()
+      await waitFor(() => {
+        const dashboard = within(screen.getByTestId('patient-dashboard'))
+        expect(history.location.pathname).toBe(patientMonitoredDashboardRoute)
+        testCommonDisplayForPatient(dashboard, patientMonitoredId)
+        expect(dashboard.getByText('Renew')).toBeVisible()
+        expect(dashboard.getByText('Remove')).toBeVisible()
+
+        expect(dashboard.getByText('Prescription_1/2/2022')).toBeVisible()
+        expect(dashboard.getByText('Weekly_report_1/2/2022')).toBeVisible()
+
+        expect(dashboard.getByText('Events')).toBeVisible()
+        expect(dashboard.getByText('Messages')).toBeVisible()
+      }, { timeout: 5000 })
+      checkHeader(`${firstName} ${lastName}`)
+      checkDrawer()
+      checkFooter()
+    })
   })
 })

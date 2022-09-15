@@ -2,6 +2,8 @@ import TeamAPI from '../../../lib/team/team-api'
 import { TeamMemberRole, TeamType } from '../../../models/team'
 import { UserInvitationStatus } from '../../../models/generic'
 import { HcpProfession } from '../../../models/hcp-profession'
+import { MonitoringStatus } from '../../../models/monitoring'
+import { monitoringParameters } from './mockPatientAPI'
 
 export const mockTeamAPI = () => {
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([{
@@ -61,7 +63,13 @@ export const mockTeamAPI = () => {
       email: 'ylp.ui.test.hcp.28@diabeloop.fr',
       idVerified: false,
       unreadMessages: 0
-    }]
+    }],
+    monitoring: {
+      enabled: true,
+      monitoringEnd: null,
+      status: MonitoringStatus.accepted,
+      parameters: monitoringParameters
+    }
   }, {
     name: 'MyThirdTeam - to be deleted',
     id: '62fe00defc9374b2fed32bce',

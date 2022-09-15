@@ -137,8 +137,8 @@ class TidelineHeader extends React.Component {
           <div className="subnav-left-container">
             {this.props.userIsHCP &&
             <div id="subnav-hcp-container">
-              <IconButton>
-                <ArrowBack id="subnav-arrow-back" data-testid="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
+              <IconButton onClick={() => this.props.onClickNavigationBack()}>
+                <ArrowBack id="subnav-arrow-back" data-testid="subnav-arrow-back" />
               </IconButton>
               <Face className="subnav-icon" />
               <span>{ t('patient') } :</span>

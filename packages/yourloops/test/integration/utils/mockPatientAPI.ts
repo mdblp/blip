@@ -5,6 +5,17 @@ import { UNITS_TYPE } from '../../../lib/units/utils'
 import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
 import { MonitoringStatus } from '../../../models/monitoring'
 
+export const monitoringParameters = {
+  bgUnit: UNITS_TYPE.MGDL,
+  lowBg: MIN_LOW_BG,
+  highBg: MIN_HIGH_BG,
+  outOfRangeThreshold: 5,
+  veryLowBg: MIN_VERY_LOW_BG,
+  hypoThreshold: 10,
+  nonDataTxThreshold: 15,
+  reportingPeriod: 7
+}
+
 export const mockPatientAPI = (patientId: string, isMonitored: boolean) => {
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([{
     userId: patientId,
@@ -20,18 +31,9 @@ export const mockPatientAPI = (patientId: string, isMonitored: boolean) => {
     alarms: { timeSpentAwayFromTargetRate: 0, timeSpentAwayFromTargetActive: false, frequencyOfSevereHypoglycemiaRate: 0, frequencyOfSevereHypoglycemiaActive: false, nonDataTransmissionRate: 0, nonDataTransmissionActive: false },
     monitoring: isMonitored ? {
       enabled: true,
-      monitoringEnd: new Date(Date.now() + 10000),
+      monitoringEnd: new Date(Date.now() - 10000),
       status: MonitoringStatus.accepted,
-      parameters: {
-        bgUnit: UNITS_TYPE.MGDL,
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
-        outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
-        hypoThreshold: 10,
-        nonDataTxThreshold: 15,
-        reportingPeriod: 7
-      }
+      parameters: monitoringParameters
     } : null
   }, {
     userId: patientId,
@@ -44,21 +46,6 @@ export const mockPatientAPI = (patientId: string, isMonitored: boolean) => {
     email: 'ylp.ui.test.patient28@diabeloop.fr',
     idVerified: false,
     unreadMessages: 0,
-    alarms: { timeSpentAwayFromTargetRate: 0, timeSpentAwayFromTargetActive: false, frequencyOfSevereHypoglycemiaRate: 0, frequencyOfSevereHypoglycemiaActive: false, nonDataTransmissionRate: 0, nonDataTransmissionActive: false },
-    monitoring: isMonitored ? {
-      enabled: true,
-      monitoringEnd: new Date(Date.now() + 10000),
-      status: MonitoringStatus.accepted,
-      parameters: {
-        bgUnit: UNITS_TYPE.MGDL,
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
-        outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
-        hypoThreshold: 10,
-        nonDataTxThreshold: 15,
-        reportingPeriod: 7
-      }
-    } : null
+    alarms: { timeSpentAwayFromTargetRate: 0, timeSpentAwayFromTargetActive: false, frequencyOfSevereHypoglycemiaRate: 0, frequencyOfSevereHypoglycemiaActive: false, nonDataTransmissionRate: 0, nonDataTransmissionActive: false }
   }])
 }
