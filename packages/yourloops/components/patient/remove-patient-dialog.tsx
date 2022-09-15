@@ -25,7 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -50,16 +50,14 @@ import { Patient } from '../../lib/data/patient'
 import { usePatientContext } from '../../lib/patient/provider'
 import { Team, useTeam } from '../../lib/team'
 
-interface RemoveDialogProps {
-  isOpen: boolean
+interface RemovePatientDialogProps {
   patient: Patient | null
   onClose: () => void
 }
 
 const makeButtonClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-remove-patient-dialog-buttons' })
 
-function RemoveDialog(props: RemoveDialogProps): JSX.Element {
-  const { isOpen, onClose, patient } = props
+const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const patientHook = usePatientContext()
@@ -81,17 +79,14 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const getSuccessAlertMessage = (): void => {
     if (patientTeamStatus.status === UserInvitationStatus.pending) {
       alert.success(t('alert-remove-patient-pending-invitation-success'))
+      return
     }
     const team = teamHook.getTeam(selectedTeamId)
     if (team.code === 'private') {
       alert.success(t('alert-remove-private-practice-success', { patientName }))
+    } else {
+      alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))
     }
-    alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))
-  }
-
-  const handleOnClose = (): void => {
-    onClose()
-    setSelectedTeamId('')
   }
 
   const handleOnClickRemove = async (): Promise<void> => {
@@ -99,7 +94,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       setProcessing(true)
       await patientHook.removePatient(patient, patientTeamStatus)
       getSuccessAlertMessage()
-      handleOnClose()
+      onClose()
     } catch (err) {
       alert.error(t('alert-remove-patient-failure'))
     } finally {
@@ -134,8 +129,8 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   return (
     <Dialog
       id="remove-hcp-patient-dialog"
-      open={isOpen}
-      onClose={handleOnClose}
+      open
+      onClose={onClose}
     >
       <DialogTitle>
         <strong>{t('remove-patient')}</strong>
@@ -189,7 +184,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       }
 
       <DialogActions>
-        <Button onClick={handleOnClose}>
+        <Button onClick={onClose}>
           {t('button-cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={processing}>
@@ -209,4 +204,4 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   )
 }
 
-export default RemoveDialog
+export default RemovePatientDialog

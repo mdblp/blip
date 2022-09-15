@@ -39,6 +39,11 @@ import TableBody from '@material-ui/core/TableBody'
 import userEvent from '@testing-library/user-event'
 import PatientUtils from '../../../../lib/patient/utils'
 
+const removePatientDialogMockId = 'remove-patient-dialog-id'
+// eslint-disable-next-line react/display-name
+jest.mock('../../../../components/patient/remove-patient-dialog', () => () => {
+  return <div data-testid={removePatientDialogMockId} />
+})
 jest.mock('../../../../lib/auth')
 describe('Patient row', () => {
   const flagPatientMock = jest.fn()
@@ -73,7 +78,15 @@ describe('Patient row', () => {
     )
   }
 
-  it('clicking on flag icon should flag patient', () => {
+  it('should open modal when clicking on remove patient icon', () => {
+    render(getPatientRowJSX())
+    const removeButton = screen.getByRole('button', { name: 'remove-patient-button' })
+    expect(screen.queryByTestId(removePatientDialogMockId)).not.toBeInTheDocument()
+    fireEvent.click(removeButton)
+    expect(screen.queryByTestId(removePatientDialogMockId)).toBeInTheDocument()
+  })
+
+  it('should flag patient when clicking on flag icon', () => {
     render(getPatientRowJSX())
     expect(screen.queryByTitle('flag-icon-active')).toBeNull()
     expect(screen.queryByTitle('flag-icon-inactive')).not.toBeNull()

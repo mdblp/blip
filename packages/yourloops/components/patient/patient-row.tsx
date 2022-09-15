@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useMemo } from 'react'
+import React, { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
@@ -49,6 +49,8 @@ import PersonRemoveIcon from '../icons/PersonRemoveIcon'
 import { isEllipsisActive } from '../../lib/utils'
 import usePatientRow from './patient-row.hook'
 import { useHistory } from 'react-router-dom'
+import { Patient } from '../../lib/data/patient'
+import RemovePatientDialog from './remove-patient-dialog'
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -95,7 +97,9 @@ const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
   const classes = patientListStyle()
   const patientListCommonClasses = patientListCommonStyle()
   const medicalData: MedicalData | null | undefined = patient.metadata.medicalData
-  const rowRef = React.createRef<HTMLTableRowElement>()
+
+  const [tooltipText, setTooltipText] = useState<string>('')
+  const [patientToRemove, setPatientToRemove] = useState<Patient | null>(null)
 
   const userId = patient.userid
   const email = patient.profile.email
@@ -124,20 +128,22 @@ const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
     dataNotTransferredRateClasses
   } = computeRowInformation()
 
-  const [tooltipText, setTooltipText] = React.useState<string>('')
-
   const onClickFlag = async (event: React.MouseEvent): Promise<void> => {
     event.stopPropagation()
-    await flagPatient(userId)
+    await flagPatient()
   }
 
-  const onRowClick = (): void => {
+  const onClickRow = (): void => {
     historyHook.push(`/patient/${patient.userid}`)
   }
 
-  const removePatient = (event: React.MouseEvent): void => {
+  const onClickRemovePatient = (event: React.MouseEvent): void => {
     event.stopPropagation()
-    console.log('removed !')
+    setPatientToRemove(patient)
+  }
+
+  const onCloseRemovePatientDialog = (): void => {
+    setPatientToRemove(null)
   }
 
   const { lastUpload } = useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA])
@@ -148,102 +154,111 @@ const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
   }, [patientFullName, userId])
 
   return (
-    <StyledTableRow
-      tabIndex={-1}
-      hover
-      onClick={hasPendingInvitation && !isAlreadyInATeam ? undefined : onRowClick}
-      className={`${classes.tableRow} patients-list-row`}
-      data-userid={userId}
-      data-email={email}
-      ref={rowRef}
-    >
-      <StyledTableCell
-        className={classes.iconCell}
+    <React.Fragment>
+      <StyledTableRow
+        tabIndex={-1}
+        hover
+        onClick={hasPendingInvitation && !isAlreadyInATeam ? undefined : onClickRow}
+        className={`${classes.tableRow} patients-list-row`}
+        data-userid={userId}
+        data-email={email}
       >
-        {filter === FilterType.pending && hasPendingInvitation
-          ? (<Tooltip
-            title={t('pending-invitation')}
-            aria-label={t('pending-invitation')}
-            placement="bottom"
-          >
-            <Box display="flex">
-              <AccessTimeIcon titleAccess="pending-icon" className={classes.icon} />
-            </Box>
-          </Tooltip>)
-          : (<IconActionButton
-            icon={isFlagged ? <FlagIcon
-                titleAccess="flag-icon-active"
-                aria-label="flag-icon-active"
-              />
-              : <FlagOutlineIcon
-                titleAccess="flag-icon-inactive"
-                aria-label="flag-icon-inactive"
-              />}
-            onClick={onClickFlag}
-            className={`${!isFlagged ? classes.coloredIcon : ''} ${classes.icon} patient-flag-button`}
-          />)}
-      </StyledTableCell>
-
-      <StyledTableCell
-        id={`${userId}-patient-full-name`}
-        className={patientFullNameClasses}
-      >
-        <Tooltip title={tooltipText}>
-          <Typography
-            id={`${userId}-patient-full-name-value`}
-            data-testid="patient-full-name-value"
-            className={classes.typography}
-          >
-            {patientFullName}
-          </Typography>
-        </Tooltip>
-      </StyledTableCell>
-
-      <StyledTableCell className={classes.typography}>{patientSystem}</StyledTableCell>
-      {isUserHcp &&
         <StyledTableCell
-          className={`${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.remoteMonitoringCell}`}>
-          {patientRemoteMonitoring}
+          className={classes.iconCell}
+        >
+          {filter === FilterType.pending && hasPendingInvitation
+            ? (<Tooltip
+              title={t('pending-invitation')}
+              aria-label={t('pending-invitation')}
+              placement="bottom"
+            >
+              <Box display="flex">
+                <AccessTimeIcon titleAccess="pending-icon" className={classes.icon} />
+              </Box>
+            </Tooltip>)
+            : (<IconActionButton
+              icon={isFlagged ? <FlagIcon
+                  titleAccess="flag-icon-active"
+                  aria-label="flag-icon-active"
+                />
+                : <FlagOutlineIcon
+                  titleAccess="flag-icon-inactive"
+                  aria-label="flag-icon-inactive"
+                />}
+              onClick={onClickFlag}
+              className={`${!isFlagged ? classes.coloredIcon : ''} ${classes.icon} patient-flag-button`}
+            />)}
         </StyledTableCell>
-      }
 
-      <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
-        {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
-        {isUserHcp && timeSpentAwayFromTargetActive &&
-          <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
-      </StyledTableCell>
+        <StyledTableCell
+          id={`${userId}-patient-full-name`}
+          className={patientFullNameClasses}
+        >
+          <Tooltip title={tooltipText}>
+            <Typography
+              id={`${userId}-patient-full-name-value`}
+              data-testid="patient-full-name-value"
+              className={classes.typography}
+            >
+              {patientFullName}
+            </Typography>
+          </Tooltip>
+        </StyledTableCell>
 
-      <StyledTableCell className={frequencyOfSevereHypoglycemiaRateClasses}>
-        {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
-        {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
-          <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
-      </StyledTableCell>
-
-      <StyledTableCell className={dataNotTransferredRateClasses}>
-        {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
-        {isUserHcp && nonDataTransmissionActive &&
-          <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
-      </StyledTableCell>
-
-      <StyledTableCell className={classes.typography}>
-        {lastUpload}
-      </StyledTableCell>
-
-      <StyledTableCell>
-        {patientIsMonitored && patient.metadata.unreadMessagesSent > 0 &&
-          <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
-        }
-      </StyledTableCell>
-
-      <StyledTableCell>
+        <StyledTableCell className={classes.typography}>{patientSystem}</StyledTableCell>
         {isUserHcp &&
-          <IconActionButton
-            icon={<PersonRemoveIcon />}
-            onClick={removePatient}
-          />
+          <StyledTableCell
+            className={`${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.remoteMonitoringCell}`}>
+            {patientRemoteMonitoring}
+          </StyledTableCell>
         }
-      </StyledTableCell>
-    </StyledTableRow>
+
+        <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
+          {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
+          {isUserHcp && timeSpentAwayFromTargetActive &&
+            <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
+        </StyledTableCell>
+
+        <StyledTableCell className={frequencyOfSevereHypoglycemiaRateClasses}>
+          {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+          {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
+            <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
+        </StyledTableCell>
+
+        <StyledTableCell className={dataNotTransferredRateClasses}>
+          {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
+          {isUserHcp && nonDataTransmissionActive &&
+            <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
+        </StyledTableCell>
+
+        <StyledTableCell className={classes.typography}>
+          {lastUpload}
+        </StyledTableCell>
+
+        <StyledTableCell>
+          {patientIsMonitored && patient.metadata.unreadMessagesSent > 0 &&
+            <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
+          }
+        </StyledTableCell>
+
+        <StyledTableCell>
+          {isUserHcp &&
+            <IconActionButton
+              ariaLabel="remove-patient-button"
+              icon={<PersonRemoveIcon />}
+              onClick={onClickRemovePatient}
+            />
+          }
+        </StyledTableCell>
+      </StyledTableRow>
+
+      {patientToRemove &&
+        <RemovePatientDialog
+          patient={patient}
+          onClose={onCloseRemovePatientDialog}
+        />
+      }
+    </React.Fragment>
   )
 }
 

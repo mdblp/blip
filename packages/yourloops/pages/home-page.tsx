@@ -27,7 +27,7 @@
  */
 
 import _ from 'lodash'
-import React, { useMemo } from 'react'
+import React, { FunctionComponent, useMemo } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 
@@ -43,9 +43,7 @@ import { Team, useTeam } from '../lib/team'
 import { AddPatientDialogContentProps, AddPatientDialogResult } from './hcp/types'
 import PatientsSecondaryBar from '../components/patient/secondary-bar'
 import AddPatientDialog from '../components/patient/add-dialog'
-import RemovePatientDialog from '../components/patient/remove-dialog'
 import TeamCodeDialog from '../components/patient/team-code-dialog'
-import { Patient } from '../lib/data/patient'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
 import { usePatientContext } from '../lib/patient/provider'
@@ -54,7 +52,7 @@ const log = bows('PatientListPage')
 
 const throttledMetrics = _.throttle(metrics.send, 60000) // No more than one per minute
 
-function HomePage(): JSX.Element {
+const HomePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
   const patientHook = usePatientContext()
@@ -64,7 +62,6 @@ function HomePage(): JSX.Element {
   const [filter, setFilter] = React.useState<string>('')
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null)
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null)
-  const [patientToRemove, setPatientToRemove] = React.useState<Patient | null>(null)
 
   const filterType = useMemo(() => new URLSearchParams(search).get('filter') as PatientFilterTypes ?? PatientFilterTypes.all, [search])
 
@@ -119,8 +116,6 @@ function HomePage(): JSX.Element {
     setTeamCodeToDisplay(null)
   }
 
-  const handleCloseRemovePatientDialog = (): void => setPatientToRemove(null)
-
   React.useEffect(() => {
     if (patientHook.errorMessage !== null) {
       const message = t('error-failed-display-patients', { errorMessage: patientHook.errorMessage })
@@ -173,11 +168,6 @@ function HomePage(): JSX.Element {
         onClose={handleCloseTeamCodeDialog}
         code={teamCodeToDisplay?.code ?? ''}
         name={teamCodeToDisplay?.name ?? ''}
-      />
-      <RemovePatientDialog
-        isOpen={!!patientToRemove}
-        onClose={handleCloseRemovePatientDialog}
-        patient={patientToRemove}
       />
     </React.Fragment>
   )

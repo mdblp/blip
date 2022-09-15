@@ -30,7 +30,7 @@ import React from 'react'
 import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
 import { render, unmountComponentAtNode } from 'react-dom'
 
-import RemoveDialog from '../../../../components/patient/remove-dialog'
+import RemovePatientDialog from '../../../../components/patient/remove-patient-dialog'
 import { waitTimeout } from '../../../../lib/utils'
 import { Patient, PatientTeam } from '../../../../lib/data/patient'
 import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
@@ -51,11 +51,10 @@ describe('RemoveDialog', () => {
   const teams = [buildTeam('fakePatientTeam1Id'), buildTeam('fakePatientTeam2Id')]
   const onCloseStub = jest.fn()
 
-  function mountComponent(props: { dialogOpened: boolean }): void {
+  function mountComponent(): void {
     act(() => {
       return render(
-        <RemoveDialog
-          isOpen={props.dialogOpened}
+        <RemovePatientDialog
           onClose={onCloseStub}
           patient={patient}
         />, container)
@@ -85,27 +84,21 @@ describe('RemoveDialog', () => {
     })
   })
 
-  it('should be closed if isOpen is false', () => {
-    mountComponent({ dialogOpened: false })
-    const dialog = document.getElementById('remove-hcp-patient-dialog')
-    expect(dialog).toBeNull()
-  })
-
   it('should be opened if isOpen is true', () => {
-    mountComponent({ dialogOpened: true })
+    mountComponent()
     const dialog = document.getElementById('remove-hcp-patient-dialog')
     expect(dialog).not.toBeNull()
   })
 
   it('should not allow to validate if no team is selected', () => {
-    mountComponent({ dialogOpened: true })
+    mountComponent()
     const validateButton: HTMLButtonElement = document.querySelector('#remove-patient-dialog-validate-button')
     expect(validateButton.disabled).toBe(true)
   })
 
   it('should be able to remove patient after selecting a team', async () => {
     patient = createPatient('fakePatientId', patientTeams)
-    mountComponent({ dialogOpened: true })
+    mountComponent()
     const validateButton: HTMLButtonElement = document.querySelector('#remove-patient-dialog-validate-button')
     const teamSelect = document.querySelector('#patient-team-selector + input')
 

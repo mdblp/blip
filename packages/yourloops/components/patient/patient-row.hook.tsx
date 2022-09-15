@@ -12,7 +12,7 @@ interface PatientRowHookProps {
 
 interface PatientRowHookReturn {
   computeRowInformation: () => ComputedRow
-  flagPatient: (userId: string) => Promise<void>
+  flagPatient: () => Promise<void>
   isFlagged: boolean
   isUserHcp: boolean
   patientIsMonitored: boolean
@@ -83,8 +83,8 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
     }
   }
 
-  const flagPatient = async (userId: string): Promise<void> => {
-    await authHook.flagPatient(userId)
+  const flagPatient = async (): Promise<void> => {
+    await authHook.flagPatient(patient.userid)
   }
 
   return {
