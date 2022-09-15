@@ -29,7 +29,6 @@
 import _ from 'lodash'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
 
 import Container from '@material-ui/core/Container'
 
@@ -48,7 +47,6 @@ const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true }
 
 function PatientList(props: PatientListProps): JSX.Element {
   const { filter, filterType } = props
-  const historyHook = useHistory()
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
   const patientHook = usePatientContext()
@@ -78,16 +76,6 @@ function PatientList(props: PatientListProps): JSX.Element {
       return filteredPatients
     }, [patientHook])
 
-  const handleSelectPatient = (patient: Patient): void => {
-    metrics.send('patient_selection', 'select_patient', flagged.includes(patient.userid) ? 'flagged' : 'not_flagged')
-    historyHook.push(`/patient/${patient.userid}`)
-  }
-
-  const handleFlagPatient = async (userId: string): Promise<void> => {
-    metrics.send('patient_selection', 'flag_patient', flagged.includes(userId) ? 'flagged' : 'un-flagged')
-    await authHook.flagPatient(userId)
-  }
-
   const handleSortList = (orderBy: PatientTableSortFields, order: SortDirection): void => {
     metrics.send('patient_selection', 'sort_patients', orderBy, order === SortDirection.asc ? 1 : -1)
     setOrder(order)
@@ -106,12 +94,9 @@ function PatientList(props: PatientListProps): JSX.Element {
     <Container id="patient-list-container" maxWidth={false}>
       <PatientsTable
         patients={patients}
-        flagged={flagged}
         order={order}
         orderBy={orderBy}
         filter={filterType}
-        onClickPatient={handleSelectPatient}
-        onFlagPatient={handleFlagPatient}
         onSortList={handleSortList}
       />
     </Container>

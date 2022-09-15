@@ -51,6 +51,7 @@ import RoundedHospitalIcon from '../icons/RoundedHospitalIcon'
 import config from '../../lib/config'
 import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
+import { isEllipsisActive } from '../../lib/utils'
 
 const classes = makeStyles((theme: Theme) => ({
   clickableMenu: {
@@ -113,10 +114,6 @@ function UserMenu(): JSX.Element {
    * User full name is hidden with an ellipsis if too long
    * Here we check if the ellipsis is on, if so we add a tooltip on hover to see the entire name.
    */
-  const isEllipsisActive = (element: HTMLElement | null): boolean | undefined => {
-    return element ? element.offsetWidth < element.scrollWidth : undefined
-  }
-
   useEffect(() => {
     const userFullNameHtmlElement = document.getElementById('user-menu-full-name')
     setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? user?.fullName : '')
