@@ -40,7 +40,6 @@ import PatientApi from '../../lib/patient/patient-api'
 import TeamApi from '../../lib/team/team-api'
 import { mockNotificationAPI } from './utils/mockNotificationAPI'
 
-jest.mock('@auth0/auth0-react')
 describe('Invalid Route', () => {
   const unknownRoute = '/unknown-route'
   const firstName = 'firstName'

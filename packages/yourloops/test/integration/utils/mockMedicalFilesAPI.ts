@@ -1,10 +1,10 @@
 import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
-import { monitoringParameters } from './mockPatientAPI'
+import { monitoringParameters, patientMonitoredId } from './mockPatientAPI'
 
-export const mockMedicalFilesAPI = (patientId: string) => {
+export const mockMedicalFilesAPI = () => {
   jest.spyOn(MedicalFilesApi, 'getWeeklyReports').mockResolvedValue([{
     id: 'weeklyReportMocked',
-    patientId,
+    patientId: patientMonitoredId,
     teamId: 'team1234',
     parameters: monitoringParameters,
     alarms: {
@@ -20,7 +20,7 @@ export const mockMedicalFilesAPI = (patientId: string) => {
   jest.spyOn(MedicalFilesApi, 'getPrescriptions').mockResolvedValue([{
     id: 'prescriptionMocked',
     name: 'patientPrescription',
-    patientId,
+    patientId: patientMonitoredId,
     teamId: 'team1234',
     prescriptorId: 'prescriptorId',
     link: 'https://linkToPrescription',
@@ -30,7 +30,7 @@ export const mockMedicalFilesAPI = (patientId: string) => {
     id: 'medicalRecordId',
     authorId: 'authorId',
     creationDate: '2022-01-02T08:34:06.898Z',
-    patientId,
+    patientId: patientMonitoredId,
     teamId: 'team1234',
     diagnosis: 'whatever diagnosis',
     progressionProposal: 'whatever proposal',

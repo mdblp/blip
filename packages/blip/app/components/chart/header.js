@@ -193,7 +193,7 @@ class TidelineHeader extends React.Component {
 
   render() {
     return (
-      <div className="patient-data-subnav-outer">
+      <div className="patient-data-subnav-outer" data-testid="patient-data-subnav-outer">
         <div className="patient-data-subnav-inner box-shadow">{this.renderStandard()}</div>
       </div>
     )
