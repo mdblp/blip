@@ -42,7 +42,7 @@ import { errorTextFromException } from '../utils'
 import { PatientContextResult } from './provider'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { cancel: cancelInvitation, getInvitation } = useNotification()
+  const { cancel: cancelInvitation, getInvitation, receivedInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
 
@@ -186,7 +186,13 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     if (!initialized && user) {
       fetchPatients()
     }
-  }, [errorMessage, fetchPatients, initialized, user])
+  }, [fetchPatients, initialized, user])
+
+  React.useEffect(() => {
+    if (initialized) {
+      refresh()
+    }
+  }, [receivedInvitations, initialized, refresh]) // We want the patient list to refresh when the notifications are updated
 
   return useMemo(() => ({
     patients,
