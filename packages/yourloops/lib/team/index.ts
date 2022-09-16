@@ -30,7 +30,6 @@ import {
   Team,
   TeamContext,
   TeamMember,
-  TeamUser,
   TEAM_CODE_LENGTH,
   REGEX_TEAM_CODE,
   REGEX_TEAM_CODE_DISPLAY
@@ -45,7 +44,6 @@ import { getDisplayTeamCode } from './utils'
 
 export {
   Team,
-  TeamUser,
   TeamMember,
   TeamContext,
   TeamContextProvider,
