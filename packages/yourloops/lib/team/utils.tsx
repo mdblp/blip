@@ -78,8 +78,7 @@ export default class TeamUtils {
       invitationStatus,
       role,
       email,
-      profile,
-      idVerified
+      profile
     } = iTeamMember
     return {
       userId,
@@ -87,7 +86,6 @@ export default class TeamUtils {
       profile,
       role,
       status: invitationStatus,
-      idVerified,
       invitation: invitations.find(invitation => invitation.target.id === teamId && invitation.email === email)
     }
   }

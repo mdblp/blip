@@ -78,7 +78,6 @@ describe('TeamUtils', () => {
           id: team1.id,
           members: [{
             email: team1Member1.email,
-            idVerified: team1Member1.idVerified,
             invitation: undefined,
             profile: team1Member1.profile,
             role: team1Member1.role,
@@ -87,7 +86,6 @@ describe('TeamUtils', () => {
           },
           {
             email: team1Member2.email,
-            idVerified: team1Member2.idVerified,
             invitation: notification,
             profile: team1Member2.profile,
             role: team1Member2.role,
@@ -110,7 +108,6 @@ describe('TeamUtils', () => {
             [
               {
                 email: team2Member1.email,
-                idVerified: team2Member1.idVerified,
                 invitation: undefined,
                 profile: team2Member1.profile,
                 role: team2Member1.role,
@@ -119,7 +116,6 @@ describe('TeamUtils', () => {
               },
               {
                 email: team2Member2.email,
-                idVerified: team2Member2.idVerified,
                 invitation: undefined,
                 profile: team2Member2.profile,
                 role: team2Member2.role,
@@ -132,7 +128,6 @@ describe('TeamUtils', () => {
           phone: team2.phone,
           type: team2.type
         }
-
       ]
       jest.spyOn(TeamApi, 'getTeams').mockResolvedValue(teamsFromApi)
 

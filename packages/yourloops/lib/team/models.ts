@@ -43,7 +43,6 @@ export interface TeamMember {
   role: TeamMemberRole
   status: UserInvitationStatus
   invitation?: INotification
-  idVerified?: boolean
 }
 
 export interface Team {
