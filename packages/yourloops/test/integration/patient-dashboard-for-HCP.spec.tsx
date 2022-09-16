@@ -122,7 +122,7 @@ describe('Patient dashboard for HCP', () => {
       expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
       const dashboard = within(screen.getByTestId('patient-dashboard'))
       testCommonDisplayForPatient(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
-    }, { timeout: 5000 })
+    })
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
@@ -151,7 +151,7 @@ describe('Patient dashboard for HCP', () => {
 
         /* Chat widget */
         expect(dashboard.getByText('Messages')).toBeVisible()
-      }, { timeout: 5000 })
+      })
       checkHeader(`${firstName} ${lastName}`)
       checkDrawer()
       checkFooter()
@@ -179,7 +179,7 @@ describe('Patient dashboard for HCP', () => {
         // call this to update the card and catch the new patient
         patientInfoCard = within(screen.getByTestId('patient-info-card'))
         expect(patientInfoCard.getByText(patientNonMonitoredFullName)).toBeVisible()
-      }, { timeout: 3000 })
+      })
     })
   })
 })
