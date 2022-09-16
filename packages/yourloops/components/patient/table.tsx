@@ -142,8 +142,11 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   return (
     <div>
       <TableContainer component={Paper} className={classes.tableContainer}>
-        <Table id="patients-list-table" aria-label={t('aria-table-list-patient')}
-          stickyHeader>
+        <Table
+          id="patients-list-table"
+          aria-label={t('aria-table-list-patient')}
+          stickyHeader
+        >
           <TableHead>
             <TableRow className={classes.tableRowHeader}>
               <StyledTableCell
@@ -270,14 +273,18 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t('last-data-update')}
                 </TableSortLabel>
               </StyledTableCell>
-              <StyledTableCell
-                id="patients-list-message-icon"
-                className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
-              />
-              <StyledTableCell
-                id="patients-list-remove-icon"
-                className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
-              />
+              {isUserHcp &&
+                <React.Fragment>
+                  <StyledTableCell
+                    id="patients-list-message-icon"
+                    className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
+                  />
+                  <StyledTableCell
+                    id="patients-list-remove-icon"
+                    className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
+                  />
+                </React.Fragment>
+              }
             </TableRow>
           </TableHead>
           <TableBody id="patient-table-body-id">

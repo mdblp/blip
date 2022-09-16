@@ -237,36 +237,38 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
           {lastUpload}
         </StyledTableCell>
 
-        <StyledTableCell className={classes.iconCell}>
-          <Tooltip
-            title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-            aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-          >
-            <Box display="flex" justifyContent="center">
-              {hasUnreadMessages
-                ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
-                : <EmailOpenIcon className={classes.lightGrey} />
-              }
-            </Box>
-          </Tooltip>
-        </StyledTableCell>
+        {isUserHcp &&
+          <React.Fragment>
+            <StyledTableCell className={classes.iconCell}>
+              <Tooltip
+                title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+                aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+              >
+                <Box display="flex" justifyContent="center">
+                  {hasUnreadMessages
+                    ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
+                    : <EmailOpenIcon className={classes.lightGrey} />
+                  }
+                </Box>
+              </Tooltip>
+            </StyledTableCell>
 
-        <StyledTableCell>
-          {isUserHcp &&
-            <Tooltip
-              title={t('remove-patient')}
-              aria-label={t('remove-patient')}
-            >
-              <Box>
-                <IconActionButton
-                  ariaLabel="remove-patient-button"
-                  icon={<PersonRemoveIcon />}
-                  onClick={onClickRemovePatient}
-                />
-              </Box>
-            </Tooltip>
-          }
-        </StyledTableCell>
+            <StyledTableCell>
+              <Tooltip
+                title={t('remove-patient')}
+                aria-label={t('remove-patient')}
+              >
+                <Box>
+                  <IconActionButton
+                    ariaLabel={t('remove-patient')}
+                    icon={<PersonRemoveIcon />}
+                    onClick={onClickRemovePatient}
+                  />
+                </Box>
+              </Tooltip>
+            </StyledTableCell>
+          </React.Fragment>
+        }
       </StyledTableRow>
 
       {patientToRemove &&
