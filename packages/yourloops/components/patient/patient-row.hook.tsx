@@ -15,7 +15,6 @@ interface PatientRowHookReturn {
   flagPatient: () => Promise<void>
   isFlagged: boolean
   isUserHcp: boolean
-  patientIsMonitored: boolean
   trNA: string
 }
 
@@ -92,7 +91,6 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
     isFlagged,
     isUserHcp,
     flagPatient,
-    patientIsMonitored,
     trNA
   }
 }

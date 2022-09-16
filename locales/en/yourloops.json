@@ -236,6 +236,7 @@
   "new": "New",
   "new-care-team": "New care team",
   "no": "No",
+  "no-new-messages": "No new messages",
   "none": "None",
   "not-logged-in": "You are not logged in",
   "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",

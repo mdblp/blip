@@ -51,6 +51,7 @@ import usePatientRow from './patient-row.hook'
 import { useHistory } from 'react-router-dom'
 import { Patient } from '../../lib/data/patient'
 import RemovePatientDialog from './remove-patient-dialog'
+import EmailOpenIcon from '../icons/EmailOpenIcon'
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -74,6 +75,9 @@ const patientListStyle = makeStyles(
         width: '56px',
         padding: 0
       },
+      lightGrey: {
+        color: theme.palette.grey[500]
+      },
       remoteMonitoringCell: {
         whiteSpace: 'pre-line'
       },
@@ -90,8 +94,7 @@ const patientListStyle = makeStyles(
   { name: 'ylp-hcp-patients-row' }
 )
 
-const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
-  const { patient, filter } = props
+const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => {
   const historyHook = useHistory()
   const { t } = useTranslation('yourloops')
   const classes = patientListStyle()
@@ -106,12 +109,12 @@ const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
   const patientFullName = patient.profile.fullName
   const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
   const isAlreadyInATeam = PatientUtils.isInAtLeastATeam(patient)
+  const hasUnreadMessages = patient.metadata.unreadMessagesSent > 0
 
   const {
     computeRowInformation,
     flagPatient,
     trNA,
-    patientIsMonitored,
     isUserHcp,
     isFlagged
   } = usePatientRow({ patient, classes })
@@ -163,21 +166,19 @@ const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
         data-userid={userId}
         data-email={email}
       >
-        <StyledTableCell
-          className={classes.iconCell}
-        >
+        <StyledTableCell className={classes.iconCell}>
           {filter === FilterType.pending && hasPendingInvitation
-            ? (<Tooltip
+            ? <Tooltip
               title={t('pending-invitation')}
               aria-label={t('pending-invitation')}
-              placement="bottom"
             >
               <Box display="flex">
                 <AccessTimeIcon titleAccess="pending-icon" className={classes.icon} />
               </Box>
-            </Tooltip>)
-            : (<IconActionButton
-              icon={isFlagged ? <FlagIcon
+            </Tooltip>
+            : <IconActionButton
+              icon={isFlagged
+                ? <FlagIcon
                   titleAccess="flag-icon-active"
                   aria-label="flag-icon-active"
                 />
@@ -187,7 +188,8 @@ const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
                 />}
               onClick={onClickFlag}
               className={`${!isFlagged ? classes.coloredIcon : ''} ${classes.icon} patient-flag-button`}
-            />)}
+            />
+          }
         </StyledTableCell>
 
         <StyledTableCell
@@ -235,19 +237,34 @@ const PatientRow: FunctionComponent<PatientRowProps> = (props) => {
           {lastUpload}
         </StyledTableCell>
 
-        <StyledTableCell>
-          {patientIsMonitored && patient.metadata.unreadMessagesSent > 0 &&
-            <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
-          }
+        <StyledTableCell className={classes.iconCell}>
+          <Tooltip
+            title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+            aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+          >
+            <Box display="flex" justifyContent="center">
+              {hasUnreadMessages
+                ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
+                : <EmailOpenIcon className={classes.lightGrey} />
+              }
+            </Box>
+          </Tooltip>
         </StyledTableCell>
 
         <StyledTableCell>
           {isUserHcp &&
-            <IconActionButton
-              ariaLabel="remove-patient-button"
-              icon={<PersonRemoveIcon />}
-              onClick={onClickRemovePatient}
-            />
+            <Tooltip
+              title={t('remove-patient')}
+              aria-label={t('remove-patient')}
+            >
+              <Box>
+                <IconActionButton
+                  ariaLabel="remove-patient-button"
+                  icon={<PersonRemoveIcon />}
+                  onClick={onClickRemovePatient}
+                />
+              </Box>
+            </Tooltip>
           }
         </StyledTableCell>
       </StyledTableRow>
