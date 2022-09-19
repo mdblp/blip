@@ -4,6 +4,10 @@ import { UserInvitationStatus } from '../../../models/generic'
 import { HcpProfession } from '../../../models/hcp-profession'
 import { MonitoringStatus } from '../../../models/monitoring'
 import { monitoringParameters } from './mockPatientAPI'
+import { loggedInUserId } from './mockAuth0Hook'
+
+export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
+export const myThirdTeamId = '62fe00defc9374b2fed32bce'
 
 export const mockTeamAPI = () => {
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([{
@@ -11,13 +15,13 @@ export const mockTeamAPI = () => {
     id: '62fe00defc9374b2fed32bcc',
     code: '036038775',
     type: TeamType.medical,
-    owner: '919b1575bad58',
+    owner: loggedInUserId,
     phone: '0476000000',
     email: 'hey@hey.hey',
     address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
     description: 'Test MyTeam',
     members: [{
-      userId: '919b1575bad58',
+      userId: loggedInUserId,
       teamId: '62fe00defc9374b2fed32bcc',
       role: TeamMemberRole.admin,
       profile: {
@@ -37,17 +41,17 @@ export const mockTeamAPI = () => {
     }]
   }, {
     name: 'MySecondTeam',
-    id: '62fe00defc9374b2fed32bcd',
+    id: mySecondTeamId,
     code: '241548778',
     type: TeamType.medical,
-    owner: '919b1575bad58',
+    owner: loggedInUserId,
     phone: '0476000000',
     email: 'hey@hey.hey',
     address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
     description: 'Test My second Team',
     members: [{
-      userId: '919b1575bad58',
-      teamId: '62fe00defc9374b2fed32bcd',
+      userId: loggedInUserId,
+      teamId: mySecondTeamId,
       role: TeamMemberRole.admin,
       profile: {
         firstName: 'Yourloops UI 28.0',
@@ -72,17 +76,17 @@ export const mockTeamAPI = () => {
     }
   }, {
     name: 'MyThirdTeam - to be deleted',
-    id: '62fe00defc9374b2fed32bce',
+    id: myThirdTeamId,
     code: '263381988',
     type: TeamType.medical,
-    owner: '919b1575bad58',
+    owner: loggedInUserId,
     phone: '0476000000',
     email: 'hey@third.hey',
     address: { line1: 'Guiness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'IE' },
     description: 'Test My third Team',
     members: [{
-      userId: '919b1575bad58',
-      teamId: '62fe00defc9374b2fed32bce',
+      userId: loggedInUserId,
+      teamId: myThirdTeamId,
       role: TeamMemberRole.admin,
       profile: {
         firstName: 'Yourloops UI 28.0',
@@ -100,7 +104,7 @@ export const mockTeamAPI = () => {
       unreadMessages: 0
     }, {
       userId: '4d9afc649ae4',
-      teamId: '62fe00defc9374b2fed32bce',
+      teamId: myThirdTeamId,
       role: TeamMemberRole.admin,
       profile: {
         firstName: 'Yourloops UI 28.1',

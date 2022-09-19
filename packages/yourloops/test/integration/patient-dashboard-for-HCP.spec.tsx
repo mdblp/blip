@@ -28,7 +28,7 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { act, BoundFunctions, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { AuthContextProvider } from '../../lib/auth'
 import { MainLobby } from '../../app/main-lobby'
 import { checkHeader } from './utils/header'
@@ -69,10 +69,6 @@ describe('Patient dashboard for HCP', () => {
     mockDataAPI()
   })
 
-  afterEach(() => {
-    cleanup()
-  })
-
   function getPatientDashboardForHCP(history) {
     return (
       <Router history={history}>
@@ -83,7 +79,7 @@ describe('Patient dashboard for HCP', () => {
     )
   }
 
-  function testCommonDisplayForPatient(dashboard: BoundFunctions<typeof queries>, patientId: string, fullname: string) {
+  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string, fullName: string) {
     /* Top bar */
     expect(dashboard.getByTestId('subnav-arrow-back')).toBeVisible()
     expect(dashboard.getByTestId('subnav-patient-list')).toBeVisible()
@@ -102,7 +98,7 @@ describe('Patient dashboard for HCP', () => {
     /* Patient info widget */
     const patientInfoCard = within(dashboard.getByTestId('patient-info-card'))
     expect(patientInfoCard.getByText('Patient Information')).toBeVisible()
-    expect(patientInfoCard.getByText(fullname)).toBeVisible()
+    expect(patientInfoCard.getByText(fullName)).toBeVisible()
 
     /* Patient stats widget */
     expect(dashboard.getByText('Patient statistics')).toBeVisible()
@@ -121,7 +117,7 @@ describe('Patient dashboard for HCP', () => {
     await waitFor(() => {
       expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
       const dashboard = within(screen.getByTestId('patient-dashboard'))
-      testCommonDisplayForPatient(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
+      testPatientDashboardCommonDisplay(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
     })
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
@@ -137,7 +133,7 @@ describe('Patient dashboard for HCP', () => {
       await waitFor(() => {
         const dashboard = within(screen.getByTestId('patient-dashboard'))
         expect(history.location.pathname).toBe(patientMonitoredDashboardRoute)
-        testCommonDisplayForPatient(dashboard, patientMonitoredId, patientMonitoredFullName)
+        testPatientDashboardCommonDisplay(dashboard, patientMonitoredId, patientMonitoredFullName)
         /* Patient info widget */
         expect(dashboard.getByText('Renew')).toBeVisible()
         expect(dashboard.getByText('Remove')).toBeVisible()

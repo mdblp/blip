@@ -4,6 +4,7 @@ import { UserInvitationStatus } from '../../../models/generic'
 import { UNITS_TYPE } from '../../../lib/units/utils'
 import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
 import { MonitoringStatus } from '../../../models/monitoring'
+import { mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
 
 export const monitoringParameters = {
   bgUnit: UNITS_TYPE.MGDL,
@@ -28,7 +29,7 @@ export const patientMonitoredFullName = `${patientMonitoredFirstName} ${patientM
 export const mockPatientAPI = () => {
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([{
     userId: patientMonitoredId,
-    teamId: '62fe00defc9374b2fed32bcd',
+    teamId: mySecondTeamId,
     role: TeamMemberRole.patient,
     profile: { firstName: patientMonitoredFirstName, fullName: patientMonitoredFullName, lastName: patientMonitoredLastName, patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' }, privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true }, termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true } },
     settings: null,
@@ -46,7 +47,7 @@ export const mockPatientAPI = () => {
     }
   }, {
     userId: patientNonMonitoredId,
-    teamId: '62fe00defc9374b2fed32bce',
+    teamId: myThirdTeamId,
     role: TeamMemberRole.patient,
     profile: { firstName: patientNonMonitoredFirstName, fullName: patientNonMonitoredFullName, lastName: patientNonMonitoredLastName, patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' }, privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true }, termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true } },
     settings: null,
