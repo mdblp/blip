@@ -114,11 +114,9 @@ describe('Patient dashboard for HCP', () => {
       render(getPatientDashboardForHCP(history))
     })
 
-    await waitFor(() => {
-      expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
-      const dashboard = within(screen.getByTestId('patient-dashboard'))
-      testPatientDashboardCommonDisplay(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
-    })
+    const dashboard = within(await screen.findByTestId('patient-dashboard'))
+    expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
+    testPatientDashboardCommonDisplay(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
@@ -130,24 +128,22 @@ describe('Patient dashboard for HCP', () => {
     await act(async () => {
       render(getPatientDashboardForHCP(history))
 
-      await waitFor(() => {
-        const dashboard = within(screen.getByTestId('patient-dashboard'))
-        expect(history.location.pathname).toBe(patientMonitoredDashboardRoute)
-        testPatientDashboardCommonDisplay(dashboard, patientMonitoredId, patientMonitoredFullName)
-        /* Patient info widget */
-        expect(dashboard.getByText('Renew')).toBeVisible()
-        expect(dashboard.getByText('Remove')).toBeVisible()
+      const dashboard = within(await screen.findByTestId('patient-dashboard'))
+      expect(history.location.pathname).toBe(patientMonitoredDashboardRoute)
+      testPatientDashboardCommonDisplay(dashboard, patientMonitoredId, patientMonitoredFullName)
+      /* Patient info widget */
+      expect(dashboard.getByText('Renew')).toBeVisible()
+      expect(dashboard.getByText('Remove')).toBeVisible()
 
-        /* Medical files widget */
-        expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
-        expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
+      /* Medical files widget */
+      expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
+      expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
 
-        /* Events widget */
-        expect(dashboard.getByText('Events')).toBeVisible()
+      /* Events widget */
+      expect(dashboard.getByText('Events')).toBeVisible()
 
-        /* Chat widget */
-        expect(dashboard.getByText('Messages')).toBeVisible()
-      })
+      /* Chat widget */
+      expect(dashboard.getByText('Messages')).toBeVisible()
       checkHeader(`${firstName} ${lastName}`)
       checkDrawer()
       checkFooter()
@@ -160,14 +156,11 @@ describe('Patient dashboard for HCP', () => {
     await act(async () => {
       render(getPatientDashboardForHCP(history))
       let patientInfoCard
-      let secondaryHeader
 
-      await waitFor(() => {
-        patientInfoCard = within(screen.getByTestId('patient-info-card'))
-        secondaryHeader = within(screen.getByTestId('patient-data-subnav-outer'))
-        expect(patientInfoCard.getByText(patientMonitoredFullName)).toBeVisible()
-      })
+      patientInfoCard = within(await screen.findByTestId('patient-info-card'))
+      const secondaryHeader = within(await screen.findByTestId('patient-data-subnav-outer'))
 
+      expect(patientInfoCard.getByText(patientMonitoredFullName)).toBeVisible()
       fireEvent.mouseDown(secondaryHeader.getByText(patientMonitoredFullName))
       fireEvent.click(screen.getByText(patientNonMonitoredFullName))
 
