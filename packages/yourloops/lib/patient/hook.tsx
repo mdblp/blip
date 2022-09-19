@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import moment from 'moment-timezone'
 
 import { Patient, PatientTeam } from '../data/patient'
@@ -182,13 +182,13 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     }
   }, [getPatient, updatePatient])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!initialized && user) {
       fetchPatients()
     }
   }, [fetchPatients, initialized, user])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (initialized) {
       refresh()
     }
