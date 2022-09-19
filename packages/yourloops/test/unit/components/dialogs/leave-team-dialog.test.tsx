@@ -40,8 +40,8 @@ jest.mock('../../../../lib/auth')
 describe('Leave team dialog', () => {
   const teamId = 'teamId'
   const members = [
-    buildTeamMember(teamId, 'userId1'),
-    buildTeamMember(teamId, 'userId2')
+    buildTeamMember('userId1'),
+    buildTeamMember('userId2')
   ]
   const team = buildTeam(teamId, members)
   const onDialogResult = jest.fn()

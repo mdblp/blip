@@ -81,14 +81,14 @@ export interface TeamMembersProps {
 function MemberRow(props: TeamMembersProps): JSX.Element {
   const { teamMember, team, refreshParent } = props
   const classes = useStyles()
-  const rowId = teamMember.user.userid.replace(/@/g, '_')
+  const rowId = teamMember.userId.replace(/@/g, '_')
   const teamHook = useTeam()
   const authContext = useAuth()
   const alert = useAlert()
   const { t } = useTranslation('yourloops')
   const [userUpdateInProgress, setUserUpdateInProgress] = useState<boolean>(false)
   const [showConfirmRemoveDialog, setShowConfirmRemoveDialog] = useState(false)
-  const currentUserId = teamMember.user.userid
+  const currentUserId = teamMember.userId
   const loggedInUserId = authContext.user?.id
   const loggedInUserIsAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId)
   const currentUserIsAdmin = TeamUtils.isUserAdministrator(team, currentUserId)
@@ -97,14 +97,14 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
     userUpdateInProgress
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
-    (teamMember.status === UserInvitationStatus.pending && (!teamMember.invitation || teamMember.team.id !== teamMember.invitation.target?.id)) // This condition basically means that the logged in user did not invite the pending user
+    (teamMember.status === UserInvitationStatus.pending && (!teamMember.invitation || team.id !== teamMember.invitation.target?.id)) // This condition basically means that the logged in user did not invite the pending user
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked
     setUserUpdateInProgress(true)
 
     try {
-      await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member)
+      await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member, team.id)
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t('team-page-failed-update-role', { errorMessage }))
@@ -117,7 +117,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const deleteMember = async (): Promise<void> => {
     setUserUpdateInProgress(true)
     try {
-      await teamHook.removeMember(teamMember)
+      await teamHook.removeMember(teamMember, team.id)
       alert.success(t('remove-member-success'))
     } catch (reason: unknown) {
       console.error(reason)
@@ -142,7 +142,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
         >
           {currentUserIsPending
             ? ('--')
-            : (teamMember.user.profile?.fullName)
+            : (teamMember.profile?.fullName)
           }
         </StyledTableCell>
         <StyledTableCell
@@ -159,7 +159,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           id={`${rowId}-member-email`}
           className={classes.typography}
         >
-          {teamMember.user.username}
+          {teamMember.email}
         </StyledTableCell>
         <StyledTableCell
           size="small"
@@ -197,7 +197,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
       {showConfirmRemoveDialog &&
         <ConfirmDialog
           title={t('remove-member-from-team')}
-          label={t('remove-member-confirm', { fullName: teamMember.user.profile?.fullName, teamName: team.name })}
+          label={t('remove-member-confirm', { fullName: teamMember.profile?.fullName, teamName: team.name })}
           inProgress={userUpdateInProgress}
           onClose={() => setShowConfirmRemoveDialog(false)}
           onConfirm={deleteMember}

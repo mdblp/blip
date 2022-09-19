@@ -63,7 +63,7 @@ describe('Main Drawer', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const flaggedPatients = ['fakeFlaggedPatientId']
   const userId = 'fakeUserId'
-  const teamMember = buildTeamMember('fakeTeamId', userId)
+  const teamMember = buildTeamMember(userId)
   const monitoredTeam = buildTeam('fakeTeamId', [teamMember])
 
   const getRemoteMonitoringTeamsMock = jest.fn().mockReturnValue([monitoredTeam])

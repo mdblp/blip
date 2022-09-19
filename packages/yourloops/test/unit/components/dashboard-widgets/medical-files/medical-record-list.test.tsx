@@ -68,7 +68,7 @@ jest.mock('../../../../../components/dialogs/medical-record-delete-dialog', () =
 describe('Medical Record list', () => {
   const patient = createPatient('fakePatientId', [])
   const adminMember = buildTeamMember()
-  const patientMember = buildTeamMember('fakeTeamId', patient.userid)
+  const patientMember = buildTeamMember(patient.userid)
   const remoteMonitoringTeam = buildTeam('fakeTeamId', [adminMember, patientMember])
   const medicalRecords: MedicalRecord[] = [
     {

@@ -33,7 +33,6 @@ import { Team, TeamContext, TeamContextProvider, useTeam } from '../../../../lib
 import { UserInvitationStatus } from '../../../../models/generic'
 import * as notificationHookMock from '../../../../lib/notifications/hook'
 import { ITeam, TeamMemberRole } from '../../../../models/team'
-import { UserRoles } from '../../../../models/user'
 import { buildInvite, buildTeam, buildTeamMember } from '../../common/utils'
 import * as authHookMock from '../../../../lib/auth'
 import TeamUtils from '../../../../lib/team/utils'
@@ -44,14 +43,10 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/notifications/hook')
 describe('Team hook', () => {
   let teamHook: TeamContext
-  const memberPatientAccepted1 = buildTeamMember('team1Id', 'memberPatientAccepted1', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.accepted, UserRoles.patient)
-  memberPatientAccepted1.user.profile.firstName = 'donkey'
-  const memberPatientPending1 = buildTeamMember('team1Id', 'memberPatientPending1', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient)
-  const memberPatientPending2 = buildTeamMember('team1Id', 'memberPatientPending2', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient)
-  const memberHcp1 = buildTeamMember('team1Id', 'memberHcp', undefined, TeamMemberRole.member)
-  const memberHcp2 = buildTeamMember('team3Id', 'memberHcpAdmin', undefined, TeamMemberRole.admin, undefined, undefined, UserInvitationStatus.accepted)
-  const team1 = buildTeam('team1Id', [memberPatientAccepted1, memberPatientPending1, memberHcp1])
-  const team2 = buildTeam('team2Id', [memberPatientPending1, memberPatientPending2])
+  const memberHcp1 = buildTeamMember('memberHcp', undefined, TeamMemberRole.member)
+  const memberHcp2 = buildTeamMember('memberHcpAdmin', undefined, TeamMemberRole.admin, undefined, undefined, UserInvitationStatus.accepted)
+  const team1 = buildTeam('team1Id', [memberHcp1])
+  const team2 = buildTeam('team2Id', [])
   const team3 = buildTeam('team3Id', [memberHcp2])
   const team4 = buildTeam('team4Id', [])
   team4.monitoring.enabled = false
@@ -102,14 +97,14 @@ describe('Team hook', () => {
     it('should throw an error when there is no invitation', async () => {
       const teamMember = buildTeamMember()
       await expect(async () => {
-        await teamHook.removeMember(teamMember)
+        await teamHook.removeMember(teamMember, 'fakeTeamId')
       }).rejects.toThrow()
     })
 
     it('should throw an error when there is no invitation for the member team', async () => {
-      const teamMember = buildTeamMember('fakeTeamId', 'fakeUserId', buildInvite('wrongTeam'))
+      const teamMember = buildTeamMember('fakeUserId', buildInvite('wrongTeam'))
       await expect(async () => {
-        await teamHook.removeMember(teamMember)
+        await teamHook.removeMember(teamMember, 'fakeTeamId')
       }).rejects.toThrow()
     })
   })
@@ -208,18 +203,9 @@ describe('Team hook', () => {
     it('should change the member role', async () => {
       jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValue(undefined)
       await act(async () => {
-        await teamHook.changeMemberRole(memberHcp1, TeamMemberRole.admin)
+        await teamHook.changeMemberRole(memberHcp1, TeamMemberRole.admin, 'fakeTeamId')
       })
       expect(loadTeamsSpy).toBeCalledTimes(1)
-    })
-  })
-
-  describe('getUser', () => {
-    it('should return the given user or null if does not exist', () => {
-      let user = teamHook.getUser('memberPatientAccepted1')
-      expect(user).toBeTruthy()
-      user = teamHook.getUser('unknownUser')
-      expect(user).toBeFalsy()
     })
   })
 
