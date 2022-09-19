@@ -1,11 +1,8 @@
 # `medical-domain`
+This package centralizes services to normalize/deduplicate medical data retrieved from backend services.
 
-> TODO: description
+It refactors functions from the following legacy modules: 
+ * packages/tideline/js/tidelinedata
+ * packages/tideline/plugins/nurseshark/
+ * some logic from packages/blip/app/components/patient-data
 
-## Usage
-
-```
-const medicalDomain = require('medical-domain');
-
-// TODO: DEMONSTRATE API
-```

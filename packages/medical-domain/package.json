@@ -2,7 +2,10 @@
   "name": "medical-domain",
   "version": "0.0.1",
   "description": "Yourloops package for processing medical data",
-  "author": "Cedric Perotto <cedric.perotto@diabeloop.fr>",
+  "author": {
+    "name": "Diabeloop",
+    "url": "https://www.diabeloop.com/"
+  },
   "homepage": "https://github.com/mdblp/blip#readme",
   "license": "ISC",
   "main": "dist/src/index.js",

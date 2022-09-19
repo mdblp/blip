@@ -3,7 +3,7 @@ import Datum from '../../models/medical/Datum'
 import Upload from '../../models/medical/datum/Upload'
 import { toISOString, findBasicsDays } from '../time/TimeService'
 
-interface BasicsData {
+interface BasicData {
   timezone: string
   dateRange: string[]
   days: Array<{
@@ -39,7 +39,7 @@ interface BasicsData {
   }
 }
 
-export function generateBasicsData(medicalData: MedicalData, startEpoch: number, startTimezone: string, endEpoch: number, endTimezone: string): BasicsData | null {
+export function generateBasicData(medicalData: MedicalData, startEpoch: number, startTimezone: string, endEpoch: number, endTimezone: string): BasicData | null {
   const days = findBasicsDays(startEpoch, startTimezone, endEpoch, endTimezone)
   const dateRange = [toISOString(startEpoch), toISOString(endEpoch)]
 
@@ -87,4 +87,4 @@ export function generateBasicsData(medicalData: MedicalData, startEpoch: number,
   return basicsData
 }
 
-export default BasicsData
+export default BasicData

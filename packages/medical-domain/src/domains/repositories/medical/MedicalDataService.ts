@@ -10,7 +10,7 @@ import Wizard from '../../models/medical/datum/Wizard'
 
 import ZenMode from '../../models/medical/datum/ZenMode'
 
-import BasicsData, { generateBasicsData } from './BasicsDataService'
+import BasicData, { generateBasicData } from './BasicsDataService'
 import BasalService from './datum/BasalService'
 import BolusService from './datum/BolusService'
 import DeviceParameterChangeService from './datum/DeviceParameterChangeService'
@@ -57,7 +57,7 @@ class MedicalDataService {
   fills: Fill[] = []
 
   // for compatibility with tidelineData interface only... see generateBasicsData
-  basicsData: BasicsData | null = null
+  basicsData: BasicData | null = null
   private _datumOpts: MedicalDataOptions = defaultMedicalDataOptions
 
   private normalize(rawData: Array<Record<string, unknown>>): void {
@@ -401,7 +401,7 @@ class MedicalDataService {
     startEpoch += 1
     endEpoch -= 1
 
-    this.basicsData = generateBasicsData(this.medicalData, startEpoch, startTimezone, endEpoch, endTimezone)
+    this.basicsData = generateBasicData(this.medicalData, startEpoch, startTimezone, endEpoch, endTimezone)
   }
 
   editMessage(message: Record<string, unknown>): Message | null {
