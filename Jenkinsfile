@@ -129,8 +129,10 @@ pipeline {
             steps {
                 script {
                     env.target = "itg"
+                    def doPublish = true
                     if (env.version == "UNRELEASED" || env.version.contains("BETA") && env.GIT_BRANCH == "dblp") {
                         env.version = "master"
+                        doPublish = false
                     }
                 }
                 lock('blip-cloudfront-publish') {
@@ -139,7 +141,9 @@ pipeline {
                         string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT')]) {
                         sh 'docker run --rm -e STACK_VERSION=${version}:${GIT_COMMIT} -e APP_VERSION=${version}:${GIT_COMMIT} -e AWS_ACCOUNT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY --env-file ./cloudfront-dist/deployment/${target}.env blip:${GIT_COMMIT}'
                     }
-                    publish()
+                    if (doPublish) {
+                        publish()
+                    }
                 }
             }
         }
