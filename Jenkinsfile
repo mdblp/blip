@@ -129,7 +129,7 @@ pipeline {
             steps {
                 script {
                     env.target = "itg"
-                    if (env.version == "UNRELEASED") {
+                    if (env.version == "UNRELEASED" || env.version.contains("BETA") && env.GIT_BRANCH == "dblp") {
                         env.version = "master"
                     }
                 }

@@ -63,7 +63,7 @@ describe('PatientInfoWidget', () => {
   const patient = createPatient('fakePatientId', [])
   let container: HTMLElement | null = null
   const adminMember = buildTeamMember()
-  const patientMember = buildTeamMember('fakeTeamId', patient.userid)
+  const patientMember = buildTeamMember(patient.userid)
   const remoteMonitoringTeam = buildTeam('fakeTeamId', [adminMember, patientMember])
   patient.teams = [{ teamId: remoteMonitoringTeam.id } as PatientTeam]
   const cancelRemoteMonitoringInviteMock = jest.fn()
@@ -73,7 +73,7 @@ describe('PatientInfoWidget', () => {
   beforeAll(() => {
     i18n.changeLanguage('en');
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserCaregiver: () => false, isUserHcp: () => true, id: adminMember.user.userid } as User }
+      return { user: { isUserCaregiver: () => false, isUserHcp: () => true, id: adminMember.userId } as User }
     })
     jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam);
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {

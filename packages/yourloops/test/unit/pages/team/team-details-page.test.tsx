@@ -52,8 +52,8 @@ describe('TeamDetailsPage', () => {
   const teamId2 = 'teamId2'
 
   const members = [
-    buildTeamMember(teamId1, 'userId1'),
-    buildTeamMember(teamId1, 'userId2')
+    buildTeamMember('userId1'),
+    buildTeamMember('userId2')
   ]
   const team1 = buildTeam(teamId1, members, 'team1')
   const team2 = buildTeam(teamId2, members, 'team2')
