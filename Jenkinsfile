@@ -1,5 +1,7 @@
 @Library('mdblp-library') _
 
+def doPublish = true
+
 pipeline {
     agent {
         label 'blip'
@@ -129,7 +131,6 @@ pipeline {
             steps {
                 script {
                     env.target = "itg"
-                    def doPublish = true
                     if (env.version == "UNRELEASED" || env.version.contains("BETA") && env.GIT_BRANCH == "dblp") {
                         env.version = "master"
                         doPublish = false
