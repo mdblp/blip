@@ -29,8 +29,8 @@ import { screen, within } from '@testing-library/react'
 
 export const checkDrawer = () => {
   const drawer = within(screen.getByTestId('main-left-drawer'))
-  expect(drawer.getByLabelText('all-patients-filter')).toBeVisible()
-  expect(drawer.getByLabelText('flagged-patients-filter')).toBeVisible()
-  expect(drawer.getByLabelText('pending-patients-filter')).toBeVisible()
-  expect(drawer.getByLabelText('private-practice-patients-filter')).toBeVisible()
+  expect(drawer.getByLabelText('Filter on all patients')).toBeVisible()
+  expect(drawer.getByLabelText('Filter on flagged patients')).toBeVisible()
+  expect(drawer.getByLabelText('Filter on pending patients')).toBeVisible()
+  expect(drawer.getByLabelText('Filter on patients in private practice')).toBeVisible()
 }

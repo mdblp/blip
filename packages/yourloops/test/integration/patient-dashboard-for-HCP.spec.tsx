@@ -77,7 +77,7 @@ describe('Patient dashboard for HCP', () => {
 
     await waitFor(() => {
       expect(history.location.pathname).toBe(`/patient/${patientId}/dashboard`)
-      const dashboardLink = screen.getByText('dashboard')
+      const dashboardLink = screen.getByText('Dashboard')
       const dailyLink = screen.getByText('Daily')
       const trendsLink = screen.getByText('Trends')
       expect(dashboardLink).toBeVisible()

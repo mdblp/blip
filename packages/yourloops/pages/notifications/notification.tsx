@@ -43,7 +43,6 @@ import { IUser, UserRoles } from '../../models/user'
 import { INotification, NotificationType } from '../../lib/notifications/models'
 import { errorTextFromException, getUserFirstName, getUserLastName } from '../../lib/utils'
 import { useNotification } from '../../lib/notifications/hook'
-import { useSharedUser } from '../../lib/share/reducer'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
 import AddTeamDialog from '../../pages/patient/teams/add-dialog'
@@ -212,7 +211,6 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const teamHook = useTeam()
   const { user } = useAuth()
   const patientHook = usePatientContext()
-  const [_sharedUsersContext, sharedUsersDispatch] = useSharedUser() // eslint-disable-line no-unused-vars,@typescript-eslint/no-unused-vars
   const [inProgress, setInProgress] = React.useState(false)
   const classes = useStyles()
   const { notification } = props
@@ -231,9 +229,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     try {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
-      sharedUsersDispatch({ type: 'reset' })
       if (user.isUserHcp()) {
-        teamHook.refresh(true)
+        teamHook.refresh()
       } else {
         patientHook.refresh()
       }

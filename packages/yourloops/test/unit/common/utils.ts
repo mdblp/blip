@@ -30,8 +30,7 @@ import { UserInvitationStatus } from '../../../models/generic'
 import { Patient, PatientTeam } from '../../../lib/data/patient'
 import { Alarm } from '../../../models/alarm'
 import { Team, TeamMember } from '../../../lib/team'
-import { UserRoles } from '../../../models/user'
-import { TeamMemberRole, TeamType } from '../../../models/team'
+import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../../models/team'
 import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
 import { UNITS_TYPE } from '../../../lib/units/utils'
 import { INotification, NotificationType } from '../../../lib/notifications/models'
@@ -125,36 +124,75 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
   }
 }
 
+export function buildITeam(id = 'fakeTeamId', members: ITeamMember[] = [], name = 'fake team name'): ITeam {
+  return {
+    id,
+    name,
+    code: '123456789',
+    type: TeamType.medical,
+    owner: 'fakeOwner',
+    phone: 'fakePhone',
+    email: 'fake@email.com',
+    address: {
+      line1: 'fakeLine1',
+      line2: 'fakeLine2',
+      zip: 'fakeZip',
+      city: 'fakeCity',
+      country: 'fakeCountry'
+    },
+    description: 'fakeDescription',
+    members,
+    monitoring: {
+      enabled: true,
+      parameters: {
+        bgUnit: UNITS_TYPE.MGDL,
+        lowBg: 1,
+        highBg: 2,
+        outOfRangeThreshold: 10,
+        veryLowBg: 4,
+        hypoThreshold: 15,
+        nonDataTxThreshold: 20,
+        reportingPeriod: 7
+      }
+    }
+  }
+}
+
 export function buildTeamMember(
-  teamId = 'fakeTeamId',
   userId = 'fakeUserId',
   invitation: INotification | undefined = undefined,
   role: TeamMemberRole = TeamMemberRole.admin,
-  username = 'fake@username.com',
+  email = 'fake@username.com',
   fullName = 'fake full name',
-  status = UserInvitationStatus.pending,
-  userRole: UserRoles = UserRoles.hcp
+  status = UserInvitationStatus.pending
 ): TeamMember {
   return {
-    team: { id: teamId } as Team,
+    userId,
+    email,
+    profile: { fullName },
     role,
     status,
-    user: {
-      role: userRole,
-      userid: userId,
-      username,
-      members: [
-        {
-          invitation: {} as INotification,
-          status,
-          team: { id: teamId, code: 'fakeCode', name: 'fakeTeamName' }
-        } as TeamMember
-      ],
-      profile: {
-        fullName
-      }
-    },
-    invitation
+    invitation,
+    idVerified: undefined
+  }
+}
+
+export function buildITeamMember(
+  teamId = 'fakeTeamId',
+  userId = 'fakeUserId',
+  role: TeamMemberRole = TeamMemberRole.admin,
+  email = 'fake@username.com',
+  fullName = 'fake full name',
+  invitationStatus = UserInvitationStatus.pending
+): ITeamMember {
+  return {
+    userId,
+    teamId,
+    email,
+    role,
+    invitationStatus,
+    profile: { fullName },
+    idVerified: undefined
   }
 }
 

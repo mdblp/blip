@@ -27,7 +27,7 @@
  */
 
 import { PostalAddress, UserInvitationStatus } from '../../models/generic'
-import { IUser } from '../../models/user'
+import { Profile } from '../../models/user'
 import { INotification } from '../notifications/models'
 import { TeamMemberRole, TeamType, TypeTeamMemberRole } from '../../models/team'
 import { Monitoring } from '../../models/monitoring'
@@ -36,18 +36,13 @@ export const TEAM_CODE_LENGTH = 9
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/
 export const REGEX_TEAM_CODE_DISPLAY = /^[0-9]{3} - [0-9]{3} - [0-9]{3}$/
 
-export interface TeamUser extends IUser {
-  members: TeamMember[]
-}
-
 export interface TeamMember {
-  team: Team
+  userId: string
+  email: string
+  profile?: Profile | null
   role: TeamMemberRole
   status: UserInvitationStatus
-  user: TeamUser
-  /** Invitations for roles = pending */
   invitation?: INotification
-  idVerified?: boolean
 }
 
 export interface Team {
@@ -68,14 +63,14 @@ export interface TeamContext {
   teams: Array<Readonly<Team>>
   /** true if an initial team fetch has been done */
   initialized: boolean
+  /** true if the teams are being retrieved */
+  refreshInProgress: boolean
   /** The error message set if there is any error */
   errorMessage: string | null
   /**
    * Refresh the team list & members.
-   *
-   * @param forceRefresh if true, re-fetch the team
    */
-  refresh: (forceRefresh: boolean) => void
+  refresh: () => void
   /**
    * Return the medical teams only
    */
@@ -89,12 +84,6 @@ export interface TeamContext {
    * @param teamId The technical team id
    */
   getTeam: (teamId: string) => Readonly<Team> | null
-  /**
-   * Return the user which the userId belongs to.
-   * *All your base are belong to us*
-   * @param userId The user we want
-   */
-  getUser: (userId: string) => Readonly<TeamUser> | null
 
   /**
    * As an HCP invite a member (non patient)
@@ -131,15 +120,17 @@ export interface TeamContext {
   /**
    * Remove a team member from a team
    * @param member The member to remove
+   * @param teamId The id of the team the member should be removed from
    */
-  removeMember: (member: TeamMember) => Promise<void>
+  removeMember: (member: TeamMember, teamId: string) => Promise<void>
 
   /**
    * Change a member role
    * @param member The concerned member
    * @param role The new role
+   * @param teamId The id of the team the member should have his role changed
    */
-  changeMemberRole: (member: TeamMember, role: Exclude<TypeTeamMemberRole, 'patient'>) => Promise<void>
+  changeMemberRole: (member: TeamMember, role: Exclude<TypeTeamMemberRole, 'patient'>, teamId: string) => Promise<void>
 
   /**
    * Retreive a team from it's 9 digit code.
@@ -150,10 +141,6 @@ export interface TeamContext {
    * Join a specific team.
    */
   joinTeam: (teamId: string) => Promise<void>
-  /**
-   * Remove a team (no api call is done)
-   */
-  removeTeamFromList: (teamId: string) => void
 }
 
 export interface PatientFilterStats {

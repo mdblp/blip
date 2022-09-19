@@ -34,7 +34,6 @@ import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/utils'
 import TeamMembers, { TeamMembersProps } from '../../../../components/team/team-members'
 import { TeamMemberRole } from '../../../../models/team'
-import { UserRoles } from '../../../../models/user'
 import { UserInvitationStatus } from '../../../../models/generic'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 
@@ -45,19 +44,17 @@ describe('TeamMembers', () => {
 
   const teamId = 'teamId'
   const members = [
-    buildTeamMember(teamId, 'userId1'),
-    buildTeamMember(teamId, 'userId2'),
-    buildTeamMember(teamId, 'userId3'),
-    buildTeamMember(teamId, 'userId4'),
+    buildTeamMember('userId1'),
+    buildTeamMember('userId2'),
+    buildTeamMember('userId3'),
+    buildTeamMember('userId4'),
     buildTeamMember(
-      teamId,
       'patientUserId',
       undefined,
       TeamMemberRole.patient,
       'fakePatient',
       'patientFullName',
-      UserInvitationStatus.accepted,
-      UserRoles.patient
+      UserInvitationStatus.accepted
     )
   ]
   const team = buildTeam(teamId, members)
