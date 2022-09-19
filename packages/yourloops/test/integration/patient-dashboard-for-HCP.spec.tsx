@@ -143,8 +143,8 @@ describe('Patient dashboard for HCP', () => {
         expect(dashboard.getByText('Remove')).toBeVisible()
 
         /* Medical files widget */
-        expect(dashboard.getByText('Prescription_1/2/2022')).toBeVisible()
-        expect(dashboard.getByText('Weekly_report_1/2/2022')).toBeVisible()
+        expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
+        expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
 
         /* Events widget */
         expect(dashboard.getByText('Events')).toBeVisible()
