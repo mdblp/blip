@@ -27,7 +27,6 @@
  */
 
 import React from 'react'
-import _ from 'lodash'
 import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
@@ -44,12 +43,13 @@ import { IUser, UserRoles } from '../../models/user'
 import { INotification, NotificationType } from '../../lib/notifications/models'
 import { errorTextFromException, getUserFirstName, getUserLastName } from '../../lib/utils'
 import { useNotification } from '../../lib/notifications/hook'
-import { useTeam } from '../../lib/team/hook'
-import { useSharedUser } from '../../lib/share/reducer'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
 import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
+import { usePatientContext } from '../../lib/patient/provider'
+import { useTeam } from '../../lib/team'
+import { useAuth } from '../../lib/auth'
 
 export interface NotificationSpanProps {
   id: string
@@ -209,7 +209,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const notifications = useNotification()
   const alert = useAlert()
   const teamHook = useTeam()
-  const [_sharedUsersContext, sharedUsersDispatch] = useSharedUser() // eslint-disable-line no-unused-vars,@typescript-eslint/no-unused-vars
+  const { user } = useAuth()
+  const patientHook = usePatientContext()
   const [inProgress, setInProgress] = React.useState(false)
   const classes = useStyles()
   const { notification } = props
@@ -228,9 +229,10 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     try {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
-      sharedUsersDispatch({ type: 'reset' })
-      if (_.isFunction(teamHook.refresh)) {
-        teamHook.refresh(true)
+      if (user.isUserHcp()) {
+        teamHook.refresh()
+      } else {
+        patientHook.refresh()
       }
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
@@ -276,7 +278,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   }
 
   return (
-    <div id={`notification-line-${id}`} data-testid="notification-line" className={`${classes.container} notification-line`} data-notificationid={id}>
+    <div id={`notification-line-${id}`} data-testid="notification-line"
+         className={`${classes.container} notification-line`} data-notificationid={id}>
       <NotificationIcon id={id} className="notification-icon" type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} notification={notification} />
       <div className={classes.rightSide}>

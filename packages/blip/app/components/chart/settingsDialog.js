@@ -106,7 +106,7 @@ const SettingsDialog = (props) => {
         <Typography className={classes.dialogTitle}>
           <strong>{t('device-usage')}</strong>
         </Typography>
-        <IconButton data-testId="close-settings-dialog" className={classes.closeButton} onClick={()=>setOpen(false)}>
+        <IconButton data-testid="close-settings-dialog" className={classes.closeButton} onClick={()=>setOpen(false)}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>

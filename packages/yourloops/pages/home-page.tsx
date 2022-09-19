@@ -32,9 +32,8 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 
 import Alert from '@material-ui/lab/Alert'
+import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Grid from '@material-ui/core/Grid'
 
 import { PatientFilterTypes } from '../models/generic'
 import metrics from '../lib/metrics'
@@ -49,6 +48,7 @@ import TeamCodeDialog from '../components/patient/team-code-dialog'
 import { Patient } from '../lib/data/patient'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
+import { usePatientContext } from '../lib/patient/provider'
 
 const log = bows('PatientListPage')
 
@@ -57,9 +57,9 @@ const throttledMetrics = _.throttle(metrics.send, 60000) // No more than one per
 function HomePage(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
+  const patientHook = usePatientContext()
   const alert = useAlert()
   const { search } = useLocation()
-  const [loading, setLoading] = React.useState<boolean>(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [filter, setFilter] = React.useState<string>('')
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null)
@@ -70,16 +70,14 @@ function HomePage(): JSX.Element {
 
   const handleRefresh = async (force = false): Promise<void> => {
     log.debug('handleRefresh:', { force })
-    setLoading(true)
     setErrorMessage(null)
     try {
-      await teamHook.refresh(force)
+      await patientHook.refresh()
     } catch (reason: unknown) {
       log.error('handleRefresh', reason)
-      const errorMessage = t('error-failed-display-teams', { errorMessage: errorTextFromException(reason) })
+      const errorMessage = t('error-failed-display-patients', { errorMessage: errorTextFromException(reason) })
       setErrorMessage(errorMessage)
     }
-    setLoading(false)
   }
 
   const handleInvitePatient = async (): Promise<void> => {
@@ -97,7 +95,7 @@ function HomePage(): JSX.Element {
       try {
         const { email, teamId } = result
         const team = teamHook.getTeam(teamId)
-        await teamHook.invitePatient(team as Team, email)
+        await patientHook.invitePatient(team as Team, email)
         alert.success(t('alert-invitation-sent-success'))
         metrics.send('invitation', 'send_invitation', 'patient')
         setTeamCodeToDisplay(team)
@@ -124,15 +122,8 @@ function HomePage(): JSX.Element {
   const handleCloseRemovePatientDialog = (): void => setPatientToRemove(null)
 
   React.useEffect(() => {
-    if (!teamHook.initialized) {
-      if (!loading) {
-        setLoading(true)
-      }
-      return
-    }
-
-    if (teamHook.errorMessage !== null) {
-      const message = t('error-failed-display-teams', { errorMessage: teamHook.errorMessage })
+    if (patientHook.errorMessage !== null) {
+      const message = t('error-failed-display-patients', { errorMessage: patientHook.errorMessage })
       if (message !== errorMessage) {
         log.error('errorMessage', message)
         setErrorMessage(message)
@@ -140,29 +131,20 @@ function HomePage(): JSX.Element {
     } else if (errorMessage !== null) {
       setErrorMessage(null)
     }
-
-    if (loading) {
-      setLoading(false)
-    }
-  }, [teamHook.initialized, teamHook.errorMessage, errorMessage, loading, t])
+  }, [patientHook.errorMessage, errorMessage, t])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))
   }, [t])
 
-  if (loading) {
-    return (
-      <CircularProgress disableShrink
-        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }} />
-    )
-  }
-
   if (errorMessage !== null) {
     return (
-      <div id="div-api-error-message" className="api-error-message">
-        <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: '1em' }}>
-          {errorMessage}
-        </Alert>
+      <Box id="div-api-error-message" className="api-error-message">
+        <Box marginBottom={1}>
+          <Alert id="alert-api-error-message" severity="error">
+            {errorMessage}
+          </Alert>
+        </Box>
         <Button
           id="button-api-error-message"
           variant="contained"
@@ -172,21 +154,19 @@ function HomePage(): JSX.Element {
         >
           {t('button-refresh-page-on-error')}
         </Button>
-      </div>
+      </Box>
     )
   }
 
   return (
     <React.Fragment>
-      <PatientsSecondaryBar
-        filter={filter}
-        onFilter={handleFilter}
-        onInvitePatient={handleInvitePatient}
-      />
-      <Grid container direction="row" justifyContent="center" alignItems="center"
-        style={{ marginTop: '1.5em', marginBottom: '1.5em' }}>
-        <Alert severity="info">{t('secondary-bar-period-text')}</Alert>
-      </Grid>
+      <Box marginTop={2} marginBottom={3}>
+        <PatientsSecondaryBar
+          filter={filter}
+          onFilter={handleFilter}
+          onInvitePatient={handleInvitePatient}
+        />
+      </Box>
       <PatientList filter={filter} filterType={filterType} />
       <AddPatientDialog actions={patientToAdd} />
       <TeamCodeDialog

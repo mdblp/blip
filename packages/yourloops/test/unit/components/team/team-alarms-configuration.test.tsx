@@ -49,8 +49,8 @@ describe('TeamMembers', () => {
   const errorMock = jest.fn()
   const teamId = 'teamId'
   const members = [
-    buildTeamMember(teamId, 'userId1'),
-    buildTeamMember(teamId, 'userId2')
+    buildTeamMember('userId1'),
+    buildTeamMember('userId2')
   ]
   const team = buildTeam(teamId, members)
 

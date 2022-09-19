@@ -28,15 +28,16 @@
 import React from 'react'
 import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import { act } from 'react-dom/test-utils'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 
 import MainDrawer, {
   mainDrawerDefaultWidth,
   mainDrawerMiniVariantWidth
-} from '../../../../components/menus/main-drawer'
+} from '../../../../components/menus/drawer/main-drawer'
 import { buildTeam, buildTeamMember, triggerMouseEvent } from '../../common/utils'
+import * as patientHookMock from '../../../../lib/patient/provider'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { PatientFilterStats } from '../../../../lib/team/models'
@@ -44,6 +45,7 @@ import User from '../../../../lib/auth/user'
 import { PatientFilterTypes } from '../../../../models/generic'
 
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../lib/auth')
 describe('Main Drawer', () => {
   let container: HTMLElement | null = null
@@ -61,7 +63,7 @@ describe('Main Drawer', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const flaggedPatients = ['fakeFlaggedPatientId']
   const userId = 'fakeUserId'
-  const teamMember = buildTeamMember('fakeTeamId', userId)
+  const teamMember = buildTeamMember(userId)
   const monitoredTeam = buildTeam('fakeTeamId', [teamMember])
 
   const getRemoteMonitoringTeamsMock = jest.fn().mockReturnValue([monitoredTeam])
@@ -85,7 +87,10 @@ describe('Main Drawer', () => {
     container = document.createElement('div')
     document.body.appendChild(container);
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { patientsFilterStats, getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock }
+      return { getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock }
+    });
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
+      return { patientsFilterStats }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserHcp: () => true, id: userId } as User, getFlagPatients: getFlagPatientsMock }
@@ -224,5 +229,27 @@ describe('Main Drawer', () => {
   it('unread messages filter should not display a number when there are 0 patients in this alert', async () => {
     const patientsFilterStatsUpdated: PatientFilterStats = { ...patientsFilterStats, unread: 0 }
     await checkFilterLabel(patientsFilterStatsUpdated, 'unread-messages')
+  })
+
+  it('should highlight the selected filter', async () => {
+    await mountComponent()
+    const link = await screen.findByRole('link', { name: PatientFilterTypes.outOfRange.toString() })
+    const item = await within(link).findByRole('button', { name: `time-away-from-target ${patientsFilterStats.outOfRange}` })
+
+    expect(item).not.toHaveClass('Mui-selected')
+    fireEvent.click(link)
+    expect(item).toHaveClass('Mui-selected')
+  })
+
+  it('should highlight "all" filter by default when on home page', async () => {
+    await mountComponent()
+    history.push('/preferences')
+
+    const link = await screen.findByRole('link', { name: PatientFilterTypes.all.toString() })
+    const item = await within(link).findByRole('button')
+
+    expect(item).not.toHaveClass('Mui-selected')
+    history.push('/home')
+    expect(item).toHaveClass('Mui-selected')
   })
 })

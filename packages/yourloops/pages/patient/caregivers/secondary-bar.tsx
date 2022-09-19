@@ -79,7 +79,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
         className={classes.buttonAddCaregiver}
         onClick={handleOpenAddCaregiverDialog}
       >
-        <AddIcon />
+        <AddIcon className="marginTop-2" />
         <Box component="span" className={classes.buttonAddCaregiverText}>&nbsp;{t('button-add-caregiver')}</Box>
       </Button>
     </div>

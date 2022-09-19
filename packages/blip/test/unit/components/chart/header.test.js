@@ -7,15 +7,32 @@ import * as sinon from 'sinon'
 
 import Header from '../../../../app/components/chart/header'
 
-describe.skip('Header', function () {
+describe('Header', function () {
+  let div = null
+
   describe('render', () => {
     const props = {
       patient: {
+        userid: 'user1',
         profile: {
-          fullName: 'Jane Doe'
+          fullName: 'Jone Dah'
         }
       },
-      chartType: 'Awesome',
+      patients: [
+        {
+          userid: 'user1',
+          profile: {
+            fullName: 'Jone Dah'
+          }
+        },
+        {
+          userid: 'user2',
+          profile: {
+            fullName: 'Jane Doe'
+          }
+        }
+      ],
+      chartType: 'daily',
       inTransition: false,
       atMostRecent: false,
       title: 'Most Awesome',
@@ -23,13 +40,16 @@ describe.skip('Header', function () {
       iconNext: true,
       iconMostRecent: true,
       onClickBack: sinon.stub(),
+      onClickDashboard: sinon.stub(),
       onClickTrends: sinon.stub(),
       onClickMostRecent: sinon.stub(),
       onClickNext: sinon.stub(),
       onClickOneDay: sinon.stub(),
       onClickSettings: sinon.stub(),
       ProfileDialog: sinon.stub().returns(null),
-      trackMetric: sinon.stub()
+      trackMetric: sinon.stub(),
+      userIsHCP: false,
+      onSwitchPatient: sinon.stub()
     }
 
     before(() => {
@@ -42,15 +62,21 @@ describe.skip('Header', function () {
       expect(console.error.callCount).to.be.eq(0)
       console.error.resetHistory()
       props.onClickBack.resetHistory()
+      props.onClickDashboard.resetHistory()
       props.onClickMostRecent.resetHistory()
       props.onClickNext.resetHistory()
       props.onClickOneDay.resetHistory()
       props.onClickSettings.resetHistory()
       props.onClickTrends.resetHistory()
+      props.onSwitchPatient.resetHistory()
+      ReactDOM.unmountComponentAtNode(div)
+      document.body.removeChild(div)
+      div = null
     })
 
     const renderIntoDocument = (elem) => {
-      const div = document.createElement('div')
+      div = document.createElement('div')
+      document.body.appendChild(div)
       ReactDOM.render(elem, div)
       return div
     }
@@ -87,14 +113,38 @@ describe.skip('Header', function () {
 
     it('should trigger onClickTrends when trends button is clicked', function () {
       const dailyElem = React.createElement(Header, props)
-      const elem = TestUtils.renderIntoDocument(dailyElem)
+      const elem = renderIntoDocument(dailyElem)
       expect(elem).to.be.ok
 
-      const trendsButton = TestUtils.findRenderedDOMComponentWithClass(elem, 'js-trends')
+      const trendsButton = elem.querySelector('[data-testid="trends-tab"]')
 
       expect(props.onClickTrends.callCount).to.equal(0)
       TestUtils.Simulate.click(trendsButton)
       expect(props.onClickTrends.callCount).to.equal(1)
+    })
+
+    it('should trigger onClickDashboard when dashboard button is clicked', function () {
+      const dailyElem = React.createElement(Header, props)
+      const elem = renderIntoDocument(dailyElem)
+      expect(elem).to.be.ok
+
+      const dashboardButton = elem.querySelector('[data-testid="dashboard-tab"]')
+
+      expect(props.onClickDashboard.callCount).to.equal(0)
+      TestUtils.Simulate.click(dashboardButton)
+      expect(props.onClickDashboard.callCount).to.equal(1)
+    })
+
+    it('should trigger onClickOneDay when daily button is clicked', function () {
+      const dailyElem = React.createElement(Header, props)
+      const elem = renderIntoDocument(dailyElem)
+      expect(elem).to.be.ok
+
+      const dailyButton = elem.querySelector('[data-testid="daily-tab"]')
+
+      expect(props.onClickOneDay.callCount).to.equal(0)
+      TestUtils.Simulate.click(dailyButton)
+      expect(props.onClickOneDay.callCount).to.equal(1)
     })
 
     it('should trigger onClickMostRecent when inTransition is false and mostRecent button is clicked', () => {
@@ -149,28 +199,7 @@ describe.skip('Header', function () {
       expect(props.onClickNext.callCount).to.equal(0)
     })
 
-    it('should trigger onClickOneDay when daily button is clicked', () => {
-      const dailyElem = React.createElement(Header, props)
-      const elem = TestUtils.renderIntoDocument(dailyElem)
-      expect(elem).to.be.ok
-
-      const dayButton = TestUtils.findRenderedDOMComponentWithClass(elem, 'js-daily')
-
-      expect(props.onClickOneDay.callCount).to.equal(0)
-      TestUtils.Simulate.click(dayButton)
-      expect(props.onClickOneDay.callCount).to.equal(1)
-    })
-
-    it('should trigger onClickSettings when settings button is clicked', () => {
-      const dailyElem = React.createElement(Header, props)
-      const elem = TestUtils.renderIntoDocument(dailyElem)
-      expect(elem).to.be.ok
-
-      const settingsButton = TestUtils.findRenderedDOMComponentWithClass(elem, 'js-settings')
-
-      expect(props.onClickSettings.callCount).to.equal(0)
-      TestUtils.Simulate.click(settingsButton)
-      expect(props.onClickSettings.callCount).to.equal(1)
-    })
+    /*should trigger onSwitchPatient not tested because can't make it work with MUI
+    * Doing an IT test instead*/
   })
 })

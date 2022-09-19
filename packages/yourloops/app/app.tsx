@@ -32,6 +32,7 @@ import { Auth0Provider } from '@auth0/auth0-react'
 
 import '@fontsource/roboto'
 import 'branding/theme.css'
+import 'classes.css'
 
 import appConfig from '../lib/config'
 import { AuthContextProvider } from '../lib/auth'

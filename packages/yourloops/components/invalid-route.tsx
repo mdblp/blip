@@ -27,9 +27,11 @@
  */
 
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 
 import { setPageTitle } from '../lib/utils'
 
@@ -39,13 +41,13 @@ function InvalidRoute(): JSX.Element {
   setPageTitle()
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center" style={{ flexGrow: 1 }}>
+    <Grid container direction="column" justify="center" alignItems="center">
       <p>{t('page-not-found')}</p>
-      <p>
-        <a href="/">
+      <Typography color="primary">
+        <Link to="/">
           {t('breadcrumb-home')}
-        </a>
-      </p>
+        </Link>
+      </Typography>
     </Grid>
   )
 }

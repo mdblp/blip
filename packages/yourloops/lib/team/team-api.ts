@@ -25,25 +25,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
+import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import { INotificationAPI } from '../../models/notification'
-import { UserRoles } from '../../models/user'
 import { HttpHeaderKeys } from '../../models/api'
 import { getCurrentLang } from '../language'
 import { Monitoring } from '../../models/monitoring'
 import bows from 'bows'
 
 const log = bows('Team API')
-
-interface InvitePatientArgs {
-  teamId: string
-  email: string
-}
-
-interface InvitePatientPayload extends InvitePatientArgs {
-  role: UserRoles
-}
 
 interface InviteMemberArgs {
   teamId: string
@@ -86,29 +76,6 @@ export default class TeamApi {
     }
   }
 
-  static async getPatients(): Promise<ITeamMember[]> {
-    try {
-      const { data } = await HttpService.get<ITeamMember[]>({ url: '/v0/my-patients' })
-      return data
-    } catch (err) {
-      const error = err as Error
-      if (error.message === ErrorMessageStatus.NotFound) {
-        log.info('No patients')
-        return []
-      }
-      throw err
-    }
-  }
-
-  static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotificationAPI> {
-    const { data } = await HttpService.post<INotificationAPI, InvitePatientPayload>({
-      url: '/confirm/send/team/invite',
-      payload: { teamId, email, role: UserRoles.patient },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
-    })
-    return data
-  }
-
   static async inviteMember({ teamId, email, role }: InviteMemberArgs): Promise<INotificationAPI> {
     const { data } = await HttpService.post<INotificationAPI, InviteMemberPayload>({
       url: '/confirm/send/team/invite',
@@ -137,13 +104,6 @@ export default class TeamApi {
     })
   }
 
-  static async updatePatientAlerts(teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
-    await HttpService.put<void, Monitoring>({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`,
-      payload: monitoring
-    })
-  }
-
   static async updateTeamAlerts(teamId: string, monitoring: Monitoring): Promise<void> {
     await HttpService.put<void, Monitoring>({
       url: `/crew/v0/teams/${teamId}/remote-monitoring`,
@@ -164,10 +124,6 @@ export default class TeamApi {
       url: `confirm/send/team/leave/${teamId}/${userId}`,
       config: { params: { email } }
     })
-  }
-
-  static async removePatient(teamId: string, userId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
   }
 
   static async changeMemberRole({ teamId, userId, email, role }: ChangeMemberRoleArgs): Promise<void> {

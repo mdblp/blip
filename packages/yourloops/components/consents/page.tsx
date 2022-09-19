@@ -32,6 +32,7 @@ import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
 import Card from '@material-ui/core/Card'
 import CardMedia from '@material-ui/core/CardMedia'
 import Container from '@material-ui/core/Container'
@@ -54,16 +55,11 @@ interface ConsentProps {
 const style = makeStyles((theme: Theme) => {
   return {
     mainContainer: {
-      margin: 'auto',
       [theme.breakpoints.down('xs')]: {
-        margin: 0,
         padding: 0
       }
     },
     card: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
       textAlign: 'center',
       padding: theme.spacing(4)
     },
@@ -74,6 +70,9 @@ const style = makeStyles((theme: Theme) => {
         marginLeft: theme.spacing(0),
         marginRight: theme.spacing(0)
       }
+    },
+    centeredGrid: {
+      minHeight: '90vh'
     },
     buttons: {
       display: 'flex',
@@ -113,7 +112,6 @@ function Page(props: ConsentProps): JSX.Element {
     }
 
     const onConfirm = (): void => {
-      // api call
       const now = new Date().toISOString()
       const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile
       updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted }
@@ -135,66 +133,51 @@ function Page(props: ConsentProps): JSX.Element {
           spacing={0}
           alignItems="center"
           justify="center"
-          style={{ minHeight: '100vh' }}>
+          className={classes.centeredGrid}
+        >
           <Grid item xs={12}>
             <Card className={classes.card}>
-              <CardMedia
-                style={{
-                  display: 'flex',
-                  paddingTop: '1em',
-                  paddingBottom: '1em'
-                }}>
-                <img
-                  src={`/branding_${appConfig.BRANDING}_logo.svg`}
-                  style={{
-                    height: '60px',
-                    marginLeft: 'auto',
-                    marginRight: 'auto'
-                  }}
-                  alt={t('alt-img-logo')}
-                />
+              <CardMedia>
+                <Box marginY={2}>
+                  <img
+                    src={`/branding_${appConfig.BRANDING}_logo.svg`}
+                    height="60"
+                    alt={t('alt-img-logo')}
+                  />
+                </Box>
               </CardMedia>
               <CardContent className={classes.cardContent}>
                 <Typography variant="body1" gutterBottom>
                   {t(props.messageKey)}
                 </Typography>
-                <form
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center'
-                  }}
-                  noValidate
-                  autoComplete="off">
-                  <ConsentForm
-                    id="login-renew-consents"
-                    userRole={user.role}
-                    policyAccepted={policyAccepted}
-                    setPolicyAccepted={setPolicyAccepted}
-                    termsAccepted={termsAccepted}
-                    setTermsAccepted={setTermsAccepted}
-                    feedbackAccepted={feedbackAccepted}
-                    setFeedbackAccepted={showFeedback ? setFeedbackAccepted : undefined}
-                  />
-                  <div id="consent-button-group" className={classes.buttons}>
-                    <Button
-                      id="consent-button-decline"
-                      onClick={onDecline}
-                    >
-                      {t('button-decline')}
-                    </Button>
-                    <Button
-                      id="consent-button-confirm"
-                      variant="contained"
-                      color="primary"
-                      disableElevation
-                      disabled={!consentsChecked}
-                      onClick={onConfirm}
-                    >
-                      {t('button-accept')}
-                    </Button>
-                  </div>
-                </form>
+                <ConsentForm
+                  id="login-renew-consents"
+                  userRole={user.role}
+                  policyAccepted={policyAccepted}
+                  setPolicyAccepted={setPolicyAccepted}
+                  termsAccepted={termsAccepted}
+                  setTermsAccepted={setTermsAccepted}
+                  feedbackAccepted={feedbackAccepted}
+                  setFeedbackAccepted={showFeedback ? setFeedbackAccepted : undefined}
+                />
+                <div id="consent-button-group" className={classes.buttons}>
+                  <Button
+                    id="consent-button-decline"
+                    onClick={onDecline}
+                  >
+                    {t('button-decline')}
+                  </Button>
+                  <Button
+                    id="consent-button-confirm"
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    disabled={!consentsChecked}
+                    onClick={onConfirm}
+                  >
+                    {t('button-accept')}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </Grid>

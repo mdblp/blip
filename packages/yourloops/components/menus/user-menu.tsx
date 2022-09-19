@@ -50,7 +50,7 @@ import { useAuth } from '../../lib/auth'
 import RoundedHospitalIcon from '../icons/RoundedHospitalIcon'
 import config from '../../lib/config'
 import metrics from '../../lib/metrics'
-import MenuLayout from '../layouts/menu-layout'
+import MenuLayout from '../../layout/menu-layout'
 
 const classes = makeStyles((theme: Theme) => ({
   clickableMenu: {

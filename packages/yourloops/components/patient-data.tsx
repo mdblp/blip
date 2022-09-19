@@ -37,7 +37,6 @@ import Container from '@material-ui/core/Container'
 import Blip from 'blip'
 import appConfig from '../lib/config'
 import { useAuth } from '../lib/auth'
-import { useTeam } from '../lib/team'
 import { useData } from '../lib/data/hook'
 import { setPageTitle } from '../lib/utils'
 
@@ -50,6 +49,7 @@ import ChatWidget from './chat/chat-widget'
 import { Patient } from '../lib/data/patient'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
+import { usePatientContext } from '../lib/patient/provider'
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -81,12 +81,11 @@ function PatientDataPage(): JSX.Element | null {
   const { t } = useTranslation('yourloops')
   const paramHook = useParams()
   const authHook = useAuth()
-  const teamHook = useTeam()
+  const patientHook = usePatientContext()
   const dataHook = useData()
   const classes = patientDataStyles()
 
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null)
-  const [patients, setPatients] = React.useState<Array<Readonly<Patient>>>([])
   const [error, setError] = React.useState<string | null>(null)
 
   const { blipApi } = dataHook
@@ -97,14 +96,13 @@ function PatientDataPage(): JSX.Element | null {
   const userIsHCP = authHook.user?.isUserHcp()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
 
-  const initialized = authHook.isLoggedIn && teamHook.initialized && blipApi
+  const initialized = authHook.isLoggedIn && blipApi
 
   React.useEffect(() => {
     if (!initialized) {
       return
     }
 
-    setPatients(teamHook.getPatients())
     let patientId = paramPatientId ?? userId
     if (userIsPatient && authUser) {
       patientId = authUser.id
@@ -114,14 +112,14 @@ function PatientDataPage(): JSX.Element | null {
       setError('Invalid patient Id')
       return
     }
-    const patientToSet = teamHook.getPatient(patientId)
+    const patientToSet = patientHook.getPatient(patientId)
     if (patientToSet) {
       setPatient(patientToSet)
     } else {
       log.error('Patient not found')
       setError('Patient not found')
     }
-  }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient])
+  }, [initialized, paramPatientId, userId, patientHook, authUser, userIsPatient])
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
@@ -146,7 +144,7 @@ function PatientDataPage(): JSX.Element | null {
         api={blipApi}
         patient={patient}
         userIsHCP={!!userIsHCP}
-        patients={patients}
+        patients={patientHook.patients}
         setPatient={setPatient}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}

@@ -39,7 +39,6 @@ import Typography from '@material-ui/core/Typography'
 import BasicDropdown from '../dropdown/basic-dropdown'
 import Dropdown from '../dropdown/dropdown'
 import { Team, TeamMember, useTeam } from '../../lib/team'
-import { UserRoles } from '../../models/user'
 import { commonComponentStyles } from '../common'
 import { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 
@@ -117,7 +116,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
   useEffect(() => {
     const prescriptionInfo: PrescriptionInfo = {
       teamId: selectedTeam?.id,
-      memberId: selectedMember?.user.userid,
+      memberId: selectedMember?.userId,
       file: prescription,
       numberOfMonth: numberOfMonthSelected
     }
@@ -127,7 +126,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
   }, [selectedMember, selectedTeam, prescription, numberOfMonthSelected, setPrescriptionInfo])
 
   const selectMember = (userId: string): void => {
-    const member = selectedTeam?.members.find(member => member.user.userid === userId)
+    const member = selectedTeam?.members.find(member => member.userId === userId)
     if (!member) {
       throw new Error(`The selected member with the name ${userId} does not exists`)
     }
@@ -142,8 +141,8 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
     setSelectedTeam(team)
     const membersHasMap = new Map<string, string>()
     team.members
-      .filter(member => member.user.profile?.fullName && member.user.role === UserRoles.hcp)
-      .forEach(member => membersHasMap.set(member.user.userid, member.user.profile?.fullName ?? ''))
+      .filter(member => member.profile?.fullName)
+      .forEach(member => membersHasMap.set(member.userId, member.profile?.fullName ?? ''))
     setMembersMap(membersHasMap)
   }
 

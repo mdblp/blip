@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.0.1-BETA18",
+  "version": "3.0.1-BETA22",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform.",
   "repository": {
@@ -34,6 +34,7 @@
     "test-viz-debug": "lerna --stream --scope=tidepool-viz run test-debug",
     "test-blip": "lerna --stream --scope=blip run test",
     "test-blip-debug": "lerna --stream --scope=blip run test-debug",
+    "test-yourloops": "npm run test-yourloops-integration && npm run test-yourloops-unit",
     "test-yourloops-integration": "bash -c 'source config/.env.sh && lerna --stream  --scope=yourloops run integration-test'",
     "test-yourloops-unit": "bash -c 'source config/.env.sh && lerna --stream  --scope=yourloops run unit-test'",
     "test-locales": "mocha --recursive test/locales",
