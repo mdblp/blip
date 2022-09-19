@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2021-2022, Diabeloop
  * Verify all the strings are translated (at least present in the translation files)
  *
  * All rights reserved.
@@ -26,13 +26,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const _ = require("lodash");
-const { expect } = require("chai");
-const localesInfos = require("../../locales/languages.json");
-const refLang = "en";
-const langs = Object.keys(localesInfos.resources).filter((lang) => lang !== "en");
+const fs = require('fs').promises
+const path = require('path')
+const _ = require('lodash')
+const { expect } = require('chai')
+const localesInfos = require('../../locales/languages.json')
+const refLang = 'en'
+const langs = Object.keys(localesInfos.resources).filter((lang) => lang !== 'en')
 
 /**
  *
@@ -44,12 +44,12 @@ const langs = Object.keys(localesInfos.resources).filter((lang) => lang !== "en"
  * @return {Promise<FilesList>} A list of json files
  */
 async function getFiles(lang) {
-  const dir = path.resolve(__dirname, "../../locales", lang);
-  let files = await fs.readdir(dir);
-  files = files.filter((name) => /\.json$/.test(name));
-  files.sort((a, b) => a.localeCompare(b));
-  const fullNames = files.map((file) => `${dir}/${file}`);
-  return { files, fullNames };
+  const dir = path.resolve(__dirname, '../../locales', lang)
+  let files = await fs.readdir(dir)
+  files = files.filter((name) => /\.json$/.test(name))
+  files.sort((a, b) => a.localeCompare(b))
+  const fullNames = files.map((file) => `${dir}/${file}`)
+  return { files, fullNames }
 }
 
 /**
@@ -58,28 +58,28 @@ async function getFiles(lang) {
  * @param {string} trFile tr JSON filename
  */
 function checkFile(lang, refFile, trFile) {
-  const refContent = require(refFile);
-  const trContent = require(trFile);
-  const refKeys = Object.keys(refContent);
-  const trKeys = Object.keys(trContent);
+  const refContent = require(refFile)
+  const trContent = require(trFile)
+  const refKeys = Object.keys(refContent)
+  const trKeys = Object.keys(trContent)
 
-  let nErrors = 0;
+  let nErrors = 0
 
   for (const key of refKeys) {
     if (!trKeys.includes(key)) {
-      console.error(`${lang}: Missing key "${key}" in ${trFile}`);
-      nErrors++;
+      console.error(`${lang}: Missing key "${key}" in ${trFile}`)
+      nErrors++
     }
   }
 
   for (const key of trKeys) {
     if (!refKeys.includes(key)) {
-      console.error(`${lang}: Invalid key "${key}" in ${trFile}`);
-      nErrors++;
+      console.error(`${lang}: Invalid key "${key}" in ${trFile}`)
+      nErrors++
     }
   }
 
-  return nErrors;
+  return nErrors
 }
 
 /**
@@ -89,57 +89,57 @@ function checkFile(lang, refFile, trFile) {
  */
 function verify(lang, refFiles, trFiles) {
   if (!_.isEqual(refFiles.files, trFiles.files)) {
-    console.error(`Translation files for "${lang}" is not the same`);
-    const result = {};
-    result[refLang] = refFiles.files;
-    result[lang] = trFiles.files;
-    console.error(JSON.stringify(result, null, 2));
+    console.error(`Translation files for "${lang}" is not the same`)
+    const result = {}
+    result[refLang] = refFiles.files
+    result[lang] = trFiles.files
+    console.error(JSON.stringify(result, null, 2))
   }
-  expect(_.isEqual(refFiles.files, trFiles.files)).to.be.true;
+  expect(_.isEqual(refFiles.files, trFiles.files)).to.be.true
 
-  let nErrors = 0;
+  let nErrors = 0
   for (let i = 0; i < refFiles.fullNames.length; i++) {
-    nErrors += checkFile(lang, refFiles.fullNames[i], trFiles.fullNames[i]);
+    nErrors += checkFile(lang, refFiles.fullNames[i], trFiles.fullNames[i])
   }
-  expect(nErrors, "nErrors").to.be.lessThan(1);
+  expect(nErrors, 'nErrors').to.be.lessThan(1)
 }
 
-describe("Localization files", () => {
-  const isMainBranch = typeof process.env.GIT_BRANCH === "string" && process.env.GIT_BRANCH === "dblp";
-  const isReleasedBuild = typeof process.env.version === "string" && process.env.version.toUpperCase() !== "UNRELEASED";
+describe('Localization files', () => {
+  const isMainBranch = process.env.GIT_BRANCH === 'dblp'
+  const isReleasedBuild = process.env.version.toUpperCase() !== 'UNRELEASED' && !process.env.version.toUpperCase().includes('BETA')
 
   /** @type {FilesList | null} */
-  let refFiles = null;
+  let refFiles = null
   before(async () => {
-    console.log("Test may fail:", isMainBranch && isReleasedBuild);
-    refFiles = await getFiles(refLang);
-  });
+    console.log('Test may fail:', isMainBranch && isReleasedBuild)
+    refFiles = await getFiles(refLang)
+  })
 
   after(() => {
-    refFiles = null;
-  });
+    refFiles = null
+  })
 
-  it("Should have more than one language", () => {
-    expect(langs).to.be.an("array").not.empty;
-  });
+  it('Should have more than one language', () => {
+    expect(langs).to.be.an('array').not.empty
+  })
 
   langs.forEach((lang) => {
     it(`"${lang}" files should match "${refLang}" files`, async () => {
-      const trFiles = await getFiles(lang);
-      expect(refFiles).to.be.not.null;
+      const trFiles = await getFiles(lang)
+      expect(refFiles).to.be.not.null
 
       if (refFiles !== null) {
         try {
-          verify(lang, refFiles, trFiles);
+          verify(lang, refFiles, trFiles)
         } catch (reason) {
           // Don't block unreleased version to publish to preview (see Jenkinsfile)
           // Temporary fix to release 3.0.0
-          if (isMainBranch && isReleasedBuild && lang !== "ja") {
-            return Promise.reject(reason);
+          if (isMainBranch && isReleasedBuild && lang !== 'ja') {
+            return Promise.reject(reason)
           }
-          console.error(reason);
+          console.error(reason)
         }
       }
-    });
-  });
-});
+    })
+  })
+})
