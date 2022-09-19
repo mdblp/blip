@@ -260,7 +260,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
               >
                 <Box>
                   <IconActionButton
-                    ariaLabel={t('remove-patient')}
+                    ariaLabel={`${t('remove-patient')}-${patient.profile.email}`}
                     icon={<PersonRemoveIcon />}
                     onClick={onClickRemovePatient}
                   />

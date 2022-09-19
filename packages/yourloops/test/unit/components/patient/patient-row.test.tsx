@@ -80,7 +80,7 @@ describe('Patient row', () => {
 
   it('should open modal when clicking on remove patient icon', () => {
     render(getPatientRowJSX())
-    const removeButton = screen.getByRole('button', { name: 'remove-patient' })
+    const removeButton = screen.getByRole('button', { name: 'remove-patient-fake@email.com' })
     expect(screen.queryByTestId(removePatientDialogMockId)).not.toBeInTheDocument()
     fireEvent.click(removeButton)
     expect(screen.queryByTestId(removePatientDialogMockId)).toBeInTheDocument()
@@ -138,7 +138,7 @@ describe('Patient row', () => {
     })
     render(getPatientRowJSX())
     const cells = screen.getAllByRole('cell')
-    expect(cells).toHaveLength(9)
+    expect(cells).toHaveLength(7)
     expect(within(cells[1]).queryByText(patient.profile.fullName)).not.toBeNull()
     expect(within(cells[2]).queryByText('N/A')).not.toBeNull()
     expect(within(cells[3]).queryByText(`${patient.metadata.alarm.timeSpentAwayFromTargetRate}%`)).not.toBeNull()

@@ -156,7 +156,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
           >
             {sortedTeams.map((team, index) => (
-              <MenuItem value={team.id} key={index}>
+              <MenuItem value={team.id} key={index} id={`select-option-${team.name}`}>
                 {team.code === 'private'
                   ? <Box display="flex" alignItems="center">
                     <React.Fragment>

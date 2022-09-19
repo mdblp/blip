@@ -172,8 +172,7 @@ export function buildTeamMember(
     profile: { fullName },
     role,
     status,
-    invitation,
-    idVerified: undefined
+    invitation
   }
 }
 
