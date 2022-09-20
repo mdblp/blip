@@ -51,6 +51,8 @@ import { mockMedicalFilesAPI } from './utils/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
 import { mockDirectShareApi } from './utils/mockDirectShareAPI'
 
+jest.setTimeout(15000)
+
 describe('Patient dashboard for HCP', () => {
   const patientNonMonitoredDashboardRoute = `/patient/${patientNonMonitoredId}/dashboard`
   const patientMonitoredDashboardRoute = `/patient/${patientMonitoredId}/dashboard`
