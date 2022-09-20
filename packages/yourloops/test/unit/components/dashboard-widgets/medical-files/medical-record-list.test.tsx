@@ -42,7 +42,16 @@ jest.mock('../../../../../lib/auth')
 jest.mock('../../../../../components/dialogs/medical-record-edit-dialog', () => (props: MedicalRecordEditDialogProps) => {
   return (
     <div aria-label="mock-edit-dialog">
-      <button onClick={() => props.onSaved({} as MedicalRecord)}>mock-save-button</button>
+      <button onClick={() => props.onSaved({
+        id: 'whateverId',
+        authorId: 'whateverAuthorId',
+        creationDate: new Date().toISOString(),
+        patientId: 'patientId',
+        teamId: 'teamId',
+        diagnosis: 'diagnosis',
+        progressionProposal: 'proposal',
+        trainingSubject: 'trainingSubject'
+      })}>mock-save-button</button>
       <button onClick={() => props.onClose()}>mock-cancel-button</button>
     </div>
   )

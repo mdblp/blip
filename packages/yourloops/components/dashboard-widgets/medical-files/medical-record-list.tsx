@@ -126,8 +126,8 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   }
 
   const buildFileName = (date: string, index: number): string => {
-    const fileDate = new Date(date).toLocaleDateString()
-    const previousFileDate = index > 0 ? new Date(medicalRecords[index - 1].creationDate).toLocaleDateString() : null
+    const fileDate = date.substring(0, 10)
+    const previousFileDate = index > 0 ? medicalRecords[index - 1].creationDate.substring(0, 10) : null
     return `${fileDate}${fileDate === previousFileDate ? `_${index}` : ''}`
   }
 

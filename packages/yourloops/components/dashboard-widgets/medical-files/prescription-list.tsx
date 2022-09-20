@@ -117,7 +117,7 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
                 <FileChartOutlinedIcon />
               </ListItemIcon>
               <ListItemText>
-                {t('prescription-pdf', { pdfName: new Date(prescription.uploadedAt).toLocaleDateString() })}
+                {t('prescription-pdf', { pdfName: prescription.uploadedAt.substring(0, 10) })}
               </ListItemText>
             </ListItem>
           ))}

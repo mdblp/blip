@@ -105,7 +105,7 @@ const WeeklyReportList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
                 <FileChartOutlinedIcon />
               </ListItemIcon>
               <ListItemText>
-                {t('weekly-report-pdf', { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
+                {t('weekly-report-pdf', { pdfName: weeklyReport.creationDate.substring(0, 10) })}
               </ListItemText>
             </ListItem>
           ))}

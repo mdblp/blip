@@ -34,6 +34,5 @@ export function getPumpVocabulary(manufacturer) {
   if (deviceName in pumpVocabularies) {
     return pumpVocabularies[deviceName]
   }
-  console.warn(`Missing ${deviceName} in pumpVocabularies`)
   return pumpVocabularies.default
 }

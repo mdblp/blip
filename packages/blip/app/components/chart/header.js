@@ -137,12 +137,12 @@ class TidelineHeader extends React.Component {
           <div className="subnav-left-container">
             {this.props.userIsHCP &&
             <div id="subnav-hcp-container">
-              <IconButton>
-                <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
+              <IconButton onClick={() => this.props.onClickNavigationBack()}>
+                <ArrowBack id="subnav-arrow-back" data-testid="subnav-arrow-back" />
               </IconButton>
               <Face className="subnav-icon" />
               <span>{ t('patient') } :</span>
-              <FormControl id="subnav-patient-list" variant="outlined">
+              <FormControl id="subnav-patient-list" variant="outlined" data-testid="subnav-patient-list">
                 <Select
                   data-testid="drop-down-patient"
                   defaultValue={this.props.patient.userid}
@@ -193,7 +193,7 @@ class TidelineHeader extends React.Component {
 
   render() {
     return (
-      <div className="patient-data-subnav-outer">
+      <div className="patient-data-subnav-outer" data-testid="patient-data-subnav-outer">
         <div className="patient-data-subnav-inner box-shadow">{this.renderStandard()}</div>
       </div>
     )

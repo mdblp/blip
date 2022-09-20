@@ -13,3 +13,5 @@ i18nInit(options).then(() => {
 }).catch((reason) => {
   console.error(reason)
 })
+
+jest.mock('@auth0/auth0-react')

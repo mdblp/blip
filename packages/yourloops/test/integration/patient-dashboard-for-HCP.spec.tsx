@@ -28,7 +28,7 @@
 import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { AuthContextProvider } from '../../lib/auth'
 import { MainLobby } from '../../app/main-lobby'
 import { checkHeader } from './utils/header'
@@ -39,28 +39,39 @@ import { mockAuth0Hook } from './utils/mockAuth0Hook'
 import { mockTeamAPI } from './utils/mockTeamAPI'
 import { mockDataAPI } from './utils/mockDataAPI'
 import { mockNotificationAPI } from './utils/mockNotificationAPI'
-import { mockPatientAPI } from './utils/mockPatientAPI'
+import {
+  mockPatientAPI,
+  patientMonitoredFullName,
+  patientMonitoredId,
+  patientNonMonitoredFullName,
+  patientNonMonitoredId
+} from './utils/mockPatientAPI'
+import { mockChatAPI } from './utils/mockChatAPI'
+import { mockMedicalFilesAPI } from './utils/mockMedicalFilesAPI'
+import { queries } from '@testing-library/dom'
+import { mockDirectShareApi } from './utils/mockDirectShareAPI'
 
-jest.mock('@auth0/auth0-react')
-jest.setTimeout(10000)
+jest.setTimeout(15000)
 
 describe('Patient dashboard for HCP', () => {
-  const patientId = '1db524f3b65f2'
-  const patientDashboardRoute = `/patient/${patientId}/dashboard`
+  const patientNonMonitoredDashboardRoute = `/patient/${patientNonMonitoredId}/dashboard`
+  const patientMonitoredDashboardRoute = `/patient/${patientMonitoredId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
-  const history = createMemoryHistory({ initialEntries: [patientDashboardRoute] })
 
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
+    mockDirectShareApi()
     mockTeamAPI()
-    mockPatientAPI(patientId)
-    mockDataAPI(patientId)
     mockUserDataFetch(firstName, lastName)
+    mockPatientAPI()
+    mockChatAPI()
+    mockMedicalFilesAPI()
+    mockDataAPI()
   })
 
-  function getPatientDashboardForHCP() {
+  function getPatientDashboardForHCP(history) {
     return (
       <Router history={history}>
         <AuthContextProvider>
@@ -70,25 +81,96 @@ describe('Patient dashboard for HCP', () => {
     )
   }
 
-  it('should render correct components when navigating to patient dashboard as an HCP', async () => {
+  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string, fullName: string) {
+    /* Top bar */
+    expect(dashboard.getByTestId('subnav-arrow-back')).toBeVisible()
+    expect(dashboard.getByTestId('subnav-patient-list')).toBeVisible()
+    expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
+    const dashboardLink = dashboard.getByText('Dashboard')
+    const dailyLink = dashboard.getByText('Daily')
+    const trendsLink = dashboard.getByText('Trends')
+    expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
+    expect(dashboardLink).toBeVisible()
+    expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/daily`)
+    expect(dailyLink).toBeVisible()
+    expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/trends`)
+    expect(trendsLink).toBeVisible()
+    expect(dashboard.getByText('Generate report')).toBeVisible()
+
+    /* Patient info widget */
+    const patientInfoCard = within(dashboard.getByTestId('patient-info-card'))
+    expect(patientInfoCard.getByText('Patient Information')).toBeVisible()
+    expect(patientInfoCard.getByText(fullName)).toBeVisible()
+
+    /* Patient stats widget */
+    expect(dashboard.getByText('Patient statistics')).toBeVisible()
+
+    /* Device usage widget */
+    expect(dashboard.getByText('Device Usage')).toBeVisible()
+  }
+
+  it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
+    const history = createMemoryHistory({ initialEntries: [patientNonMonitoredDashboardRoute] })
+
     act(() => {
-      render(getPatientDashboardForHCP())
+      render(getPatientDashboardForHCP(history))
     })
 
-    await waitFor(() => {
-      expect(history.location.pathname).toBe(`/patient/${patientId}/dashboard`)
-      const dashboardLink = screen.getByText('Dashboard')
-      const dailyLink = screen.getByText('Daily')
-      const trendsLink = screen.getByText('Trends')
-      expect(dashboardLink).toBeVisible()
-      expect(dailyLink).toBeVisible()
-      expect(trendsLink).toBeVisible()
-      expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
-      expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/daily`)
-      expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/trends`)
-    }, { timeout: 5000 })
+    const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
+    expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
+    testPatientDashboardCommonDisplay(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
+  })
+
+  it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
+    const history = createMemoryHistory({ initialEntries: [patientMonitoredDashboardRoute] })
+
+    await act(async () => {
+      render(getPatientDashboardForHCP(history))
+
+      const dashboard = within(await screen.findByTestId('patient-dashboard'))
+      expect(history.location.pathname).toBe(patientMonitoredDashboardRoute)
+      testPatientDashboardCommonDisplay(dashboard, patientMonitoredId, patientMonitoredFullName)
+      /* Patient info widget */
+      expect(dashboard.getByText('Renew')).toBeVisible()
+      expect(dashboard.getByText('Remove')).toBeVisible()
+
+      /* Medical files widget */
+      expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
+      expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
+
+      /* Events widget */
+      expect(dashboard.getByText('Events')).toBeVisible()
+
+      /* Chat widget */
+      expect(dashboard.getByText('Messages')).toBeVisible()
+      checkHeader(`${firstName} ${lastName}`)
+      checkDrawer()
+      checkFooter()
+    })
+  })
+
+  it('should switch between patients by using the dropdown', async () => {
+    const history = createMemoryHistory({ initialEntries: [patientMonitoredDashboardRoute] })
+
+    await act(async () => {
+      render(getPatientDashboardForHCP(history))
+      let patientInfoCard
+
+      patientInfoCard = within(await screen.findByTestId('patient-info-card'))
+      const secondaryHeader = within(await screen.findByTestId('patient-data-subnav-outer'))
+
+      expect(patientInfoCard.getByText(patientMonitoredFullName)).toBeVisible()
+      fireEvent.mouseDown(secondaryHeader.getByText(patientMonitoredFullName))
+      fireEvent.click(screen.getByText(patientNonMonitoredFullName))
+
+      await waitFor(() => {
+        // call this to update the card and catch the new patient
+        patientInfoCard = within(screen.getByTestId('patient-info-card'))
+        expect(patientInfoCard.getByText(patientNonMonitoredFullName)).toBeVisible()
+      })
+    })
   })
 })
