@@ -33,7 +33,9 @@
     "build": "npm run tsc",
     "test": "jest --config=test/jest.config.js",
     "lint": "eslint .",
-    "lint-fix": "npm run lint -- --fix"
+    "lint-fix": "npm run lint -- --fix",
+    "postbuild": "npm run copy-files",
+    "copy-files": "copyfiles src/**/*.css src/**/**/*.css dist/"
   },
   "bugs": {
     "url": "https://github.com/mdblp/blip/issues"
@@ -75,9 +77,14 @@
     "stream-browserify": "^3.0.0",
     "text-table": "0.2.0",
     "translate-svg-path": "0.0.1",
+    "typescript-plugin-css-modules": "^3.4.0",
     "victory": "31.3.0",
     "voilab-pdf-table": "0.4.0",
     "sundial": "file:../sundial",
     "tideline": "file:../tideline"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "typed-css-modules": "^0.7.2"
   }
 }

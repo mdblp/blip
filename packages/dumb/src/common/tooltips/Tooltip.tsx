@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import _ from 'lodash'
 import moment from 'moment-timezone'
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../utils/datetime'
-// import './Tooltip.css'
+import styles from './Tooltip.css'
 
 interface Offset {
   top: number
@@ -84,7 +84,6 @@ const Tooltip: FunctionComponent<TooltipProps> = (
     position,
     title
   } = props
-
   const [offset, setOffset] = useState<Offset>({
     top: initialOffset.top,
     left: initialOffset.left,
@@ -146,7 +145,9 @@ const Tooltip: FunctionComponent<TooltipProps> = (
     }
   }
 
-  calculateOffset()
+  useEffect(() => {
+    calculateOffset()
+  }, [])
 
   const renderTail = (): JSX.Element => {
     const tailSide = (side === 'left') ? 'right' : 'left'
@@ -164,7 +165,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
       <div>
         <div
           ref={setTailElementRef}
-          className="tail"
+          className={styles.tail}
           style={{
             marginTop: `-${tailHeight}px`,
             marginLeft: marginOuterValue,
@@ -197,7 +198,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
       } else {
         dateValue = formatLocalizedFromUTC(dateTitle.normalTime, dateTitle.timePrefs, getHourMinuteFormat())
       }
-      renderedDateTitle = <span id="tooltip-daily-title-date" className="titleDate">{dateValue}</span>
+      renderedDateTitle = <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>
     }
 
     if (renderedDateTitle === null && renderedTitle === null) {
@@ -205,8 +206,8 @@ const Tooltip: FunctionComponent<TooltipProps> = (
     }
 
     return (
-      <div id="tooltip-daily-title" className="title">
-        <div id="tooltip-daily-title-content" className="titleContent">
+      <div id="tooltip-daily-title" className={styles.title}>
+        <div id="tooltip-daily-title-content" className={styles.titleContent}>
           {renderedDateTitle}
           {renderedTitle}
         </div>
@@ -223,7 +224,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
         tailNode = renderTail()
       }
       renderedContent = (
-        <div id="tooltip-daily-content" className="content">
+        <div id="tooltip-daily-content" className={styles.content}>
           <span>{content}</span>
           {tailNode}
         </div>
@@ -234,7 +235,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
 
   return (
     <div
-      className="tooltip"
+      className={styles.tooltip}
       style={{ top, left, backgroundColor, borderColor, borderWidth: `${borderWidth}px` }}
       ref={setElementRef}
     >

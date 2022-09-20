@@ -22,6 +22,7 @@ import moment from 'moment-timezone'
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../../utils/datetime'
 import styles from './Tooltip.css'
+// import Tooltip from 'dumb'
 
 class Tooltip extends React.PureComponent {
   constructor(props) {
