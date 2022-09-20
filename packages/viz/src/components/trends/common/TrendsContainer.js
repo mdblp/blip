@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 
 import * as actions from '../../../redux/actions/'
 import TrendsSVGContainer from './TrendsSVGContainer'

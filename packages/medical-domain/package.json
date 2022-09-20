@@ -1,0 +1,41 @@
+{
+  "name": "medical-domain",
+  "version": "0.0.1",
+  "description": "Yourloops package for processing medical data",
+  "author": {
+    "name": "Diabeloop",
+    "url": "https://www.diabeloop.com/"
+  },
+  "homepage": "https://github.com/mdblp/blip#readme",
+  "license": "ISC",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
+  "directories": {
+    "lib": "dist",
+    "dist": "dist",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "registry": "https://nexus.ci.diabeloop.eu/repository/npm-diabeloop/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdblp/blip.git"
+  },
+  "scripts": {
+    "mrproper": "rm -rf node_modules dist",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "tsc": "tsc --project ./tsconfig.json",
+    "build": "npm run tsc",
+    "test": "jest --config=test/jest.config.js",
+    "lint": "eslint .",
+    "lint-fix": "npm run lint -- --fix"
+  },
+  "bugs": {
+    "url": "https://github.com/mdblp/blip/issues"
+  }
+}

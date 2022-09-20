@@ -16,7 +16,7 @@
  */
 
 import { assert, expect } from 'chai'
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import { BG_HIGH, BG_LOW } from '../../src/utils/constants'
 
 import * as format from '../../src/utils/format'

@@ -18,7 +18,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import Tooltip from '../../common/tooltips/Tooltip'
 import { formatBgValue } from '../../../utils/format'
 import { formatClocktimeFromMsPer24 } from '../../../utils/datetime'

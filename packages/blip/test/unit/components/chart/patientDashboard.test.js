@@ -32,7 +32,7 @@ import moment from 'moment-timezone'
 import * as sinon from 'sinon'
 import chai from 'chai'
 
-import { MGDL_UNITS, MS_IN_DAY } from 'tideline'
+import { MGDL_UNITS, TimeService } from 'medical-domain'
 
 import DataUtilStub from '../../../helpers/DataUtil'
 import { PatientDashboard } from '../../../../app/components/chart'
@@ -120,7 +120,7 @@ describe('PatientDashboard', () => {
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc('2014-03-13T12:00:00.000Z').valueOf(),
-    msRange: MS_IN_DAY, // ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
+    msRange: TimeService.MS_IN_DAY, // ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
     loading: false,
     prefixURL: 'test',
     patient: {

@@ -16,7 +16,7 @@
  */
 
 /**
- * @typedef { import("tideline").TidelineData } TidelineData
+ * @typedef { import("medical-domain";).MedicalDataService } MedicalDataService
  */
 
 import _ from 'lodash'
@@ -58,7 +58,7 @@ const SettingsDialog = (props) => {
   const log = bows('SettingsDialog')
   const { t } = useTranslation()
   const renderChart = () => {
-    /** @type {{patientData: TidelineData}} */
+    /** @type {{patientData: MedicalDataService}} */
     const mostRecentSettings = _.last(patientData.grouped.pumpSettings)
     log.debug('Settings.renderChart()', mostRecentSettings)
 
