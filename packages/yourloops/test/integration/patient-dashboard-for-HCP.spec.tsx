@@ -114,7 +114,7 @@ describe('Patient dashboard for HCP', () => {
       render(getPatientDashboardForHCP(history))
     })
 
-    const dashboard = within(await screen.findByTestId('patient-dashboard'))
+    const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
     testPatientDashboardCommonDisplay(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
     checkHeader(`${firstName} ${lastName}`)
