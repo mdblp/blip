@@ -1,4 +1,4 @@
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 
 export const data = {
   [MGDL_UNITS]: {

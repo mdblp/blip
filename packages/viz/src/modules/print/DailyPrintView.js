@@ -21,7 +21,7 @@ import { range } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import moment from 'moment-timezone'
 
-import { MMOLL_UNITS } from 'tideline'
+import { MMOLL_UNITS } from 'medical-domain'
 
 import PrintView from './PrintView'
 import { calculateBasalPath, getBasalSequencePaths } from '../render/basal'

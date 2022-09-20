@@ -8,6 +8,7 @@
     "packages/tideline",
     "packages/viz",
     "packages/blip",
-    "packages/yourloops"
+    "packages/yourloops",
+    "packages/medical-domain"
   ]
 }

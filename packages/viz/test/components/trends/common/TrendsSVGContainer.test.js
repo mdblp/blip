@@ -21,7 +21,7 @@ import { shallow } from 'enzyme'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
 
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 
 import bgBounds from '../../../helpers/bgBounds'
 import { TrendsSVGContainer } from '../../../../src/components/trends/common/TrendsSVGContainer'

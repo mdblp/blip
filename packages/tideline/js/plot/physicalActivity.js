@@ -37,7 +37,7 @@ function plotPhysicalActivity(pool, opts) {
     const drawPa = drawPhysicalActivity(pool, opts)
 
     selection.each(function () {
-      const physicalActivities = pool.filterDataForRender(opts.tidelineData.physicalActivities)
+      const physicalActivities = pool.filterDataForRender(opts.tidelineData.medicalData.physicalActivities)
       if (physicalActivities.length < 1) {
         // Remove previous data
         d3.select(this).selectAll('g.d3-pa-group').remove()

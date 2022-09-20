@@ -17,7 +17,7 @@
 
 import { expect } from 'chai'
 
-import { MMOLL_UNITS, MGDL_UNITS } from 'tideline'
+import { MMOLL_UNITS, MGDL_UNITS } from 'medical-domain'
 import generateClassifiers from '../../src/utils/classifiers'
 
 const bgBounds = {

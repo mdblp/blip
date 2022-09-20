@@ -6,7 +6,7 @@ import { mount } from 'enzyme'
 import * as sinon from 'sinon'
 import chai from 'chai'
 
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 import SettingsDialog from '../../../../app/components/chart/settingsDialog'
 
 describe('SettingsDialog', function () {

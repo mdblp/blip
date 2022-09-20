@@ -26,8 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TidelineData } from "tideline";
-import { Datum } from "tideline/js/tidelinedata";
+import MedicalDataService, { Datum } from "medical-domain";
 import { utils as vizUtils } from "tidepool-viz";
 import { IUser } from "../../../../yourloops/models/user";
 import ProfileDialog from "../../../../yourloops/components/dialogs/patient-profile";
@@ -109,7 +108,7 @@ export interface TrendsProps {
   msRange: number;
   loading: boolean;
   canPrint: boolean;
-  tidelineData: TidelineData;
+  tidelineData: MedicalDataService;
   chartPrefs: ChartPrefs;
   bgPrefs: BgPrefs;
   /** @deprecated */

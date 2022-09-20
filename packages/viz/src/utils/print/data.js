@@ -24,7 +24,6 @@ import { getLatestPumpUpload, isAutomatedBasalDevice } from '../../utils/device'
 import { commonStats, statFetchMethods, getStatDefinition } from '../../utils/stat'
 
 /**
- * @typedef { import("tideline").TidelineData } TidelineData
  * @typedef { import("../data").default } DataUtil
  */
 
@@ -135,12 +134,12 @@ function transformData(type, data) {
 
 /**
  *
- * @param {import("tideline").TidelineData} tidelineData
+ * @param {import("medical-domain").MedicalDataService} medicalData
  * @param {moment.Moment} startDate
  * @param {moment.Moment} endDate
  */
-export function selectDailyViewData(tidelineData, startDate, endDate) {
-  const dailyDataTypes = ['basal', 'bolus', 'cbg', 'food', 'message', 'smbg', 'upload', 'physicalActivity']
+export function selectDailyViewData(medicalData, startDate, endDate) {
+  const dailyDataTypes = ['basal', 'bolus', 'cbg', 'meals', 'message', 'smbg', 'uploads', 'physicalActivities']
   const current = startDate.clone()
 
   // Partially compute in patient-data.js in blip
@@ -157,7 +156,7 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
     const data = {}
     for (const type of dailyDataTypes) {
       /** @type {{epoch:number}[]} */
-      const filteredData = tidelineData.grouped[type].filter((d) => {
+      const filteredData = medicalData.medicalData[type].filter((d) => {
         if (d.epochEnd) {
           return minEpoch < d.epochEnd && d.epoch < maxEpoch
         }
@@ -189,8 +188,8 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
     bgRange: processBgRange(dataByDate),
     bolusRange: processBolusRange(dataByDate),
     dateRange: [startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')],
-    latestPumpUpload: getLatestPumpUpload(tidelineData.grouped.upload),
-    timezone: tidelineData.getLastTimezone()
+    latestPumpUpload: getLatestPumpUpload(medicalData.medicalData.uploads),
+    timezone: medicalData.getLastTimezone()
   }
 }
 

@@ -1,5 +1,5 @@
 import * as sinon from 'sinon'
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 
 export default class DataUtil {
   // eslint-disable-next-line no-unused-vars

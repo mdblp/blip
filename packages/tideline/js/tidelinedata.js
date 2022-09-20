@@ -156,7 +156,7 @@ function TidelineData(opts = defaults) {
 }
 
 /**
- * @param {Datun} d a datum which we may not want anymore
+ * @param {Datum} d a datum which we may not want anymore
  */
 const isWanted = (d) => {
   if (!_.isObject(d)) {
@@ -1171,5 +1171,5 @@ TidelineData.prototype.editMessage = function editMessage(editedMessage) {
   return message
 }
 
-export { DAILY_TYPES, genRandomId }
+export { genRandomId }
 export default TidelineData
