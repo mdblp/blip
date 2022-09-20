@@ -39,7 +39,7 @@
 import _ from 'lodash'
 import { format } from 'd3-format'
 import i18next from 'i18next'
-import { convertBG, MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { convertBG, MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime'
 import { BG_HIGH, BG_LOW } from './constants'
 

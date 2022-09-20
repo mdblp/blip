@@ -36,6 +36,7 @@ pipeline {
                     sh 'npm run lint'
                     sh 'npm run test-sundial'
                     sh 'npm run test-tideline'
+                    sh 'npm run test-medical-domain'
                     sh 'npm run test-viz'
                     sh 'npm run test-blip'
                     sh 'npm run test-yourloops-unit'

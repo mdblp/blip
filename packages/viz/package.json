@@ -66,6 +66,7 @@
     "victory": "31.3.0",
     "voilab-pdf-table": "0.4.0",
     "sundial": "file:../sundial",
-    "tideline": "file:../tideline"
+    "tideline": "file:../tideline",
+    "medical-domain": "file:../medical-domain"
   }
 }

@@ -22,7 +22,7 @@ import { shallow } from 'enzyme'
 import * as sinon from 'sinon'
 import { expect } from 'chai'
 
-import { MGDL_UNITS, MMOLL_UNITS, genRandomId } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 
 import {
   TrendsContainer,
@@ -48,7 +48,7 @@ describe('TrendsContainer', () => {
     }
     const randomInt = (min, max) => Math.floor(min + Math.random() * (max-min))
     const justOneDatum = (device = devices.dexcom, type = 'cbg') => ([{
-      id: genRandomId(),
+      id: randomInt(0, 1e6).toString(),
       deviceId: device.id,
       msPer24: randomInt(0, 864e5),
       timezone,

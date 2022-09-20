@@ -21,7 +21,7 @@ import { shallow, mount } from 'enzyme'
 import * as sinon from 'sinon'
 import chai from 'chai'
 
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 import { utils as vizUtils } from 'tidepool-viz'
 
 import DataUtilStub from '../../../helpers/DataUtil'

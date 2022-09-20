@@ -1,0 +1,161 @@
+import moment from 'moment-timezone'
+
+const INVALID_TIMEZONES = ['UTC', 'GMT', 'Etc/GMT']
+const timezones = moment.tz.names().filter((tz) => !INVALID_TIMEZONES.includes(tz))
+
+interface NormalizedTime {
+  epoch: number
+  displayOffset: number
+  normalTime: string
+}
+interface NormalizedEndTime {
+  epochEnd: number
+  normalEnd: string
+}
+interface TrendsTime {
+  localDate: string
+  isoWeekday: string
+  msPer24: number
+}
+
+export const MS_IN_DAY = 864e5
+export const MS_IN_HOUR = 3600000
+
+// Find first Daily Saving Time(Summer/Winter time) in a timezone between two dates (unix timestamp)
+export function getDstChange(timezone: string, epochFrom: number, epochTo: number): number | null {
+  const zone = moment.tz.zone(timezone)
+  if (zone === null || zone.untils.length === 0) {
+    return null
+  }
+  const tzChange = zone.untils.find(epoch => epoch >= epochFrom && epoch <= epochTo)
+  return tzChange ?? null
+}
+
+export function isValidTimeZone(tz: string): boolean {
+  return timezones.includes(tz)
+}
+
+export function getOffset(epoch: number, timezone: string): number {
+  const mTime = moment.tz(epoch, timezone)
+  return -mTime.utcOffset()
+}
+
+export function toISOString(epoch: number): string {
+  return moment.utc(epoch).toISOString()
+}
+
+export function epochAtTimezone(time: string | number, tz: string): number {
+  return moment.utc(time).tz(tz).valueOf()
+}
+
+export function addAtTimezone(time: string | number, tz: string, amount: number, unit: moment.unitOfTime.DurationConstructor): number {
+  return moment.utc(time).tz(tz).add(amount, unit).valueOf()
+}
+
+export function substractAtTimezone(time: string | number, tz: string, amount: number, unit: moment.unitOfTime.DurationConstructor): number {
+  return moment.utc(time).tz(tz).subtract(amount, unit).valueOf()
+}
+
+export function getHours(time: string | number, tz: string): number {
+  return moment.utc(time).tz(tz).hours()
+}
+
+export function addMilliseconds(time: string, milliseconds: number): string {
+  const mTime = moment.parseZone(time)
+  return moment.utc(mTime).add(milliseconds, 'milliseconds').toISOString()
+}
+
+export function getNormalizedTime(strTime: string, timezone: string): NormalizedTime {
+  const mTime = moment.parseZone(strTime)
+  const epoch = mTime.valueOf()
+  const displayOffset = -moment.utc(epoch).tz(timezone).utcOffset()
+  return {
+    epoch,
+    displayOffset,
+    normalTime: mTime.toISOString()
+  }
+}
+
+export function getNormalizedEnd(time: string, duration: number, unit: string): NormalizedEndTime {
+  const mTime = moment.parseZone(time)
+  const mEndTime = moment.utc(mTime).add(
+    duration,
+    unit as moment.unitOfTime.DurationConstructor
+  )
+  return {
+    normalEnd: mEndTime.toISOString(),
+    epochEnd: mEndTime.valueOf()
+  }
+}
+
+export function getTrendsTime(epoch: number, timezone: string): TrendsTime {
+  const mTime = moment.tz(epoch, timezone)
+  const msPer24 = mTime.hours() * 1000 * 60 * 60 +
+                  mTime.minutes() * 1000 * 60 +
+                  mTime.seconds() * 1000 +
+                  mTime.milliseconds()
+  return {
+    localDate: mTime.format('YYYY-MM-DD'),
+    isoWeekday: mTime.locale('en').format('dddd').toLowerCase(),
+    msPer24
+  }
+}
+
+export function getStartOfDay(epoch: number, timezone: string): number {
+  const mTime = moment.tz(epoch, timezone).startOf('day')
+  return mTime.valueOf()
+}
+
+export function getEndOfDay(epoch: number, timezone: string): number {
+  const mTime = moment.tz(epoch, timezone).endOf('day').add(1, 'millisecond')
+  return mTime.valueOf()
+}
+
+export function getEpoch(time: string): number {
+  const mTime = moment.parseZone(time)
+  return mTime.valueOf()
+}
+
+export function format(epoch: number, timezone: string, strFormat: string): string {
+  return moment.tz(epoch, timezone).format(strFormat)
+}
+
+export function findBasicsDays(firstEpoch: number, firstTimezone: string, lastEpoch: number, lastTimezone: string, fullWeeks: boolean = false): Array<{date: string, type: string}> {
+  const first = moment.tz(firstEpoch, firstTimezone)
+  const last = moment.tz(lastEpoch, lastTimezone)
+
+  const start = first.format('YYYY-MM-DD')
+  const current = first.clone().startOf('week')
+  const mostRecent = last.format('YYYY-MM-DD')
+  const end = last.clone().endOf('week').add(1, 'day').format('YYYY-MM-DD')
+  let date
+  const days = []
+  while ((date = current.format('YYYY-MM-DD')) !== end) {
+    const dateObj = { date, type: 'mostRecent' }
+    if (!fullWeeks && date < start) {
+      // Use future here, even if it is not
+      // true, so the calendar days are greyed.
+      dateObj.type = 'future'
+    } else if (date < mostRecent) {
+      dateObj.type = 'past'
+    } else if (date > mostRecent) {
+      dateObj.type = 'future'
+    }
+    days.push(dateObj)
+    current.add(1, 'day')
+  }
+  return days
+}
+
+export function twoWeeksAgo(time: string | number, timezone: string): number {
+  const mTime = moment.tz(time, timezone)
+  return mTime.startOf('week').subtract(2, 'weeks').valueOf()
+}
+/**
+   * setTimeout() as promised
+   * @param {number} timeout in milliseconds
+   * @returns Promise<void>
+   */
+export async function waitTimeout(timeout: number): Promise<void> {
+  await new Promise(resolve => setTimeout(resolve, timeout))
+}

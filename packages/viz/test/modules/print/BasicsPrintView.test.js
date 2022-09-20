@@ -19,7 +19,7 @@ import _ from 'lodash'
 import * as sinon from 'sinon'
 import { expect } from 'chai'
 
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import BasicsPrintView from '../../../src/modules/print/BasicsPrintView'
 import PrintView from '../../../src/modules/print/PrintView'
 import { patient } from '../../../data/patient/profiles'
