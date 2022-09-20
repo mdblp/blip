@@ -129,7 +129,7 @@
     "karma-sinon": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^5.0.0",
-    "lerna": "^4.0.0",
+    "lerna": "^5.5.1",
     "less": "^4.1.2",
     "less-loader": "^10.0.1",
     "mini-css-extract-plugin": "^2.4.2",
