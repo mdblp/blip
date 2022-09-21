@@ -30,28 +30,50 @@
       "version": "detect"
     }
   },
-  "overrides": [{
-    "files": ["./test/**/*.*"],
-    "parserOptions": {
-      "project": "./test/tsconfig.test.json"
-    },
-    "rules": {
-      "@typescript-eslint/promise-function-async": "off",
-      "@typescript-eslint/explicit-function-return-type": "off"
+  "overrides": [
+    {
+      "files": [
+        "./src/**/*.test.*",
+        "./src/jest.config.js"
+      ],
+      "parserOptions": {
+        "project": "./src/tsconfig.test.json"
+      },
+      "rules": {
+        "@typescript-eslint/promise-function-async": "off",
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
     }
-  }],
+  ],
   "rules": {
     "space-before-function-paren": "off",
     "multiline-ternary": "off",
     "no-shadow": "off",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/space-before-function-paren": ["error", { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
-    "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
+    "@typescript-eslint/space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ],
     "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
     "@typescript-eslint/no-extraneous-class": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "vars": "all" }]
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "vars": "all"
+      }
+    ]
   }
 }

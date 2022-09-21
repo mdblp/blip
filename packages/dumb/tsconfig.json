@@ -3,18 +3,21 @@
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": ".",
-    "types": [],
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "types": [
+      "jest"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
   },
   "exclude": [
     "node_modules",
-    "test/*",
-    "__tests__/*",
+    "coverage",
     "dist"
   ],
   "include": [
-    "./src/index.ts",
-    "./src/**/*.ts*",
-    "declarations.d.ts"
+    "src/**/*"
   ]
 }

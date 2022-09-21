@@ -30,7 +30,7 @@ import { DateTitle, Offset, Position } from './tooltip'
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../utils/datetime'
 import moment from 'moment-timezone'
 
-interface TooltipHookProps {
+export interface TooltipHookProps {
   borderWidth: number
   dateTitle?: DateTitle
   offset: Offset
@@ -40,7 +40,7 @@ interface TooltipHookProps {
   tailWidth: number
 }
 
-interface TooltipHookReturn {
+export interface TooltipHookReturn {
   borderSide: string
   dateValue?: string
   left: number

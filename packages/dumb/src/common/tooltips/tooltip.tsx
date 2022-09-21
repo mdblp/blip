@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import _ from 'lodash'
-import styles from './Tooltip.css'
+import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
 
 export interface Offset {
