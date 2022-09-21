@@ -20,7 +20,7 @@ import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import _ from 'lodash'
 
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 import colors from '../../../styles/colors.css'
 import styles from './StatTooltip.css'
 

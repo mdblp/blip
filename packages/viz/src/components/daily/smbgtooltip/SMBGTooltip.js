@@ -29,7 +29,7 @@ import { formatBgValue } from '../../../utils/format'
 import {
   getOutOfRangeAnnotationMessage
 } from '../../../utils/annotations'
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 import colors from '../../../styles/colors.css'
 import styles from './SMBGTooltip.css'
 

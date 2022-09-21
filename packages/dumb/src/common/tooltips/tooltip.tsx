@@ -91,7 +91,6 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   })
   const [elementRef, setElementRef] = useState<Element | null>(null)
   const [tailElementRef, setTailElementRef] = useState<Element | null>(null)
-
   const top = position.top + offset.top
   const left = position.left + (offset.left ?? 0)
 
@@ -140,14 +139,13 @@ const Tooltip: FunctionComponent<TooltipProps> = (
         computedOffset.top = topOffset + offset.top
         computedOffset.left = leftOffset + horizontalOffset
       }
-
       setOffset(computedOffset)
     }
   }
 
   useEffect(() => {
     calculateOffset()
-  }, [])
+  }, [elementRef])
 
   const renderTail = (): JSX.Element => {
     const tailSide = (side === 'left') ? 'right' : 'left'
