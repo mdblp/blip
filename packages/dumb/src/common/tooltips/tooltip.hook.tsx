@@ -112,7 +112,7 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
       return { top, left }
     }
     return { top: 0, left: 0 }
-  }, [elementRef, offset])
+  }, [elementRef, offset.horizontal, offset.left, offset.top, position.left, position.top, side, tail, tailElementRef])
 
   const computeDateValue = useCallback(() => {
     if (!dateTitle) {
@@ -164,15 +164,7 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
     setElementRef,
     setTailElementRef,
     top
-  }), [
-    borderSide,
-    dateValue,
-    left,
-    marginOuterValue,
-    setElementRef,
-    setTailElementRef,
-    top
-  ])
+  }), [borderSide, dateValue, left, marginOuterValue, top])
 }
 
 export default useTooltip
