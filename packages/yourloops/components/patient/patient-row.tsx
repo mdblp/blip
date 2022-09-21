@@ -165,6 +165,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         className={`${classes.tableRow} patients-list-row`}
         data-userid={userId}
         data-email={email}
+        data-testid={`patient-row-${userId}`}
       >
         <StyledTableCell className={classes.iconCell}>
           {filter === FilterType.pending && hasPendingInvitation

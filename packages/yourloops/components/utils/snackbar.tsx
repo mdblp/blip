@@ -166,7 +166,13 @@ export const Snackbar = (props: SnackbarContext): JSX.Element => {
   const alertUI = React.useMemo(() => {
     if (currentAlert !== null) {
       return (
-        <Alert id="alert-message" onClose={onCloseAlert} severity={currentAlert.severity} action={currentAlert.options.action}>
+        <Alert
+          id="alert-message"
+          data-testid="alert-snackbar"
+          onClose={onCloseAlert}
+          severity={currentAlert.severity}
+          action={currentAlert.options.action}
+        >
           {currentAlert.message}
         </Alert>
       )
@@ -175,11 +181,13 @@ export const Snackbar = (props: SnackbarContext): JSX.Element => {
   }, [currentAlert, onCloseAlert])
 
   return (
-    <SnackbarUI open={currentAlert !== null}
+    <SnackbarUI
+      open={currentAlert !== null}
       autoHideDuration={getAlertTimeout(alerts.length, currentAlert?.options)}
       onClose={onCloseAlert}
       key={currentAlert?.options.id ?? Number.MAX_SAFE_INTEGER}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
       {alertUI}
     </SnackbarUI>
   )

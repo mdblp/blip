@@ -26,6 +26,7 @@ export const patientMonitoredFirstName = 'Monitored'
 export const patientMonitoredLastName = 'Patient'
 export const patientMonitoredFullName = `${patientMonitoredFirstName} ${patientMonitoredLastName}`
 
+export const removePatientMock = jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
 export const mockPatientAPI = () => {
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([{
     userId: patientMonitoredId,

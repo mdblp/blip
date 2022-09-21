@@ -140,7 +140,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   }
 
   return (
-    <div>
+    <React.Fragment>
       <TableContainer component={Paper} className={classes.tableContainer}>
         <Table
           id="patients-list-table"
@@ -312,7 +312,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
         labelRowsPerPage={t('rows-per-page')}
         className={classes.pagination}
       />
-    </div>
+    </React.Fragment>
   )
 }
 

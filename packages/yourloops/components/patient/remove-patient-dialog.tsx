@@ -97,7 +97,6 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       onClose()
     } catch (err) {
       alert.error(t('alert-remove-patient-failure'))
-    } finally {
       setProcessing(false)
     }
   }
@@ -129,6 +128,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
   return (
     <Dialog
       id="remove-hcp-patient-dialog"
+      data-testid="remove-hcp-patient-dialog"
       open
       onClose={onClose}
     >
