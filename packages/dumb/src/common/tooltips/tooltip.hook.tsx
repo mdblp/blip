@@ -41,13 +41,11 @@ export interface TooltipHookProps {
 }
 
 export interface TooltipHookReturn {
-  borderSide: string
-  dateValue?: string
-  left: number
-  marginOuterValue: string
+  calculateOffset: () => { top: number, left: number }
+  computeDateValue: () => string | undefined
+  computeTailData: () => { marginOuterValue: string, borderSide: string }
   setElementRef: LegacyRef<HTMLDivElement> | undefined
   setTailElementRef: LegacyRef<HTMLDivElement> | undefined
-  top: number
 }
 
 const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
@@ -116,7 +114,7 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
 
   const computeDateValue = useCallback(() => {
     if (!dateTitle) {
-      return { dateValue: undefined }
+      return undefined
     }
     let dateValue
     if (dateTitle.source === 'Diabeloop') {
@@ -128,7 +126,7 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
     } else {
       dateValue = formatLocalizedFromUTC(dateTitle.normalTime, dateTitle.timePrefs, getHourMinuteFormat())
     }
-    return { dateValue }
+    return dateValue
   }, [dateTitle])
 
   const computeTailData = useCallback(() => {
@@ -144,27 +142,18 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
     return { marginOuterValue, borderSide }
   }, [side, tailWidth, borderWidth])
 
-  const { top, left } = useMemo(() => {
-    return calculateOffset()
-  }, [calculateOffset])
-
-  const { marginOuterValue, borderSide } = useMemo(() => {
-    return computeTailData()
-  }, [computeTailData])
-
-  const { dateValue } = useMemo(() => {
-    return computeDateValue()
-  }, [computeDateValue])
-
   return useMemo(() => ({
-    borderSide,
-    dateValue,
-    left,
-    marginOuterValue,
+    calculateOffset,
+    computeDateValue,
+    computeTailData,
     setElementRef,
-    setTailElementRef,
-    top
-  }), [borderSide, dateValue, left, marginOuterValue, top])
+    setTailElementRef
+  }), [
+    calculateOffset,
+    computeDateValue,
+    computeTailData,
+    setElementRef,
+    setTailElementRef])
 }
 
 export default useTooltip

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useMemo } from 'react'
 import _ from 'lodash'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
@@ -86,14 +86,24 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   } = props
 
   const {
+    calculateOffset,
+    computeDateValue,
+    computeTailData,
     setElementRef,
-    setTailElementRef,
-    top,
-    left,
-    marginOuterValue,
-    borderSide,
-    dateValue
+    setTailElementRef
   } = useTooltip({ position, offset: initialOffset, tail, side, dateTitle, borderWidth, tailWidth })
+
+  const { top, left } = useMemo(() => {
+    return calculateOffset()
+  }, [calculateOffset])
+
+  const { marginOuterValue, borderSide } = useMemo(() => {
+    return computeTailData()
+  }, [computeTailData])
+
+  const dateValue = useMemo(() => {
+    return computeDateValue()
+  }, [computeDateValue])
 
   return (
     <div

@@ -27,11 +27,50 @@
 
 import { renderHook } from '@testing-library/react-hooks/dom'
 import useTooltip, { TooltipHookProps } from './tooltip.hook'
+import { DateTitle } from './tooltip'
 
 describe('Tooltip hook', () => {
-  describe('computeTailData', () => {
-    it('should return correct patients when filter is pending', () => {
-      renderHook(() => useTooltip({} as TooltipHookProps))
+  const defaultProps = { offset: { top: 0 }, position: { top: 0, left: 0 } } as TooltipHookProps
+  describe('computeDateValue', () => {
+    it('should return undefined when dateTitle is undefined', () => {
+      const props = { ...defaultProps, dateTitle: undefined }
+      const { result } = renderHook(() => useTooltip(props))
+      const dateValue = result.current.computeDateValue()
+      expect(dateValue).toBeUndefined()
+    })
+
+    it('should return correct value when source is not "Diabeloop"', () => {
+      const date = '2020-01-13T'
+      const dateTitle: DateTitle = {
+        normalTime: `${date}22:00:00.000Z`,
+        timezone: 'fakeTimezone',
+        source: 'not Diabeloop',
+        timePrefs: {
+          timezoneAware: true,
+          timezoneName: 'Europe/Paris'
+        }
+      }
+      const props = { ...defaultProps, dateTitle }
+      const { result } = renderHook(() => useTooltip(props))
+      const dateValue = result.current.computeDateValue()
+      expect(dateValue).toBe(`${date}23:00:00+01:00`)
+    })
+
+    it('should return correct value when source is "Diabeloop"', () => {
+      const date = '2020-01-13T22:00:00'
+      const dateTitle: DateTitle = {
+        normalTime: `${date}.000Z`,
+        timezone: 'fakeTimezone',
+        source: 'Diabeloop',
+        timePrefs: {
+          timezoneAware: true,
+          timezoneName: 'Europe/Paris'
+        }
+      }
+      const props = { ...defaultProps, dateTitle }
+      const { result } = renderHook(() => useTooltip(props))
+      const dateValue = result.current.computeDateValue()
+      expect(dateValue).toBe(`${date}Z`)
     })
   })
 })

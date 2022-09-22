@@ -1,5 +1,6 @@
-import Tooltip, { DateTitle, Offset, Position } from './common/tooltips/tooltip'
+import Tooltip from './common/tooltips/tooltip'
+
 export {
-  Tooltip, DateTitle, Offset, Position
+  Tooltip
 }
 export default Tooltip
