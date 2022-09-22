@@ -26,8 +26,6 @@
  */
 
 import _ from 'lodash'
-// using d3-time-format because time is time of data access in
-// user’s browser time, not PwD’s configured timezone
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 
