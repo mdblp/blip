@@ -29,7 +29,7 @@
     "mrproper": "rm -rf node_modules dist",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "tsc": "tsc --project ./tsconfig.build.json",
+    "tsc": "tsc --project ./tsconfig.json",
     "build": "npm run tsc",
     "test": "jest --config=src/jest.config.js",
     "lint": "eslint .",
