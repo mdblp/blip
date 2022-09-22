@@ -73,7 +73,6 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
           left: tailRect.left + (tailRect.width / 2)
         }
         computedOffset.top = -tailCenter.top + tooltipRect.top + offset.top
-        console.log(computedOffset.top)
         computedOffset.left = -tailCenter.left + tooltipRect.left + horizontalOffset
       } else {
         let leftOffset
