@@ -37,7 +37,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 
 import metrics from '../../lib/metrics'
-import { FormValuesType, useSignUpFormState } from './signup-formstate-context'
+import { useSignUpFormState } from './signup-formstate-context'
 import { availableCountries } from '../../lib/language'
 import { HcpProfessionList } from '../../models/hcp-profession'
 import { useAuth } from '../../lib/auth'
@@ -45,6 +45,7 @@ import { UserRoles } from '../../models/user'
 import { useAlert } from '../../components/utils/snackbar'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { SignUpFormProps } from './signup-stepper'
+import { SignupFormKey } from './signup-form-reducer'
 
 interface Errors {
   firstName: boolean
@@ -70,51 +71,30 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
   const isFormEmpty = useMemo<boolean>(() => {
     return !_.some(errors) &&
-      !state.formValues?.profileFirstname &&
-      !state.formValues?.profileLastname &&
-      !state.formValues?.profileCountry &&
-      !state.formValues?.hcpProfession
-  }, [errors, state.formValues])
+      !state.profileFirstname &&
+      !state.profileLastname &&
+      !state.profileCountry &&
+      !state.hcpProfession
+  }, [errors, state])
 
-  const onChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    keyField: FormValuesType
-  ): void => {
-    dispatch({
-      type: 'EDIT_FORMVALUE',
-      key: keyField,
-      value: event.target.value
-    })
-  }
-
-  const onSelectChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined
-      value: string | unknown
-    }>,
-    keyField: FormValuesType
-  ): void => {
-    dispatch({
-      type: 'EDIT_FORMVALUE',
-      key: keyField,
-      value: event.target.value as string
-    })
+  const onChange = (value: string | unknown, key: SignupFormKey): void => {
+    dispatch({ type: 'EDIT_FORMVALUE', key, value: value as string })
   }
 
   const validateFirstName = (): boolean => {
-    const err = !state.formValues?.profileFirstname.trim()
+    const err = !state.profileFirstname.trim()
     setErrors({ ...errors, firstName: err })
     return !err
   }
 
   const validateLastName = (): boolean => {
-    const err = !state.formValues?.profileLastname.trim()
+    const err = !state.profileLastname.trim()
     setErrors({ ...errors, lastName: err })
     return !err
   }
 
   const validateCountry = (): boolean => {
-    const err = !state.formValues?.profileCountry
+    const err = !state.profileCountry
     setErrors({ ...errors, country: err })
     return !err
   }
@@ -122,7 +102,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
   const validateHcpProfession = (): boolean => {
     let err = false
     if (userRole === UserRoles.hcp) {
-      err = !state.formValues?.hcpProfession
+      err = !state.hcpProfession
       setErrors({ ...errors, hcpProfession: err })
     }
     return !err
@@ -132,7 +112,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
     if (validateFirstName() && validateLastName() && validateCountry() && validateHcpProfession()) {
       try {
         setSaving(true)
-        await completeSignup(state.formValues)
+        await completeSignup(state)
         metrics.send('registration', 'create_profile', userRole)
         handleNext()
       } catch (err) {
@@ -153,11 +133,11 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         margin="normal"
         label={t('firstname')}
         variant="outlined"
-        value={state.formValues?.profileFirstname}
+        value={state.profileFirstname}
         required
         error={errors.firstName}
-        onBlur={() => validateFirstName()}
-        onChange={(e) => onChange(e, 'profileFirstname')}
+        onBlur={validateFirstName}
+        onChange={event => onChange(event.target.value, 'profileFirstname')}
         helperText={errors.firstName && t('required-field')}
       />
       <TextField
@@ -165,11 +145,11 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         margin="normal"
         label={t('lastname')}
         variant="outlined"
-        value={state.formValues?.profileLastname}
+        value={state.profileLastname}
         required
         error={errors.lastName}
-        onBlur={() => validateLastName()}
-        onChange={(e) => onChange(e, 'profileLastname')}
+        onBlur={validateLastName}
+        onChange={event => onChange(event.target.value, 'profileLastname')}
         helperText={errors.lastName && t('required-field')}
       />
       <FormControl
@@ -185,9 +165,9 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
           labelId="country-selector-label"
           label={t('signup-country')}
           id="country-selector"
-          value={state.formValues?.profileCountry}
-          onBlur={() => validateCountry()}
-          onChange={(e) => onSelectChange(e, 'profileCountry')}
+          value={state.profileCountry}
+          onBlur={validateCountry}
+          onChange={event => onChange(event.target.value, 'profileCountry')}
         >
           <MenuItem key="" value="" />
           {availableCountries.map((item) => (
@@ -212,9 +192,9 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
             labelId="hcp-profession-selector-label"
             label={t('hcp-profession')}
             id="hcp-profession-selector"
-            value={state.formValues?.hcpProfession}
+            value={state.hcpProfession}
             onBlur={validateHcpProfession}
-            onChange={(e) => onSelectChange(e, 'hcpProfession')}
+            onChange={event => onChange(event.target.value, 'hcpProfession')}
           >
             {HcpProfessionList.map((item) => (
               <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>

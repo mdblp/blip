@@ -25,83 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import _ from 'lodash'
+import React, { createContext, Dispatch, FunctionComponent, useContext, useReducer } from 'react'
 
 import { HcpProfession } from '../../models/hcp-profession'
 import { getCurrentLang } from '../../lib/language'
-import { SignupForm as IFormValues } from '../../lib/auth'
-
-export type FormValuesType = keyof IFormValues
-
-/*
- * Signup Form type
- */
-export interface SignUpFormState {
-  formValues: IFormValues
-}
+import { SignupForm } from '../../lib/auth'
+import { UserRoles } from '../../models/user'
+import signupFormReducer, { SignupReducerAction } from './signup-form-reducer'
 
 interface ISignUpFormStateContext {
-  state: SignUpFormState
-  dispatch: React.Dispatch<ISignUpDispatch>
+  state: SignupForm
+  dispatch: Dispatch<SignupReducerAction>
 }
 
-interface IProvider {
-  children?: JSX.Element | JSX.Element[]
-}
-
-export interface ISignUpDispatch {
-  type: string
-  key?: FormValuesType
-  value?: boolean | string
-}
-
-export const initialState: SignUpFormState = {
-  formValues: {
-    profileFirstname: '',
-    profileLastname: '',
-    profileCountry: '', // how to do better ?
-    hcpProfession: HcpProfession.empty,
-    preferencesLanguage: getCurrentLang(),
-    terms: false,
-    privacyPolicy: false,
-    feedback: false
-  }
-}
-
-export function signupReducer(state: SignUpFormState, action: ISignUpDispatch): SignUpFormState {
-  switch (action.type) {
-    case 'EDIT_FORMVALUE': {
-      if (_.isNil(action.value) || _.isNil(action.key)) {
-        throw new Error(`Invalid parameter: ${JSON.stringify(action)}`)
-      }
-      // clone input state in order to avoid initialstate mutation
-      const clone = _.cloneDeep(state)
-      _.set(clone.formValues, action.key, action.value)
-      // clone.formValues[action.key] = action.value;
-      return clone
-    }
-    case 'RESET_FORMVALUES':
-      return initialState
-    default:
-  }
-  return state
+export const initialState: SignupForm = {
+  accountRole: UserRoles.caregiver,
+  profileFirstname: '',
+  profileLastname: '',
+  profileCountry: '',
+  hcpProfession: HcpProfession.empty,
+  preferencesLanguage: getCurrentLang(),
+  terms: false,
+  privacyPolicy: false,
+  feedback: false
 }
 
 /*
  * Create the context for the Signup Form state
  */
-const SignUpFormStateContext = React.createContext<ISignUpFormStateContext>({ state: initialState, dispatch: _.noop })
+const SignUpFormStateContext = createContext<ISignUpFormStateContext>({
+  state: initialState,
+  dispatch: () => undefined
+})
 
 /*
  * Provide a signup form state context
  */
-export const SignUpFormStateProvider = ({ children }: IProvider): JSX.Element => {
+export const SignUpFormStateProvider: FunctionComponent = ({ children }) => {
   // Attach the Signup reducer and assign initial state
-  const [state, dispatch] = React.useReducer(signupReducer, initialState)
-  const value = { state, dispatch }
+  const [state, dispatch] = useReducer(signupFormReducer, initialState)
+
   return (
-    <SignUpFormStateContext.Provider value={value}>
+    <SignUpFormStateContext.Provider value={{ state, dispatch }}>
       {children}
     </SignUpFormStateContext.Provider>
   )
@@ -110,4 +75,4 @@ export const SignUpFormStateProvider = ({ children }: IProvider): JSX.Element =>
 /**
  Returns the current SignupForm State and a dispatcher to update it
  */
-export const useSignUpFormState = (): ISignUpFormStateContext => React.useContext(SignUpFormStateContext)
+export const useSignUpFormState = (): ISignUpFormStateContext => useContext(SignUpFormStateContext)

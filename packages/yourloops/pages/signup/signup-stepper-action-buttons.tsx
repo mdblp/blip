@@ -9,8 +9,8 @@ interface SignupStepperActionButtonsProps {
   nextButtonLabel: string
   disabled: boolean
   inProgress?: boolean
-  onClickBackButton: (event: React.MouseEvent) => unknown
-  onClickNextButton: (event: React.MouseEvent) => unknown
+  onClickBackButton: () => unknown
+  onClickNextButton: () => unknown
 }
 
 const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsProps> = (props) => {

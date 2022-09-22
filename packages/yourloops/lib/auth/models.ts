@@ -28,10 +28,11 @@
 
 import User from './user'
 import { LanguageCodes } from '../../models/locales'
-import { Preferences, Profile, Settings } from '../../models/user'
+import { Preferences, Profile, Settings, UserRoles } from '../../models/user'
 import { HcpProfession } from '../../models/hcp-profession'
 
 export interface SignupForm {
+  accountRole: UserRoles
   feedback: boolean // Consent to be contacted by Diabeloop
   hcpProfession: HcpProfession
   preferencesLanguage: LanguageCodes
