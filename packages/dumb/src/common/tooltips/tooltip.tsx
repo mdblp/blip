@@ -26,7 +26,6 @@
  */
 
 import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
-import _ from 'lodash'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
 import TooltipTail from './tooltip-tail'

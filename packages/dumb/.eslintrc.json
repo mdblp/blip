@@ -33,11 +33,10 @@
   "overrides": [
     {
       "files": [
-        "./src/**/*.test.*",
-        "./src/jest.config.js"
+        "./src/**/*.test.*"
       ],
       "parserOptions": {
-        "project": "./src/tsconfig.test.json"
+        "project": "./tsconfig.test.json"
       },
       "rules": {
         "@typescript-eslint/promise-function-async": "off",
