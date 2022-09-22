@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import _ from 'lodash'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
@@ -88,14 +88,17 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   const {
     calculateOffset,
     computeDateValue,
-    computeTailData,
-    setElementRef,
-    setTailElementRef
-  } = useTooltip({ position, offset: initialOffset, tail, side, dateTitle, borderWidth, tailWidth })
+    computeTailData
+  } = useTooltip({ position, offset: initialOffset, side, dateTitle, borderWidth, tailWidth })
 
-  const { top, left } = useMemo(() => {
-    return calculateOffset()
-  }, [calculateOffset])
+  const elementRef = useRef<HTMLDivElement>(null)
+  const tailElementRef = useRef<HTMLDivElement>(null)
+  const [offsets, setOffset] = useState({ top: 0, left: 0 })
+
+  useEffect(() => {
+    const { top, left } = calculateOffset(elementRef.current, tailElementRef.current)
+    setOffset({ top, left })
+  }, [calculateOffset, elementRef, tailElementRef])
 
   const { marginOuterValue, borderSide } = useMemo(() => {
     return computeTailData()
@@ -108,8 +111,8 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   return (
     <div
       className={styles.tooltip}
-      style={{ top, left, backgroundColor, borderColor, borderWidth: `${borderWidth}px` }}
-      ref={setElementRef}
+      style={{ top: offsets.top, left: offsets.left, backgroundColor, borderColor, borderWidth: `${borderWidth}px` }}
+      ref={elementRef}
     >
       {(title ?? dateValue) &&
         <div id="tooltip-daily-title" className={styles.title}>
@@ -120,7 +123,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
           {tail && !content &&
             <div>
               <div
-                ref={setTailElementRef}
+                ref={tailElementRef}
                 className={styles.tail}
                 style={{
                   marginTop: `-${tailHeight}px`,
@@ -139,7 +142,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
           {
             <div>
               <div
-                ref={setTailElementRef}
+                ref={tailElementRef}
                 className={styles.tail}
                 style={{
                   marginTop: `-${tailHeight}px`,

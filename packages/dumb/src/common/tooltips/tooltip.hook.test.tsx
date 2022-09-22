@@ -31,7 +31,67 @@ import { DateTitle } from './tooltip'
 
 describe('Tooltip hook', () => {
   const defaultProps = { offset: { top: 0 }, position: { top: 0, left: 0 } } as TooltipHookProps
+
+  describe('calculateOffset', () => {
+    const height = 100
+    const width = 20
+    const offsetTop = 1100
+    const offsetLeft = 2300
+    const offsetHorizontal = 3500
+    const offset = { top: offsetTop, left: offsetLeft, horizontal: offsetHorizontal }
+    const mainDiv = { getBoundingClientRect: () => ({ top: 1, left: 3, width, height }) } as HTMLDivElement
+
+    it('should return default values when mainDiv is null', () => {
+      const props = { ...defaultProps, offset }
+      const { result } = renderHook(() => useTooltip(props))
+      const { top, left } = result.current.calculateOffset(null, null)
+      expect(top).toBe(0)
+      expect(left).toBe(0)
+    })
+
+    it('should return correct values when side is left and tailElement is null', () => {
+      const props = { ...defaultProps, offset, side: 'left' } as TooltipHookProps
+      const { result } = renderHook(() => useTooltip(props))
+      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      expect(top).toBe(offsetTop - height / 2)
+      expect(left).toBe(-offsetLeft - width)
+    })
+
+    it('should return correct values when side is top and tailElement is null', () => {
+      const props = { ...defaultProps, offset, side: 'top' } as TooltipHookProps
+      const { result } = renderHook(() => useTooltip(props))
+      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      expect(top).toBe(offsetTop - height)
+      expect(left).toBe(-width / 2 + offsetLeft)
+    })
+
+    it('should return correct values when side is right and tailElement is null', () => {
+      const props = { ...defaultProps, offset, side: 'right' } as TooltipHookProps
+      const { result } = renderHook(() => useTooltip(props))
+      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      expect(top).toBe(offsetTop - height / 2)
+      expect(left).toBe(offsetLeft)
+    })
+
+    it('should return correct values when side is bottom and tailElement is null', () => {
+      const props = { ...defaultProps, side: 'bottom' } as TooltipHookProps
+      const { result } = renderHook(() => useTooltip(props))
+      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      expect(top).toBe(0)
+      expect(left).toBe(-width / 2)
+    })
+  })
+
   describe('computeDateValue', () => {
+    const defaultDateTitle: DateTitle = {
+      normalTime: 'TBD',
+      timezone: 'Europe/Paris',
+      source: 'not Diabeloop',
+      timePrefs: {
+        timezoneAware: true,
+        timezoneName: 'Europe/Paris'
+      }
+    }
     it('should return undefined when dateTitle is undefined', () => {
       const props = { ...defaultProps, dateTitle: undefined }
       const { result } = renderHook(() => useTooltip(props))
@@ -41,15 +101,7 @@ describe('Tooltip hook', () => {
 
     it('should return correct value when source is not "Diabeloop"', () => {
       const date = '2020-01-13T'
-      const dateTitle: DateTitle = {
-        normalTime: `${date}22:00:00.000Z`,
-        timezone: 'fakeTimezone',
-        source: 'not Diabeloop',
-        timePrefs: {
-          timezoneAware: true,
-          timezoneName: 'Europe/Paris'
-        }
-      }
+      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z` }
       const props = { ...defaultProps, dateTitle }
       const { result } = renderHook(() => useTooltip(props))
       const dateValue = result.current.computeDateValue()
@@ -57,20 +109,74 @@ describe('Tooltip hook', () => {
     })
 
     it('should return correct value when source is "Diabeloop"', () => {
-      const date = '2020-01-13T22:00:00'
-      const dateTitle: DateTitle = {
-        normalTime: `${date}.000Z`,
-        timezone: 'fakeTimezone',
-        source: 'Diabeloop',
-        timePrefs: {
-          timezoneAware: true,
-          timezoneName: 'Europe/Paris'
-        }
-      }
+      const date = '2020-01-13T'
+      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z`, source: 'Diabeloop' }
       const props = { ...defaultProps, dateTitle }
       const { result } = renderHook(() => useTooltip(props))
       const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBe(`${date}Z`)
+      expect(dateValue).toBe(`${date}23:00:00+01:00`)
+    })
+  })
+
+  describe('computeTailData', () => {
+    it('should return correct value when side is left', () => {
+      const props = {
+        ...defaultProps,
+        dateTitle: undefined,
+        tailWidth: 50,
+        borderWidth: 20,
+        side: 'left'
+      } as TooltipHookProps
+      const expectedMarginOuterValue = `calc(10px + ${props.borderWidth}px)`
+      const { result } = renderHook(() => useTooltip(props))
+      const { marginOuterValue, borderSide } = result.current.computeTailData()
+      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
+      expect(borderSide).toEqual(props.side)
+    })
+
+    it('should return correct value when side is right', () => {
+      const props = {
+        ...defaultProps,
+        dateTitle: undefined,
+        tailWidth: 50,
+        borderWidth: 20,
+        side: 'right'
+      } as TooltipHookProps
+      const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
+      const { result } = renderHook(() => useTooltip(props))
+      const { marginOuterValue, borderSide } = result.current.computeTailData()
+      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
+      expect(borderSide).toEqual(props.side)
+    })
+
+    it('should return correct value when side is top', () => {
+      const props = {
+        ...defaultProps,
+        dateTitle: undefined,
+        tailWidth: 50,
+        borderWidth: 20,
+        side: 'top'
+      } as TooltipHookProps
+      const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
+      const { result } = renderHook(() => useTooltip(props))
+      const { marginOuterValue, borderSide } = result.current.computeTailData()
+      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
+      expect(borderSide).toEqual('right')
+    })
+
+    it('should return correct value when side is bottom', () => {
+      const props = {
+        ...defaultProps,
+        dateTitle: undefined,
+        tailWidth: 50,
+        borderWidth: 20,
+        side: 'bottom'
+      } as TooltipHookProps
+      const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
+      const { result } = renderHook(() => useTooltip(props))
+      const { marginOuterValue, borderSide } = result.current.computeTailData()
+      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
+      expect(borderSide).toEqual('right')
     })
   })
 })

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { LegacyRef, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { DateTitle, Offset, Position } from './tooltip'
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../utils/datetime'
 import moment from 'moment-timezone'
@@ -36,16 +36,13 @@ export interface TooltipHookProps {
   offset: Offset
   position: Position
   side: 'top' | 'right' | 'bottom' | 'left'
-  tail?: boolean
   tailWidth: number
 }
 
 export interface TooltipHookReturn {
-  calculateOffset: () => { top: number, left: number }
+  calculateOffset: (mainDiv: HTMLDivElement | null, tailElement: HTMLDivElement | null) => { top: number, left: number }
   computeDateValue: () => string | undefined
   computeTailData: () => { marginOuterValue: string, borderSide: string }
-  setElementRef: LegacyRef<HTMLDivElement> | undefined
-  setTailElementRef: LegacyRef<HTMLDivElement> | undefined
 }
 
 const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
@@ -55,17 +52,13 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
     offset,
     position,
     side,
-    tail,
     tailWidth
   } = props
 
-  const [elementRef, setElementRef] = useState<Element | null>(null)
-  const [tailElementRef, setTailElementRef] = useState<Element | null>(null)
-
-  const calculateOffset = useCallback(() => {
-    if (elementRef) {
+  const calculateOffset = useCallback((mainDiv: HTMLDivElement | null, tailElement: HTMLDivElement | null) => {
+    if (mainDiv) {
       const computedOffset = { top: 0, left: 0 }
-      const tooltipRect = elementRef.getBoundingClientRect()
+      const tooltipRect = mainDiv.getBoundingClientRect()
 
       let horizontalOffset = offset.left ?? (offset.horizontal ?? 0)
 
@@ -73,8 +66,8 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
         horizontalOffset = -horizontalOffset
       }
 
-      if (tail && tailElementRef) {
-        const tailRect = tailElementRef.getBoundingClientRect()
+      if (tailElement) {
+        const tailRect = tailElement.getBoundingClientRect()
         const tailCenter = {
           top: tailRect.top + (tailRect.height / 2),
           left: tailRect.left + (tailRect.width / 2)
@@ -106,11 +99,11 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
         computedOffset.left = leftOffset + horizontalOffset
       }
       const top = position.top + computedOffset.top
-      const left = position.left + (computedOffset.left ?? 0)
+      const left = position.left + computedOffset.left
       return { top, left }
     }
     return { top: 0, left: 0 }
-  }, [elementRef, offset.horizontal, offset.left, offset.top, position.left, position.top, side, tail, tailElementRef])
+  }, [offset.horizontal, offset.left, offset.top, position.left, position.top, side])
 
   const computeDateValue = useCallback(() => {
     if (!dateTitle) {
@@ -130,30 +123,26 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
   }, [dateTitle])
 
   const computeTailData = useCallback(() => {
-    const tailSide = (side === 'left') ? 'right' : 'left'
     const padding = 10
     let marginOuterValue
-    if (tailSide === 'left') {
+    if (side !== 'left') {
       marginOuterValue = `calc(-100% - (4 * ${tailWidth}px - ${padding}px)`
     } else {
       marginOuterValue = `calc(${padding}px + ${borderWidth}px)`
     }
-    const borderSide = (tailSide === 'left') ? 'right' : 'left'
+    const borderSide = (side !== 'left') ? 'right' : 'left'
     return { marginOuterValue, borderSide }
   }, [side, tailWidth, borderWidth])
 
   return useMemo(() => ({
     calculateOffset,
     computeDateValue,
-    computeTailData,
-    setElementRef,
-    setTailElementRef
+    computeTailData
   }), [
     calculateOffset,
     computeDateValue,
-    computeTailData,
-    setElementRef,
-    setTailElementRef])
+    computeTailData
+  ])
 }
 
 export default useTooltip
