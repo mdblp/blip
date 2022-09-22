@@ -29,6 +29,7 @@ import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from '
 import _ from 'lodash'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
+import TooltipTail from './tooltip-tail'
 
 export interface Offset {
   top: number
@@ -121,38 +122,28 @@ const Tooltip: FunctionComponent<TooltipProps> = (
             {title && <span id="tooltip-daily-title-text">{title}</span>}
           </div>
           {tail && !content &&
-            <div>
-              <div
-                ref={tailElementRef}
-                className={styles.tail}
-                style={{
-                  marginTop: `-${tailHeight}px`,
-                  marginLeft: marginOuterValue,
-                  borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
-                  [`border${_.upperFirst(borderSide)}Color`]: borderColor
-                }}
-              />
-            </div>
+            <TooltipTail
+              borderColor={borderColor}
+              borderSide={borderSide}
+              marginOuterValue={marginOuterValue}
+              tailElementRef={tailElementRef}
+              tailHeight={tailHeight}
+              tailWidth={tailWidth}
+            />
           }
         </div>
       }
       {content &&
         <div id="tooltip-daily-content" className={styles.content}>
           <span>{content}</span>
-          {
-            <div>
-              <div
-                ref={tailElementRef}
-                className={styles.tail}
-                style={{
-                  marginTop: `-${tailHeight}px`,
-                  marginLeft: marginOuterValue,
-                  borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
-                  [`border${_.upperFirst(borderSide)}Color`]: borderColor
-                }}
-              />
-            </div>
-          }
+          <TooltipTail
+            borderColor={borderColor}
+            borderSide={borderSide}
+            marginOuterValue={marginOuterValue}
+            tailElementRef={tailElementRef}
+            tailHeight={tailHeight}
+            tailWidth={tailWidth}
+          />
         </div>
       }
     </div>
