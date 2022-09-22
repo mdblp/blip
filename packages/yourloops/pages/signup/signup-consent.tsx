@@ -32,10 +32,11 @@ import Box from '@material-ui/core/Box'
 
 import metrics from '../../lib/metrics'
 import { ConsentForm } from '../../components/consents'
-import { useSignUpFormState, FormValuesType } from './signup-formstate-context'
+import { useSignUpFormState } from './signup-formstate-context'
 import { useAuth } from '../../lib/auth'
 import { SignUpFormProps } from './signup-stepper'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
+import { SignupFormKey } from './signup-form-reducer'
 
 const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
   const { user } = useAuth()
@@ -43,26 +44,25 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { handleBack, handleNext } = props
   const { state, dispatch } = useSignUpFormState()
-  const consentsChecked = state.formValues.terms && state.formValues.privacyPolicy
+  const consentsChecked = state.terms && state.privacyPolicy
 
-  const handleChange = (checked: boolean, keyField: FormValuesType): void => {
-    dispatch({ type: 'EDIT_FORMVALUE', key: keyField, value: checked })
+  const handleChange = (value: boolean, key: SignupFormKey): void => {
+    dispatch({ type: 'EDIT_FORMVALUE', key, value })
   }
 
-  const setPolicyAccepted: React.Dispatch<boolean> = (value: boolean): void => {
+  const setPolicyAccepted = (value: boolean): void => {
     handleChange(value, 'privacyPolicy')
   }
 
-  const setTermsAccepted: React.Dispatch<boolean> = (value: boolean): void => {
+  const setTermsAccepted = (value: boolean): void => {
     handleChange(value, 'terms')
   }
 
-  const setFeedbackAccepted: React.Dispatch<boolean> = (value: boolean): void => {
+  const setFeedbackAccepted = (value: boolean): void => {
     handleChange(value, 'feedback')
   }
 
-  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    event.preventDefault()
+  const onNext = (): void => {
     handleNext()
     metrics.send('registration', 'accept_terms', userRole)
   }
@@ -76,11 +76,11 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
       <ConsentForm
         id="signup"
         userRole={userRole}
-        policyAccepted={state.formValues.privacyPolicy}
+        policyAccepted={state.privacyPolicy}
         setPolicyAccepted={setPolicyAccepted}
-        termsAccepted={state.formValues.terms}
+        termsAccepted={state.terms}
         setTermsAccepted={setTermsAccepted}
-        feedbackAccepted={state.formValues.feedback}
+        feedbackAccepted={state.feedback}
         setFeedbackAccepted={setFeedbackAccepted}
       />
 
