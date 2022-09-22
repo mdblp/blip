@@ -34,7 +34,7 @@ import { mockAuth0Hook } from './utils/mockAuth0Hook'
 import { mockNotificationAPI } from './utils/mockNotificationAPI'
 import { mockTeamAPI } from './utils/mockTeamAPI'
 import { mockUserDataFetch } from './utils/auth'
-import { mockPatientAPI, patientNonMonitoredId, removePatientMock } from './utils/mockPatientAPI'
+import { mockPatientAPI, monitoredPatient, removePatientMock, unMonitoredPatient } from './utils/mockPatientAPI'
 import { act, render, screen, within } from '@testing-library/react'
 import { checkHeader } from './utils/header'
 import { checkDrawer } from './utils/drawer'
@@ -42,7 +42,6 @@ import { checkFooter } from './utils/footer'
 import { mockDataAPI } from './utils/mockDataAPI'
 import { mockDirectShareApi } from './utils/mockDirectShareAPI'
 import PatientAPI from '../../lib/patient/patient-api'
-import { ITeamMember } from '../../models/team'
 
 describe('HCP remove a patient from list', () => {
   const firstName = 'Eric'
@@ -87,7 +86,7 @@ describe('HCP remove a patient from list', () => {
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
 
-    const patientRow = screen.queryByTestId(`patient-row-${patientNonMonitoredId}`)
+    const patientRow = screen.queryByTestId(`patient-row-${unMonitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
     expect(removeButton).toBeInTheDocument()
 
@@ -96,7 +95,7 @@ describe('HCP remove a patient from list', () => {
     expect(removeDialog).toBeInTheDocument()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([{ userId: patientNonMonitoredId } as ITeamMember])
+    jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatient])
     await act(async () => {
       confirmRemoveButton.click()
     })
@@ -113,8 +112,8 @@ describe('HCP remove a patient from list', () => {
       render(getHomePage())
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${patientNonMonitoredId}`)
-    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
+    const patientRow = screen.queryByTestId(`patient-row-${unMonitoredPatient.userId}`)
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unMonitoredPatient.email}` })
     removeButton.click()
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })

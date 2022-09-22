@@ -1,5 +1,6 @@
 import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
-import { monitoringParameters, patientMonitoredId } from './mockPatientAPI'
+import { patientMonitoredId } from './mockPatientAPI'
+import { monitoringParameters } from './mockTeamAPI'
 
 export const mockMedicalFilesAPI = () => {
   jest.spyOn(MedicalFilesApi, 'getWeeklyReports').mockResolvedValue([{
