@@ -40,7 +40,7 @@ export interface TooltipHookProps {
 }
 
 export interface TooltipHookReturn {
-  calculateOffset: (mainDiv: HTMLDivElement | null, tailElement: HTMLDivElement | null) => { top: number, left: number }
+  calculateOffset: (mainDiv: HTMLDivElement | null, tailDiv: HTMLDivElement | null) => { top: number, left: number }
   computeDateValue: () => string | undefined
   computeTailData: () => { marginOuterValue: string, borderSide: string }
 }
@@ -73,6 +73,7 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
           left: tailRect.left + (tailRect.width / 2)
         }
         computedOffset.top = -tailCenter.top + tooltipRect.top + offset.top
+        console.log(computedOffset.top)
         computedOffset.left = -tailCenter.left + tooltipRect.left + horizontalOffset
       } else {
         let leftOffset

@@ -38,8 +38,27 @@ describe('Tooltip hook', () => {
     const offsetTop = 1100
     const offsetLeft = 2300
     const offsetHorizontal = 3500
+    const mainDivLeft = 1
+    const mainDivTop = 3
+    const tailDivTop = 4
+    const tailDivLeft = 4
     const offset = { top: offsetTop, left: offsetLeft, horizontal: offsetHorizontal }
-    const mainDiv = { getBoundingClientRect: () => ({ top: 1, left: 3, width, height }) } as HTMLDivElement
+    const mainDiv = {
+      getBoundingClientRect: () => ({
+        top: mainDivTop,
+        left: mainDivLeft,
+        width,
+        height
+      })
+    } as HTMLDivElement
+    const tailDiv = {
+      getBoundingClientRect: () => ({
+        top: tailDivTop,
+        left: tailDivLeft,
+        width,
+        height
+      })
+    } as HTMLDivElement
 
     it('should return default values when mainDiv is null', () => {
       const props = { ...defaultProps, offset }
@@ -49,7 +68,7 @@ describe('Tooltip hook', () => {
       expect(left).toBe(0)
     })
 
-    it('should return correct values when side is left and tailElement is null', () => {
+    it('should return correct values when side is left and tailDiv is null', () => {
       const props = { ...defaultProps, offset, side: 'left' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
       const { top, left } = result.current.calculateOffset(mainDiv, null)
@@ -57,7 +76,7 @@ describe('Tooltip hook', () => {
       expect(left).toBe(-offsetLeft - width)
     })
 
-    it('should return correct values when side is top and tailElement is null', () => {
+    it('should return correct values when side is top and tailDiv is null', () => {
       const props = { ...defaultProps, offset, side: 'top' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
       const { top, left } = result.current.calculateOffset(mainDiv, null)
@@ -65,7 +84,7 @@ describe('Tooltip hook', () => {
       expect(left).toBe(-width / 2 + offsetLeft)
     })
 
-    it('should return correct values when side is right and tailElement is null', () => {
+    it('should return correct values when side is right and tailDiv is null', () => {
       const props = { ...defaultProps, offset, side: 'right' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
       const { top, left } = result.current.calculateOffset(mainDiv, null)
@@ -73,12 +92,20 @@ describe('Tooltip hook', () => {
       expect(left).toBe(offsetLeft)
     })
 
-    it('should return correct values when side is bottom and tailElement is null', () => {
+    it('should return correct values when side is bottom and tailDiv is null', () => {
       const props = { ...defaultProps, side: 'bottom' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
       const { top, left } = result.current.calculateOffset(mainDiv, null)
       expect(top).toBe(0)
       expect(left).toBe(-width / 2)
+    })
+
+    it('should return correct values when side tailDiv is not null', () => {
+      const props = { ...defaultProps, side: 'bottom' } as TooltipHookProps
+      const { result } = renderHook(() => useTooltip(props))
+      const { top, left } = result.current.calculateOffset(mainDiv, tailDiv)
+      expect(top).toBe(-(tailDivTop + (height / 2)) + mainDivTop)
+      expect(left).toBe(-(tailDivLeft + (width / 2)) + mainDivLeft)
     })
   })
 
