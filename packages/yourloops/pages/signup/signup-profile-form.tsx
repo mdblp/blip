@@ -25,13 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import React, { FunctionComponent, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -41,12 +39,12 @@ import TextField from '@material-ui/core/TextField'
 import metrics from '../../lib/metrics'
 import { FormValuesType, useSignUpFormState } from './signup-formstate-context'
 import { availableCountries } from '../../lib/language'
-import SignUpFormProps from './signup-form-props'
 import { HcpProfessionList } from '../../models/hcp-profession'
 import { useAuth } from '../../lib/auth'
 import { UserRoles } from '../../models/user'
 import { useAlert } from '../../components/utils/snackbar'
-import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
+import SignupStepperActionButtons from './signup-stepper-action-buttons'
+import { SignUpFormProps } from './signup-stepper'
 
 interface Errors {
   firstName: boolean
@@ -55,32 +53,28 @@ interface Errors {
   hcpProfession: boolean
 }
 
-const formStyle = makeStyles((theme: Theme) => ({
-  backButton: {
-    marginRight: theme.spacing(2)
-  }
-}))
-
-/**
- * SignUpProfileForm Form
- */
-function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
+const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
   const { user, completeSignup } = useAuth()
   const userRole = user?.role
   const alert = useAlert()
   const { t } = useTranslation('yourloops')
   const { state, dispatch } = useSignUpFormState()
   const { handleBack, handleNext } = props
-  const defaultErr = {
+  const [errors, setErrors] = useState<Errors>({
     firstName: false,
     lastName: false,
     country: false,
     hcpProfession: false
-  }
-  const [errors, setErrors] = useState<Errors>(defaultErr)
+  })
   const [saving, setSaving] = useState<boolean>(false)
 
-  const classes = formStyle()
+  const isFormEmpty = useMemo<boolean>(() => {
+    return !_.some(errors) &&
+      !state.formValues?.profileFirstname &&
+      !state.formValues?.profileLastname &&
+      !state.formValues?.profileCountry &&
+      !state.formValues?.hcpProfession
+  }, [errors, state.formValues])
 
   const onChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
@@ -134,14 +128,8 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     return !err
   }
 
-  const onFinishSignup = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
-    event.preventDefault()
-    if (
-      validateFirstName() &&
-      validateLastName() &&
-      validateCountry() &&
-      validateHcpProfession()
-    ) {
+  const onFinishSignup = async (): Promise<void> => {
+    if (validateFirstName() && validateLastName() && validateCountry() && validateHcpProfession()) {
       try {
         setSaving(true)
         await completeSignup(state.formValues)
@@ -209,6 +197,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           ))}
         </Select>
       </FormControl>
+
       {userRole === UserRoles.hcp &&
         <FormControl
           variant="outlined"
@@ -232,37 +221,16 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
                 {t(item)}
               </MenuItem>
             ))}
-
           </Select>
         </FormControl>
       }
-      <Box
-        id="signup-profileform-button-group"
-        display="flex"
-        justifyContent="end"
-        mx={0}
-        mt={4}
-      >
-        <Button
-          className={classes.backButton}
-          id="button-signup-steppers-back"
-          onClick={handleBack}
-        >
-          {t('signup-steppers-back')}
-        </Button>
-        <ProgressIconButtonWrapper inProgress={saving}>
-          <Button
-            id="button-signup-steppers-next"
-            variant="contained"
-            color="primary"
-            disableElevation
-            disabled={_.some(errors) || saving}
-            onClick={onFinishSignup}
-          >
-            {t('signup-steppers-create-account')}
-          </Button>
-        </ProgressIconButtonWrapper>
-      </Box>
+
+      <SignupStepperActionButtons
+        nextButtonLabel={t('signup-steppers-create-account')}
+        disabled={_.some(errors) || saving || isFormEmpty}
+        onClickBackButton={handleBack}
+        onClickNextButton={onFinishSignup}
+      />
     </Box>
   )
 }
