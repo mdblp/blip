@@ -4,23 +4,23 @@ import { UserInvitationStatus } from '../../../models/generic'
 import { MonitoringStatus } from '../../../models/monitoring'
 import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
 
-export const patientNonMonitoredId = '1db524f3b65f2'
-export const patientNonMonitoredFirstName = 'Non monitored'
-export const patientNonMonitoredLastName = 'Patient'
-export const patientNonMonitoredFullName = `${patientNonMonitoredFirstName} ${patientNonMonitoredLastName}`
-export const patientMonitoredId = '2db524f3b65f2'
-export const patientMonitoredFirstName = 'Monitored'
-export const patientMonitoredLastName = 'Patient'
-export const patientMonitoredFullName = `${patientMonitoredFirstName} ${patientMonitoredLastName}`
+export const unMonitoredPatientId = '1db524f3b65f2'
+export const unMonitoredPatientFirstName = 'Non monitored'
+export const unMonitoredPatientLastName = 'Patient'
+export const unMonitoredPatientFullName = `${unMonitoredPatientFirstName} ${unMonitoredPatientLastName}`
+export const monitoredPatientId = '2db524f3b65f2'
+export const monitoredPatientFirstName = 'Monitored'
+export const monitoredPatientLastName = 'Patient'
+export const monitoredPatientFullName = `${monitoredPatientFirstName} ${monitoredPatientLastName}`
 
 export const monitoredPatient: ITeamMember = {
-  userId: patientMonitoredId,
+  userId: monitoredPatientId,
   teamId: mySecondTeamId,
   role: TeamMemberRole.patient,
   profile: {
-    firstName: patientMonitoredFirstName,
-    fullName: patientMonitoredFullName,
-    lastName: patientMonitoredLastName,
+    firstName: monitoredPatientFirstName,
+    fullName: monitoredPatientFullName,
+    lastName: monitoredPatientLastName,
     patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
@@ -48,13 +48,13 @@ export const monitoredPatient: ITeamMember = {
 }
 
 export const unMonitoredPatient: ITeamMember = {
-  userId: patientNonMonitoredId,
+  userId: unMonitoredPatientId,
   teamId: myThirdTeamId,
   role: TeamMemberRole.patient,
   profile: {
-    firstName: patientNonMonitoredFirstName,
-    fullName: patientNonMonitoredFullName,
-    lastName: patientNonMonitoredLastName,
+    firstName: unMonitoredPatientFirstName,
+    fullName: unMonitoredPatientFullName,
+    lastName: unMonitoredPatientLastName,
     patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
