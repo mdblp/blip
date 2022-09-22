@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -41,12 +41,17 @@ import SignUpConsent from './signup-consent'
 import { useSignUpFormState } from './signup-formstate-context'
 import { useAuth } from '../../lib/auth'
 
-export default function SignUpStepper(): JSX.Element {
+export interface SignUpFormProps {
+  handleBack: () => void
+  handleNext: () => void
+}
+
+const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { dispatch } = useSignUpFormState()
   const { logout } = useAuth()
   const history = useHistory()
-  const [activeStep, setActiveStep] = React.useState(0)
+  const [activeStep, setActiveStep] = useState(0)
   const steps = [
     'signup-steppers-step1',
     'signup-steppers-step2'
@@ -72,9 +77,9 @@ export default function SignUpStepper(): JSX.Element {
   const getStepContent = (step: number): JSX.Element | string => {
     switch (step) {
       case 0:
-        return (<SignUpConsent handleBack={handleBack} handleNext={handleNext} />)
+        return <SignUpConsent handleBack={handleBack} handleNext={handleNext} />
       case 1:
-        return (<SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />)
+        return <SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />
       default:
         return t('signup-steppers-step-unknown')
     }
@@ -82,7 +87,12 @@ export default function SignUpStepper(): JSX.Element {
 
   return (
     <React.Fragment>
-      <Box marginX="auto" marginY={3} textAlign="center" maxWidth="60%">
+      <Box
+        marginX="auto"
+        marginY={3}
+        textAlign="center"
+        maxWidth="60%"
+      >
         <Typography variant="h5">
           {t('account-creation-finalization')}
         </Typography>
@@ -92,18 +102,15 @@ export default function SignUpStepper(): JSX.Element {
         activeStep={activeStep}
         alternativeLabel
       >
-        {steps.map((label) => {
-          const stepProps: { completed?: boolean } = {}
-          const labelProps: { optional?: React.ReactNode } = {}
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{t(label)}</StepLabel>
-            </Step>
-          )
-        })}
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{t(label)}</StepLabel>
+          </Step>
+        ))}
       </Stepper>
-      {activeStep === steps.length ? (
-        <Box paddingX={4} paddingY={2} textAlign="left">
+
+      {activeStep === steps.length
+        ? <Box paddingX={4} paddingY={2} textAlign="left">
           <Typography id="signup-steppers-ending-text-1" variant="h6" gutterBottom>
             {t('account-creation-finalized')}
           </Typography>
@@ -131,9 +138,10 @@ export default function SignUpStepper(): JSX.Element {
             </Button>
           </Box>
         </Box>
-      ) : (
-        <div>{getStepContent(activeStep)}</div>
-      )}
+        : getStepContent(activeStep)
+      }
     </React.Fragment>
   )
 }
+
+export default SignUpStepper

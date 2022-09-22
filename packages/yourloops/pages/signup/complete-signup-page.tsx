@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
@@ -53,7 +53,7 @@ const formStyle = makeStyles((theme: Theme) => ({
   }
 }), { name: 'signup-page-styles' })
 
-function CompleteSignUpPage(): JSX.Element {
+const CompleteSignUpPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const classes = formStyle()
 
