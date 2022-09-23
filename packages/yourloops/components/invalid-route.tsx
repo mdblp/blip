@@ -41,7 +41,7 @@ function InvalidRoute(): JSX.Element {
   setPageTitle()
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
+    <Grid container direction="column" justifyContent="center" alignItems="center">
       <p>{t('page-not-found')}</p>
       <Typography color="primary">
         <Link to="/">
