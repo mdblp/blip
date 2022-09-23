@@ -39,7 +39,8 @@ import { mockAuth0Hook } from './utils/mockAuth0Hook'
 import { mockTeamAPI } from './utils/mockTeamAPI'
 import {
   CARB_ID1,
-  CARB_ID2, CBG_ID,
+  CARB_ID2,
+  CBG_ID,
   mockDataAPI,
   PARAMETER_ID,
   PHYSICAL_ACTIVITY_ID,
@@ -111,7 +112,7 @@ describe('Patient dashboard for HCP', () => {
   }
 
   const checkTidelineContainerTooltips = async () => {
-    expect(await screen.findByTestId('poolBG_confidential_group')).toBeVisible() // This is used to wait for the container to be fully initialized
+    expect(await screen.findByTestId('poolBG_confidential_group', {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
     checkTidelineContainerElementTooltip('poolBG_confidential_group', 'Confidential mode')
     checkTidelineContainerElementTooltip('poolBolus_confidential_group', 'Confidential mode')
     checkTidelineContainerElementTooltip('poolBasal_confidential_group', 'Confidential mode')
@@ -145,7 +146,7 @@ describe('Patient dashboard for HCP', () => {
 
   it('should render correct basic components when navigating to patient daily view as an HCP', async () => {
     renderDailyView()
-    expect(await screen.findByTestId('patient-data-subnav-outer')).toBeVisible()
+    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBar()
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
