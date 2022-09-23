@@ -191,6 +191,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
             labelId="hcp-profession-selector-label"
             label={t('hcp-profession')}
             id="hcp-profession-selector"
+            data-testid="hcp-profession-selector"
             value={state.hcpProfession}
             onBlur={validateHcpProfession}
             onChange={event => onChange(event.target.value, 'hcpProfession')}
