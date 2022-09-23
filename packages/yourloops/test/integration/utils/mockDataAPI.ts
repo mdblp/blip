@@ -1,45 +1,28 @@
 import DataAPI from '../../../lib/data/data-api'
 import { Patient } from '../../../lib/data/patient'
 
+const CARB_BOLUS_ID = 'carbBolusId'
+export const CBG_ID = 'cbgId'
+export const CARB_ID1 = 'carbId1'
+export const CARB_ID2 = 'carbId2'
+export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
+export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
+export const PARAMETER_ID = 'parameterId'
+
 export const mockDataAPI = () => {
   jest.spyOn(DataAPI, 'getPatientDataRange').mockResolvedValue(['2022-08-08T15:30:00Z', '2022-08-08T18:30:00Z'])
   jest.spyOn(DataAPI, 'getMessages').mockResolvedValue([])
   jest.spyOn(DataAPI, 'getPatientData').mockImplementation((patient: Patient) => Promise.resolve([
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_0`, time: '2022-08-08T15:30:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_1`, time: '2022-08-08T15:35:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.4 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_2`, time: '2022-08-08T15:40:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.1 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_3`, time: '2022-08-08T15:45:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 9.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_4`, time: '2022-08-08T15:50:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 8.7 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_5`, time: '2022-08-08T15:55:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 7.9 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_6`, time: '2022-08-08T16:00:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 6.9 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_7`, time: '2022-08-08T16:05:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 6 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_8`, time: '2022-08-08T16:10:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 5.1 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_9`, time: '2022-08-08T16:15:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 4.4 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_10`, time: '2022-08-08T16:20:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.8 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_11`, time: '2022-08-08T16:25:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_12`, time: '2022-08-08T16:30:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.3 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_13`, time: '2022-08-08T16:35:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_14`, time: '2022-08-08T16:40:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.8 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_15`, time: '2022-08-08T16:45:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 4.4 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_16`, time: '2022-08-08T16:50:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 5.1 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_17`, time: '2022-08-08T16:55:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 6 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_18`, time: '2022-08-08T17:00:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 6.9 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_19`, time: '2022-08-08T17:05:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 7.9 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_20`, time: '2022-08-08T17:10:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 8.7 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_21`, time: '2022-08-08T17:15:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 9.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_22`, time: '2022-08-08T17:20:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.1 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_23`, time: '2022-08-08T17:25:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.4 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_24`, time: '2022-08-08T17:30:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_25`, time: '2022-08-08T17:35:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.4 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_26`, time: '2022-08-08T17:40:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 10.1 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_27`, time: '2022-08-08T17:45:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 9.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_28`, time: '2022-08-08T17:50:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 8.7 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_29`, time: '2022-08-08T17:55:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 7.9 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_30`, time: '2022-08-08T18:00:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 6.9 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_31`, time: '2022-08-08T18:05:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 6 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_32`, time: '2022-08-08T18:10:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 5.1 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_33`, time: '2022-08-08T18:15:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 4.4 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_34`, time: '2022-08-08T18:20:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.8 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_35`, time: '2022-08-08T18:25:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.5 },
-    { uploadId: 'osef', _userId: patient.userid, id: `${patient.userid}_2022-08-08_36`, time: '2022-08-08T18:30:00Z', timezone: 'Europe/Paris', type: 'cbg', units: 'mmol/L', value: 3.3 }]))
+    { time: '2022-08-08T15:30:00Z', type: 'cbg', id: CBG_ID, timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T18:25:00Z', type: 'bolus', id: CARB_BOLUS_ID, timezone: 'Europe/Paris', prescriptor: 'auto', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T18:25:00Z', type: 'wizard', id: CARB_ID1, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 45, bolus: CARB_BOLUS_ID, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T16:30:00Z', type: 'basal', id: `${patient.userid}_2022-08-08_5`, timezone: 'Europe/Paris', deliveryType: 'automated', duration: 1000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T16:35:00Z', type: 'pumpSettings', id: `${patient.userid}_2022-08-08_6`, timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: 'beta' }, history: [], parameters: [], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'VICENTRA', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: patient.userid },
+    { time: '2022-08-08T16:40:00Z', type: 'upload', id: `${patient.userid}_2022-08-08_7`, timezone: 'UTC', _dataState: 'open', _deduplicator: { name: 'org.tidepool.deduplicator.none', version: '1.0.0' }, _state: 'open', client: { name: 'portal-api.yourloops.com', version: '1.0.0' }, dataSetType: 'continuous', deviceManufacturers: ['Diabeloop'], deviceModel: 'DBLG1', deviceTags: ['cgm', 'insulin-pump'], revision: 1, uploadId: '33031f76c78461670a1a95b5f032bb6a', version: '1.0.0', _userId: patient.userid },
+    { time: '2022-08-08T02:00:00Z', type: 'deviceEvent', id: `${patient.userid}_2022-08-08_8`, timezone: 'Europe/Paris', duration: { units: 'hours', value: 2 }, guid: 'confidential_0', inputTime: '2022-08-08T02:00:00Z', subType: 'confidential', uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T12:00:00Z', type: 'food', id: CARB_ID2, timezone: 'Europe/Paris', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 15, units: 'grams' } }, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T13:00:00Z', type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 1800 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T17:00:00Z', type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: patient.userid }
+  ]))
 }

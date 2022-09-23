@@ -53,8 +53,9 @@ function plotReservoirChange(pool, opts) {
       const reservoirGroup = allReservoirs.enter()
         .append('g')
         .attr({
-          class: 'd3-reservoir-group',
-          id: (d) => `reservoir_group_${d.id}`
+          'class': 'd3-reservoir-group',
+          'id': (d) => `reservoir_group_${d.id}`,
+          'data-testid': (d) => `reservoir_group_${d.id}`
         })
       reservoirGroup
         .append('image')

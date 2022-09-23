@@ -110,11 +110,11 @@ CBGTooltip.propTypes = {
   title: PropTypes.node,
   tail: PropTypes.bool,
   side: PropTypes.oneOf(['top', 'right', 'bottom', 'left']).isRequired,
-  tailColor: PropTypes.string.isRequired,
+  tailColor: PropTypes.string,
   tailWidth: PropTypes.number.isRequired,
   tailHeight: PropTypes.number.isRequired,
   backgroundColor: PropTypes.string,
-  borderColor: PropTypes.string.isRequired,
+  borderColor: PropTypes.string,
   borderWidth: PropTypes.number.isRequired,
   cbg: PropTypes.shape({
     type: PropTypes.string.isRequired,

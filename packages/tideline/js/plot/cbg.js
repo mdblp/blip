@@ -63,10 +63,11 @@ function plotCbg(pool, opts = defaults) {
         .append('circle')
         .attr('class', 'd3-cbg')
         .attr({
-          cx: cbg.xPosition,
-          cy: cbg.yPosition,
-          r: opts.radius,
-          id: (d) => `cbg_${d.id}`
+          'cx': cbg.xPosition,
+          'cy': cbg.yPosition,
+          'r': opts.radius,
+          'id': (d) => `cbg_${d.id}`,
+          'data-testid': (d) => `cbg_${d.id}`
         })
       const cbgVeryLow = cbgGroups.filter((d) => categorize(d) === 'verylow')
       const cbgLow = cbgGroups.filter((d) => categorize(d) === 'low')

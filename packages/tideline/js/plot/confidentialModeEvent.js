@@ -63,8 +63,9 @@ function plotConfidentialModeEvent(pool, opts) {
       const backGroup = events.enter()
         .append('g')
         .attr({
-          class: 'd3-confidential-group',
-          id: (d) => `${poolId}_confidential_group_${d.id}`
+          'class': 'd3-confidential-group',
+          'id': (d) => `${poolId}_confidential_group_${d.id}`,
+          'data-testid': () => `${poolId}_confidential_group`
         })
       backGroup.append('rect')
         .attr({
