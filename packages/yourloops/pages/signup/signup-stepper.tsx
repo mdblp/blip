@@ -29,6 +29,7 @@ import React, { FunctionComponent, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Stepper from '@material-ui/core/Stepper'
@@ -38,23 +39,33 @@ import Typography from '@material-ui/core/Typography'
 
 import SignUpProfileForm from './signup-profile-form'
 import SignUpConsent from './signup-consent'
-import { useSignUpFormState } from './signup-formstate-context'
 import { useAuth } from '../../lib/auth'
+import SignUpAccountSelector from './signup-account-selector'
 
 export interface SignUpFormProps {
   handleBack: () => void
   handleNext: () => void
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  stepper: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(0),
+    paddingRight: theme.spacing(0)
+  }
+}))
+
 const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const { dispatch } = useSignUpFormState()
+  const { stepper } = useStyles()
   const { logout } = useAuth()
   const history = useHistory()
   const [activeStep, setActiveStep] = useState(0)
   const steps = [
-    'signup-steppers-step1',
-    'signup-steppers-step2'
+    'signup-account-select-step',
+    'signup-consent-step',
+    'signup-profile-step'
   ]
 
   const handleNext = (): void => {
@@ -70,18 +81,19 @@ const SignUpStepper: FunctionComponent = () => {
   }
 
   const redirectToHome = (): void => {
-    dispatch({ type: 'RESET_FORMVALUES' })
     history.replace('/')
   }
 
   const getStepContent = (step: number): JSX.Element | string => {
     switch (step) {
       case 0:
-        return <SignUpConsent handleBack={handleBack} handleNext={handleNext} />
+        return <SignUpAccountSelector handleBack={handleBack} handleNext={handleNext} />
       case 1:
+        return <SignUpConsent handleBack={handleBack} handleNext={handleNext} />
+      case 2:
         return <SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />
       default:
-        return t('signup-steppers-step-unknown')
+        return t('signup-unknown-step')
     }
   }
 
@@ -101,6 +113,7 @@ const SignUpStepper: FunctionComponent = () => {
         id="signup-stepper"
         activeStep={activeStep}
         alternativeLabel
+        className={stepper}
       >
         {steps.map((label) => (
           <Step key={label}>
@@ -110,7 +123,7 @@ const SignUpStepper: FunctionComponent = () => {
       </Stepper>
 
       {activeStep === steps.length
-        ? <Box paddingX={4} paddingY={2} textAlign="left">
+        ? <Box paddingX={2} paddingTop={1} textAlign="left">
           <Typography id="signup-steppers-ending-text-1" variant="h6" gutterBottom>
             {t('account-creation-finalized')}
           </Typography>

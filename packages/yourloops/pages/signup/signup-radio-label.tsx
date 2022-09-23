@@ -25,27 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import Typography from '@material-ui/core/Typography'
 
 interface RadioLabelProps {
-  id: string
   header: string
   body: string
 }
 
-export default function RadioLabel(props: RadioLabelProps): JSX.Element {
+const SignupRadioLabel: FunctionComponent<RadioLabelProps> = ({ header, body }) => {
   const { t } = useTranslation('yourloops')
 
   return (
     <React.Fragment>
-      <Typography id={`${props.id}-header`} variant="h6" gutterBottom>
-        {t(props.header)}
+      <Typography variant="h6" gutterBottom>
+        {t(header)}
       </Typography>
-      <Typography id={`${props.id}-body`} variant="body2" gutterBottom>
-        {t(props.body)}
+      <Typography variant="body2" gutterBottom>
+        {t(body)}
       </Typography>
     </React.Fragment>
   )
 }
+
+export default SignupRadioLabel

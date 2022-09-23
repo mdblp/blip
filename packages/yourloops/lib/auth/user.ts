@@ -45,7 +45,7 @@ export default class User {
   readonly username: string
   id: string
   frProId?: string
-  role: UserRoles
+  role: UserRoles | null
   medicalData?: MedicalData
   preferences?: Preferences
   profile?: Profile
@@ -55,7 +55,7 @@ export default class User {
     this.email = authenticatedUser.email
     this.emailVerified = authenticatedUser.emailVerified
     this.id = User.getId(authenticatedUser.sub)
-    this.role = authenticatedUser[UserMetadata.Roles][0] as UserRoles
+    this.role = User.getRole(authenticatedUser[UserMetadata.Roles])
     this.username = authenticatedUser.email
     this.latestConsentChangeDate = config.LATEST_TERMS ? new Date(config.LATEST_TERMS) : new Date(0)
     this.latestTrainingDate = config.LATEST_TRAINING ? new Date(config.LATEST_TRAINING) : new Date(0)
@@ -63,7 +63,11 @@ export default class User {
 
   private static getId(sub: string): string {
     const parsedSub = sub.split('|')
-    return parsedSub[1]
+    return parsedSub[parsedSub.length - 1]
+  }
+
+  private static getRole(roles: string[] | null): UserRoles | null {
+    return roles ? roles[0] as UserRoles : null
   }
 
   get firstName(): string {

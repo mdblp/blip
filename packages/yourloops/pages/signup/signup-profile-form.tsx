@@ -55,8 +55,7 @@ interface Errors {
 }
 
 const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
-  const { user, completeSignup } = useAuth()
-  const userRole = user?.role
+  const { completeSignup } = useAuth()
   const alert = useAlert()
   const { t } = useTranslation('yourloops')
   const { state, dispatch } = useSignUpFormState()
@@ -101,7 +100,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
   const validateHcpProfession = (): boolean => {
     let err = false
-    if (userRole === UserRoles.hcp) {
+    if (state.accountRole === UserRoles.hcp) {
       err = !state.hcpProfession
       setErrors({ ...errors, hcpProfession: err })
     }
@@ -113,7 +112,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
       try {
         setSaving(true)
         await completeSignup(state)
-        metrics.send('registration', 'create_profile', userRole)
+        metrics.send('registration', 'create_profile', state.accountRole)
         handleNext()
       } catch (err) {
         alert.error(t('profile-update-failed'))
@@ -178,7 +177,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         </Select>
       </FormControl>
 
-      {userRole === UserRoles.hcp &&
+      {state.accountRole === UserRoles.hcp &&
         <FormControl
           variant="outlined"
           margin="normal"
@@ -206,7 +205,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
       }
 
       <SignupStepperActionButtons
-        nextButtonLabel={t('signup-steppers-create-account')}
+        nextButtonLabel={t('create-account')}
         disabled={_.some(errors) || saving || isFormEmpty}
         onClickBackButton={handleBack}
         onClickNextButton={onFinishSignup}

@@ -12,7 +12,7 @@ export interface SignupReducerAction {
 const signupFormReducer: Reducer<SignupForm, SignupReducerAction> = (state, action) => {
   switch (action.type) {
     case 'EDIT_FORMVALUE': {
-      if (action.value === undefined || !action.key === undefined) {
+      if (action.value === undefined || action.key === undefined) {
         throw new Error(`Invalid parameter: ${JSON.stringify(action)}`)
       }
       return { ...state, [action.key]: action.value }
