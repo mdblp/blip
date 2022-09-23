@@ -117,10 +117,11 @@ const ignoredTransKeyForYourLoops = [
   'severe-hypoglycemia-threshold',
   'signup-steppers-caregiver-title',
   'signup-steppers-hcp-title',
-  'signup-steppers-step1',
-  'signup-steppers-step2',
   'team-card-label-address',
   'team-leave-dialog-button-leave',
+  'signup-account-select-step',
+  'signup-consent-step',
+  'signup-profile-step',
   'until',
   // Others
   // TODO

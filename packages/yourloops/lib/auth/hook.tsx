@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, FunctionComponent, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import bows from 'bows'
 import _ from 'lodash'
 
@@ -210,6 +210,7 @@ export function AuthContextImpl(): AuthContext {
     await UserApi.updateProfile(user.id, profile)
     await UserApi.updatePreferences(user.id, preferences)
     await UserApi.updateSettings(user.id, settings)
+    user.role = signupForm.accountRole
     user.preferences = preferences
     user.profile = profile
     user.settings = settings
@@ -252,7 +253,7 @@ export function useAuth(): AuthContext {
  * Provider component that wraps your app and makes auth object available to any child component that calls useAuth().
  * @param props for auth provider & children
  */
-export function AuthContextProvider({ children }: { children: JSX.Element }): JSX.Element {
+export const AuthContextProvider: FunctionComponent = ({ children }) => {
   return (
     <ReactAuthContext.Provider value={AuthContextImpl()}>
       {children}

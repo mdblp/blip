@@ -33,14 +33,11 @@ import Box from '@material-ui/core/Box'
 import metrics from '../../lib/metrics'
 import { ConsentForm } from '../../components/consents'
 import { useSignUpFormState } from './signup-formstate-context'
-import { useAuth } from '../../lib/auth'
 import { SignUpFormProps } from './signup-stepper'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { SignupFormKey } from './signup-form-reducer'
 
 const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
-  const { user } = useAuth()
-  const userRole = user?.role
   const { t } = useTranslation('yourloops')
   const { handleBack, handleNext } = props
   const { state, dispatch } = useSignUpFormState()
@@ -64,7 +61,7 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
 
   const onNext = (): void => {
     handleNext()
-    metrics.send('registration', 'accept_terms', userRole)
+    metrics.send('registration', 'accept_terms', state.accountRole)
   }
 
   return (
@@ -75,7 +72,7 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
     >
       <ConsentForm
         id="signup"
-        userRole={userRole}
+        userRole={state.accountRole}
         policyAccepted={state.privacyPolicy}
         setPolicyAccepted={setPolicyAccepted}
         termsAccepted={state.terms}
@@ -85,7 +82,7 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
       />
 
       <SignupStepperActionButtons
-        nextButtonLabel={t('signup-steppers-next')}
+        nextButtonLabel={t('next')}
         disabled={!consentsChecked}
         onClickBackButton={handleBack}
         onClickNextButton={onNext}
