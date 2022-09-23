@@ -63,6 +63,8 @@ const TOTAL_CARBS_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue 
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the mean.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 
+jest.setTimeout(10000)
+
 describe('Patient dashboard for HCP', () => {
   const patient = `/patient/${patientNonMonitoredId}/daily`
   const firstName = 'HCP firstName'
