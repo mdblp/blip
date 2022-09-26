@@ -25,23 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
-import { patientNonMonitoredId } from '../mock/mockPatientAPI'
+import UserApi from '../../../../lib/auth/user-api'
+import { Preferences, Profile, Settings } from '../../../../models/user'
+import { loggedInUserId } from './mockAuth0Hook'
 
-export const checkPatientNavBar = (canGenerateReport = true) => {
-  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
-  const dashboardLink = patientNavBar.getByText('Dashboard')
-  const dailyLink = patientNavBar.getByText('Daily')
-  const trendsLink = patientNavBar.getByText('Trends')
-  expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientNonMonitoredId}/dashboard`)
-  expect(dashboardLink).toBeVisible()
-  expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientNonMonitoredId}/daily`)
-  expect(dailyLink).toBeVisible()
-  expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientNonMonitoredId}/trends`)
-  expect(trendsLink).toBeVisible()
-  if (canGenerateReport) {
-    expect(patientNavBar.getByText('Generate report')).toBeVisible()
-  } else {
-    expect(patientNavBar.queryByText('Generate report')).not.toBeInTheDocument()
-  }
+export const mockUserDataFetch = (firstName: string, lastName: string) => {
+  jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: loggedInUserId, token: null })
+  jest.spyOn(UserApi, 'getProfile').mockResolvedValue({
+    firstName,
+    lastName,
+    fullName: `${firstName} ${lastName}`,
+    termsOfUse: { acceptanceTimestamp: '2021-01-02' },
+    privacyPolicy: { acceptanceTimestamp: '2021-01-02' }
+  } as Profile)
+  jest.spyOn(UserApi, 'getPreferences').mockResolvedValue({} as Preferences)
+  jest.spyOn(UserApi, 'getSettings').mockResolvedValue({} as Settings)
 }

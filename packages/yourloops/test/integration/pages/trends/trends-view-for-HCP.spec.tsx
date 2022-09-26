@@ -44,12 +44,12 @@ import { mockChatAPI } from '../../utils/mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
 import { checkPatientNavBar } from '../../utils/assert/patient-nav-bar'
-import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../utils/assert/daily'
+import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../utils/assert/trends'
 
 jest.setTimeout(10000)
 
-describe('Daily view for HCP', () => {
-  const patient = `/patient/${patientNonMonitoredId}/daily`
+describe('Trends view for HCP', () => {
+  const patient = `/patient/${patientNonMonitoredId}/trends`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
@@ -65,7 +65,7 @@ describe('Daily view for HCP', () => {
     mockDataAPIForDailyView()
   })
 
-  function getPatientDailyView(history) {
+  function getPatientTrendsView(history) {
     return (
       <Router history={history}>
         <AuthContextProvider>
@@ -75,27 +75,27 @@ describe('Daily view for HCP', () => {
     )
   }
 
-  const renderDailyView = () => {
+  const renderTrendView = () => {
     const history = createMemoryHistory({ initialEntries: [patient] })
 
     act(() => {
-      render(getPatientDailyView(history))
+      render(getPatientTrendsView(history))
     })
     expect(history.location.pathname).toBe(patient)
   }
 
-  it('should render correct basic components when navigating to patient daily view as an HCP', async () => {
-    renderDailyView()
+  it('should render correct basic components when navigating to patient trends view as an HCP', async () => {
+    renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBar()
+    checkPatientNavBar(false)
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
   })
 
   it('should render correct tooltips', async () => {
-    renderDailyView()
-    await checkDailyTidelineContainerTooltips()
-    checkDailyStatsWidgetsTooltips()
+    renderTrendView()
+    await checkTrendsTidelineContainerTooltips()
+    checkTrendsStatsWidgetsTooltips()
   })
 })

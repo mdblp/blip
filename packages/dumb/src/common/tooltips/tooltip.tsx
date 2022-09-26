@@ -84,7 +84,6 @@ const Tooltip: FunctionComponent<TooltipProps> = (
     position,
     title
   } = props
-
   const {
     calculateOffset,
     computeDateValue,

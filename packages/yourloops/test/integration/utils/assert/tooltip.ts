@@ -25,19 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import UserApi from '../../../../lib/auth/user-api'
-import { Preferences, Profile, Settings } from '../../../../models/user'
-import { loggedInUserId } from '../mock/mockAuth0Hook'
+import userEvent from '@testing-library/user-event'
+import { BoundFunctions, queries, within, screen } from '@testing-library/react'
 
-export const mockUserDataFetch = (firstName: string, lastName: string) => {
-  jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: loggedInUserId, token: null })
-  jest.spyOn(UserApi, 'getProfile').mockResolvedValue({
-    firstName,
-    lastName,
-    fullName: `${firstName} ${lastName}`,
-    termsOfUse: { acceptanceTimestamp: '2021-01-02' },
-    privacyPolicy: { acceptanceTimestamp: '2021-01-02' }
-  } as Profile)
-  jest.spyOn(UserApi, 'getPreferences').mockResolvedValue({} as Preferences)
-  jest.spyOn(UserApi, 'getSettings').mockResolvedValue({} as Settings)
+export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
+  const element = statsWidgets.getByText(infoIconLabel)
+  const infoIcon = within(element).getByTestId('info-icon')
+  userEvent.hover(infoIcon)
+  const tooltip = screen.getByTestId('tooltip')
+  expect(tooltip).toHaveTextContent(expectedTextContent)
+  userEvent.unhover(infoIcon)
 }
