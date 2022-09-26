@@ -49,6 +49,7 @@ import { UserInvitationStatus } from '../../models/generic'
 import { Patient } from '../../lib/data/patient'
 import { usePatientContext } from '../../lib/patient/provider'
 import { Team, useTeam } from '../../lib/team'
+import TeamUtils from '../../lib/team/utils'
 
 interface RemovePatientDialogProps {
   patient: Patient | null
@@ -103,18 +104,16 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
 
   useEffect(() => {
     if (patientTeams) {
-      if (patientTeams?.length === 1) {
-        setSelectedTeamId(patientTeams[0].teamId)
-        setSortedTeams([teamHook.getTeam(patientTeams[0].teamId)])
+      const teams = TeamUtils.mapPatientTeamsToTeams(patientTeams, teamHook.teams)
+      if (teams?.length === 1) {
+        setSelectedTeamId(teams[0].id)
+        setSortedTeams([teams[0]])
         return
       }
 
       // Sorting teams in alphabetical order if there are several
-      if (patientTeams?.length > 1) {
-        const teams = teamHook.teams
-
+      if (teams?.length > 1) {
         setSortedTeams(teams.sort((a, b) => +a.name - +b.name))
-
         teams.forEach((team, index) => {
           if (team.code === 'private') {
             const privatePractice = teams.splice(index, 1)[0]
