@@ -26,18 +26,39 @@
  */
 
 import UserApi from '../../../../lib/auth/user-api'
-import { Preferences, Profile, Settings } from '../../../../models/user'
-import { loggedInUserId } from './mockAuth0Hook'
+import { Preferences, Profile, Settings, UserRoles } from '../../../../models/user'
+import { loggedInUserId, mockAuth0Hook } from './mockAuth0Hook'
+import { patientMonitoredId } from './mockPatientAPI'
+import { mockNotificationAPI } from './mockNotificationAPI'
+import { mockDirectShareApi } from './mockDirectShareAPI'
+import { mockTeamAPI } from './mockTeamAPI'
+import PatientAPI from '../../../../lib/patient/patient-api'
+import { ITeamMember } from '../../../../models/team'
+import { mockChatAPI } from './mockChatAPI'
+import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
+import { mockDataAPIForDailyView } from './mockDataAPI'
 
-export const mockUserDataFetch = (firstName: string, lastName: string) => {
-  jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: loggedInUserId, token: null })
+export const mockUserDataFetch = (firstName: string, lastName: string, userId = loggedInUserId) => {
+  jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: userId, token: null })
   jest.spyOn(UserApi, 'getProfile').mockResolvedValue({
     firstName,
     lastName,
     fullName: `${firstName} ${lastName}`,
-    termsOfUse: { acceptanceTimestamp: '2021-01-02' },
-    privacyPolicy: { acceptanceTimestamp: '2021-01-02' }
+    termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+    privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true }
   } as Profile)
   jest.spyOn(UserApi, 'getPreferences').mockResolvedValue({} as Preferences)
   jest.spyOn(UserApi, 'getSettings').mockResolvedValue({} as Settings)
+}
+
+export const mockPatientLogin = (patient: ITeamMember) => {
+  mockAuth0Hook(UserRoles.patient, patientMonitoredId)
+  mockNotificationAPI()
+  mockDirectShareApi()
+  mockTeamAPI()
+  mockUserDataFetch(patient.profile.firstName, patient.profile.lastName, patient.userId)
+  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
+  mockChatAPI()
+  mockMedicalFilesAPI()
+  mockDataAPIForDailyView()
 }

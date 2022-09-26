@@ -26,19 +26,19 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { UserMetadata } from '../../../../models/user'
+import { UserMetadata, UserRoles } from '../../../../models/user'
 
 export const loggedInUserId = '919b1575bad58'
 
-export const mockAuth0Hook = () => {
+export const mockAuth0Hook = (role = UserRoles.hcp, userId = loggedInUserId) => {
   (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
     isAuthenticated: true,
     isLoading: false,
     user: {
       email: 'john.doe@example.com',
       email_verified: true,
-      sub: 'auth0|' + loggedInUserId,
-      [UserMetadata.Roles]: ['hcp']
+      sub: 'auth0|' + userId,
+      [UserMetadata.Roles]: [role]
     }
   })
 }

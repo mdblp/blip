@@ -28,16 +28,16 @@
 import { screen, within } from '@testing-library/react'
 import { patientNonMonitoredId } from '../mock/mockPatientAPI'
 
-export const checkPatientNavBar = (canGenerateReport = true) => {
+export const checkPatientNavBar = (canGenerateReport = true, isUserPatient = false) => {
   const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
   const dashboardLink = patientNavBar.getByText('Dashboard')
   const dailyLink = patientNavBar.getByText('Daily')
   const trendsLink = patientNavBar.getByText('Trends')
-  expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientNonMonitoredId}/dashboard`)
+  expect(dashboardLink.parentElement).toHaveAttribute('href', isUserPatient ? '/dashboard' : `/patient/${patientNonMonitoredId}/dashboard`)
   expect(dashboardLink).toBeVisible()
-  expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientNonMonitoredId}/daily`)
+  expect(dailyLink.parentElement).toHaveAttribute('href', isUserPatient ? '/daily' : `/patient/${patientNonMonitoredId}/daily`)
   expect(dailyLink).toBeVisible()
-  expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientNonMonitoredId}/trends`)
+  expect(trendsLink.parentElement).toHaveAttribute('href', isUserPatient ? '/trends' : `/patient/${patientNonMonitoredId}/trends`)
   expect(trendsLink).toBeVisible()
   if (canGenerateReport) {
     expect(patientNavBar.getByText('Generate report')).toBeVisible()

@@ -34,3 +34,7 @@ export const checkDrawer = () => {
   expect(drawer.getByLabelText('Filter on pending patients')).toBeVisible()
   expect(drawer.getByLabelText('Filter on patients in private practice')).toBeVisible()
 }
+
+export const checkDrawerNotVisible = () => {
+  expect(screen.queryByTestId('main-left-drawer')).not.toBeInTheDocument()
+}

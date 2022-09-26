@@ -49,7 +49,6 @@ export const checkTrendsTidelineContainerTooltips = async () => {
 
 export const checkTrendsStatsWidgetsTooltips = () => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  logDOM(screen.getByTestId('stats-widgets'), 100000)
   checkStatTooltip(statsWidgets, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
   checkStatTooltip(statsWidgets, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
   checkStatTooltip(statsWidgets, 'Sensor Usage', SENSOR_USAGE_TOOLTIP)
