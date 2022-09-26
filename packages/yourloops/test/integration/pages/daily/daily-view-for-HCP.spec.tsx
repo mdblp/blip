@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
 import { screen } from '@testing-library/react'
 import { checkHCPHeader } from '../../assert/header'
 import { checkHCPDrawer } from '../../assert/drawer'
