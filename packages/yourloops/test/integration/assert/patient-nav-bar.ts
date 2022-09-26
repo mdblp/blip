@@ -28,7 +28,7 @@
 import { screen, within } from '@testing-library/react'
 import { patientNonMonitoredId } from '../mock/mockPatientAPI'
 
-export const checkPatientNavBar = (canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
+const checkPatientNavBar = (canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
   const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
   const dashboardLink = patientNavBar.getByText('Dashboard')
   const dailyLink = patientNavBar.getByText('Daily')
@@ -54,8 +54,5 @@ export const checkPatientNavBarAsHCP = (canGenerateReport = true, patientId = pa
 }
 
 export const checkPatientNavBarAsPatient = (canGenerateReport = true) => {
-  const dashboardURL = '/dashboard'
-  const dailyURL = '/daily'
-  const trendsURL = '/trends'
-  checkPatientNavBar(canGenerateReport, dashboardURL, dailyURL, trendsURL)
+  checkPatientNavBar(canGenerateReport, '/dashboard', '/daily', '/trends')
 }
