@@ -30,6 +30,7 @@ export const mockDataAPIForDailyView = () => {
 
 export const mockDataAPIForTrendsView = () => {
   jest.spyOn(DataAPI, 'getPatientDataRange').mockResolvedValue(['2020-01-18T00:00:00Z', '2020-01-20T00:00:00Z'])
+  jest.spyOn(DataAPI, 'getMessages').mockResolvedValue([])
   jest.spyOn(DataAPI, 'getPatientData').mockImplementation((patient: Patient) => Promise.resolve([
     { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: patient.userid },
     { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.4, uploadId: 'osef', _userId: patient.userid },

@@ -48,6 +48,7 @@ import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } f
 import { ITeamMember, TeamMemberRole } from '../../../../models/team'
 import { UserInvitationStatus } from '../../../../models/generic'
 import { MonitoringStatus } from '../../../../models/monitoring'
+import { mockDataAPIForDailyView } from '../../utils/mock/mockDataAPI'
 
 jest.setTimeout(10000)
 
@@ -88,6 +89,7 @@ describe('Daily view for patient', () => {
 
   beforeAll(() => {
     mockPatientLogin(patient)
+    mockDataAPIForDailyView()
   })
 
   function getPatientDailyView(history) {

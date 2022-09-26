@@ -32,36 +32,63 @@ import { act, render, screen } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
 import { checkHeader } from '../../utils/assert/header'
-import { checkDrawer } from '../../utils/assert/drawer'
+import { checkDrawerNotVisible } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
-import { mockUserDataFetch } from '../../utils/mock/auth'
-import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
-import { mockTeamAPI } from '../../utils/mock/mockTeamAPI'
-import { mockDataAPIForTrendsView } from '../../utils/mock/mockDataAPI'
-import { mockNotificationAPI } from '../../utils/mock/mockNotificationAPI'
-import { mockPatientAPI, patientNonMonitoredId } from '../../utils/mock/mockPatientAPI'
-import { mockChatAPI } from '../../utils/mock/mockChatAPI'
-import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
-import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
+import { mockPatientLogin } from '../../utils/mock/auth'
+import { mySecondTeamId } from '../../utils/mock/mockTeamAPI'
+import {
+  monitoringParameters,
+  patientMonitoredFirstName,
+  patientMonitoredFullName,
+  patientMonitoredId,
+  patientMonitoredLastName
+} from '../../utils/mock/mockPatientAPI'
 import { checkPatientNavBar } from '../../utils/assert/patient-nav-bar'
 import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../utils/assert/trends'
+import { ITeamMember, TeamMemberRole } from '../../../../models/team'
+import { UserInvitationStatus } from '../../../../models/generic'
+import { MonitoringStatus } from '../../../../models/monitoring'
+import { mockDataAPIForTrendsView } from '../../utils/mock/mockDataAPI'
 
 jest.setTimeout(10000)
 
 describe('Trends view for HCP', () => {
-  const patient = `/patient/${patientNonMonitoredId}/trends`
-  const firstName = 'HCP firstName'
-  const lastName = 'HCP lastName'
+  const patient: ITeamMember = {
+    userId: patientMonitoredId,
+    teamId: mySecondTeamId,
+    role: TeamMemberRole.patient,
+    profile: {
+      firstName: patientMonitoredFirstName,
+      fullName: patientMonitoredFullName,
+      lastName: patientMonitoredLastName,
+      patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
+      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+    },
+    settings: null,
+    preferences: { displayLanguageCode: 'en' },
+    invitationStatus: UserInvitationStatus.accepted,
+    email: 'ylp.ui.test.patient28@diabeloop.fr',
+    idVerified: false,
+    unreadMessages: 0,
+    alarms: {
+      timeSpentAwayFromTargetRate: 0,
+      timeSpentAwayFromTargetActive: false,
+      frequencyOfSevereHypoglycemiaRate: 0,
+      frequencyOfSevereHypoglycemiaActive: false,
+      nonDataTransmissionRate: 0,
+      nonDataTransmissionActive: false
+    },
+    monitoring: {
+      enabled: true,
+      monitoringEnd: new Date(Date.now() - 10000),
+      status: MonitoringStatus.accepted,
+      parameters: monitoringParameters
+    }
+  }
 
   beforeAll(() => {
-    mockAuth0Hook()
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
-    mockPatientAPI()
-    mockChatAPI()
-    mockMedicalFilesAPI()
+    mockPatientLogin(patient)
     mockDataAPIForTrendsView()
   })
 
@@ -76,20 +103,20 @@ describe('Trends view for HCP', () => {
   }
 
   const renderTrendView = () => {
-    const history = createMemoryHistory({ initialEntries: [patient] })
+    const history = createMemoryHistory({ initialEntries: ['/trends'] })
 
     act(() => {
       render(getPatientTrendsView(history))
     })
-    expect(history.location.pathname).toBe(patient)
+    expect(history.location.pathname).toBe('/trends')
   }
 
   it('should render correct basic components when navigating to patient trends view as an HCP', async () => {
     renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBar(false)
-    checkHeader(`${firstName} ${lastName}`)
-    checkDrawer()
+    checkPatientNavBar(false, true)
+    checkHeader(`${patient.profile.firstName} ${patient.profile.lastName}`, true)
+    checkDrawerNotVisible()
     checkFooter()
   })
 

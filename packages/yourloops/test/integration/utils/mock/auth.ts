@@ -60,5 +60,4 @@ export const mockPatientLogin = (patient: ITeamMember) => {
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
   mockChatAPI()
   mockMedicalFilesAPI()
-  mockDataAPIForDailyView()
 }

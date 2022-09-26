@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { logDOM, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './tooltip'
 
-const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
+const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Daily average of the time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is number of readings in range multiplied by the sample frequency.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const SENSOR_USAGE_TOOLTIP = 'Sensor Usage: Time the CGM collected data, divided by the total time represented in this view.'
 const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
@@ -41,15 +41,16 @@ export const checkTrendsTidelineContainerTooltips = async () => {
   userEvent.hover(cbgSlice)
   const tooltips = await screen.findAllByTestId('tooltip')
   expect(tooltips).toHaveLength(3)
-  expect(tooltips[0]).toHaveTextContent('5:30 pm - 6:00 pm')
+  expect(tooltips[0]).toHaveTextContent('11:00 am - 11:30 am')
   const trendsTooltips = screen.getByTestId('trends-tooltips')
-  expect(within(trendsTooltips).getAllByText('189')).toHaveLength(2)
+  expect(within(trendsTooltips).getByText('189')).toBeVisible()
+  expect(within(trendsTooltips).getByText('169')).toBeVisible()
   userEvent.unhover(cbgSlice)
 }
 
 export const checkTrendsStatsWidgetsTooltips = () => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  checkStatTooltip(statsWidgets, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
+  checkStatTooltip(statsWidgets, 'Avg. Daily Time In Range', TIME_IN_RANGE_TOOLTIP)
   checkStatTooltip(statsWidgets, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
   checkStatTooltip(statsWidgets, 'Sensor Usage', SENSOR_USAGE_TOOLTIP)
   checkStatTooltip(statsWidgets, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
