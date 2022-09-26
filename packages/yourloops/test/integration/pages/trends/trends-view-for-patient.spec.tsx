@@ -26,29 +26,26 @@
  */
 
 import React from 'react'
-import { createMemoryHistory } from 'history'
-import { Router } from 'react-router-dom'
-import { act, render, screen } from '@testing-library/react'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
-import { checkPatientHeader } from '../../utils/assert/header'
-import { checkDrawerNotVisible } from '../../utils/assert/drawer'
-import { checkFooter } from '../../utils/assert/footer'
-import { mockPatientLogin } from '../../utils/mock/auth'
-import { mySecondTeamId } from '../../utils/mock/mockTeamAPI'
+import { screen } from '@testing-library/react'
+import { checkPatientHeader } from '../../assert/header'
+import { checkDrawerNotVisible } from '../../assert/drawer'
+import { checkFooter } from '../../assert/footer'
+import { mockPatientLogin } from '../../mock/auth'
+import { mySecondTeamId } from '../../mock/mockTeamAPI'
 import {
   monitoringParameters,
   patientMonitoredFirstName,
   patientMonitoredFullName,
   patientMonitoredId,
   patientMonitoredLastName
-} from '../../utils/mock/mockPatientAPI'
-import { checkPatientNavBarAsPatient } from '../../utils/assert/patient-nav-bar'
-import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../utils/assert/trends'
+} from '../../mock/mockPatientAPI'
+import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
+import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../assert/trends'
 import { ITeamMember, TeamMemberRole } from '../../../../models/team'
 import { UserInvitationStatus } from '../../../../models/generic'
 import { MonitoringStatus } from '../../../../models/monitoring'
-import { mockDataAPIForTrendsView } from '../../utils/mock/mockDataAPI'
+import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
+import { renderPage } from '../../utils/render'
 
 jest.setTimeout(10000)
 
@@ -92,23 +89,8 @@ describe('Trends view for HCP', () => {
     mockDataAPIForTrendsView()
   })
 
-  function getPatientTrendsView(history) {
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
-
   const renderTrendView = () => {
-    const history = createMemoryHistory({ initialEntries: ['/trends'] })
-
-    act(() => {
-      render(getPatientTrendsView(history))
-    })
-    expect(history.location.pathname).toBe('/trends')
+    renderPage('/trends')
   }
 
   it('should render correct basic components when navigating to patient trends view', async () => {

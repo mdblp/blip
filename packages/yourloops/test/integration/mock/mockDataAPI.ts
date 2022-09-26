@@ -1,5 +1,5 @@
-import DataAPI from '../../../../lib/data/data-api'
-import { Patient } from '../../../../lib/data/patient'
+import DataAPI from '../../../lib/data/data-api'
+import { Patient } from '../../../lib/data/patient'
 
 const CARB_BOLUS_ID = 'carbBolusId'
 export const CBG_ID = 'cbgId'

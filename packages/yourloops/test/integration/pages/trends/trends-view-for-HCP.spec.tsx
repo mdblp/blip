@@ -26,30 +26,26 @@
  */
 
 import React from 'react'
-import { createMemoryHistory } from 'history'
-import { Router } from 'react-router-dom'
-import { act, render, screen } from '@testing-library/react'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
-import { checkHCPHeader } from '../../utils/assert/header'
-import { checkHCPDrawer } from '../../utils/assert/drawer'
-import { checkFooter } from '../../utils/assert/footer'
-import { mockUserDataFetch } from '../../utils/mock/auth'
-import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
-import { mockTeamAPI } from '../../utils/mock/mockTeamAPI'
-import { mockDataAPIForTrendsView } from '../../utils/mock/mockDataAPI'
-import { mockNotificationAPI } from '../../utils/mock/mockNotificationAPI'
-import { mockPatientAPI, patientNonMonitoredId } from '../../utils/mock/mockPatientAPI'
-import { mockChatAPI } from '../../utils/mock/mockChatAPI'
-import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
-import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
-import { checkPatientNavBarAsHCP } from '../../utils/assert/patient-nav-bar'
-import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../utils/assert/trends'
+import { screen } from '@testing-library/react'
+import { checkHCPHeader } from '../../assert/header'
+import { checkHCPDrawer } from '../../assert/drawer'
+import { checkFooter } from '../../assert/footer'
+import { mockUserDataFetch } from '../../mock/auth'
+import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { mockTeamAPI } from '../../mock/mockTeamAPI'
+import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
+import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { mockPatientAPI, patientNonMonitoredId } from '../../mock/mockPatientAPI'
+import { mockChatAPI } from '../../mock/mockChatAPI'
+import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
+import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
+import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../assert/trends'
+import { renderPage } from '../../utils/render'
 
 jest.setTimeout(10000)
 
 describe('Trends view for HCP', () => {
-  const patient = `/patient/${patientNonMonitoredId}/trends`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
@@ -65,23 +61,8 @@ describe('Trends view for HCP', () => {
     mockDataAPIForTrendsView()
   })
 
-  function getPatientTrendsView(history) {
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
-
   const renderTrendView = () => {
-    const history = createMemoryHistory({ initialEntries: [patient] })
-
-    act(() => {
-      render(getPatientTrendsView(history))
-    })
-    expect(history.location.pathname).toBe(patient)
+    renderPage(`/patient/${patientNonMonitoredId}/trends`)
   }
 
   it('should render correct basic components when navigating to patient trends view', async () => {

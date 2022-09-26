@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import UserApi from '../../../../lib/auth/user-api'
-import { Preferences, Profile, Settings, UserRoles } from '../../../../models/user'
+import UserApi from '../../../lib/auth/user-api'
+import { Preferences, Profile, Settings, UserRoles } from '../../../models/user'
 import { loggedInUserId, mockAuth0Hook } from './mockAuth0Hook'
 import { patientMonitoredId } from './mockPatientAPI'
 import { mockNotificationAPI } from './mockNotificationAPI'
 import { mockDirectShareApi } from './mockDirectShareAPI'
 import { mockTeamAPI } from './mockTeamAPI'
-import PatientAPI from '../../../../lib/patient/patient-api'
-import { ITeamMember } from '../../../../models/team'
+import PatientAPI from '../../../lib/patient/patient-api'
+import { ITeamMember } from '../../../models/team'
 import { mockChatAPI } from './mockChatAPI'
 import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
 

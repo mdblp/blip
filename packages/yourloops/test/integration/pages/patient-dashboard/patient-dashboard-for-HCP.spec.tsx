@@ -31,25 +31,25 @@ import { Router } from 'react-router-dom'
 import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHCPHeader } from '../../utils/assert/header'
-import { checkHCPDrawer } from '../../utils/assert/drawer'
-import { checkFooter } from '../../utils/assert/footer'
-import { mockUserDataFetch } from '../../utils/mock/auth'
-import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
-import { mockTeamAPI } from '../../utils/mock/mockTeamAPI'
-import { mockDataAPIForDailyView } from '../../utils/mock/mockDataAPI'
-import { mockNotificationAPI } from '../../utils/mock/mockNotificationAPI'
+import { checkHCPHeader } from '../../assert/header'
+import { checkHCPDrawer } from '../../assert/drawer'
+import { checkFooter } from '../../assert/footer'
+import { mockUserDataFetch } from '../../mock/auth'
+import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { mockTeamAPI } from '../../mock/mockTeamAPI'
+import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
+import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
   mockPatientAPI,
   patientMonitoredFullName,
   patientMonitoredId,
   patientNonMonitoredFullName,
   patientNonMonitoredId
-} from '../../utils/mock/mockPatientAPI'
-import { mockChatAPI } from '../../utils/mock/mockChatAPI'
-import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
+} from '../../mock/mockPatientAPI'
+import { mockChatAPI } from '../../mock/mockChatAPI'
+import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
-import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
+import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 
 jest.setTimeout(15000)
 
