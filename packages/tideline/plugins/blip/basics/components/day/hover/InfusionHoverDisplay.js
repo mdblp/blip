@@ -36,7 +36,7 @@ function InfusionHoverDisplay(props) {
 
 InfusionHoverDisplay.propTypes = {
   data: PropTypes.object,
-  date: PropTypes.string.isRequired
+  date: PropTypes.string
 }
 
 export default InfusionHoverDisplay
