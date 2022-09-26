@@ -36,7 +36,6 @@ import PatientAPI from '../../../../lib/patient/patient-api'
 import { ITeamMember } from '../../../../models/team'
 import { mockChatAPI } from './mockChatAPI'
 import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
-import { mockDataAPIForDailyView } from './mockDataAPI'
 
 export const mockUserDataFetch = (firstName: string, lastName: string, userId = loggedInUserId) => {
   jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: userId, token: null })
