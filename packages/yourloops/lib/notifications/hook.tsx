@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import bows from 'bows'
 import { INotification, NotificationContext, NotificationProvider } from './models'
 import { useAuth } from '../auth'
@@ -88,23 +88,23 @@ function NotificationContextImpl(): NotificationContext {
     return invitation
   }
 
-  const refreshSentInvitations = async (): Promise<void> => {
+  const refreshSentInvitations = useCallback(async (): Promise<void> => {
     try {
       const invitations = await NotificationApi.getSentInvitations(user.id)
       setSentInvitations(invitations)
     } catch (err) {
       log.error(err)
     }
-  }
+  }, [user.id])
 
-  const refreshReceivedInvitations = async (): Promise<void> => {
+  const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
     try {
       const invitations = await NotificationApi.getReceivedInvitations(user.id)
       setReceivedInvitations(invitations)
     } catch (err) {
       log.error(err)
     }
-  }
+  }, [user.id])
 
   const initHook = (): void => {
     if (initialized || lock) {
@@ -118,16 +118,13 @@ function NotificationContextImpl(): NotificationContext {
       refreshReceivedInvitations(),
       refreshSentInvitations()
     ])
-      .catch((reason: unknown) => {
-        log.error(reason)
-      })
       .finally(() => {
         setInitialized(true)
         lock = false
       })
   }
 
-  useEffect(initHook, [user, initialized])
+  useEffect(initHook, [user, initialized, refreshReceivedInvitations, refreshSentInvitations])
 
   return {
     initialized,

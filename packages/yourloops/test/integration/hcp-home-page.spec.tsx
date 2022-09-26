@@ -32,18 +32,19 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { mockAuth0Hook } from './utils/mockAuth0Hook'
 import { mockNotificationAPI } from './utils/mockNotificationAPI'
-import { mockTeamAPI } from './utils/mockTeamAPI'
+import { mockTeamAPI, teamThree, teamTwo } from './utils/mockTeamAPI'
 import { mockUserDataFetch } from './utils/auth'
 import { mockPatientAPI, monitoredPatient, removePatientMock, unMonitoredPatient } from './utils/mockPatientAPI'
-import { act, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { checkHeader } from './utils/header'
 import { checkDrawer } from './utils/drawer'
 import { checkFooter } from './utils/footer'
 import { mockDataAPI } from './utils/mockDataAPI'
 import { mockDirectShareApi } from './utils/mockDirectShareAPI'
 import PatientAPI from '../../lib/patient/patient-api'
+import { checkPatientSecondaryBar } from './utils/patientSecondaryBar'
 
-describe('HCP remove a patient from list', () => {
+describe('HCP can remove a patient from list', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
   beforeAll(() => {
@@ -74,8 +75,7 @@ describe('HCP remove a patient from list', () => {
     checkHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
-    expect(screen.getByTestId('patients-secondary-bar')).toBeVisible()
-    expect(screen.getByRole('table')).toBeVisible()
+    checkPatientSecondaryBar()
   })
 
   it('should display a list of patient and be able to remove one of them', async () => {
@@ -99,10 +99,38 @@ describe('HCP remove a patient from list', () => {
     await act(async () => {
       confirmRemoveButton.click()
     })
-    expect(removePatientMock).toHaveBeenCalledTimes(1)
+    expect(removePatientMock).toHaveBeenCalledWith(unMonitoredPatient.teamId, unMonitoredPatient.userId)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Non monitored Patient is no longer a member of MyThirdTeam - to be deleted')
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
+  })
+
+  it('should be able to remove a patient who is in many teams', async () => {
+    await act(async () => {
+      render(getHomePage())
+    })
+
+    const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userId}`)
+    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
+    expect(removeButton).toBeInTheDocument()
+
+    removeButton.click()
+    const removeDialog = screen.getByRole('dialog')
+    expect(removeDialog).toBeInTheDocument()
+    const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
+
+    const select = within(removeDialog).getByTestId('patient-team-selector')
+    fireEvent.mouseDown(within(select).getByRole('button'))
+
+    screen.getByRole('listbox')
+    fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
+
+    await act(async () => {
+      confirmRemoveButton.click()
+    })
+    expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teamId, monitoredPatient.userId)
+    expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} is no longer a member of ${teamTwo.name}`)
   })
 
   it('should display an error message if patient removal failed', async () => {

@@ -151,6 +151,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
           <InputLabel>{t('select-team')}</InputLabel>
           <Select
             id="patient-team-selector"
+            data-testid="patient-team-selector"
             label={t('select-team')}
             value={selectedTeamId}
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
