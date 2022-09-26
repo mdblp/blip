@@ -31,7 +31,7 @@ import { Router } from 'react-router-dom'
 import { act, render, screen } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHeader } from '../../utils/assert/header'
+import { checkPatientHeader } from '../../utils/assert/header'
 import { checkDrawerNotVisible } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
 import { mockPatientLogin } from '../../utils/mock/auth'
@@ -43,7 +43,7 @@ import {
   patientMonitoredId,
   patientMonitoredLastName
 } from '../../utils/mock/mockPatientAPI'
-import { checkPatientNavBar } from '../../utils/assert/patient-nav-bar'
+import { checkPatientNavBarAsPatient } from '../../utils/assert/patient-nav-bar'
 import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../utils/assert/trends'
 import { ITeamMember, TeamMemberRole } from '../../../../models/team'
 import { UserInvitationStatus } from '../../../../models/generic'
@@ -111,11 +111,11 @@ describe('Trends view for HCP', () => {
     expect(history.location.pathname).toBe('/trends')
   }
 
-  it('should render correct basic components when navigating to patient trends view as an HCP', async () => {
+  it('should render correct basic components when navigating to patient trends view', async () => {
     renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBar(false, true)
-    checkHeader(`${patient.profile.firstName} ${patient.profile.lastName}`, true)
+    checkPatientNavBarAsPatient(false)
+    checkPatientHeader(`${patient.profile.firstName} ${patient.profile.lastName}`)
     checkDrawerNotVisible()
     checkFooter()
   })

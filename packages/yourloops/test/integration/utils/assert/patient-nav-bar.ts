@@ -28,20 +28,34 @@
 import { screen, within } from '@testing-library/react'
 import { patientNonMonitoredId } from '../mock/mockPatientAPI'
 
-export const checkPatientNavBar = (canGenerateReport = true, isUserPatient = false) => {
+export const checkPatientNavBar = (canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
   const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
   const dashboardLink = patientNavBar.getByText('Dashboard')
   const dailyLink = patientNavBar.getByText('Daily')
   const trendsLink = patientNavBar.getByText('Trends')
-  expect(dashboardLink.parentElement).toHaveAttribute('href', isUserPatient ? '/dashboard' : `/patient/${patientNonMonitoredId}/dashboard`)
+  expect(dashboardLink.parentElement).toHaveAttribute('href', dashboardUrl)
   expect(dashboardLink).toBeVisible()
-  expect(dailyLink.parentElement).toHaveAttribute('href', isUserPatient ? '/daily' : `/patient/${patientNonMonitoredId}/daily`)
+  expect(dailyLink.parentElement).toHaveAttribute('href', dailyUrl)
   expect(dailyLink).toBeVisible()
-  expect(trendsLink.parentElement).toHaveAttribute('href', isUserPatient ? '/trends' : `/patient/${patientNonMonitoredId}/trends`)
+  expect(trendsLink.parentElement).toHaveAttribute('href', trendsUrl)
   expect(trendsLink).toBeVisible()
   if (canGenerateReport) {
     expect(patientNavBar.getByText('Generate report')).toBeVisible()
   } else {
     expect(patientNavBar.queryByText('Generate report')).not.toBeInTheDocument()
   }
+}
+
+export const checkPatientNavBarAsHCP = (canGenerateReport = true, patientId = patientNonMonitoredId) => {
+  const dashboardURL = `/patient/${patientId}/dashboard`
+  const dailyURL = `/patient/${patientId}/daily`
+  const trendsURL = `/patient/${patientId}/trends`
+  checkPatientNavBar(canGenerateReport, dashboardURL, dailyURL, trendsURL)
+}
+
+export const checkPatientNavBarAsPatient = (canGenerateReport = true) => {
+  const dashboardURL = '/dashboard'
+  const dailyURL = '/daily'
+  const trendsURL = '/trends'
+  checkPatientNavBar(canGenerateReport, dashboardURL, dailyURL, trendsURL)
 }

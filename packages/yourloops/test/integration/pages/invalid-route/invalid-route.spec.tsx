@@ -31,8 +31,8 @@ import { Router } from 'react-router-dom'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHeader } from '../../utils/assert/header'
-import { checkDrawer } from '../../utils/assert/drawer'
+import { checkHCPHeader } from '../../utils/assert/header'
+import { checkHCPDrawer } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
 import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
 import { mockUserDataFetch } from '../../utils/mock/auth'
@@ -76,8 +76,8 @@ describe('Invalid Route', () => {
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')
 
-    checkHeader(`${firstName} ${lastName}`)
-    checkDrawer()
+    checkHCPHeader(`${firstName} ${lastName}`)
+    checkHCPDrawer()
     checkFooter()
   })
 })

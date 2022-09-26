@@ -27,7 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 
-export const checkDrawer = () => {
+export const checkHCPDrawer = () => {
   const drawer = within(screen.getByTestId('main-left-drawer'))
   expect(drawer.getByLabelText('Filter on all patients')).toBeVisible()
   expect(drawer.getByLabelText('Filter on flagged patients')).toBeVisible()

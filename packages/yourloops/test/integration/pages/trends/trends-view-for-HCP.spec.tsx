@@ -31,8 +31,8 @@ import { Router } from 'react-router-dom'
 import { act, render, screen } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHeader } from '../../utils/assert/header'
-import { checkDrawer } from '../../utils/assert/drawer'
+import { checkHCPHeader } from '../../utils/assert/header'
+import { checkHCPDrawer } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
 import { mockUserDataFetch } from '../../utils/mock/auth'
 import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
@@ -43,7 +43,7 @@ import { mockPatientAPI, patientNonMonitoredId } from '../../utils/mock/mockPati
 import { mockChatAPI } from '../../utils/mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
-import { checkPatientNavBar } from '../../utils/assert/patient-nav-bar'
+import { checkPatientNavBarAsHCP } from '../../utils/assert/patient-nav-bar'
 import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../utils/assert/trends'
 
 jest.setTimeout(10000)
@@ -84,12 +84,12 @@ describe('Trends view for HCP', () => {
     expect(history.location.pathname).toBe(patient)
   }
 
-  it('should render correct basic components when navigating to patient trends view as an HCP', async () => {
+  it('should render correct basic components when navigating to patient trends view', async () => {
     renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBar(false)
-    checkHeader(`${firstName} ${lastName}`)
-    checkDrawer()
+    checkPatientNavBarAsHCP(false)
+    checkHCPHeader(`${firstName} ${lastName}`)
+    checkHCPDrawer()
     checkFooter()
   })
 

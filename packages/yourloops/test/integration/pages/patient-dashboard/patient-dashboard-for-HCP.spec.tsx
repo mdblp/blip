@@ -31,8 +31,8 @@ import { Router } from 'react-router-dom'
 import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHeader } from '../../utils/assert/header'
-import { checkDrawer } from '../../utils/assert/drawer'
+import { checkHCPHeader } from '../../utils/assert/header'
+import { checkHCPDrawer } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
 import { mockUserDataFetch } from '../../utils/mock/auth'
 import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
@@ -119,8 +119,8 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     expect(history.location.pathname).toBe(patientNonMonitoredDashboardRoute)
     testPatientDashboardCommonDisplay(dashboard, patientNonMonitoredId, patientNonMonitoredFullName)
-    checkHeader(`${firstName} ${lastName}`)
-    checkDrawer()
+    checkHCPHeader(`${firstName} ${lastName}`)
+    checkHCPDrawer()
     checkFooter()
   })
 
@@ -146,8 +146,8 @@ describe('Patient dashboard for HCP', () => {
 
       /* Chat widget */
       expect(dashboard.getByText('Messages')).toBeVisible()
-      checkHeader(`${firstName} ${lastName}`)
-      checkDrawer()
+      checkHCPHeader(`${firstName} ${lastName}`)
+      checkHCPDrawer()
       checkFooter()
     })
   })

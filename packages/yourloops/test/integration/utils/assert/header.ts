@@ -25,17 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { BoundFunctions, queries, screen, within } from '@testing-library/react'
 
-export const checkHeader = (fullName: string, isUserPatient = false) => {
-  const header = within(screen.getByTestId('app-main-header'))
-  if (isUserPatient) {
-    expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
-  } else {
-    expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
-  }
+const checkHeader = (header: BoundFunctions<typeof queries>, fullName: string) => {
   expect(header.getByLabelText('YourLoops Logo')).toBeVisible()
   expect(header.getByLabelText('Go to notifications list')).toBeVisible()
   expect(header.getByLabelText('Open team menu')).toBeVisible()
   expect(header.getByText(fullName)).toBeVisible()
+}
+
+export const checkHCPHeader = (fullName: string) => {
+  const header = within(screen.getByTestId('app-main-header'))
+  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
+  checkHeader(header, fullName)
+}
+
+export const checkPatientHeader = (fullName: string) => {
+  const header = within(screen.getByTestId('app-main-header'))
+  expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
+  checkHeader(header, fullName)
 }

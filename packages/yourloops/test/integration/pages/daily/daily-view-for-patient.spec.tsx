@@ -31,7 +31,7 @@ import { Router } from 'react-router-dom'
 import { act, render, screen } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHeader } from '../../utils/assert/header'
+import { checkPatientHeader } from '../../utils/assert/header'
 import { checkDrawerNotVisible } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
 import { mockPatientLogin } from '../../utils/mock/auth'
@@ -43,7 +43,7 @@ import {
   patientMonitoredId,
   patientMonitoredLastName
 } from '../../utils/mock/mockPatientAPI'
-import { checkPatientNavBar } from '../../utils/assert/patient-nav-bar'
+import { checkPatientNavBarAsPatient } from '../../utils/assert/patient-nav-bar'
 import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../utils/assert/daily'
 import { ITeamMember, TeamMemberRole } from '../../../../models/team'
 import { UserInvitationStatus } from '../../../../models/generic'
@@ -110,11 +110,11 @@ describe('Daily view for patient', () => {
     expect(history.location.pathname).toBe('/daily')
   }
 
-  it('should render correct basic components when navigating to patient daily view as an HCP', async () => {
+  it('should render correct basic components when navigating to patient daily view', async () => {
     renderDailyView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBar(true, true)
-    checkHeader(`${patient.profile.firstName} ${patient.profile.lastName}`, true)
+    checkPatientNavBarAsPatient(true)
+    checkPatientHeader(`${patient.profile.firstName} ${patient.profile.lastName}`)
     checkDrawerNotVisible()
     checkFooter()
   })
