@@ -30,18 +30,25 @@ import { BoundFunctions, queries, screen, within } from '@testing-library/react'
 const checkHeader = (header: BoundFunctions<typeof queries>, fullName: string) => {
   expect(header.getByLabelText('YourLoops Logo')).toBeVisible()
   expect(header.getByLabelText('Go to notifications list')).toBeVisible()
-  expect(header.getByLabelText('Open team menu')).toBeVisible()
   expect(header.getByText(fullName)).toBeVisible()
 }
 
 export const checkHCPHeader = (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
+  expect(header.getByLabelText('Open team menu')).toBeVisible()
+  checkHeader(header, fullName)
+}
+
+export const checkCaregiverHeader = (fullName: string) => {
+  const header = within(screen.getByTestId('app-main-header'))
+  expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
   checkHeader(header, fullName)
 }
 
 export const checkPatientHeader = (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
+  expect(header.getByLabelText('Open team menu')).toBeVisible()
   checkHeader(header, fullName)
 }

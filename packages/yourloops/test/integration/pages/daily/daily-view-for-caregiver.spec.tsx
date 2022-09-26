@@ -31,7 +31,7 @@ import { Router } from 'react-router-dom'
 import { act, render, screen } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHCPHeader } from '../../utils/assert/header'
+import { checkCaregiverHeader, checkHCPHeader } from '../../utils/assert/header'
 import { checkHCPDrawer } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
 import { mockUserDataFetch } from '../../utils/mock/auth'
@@ -45,16 +45,17 @@ import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
 import { checkPatientNavBarAsHCP } from '../../utils/assert/patient-nav-bar'
 import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../utils/assert/daily'
+import { UserRoles } from '../../../../models/user'
 
 jest.setTimeout(10000)
 
-describe('Daily view for HCP', () => {
+describe('Daily view for caregiver', () => {
   const url = `/patient/${patientNonMonitoredId}/daily`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
   beforeAll(() => {
-    mockAuth0Hook()
+    mockAuth0Hook(UserRoles.caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
@@ -88,7 +89,7 @@ describe('Daily view for HCP', () => {
     renderDailyView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP()
-    checkHCPHeader(`${firstName} ${lastName}`)
+    checkCaregiverHeader(`${firstName} ${lastName}`)
     checkHCPDrawer()
     checkFooter()
   })

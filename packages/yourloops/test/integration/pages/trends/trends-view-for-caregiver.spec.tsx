@@ -31,30 +31,31 @@ import { Router } from 'react-router-dom'
 import { act, render, screen } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHCPHeader } from '../../utils/assert/header'
+import { checkCaregiverHeader, checkHCPHeader } from '../../utils/assert/header'
 import { checkHCPDrawer } from '../../utils/assert/drawer'
 import { checkFooter } from '../../utils/assert/footer'
 import { mockUserDataFetch } from '../../utils/mock/auth'
 import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../utils/mock/mockTeamAPI'
-import { mockDataAPIForDailyView } from '../../utils/mock/mockDataAPI'
+import { mockDataAPIForTrendsView } from '../../utils/mock/mockDataAPI'
 import { mockNotificationAPI } from '../../utils/mock/mockNotificationAPI'
 import { mockPatientAPI, patientNonMonitoredId } from '../../utils/mock/mockPatientAPI'
 import { mockChatAPI } from '../../utils/mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
 import { checkPatientNavBarAsHCP } from '../../utils/assert/patient-nav-bar'
-import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../utils/assert/daily'
+import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../utils/assert/trends'
+import { UserRoles } from '../../../../models/user'
 
 jest.setTimeout(10000)
 
-describe('Daily view for HCP', () => {
-  const url = `/patient/${patientNonMonitoredId}/daily`
+describe('Trends view for caregiver', () => {
+  const patient = `/patient/${patientNonMonitoredId}/trends`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
   beforeAll(() => {
-    mockAuth0Hook()
+    mockAuth0Hook(UserRoles.caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
@@ -62,10 +63,10 @@ describe('Daily view for HCP', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPIForDailyView()
+    mockDataAPIForTrendsView()
   })
 
-  function getPatientDailyView(history) {
+  function getPatientTrendsView(history) {
     return (
       <Router history={history}>
         <AuthContextProvider>
@@ -75,27 +76,27 @@ describe('Daily view for HCP', () => {
     )
   }
 
-  const renderDailyView = () => {
-    const history = createMemoryHistory({ initialEntries: [url] })
+  const renderTrendView = () => {
+    const history = createMemoryHistory({ initialEntries: [patient] })
 
     act(() => {
-      render(getPatientDailyView(history))
+      render(getPatientTrendsView(history))
     })
-    expect(history.location.pathname).toBe(url)
+    expect(history.location.pathname).toBe(patient)
   }
 
-  it('should render correct basic components when navigating to patient daily view', async () => {
-    renderDailyView()
+  it('should render correct basic components when navigating to patient trends view', async () => {
+    renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP()
-    checkHCPHeader(`${firstName} ${lastName}`)
+    checkPatientNavBarAsHCP(false)
+    checkCaregiverHeader(`${firstName} ${lastName}`)
     checkHCPDrawer()
     checkFooter()
   })
 
   it('should render correct tooltips', async () => {
-    renderDailyView()
-    await checkDailyTidelineContainerTooltips()
-    checkDailyStatsWidgetsTooltips()
+    renderTrendView()
+    await checkTrendsTidelineContainerTooltips()
+    checkTrendsStatsWidgetsTooltips()
   })
 })
