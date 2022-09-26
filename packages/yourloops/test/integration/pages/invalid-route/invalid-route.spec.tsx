@@ -31,14 +31,12 @@ import { Router } from 'react-router-dom'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHCPHeader } from '../../assert/header'
-import { checkHCPDrawer } from '../../assert/drawer'
-import { checkFooter } from '../../assert/footer'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockUserDataFetch } from '../../mock/auth'
 import PatientApi from '../../../../lib/patient/patient-api'
 import TeamApi from '../../../../lib/team/team-api'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { checkHCPLayout } from '../../assert/layout'
 
 describe('Invalid Route', () => {
   const unknownRoute = '/unknown-route'
@@ -76,8 +74,6 @@ describe('Invalid Route', () => {
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')
 
-    checkHCPHeader(`${firstName} ${lastName}`)
-    checkHCPDrawer()
-    checkFooter()
+    checkHCPLayout(`${firstName} ${lastName}`)
   })
 })

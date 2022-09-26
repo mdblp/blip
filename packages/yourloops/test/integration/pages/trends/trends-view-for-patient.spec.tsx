@@ -26,9 +26,6 @@
  */
 
 import { screen } from '@testing-library/react'
-import { checkPatientHeader } from '../../assert/header'
-import { checkDrawerNotVisible } from '../../assert/drawer'
-import { checkFooter } from '../../assert/footer'
 import { mockPatientLogin } from '../../mock/auth'
 import { mySecondTeamId } from '../../mock/mockTeamAPI'
 import {
@@ -45,6 +42,7 @@ import { UserInvitationStatus } from '../../../../models/generic'
 import { MonitoringStatus } from '../../../../models/monitoring'
 import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
+import { checkPatientLayout } from '../../assert/layout'
 
 jest.setTimeout(10000)
 
@@ -96,9 +94,7 @@ describe('Trends view for HCP', () => {
     renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient(false)
-    checkPatientHeader(`${patient.profile.firstName} ${patient.profile.lastName}`)
-    checkDrawerNotVisible()
-    checkFooter()
+    checkPatientLayout(`${patient.profile.firstName} ${patient.profile.lastName}`)
   })
 
   it('should render correct tooltips', async () => {

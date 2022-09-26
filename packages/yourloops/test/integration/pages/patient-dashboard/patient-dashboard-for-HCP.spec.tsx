@@ -50,6 +50,7 @@ import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { checkHCPLayout } from '../../assert/layout'
 
 jest.setTimeout(15000)
 
@@ -146,9 +147,7 @@ describe('Patient dashboard for HCP', () => {
 
       /* Chat widget */
       expect(dashboard.getByText('Messages')).toBeVisible()
-      checkHCPHeader(`${firstName} ${lastName}`)
-      checkHCPDrawer()
-      checkFooter()
+      checkHCPLayout(`${firstName} ${lastName}`)
     })
   })
 

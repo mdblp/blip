@@ -26,9 +26,6 @@
  */
 
 import { screen } from '@testing-library/react'
-import { checkHCPHeader } from '../../assert/header'
-import { checkHCPDrawer } from '../../assert/drawer'
-import { checkFooter } from '../../assert/footer'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
@@ -41,6 +38,7 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../assert/daily'
 import { renderPage } from '../../utils/render'
+import { checkHCPLayout } from '../../assert/layout'
 
 jest.setTimeout(10000)
 
@@ -68,9 +66,7 @@ describe('Daily view for HCP', () => {
     renderDailyView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP()
-    checkHCPHeader(`${firstName} ${lastName}`)
-    checkHCPDrawer()
-    checkFooter()
+    checkHCPLayout(`${firstName} ${lastName}`)
   })
 
   it('should render correct tooltips', async () => {
