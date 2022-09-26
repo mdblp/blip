@@ -29,27 +29,27 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { AuthContextProvider } from '../../lib/auth'
-import { MainLobby } from '../../app/main-lobby'
-import { checkHeader } from './utils/header'
-import { checkDrawer } from './utils/drawer'
-import { checkFooter } from './utils/footer'
-import { mockUserDataFetch } from './utils/auth'
-import { mockAuth0Hook } from './utils/mockAuth0Hook'
-import { mockTeamAPI } from './utils/mockTeamAPI'
-import { mockDataAPI } from './utils/mockDataAPI'
-import { mockNotificationAPI } from './utils/mockNotificationAPI'
+import { AuthContextProvider } from '../../../../lib/auth'
+import { MainLobby } from '../../../../app/main-lobby'
+import { checkHeader } from '../../utils/assert/header'
+import { checkDrawer } from '../../utils/assert/drawer'
+import { checkFooter } from '../../utils/assert/footer'
+import { mockUserDataFetch } from '../../utils/assert/auth'
+import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
+import { mockTeamAPI } from '../../utils/mock/mockTeamAPI'
+import { mockDataAPIForDailyView } from '../../utils/mock/mockDataAPI'
+import { mockNotificationAPI } from '../../utils/mock/mockNotificationAPI'
 import {
   mockPatientAPI,
   patientMonitoredFullName,
   patientMonitoredId,
   patientNonMonitoredFullName,
   patientNonMonitoredId
-} from './utils/mockPatientAPI'
-import { mockChatAPI } from './utils/mockChatAPI'
-import { mockMedicalFilesAPI } from './utils/mockMedicalFilesAPI'
+} from '../../utils/mock/mockPatientAPI'
+import { mockChatAPI } from '../../utils/mock/mockChatAPI'
+import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
-import { mockDirectShareApi } from './utils/mockDirectShareAPI'
+import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
 
 jest.setTimeout(15000)
 
@@ -68,7 +68,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPI()
+    mockDataAPIForDailyView()
   })
 
   function getPatientDashboardForHCP(history) {

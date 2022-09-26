@@ -1,8 +1,8 @@
-import TeamAPI from '../../../lib/team/team-api'
-import { TeamMemberRole, TeamType } from '../../../models/team'
-import { UserInvitationStatus } from '../../../models/generic'
-import { HcpProfession } from '../../../models/hcp-profession'
-import { MonitoringStatus } from '../../../models/monitoring'
+import TeamAPI from '../../../../lib/team/team-api'
+import { TeamMemberRole, TeamType } from '../../../../models/team'
+import { UserInvitationStatus } from '../../../../models/generic'
+import { HcpProfession } from '../../../../models/hcp-profession'
+import { MonitoringStatus } from '../../../../models/monitoring'
 import { monitoringParameters } from './mockPatientAPI'
 import { loggedInUserId } from './mockAuth0Hook'
 

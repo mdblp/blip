@@ -26,7 +26,7 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { patientNonMonitoredId } from './mockPatientAPI'
+import { patientNonMonitoredId } from '../mock/mockPatientAPI'
 
 export const checkPatientNavBar = () => {
   const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))

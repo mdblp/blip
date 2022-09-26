@@ -1,9 +1,9 @@
-import PatientAPI from '../../../lib/patient/patient-api'
-import { TeamMemberRole } from '../../../models/team'
-import { UserInvitationStatus } from '../../../models/generic'
-import { UNITS_TYPE } from '../../../lib/units/utils'
-import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
-import { MonitoringStatus } from '../../../models/monitoring'
+import PatientAPI from '../../../../lib/patient/patient-api'
+import { TeamMemberRole } from '../../../../models/team'
+import { UserInvitationStatus } from '../../../../models/generic'
+import { UNITS_TYPE } from '../../../../lib/units/utils'
+import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../../components/alarm/alarms-content-configuration'
+import { MonitoringStatus } from '../../../../models/monitoring'
 import { mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
 
 export const monitoringParameters = {

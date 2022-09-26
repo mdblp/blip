@@ -1,4 +1,4 @@
-import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files-api'
 import { monitoringParameters, patientMonitoredId } from './mockPatientAPI'
 
 export const mockMedicalFilesAPI = () => {

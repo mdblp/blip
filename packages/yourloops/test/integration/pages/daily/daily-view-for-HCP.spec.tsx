@@ -30,29 +30,29 @@ import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 import moment from 'moment-timezone'
 import { act, render, screen, within } from '@testing-library/react'
-import { AuthContextProvider } from '../../lib/auth'
-import { MainLobby } from '../../app/main-lobby'
-import { checkHeader } from './utils/header'
-import { checkDrawer } from './utils/drawer'
-import { checkFooter } from './utils/footer'
-import { mockUserDataFetch } from './utils/auth'
-import { mockAuth0Hook } from './utils/mockAuth0Hook'
-import { mockTeamAPI } from './utils/mockTeamAPI'
+import { AuthContextProvider } from '../../../../lib/auth'
+import { MainLobby } from '../../../../app/main-lobby'
+import { checkHeader } from '../../utils/assert/header'
+import { checkDrawer } from '../../utils/assert/drawer'
+import { checkFooter } from '../../utils/assert/footer'
+import { mockUserDataFetch } from '../../utils/assert/auth'
+import { mockAuth0Hook } from '../../utils/mock/mockAuth0Hook'
+import { mockTeamAPI } from '../../utils/mock/mockTeamAPI'
 import {
   CARB_ID1,
   CARB_ID2,
   CBG_ID,
-  mockDataAPI,
+  mockDataAPIForDailyView,
   PARAMETER_ID,
   PHYSICAL_ACTIVITY_ID, PHYSICAL_ACTIVITY_TIME,
   RESERVOIR_CHANGE_ID
-} from './utils/mockDataAPI'
-import { mockNotificationAPI } from './utils/mockNotificationAPI'
-import { mockPatientAPI, patientNonMonitoredId } from './utils/mockPatientAPI'
-import { mockChatAPI } from './utils/mockChatAPI'
-import { mockMedicalFilesAPI } from './utils/mockMedicalFilesAPI'
-import { mockDirectShareApi } from './utils/mockDirectShareAPI'
-import { checkPatientNavBar } from './utils/patient-nav-bar'
+} from '../../utils/mock/mockDataAPI'
+import { mockNotificationAPI } from '../../utils/mock/mockNotificationAPI'
+import { mockPatientAPI, patientNonMonitoredId } from '../../utils/mock/mockPatientAPI'
+import { mockChatAPI } from '../../utils/mock/mockChatAPI'
+import { mockMedicalFilesAPI } from '../../utils/mock/mockMedicalFilesAPI'
+import { mockDirectShareApi } from '../../utils/mock/mockDirectShareAPI'
+import { checkPatientNavBar } from '../../utils/assert/patient-nav-bar'
 import userEvent from '@testing-library/user-event'
 import { BoundFunctions } from '@testing-library/dom/types/get-queries-for-element'
 import { queries } from '@testing-library/dom'
@@ -81,7 +81,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPI()
+    mockDataAPIForDailyView()
   })
 
   function getPatientDailyView(history) {

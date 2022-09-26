@@ -1,5 +1,5 @@
-import DataAPI from '../../../lib/data/data-api'
-import { Patient } from '../../../lib/data/patient'
+import DataAPI from '../../../../lib/data/data-api'
+import { Patient } from '../../../../lib/data/patient'
 
 const CARB_BOLUS_ID = 'carbBolusId'
 export const CBG_ID = 'cbgId'
@@ -10,7 +10,7 @@ export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const PARAMETER_ID = 'parameterId'
 
-export const mockDataAPI = () => {
+export const mockDataAPIForDailyView = () => {
   jest.spyOn(DataAPI, 'getPatientDataRange').mockResolvedValue(['2022-08-08T15:30:00Z', '2022-08-08T18:30:00Z'])
   jest.spyOn(DataAPI, 'getMessages').mockResolvedValue([])
   jest.spyOn(DataAPI, 'getPatientData').mockImplementation((patient: Patient) => Promise.resolve([

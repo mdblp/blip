@@ -26,7 +26,7 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { UserMetadata } from '../../../models/user'
+import { UserMetadata } from '../../../../models/user'
 
 export const loggedInUserId = '919b1575bad58'
 

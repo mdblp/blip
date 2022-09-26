@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import UserApi from '../../../lib/auth/user-api'
-import { Preferences, Profile, Settings } from '../../../models/user'
-import { loggedInUserId } from './mockAuth0Hook'
+import UserApi from '../../../../lib/auth/user-api'
+import { Preferences, Profile, Settings } from '../../../../models/user'
+import { loggedInUserId } from '../mock/mockAuth0Hook'
 
 export const mockUserDataFetch = (firstName: string, lastName: string) => {
   jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: loggedInUserId, token: null })
