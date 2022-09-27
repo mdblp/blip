@@ -25,7 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -44,12 +44,8 @@ import Select from '@material-ui/core/Select'
 import MedicalServiceIcon from '../icons/MedicalServiceIcon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { makeButtonsStyles } from '../theme'
-import { useAlert } from '../utils/snackbar'
-import { UserInvitationStatus } from '../../models/generic'
 import { Patient } from '../../lib/data/patient'
-import { usePatientContext } from '../../lib/patient/provider'
-import { Team, useTeam } from '../../lib/team'
-import TeamUtils from '../../lib/team/utils'
+import useRemovePatientDialog from './remove-patient-dialog.hook'
 
 interface RemovePatientDialogProps {
   patient: Patient | null
@@ -60,69 +56,15 @@ const makeButtonClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-remo
 
 const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
   const { t } = useTranslation('yourloops')
-  const alert = useAlert()
-  const patientHook = usePatientContext()
-  const teamHook = useTeam()
   const buttonClasses = makeButtonClasses()
-
-  const [selectedTeamId, setSelectedTeamId] = useState<string>('')
-  const [processing, setProcessing] = useState<boolean>(false)
-  const [sortedTeams, setSortedTeams] = useState<Team[]>([])
-
-  const userName = patient ? {
-    firstName: patient.profile.firstName,
-    lastName: patient.profile.lastName
-  } : { firstName: '', lastName: '' }
-  const patientName = t('user-name', userName)
-  const patientTeams = patient?.teams
-  const patientTeamStatus = patientTeams?.find(team => team.teamId === selectedTeamId)
-
-  const getSuccessAlertMessage = (): void => {
-    if (patientTeamStatus.status === UserInvitationStatus.pending) {
-      alert.success(t('alert-remove-patient-pending-invitation-success'))
-      return
-    }
-    const team = teamHook.getTeam(selectedTeamId)
-    if (team.code === 'private') {
-      alert.success(t('alert-remove-private-practice-success', { patientName }))
-    } else {
-      alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))
-    }
-  }
-
-  const handleOnClickRemove = async (): Promise<void> => {
-    try {
-      setProcessing(true)
-      await patientHook.removePatient(patient, patientTeamStatus)
-      getSuccessAlertMessage()
-      onClose()
-    } catch (err) {
-      alert.error(t('alert-remove-patient-failure'))
-      setProcessing(false)
-    }
-  }
-
-  useEffect(() => {
-    if (patientTeams) {
-      const teams = TeamUtils.mapPatientTeamsToTeams(patientTeams, teamHook.teams)
-      if (teams?.length === 1) {
-        setSelectedTeamId(teams[0].id)
-        setSortedTeams([teams[0]])
-        return
-      }
-
-      // Sorting teams in alphabetical order if there are several
-      if (teams?.length > 1) {
-        setSortedTeams(teams.sort((a, b) => +a.name - +b.name))
-        teams.forEach((team, index) => {
-          if (team.code === 'private') {
-            const privatePractice = teams.splice(index, 1)[0]
-            teams.unshift(privatePractice)
-          }
-        })
-      }
-    }
-  }, [patientTeams, teamHook])
+  const {
+    selectedTeamId,
+    sortedTeams,
+    processing,
+    handleOnClickRemove,
+    setSelectedTeamId,
+    patientName
+  } = useRemovePatientDialog({ patient, onClose })
 
   return (
     <Dialog

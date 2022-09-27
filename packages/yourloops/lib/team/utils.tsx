@@ -31,7 +31,6 @@ import TeamApi from './team-api'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
 import { UserInvitationStatus } from '../../models/generic'
 import { INotification } from '../notifications/models'
-import { PatientTeam } from '../data/patient'
 
 /**
  * Get the team code for display - Can be use with partial code.
@@ -123,16 +122,5 @@ export default class TeamUtils {
     })
 
     return teams
-  }
-
-  static mapPatientTeamsToTeams(patientTeams: PatientTeam[], allTeams: Team[]): Team[] {
-    const res = []
-    patientTeams.forEach((patientTeam) => {
-      const team = allTeams.find(team => team.id === patientTeam.teamId)
-      if (team) {
-        res.push(team)
-      }
-    })
-    return res
   }
 }
