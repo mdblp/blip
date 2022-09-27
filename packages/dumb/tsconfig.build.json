@@ -1,5 +1,4 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
     "baseUrl": ".",
@@ -14,10 +13,11 @@
   },
   "exclude": [
     "node_modules",
-    "coverage",
-    "dist"
+    "src/coverage",
+    "dist",
+    "src/**/*.test.tsx"
   ],
   "include": [
-    "src/**/*.test.tsx"
+    "src/**/*"
   ]
 }

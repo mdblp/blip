@@ -15,8 +15,7 @@
   "exclude": [
     "node_modules",
     "src/coverage",
-    "dist",
-    "src/**/*.test.tsx"
+    "dist"
   ],
   "include": [
     "src/**/*"
