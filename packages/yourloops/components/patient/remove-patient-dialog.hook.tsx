@@ -37,6 +37,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const patientName = t('user-name', userName)
   const patientTeam = patient.teams.find(team => team.teamId === selectedTeamId)
   const teams = patient.teams.map(team => getTeam(team.teamId))
+  const sortedTeams = TeamUtils.sortTeams(teams)
 
   const getSuccessAlertMessage = (): void => {
     if (patientTeam.status === UserInvitationStatus.pending) {
@@ -62,8 +63,6 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
       setProcessing(false)
     }
   }
-
-  const sortedTeams = TeamUtils.sortTeams(teams)
 
   useEffect(() => {
     if (teams?.length === 1 && !selectedTeamId) {
