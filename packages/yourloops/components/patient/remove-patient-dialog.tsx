@@ -91,14 +91,17 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
         >
           <InputLabel>{t('select-team')}</InputLabel>
           <Select
-            id="patient-team-selector"
             data-testid="patient-team-selector"
             label={t('select-team')}
             value={selectedTeamId}
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
           >
             {sortedTeams.map((team, index) => (
-              <MenuItem value={team.id} key={index} id={`select-option-${team.name}`}>
+              <MenuItem
+                value={team.id}
+                key={index}
+                data-testid={`select-option-${team.name}`}
+              >
                 {team.code === 'private'
                   ? <Box display="flex" alignItems="center">
                     <React.Fragment>
@@ -131,7 +134,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
         </Button>
         <ProgressIconButtonWrapper inProgress={processing}>
           <Button
-            id="remove-patient-dialog-validate-button"
+            data-testid="remove-patient-dialog-validate-button"
             className={buttonClasses.alertActionButton}
             disabled={!selectedTeamId || processing}
             variant="contained"

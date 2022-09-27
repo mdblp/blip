@@ -251,6 +251,7 @@
   "patient": "Patient",
   "patient-info": "Patient Information",
   "patient-info-reminder": "Patient information reminder",
+  "patient-list-searchbar": "Search for a patient",
   "patient-profile-hba1c": "Initial HbA1c {{hba1cDate}}",
   "patient-profile-title": "Patient profile",
   "patient-update-error": "Patient update failed",

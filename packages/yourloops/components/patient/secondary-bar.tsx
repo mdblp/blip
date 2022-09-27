@@ -93,7 +93,7 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
     <Box className={classes.topBar} data-testid="patients-secondary-bar">
       <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
         <AccessTime className="subnav-icon" />
-        <span aria-label="subnav-period-label">{t('secondary-bar-period-text')}</span>
+        <span aria-label={t('secondary-bar-period-text')}>{t('secondary-bar-period-text')}</span>
       </div>
       <Box className={classes.toolBarMiddle}>
         <PatientFilters

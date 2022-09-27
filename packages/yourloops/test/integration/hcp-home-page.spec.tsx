@@ -44,7 +44,7 @@ import { mockDirectShareApi } from './utils/mockDirectShareAPI'
 import PatientAPI from '../../lib/patient/patient-api'
 import { checkPatientSecondaryBar } from './utils/patientSecondaryBar'
 
-describe('HCP can remove a patient from list', () => {
+describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
   beforeAll(() => {
@@ -129,7 +129,7 @@ describe('HCP can remove a patient from list', () => {
       confirmRemoveButton.click()
     })
     expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teamId, monitoredPatient.userId)
-    expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
+    expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} is no longer a member of ${teamTwo.name}`)
   })
 
@@ -149,8 +149,7 @@ describe('HCP can remove a patient from list', () => {
     await act(async () => {
       confirmRemoveButton.click()
     })
-    expect(removePatientMock).toHaveBeenCalledTimes(1)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
+    expect(removePatientMock).toHaveBeenCalledWith(unMonitoredPatient.teamId, unMonitoredPatient.userId)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })

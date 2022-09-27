@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { UserInvitationStatus } from '../../models/generic'
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/provider'
 import { Team, useTeam } from '../../lib/team'
 import { Patient } from '../../lib/data/patient'
+import TeamUtils from '../../lib/team/utils'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void
@@ -34,9 +35,8 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
     lastName: patient.profile.lastName
   } : { firstName: '', lastName: '' }
   const patientName = t('user-name', userName)
-  const patientTeams = patient.teams
-  const patientTeam = patientTeams?.find(team => team.teamId === selectedTeamId)
-  const teams = patientTeams.map(team => getTeam(team.teamId))
+  const patientTeam = patient.teams.find(team => team.teamId === selectedTeamId)
+  const teams = patient.teams.map(team => getTeam(team.teamId))
 
   const getSuccessAlertMessage = (): void => {
     if (patientTeam.status === UserInvitationStatus.pending) {
@@ -63,13 +63,12 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
     }
   }
 
-  const sortedTeams = useMemo<Team[]>(() => {
+  const sortedTeams = TeamUtils.sortTeams(teams)
+
+  useEffect(() => {
     if (teams?.length === 1 && !selectedTeamId) {
       setSelectedTeamId(teams[0].id)
-    } else {
-      teams.sort((a, b) => +a.name - +b.name)
     }
-    return teams
   }, [selectedTeamId, teams])
 
   return { sortedTeams, processing, selectedTeamId, patientName, handleOnClickRemove, setSelectedTeamId }
