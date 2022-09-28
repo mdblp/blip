@@ -23,6 +23,17 @@ pipeline {
                 }
             }
         }
+        stage('Verify translations') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.build'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'npm run test-locales'
+            }
+        }
         stage('Test') {
             agent {
                 dockerfile {
@@ -111,17 +122,6 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-        stage('Verify translations') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile.build'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh 'npm run test-locales'
             }
         }
         stage('Publish') {

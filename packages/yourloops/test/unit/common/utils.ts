@@ -99,6 +99,17 @@ export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSeve
   } as Alarm
 }
 
+export function buildPrivateTeam(userId: string = 'userId'): Team {
+  return {
+    code: TeamType.private,
+    id: TeamType.private,
+    members: [],
+    name: TeamType.private,
+    owner: userId,
+    type: TeamType.private
+  }
+}
+
 export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name'): Team {
   return {
     id,
@@ -172,8 +183,7 @@ export function buildTeamMember(
     profile: { fullName },
     role,
     status,
-    invitation,
-    idVerified: undefined
+    invitation
   }
 }
 

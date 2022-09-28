@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Models for patients list
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,38 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { FilterType, PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
-import { Patient } from '../../lib/data/patient'
+import React from 'react'
 
-export interface PatientTableProps {
-  filter?: FilterType | string
-  order: SortDirection
-  orderBy: PatientTableSortFields
-  onSortList: (field: PatientTableSortFields, direction: SortDirection) => void
-  patients: Patient[]
+import SvgIcon, { SvgIconProps } from '@material-ui/core/SvgIcon'
+
+function EmailOpenIcon(props: SvgIconProps): JSX.Element {
+  // For some reason this icon is not available with material-ui
+  // This one come directly from material-design
+  // Source: https://material.io/resources/icons/?icon=person_remove&style=baseline
+  // prettier-ignore
+  return (
+    <SvgIcon xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24" {...props}>
+      <path fill="currentColor" d="M4,8L12,13L20,8V8L12,3L4,8V8M22,8V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V8C2,7.27 2.39,6.64 2.97,6.29L12,0.64L21.03,6.29C21.61,6.64 22,7.27 22,8Z" />
+    </SvgIcon>
+  )
 }
 
-export interface PatientListProps {
-  filter: string
-  filterType: PatientFilterTypes
-}
-
-export interface PatientRowProps {
-  patient: Patient
-  filter?: FilterType | string
-}
-
-export interface MedicalTableValues {
-  /** Value as a string for easy display */
-  tir: string
-  /** Value as a number for easy compare */
-  tirNumber: number
-  /** Value as a string for easy display */
-  tbr: string
-  /** Value as a number for easy compare */
-  tbrNumber: number
-  /** Value as a string for easy display */
-  lastUpload: string
-  /** Value as a number for easy compare */
-  lastUploadEpoch: number
-}
+export default EmailOpenIcon

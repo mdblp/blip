@@ -27,7 +27,7 @@
 
 import TeamApi from '../../../../lib/team/team-api'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../../../models/team'
-import { buildITeam, buildITeamMember } from '../../common/utils'
+import { buildITeam, buildITeamMember, buildTeam } from '../../common/utils'
 import { UserInvitationStatus } from '../../../../models/generic'
 import TeamUtils from '../../../../lib/team/utils'
 import { INotification, NotificationType } from '../../../../lib/notifications/models'
@@ -91,7 +91,8 @@ describe('TeamUtils', () => {
             role: team1Member2.role,
             status: team1Member2.invitationStatus,
             userId: team1Member2.userId
-          }],
+          }
+          ],
           monitoring: team1.monitoring,
           name: team1.name,
           owner: team1.owner,
@@ -133,6 +134,18 @@ describe('TeamUtils', () => {
 
       const teams = await TeamUtils.loadTeams(userId, notifications)
       expect(teams).toEqual(expectedTeams)
+    })
+  })
+
+  describe('sortTeams', () => {
+    it('should sort a list of teams in alphabetical order', () => {
+      const teams = [
+        buildTeam('fakeId2', [], 'B team'),
+        buildTeam('fakeId3', [], 'C team'),
+        buildTeam('fakeId1', [], 'A team')
+      ]
+      const expectedResult = [teams[2], teams[0], teams[1]]
+      expect(expectedResult).toEqual(TeamUtils.sortTeams(teams))
     })
   })
 })
