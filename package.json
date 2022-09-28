@@ -11,6 +11,7 @@
     "mrproper": "npm run clean && lerna run mrproper",
     "postmrproper": "rm -rf node_modules cloudfront-dist/deployment/node_modules server/node_modules",
     "clean": "lerna exec -- rm -rf dist coverage deploy reports && lerna clean --yes",
+    "copy-css": "lerna --stream --scope=dumb run copy-files",
     "postclean": "rm -rf doc dist coverage reports",
     "info": "lerna info",
     "prebuild": "rm -rf dist",
@@ -51,7 +52,7 @@
     "prebuild-dev": "rm -rf dist",
     "build-dev": "NODE_OPTIONS='--max-old-space-size=4096 --trace-deprecation' lerna run --stream --scope yourloops build-dev",
     "postbuild-dev": "mkdir dist && mv packages/yourloops/dist dist/static",
-    "start-dev": "bash -c 'source config/.env.sh && lerna run --stream --scope yourloops start-dev'",
+    "start-dev": "npm run copy-css && bash -c 'source config/.env.sh && lerna run --stream --scope yourloops start-dev'",
     "sort-translations": "node ./locales/translations-sorter.js"
   },
   "engines": {
