@@ -106,7 +106,7 @@ function verify(lang, refFiles, trFiles) {
 
 describe('Localization files', () => {
   const isMainBranch = process.env.GIT_BRANCH === 'dblp'
-  const isReleasedBuild = process.env.version.toUpperCase() !== 'UNRELEASED' && !process.env.version.toUpperCase().includes('BETA')
+  const isReleasedBuild = process.env.version && process.env.version.toUpperCase() !== 'UNRELEASED' && !process.env.version.toUpperCase().includes('BETA')
 
   /** @type {FilesList | null} */
   let refFiles = null

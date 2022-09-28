@@ -156,7 +156,7 @@ function PatientFilters(props: PatientFiltersProps): JSX.Element {
           <SearchIcon />
         </div>
         <InputBase
-          id="input-patient-list-search"
+          aria-label={t('patient-list-searchbar')}
           placeholder={t('placeholder-search')}
           classes={{ root: classes.inputRoot, input: classes.inputInput }}
           inputProps={{ 'aria-label': t('aria-search') }}

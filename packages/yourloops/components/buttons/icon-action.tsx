@@ -26,11 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 
-export interface RemoveButtonProps {
+interface IconActionButtonProps {
+  ariaLabel?: string
   className?: string
   color?: 'inherit' | 'primary' | 'secondary' | 'default'
   component?: React.ElementType
@@ -42,7 +43,7 @@ export interface RemoveButtonProps {
   disabled?: boolean
 }
 
-function IconActionButton(props: RemoveButtonProps): JSX.Element {
+const IconActionButton: FunctionComponent<IconActionButtonProps> = (props) => {
   const { id, onClick, className, size, icon, disabled } = props
   const color = props.color ?? 'primary'
   const tooltip = props.tooltip ?? ''
@@ -55,7 +56,7 @@ function IconActionButton(props: RemoveButtonProps): JSX.Element {
           size={size}
           color={color}
           onClick={onClick}
-          aria-label={tooltip}
+          aria-label={props.ariaLabel}
           className={className}
           disabled={disabled}
         >

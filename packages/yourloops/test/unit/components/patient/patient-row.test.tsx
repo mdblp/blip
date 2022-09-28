@@ -32,69 +32,75 @@ import * as authHookMock from '../../../../lib/auth'
 import { User } from '../../../../lib/auth'
 import { createPatient, createPatientTeam } from '../../common/utils'
 import PatientRow from '../../../../components/patient/patient-row'
-import { PatientElementProps } from '../../../../components/patient/models'
+import { PatientRowProps } from '../../../../components/patient/models'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import userEvent from '@testing-library/user-event'
 import PatientUtils from '../../../../lib/patient/utils'
 
+const removePatientDialogMockId = 'remove-patient-dialog-id'
+// eslint-disable-next-line react/display-name
+jest.mock('../../../../components/patient/remove-patient-dialog', () => () => {
+  return <div data-testid={removePatientDialogMockId} />
+})
 jest.mock('../../../../lib/auth')
 describe('Patient row', () => {
-  const onClickPatient = jest.fn()
-  const onFlagPatient = jest.fn()
-
+  const flagPatientMock = jest.fn()
   const teamId = 'teamId'
   const teams = [createPatientTeam(teamId, UserInvitationStatus.accepted)]
   const patient = createPatient('id1', teams)
-  const props: PatientElementProps = {
+  const props: PatientRowProps = {
     patient,
-    flagged: [],
-    filter: undefined,
-    onClickPatient,
-    onFlagPatient
+    filter: undefined
   }
 
   beforeEach(() => {
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
-      return { user: { isUserHcp: () => true } as User }
+      return {
+        flagPatient: flagPatientMock,
+        getFlagPatients: jest.fn().mockReturnValue([]),
+        user: { isUserHcp: () => true } as User
+      }
     })
   })
 
-  const getPatientRowJSX = (patientElementProps: PatientElementProps = props): JSX.Element => {
+  const getPatientRowJSX = (patientElementProps: PatientRowProps = props): JSX.Element => {
     return (
       <Table>
         <TableBody>
           <PatientRow
             patient={patientElementProps.patient}
-            flagged={patientElementProps.flagged}
             filter={patientElementProps.filter}
-            onClickPatient={patientElementProps.onClickPatient}
-            onFlagPatient={patientElementProps.onFlagPatient}
           />
         </TableBody>
       </Table>
     )
   }
 
-  it('clicking on flag icon should flag patient', () => {
+  it('should open modal when clicking on remove patient icon', () => {
+    render(getPatientRowJSX())
+    const removeButton = screen.getByRole('button', { name: 'remove-patient-fake@email.com' })
+    expect(screen.queryByTestId(removePatientDialogMockId)).not.toBeInTheDocument()
+    fireEvent.click(removeButton)
+    expect(screen.queryByTestId(removePatientDialogMockId)).toBeInTheDocument()
+  })
+
+  it('should flag patient when clicking on flag icon', () => {
     render(getPatientRowJSX())
     expect(screen.queryByTitle('flag-icon-active')).toBeNull()
     expect(screen.queryByTitle('flag-icon-inactive')).not.toBeNull()
     expect(screen.queryByTitle('pending-icon')).toBeNull()
     const flagButton = screen.getByRole('button', { name: 'flag-icon-inactive' })
     fireEvent.click(flagButton)
-    expect(onFlagPatient).toHaveBeenCalledTimes(1)
+    expect(flagPatientMock).toHaveBeenCalledTimes(1)
   })
 
   it('should show pending icon when patient is pending and filter is pending', () => {
     jest.spyOn(PatientUtils, 'isInvitationPending').mockReturnValue(true)
-    const componentProps: PatientElementProps = {
+    const componentProps: PatientRowProps = {
       patient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     expect(screen.queryByTitle('flag-icon-active')).toBeNull()
@@ -108,7 +114,7 @@ describe('Patient row', () => {
   it('should display correct fields when logged in user is HCP', () => {
     render(getPatientRowJSX())
     const cells = screen.getAllByRole('cell')
-    expect(cells).toHaveLength(9)
+    expect(cells).toHaveLength(10)
     expect(within(cells[1]).queryByText(patient.profile.fullName)).not.toBeNull()
     expect(within(cells[2]).queryByText('N/A')).not.toBeNull()
     expect(within(cells[3]).queryByText('no')).not.toBeNull()
@@ -124,11 +130,15 @@ describe('Patient row', () => {
 
   it('should display correct fields when logged in user is caregiver', () => {
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
-      return { user: { isUserHcp: () => false } as User }
+      return {
+        flagPatient: flagPatientMock,
+        getFlagPatients: jest.fn().mockReturnValue([]),
+        user: { isUserHcp: () => false } as User
+      }
     })
     render(getPatientRowJSX())
     const cells = screen.getAllByRole('cell')
-    expect(cells).toHaveLength(8)
+    expect(cells).toHaveLength(7)
     expect(within(cells[1]).queryByText(patient.profile.fullName)).not.toBeNull()
     expect(within(cells[2]).queryByText('N/A')).not.toBeNull()
     expect(within(cells[3]).queryByText(`${patient.metadata.alarm.timeSpentAwayFromTargetRate}%`)).not.toBeNull()
@@ -140,12 +150,9 @@ describe('Patient row', () => {
   it('should display remote monitoring to yes when logged in user is HCP and user is remote monitored', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true }
-    const componentProps: PatientElementProps = {
+    const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -155,12 +162,9 @@ describe('Patient row', () => {
   it('should display correct remote monitoring label when logged in user is HCP and user is remote monitored and has a monitoring end date', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
-    const componentProps: PatientElementProps = {
+    const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -171,12 +175,9 @@ describe('Patient row', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
     remoteMonitoredPatient.metadata.alarm.timeSpentAwayFromTargetActive = true
-    const componentProps: PatientElementProps = {
+    const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -189,12 +190,9 @@ describe('Patient row', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
     remoteMonitoredPatient.metadata.alarm.frequencyOfSevereHypoglycemiaActive = true
-    const componentProps: PatientElementProps = {
+    const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -207,12 +205,9 @@ describe('Patient row', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
     remoteMonitoredPatient.metadata.alarm.nonDataTransmissionActive = true
-    const componentProps: PatientElementProps = {
+    const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
@@ -225,12 +220,9 @@ describe('Patient row', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true }
     remoteMonitoredPatient.metadata.unreadMessagesSent = 3
-    const componentProps: PatientElementProps = {
+    const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
-      flagged: [],
-      filter: FilterType.pending,
-      onClickPatient,
-      onFlagPatient
+      filter: FilterType.pending
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')

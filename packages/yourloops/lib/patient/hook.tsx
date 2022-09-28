@@ -42,7 +42,7 @@ import { errorTextFromException } from '../utils'
 import { PatientContextResult } from './provider'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { cancel: cancelInvitation, getInvitation, receivedInvitations } = useNotification()
+  const { cancel: cancelInvitation, getInvitation, receivedInvitations, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
 
@@ -116,8 +116,9 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const invitePatient = useCallback(async (team: Team, username: string) => {
     await PatientApi.invitePatient({ teamId: team.id, email: username })
+    await refreshSentInvitations()
     refresh()
-  }, [refresh])
+  }, [refresh, refreshSentInvitations])
 
   const editPatientRemoteMonitoring = useCallback((patient: Patient) => {
     const patientUpdated = getPatient(patient.userid)

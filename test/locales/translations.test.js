@@ -128,6 +128,7 @@ const ignoredTransKeyForYourLoops = [
   'alert-invitation-patient-failed-already-invited',
   'accompanying-documents',
   'intended-use',
+  'no-new-messages',
   'training',
   'initial-hba1c',
   'optional'

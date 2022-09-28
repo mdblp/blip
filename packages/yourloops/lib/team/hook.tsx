@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { createContext, FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
 import _ from 'lodash'
 
 import { UserInvitationStatus } from '../../models/generic'
@@ -41,15 +41,15 @@ import TeamApi from './team-api'
 import TeamUtils from './utils'
 import { CircularProgress } from '@material-ui/core'
 
-const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext)
+const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
 function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
   const notificationHook = useNotification()
-  const [teams, setTeams] = React.useState<Team[]>([])
-  const [initialized, setInitialized] = React.useState<boolean>(false)
+  const [teams, setTeams] = useState<Team[]>([])
+  const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const user = authHook.user
   if (!user) {
@@ -183,7 +183,7 @@ function TeamContextImpl(): TeamContext {
     refresh()
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!initialized && notificationHook.initialized) {
       fetchTeams()
     }
@@ -210,25 +210,13 @@ function TeamContextImpl(): TeamContext {
   }
 }
 
-/**
- * Provider component that wraps your app and makes auth object available to any child component that calls useTeam().
- * @param props for team provider & children
- */
-export function TeamContextProvider({ children }: { children: JSX.Element }): JSX.Element {
+export const TeamContextProvider: FunctionComponent = ({ children }) => {
   const context = TeamContextImpl()
-  return context.initialized ? (
-    <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
-  ) : <CircularProgress
-    disableShrink
-    style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
-  />
+  return context.initialized
+    ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
+    : <CircularProgress className="centered-spinning-loader" />
 }
 
-/**
- * Hook for child components to get the teams functionalities
- *
- * Trigger a re-render when it change.
- */
-export function useTeam(): TeamContext {
-  return React.useContext(ReactTeamContext)
+export const useTeam = (): TeamContext => {
+  return useContext(ReactTeamContext)
 }

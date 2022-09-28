@@ -83,7 +83,7 @@ const patientListStyle = makeStyles(
       alertTimeTargetHeader: {
         maxWidth: '210px'
       },
-      tableHeaderFlag: {
+      tableHeaderIcon: {
         width: '56px',
         padding: 0
       }
@@ -106,12 +106,9 @@ export const patientListCommonStyle = makeStyles(() => {
 function PatientTable(props: PatientTableProps): JSX.Element {
   const {
     patients,
-    flagged,
     order,
     filter,
     orderBy,
-    onClickPatient,
-    onFlagPatient,
     onSortList
   } = props
   const { t } = useTranslation('yourloops')
@@ -124,7 +121,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage)
 
   const createSortHandler = (property: PatientTableSortFields): (() => void) => {
-    return (/* event: React.MouseEvent */): void => {
+    return (): void => {
       let newOrder = order
       if (property === orderBy) {
         newOrder = order === SortDirection.asc ? SortDirection.desc : SortDirection.asc
@@ -143,15 +140,18 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   }
 
   return (
-    <div>
+    <React.Fragment>
       <TableContainer component={Paper} className={classes.tableContainer}>
-        <Table id="patients-list-table" aria-label={t('aria-table-list-patient')}
-          stickyHeader>
+        <Table
+          id="patients-list-table"
+          aria-label={t('aria-table-list-patient')}
+          stickyHeader
+        >
           <TableHead>
             <TableRow className={classes.tableRowHeader}>
               <StyledTableCell
                 id="patients-list-header-icon"
-                className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}
+                className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
               >
                 <TableSortLabel
                   id={`patients-list-header-flag${orderBy === PatientTableSortFields.flag ? `-${order}` : ''}`}
@@ -273,10 +273,18 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t('last-data-update')}
                 </TableSortLabel>
               </StyledTableCell>
-              <StyledTableCell
-                id="patients-list-message-icon"
-                className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}
-              />
+              {isUserHcp &&
+                <React.Fragment>
+                  <StyledTableCell
+                    id="patients-list-message-icon"
+                    className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
+                  />
+                  <StyledTableCell
+                    id="patients-list-remove-icon"
+                    className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
+                  />
+                </React.Fragment>
+              }
             </TableRow>
           </TableHead>
           <TableBody id="patient-table-body-id">
@@ -285,10 +293,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 <PatientRow
                   key={patient.userid}
                   patient={patient}
-                  flagged={flagged}
                   filter={filter}
-                  onClickPatient={onClickPatient}
-                  onFlagPatient={onFlagPatient}
                 />
               )
             )}
@@ -307,7 +312,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
         labelRowsPerPage={t('rows-per-page')}
         className={classes.pagination}
       />
-    </div>
+    </React.Fragment>
   )
 }
 
