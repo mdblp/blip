@@ -27,19 +27,9 @@
 
 import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
-import { mySecondTeamId } from '../../mock/mockTeamAPI'
-import {
-  monitoringParameters,
-  patientMonitoredFirstName,
-  patientMonitoredFullName,
-  patientMonitoredId,
-  patientMonitoredLastName
-} from '../../mock/mockPatientAPI'
+import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
 import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../assert/trends'
-import { ITeamMember, TeamMemberRole } from '../../../../models/team'
-import { UserInvitationStatus } from '../../../../models/generic'
-import { MonitoringStatus } from '../../../../models/monitoring'
 import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
@@ -47,42 +37,8 @@ import { checkPatientLayout } from '../../assert/layout'
 jest.setTimeout(10000)
 
 describe('Trends view for HCP', () => {
-  const patient: ITeamMember = {
-    userId: patientMonitoredId,
-    teamId: mySecondTeamId,
-    role: TeamMemberRole.patient,
-    profile: {
-      firstName: patientMonitoredFirstName,
-      fullName: patientMonitoredFullName,
-      lastName: patientMonitoredLastName,
-      patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
-      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
-    settings: null,
-    preferences: { displayLanguageCode: 'en' },
-    invitationStatus: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.patient28@diabeloop.fr',
-    idVerified: false,
-    unreadMessages: 0,
-    alarms: {
-      timeSpentAwayFromTargetRate: 0,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 0,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 0,
-      nonDataTransmissionActive: false
-    },
-    monitoring: {
-      enabled: true,
-      monitoringEnd: new Date(Date.now() - 10000),
-      status: MonitoringStatus.accepted,
-      parameters: monitoringParameters
-    }
-  }
-
   beforeAll(() => {
-    mockPatientLogin(patient)
+    mockPatientLogin(unMonitoredPatient)
     mockDataAPIForTrendsView()
   })
 
@@ -94,7 +50,7 @@ describe('Trends view for HCP', () => {
     renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient(false)
-    checkPatientLayout(`${patient.profile.firstName} ${patient.profile.lastName}`)
+    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
   })
 
   it('should render correct tooltips', async () => {

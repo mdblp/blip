@@ -31,7 +31,7 @@ import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockPatientAPI, patientNonMonitoredId } from '../../mock/mockPatientAPI'
+import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
@@ -59,7 +59,7 @@ describe('Trends view for HCP', () => {
   })
 
   const renderTrendView = () => {
-    renderPage(`/patient/${patientNonMonitoredId}/trends`)
+    renderPage(`/patient/${unMonitoredPatientId}/trends`)
   }
 
   it('should render correct basic components when navigating to patient trends view', async () => {
