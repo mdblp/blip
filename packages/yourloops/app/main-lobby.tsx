@@ -40,6 +40,8 @@ import PatientConsentPage from '../pages/patient/patient-consent'
 import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage, LoginPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
+import metrics from '../lib/metrics'
+import { UserMetadata } from '../models/user'
 
 const RENEW_CONSENT_PATH = '/renew-consent'
 const NEW_CONSENT_PATH = '/new-consent'
@@ -71,7 +73,7 @@ const routeStyle = makeStyles<Theme, StyleProps>(() => {
 })
 
 export function MainLobby(): JSX.Element {
-  const { isLoading, isAuthenticated } = useAuth0()
+  const { isLoading, isAuthenticated, user: authUser } = useAuth0()
   const { user, fetchingUser } = useAuth()
   const location = useLocation()
   const currentRoute = location.pathname
@@ -90,10 +92,14 @@ export function MainLobby(): JSX.Element {
   }
 
   const checkRedirect = (): void => {
-    if (isCurrentRoutePublic && isAuthenticated) {
-      redirectTo = '/'
-    } else if (!isAuthenticated && !isCurrentRoutePublic) {
+    if (!isAuthenticated && !isCurrentRoutePublic) {
       redirectTo = '/login'
+    } else if (isAuthenticated && currentRoute === '/logged-in') {
+      metrics.send('registration', 'login', authUser[UserMetadata.Roles][0])
+      metrics.setVariable('UserRole', authUser[UserMetadata.Roles][0])
+      redirectTo = '/'
+    } else if (isAuthenticated && isCurrentRoutePublic) {
+      redirectTo = '/'
     } else if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
       redirectTo = '/complete-signup'
     } else if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
