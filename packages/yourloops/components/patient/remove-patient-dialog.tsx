@@ -25,7 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -44,98 +44,34 @@ import Select from '@material-ui/core/Select'
 import MedicalServiceIcon from '../icons/MedicalServiceIcon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { makeButtonsStyles } from '../theme'
-import { useAlert } from '../utils/snackbar'
-import { UserInvitationStatus } from '../../models/generic'
 import { Patient } from '../../lib/data/patient'
-import { usePatientContext } from '../../lib/patient/provider'
-import { Team, useTeam } from '../../lib/team'
+import useRemovePatientDialog from './remove-patient-dialog.hook'
 
-interface RemoveDialogProps {
-  isOpen: boolean
+interface RemovePatientDialogProps {
   patient: Patient | null
   onClose: () => void
 }
 
 const makeButtonClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-remove-patient-dialog-buttons' })
 
-function RemoveDialog(props: RemoveDialogProps): JSX.Element {
-  const { isOpen, onClose, patient } = props
+const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
   const { t } = useTranslation('yourloops')
-  const alert = useAlert()
-  const patientHook = usePatientContext()
-  const teamHook = useTeam()
   const buttonClasses = makeButtonClasses()
-
-  const [selectedTeamId, setSelectedTeamId] = useState<string>('')
-  const [processing, setProcessing] = useState<boolean>(false)
-  const [sortedTeams, setSortedTeams] = useState<Team[]>([])
-
-  const userName = patient ? {
-    firstName: patient.profile.firstName,
-    lastName: patient.profile.lastName
-  } : { firstName: '', lastName: '' }
-  const patientName = t('user-name', userName)
-  const patientTeams = patient?.teams
-  const patientTeamStatus = patientTeams?.find(team => team.teamId === selectedTeamId)
-
-  const getSuccessAlertMessage = (): void => {
-    if (patientTeamStatus.status === UserInvitationStatus.pending) {
-      alert.success(t('alert-remove-patient-pending-invitation-success'))
-    }
-    const team = teamHook.getTeam(selectedTeamId)
-    if (team.code === 'private') {
-      alert.success(t('alert-remove-private-practice-success', { patientName }))
-    }
-    alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))
-  }
-
-  const handleOnClose = (): void => {
-    onClose()
-    setSelectedTeamId('')
-  }
-
-  const handleOnClickRemove = async (): Promise<void> => {
-    try {
-      setProcessing(true)
-      await patientHook.removePatient(patient, patientTeamStatus)
-      getSuccessAlertMessage()
-      handleOnClose()
-    } catch (err) {
-      alert.error(t('alert-remove-patient-failure'))
-    } finally {
-      setProcessing(false)
-    }
-  }
-
-  useEffect(() => {
-    if (patientTeams) {
-      if (patientTeams?.length === 1) {
-        setSelectedTeamId(patientTeams[0].teamId)
-        setSortedTeams([teamHook.getTeam(patientTeams[0].teamId)])
-        return
-      }
-
-      // Sorting teams in alphabetical order if there are several
-      if (patientTeams?.length > 1) {
-        const teams = teamHook.teams
-
-        setSortedTeams(teams.sort((a, b) => +a.name - +b.name))
-
-        teams.forEach((team, index) => {
-          if (team.code === 'private') {
-            const privatePractice = teams.splice(index, 1)[0]
-            teams.unshift(privatePractice)
-          }
-        })
-      }
-    }
-  }, [patientTeams, teamHook])
+  const {
+    selectedTeamId,
+    sortedTeams,
+    processing,
+    handleOnClickRemove,
+    setSelectedTeamId,
+    patientName
+  } = useRemovePatientDialog({ patient, onClose })
 
   return (
     <Dialog
       id="remove-hcp-patient-dialog"
-      open={isOpen}
-      onClose={handleOnClose}
+      data-testid="remove-hcp-patient-dialog"
+      open
+      onClose={onClose}
     >
       <DialogTitle>
         <strong>{t('remove-patient')}</strong>
@@ -153,15 +89,19 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
           required
           variant="outlined"
         >
-          <InputLabel>{t('team')}</InputLabel>
+          <InputLabel>{t('select-team')}</InputLabel>
           <Select
-            id="patient-team-selector"
-            label={t('team')}
+            data-testid="patient-team-selector"
+            label={t('select-team')}
             value={selectedTeamId}
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
           >
             {sortedTeams.map((team, index) => (
-              <MenuItem value={team.id} key={index}>
+              <MenuItem
+                value={team.id}
+                key={index}
+                data-testid={`select-option-${team.name}`}
+              >
                 {team.code === 'private'
                   ? <Box display="flex" alignItems="center">
                     <React.Fragment>
@@ -189,12 +129,12 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       }
 
       <DialogActions>
-        <Button onClick={handleOnClose}>
+        <Button onClick={onClose}>
           {t('button-cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={processing}>
           <Button
-            id="remove-patient-dialog-validate-button"
+            data-testid="remove-patient-dialog-validate-button"
             className={buttonClasses.alertActionButton}
             disabled={!selectedTeamId || processing}
             variant="contained"
@@ -209,4 +149,4 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   )
 }
 
-export default RemoveDialog
+export default RemovePatientDialog

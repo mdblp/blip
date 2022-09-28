@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { createContext, FunctionComponent, useContext } from 'react'
 
 import { Patient, PatientTeam } from '../data/patient'
 import { Team } from '../team'
@@ -53,21 +53,16 @@ export interface PatientContextResult {
   refresh: () => void
 }
 
-const PatientContext = React.createContext<PatientContextResult>({} as PatientContextResult)
+const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
 
 export const PatientProvider: FunctionComponent = ({ children }) => {
   const patientProviderCustomHook = usePatientProviderCustomHook()
 
-  return patientProviderCustomHook.initialized ? (
-    <PatientContext.Provider value={patientProviderCustomHook}>
-      {children}
-    </PatientContext.Provider>
-  ) : <CircularProgress
-    disableShrink
-    style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
-  />
+  return patientProviderCustomHook.initialized
+    ? <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
+    : <CircularProgress className="centered-spinning-loader" />
 }
 
 export function usePatientContext(): PatientContextResult {
-  return React.useContext(PatientContext)
+  return useContext(PatientContext)
 }

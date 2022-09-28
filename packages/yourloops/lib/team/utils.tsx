@@ -123,4 +123,8 @@ export default class TeamUtils {
 
     return teams
   }
+
+  static sortTeams(teams: Team[]): Team[] {
+    return teams.sort((a, b) => a.name.localeCompare(b.name))
+  }
 }

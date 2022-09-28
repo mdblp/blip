@@ -53,6 +53,7 @@ describe('Patient hook', () => {
   const authHookFlagPatientMock = jest.fn()
   const getInvitationMock = jest.fn()
   const refreshTeamsMock = jest.fn()
+  const refreshSentInvitationsMock = jest.fn()
   const computePatientsSpy = jest.spyOn(PatientUtils, 'computePatients')
 
   beforeAll(() => {
@@ -67,7 +68,8 @@ describe('Patient hook', () => {
     (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return {
         cancel: notificationHookCancelMock,
-        getInvitation: getInvitationMock
+        getInvitation: getInvitationMock,
+        refreshSentInvitations: refreshSentInvitationsMock
       }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {

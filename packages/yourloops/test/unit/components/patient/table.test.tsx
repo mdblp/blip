@@ -38,12 +38,14 @@ import PatientTable from '../../../../components/patient/table'
 import { ThemeProvider } from '@material-ui/core'
 import { getTheme } from '../../../../components/theme'
 import { createPatient, createPatientTeam } from '../../common/utils'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
 describe('Patient list table', () => {
-  const clickPatientStub = jest.fn()
-  const clickFlagPatientStub = jest.fn()
+  const history = createMemoryHistory({ initialEntries: ['/'] })
+  const flagPatientMock = jest.fn()
   const isOnlyPendingInvitationMock = jest.fn().mockReturnValue(false)
   const isInvitationPendingMock = jest.fn().mockReturnValue(false)
   const isInAtLeastATeamMock = jest.fn().mockReturnValue(true)
@@ -66,7 +68,10 @@ describe('Patient list table', () => {
 
   beforeAll(() => {
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
-      return {}
+      return {
+        flagPatient: flagPatientMock,
+        getFlagPatients: jest.fn().mockReturnValue([patient1.userid])
+      }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
@@ -92,17 +97,16 @@ describe('Patient list table', () => {
 
   const PatientTableComponent = (): JSX.Element => {
     return (
-      <ThemeProvider theme={getTheme()}>
-        <PatientTable
-          patients={allPatients}
-          flagged={[]}
-          order={SortDirection.asc}
-          orderBy={PatientTableSortFields.patientFullName}
-          onClickPatient={clickPatientStub}
-          onFlagPatient={clickFlagPatientStub}
-          onSortList={jest.fn()}
-        />
-      </ThemeProvider>
+      <Router history={history}>
+        <ThemeProvider theme={getTheme()}>
+          <PatientTable
+            patients={allPatients}
+            order={SortDirection.asc}
+            orderBy={PatientTableSortFields.patientFullName}
+            onSortList={jest.fn()}
+          />
+        </ThemeProvider>
+      </Router>
     )
   }
 
@@ -128,7 +132,7 @@ describe('Patient list table', () => {
     mountComponent()
     const firstRow = document.querySelector('.patients-list-row')
     Simulate.click(firstRow)
-    expect(clickPatientStub).toHaveBeenCalledTimes(1)
+    expect(history.location.pathname).toBe(`/patient/${patient1.userid}`)
   })
 
   it('should call onFlagPatient method when clicking on a flag', () => {
@@ -136,7 +140,7 @@ describe('Patient list table', () => {
     const firstRow = document.querySelector('.patients-list-row')
     const flagButton = firstRow.querySelector('.patient-flag-button')
     Simulate.click(flagButton)
-    expect(clickFlagPatientStub).toHaveBeenCalledTimes(1)
+    expect(flagPatientMock).toHaveBeenCalledTimes(1)
   })
 
   it('should display only 10 patients when number pagination is by 10', () => {
