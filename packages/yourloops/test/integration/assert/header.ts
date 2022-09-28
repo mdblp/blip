@@ -42,6 +42,7 @@ export const checkHCPHeader = (fullName: string) => {
 
 export const checkCaregiverHeader = (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
+  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
   checkHeader(header, fullName)
 }

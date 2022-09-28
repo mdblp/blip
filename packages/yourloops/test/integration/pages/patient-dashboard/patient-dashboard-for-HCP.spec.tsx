@@ -32,7 +32,7 @@ import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from 
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
 import { checkHCPHeader } from '../../assert/header'
-import { checkHCPDrawer } from '../../assert/drawer'
+import { checkDrawer } from '../../assert/drawer'
 import { checkFooter } from '../../assert/footer'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
@@ -121,7 +121,7 @@ describe('Patient dashboard for HCP', () => {
     expect(history.location.pathname).toBe(unMonitoredPatientDashboardRoute)
     testPatientDashboardCommonDisplay(dashboard, unMonitoredPatientId, unMonitoredPatientFullName)
     checkHCPHeader(`${firstName} ${lastName}`)
-    checkHCPDrawer()
+    checkDrawer()
     checkFooter()
   })
 
