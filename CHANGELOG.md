@@ -19,6 +19,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1697 Split patients and team members management
 - YLP-1699 Rework TeamUser structure so that it becomes understandable
 - YLP-1719 Remove inline CSS
+- YLP-1726 Rework signup with Auth0
 - YLP-1740 Make HTTP calls to back instead of computing data in the front
 - YLP-1754 Patient list not updated after accept invitation
 - YLP-1767 Create package to migrate viz components
