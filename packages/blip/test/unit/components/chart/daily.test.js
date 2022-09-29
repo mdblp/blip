@@ -10,7 +10,7 @@ import * as sinon from 'sinon'
 import { expect } from 'chai'
 import { mount } from 'enzyme'
 import moment from 'moment-timezone'
-import { MGDL_UNITS, MS_IN_DAY } from 'tideline'
+import { MGDL_UNITS, TimeService } from 'medical-domain'
 
 import DataUtilStub from '../../../helpers/DataUtil'
 import Daily, { DailyChart } from '../../../../app/components/chart/daily'
@@ -67,7 +67,7 @@ describe('Daily', () => {
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc('2014-03-13T12:00:00.000Z').valueOf(),
-    msRange: MS_IN_DAY, // ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
+    msRange: TimeService.MS_IN_DAY, // ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
     loading: false,
     onClickRefresh: sinon.stub(),
     onClickPrint: sinon.stub(),
@@ -77,12 +77,13 @@ describe('Daily', () => {
     onSwitchToDaily: sinon.stub(),
     onSwitchToSettings: sinon.stub(),
     onSwitchToTrends: sinon.stub(),
+    onSwitchPatient: sinon.stub(),
     onDatetimeLocationChange: sinon.stub().resolves(false),
     trackMetric: sinon.stub(),
     updateChartPrefs: sinon.stub(),
     patient,
     patients: [patient],
-    isUserHCP: true,
+    userIsHCP: true,
     onClickNavigationBack: sinon.stub(),
     tidelineData: {
       opts: {

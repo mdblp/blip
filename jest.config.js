@@ -23,7 +23,7 @@ module.exports = {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -98,7 +98,11 @@ module.exports = {
   // preset: undefined,
 
   // Run tests from one or more projects
-  projects: ["<rootDir>/packages/yourloops/test"],
+  projects: [
+    '<rootDir>/packages/yourloops/test',
+    '<rootDir>/packages/medical-domain/test',
+    '<rootDir>/packages/dumb/test'
+  ],
 
   // Use this configuration option to add custom reporters to Jest
   // reporters: undefined,
@@ -139,7 +143,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "jsdom",
+  testEnvironment: 'jsdom',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -176,7 +180,7 @@ module.exports = {
   // A map from regular expressions to paths to transformers
   // transform: undefined,
   transform: {
-    "^.+\\.(ts|tsx|js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+    '^.+\\.(ts|tsx|js|jsx|mjs)$': '<rootDir>/node_modules/babel-jest'
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -185,18 +189,18 @@ module.exports = {
   //   "\\.pnp\\.[^\\/]+$"
   // ],
   transformIgnorePatterns: [
-    "/!node_modules\\/lodash-es/",
+    '/!node_modules\\/lodash-es/'
   ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
 
   // Indicates whether each individual test should be reported during the run
-  verbose: true,
+  verbose: true
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   // watchPathIgnorePatterns: [],
 
   // Whether to use watchman for file crawling
   // watchman: true,
-};
+}

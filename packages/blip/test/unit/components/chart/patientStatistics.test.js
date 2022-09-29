@@ -31,7 +31,7 @@ import { shallow } from 'enzyme'
 import * as sinon from 'sinon'
 import chai from 'chai'
 
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 
 import DataUtilStub from '../../../helpers/DataUtil'
 import PatientStatistics from '../../../../app/components/chart/patientStatistics'

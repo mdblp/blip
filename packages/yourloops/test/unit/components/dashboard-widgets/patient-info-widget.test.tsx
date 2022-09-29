@@ -35,6 +35,7 @@ import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
+import * as patientHookMock from '../../../../lib/patient/provider'
 import * as notificationsHookMock from '../../../../lib/notifications/hook'
 import User from '../../../../lib/auth/user'
 import { genderLabels } from '../../../../lib/auth/helpers'
@@ -44,6 +45,7 @@ import { RemoteMonitoringPatientDialogProps } from '../../../../components/dialo
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
 import { PatientTeam } from '../../../../lib/data/patient'
+import PatientUtils from '../../../../lib/patient/utils'
 
 /* eslint-disable-next-line react/display-name */
 jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: ConfirmDialogProps) => {
@@ -55,27 +57,34 @@ jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: Confirm
 jest.mock('../../../../components/dialogs/remote-monitoring-dialog')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../lib/notifications/hook')
 describe('PatientInfoWidget', () => {
   const patient = createPatient('fakePatientId', [])
   let container: HTMLElement | null = null
   const adminMember = buildTeamMember()
-  const patientMember = buildTeamMember('fakeTeamId', patient.userid)
+  const patientMember = buildTeamMember(patient.userid)
   const remoteMonitoringTeam = buildTeam('fakeTeamId', [adminMember, patientMember])
+  patient.teams = [{ teamId: remoteMonitoringTeam.id } as PatientTeam]
   const cancelRemoteMonitoringInviteMock = jest.fn()
   const updatePatientMonitoringMock = jest.fn()
-  const getPatientRemoteMonitoringTeamMock = jest.fn().mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam)
+  const getPatientMock = jest.fn().mockReturnValue(patient)
 
   beforeAll(() => {
     i18n.changeLanguage('en');
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserCaregiver: () => false, isUserHcp: () => true, id: adminMember.user.userid } as User }
-    });
+      return { user: { isUserCaregiver: () => false, isUserHcp: () => true, id: adminMember.userId } as User }
+    })
+    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam);
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
-        getRemoteMonitoringTeams: () => [remoteMonitoringTeam],
-        getPatientRemoteMonitoringTeam: getPatientRemoteMonitoringTeamMock,
-        updatePatientMonitoring: updatePatientMonitoringMock
+        getRemoteMonitoringTeams: () => [remoteMonitoringTeam]
+      }
+    });
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
+      return {
+        updatePatientMonitoring: updatePatientMonitoringMock,
+        getPatient: getPatientMock
       }
     });
     (RemoteMonitoringPatientDialogMock.default as jest.Mock).mockImplementation((props: RemoteMonitoringPatientDialogProps) => {

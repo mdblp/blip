@@ -35,10 +35,7 @@ import { AuthenticatedUser, Preferences, Profile, Settings, UserRoles } from '..
 import { HcpProfession } from '../../models/hcp-profession'
 import { zendeskLogout } from '../zendesk'
 import User from './user'
-import {
-  AuthContext,
-  SignupForm
-} from './models'
+import { AuthContext, SignupForm } from './models'
 import appConfig from '../config'
 import HttpService from '../../services/http'
 import UserApi from './user-api'

@@ -25,44 +25,127 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import TeamApi from '../../../../lib/team/team-api'
+import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../../../models/team'
+import { buildITeam, buildITeamMember, buildTeam } from '../../common/utils'
 import { UserInvitationStatus } from '../../../../models/generic'
-import { createPatient, createPatientTeam } from '../../common/utils'
-import { Patient } from '../../../../lib/data/patient'
 import TeamUtils from '../../../../lib/team/utils'
+import { INotification, NotificationType } from '../../../../lib/notifications/models'
+import { Profile } from '../../../../models/user'
+import { Team } from '../../../../lib/team'
 
-describe('Team utils', () => {
-  describe('computeFlaggedPatients', () => {
-    it('should return patients with the correct flagged attribute', () => {
-      const patientFlaggedId = 'flaggedPatient'
-      const patients: Patient[] = [createPatient(patientFlaggedId, []), createPatient('fakePatient1', []), createPatient('fakePatient2', [])]
-      const flaggedPatientIds = [patientFlaggedId]
-      const patientsUpdated = TeamUtils.computeFlaggedPatients(patients, flaggedPatientIds)
-      patientsUpdated.forEach(patient => {
-        expect(patient.metadata.flagged).toBe(flaggedPatientIds.includes(patient.userid))
-      })
+describe('TeamUtils', () => {
+  describe('loadTeams', () => {
+    it('should return correct team structure', async () => {
+      const userId = 'fakeUserId'
+      const team1Id = 'team1Id'
+      const team2Id = 'team2Id'
+      const team1Member1 = buildITeamMember(team1Id, 'team1Member1', TeamMemberRole.admin, 'team1@member1.com', 'team 1 member 1', UserInvitationStatus.accepted)
+      const team1Member2 = buildITeamMember(team1Id, 'team1Member2', TeamMemberRole.admin, 'team1@member2.com', 'team 1 member 2', UserInvitationStatus.pending)
+      const team1Members: ITeamMember[] = [team1Member1, team1Member2]
+      const team1 = buildITeam(team1Id, team1Members, 'team 1')
+      const team2Member1 = buildITeamMember(team2Id, 'team2Member1', TeamMemberRole.admin, 'team2@member1.com', 'team 2 member 1', UserInvitationStatus.accepted)
+      const team2Member2 = buildITeamMember(team2Id, 'team2Member2', TeamMemberRole.member, 'team2@member2.com', 'team 2 member 2', UserInvitationStatus.accepted)
+      const team2Members: ITeamMember[] = [team2Member1, team2Member2]
+      const team2 = buildITeam(team2Id, team2Members, 'team 1')
+      const teamsFromApi: ITeam[] = [team1, team2]
+
+      const notification: INotification = {
+        metricsType: 'join_team',
+        type: NotificationType.careTeamProInvitation,
+        creator: { userid: userId, profile: {} as Profile },
+        creatorId: userId,
+        date: new Date().toISOString(),
+        email: team1Member2.email,
+        target: { id: team1.id, name: 'fakeName' },
+        id: 'fakeId'
+      }
+      const notifications: INotification[] = [notification]
+      const expectedTeams: Team[] = [
+        {
+          code: 'private',
+          id: 'private',
+          members: [],
+          name: 'private',
+          owner: 'fakeUserId',
+          type: TeamType.private
+        },
+        {
+          address: team1.address,
+          code: team1.code,
+          description: team1.description,
+          email: team1.email,
+          id: team1.id,
+          members: [{
+            email: team1Member1.email,
+            invitation: undefined,
+            profile: team1Member1.profile,
+            role: team1Member1.role,
+            status: team1Member1.invitationStatus,
+            userId: team1Member1.userId
+          },
+          {
+            email: team1Member2.email,
+            invitation: notification,
+            profile: team1Member2.profile,
+            role: team1Member2.role,
+            status: team1Member2.invitationStatus,
+            userId: team1Member2.userId
+          }
+          ],
+          monitoring: team1.monitoring,
+          name: team1.name,
+          owner: team1.owner,
+          phone: team1.phone,
+          type: team1.type
+        },
+        {
+          address: team2.address,
+          code: team2.code,
+          description: team2.description,
+          email: team2.email,
+          id: team2.id,
+          members:
+            [
+              {
+                email: team2Member1.email,
+                invitation: undefined,
+                profile: team2Member1.profile,
+                role: team2Member1.role,
+                status: team2Member1.invitationStatus,
+                userId: team2Member1.userId
+              },
+              {
+                email: team2Member2.email,
+                invitation: undefined,
+                profile: team2Member2.profile,
+                role: team2Member2.role,
+                status: team2Member2.invitationStatus,
+                userId: team2Member2.userId
+              }],
+          monitoring: team2.monitoring,
+          name: team2.name,
+          owner: team2.owner,
+          phone: team2.phone,
+          type: team2.type
+        }
+      ]
+      jest.spyOn(TeamApi, 'getTeams').mockResolvedValue(teamsFromApi)
+
+      const teams = await TeamUtils.loadTeams(userId, notifications)
+      expect(teams).toEqual(expectedTeams)
     })
   })
 
-  describe('isInAtLeastATeam', () => {
-    it('should return false when team user does not have an accepted status in any team', () => {
-      const members = [
-        createPatientTeam('team1Id', UserInvitationStatus.pending),
-        createPatientTeam('team2Id', UserInvitationStatus.pending)
+  describe('sortTeams', () => {
+    it('should sort a list of teams in alphabetical order', () => {
+      const teams = [
+        buildTeam('fakeId2', [], 'B team'),
+        buildTeam('fakeId3', [], 'C team'),
+        buildTeam('fakeId1', [], 'A team')
       ]
-      const teamUser = createPatient('id1', members)
-      const res = TeamUtils.isInAtLeastATeam(teamUser)
-      expect(res).toBe(false)
-    })
-
-    it('should return true when team user does has an accepted status in a team', () => {
-      const members = [
-        createPatientTeam('team1Id', UserInvitationStatus.pending),
-        createPatientTeam('team2Id', UserInvitationStatus.accepted)
-      ]
-      const teamUser = createPatient('id1', members)
-
-      const res = TeamUtils.isInAtLeastATeam(teamUser)
-      expect(res).toBe(true)
+      const expectedResult = [teams[2], teams[0], teams[1]]
+      expect(expectedResult).toEqual(TeamUtils.sortTeams(teams))
     })
   })
 })

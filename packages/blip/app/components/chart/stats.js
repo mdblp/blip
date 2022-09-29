@@ -14,7 +14,7 @@ class Stats extends React.Component {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object,
-    chartType: PropTypes.oneOf(['basics', 'daily', 'bgLog', 'trends', 'deviceUsage', 'patientStatistics']).isRequired,
+    chartType: PropTypes.oneOf(['daily', 'bgLog', 'trends', 'deviceUsage', 'patientStatistics']).isRequired,
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
@@ -142,18 +142,6 @@ class Stats extends React.Component {
     const smbgSelected = bgSource === 'smbg'
 
     switch (chartType) {
-      case 'basics':
-        cbgSelected && addStat(commonStats.timeInRange)
-        smbgSelected && addStat(commonStats.readingsInRange)
-        addStat(commonStats.averageGlucose)
-        cbgSelected && addStat(commonStats.sensorUsage)
-        addStat(commonStats.totalInsulin)
-        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        addStat(commonStats.carbs)
-        addStat(commonStats.averageDailyDose)
-        cbgSelected && addStat(commonStats.glucoseManagementIndicator)
-        break
-
       case 'daily':
         cbgSelected && addStat(commonStats.timeInRange)
         smbgSelected && addStat(commonStats.readingsInRange)

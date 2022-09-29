@@ -26,6 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { ReactNode } from 'react'
 import { Profile } from '../../models/user'
 import { TeamMemberRole } from '../../models/team'
 
@@ -73,10 +74,13 @@ export interface NotificationContext {
   cancel: (notification: INotification) => Promise<void>
   inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>
   cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>
+  getInvitation: (teamId: string) => INotification
+  refreshReceivedInvitations: () => Promise<void>
+  refreshSentInvitations: () => Promise<void>
 }
 
 export interface NotificationProvider {
-  children: React.ReactNode
+  children: ReactNode
   /** Used for test components which need this hook */
   value?: NotificationContext
 }

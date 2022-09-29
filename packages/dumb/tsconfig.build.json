@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "types": [
+      "jest"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "src/coverage",
+    "dist",
+    "src/**/*.test.tsx"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}

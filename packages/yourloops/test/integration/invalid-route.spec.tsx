@@ -34,10 +34,12 @@ import { MainLobby } from '../../app/main-lobby'
 import { checkHeader } from './utils/header'
 import { checkDrawer } from './utils/drawer'
 import { checkFooter } from './utils/footer'
-import { mockAuth0 } from './utils/auth0'
+import { mockAuth0Hook } from './utils/mockAuth0Hook'
 import { mockUserDataFetch } from './utils/auth'
+import PatientApi from '../../lib/patient/patient-api'
+import TeamApi from '../../lib/team/team-api'
+import { mockNotificationAPI } from './utils/mockNotificationAPI'
 
-jest.mock('@auth0/auth0-react')
 describe('Invalid Route', () => {
   const unknownRoute = '/unknown-route'
   const firstName = 'firstName'
@@ -45,8 +47,9 @@ describe('Invalid Route', () => {
   const history = createMemoryHistory({ initialEntries: [unknownRoute] })
 
   beforeAll(() => {
-    mockAuth0()
+    mockAuth0Hook()
     mockUserDataFetch(firstName, lastName)
+    mockNotificationAPI()
   })
 
   function getInvalidRoutePage() {
@@ -60,14 +63,16 @@ describe('Invalid Route', () => {
   }
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {
+    jest.spyOn(TeamApi, 'getTeams').mockResolvedValue([])
+    jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([])
     act(() => {
       render(getInvalidRoutePage())
     })
 
     await waitFor(() => expect(history.location.pathname).toBe('/not-found'))
 
-    expect(screen.getByText('page-not-found')).toBeVisible()
-    const homeLink = screen.getByText('breadcrumb-home')
+    expect(screen.getByText('Page not found')).toBeVisible()
+    const homeLink = screen.getByText('Home')
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')
 

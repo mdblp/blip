@@ -90,32 +90,28 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   }
 
   return (
-    <Box className={classes.topBar}>
+    <Box className={classes.topBar} data-testid="patients-secondary-bar">
       <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
         <AccessTime className="subnav-icon" />
-        <span id="subnav-period-label">{t('secondary-bar-period-text')}</span>
+        <span aria-label={t('secondary-bar-period-text')}>{t('secondary-bar-period-text')}</span>
       </div>
-      <Box id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
+      <Box className={classes.toolBarMiddle}>
         <PatientFilters
           filter={filter}
           onFilter={onFilter}
         />
       </Box>
-      {
-        authHook.user?.isUserHcp() &&
-        <div id="patients-list-toolbar-item-right">
-          <Button
-            id="patient-list-toolbar-add-patient"
-            color="primary"
-            variant="contained"
-            disableElevation
-            className={classes.buttonAddPatient}
-            onClick={handleOpenModalAddPatient}
-          >
-            <PersonAddIcon />
-            <Box component="span" className={classes.buttonAddPatientText}>&nbsp;{t('add-patient')}</Box>
-          </Button>
-        </div>
+      {authHook.user?.isUserHcp() &&
+        <Button
+          color="primary"
+          variant="contained"
+          disableElevation
+          className={classes.buttonAddPatient}
+          onClick={handleOpenModalAddPatient}
+        >
+          <PersonAddIcon />
+          <Box component="span" className={classes.buttonAddPatientText}>&nbsp;{t('add-patient')}</Box>
+        </Button>
       }
     </Box>
   )

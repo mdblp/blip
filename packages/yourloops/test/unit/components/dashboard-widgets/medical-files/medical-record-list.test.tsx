@@ -42,7 +42,16 @@ jest.mock('../../../../../lib/auth')
 jest.mock('../../../../../components/dialogs/medical-record-edit-dialog', () => (props: MedicalRecordEditDialogProps) => {
   return (
     <div aria-label="mock-edit-dialog">
-      <button onClick={() => props.onSaved({} as MedicalRecord)}>mock-save-button</button>
+      <button onClick={() => props.onSaved({
+        id: 'whateverId',
+        authorId: 'whateverAuthorId',
+        creationDate: new Date().toISOString(),
+        patientId: 'patientId',
+        teamId: 'teamId',
+        diagnosis: 'diagnosis',
+        progressionProposal: 'proposal',
+        trainingSubject: 'trainingSubject'
+      })}>mock-save-button</button>
       <button onClick={() => props.onClose()}>mock-cancel-button</button>
     </div>
   )
@@ -59,7 +68,7 @@ jest.mock('../../../../../components/dialogs/medical-record-delete-dialog', () =
 describe('Medical Record list', () => {
   const patient = createPatient('fakePatientId', [])
   const adminMember = buildTeamMember()
-  const patientMember = buildTeamMember('fakeTeamId', patient.userid)
+  const patientMember = buildTeamMember(patient.userid)
   const remoteMonitoringTeam = buildTeam('fakeTeamId', [adminMember, patientMember])
   const medicalRecords: MedicalRecord[] = [
     {
@@ -122,7 +131,7 @@ describe('Medical Record list', () => {
     checkListLength(2)
   })
 
-  it('should not render create, edit and delete button if the user is a patient', async () => {
+  it('should not render create and delete button if the user is a patient', async () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserHcp: () => false, isUserPatient: () => true } as User }
     })
@@ -130,7 +139,6 @@ describe('Medical Record list', () => {
     expect(screen.queryByRole('button', { name: 'new' })).toBeNull()
     const listItem = screen.getByRole('listitem', { name: 'record-fakeId' })
     fireEvent.mouseOver(listItem)
-    expect(within(listItem).queryByRole('button', { name: 'edit-button' })).toBeNull()
     expect(within(listItem).queryByRole('button', { name: 'delete-button' })).toBeNull()
   })
 
@@ -141,14 +149,6 @@ describe('Medical Record list', () => {
     fireEvent.click(newButton)
     fireEvent.click(screen.getByRole('button', { name: 'mock-save-button' }))
     await waitFor(() => checkListLength(3))
-  })
-
-  it('should open edit modal when clicking on edit button', async () => {
-    await renderComponent()
-    const listItem = screen.getByRole('listitem', { name: 'record-fakeId' })
-    fireEvent.mouseOver(listItem)
-    fireEvent.click(screen.getByRole('button', { name: 'edit' }))
-    expect(screen.queryByLabelText('mock-edit-dialog')).not.toBeNull()
   })
 
   it('should close the edit dialog when clicking on cancel button', async () => {

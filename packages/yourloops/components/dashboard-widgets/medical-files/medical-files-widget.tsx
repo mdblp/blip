@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -36,8 +36,8 @@ import CardContent from '@material-ui/core/CardContent'
 import MedicalRecordList from './medical-record-list'
 import PrescriptionList from './prescription-list'
 import { Patient } from '../../../lib/data/patient'
-import { useTeam } from '../../../lib/team'
 import WeeklyReportList from './weekly-report-list'
+import PatientUtils from '../../../lib/patient/utils'
 
 const useStyle = makeStyles(() => ({
   cardContent: {
@@ -63,17 +63,12 @@ export interface CategoryProps {
   patientId: string
 }
 
-export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
+const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const classes = useStyle()
-  const { getRemoteMonitoringTeams } = useTeam()
   const { patient } = props
 
-  const team = getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === patient.userid))
-
-  if (!team) {
-    throw Error(`Could not find monitoring team for patient with id: ${patient.userid}`)
-  }
+  const team = PatientUtils.getRemoteMonitoringTeam(patient)
 
   return (
     <Card className={classes.medicalFilesWidget} id="medical-files-card" data-testid="medical-files-card">
@@ -84,10 +79,12 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
         title={`${t('medical-files')}`}
       />
       <CardContent className={classes.cardContent}>
-        <PrescriptionList teamId={team.id} patientId={patient.userid} />
-        <WeeklyReportList teamId={team.id} patientId={patient.userid} />
-        <MedicalRecordList teamId={team.id} patientId={patient.userid} />
+        <PrescriptionList teamId={team.teamId} patientId={patient.userid} />
+        <WeeklyReportList teamId={team.teamId} patientId={patient.userid} />
+        <MedicalRecordList teamId={team.teamId} patientId={patient.userid} />
       </CardContent>
     </Card>
   )
 }
+
+export default MedicalFilesWidget

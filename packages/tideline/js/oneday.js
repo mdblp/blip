@@ -29,7 +29,6 @@ import moment from 'moment-timezone'
 import { MS_IN_DAY } from './data/util/constants'
 import mkAnnotation from './plot/util/annotations/annotation'
 import Tooltips from './plot/util/tooltips/tooltip'
-import TidelineData from './tidelinedata'
 
 /**
  * @param {import('events').EventEmitter} emitter
@@ -704,7 +703,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   container.data = function(/** @type {TidelineData} */ td) {
-    if (td instanceof TidelineData) {
+    if (td !== undefined) {
       container.tidelineData = td
     } else if (container.tidelineData === null) {
       return []
@@ -740,10 +739,10 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   container.updateRenderedData = function rData() {
-    if (container.tidelineData.dataByDate === null) {
+    if (container.tidelineData.data === null) {
       // FIXME: We may have some nasty callback here
       // We are currently fetching&processing data from the API
-      log.warn('FIXME: updateRenderedData: tidelineData.dataByDate is null')
+      log.warn('FIXME: updateRenderedData: tidelineData.data is null')
       renderedData = []
       renderedDataRange.start = Number.MAX_SAFE_INTEGER
       renderedDataRange.end = Number.MIN_SAFE_INTEGER
@@ -753,13 +752,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       const end = moment.utc(domain[1]).add(renderDaysBuffer, 'day')
       renderedDataRange.start = start.valueOf()
       renderedDataRange.end = end.valueOf()
-      start.subtract(this.tidelineData.maxDuration + 1, 'milliseconds')
-      end.add(1, 'millisecond') // +1ms to be sure we have them
-      const filtered = container.tidelineData.dataByDate.filter([start.toISOString(), end.toISOString()])
-      renderedData = filtered.top(Infinity).reverse()
-      const rangeStart = renderedDataRange.start - 1 // -1ms to be sure we have them
-      // Only keep data which ends after our range
-      renderedData = renderedData.filter((d) => d.epoch > rangeStart || (Number.isInteger(d.epochEnd) && d.epochEnd > rangeStart))
+      renderedData = container.tidelineData.filterByDate(renderedDataRange.start - 1 , renderedDataRange.end, + 1)
     }
   }
 
@@ -785,14 +778,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   container.createMessage = async (message) => {
-    const nAdded = await container.tidelineData.addData([message])
-    if (nAdded > 0) {
-      // We can assume chart.tidelineData.grouped.message is an array
-      const tdMessage = container.tidelineData.grouped.message.find((d) => d.id === message.id)
-      if (typeof tdMessage === 'object') {
-        container.emitter.emit('messageCreated', tdMessage)
-        return true
-      }
+    container.tidelineData.add([message])
+    // We can assume chart.tidelineData.grouped.message is an array
+    const tdMessage = container.tidelineData.grouped.message.find((d) => d.id === message.id)
+    if (typeof tdMessage === 'object') {
+      container.emitter.emit('messageCreated', tdMessage)
+      return true
     }
     return false
   }

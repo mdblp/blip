@@ -20,7 +20,7 @@ import React from 'react'
 import { mount } from 'enzyme'
 import { expect } from 'chai'
 
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 
 import { formatClassesAsSelector } from '../../../helpers/cssmodules'
 import FocusedRangeLabels from '../../../../src/components/trends/common/FocusedRangeLabels'

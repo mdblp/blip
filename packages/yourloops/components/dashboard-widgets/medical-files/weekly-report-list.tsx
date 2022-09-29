@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
@@ -40,6 +40,8 @@ import { WeeklyReport } from '../../../lib/medical-files/model'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
 import { CategoryProps } from './medical-files-widget'
 import WeeklyReportDialog from '../../dialogs/weekly-report-dialog'
+import { useAlert } from '../../utils/snackbar'
+import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -62,45 +64,54 @@ const useStyle = makeStyles((theme: Theme) => ({
   }
 }))
 
-export default function WeeklyReportList({ teamId, patientId }: CategoryProps): JSX.Element {
+const WeeklyReportList: FunctionComponent<CategoryProps> = ({ teamId, patientId }) => {
   const { t } = useTranslation('yourloops')
   const classes = useStyle()
-  const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[]>([])
+  const alert = useAlert()
+  const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[] | null>(null)
   const [displayWeeklyReportDetails, setDisplayWeeklyReportDetails] = useState<WeeklyReport | undefined>(undefined)
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     (async () => {
-      setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId))
+      try {
+        setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId))
+      } catch (err) {
+        setWeeklyReports([])
+        alert.error(t('weekly-reports-get-failed'))
+      }
     })()
-  }, [patientId, teamId])
+  }, [alert, patientId, t, teamId])
 
   return (
     <React.Fragment>
       <Typography className={classes.categoryTitle}>
         {t('weekly-reports')}
       </Typography>
-      <List className={classes.list}>
-        {weeklyReports.map((weeklyReport, index) => (
-          <ListItem
-            dense
-            divider
-            key={index}
-            aria-label={`weekly-report-${weeklyReport.id}`}
-            className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? 'selected' : ''}`}
-            onMouseOver={() => setHoveredItem(weeklyReport.id)}
-            onMouseOut={() => setHoveredItem(undefined)}
-            onClick={() => setDisplayWeeklyReportDetails(weeklyReport)}
-          >
-            <ListItemIcon>
-              <FileChartOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText>
-              {t('weekly-report-pdf', { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
-            </ListItemText>
-          </ListItem>
-        ))}
-      </List>
+      {weeklyReports
+        ? <List className={classes.list}>
+          {weeklyReports.map((weeklyReport, index) => (
+            <ListItem
+              dense
+              divider
+              key={index}
+              aria-label={`weekly-report-${weeklyReport.id}`}
+              className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? 'selected' : ''}`}
+              onMouseOver={() => setHoveredItem(weeklyReport.id)}
+              onMouseOut={() => setHoveredItem(undefined)}
+              onClick={() => setDisplayWeeklyReportDetails(weeklyReport)}
+            >
+              <ListItemIcon>
+                <FileChartOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText>
+                {t('weekly-report-pdf', { pdfName: weeklyReport.creationDate.substring(0, 10) })}
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
+        : <CenteredSpinningLoader size={20} />
+      }
 
       {displayWeeklyReportDetails &&
         <WeeklyReportDialog
@@ -111,3 +122,5 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
     </React.Fragment>
   )
 }
+
+export default WeeklyReportList

@@ -1,0 +1,33 @@
+:global(.centered-spinning-loader) {
+  position: absolute;
+  top: calc(50vh - 20px);
+  left: calc(50vw - 20px);
+}
+
+:global(.visibility-hidden) {
+  visibility: hidden;
+}
+
+:global(.display-none) {
+  display: none;
+}
+
+:global(.no-margin) {
+  margin: 0 !important;
+}
+
+:global(.no-margin-top) {
+  margin-top: 0 !important;
+}
+
+:global(.no-margin-right) {
+  margin-right: 0 !important;
+}
+
+:global(.no-margin-bottom) {
+  margin-bottom: 0 !important;
+}
+
+:global(.no-margin-left) {
+  margin-left: 0 !important;
+}

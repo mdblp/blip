@@ -137,13 +137,14 @@ class TidelineHeader extends React.Component {
           <div className="subnav-left-container">
             {this.props.userIsHCP &&
             <div id="subnav-hcp-container">
-              <IconButton>
-                <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
+              <IconButton onClick={() => this.props.onClickNavigationBack()}>
+                <ArrowBack id="subnav-arrow-back" data-testid="subnav-arrow-back" />
               </IconButton>
               <Face className="subnav-icon" />
               <span>{ t('patient') } :</span>
-              <FormControl id="subnav-patient-list" variant="outlined">
+              <FormControl id="subnav-patient-list" variant="outlined" data-testid="subnav-patient-list">
                 <Select
+                  data-testid="drop-down-patient"
                   defaultValue={this.props.patient.userid}
                   onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
                 >
@@ -173,11 +174,11 @@ class TidelineHeader extends React.Component {
               textColor="primary"
               indicatorColor="primary"
             >
-              <Tab data-testId="dashboard-tab" className={'subnav-tab'} href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
-                onClick={this.props.onClickDashboard} />
-              <div className={'dashboard-divider'}></div>
-              <Tab data-testId="daily-tab" className={'subnav-tab'} href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
-              <Tab data-testId="trends-tab" className={'subnav-tab'} href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
+              <Tab className={'subnav-tab'} data-testid="dashboard-tab" href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
+                onClick={this.props.onClickDashboard}/>
+              <Tab label="" className={'dashboard-divider'} disabled />
+              <Tab className={'subnav-tab'} data-testid="daily-tab" href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab className={'subnav-tab'} data-testid="trends-tab" href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
                 onClick={this.props.onClickTrends} />
             </Tabs>
           </div>
@@ -192,7 +193,7 @@ class TidelineHeader extends React.Component {
 
   render() {
     return (
-      <div className="patient-data-subnav-outer">
+      <div className="patient-data-subnav-outer" data-testid="patient-data-subnav-outer">
         <div className="patient-data-subnav-inner box-shadow">{this.renderStandard()}</div>
       </div>
     )

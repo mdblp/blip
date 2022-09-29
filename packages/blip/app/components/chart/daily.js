@@ -26,7 +26,9 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import TextField from '@material-ui/core/TextField'
 
-import { chartDailyFactory, MS_IN_DAY, MS_IN_HOUR } from 'tideline'
+import { chartDailyFactory } from 'tideline'
+import { TimeService } from 'medical-domain'
+
 import { components as vizComponents } from 'tidepool-viz'
 
 import { BG_DATA_TYPES } from '../../core/constants'
@@ -36,7 +38,7 @@ import Header from './header'
 import Footer from './footer'
 
 /**
- * @typedef { import("tideline").TidelineData } TidelineData
+ * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
  * @typedef { import("../../index").DatePicker } DatePicker
  * @typedef { import("./index").DailyDatePickerProps } DailyDatePickerProps
 */
@@ -314,7 +316,7 @@ class DailyChart extends React.Component {
 }
 
 /**
- * @typedef {{tidelineData: TidelineData; epochLocation: number; bgPrefs: any; msRange: number; loading: boolean; trackMetric: ()=>void; datePicker?: DatePicker}} DailyProps
+ * @typedef {{tidelineData: MedicalDataService; epochLocation: number; bgPrefs: any; msRange: number; loading: boolean; trackMetric: ()=>void; datePicker?: DatePicker}} DailyProps
  */
 
 /** @augments React.Component<DailyProps> */
@@ -370,13 +372,13 @@ class Daily extends React.Component {
       tooltip: null
     }
 
-    /** @type {{tidelineData: TidelineData}} */
+    /** @type {{tidelineData: MedicalDataService}} */
     const { tidelineData } = props
     const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints()
     /** @type {Date} */
-    this.startDate = startDate.toDate()
+    this.startDate = Date.parse(startDate)
     /** @type {Date} */
-    this.endDate = endDate.toDate()
+    this.endDate = Date.parse(endDate)
   }
 
   componentDidUpdate(prevProps) {
@@ -395,15 +397,14 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading, dialogDatePicker } = this.props
+    const { tidelineData, epochLocation, msRange, trackMetric, loading, dialogDatePicker, timePrefs } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
-    const { timePrefs } = tidelineData.opts
     const endpoints = this.getEndpoints()
 
     const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
       if (typeof date === 'string' && this.chartRef.current !== null) {
-        const timezone = tidelineData.getTimezoneAt(date)
-        const mDate = moment.tz(date, timezone).add(MS_IN_DAY / 2, 'milliseconds')
+        const timezone = tidelineData.getTimezoneAt(Date.parse(date).valueOf())
+        const mDate = moment.tz(date, timezone).add(TimeService.MS_IN_DAY / 2, 'milliseconds')
         this.log.debug('DatePicker', date, timezone, mDate.toISOString())
         this.chartRef.current.goToDate(mDate.toDate())
       }
@@ -536,7 +537,7 @@ class Daily extends React.Component {
    * @returns {string}
    */
   getTitle(datetime) {
-    /** @type {{tidelineData: TidelineData}} */
+    /** @type {{tidelineData: MedicalDataService}} */
     const { tidelineData } = this.props
     return moment.tz(datetime, tidelineData.getTimezoneAt(datetime)).format(i18next.t('ddd, MMM D, YYYY'))
   }
@@ -596,7 +597,7 @@ class Daily extends React.Component {
     const { loading } = this.props
     if (!loading) {
       this.setState({ title: this.getTitle(epoch), atMostRecent: this.isAtMostRecent(epoch) })
-      this.props.onDatetimeLocationChange(epoch, MS_IN_DAY).then((dataLoaded) => {
+      this.props.onDatetimeLocationChange(epoch, TimeService.MS_IN_DAY).then((dataLoaded) => {
         if (dataLoaded && this.chartRef.current !== null) {
           // New data available, re-render the chart so they can be displayed
           // to the user
@@ -613,11 +614,11 @@ class Daily extends React.Component {
   }
 
   updateDatumHoverForTooltip(datum) {
-    /** @type {{ epochLocation: number, bgPrefs: {}, tidelineData: TidelineData }} */
+    /** @type {{ epochLocation: number, bgPrefs: {}, tidelineData: MedicalDataService }} */
     const { epochLocation, bgPrefs } = this.props
     const rect = datum.rect
     // range here is -12 to 12
-    const hoursOffset = (datum.data.epoch - epochLocation) / MS_IN_HOUR
+    const hoursOffset = (datum.data.epoch - epochLocation) / TimeService.MS_IN_HOUR
     datum.top = rect.top + rect.height / 2
     if (hoursOffset > 5) {
       datum.side = 'left'

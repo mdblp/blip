@@ -29,18 +29,12 @@
 import { FilterType, PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
 import { Patient } from '../../lib/data/patient'
 
-export interface PatientTableCardCommonProps {
-  patients: Patient[]
-  flagged: string[]
+export interface PatientTableProps {
   filter?: FilterType | string
-  onClickPatient: (user: Patient) => void
-  onFlagPatient: (userId: string) => Promise<void>
-}
-
-export interface PatientTableProps extends PatientTableCardCommonProps {
   order: SortDirection
   orderBy: PatientTableSortFields
   onSortList: (field: PatientTableSortFields, direction: SortDirection) => void
+  patients: Patient[]
 }
 
 export interface PatientListProps {
@@ -48,12 +42,9 @@ export interface PatientListProps {
   filterType: PatientFilterTypes
 }
 
-export interface PatientElementProps {
+export interface PatientRowProps {
   patient: Patient
-  flagged: string[]
   filter?: FilterType | string
-  onClickPatient: (user: Patient) => void
-  onFlagPatient: (userId: string) => Promise<void>
 }
 
 export interface MedicalTableValues {

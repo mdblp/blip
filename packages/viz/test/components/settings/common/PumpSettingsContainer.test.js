@@ -19,7 +19,7 @@ import React from 'react'
 import * as sinon from 'sinon'
 import { expect } from 'chai'
 import { mount } from 'enzyme'
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 
 import PumpSettingsContainer from '../../../../src/components/settings/common/PumpSettingsContainer'
 

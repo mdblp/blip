@@ -20,7 +20,7 @@ import PropTypes from 'prop-types'
 import i18next from 'i18next'
 import moment from 'moment-timezone'
 
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 
 import styles from './CBGDateTraceLabel.css'
 

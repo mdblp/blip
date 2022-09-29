@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { expect } from 'chai'
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 import * as stat from '../../src/utils/stat'
 
 /* eslint-disable max-len */

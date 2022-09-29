@@ -1,0 +1,89 @@
+/**
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+:root {
+  --basal: #a4a4a4;
+  --basal-automated: #3a90a4;
+  --basal-over: #b1b1b1;
+  --text-on-basal: white;
+  --text-on-basal-automated: white;
+  --text-basal: #a4a4a4;
+  --text-basal-automated: #3a90a4;
+  --bolus: var(--blip-color-primary-light);
+  --bolus-ride: #7E7E7E;
+  --bolus-override: #7E7E7E;
+  --bolus-underride: #7E7E7E;
+  --bolus-undelivered: #E98D7C;
+  --bolus-meal: #6FC3BB;
+  --bolus-micro: #9A78BD;
+  --bolus-manual: #8C65D6;
+  --carbs: #6FC3BB;
+  --carbs-text: black;
+  --rescuecarbs: #E98D7C;
+  --collapsible--border: #EDEDED;
+  --table-stripe--light: #F7F7F7;
+  --table-stripe--dark: #ECECEC;
+  --trends--light: #D0D0D0;
+  --trends--light--faded: #F0F0F0;
+  --trends--dark: #BCBCBC;
+  --trends--dark--faded: #E3E3E3;
+  --input--border: #75849f;
+  --input--disabled: #75849f;
+  --stat--border: #75849f;
+  --stat--default: var(--section-title-color);
+  --stat-disabled: #e7e9ee;
+  --stat--dark: #27385b;
+  --stat-legend: rgba(0,0,0,0.6);
+  --axis-tick: #E7E7E7;
+  --bkgrnd: #F8F8F8;
+  --bkgrnd-lines: #E7E7E7;
+  --bkgrnd-white: #FFFFFF;
+  --tooltip-title-bg: #EAEAEE;
+  --chrome: #989897;
+  --text-medium-contrast: #727375;
+  --text-high-contrast: #281946;
+  --text-black: #000000;
+  --bg-very-low: #DA3A1B;
+  --bg-low: #E98D7C;
+  --bg-target: #9FCC93;
+  --bg-high: #F9D83E;
+  --bg-very-high: #FFA700;
+  --text-hover: #00D3D9;
+  --blue-green-light: #12D3D8;
+  --gray-medium: #989897;
+  --gray-dark: #4E4E4F;
+  --white: #FFFFFF;
+  --brand-purple: #627CFF;
+  --brand-purple-dark: #281946;
+  --bg-history-added-plain:rgba(118,211,166,1);
+  --bg-history-added-soft:rgba(118,211,166,0.1);
+  --bg-history-updated-plain:rgba(255,211,130,1);
+  --bg-history-updated-soft:rgba(255,211,130,0.1);
+  --bg-history-deleted-plain:rgba(251,89,81,1);
+  --bg-history-deleted-soft:rgba(251,89,81,0.1);
+  --activeValue: var(--blip-color-primary-light);
+}

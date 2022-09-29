@@ -197,7 +197,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
                 {members.map(
                   (teamMember: TeamMember): JSX.Element => (
                     <MemberRow
-                      key={teamMember.user.userid}
+                      key={teamMember.userId}
                       teamMember={teamMember}
                       team={team}
                       refreshParent={refresh}

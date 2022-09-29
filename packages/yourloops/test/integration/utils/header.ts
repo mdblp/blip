@@ -29,9 +29,9 @@ import { screen, within } from '@testing-library/react'
 
 export const checkHeader = (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
-  expect(header.getByLabelText('left-drawer-toggle')).toBeVisible()
-  expect(header.getByLabelText('alt-img-logo')).toBeVisible()
-  expect(header.getByLabelText('notification-list')).toBeVisible()
-  expect(header.getByLabelText('open-team-menu')).toBeVisible()
+  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
+  expect(header.getByLabelText('YourLoops Logo')).toBeVisible()
+  expect(header.getByLabelText('Go to notifications list')).toBeVisible()
+  expect(header.getByLabelText('Open team menu')).toBeVisible()
   expect(header.getByText(fullName)).toBeVisible()
 }

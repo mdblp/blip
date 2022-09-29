@@ -1,5 +1,7 @@
 @Library('mdblp-library') _
 
+def doPublish = true
+
 pipeline {
     agent {
         label 'blip'
@@ -44,6 +46,8 @@ pipeline {
                     sh 'npm run lint'
                     sh 'npm run test-sundial'
                     sh 'npm run test-tideline'
+                    sh 'npm run test-medical-domain'
+                    sh 'npm run test-dumb'
                     sh 'npm run test-viz'
                     sh 'npm run test-blip'
                     sh 'npm run test-yourloops-unit'
@@ -128,8 +132,9 @@ pipeline {
             steps {
                 script {
                     env.target = "itg"
-                    if (env.version == "UNRELEASED") {
+                    if (env.version == "UNRELEASED" || env.version.contains("BETA") && env.GIT_BRANCH == "dblp") {
                         env.version = "master"
+                        doPublish = false
                     }
                 }
                 lock('blip-cloudfront-publish') {
@@ -138,7 +143,11 @@ pipeline {
                         string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT')]) {
                         sh 'docker run --rm -e STACK_VERSION=${version}:${GIT_COMMIT} -e APP_VERSION=${version}:${GIT_COMMIT} -e AWS_ACCOUNT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY --env-file ./cloudfront-dist/deployment/${target}.env blip:${GIT_COMMIT}'
                     }
-                    publish()
+                    script {
+                        if (doPublish) {
+                            publish()
+                        }
+                    }
                 }
             }
         }

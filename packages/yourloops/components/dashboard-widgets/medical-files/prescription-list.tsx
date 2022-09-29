@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
@@ -40,6 +40,7 @@ import { Prescription } from '../../../lib/medical-files/model'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
 import { CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
+import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -62,18 +63,23 @@ const useStyle = makeStyles((theme: Theme) => ({
   }
 }))
 
-export default function PrescriptionList({ teamId, patientId }: CategoryProps): JSX.Element {
+const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId }) => {
   const { t } = useTranslation('yourloops')
   const classes = useStyle()
   const alert = useAlert()
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
+  const [prescriptions, setPrescriptions] = useState<Prescription[] | null>(null)
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     (async () => {
-      setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId))
+      try {
+        setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId))
+      } catch (err) {
+        setPrescriptions([])
+        alert.error(t('prescriptions-get-failed'))
+      }
     })()
-  }, [patientId, teamId])
+  }, [alert, patientId, t, teamId])
 
   const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription): void => {
     MedicalFilesApi.getPrescription(patientId, teamId, prescription.id).then(data => {
@@ -94,27 +100,33 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
       <Typography className={classes.categoryTitle}>
         {t('prescriptions')}
       </Typography>
-      <List className={classes.list}>
-        {prescriptions.map((prescription, index) => (
-          <ListItem
-            dense
-            divider
-            key={index}
-            aria-label={`prescription-${prescription.id}`}
-            className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? 'selected' : ''}`}
-            onMouseOver={() => setHoveredItem(prescription.id)}
-            onMouseOut={() => setHoveredItem(undefined)}
-            onClick={() => { downloadPrescription(patientId, teamId, prescription) }}
-          >
-            <ListItemIcon>
-              <FileChartOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText>
-              {t('prescription-pdf', { pdfName: new Date(prescription.uploadedAt).toLocaleDateString() })}
-            </ListItemText>
-          </ListItem>
-        ))}
-      </List>
+      {prescriptions
+        ? <List className={classes.list}>
+          {prescriptions.map((prescription, index) => (
+            <ListItem
+              dense
+              divider
+              key={index}
+              aria-label={`prescription-${prescription.id}`}
+              className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? 'selected' : ''}`}
+              onMouseOver={() => setHoveredItem(prescription.id)}
+              onMouseOut={() => setHoveredItem(undefined)}
+              onClick={() => downloadPrescription(patientId, teamId, prescription)}
+            >
+              <ListItemIcon>
+                <FileChartOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText>
+                {t('prescription-pdf', { pdfName: prescription.uploadedAt.substring(0, 10) })}
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
+        : <CenteredSpinningLoader size={20} />
+      }
+
     </React.Fragment>
   )
 }
+
+export default PrescriptionList

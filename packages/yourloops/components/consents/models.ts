@@ -33,7 +33,6 @@ export interface BaseConsentCheck {
   id: string
   checked: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  style?: React.CSSProperties
 }
 
 export interface ConsentCheck extends BaseConsentCheck {

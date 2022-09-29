@@ -35,6 +35,7 @@ if (!brandings.includes(buildConfig.BRANDING)) {
 
 const alias = {
   'branding/theme.css': path.resolve(__dirname, '../../branding/theme.css'),
+  'classes.css': path.resolve(__dirname, 'css/classes.css'),
   'pro-sante-connect.svg': path.resolve(__dirname, 'images/pro-sante-connect-gris.svg'),
   'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
   'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
@@ -250,7 +251,15 @@ const webpackConfig = {
   module: {
     rules: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-      { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/, options: { configFile: 'tsconfig.json' } },
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+        options: {
+          projectReferences: true,
+          configFile: 'tsconfig.json'
+        }
+      },
       blipWebpack.babelLoaderConfiguration,
       blipWebpack.lessLoaderConfiguration,
       blipWebpack.cssLoaderConfiguration,

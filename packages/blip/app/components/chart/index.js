@@ -13,7 +13,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import Basics from './basics'
 import Daily from './daily'
 import Trends from './trends'
 import SettingsDialog from './settingsDialog'
@@ -22,7 +21,6 @@ import Footer from './footer'
 import PatientDashboard from './patientDashboard'
 
 export {
-  Basics,
   Daily,
   Trends,
   SettingsDialog,

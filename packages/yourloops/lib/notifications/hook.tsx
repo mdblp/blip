@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import bows from 'bows'
 import { INotification, NotificationContext, NotificationProvider } from './models'
-import { useAuth } from '../auth/hook'
+import { useAuth } from '../auth'
 import NotificationApi from './notification-api'
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext)
@@ -80,6 +80,32 @@ function NotificationContextImpl(): NotificationContext {
     await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
   }
 
+  const getInvitation = (teamId: string): INotification => {
+    const invitation = sentInvitations.find(invitation => invitation.target.id === teamId)
+    if (!invitation) {
+      throw Error(`Could not find invitation for team ${teamId}`)
+    }
+    return invitation
+  }
+
+  const refreshSentInvitations = useCallback(async (): Promise<void> => {
+    try {
+      const invitations = await NotificationApi.getSentInvitations(user.id)
+      setSentInvitations(invitations)
+    } catch (err) {
+      log.error(err)
+    }
+  }, [user.id])
+
+  const refreshReceivedInvitations = useCallback(async (): Promise<void> => {
+    try {
+      const invitations = await NotificationApi.getReceivedInvitations(user.id)
+      setReceivedInvitations(invitations)
+    } catch (err) {
+      log.error(err)
+    }
+  }, [user.id])
+
   const initHook = (): void => {
     if (initialized || lock) {
       return
@@ -89,20 +115,16 @@ function NotificationContextImpl(): NotificationContext {
     lock = true
 
     Promise.all([
-      NotificationApi.getReceivedInvitations(user.id),
-      NotificationApi.getSentInvitations(user.id)
-    ]).then((result: [INotification[], INotification[]]) => {
-      setReceivedInvitations(result[0])
-      setSentInvitations(result[1])
-    }).catch((reason: unknown) => {
-      log.error(reason)
-    }).finally(() => {
-      setInitialized(true)
-      lock = false
-    })
+      refreshReceivedInvitations(),
+      refreshSentInvitations()
+    ])
+      .finally(() => {
+        setInitialized(true)
+        lock = false
+      })
   }
 
-  React.useEffect(initHook, [user, initialized])
+  useEffect(initHook, [user, initialized, refreshReceivedInvitations, refreshSentInvitations])
 
   return {
     initialized,
@@ -113,7 +135,10 @@ function NotificationContextImpl(): NotificationContext {
     decline,
     cancel,
     inviteRemoteMonitoring,
-    cancelRemoteMonitoringInvite
+    cancelRemoteMonitoringInvite,
+    getInvitation,
+    refreshSentInvitations,
+    refreshReceivedInvitations
   }
 }
 
