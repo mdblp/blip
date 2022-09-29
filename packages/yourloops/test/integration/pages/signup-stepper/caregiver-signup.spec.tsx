@@ -36,6 +36,8 @@ import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStep
 import { mockUserApi } from '../../utils/mockUserApi'
 import { Profile } from '../../../../models/user'
 
+jest.setTimeout(15000)
+
 describe('Signup stepper', () => {
   const { updateProfileMock, updatePreferencesMock, updateSettingsMock } = mockUserApi()
   const history = createMemoryHistory({ initialEntries: ['/'] })
