@@ -162,7 +162,7 @@ describe('Tooltip hook', () => {
     })
 
     it('should return correct value when side is right', () => {
-      props = { ...props, side: 'left' }
+      props = { ...props, side: 'right' }
       const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
       const { result } = renderHook(() => useTooltip(props))
       const { marginOuterValue, borderSide } = result.current.computeTailData()
