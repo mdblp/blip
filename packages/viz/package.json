@@ -67,6 +67,7 @@
     "voilab-pdf-table": "0.4.0",
     "sundial": "file:../sundial",
     "tideline": "file:../tideline",
-    "medical-domain": "file:../medical-domain"
+    "medical-domain": "file:../medical-domain",
+    "dumb": "file:../dumb"
   }
 }

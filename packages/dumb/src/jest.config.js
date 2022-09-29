@@ -1,3 +1,29 @@
+/**
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 /*
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
@@ -20,15 +46,17 @@ module.exports = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: undefined,
+  collectCoverageFrom: [
+    '<rootDir>/**/**.ts*'
+  ],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: 'coverage',
 
+  displayName: 'dumb',
+
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  // coveragePathIgnorePatterns: [],
 
   // Indicates which provider should be used to instrument code for coverage
   // coverageProvider: "babel",
@@ -48,7 +76,7 @@ module.exports = {
   // dependencyExtractor: undefined,
 
   // Make calling deprecated APIs throw helpful error messages
-  // errorOnDeprecated: false,
+  errorOnDeprecated: true,
 
   // Force coverage collection from ignored files using an array of glob patterns
   // forceCoverageMatch: [],
@@ -56,13 +84,11 @@ module.exports = {
   // A path to a module which exports an async function that is triggered once before all test suites
   // globalSetup: undefined,
 
-  // globalSetup: "<rootDir>/packages/yourloops/test/index.js",
-
   // A path to a module which exports an async function that is triggered once after all test suites
   // globalTeardown: undefined,
 
   // A set of global variables that need to be available in all test environments
-  // globals: { },
+  globals: {},
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
@@ -84,6 +110,10 @@ module.exports = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   // moduleNameMapper: {},
+  // moduleNameMapper: {
+  //   "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>../../../__mocks__/fileMock.js",
+  //   "\\.(css|less)$": "<rootDir>../../../__mocks__/styleMock.js"
+  // },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -98,11 +128,7 @@ module.exports = {
   // preset: undefined,
 
   // Run tests from one or more projects
-  projects: [
-    '<rootDir>/packages/yourloops/test',
-    '<rootDir>/packages/medical-domain/test',
-    '<rootDir>/packages/dumb/test'
-  ],
+  // projects: [],
 
   // Use this configuration option to add custom reporters to Jest
   // reporters: undefined,
@@ -131,7 +157,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  // setupFiles: ["<rootDir>/beforeEach.js"],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],
@@ -152,10 +178,9 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  // testMatch: [
-  //   "**/__tests__/**/*.[jt]s?(x)",
-  //   "**/?(*.)+(spec|test).[tj]s?(x)"
-  // ],
+  testMatch: [
+    '<rootDir>/**/*.test.tsx'
+  ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
@@ -180,7 +205,7 @@ module.exports = {
   // A map from regular expressions to paths to transformers
   // transform: undefined,
   transform: {
-    '^.+\\.(ts|tsx|js|jsx|mjs)$': '<rootDir>/node_modules/babel-jest'
+    '^.+\\.(ts|tsx|js|jsx|mjs)$': ['<rootDir>../../../node_modules/babel-jest', { rootMode: 'upward' }]
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -188,9 +213,9 @@ module.exports = {
   //   "/node_modules/",
   //   "\\.pnp\\.[^\\/]+$"
   // ],
-  transformIgnorePatterns: [
-    '/!node_modules\\/lodash-es/'
-  ],
+  // transformIgnorePatterns: [
+  //   "/!node_modules\\/lodash-es/",
+  // ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

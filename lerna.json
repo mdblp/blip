@@ -9,6 +9,7 @@
     "packages/viz",
     "packages/blip",
     "packages/yourloops",
-    "packages/medical-domain"
+    "packages/medical-domain",
+    "packages/dumb"
   ]
 }

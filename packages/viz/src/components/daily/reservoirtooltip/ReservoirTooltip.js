@@ -20,7 +20,7 @@ import PropTypes from 'prop-types'
 import i18next from 'i18next'
 import _ from 'lodash'
 
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 import colors from '../../../styles/colors.css'
 import styles from './ReservoirTooltip.css'
 import { SITE_CHANGE_BY_MANUFACTURER, RESERVOIR_CHANGE, DEFAULT_MANUFACTURER } from '../../../utils/constants'
