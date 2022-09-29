@@ -150,7 +150,7 @@ export default class User {
   }
 
   isFirstLogin(): boolean {
-    return !this.profile
+    return !this.role
   }
 
   hasToAcceptNewConsent(): boolean {

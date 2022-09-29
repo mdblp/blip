@@ -110,14 +110,14 @@ const SignUpStepper: FunctionComponent = () => {
         </Typography>
       </Box>
       <Stepper
-        id="signup-stepper"
+        aria-label="signup-stepper"
         activeStep={activeStep}
         alternativeLabel
         className={stepper}
       >
-        {steps.map((label) => (
+        {steps.map((label, index) => (
           <Step key={label}>
-            <StepLabel>{t(label)}</StepLabel>
+            <StepLabel aria-label={`step-${++index}-label`}>{t(label)}</StepLabel>
           </Step>
         ))}
       </Stepper>
