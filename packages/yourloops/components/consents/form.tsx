@@ -191,7 +191,7 @@ export function ConsentFeedback({ id, userRole, checked, onChange }: ConsentChec
 
   const checkboxFeedback = (
     <Checkbox
-      id={`${id}-checkbox-feedback`}
+      aria-label="feedback-checkbox"
       className={classes.checkbox}
       checked={checked}
       onChange={onChange}
