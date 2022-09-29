@@ -23,7 +23,7 @@ import moment from 'moment-timezone'
 
 import { getHourMinuteFormat } from '../../../utils/datetime'
 import { formatParameterValue } from '../../../utils/format'
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 import colors from '../../../styles/colors.css'
 import styles from './ParameterTooltip.css'
 

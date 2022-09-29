@@ -19,7 +19,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 import colors from '../../../styles/colors.css'
 import styles from './FoodTooltip.css'
 import i18next from 'i18next'

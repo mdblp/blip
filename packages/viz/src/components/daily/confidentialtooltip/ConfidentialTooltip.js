@@ -24,7 +24,7 @@ import LockIcon from '@material-ui/icons/LockOutlined'
 import colors from '../../../styles/colors.css'
 import styles from './ConfidentialTooltip.css'
 
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 

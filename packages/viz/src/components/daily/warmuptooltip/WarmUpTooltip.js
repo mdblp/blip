@@ -22,7 +22,7 @@ import i18next from 'i18next'
 import moment from 'moment-timezone'
 
 import { getHourMinuteFormat } from '../../../utils/datetime'
-import Tooltip from '../../common/tooltips/Tooltip'
+import { Tooltip } from 'dumb'
 import colors from '../../../styles/colors.css'
 import styles from './WarmUpTooltip.css'
 
