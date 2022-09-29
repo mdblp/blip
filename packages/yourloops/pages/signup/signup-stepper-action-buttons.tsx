@@ -33,7 +33,6 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
     >
       <Box marginRight={2}>
         <Button
-          id="button-signup-steppers-back"
           onClick={onClickBackButton}
         >
           {t('signup-steppers-back')}
@@ -41,7 +40,6 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
       </Box>
       <ProgressIconButtonWrapper inProgress={inProgress}>
         <Button
-          id="button-signup-steppers-next"
           variant="contained"
           color="primary"
           disableElevation

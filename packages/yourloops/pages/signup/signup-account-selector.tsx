@@ -95,7 +95,8 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             <FormControlLabel
               className={classes.FormControlLabel}
               value={UserRoles.caregiver}
-              control={<Radio id="signup-account-selector-radio-caregiver" color="primary" />}
+              aria-label="caregiver-radio-input"
+              control={<Radio color="primary" />}
               label={
                 <SignupRadioLabel
                   header={t('signup-radiolabel-caregiver-header')}
@@ -108,7 +109,8 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             <FormControlLabel
               className={classes.FormControlLabel}
               value={UserRoles.hcp}
-              control={<Radio id="signup-account-selector-radio-hcp" color="primary" />}
+              aria-label="hcp-radio-input"
+              control={<Radio color="primary" />}
               label={
                 <SignupRadioLabel
                   header={t('signup-radiolabel-hcp-header')}
@@ -122,8 +124,8 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
               disabled
               className={classes.FormControlLabel}
               value={UserRoles.patient}
-              id="form-label-signup-account-patient"
-              control={<Radio id="signup-account-selector-radio-patient" color="primary" />}
+              aria-label="patient-radio-input"
+              control={<Radio color="primary" />}
               label={
                 <SignupRadioLabel
                   header={t('signup-radiolabel-patient-header')}

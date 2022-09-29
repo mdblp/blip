@@ -67,7 +67,7 @@ export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: Consen
 
   const checkboxPolicy = (
     <Checkbox
-      id={`${id}-checkbox-privacy-policy`}
+      aria-label="privacy-policy-checkbox"
       className={classes.checkbox}
       checked={checked}
       onChange={onChange}
@@ -108,7 +108,7 @@ export function ConsentTerms({ id, userRole, checked, onChange }: ConsentCheck):
 
   const checkboxTerms = (
     <Checkbox
-      id={`${id}-checkbox-terms`}
+      aria-label="terms-checkbox"
       className={classes.checkbox}
       checked={checked}
       onChange={onChange}
@@ -252,17 +252,14 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
     }
   }
 
-  let formControlFeedback: JSX.Element | null = null
-  if (showFeedback) {
-    formControlFeedback = <ConsentFeedback id={id} userRole={userRole} checked={feedbackAccepted ?? false} onChange={handleChange} />
-  }
-
   return (
     <FormControl id={`${id}-form`} className={className}>
       <FormGroup className={`${classes.formGroup} ${group ?? ''}`}>
         <ConsentPrivacyPolicy id={id} userRole={userRole} checked={policyAccepted} onChange={handleChange} />
         <ConsentTerms id={id} userRole={userRole} checked={termsAccepted} onChange={handleChange} />
-        {formControlFeedback}
+        {showFeedback &&
+          <ConsentFeedback id={id} userRole={userRole} checked={feedbackAccepted ?? false} onChange={handleChange} />
+        }
       </FormGroup>
     </FormControl>
   )

@@ -69,6 +69,7 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
       display="flex"
       flexDirection="column"
       justifyContent="center"
+      data-testid="consents"
     >
       <ConsentForm
         id="signup"

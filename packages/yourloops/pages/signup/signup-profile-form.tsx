@@ -48,8 +48,8 @@ import { SignUpFormProps } from './signup-stepper'
 import { SignupFormKey } from './signup-form-reducer'
 
 interface Errors {
-  firstName: boolean
-  lastName: boolean
+  firstname: boolean
+  lastname: boolean
   country: boolean
   hcpProfession: boolean
 }
@@ -61,8 +61,8 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
   const { state, dispatch } = useSignUpFormState()
   const { handleBack, handleNext } = props
   const [errors, setErrors] = useState<Errors>({
-    firstName: false,
-    lastName: false,
+    firstname: false,
+    lastname: false,
     country: false,
     hcpProfession: false
   })
@@ -80,15 +80,15 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
     dispatch({ type: 'EDIT_FORMVALUE', key, value: value as string })
   }
 
-  const validateFirstName = (): boolean => {
+  const validateFirstname = (): boolean => {
     const err = !state.profileFirstname.trim()
-    setErrors({ ...errors, firstName: err })
+    setErrors({ ...errors, firstname: err })
     return !err
   }
 
-  const validateLastName = (): boolean => {
+  const validateLastname = (): boolean => {
     const err = !state.profileLastname.trim()
-    setErrors({ ...errors, lastName: err })
+    setErrors({ ...errors, lastname: err })
     return !err
   }
 
@@ -108,7 +108,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
   }
 
   const onFinishSignup = async (): Promise<void> => {
-    if (validateFirstName() && validateLastName() && validateCountry() && validateHcpProfession()) {
+    if (validateFirstname() && validateLastname() && validateCountry() && validateHcpProfession()) {
       try {
         setSaving(true)
         await completeSignup(state)
@@ -128,28 +128,28 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
       justifyContent="center"
     >
       <TextField
-        id="firstname"
+        aria-label={t('firstname')}
         margin="normal"
         label={t('firstname')}
         variant="outlined"
         value={state.profileFirstname}
         required
-        error={errors.firstName}
-        onBlur={validateFirstName}
+        error={errors.firstname}
+        onBlur={validateFirstname}
         onChange={event => onChange(event.target.value, 'profileFirstname')}
-        helperText={errors.firstName && t('required-field')}
+        helperText={errors.firstname && t('required-field')}
       />
       <TextField
-        id="lastname"
+        aria-label={t('lastname')}
         margin="normal"
         label={t('lastname')}
         variant="outlined"
         value={state.profileLastname}
         required
-        error={errors.lastName}
-        onBlur={validateLastName}
+        error={errors.lastname}
+        onBlur={validateLastname}
         onChange={event => onChange(event.target.value, 'profileLastname')}
-        helperText={errors.lastName && t('required-field')}
+        helperText={errors.lastname && t('required-field')}
       />
       <FormControl
         variant="outlined"
@@ -157,18 +157,16 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         required
         error={errors.country}
       >
-        <InputLabel id="country-selector-input-label">
-          {t('signup-country')}
+        <InputLabel>
+          {t('country')}
         </InputLabel>
         <Select
-          labelId="country-selector-label"
-          label={t('signup-country')}
-          id="country-selector"
+          label={t('country')}
+          data-testid="country-selector"
           value={state.profileCountry}
           onBlur={validateCountry}
           onChange={event => onChange(event.target.value, 'profileCountry')}
         >
-          <MenuItem key="" value="" />
           {availableCountries.map((item) => (
             <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
               {t(item.name)}
