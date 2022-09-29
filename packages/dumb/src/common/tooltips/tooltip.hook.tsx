@@ -130,7 +130,7 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
     } else {
       marginOuterValue = `calc(${padding}px + ${borderWidth}px)`
     }
-    const borderSide = (side !== 'left') ? 'right' : 'left'
+    const borderSide = side !== 'left' ? 'right' : 'left'
     return { marginOuterValue, borderSide }
   }, [side, tailWidth, borderWidth])
 

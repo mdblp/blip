@@ -146,14 +146,14 @@ describe('Tooltip hook', () => {
   })
 
   describe('computeTailData', () => {
+    let props = {
+      ...defaultProps,
+      dateTitle: undefined,
+      tailWidth: 50,
+      borderWidth: 20
+    } as TooltipHookProps
     it('should return correct value when side is left', () => {
-      const props = {
-        ...defaultProps,
-        dateTitle: undefined,
-        tailWidth: 50,
-        borderWidth: 20,
-        side: 'left'
-      } as TooltipHookProps
+      props = { ...props, side: 'left' }
       const expectedMarginOuterValue = `calc(10px + ${props.borderWidth}px)`
       const { result } = renderHook(() => useTooltip(props))
       const { marginOuterValue, borderSide } = result.current.computeTailData()
@@ -162,13 +162,7 @@ describe('Tooltip hook', () => {
     })
 
     it('should return correct value when side is right', () => {
-      const props = {
-        ...defaultProps,
-        dateTitle: undefined,
-        tailWidth: 50,
-        borderWidth: 20,
-        side: 'right'
-      } as TooltipHookProps
+      props = { ...props, side: 'right' }
       const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
       const { result } = renderHook(() => useTooltip(props))
       const { marginOuterValue, borderSide } = result.current.computeTailData()
@@ -177,13 +171,7 @@ describe('Tooltip hook', () => {
     })
 
     it('should return correct value when side is top', () => {
-      const props = {
-        ...defaultProps,
-        dateTitle: undefined,
-        tailWidth: 50,
-        borderWidth: 20,
-        side: 'top'
-      } as TooltipHookProps
+      props = { ...props, side: 'top' }
       const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
       const { result } = renderHook(() => useTooltip(props))
       const { marginOuterValue, borderSide } = result.current.computeTailData()
@@ -192,13 +180,7 @@ describe('Tooltip hook', () => {
     })
 
     it('should return correct value when side is bottom', () => {
-      const props = {
-        ...defaultProps,
-        dateTitle: undefined,
-        tailWidth: 50,
-        borderWidth: 20,
-        side: 'bottom'
-      } as TooltipHookProps
+      props = { ...props, side: 'bottom' }
       const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
       const { result } = renderHook(() => useTooltip(props))
       const { marginOuterValue, borderSide } = result.current.computeTailData()

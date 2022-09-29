@@ -87,11 +87,6 @@
   fill: var(--bolus);
 }
 
-.bolusInterrupted {
-  color: var(--bolus-interrupted);
-  fill: var(--bolus-interrupted);
-}
-
 .bolusProgrammed {
   fill: none;
   stroke: var(--bolus);

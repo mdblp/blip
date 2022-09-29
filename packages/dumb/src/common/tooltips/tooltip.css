@@ -63,8 +63,8 @@
 }
 
 .tail {
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   border-style: solid;
   border-color: transparent;
   position: absolute;
