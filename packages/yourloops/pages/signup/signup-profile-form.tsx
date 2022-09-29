@@ -182,13 +182,11 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
           required
           error={errors.hcpProfession}
         >
-          <InputLabel id="hcp-profession-selector-input-label">
+          <InputLabel>
             {t('hcp-profession')}
           </InputLabel>
           <Select
-            labelId="hcp-profession-selector-label"
             label={t('hcp-profession')}
-            id="hcp-profession-selector"
             data-testid="hcp-profession-selector"
             value={state.hcpProfession}
             onBlur={validateHcpProfession}
