@@ -59,7 +59,7 @@ const CompleteSignUpPage: FunctionComponent = () => {
 
   return (
     <Container maxWidth="sm">
-      <Grid container spacing={0} alignItems="center" justify="center">
+      <Grid container spacing={0} alignItems="center" justifyContent="center">
         <Grid item xs={12}>
           <SignUpFormStateProvider>
             <Card id="card-signup" className={classes.card} elevation={4}>
