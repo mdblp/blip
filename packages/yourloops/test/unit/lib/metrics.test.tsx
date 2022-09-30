@@ -28,6 +28,7 @@
 
 import config from '../../../lib/config'
 import metrics from '../../../lib/metrics'
+import { loggedInUsers } from '../common'
 
 describe('Metrics', () => {
   afterAll(() => {
@@ -90,6 +91,26 @@ describe('Metrics', () => {
     expect(window._paq[0][1]).toBe('action')
     expect(window._paq[0][2]).toBe('value')
     expect(window._paq[0][3]).toBe(2)
+  })
+
+  it('should set the userId', () => {
+    const user = loggedInUsers.getCaregiver()
+    metrics.setUser(user)
+    expect(window._paq).toEqual([
+      ['setUserId', user.id],
+      ['setCustomVariable', 1, 'UserRole', user.role, 'page'],
+      ['trackEvent', 'registration', 'login', user.role]
+    ])
+  })
+
+  it('shouldmockReset() the userId', () => {
+    metrics.resetUser()
+    expect(window._paq).toEqual([
+      ['trackEvent', 'registration', 'logout'],
+      ['deleteCustomVariable', 1, 'page'],
+      ['resetUserId'],
+      ['deleteCookies']
+    ])
   })
 
   it('should set the setDocumentTitle', () => {

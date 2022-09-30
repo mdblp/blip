@@ -30,6 +30,7 @@ import _ from 'lodash'
 import bows from 'bows'
 
 import config from './config'
+import { User } from './auth'
 
 type VariableScope = 'page' | 'visit'
 
@@ -186,6 +187,36 @@ const metrics = {
     }
     if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
       matomoPaq.push(['setCustomVariable', id, name, value, scope])
+    }
+  },
+  deleteVariable: (name: string, scope: VariableScope = 'page'): void => {
+    const matomoPaq: unknown[] | undefined = window._paq
+    const { id, found } = getVariableId(name, scope)
+    if (!found) {
+      log.warn(`Variable ${name} / ${scope} do not exists`)
+      return
+    }
+    customVariables[scope].delete(name)
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      matomoPaq.push(['deleteCustomVariable', id, scope])
+    }
+  },
+  setUser: (user: User): void => {
+    const matomoPaq: unknown[] | undefined = window._paq
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      matomoPaq.push(['setUserId', user.id])
+      matomoPaq.push(['setVisitorId', user.id])
+      metrics.setVariable('UserRole', user.role)
+      matomoPaq.push(['trackEvent', 'registration', 'login', user.role])
+    }
+  },
+  resetUser: (): void => {
+    const matomoPaq: unknown[] | undefined = window._paq
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      matomoPaq.push(['trackEvent', 'registration', 'logout'])
+      metrics.deleteVariable('UserRole')
+      matomoPaq.push(['resetUserId'])
+      matomoPaq.push(['deleteCookies']) // Reset visitor id
     }
   },
   setLanguage: (language: string): void => {
