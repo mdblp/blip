@@ -28,7 +28,6 @@
 import UserApi from '../../../lib/auth/user-api'
 import { Preferences, Profile, Settings, UserRoles } from '../../../models/user'
 import { loggedInUserId, mockAuth0Hook } from './mockAuth0Hook'
-import { patientMonitoredId } from './mockPatientAPI'
 import { mockNotificationAPI } from './mockNotificationAPI'
 import { mockDirectShareApi } from './mockDirectShareAPI'
 import { mockTeamAPI } from './mockTeamAPI'
@@ -36,6 +35,7 @@ import PatientAPI from '../../../lib/patient/patient-api'
 import { ITeamMember } from '../../../models/team'
 import { mockChatAPI } from './mockChatAPI'
 import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
+import { unMonitoredPatientId } from './mockPatientAPI'
 
 export const mockUserDataFetch = (firstName: string, lastName: string, userId = loggedInUserId) => {
   jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: userId, token: null })
@@ -51,7 +51,7 @@ export const mockUserDataFetch = (firstName: string, lastName: string, userId = 
 }
 
 export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRoles.patient, patientMonitoredId)
+  mockAuth0Hook(UserRoles.patient, unMonitoredPatientId)
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()

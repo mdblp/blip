@@ -35,7 +35,7 @@ import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
+import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
 import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../assert/daily'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
@@ -66,7 +66,7 @@ describe('Daily view for caregiver', () => {
   it('should render correct basic components when navigating to patient daily view', async () => {
     renderDailyView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP()
+    checkPatientNavBarAsCaregiver()
     checkCaregiverLayout(`${firstName} ${lastName}`)
   })
 

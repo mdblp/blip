@@ -25,11 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { BoundFunctions, queries, screen, within } from '@testing-library/react'
 import { unMonitoredPatientId } from '../mock/mockPatientAPI'
 
-const checkPatientNavBar = (canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
-  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
+const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>, canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
   const dashboardLink = patientNavBar.getByText('Dashboard')
   const dailyLink = patientNavBar.getByText('Daily')
   const trendsLink = patientNavBar.getByText('Trends')
@@ -50,9 +49,22 @@ export const checkPatientNavBarAsHCP = (canGenerateReport = true, patientId = un
   const dashboardURL = `/patient/${patientId}/dashboard`
   const dailyURL = `/patient/${patientId}/daily`
   const trendsURL = `/patient/${patientId}/trends`
-  checkPatientNavBar(canGenerateReport, dashboardURL, dailyURL, trendsURL)
+  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
+  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
+  checkPatientNavBar(patientNavBar, canGenerateReport, dashboardURL, dailyURL, trendsURL)
+}
+
+export const checkPatientNavBarAsCaregiver = (canGenerateReport = true, patientId = unMonitoredPatientId) => {
+  const dashboardURL = `/patient/${patientId}/dashboard`
+  const dailyURL = `/patient/${patientId}/daily`
+  const trendsURL = `/patient/${patientId}/trends`
+  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
+  expect(patientNavBar.queryByTestId('patient-dropdown')).not.toBeInTheDocument()
+  checkPatientNavBar(patientNavBar, canGenerateReport, dashboardURL, dailyURL, trendsURL)
 }
 
 export const checkPatientNavBarAsPatient = (canGenerateReport = true) => {
-  checkPatientNavBar(canGenerateReport, '/dashboard', '/daily', '/trends')
+  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
+  expect(patientNavBar.queryByTestId('patient-dropdown')).not.toBeInTheDocument()
+  checkPatientNavBar(patientNavBar, canGenerateReport, '/dashboard', '/daily', '/trends')
 }

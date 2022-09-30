@@ -35,7 +35,7 @@ import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
+import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
 import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../assert/trends'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
@@ -66,7 +66,7 @@ describe('Trends view for caregiver', () => {
   it('should render correct basic components when navigating to patient trends view', async () => {
     renderTrendView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP(false)
+    checkPatientNavBarAsCaregiver(false)
     checkCaregiverLayout(`${firstName} ${lastName}`)
   })
 
