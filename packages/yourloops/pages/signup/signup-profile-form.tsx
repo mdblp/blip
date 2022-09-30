@@ -48,8 +48,8 @@ import { SignUpFormProps } from './signup-stepper'
 import { SignupFormKey } from './signup-form-reducer'
 
 interface Errors {
-  firstname: boolean
-  lastname: boolean
+  firstName: boolean
+  lastName: boolean
   country: boolean
   hcpProfession: boolean
 }
@@ -61,8 +61,8 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
   const { state, dispatch } = useSignUpFormState()
   const { handleBack, handleNext } = props
   const [errors, setErrors] = useState<Errors>({
-    firstname: false,
-    lastname: false,
+    firstName: false,
+    lastName: false,
     country: false,
     hcpProfession: false
   })
@@ -82,13 +82,13 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
   const validateFirstname = (): boolean => {
     const err = !state.profileFirstname.trim()
-    setErrors({ ...errors, firstname: err })
+    setErrors({ ...errors, firstName: err })
     return !err
   }
 
   const validateLastname = (): boolean => {
     const err = !state.profileLastname.trim()
-    setErrors({ ...errors, lastname: err })
+    setErrors({ ...errors, lastName: err })
     return !err
   }
 
@@ -128,28 +128,28 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
       justifyContent="center"
     >
       <TextField
-        aria-label={t('firstname')}
+        aria-label={t('firstName')}
         margin="normal"
-        label={t('firstname')}
+        label={t('firstName')}
         variant="outlined"
         value={state.profileFirstname}
         required
-        error={errors.firstname}
+        error={errors.firstName}
         onBlur={validateFirstname}
         onChange={event => onChange(event.target.value, 'profileFirstname')}
-        helperText={errors.firstname && t('required-field')}
+        helperText={errors.firstName && t('required-field')}
       />
       <TextField
-        aria-label={t('lastname')}
+        aria-label={t('lastName')}
         margin="normal"
-        label={t('lastname')}
+        label={t('lastName')}
         variant="outlined"
         value={state.profileLastname}
         required
-        error={errors.lastname}
+        error={errors.lastName}
         onBlur={validateLastname}
         onChange={event => onChange(event.target.value, 'profileLastname')}
-        helperText={errors.lastname && t('required-field')}
+        helperText={errors.lastName && t('required-field')}
       />
       <FormControl
         variant="outlined"

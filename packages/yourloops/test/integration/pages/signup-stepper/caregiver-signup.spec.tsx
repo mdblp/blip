@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { Router } from 'react-router-dom'
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import { loggedInUserId, mockAuth0Hook } from '../../utils/mockAuth0Hook'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
@@ -35,6 +35,7 @@ import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../utils/mockUserApi'
 import { Profile } from '../../../../models/user'
+import userEvent from '@testing-library/user-event'
 
 jest.setTimeout(15000)
 
@@ -72,25 +73,26 @@ describe('Signup stepper', () => {
     await waitFor(() => expect(history.location.pathname).toEqual('/complete-signup'))
   }
 
-  it('should be able to create a hcp account', async () => {
+  it('should be able to create a caregiver account', async () => {
     await renderDom()
     checkStepper()
 
     // Step one
     checkAccountSelectorStep()
-    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    userEvent.click(screen.getByLabelText('Caregiver radio selector'))
+    userEvent.click(screen.getByRole('button', { name: 'Next' }))
 
     // Step two
     checkConsentStep()
-    expect(screen.queryByLabelText('feedback-checkbox')).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    expect(screen.queryByLabelText('Feedback checkbox')).not.toBeInTheDocument()
+    userEvent.click(screen.getByRole('button', { name: 'Next' }))
 
     // Step three
     await checkProfileStep(firstName, lastName)
     expect(screen.queryByTestId('hcp-profession-selector')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Create Account' })).not.toBeDisabled()
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Create Account' }))
+      userEvent.click(screen.getByRole('button', { name: 'Create Account' }))
     })
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expect.objectContaining<Partial<Profile>>(expectedProfile))
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, { country: 'FR' })

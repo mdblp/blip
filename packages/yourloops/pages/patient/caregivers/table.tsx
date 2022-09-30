@@ -171,7 +171,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
             <TableCell id="patient-caregivers-table-header-status" />
             <TableCell id="patient-caregivers-table-header-lastname">
               <TableSortLabel active={orderBy === 'lastname'} direction={order} onClick={createSortHandler(SortFields.lastname)}>
-                {t('lastname')}
+                {t('lastName')}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patient-caregivers-table-header-firstname">
@@ -180,7 +180,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
                 direction={order}
                 onClick={createSortHandler(SortFields.firstname)}
               >
-                {t('firstname')}
+                {t('firstName')}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patient-cargivers-table-header-email">

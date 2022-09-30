@@ -39,7 +39,7 @@ interface ISignUpFormStateContext {
 }
 
 export const initialState: SignupForm = {
-  accountRole: UserRoles.caregiver,
+  accountRole: UserRoles.unset,
   profileFirstname: '',
   profileLastname: '',
   profileCountry: '',
@@ -53,10 +53,7 @@ export const initialState: SignupForm = {
 /*
  * Create the context for the Signup Form state
  */
-const SignUpFormStateContext = createContext<ISignUpFormStateContext>({
-  state: initialState,
-  dispatch: () => undefined
-})
+const SignUpFormStateContext = createContext<ISignUpFormStateContext>({} as ISignUpFormStateContext)
 
 /*
  * Provide a signup form state context

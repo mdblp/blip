@@ -97,10 +97,10 @@ export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.
 
       <DialogContent>
         <DialogContentText color="textPrimary" aria-label="firstname">
-          {t('firstname')} : {patient?.profile.firstName}
+          {t('firstName')} : {patient?.profile.firstName}
         </DialogContentText>
         <DialogContentText color="textPrimary" aria-label="lastname">
-          {t('lastname')} : {patient?.profile.lastName}
+          {t('lastName')} : {patient?.profile.lastName}
         </DialogContentText>
         <DialogContentText color="textPrimary" aria-label="birthdate">
           {t('birthdate')} : {formatDateWithMomentLongFormat(patient?.profile.birthdate)}
