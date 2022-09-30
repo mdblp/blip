@@ -205,7 +205,6 @@ const metrics = {
     const matomoPaq: unknown[] | undefined = window._paq
     if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
       matomoPaq.push(['setUserId', user.id])
-      matomoPaq.push(['setVisitorId', user.id])
       metrics.setVariable('UserRole', user.role)
       matomoPaq.push(['trackEvent', 'registration', 'login', user.role])
     }
