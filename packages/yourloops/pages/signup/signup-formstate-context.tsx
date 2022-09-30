@@ -25,29 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, Dispatch, FunctionComponent, useContext, useReducer } from 'react'
+import React, { createContext, FunctionComponent, useContext, useState } from 'react'
 
-import { HcpProfession } from '../../models/hcp-profession'
 import { getCurrentLang } from '../../lib/language'
 import { SignupForm } from '../../lib/auth'
 import { UserRoles } from '../../models/user'
-import signupFormReducer, { SignupReducerAction } from './signup-form-reducer'
 
 interface ISignUpFormStateContext {
-  state: SignupForm
-  dispatch: Dispatch<SignupReducerAction>
+  signupForm: SignupForm
+  setSignupForm: Function
 }
 
-export const initialState: SignupForm = {
+const initialState: SignupForm = {
   accountRole: UserRoles.unset,
   profileFirstname: '',
   profileLastname: '',
   profileCountry: '',
-  hcpProfession: HcpProfession.empty,
   preferencesLanguage: getCurrentLang(),
   terms: false,
-  privacyPolicy: false,
-  feedback: false
+  privacyPolicy: false
 }
 
 /*
@@ -59,17 +55,16 @@ const SignUpFormStateContext = createContext<ISignUpFormStateContext>({} as ISig
  * Provide a signup form state context
  */
 export const SignUpFormStateProvider: FunctionComponent = ({ children }) => {
-  // Attach the Signup reducer and assign initial state
-  const [state, dispatch] = useReducer(signupFormReducer, initialState)
+  const [signupForm, setSignupForm] = useState<SignupForm>(initialState)
 
   return (
-    <SignUpFormStateContext.Provider value={{ state, dispatch }}>
+    <SignUpFormStateContext.Provider value={{ signupForm, setSignupForm }}>
       {children}
     </SignUpFormStateContext.Provider>
   )
 }
 
 /**
- Returns the current SignupForm State and a dispatcher to update it
+ Returns the current SignupForm State and a setter to update it
  */
 export const useSignUpFormState = (): ISignUpFormStateContext => useContext(SignUpFormStateContext)
