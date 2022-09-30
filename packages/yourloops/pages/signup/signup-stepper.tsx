@@ -63,9 +63,9 @@ const SignUpStepper: FunctionComponent = () => {
   const history = useHistory()
   const [activeStep, setActiveStep] = useState(0)
   const steps = [
-    'signup-account-select-step',
-    'signup-consent-step',
-    'signup-profile-step'
+    'select-account',
+    'consent',
+    'create-profile'
   ]
 
   const handleNext = (): void => {
@@ -110,14 +110,14 @@ const SignUpStepper: FunctionComponent = () => {
         </Typography>
       </Box>
       <Stepper
-        aria-label="signup-stepper"
+        aria-label={t('signup-stepper')}
         activeStep={activeStep}
         alternativeLabel
         className={stepper}
       >
-        {steps.map((label, index) => (
+        {steps.map((label) => (
           <Step key={label}>
-            <StepLabel aria-label={`step-${++index}-label`}>{t(label)}</StepLabel>
+            <StepLabel aria-label={t(label)}>{t(label)}</StepLabel>
           </Step>
         ))}
       </Stepper>

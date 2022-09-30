@@ -25,15 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  AuthenticatedUser,
-  Consent,
-  Preferences,
-  Profile,
-  Settings,
-  UserMetadata,
-  UserRoles
-} from '../../models/user'
+import { AuthenticatedUser, Consent, Preferences, Profile, Settings, UserMetadata, UserRoles } from '../../models/user'
 import { MedicalData } from '../../models/device-data'
 import config from '../config'
 
@@ -45,7 +37,7 @@ export default class User {
   readonly username: string
   id: string
   frProId?: string
-  role: UserRoles | null
+  role: UserRoles
   medicalData?: MedicalData
   preferences?: Preferences
   profile?: Profile
@@ -66,8 +58,8 @@ export default class User {
     return parsedSub[parsedSub.length - 1]
   }
 
-  private static getRole(roles: string[] | null): UserRoles | null {
-    return roles ? roles[0] as UserRoles : null
+  private static getRole(roles: string[] | null): UserRoles {
+    return roles ? roles[0] as UserRoles : UserRoles.unset
   }
 
   get firstName(): string {
@@ -150,7 +142,7 @@ export default class User {
   }
 
   isFirstLogin(): boolean {
-    return !this.role
+    return this.role === UserRoles.unset
   }
 
   hasToAcceptNewConsent(): boolean {

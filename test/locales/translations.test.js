@@ -115,13 +115,10 @@ const ignoredTransKeyForYourLoops = [
   'not-logged-in',
   'modal-add-medical-team-code-no-invite',
   'severe-hypoglycemia-threshold',
-  'signup-steppers-caregiver-title',
-  'signup-steppers-hcp-title',
-  'team-card-label-address',
   'team-leave-dialog-button-leave',
-  'signup-account-select-step',
-  'signup-consent-step',
-  'signup-profile-step',
+  'select-account',
+  'consent',
+  'create-profile',
   'until',
   // Others
   // TODO
@@ -137,8 +134,6 @@ const ignoredTransKeyForYourLoops = [
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
-  'team-card-label-${label}',
-  'signup-steppers-${state.formValues.accountRole}-title',
   // Documentation!
   'translate-me',
   'translate-{{someone}}'

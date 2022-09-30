@@ -86,8 +86,6 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
       justifyContent="center"
     >
         <RadioGroup
-          aria-label="account-selector"
-          name="account-selector"
           value={state.accountRole}
           onChange={event => handleRadioChange(event.target.value, 'accountRole')}
         >
@@ -95,11 +93,11 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             <FormControlLabel
               className={classes.FormControlLabel}
               value={UserRoles.caregiver}
-              aria-label="caregiver-radio-input"
+              aria-label={t('caregiver-radio-input')}
               control={<Radio color="primary" />}
               label={
                 <SignupRadioLabel
-                  header={t('signup-radiolabel-caregiver-header')}
+                  header={t('caregiver-and-family')}
                   body={t('signup-radiolabel-caregiver-body')}
                 />
               }
@@ -109,11 +107,11 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             <FormControlLabel
               className={classes.FormControlLabel}
               value={UserRoles.hcp}
-              aria-label="hcp-radio-input"
+              aria-label={t('hcp-radio-input')}
               control={<Radio color="primary" />}
               label={
                 <SignupRadioLabel
-                  header={t('signup-radiolabel-hcp-header')}
+                  header={t('professional')}
                   body={t('signup-radiolabel-hcp-body')}
                 />
               }
@@ -124,11 +122,11 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
               disabled
               className={classes.FormControlLabel}
               value={UserRoles.patient}
-              aria-label="patient-radio-input"
+              aria-label={t('patient-radio-input')}
               control={<Radio color="primary" />}
               label={
                 <SignupRadioLabel
-                  header={t('signup-radiolabel-patient-header')}
+                  header={t('patient')}
                   body={t('signup-radiolabel-patient-body')}
                 />
               }

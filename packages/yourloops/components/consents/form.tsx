@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { Theme, makeStyles } from '@material-ui/core/styles'
@@ -61,13 +61,13 @@ const formStyles = makeStyles(
   { name: 'ylp-form-consents' }
 )
 
-export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
   const { t, i18n } = useTranslation('yourloops')
   const classes = formStyles()
 
   const checkboxPolicy = (
     <Checkbox
-      aria-label="privacy-policy-checkbox"
+      aria-label={t('privacy-policy-checkbox')}
       className={classes.checkbox}
       checked={checked}
       onChange={onChange}
@@ -77,7 +77,12 @@ export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: Consen
   )
   const privacyPolicy = t('privacy-policy')
   const linkPrivacyPolicy = (
-    <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank" rel="noreferrer">
+    <Link
+      aria-label={privacyPolicy}
+      href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)}
+      target="_blank"
+      rel="noreferrer"
+    >
       {privacyPolicy}
     </Link>
   )
@@ -102,13 +107,13 @@ export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: Consen
   )
 }
 
-export function ConsentTerms({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
   const { t, i18n } = useTranslation('yourloops')
   const classes = formStyles()
 
   const checkboxTerms = (
     <Checkbox
-      aria-label="terms-checkbox"
+      aria-label={t('terms-checkbox')}
       className={classes.checkbox}
       checked={checked}
       onChange={onChange}
@@ -143,7 +148,7 @@ export function ConsentTerms({ id, userRole, checked, onChange }: ConsentCheck):
   )
 }
 
-export function ConsentMonitoringTerms({ id, checked, onChange }: BaseConsentCheck): JSX.Element {
+export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id, checked, onChange }) => {
   const { t, i18n } = useTranslation('yourloops')
   const classes = formStyles()
 
@@ -185,13 +190,13 @@ export function ConsentMonitoringTerms({ id, checked, onChange }: BaseConsentChe
   )
 }
 
-export function ConsentFeedback({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
   const { t } = useTranslation('yourloops')
   const classes = formStyles()
 
   const checkboxFeedback = (
     <Checkbox
-      aria-label="feedback-checkbox"
+      aria-label={t('feedback-checkbox')}
       className={classes.checkbox}
       checked={checked}
       onChange={onChange}
@@ -216,7 +221,7 @@ export function ConsentFeedback({ id, userRole, checked, onChange }: ConsentChec
   )
 }
 
-function ConsentForm(props: ConsentFormProps): JSX.Element {
+const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
   const {
     userRole,
     id,
@@ -253,19 +258,34 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
   }
 
   return (
-    <FormControl id={`${id}-form`} className={className}>
+    <FormControl className={className}>
       <FormGroup className={`${classes.formGroup} ${group ?? ''}`}>
-        <ConsentPrivacyPolicy id={id} userRole={userRole} checked={policyAccepted} onChange={handleChange} />
-        <ConsentTerms id={id} userRole={userRole} checked={termsAccepted} onChange={handleChange} />
+        <ConsentPrivacyPolicy
+          id={id}
+          userRole={userRole}
+          checked={policyAccepted}
+          onChange={handleChange}
+        />
+        <ConsentTerms
+          id={id}
+          userRole={userRole}
+          checked={termsAccepted}
+          onChange={handleChange}
+        />
         {showFeedback &&
-          <ConsentFeedback id={id} userRole={userRole} checked={feedbackAccepted ?? false} onChange={handleChange} />
+          <ConsentFeedback
+            id={id}
+            userRole={userRole}
+            checked={!!feedbackAccepted}
+            onChange={handleChange}
+          />
         }
       </FormGroup>
     </FormControl>
   )
 }
 
-export function MonitoringConsentForm(props: MonitoringConsentFormProps): JSX.Element {
+export const MonitoringConsentForm: FunctionComponent<MonitoringConsentFormProps> = (props) => {
   const {
     id,
     className,

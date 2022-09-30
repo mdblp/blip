@@ -35,6 +35,7 @@ import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../utils/mockUserApi'
 import { HcpProfession } from '../../../../models/hcp-profession'
+import userEvent from '@testing-library/user-event'
 
 jest.setTimeout(15000)
 
@@ -80,17 +81,17 @@ describe('Signup stepper', () => {
 
     // Step one
     checkAccountSelectorStep()
-    fireEvent.click(screen.getByLabelText('hcp-radio-input'))
-    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    userEvent.click(screen.getByLabelText('Hcp radio selector'))
+    userEvent.click(screen.getByRole('button', { name: 'Next' }))
 
     // Step two
-    const feedbackCheckbox = screen.queryByLabelText('feedback-checkbox')
+    const feedbackCheckbox = screen.queryByLabelText('Feedback checkbox')
 
     checkConsentStep()
     expect(feedbackCheckbox).toBeInTheDocument()
 
-    fireEvent.click(feedbackCheckbox)
-    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+    userEvent.click(feedbackCheckbox)
+    userEvent.click(screen.getByRole('button', { name: 'Next' }))
 
     // Step three
     const createButton = screen.getByRole('button', { name: 'Create Account' })
@@ -101,11 +102,11 @@ describe('Signup stepper', () => {
 
     fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('button'))
     screen.getByRole('listbox')
-    fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
+    userEvent.click(screen.getByRole('option', { name: 'Nurse' }))
 
     expect(createButton).not.toBeDisabled()
     await act(async () => {
-      fireEvent.click(createButton)
+      userEvent.click(createButton)
     })
 
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)

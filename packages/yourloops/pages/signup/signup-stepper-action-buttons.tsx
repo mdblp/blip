@@ -35,7 +35,7 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
         <Button
           onClick={onClickBackButton}
         >
-          {t('signup-steppers-back')}
+          {t('back')}
         </Button>
       </Box>
       <ProgressIconButtonWrapper inProgress={inProgress}>
