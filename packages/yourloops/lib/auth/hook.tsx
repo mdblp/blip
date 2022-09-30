@@ -194,14 +194,19 @@ export function AuthContextImpl(): AuthContext {
 
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
     const now = new Date().toISOString()
-    const profile: Profile = {
+    let profile: Profile = {
       fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
       firstName: signupForm.profileFirstname,
       lastName: signupForm.profileLastname,
       termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
-      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy },
-      contactConsent: { acceptanceTimestamp: now, isAccepted: signupForm.feedback },
-      hcpProfession: signupForm.hcpProfession
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
+    }
+    if (signupForm.accountRole === UserRoles.hcp) {
+      profile = {
+        ...profile,
+        contactConsent: { acceptanceTimestamp: now, isAccepted: signupForm.feedback },
+        hcpProfession: signupForm.hcpProfession
+      }
     }
     const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
     const settings: Settings = { country: signupForm.profileCountry }

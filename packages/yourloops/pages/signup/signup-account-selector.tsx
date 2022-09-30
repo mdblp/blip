@@ -41,8 +41,7 @@ import { useSignUpFormState } from './signup-formstate-context'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { UserRoles } from '../../models/user'
 import { SignUpFormProps } from './signup-stepper'
-import { SignupFormKey } from './signup-form-reducer'
-import { HcpProfession } from '../../models/hcp-profession'
+import { SignupFormKey } from '../../lib/auth/models'
 
 const useStyles = makeStyles((theme: Theme) => ({
   Paper: {
@@ -61,22 +60,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const classes = useStyles()
-  const { state, dispatch } = useSignUpFormState()
+  const { signupForm, setSignupForm } = useSignUpFormState()
   const { handleBack, handleNext } = props
 
-  const isInvalidRole = state.accountRole === UserRoles.unset || state.accountRole === UserRoles.patient
+  const isInvalidRole = signupForm.accountRole === UserRoles.unset || signupForm.accountRole === UserRoles.patient
 
   const handleRadioChange = (value: string, key: SignupFormKey): void => {
-    dispatch({ type: 'EDIT_FORMVALUE', key, value })
+    setSignupForm(prevState => ({ ...prevState, [key]: value }))
     if (value === UserRoles.caregiver) {
-      dispatch({ type: 'EDIT_FORMVALUE', key: 'hcpProfession', value: HcpProfession.empty })
-      dispatch({ type: 'EDIT_FORMVALUE', key: 'feedback', value: false })
+      setSignupForm(prevState => {
+        delete prevState.hcpProfession
+        delete prevState.feedback
+        return { ...prevState }
+      })
     }
   }
 
   const onNext = (): void => {
     handleNext()
-    metrics.send('registration', 'select_account_type', state.accountRole)
+    metrics.send('registration', 'select_account_type', signupForm.accountRole)
   }
 
   return (
@@ -85,54 +87,54 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
       flexDirection="column"
       justifyContent="center"
     >
-        <RadioGroup
-          value={state.accountRole}
-          onChange={event => handleRadioChange(event.target.value, 'accountRole')}
-        >
-          <Paper elevation={3} className={classes.Paper}>
-            <FormControlLabel
-              className={classes.FormControlLabel}
-              value={UserRoles.caregiver}
-              aria-label={t('caregiver-radio-input')}
-              control={<Radio color="primary" />}
-              label={
-                <SignupRadioLabel
-                  header={t('caregiver-and-family')}
-                  body={t('signup-radiolabel-caregiver-body')}
-                />
-              }
-            />
-          </Paper>
-          <Paper elevation={3} className={classes.Paper}>
-            <FormControlLabel
-              className={classes.FormControlLabel}
-              value={UserRoles.hcp}
-              aria-label={t('hcp-radio-input')}
-              control={<Radio color="primary" />}
-              label={
-                <SignupRadioLabel
-                  header={t('professional')}
-                  body={t('signup-radiolabel-hcp-body')}
-                />
-              }
-            />
-          </Paper>
-          <Paper elevation={3} className={classes.Paper}>
-            <FormControlLabel
-              disabled
-              className={classes.FormControlLabel}
-              value={UserRoles.patient}
-              aria-label={t('patient-radio-input')}
-              control={<Radio color="primary" />}
-              label={
-                <SignupRadioLabel
-                  header={t('patient')}
-                  body={t('signup-radiolabel-patient-body')}
-                />
-              }
-            />
-          </Paper>
-        </RadioGroup>
+      <RadioGroup
+        value={signupForm.accountRole}
+        onChange={event => handleRadioChange(event.target.value, SignupFormKey.AccountRole)}
+      >
+        <Paper elevation={3} className={classes.Paper}>
+          <FormControlLabel
+            className={classes.FormControlLabel}
+            value={UserRoles.caregiver}
+            aria-label={t('caregiver-radio-input')}
+            control={<Radio color="primary" />}
+            label={
+              <SignupRadioLabel
+                header={t('caregiver-and-family')}
+                body={t('signup-radiolabel-caregiver-body')}
+              />
+            }
+          />
+        </Paper>
+        <Paper elevation={3} className={classes.Paper}>
+          <FormControlLabel
+            className={classes.FormControlLabel}
+            value={UserRoles.hcp}
+            aria-label={t('hcp-radio-input')}
+            control={<Radio color="primary" />}
+            label={
+              <SignupRadioLabel
+                header={t('professional')}
+                body={t('signup-radiolabel-hcp-body')}
+              />
+            }
+          />
+        </Paper>
+        <Paper elevation={3} className={classes.Paper}>
+          <FormControlLabel
+            disabled
+            className={classes.FormControlLabel}
+            value={UserRoles.patient}
+            aria-label={t('patient-radio-input')}
+            control={<Radio color="primary" />}
+            label={
+              <SignupRadioLabel
+                header={t('patient')}
+                body={t('signup-radiolabel-patient-body')}
+              />
+            }
+          />
+        </Paper>
+      </RadioGroup>
 
       <SignupStepperActionButtons
         nextButtonLabel={t('next')}

@@ -35,33 +35,33 @@ import { ConsentForm } from '../../components/consents'
 import { useSignUpFormState } from './signup-formstate-context'
 import { SignUpFormProps } from './signup-stepper'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
-import { SignupFormKey } from './signup-form-reducer'
+import { SignupFormKey } from '../../lib/auth/models'
 
 const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { handleBack, handleNext } = props
-  const { state, dispatch } = useSignUpFormState()
-  const consentsChecked = state.terms && state.privacyPolicy
+  const { signupForm, setSignupForm } = useSignUpFormState()
+  const consentsChecked = signupForm.terms && signupForm.privacyPolicy
 
   const handleChange = (value: boolean, key: SignupFormKey): void => {
-    dispatch({ type: 'EDIT_FORMVALUE', key, value })
+    setSignupForm(prevState => ({ ...prevState, [key]: value }))
   }
 
   const setPolicyAccepted = (value: boolean): void => {
-    handleChange(value, 'privacyPolicy')
+    handleChange(value, SignupFormKey.PrivacyPolicy)
   }
 
   const setTermsAccepted = (value: boolean): void => {
-    handleChange(value, 'terms')
+    handleChange(value, SignupFormKey.Terms)
   }
 
   const setFeedbackAccepted = (value: boolean): void => {
-    handleChange(value, 'feedback')
+    handleChange(value, SignupFormKey.Feedback)
   }
 
   const onNext = (): void => {
     handleNext()
-    metrics.send('registration', 'accept_terms', state.accountRole)
+    metrics.send('registration', 'accept_terms', signupForm.accountRole)
   }
 
   return (
@@ -73,12 +73,12 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
     >
       <ConsentForm
         id="signup"
-        userRole={state.accountRole}
-        policyAccepted={state.privacyPolicy}
+        userRole={signupForm.accountRole}
+        policyAccepted={signupForm.privacyPolicy}
         setPolicyAccepted={setPolicyAccepted}
-        termsAccepted={state.terms}
+        termsAccepted={signupForm.terms}
         setTermsAccepted={setTermsAccepted}
-        feedbackAccepted={state.feedback}
+        feedbackAccepted={signupForm.feedback}
         setFeedbackAccepted={setFeedbackAccepted}
       />
 
