@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.0.1-beta29",
+  "version": "3.0.1-beta31",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform.",
   "repository": {
@@ -47,7 +47,7 @@
     "test-medical-domain": "lerna --stream --scope=medical-domain run test",
     "test-dumb": "lerna --stream --scope=dumb run test",
     "build-yourloops": "lerna --stream --scope yourloops run build",
-    "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
+    "security-checks": "npm audit --production --audit-level=critical --registry=https://registry.npmjs.org/",
     "prebuild-soup": "mkdir -pv doc",
     "prebuild-dev": "rm -rf dist",
     "build-dev": "NODE_OPTIONS='--max-old-space-size=4096 --trace-deprecation' lerna run --stream --scope yourloops build-dev",
@@ -134,7 +134,7 @@
     "karma-sinon": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^5.0.0",
-    "lerna": "^4.0.0",
+    "lerna": "^5.4.4",
     "less": "^4.1.2",
     "less-loader": "^10.0.1",
     "mini-css-extract-plugin": "^2.4.2",

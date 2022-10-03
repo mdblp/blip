@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * 404 page
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,30 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { screen } from '@testing-library/react'
+import { mockPatientLogin } from '../../mock/auth'
+import { unMonitoredPatient } from '../../mock/mockPatientAPI'
+import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
+import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../assert/daily'
+import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
+import { renderPage } from '../../utils/render'
+import { checkPatientLayout } from '../../assert/layout'
 
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
+jest.setTimeout(10000)
 
-import { setPageTitle } from '../lib/utils'
+describe('Daily view for patient', () => {
+  beforeAll(() => {
+    mockPatientLogin(unMonitoredPatient)
+    mockDataAPIForDailyView()
+  })
 
-function InvalidRoute(): JSX.Element {
-  const { t } = useTranslation('yourloops')
+  const renderDailyView = () => {
+    renderPage('/daily')
+  }
 
-  setPageTitle()
+  it('should render correct basic components when navigating to patient daily view', async () => {
+    renderDailyView()
+    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsPatient(true)
+    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
+  })
 
-  return (
-    <Grid container direction="column" justifyContent="center" alignItems="center">
-      <p>{t('page-not-found')}</p>
-      <Typography color="primary">
-        <Link to="/">
-          {t('breadcrumb-home')}
-        </Link>
-      </Typography>
-    </Grid>
-  )
-}
-
-export default InvalidRoute
+  it('should render correct tooltips', async () => {
+    renderDailyView()
+    await checkDailyTidelineContainerTooltips()
+    checkDailyStatsWidgetsTooltips()
+  })
+})

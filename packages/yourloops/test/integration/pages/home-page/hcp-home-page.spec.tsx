@@ -26,23 +26,21 @@
  */
 
 import { Router } from 'react-router-dom'
-import { AuthContextProvider } from '../../lib/auth'
-import { MainLobby } from '../../app/main-lobby'
+import { AuthContextProvider } from '../../../../lib/auth'
+import { MainLobby } from '../../../../app/main-lobby'
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { mockAuth0Hook } from './utils/mockAuth0Hook'
-import { mockNotificationAPI } from './utils/mockNotificationAPI'
-import { mockTeamAPI, teamThree, teamTwo } from './utils/mockTeamAPI'
-import { mockUserDataFetch } from './utils/auth'
-import { mockPatientAPI, monitoredPatient, removePatientMock, unMonitoredPatient } from './utils/mockPatientAPI'
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
-import { checkHeader } from './utils/header'
-import { checkDrawer } from './utils/drawer'
-import { checkFooter } from './utils/footer'
-import { mockDataAPI } from './utils/mockDataAPI'
-import { mockDirectShareApi } from './utils/mockDirectShareAPI'
-import PatientAPI from '../../lib/patient/patient-api'
-import { checkPatientSecondaryBar } from './utils/patientSecondaryBar'
+import PatientAPI from '../../../../lib/patient/patient-api'
+import { checkPatientSecondaryBar } from '../../utils/patientSecondaryBar'
+import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { mockPatientAPI, monitoredPatient, removePatientMock, unMonitoredPatient } from '../../mock/mockPatientAPI'
+import { mockUserDataFetch } from '../../mock/auth'
+import { mockTeamAPI, teamThree, teamTwo } from '../../mock/mockTeamAPI'
+import { checkFooter } from '../../assert/footer'
+import { checkHCPLayout } from '../../assert/layout'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -53,7 +51,6 @@ describe('HCP home page', () => {
     mockTeamAPI()
     mockUserDataFetch(firstName, lastName)
     mockPatientAPI()
-    mockDataAPI()
     mockDirectShareApi()
   })
 
@@ -72,8 +69,7 @@ describe('HCP home page', () => {
     await act(async () => {
       render(getHomePage())
     })
-    checkHeader(`${firstName} ${lastName}`)
-    checkDrawer()
+    checkHCPLayout(`${firstName} ${lastName}`)
     checkFooter()
     checkPatientSecondaryBar()
   })

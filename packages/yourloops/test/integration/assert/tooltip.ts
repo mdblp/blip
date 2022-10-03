@@ -25,20 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { UserMetadata } from '../../../models/user'
+import userEvent from '@testing-library/user-event'
+import { BoundFunctions, queries, within, screen } from '@testing-library/react'
 
-export const loggedInUserId = '919b1575bad58'
-
-export const mockAuth0Hook = () => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
-    user: {
-      email: 'john.doe@example.com',
-      email_verified: true,
-      sub: 'auth0|' + loggedInUserId,
-      [UserMetadata.Roles]: ['hcp']
-    }
-  })
+export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
+  const element = statsWidgets.getByText(infoIconLabel)
+  const infoIcon = within(element).getByTestId('info-icon')
+  userEvent.hover(infoIcon)
+  const tooltip = screen.getByTestId('tooltip')
+  expect(tooltip).toHaveTextContent(expectedTextContent)
+  userEvent.unhover(infoIcon)
 }

@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * 404 page
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,30 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { checkCaregiverHeader, checkHCPHeader, checkPatientHeader } from './header'
+import { checkDrawerNotVisible, checkDrawer } from './drawer'
+import { checkFooter } from './footer'
 
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-
-import { setPageTitle } from '../lib/utils'
-
-function InvalidRoute(): JSX.Element {
-  const { t } = useTranslation('yourloops')
-
-  setPageTitle()
-
-  return (
-    <Grid container direction="column" justifyContent="center" alignItems="center">
-      <p>{t('page-not-found')}</p>
-      <Typography color="primary">
-        <Link to="/">
-          {t('breadcrumb-home')}
-        </Link>
-      </Typography>
-    </Grid>
-  )
+export const checkHCPLayout = (fullName: string) => {
+  checkHCPHeader(fullName)
+  checkDrawer()
+  checkFooter()
 }
 
-export default InvalidRoute
+export const checkCaregiverLayout = (fullName: string) => {
+  checkCaregiverHeader(fullName)
+  checkDrawer()
+  checkFooter()
+}
+
+export const checkPatientLayout = (fullName: string) => {
+  checkPatientHeader(fullName)
+  checkDrawerNotVisible()
+  checkFooter()
+}

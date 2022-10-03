@@ -111,6 +111,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   return (
     <div
       className={styles.tooltip}
+      data-testid="tooltip"
       style={{ top: offsets.top, left: offsets.left, backgroundColor, borderColor, borderWidth: `${borderWidth}px` }}
       ref={elementRef}
     >

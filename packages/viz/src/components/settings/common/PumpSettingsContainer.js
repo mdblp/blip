@@ -29,8 +29,8 @@ class PumpSettingsContainer extends React.Component {
       ['animas', 'carelink', 'insulet', 'medtronic', 'tandem', 'diabeloop']
     ).isRequired,
     pumpSettings: PropTypes.shape({
-      deviceId: PropTypes.string.isRequired,
-      deviceTime: PropTypes.string.isRequired,
+      deviceId: PropTypes.string,
+      deviceTime: PropTypes.string,
       payload: PropTypes.object.isRequired
     }).isRequired,
     timePrefs: PropTypes.shape({

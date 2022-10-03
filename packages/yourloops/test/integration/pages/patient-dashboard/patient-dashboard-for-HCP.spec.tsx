@@ -29,27 +29,28 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { AuthContextProvider } from '../../lib/auth'
-import { MainLobby } from '../../app/main-lobby'
-import { checkHeader } from './utils/header'
-import { checkDrawer } from './utils/drawer'
-import { checkFooter } from './utils/footer'
-import { mockUserDataFetch } from './utils/auth'
-import { mockAuth0Hook } from './utils/mockAuth0Hook'
-import { mockTeamAPI } from './utils/mockTeamAPI'
-import { mockDataAPI } from './utils/mockDataAPI'
-import { mockNotificationAPI } from './utils/mockNotificationAPI'
+import { AuthContextProvider } from '../../../../lib/auth'
+import { MainLobby } from '../../../../app/main-lobby'
+import { checkHCPHeader } from '../../assert/header'
+import { checkDrawer } from '../../assert/drawer'
+import { checkFooter } from '../../assert/footer'
+import { mockUserDataFetch } from '../../mock/auth'
+import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { mockTeamAPI } from '../../mock/mockTeamAPI'
+import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
+import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
   mockPatientAPI,
   monitoredPatientFullName,
   monitoredPatientId,
   unMonitoredPatientFullName,
   unMonitoredPatientId
-} from './utils/mockPatientAPI'
-import { mockChatAPI } from './utils/mockChatAPI'
-import { mockMedicalFilesAPI } from './utils/mockMedicalFilesAPI'
+} from '../../mock/mockPatientAPI'
+import { mockChatAPI } from '../../mock/mockChatAPI'
+import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
-import { mockDirectShareApi } from './utils/mockDirectShareAPI'
+import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { checkHCPLayout } from '../../assert/layout'
 
 jest.setTimeout(15000)
 
@@ -68,7 +69,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPI()
+    mockDataAPIForDailyView()
   })
 
   function getPatientDashboardForHCP(history) {
@@ -119,7 +120,7 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     expect(history.location.pathname).toBe(unMonitoredPatientDashboardRoute)
     testPatientDashboardCommonDisplay(dashboard, unMonitoredPatientId, unMonitoredPatientFullName)
-    checkHeader(`${firstName} ${lastName}`)
+    checkHCPHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
   })
@@ -146,9 +147,7 @@ describe('Patient dashboard for HCP', () => {
 
       /* Chat widget */
       expect(dashboard.getByText('Messages')).toBeVisible()
-      checkHeader(`${firstName} ${lastName}`)
-      checkDrawer()
-      checkFooter()
+      checkHCPLayout(`${firstName} ${lastName}`)
     })
   })
 
