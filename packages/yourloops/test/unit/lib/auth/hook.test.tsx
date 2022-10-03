@@ -328,6 +328,7 @@ describe('Auth hook', () => {
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
       const signupForm: SignupForm = {
+        accountRole: UserRoles.hcp,
         profileFirstname: 'Tim',
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
@@ -347,6 +348,7 @@ describe('Auth hook', () => {
         await auth.completeSignup(signupForm)
       })
 
+      expect(auth.user.role).toEqual(UserRoles.hcp)
       expect(auth.user.profile.firstName).toEqual('Tim')
       expect(auth.user.profile.lastName).toEqual('Hagine')
       expect(auth.user.profile.fullName).toEqual('Tim Hagine')

@@ -36,20 +36,20 @@ export const checkStepper = () => {
 }
 
 export const checkAccountSelectorStep = () => {
-  const caregiverRadioInput = screen.getByLabelText('Caregiver radio selector')
-  const hcpRadioInput = screen.getByLabelText('Hcp radio selector')
-  const patientRadioInput = screen.getByLabelText('Patient radio selector')
+  const caregiverRadioInput = screen.getByLabelText('Create caregiver account')
+  const hcpRadioInput = screen.getByLabelText('Create hcp account')
+  const patientRadioInput = screen.getByLabelText('Create patient account')
 
   expect(within(caregiverRadioInput).getByRole('radio')).toBeInTheDocument()
   expect(within(hcpRadioInput).getByRole('radio')).toBeInTheDocument()
   expect(within(patientRadioInput).getByRole('radio')).toBeInTheDocument()
   expect(within(patientRadioInput).getByRole('radio')).toHaveAttribute('disabled')
-  expect(within(caregiverRadioInput).getByLabelText('Radio label header')).toHaveTextContent('Caregiver and family')
-  expect(within(caregiverRadioInput).getByLabelText('Radio label body')).toHaveTextContent('View patients diabetes data as an individual caregiver or family member.')
-  expect(within(hcpRadioInput).getByLabelText('Radio label header')).toHaveTextContent('Professional')
-  expect(within(hcpRadioInput).getByLabelText('Radio label body')).toHaveTextContent('View all your patients diabetes data in one place. Join and create a care team for your clinic or practice.')
-  expect(within(patientRadioInput).getByLabelText('Radio label header')).toHaveTextContent('Patient')
-  expect(within(patientRadioInput).getByLabelText('Radio label body')).toHaveTextContent('If you use a DBL System, you have to create your account from your handset. You can’t create several accounts with the same email address.')
+  expect(within(caregiverRadioInput).getByTestId('radio-label-header')).toHaveTextContent('Caregiver and family')
+  expect(within(caregiverRadioInput).getByTestId('radio-label-body')).toHaveTextContent('View patients diabetes data as an individual caregiver or family member.')
+  expect(within(hcpRadioInput).getByTestId('radio-label-header')).toHaveTextContent('Professional')
+  expect(within(hcpRadioInput).getByTestId('radio-label-body')).toHaveTextContent('View all your patients diabetes data in one place. Join and create a care team for your clinic or practice.')
+  expect(within(patientRadioInput).getByTestId('radio-label-header')).toHaveTextContent('Patient')
+  expect(within(patientRadioInput).getByTestId('radio-label-body')).toHaveTextContent('If you use a DBL System, you have to create your account from your handset. You can’t create several accounts with the same email address.')
 }
 
 export const checkConsentStep = () => {
@@ -61,15 +61,15 @@ export const checkConsentStep = () => {
   expect(privacyCheckbox).toBeInTheDocument()
   expect(termsCheckbox).toBeInTheDocument()
 
-  fireEvent.click(privacyCheckbox)
-  fireEvent.click(termsCheckbox)
+  userEvent.click(privacyCheckbox)
+  userEvent.click(termsCheckbox)
 
   expect(nextButton).not.toBeDisabled()
 }
 
 export const checkProfileStep = async (firstname: string, lastname: string) => {
-  const firstnameInput = within(screen.getByLabelText('First Name')).getByRole('textbox')
-  const lastnameInput = within(screen.getByLabelText('Last Name')).getByRole('textbox')
+  const firstnameInput = within(screen.getByLabelText('First name')).getByRole('textbox')
+  const lastnameInput = within(screen.getByLabelText('Last name')).getByRole('textbox')
   const countrySelect = screen.getByTestId('country-selector')
   const createButton = screen.getByRole('button', { name: 'Create Account' })
 
@@ -82,5 +82,5 @@ export const checkProfileStep = async (firstname: string, lastname: string) => {
   await userEvent.type(lastnameInput, lastname)
   fireEvent.mouseDown(within(countrySelect).getByRole('button'))
   screen.getByRole('listbox')
-  fireEvent.click(screen.getByRole('option', { name: 'France' }))
+  userEvent.click(screen.getByRole('option', { name: 'France' }))
 }
