@@ -86,9 +86,6 @@
   --bg-history-deleted-plain:rgba(251,89,81,1);
   --bg-history-deleted-soft:rgba(251,89,81,0.1);
   --activeValue: var(--blip-color-primary-light);
-  --axis: #E7E9EE;
-  --white: #FFFFFF;
-  --stat-default: #727375;
 }
 
 :export {
