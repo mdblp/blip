@@ -19,7 +19,7 @@ import styles from './Stat.css'
 import colors from '../../../styles/colors.css'
 import { bgPrefsPropType } from '../../../propTypes'
 import HoverBar from './HoverBar'
-import HoverBarLabel from './HoverBarLabel'
+// import HoverBarLabel from './HoverBarLabel'
 import BgBar from './BgBar'
 import BgBarLabel from './BgBarLabel'
 import Lines from './Lines'
@@ -30,6 +30,7 @@ import StatLegend from './StatLegend'
 import CollapseIconOpen from './assets/expand-more-24-px.svg'
 import CollapseIconClose from './assets/chevron-right-24-px.svg'
 import InfoIcon from './assets/info-outline-24-px.svg'
+import { HoverBarLabel } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 
@@ -612,8 +613,8 @@ class Stat extends React.Component {
             <HoverBarLabel
               active={props.alwaysShowTooltips}
               barWidth={barWidth}
-              isDisabled={() => this.state.isDisabled}
-              domain={domain}
+              isDisabled={this.state.isDisabled}
+              domain={domain.x[1]}
               text={(datum = {}) => {
                 const { value, suffix } = this.formatDatum(
                   _.get(props.data, `data.${datum.eventKey}`),

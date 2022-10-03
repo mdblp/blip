@@ -62,6 +62,7 @@
   "dependencies": {
     "@auth0/auth0-react": "^1.9.0",
     "blip": "file:packages/blip",
+    "dumb": "file:packages/dumb",
     "sundial": "file:packages/sundial",
     "tideline": "file:packages/tideline",
     "tidepool-viz": "file:packages/viz",

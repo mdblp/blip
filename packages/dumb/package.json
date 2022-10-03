@@ -45,6 +45,7 @@
     "moment-timezone": "^0.5.32",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "typescript-plugin-css-modules": "^3.4.0"
+    "typescript-plugin-css-modules": "^3.4.0",
+    "victory": "31.3.0"
   }
 }
