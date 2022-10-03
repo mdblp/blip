@@ -28,7 +28,7 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import { loggedInUserId, mockAuth0Hook } from '../../utils/mockAuth0Hook'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
 import { createMemoryHistory } from 'history'
@@ -79,7 +79,7 @@ describe('Signup stepper', () => {
 
     // Step one
     checkAccountSelectorStep()
-    userEvent.click(screen.getByLabelText('Caregiver radio selector'))
+    userEvent.click(screen.getByLabelText('Create caregiver account'))
     userEvent.click(screen.getByRole('button', { name: 'Next' }))
 
     // Step two

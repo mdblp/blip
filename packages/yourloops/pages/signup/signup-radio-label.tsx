@@ -39,10 +39,10 @@ const SignupRadioLabel: FunctionComponent<RadioLabelProps> = ({ header, body }) 
 
   return (
     <React.Fragment>
-      <Typography aria-label={t('radio-label-header')} variant="h6" gutterBottom>
+      <Typography data-testid="radio-label-header" variant="h6" gutterBottom>
         {t(header)}
       </Typography>
-      <Typography aria-label={t('radio-label-body')} variant="body2" gutterBottom>
+      <Typography data-testid="radio-label-body" variant="body2" gutterBottom>
         {t(body)}
       </Typography>
     </React.Fragment>

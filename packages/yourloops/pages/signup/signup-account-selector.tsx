@@ -60,21 +60,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const classes = useStyles()
-  const { signupForm, setSignupForm } = useSignUpFormState()
+  const { signupForm, updateForm } = useSignUpFormState()
   const { handleBack, handleNext } = props
 
   const isInvalidRole = signupForm.accountRole === UserRoles.unset || signupForm.accountRole === UserRoles.patient
-
-  const handleRadioChange = (value: string, key: SignupFormKey): void => {
-    setSignupForm(prevState => ({ ...prevState, [key]: value }))
-    if (value === UserRoles.caregiver) {
-      setSignupForm(prevState => {
-        delete prevState.hcpProfession
-        delete prevState.feedback
-        return { ...prevState }
-      })
-    }
-  }
 
   const onNext = (): void => {
     handleNext()
@@ -89,7 +78,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
     >
       <RadioGroup
         value={signupForm.accountRole}
-        onChange={event => handleRadioChange(event.target.value, SignupFormKey.AccountRole)}
+        onChange={event => updateForm(SignupFormKey.AccountRole, event.target.value)}
       >
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel

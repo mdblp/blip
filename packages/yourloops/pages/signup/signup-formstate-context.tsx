@@ -30,10 +30,11 @@ import React, { createContext, FunctionComponent, useContext, useState } from 'r
 import { getCurrentLang } from '../../lib/language'
 import { SignupForm } from '../../lib/auth'
 import { UserRoles } from '../../models/user'
+import { SignupFormKey } from '../../lib/auth/models'
 
 interface ISignUpFormStateContext {
   signupForm: SignupForm
-  setSignupForm: Function
+  updateForm: (key: SignupFormKey, value: boolean | string) => void
 }
 
 const initialState: SignupForm = {
@@ -57,8 +58,19 @@ const SignUpFormStateContext = createContext<ISignUpFormStateContext>({} as ISig
 export const SignUpFormStateProvider: FunctionComponent = ({ children }) => {
   const [signupForm, setSignupForm] = useState<SignupForm>(initialState)
 
+  const updateForm = (key: SignupFormKey, value: unknown): void => {
+    setSignupForm(prevState => ({ ...prevState, [key]: value }))
+    if (value === UserRoles.caregiver) {
+      setSignupForm(prevState => {
+        delete prevState.hcpProfession
+        delete prevState.feedback
+        return { ...prevState }
+      })
+    }
+  }
+
   return (
-    <SignUpFormStateContext.Provider value={{ signupForm, setSignupForm }}>
+    <SignUpFormStateContext.Provider value={{ signupForm, updateForm }}>
       {children}
     </SignUpFormStateContext.Provider>
   )

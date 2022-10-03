@@ -40,23 +40,19 @@ import { SignupFormKey } from '../../lib/auth/models'
 const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { handleBack, handleNext } = props
-  const { signupForm, setSignupForm } = useSignUpFormState()
+  const { signupForm, updateForm } = useSignUpFormState()
   const consentsChecked = signupForm.terms && signupForm.privacyPolicy
 
-  const handleChange = (value: boolean, key: SignupFormKey): void => {
-    setSignupForm(prevState => ({ ...prevState, [key]: value }))
-  }
-
   const setPolicyAccepted = (value: boolean): void => {
-    handleChange(value, SignupFormKey.PrivacyPolicy)
+    updateForm(SignupFormKey.PrivacyPolicy, value)
   }
 
   const setTermsAccepted = (value: boolean): void => {
-    handleChange(value, SignupFormKey.Terms)
+    updateForm(SignupFormKey.Terms, value)
   }
 
   const setFeedbackAccepted = (value: boolean): void => {
-    handleChange(value, SignupFormKey.Feedback)
+    updateForm(SignupFormKey.Feedback, value)
   }
 
   const onNext = (): void => {
