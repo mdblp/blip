@@ -47,7 +47,7 @@
     "test-medical-domain": "lerna --stream --scope=medical-domain run test",
     "test-dumb": "lerna --stream --scope=dumb run test",
     "build-yourloops": "lerna --stream --scope yourloops run build",
-    "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
+    "security-checks": "npm audit --production --audit-level=critical --registry=https://registry.npmjs.org/",
     "prebuild-soup": "mkdir -pv doc",
     "prebuild-dev": "rm -rf dist",
     "build-dev": "NODE_OPTIONS='--max-old-space-size=4096 --trace-deprecation' lerna run --stream --scope yourloops build-dev",

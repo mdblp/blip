@@ -63,7 +63,7 @@
     "stream-browserify": "^3.0.0",
     "text-table": "0.2.0",
     "translate-svg-path": "0.0.1",
-    "victory": "36.6.8",
+    "victory": "31.3.0",
     "voilab-pdf-table": "0.4.0",
     "sundial": "file:../sundial",
     "tideline": "file:../tideline",
