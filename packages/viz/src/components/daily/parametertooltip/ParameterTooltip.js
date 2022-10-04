@@ -125,7 +125,7 @@ ParameterTooltip.propTypes = {
     params: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
-        normalTime: PropTypes.string.isRequired,
+        normalTime: PropTypes.string,
         timezone: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,

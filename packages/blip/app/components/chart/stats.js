@@ -90,7 +90,7 @@ class Stats extends React.Component {
 
   renderStats(stats, animate, hideToolTips) {
     return _.map(stats, stat => (
-      <div id={`Stat--${stat.id}`} key={stat.id}>
+      <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
         <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
         <Divider variant="fullWidth"/>
       </div>
@@ -101,7 +101,7 @@ class Stats extends React.Component {
     const { chartPrefs: { animateStats }, hideToolTips } = this.props
 
     return (
-      <div className="Stats">
+      <div className="Stats" data-testid="stats-widgets">
         {this.renderStats(this.state.stats, animateStats, hideToolTips)}
       </div>
     )

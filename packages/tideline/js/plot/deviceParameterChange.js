@@ -64,8 +64,9 @@ function plotDeviceParameterChange(pool, opts) {
       const parameterGroup = allParameters.enter()
         .append('g')
         .attr({
-          class: 'd3-param-group',
-          id: (d) => `param_group_${d.id}`
+          'class': 'd3-param-group',
+          'id': (d) => `param_group_${d.id}`,
+          'data-testid': (d) => `param_group_${d.id}`
         })
 
       parameterGroup.append('image')

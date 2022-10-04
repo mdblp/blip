@@ -67,8 +67,9 @@ function plotWizard(pool, opts = defaults) {
       let wizardGroups = wizards.enter()
         .append('g')
         .attr({
-          class: 'd3-wizard-group',
-          id: (d) => `wizard_group_${d.id}`
+          'class': 'd3-wizard-group',
+          'data-testid': (d) => `wizard_group_${d.id}`,
+          'id': (d) => `wizard_group_${d.id}`
         })
 
       // sort by size so smaller boluses are drawn last

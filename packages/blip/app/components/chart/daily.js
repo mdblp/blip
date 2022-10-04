@@ -254,7 +254,7 @@ class DailyChart extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div id="tidelineContainer" className="patient-data-chart" ref={this.refNode} />
+        <div id="tidelineContainer" data-testid="tidelineContainer" className="patient-data-chart" ref={this.refNode} />
         <WindowSizeListener onResize={this.handleWindowResize} />
       </React.Fragment>
     )
