@@ -69,7 +69,7 @@ export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (props: Hove
     y: datum.y > 0 ? datum.y : 0
   }
   return (
-    <g className="HoverBarLabel" data-testid={`hover-bar-${datum.id}`}>
+    <g className="HoverBarLabel" data-testid={`hover-bar-label-${datum.id}`}>
       <VictoryLabel
         active={active}
         data={data}
