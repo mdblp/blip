@@ -57,3 +57,12 @@ export const checkTrendsStatsWidgetsTooltips = () => {
   checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
 }
+
+export const checkTrendsTimeInRangeStatsWidgets = async () => {
+  expect(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+  expect(screen.getByTestId('hover-bar-veryHigh')).toHaveTextContent('7%1h 36m')
+  expect(screen.getByTestId('hover-bar-high')).toHaveTextContent('27%6h 24m')
+  expect(screen.getByTestId('hover-bar-target')).toHaveTextContent('13%3h 12m')
+  expect(screen.getByTestId('hover-bar-low')).toHaveTextContent('20%4h 48m')
+  expect(screen.getByTestId('hover-bar-veryLow')).toHaveTextContent('33%8h')
+}

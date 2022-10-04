@@ -29,14 +29,18 @@ import { screen } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
+import { mockDataAPIForTrendsView, mockDataAPIForTrendViewTimeInRangeStats } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
-import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../assert/trends'
+import {
+  checkTrendsStatsWidgetsTooltips,
+  checkTrendsTidelineContainerTooltips,
+  checkTrendsTimeInRangeStatsWidgets
+} from '../../assert/trends'
 import { renderPage } from '../../utils/render'
 import { checkHCPLayout } from '../../assert/layout'
 
@@ -55,23 +59,30 @@ describe('Trends view for HCP', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPIForTrendsView()
   })
 
-  const renderTrendView = () => {
+  const renderTrendsView = () => {
     renderPage(`/patient/${unMonitoredPatientId}/trends`)
   }
 
   it('should render correct basic components when navigating to patient trends view', async () => {
-    renderTrendView()
+    mockDataAPIForTrendsView()
+    renderTrendsView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP(false)
     checkHCPLayout(`${firstName} ${lastName}`)
   })
 
   it('should render correct tooltips', async () => {
-    renderTrendView()
+    mockDataAPIForTrendsView()
+    renderTrendsView()
     await checkTrendsTidelineContainerTooltips()
     checkTrendsStatsWidgetsTooltips()
+  })
+
+  it('should display correct time in range stats', async () => {
+    mockDataAPIForTrendViewTimeInRangeStats()
+    renderTrendsView()
+    await checkTrendsTimeInRangeStatsWidgets()
   })
 })

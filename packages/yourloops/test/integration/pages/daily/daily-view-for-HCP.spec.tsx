@@ -39,7 +39,7 @@ import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
-  checkTimeInRangeStatsWidgets
+  checkDailyTimeInRangeStatsWidgets
 } from '../../assert/daily'
 import { renderPage } from '../../utils/render'
 import { checkHCPLayout } from '../../assert/layout'
@@ -81,6 +81,6 @@ describe('Daily view for HCP', () => {
 
   it('should display correct time in range stats', async () => {
     renderDailyView()
-    await checkTimeInRangeStatsWidgets()
+    await checkDailyTimeInRangeStatsWidgets()
   })
 })

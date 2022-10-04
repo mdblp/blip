@@ -29,8 +29,12 @@ import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
 import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../assert/trends'
-import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
+import {
+  checkTrendsStatsWidgetsTooltips,
+  checkTrendsTidelineContainerTooltips,
+  checkTrendsTimeInRangeStatsWidgets
+} from '../../assert/trends'
+import { mockDataAPIForTrendsView, mockDataAPIForTrendViewTimeInRangeStats } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 
@@ -39,23 +43,30 @@ jest.setTimeout(10000)
 describe('Trends view for HCP', () => {
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
-    mockDataAPIForTrendsView()
   })
 
-  const renderTrendView = () => {
+  const renderTrendsView = () => {
     renderPage('/trends')
   }
 
   it('should render correct basic components when navigating to patient trends view', async () => {
-    renderTrendView()
+    mockDataAPIForTrendsView()
+    renderTrendsView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient(false)
     checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
   })
 
   it('should render correct tooltips', async () => {
-    renderTrendView()
+    mockDataAPIForTrendsView()
+    renderTrendsView()
     await checkTrendsTidelineContainerTooltips()
     checkTrendsStatsWidgetsTooltips()
+  })
+
+  it('should display correct time in range stats', async () => {
+    mockDataAPIForTrendViewTimeInRangeStats()
+    renderTrendsView()
+    await checkTrendsTimeInRangeStatsWidgets()
   })
 })

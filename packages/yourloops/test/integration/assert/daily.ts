@@ -80,7 +80,7 @@ export const checkDailyStatsWidgetsTooltips = () => {
   checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
 }
 
-export const checkTimeInRangeStatsWidgets = async () => {
+export const checkDailyTimeInRangeStatsWidgets = async () => {
   expect(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
   expect(screen.getByTestId('hover-bar-veryHigh')).toHaveTextContent('13%10m')
   expect(screen.getByTestId('hover-bar-high')).toHaveTextContent('7%5m')

@@ -32,7 +32,7 @@ import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
-  checkTimeInRangeStatsWidgets
+  checkDailyTimeInRangeStatsWidgets
 } from '../../assert/daily'
 import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
@@ -65,6 +65,6 @@ describe('Daily view for patient', () => {
 
   it('should display correct time in range stats', async () => {
     renderDailyView()
-    await checkTimeInRangeStatsWidgets()
+    await checkDailyTimeInRangeStatsWidgets()
   })
 })

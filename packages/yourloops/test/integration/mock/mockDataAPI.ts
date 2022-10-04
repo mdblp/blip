@@ -52,3 +52,26 @@ export const mockDataAPIForTrendsView = () => {
     { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.4, uploadId: 'osef', _userId: patient.userid }
   ]))
 }
+
+export const mockDataAPIForTrendViewTimeInRangeStats = () => {
+  jest.spyOn(DataAPI, 'getPatientDataRange').mockResolvedValue(['2020-01-19T00:00:00Z', '2020-01-20T00:00:00Z'])
+  jest.spyOn(DataAPI, 'getMessages').mockResolvedValue([])
+  jest.spyOn(DataAPI, 'getPatientData').mockImplementation((patient: Patient) => Promise.resolve([
+    { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:00:00Z', type: 'cbg', id: '2020-01-20_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:05:00Z', type: 'cbg', id: '2020-01-20_3', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:10:00Z', type: 'cbg', id: '2020-01-20_4', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:15:00Z', type: 'cbg', id: '2020-01-20_5', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:20:00Z', type: 'cbg', id: '2020-01-20_6', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:25:00Z', type: 'cbg', id: '2020-01-20_7', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:30:00Z', type: 'cbg', id: '2020-01-20_8', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:35:00Z', type: 'cbg', id: '2020-01-20_9', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:40:00Z', type: 'cbg', id: '2020-01-20_10', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:45:00Z', type: 'cbg', id: '2020-01-20_11', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:50:00Z', type: 'cbg', id: '2020-01-20_12', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T11:55:00Z', type: 'cbg', id: '2020-01-20_13', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T12:00:00Z', type: 'cbg', id: '2020-01-20_14', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T12:05:00Z', type: 'cbg', id: '2020-01-20_15', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: patient.userid },
+    { time: '2022-01-20T12:10:00Z', type: 'cbg', id: '2020-01-20_16', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: patient.userid }
+  ]))
+}

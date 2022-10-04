@@ -39,7 +39,7 @@ import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
-  checkTimeInRangeStatsWidgets
+  checkDailyTimeInRangeStatsWidgets
 } from '../../assert/daily'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
@@ -82,6 +82,6 @@ describe('Daily view for caregiver', () => {
 
   it('should display correct time in range stats', async () => {
     renderDailyView()
-    await checkTimeInRangeStatsWidgets()
+    await checkDailyTimeInRangeStatsWidgets()
   })
 })
