@@ -18,7 +18,6 @@ import { statFormats, statTypes } from '../../../utils/stat'
 import styles from './Stat.css'
 import colors from '../../../styles/colors.css'
 import { bgPrefsPropType } from '../../../propTypes'
-import HoverBar from './HoverBar'
 import BgBar from './BgBar'
 import BgBarLabel from './BgBarLabel'
 import Lines from './Lines'
@@ -29,7 +28,7 @@ import StatLegend from './StatLegend'
 import CollapseIconOpen from './assets/expand-more-24-px.svg'
 import CollapseIconClose from './assets/chevron-right-24-px.svg'
 import InfoIcon from './assets/info-outline-24-px.svg'
-import { HoverBarLabel } from 'dumb'
+import { HoverBar, HoverBarLabel } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 
@@ -569,7 +568,7 @@ class Stat extends React.Component {
               barWidth={barWidth}
               barSpacing={barSpacing}
               chartLabelWidth={chartLabelWidth}
-              domain={domain}
+              domain={domain.x[1]}
               horizontal={true}
             />
           ),
