@@ -8,6 +8,7 @@ interface HoverBarLabelProps {
   data: []
   datum: { x: number, y: number, id: string }
   domain: number
+  events: {}
   horizontal: boolean
   labelPlacement: string
   isDisabled: boolean
@@ -25,6 +26,7 @@ export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (props: Hove
     data,
     datum,
     domain,
+    events,
     horizontal,
     labelPlacement,
     isDisabled,
@@ -73,6 +75,7 @@ export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (props: Hove
         data={data}
         datum={tooltipDatum}
         dx={-(labelUnitsTextSize.width * 1.9)}
+        events={events}
         labelPlacement={labelPlacement}
         renderInPortal={false}
         style={labelStyle}
@@ -87,6 +90,7 @@ export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (props: Hove
         data={data}
         datum={tooltipDatum}
         dx={0}
+        events={events}
         labelPlacement={labelPlacement}
         renderInPortal={false}
         style={labelUnitsStyle}
@@ -104,6 +108,7 @@ export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (props: Hove
           data={data}
           datum={tooltipDatum}
           domain={domain}
+          events={events}
           flyoutStyle={{
             display: isDisabled ? 'none' : 'inherit',
             stroke: colors.axis,
