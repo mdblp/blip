@@ -20,13 +20,15 @@
     "build-prod": "NODE_ENV=production webpack --mode=production",
     "prebuild-dev": "npm run clean",
     "build-dev": "NODE_ENV=development webpack --mode=development",
-    "start-dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' USE_WEBPACK_DEV_SERVER=true webpack-dev-server --cache --color --port 3001 --host 0.0.0.0",
+    "start-dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' USE_WEBPACK_DEV_SERVER=true webpack serve --host 0.0.0.0",
+    "test": "npm run unit-test && npm run integration-test",
     "unit-test": "jest --config=test/unit/jest.config.js",
     "integration-test": "jest --config=test/integration/jest.config.js",
     "lint": "eslint .",
     "lint-fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.9.0",
     "@fontsource/roboto": "^4.1.0",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
