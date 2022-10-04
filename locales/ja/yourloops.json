@@ -328,7 +328,7 @@
   "team-edit-dialog-placeholder-addr-line1": "住所1",
   "team-edit-dialog-placeholder-addr-line2": "住所2",
   "team-edit-dialog-placeholder-addr-zip": "郵便番号",
-  "team-edit-dialog-placeholder-name": "Name",
+  "team-edit-dialog-placeholder-name": "氏名",
   "team-leave-dialog-and-del-consequences": "You will no longer have access to your patients data. This action can't be undone.",
   "team-leave-dialog-and-del-question": "Since you are the only member in this team, {{teamName}} will be <strong>permanently deleted</strong> if you leave it.",
   "team-leave-dialog-and-del-title": "Leave and delete a care team",
