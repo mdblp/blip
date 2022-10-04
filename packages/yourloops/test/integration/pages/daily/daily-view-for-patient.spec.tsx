@@ -29,7 +29,11 @@ import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
 import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../assert/daily'
+import {
+  checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltips,
+  checkTimeInRangeStatsWidgets
+} from '../../assert/daily'
 import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
@@ -57,5 +61,10 @@ describe('Daily view for patient', () => {
     renderDailyView()
     await checkDailyTidelineContainerTooltips()
     checkDailyStatsWidgetsTooltips()
+  })
+
+  it('should display correct time in range stats', async () => {
+    renderDailyView()
+    await checkTimeInRangeStatsWidgets()
   })
 })

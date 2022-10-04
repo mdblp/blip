@@ -36,7 +36,11 @@ import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
-import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../assert/daily'
+import {
+  checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltips,
+  checkTimeInRangeStatsWidgets
+} from '../../assert/daily'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
@@ -74,5 +78,10 @@ describe('Daily view for caregiver', () => {
     renderDailyView()
     await checkDailyTidelineContainerTooltips()
     checkDailyStatsWidgetsTooltips()
+  })
+
+  it('should display correct time in range stats', async () => {
+    renderDailyView()
+    await checkTimeInRangeStatsWidgets()
   })
 })

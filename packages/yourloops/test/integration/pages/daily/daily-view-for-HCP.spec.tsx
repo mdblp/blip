@@ -36,7 +36,11 @@ import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
-import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../assert/daily'
+import {
+  checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltips,
+  checkTimeInRangeStatsWidgets
+} from '../../assert/daily'
 import { renderPage } from '../../utils/render'
 import { checkHCPLayout } from '../../assert/layout'
 
@@ -73,5 +77,10 @@ describe('Daily view for HCP', () => {
     renderDailyView()
     await checkDailyTidelineContainerTooltips()
     checkDailyStatsWidgetsTooltips()
+  })
+
+  it('should display correct time in range stats', async () => {
+    renderDailyView()
+    await checkTimeInRangeStatsWidgets()
   })
 })

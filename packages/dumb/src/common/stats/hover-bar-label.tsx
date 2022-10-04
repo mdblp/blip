@@ -6,7 +6,7 @@ interface HoverBarLabelProps {
   active: boolean
   barWidth: number
   data: []
-  datum: { x: number, y: number }
+  datum: { x: number, y: number, id: string }
   domain: number
   horizontal: boolean
   labelPlacement: string
@@ -18,15 +18,12 @@ interface HoverBarLabelProps {
   y: number
 }
 
-export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (
-  {
-    datum = { x: 0, y: 0 },
-    ...props
-  }) => {
+export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (props: HoverBarLabelProps) => {
   const {
     active,
     barWidth,
     data,
+    datum,
     domain,
     horizontal,
     labelPlacement,
@@ -70,7 +67,7 @@ export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (
     y: datum.y > 0 ? datum.y : 0
   }
   return (
-    <g className="HoverBarLabel">
+    <g className="HoverBarLabel" data-testid={`hover-bar-${datum.id}`}>
       <VictoryLabel
         active={active}
         data={data}
