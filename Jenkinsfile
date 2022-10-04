@@ -44,6 +44,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                     sh 'npm run lint'
+                    sh 'npm run build-dependencies'
                     sh 'npm run test-sundial'
                     sh 'npm run test-tideline'
                     sh 'npm run test-medical-domain'
