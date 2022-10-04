@@ -159,6 +159,7 @@ class Stat extends React.Component {
             className={styles.tooltipIcon}
           >
             <img
+              data-testid="info-icon"
               src={InfoIcon}
               alt={t('img-alt-hover-for-more-info')}
               ref={this.setTooltipIconRef}

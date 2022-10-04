@@ -58,7 +58,7 @@ const FocusedRangeLabels = (props) => {
   }
   const centerSide = position.tooltipLeft ? 'left' : 'right'
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid="trends-tooltips">
       {isCbg ? (
         <Tooltip
           title={<span className={styles.timeLabel}>{timeFrom} - {timeTo}</span>}

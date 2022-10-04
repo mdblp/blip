@@ -31,7 +31,7 @@ const t = i18next.t.bind(i18next)
 class ConfidentialTooltip extends React.Component {
 
   renderConfidential(/** props */) {
-    return <Grid container direction="row" alignItems="center" justify="center">
+    return <Grid container direction="row" alignItems="center" justifyContent="center">
       <Grid item>
         <LockIcon className={styles.icon} />
       </Grid>
@@ -65,7 +65,7 @@ ConfidentialTooltip.propTypes = {
   tail: PropTypes.bool.isRequired,
   side: PropTypes.oneOf(['top', 'right', 'bottom', 'left']).isRequired,
   backgroundColor: PropTypes.string,
-  borderColor: PropTypes.string.isRequired,
+  borderColor: PropTypes.string,
   borderWidth: PropTypes.number.isRequired,
   confidential: PropTypes.shape({
     duration: PropTypes.shape({

@@ -27,11 +27,14 @@
 
 import { screen, within } from '@testing-library/react'
 
-export const checkHeader = (fullName: string) => {
-  const header = within(screen.getByTestId('app-main-header'))
-  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
-  expect(header.getByLabelText('YourLoops Logo')).toBeVisible()
-  expect(header.getByLabelText('Go to notifications list')).toBeVisible()
-  expect(header.getByLabelText('Open team menu')).toBeVisible()
-  expect(header.getByText(fullName)).toBeVisible()
+export const checkDrawer = () => {
+  const drawer = within(screen.getByTestId('main-left-drawer'))
+  expect(drawer.getByLabelText('Filter on all patients')).toBeVisible()
+  expect(drawer.getByLabelText('Filter on flagged patients')).toBeVisible()
+  expect(drawer.getByLabelText('Filter on pending patients')).toBeVisible()
+  expect(drawer.getByLabelText('Filter on patients in private practice')).toBeVisible()
+}
+
+export const checkDrawerNotVisible = () => {
+  expect(screen.queryByTestId('main-left-drawer')).not.toBeInTheDocument()
 }

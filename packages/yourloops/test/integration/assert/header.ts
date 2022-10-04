@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * 404 page
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,30 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { BoundFunctions, queries, screen, within } from '@testing-library/react'
 
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-
-import { setPageTitle } from '../lib/utils'
-
-function InvalidRoute(): JSX.Element {
-  const { t } = useTranslation('yourloops')
-
-  setPageTitle()
-
-  return (
-    <Grid container direction="column" justifyContent="center" alignItems="center">
-      <p>{t('page-not-found')}</p>
-      <Typography color="primary">
-        <Link to="/">
-          {t('breadcrumb-home')}
-        </Link>
-      </Typography>
-    </Grid>
-  )
+const checkHeader = (header: BoundFunctions<typeof queries>, fullName: string) => {
+  expect(header.getByLabelText('YourLoops Logo')).toBeVisible()
+  expect(header.getByLabelText('Go to notifications list')).toBeVisible()
+  expect(header.getByText(fullName)).toBeVisible()
 }
 
-export default InvalidRoute
+export const checkHCPHeader = (fullName: string) => {
+  const header = within(screen.getByTestId('app-main-header'))
+  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
+  expect(header.getByLabelText('Open team menu')).toBeVisible()
+  checkHeader(header, fullName)
+}
+
+export const checkCaregiverHeader = (fullName: string) => {
+  const header = within(screen.getByTestId('app-main-header'))
+  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
+  expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
+  checkHeader(header, fullName)
+}
+
+export const checkPatientHeader = (fullName: string) => {
+  const header = within(screen.getByTestId('app-main-header'))
+  expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
+  expect(header.getByLabelText('Open team menu')).toBeVisible()
+  checkHeader(header, fullName)
+}

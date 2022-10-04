@@ -54,8 +54,9 @@ function plotCarb(pool, opts) {
       const carbGroup = allCarbs.enter()
         .append('g')
         .attr({
-          class: 'd3-carb-group',
-          id: (d) => `carb_group_${d.id}`
+          'class': 'd3-carb-group',
+          'id': (d) => `carb_group_${d.id}`,
+          'data-testid': (d) => `carb_group_${d.id}`
         })
 
       carbGroup.append('circle').attr({

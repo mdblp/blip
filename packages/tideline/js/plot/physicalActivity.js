@@ -53,8 +53,9 @@ function plotPhysicalActivity(pool, opts) {
         .enter()
         .append('g')
         .attr({
-          class: 'd3-pa-group',
-          id: (d) => `pa_group_${d.id}`
+          'class': 'd3-pa-group',
+          'id': (d) => `pa_group_${d.id}`,
+          'data-testid': (d) => `pa_group_${d.id}`
         })
 
       const intensity = paGroups.filter(d => !_.isEmpty(d.reportedIntensity))

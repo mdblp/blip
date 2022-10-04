@@ -94,6 +94,7 @@ export class CBGSliceSegment extends PureComponent {
         className={classes}
         key={key}
         id={`cbgSlice-${datum.id}-${key}`}
+        data-testid={`cbg-slice-rectangle-${key}`}
         width={width}
         height={style[segment.height]}
         x={x}

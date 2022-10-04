@@ -221,12 +221,12 @@ class Selector extends React.Component {
 
 Selector.propTypes = {
   data: PropTypes.object,
-  selectedSubtotal: PropTypes.string.isRequired,
-  selectorOptions: PropTypes.object.isRequired,
-  selectorMetaData: PropTypes.object.isRequired,
-  updateBasicsSettings: PropTypes.func.isRequired,
-  sectionId: PropTypes.string.isRequired,
-  trackMetric: PropTypes.func.isRequired
+  selectedSubtotal: PropTypes.string,
+  selectorOptions: PropTypes.object,
+  selectorMetaData: PropTypes.object,
+  updateBasicsSettings: PropTypes.func,
+  sectionId: PropTypes.string,
+  trackMetric: PropTypes.func
 }
 
 export default Selector

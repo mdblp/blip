@@ -29,16 +29,14 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import { AuthContextProvider } from '../../lib/auth'
-import { MainLobby } from '../../app/main-lobby'
-import { checkHeader } from './utils/header'
-import { checkDrawer } from './utils/drawer'
-import { checkFooter } from './utils/footer'
-import { mockAuth0Hook } from './utils/mockAuth0Hook'
-import { mockUserDataFetch } from './utils/auth'
-import PatientApi from '../../lib/patient/patient-api'
-import TeamApi from '../../lib/team/team-api'
-import { mockNotificationAPI } from './utils/mockNotificationAPI'
+import { AuthContextProvider } from '../../../../lib/auth'
+import { MainLobby } from '../../../../app/main-lobby'
+import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { mockUserDataFetch } from '../../mock/auth'
+import PatientApi from '../../../../lib/patient/patient-api'
+import TeamApi from '../../../../lib/team/team-api'
+import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { checkHCPLayout } from '../../assert/layout'
 
 describe('Invalid Route', () => {
   const unknownRoute = '/unknown-route'
@@ -76,8 +74,6 @@ describe('Invalid Route', () => {
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')
 
-    checkHeader(`${firstName} ${lastName}`)
-    checkDrawer()
-    checkFooter()
+    checkHCPLayout(`${firstName} ${lastName}`)
   })
 })

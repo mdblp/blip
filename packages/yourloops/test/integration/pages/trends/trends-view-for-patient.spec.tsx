@@ -25,19 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import UserApi from '../../../lib/auth/user-api'
-import { Preferences, Profile, Settings } from '../../../models/user'
-import { loggedInUserId } from './mockAuth0Hook'
+import { screen } from '@testing-library/react'
+import { mockPatientLogin } from '../../mock/auth'
+import { unMonitoredPatient } from '../../mock/mockPatientAPI'
+import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
+import { checkTrendsStatsWidgetsTooltips, checkTrendsTidelineContainerTooltips } from '../../assert/trends'
+import { mockDataAPIForTrendsView } from '../../mock/mockDataAPI'
+import { renderPage } from '../../utils/render'
+import { checkPatientLayout } from '../../assert/layout'
 
-export const mockUserDataFetch = (firstName: string, lastName: string) => {
-  jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: loggedInUserId, token: null })
-  jest.spyOn(UserApi, 'getProfile').mockResolvedValue({
-    firstName,
-    lastName,
-    fullName: `${firstName} ${lastName}`,
-    termsOfUse: { acceptanceTimestamp: '2021-01-02' },
-    privacyPolicy: { acceptanceTimestamp: '2021-01-02' }
-  } as Profile)
-  jest.spyOn(UserApi, 'getPreferences').mockResolvedValue({} as Preferences)
-  jest.spyOn(UserApi, 'getSettings').mockResolvedValue({} as Settings)
-}
+jest.setTimeout(10000)
+
+describe('Trends view for HCP', () => {
+  beforeAll(() => {
+    mockPatientLogin(unMonitoredPatient)
+    mockDataAPIForTrendsView()
+  })
+
+  const renderTrendView = () => {
+    renderPage('/trends')
+  }
+
+  it('should render correct basic components when navigating to patient trends view', async () => {
+    renderTrendView()
+    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsPatient(false)
+    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
+  })
+
+  it('should render correct tooltips', async () => {
+    renderTrendView()
+    await checkTrendsTidelineContainerTooltips()
+    checkTrendsStatsWidgetsTooltips()
+  })
+})

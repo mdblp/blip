@@ -92,7 +92,7 @@ WheelPercent.propTypes = {
     on: PropTypes.number.isRequired,
     off: PropTypes.number.isRequired
   }).isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
   units: PropTypes.string,
   rawValues: PropTypes.shape({
     on: PropTypes.string.isRequired,
