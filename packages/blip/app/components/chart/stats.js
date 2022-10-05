@@ -90,6 +90,7 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
+    console.log(stats)
     return _.map(stats, stat => {
       if (stat.id === 'timeInRange') {
         return (

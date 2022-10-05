@@ -14,7 +14,6 @@ import StatLegend from '../../../../src/components/common/stat/StatLegend'
 import styles from '../../../../src/components/common/stat/Stat.css'
 import colors from '../../../../src/styles/colors.css'
 import { statFormats, statTypes } from '../../../../src/utils/stat'
-import StatTooltip from '../../../../src/components/common/tooltips/StatTooltip'
 import {
   MGDL_CLAMP_TOP,
   MMOLL_CLAMP_TOP,
@@ -446,55 +445,6 @@ describe('Stat', () => {
     })
   })
 
-  describe('renderStatLegend', () => {
-    let statLegend
-
-    beforeEach(() => {
-      wrapper.setState({ isOpened: true })
-
-      wrapper.setProps(props({
-        data: _.assign({}, defaultProps.data, {
-          data: [
-            {
-              id: 'basal',
-              value: 80,
-              legendTitle: 'Basal'
-            },
-            {
-              id: 'bolus',
-              value: 60,
-              legendTitle: 'Bolus'
-            }
-          ]
-        }),
-        legend: true,
-        type: statTypes.barHorizontal
-      }))
-
-      statLegend = () => wrapper.find(StatLegend).dive()
-    })
-
-    it('should render the legendTitle text for each item passed to the `StatLegend` component', () => {
-      expect(statLegend()).to.have.length(1)
-      const items = () => statLegend().find('li > span')
-      expect(items()).to.have.length(2)
-      expect(items().at(0).text()).to.equal('Bolus')
-      expect(items().at(1).text()).to.equal('Basal')
-    })
-
-    it('should render the legend items in reverse order when the `reverseLegendOrder` prop is true', () => {
-      wrapper.setProps(_.assign({}, wrapper.props(), {
-        reverseLegendOrder: true
-      }))
-
-      expect(statLegend()).to.have.length(1)
-      const items = () => statLegend().find('li > span')
-      expect(items()).to.have.length(2)
-      expect(items().at(0).text()).to.equal('Basal')
-      expect(items().at(1).text()).to.equal('Bolus')
-    })
-  })
-
   describe('renderChart', () => {
     beforeEach(() => {
       wrapper.setState({ isOpened: true })
@@ -514,7 +464,7 @@ describe('Stat', () => {
             }
           ]
         }),
-        type: statTypes.barHorizontal
+        type: statTypes.barBg
       }))
     })
 
@@ -702,56 +652,12 @@ describe('Stat', () => {
     })
   })
 
-  describe('renderTooltip', () => {
-    let statTooltip
-    beforeEach(() => {
-      wrapper.setProps(props({
-        annotations: ['one', 'two']
-      }))
-
-      wrapper.setState({ showMessages: true })
-
-      statTooltip = () => wrapper.find(StatTooltip)
-    })
-
-    it('should render a tooltip wrapper and `StatTooltip` component', () => {
-      const statTooltipWrapper = wrapper.find(formatClassesAsSelector(styles.StatWrapper))
-      expect(statTooltipWrapper).to.have.length(1)
-      expect(statTooltip()).to.have.length(1)
-    })
-
-    it('should pass the `annotations` prop to the `StatTooltip` component', () => {
-      expect(statTooltip().props().annotations).to.have.members(['one', 'two'])
-    })
-
-    it('should pass the `messageTooltipOffset` state to the `offset` prop of the `StatTooltip` component', () => {
-      wrapper.setState({
-        messageTooltipOffset: 20
-      })
-      expect(statTooltip().props().offset).to.equal(20)
-    })
-
-    it('should pass the `messageTooltipPosition` state to the `position` prop of the `StatTooltip` component', () => {
-      wrapper.setState({
-        messageTooltipPosition: { x: 100, y: 50 }
-      })
-      expect(statTooltip().props().position).to.eql({ x: 100, y: 50 })
-    })
-
-    it('should pass the `messageTooltipSide` state to the `side` prop of the `StatTooltip` component', () => {
-      wrapper.setState({
-        messageTooltipSide: 'right'
-      })
-      expect(statTooltip().props().side).to.equal('right')
-    })
-  })
-
   describe('render', () => {
     beforeEach(() => {
       wrapper.setState({ isOpened: true })
 
       wrapper.setProps(props({
-        type: statTypes.barHorizontal
+        type: statTypes.barBg
       }))
 
       instance = wrapper.instance()
@@ -801,7 +707,7 @@ describe('Stat', () => {
 
       // Set to a type with a renderer
       mountedWrapper.setProps(props({
-        type: statTypes.barHorizontal
+        type: statTypes.barBg
       }))
 
       expect(mountedWrapper.find(formatClassesAsSelector(styles.statMain))).to.have.length(1)
@@ -1016,139 +922,6 @@ describe('Stat', () => {
 
         expect(instance.getStateByType(instance.props).isOpened).to.be.false
         expect(instance.getStateByType(instance.props).showFooter).to.be.false
-      })
-    })
-
-    context('barHorizontal', () => {
-      beforeEach(() => {
-        wrapper.setProps(props({
-          type: statTypes.barHorizontal
-        }))
-      })
-
-      it('should set the `isCollapsible` state to the `collapsible` prop', () => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          collapsible: false
-        }))
-        expect(instance.getStateByType(instance.props).isCollapsible).to.be.false
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          collapsible: true
-        }))
-        expect(instance.getStateByType(instance.props).isCollapsible).to.be.true
-      })
-
-      it('should set the `isOpened` state to the `isOpened` prop, unless already set', () => {
-        // state unset, prop is false
-        wrapper.setState({
-          isOpened: undefined
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          isOpened: false
-        }))
-
-        expect(instance.getStateByType(instance.props).isOpened).to.be.false
-
-        // state unset, prop is true
-        wrapper.setState({
-          isOpened: undefined
-        })
-        wrapper.setState({
-          isOpened: undefined
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          isOpened: true
-        }))
-
-        expect(instance.getStateByType(instance.props).isOpened).to.be.true
-
-        // state is true, prop is false
-        wrapper.setState({
-          isOpened: true
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          isOpened: false
-        }))
-
-        expect(instance.getStateByType(instance.props).isOpened).to.be.true
-
-        // state is false, prop is true
-        wrapper.setState({
-          isOpened: false
-        })
-        wrapper.setState({
-          isOpened: false
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          isOpened: true
-        }))
-
-        expect(instance.getStateByType(instance.props).isOpened).to.be.false
-      })
-
-      it('should set the `hoveredDatumIndex` state to `-1`', () => {
-        wrapper.setState({
-          hoveredDatumIndex: undefined
-        })
-        expect(instance.getStateByType(instance.props).hoveredDatumIndex).to.equal(-1)
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          collapsible: true
-        }))
-        expect(instance.getStateByType(instance.props).isCollapsible).to.be.true
-      })
-
-      it('should set the `showFooter` state to true if to the `isOpened` state is true and the `legend` prop is true', () => {
-        // state is false, prop is false
-        wrapper.setState({
-          isOpened: false
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          legend: false
-        }))
-
-        expect(instance.getStateByType(instance.props).showFooter).to.be.false
-
-        // state is false, prop is true
-        wrapper.setState({
-          isOpened: false
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          legend: true
-        }))
-
-        expect(instance.getStateByType(instance.props).showFooter).to.be.false
-
-        // state is true, prop is false
-        wrapper.setState({
-          isOpened: true
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          legend: false
-        }))
-
-        expect(instance.getStateByType(instance.props).showFooter).to.be.false
-
-        // state is true, prop is true
-        wrapper.setState({
-          isOpened: true
-        })
-        wrapper.setState({
-          isOpened: true
-        })
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          legend: true
-        }))
-
-        expect(instance.getStateByType(instance.props).showFooter).to.be.true
       })
     })
 
@@ -1520,192 +1293,6 @@ describe('Stat', () => {
         expect(result.style.labels.fontSize).to.be.a('number')
         expect(result.style.labels.fontWeight).to.be.a('number')
         expect(result.style.labels.paddingLeft).to.be.a('number')
-      })
-    })
-
-    context('barHorizontal stat', () => {
-      beforeEach(() => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          data: _.assign({}, defaultProps.data, {
-            data: [
-              {
-                value: 30,
-                id: 'basal'
-              },
-              {
-                value: 20,
-                id: 'bolus'
-              }
-            ],
-            total: { value: 50 }
-          }),
-          type: statTypes.barHorizontal
-        }))
-      })
-
-      it('should return an extended default chartProps object', () => {
-        const getDefaultChartPropsSpy = sinon.spy(instance, 'getDefaultChartProps')
-        sinon.assert.callCount(getDefaultChartPropsSpy, 0)
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        sinon.assert.callCount(getDefaultChartPropsSpy, 1)
-        sinon.assert.calledWith(getDefaultChartPropsSpy, sinon.match(instance.props))
-
-        const baseKeys = [
-          'animate',
-          'data',
-          'height',
-          'labels',
-          'renderer',
-          'style'
-        ]
-
-        expect(result).to.be.an('object').and.have.keys([
-          ...baseKeys,
-          'alignment',
-          'containerComponent',
-          'cornerRadius',
-          'dataComponent',
-          'domain',
-          'events',
-          'horizontal',
-          'labelComponent',
-          'padding'
-        ])
-      })
-
-      it('should set basic chart layout properties', () => {
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.alignment).to.equal('middle')
-        expect(result.horizontal).to.equal(true)
-      })
-
-      it('should set `data` to a chart-compatible map of the provided `data` prop', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const firstDatum = result.data[0]
-        const secondDatum = result.data[1]
-
-        expect(firstDatum.x).to.equal(1)
-        expect(firstDatum.y).to.equal(0.6)
-        expect(firstDatum.id).to.equal('basal')
-
-        expect(secondDatum.x).to.equal(2)
-        expect(secondDatum.y).to.equal(0.4)
-        expect(secondDatum.id).to.equal('bolus')
-      })
-
-      it('should set `containerComponent` to a non-responsive `VictoryContainer` component', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const containerComponentInstance = shallow(result.containerComponent).instance()
-
-        expect(containerComponentInstance).to.be.instanceOf(VictoryContainer)
-        expect(containerComponentInstance.props.responsive).to.be.false
-      })
-
-      it('should set `dataComponent` to a `HoverBar` component with necessary props', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const dataComponent = shallow(result.dataComponent)
-
-        expect(dataComponent.is('.HoverBar')).to.be.true
-        expect(dataComponent.props().children[0].props.children.props.barWidth).to.be.a('number')
-        expect(dataComponent.props().children[0].props.children.props.barSpacing).to.be.a('number')
-        expect(dataComponent.props().children[0].props.children.props.chartLabelWidth).to.be.a('number')
-        expect(dataComponent.props().children[0].props.children.props.domain).to.eql(result.domain)
-      })
-
-      it('should set `labelComponent` to a `HoverBarLabel` component with necessary props', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const dataComponent = shallow(result.labelComponent)
-
-        expect(dataComponent.is('.HoverBarLabel')).to.be.true
-        expect(result.labelComponent.props.barWidth).to.be.a('number')
-        expect(result.labelComponent.props.domain).to.eql(result.domain)
-        expect(result.labelComponent.props.isDisabled).to.be.a('function')
-        expect(result.labelComponent.props.text).to.be.a('function')
-        expect(result.labelComponent.props.tooltipText).to.be.a('function')
-      })
-
-      it('should set `renderer` to a `VictoryBar` component', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const renderComponentInstance = shallow(<result.renderer />).instance()
-
-        expect(renderComponentInstance).to.be.instanceOf(VictoryBar)
-      })
-
-      it('should properly set the chart height to the `chartHeight` prop, or based on `datums.length`', () => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          chartHeight: 40
-        }))
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.height).to.equal(40)
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          chartHeight: undefined
-        }))
-
-        const result2 = instance.getChartPropsByType(instance.props)
-
-        const datumCount = instance.props.data.data.length
-        expect(datumCount).to.equal(2)
-
-        expect(result2.height).to.equal(72) // datumCount:2 * (barWidth:30 + barSpacing:6)
-      })
-
-      it('should properly set the chart domain based on the length of data', () => {
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.domain).to.eql({
-          x: [0, 1],
-          y: [0, 2]
-        })
-
-        // Remove a datum
-        instance.props.data.data.shift()
-        const result2 = instance.getChartPropsByType(instance.props)
-        expect(result2.domain).to.eql({
-          x: [0, 1],
-          y: [0, 1]
-        })
-      })
-
-      it('should set `style` for dynamic data and label styling', () => {
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.style).to.be.an('object').and.have.keys([
-          'data',
-          'labels'
-        ])
-
-        expect(result.style.data.fill).to.be.a('function')
-        expect(result.style.data.width).to.be.a('function')
-
-        expect(result.style.labels.fill).to.be.a('function')
-        expect(result.style.labels.fontSize).to.be.a('number')
-        expect(result.style.labels.fontWeight).to.be.a('number')
-        expect(result.style.labels.paddingLeft).to.be.a('number')
-      })
-
-      it('should set `events` with `onMouseOver` and `onMouseOut` handlers', () => {
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.events).to.be.an('array')
-        expect(result.events[0]).to.be.an('object').and.have.keys([
-          'target',
-          'eventHandlers'
-        ])
-
-        expect(result.events[0].target).to.equal('data')
-        expect(result.events[0].eventHandlers).to.be.an('object').and.have.keys([
-          'onMouseOver',
-          'onMouseOut'
-        ])
-
-        expect(result.events[0].eventHandlers.onMouseOver).to.be.a('function')
-        expect(result.events[0].eventHandlers.onMouseOut).to.be.a('function')
       })
     })
   })
@@ -2479,7 +2066,7 @@ describe('Stat', () => {
   describe('handleCollapse', () => {
     it('should toggle the `isOpened` state', () => {
       wrapper.setProps(props({
-        type: statTypes.barHorizontal
+        type: statTypes.barBg
       }))
 
       wrapper.setState({
@@ -2495,7 +2082,7 @@ describe('Stat', () => {
 
     it('should reset the state to the result of `getStateByType` method after toggling the isOpened state', () => {
       wrapper.setProps(props({
-        type: statTypes.barHorizontal
+        type: statTypes.barBg
       }))
 
       const setStateSpy = sinon.spy(instance, 'setState')
@@ -2507,39 +2094,6 @@ describe('Stat', () => {
       sinon.assert.callCount(getStateByTypeSpy, 2)
 
       sinon.assert.callOrder(setStateSpy, getStateByTypeSpy, setStateSpy)
-    })
-  })
-
-  describe('handleTooltipIconMouseOver', () => {
-    it('should set the message tooltip state', () => {
-      const setStateSpy = sinon.spy(instance, 'setState')
-
-      instance.tooltipIcon = {
-        getBoundingClientRect: sinon.stub().returns({
-          top: 10,
-          left: 20,
-          width: 200,
-          height: 100
-        })
-      }
-
-      instance.stat = {
-        getBoundingClientRect: sinon.stub().returns({
-          top: 10,
-          left: 20,
-          height: 100
-        })
-      }
-
-      instance.handleTooltipIconMouseOver()
-
-      sinon.assert.callCount(setStateSpy, 1)
-      sinon.assert.calledWith(setStateSpy, sinon.match({
-        showMessages: true,
-        messageTooltipOffset: { horizontal: 100, top: -100 },
-        messageTooltipPosition: { left: 100, top: 50 },
-        messageTooltipSide: 'right'
-      }))
     })
   })
 

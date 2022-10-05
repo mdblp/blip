@@ -20,7 +20,6 @@ export const dailyDoseUnitOptions = [
 ]
 
 export const statTypes = {
-  barHorizontal: 'barHorizontal',
   barBg: 'barBg',
   noBar: 'noBar',
   lines: 'lines',
@@ -523,7 +522,7 @@ export const getStatDefinition = (data, type, opts = {}) => {
     data: getStatData(data, type, opts),
     id: type,
     title: getStatTitle(type, opts),
-    type: statTypes.barHorizontal
+    type: statTypes.barBg
   }
 
   switch (type) {
