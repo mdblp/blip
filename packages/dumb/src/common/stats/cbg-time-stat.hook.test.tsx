@@ -42,6 +42,24 @@ describe('CBGTimeStat hook', () => {
     value: 200
   } as CBGTimeStatHookProps
 
+  it('should return correct percentage', () => {
+    const props = { ...defaultProps }
+    const { result } = renderHook(() => useCBGTimeStat(props))
+    expect(result.current.percentage).toBe(20)
+  })
+
+  it('should return hasValues as true when total is not 0', () => {
+    const props = { ...defaultProps }
+    const { result } = renderHook(() => useCBGTimeStat(props))
+    expect(result.current.hasValues).toBeTruthy()
+  })
+
+  it('should return hasValues as false when total is 0', () => {
+    const props = { ...defaultProps, total: 0 }
+    const { result } = renderHook(() => useCBGTimeStat(props))
+    expect(result.current.hasValues).toBeFalsy()
+  })
+
   describe('handleMouseOver', () => {
     it('should not call onMouseOver when total is 0', () => {
       const props = { ...defaultProps, total: 0 }
@@ -62,6 +80,29 @@ describe('CBGTimeStat hook', () => {
       const { result } = renderHook(() => useCBGTimeStat(props))
       result.current.handleMouseOver()
       expect(onMouseOverMock).toBeCalled()
+    })
+  })
+
+  describe('handleMouseLeave', () => {
+    it('should not call onMouseOver when total is 0', () => {
+      const props = { ...defaultProps, total: 0 }
+      const { result } = renderHook(() => useCBGTimeStat(props))
+      result.current.handleMouseLeave()
+      expect(onMouseLeaveMock).not.toBeCalled()
+    })
+
+    it('should not call onMouseOver when hoveredStatId is not equal to id', () => {
+      const props = { ...defaultProps, hoveredStatId: 'unknownId' }
+      const { result } = renderHook(() => useCBGTimeStat(props))
+      result.current.handleMouseLeave()
+      expect(onMouseLeaveMock).not.toBeCalled()
+    })
+
+    it('should call onMouseOver', () => {
+      const props = { ...defaultProps }
+      const { result } = renderHook(() => useCBGTimeStat(props))
+      result.current.handleMouseLeave()
+      expect(onMouseLeaveMock).toBeCalled()
     })
   })
 })
