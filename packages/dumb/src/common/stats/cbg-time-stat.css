@@ -25,50 +25,106 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.legendTitle {
+@import "../../styles/colors.css";
+
+.bar {
+  display: flex;
+  align-items: center;
+  width: 234px;
+  position: relative;
+}
+
+.disabled-label {
+  color: var(--muted);
+}
+
+.disabled-rectangle {
+  background-color: var(--muted);
+}
+
+.line {
+  height: 5px;
+  background-color: var(--stat-disabled);
+  flex-grow: 1;
+}
+
+.percentage-symbol {
+  color: #727375;
   font-size: 12px;
+  margin-top: 5px;
 }
 
-.tooltipIcon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
+.percentage-value {
+  font-size: 24px;
+  margin-left: auto;
+  margin-right: 2px;
 }
 
-.tooltipIcon > img {
-  width: 0.9em;
+.rectangle {
+  height: 32px;
+  border-radius: 2px;
 }
 
-.stat-tooltip {
-  z-index: 1;
-  position: relative;
+.stat {
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.time {
+  background-color: white;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--stat-disabled);
+  border-width: thin;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 12px;
+  position: absolute;
+  right: 0;
 }
 
 .title {
   margin-left: 4px;
 }
 
-.stats {
-  margin-left: 10px;
-  margin-right: 10px;
+.veryHigh-background {
+  background-color: var(--bg-very-high);
+}
+
+.high-background {
+  background-color: var(--bg-high);
+}
+
+.target-background {
+  background-color: var(--bg-target);
+}
+
+.low-background {
+  background-color: var(--bg-low);
+}
+
+.veryLow-background {
+  background-color: var(--bg-very-low);
 }
 
 .veryHigh-label {
-  color: rgb(255, 167, 0);
+  color: var(--bg-very-high);
 }
 
 .high-label {
-  color: rgb(249, 216, 62);
+  color: var(--bg-high);
 }
 
 .target-label {
-  color: rgb(159, 204, 147);
+  color: var(--bg-target);
 }
 
 .low-label {
-  color: rgb(233, 141, 124);
+  color: var(--bg-low);
 }
 
 .veryLow-label {
-  color: rgb(218, 58, 27);
+  color: var(--bg-very-low);
 }

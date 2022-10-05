@@ -26,13 +26,13 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './time-in-range.css'
+import styles from './cbg-time-stat.css'
 import { formatDuration } from '../../utils/datetime'
 
 interface CBGTimeStatProps {
+  hoveredStatId: string | null
   id: string
   legendTitle: string
-  hoveredStatId: string | null
   onMouseLeave: Function
   onMouseOver: Function
   title: string
@@ -41,20 +41,20 @@ interface CBGTimeStatProps {
 }
 
 export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
-  const { id, value, total, onMouseLeave, onMouseOver, hoveredStatId, legendTitle, title } = props
-  const tooltip = formatDuration(value, { condensed: true })
+  const { hoveredStatId, id, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
+  const time = formatDuration(value, { condensed: true })
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
   const isDisabled = !hasValues || (hoveredStatId && hoveredStatId !== id)
-  const background = isDisabled ? styles['disabled-rectangle'] : styles[`${id}-background`]
-  const label = isDisabled ? styles['disabled-label'] : styles[`${id}-label`]
+  const rectangleBackgroundClass = isDisabled ? styles['disabled-rectangle'] : styles[`${id}-background`]
+  const labelClass = isDisabled ? styles['disabled-label'] : styles[`${id}-label`]
 
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const rectangleClasses = `${styles.rectangle} ${background}`
+  const rectangleClasses = `${styles.rectangle} ${rectangleBackgroundClass}`
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const tooltipClasses = `${styles.tooltip} ${label}`
+  const timeClasses = `${styles.time} ${labelClass}`
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const percentageClasses = `${styles['percentage-value']} ${label}`
+  const percentageClasses = `${styles['percentage-value']} ${labelClass}`
 
   const handleMouseOver = (): void => {
     if (!isDisabled) {
@@ -75,13 +75,13 @@ export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeS
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={styles.bar} style={{ width: '234px', position: 'relative' }}>
+      <div className={styles.bar}>
         {hasValues &&
           <div className={rectangleClasses} style={{ width: `${percentage}%` }} />
         }
-        <div className={styles.line} style={{ flexGrow: 1 }} />
-        <div className={tooltipClasses}>
-          {tooltip}
+        <div className={styles.line} />
+        <div className={timeClasses}>
+          {time}
         </div>
       </div>
       {hasValues

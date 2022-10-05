@@ -126,7 +126,7 @@ export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props
             />
           </span>}
         {showTooltip && elementRef.current && parentRef.current &&
-          <div className={styles.StatTooltipWrapper}>
+          <div className={styles['stat-tooltip']}>
             <StatTooltip
               annotations={annotations}
               parentRef={parentRef.current}
