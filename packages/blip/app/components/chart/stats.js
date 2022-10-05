@@ -90,12 +90,17 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    console.log(stats)
     return _.map(stats, stat => {
       if (stat.id === 'timeInRange') {
         return (
           <>
-            <TimeInRangeStats annotations={stat.annotations} data={stat.data.data} total={stat.data.total.value} />
+            <TimeInRangeStats
+              key={stat.id}
+              annotations={stat.annotations}
+              data={stat.data.data}
+              total={stat.data.total.value}
+              titleKey={stat.title}
+            />
             <Divider variant="fullWidth" />
           </>
         )

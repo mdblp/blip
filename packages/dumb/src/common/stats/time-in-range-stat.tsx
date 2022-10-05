@@ -42,8 +42,12 @@ export const TimeInRangeStat: FunctionComponent<TimeInRangeStatsProps> = (props:
   }
 
   return (
-    <div onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}
-         className={styles.stat}>
+    <div
+      data-testid={`time-in-range-stat-${id}`}
+      className={styles.stat}
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className={styles.bar} style={{ width: '234px', position: 'relative' }}>
         {hasValues &&
           <div className={rectangleClasses} style={{ width: `${percentage}%` }} />

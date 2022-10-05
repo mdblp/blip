@@ -16,12 +16,13 @@ interface TimeInRangeStatsProps {
   annotations: []
   data: TimeInRangeData[]
   total: number
+  titleKey: string
 }
 
 export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
-  const { annotations, data, total } = props
+  const { annotations, data, titleKey, total } = props
   const { t } = useTranslation('main')
-  const timeInRangeLabel = t('Time In Range')
+  const timeInRangeLabel = t(titleKey)
 
   const [hoveredStatId, setHoveredStatId] = useState<string | null>(null)
   const [title, setTitle] = useState<string>(timeInRangeLabel)

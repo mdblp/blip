@@ -60,9 +60,9 @@ export const checkTrendsStatsWidgetsTooltips = () => {
 
 export const checkTrendsTimeInRangeStatsWidgets = async () => {
   expect(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
-  expect(screen.getByTestId('hover-bar-label-veryHigh')).toHaveTextContent('7%1h 36m')
-  expect(screen.getByTestId('hover-bar-label-high')).toHaveTextContent('27%6h 24m')
-  expect(screen.getByTestId('hover-bar-label-target')).toHaveTextContent('13%3h 12m')
-  expect(screen.getByTestId('hover-bar-label-low')).toHaveTextContent('20%4h 48m')
-  expect(screen.getByTestId('hover-bar-label-veryLow')).toHaveTextContent('33%8h')
+  expect(screen.getByTestId('time-in-range-stat-veryHigh')).toHaveTextContent('1h 36m7%')
+  expect(screen.getByTestId('time-in-range-stat-high')).toHaveTextContent('6h 24m27%')
+  expect(screen.getByTestId('time-in-range-stat-target')).toHaveTextContent('3h 12m13%')
+  expect(screen.getByTestId('time-in-range-stat-low')).toHaveTextContent('4h 48m20%')
+  expect(screen.getByTestId('time-in-range-stat-veryLow')).toHaveTextContent('8h33%')
 }
