@@ -39,15 +39,15 @@ export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, i
 
 const hoverOnTimeInRangeStat = (statsWidgets: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {
   userEvent.hover(statsWidgets.getByTestId(statId))
-  expect(statsWidgets.getByTestId('time-in-range-stat-title')).toHaveTextContent(expectedTextContent)
+  expect(statsWidgets.getByTestId('time-in-range-stats-title')).toHaveTextContent(expectedTextContent)
   userEvent.unhover(statsWidgets.getByTestId(statId))
 }
 
 export const checkTimeInRangeStatsTitle = async () => {
   const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
-  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-veryHigh', 'Time Above Range ( >250 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-high', 'Time Above Range ( 180-250 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-target', 'Time In Range ( 70-180 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-low', 'Time Below Range ( 54-70 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-veryLow', 'Time Below Range ( <54 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-veryHigh', 'Time Above Range ( >250 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-high', 'Time Above Range ( 180-250 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-target', 'Time In Range ( 70-180 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-low', 'Time Below Range ( 54-70 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-veryLow', 'Time Below Range ( <54 )')
 }

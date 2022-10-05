@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 import styles from './time-in-range.css'
 import { formatDuration } from '../../utils/datetime'
 
-interface TimeInRangeStatsProps {
+interface CBGTimeStatProps {
   id: string
   legendTitle: string
   hoveredStatId: string | null
@@ -40,7 +40,7 @@ interface TimeInRangeStatsProps {
   value: number
 }
 
-export const TimeInRangeStat: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
+export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
   const { id, value, total, onMouseLeave, onMouseOver, hoveredStatId, legendTitle, title } = props
   const tooltip = formatDuration(value, { condensed: true })
   const hasValues = total !== 0
@@ -70,7 +70,7 @@ export const TimeInRangeStat: FunctionComponent<TimeInRangeStatsProps> = (props:
 
   return (
     <div
-      data-testid={`time-in-range-stat-${id}`}
+      data-testid={`cbg-time-stat-${id}`}
       className={styles.stat}
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}

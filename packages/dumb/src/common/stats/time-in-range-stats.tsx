@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent, useRef, useState } from 'react'
-import { TimeInRangeStat } from './time-in-range-stat'
+import { CBGTimeStat } from './cbg-time-stat'
 import styles from './time-in-range.css'
 import InfoIcon from './assets/info-outline-24-px.svg'
 import { StatTooltip } from '../tooltips/stat-tooltip'
@@ -99,7 +99,7 @@ export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props
   return (
     <>
       <div
-        data-testid="time-in-range-stat-title"
+        data-testid="time-in-range-stats-title"
         className={styles.title}
         ref={parentRef}
       >
@@ -136,35 +136,35 @@ export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props
         }
       </div>
       <div className={styles.stats}>
-        <TimeInRangeStat
+        <CBGTimeStat
           total={total}
           hoveredStatId={hoveredStatId}
           onMouseLeave={onStatMouseLeave}
           onMouseOver={onStatMouseover}
           {...veryHighTir}
         />
-        <TimeInRangeStat
+        <CBGTimeStat
           total={total}
           hoveredStatId={hoveredStatId}
           onMouseLeave={onStatMouseLeave}
           onMouseOver={onStatMouseover}
           {...highTir}
         />
-        <TimeInRangeStat
+        <CBGTimeStat
           total={total}
           hoveredStatId={hoveredStatId}
           onMouseLeave={onStatMouseLeave}
           onMouseOver={onStatMouseover}
           {...targetTir}
         />
-        <TimeInRangeStat
+        <CBGTimeStat
           total={total}
           hoveredStatId={hoveredStatId}
           onMouseLeave={onStatMouseLeave}
           onMouseOver={onStatMouseover}
           {...lowTir}
         />
-        <TimeInRangeStat
+        <CBGTimeStat
           total={total}
           hoveredStatId={hoveredStatId}
           onMouseLeave={onStatMouseLeave}

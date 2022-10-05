@@ -37,7 +37,7 @@ import {
   RESERVOIR_CHANGE_ID
 } from '../mock/mockDataAPI'
 import moment from 'moment-timezone'
-import { checkStatTooltip, hoverOnTimeInRangeStat } from './stats'
+import { checkStatTooltip } from './stats'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
@@ -82,13 +82,9 @@ export const checkDailyStatsWidgetsTooltips = () => {
 
 export const checkDailyTimeInRangeStatsWidgets = async () => {
   const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
-  expect(statsWidgets.getByTestId('time-in-range-stat-veryHigh')).toHaveTextContent('10m13%')
-  expect(statsWidgets.getByTestId('time-in-range-stat-high')).toHaveTextContent('5m7%')
-  expect(statsWidgets.getByTestId('time-in-range-stat-target')).toHaveTextContent('15m20%')
-  expect(statsWidgets.getByTestId('time-in-range-stat-low')).toHaveTextContent('20m27%')
-  expect(statsWidgets.getByTestId('time-in-range-stat-veryLow')).toHaveTextContent('25m33%')
-
-  userEvent.hover(statsWidgets.getByTestId('time-in-range-stat-veryHigh'))
-  expect(statsWidgets.getByTestId('time-in-range-stat-title')).toHaveTextContent('Time Above Range ( >250 )')
-  userEvent.unhover(statsWidgets.getByTestId('time-in-range-stat-veryHigh'))
+  expect(statsWidgets.getByTestId('cbg-time-stat-veryHigh')).toHaveTextContent('10m13%')
+  expect(statsWidgets.getByTestId('cbg-time-stat-high')).toHaveTextContent('5m7%')
+  expect(statsWidgets.getByTestId('cbg-time-stat-target')).toHaveTextContent('15m20%')
+  expect(statsWidgets.getByTestId('cbg-time-stat-low')).toHaveTextContent('20m27%')
+  expect(statsWidgets.getByTestId('cbg-time-stat-veryLow')).toHaveTextContent('25m33%')
 }
