@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import { useCallback, useMemo } from 'react'
 import styles from './cbg-time-stat.css'
-import { useCBGTimeStat } from './cbg-time-stat.hook'
+import { formatDuration } from '../../utils/datetime'
 
-interface CBGTimeStatProps {
+export interface CBGTimeStatHookProps {
   hoveredStatId: string | null
   id: string
   legendTitle: string
@@ -40,10 +40,46 @@ interface CBGTimeStatProps {
   value: number
 }
 
-export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
-  const { hoveredStatId, id, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
+interface CBGTimeStatHookReturn {
+  handleMouseOver: Function
+  handleMouseLeave: Function
+  hasValues: boolean
+  percentage: number
+  percentageClasses: string
+  rectangleClasses: string
+  timeClasses: string
+  time: string
+}
 
-  const {
+export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookReturn => {
+  const { hoveredStatId, id, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
+  const time = formatDuration(value, { condensed: true })
+  const hasValues = total !== 0
+  const percentage = hasValues ? Math.round(value / total * 100) : 0
+  const isDisabled = !hasValues || (hoveredStatId && hoveredStatId !== id)
+  const rectangleBackgroundClass = isDisabled ? styles['disabled-rectangle'] : styles[`${id}-background`]
+  const labelClass = isDisabled ? styles['disabled-label'] : styles[`${id}-label`]
+
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const rectangleClasses = `${styles.rectangle} ${rectangleBackgroundClass}`
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const timeClasses = `${styles.time} ${labelClass}`
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const percentageClasses = `${styles['percentage-value']} ${labelClass}`
+
+  const handleMouseOver = useCallback(() => {
+    if (!isDisabled) {
+      onMouseOver(id, title, legendTitle)
+    }
+  }, [id, isDisabled, legendTitle, onMouseOver, title])
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isDisabled) {
+      onMouseLeave()
+    }
+  }, [isDisabled, onMouseLeave])
+
+  return useMemo(() => ({
     handleMouseOver,
     handleMouseLeave,
     hasValues,
@@ -52,40 +88,15 @@ export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeS
     rectangleClasses,
     timeClasses,
     time
-  } = useCBGTimeStat({ hoveredStatId, id, legendTitle, onMouseLeave, onMouseOver, title, total, value })
-
-  return (
-    <div
-      data-testid={`cbg-time-stat-${id}`}
-      className={styles.stat}
-      onMouseOver={() => handleMouseOver()}
-      onMouseLeave={() => handleMouseLeave()}
-    >
-      <div className={styles.bar}>
-        {hasValues &&
-          <div className={rectangleClasses} style={{ width: `${percentage}%` }} />
-        }
-        <div className={styles.line} />
-        <div className={timeClasses}>
-          {time}
-        </div>
-      </div>
-      {hasValues
-        ? (
-          <>
-            <div className={percentageClasses}>
-              {percentage}
-            </div>
-            <div className={styles['percentage-symbol']}>
-              %
-            </div>
-          </>
-          ) : (
-          <div className={percentageClasses}>
-            --
-          </div>
-          )
-      }
-    </div>
+  }), [
+    handleMouseLeave,
+    handleMouseOver,
+    hasValues,
+    percentage,
+    percentageClasses,
+    rectangleClasses,
+    time,
+    timeClasses
+  ]
   )
 }
