@@ -93,16 +93,15 @@ class Stats extends React.Component {
     return _.map(stats, stat => {
       if (stat.id === 'timeInRange') {
         return (
-          <>
+          <div key={stat.id} >
             <TimeInRangeStats
-              key={stat.id}
               annotations={stat.annotations}
               data={stat.data.data}
               total={stat.data.total.value}
               titleKey={stat.title}
             />
             <Divider variant="fullWidth" />
-          </>
+          </div>
         )
       }
       return (

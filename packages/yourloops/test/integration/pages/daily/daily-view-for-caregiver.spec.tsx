@@ -29,7 +29,7 @@ import { screen } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
+import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
@@ -44,6 +44,7 @@ import {
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
+import { checkTimeInRangeStatsTitle } from '../../assert/stats'
 
 jest.setTimeout(10000)
 
@@ -60,7 +61,7 @@ describe('Daily view for caregiver', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPIForDailyView()
+    mockDataAPI()
   })
 
   const renderDailyView = () => {
@@ -83,5 +84,10 @@ describe('Daily view for caregiver', () => {
   it('should display correct time in range stats', async () => {
     renderDailyView()
     await checkDailyTimeInRangeStatsWidgets()
+  })
+
+  it('should display correct time in range title when hovering on items', async () => {
+    renderDailyView()
+    await checkTimeInRangeStatsTitle()
   })
 })

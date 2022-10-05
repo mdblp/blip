@@ -34,16 +34,17 @@ import {
   checkDailyTidelineContainerTooltips,
   checkDailyTimeInRangeStatsWidgets
 } from '../../assert/daily'
-import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
+import { mockDataAPI } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
+import { checkTimeInRangeStatsTitle } from '../../assert/stats'
 
 jest.setTimeout(10000)
 
 describe('Daily view for patient', () => {
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
-    mockDataAPIForDailyView()
+    mockDataAPI()
   })
 
   const renderDailyView = () => {
@@ -66,5 +67,10 @@ describe('Daily view for patient', () => {
   it('should display correct time in range stats', async () => {
     renderDailyView()
     await checkDailyTimeInRangeStatsWidgets()
+  })
+
+  it('should display correct time in range title when hovering on items', async () => {
+    renderDailyView()
+    await checkTimeInRangeStatsTitle()
   })
 })

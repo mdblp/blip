@@ -34,23 +34,30 @@ import {
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
 } from '../../assert/trends'
-import { mockDataAPIForTrendsView, mockDataAPIForTrendViewTimeInRangeStats } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
+import { checkTimeInRangeStatsTitle } from '../../assert/stats'
 
 jest.setTimeout(10000)
 
-describe('Trends view for HCP', () => {
+describe('Trends view for patient', () => {
+  let dataToMock = minimalTrendViewData
+
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
   })
 
+  beforeEach(() => {
+    dataToMock = minimalTrendViewData
+  })
+
   const renderTrendsView = () => {
+    mockDataAPI(dataToMock)
     renderPage('/trends')
   }
 
   it('should render correct basic components when navigating to patient trends view', async () => {
-    mockDataAPIForTrendsView()
     renderTrendsView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient(false)
@@ -58,15 +65,19 @@ describe('Trends view for HCP', () => {
   })
 
   it('should render correct tooltips', async () => {
-    mockDataAPIForTrendsView()
     renderTrendsView()
     await checkTrendsTidelineContainerTooltips()
     checkTrendsStatsWidgetsTooltips()
   })
 
   it('should display correct time in range stats', async () => {
-    mockDataAPIForTrendViewTimeInRangeStats()
+    dataToMock = timeInRangeStatsTrendViewData
     renderTrendsView()
     await checkTrendsTimeInRangeStatsWidgets()
+  })
+
+  it('should display correct time in range title when hovering on items', async () => {
+    renderTrendsView()
+    await checkTimeInRangeStatsTitle()
   })
 })

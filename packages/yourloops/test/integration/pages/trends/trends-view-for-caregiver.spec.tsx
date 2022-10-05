@@ -29,7 +29,7 @@ import { screen } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockDataAPIForTrendsView, mockDataAPIForTrendViewTimeInRangeStats } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
@@ -44,12 +44,14 @@ import {
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
+import { checkTimeInRangeStatsTitle } from '../../assert/stats'
 
 jest.setTimeout(10000)
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
+  let dataToMock = minimalTrendViewData
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.caregiver)
@@ -62,12 +64,16 @@ describe('Trends view for caregiver', () => {
     mockMedicalFilesAPI()
   })
 
+  beforeEach(() => {
+    dataToMock = minimalTrendViewData
+  })
+
   const renderTrendsView = () => {
+    mockDataAPI(dataToMock)
     renderPage(`/patient/${unMonitoredPatientId}/trends`)
   }
 
   it('should render correct basic components when navigating to patient trends view', async () => {
-    mockDataAPIForTrendsView()
     renderTrendsView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsCaregiver(false)
@@ -75,15 +81,19 @@ describe('Trends view for caregiver', () => {
   })
 
   it('should render correct tooltips', async () => {
-    mockDataAPIForTrendsView()
     renderTrendsView()
     await checkTrendsTidelineContainerTooltips()
     checkTrendsStatsWidgetsTooltips()
   })
 
   it('should display correct time in range stats', async () => {
-    mockDataAPIForTrendViewTimeInRangeStats()
+    dataToMock = timeInRangeStatsTrendViewData
     renderTrendsView()
     await checkTrendsTimeInRangeStatsWidgets()
+  })
+
+  it('should display correct time in range title when hovering on items', async () => {
+    renderTrendsView()
+    await checkTimeInRangeStatsTitle()
   })
 })

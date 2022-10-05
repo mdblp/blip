@@ -26,7 +26,7 @@
  */
 
 import userEvent from '@testing-library/user-event'
-import { BoundFunctions, queries, within, screen } from '@testing-library/react'
+import { BoundFunctions, queries, screen, within } from '@testing-library/react'
 
 export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
   const element = statsWidgets.getByText(infoIconLabel)
@@ -35,4 +35,19 @@ export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, i
   const tooltip = screen.getByTestId('tooltip')
   expect(tooltip).toHaveTextContent(expectedTextContent)
   userEvent.unhover(infoIcon)
+}
+
+const hoverOnTimeInRangeStat = (statsWidgets: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {
+  userEvent.hover(statsWidgets.getByTestId(statId))
+  expect(statsWidgets.getByTestId('time-in-range-stat-title')).toHaveTextContent(expectedTextContent)
+  userEvent.unhover(statsWidgets.getByTestId(statId))
+}
+
+export const checkTimeInRangeStatsTitle = async () => {
+  const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
+  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-veryHigh', 'Time Above Range ( >250 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-high', 'Time Above Range ( 180-250 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-target', 'Time In Range ( 70-180 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-low', 'Time Below Range ( 54-70 )')
+  hoverOnTimeInRangeStat(statsWidgets, 'time-in-range-stat-veryLow', 'Time Below Range ( <54 )')
 }

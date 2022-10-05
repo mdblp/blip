@@ -72,6 +72,7 @@ export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props
   return (
     <>
       <div
+        data-testid="time-in-range-stat-title"
         className={styles.title}
         ref={parentRef}
       >
