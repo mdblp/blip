@@ -27,3 +27,4 @@
 
 declare module '*.css';
 declare module 'victory';
+declare module '*.svg';

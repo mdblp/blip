@@ -26,10 +26,14 @@
  */
 import { HoverBar } from './common/stats/hover-bar'
 import { HoverBarLabel } from './common/stats/hover-bar-label'
+import { TimeInRangeStats } from './common/stats/time-in-range-stats'
+import { StatTooltip } from './common/tooltips/stat-tooltip'
 import Tooltip from './common/tooltips/tooltip'
 
 export {
+  StatTooltip,
   HoverBar,
   HoverBarLabel,
+  TimeInRangeStats,
   Tooltip
 }

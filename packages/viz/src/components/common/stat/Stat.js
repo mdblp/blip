@@ -1,4 +1,3 @@
-
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
@@ -10,9 +9,9 @@ import { VictoryBar, VictoryContainer } from 'victory'
 import { Collapse } from 'react-collapse'
 
 import { MGDL_UNITS } from 'medical-domain'
-import { formatPercentage, formatDecimalNumber, formatBgValue } from '../../../utils/format'
+import { formatBgValue, formatDecimalNumber, formatPercentage } from '../../../utils/format'
 import { formatDuration } from '../../../utils/datetime'
-import { generateBgRangeLabels, classifyBgValue, classifyCvValue } from '../../../utils/bloodglucose'
+import { classifyBgValue, classifyCvValue, generateBgRangeLabels } from '../../../utils/bloodglucose'
 import { LBS_PER_KG, MGDL_CLAMP_TOP, MMOLL_CLAMP_TOP } from '../../../utils/constants'
 import { statFormats, statTypes } from '../../../utils/stat'
 import styles from './Stat.css'
@@ -23,12 +22,11 @@ import BgBarLabel from './BgBarLabel'
 import Lines from './Lines'
 import NoBar from './NoBar'
 import WheelPercent from './Wheel'
-import StatTooltip from '../tooltips/StatTooltip'
 import StatLegend from './StatLegend'
 import CollapseIconOpen from './assets/expand-more-24-px.svg'
 import CollapseIconClose from './assets/chevron-right-24-px.svg'
 import InfoIcon from './assets/info-outline-24-px.svg'
-import { HoverBar, HoverBarLabel } from 'dumb'
+import { HoverBar, HoverBarLabel, StatTooltip, TimeInRangeStats } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 
@@ -339,14 +337,14 @@ class Stat extends React.Component {
     <div className={styles.StatTooltipWrapper}>
       <StatTooltip
         annotations={this.props.annotations}
-        offset={this.state.messageTooltipOffset}
-        position={this.state.messageTooltipPosition}
-        side={this.state.messageTooltipSide}
+        tooltipRef={this.tooltipIcon}
+        parentRef={this.stat}
       />
     </div>
   )
 
   render() {
+    const { type, data } = this.props
     const statClasses = cx({
       [styles.Stat]: true,
       [styles.isOpen]: this.state.isOpened
@@ -356,11 +354,28 @@ class Stat extends React.Component {
       <div className={styles.StatWrapper}>
         <div ref={this.setStatRef} className={statClasses}>
           {this.renderStatHeader()}
-          {this.chartProps.renderer && (
-            <div className={styles.statMain}>
-              <SizeMe render={({ size }) => (this.renderChart(size))} />
-            </div>
-          )}
+          {this.chartProps.renderer &&
+            <>
+              {type === 'barHorizontal' ?
+                (<>
+                  <TimeInRangeStats
+                    data={data.data}
+                    total={data.total.value}
+                    annotations={this.props.annotations}
+                  />
+                  <div className={styles.statMain}>
+                    <SizeMe render={({ size }) => (this.renderChart(size))} />
+                  </div>
+                </>)
+                :
+                (
+                  <div className={styles.statMain}>
+                    <SizeMe render={({ size }) => (this.renderChart(size))} />
+                  </div>
+                )
+              }
+            </>
+          }
           {this.props.type === statTypes.input && this.renderWeight()}
           {this.state.showFooter && this.renderStatFooter()}
         </div>
@@ -503,7 +518,7 @@ class Stat extends React.Component {
               tooltipText={(datum = {}) => {
                 const { value, suffix } = this.formatDatum(
                   _.get(props.data, `data.${datum.eventKey}`),
-                  props.dataFormat.tooltip,
+                  props.dataFormat.tooltip
                 )
                 return `${value}${suffix}`
               }}
@@ -519,7 +534,7 @@ class Stat extends React.Component {
             labels: {
               fill: datum => this.getDatumColor(_.assign({}, datum, this.formatDatum(
                 _.get(props.data, `data.${datum.eventKey}`),
-                props.dataFormat.label,
+                props.dataFormat.label
               ))),
               fontSize: labelFontSize,
               fontWeight: 500,
@@ -616,14 +631,14 @@ class Stat extends React.Component {
               text={(datum = {}) => {
                 const { value, suffix } = this.formatDatum(
                   _.get(props.data, `data.${datum.eventKey}`),
-                  props.dataFormat.label,
+                  props.dataFormat.label
                 )
                 return [value, suffix]
               }}
               tooltipText={(datum = {}) => {
                 const { value, suffix } = this.formatDatum(
                   _.get(props.data, `data.${datum.eventKey}`),
-                  props.dataFormat.tooltip,
+                  props.dataFormat.tooltip
                 )
                 return `${value}${suffix}`
               }}
@@ -639,7 +654,7 @@ class Stat extends React.Component {
             labels: {
               fill: datum => this.getDatumColor(_.assign({}, datum, this.formatDatum(
                 _.get(props.data, `data.${datum.eventKey}`),
-                props.dataFormat.label,
+                props.dataFormat.label
               ))),
               fontSize: labelFontSize,
               fontWeight: 500,
@@ -847,7 +862,7 @@ class Stat extends React.Component {
               }}>
                 {formatBgValue(value - deviation, bgPrefs)}
               </span>
-              &nbsp;-&nbsp;
+            &nbsp;-&nbsp;
               <span style={{
                 color: colors[upperColorId]
               }}>
@@ -907,30 +922,8 @@ class Stat extends React.Component {
   }
 
   handleTooltipIconMouseOver = () => {
-    const { top, left, width, height } = this.tooltipIcon.getBoundingClientRect()
-    const {
-      top: parentTop,
-      left: parentLeft,
-      height: parentHeight
-    } = this.stat.getBoundingClientRect()
-
-    const position = {
-      top: (top - parentTop) + height / 2,
-      left: (left - parentLeft) + width / 2
-    }
-
-    const offset = {
-      horizontal: width / 2,
-      top: -parentHeight
-    }
-
-    const side = (_.get(document, 'body.clientWidth', 0) - left < 225) ? 'left' : 'right'
-
     this.setState({
-      showMessages: true,
-      messageTooltipPosition: position,
-      messageTooltipOffset: offset,
-      messageTooltipSide: side
+      showMessages: true
     })
   }
 

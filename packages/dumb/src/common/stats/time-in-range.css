@@ -1,0 +1,147 @@
+/**
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+.legendTitle {
+  font-size: 12px;
+}
+
+.tooltipIcon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
+}
+
+.tooltipIcon > img {
+  width: 0.9em;
+}
+
+.StatTooltipWrapper {
+  z-index: 1;
+  position: relative;
+}
+
+.rectangle {
+  height: 32px;
+  border-radius: 2px;
+}
+
+.title {
+  margin-left: 4px;
+}
+
+.stats {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.line {
+  height: 5px;
+  background-color: rgb(231, 233, 238);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+}
+
+.percentage-value {
+  font-size: 24px;
+  margin-left: auto;
+  margin-right: 2px;
+}
+
+.percentage-symbol {
+  color: rgb(114, 115, 117);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.tooltip {
+  background-color: white;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: rgb(231, 233, 238);
+  border-width: thin;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 12px;
+}
+
+.disabled-label {
+  color: rgb(193, 201, 214);
+}
+
+.disabled-rectangle {
+  background-color: rgb(193, 201, 214);
+}
+
+.veryHigh-background {
+  background-color: rgb(255, 167, 0);
+}
+
+.high-background {
+  background-color: rgb(249, 216, 62);
+}
+
+.target-background {
+  background-color: rgb(159, 204, 147);
+}
+
+.low-background {
+  background-color: rgb(233, 141, 124);
+}
+
+.veryLow-background {
+  background-color: rgb(218, 58, 27);
+}
+
+.veryHigh-label {
+  color: rgb(255, 167, 0);
+}
+
+.high-label {
+  color: rgb(249, 216, 62);
+}
+
+.target-label {
+  color: rgb(159, 204, 147);
+}
+
+.low-label {
+  color: rgb(233, 141, 124);
+}
+
+.veryLow-label {
+  color: rgb(218, 58, 27);
+}

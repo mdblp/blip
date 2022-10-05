@@ -36,7 +36,6 @@ export const HoverBarLabel: FunctionComponent<HoverBarLabelProps> = (props: Hove
     tooltipText,
     y
   } = props
-
   const tooltipFontSize = barWidth / 2 < 12 ? barWidth / 2 : 12
 
   const tooltipHeight = tooltipFontSize * 1.2
