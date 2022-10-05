@@ -24,16 +24,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { HoverBar } from './common/stats/hover-bar'
-import { HoverBarLabel } from './common/stats/hover-bar-label'
+
 import { TimeInRangeStats } from './common/stats/time-in-range-stats'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
 import Tooltip from './common/tooltips/tooltip'
 
 export {
   StatTooltip,
-  HoverBar,
-  HoverBarLabel,
   TimeInRangeStats,
   Tooltip
 }

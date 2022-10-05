@@ -91,7 +91,6 @@ const Tooltip: FunctionComponent<TooltipProps> = (
     computeTailData
   } = useTooltip({ position, offset: initialOffset, side, dateTitle, borderWidth, tailWidth })
 
-  // console.log(props)
   const elementRef = useRef<HTMLDivElement>(null)
   const tailElementRef = useRef<HTMLDivElement>(null)
   const [offsets, setOffset] = useState({ top: 0, left: 0 })
@@ -108,8 +107,6 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   const dateValue = useMemo(() => {
     return computeDateValue()
   }, [computeDateValue])
-
-  console.log(elementRef)
 
   return (
     <div

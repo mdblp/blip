@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
-import { utils as vizUtils, components as vizComponents } from 'tidepool-viz'
+import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
 
 import { BG_DATA_TYPES } from '../../core/constants'
+import { TimeInRangeStats } from 'dumb'
 
 const { Stat } = vizComponents
 
@@ -89,12 +90,23 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    return _.map(stats, stat => (
-      <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
-        <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-        <Divider variant="fullWidth"/>
-      </div>
-    ))
+    console.log(stats)
+    return _.map(stats, stat => {
+      if (stat.id === 'timeInRange') {
+        return (
+          <>
+            <TimeInRangeStats annotations={stat.annotations} data={stat.data.data} total={stat.data.total.value} />
+            <Divider variant="fullWidth" />
+          </>
+        )
+      }
+      return (
+        <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
+          <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+          <Divider variant="fullWidth" />
+        </div>
+      )
+    })
   }
 
   render() {
