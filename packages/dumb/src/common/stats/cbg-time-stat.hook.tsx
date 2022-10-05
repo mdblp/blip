@@ -97,6 +97,5 @@ export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookRetu
     rectangleClasses,
     time,
     timeClasses
-  ]
-  )
+  ])
 }
