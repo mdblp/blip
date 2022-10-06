@@ -1,21 +1,12 @@
-import { IUser, Preferences, Profile, Settings } from '../../models/user'
+import axios from 'axios'
+import { Preferences, Profile, Settings } from '../../models/user'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
-import { HttpHeaderKeys } from '../../models/api'
 import bows from 'bows'
+import appConfig from '../config'
 
 const log = bows('User API')
 
 export default class UserApi {
-  static async getShorelineAccessToken(): Promise<{ token: string, id: string }> {
-    try {
-      const { headers, data } = await HttpService.get<IUser>({ url: 'auth/login' })
-      return { token: headers[HttpHeaderKeys.sessionToken], id: data.userid }
-    } catch (err) {
-      console.log('This profile doesn\'t exists')
-      throw Error('unknown user')
-    }
-  }
-
   static async getProfile(userId: string): Promise<Profile | undefined> {
     try {
       const { data } = await HttpService.get<Profile>({ url: `/metadata/${userId}/profile` })
@@ -80,5 +71,14 @@ export default class UserApi {
       payload: settings
     })
     return data
+  }
+
+  static async updateAuth0UserMetadata(userId: string, payload: Record<string, string>): Promise<void> {
+    await axios({
+      method: 'patch',
+      url: `/api/v2/users/${userId}`,
+      baseURL: `https://${appConfig.AUTH0_DOMAIN}`,
+      data: { user_metadata: payload }
+    })
   }
 }

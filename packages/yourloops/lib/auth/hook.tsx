@@ -31,7 +31,7 @@ import bows from 'bows'
 import _ from 'lodash'
 
 import { useAuth0 } from '@auth0/auth0-react'
-import { AuthenticatedUser, Preferences, Profile, Settings, UserRoles } from '../../models/user'
+import { AuthenticatedUser, Preferences, Profile, Settings, UserMetadata, UserRoles } from '../../models/user'
 import { HcpProfession } from '../../models/hcp-profession'
 import { zendeskLogout } from '../zendesk'
 import User from './user'
@@ -156,21 +156,13 @@ export function AuthContextImpl(): AuthContext {
       setFetchingUser(true)
       const user = new User(auth0user as AuthenticatedUser)
 
-      // Temporary here waiting all backend services be compatible with Auth0
-      // see https://diabeloop.atlassian.net/browse/YLP-1553
-      try {
-        const { token, id } = await UserApi.getShorelineAccessToken()
-        HttpService.shorelineAccessToken = token
-        user.id = id
-        metrics.setUser(user)
-      } catch (err) {
-        console.log(err)
+      if (auth0user[UserMetadata.Roles]) {
+        user.profile = await UserApi.getProfile(user.id)
+        user.preferences = await UserApi.getPreferences(user.id)
+        user.settings = await UserApi.getSettings(user.id)
+        updateUserLanguage(user)
       }
 
-      user.profile = await UserApi.getProfile(user.id)
-      user.preferences = await UserApi.getPreferences(user.id)
-      user.settings = await UserApi.getSettings(user.id)
-      updateUserLanguage(user)
       setUser(user)
     } catch (err) {
       console.error(err)
@@ -192,6 +184,11 @@ export function AuthContextImpl(): AuthContext {
     }
   }
 
+  const setAccessToken = useCallback((ignoreCache: boolean = false): void => {
+    const getAccessToken = async (): Promise<string> => await getAccessTokenSilently({ ignoreCache })
+    HttpService.setGetAccessTokenMethod(getAccessToken)
+  }, [getAccessTokenSilently])
+
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
     const now = new Date().toISOString()
     let profile: Profile = {
@@ -212,9 +209,16 @@ export function AuthContextImpl(): AuthContext {
     const settings: Settings = { country: signupForm.profileCountry }
 
     const user = getUser()
-    await UserApi.updateProfile(user.id, profile)
-    await UserApi.updatePreferences(user.id, preferences)
-    await UserApi.updateSettings(user.id, settings)
+
+    setAccessToken(true)
+    await UserApi.updateAuth0UserMetadata(auth0user.sub, { role: signupForm.accountRole })
+    await Promise.all([
+      UserApi.updateProfile(user.id, profile),
+      UserApi.updatePreferences(user.id, preferences),
+      UserApi.updateSettings(user.id, settings)
+    ])
+    setAccessToken()
+
     user.role = signupForm.accountRole
     user.preferences = preferences
     user.profile = profile
@@ -224,12 +228,11 @@ export function AuthContextImpl(): AuthContext {
   useEffect(() => {
     (async () => {
       if (isAuthenticated && !user) {
-        const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
-        HttpService.setGetAccessTokenMethod(getAccessToken)
+        setAccessToken()
         await getUserInfo()
       }
     })()
-  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, user])
+  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, setAccessToken, user])
 
   return {
     user,

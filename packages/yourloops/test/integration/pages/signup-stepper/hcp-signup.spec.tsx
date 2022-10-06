@@ -36,11 +36,12 @@ import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStep
 import { mockUserApi } from '../../utils/mockUserApi'
 import { HcpProfession } from '../../../../models/hcp-profession'
 import userEvent from '@testing-library/user-event'
+import { UserRoles } from '../../../../models/user'
 
 jest.setTimeout(15000)
 
 describe('Signup stepper', () => {
-  const { updateProfileMock, updatePreferencesMock, updateSettingsMock } = mockUserApi()
+  const { updateProfileMock, updatePreferencesMock, updateSettingsMock, updateAuth0UserMetadataMock } = mockUserApi()
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Lara'
   const lastName = 'Tatouille'
@@ -109,6 +110,7 @@ describe('Signup stepper', () => {
       userEvent.click(createButton)
     })
 
+    expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(`auth0|${loggedInUserId}`, { role: UserRoles.hcp })
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, { displayLanguageCode: 'en' })
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, { country: 'FR' })

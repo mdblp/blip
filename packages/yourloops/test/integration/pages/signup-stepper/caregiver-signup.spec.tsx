@@ -34,13 +34,13 @@ import { MainLobby } from '../../../../app/main-lobby'
 import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../utils/mockUserApi'
-import { Profile } from '../../../../models/user'
+import { Profile, UserRoles } from '../../../../models/user'
 import userEvent from '@testing-library/user-event'
 
 jest.setTimeout(15000)
 
 describe('Signup stepper', () => {
-  const { updateProfileMock, updatePreferencesMock, updateSettingsMock } = mockUserApi()
+  const { updateProfileMock, updatePreferencesMock, updateSettingsMock, updateAuth0UserMetadataMock } = mockUserApi()
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Sandy'
   const lastName = 'Kilo'
@@ -94,6 +94,7 @@ describe('Signup stepper', () => {
     await act(async () => {
       userEvent.click(screen.getByRole('button', { name: 'Create Account' }))
     })
+    expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(`auth0|${loggedInUserId}`, { role: UserRoles.caregiver })
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expect.objectContaining<Partial<Profile>>(expectedProfile))
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, { country: 'FR' })
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, { displayLanguageCode: 'en' })
