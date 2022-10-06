@@ -2,7 +2,7 @@
   " reports the data.": " reports the data.",
   "%-I:%M %p": "%-I:%M %p",
   "%b %-d, %Y": "%b %-d, %Y",
-  "* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.": "* この血糖値はあなたのデバイスが記録できるよりも高かったです。実際の血糖値はここに表示されているよりも高くなります。",
+  "* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.": "*血糖値が記録可能な数値を超えており、実際の血糖値は表示されている数値より高いです。",
   "* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.": "*血糖値が記録可能な数値を下回っており、実際の血糖値は表示されている数値より低いです。",
   "**Avg. Daily Carbs**: All carb entries added together, then divided by the number of days in this view. Note, these entries come from either bolus wizard events, or Apple Health records.": "**平均日次糖質量** 入力された全ての糖質量の合計（レスキューカーボを含む）から表示されている日数を割ったもの。",
   "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.": "**平均日次インスリン**全ての基礎レートおよびボーラス（U）の合計から、表示されている日数を割ったもの。",
