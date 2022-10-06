@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import { CBGTimeStatMemoized as CBGTimeStat } from './cbg-time-stat'
-import styles from './time-in-range.css'
+import styles from './time-in-range-stats.css'
 import { TimeInRangeStatsTitleMemoized as TimeInRangeStatsTitle } from './time-in-range-stats-title'
 import { useTimeInRangeStatsHook } from './time-in-range-stats.hook'
 

@@ -27,7 +27,6 @@
 
 import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-time-stat.css'
-import timeInRangeStyles from './time-in-range.css'
 import { formatDuration } from '../../utils/datetime'
 
 export interface CBGTimeStatHookProps {
@@ -52,13 +51,9 @@ export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookRetu
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
   const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : cbgTimeStatStyles[`${id}-background`]
-  const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : timeInRangeStyles[`${id}-label`]
-
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : cbgTimeStatStyles[`${id}-label`]
   const rectangleClasses = `${cbgTimeStatStyles.rectangle} ${rectangleBackgroundClass}`
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const timeClasses = `${cbgTimeStatStyles.time} ${labelClass}`
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
 
   return useMemo(() => ({

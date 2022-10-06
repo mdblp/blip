@@ -64,10 +64,16 @@
         "checksVoidReturn": false
       }
     ],
-    "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
     "@typescript-eslint/no-extraneous-class": "off",
+    "@typescript-eslint/restrict-template-expressions": [
+      "error",
+      {
+        "allowAny": true
+      }
+    ],
+    "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
