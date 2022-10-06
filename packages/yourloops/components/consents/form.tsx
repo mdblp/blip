@@ -196,6 +196,7 @@ export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole,
 
   const checkboxFeedback = (
     <Checkbox
+      id="feedback-checkbox"
       aria-label={t('feedback-checkbox')}
       className={classes.checkbox}
       checked={checked}
