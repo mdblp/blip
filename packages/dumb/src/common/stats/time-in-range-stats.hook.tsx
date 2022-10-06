@@ -27,17 +27,17 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StatLevel, TimeInRangeData } from './time-in-range-stats'
+import { CBGTimeData, StatLevel } from './time-in-range-stats'
 import { CBGTimeStatProps } from './cbg-time-stat'
 
 export interface TimeInRangeStatsTitleHookProps {
-  data: TimeInRangeData[]
+  data: CBGTimeData[]
   titleKey: string
   total: number
 }
 
 interface TimeInRangeStatsTitleHookReturn {
-  cbgStats: {
+  cbgStatsProps: {
     veryHighStat: CBGTimeStatProps
     highStat: CBGTimeStatProps
     targetStat: CBGTimeStatProps
@@ -45,6 +45,7 @@ interface TimeInRangeStatsTitleHookReturn {
     veryLowStat: CBGTimeStatProps
   }
   hoveredStatId: StatLevel | null
+  onMouseLeave: Function
   titleProps: {
     legendTitle: string
     showTooltipIcon: boolean
@@ -64,13 +65,15 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): 
     title: timeInRangeLabel
   })
 
-  const onStatMouseover = useCallback((id: StatLevel, title: string, legendTitle: string) => {
-    setTitleProps({
-      legendTitle,
-      showTooltipIcon: false,
-      title: `${title}`
-    })
-    setHoveredStatId(id)
+  const onStatMouseover = useCallback((id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => {
+    if (hasValues) {
+      setTitleProps({
+        legendTitle,
+        showTooltipIcon: false,
+        title: `${title}`
+      })
+      setHoveredStatId(id)
+    }
   }, [])
 
   const onStatMouseLeave = useCallback(() => {
@@ -82,25 +85,19 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): 
     setHoveredStatId(null)
   }, [timeInRangeLabel])
 
-  const cbgTimeStatCommonProps = useMemo(() => ({
-    onMouseLeave: onStatMouseLeave,
-    onMouseOver: onStatMouseover,
-    total
-  }), [onStatMouseLeave, onStatMouseover, total])
-
   const getCBGTimeStatsProps = useCallback((id: string) => {
     const stat = data.find(timeInRange => timeInRange.id === id)
     if (!stat) {
       throw Error(`Could not find stat with id ${id}`)
     }
     return {
+      id: stat.id,
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
-      onMouseLeave: onStatMouseLeave,
-      onMouseOver: onStatMouseover,
+      onMouseOver: () => onStatMouseover(stat.id, stat.title, stat.legendTitle, total !== 0),
       total,
-      ...stat
+      value: stat.value
     }
-  }, [data, hoveredStatId, onStatMouseLeave, onStatMouseover, total])
+  }, [data, hoveredStatId, onStatMouseover, total])
 
   const cbgStats = useMemo(() => ({
     veryHighStat: getCBGTimeStatsProps(StatLevel.VeryHigh),
@@ -111,13 +108,13 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): 
   }), [getCBGTimeStatsProps])
 
   return useMemo(() => ({
-    cbgStats,
-    cbgTimeStatCommonProps,
+    cbgStatsProps: cbgStats,
+    onMouseLeave: onStatMouseLeave,
     hoveredStatId,
     titleProps
   }), [
     cbgStats,
-    cbgTimeStatCommonProps,
+    onStatMouseLeave,
     hoveredStatId,
     titleProps
   ])

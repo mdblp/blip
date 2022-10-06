@@ -31,8 +31,8 @@ import styles from './time-in-range.css'
 import { TimeInRangeStatsTitleMemoized as TimeInRangeStatsTitle } from './time-in-range-stats-title'
 import { useTimeInRangeStatsHook } from './time-in-range-stats.hook'
 
-export interface TimeInRangeData {
-  id: string
+export interface CBGTimeData {
+  id: StatLevel
   legendTitle: string
   title: string
   value: number
@@ -40,7 +40,7 @@ export interface TimeInRangeData {
 
 interface TimeInRangeStatsProps {
   annotations: []
-  data: TimeInRangeData[]
+  data: CBGTimeData[]
   total: number
   titleKey: string
 }
@@ -56,7 +56,7 @@ export enum StatLevel {
 const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
   const { annotations, data, titleKey, total } = props
 
-  const { cbgStats, hoveredStatId, titleProps } = useTimeInRangeStatsHook({ data, titleKey, total })
+  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useTimeInRangeStatsHook({ data, titleKey, total })
   return (
     <>
       <TimeInRangeStatsTitle
@@ -64,12 +64,12 @@ const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeI
         hoveredStatId={hoveredStatId}
         {...titleProps}
       />
-      <div className={styles.stats}>
-        <CBGTimeStat{...cbgStats.veryHighStat} />
-        <CBGTimeStat{...cbgStats.highStat} />
-        <CBGTimeStat{...cbgStats.targetStat} />
-        <CBGTimeStat{...cbgStats.lowStat} />
-        <CBGTimeStat{...cbgStats.veryLowStat} />
+      <div className={styles.stats} onMouseLeave={() => onMouseLeave()}>
+        <CBGTimeStat {...cbgStatsProps.veryHighStat} />
+        <CBGTimeStat {...cbgStatsProps.highStat} />
+        <CBGTimeStat {...cbgStatsProps.targetStat} />
+        <CBGTimeStat {...cbgStatsProps.lowStat} />
+        <CBGTimeStat {...cbgStatsProps.veryLowStat} />
       </div>
     </>
   )

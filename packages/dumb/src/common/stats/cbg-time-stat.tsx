@@ -32,35 +32,28 @@ import { useCBGTimeStat } from './cbg-time-stat.hook'
 export interface CBGTimeStatProps {
   id: string
   isDisabled: boolean
-  legendTitle: string
-  onMouseLeave: Function
   onMouseOver: Function
-  title: string
   total: number
   value: number
 }
 
 const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
-  const { isDisabled, id, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
+  const { id, isDisabled, onMouseOver, total, value } = props
 
   const {
-    handleMouseOver,
-    handleMouseLeave,
     hasValues,
     percentage,
     percentageClasses,
     rectangleClasses,
     timeClasses,
     time
-  } = useCBGTimeStat({ id, isDisabled, legendTitle, onMouseLeave, onMouseOver, title, total, value })
+  } = useCBGTimeStat({ id, isDisabled, total, value })
 
-  console.log('Rendering stat')
   return (
     <div
       data-testid={`cbg-time-stat-${id}`}
       className={styles.stat}
-      onMouseOver={() => handleMouseOver()}
-      onMouseLeave={() => handleMouseLeave()}
+      onMouseOver={() => onMouseOver()}
     >
       <div className={styles.bar}>
         {hasValues &&

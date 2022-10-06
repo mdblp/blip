@@ -57,7 +57,6 @@ const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (pr
   const onTooltipMouseLeave = (): void => {
     setShowTooltip(false)
   }
-  console.log('Rendering title')
   return (
     <>
       <div

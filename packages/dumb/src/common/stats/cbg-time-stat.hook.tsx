@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-time-stat.css'
 import timeInRangeStyles from './time-in-range.css'
 import { formatDuration } from '../../utils/datetime'
@@ -33,17 +33,11 @@ import { formatDuration } from '../../utils/datetime'
 export interface CBGTimeStatHookProps {
   id: string
   isDisabled: boolean
-  legendTitle: string
-  onMouseLeave: Function
-  onMouseOver: Function
-  title: string
   total: number
   value: number
 }
 
 interface CBGTimeStatHookReturn {
-  handleMouseOver: Function
-  handleMouseLeave: Function
   hasValues: boolean
   percentage: number
   percentageClasses: string
@@ -53,7 +47,7 @@ interface CBGTimeStatHookReturn {
 }
 
 export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookReturn => {
-  const { id, isDisabled, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
+  const { id, isDisabled, total, value } = props
   const time = formatDuration(value, { condensed: true })
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
@@ -67,21 +61,7 @@ export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookRetu
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
 
-  const handleMouseOver = useCallback(() => {
-    if (!isDisabled) {
-      onMouseOver(id, title, legendTitle)
-    }
-  }, [id, isDisabled, legendTitle, onMouseOver, title])
-
-  const handleMouseLeave = useCallback(() => {
-    if (!isDisabled) {
-      onMouseLeave()
-    }
-  }, [isDisabled, onMouseLeave])
-
   return useMemo(() => ({
-    handleMouseOver,
-    handleMouseLeave,
     hasValues,
     percentage,
     percentageClasses,
@@ -89,8 +69,6 @@ export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookRetu
     timeClasses,
     time
   }), [
-    handleMouseLeave,
-    handleMouseOver,
     hasValues,
     percentage,
     percentageClasses,

@@ -27,35 +27,70 @@
 
 import { act, renderHook } from '@testing-library/react-hooks/dom'
 import { TimeInRangeStatsTitleHookProps, useTimeInRangeStatsHook } from './time-in-range-stats.hook'
-import { StatLevel, TimeInRangeData } from './time-in-range-stats'
+import { CBGTimeData, StatLevel } from './time-in-range-stats'
 import { waitFor } from '@testing-library/dom'
 
 describe('TimeInRangeStat hook', () => {
-  const createStat = (id: StatLevel, legendTitle: string, title: string, value: number): TimeInRangeData => {
+  const total = 1000
+  const createCbgStatProps = (id: StatLevel, legendTitle: string, title: string, value: number): CBGTimeData => {
     return { id, legendTitle, title, value }
   }
-  const veryHighStat = createStat(StatLevel.VeryHigh, 'fakeLegendTitle', 'fakeTitle', 100)
-  const highStat = createStat(StatLevel.High, 'fakeLegendTitle2', 'fakeTitle2', 200)
-  const targetStat = createStat(StatLevel.Target, 'fakeLegendTitle3', 'fakeTitle3', 150)
-  const lowStat = createStat(StatLevel.Low, 'fakeLegendTitle4', 'fakeTitle4', 250)
-  const veryLowStat = createStat(StatLevel.VeryLow, 'fakeLegendTitle5', 'fakeTitle5', 50)
+  const veryHighStat = createCbgStatProps(StatLevel.VeryHigh, 'fakeLegendTitle', 'fakeTitle', 100)
+  const highStat = createCbgStatProps(StatLevel.High, 'fakeLegendTitle2', 'fakeTitle2', 200)
+  const targetStat = createCbgStatProps(StatLevel.Target, 'fakeLegendTitle3', 'fakeTitle3', 150)
+  const lowStat = createCbgStatProps(StatLevel.Low, 'fakeLegendTitle4', 'fakeTitle4', 250)
+  const veryLowStat = createCbgStatProps(StatLevel.VeryLow, 'fakeLegendTitle5', 'fakeTitle5', 50)
 
   const defaultProps = {
     data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
     titleKey: 'fakeTitleKey',
-    total: 1000
+    total
   } as TimeInRangeStatsTitleHookProps
 
-  it('should return correct cbgStats', () => {
+  it('should return correct cbgStatsProps', () => {
     const props = { ...defaultProps }
     const { result } = renderHook(() => useTimeInRangeStatsHook(props))
-    expect(result.current.cbgStats).toEqual({
-      veryHighStat, highStat, targetStat, lowStat, veryLowStat
+    expect(result.current.cbgStatsProps).toEqual({
+      veryHighStat: {
+        id: veryHighStat.id,
+        isDisabled: false,
+        onMouseOver: expect.any(Function),
+        total: defaultProps.total,
+        value: veryHighStat.value
+      },
+      highStat: {
+        id: highStat.id,
+        isDisabled: false,
+        onMouseOver: expect.any(Function),
+        total: defaultProps.total,
+        value: highStat.value
+      },
+      targetStat: {
+        id: targetStat.id,
+        isDisabled: false,
+        onMouseOver: expect.any(Function),
+        total: defaultProps.total,
+        value: targetStat.value
+      },
+      lowStat: {
+        id: lowStat.id,
+        isDisabled: false,
+        onMouseOver: expect.any(Function),
+        total: defaultProps.total,
+        value: lowStat.value
+      },
+      veryLowStat: {
+        id: veryLowStat.id,
+        isDisabled: false,
+        onMouseOver: expect.any(Function),
+        total: defaultProps.total,
+        value: veryLowStat.value
+      }
     })
   })
 
   it('onMouseOver and OnMouseLeave should return correct values', async () => {
-    const props = { ...defaultProps, total: 0 }
+    const props = { ...defaultProps, total: 1000 }
     const defaultTitleProps = {
       legendTitle: '',
       showTooltipIcon: true,
@@ -65,7 +100,7 @@ describe('TimeInRangeStat hook', () => {
     expect(result.current.hoveredStatId).toBeNull()
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {
-      result.current.cbgStats.veryHighStat.onMouseOver(veryHighStat.id, veryHighStat.title, veryHighStat.legendTitle)
+      result.current.cbgStatsProps.veryHighStat.onMouseOver()
       await waitFor(() => expect(result.current.hoveredStatId).toEqual(veryHighStat.id))
     })
     expect(result.current.titleProps).toEqual({
@@ -74,7 +109,7 @@ describe('TimeInRangeStat hook', () => {
       title: veryHighStat.title
     })
     await act(async () => {
-      result.current.cbgStats.veryHighStat.onMouseLeave()
+      result.current.onMouseLeave()
       await waitFor(() => expect(result.current.hoveredStatId).toBeNull())
     })
     expect(result.current.titleProps).toEqual(defaultTitleProps)
