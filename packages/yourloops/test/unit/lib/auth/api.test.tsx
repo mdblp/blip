@@ -29,36 +29,10 @@
 import { Preferences, Profile, Settings } from '../../../../models/user'
 import UserApi from '../../../../lib/auth/user-api'
 import HttpService, { ErrorMessageStatus } from '../../../../services/http'
-import { AxiosResponse, AxiosResponseHeaders } from 'axios'
-import { HttpHeaderKeys } from '../../../../models/api'
+import { AxiosResponse } from 'axios'
 
 describe('Auth API', () => {
   const userId = 'userId'
-
-  describe('getShorelineAccessToken', () => {
-    it('should get an access token from shoreline service', async () => {
-      const token = 'session-token'
-      const data = { token, userid: userId }
-      const headers = { [HttpHeaderKeys.sessionToken]: token } as AxiosResponseHeaders
-      const expectedResponse = { token, id: data.userid }
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({
-        data,
-        headers
-      } as AxiosResponse)
-
-      const response = await UserApi.getShorelineAccessToken()
-
-      expect(response).toEqual(expectedResponse)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: 'auth/login' })
-    })
-
-    it('should throw an error if profile does not exist', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValue('error')
-      await expect(async () => {
-        await UserApi.getShorelineAccessToken()
-      }).rejects.toThrowError('unknown user')
-    })
-  })
 
   describe('getProfile', () => {
     it('should get the user profile', async () => {

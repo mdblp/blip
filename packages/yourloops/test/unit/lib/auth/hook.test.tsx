@@ -88,7 +88,6 @@ describe('Auth hook', () => {
       },
       logout: jest.fn()
     })
-    jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ token: 'session-token', id })
     jest.spyOn(UserApi, 'getProfile').mockResolvedValue(profile)
     jest.spyOn(UserApi, 'getPreferences').mockResolvedValue(preferences)
     jest.spyOn(UserApi, 'getSettings').mockResolvedValue(settings)
@@ -321,6 +320,7 @@ describe('Auth hook', () => {
 
   describe('completeSignup', () => {
     it('should update user profile, preferences and settings', async () => {
+      jest.spyOn(UserApi, 'updateAuth0UserMetadata').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'getProfile').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'getSettings').mockResolvedValueOnce(undefined)
