@@ -81,23 +81,6 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (
 
   const side = ((document.body.clientWidth ?? 0) - left < 225) ? 'left' : 'right'
 
-  const rows: JSX.Element[] = []
-  annotations.forEach((message, index) => {
-    rows.push(
-      <ReactMarkdown key={`message-${index}`} className={styles.message} linkTarget="_blank">
-        {message}
-      </ReactMarkdown>
-    )
-    if (index !== annotations.length - 1) {
-      rows.push(
-        <div
-          key={`divider-${index}`}
-          className={styles.divider}
-        />
-      )
-    }
-  })
-
   return (
     <Tooltip
       tail={tail}
@@ -110,7 +93,23 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (
       offset={offset}
       title={title}
       backgroundColor={backgroundColor}
-      content={<div className={styles.container}>{rows}</div>}
+      content={
+        <div className={styles.container}>
+          {annotations.map((message, index) =>
+            <>
+              <ReactMarkdown key={`message-${index}`} className={styles.message} linkTarget="_blank">
+                {message}
+              </ReactMarkdown>
+              {index !== annotations.length - 1 &&
+                <div
+                  key={`divider-${index}`}
+                  className={styles.divider}
+                />
+              }
+            </>
+          )}
+        </div>
+      }
     />
   )
 }
