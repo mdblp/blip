@@ -25,18 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.legendTitle {
+.legend-title {
   font-size: 12px;
-}
-
-.tooltipIcon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
-}
-
-.tooltipIcon > img {
-  width: 0.9em;
 }
 
 .stat-tooltip {
@@ -48,27 +38,12 @@
   margin-left: 4px;
 }
 
-.stats {
-  margin-left: 10px;
-  margin-right: 10px;
+.tooltip-icon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
 }
 
-.veryHigh-label {
-  color: rgb(255, 167, 0);
-}
-
-.high-label {
-  color: rgb(249, 216, 62);
-}
-
-.target-label {
-  color: rgb(159, 204, 147);
-}
-
-.low-label {
-  color: rgb(233, 141, 124);
-}
-
-.veryLow-label {
-  color: rgb(218, 58, 27);
+.tooltip-icon > img {
+  width: 0.9em;
 }

@@ -25,14 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useRef, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import { CBGTimeStat } from './cbg-time-stat'
 import styles from './time-in-range.css'
-import InfoIcon from './assets/info-outline-24-px.svg'
-import { StatTooltip } from '../tooltips/stat-tooltip'
-import { useTranslation } from 'react-i18next'
+import { TimeInRangeStatsTitle } from './time-in-range-stats-title'
+import { useTimeInRangeStatsTitleHook } from './time-in-range-stats.hook'
 
-interface TimeInRangeData {
+export interface TimeInRangeData {
   id: string
   legendTitle: string
   title: string
@@ -46,130 +45,46 @@ interface TimeInRangeStatsProps {
   titleKey: string
 }
 
+export enum StatLevel {
+  VeryHigh = 'veryHigh',
+  High = 'high',
+  Target = 'target',
+  Low = 'low',
+  VeryLow = 'veryLow'
+}
+
 export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
   const { annotations, data, titleKey, total } = props
-  const { t } = useTranslation('main')
-  const timeInRangeLabel = t(titleKey)
 
-  const [hoveredStatId, setHoveredStatId] = useState<string | null>(null)
-  const [title, setTitle] = useState<string>(timeInRangeLabel)
-  const [legendTitle, setLegendTitle] = useState<string>('')
-  const [showTooltipIcon, setshowTooltipIcon] = useState<boolean>(true)
-  const [showTooltip, setShowTooltip] = useState<boolean>(false)
-
-  const elementRef = useRef<HTMLImageElement>(null)
-  const parentRef = useRef<HTMLDivElement>(null)
-
-  const getTimeInRange = (id: string): TimeInRangeData => {
-    const tir = data.find(timeInRange => timeInRange.id === id)
-    if (!tir) {
-      throw Error(`Could not find stat with id ${id}`)
-    }
-    return tir
-  }
-
-  const veryHighTir = getTimeInRange('veryHigh')
-  const highTir = getTimeInRange('high')
-  const targetTir = getTimeInRange('target')
-  const lowTir = getTimeInRange('low')
-  const veryLowTir = getTimeInRange('veryLow')
-
-  const onStatMouseover = (id: string, title: string, legendTitle: string): void => {
-    setTitle(`${title}`)
-    setLegendTitle(legendTitle)
-    setHoveredStatId(id)
-    setshowTooltipIcon(false)
-  }
-
-  const onStatMouseLeave = (): void => {
-    setTitle(timeInRangeLabel)
-    setLegendTitle('')
-    setHoveredStatId(null)
-    setshowTooltipIcon(true)
-  }
-
-  const onTooltipMouseover = (): void => {
-    setShowTooltip(true)
-  }
-
-  const onTooltipMouseLeave = (): void => {
-    setShowTooltip(false)
-  }
+  const { cbgStats, cbgTimeStatCommonProps, hoveredStatId, titleProps } = useTimeInRangeStatsTitleHook({ data, titleKey, total })
 
   return (
     <>
-      <div
-        data-testid="time-in-range-stats-title"
-        className={styles.title}
-        ref={parentRef}
-      >
-        {title}
-        {hoveredStatId &&
-          <span className={styles.legendTitle}>
-            {' ( '}
-            <span className={styles[`${hoveredStatId}-label`]}>
-            {legendTitle}
-          </span>
-            {' )'}
-          </span>
-        }
-        {showTooltipIcon && <span
-          className={styles.tooltipIcon}
-        >
-            <img
-              data-testid="info-icon"
-              src={InfoIcon}
-              alt={t('img-alt-hover-for-more-info')}
-              ref={elementRef}
-              onMouseOver={onTooltipMouseover}
-              onMouseOut={onTooltipMouseLeave}
-            />
-          </span>}
-        {showTooltip && elementRef.current && parentRef.current &&
-          <div className={styles['stat-tooltip']}>
-            <StatTooltip
-              annotations={annotations}
-              parentRef={parentRef.current}
-              tooltipRef={elementRef.current}
-            />
-          </div>
-        }
-      </div>
+      <TimeInRangeStatsTitle
+        annotations={annotations}
+        hoveredStatId={hoveredStatId}
+        {...titleProps}
+      />
       <div className={styles.stats}>
         <CBGTimeStat
-          total={total}
-          hoveredStatId={hoveredStatId}
-          onMouseLeave={onStatMouseLeave}
-          onMouseOver={onStatMouseover}
-          {...veryHighTir}
+          {...cbgTimeStatCommonProps}
+          {...cbgStats.veryHighStat}
         />
         <CBGTimeStat
-          total={total}
-          hoveredStatId={hoveredStatId}
-          onMouseLeave={onStatMouseLeave}
-          onMouseOver={onStatMouseover}
-          {...highTir}
+          {...cbgTimeStatCommonProps}
+          {...cbgStats.highStat}
         />
         <CBGTimeStat
-          total={total}
-          hoveredStatId={hoveredStatId}
-          onMouseLeave={onStatMouseLeave}
-          onMouseOver={onStatMouseover}
-          {...targetTir}
+          {...cbgTimeStatCommonProps}
+          {...cbgStats.targetStat}
         />
         <CBGTimeStat
-          total={total}
-          hoveredStatId={hoveredStatId}
-          onMouseLeave={onStatMouseLeave}
-          onMouseOver={onStatMouseover}
-          {...lowTir}
+          {...cbgTimeStatCommonProps}
+          {...cbgStats.lowStat}
         />
         <CBGTimeStat
-          total={total}
-          hoveredStatId={hoveredStatId}
-          onMouseLeave={onStatMouseLeave}
-          onMouseOver={onStatMouseover}
-          {...veryLowTir}
+          {...cbgTimeStatCommonProps}
+          {...cbgStats.veryLowStat}
         />
       </div>
     </>
