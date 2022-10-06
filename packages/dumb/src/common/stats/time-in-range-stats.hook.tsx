@@ -29,7 +29,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatLevel, TimeInRangeData } from './time-in-range-stats'
 
-interface TimeInRangeStatsTitleHookProps {
+export interface TimeInRangeStatsTitleHookProps {
   data: TimeInRangeData[]
   titleKey: string
   total: number
@@ -57,7 +57,7 @@ interface TimeInRangeStatsTitleHookReturn {
   }
 }
 
-export const useTimeInRangeStatsTitleHook = (props: TimeInRangeStatsTitleHookProps): TimeInRangeStatsTitleHookReturn => {
+export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): TimeInRangeStatsTitleHookReturn => {
   const { data, titleKey, total } = props
   const { t } = useTranslation('main')
   const timeInRangeLabel = t(titleKey)

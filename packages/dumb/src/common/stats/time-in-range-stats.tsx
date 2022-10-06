@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 import { CBGTimeStat } from './cbg-time-stat'
 import styles from './time-in-range.css'
 import { TimeInRangeStatsTitle } from './time-in-range-stats-title'
-import { useTimeInRangeStatsTitleHook } from './time-in-range-stats.hook'
+import { useTimeInRangeStatsHook } from './time-in-range-stats.hook'
 
 export interface TimeInRangeData {
   id: string
@@ -56,7 +56,7 @@ export enum StatLevel {
 export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
   const { annotations, data, titleKey, total } = props
 
-  const { cbgStats, cbgTimeStatCommonProps, hoveredStatId, titleProps } = useTimeInRangeStatsTitleHook({ data, titleKey, total })
+  const { cbgStats, cbgTimeStatCommonProps, hoveredStatId, titleProps } = useTimeInRangeStatsHook({ data, titleKey, total })
 
   return (
     <>
