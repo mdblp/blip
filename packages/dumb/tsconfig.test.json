@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "types": [
+      "jest"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "src/coverage",
+    "dist"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}
