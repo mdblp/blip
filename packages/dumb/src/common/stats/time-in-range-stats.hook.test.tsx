@@ -26,7 +26,7 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks/dom'
-import { TimeInRangeStatsTitleHookProps, useTimeInRangeStatsHook } from './time-in-range-stats.hook'
+import { TimeInRangeStatsHookProps, useTimeInRangeStatsHook } from './time-in-range-stats.hook'
 import { CBGTimeData, StatLevel } from './time-in-range-stats'
 import { waitFor } from '@testing-library/dom'
 
@@ -45,7 +45,7 @@ describe('TimeInRangeStat hook', () => {
     data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
     titleKey: 'fakeTitleKey',
     total
-  } as TimeInRangeStatsTitleHookProps
+  } as TimeInRangeStatsHookProps
 
   it('should return correct cbgStatsProps', () => {
     const props = { ...defaultProps }

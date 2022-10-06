@@ -27,7 +27,6 @@
 
 import React, { FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
-import _ from 'lodash'
 
 import colors from '../../styles/colors.css'
 import styles from './stat-tooltip.css'
@@ -83,7 +82,7 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (
   const side = ((document.body.clientWidth ?? 0) - left < 225) ? 'left' : 'right'
 
   const rows: JSX.Element[] = []
-  _.forEach(annotations, (message, index) => {
+  annotations.forEach((message, index) => {
     rows.push(
       <ReactMarkdown key={`message-${index}`} className={styles.message} linkTarget="_blank">
         {message}

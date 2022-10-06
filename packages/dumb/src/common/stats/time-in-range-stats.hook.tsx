@@ -30,13 +30,13 @@ import { useTranslation } from 'react-i18next'
 import { CBGTimeData, StatLevel } from './time-in-range-stats'
 import { CBGTimeStatProps } from './cbg-time-stat'
 
-export interface TimeInRangeStatsTitleHookProps {
+export interface TimeInRangeStatsHookProps {
   data: CBGTimeData[]
   titleKey: string
   total: number
 }
 
-interface TimeInRangeStatsTitleHookReturn {
+interface TimeInRangeStatsHookReturn {
   cbgStatsProps: {
     veryHighStat: CBGTimeStatProps
     highStat: CBGTimeStatProps
@@ -53,7 +53,7 @@ interface TimeInRangeStatsTitleHookReturn {
   }
 }
 
-export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): TimeInRangeStatsTitleHookReturn => {
+export const useTimeInRangeStatsHook = (props: TimeInRangeStatsHookProps): TimeInRangeStatsHookReturn => {
   const { data, titleKey, total } = props
   const { t } = useTranslation('main')
   const timeInRangeLabel = t(titleKey)
@@ -76,7 +76,7 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): 
     }
   }, [])
 
-  const onStatMouseLeave = useCallback(() => {
+  const onMouseLeave = useCallback(() => {
     setTitleProps({
       legendTitle: '',
       showTooltipIcon: true,
@@ -99,7 +99,7 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): 
     }
   }, [data, hoveredStatId, onStatMouseover, total])
 
-  const cbgStats = useMemo(() => ({
+  const cbgStatsProps = useMemo(() => ({
     veryHighStat: getCBGTimeStatsProps(StatLevel.VeryHigh),
     highStat: getCBGTimeStatsProps(StatLevel.High),
     targetStat: getCBGTimeStatsProps(StatLevel.Target),
@@ -108,13 +108,13 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): 
   }), [getCBGTimeStatsProps])
 
   return useMemo(() => ({
-    cbgStatsProps: cbgStats,
-    onMouseLeave: onStatMouseLeave,
+    cbgStatsProps,
+    onMouseLeave,
     hoveredStatId,
     titleProps
   }), [
-    cbgStats,
-    onStatMouseLeave,
+    cbgStatsProps,
+    onMouseLeave,
     hoveredStatId,
     titleProps
   ])
