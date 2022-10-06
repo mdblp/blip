@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TimeInRangeStats } from './common/stats/time-in-range-stats'
+import { TimeInRangeStatsMemoized as TimeInRangeStats } from './common/stats/time-in-range-stats'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
 import Tooltip from './common/tooltips/tooltip'
 

@@ -28,6 +28,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatLevel, TimeInRangeData } from './time-in-range-stats'
+import { CBGTimeStatProps } from './cbg-time-stat'
 
 export interface TimeInRangeStatsTitleHookProps {
   data: TimeInRangeData[]
@@ -37,17 +38,11 @@ export interface TimeInRangeStatsTitleHookProps {
 
 interface TimeInRangeStatsTitleHookReturn {
   cbgStats: {
-    veryHighStat: TimeInRangeData
-    highStat: TimeInRangeData
-    targetStat: TimeInRangeData
-    lowStat: TimeInRangeData
-    veryLowStat: TimeInRangeData
-  }
-  cbgTimeStatCommonProps: {
-    hoveredStatId: string | null
-    onMouseLeave: Function
-    onMouseOver: Function
-    total: number
+    veryHighStat: CBGTimeStatProps
+    highStat: CBGTimeStatProps
+    targetStat: CBGTimeStatProps
+    lowStat: CBGTimeStatProps
+    veryLowStat: CBGTimeStatProps
   }
   hoveredStatId: StatLevel | null
   titleProps: {
@@ -88,27 +83,32 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsTitleHookProps): 
   }, [timeInRangeLabel])
 
   const cbgTimeStatCommonProps = useMemo(() => ({
-    hoveredStatId,
     onMouseLeave: onStatMouseLeave,
     onMouseOver: onStatMouseover,
     total
-  }), [hoveredStatId, onStatMouseLeave, onStatMouseover, total])
+  }), [onStatMouseLeave, onStatMouseover, total])
 
-  const getTimeInRange = useCallback((id: string) => {
-    const tir = data.find(timeInRange => timeInRange.id === id)
-    if (!tir) {
+  const getCBGTimeStatsProps = useCallback((id: string) => {
+    const stat = data.find(timeInRange => timeInRange.id === id)
+    if (!stat) {
       throw Error(`Could not find stat with id ${id}`)
     }
-    return tir
-  }, [data])
+    return {
+      isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
+      onMouseLeave: onStatMouseLeave,
+      onMouseOver: onStatMouseover,
+      total,
+      ...stat
+    }
+  }, [data, hoveredStatId, onStatMouseLeave, onStatMouseover, total])
 
   const cbgStats = useMemo(() => ({
-    veryHighStat: getTimeInRange(StatLevel.VeryHigh),
-    highStat: getTimeInRange(StatLevel.High),
-    targetStat: getTimeInRange(StatLevel.Target),
-    lowStat: getTimeInRange(StatLevel.Low),
-    veryLowStat: getTimeInRange(StatLevel.VeryLow)
-  }), [getTimeInRange])
+    veryHighStat: getCBGTimeStatsProps(StatLevel.VeryHigh),
+    highStat: getCBGTimeStatsProps(StatLevel.High),
+    targetStat: getCBGTimeStatsProps(StatLevel.Target),
+    lowStat: getCBGTimeStatsProps(StatLevel.Low),
+    veryLowStat: getCBGTimeStatsProps(StatLevel.VeryLow)
+  }), [getCBGTimeStatsProps])
 
   return useMemo(() => ({
     cbgStats,

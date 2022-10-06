@@ -41,7 +41,7 @@ interface TimeInRangeStatsTitleProps {
   title: string
 }
 
-export const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (props: TimeInRangeStatsTitleProps) => {
+const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (props: TimeInRangeStatsTitleProps) => {
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
   const { t } = useTranslation('main')
 
@@ -57,7 +57,7 @@ export const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps
   const onTooltipMouseLeave = (): void => {
     setShowTooltip(false)
   }
-
+  console.log('Rendering title')
   return (
     <>
       <div
@@ -100,3 +100,5 @@ export const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps
     </>
   )
 }
+
+export const TimeInRangeStatsTitleMemoized = React.memo(TimeInRangeStatsTitle)

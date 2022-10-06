@@ -29,9 +29,9 @@ import React, { FunctionComponent } from 'react'
 import styles from './cbg-time-stat.css'
 import { useCBGTimeStat } from './cbg-time-stat.hook'
 
-interface CBGTimeStatProps {
-  hoveredStatId: string | null
+export interface CBGTimeStatProps {
   id: string
+  isDisabled: boolean
   legendTitle: string
   onMouseLeave: Function
   onMouseOver: Function
@@ -40,8 +40,8 @@ interface CBGTimeStatProps {
   value: number
 }
 
-export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
-  const { hoveredStatId, id, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
+const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
+  const { isDisabled, id, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
 
   const {
     handleMouseOver,
@@ -52,8 +52,9 @@ export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeS
     rectangleClasses,
     timeClasses,
     time
-  } = useCBGTimeStat({ hoveredStatId, id, legendTitle, onMouseLeave, onMouseOver, title, total, value })
+  } = useCBGTimeStat({ id, isDisabled, legendTitle, onMouseLeave, onMouseOver, title, total, value })
 
+  console.log('Rendering stat')
   return (
     <div
       data-testid={`cbg-time-stat-${id}`}
@@ -89,3 +90,5 @@ export const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeS
     </div>
   )
 }
+
+export const CBGTimeStatMemoized = React.memo(CBGTimeStat)

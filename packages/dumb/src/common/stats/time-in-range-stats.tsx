@@ -26,9 +26,9 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { CBGTimeStat } from './cbg-time-stat'
+import { CBGTimeStatMemoized as CBGTimeStat } from './cbg-time-stat'
 import styles from './time-in-range.css'
-import { TimeInRangeStatsTitle } from './time-in-range-stats-title'
+import { TimeInRangeStatsTitleMemoized as TimeInRangeStatsTitle } from './time-in-range-stats-title'
 import { useTimeInRangeStatsHook } from './time-in-range-stats.hook'
 
 export interface TimeInRangeData {
@@ -53,11 +53,10 @@ export enum StatLevel {
   VeryLow = 'veryLow'
 }
 
-export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
+const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
   const { annotations, data, titleKey, total } = props
 
-  const { cbgStats, cbgTimeStatCommonProps, hoveredStatId, titleProps } = useTimeInRangeStatsHook({ data, titleKey, total })
-
+  const { cbgStats, hoveredStatId, titleProps } = useTimeInRangeStatsHook({ data, titleKey, total })
   return (
     <>
       <TimeInRangeStatsTitle
@@ -66,27 +65,13 @@ export const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props
         {...titleProps}
       />
       <div className={styles.stats}>
-        <CBGTimeStat
-          {...cbgTimeStatCommonProps}
-          {...cbgStats.veryHighStat}
-        />
-        <CBGTimeStat
-          {...cbgTimeStatCommonProps}
-          {...cbgStats.highStat}
-        />
-        <CBGTimeStat
-          {...cbgTimeStatCommonProps}
-          {...cbgStats.targetStat}
-        />
-        <CBGTimeStat
-          {...cbgTimeStatCommonProps}
-          {...cbgStats.lowStat}
-        />
-        <CBGTimeStat
-          {...cbgTimeStatCommonProps}
-          {...cbgStats.veryLowStat}
-        />
+        <CBGTimeStat{...cbgStats.veryHighStat} />
+        <CBGTimeStat{...cbgStats.highStat} />
+        <CBGTimeStat{...cbgStats.targetStat} />
+        <CBGTimeStat{...cbgStats.lowStat} />
+        <CBGTimeStat{...cbgStats.veryLowStat} />
       </div>
     </>
   )
 }
+export const TimeInRangeStatsMemoized = React.memo(TimeInRangeStats)

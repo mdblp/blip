@@ -65,7 +65,7 @@ describe('TimeInRangeStat hook', () => {
     expect(result.current.hoveredStatId).toBeNull()
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {
-      result.current.cbgTimeStatCommonProps.onMouseOver(veryHighStat.id, veryHighStat.title, veryHighStat.legendTitle)
+      result.current.cbgStats.veryHighStat.onMouseOver(veryHighStat.id, veryHighStat.title, veryHighStat.legendTitle)
       await waitFor(() => expect(result.current.hoveredStatId).toEqual(veryHighStat.id))
     })
     expect(result.current.titleProps).toEqual({
@@ -74,7 +74,7 @@ describe('TimeInRangeStat hook', () => {
       title: veryHighStat.title
     })
     await act(async () => {
-      result.current.cbgTimeStatCommonProps.onMouseLeave()
+      result.current.cbgStats.veryHighStat.onMouseLeave()
       await waitFor(() => expect(result.current.hoveredStatId).toBeNull())
     })
     expect(result.current.titleProps).toEqual(defaultTitleProps)

@@ -32,8 +32,8 @@ describe('CBGTimeStat hook', () => {
   const onMouseLeaveMock = jest.fn()
   const onMouseOverMock = jest.fn()
   const defaultProps = {
-    hoveredStatId: null,
     id: 'fakeId',
+    isDisabled: false,
     legendTitle: 'fakeLegendTitle',
     onMouseLeave: onMouseLeaveMock as Function,
     onMouseOver: onMouseOverMock as Function,

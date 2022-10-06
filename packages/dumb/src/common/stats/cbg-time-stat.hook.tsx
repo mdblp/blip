@@ -31,8 +31,8 @@ import timeInRangeStyles from './time-in-range.css'
 import { formatDuration } from '../../utils/datetime'
 
 export interface CBGTimeStatHookProps {
-  hoveredStatId: string | null
   id: string
+  isDisabled: boolean
   legendTitle: string
   onMouseLeave: Function
   onMouseOver: Function
@@ -53,11 +53,10 @@ interface CBGTimeStatHookReturn {
 }
 
 export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookReturn => {
-  const { hoveredStatId, id, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
+  const { id, isDisabled, legendTitle, onMouseLeave, onMouseOver, title, total, value } = props
   const time = formatDuration(value, { condensed: true })
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
-  const isDisabled = !hasValues || (hoveredStatId && hoveredStatId !== id)
   const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : cbgTimeStatStyles[`${id}-background`]
   const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : timeInRangeStyles[`${id}-label`]
 
