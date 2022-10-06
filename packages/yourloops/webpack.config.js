@@ -106,6 +106,8 @@ plugins.push(
   new CopyWebpackPlugin({ patterns: [...patterns, { from: '../../branding/palette.css', to: 'palette.css' }] })
 )
 
+console.log(`isTest ${isTest}, isProduction ${isProduction}, isDev ${isDev}`)
+
 /** @type {webpack.Configuration & { devServer: { [index: string]: any; }}} */
 const webpackConfig = {
   entry: {
@@ -131,8 +133,9 @@ const webpackConfig = {
   mode,
   stats: 'minimal', // See https://webpack.js.org/configuration/stats/
 
-  // Enable sourcemaps for debugging webpack output.
-  devtool: isTest || isDev ? 'inline-source-map' : 'source-map',
+  // Enable sourcemaps for debugging webpack's output.
+  devtool: isTest || isDev ? 'inline-source-map' : false,
+  // todo: enhance this part
   devServer: {
     allowedHosts: 'auto',
     compress: false,
