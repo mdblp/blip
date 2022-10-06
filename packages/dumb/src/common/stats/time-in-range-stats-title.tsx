@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent, useRef, useState } from 'react'
 import styles from './time-in-range-stats-title.css'
-import cbgTimeStatStyles from './cbg-time-stat.css'
+import cbgTimeStatStyles from './cbg-percentage-stat.css'
 import InfoIcon from './assets/info-outline-24-px.svg'
 import { StatTooltip } from '../tooltips/stat-tooltip'
 import { useTranslation } from 'react-i18next'

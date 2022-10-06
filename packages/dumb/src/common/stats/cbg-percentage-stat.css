@@ -34,6 +34,19 @@
   position: relative;
 }
 
+.bar-value {
+  background-color: white;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--stat-disabled);
+  border-width: thin;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 12px;
+  position: absolute;
+  right: 0;
+}
+
 .disabled-label {
   color: var(--muted);
 }
@@ -70,19 +83,6 @@
   align-items: center;
   padding-bottom: 6px;
   padding-top: 6px;
-}
-
-.time {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
 }
 
 .title {

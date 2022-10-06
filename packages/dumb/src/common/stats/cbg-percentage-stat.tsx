@@ -26,28 +26,30 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './cbg-time-stat.css'
-import { useCBGTimeStat } from './cbg-time-stat.hook'
+import styles from './cbg-percentage-stat.css'
+import { useCBGPercentageStat } from './cbg-percentage-stat.hook'
+import { CBGStatType } from './time-in-range-stats'
 
 export interface CBGTimeStatProps {
   id: string
+  cbgStatType: CBGStatType
   isDisabled: boolean
   onMouseOver: Function
   total: number
   value: number
 }
 
-const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
-  const { id, isDisabled, onMouseOver, total, value } = props
+const CBGPercentageStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
+  const { cbgStatType, id, isDisabled, onMouseOver, total, value } = props
 
   const {
+    barClasses,
+    barValue,
     hasValues,
     percentage,
     percentageClasses,
-    rectangleClasses,
-    timeClasses,
-    time
-  } = useCBGTimeStat({ id, isDisabled, total, value })
+    rectangleClasses
+  } = useCBGPercentageStat({ cbgStatType, id, isDisabled, total, value })
 
   return (
     <div
@@ -60,8 +62,8 @@ const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProp
           <div className={rectangleClasses} style={{ width: `${percentage}%` }} />
         }
         <div className={styles.line} />
-        <div className={timeClasses}>
-          {time}
+        <div className={barClasses}>
+          {barValue}
         </div>
       </div>
       {hasValues
@@ -84,4 +86,4 @@ const CBGTimeStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProp
   )
 }
 
-export const CBGTimeStatMemoized = React.memo(CBGTimeStat)
+export const CBGPercentageStatMemoized = React.memo(CBGPercentageStat)

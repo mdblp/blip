@@ -26,49 +26,61 @@
  */
 
 import { useMemo } from 'react'
-import cbgTimeStatStyles from './cbg-time-stat.css'
+import cbgTimeStatStyles from './cbg-percentage-stat.css'
 import { formatDuration } from '../../utils/datetime'
+import { CBGStatType } from './time-in-range-stats'
 
-export interface CBGTimeStatHookProps {
+export interface CBGPercentageStatHookProps {
+  cbgStatType: CBGStatType
   id: string
   isDisabled: boolean
   total: number
   value: number
 }
 
-interface CBGTimeStatHookReturn {
+interface CBGPercentageStatHookReturn {
+  barClasses: string
+  barValue: string
   hasValues: boolean
   percentage: number
   percentageClasses: string
   rectangleClasses: string
-  timeClasses: string
-  time: string
 }
 
-export const useCBGTimeStat = (props: CBGTimeStatHookProps): CBGTimeStatHookReturn => {
-  const { id, isDisabled, total, value } = props
-  const time = formatDuration(value, { condensed: true })
+export const useCBGPercentageStat = (props: CBGPercentageStatHookProps): CBGPercentageStatHookReturn => {
+  const { cbgStatType, id, isDisabled, total, value } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
   const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : cbgTimeStatStyles[`${id}-background`]
   const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : cbgTimeStatStyles[`${id}-label`]
   const rectangleClasses = `${cbgTimeStatStyles.rectangle} ${rectangleBackgroundClass}`
-  const timeClasses = `${cbgTimeStatStyles.time} ${labelClass}`
+  const barClasses = `${cbgTimeStatStyles['bar-value']} ${labelClass}`
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
 
+  const barValue = useMemo(() => {
+    if (cbgStatType === CBGStatType.TimeInRange) {
+      return formatDuration(value, { condensed: true })
+    } else if (cbgStatType === CBGStatType.ReadingsInRange) {
+      return value.toString()
+    } else {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      throw Error(`Unknown stat type ${cbgStatType}`)
+    }
+  }, [cbgStatType, value])
+
   return useMemo(() => ({
+    barValue,
     hasValues,
     percentage,
     percentageClasses,
     rectangleClasses,
-    timeClasses,
-    time
+    barClasses
   }), [
+    barValue,
     hasValues,
     percentage,
     percentageClasses,
     rectangleClasses,
-    time,
-    timeClasses
+    barClasses
   ])
 }

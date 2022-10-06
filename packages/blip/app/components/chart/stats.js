@@ -91,7 +91,7 @@ class Stats extends React.Component {
 
   renderStats(stats, animate, hideToolTips) {
     return _.map(stats, stat => {
-      if (stat.id === 'timeInRange') {
+      if (stat.id === 'timeInRange' || stat.id === 'readingsInRange') {
         return (
           <div key={stat.id} >
             <TimeInRangeStats
@@ -99,6 +99,7 @@ class Stats extends React.Component {
               data={stat.data.data}
               total={stat.data.total.value}
               titleKey={stat.title}
+              cbgStatType={stat.id}
             />
             <Divider variant="fullWidth" />
           </div>

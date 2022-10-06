@@ -26,12 +26,14 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks/dom'
-import { CBGTimeStatHookProps, useCBGTimeStat } from './cbg-time-stat.hook'
+import { CBGPercentageStatHookProps, useCBGPercentageStat } from './cbg-time-stat.hook'
+import { CBGStatType } from './time-in-range-stats'
 
 describe('CBGTimeStat hook', () => {
   const onMouseLeaveMock = jest.fn()
   const onMouseOverMock = jest.fn()
   const defaultProps = {
+    cbgStatType: CBGStatType.TimeInRange,
     id: 'fakeId',
     isDisabled: false,
     legendTitle: 'fakeLegendTitle',
@@ -40,23 +42,23 @@ describe('CBGTimeStat hook', () => {
     title: 'fakeTitle',
     total: 1000,
     value: 200
-  } as CBGTimeStatHookProps
+  } as CBGPercentageStatHookProps
 
   it('should return correct percentage', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useCBGTimeStat(props))
+    const { result } = renderHook(() => useCBGPercentageStat(props))
     expect(result.current.percentage).toBe(20)
   })
 
   it('should return hasValues as true when total is not 0', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useCBGTimeStat(props))
+    const { result } = renderHook(() => useCBGPercentageStat(props))
     expect(result.current.hasValues).toBeTruthy()
   })
 
   it('should return hasValues as false when total is 0', () => {
     const props = { ...defaultProps, total: 0 }
-    const { result } = renderHook(() => useCBGTimeStat(props))
+    const { result } = renderHook(() => useCBGPercentageStat(props))
     expect(result.current.hasValues).toBeFalsy()
   })
 })

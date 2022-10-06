@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { CBGTimeStatMemoized as CBGTimeStat } from './cbg-time-stat'
+import { CBGPercentageStatMemoized as CBGPercentageStat } from './cbg-percentage-stat'
 import styles from './time-in-range-stats.css'
 import { TimeInRangeStatsTitleMemoized as TimeInRangeStatsTitle } from './time-in-range-stats-title'
 import { useTimeInRangeStatsHook } from './time-in-range-stats.hook'
@@ -40,6 +40,7 @@ export interface CBGTimeData {
 
 interface TimeInRangeStatsProps {
   annotations: []
+  cbgStatType: CBGStatType
   data: CBGTimeData[]
   total: number
   titleKey: string
@@ -53,10 +54,15 @@ export enum StatLevel {
   VeryLow = 'veryLow'
 }
 
-const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
-  const { annotations, data, titleKey, total } = props
+export enum CBGStatType {
+  TimeInRange = 'timeInRange',
+  ReadingsInRange = 'readingsInRange',
+}
 
-  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useTimeInRangeStatsHook({ data, titleKey, total })
+const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
+  const { annotations, cbgStatType, data, titleKey, total } = props
+
+  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useTimeInRangeStatsHook({ cbgStatType, data, titleKey, total })
   return (
     <>
       <TimeInRangeStatsTitle
@@ -65,11 +71,11 @@ const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeI
         {...titleProps}
       />
       <div className={styles.stats} onMouseLeave={() => onMouseLeave()}>
-        <CBGTimeStat {...cbgStatsProps.veryHighStat} />
-        <CBGTimeStat {...cbgStatsProps.highStat} />
-        <CBGTimeStat {...cbgStatsProps.targetStat} />
-        <CBGTimeStat {...cbgStatsProps.lowStat} />
-        <CBGTimeStat {...cbgStatsProps.veryLowStat} />
+        <CBGPercentageStat {...cbgStatsProps.veryHighStat} />
+        <CBGPercentageStat {...cbgStatsProps.highStat} />
+        <CBGPercentageStat {...cbgStatsProps.targetStat} />
+        <CBGPercentageStat {...cbgStatsProps.lowStat} />
+        <CBGPercentageStat {...cbgStatsProps.veryLowStat} />
       </div>
     </>
   )

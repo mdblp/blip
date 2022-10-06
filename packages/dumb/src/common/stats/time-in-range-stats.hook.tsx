@@ -27,10 +27,11 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGTimeData, StatLevel } from './time-in-range-stats'
+import { CBGStatType, CBGTimeData, StatLevel } from './time-in-range-stats'
 import { CBGTimeStatProps } from './cbg-time-stat'
 
 export interface TimeInRangeStatsHookProps {
+  cbgStatType: CBGStatType
   data: CBGTimeData[]
   titleKey: string
   total: number
@@ -54,7 +55,7 @@ interface TimeInRangeStatsHookReturn {
 }
 
 export const useTimeInRangeStatsHook = (props: TimeInRangeStatsHookProps): TimeInRangeStatsHookReturn => {
-  const { data, titleKey, total } = props
+  const { cbgStatType, data, titleKey, total } = props
   const { t } = useTranslation('main')
   const timeInRangeLabel = t(titleKey)
 
@@ -91,13 +92,14 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsHookProps): TimeI
       throw Error(`Could not find stat with id ${id}`)
     }
     return {
+      cbgStatType,
       id: stat.id,
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
       onMouseOver: () => onStatMouseover(stat.id, stat.title, stat.legendTitle, total !== 0),
       total,
       value: stat.value
     }
-  }, [data, hoveredStatId, onStatMouseover, total])
+  }, [cbgStatType, data, hoveredStatId, onStatMouseover, total])
 
   const cbgStatsProps = useMemo(() => ({
     veryHighStat: getCBGTimeStatsProps(StatLevel.VeryHigh),
