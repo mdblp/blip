@@ -2,6 +2,7 @@ import DataAPI from '../../../lib/data/data-api'
 
 const CARB_BOLUS_ID = 'carbBolusId'
 export const CBG_ID = 'cbgId'
+export const SMBG_ID = 'smbgId'
 export const CARB_ID1 = 'carbId1'
 export const CARB_ID2 = 'carbId2'
 export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
@@ -9,9 +10,10 @@ export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const PARAMETER_ID = 'parameterId'
 
-const completeDailyViewData = {
-  dataRange: ['2022-08-08T15:30:00Z', '2022-08-08T18:30:00Z'],
+export const completeDailyViewData = {
+  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:30:00Z'],
   data: [
+    { time: '2022-08-08T15:15:00Z', type: 'smbg', id: SMBG_ID, timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T15:30:00Z', type: 'cbg', id: CBG_ID, timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T15:35:00Z', type: 'cbg', id: 'cbg_2022-08-08T15:35:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T15:40:00Z', type: 'cbg', id: 'cbg_2022-08-08T15:40:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
@@ -37,6 +39,26 @@ const completeDailyViewData = {
     { time: PHYSICAL_ACTIVITY_TIME, type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 1800 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T17:00:00Z', type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' }
+  ]
+}
+export const smbgData = {
+  dataRange: ['2022-08-08T11:30:00Z', '2022-08-08T18:30:00Z'],
+  data: [
+    { time: '2022-08-08T15:15:00Z', type: 'smbg', id: 'smb_2022-08-08_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:20:00Z', type: 'smbg', id: 'smb_2022-08-08_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:25:00Z', type: 'smbg', id: 'smb_2022-08-08_2', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:30:00Z', type: 'smbg', id: 'smb_2022-08-08_3', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:35:00Z', type: 'smbg', id: 'smb_2022-08-08_4', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:40:00Z', type: 'smbg', id: 'smb_2022-08-08_5', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:45:00Z', type: 'smbg', id: 'smb_2022-08-08_6', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:50:00Z', type: 'smbg', id: 'smb_2022-08-08_7', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T15:55:00Z', type: 'smbg', id: 'smb_2022-08-08_8', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T16:00:00Z', type: 'smbg', id: 'smb_2022-08-08_9', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T16:05:00Z', type: 'smbg', id: 'smb_2022-08-08_10', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T16:10:00Z', type: 'smbg', id: 'smb_2022-08-08_11', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T16:15:00Z', type: 'smbg', id: 'smb_2022-08-08_12', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T16:20:00Z', type: 'smbg', id: 'smb_2022-08-08_13', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T16:25:00Z', type: 'smbg', id: 'smb_2022-08-08_14', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' }
   ]
 }
 

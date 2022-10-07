@@ -29,7 +29,7 @@ import { screen } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { minimalTrendViewData, mockDataAPI, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
@@ -44,7 +44,11 @@ import {
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
-import { checkTimeInRangeStatsTitle } from '../../assert/stats'
+import {
+  checkReadingsInRangeStatsTitle,
+  checkReadingsInRangeStatsWidgets,
+  checkTimeInRangeStatsTitle
+} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
@@ -86,14 +90,17 @@ describe('Trends view for caregiver', () => {
     checkTrendsStatsWidgetsTooltips()
   })
 
-  it('should display correct time in range stats', async () => {
+  it('should display correct time in range stats info', async () => {
     dataToMock = timeInRangeStatsTrendViewData
     renderTrendsView()
     await checkTrendsTimeInRangeStatsWidgets()
+    await checkTimeInRangeStatsTitle()
   })
 
-  it('should display correct time in range title when hovering on items', async () => {
+  it('should display correct readings in range stats info', async () => {
+    dataToMock = smbgData
     renderTrendsView()
-    await checkTimeInRangeStatsTitle()
+    await checkReadingsInRangeStatsWidgets()
+    await checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
   })
 })

@@ -89,7 +89,7 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    return _.map(stats, stat => {
+    return stats.map(stat => {
       if (stat.id === CBGStatType.TimeInRange || stat.id === CBGStatType.ReadingsInRange) {
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>

@@ -34,10 +34,14 @@ import {
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
 } from '../../assert/trends'
-import { minimalTrendViewData, mockDataAPI, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
-import { checkTimeInRangeStatsTitle } from '../../assert/stats'
+import {
+  checkReadingsInRangeStatsTitle,
+  checkReadingsInRangeStatsWidgets,
+  checkTimeInRangeStatsTitle
+} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
@@ -70,14 +74,17 @@ describe('Trends view for patient', () => {
     checkTrendsStatsWidgetsTooltips()
   })
 
-  it('should display correct time in range stats', async () => {
+  it('should display correct time in range stats info', async () => {
     dataToMock = timeInRangeStatsTrendViewData
     renderTrendsView()
     await checkTrendsTimeInRangeStatsWidgets()
+    await checkTimeInRangeStatsTitle()
   })
 
-  it('should display correct time in range title when hovering on items', async () => {
+  it('should display correct readings in range stats info', async () => {
+    dataToMock = smbgData
     renderTrendsView()
-    await checkTimeInRangeStatsTitle()
+    await checkReadingsInRangeStatsWidgets()
+    await checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
   })
 })

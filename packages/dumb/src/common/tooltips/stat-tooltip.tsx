@@ -96,8 +96,8 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (
       content={
         <div className={styles.container}>
           {annotations.map((message, index) =>
-            <>
-              <ReactMarkdown key={`message-${index}`} className={styles.message} linkTarget="_blank">
+            <div key={`message-${index}`}>
+              <ReactMarkdown className={styles.message} linkTarget="_blank">
                 {message}
               </ReactMarkdown>
               {index !== annotations.length - 1 &&
@@ -106,7 +106,7 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (
                   className={styles.divider}
                 />
               }
-            </>
+            </div>
           )}
         </div>
       }

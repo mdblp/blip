@@ -29,7 +29,7 @@ import { screen } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockDataAPI } from '../../mock/mockDataAPI'
+import { completeDailyViewData, mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
@@ -44,13 +44,18 @@ import {
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
-import { checkTimeInRangeStatsTitle } from '../../assert/stats'
+import {
+  checkReadingsInRangeStatsTitle,
+  checkReadingsInRangeStatsWidgets,
+  checkTimeInRangeStatsTitle
+} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
 describe('Daily view for caregiver', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
+  let dataToMock = completeDailyViewData
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.caregiver)
@@ -61,10 +66,14 @@ describe('Daily view for caregiver', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPI()
+  })
+
+  beforeEach(() => {
+    dataToMock = completeDailyViewData
   })
 
   const renderDailyView = () => {
+    mockDataAPI(dataToMock)
     renderPage(`/patient/${unMonitoredPatientId}/daily`)
   }
 
@@ -81,13 +90,16 @@ describe('Daily view for caregiver', () => {
     checkDailyStatsWidgetsTooltips()
   })
 
-  it('should display correct time in range stats', async () => {
+  it('should display correct time in range stats info', async () => {
     renderDailyView()
     await checkDailyTimeInRangeStatsWidgets()
+    await checkTimeInRangeStatsTitle()
   })
 
-  it('should display correct time in range title when hovering on items', async () => {
+  it('should display correct readings in range stats info', async () => {
+    dataToMock = smbgData
     renderDailyView()
-    await checkTimeInRangeStatsTitle()
+    await checkReadingsInRangeStatsWidgets()
+    await checkReadingsInRangeStatsTitle()
   })
 })

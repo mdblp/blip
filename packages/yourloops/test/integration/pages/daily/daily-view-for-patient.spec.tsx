@@ -34,20 +34,30 @@ import {
   checkDailyTidelineContainerTooltips,
   checkDailyTimeInRangeStatsWidgets
 } from '../../assert/daily'
-import { mockDataAPI } from '../../mock/mockDataAPI'
+import { completeDailyViewData, mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
-import { checkTimeInRangeStatsTitle } from '../../assert/stats'
+import {
+  checkReadingsInRangeStatsTitle,
+  checkReadingsInRangeStatsWidgets,
+  checkTimeInRangeStatsTitle
+} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
 describe('Daily view for patient', () => {
+  let dataToMock = completeDailyViewData
+
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
-    mockDataAPI()
+  })
+
+  beforeEach(() => {
+    dataToMock = completeDailyViewData
   })
 
   const renderDailyView = () => {
+    mockDataAPI(dataToMock)
     renderPage('/daily')
   }
 
@@ -64,13 +74,16 @@ describe('Daily view for patient', () => {
     checkDailyStatsWidgetsTooltips()
   })
 
-  it('should display correct time in range stats', async () => {
+  it('should display correct time in range stats info', async () => {
     renderDailyView()
     await checkDailyTimeInRangeStatsWidgets()
+    await checkTimeInRangeStatsTitle()
   })
 
-  it('should display correct time in range title when hovering on items', async () => {
+  it('should display correct readings in range stats info', async () => {
+    dataToMock = smbgData
     renderDailyView()
-    await checkTimeInRangeStatsTitle()
+    await checkReadingsInRangeStatsWidgets()
+    await checkReadingsInRangeStatsTitle()
   })
 })
