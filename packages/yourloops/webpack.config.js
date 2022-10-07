@@ -23,7 +23,7 @@ const isTest = process.env.NODE_ENV === 'test'
 const isProduction = mode === 'production'
 const isDev = !isProduction
 
-console.log(`Compiling ${pkg.name} v${pkg.version} for ${mode}`)
+console.log(`Compiling ${pkg.name} v${pkg.version} for ${mode}/${process.env.NODE_ENV}.`)
 
 if (process.env.USE_WEBPACK_DEV_SERVER === 'true') {
   console.log(buildConfig)
@@ -105,8 +105,6 @@ for (const branding of brandings) {
 plugins.push(
   new CopyWebpackPlugin({ patterns: [...patterns, { from: '../../branding/palette.css', to: 'palette.css' }] })
 )
-
-console.log(`isTest ${isTest}, isProduction ${isProduction}, isDev ${isDev}`)
 
 /** @type {webpack.Configuration & { devServer: { [index: string]: any; }}} */
 const webpackConfig = {
