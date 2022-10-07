@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.1-beta31 - 2022-10-03
+## 3.0.1-beta32 - 2022-10-07
 ### Added
 - YLP-1681 HCP can remove a patient
 ### Engineering use
@@ -18,6 +18,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1740 Make HTTP calls to back instead of computing data in the front
 - YLP-1754 Patient list not updated after accept invitation
 - YLP-1767 Create package to migrate viz components
+- YLP-1834 Migrate time in range stats
 ### Fixed
 - YLP-1634 Fix missing UTs
 - YLP-1645 A patient can create, edit and delete a medical record
