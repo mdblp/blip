@@ -23,7 +23,7 @@ const isTest = process.env.NODE_ENV === 'test'
 const isProduction = mode === 'production'
 const isDev = !isProduction
 
-console.log(`Compiling ${pkg.name} v${pkg.version} for ${mode}`)
+console.log(`Compiling ${pkg.name} v${pkg.version} for ${mode}/${process.env.NODE_ENV}.`)
 
 if (process.env.USE_WEBPACK_DEV_SERVER === 'true') {
   console.log(buildConfig)
@@ -131,8 +131,9 @@ const webpackConfig = {
   mode,
   stats: 'minimal', // See https://webpack.js.org/configuration/stats/
 
-  // Enable sourcemaps for debugging webpack output.
-  devtool: isTest || isDev ? 'inline-source-map' : 'source-map',
+  // Enable sourcemaps for debugging webpack's output.
+  devtool: isTest || isDev ? 'inline-source-map' : false,
+  // todo: enhance this part
   devServer: {
     allowedHosts: 'auto',
     compress: false,
