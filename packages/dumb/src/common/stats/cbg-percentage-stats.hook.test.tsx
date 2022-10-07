@@ -26,65 +26,66 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks/dom'
-import { TimeInRangeStatsHookProps, useTimeInRangeStatsHook } from './cbg-percentage-stats.hook'
+import { CBGPercentageStatsHookProps, useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
 import { waitFor } from '@testing-library/dom'
-import { CBGTimeData, StatLevel } from './models'
+import { CBGStatType, CBGTimeData, StatLevel } from './models'
 
 describe('CBGPercentageStats hook', () => {
   const total = 1000
-  const createCbgStatProps = (id: StatLevel, legendTitle: string, title: string, value: number): CBGTimeData => {
+  const createCBGTimeData = (id: StatLevel, legendTitle: string, title: string, value: number): CBGTimeData => {
     return { id, legendTitle, title, value }
   }
-  const veryHighStat = createCbgStatProps(StatLevel.VeryHigh, 'fakeLegendTitle', 'fakeTitle', 100)
-  const highStat = createCbgStatProps(StatLevel.High, 'fakeLegendTitle2', 'fakeTitle2', 200)
-  const targetStat = createCbgStatProps(StatLevel.Target, 'fakeLegendTitle3', 'fakeTitle3', 150)
-  const lowStat = createCbgStatProps(StatLevel.Low, 'fakeLegendTitle4', 'fakeTitle4', 250)
-  const veryLowStat = createCbgStatProps(StatLevel.VeryLow, 'fakeLegendTitle5', 'fakeTitle5', 50)
+  const veryHighStat = createCBGTimeData(StatLevel.VeryHigh, 'fakeLegendTitle', 'fakeTitle', 100)
+  const highStat = createCBGTimeData(StatLevel.High, 'fakeLegendTitle2', 'fakeTitle2', 200)
+  const targetStat = createCBGTimeData(StatLevel.Target, 'fakeLegendTitle3', 'fakeTitle3', 150)
+  const lowStat = createCBGTimeData(StatLevel.Low, 'fakeLegendTitle4', 'fakeTitle4', 250)
+  const veryLowStat = createCBGTimeData(StatLevel.VeryLow, 'fakeLegendTitle5', 'fakeTitle5', 50)
 
-  const defaultProps = {
+  const defaultProps: CBGPercentageStatsHookProps = {
+    cbgStatType: CBGStatType.TimeInRange,
     data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
     titleKey: 'fakeTitleKey',
     total
-  } as TimeInRangeStatsHookProps
+  }
 
   it('should return correct cbgStatsProps', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useTimeInRangeStatsHook(props))
+    const { result } = renderHook(() => useCbgPercentageStatsHook(props))
     expect(result.current.cbgStatsProps).toEqual({
       veryHighStat: {
-        id: veryHighStat.id,
+        cbgStatType: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseOver: expect.any(Function),
+        onMouseEnter: expect.any(Function),
         total: defaultProps.total,
-        value: veryHighStat.value
+        ...veryHighStat
       },
       highStat: {
-        id: highStat.id,
+        cbgStatType: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseOver: expect.any(Function),
+        onMouseEnter: expect.any(Function),
         total: defaultProps.total,
-        value: highStat.value
+        ...highStat
       },
       targetStat: {
-        id: targetStat.id,
+        cbgStatType: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseOver: expect.any(Function),
+        onMouseEnter: expect.any(Function),
         total: defaultProps.total,
-        value: targetStat.value
+        ...targetStat
       },
       lowStat: {
-        id: lowStat.id,
+        cbgStatType: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseOver: expect.any(Function),
+        onMouseEnter: expect.any(Function),
         total: defaultProps.total,
-        value: lowStat.value
+        ...lowStat
       },
       veryLowStat: {
-        id: veryLowStat.id,
+        cbgStatType: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseOver: expect.any(Function),
+        onMouseEnter: expect.any(Function),
         total: defaultProps.total,
-        value: veryLowStat.value
+        ...veryLowStat
       }
     })
   })
@@ -96,11 +97,11 @@ describe('CBGPercentageStats hook', () => {
       showTooltipIcon: true,
       title: defaultProps.titleKey
     }
-    const { result } = renderHook(() => useTimeInRangeStatsHook(props))
+    const { result } = renderHook(() => useCbgPercentageStatsHook(props))
     expect(result.current.hoveredStatId).toBeNull()
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {
-      result.current.cbgStatsProps.veryHighStat.onMouseOver()
+      result.current.cbgStatsProps.veryHighStat.onMouseEnter(veryHighStat.id, veryHighStat.title, veryHighStat.legendTitle, true)
       await waitFor(() => expect(result.current.hoveredStatId).toEqual(veryHighStat.id))
     })
     expect(result.current.titleProps).toEqual({

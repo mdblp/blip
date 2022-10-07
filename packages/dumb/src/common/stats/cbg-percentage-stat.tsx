@@ -31,16 +31,18 @@ import { useCBGPercentageStat } from './cbg-percentage-stat.hook'
 import { CBGStatType } from './models'
 
 export interface CBGTimeStatProps {
-  id: string
   cbgStatType: CBGStatType
+  id: string
   isDisabled: boolean
-  onMouseOver: Function
+  legendTitle: string
+  onMouseEnter: Function
+  title: string
   total: number
   value: number
 }
 
 const CBGPercentageStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
-  const { cbgStatType, id, isDisabled, onMouseOver, total, value } = props
+  const { cbgStatType, id, isDisabled, onMouseEnter, legendTitle, title, total, value } = props
 
   const {
     barClasses,
@@ -55,7 +57,7 @@ const CBGPercentageStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeSt
     <div
       data-testid={`cbg-percentage-stat-${id}-${cbgStatType}`}
       className={styles.stat}
-      onMouseOver={() => onMouseOver()}
+      onMouseEnter={() => onMouseEnter(id, title, legendTitle, total !== 0)}
     >
       <div className={styles.bar}>
         {hasValues &&

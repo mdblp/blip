@@ -30,14 +30,14 @@ import { useTranslation } from 'react-i18next'
 import { CBGTimeStatProps } from './cbg-percentage-stat'
 import { CBGStatType, CBGTimeData, StatLevel } from './models'
 
-export interface TimeInRangeStatsHookProps {
+export interface CBGPercentageStatsHookProps {
   cbgStatType: CBGStatType
   data: CBGTimeData[]
   titleKey: string
   total: number
 }
 
-interface TimeInRangeStatsHookReturn {
+interface CBGPercentageStatsHookReturn {
   cbgStatsProps: {
     veryHighStat: CBGTimeStatProps
     highStat: CBGTimeStatProps
@@ -54,16 +54,16 @@ interface TimeInRangeStatsHookReturn {
   }
 }
 
-export const useTimeInRangeStatsHook = (props: TimeInRangeStatsHookProps): TimeInRangeStatsHookReturn => {
+export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): CBGPercentageStatsHookReturn => {
   const { cbgStatType, data, titleKey, total } = props
   const { t } = useTranslation('main')
-  const timeInRangeLabel = t(titleKey)
+  const title = t(titleKey)
 
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
   const [titleProps, setTitleProps] = useState({
     legendTitle: '',
     showTooltipIcon: true,
-    title: timeInRangeLabel
+    title
   })
 
   const onStatMouseover = useCallback((id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => {
@@ -81,12 +81,12 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsHookProps): TimeI
     setTitleProps({
       legendTitle: '',
       showTooltipIcon: true,
-      title: timeInRangeLabel
+      title
     })
     setHoveredStatId(null)
-  }, [timeInRangeLabel])
+  }, [title])
 
-  const getCBGTimeStatsProps = useCallback((id: string) => {
+  const getCBGPercentageStatsProps = useCallback((id: string) => {
     const stat = data.find(timeInRange => timeInRange.id === id)
     if (!stat) {
       throw Error(`Could not find stat with id ${id}`)
@@ -95,19 +95,21 @@ export const useTimeInRangeStatsHook = (props: TimeInRangeStatsHookProps): TimeI
       cbgStatType,
       id: stat.id,
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
-      onMouseOver: () => onStatMouseover(stat.id, stat.title, stat.legendTitle, total !== 0),
+      legendTitle: stat.legendTitle,
+      onMouseEnter: onStatMouseover,
+      title: stat.title,
       total,
       value: stat.value
     }
   }, [cbgStatType, data, hoveredStatId, onStatMouseover, total])
 
   const cbgStatsProps = useMemo(() => ({
-    veryHighStat: getCBGTimeStatsProps(StatLevel.VeryHigh),
-    highStat: getCBGTimeStatsProps(StatLevel.High),
-    targetStat: getCBGTimeStatsProps(StatLevel.Target),
-    lowStat: getCBGTimeStatsProps(StatLevel.Low),
-    veryLowStat: getCBGTimeStatsProps(StatLevel.VeryLow)
-  }), [getCBGTimeStatsProps])
+    veryHighStat: getCBGPercentageStatsProps(StatLevel.VeryHigh),
+    highStat: getCBGPercentageStatsProps(StatLevel.High),
+    targetStat: getCBGPercentageStatsProps(StatLevel.Target),
+    lowStat: getCBGPercentageStatsProps(StatLevel.Low),
+    veryLowStat: getCBGPercentageStatsProps(StatLevel.VeryLow)
+  }), [getCBGPercentageStatsProps])
 
   return useMemo(() => ({
     cbgStatsProps,
