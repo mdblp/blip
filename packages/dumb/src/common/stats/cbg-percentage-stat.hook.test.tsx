@@ -26,8 +26,8 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks/dom'
-import { CBGPercentageStatHookProps, useCBGPercentageStat } from './cbg-time-stat.hook'
-import { CBGStatType } from './time-in-range-stats'
+import { CBGStatType } from './models'
+import { CBGPercentageStatHookProps, useCBGPercentageStat } from './cbg-percentage-stat.hook'
 
 describe('CBGTimeStat hook', () => {
   const onMouseLeaveMock = jest.fn()
@@ -60,5 +60,17 @@ describe('CBGTimeStat hook', () => {
     const props = { ...defaultProps, total: 0 }
     const { result } = renderHook(() => useCBGPercentageStat(props))
     expect(result.current.hasValues).toBeFalsy()
+  })
+
+  it('should return barValue equals value when CBGStatType is ReadingsInRange', () => {
+    const props = { ...defaultProps, cbgStatType: CBGStatType.ReadingsInRange }
+    const { result } = renderHook(() => useCBGPercentageStat(props))
+    expect(result.current.barValue).toBe(defaultProps.value.toString())
+  })
+
+  it('should return barValue as duration when CBGStatType is TimeInRange', () => {
+    const props = { ...defaultProps, total: 300000, value: 100000 }
+    const { result } = renderHook(() => useCBGPercentageStat(props))
+    expect(result.current.barValue).toBe('2undefined')
   })
 })
