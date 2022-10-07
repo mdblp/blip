@@ -26,11 +26,11 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks/dom'
-import { TimeInRangeStatsHookProps, useTimeInRangeStatsHook } from './time-in-range-stats.hook'
-import { CBGTimeData, StatLevel } from './time-in-range-stats'
+import { TimeInRangeStatsHookProps, useTimeInRangeStatsHook } from './cbg-percentage-stats.hook'
 import { waitFor } from '@testing-library/dom'
+import { CBGTimeData, StatLevel } from './models'
 
-describe('TimeInRangeStat hook', () => {
+describe('CBGPercentageStats hook', () => {
   const total = 1000
   const createCbgStatProps = (id: StatLevel, legendTitle: string, title: string, value: number): CBGTimeData => {
     return { id, legendTitle, title, value }

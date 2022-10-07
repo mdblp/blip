@@ -155,7 +155,7 @@ describe('Stats', () => {
           'coefficientOfVariation'
         ]
 
-        expect(wrapper.find({'data-testid': 'time-in-range-stats-title'})).to.have.length(1)
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -171,12 +171,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'totalInsulin',
           'carbs'
         ]
 
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -228,7 +228,7 @@ describe('Stats', () => {
           'coefficientOfVariation'
         ]
 
-        expect(wrapper.find({'data-testid': 'time-in-range-stats-title'})).to.have.length(1)
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -244,12 +244,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'standardDev',
           'coefficientOfVariation'
         ]
 
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -324,13 +324,13 @@ describe('Stats', () => {
           'carbs'
         ]
 
-        expect(wrapper.find({'data-testid': 'time-in-range-stats-title'})).to.have.length(1)
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
       })
 
-      it.only('should render the Time in Auto stat for automated basal devices', () => {
+      it('should render the Time in Auto stat for automated basal devices', () => {
         wrapper = shallow(<Stats {..._.assign({}, baseProps, {
           chartType: 'patientStatistics',
           bgSource: 'cbg',
@@ -343,7 +343,6 @@ describe('Stats', () => {
         })} />)
 
         expect(wrapper.find('.Stats').children()).to.have.length(5)
-
         const expectedStats = [
           'averageGlucose',
           'averageDailyDose',
@@ -351,7 +350,7 @@ describe('Stats', () => {
           'carbs'
         ]
 
-        expect(wrapper.find({'data-testid': 'time-in-range-stats-title'})).to.have.length(1)
+        expect(wrapper.find({'data-testid': 'stat-timeInRange'})).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -367,11 +366,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'averageDailyDose',
           'carbs'
         ]
+
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })

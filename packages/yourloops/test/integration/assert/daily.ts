@@ -82,9 +82,9 @@ export const checkDailyStatsWidgetsTooltips = () => {
 
 export const checkDailyTimeInRangeStatsWidgets = async () => {
   const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
-  expect(statsWidgets.getByTestId('cbg-time-stat-veryHigh')).toHaveTextContent('10m13%')
-  expect(statsWidgets.getByTestId('cbg-time-stat-high')).toHaveTextContent('5m7%')
-  expect(statsWidgets.getByTestId('cbg-time-stat-target')).toHaveTextContent('15m20%')
-  expect(statsWidgets.getByTestId('cbg-time-stat-low')).toHaveTextContent('20m27%')
-  expect(statsWidgets.getByTestId('cbg-time-stat-veryLow')).toHaveTextContent('25m33%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('10m13%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-high-timeInRange')).toHaveTextContent('5m7%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('15m20%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('20m27%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('25m33%')
 }

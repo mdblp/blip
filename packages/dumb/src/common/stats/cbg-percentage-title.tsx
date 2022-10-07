@@ -26,12 +26,12 @@
  */
 
 import React, { FunctionComponent, useRef, useState } from 'react'
-import styles from './time-in-range-stats-title.css'
+import styles from './cbg-percentage-title.css'
 import cbgTimeStatStyles from './cbg-percentage-stat.css'
 import InfoIcon from './assets/info-outline-24-px.svg'
 import { StatTooltip } from '../tooltips/stat-tooltip'
 import { useTranslation } from 'react-i18next'
-import { StatLevel } from './time-in-range-stats'
+import { StatLevel } from './models'
 
 interface TimeInRangeStatsTitleProps {
   annotations: []
@@ -41,7 +41,7 @@ interface TimeInRangeStatsTitleProps {
   title: string
 }
 
-const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (props: TimeInRangeStatsTitleProps) => {
+const CbgPercentageTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (props: TimeInRangeStatsTitleProps) => {
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
   const { t } = useTranslation('main')
 
@@ -60,7 +60,7 @@ const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (pr
   return (
     <>
       <div
-        data-testid="time-in-range-stats-title"
+        data-testid="cbg-percentage-title"
         className={styles.title}
         ref={parentRef}
       >
@@ -100,4 +100,4 @@ const TimeInRangeStatsTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (pr
   )
 }
 
-export const TimeInRangeStatsTitleMemoized = React.memo(TimeInRangeStatsTitle)
+export const CbgPercentageTitleMemoized = React.memo(CbgPercentageTitle)

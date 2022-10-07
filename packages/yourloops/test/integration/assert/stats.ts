@@ -37,17 +37,17 @@ export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, i
   userEvent.unhover(infoIcon)
 }
 
-const hoverOnTimeInRangeStat = (statsWidgets: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {
+const hoverOnCBGPercentageStat = (statsWidgets: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {
   userEvent.hover(statsWidgets.getByTestId(statId))
-  expect(statsWidgets.getByTestId('time-in-range-stats-title')).toHaveTextContent(expectedTextContent)
+  expect(statsWidgets.getByTestId('cbg-percentage-title')).toHaveTextContent(expectedTextContent)
   userEvent.unhover(statsWidgets.getByTestId(statId))
 }
 
 export const checkTimeInRangeStatsTitle = async () => {
   const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
-  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-veryHigh', 'Time Above Range ( >250 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-high', 'Time Above Range ( 180-250 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-target', 'Time In Range ( 70-180 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-low', 'Time Below Range ( 54-70 )')
-  hoverOnTimeInRangeStat(statsWidgets, 'cbg-time-stat-veryLow', 'Time Below Range ( <54 )')
+  hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryHigh-timeInRange', 'Time Above Range ( >250 )')
+  hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-high-timeInRange', 'Time Above Range ( 180-250 )')
+  hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-target-timeInRange', 'Time In Range ( 70-180 )')
+  hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-low-timeInRange', 'Time Below Range ( 54-70 )')
+  hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryLow-timeInRange', 'Time Below Range ( <54 )')
 }

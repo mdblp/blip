@@ -27,16 +27,10 @@
 
 import React, { FunctionComponent } from 'react'
 import { CBGPercentageStatMemoized as CBGPercentageStat } from './cbg-percentage-stat'
-import styles from './time-in-range-stats.css'
-import { TimeInRangeStatsTitleMemoized as TimeInRangeStatsTitle } from './time-in-range-stats-title'
-import { useTimeInRangeStatsHook } from './time-in-range-stats.hook'
-
-export interface CBGTimeData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
-}
+import styles from './cbg-percentage-title.css'
+import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
+import { useTimeInRangeStatsHook } from './cbg-percentage-stats.hook'
+import { CBGStatType, CBGTimeData } from './models'
 
 interface TimeInRangeStatsProps {
   annotations: []
@@ -46,26 +40,13 @@ interface TimeInRangeStatsProps {
   titleKey: string
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
-}
-
-export enum CBGStatType {
-  TimeInRange = 'timeInRange',
-  ReadingsInRange = 'readingsInRange',
-}
-
-const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
+const CBGPercentageStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
   const { annotations, cbgStatType, data, titleKey, total } = props
 
   const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useTimeInRangeStatsHook({ cbgStatType, data, titleKey, total })
   return (
-    <>
-      <TimeInRangeStatsTitle
+    <div data-testid={`cbg-percentage-stats-${cbgStatType}`}>
+      <CbgPercentageTitle
         annotations={annotations}
         hoveredStatId={hoveredStatId}
         {...titleProps}
@@ -77,7 +58,7 @@ const TimeInRangeStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeI
         <CBGPercentageStat {...cbgStatsProps.lowStat} />
         <CBGPercentageStat {...cbgStatsProps.veryLowStat} />
       </div>
-    </>
+    </div>
   )
 }
-export const TimeInRangeStatsMemoized = React.memo(TimeInRangeStats)
+export const CBGPercentageStatsMemoized = React.memo(CBGPercentageStats)

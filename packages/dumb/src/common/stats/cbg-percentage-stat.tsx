@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import styles from './cbg-percentage-stat.css'
 import { useCBGPercentageStat } from './cbg-percentage-stat.hook'
-import { CBGStatType } from './time-in-range-stats'
+import { CBGStatType } from './models'
 
 export interface CBGTimeStatProps {
   id: string
@@ -53,7 +53,7 @@ const CBGPercentageStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeSt
 
   return (
     <div
-      data-testid={`cbg-time-stat-${id}`}
+      data-testid={`cbg-percentage-stat-${id}-${cbgStatType}`}
       className={styles.stat}
       onMouseOver={() => onMouseOver()}
     >

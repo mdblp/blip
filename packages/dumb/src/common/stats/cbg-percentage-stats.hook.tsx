@@ -27,8 +27,8 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGStatType, CBGTimeData, StatLevel } from './time-in-range-stats'
-import { CBGTimeStatProps } from './cbg-time-stat'
+import { CBGTimeStatProps } from './cbg-percentage-stat'
+import { CBGStatType, CBGTimeData, StatLevel } from './models'
 
 export interface TimeInRangeStatsHookProps {
   cbgStatType: CBGStatType

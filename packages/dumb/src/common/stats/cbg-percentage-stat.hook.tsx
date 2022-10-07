@@ -28,7 +28,7 @@
 import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-percentage-stat.css'
 import { formatDuration } from '../../utils/datetime'
-import { CBGStatType } from './time-in-range-stats'
+import { CBGStatType } from './models'
 
 export interface CBGPercentageStatHookProps {
   cbgStatType: CBGStatType

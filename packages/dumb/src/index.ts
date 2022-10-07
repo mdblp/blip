@@ -25,12 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TimeInRangeStatsMemoized as TimeInRangeStats } from './common/stats/time-in-range-stats'
+import { CBGPercentageStatsMemoized as CBGPercentageStats } from './common/stats/cbg-percentage-stats'
+import { CBGStatType } from './common/stats/models'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
 import Tooltip from './common/tooltips/tooltip'
 
 export {
+  CBGPercentageStats,
+  CBGStatType,
   StatTooltip,
-  TimeInRangeStats,
   Tooltip
 }
