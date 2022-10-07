@@ -369,6 +369,8 @@
   "today": "Aujourd'hui",
   "tooltip-release-notes": "Notes de version",
   "training": "Formation",
+  "training-body": "Nouveau <trainingLink>{{training}}</trainingLink> disponible, veuillez le lire avant de continuer sur yourloops. Vous pouvez également le lire plus trad, en cliquant sur le lien disponible en bas de page.",
+  "training-materials": "Document de formation",
   "training-subject": "Sujet de la formation",
   "units": "Unités",
   "unread-messages": "Messages non lus",

@@ -41,6 +41,7 @@ export default class User {
   readonly email: string
   readonly emailVerified: boolean
   readonly latestConsentChangeDate: Date
+  readonly latestTrainingDate: Date
   readonly username: string
   id: string
   frProId?: string
@@ -57,6 +58,7 @@ export default class User {
     this.role = authenticatedUser[UserMetadata.Roles][0] as UserRoles
     this.username = authenticatedUser.email
     this.latestConsentChangeDate = config.LATEST_TERMS ? new Date(config.LATEST_TERMS) : new Date(0)
+    this.latestTrainingDate = config.LATEST_TRAINING ? new Date(config.LATEST_TRAINING) : new Date(0)
   }
 
   private static getId(sub: string): string {
@@ -107,6 +109,25 @@ export default class User {
   }
 
   /**
+   * Comparing the latest training acknowledgment date of the user to the one provided in the APP
+   * If the latest ack is older than the date provided in the app, it means
+   * a new training is available
+   * @returns a boolean indicating if a new training is available
+   */
+  newTrainingAvailable(): boolean {
+    if (this.profile.trainingAck) {
+      // A `null` is fine here, because `new Date(null).valueOf() === 0`
+      const acceptDate = new Date(this.profile.trainingAck.acceptanceTimestamp)
+      if (!Number.isFinite(acceptDate.getTime())) {
+        // if acceptDate is not a valid formatted date string, get user to re-acknowledge training materials
+        return true
+      }
+      return this.latestTrainingDate >= acceptDate
+    }
+    return true
+  }
+
+  /**
    * Check If the user should accept his consent at a first login.
    * @description the first login is determined by null consents object
    */
@@ -134,6 +155,10 @@ export default class User {
 
   hasToRenewConsent(): boolean {
     return !this.isFirstLogin() && this.shouldRenewConsent()
+  }
+
+  hasToDisplayTrainingInfoPage(): boolean {
+    return this.newTrainingAvailable()
   }
 
   getParsedFrProId(): string | null {
