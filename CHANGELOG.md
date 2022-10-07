@@ -18,6 +18,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1740 Make HTTP calls to back instead of computing data in the front
 - YLP-1754 Patient list not updated after accept invitation
 - YLP-1767 Create package to migrate viz components
+- YLP-1841 Rework of accompanying documents in footer
 ### Fixed
 - YLP-1634 Fix missing UTs
 - YLP-1645 A patient can create, edit and delete a medical record

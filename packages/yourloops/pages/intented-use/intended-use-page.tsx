@@ -25,15 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import React, { FunctionComponent } from 'react'
+import parse from 'html-react-parser'
+import { rawHtml } from './raw-html'
 
-export const checkFooter = () => {
-  const footer = within(screen.getByTestId('footer'))
-  expect(footer.getByText('Intended Use')).toBeVisible()
-  expect(footer.getByText('Training')).toBeVisible()
-  expect(footer.getByText('Privacy Policy')).toBeVisible()
-  expect(footer.getByText('Terms of use')).toBeVisible()
-  expect(footer.getByText('Cookies management')).toBeVisible()
-  expect(footer.getByText('Cookies policy')).toBeVisible()
-  expect(footer.getByText('Contact')).toBeVisible()
+const IntendedUsePage: FunctionComponent = () => {
+  // TODO Add variables to html to inject Yourloops version and release date
+  return (
+    <React.Fragment>
+      {parse(rawHtml)}
+    </React.Fragment>
+  )
 }
+
+export default IntendedUsePage
