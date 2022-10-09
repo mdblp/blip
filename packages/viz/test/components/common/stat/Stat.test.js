@@ -16,7 +16,7 @@ import { MS_IN_DAY, MS_IN_HOUR, MS_IN_MIN } from '../../../../src/utils/constant
 
 /* eslint-disable max-len */
 
-describe('Stat', () => {
+describe.skip('Stat', () => {
   let wrapper
   let instance
 
