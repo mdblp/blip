@@ -22,7 +22,6 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 
 import { formatClassesAsSelector } from '../../helpers/cssmodules'
-import colors from '../../../src/styles/colors.css'
 
 import CBGTooltip from '../../../src/components/daily/cbgtooltip/CBGTooltip'
 import styles from '../../../src/components/daily/cbgtooltip/CBGTooltip.css'
@@ -42,18 +41,6 @@ const target = {
   type: 'cbg',
   units: 'mg/dL',
   value: 100
-}
-
-const low = {
-  type: 'cbg',
-  units: 'mg/dL',
-  value: 65
-}
-
-const high = {
-  type: 'cbg',
-  units: 'mg/dL',
-  value: 200
 }
 
 const veryHigh = {
