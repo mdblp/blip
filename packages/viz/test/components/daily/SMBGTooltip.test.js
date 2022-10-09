@@ -22,7 +22,6 @@ import { mount } from 'enzyme'
 import { expect } from 'chai'
 
 import { formatClassesAsSelector } from '../../helpers/cssmodules'
-import colors from '../../../src/styles/colors.css'
 
 import SMBGTooltip from '../../../src/components/daily/smbgtooltip/SMBGTooltip'
 import styles from '../../../src/components/daily/smbgtooltip/SMBGTooltip.css'
@@ -42,18 +41,6 @@ const target = {
   type: 'smbg',
   units: 'mg/dL',
   value: 100
-}
-
-const low = {
-  type: 'smbg',
-  units: 'mg/dL',
-  value: 65
-}
-
-const high = {
-  type: 'smbg',
-  units: 'mg/dL',
-  value: 200
 }
 
 const veryHigh = {
