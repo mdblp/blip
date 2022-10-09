@@ -45,8 +45,8 @@ const hoverOnCBGPercentageStat = (statsWidgets: BoundFunctions<typeof queries>, 
   userEvent.unhover(statsWidgets.getByTestId(statId))
 }
 
-export const checkTimeInRangeStatsTitle = async () => {
-  const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
+export const checkTimeInRangeStatsTitle = () => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryHigh-timeInRange', 'Time Above Range ( >250 )')
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-high-timeInRange', 'Time Above Range ( 180-250 )')
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-target-timeInRange', 'Time In Range ( 70-180 )')
@@ -54,8 +54,8 @@ export const checkTimeInRangeStatsTitle = async () => {
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryLow-timeInRange', 'Time Below Range ( <54 )')
 }
 
-export const checkReadingsInRangeStatsTitle = async (infoIconLabel = 'Readings In Range') => {
-  const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
+export const checkReadingsInRangeStatsTitle = (infoIconLabel = 'Readings In Range') => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
   checkStatTooltip(statsWidgets, infoIconLabel, READING_IN_RANGE_STAT_TOOLTIP)
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryHigh-readingsInRange', 'Readings Above Range ( >250 )')
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-high-readingsInRange', 'Readings Above Range ( 180-250 )')

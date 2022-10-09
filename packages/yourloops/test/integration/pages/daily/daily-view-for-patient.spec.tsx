@@ -34,7 +34,7 @@ import {
   checkDailyTidelineContainerTooltips,
   checkDailyTimeInRangeStatsWidgets
 } from '../../assert/daily'
-import { completeDailyViewData, mockDataAPI, smbgData } from '../../mock/mockDataAPI'
+import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import {
@@ -46,44 +46,37 @@ import {
 jest.setTimeout(10000)
 
 describe('Daily view for patient', () => {
-  let dataToMock = completeDailyViewData
-
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
   })
 
-  beforeEach(() => {
-    dataToMock = completeDailyViewData
+  describe('with all kind of data', () => {
+    it('should render correct layout, tooltips and values', async () => {
+      mockDataAPI()
+      renderPage('/daily')
+
+      // Check the layout
+      expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+      checkPatientNavBarAsPatient(true)
+      checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
+
+      // Check the tooltips
+      await checkDailyTidelineContainerTooltips()
+      checkDailyStatsWidgetsTooltips()
+
+      // Check the time in range stats widgets
+      checkDailyTimeInRangeStatsWidgets()
+      checkTimeInRangeStatsTitle()
+    })
   })
 
-  const renderDailyView = () => {
-    mockDataAPI(dataToMock)
-    renderPage('/daily')
-  }
+  describe('with smbg data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(smbgData)
+      renderPage('/daily')
 
-  it('should render correct basic components when navigating to patient daily view', async () => {
-    renderDailyView()
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient(true)
-    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
-  })
-
-  it('should render correct tooltips', async () => {
-    renderDailyView()
-    await checkDailyTidelineContainerTooltips()
-    checkDailyStatsWidgetsTooltips()
-  })
-
-  it('should display correct time in range stats info', async () => {
-    renderDailyView()
-    await checkDailyTimeInRangeStatsWidgets()
-    await checkTimeInRangeStatsTitle()
-  })
-
-  it('should display correct readings in range stats info', async () => {
-    dataToMock = smbgData
-    renderDailyView()
-    await checkReadingsInRangeStatsWidgets()
-    await checkReadingsInRangeStatsTitle()
+      await checkReadingsInRangeStatsWidgets()
+      checkReadingsInRangeStatsTitle()
+    })
   })
 })

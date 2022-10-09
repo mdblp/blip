@@ -54,7 +54,6 @@ jest.setTimeout(10000)
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
-  let dataToMock = minimalTrendViewData
 
   beforeAll(() => {
     mockAuth0Hook()
@@ -67,39 +66,39 @@ describe('Trends view for HCP', () => {
     mockMedicalFilesAPI()
   })
 
-  beforeEach(() => {
-    dataToMock = minimalTrendViewData
+  describe('with all kind of data', () => {
+    it('should render correct layout, tooltips and values', async () => {
+      mockDataAPI(minimalTrendViewData)
+      renderPage(`/patient/${unMonitoredPatientId}/trends`)
+
+      // Check the layout
+      expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+      checkPatientNavBarAsHCP(false)
+      checkHCPLayout(`${firstName} ${lastName}`)
+
+      // Check the tooltips
+      await checkTrendsTidelineContainerTooltips()
+      checkTrendsStatsWidgetsTooltips()
+    })
   })
 
-  const renderTrendsView = () => {
-    mockDataAPI(dataToMock)
-    renderPage(`/patient/${unMonitoredPatientId}/trends`)
-  }
+  describe('with time in range data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(timeInRangeStatsTrendViewData)
+      renderPage(`/patient/${unMonitoredPatientId}/trends`)
 
-  it('should render correct basic components when navigating to patient trends view', async () => {
-    renderTrendsView()
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP(false)
-    checkHCPLayout(`${firstName} ${lastName}`)
+      await checkTrendsTimeInRangeStatsWidgets()
+      checkTimeInRangeStatsTitle()
+    })
   })
 
-  it('should render correct tooltips', async () => {
-    renderTrendsView()
-    await checkTrendsTidelineContainerTooltips()
-    checkTrendsStatsWidgetsTooltips()
-  })
+  describe('with smbg data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(smbgData)
+      renderPage(`/patient/${unMonitoredPatientId}/trends`)
 
-  it('should display correct time in range stats info', async () => {
-    dataToMock = timeInRangeStatsTrendViewData
-    renderTrendsView()
-    await checkTrendsTimeInRangeStatsWidgets()
-    await checkTimeInRangeStatsTitle()
-  })
-
-  it('should display correct readings in range stats info', async () => {
-    dataToMock = smbgData
-    renderTrendsView()
-    await checkReadingsInRangeStatsWidgets()
-    await checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
+      await checkReadingsInRangeStatsWidgets()
+      checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
+    })
   })
 })

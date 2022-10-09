@@ -81,8 +81,8 @@ export const checkDailyStatsWidgetsTooltips = () => {
   checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
 }
 
-export const checkDailyTimeInRangeStatsWidgets = async () => {
-  const statsWidgets = within(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 }))
+export const checkDailyTimeInRangeStatsWidgets = () => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
   expect(statsWidgets.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('10m13%')
   expect(statsWidgets.getByTestId('cbg-percentage-stat-high-timeInRange')).toHaveTextContent('5m7%')
   expect(statsWidgets.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('15m20%')
