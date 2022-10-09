@@ -3,7 +3,6 @@ import _ from 'lodash'
 import { mount, shallow } from 'enzyme'
 import { Collapse } from 'react-collapse'
 import { SizeMe } from 'react-sizeme'
-import { VictoryBar, VictoryContainer } from 'victory'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
 
@@ -13,13 +12,7 @@ import Stat from '../../../../src/components/common/stat/Stat'
 import styles from '../../../../src/components/common/stat/Stat.css'
 import colors from '../../../../src/styles/colors.css'
 import { statFormats, statTypes } from '../../../../src/utils/stat'
-import {
-  MGDL_CLAMP_TOP,
-  MMOLL_CLAMP_TOP,
-  MS_IN_DAY,
-  MS_IN_HOUR,
-  MS_IN_MIN
-} from '../../../../src/utils/constants'
+import { MS_IN_DAY, MS_IN_HOUR, MS_IN_MIN } from '../../../../src/utils/constants'
 
 /* eslint-disable max-len */
 
@@ -1061,243 +1054,8 @@ describe('Stat', () => {
     })
   })
 
-  describe('getChartPropsByType', () => {
-    beforeEach(() => {
-      wrapper.setProps(props({
-        chartHeight: 500
-      }))
-    })
-
-    context('simple stat', () => {
-      beforeEach(() => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          type: statTypes.simple
-        }))
-      })
-
-      it('should return default chartProps object', () => {
-        const getDefaultChartPropsSpy = sinon.spy(instance, 'getDefaultChartProps')
-        sinon.assert.callCount(getDefaultChartPropsSpy, 0)
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        sinon.assert.callCount(getDefaultChartPropsSpy, 1)
-        sinon.assert.calledWith(getDefaultChartPropsSpy, sinon.match(instance.props))
-
-        expect(result).to.be.an('object').and.have.keys([
-          'animate',
-          'height',
-          'labels',
-          'renderer',
-          'style'
-        ])
-      })
-    })
-
-    context('input stat', () => {
-      beforeEach(() => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          type: statTypes.input
-        }))
-      })
-
-      it('should return default chartProps object', () => {
-        const getDefaultChartPropsSpy = sinon.spy(instance, 'getDefaultChartProps')
-        sinon.assert.callCount(getDefaultChartPropsSpy, 0)
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        sinon.assert.callCount(getDefaultChartPropsSpy, 1)
-        sinon.assert.calledWith(getDefaultChartPropsSpy, sinon.match(instance.props))
-
-        expect(result).to.be.an('object').and.have.keys([
-          'animate',
-          'height',
-          'labels',
-          'renderer',
-          'style'
-        ])
-      })
-    })
-
-    context('barBg stat', () => {
-      beforeEach(() => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          bgPrefs: {
-            bgUnits: MGDL_UNITS,
-            bgBounds: {
-              targetLowerBound: 70,
-              targetUpperBound: 180
-            }
-          },
-          data: _.assign({}, defaultProps.data, {
-            data: [
-              {
-                value: 100,
-                deviation: {
-                  value: 30
-                }
-              }
-            ]
-          }),
-          type: statTypes.barBg
-        }))
-      })
-
-      it('should return an extended default chartProps object', () => {
-        const getDefaultChartPropsSpy = sinon.spy(instance, 'getDefaultChartProps')
-        sinon.assert.callCount(getDefaultChartPropsSpy, 0)
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        sinon.assert.callCount(getDefaultChartPropsSpy, 1)
-        sinon.assert.calledWith(getDefaultChartPropsSpy, sinon.match(instance.props))
-
-        const baseKeys = [
-          'animate',
-          'data',
-          'height',
-          'labels',
-          'renderer',
-          'style'
-        ]
-
-        expect(result).to.be.an('object').and.have.keys([
-          ...baseKeys,
-          'alignment',
-          'containerComponent',
-          'cornerRadius',
-          'dataComponent',
-          'domain',
-          'horizontal',
-          'labelComponent',
-          'padding'
-        ])
-      })
-
-      it('should set basic chart layout properties', () => {
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.alignment).to.equal('middle')
-        expect(result.horizontal).to.equal(true)
-      })
-
-      it('should set `data` to a chart-compatible map of the provided `data` prop', () => {
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.data).to.eql([
-          {
-            x: 1,
-            y: 100,
-            deviation: { value: 30 },
-            eventKey: 0
-          }
-        ])
-      })
-
-      it('should set `containerComponent` to a non-responsive `VictoryContainer` component', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const containerComponentInstance = shallow(result.containerComponent).instance()
-
-        expect(containerComponentInstance).to.be.instanceOf(VictoryContainer)
-        expect(containerComponentInstance.props.responsive).to.be.false
-      })
-
-      it('should set `dataComponent` to a `BgBar` component with necessary props', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const dataComponent = shallow(result.dataComponent)
-
-        expect(dataComponent.is('.bgBar')).to.be.true
-        expect(dataComponent.props().children[0].props.children[1].props.barWidth).to.be.a('number')
-        expect(dataComponent.props().children[0].props.children[1].props.bgPrefs).to.eql(instance.props.bgPrefs)
-        expect(dataComponent.props().children[0].props.children[1].props.chartLabelWidth).to.be.a('number')
-        expect(dataComponent.props().children[0].props.children[1].props.domain).to.eql(result.domain)
-      })
-
-      it('should set `labelComponent` to a `BgBarLabel` component with necessary props', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const dataComponent = shallow(result.labelComponent)
-
-        expect(dataComponent.is('.bgBarLabel')).to.be.true
-        expect(dataComponent.props().children.props.barWidth).to.be.a('number')
-        expect(dataComponent.props().children.props.bgPrefs).to.eql(instance.props.bgPrefs)
-        expect(dataComponent.props().children.props.domain).to.eql(result.domain)
-        expect(dataComponent.props().children.props.text).to.be.a('function')
-        expect(dataComponent.props().children.props.tooltipText).to.be.a('function')
-      })
-
-      it('should set `renderer` to a `VictoryBar` component', () => {
-        const result = instance.getChartPropsByType(instance.props)
-        const renderComponentInstance = shallow(<result.renderer />).instance()
-
-        expect(renderComponentInstance).to.be.instanceOf(VictoryBar)
-      })
-
-      it('should properly set the chart height to the `chartHeight` prop, or `24` if not provided', () => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          chartHeight: 40
-        }))
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.height).to.equal(40)
-
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          chartHeight: undefined
-        }))
-
-        const result2 = instance.getChartPropsByType(instance.props)
-
-        expect(result2.height).to.equal(24)
-      })
-
-      it('should properly set the chart domain for mg/dL units', () => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          bgPrefs: { bgUnits: MGDL_UNITS }
-        }))
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.domain).to.eql({
-          x: [0, MGDL_CLAMP_TOP],
-          y: [0, 1]
-        })
-      })
-
-      it('should properly set the chart domain for mmol/L units', () => {
-        wrapper.setProps(_.assign({}, wrapper.props(), {
-          bgPrefs: { bgUnits: MMOLL_UNITS }
-        }))
-
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.domain).to.eql({
-          x: [0, MMOLL_CLAMP_TOP],
-          y: [0, 1]
-        })
-      })
-
-      it('should set `style` for dynamic data and label styling', () => {
-        const result = instance.getChartPropsByType(instance.props)
-
-        expect(result.style).to.be.an('object').and.have.keys([
-          'data',
-          'labels'
-        ])
-
-        expect(result.style.data.fill).to.be.a('function')
-        expect(result.style.data.width).to.be.a('function')
-
-        expect(result.style.labels.fill).to.be.a('function')
-        expect(result.style.labels.fontSize).to.be.a('number')
-        expect(result.style.labels.fontWeight).to.be.a('number')
-        expect(result.style.labels.paddingLeft).to.be.a('number')
-      })
-    })
-  })
-
   describe('setChartTitle', () => {
-    it("should set the `chartTitle` state from the stat's `title` prop", () => {
+    it('should set the `chartTitle` state from the stat\'s `title` prop', () => {
       const setStateSpy = sinon.spy(instance, 'setState')
       instance.setChartTitle()
 
@@ -1307,7 +1065,7 @@ describe('Stat', () => {
       }))
     })
 
-    it("should set the `chartTitle` state from a provided datum's `title` prop", () => {
+    it('should set the `chartTitle` state from a provided datum\'s `title` prop', () => {
       const setStateSpy = sinon.spy(instance, 'setState')
 
       instance.setChartTitle({
@@ -1441,7 +1199,7 @@ describe('Stat', () => {
       expect(instance.getDatumColor({ foo: 'bar' })).to.equal(colors.statDefault)
     })
 
-    it("should return a default color when `datum.id` doesn't map to an available color", () => {
+    it('should return a default color when `datum.id` doesn\'t map to an available color', () => {
       expect(instance.getDatumColor({ id: 'foo' })).to.equal(colors.statDefault)
     })
 
