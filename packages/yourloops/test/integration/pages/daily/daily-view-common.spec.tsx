@@ -25,43 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockDataAPI } from '../../mock/mockDataAPI'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
-import { mockChatAPI } from '../../mock/mockChatAPI'
-import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
+import { mockPatientLogin } from '../../mock/auth'
+import { unMonitoredPatient } from '../../mock/mockPatientAPI'
+import {
+  checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltips,
+  checkDailyTimeInRangeStatsWidgets
+} from '../../assert/daily'
+import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
-import { checkHCPLayout } from '../../assert/layout'
+import {
+  checkReadingsInRangeStatsTitle,
+  checkReadingsInRangeStatsWidgets,
+  checkTimeInRangeStatsTitle
+} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
-describe('Daily view for HCP', () => {
-  const firstName = 'HCP firstName'
-  const lastName = 'HCP lastName'
-
+describe('Daily view for anyone', () => {
   beforeAll(() => {
-    mockAuth0Hook()
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
-    mockPatientAPI()
-    mockChatAPI()
-    mockMedicalFilesAPI()
+    mockPatientLogin(unMonitoredPatient)
   })
 
-  it('should render correct layout', async () => {
-    mockDataAPI()
-    renderPage(`/patient/${unMonitoredPatientId}/daily`)
+  describe('with all kind of data', () => {
+    it('should render correct tooltips and values', async () => {
+      mockDataAPI()
+      renderPage('/daily')
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP()
-    checkHCPLayout(`${firstName} ${lastName}`)
+      // Check the tooltips
+      await checkDailyTidelineContainerTooltips()
+      checkDailyStatsWidgetsTooltips()
+
+      // Check the time in range stats widgets
+      checkDailyTimeInRangeStatsWidgets()
+      checkTimeInRangeStatsTitle()
+    })
+  })
+
+  describe('with smbg data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(smbgData)
+      renderPage('/daily')
+
+      await checkReadingsInRangeStatsWidgets()
+      checkReadingsInRangeStatsTitle()
+    })
   })
 })

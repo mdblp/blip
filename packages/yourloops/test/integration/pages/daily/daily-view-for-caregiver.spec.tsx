@@ -29,32 +29,22 @@ import { screen } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
+import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
-import {
-  checkDailyStatsWidgetsTooltips,
-  checkDailyTidelineContainerTooltips,
-  checkDailyTimeInRangeStatsWidgets
-} from '../../assert/daily'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
-import {
-  checkReadingsInRangeStatsTitle,
-  checkReadingsInRangeStatsWidgets,
-  checkTimeInRangeStatsTitle
-} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
 describe('Daily view for caregiver', () => {
-  const firstName = 'HCP firstName'
-  const lastName = 'HCP lastName'
+  const firstName = 'Caregiver firstName'
+  const lastName = 'Caregiver lastName'
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.caregiver)
@@ -67,33 +57,12 @@ describe('Daily view for caregiver', () => {
     mockMedicalFilesAPI()
   })
 
-  describe('with all kind of data', () => {
-    it('should render correct layout, tooltips and values', async () => {
-      mockDataAPI()
-      renderPage(`/patient/${unMonitoredPatientId}/daily`)
+  it('should render correct layout', async () => {
+    mockDataAPI()
+    renderPage(`/patient/${unMonitoredPatientId}/daily`)
 
-      // Check the layout
-      expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-      checkPatientNavBarAsCaregiver()
-      checkCaregiverLayout(`${firstName} ${lastName}`)
-
-      // Check the tooltips
-      await checkDailyTidelineContainerTooltips()
-      checkDailyStatsWidgetsTooltips()
-
-      // Check the time in range stats widgets
-      checkDailyTimeInRangeStatsWidgets()
-      checkTimeInRangeStatsTitle()
-    })
-  })
-
-  describe('with smbg data', () => {
-    it('should display correct readings in range stats info', async () => {
-      mockDataAPI(smbgData)
-      renderPage(`/patient/${unMonitoredPatientId}/daily`)
-
-      await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStatsTitle()
-    })
+    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsCaregiver()
+    checkCaregiverLayout(`${firstName} ${lastName}`)
   })
 })

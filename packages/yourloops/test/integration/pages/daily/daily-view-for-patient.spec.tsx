@@ -29,19 +29,9 @@ import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
 import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import {
-  checkDailyStatsWidgetsTooltips,
-  checkDailyTidelineContainerTooltips,
-  checkDailyTimeInRangeStatsWidgets
-} from '../../assert/daily'
-import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
+import { mockDataAPI } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
-import {
-  checkReadingsInRangeStatsTitle,
-  checkReadingsInRangeStatsWidgets,
-  checkTimeInRangeStatsTitle
-} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
@@ -50,33 +40,12 @@ describe('Daily view for patient', () => {
     mockPatientLogin(unMonitoredPatient)
   })
 
-  describe('with all kind of data', () => {
-    it('should render correct layout, tooltips and values', async () => {
-      mockDataAPI()
-      renderPage('/daily')
+  it('should render correct layout', async () => {
+    mockDataAPI()
+    renderPage('/daily')
 
-      // Check the layout
-      expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-      checkPatientNavBarAsPatient(true)
-      checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
-
-      // Check the tooltips
-      await checkDailyTidelineContainerTooltips()
-      checkDailyStatsWidgetsTooltips()
-
-      // Check the time in range stats widgets
-      checkDailyTimeInRangeStatsWidgets()
-      checkTimeInRangeStatsTitle()
-    })
-  })
-
-  describe('with smbg data', () => {
-    it('should display correct readings in range stats info', async () => {
-      mockDataAPI(smbgData)
-      renderPage('/daily')
-
-      await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStatsTitle()
-    })
+    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsPatient(true)
+    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
   })
 })

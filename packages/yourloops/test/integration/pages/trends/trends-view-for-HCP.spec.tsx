@@ -29,25 +29,15 @@ import { screen } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
-import {
-  checkTrendsStatsWidgetsTooltips,
-  checkTrendsTidelineContainerTooltips,
-  checkTrendsTimeInRangeStatsWidgets
-} from '../../assert/trends'
 import { renderPage } from '../../utils/render'
 import { checkHCPLayout } from '../../assert/layout'
-import {
-  checkReadingsInRangeStatsTitle,
-  checkReadingsInRangeStatsWidgets,
-  checkTimeInRangeStatsTitle
-} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
@@ -66,39 +56,12 @@ describe('Trends view for HCP', () => {
     mockMedicalFilesAPI()
   })
 
-  describe('with all kind of data', () => {
-    it('should render correct layout, tooltips and values', async () => {
-      mockDataAPI(minimalTrendViewData)
-      renderPage(`/patient/${unMonitoredPatientId}/trends`)
+  it('should render correct layout', async () => {
+    mockDataAPI(minimalTrendViewData)
+    renderPage(`/patient/${unMonitoredPatientId}/trends`)
 
-      // Check the layout
-      expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-      checkPatientNavBarAsHCP(false)
-      checkHCPLayout(`${firstName} ${lastName}`)
-
-      // Check the tooltips
-      await checkTrendsTidelineContainerTooltips()
-      checkTrendsStatsWidgetsTooltips()
-    })
-  })
-
-  describe('with time in range data', () => {
-    it('should display correct readings in range stats info', async () => {
-      mockDataAPI(timeInRangeStatsTrendViewData)
-      renderPage(`/patient/${unMonitoredPatientId}/trends`)
-
-      await checkTrendsTimeInRangeStatsWidgets()
-      checkTimeInRangeStatsTitle()
-    })
-  })
-
-  describe('with smbg data', () => {
-    it('should display correct readings in range stats info', async () => {
-      mockDataAPI(smbgData)
-      renderPage(`/patient/${unMonitoredPatientId}/trends`)
-
-      await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
-    })
+    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsHCP(false)
+    checkHCPLayout(`${firstName} ${lastName}`)
   })
 })
