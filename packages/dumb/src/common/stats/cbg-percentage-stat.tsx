@@ -30,7 +30,7 @@ import styles from './cbg-percentage-stat.css'
 import { useCBGPercentageStat } from './cbg-percentage-stat.hook'
 import { CBGStatType } from './models'
 
-export interface CBGTimeStatProps {
+export interface CBGPercentageProps {
   cbgStatType: CBGStatType
   id: string
   isDisabled: boolean
@@ -41,7 +41,7 @@ export interface CBGTimeStatProps {
   value: number
 }
 
-const CBGPercentageStat: FunctionComponent<CBGTimeStatProps> = (props: CBGTimeStatProps) => {
+const CBGPercentageStat: FunctionComponent<CBGPercentageProps> = (props: CBGPercentageProps) => {
   const { cbgStatType, id, isDisabled, onMouseEnter, legendTitle, title, total, value } = props
 
   const {

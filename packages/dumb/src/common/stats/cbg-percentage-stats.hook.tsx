@@ -27,7 +27,7 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGTimeStatProps } from './cbg-percentage-stat'
+import { CBGPercentageProps } from './cbg-percentage-stat'
 import { CBGStatType, CBGTimeData, StatLevel } from './models'
 
 export interface CBGPercentageStatsHookProps {
@@ -39,11 +39,11 @@ export interface CBGPercentageStatsHookProps {
 
 interface CBGPercentageStatsHookReturn {
   cbgStatsProps: {
-    veryHighStat: CBGTimeStatProps
-    highStat: CBGTimeStatProps
-    targetStat: CBGTimeStatProps
-    lowStat: CBGTimeStatProps
-    veryLowStat: CBGTimeStatProps
+    veryHighStat: CBGPercentageProps
+    highStat: CBGPercentageProps
+    targetStat: CBGPercentageProps
+    lowStat: CBGPercentageProps
+    veryLowStat: CBGPercentageProps
   }
   hoveredStatId: StatLevel | null
   onMouseLeave: Function

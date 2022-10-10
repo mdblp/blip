@@ -32,7 +32,7 @@ import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percenta
 import { useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
 import { CBGStatType, CBGTimeData } from './models'
 
-interface TimeInRangeStatsProps {
+interface CBGPercentageStatsProps {
   annotations: []
   cbgStatType: CBGStatType
   data: CBGTimeData[]
@@ -40,7 +40,7 @@ interface TimeInRangeStatsProps {
   titleKey: string
 }
 
-const CBGPercentageStats: FunctionComponent<TimeInRangeStatsProps> = (props: TimeInRangeStatsProps) => {
+const CBGPercentageStats: FunctionComponent<CBGPercentageStatsProps> = (props: CBGPercentageStatsProps) => {
   const { annotations, cbgStatType, data, titleKey, total } = props
 
   const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCbgPercentageStatsHook({ cbgStatType, data, titleKey, total })
