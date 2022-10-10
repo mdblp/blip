@@ -25,15 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import parse from 'html-react-parser'
-import { rawHtml } from './raw-html'
+import i18n from 'i18next'
+import rawHtmlEN from './raw-html/EN'
+import { getCurrentLang } from '../../lib/language'
+import rawHtmlFR from './raw-html/FR'
 
 const IntendedUsePage: FunctionComponent = () => {
-  // TODO Add variables to html to inject Yourloops version and release date
+  const getHtml = (): string => {
+    switch (getCurrentLang()) {
+      case 'fr':
+        return rawHtmlFR
+      default:
+        return rawHtmlEN
+    }
+  }
+
+  const [html, setHtml] = useState<string>(getHtml())
+
+  i18n.on('languageChanged', () => {
+    setHtml(getHtml)
+  })
+
   return (
     <React.Fragment>
-      {parse(rawHtml)}
+      {parse(html)}
     </React.Fragment>
   )
 }

@@ -64,6 +64,7 @@ const config = {
   VERSION: stringOption(process.env.APP_VERSION, '0.1.0'),
   API_HOST: stringOption(process.env.API_HOST, null),
   LATEST_TERMS: stringOption(process.env.LATEST_TERMS, '1970-01-01'),
+  LATEST_RELEASE: stringOption(process.env.LATEST_RELEASE, '2022-03-03'),
   SUPPORT_WEB_ADDRESS: stringOption(process.env.SUPPORT_WEB_ADDRESS, 'https://example.com/'),
   HELP_SCRIPT_URL: stringOption(process.env.HELP_SCRIPT_URL, null),
   HELP_PAGE_URL: stringOption(process.env.HELP_PAGE_URL, null),
