@@ -27,26 +27,6 @@
 
 @import "../../styles/colors.css";
 
-.bar {
-  display: flex;
-  align-items: center;
-  width: 234px;
-  position: relative;
-}
-
-.bar-value {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
-}
-
 .dot {
   height: 13px;
   width: 13px;
@@ -61,6 +41,15 @@
 
 .disabled-rectangle {
   background-color: var(--muted);
+}
+
+.disabled-line {
+  background-color: var(--muted);
+  border-radius: 20px;
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 234px;
 }
 
 .lines {
@@ -163,25 +152,4 @@
 
 .low {
   color: var(--bg-low);
-}
-
-.row {
-  composes: smallSize from '../../styles/typography.css';
-  line-height: 20px;
-  max-width: 240px;
-  min-width: 160px;
-  width: max-content;
-}
-
-.message {
-  composes: row;
-  color: var(--stat--default);
-}
-
-.message p {
-  margin: 0;
-}
-
-.message a {
-  pointer-events: all;
 }

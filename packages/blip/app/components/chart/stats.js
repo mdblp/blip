@@ -109,23 +109,16 @@ class Stats extends React.Component {
         )
       } else if (stat.id === CBGStatType.AverageGlucose) {
         return (
-          <>
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <CBGMeanStat
-                annotations={stat.annotations}
-                value={Math.round(stat.data.raw.averageGlucose)}
-                title={stat.title}
-                cbgStatType={stat.id}
-                units={stat.units}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-
-            <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
-              <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-              <Divider variant="fullWidth" />
-            </div>
-          </>
+          <div key={stat.id} data-testid={`stat-${stat.id}`}>
+            <CBGMeanStat
+              annotations={stat.annotations}
+              value={Math.round(stat.data.raw.averageGlucose)}
+              title={stat.title}
+              cbgStatType={stat.id}
+              units={stat.units}
+            />
+            <Divider variant="fullWidth" />
+          </div>
         )
       }
       return (

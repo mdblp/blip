@@ -26,17 +26,18 @@
  */
 
 import userEvent from '@testing-library/user-event'
-import { BoundFunctions, queries, screen, within } from '@testing-library/react'
+import { BoundFunctions, queries, screen, waitFor, within } from '@testing-library/react'
 
 const READING_IN_RANGE_STAT_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'
 
-export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
+export const checkStatTooltip = async (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
   const element = statsWidgets.getByText(infoIconLabel)
   const infoIcon = within(element).getByTestId('info-icon')
   userEvent.hover(infoIcon)
-  const tooltip = screen.getByTestId('tooltip')
+  const tooltip = await screen.findByTestId('stat-tooltip-content')
   expect(tooltip).toHaveTextContent(expectedTextContent)
   userEvent.unhover(infoIcon)
+  await waitFor(() => expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument())
 }
 
 const hoverOnCBGPercentageStat = (statsWidgets: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {
@@ -54,9 +55,9 @@ export const checkTimeInRangeStatsTitle = () => {
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryLow-timeInRange', 'Time Below Range ( <54 )')
 }
 
-export const checkReadingsInRangeStatsTitle = (infoIconLabel = 'Readings In Range') => {
+export const checkReadingsInRangeStatsTitle = async (infoIconLabel = 'Readings In Range') => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  checkStatTooltip(statsWidgets, infoIconLabel, READING_IN_RANGE_STAT_TOOLTIP)
+  await checkStatTooltip(statsWidgets, infoIconLabel, READING_IN_RANGE_STAT_TOOLTIP)
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryHigh-readingsInRange', 'Readings Above Range ( >250 )')
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-high-readingsInRange', 'Readings Above Range ( 180-250 )')
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-target-readingsInRange', 'Readings In Range ( 70-180 )')

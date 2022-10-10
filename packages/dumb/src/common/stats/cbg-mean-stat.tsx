@@ -28,10 +28,10 @@
 import React, { FunctionComponent, useRef } from 'react'
 import { CBGStatType } from './models'
 import styles from './cbg-mean-stat.css'
-import { Box, Tooltip, withStyles } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import InfoIcon from './assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
-import ReactMarkdown from 'react-markdown'
+import { StatTooltip } from '../tooltips/stat-tooltip'
 
 export interface CBGMeanStatProps {
   annotations: []
@@ -42,21 +42,6 @@ export interface CBGMeanStatProps {
   value: number
 }
 
-const HtmlTooltip = withStyles(() => ({
-  tooltip: {
-    backgroundColor: 'white',
-    color: 'var(--stat--default)',
-    // maxWidth: 220,
-    border: '1px solid rgb(114, 115, 117)',
-    fontSize: '12px',
-    lineHeight: '20px',
-    borderWidth: '2px'
-  },
-  arrow: {
-    transform: 'scale(2.5) translate(-0.3px, 3.0px)'
-  }
-}))(Tooltip)
-
 export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProps) => {
   const { annotations, cbgStatType, id, title, units, value } = props
   const { t } = useTranslation('main')
@@ -64,88 +49,71 @@ export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanS
   const elementRef = useRef<HTMLImageElement>(null)
   const parentRef = useRef<HTMLDivElement>(null)
 
-  const getValueStyle = (): string => {
-    if (value < 12) {
-      return styles.low
-    } else if (value > 100) {
-      return styles.high
-    }
-    return styles.target
-  }
-
-  const valueStyle = getValueStyle()
-  console.log(annotations)
-
-  const computeDotStyle = (): { left: string, color: string } => {
+  const computeValueBasedStyle = (): { leftDot: string, backgroundColor: string, color: string } => {
     if (value < 54) {
-      return { left: '0', color: styles['low-background'] }
+      return { backgroundColor: styles['low-background'], color: styles.low, leftDot: '0' }
     } else if (value > 250) {
-      return { left: '234px', color: styles['high-background'] }
+      return { color: styles.high, backgroundColor: styles['high-background'], leftDot: '234px' }
     } else {
       return {
-        left: `${((value - 54) * 234) / 196}px`,
-        color: value < 180 ? styles['target-background'] : styles['high-background']
+        backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
+        color: value < 180 ? styles.target : styles.high,
+        leftDot: `${((value - 54) * 234) / 196}px`
       }
     }
   }
 
-  const dotLeft = computeDotStyle()
+  const valueBasedStyles = computeValueBasedStyle()
 
   return (
-    <div>
-      <Box
-        data-testid={`cbg-stat-${id}-${cbgStatType}`}
-        marginLeft="4px"
-        marginRight="4px"
-      >
-        <Box display="flex" justifyContent="space-between">
-          <div ref={parentRef}>
-            {title}
-            <HtmlTooltip arrow placement="top"
-                         title={
-                           <div className={styles.container}>
-                             {annotations.map((message, index) =>
-                               <div key={`message-${index}`}>
-                                 <ReactMarkdown className={styles.message} linkTarget="_blank">
-                                   {message}
-                                 </ReactMarkdown>
-                                 {index !== annotations.length - 1 &&
-                                   <div
-                                     key={`divider-${index}`}
-                                     className={styles.divider}
-                                   />
-                                 }
-                               </div>
-                             )}
-                           </div>}>
-            <span
-              className={styles['tooltip-icon']}
-            >
-              <img
-                data-testid="info-icon"
-                src={InfoIcon}
-                alt={t('img-alt-hover-for-more-info')}
-                ref={elementRef}
-              />
-          </span>
-            </HtmlTooltip>
-          </div>
-          <Box fontSize="12px">
-            {units}
-          </Box>
-        </Box>
-        <Box display="flex" marginLeft="6px">
-          <div className={styles.lines}>
-            <div className={`${styles.line} ${styles['line-low']}`} />
-            <div className={`${styles.line} ${styles['line-target']}`} />
-            <div className={`${styles.line} ${styles['line-high']}`} />
-            <div className={`${styles.dot} ${dotLeft.color}`} style={{ left: dotLeft.left }} />
-          </div>
-          <Box className={valueStyle} fontSize="24px" marginLeft="auto" marginRight="4px">
-            {value}
-          </Box>
+    <Box
+      data-testid={`cbg-stat-${id}-${cbgStatType}`}
+      marginLeft="4px"
+      marginRight="4px"
+    >
+      <Box display="flex" justifyContent="space-between" marginTop="4px">
+        <div ref={parentRef}>
+          {title}
+          <StatTooltip annotations={annotations}>
+              <span className={styles['tooltip-icon']}>
+                <img
+                  data-testid="info-icon"
+                  src={InfoIcon}
+                  alt={t('img-alt-hover-for-more-info')}
+                  ref={elementRef}
+                />
+              </span>
+          </StatTooltip>
+        </div>
+        <Box fontSize="12px">
+          {units}
         </Box>
       </Box>
-    </div>
+      <Box display="flex" marginLeft="6px" marginTop="4px">
+        {Number.isNaN(value) ? (
+          <>
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
+              --
+            </Box>
+          </>
+        ) : (
+          <>
+            <div className={styles.lines}>
+              <div className={`${styles.line} ${styles['line-low']}`} />
+              <div className={`${styles.line} ${styles['line-target']}`} />
+              <div className={`${styles.line} ${styles['line-high']}`} />
+              <div
+                className={`${styles.dot} ${valueBasedStyles.backgroundColor}`}
+                style={{ left: valueBasedStyles.leftDot }}
+              />
+            </div>
+            <Box className={valueBasedStyles.color} fontSize="24px" marginLeft="auto" marginRight="4px">
+              {value}
+            </Box>
+          </>
+        )}
+      </Box>
+    </Box>
   )
 }

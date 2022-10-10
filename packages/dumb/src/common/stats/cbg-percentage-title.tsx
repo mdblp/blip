@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useRef, useState } from 'react'
+import React, { FunctionComponent, useRef } from 'react'
 import styles from './cbg-percentage-title.css'
 import cbgTimeStatStyles from './cbg-percentage-stat.css'
 import InfoIcon from './assets/info-outline-24-px.svg'
@@ -45,18 +45,9 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: C
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
   const { t } = useTranslation('main')
 
-  const [showTooltip, setShowTooltip] = useState<boolean>(false)
-
   const elementRef = useRef<HTMLImageElement>(null)
   const parentRef = useRef<HTMLDivElement>(null)
 
-  const onTooltipMouseover = (): void => {
-    setShowTooltip(true)
-  }
-
-  const onTooltipMouseLeave = (): void => {
-    setShowTooltip(false)
-  }
   return (
     <>
       <div
@@ -75,27 +66,18 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: C
           </span>
         }
         {showTooltipIcon &&
-          <span
-            className={styles['tooltip-icon']}
-          >
-            <img
-              data-testid="info-icon"
-              src={InfoIcon}
-              alt={t('img-alt-hover-for-more-info')}
-              ref={elementRef}
-              onMouseOver={onTooltipMouseover}
-              onMouseOut={onTooltipMouseLeave}
-            />
-          </span>
-        }
-        {showTooltip && elementRef.current && parentRef.current &&
-          <div className={styles['stat-tooltip']}>
-            <StatTooltip
-              annotations={annotations}
-              parentRef={parentRef.current}
-              tooltipRef={elementRef.current}
-            />
-          </div>
+          <StatTooltip annotations={annotations}>
+            <span
+              className={styles['tooltip-icon']}
+            >
+              <img
+                data-testid="info-icon"
+                src={InfoIcon}
+                alt={t('img-alt-hover-for-more-info')}
+                ref={elementRef}
+              />
+            </span>
+          </StatTooltip>
         }
       </div>
     </>

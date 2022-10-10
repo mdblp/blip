@@ -54,7 +54,7 @@ describe('Trends view for anyone', () => {
 
       // Check the tooltips
       await checkTrendsTidelineContainerTooltips()
-      checkTrendsStatsWidgetsTooltips()
+      await checkTrendsStatsWidgetsTooltips()
     })
   })
 
@@ -74,7 +74,7 @@ describe('Trends view for anyone', () => {
       renderPage('/trends')
 
       await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
+      await checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
     })
   })
 })

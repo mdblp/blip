@@ -39,11 +39,6 @@
   overflow: hidden;
 }
 
-.stat-tooltip {
-  z-index: 1;
-  position: relative;
-}
-
 .title {
   margin-left: 4px;
   height: 21px;

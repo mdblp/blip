@@ -54,7 +54,7 @@ describe('Daily view for anyone', () => {
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()
-      checkDailyStatsWidgetsTooltips()
+      await checkDailyStatsWidgetsTooltips()
 
       // Check the time in range stats widgets
       checkDailyTimeInRangeStatsWidgets()
@@ -68,7 +68,7 @@ describe('Daily view for anyone', () => {
       renderPage('/daily')
 
       await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStatsTitle()
+      await checkReadingsInRangeStatsTitle()
     })
   })
 })

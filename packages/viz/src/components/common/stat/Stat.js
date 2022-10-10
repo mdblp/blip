@@ -106,14 +106,6 @@ class Stat extends React.Component {
 
     this.state = this.getStateByType(props)
     this.chartProps = this.getChartPropsByType(props)
-
-    this.setStatRef = ref => {
-      this.stat = ref
-    }
-
-    this.setTooltipIconRef = ref => {
-      this.tooltipIcon = ref
-    }
   }
 
   // eslint-disable-next-line camelcase
@@ -151,18 +143,17 @@ class Stat extends React.Component {
           </span>
         )}
         {!hideToolTips && annotations && !isDatumHovered && (
-          <span
-            className={styles.tooltipIcon}
-          >
-            <img
-              data-testid="info-icon"
-              src={InfoIcon}
-              alt={t('img-alt-hover-for-more-info')}
-              ref={this.setTooltipIconRef}
-              onMouseOver={this.handleTooltipIconMouseOver}
-              onMouseOut={this.handleTooltipIconMouseOut}
-            />
-          </span>
+          <StatTooltip annotations={this.props.annotations}>
+            <span
+              className={styles.tooltipIcon}
+            >
+              <img
+                data-testid="info-icon"
+                src={InfoIcon}
+                alt={t('img-alt-hover-for-more-info')}
+              />
+            </span>
+          </StatTooltip>
         )}
       </div>
     )
@@ -314,16 +305,6 @@ class Stat extends React.Component {
     )
   }
 
-  renderTooltip = () => (
-    <div className={styles.StatTooltipWrapper}>
-      <StatTooltip
-        annotations={this.props.annotations}
-        tooltipRef={this.tooltipIcon}
-        parentRef={this.stat}
-      />
-    </div>
-  )
-
   render() {
     const statClasses = cx({
       [styles.Stat]: true,
@@ -342,7 +323,6 @@ class Stat extends React.Component {
           {this.props.type === statTypes.input && this.renderWeight()}
           {this.state.showFooter && this.renderStatFooter()}
         </div>
-        {this.state.showMessages && this.renderTooltip()}
       </div>
     )
   }
@@ -750,18 +730,6 @@ class Stat extends React.Component {
     this.setState(state => ({
       isOpened: !state.isOpened
     }), () => this.setState(this.getStateByType(this.props)))
-  }
-
-  handleTooltipIconMouseOver = () => {
-    this.setState({
-      showMessages: true
-    })
-  }
-
-  handleTooltipIconMouseOut = () => {
-    this.setState({
-      showMessages: false
-    })
   }
 
 }
