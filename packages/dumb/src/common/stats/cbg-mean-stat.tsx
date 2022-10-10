@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useRef } from 'react'
+import React, { FunctionComponent } from 'react'
 import { CBGStatType } from './models'
 import styles from './cbg-mean-stat.css'
 import { Box } from '@material-ui/core'
@@ -45,9 +45,6 @@ export interface CBGMeanStatProps {
 export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProps) => {
   const { annotations, cbgStatType, id, title, units, value } = props
   const { t } = useTranslation('main')
-
-  const elementRef = useRef<HTMLImageElement>(null)
-  const parentRef = useRef<HTMLDivElement>(null)
 
   const computeValueBasedStyle = (): { leftDot: string, backgroundColor: string, color: string } => {
     if (value < 54) {
@@ -72,7 +69,7 @@ export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanS
       marginRight="4px"
     >
       <Box display="flex" justifyContent="space-between" marginTop="4px">
-        <div ref={parentRef}>
+        <div>
           {title}
           <StatTooltip annotations={annotations}>
               <span className={styles['tooltip-icon']}>
@@ -80,7 +77,6 @@ export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanS
                   data-testid="info-icon"
                   src={InfoIcon}
                   alt={t('img-alt-hover-for-more-info')}
-                  ref={elementRef}
                 />
               </span>
           </StatTooltip>

@@ -39,10 +39,6 @@
   color: var(--muted);
 }
 
-.disabled-rectangle {
-  background-color: var(--muted);
-}
-
 .disabled-line {
   background-color: var(--muted);
   border-radius: 20px;
@@ -52,17 +48,17 @@
   width: 234px;
 }
 
-.lines {
-  display: flex;
-  position: relative;
-  width: 234px;
-}
-
 .line {
   height: 4px;
   margin-bottom: 10px;
   margin-top: 10px;
   opacity: 0.5;
+}
+
+.lines {
+  display: flex;
+  position: relative;
+  width: 234px;
 }
 
 .line-low {
@@ -84,34 +80,6 @@
   flex-grow: 1;
 }
 
-.percentage-symbol {
-  color: #727375;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 24px;
-  margin-left: auto;
-  margin-right: 2px;
-}
-
-.rectangle {
-  height: 32px;
-  border-radius: 2px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
-}
-
-.title {
-  margin-left: 4px;
-}
-
 .tooltip-icon {
   position: relative;
   top: -0.3em;
@@ -120,10 +88,6 @@
 
 .tooltip-icon > img {
   width: 0.9em;
-}
-
-.veryHigh-background {
-  background-color: var(--bg-very-high);
 }
 
 .high-background {
@@ -136,10 +100,6 @@
 
 .low-background {
   background-color: var(--bg-low);
-}
-
-.veryLow-background {
-  background-color: var(--bg-very-low);
 }
 
 .high {
