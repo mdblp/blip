@@ -15,19 +15,17 @@ export const StatLegend: FunctionComponent<StatLegendProps> = (props: StatLegend
   return (
     <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
       <ul className={styles['stat-legend']}>
-        {items.map(item => {
-          return (
-            <li
-              className={styles['stat-legend-item']}
-              key={item.id}
-              style={{ borderBottomColor: colors[item.id] }}
-            >
+        {items.map(item =>
+          <li
+            className={styles['stat-legend-item']}
+            key={item.id}
+            style={{ borderBottomColor: colors[item.id] }}
+          >
             <span className={styles['stat-legend-title']}>
               {item.legendTitle}
             </span>
-            </li>
-          )
-        })}
+          </li>
+        )}
       </ul>
       <Box marginLeft="auto" marginRight="4px" fontSize="12px">
         {units}

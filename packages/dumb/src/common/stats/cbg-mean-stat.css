@@ -1,0 +1,187 @@
+/**
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+@import "../../styles/colors.css";
+
+.bar {
+  display: flex;
+  align-items: center;
+  width: 234px;
+  position: relative;
+}
+
+.bar-value {
+  background-color: white;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--stat-disabled);
+  border-width: thin;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 12px;
+  position: absolute;
+  right: 0;
+}
+
+.dot {
+  height: 13px;
+  width: 13px;
+  border-radius: 20px;
+  position: absolute;
+  margin-top: 5px;
+}
+
+.disabled-label {
+  color: var(--muted);
+}
+
+.disabled-rectangle {
+  background-color: var(--muted);
+}
+
+.lines {
+  display: flex;
+  position: relative;
+  width: 234px;
+}
+
+.line {
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  opacity: 0.5;
+}
+
+.line-low {
+  background-color: var(--bg-low);
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  width: 19px;
+}
+
+.line-target {
+  background-color: var(--bg-target);
+  width: 131px;
+}
+
+.line-high {
+  background-color: var(--bg-high);
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  flex-grow: 1;
+}
+
+.percentage-symbol {
+  color: #727375;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.percentage-value {
+  font-size: 24px;
+  margin-left: auto;
+  margin-right: 2px;
+}
+
+.rectangle {
+  height: 32px;
+  border-radius: 2px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.title {
+  margin-left: 4px;
+}
+
+.tooltip-icon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
+}
+
+.tooltip-icon > img {
+  width: 0.9em;
+}
+
+.veryHigh-background {
+  background-color: var(--bg-very-high);
+}
+
+.high-background {
+  background-color: var(--bg-high);
+}
+
+.target-background {
+  background-color: var(--bg-target);
+}
+
+.low-background {
+  background-color: var(--bg-low);
+}
+
+.veryLow-background {
+  background-color: var(--bg-very-low);
+}
+
+.high {
+  color: var(--bg-high);
+}
+
+.target {
+  color: var(--bg-target);
+}
+
+.low {
+  color: var(--bg-low);
+}
+
+.row {
+  composes: smallSize from '../../styles/typography.css';
+  line-height: 20px;
+  max-width: 240px;
+  min-width: 160px;
+  width: max-content;
+}
+
+.message {
+  composes: row;
+  color: var(--stat--default);
+}
+
+.message p {
+  margin: 0;
+}
+
+.message a {
+  pointer-events: all;
+}

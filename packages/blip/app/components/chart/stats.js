@@ -6,6 +6,7 @@ import Divider from '@material-ui/core/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
 import { CBGPercentageStats, CBGStatType } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
+import { CBGMeanStat } from 'dumb/src'
 
 const { Stat } = vizComponents
 
@@ -89,6 +90,7 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
+    console.log(stats)
     return stats.map(stat => {
       if (stat.id === CBGStatType.TimeInRange || stat.id === CBGStatType.ReadingsInRange) {
         return (
@@ -104,6 +106,26 @@ class Stats extends React.Component {
             />
             <Divider variant="fullWidth" />
           </div>
+        )
+      } else if (stat.id === CBGStatType.AverageGlucose) {
+        return (
+          <>
+            <div key={stat.id} data-testid={`stat-${stat.id}`}>
+              <CBGMeanStat
+                annotations={stat.annotations}
+                value={Math.round(stat.data.raw.averageGlucose)}
+                title={stat.title}
+                cbgStatType={stat.id}
+                units={stat.units}
+              />
+              <Divider variant="fullWidth" />
+            </div>
+
+            <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
+              <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+              <Divider variant="fullWidth" />
+            </div>
+          </>
         )
       }
       return (

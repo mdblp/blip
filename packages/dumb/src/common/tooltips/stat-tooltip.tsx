@@ -73,12 +73,11 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (
     top: (top - parentTop) + height / 2,
     left: (left - parentLeft) + width / 2
   }
-
+  console.log(parentRef.getBoundingClientRect())
   const offset = {
     horizontal: width / 2,
     top: -parentHeight
   }
-
   const side = ((document.body.clientWidth ?? 0) - left < 225) ? 'left' : 'right'
 
   return (

@@ -74,9 +74,10 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: C
             {' )'}
           </span>
         }
-        {showTooltipIcon && <span
-          className={styles['tooltip-icon']}
-        >
+        {showTooltipIcon &&
+          <span
+            className={styles['tooltip-icon']}
+          >
             <img
               data-testid="info-icon"
               src={InfoIcon}
@@ -85,7 +86,8 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: C
               onMouseOver={onTooltipMouseover}
               onMouseOut={onTooltipMouseLeave}
             />
-          </span>}
+          </span>
+        }
         {showTooltip && elementRef.current && parentRef.current &&
           <div className={styles['stat-tooltip']}>
             <StatTooltip
