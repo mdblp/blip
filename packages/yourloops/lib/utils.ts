@@ -39,8 +39,10 @@ export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-
 
 export const REGEX_BIRTHDATE = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
 
-export const REGEX_PHONE = /^\+(?:[0-9]\x20?){6,14}[0-9]$/
+export const REGEX_PHONE = /^(?:[0-9]●?){8,10}[0-9]$/// ^\+(?:[0-9]\x20?){6,14}[0-9]$/
 
+export const REGEX_ZIPCODE_WITHOUT_STRING = /^[0-9-]*$/
+export const REGEX_ZIPCODE_WITH_STRING = /^[A-Z0-9 ]*$/
 /**
  * setTimeout() as promised
  * @param timeout in milliseconds
@@ -149,4 +151,17 @@ export function formatAlarmSettingThreshold(value: number): string {
 
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {
   return element ? element.offsetWidth < element.scrollWidth : undefined
+}
+
+export enum PhonePrefixCode {
+  FR = '+33',
+  AT = '+43',
+  BE = '+32',
+  DE = '+49',
+  IT = '+39',
+  JA = '+81',
+  NL = '+31',
+  ES = '+34',
+  CH = '+41',
+  GB = '+44',
 }

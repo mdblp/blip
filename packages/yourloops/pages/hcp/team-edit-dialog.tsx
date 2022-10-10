@@ -29,7 +29,6 @@
 import _ from 'lodash'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -37,6 +36,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import FormControl from '@material-ui/core/FormControl'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import InputLabel from '@material-ui/core/InputLabel'
 import Link from '@material-ui/core/Link'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -47,7 +47,13 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import locales from '../../../../locales/languages.json'
 import DiabeloopUrl from '../../lib/diabeloop-url'
 import { Team } from '../../lib/team'
-import { REGEX_EMAIL } from '../../lib/utils'
+import {
+  PhonePrefixCode,
+  REGEX_EMAIL,
+  REGEX_PHONE,
+  REGEX_ZIPCODE_WITH_STRING,
+  REGEX_ZIPCODE_WITHOUT_STRING
+} from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import { TeamEditModalContentProps } from './types'
 import Box from '@material-ui/core/Box'
@@ -108,8 +114,20 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const [addrZipCode, setAddrZipCode] = React.useState(team?.address?.zip ?? '')
   const [addrCity, setAddrCity] = React.useState(team?.address?.city ?? '')
   const [addrCountry, setAddrCountry] = React.useState(team?.address?.country ?? auth.user?.settings?.country ?? 'FR')
+  const isPhoneNumberValid: boolean = REGEX_PHONE.test(teamPhone)
   const countries: LocalesCountries = locales.countries
   const optionsCountries: JSX.Element[] = []
+  const isZipCodeValid = (country): boolean => {
+    switch (country) {
+      case 'NL':
+      case 'GB':
+        return REGEX_ZIPCODE_WITH_STRING.test(addrZipCode)
+      default:
+        return REGEX_ZIPCODE_WITHOUT_STRING.test(addrZipCode)
+    }
+  }
+  const zipcodeInputOnError: boolean = !(addrZipCode.length === 0 || isZipCodeValid(addrCountry))
+  const phoneNumberInputOnError: boolean = !(teamPhone.length === 0 || isPhoneNumberValid)
   for (const entry in countries) {
     if (Object.prototype.hasOwnProperty.call(countries, entry)) {
       const { name } = countries[entry]
@@ -143,12 +161,13 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     valid = valid && inLimit(addrZipCode.trim(), teamFieldsLimits.zipCode)
     valid = valid && inLimit(addrCity.trim(), teamFieldsLimits.city)
     valid = valid && inLimit(addrCountry.trim(), teamFieldsLimits.country)
-
     const email = teamEmail.trim()
     if (valid && inLimit(email, teamFieldsLimits.email)) {
       valid = REGEX_EMAIL.test(email)
     }
-
+    if (zipcodeInputOnError || phoneNumberInputOnError) {
+      return true
+    }
     return !valid
   }
 
@@ -160,7 +179,9 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     addrCountry,
     addrLine1,
     addrLine2,
-    addrZipCode
+    addrZipCode,
+    zipcodeInputOnError,
+    phoneNumberInputOnError
   ])
 
   const handleCloseModal = (): void => {
@@ -296,6 +317,8 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             className={classes.formChild}
             variant="outlined"
             onChange={(e) => setAddrZipCode(e.target.value)}
+            error={zipcodeInputOnError}
+            helperText={isZipCodeValid(addrCountry) || addrZipCode.length === 0 ? null : t('zipcode-helpertext')}
             name="addr-zip"
             value={addrZipCode}
             label={t('team-edit-dialog-placeholder-addr-zip')}
@@ -331,6 +354,11 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             className={classes.formChild}
             variant="outlined"
             onChange={(e) => setTeamPhone(e.target.value)}
+            error={phoneNumberInputOnError}
+            helperText={isPhoneNumberValid || teamPhone.length === 0 ? null : t('phone-number-helperText')}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">{PhonePrefixCode[addrCountry]}</InputAdornment>
+            }}
             name="phone"
             value={teamPhone}
             label={t('phone-number')}
