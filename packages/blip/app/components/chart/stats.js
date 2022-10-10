@@ -99,6 +99,7 @@ class Stats extends React.Component {
               total={stat.data.total.value}
               titleKey={stat.title}
               cbgStatType={stat.id}
+              units={stat.units}
             />
             <Divider variant="fullWidth" />
           </div>

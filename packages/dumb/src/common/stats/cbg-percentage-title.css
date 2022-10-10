@@ -29,6 +29,16 @@
   font-size: 12px;
 }
 
+.stat-footer {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--stat--border);
+  padding: 0.25em 0.625em .375em;
+  overflow: hidden;
+}
+
 .stat-tooltip {
   z-index: 1;
   position: relative;

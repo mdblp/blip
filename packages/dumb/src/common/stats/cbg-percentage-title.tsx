@@ -33,7 +33,7 @@ import { StatTooltip } from '../tooltips/stat-tooltip'
 import { useTranslation } from 'react-i18next'
 import { StatLevel } from './models'
 
-interface TimeInRangeStatsTitleProps {
+interface CBGPercentageTitleProps {
   annotations: []
   hoveredStatId: StatLevel | null
   legendTitle: string
@@ -41,7 +41,7 @@ interface TimeInRangeStatsTitleProps {
   title: string
 }
 
-const CbgPercentageTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (props: TimeInRangeStatsTitleProps) => {
+const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: CBGPercentageTitleProps) => {
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
   const { t } = useTranslation('main')
 
@@ -100,4 +100,4 @@ const CbgPercentageTitle: FunctionComponent<TimeInRangeStatsTitleProps> = (props
   )
 }
 
-export const CbgPercentageTitleMemoized = React.memo(CbgPercentageTitle)
+export const CbgPercentageTitleMemoized = React.memo(CBGPercentageTitle)

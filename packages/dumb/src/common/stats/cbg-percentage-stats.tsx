@@ -31,6 +31,8 @@ import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
 import { CBGStatType, CBGTimeData } from './models'
+import { StatLegend } from './stat-legend'
+import { Box } from '@material-ui/core'
 
 interface CBGPercentageStatsProps {
   annotations: []
@@ -38,27 +40,37 @@ interface CBGPercentageStatsProps {
   data: CBGTimeData[]
   total: number
   titleKey: string
+  units: string
 }
 
 const CBGPercentageStats: FunctionComponent<CBGPercentageStatsProps> = (props: CBGPercentageStatsProps) => {
-  const { annotations, cbgStatType, data, titleKey, total } = props
+  const { annotations, cbgStatType, data, titleKey, total, units } = props
 
-  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCbgPercentageStatsHook({ cbgStatType, data, titleKey, total })
+  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCbgPercentageStatsHook({
+    cbgStatType,
+    data,
+    titleKey,
+    total
+  })
   return (
-    <div data-testid={`cbg-percentage-stats-${cbgStatType}`}>
-      <CbgPercentageTitle
-        annotations={annotations}
-        hoveredStatId={hoveredStatId}
-        {...titleProps}
-      />
-      <div className={styles.stats} onMouseLeave={() => onMouseLeave()}>
-        <CBGPercentageStat {...cbgStatsProps.veryHighStat} />
-        <CBGPercentageStat {...cbgStatsProps.highStat} />
-        <CBGPercentageStat {...cbgStatsProps.targetStat} />
-        <CBGPercentageStat {...cbgStatsProps.lowStat} />
-        <CBGPercentageStat {...cbgStatsProps.veryLowStat} />
+    <>
+      <div data-testid={`cbg-percentage-stats-${cbgStatType}`}>
+        <CbgPercentageTitle
+          annotations={annotations}
+          hoveredStatId={hoveredStatId}
+          {...titleProps}
+        />
+        <Box className={styles.stats} onMouseLeave={() => onMouseLeave()} marginLeft="8px">
+          <CBGPercentageStat {...cbgStatsProps.veryHighStat} />
+          <CBGPercentageStat {...cbgStatsProps.highStat} />
+          <CBGPercentageStat {...cbgStatsProps.targetStat} />
+          <CBGPercentageStat {...cbgStatsProps.lowStat} />
+          <CBGPercentageStat {...cbgStatsProps.veryLowStat} />
+        </Box>
       </div>
-    </div>
+      <div className={styles['stat-footer']} />
+      <StatLegend items={data} units={units} />
+    </>
   )
 }
 export const CBGPercentageStatsMemoized = React.memo(CBGPercentageStats)

@@ -88,4 +88,5 @@ export const checkDailyTimeInRangeStatsWidgets = () => {
   expect(statsWidgets.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('15m20%')
   expect(statsWidgets.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('20m27%')
   expect(statsWidgets.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('25m33%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
 }

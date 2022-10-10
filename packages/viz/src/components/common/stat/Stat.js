@@ -22,7 +22,6 @@ import BgBarLabel from './BgBarLabel'
 import Lines from './Lines'
 import NoBar from './NoBar'
 import WheelPercent from './Wheel'
-import StatLegend from './StatLegend'
 import CollapseIconOpen from './assets/expand-more-24-px.svg'
 import CollapseIconClose from './assets/chevron-right-24-px.svg'
 import InfoIcon from './assets/info-outline-24-px.svg'
@@ -224,27 +223,9 @@ class Stat extends React.Component {
   renderStatFooter = () => (
     <div className={styles.statFooter}>
       {this.props.type === statTypes.input && this.renderCalculatedOutput()}
-      {this.props.legend && this.renderStatLegend()}
       {this.props.units && this.renderStatUnits()}
     </div>
   )
-
-  renderStatLegend = () => {
-    const items = _.map(
-      this.props.data.data,
-      datum => _.pick(datum, ['id', 'legendTitle'])
-    )
-
-    if (!this.props.reverseLegendOrder) {
-      _.reverse(items)
-    }
-
-    return (
-      <div className={styles.statLegend}>
-        <StatLegend items={items} />
-      </div>
-    )
-  }
 
   renderChart = size => {
     const { renderer: Renderer, ...chartProps } = this.chartProps
