@@ -25,66 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../styles/colors.css";
+import styles from './cbg-colors.css'
 
-.bar {
-  display: flex;
-  align-items: center;
-  width: 234px;
-  position: relative;
+export interface CBGMeanStatHookReturn {
+  computeValueBasedStyle: Function
 }
 
-.bar-value {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
-}
-
-.disabled-label {
-  color: var(--muted);
-}
-
-.disabled-rectangle {
-  background-color: var(--muted);
-}
-
-.line {
-  height: 5px;
-  background-color: var(--stat-disabled);
-  flex-grow: 1;
-}
-
-.percentage-symbol {
-  color: #727375;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 24px;
-  margin-left: auto;
-  margin-right: 2px;
-}
-
-.rectangle {
-  height: 32px;
-  border-radius: 2px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
-}
-
-.title {
-  margin-left: 4px;
+export const useCBGMeanStat = (): CBGMeanStatHookReturn => {
+  const computeValueBasedStyle = (value: number): { leftDot: string, backgroundColor: string, color: string } => {
+    if (value < 54) {
+      return { backgroundColor: styles['low-background'], color: styles['low-color'], leftDot: '0' }
+    } else if (value > 250) {
+      return { color: styles['high-color'], backgroundColor: styles['high-background'], leftDot: '234px' }
+    } else {
+      const widhtInPx = 234 // Width of the cbg bar
+      const cbgBarRange = 196 // Number of value included in the cbg bar range (from 54 to 250)
+      const nbOfValuesNotIncludedInRange = 54 // The first 54 values are not included in the range and should be deduced
+      return {
+        backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
+        color: value < 180 ? styles['target-color'] : styles['high-color'],
+        leftDot: `${Math.round(((value - nbOfValuesNotIncludedInRange) * widhtInPx) / cbgBarRange)}px`
+      }
+    }
+  }
+  return { computeValueBasedStyle }
 }

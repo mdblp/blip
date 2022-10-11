@@ -25,17 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useMemo } from 'react'
 import { CBGStatType } from './models'
 import styles from './cbg-mean-stat.css'
 import { Box } from '@material-ui/core'
 import InfoIcon from './assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../tooltips/stat-tooltip'
+import { useCBGMeanStat } from './cbg-mean-stat.hook'
 
 export interface CBGMeanStatProps {
   cbgStatType: CBGStatType
-  id: string
   title: string
   tooltipValue: string
   units: string
@@ -43,27 +43,18 @@ export interface CBGMeanStatProps {
 }
 
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProps) => {
-  const { cbgStatType, id, title, tooltipValue, units, value } = props
+  const { cbgStatType, title, tooltipValue, units, value } = props
   const { t } = useTranslation('main')
 
-  const computeValueBasedStyle = (): { leftDot: string, backgroundColor: string, color: string } => {
-    if (value < 54) {
-      return { backgroundColor: styles['low-background'], color: styles.low, leftDot: '0' }
-    } else if (value > 250) {
-      return { color: styles.high, backgroundColor: styles['high-background'], leftDot: '234px' }
-    } else {
-      return {
-        backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
-        color: value < 180 ? styles.target : styles.high,
-        leftDot: `${((value - 54) * 234) / 196}px`
-      }
-    }
-  }
+  const { computeValueBasedStyle } = useCBGMeanStat()
 
-  const valueBasedStyles = computeValueBasedStyle()
+  const valueBasedStyles = useMemo(() => {
+    return computeValueBasedStyle(value)
+  }, [computeValueBasedStyle, value])
+
   return (
     <Box
-      data-testid={`cbg-stat-${id}-${cbgStatType}`}
+      data-testid={`cbg-mean-stat-${cbgStatType}`}
       marginLeft="4px"
       marginRight="4px"
     >

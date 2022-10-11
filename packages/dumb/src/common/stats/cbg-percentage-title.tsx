@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent, useRef } from 'react'
 import styles from './cbg-percentage-title.css'
-import cbgTimeStatStyles from './cbg-percentage-stat.css'
+import cbgColorsStyles from './cbg-colors.css'
 import InfoIcon from './assets/info-outline-24-px.svg'
 import { StatTooltip } from '../tooltips/stat-tooltip'
 import { useTranslation } from 'react-i18next'
@@ -59,7 +59,7 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: C
         {hoveredStatId &&
           <span className={styles['legend-title']}>
             {' ( '}
-            <span className={cbgTimeStatStyles[`${hoveredStatId}-label`]}>
+            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
             {legendTitle}
           </span>
             {' )'}

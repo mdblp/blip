@@ -25,66 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../styles/colors.css";
+import { renderHook } from '@testing-library/react-hooks/dom'
+import { useCBGMeanStat } from './cbg-mean-stat.hook'
 
-.bar {
-  display: flex;
-  align-items: center;
-  width: 234px;
-  position: relative;
-}
+describe('CBGMeanStat hook', () => {
+  describe('computeValueBasedStyle', () => {
+    it('should return correct leftDot when value is < 54', () => {
+      const { result } = renderHook(() => useCBGMeanStat())
+      const computedStyle = result.current.computeValueBasedStyle(20)
+      expect(computedStyle.leftDot).toBe('0')
+    })
 
-.bar-value {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
-}
+    it('should return correct leftDot when value is > 250', () => {
+      const { result } = renderHook(() => useCBGMeanStat())
+      const computedStyle = result.current.computeValueBasedStyle(255)
+      expect(computedStyle.leftDot).toBe('234px')
+    })
 
-.disabled-label {
-  color: var(--muted);
-}
-
-.disabled-rectangle {
-  background-color: var(--muted);
-}
-
-.line {
-  height: 5px;
-  background-color: var(--stat-disabled);
-  flex-grow: 1;
-}
-
-.percentage-symbol {
-  color: #727375;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 24px;
-  margin-left: auto;
-  margin-right: 2px;
-}
-
-.rectangle {
-  height: 32px;
-  border-radius: 2px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
-}
-
-.title {
-  margin-left: 4px;
-}
+    it('should return correct leftDot when value is > 54 and < 250', () => {
+      const { result } = renderHook(() => useCBGMeanStat())
+      const computedStyle = result.current.computeValueBasedStyle(128)
+      expect(computedStyle.leftDot).toBe('88px')
+    })
+  })
+})

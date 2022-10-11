@@ -89,27 +89,3 @@
 .tooltip-icon > img {
   width: 0.9em;
 }
-
-.high-background {
-  background-color: var(--bg-high);
-}
-
-.target-background {
-  background-color: var(--bg-target);
-}
-
-.low-background {
-  background-color: var(--bg-low);
-}
-
-.high {
-  color: var(--bg-high);
-}
-
-.target {
-  color: var(--bg-target);
-}
-
-.low {
-  color: var(--bg-low);
-}

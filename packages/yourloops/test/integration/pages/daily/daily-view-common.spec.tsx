@@ -35,6 +35,7 @@ import {
 import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import {
+  checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsTitle,
   checkReadingsInRangeStatsWidgets,
   checkTimeInRangeStatsTitle
@@ -59,6 +60,8 @@ describe('Daily view for anyone', () => {
       // Check the time in range stats widgets
       checkDailyTimeInRangeStatsWidgets()
       checkTimeInRangeStatsTitle()
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
     })
   })
 
@@ -69,6 +72,8 @@ describe('Daily view for anyone', () => {
 
       await checkReadingsInRangeStatsWidgets()
       await checkReadingsInRangeStatsTitle()
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
     })
   })
 })

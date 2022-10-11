@@ -27,6 +27,7 @@
 
 import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-percentage-stat.css'
+import stylesColors from './cbg-colors.css'
 import { formatDuration } from '../../utils/datetime'
 import { CBGStatType } from './models'
 
@@ -51,8 +52,8 @@ export const useCBGPercentageStat = (props: CBGPercentageStatHookProps): CBGPerc
   const { cbgStatType, id, isDisabled, total, value } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
-  const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : cbgTimeStatStyles[`${id}-background`]
-  const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : cbgTimeStatStyles[`${id}-label`]
+  const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : stylesColors[`${id}-background`]
+  const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : stylesColors[`${id}-color`]
   const rectangleClasses = `${cbgTimeStatStyles.rectangle} ${rectangleBackgroundClass}`
   const barClasses = `${cbgTimeStatStyles['bar-value']} ${labelClass}`
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`

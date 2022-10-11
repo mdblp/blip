@@ -27,64 +27,26 @@
 
 @import "../../styles/colors.css";
 
-.bar {
-  display: flex;
-  align-items: center;
-  width: 234px;
-  position: relative;
+.high-background {
+  background-color: var(--bg-high);
 }
 
-.bar-value {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
+.target-background {
+  background-color: var(--bg-target);
 }
 
-.disabled-label {
-  color: var(--muted);
+.low-background {
+  background-color: var(--bg-low);
 }
 
-.disabled-rectangle {
-  background-color: var(--muted);
+.high {
+  color: var(--bg-high);
 }
 
-.line {
-  height: 5px;
-  background-color: var(--stat-disabled);
-  flex-grow: 1;
+.target {
+  color: var(--bg-target);
 }
 
-.percentage-symbol {
-  color: #727375;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 24px;
-  margin-left: auto;
-  margin-right: 2px;
-}
-
-.rectangle {
-  height: 32px;
-  border-radius: 2px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
-}
-
-.title {
-  margin-left: 4px;
+.low {
+  color: var(--bg-low);
 }

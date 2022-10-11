@@ -74,3 +74,8 @@ export const checkReadingsInRangeStatsWidgets = async () => {
   expect(statsWidgets.getByTestId('cbg-percentage-stat-veryLow-readingsInRange')).toHaveTextContent('533%')
   expect(statsWidgets.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
 }
+
+export const checkAverageGlucoseStatWidget = (expectedTextContent: string) => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
+  expect(statsWidgets.getByTestId('cbg-mean-stat-averageGlucose')).toHaveTextContent(expectedTextContent)
+}

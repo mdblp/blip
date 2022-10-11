@@ -35,6 +35,7 @@ import {
 import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import {
+  checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsTitle,
   checkReadingsInRangeStatsWidgets,
   checkTimeInRangeStatsTitle
@@ -55,6 +56,8 @@ describe('Trends view for anyone', () => {
       // Check the tooltips
       await checkTrendsTidelineContainerTooltips()
       await checkTrendsStatsWidgetsTooltips()
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL179')
     })
   })
 
@@ -75,6 +78,8 @@ describe('Trends view for anyone', () => {
 
       await checkReadingsInRangeStatsWidgets()
       await checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
     })
   })
 })
