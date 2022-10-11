@@ -96,6 +96,7 @@ class Stats extends React.Component {
             <CBGPercentageStats
               annotations={stat.annotations}
               data={stat.data.data}
+              hideToolTip={hideToolTips}
               total={stat.data.total.value}
               titleKey={stat.title}
               cbgStatType={stat.id}

@@ -33,6 +33,7 @@ import { CBGStatType, CBGPercentageData, StatLevel } from './models'
 export interface CBGPercentageStatsHookProps {
   cbgStatType: CBGStatType
   data: CBGPercentageData[]
+  hideToolTip: boolean
   titleKey: string
   total: number
 }
@@ -55,14 +56,14 @@ interface CBGPercentageStatsHookReturn {
 }
 
 export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): CBGPercentageStatsHookReturn => {
-  const { cbgStatType, data, titleKey, total } = props
+  const { cbgStatType, data, hideToolTip, titleKey, total } = props
   const { t } = useTranslation('main')
   const title = t(titleKey)
 
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
   const [titleProps, setTitleProps] = useState({
     legendTitle: '',
-    showTooltipIcon: true,
+    showTooltipIcon: !hideToolTip,
     title
   })
 
@@ -80,11 +81,11 @@ export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): C
   const onMouseLeave = useCallback(() => {
     setTitleProps({
       legendTitle: '',
-      showTooltipIcon: true,
+      showTooltipIcon: !hideToolTip,
       title
     })
     setHoveredStatId(null)
-  }, [title])
+  }, [hideToolTip, title])
 
   const getCBGPercentageStatsProps = useCallback((id: string) => {
     const stat = data.find(timeInRange => timeInRange.id === id)
