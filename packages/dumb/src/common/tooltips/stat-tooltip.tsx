@@ -31,7 +31,7 @@ import styles from './stat-tooltip.css'
 import { Tooltip, withStyles } from '@material-ui/core'
 
 interface StatTooltipProps {
-  annotations: []
+  annotations: string[]
   children: JSX.Element
 }
 

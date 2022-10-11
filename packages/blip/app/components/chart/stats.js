@@ -90,7 +90,6 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    console.log(stats)
     return stats.map(stat => {
       if (stat.id === CBGStatType.TimeInRange || stat.id === CBGStatType.ReadingsInRange) {
         return (
@@ -111,9 +110,9 @@ class Stats extends React.Component {
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
             <CBGMeanStat
-              annotations={stat.annotations}
               value={Math.round(stat.data.raw.averageGlucose)}
               title={stat.title}
+              tooltipValue={stat.annotations[0]}
               cbgStatType={stat.id}
               units={stat.units}
             />

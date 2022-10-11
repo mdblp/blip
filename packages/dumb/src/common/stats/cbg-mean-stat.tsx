@@ -34,16 +34,16 @@ import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../tooltips/stat-tooltip'
 
 export interface CBGMeanStatProps {
-  annotations: []
   cbgStatType: CBGStatType
   id: string
   title: string
+  tooltipValue: string
   units: string
   value: number
 }
 
-export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProps) => {
-  const { annotations, cbgStatType, id, title, units, value } = props
+const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProps) => {
+  const { cbgStatType, id, title, tooltipValue, units, value } = props
   const { t } = useTranslation('main')
 
   const computeValueBasedStyle = (): { leftDot: string, backgroundColor: string, color: string } => {
@@ -61,7 +61,6 @@ export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanS
   }
 
   const valueBasedStyles = computeValueBasedStyle()
-
   return (
     <Box
       data-testid={`cbg-stat-${id}-${cbgStatType}`}
@@ -71,7 +70,7 @@ export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanS
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <div>
           {title}
-          <StatTooltip annotations={annotations}>
+          <StatTooltip annotations={[tooltipValue]}>
               <span className={styles['tooltip-icon']}>
                 <img
                   data-testid="info-icon"
@@ -113,3 +112,5 @@ export const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanS
     </Box>
   )
 }
+
+export const CBGMeanStatMemoized = React.memo(CBGMeanStat)

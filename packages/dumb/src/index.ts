@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGMeanStat } from './common/stats/cbg-mean-stat'
+import { CBGMeanStatMemoized as CBGMeanStat } from './common/stats/cbg-mean-stat'
 import { CBGPercentageStatsMemoized as CBGPercentageStats } from './common/stats/cbg-percentage-stats'
 import { CBGStatType } from './common/stats/models'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
