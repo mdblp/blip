@@ -5,20 +5,15 @@ import bows from 'bows'
 import cx from 'classnames'
 import i18next from 'i18next'
 import { SizeMe } from 'react-sizeme'
-import { VictoryBar, VictoryContainer } from 'victory'
 import { Collapse } from 'react-collapse'
-
-import { MGDL_UNITS } from 'medical-domain'
 import { formatBgValue, formatDecimalNumber, formatPercentage } from '../../../utils/format'
 import { formatDuration } from '../../../utils/datetime'
 import { classifyBgValue, classifyCvValue, generateBgRangeLabels } from '../../../utils/bloodglucose'
-import { LBS_PER_KG, MGDL_CLAMP_TOP, MMOLL_CLAMP_TOP } from '../../../utils/constants'
+import { LBS_PER_KG } from '../../../utils/constants'
 import { statFormats, statTypes } from '../../../utils/stat'
 import styles from './Stat.css'
 import colors from '../../../styles/colors.css'
 import { bgPrefsPropType } from '../../../propTypes'
-import BgBar from './BgBar'
-import BgBarLabel from './BgBarLabel'
 import Lines from './Lines'
 import NoBar from './NoBar'
 import WheelPercent from './Wheel'
@@ -384,96 +379,14 @@ class Stat extends React.Component {
   }
 
   getChartPropsByType = props => {
-    const { type, data, bgPrefs: { bgUnits } } = props
+    const { type, data } = props
 
-    let barWidth
-    let domain
-    let height
-    let labelFontSize = 24
-    let chartLabelWidth = labelFontSize * 2.75
-    let padding
     let total
     let value
 
     const chartProps = this.getDefaultChartProps(props)
 
     switch (type) {
-      case 'barBg':
-        barWidth = 4
-        height = chartProps.height || barWidth * 6
-
-        domain = {
-          x: [0, bgUnits === MGDL_UNITS ? MGDL_CLAMP_TOP : MMOLL_CLAMP_TOP],
-          y: [0, 1]
-        }
-
-        padding = {
-          top: 10,
-          bottom: 10
-        }
-
-        _.assign(chartProps, {
-          alignment: 'middle',
-          containerComponent: <VictoryContainer responsive={false} />,
-          cornerRadius: { topLeft: 2, bottomLeft: 2, topRight: 2, bottomRight: 2 },
-          data: _.map(data.data, (d, i) => ({
-            x: i + 1,
-            y: d.value,
-            deviation: d.deviation,
-            eventKey: i
-          })),
-          dataComponent: (
-            <BgBar
-              barWidth={barWidth}
-              bgPrefs={props.bgPrefs}
-              chartLabelWidth={chartLabelWidth}
-              domain={domain}
-            />
-          ),
-          domain,
-          height,
-          horizontal: true,
-          labelComponent: (
-            <BgBarLabel
-              barWidth={barWidth}
-              bgPrefs={props.bgPrefs}
-              domain={domain}
-              text={(datum = {}) => {
-                const datumRef = _.get(props.data, `data.${datum.eventKey}`)
-                const { value } = this.formatDatum(
-                  _.get(datumRef, 'deviation', datumRef),
-                  props.dataFormat.label
-                )
-                return `${value}`
-              }}
-              tooltipText={(datum = {}) => {
-                const { value, suffix } = this.formatDatum(
-                  _.get(props.data, `data.${datum.eventKey}`),
-                  props.dataFormat.tooltip
-                )
-                return `${value}${suffix}`
-              }}
-            />
-          ),
-          padding,
-          renderer: VictoryBar,
-          style: {
-            data: {
-              fill: datum => this.getDatumColor(datum),
-              width: () => barWidth
-            },
-            labels: {
-              fill: datum => this.getDatumColor(_.assign({}, datum, this.formatDatum(
-                _.get(props.data, `data.${datum.eventKey}`),
-                props.dataFormat.label
-              ))),
-              fontSize: labelFontSize,
-              fontWeight: 500,
-              paddingLeft: chartLabelWidth
-            }
-          }
-        })
-        break
       case 'wheel':
         total = _.get(data, 'total.value', 0)
         value = _.get(data, 'data[1].value', 0)
