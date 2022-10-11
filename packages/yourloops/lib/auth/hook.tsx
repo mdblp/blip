@@ -40,6 +40,7 @@ import appConfig from '../config'
 import HttpService from '../../services/http'
 import UserApi from './user-api'
 import { availableLanguageCodes, changeLanguage, getCurrentLang } from '../language'
+import metrics from '../metrics'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -161,6 +162,7 @@ export function AuthContextImpl(): AuthContext {
         const { token, id } = await UserApi.getShorelineAccessToken()
         HttpService.shorelineAccessToken = token
         user.id = id
+        metrics.setUser(user)
       } catch (err) {
         console.log(err)
       }
@@ -184,6 +186,7 @@ export function AuthContextImpl(): AuthContext {
       }
       zendeskLogout()
       await auth0logout({ returnTo: window.location.origin })
+      metrics.resetUser()
     } catch (err) {
       log.error('logout', err)
     }

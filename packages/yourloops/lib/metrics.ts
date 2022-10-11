@@ -30,7 +30,7 @@ import _ from 'lodash'
 import bows from 'bows'
 
 import config from './config'
-import User from './auth/user'
+import { User } from './auth'
 
 type VariableScope = 'page' | 'visit'
 
@@ -54,7 +54,7 @@ const logWrongMetricsConfiguration = _.once(() => {
   log.error('Matomo do not seems to be available, wrong configuration')
 })
 
-function getVariableId(name: string, scope: VariableScope): {id: number, found: boolean } {
+function getVariableId(name: string, scope: VariableScope): { id: number, found: boolean } {
   let id = 1
   let found = false
   if (customVariables[scope].has(name)) {
