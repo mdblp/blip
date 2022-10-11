@@ -28,11 +28,11 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CBGPercentageProps } from './cbg-percentage-stat'
-import { CBGStatType, CBGTimeData, StatLevel } from './models'
+import { CBGStatType, CBGPercentageData, StatLevel } from './models'
 
 export interface CBGPercentageStatsHookProps {
   cbgStatType: CBGStatType
-  data: CBGTimeData[]
+  data: CBGPercentageData[]
   titleKey: string
   total: number
 }

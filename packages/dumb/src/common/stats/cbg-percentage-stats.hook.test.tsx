@@ -28,11 +28,11 @@
 import { act, renderHook } from '@testing-library/react-hooks/dom'
 import { CBGPercentageStatsHookProps, useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
 import { waitFor } from '@testing-library/dom'
-import { CBGStatType, CBGTimeData, StatLevel } from './models'
+import { CBGStatType, CBGPercentageData, StatLevel } from './models'
 
 describe('CBGPercentageStats hook', () => {
   const total = 1000
-  const createCBGTimeData = (id: StatLevel, legendTitle: string, title: string, value: number): CBGTimeData => {
+  const createCBGTimeData = (id: StatLevel, legendTitle: string, title: string, value: number): CBGPercentageData => {
     return { id, legendTitle, title, value }
   }
   const veryHighStat = createCBGTimeData(StatLevel.VeryHigh, 'fakeLegendTitle', 'fakeTitle', 100)

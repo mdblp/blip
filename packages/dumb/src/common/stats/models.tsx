@@ -3,7 +3,7 @@ export enum CBGStatType {
   ReadingsInRange = 'readingsInRange',
 }
 
-export interface CBGTimeData {
+export interface CBGPercentageData {
   id: StatLevel
   legendTitle: string
   title: string

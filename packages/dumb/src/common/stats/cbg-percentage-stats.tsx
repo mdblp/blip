@@ -30,14 +30,14 @@ import { CBGPercentageStatMemoized as CBGPercentageStat } from './cbg-percentage
 import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
-import { CBGStatType, CBGTimeData } from './models'
+import { CBGStatType, CBGPercentageData } from './models'
 import { StatLegend } from './stat-legend'
 import { Box } from '@material-ui/core'
 
 interface CBGPercentageStatsProps {
   annotations: []
   cbgStatType: CBGStatType
-  data: CBGTimeData[]
+  data: CBGPercentageData[]
   total: number
   titleKey: string
   units: string

@@ -29,7 +29,7 @@ import { renderHook } from '@testing-library/react-hooks/dom'
 import { CBGStatType } from './models'
 import { CBGPercentageStatHookProps, useCBGPercentageStat } from './cbg-percentage-stat.hook'
 
-describe('CBGTimeStat hook', () => {
+describe('CBGPercentageStat hook', () => {
   const onMouseLeaveMock = jest.fn()
   const onMouseOverMock = jest.fn()
   const defaultProps = {
