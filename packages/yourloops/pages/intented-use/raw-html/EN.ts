@@ -1,8 +1,8 @@
-import image1 from '../images/image1.png'
-import image2 from '../images/image2.png'
-import image3 from '../images/image3.png'
-import image4 from '../images/image4.png'
-import image5 from '../images/image5.png'
+import yourloopsLabel from '../images/yourloops-label.png'
+import diabeloopLogo from '../images/diabeloop-logo.png'
+import yourloopsLogo from '../images/yourloops-logo.png'
+import factory from '../images/factory.png'
+import ceMark from '../images/ce-mark.png'
 import appConfig from '../../../lib/config'
 
 const rawHtmlEN = `
@@ -351,8 +351,7 @@ const rawHtmlEN = `
     }
 
     .c25 {
-        margin-left: 70.9pt;
-        text-indent: -56.7pt
+        margin-left: 3rem;
     }
 
     .c13 {
@@ -444,7 +443,7 @@ const rawHtmlEN = `
   </style>
   <div class="c5 doc-content">
     <div>
-      <a href="/"><p class="c37"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 176.57px; height: 51.50px;"><img alt="" src="${image3}" style="width: 176.57px; height: 51.50px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p></a>
+      <a href="/"><p class="c37"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 176.57px; height: 51.50px;"><img alt="" src="${yourloopsLogo}" style="width: 176.57px; height: 51.50px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p></a>
     </div>
     <p class="c0"><span class="c21 c29"></span></p>
     <p class="c3"><span class="c30 c31">Intended Purpose and regulatory information</span></p>
@@ -458,7 +457,7 @@ const rawHtmlEN = `
     </p>
     <p class="c0"><span class="c15"></span></p>
     <p class="c0"><span class="c15"></span></p>
-    <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 494.00px; height: 99.00px;"><img alt="" src="${image1}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+    <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 494.00px; height: 99.00px;"><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
     <p class="c18"><span class="c10 c30">Intended purpose</span></p>
     <hr>
     <p class="c18"><span class="c1">&nbsp;</span></p>
@@ -489,21 +488,21 @@ const rawHtmlEN = `
     <tbody>
       <tr class="c35">
         <td class="c36" colspan="1" rowspan="1">
-          <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 79.54px; height: 82.00px;"><img alt="" src="${image4}" style="width: 79.54px; height: 82.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+          <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 79.54px; height: 82.00px;"><img alt="" src="${factory}" style="width: 79.54px; height: 82.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
           <p class="c3"><span class="c1">Diabeloop SA</span></p>
           <p class="c3"><span class="c17">1</span><span class="c17">55-15</span><span class="c17">7 </span><span class="c17">Cours Berriat</span></p>
           <p class="c3"><span class="c17">380</span><span class="c17">28</span><span class="c17">&nbsp;Grenoble</span><span class="c17">&nbsp;Cedex 1</span><span class="c1">&nbsp;France</span></p>
           <p class="c3"><span class="c17 c34"><a class="c13" href="mailto:contact@diabeloop.fr">contact@diabeloop.fr</a></span></p>
         </td>
         <td class="c14" colspan="1" rowspan="1">
-          <p class="c3 c25"><span class="c23">&nbsp; &nbsp; &nbsp; &nbsp;</span><span class="c17">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 180.50px; height: 95.34px;"><img alt="" src="${image5}" style="width: 180.50px; height: 95.34px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+          <p class="c3 c25"><span class="c23">&nbsp; &nbsp; &nbsp; &nbsp;</span><span class="c17">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 180.50px; height: 95.34px;"><img alt="" src="${ceMark}" style="width: 180.50px; height: 95.34px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
         </td>
       </tr>
     </tbody>
     </table>
     <p class="c0"><span class="c9"></span></p>
     <div>
-      <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 160.98px; height: 38.00px;"><img alt="" src="${image2}" style="width: 160.98px; height: 38.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+      <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 160.98px; height: 38.00px;"><img alt="" src="${diabeloopLogo}" style="width: 160.98px; height: 38.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
       <p class="c38"><span class="c21">YLPZ-RA-LAD-001-en-Rev</span><span class="c21">0</span><span class="c21">&nbsp;</span></p>
     </div>
   </div>

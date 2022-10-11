@@ -48,7 +48,7 @@ const COMPLETE_SIGNUP_PATH = '/complete-signup'
 const LOGIN_PATH = '/login'
 const INTENDED_USE_PATH = '/intended-use'
 const PUBLIC_ROUTES = [LOGIN_PATH]
-const ALL_ACCESS_ROUTES = [INTENDED_USE_PATH]
+const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
 const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, INTENDED_USE_PATH]
 
 interface StyleProps {
@@ -80,7 +80,7 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute)
-  const isCurrentRouteAlwaysAccessible = ALL_ACCESS_ROUTES.includes(currentRoute)
+  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(currentRoute)
   const theme = getTheme()
   const { palette } = useTheme()
   const classes = routeStyle({
