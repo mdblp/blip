@@ -25,18 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGMeanStatMemoized as CBGMeanStat } from './common/stats/cbg-mean/cbg-mean-stat'
-import { CBGPercentageStatsMemoized as CBGPercentageStats } from './common/stats/cbg-percentage/cbg-percentage-stats'
-import { CbgStandardDeviationMemoized as CbgStandardDeviation } from './common/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './common/stats/models'
-import { StatTooltip } from './common/tooltips/stat-tooltip'
-import Tooltip from './common/tooltips/tooltip'
+import styles from '../cbg-colors.css'
 
-export {
-  CBGMeanStat,
-  CBGPercentageStats,
-  CbgStandardDeviation,
-  CBGStatType,
-  StatTooltip,
-  Tooltip
+export interface CBGStandarDeviationHookReturn {
+  computeValueBasedStyle: Function
+}
+
+export const useCBGMeanStat = (): CBGStandarDeviationHookReturn => {
+  const computeValueBasedStyle = (value: number): { leftDot: string, backgroundColor: string, color: string } => {
+    if (value < 54) {
+      return { backgroundColor: styles['low-background'], color: styles['low-color'], leftDot: '0' }
+    } else if (value > 250) {
+      return { color: styles['high-color'], backgroundColor: styles['high-background'], leftDot: '234px' }
+    } else {
+      const widhtInPx = 234 // Width of the cbg bar
+      const cbgBarRange = 196 // Number of value included in the cbg bar range (from 54 to 250)
+      const nbOfValuesNotIncludedInRange = 54 // The first 54 values are not included in the range and should be deduced
+      return {
+        backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
+        color: value < 180 ? styles['target-color'] : styles['high-color'],
+        leftDot: `${Math.round(((value - nbOfValuesNotIncludedInRange) * widhtInPx) / cbgBarRange)}px`
+      }
+    }
+  }
+  return { computeValueBasedStyle }
 }

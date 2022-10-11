@@ -4,9 +4,8 @@ import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
-import { CBGPercentageStats, CBGStatType } from 'dumb'
+import { CBGMeanStat, CBGPercentageStats, CbgStandardDeviation, CBGStatType } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
-import { CBGMeanStat } from 'dumb/src'
 
 const { Stat } = vizComponents
 
@@ -90,6 +89,7 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
+    console.log(stats)
     return stats.map(stat => {
       if (stat.id === CBGStatType.TimeInRange || stat.id === CBGStatType.ReadingsInRange) {
         return (
@@ -110,10 +110,24 @@ class Stats extends React.Component {
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
             <CBGMeanStat
-              value={Math.round(stat.data.raw.averageGlucose)}
+              cbgStatType={stat.id}
               title={stat.title}
               tooltipValue={stat.annotations[0]}
+              units={stat.units}
+              value={Math.round(stat.data.raw.averageGlucose)}
+            />
+            <Divider variant="fullWidth" />
+          </div>
+        )
+      } else if (stat.id === CBGStatType.StandardDeviation) {
+        return (
+          <div key={stat.id} data-testid={`stat-${stat.id}`}>
+            <CbgStandardDeviation
+              averageGlucose={Math.round(stat.data.raw.averageGlucose)}
               cbgStatType={stat.id}
+              standardDeviation={Math.round(stat.data.raw.standardDeviation)}
+              title={stat.title}
+              tooltipValue={stat.annotations[0]}
               units={stat.units}
             />
             <Divider variant="fullWidth" />

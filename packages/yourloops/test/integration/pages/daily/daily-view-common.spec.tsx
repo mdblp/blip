@@ -41,7 +41,7 @@ import {
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 
-jest.setTimeout(10000)
+jest.setTimeout(15000)
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {

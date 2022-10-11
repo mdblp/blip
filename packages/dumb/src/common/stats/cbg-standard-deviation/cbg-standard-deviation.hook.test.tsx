@@ -25,18 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGMeanStatMemoized as CBGMeanStat } from './common/stats/cbg-mean/cbg-mean-stat'
-import { CBGPercentageStatsMemoized as CBGPercentageStats } from './common/stats/cbg-percentage/cbg-percentage-stats'
-import { CbgStandardDeviationMemoized as CbgStandardDeviation } from './common/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './common/stats/models'
-import { StatTooltip } from './common/tooltips/stat-tooltip'
-import Tooltip from './common/tooltips/tooltip'
+import { renderHook } from '@testing-library/react-hooks/dom'
+import { useCBGMeanStat } from './cbg-standard-deviation.hook'
 
-export {
-  CBGMeanStat,
-  CBGPercentageStats,
-  CbgStandardDeviation,
-  CBGStatType,
-  StatTooltip,
-  Tooltip
-}
+describe('CBGMeanStat hook', () => {
+  describe('computeValueBasedStyle', () => {
+    it('should return correct leftDot when value is < 54', () => {
+      const { result } = renderHook(() => useCBGMeanStat())
+      const computedStyle = result.current.computeValueBasedStyle(20)
+      expect(computedStyle.leftDot).toBe('0')
+    })
+
+    it('should return correct leftDot when value is > 250', () => {
+      const { result } = renderHook(() => useCBGMeanStat())
+      const computedStyle = result.current.computeValueBasedStyle(255)
+      expect(computedStyle.leftDot).toBe('234px')
+    })
+
+    it('should return correct leftDot when value is > 54 and < 250', () => {
+      const { result } = renderHook(() => useCBGMeanStat())
+      const computedStyle = result.current.computeValueBasedStyle(128)
+      expect(computedStyle.leftDot).toBe('88px')
+    })
+  })
+})
