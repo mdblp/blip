@@ -127,7 +127,7 @@ class Stats extends React.Component {
               cbgStatType={stat.id}
               standardDeviation={Math.round(stat.data.raw.standardDeviation)}
               title={stat.title}
-              tooltipValue={stat.annotations[0]}
+              annotations={stat.annotations}
               units={stat.units}
             />
             <Divider variant="fullWidth" />

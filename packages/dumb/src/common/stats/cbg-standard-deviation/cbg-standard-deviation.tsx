@@ -39,23 +39,21 @@ export interface CBGStandardDeviationProps {
   cbgStatType: CBGStatType
   standardDeviation: number
   title: string
-  tooltipValue: string
+  annotations: string[]
   units: string
 }
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props: CBGStandardDeviationProps) => {
-  const { averageGlucose, cbgStatType, title, tooltipValue, units, standardDeviation } = props
+  const { averageGlucose, cbgStatType, title, annotations, units, standardDeviation } = props
   const { t } = useTranslation('main')
 
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
 
-  const valueBasedStyles = useMemo(() => {
-    return {
-      min: computeCBGStyle(standardDeviationMin),
-      max: computeCBGStyle(standardDeviationMax)
-    }
-  }, [standardDeviationMax, standardDeviationMin])
+  const valueBasedStyles = useMemo(() => ({
+    min: computeCBGStyle(standardDeviationMin),
+    max: computeCBGStyle(standardDeviationMax)
+  }), [standardDeviationMax, standardDeviationMin])
 
   return (
     <Box
@@ -65,15 +63,19 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
     >
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <Box display="flex">
-          {title}&nbsp;
-          <span className={styles['title-value']}>
+          {title}
+          {standardDeviation && <>
+            &nbsp;
+            <span className={styles['title-value']}>
             {'( '}
-            <span className={valueBasedStyles.min.color}>{standardDeviationMin}</span>
-            {' - '}
-            <span className={valueBasedStyles.max.color}>{standardDeviationMax}</span>
-            {' )'}
+              <span className={valueBasedStyles.min.color}>{standardDeviationMin}</span>
+              {' - '}
+              <span className={valueBasedStyles.max.color}>{standardDeviationMax}</span>
+              {' )'}
           </span>
-          <StatTooltip annotations={[tooltipValue]}>
+          </>
+          }
+          <StatTooltip annotations={annotations}>
               <span className={styles['tooltip-icon']}>
                 <img
                   data-testid="info-icon"
