@@ -29,33 +29,33 @@ import React, { FunctionComponent } from 'react'
 import Link from '@material-ui/core/Link'
 import { Link as RouterLink } from 'react-router-dom'
 import Box from '@material-ui/core/Box'
-import { ClassNameMap } from '@material-ui/styles/withStyles'
 import { useTranslation } from 'react-i18next'
 import diabeloopUrls from '../../lib/diabeloop-url'
-import { useAuth } from '../../lib/auth'
+import { User } from '../../lib/auth'
+import { footerStyle } from './footer'
 
-const AccompanyingDocumentLinks: FunctionComponent<{ classes: ClassNameMap }> = ({ classes }) => {
+const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
   const { t, i18n } = useTranslation('yourloops')
-  const { user } = useAuth()
+  const { link, separator } = footerStyle()
 
   return (
     <React.Fragment>
       <Link
         id="footer-link-intended-use"
         component={RouterLink}
-        to={'/intended-use'}
-        className={classes.link}
+        to="/intended-use"
+        className={link}
       >
         {t('intended-use')}
       </Link>
-      <Box className={classes.separator}>|</Box>
+      <Box className={separator}>|</Box>
 
       <Link
         id="footer-link-url-training"
         target="_blank"
         href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)}
         rel="nofollow"
-        className={classes.link}
+        className={link}
       >
         {t('training')}
       </Link>

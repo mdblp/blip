@@ -24,29 +24,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import * as auth0Mock from '@auth0/auth0-react'
 import { createMemoryHistory } from 'history'
-import { Router } from 'react-router-dom'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
-import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { act, render, screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
+import { renderPageFromHistory } from '../../utils/render'
 
+jest.setTimeout(10000)
 describe('Intended use page', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
-
-  function getPage() {
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
 
   beforeAll(() => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
@@ -57,31 +46,22 @@ describe('Intended use page', () => {
   })
 
   it('should render intended use with the right selected language', () => {
-    render(getPage())
+    renderPageFromHistory(history)
     expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
     checkFooter()
 
     userEvent.click(screen.getByText('Intended Use'))
 
     expect(history.location.pathname).toEqual('/intended-use')
+    expect(screen.getByText('YourLoops, version 1.0.0, released on 2000-01-01')).toBeInTheDocument()
     expect(screen.getByText('Intended Purpose and regulatory information')).toBeInTheDocument()
     expect(screen.getByText('Legal Manufacturer')).toBeInTheDocument()
 
     act(() => {
       i18n.changeLanguage('fr')
     })
+    expect(screen.getByText('YourLoops, version 1.0.0, libérée le 2000-01-01')).toBeInTheDocument()
     expect(screen.getByText('Usage prévu et informations réglementaires')).toBeInTheDocument()
     expect(screen.getByText('Fabricant')).toBeInTheDocument()
-  })
-
-  it('should render the yourloops version and latest release date on all languages', () => {
-    history.location.pathname = '/intended-use'
-    render(getPage())
-    expect(screen.getByText('YourLoops, version 1.0.0, released on 2000-01-01')).toBeInTheDocument()
-
-    act(() => {
-      i18n.changeLanguage('fr')
-    })
-    expect(screen.getByText('YourLoops, version 1.0.0, libérée le 2000-01-01')).toBeInTheDocument()
   })
 })

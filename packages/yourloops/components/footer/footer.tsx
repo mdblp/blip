@@ -45,7 +45,7 @@ import diabeloopLabel from 'diabeloop-label.svg'
 import diabeloopLogo from 'diabeloop-logo.svg'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 
-const footerStyle = makeStyles((theme: Theme) => {
+export const footerStyle = makeStyles((theme: Theme) => {
   return {
     bySpan: {
       paddingLeft: '12px',
@@ -111,7 +111,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       marginBottom: '6px',
       width: '100%',
       [theme.breakpoints.down('sm')]: {
-        marginBottom: '0px'
+        marginBottom: '0'
       },
       [theme.breakpoints.down('xs')]: {
         flexWrap: 'wrap'
@@ -127,7 +127,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       },
       [theme.breakpoints.down('xs')]: {
         marginBottom: '15px',
-        marginTop: '0px',
+        marginTop: '0',
         width: '100%',
         justifyContent: 'center'
       }
@@ -145,7 +145,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       alignItems: 'center',
       [theme.breakpoints.down('xs')]: {
         marginBottom: '15px',
-        marginTop: '0px',
+        marginTop: '0',
         width: '100%',
         justifyContent: 'center'
       }
@@ -238,11 +238,11 @@ const Footer: FunctionComponent = () => {
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
             </Box>
-            <AccompanyingDocumentLinks classes={classes} />
+            <AccompanyingDocumentLinks user={user} />
           </Box>
         ) : (
           <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
-            <AccompanyingDocumentLinks classes={classes} />
+            <AccompanyingDocumentLinks user={user} />
             <Box className={classes.separator}>|</Box>
           </Box>
         )}

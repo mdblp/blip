@@ -80,7 +80,7 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute)
-  const hasAllAccess = ALL_ACCESS_ROUTES.includes(currentRoute)
+  const isCurrentRouteAlwaysAccessible = ALL_ACCESS_ROUTES.includes(currentRoute)
   const theme = getTheme()
   const { palette } = useTheme()
   const classes = routeStyle({
@@ -95,9 +95,9 @@ export function MainLobby(): JSX.Element {
   }
 
   const checkRedirect = (): void => {
-    if (currentRoute === LOGIN_PATH && isAuthenticated) {
+    if (isCurrentRoutePublic && isAuthenticated) {
       redirectTo = '/'
-    } else if (!isAuthenticated && !isCurrentRoutePublic && !hasAllAccess) {
+    } else if (!isAuthenticated && !isCurrentRoutePublic && !isCurrentRouteAlwaysAccessible) {
       redirectTo = '/login'
     } else if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
       redirectTo = '/complete-signup'

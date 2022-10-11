@@ -36,7 +36,6 @@ import { AuthContext, useAuth, User } from '../../../../lib/auth'
 import diabeloopUrls from '../../../../lib/diabeloop-url'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { triggerMouseEvent } from '../../common/utils'
 
 describe('Footer', () => {
   let auth: AuthContext = null
@@ -109,20 +108,6 @@ describe('Footer', () => {
   it('should training link redirect to correct url', async () => {
     await mountComponent()
     checkLinkHref('footer-link-url-training', diabeloopUrls.getTrainingUrl(i18n.language))
-  })
-
-  it('should intended use link redirect to /intended-use page when user is logged in', async () => {
-    await mountComponent()
-    const link = document.getElementById('footer-link-intended-use')
-    triggerMouseEvent('click', link)
-    expect(history.location.pathname).toBe('/intended-use')
-  })
-
-  it('should intended use link redirect to /intended-use page when user is not logged in', async () => {
-    await mountComponent({} as User)
-    const link = document.getElementById('footer-link-intended-use')
-    triggerMouseEvent('click', link)
-    expect(history.location.pathname).toBe('/intended-use')
   })
 
   it('should terms of use link redirect to correct url', async () => {
