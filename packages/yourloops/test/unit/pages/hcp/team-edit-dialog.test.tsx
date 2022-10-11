@@ -40,12 +40,12 @@ describe('TeamEditDialog', () => {
     teamToEdit: {
       team: {
         name: 'fakeTeamName',
-        phone: 'fakeTeamPhone',
+        phone: '0600000000',
         email: 'fake@team.email',
         address: {
           line1: 'fakeLine1',
           line2: 'fakeLine2',
-          zip: 'fakeZip',
+          zip: '38000',
           city: 'fakeCity',
           country: 'FR'
         }
@@ -62,8 +62,6 @@ describe('TeamEditDialog', () => {
     'team-edit-dialog-field-phone',
     'team-edit-dialog-field-email'
   ]
-  /** paths to be used with lodash.get(...) */
-  const textFieldTeamPath = ['name', 'address.line1', 'address.line2', 'address.zip', 'address.city', 'phone', 'email']
 
   let container: HTMLElement | null = null
 
@@ -98,10 +96,21 @@ describe('TeamEditDialog', () => {
 
   it('should fill fields when editing a team', () => {
     mountComponent()
-    textFieldIds.forEach((id: string, index: number) => {
-      const field: HTMLInputElement = document.getElementById(id) as HTMLInputElement
-      expect(field.value).toBe(_.get(defaultProps.teamToEdit.team, textFieldTeamPath[index]))
-    })
+    const nameField: HTMLInputElement = document.getElementById('team-edit-dialog-field-name') as HTMLInputElement
+    expect(nameField.value).toBe(defaultProps.teamToEdit.team.name)
+    const line1Field: HTMLInputElement = document.getElementById('team-edit-dialog-field-line1') as HTMLInputElement
+    expect(line1Field.value).toBe(defaultProps.teamToEdit.team.address.line1)
+    const line2Field: HTMLInputElement = document.getElementById('team-edit-dialog-field-line2') as HTMLInputElement
+    expect(line2Field.value).toBe(defaultProps.teamToEdit.team.address.line2)
+    const zipField: HTMLInputElement = document.getElementById('team-edit-dialog-field-zip') as HTMLInputElement
+    expect(zipField.value).toBe(defaultProps.teamToEdit.team.address.zip)
+    const emailField: HTMLInputElement = document.getElementById('team-edit-dialog-field-email') as HTMLInputElement
+    expect(emailField.value).toBe(defaultProps.teamToEdit.team.email)
+    const cityField: HTMLInputElement = document.getElementById('team-edit-dialog-field-city') as HTMLInputElement
+    expect(cityField.value).toBe(defaultProps.teamToEdit.team.address.city)
+    const phoneField: HTMLInputElement = document.getElementById('team-edit-dialog-field-phone') as HTMLInputElement
+    expect(phoneField.value).toBe(defaultProps.teamToEdit.team.phone)
+
     expect((document.getElementById('team-edit-dialog-button-validate') as HTMLButtonElement).disabled).toBeFalsy()
   })
 
