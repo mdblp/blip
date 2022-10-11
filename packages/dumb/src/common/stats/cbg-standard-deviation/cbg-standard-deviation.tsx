@@ -32,7 +32,7 @@ import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip'
-import { useCBGMeanStat } from './cbg-standard-deviation.hook'
+import { computeCBGStyle } from '../cbg-utils'
 
 export interface CBGStandardDeviationProps {
   averageGlucose: number
@@ -47,16 +47,15 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
   const { averageGlucose, cbgStatType, title, tooltipValue, units, standardDeviation } = props
   const { t } = useTranslation('main')
 
-  const { computeValueBasedStyle } = useCBGMeanStat()
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
 
   const valueBasedStyles = useMemo(() => {
     return {
-      min: computeValueBasedStyle(standardDeviationMin),
-      max: computeValueBasedStyle(standardDeviationMax)
+      min: computeCBGStyle(standardDeviationMin),
+      max: computeCBGStyle(standardDeviationMax)
     }
-  }, [computeValueBasedStyle, standardDeviationMax, standardDeviationMin])
+  }, [standardDeviationMax, standardDeviationMin])
 
   return (
     <Box
@@ -104,11 +103,11 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               <div className={`${styles.line} ${styles['line-high']}`} />
               <div
                 className={`${styles.dot} ${valueBasedStyles.min.backgroundColor}`}
-                style={{ left: valueBasedStyles.min.leftDot }}
+                style={{ left: valueBasedStyles.min.left }}
               />
               <div
                 className={`${styles.dot} ${valueBasedStyles.max.backgroundColor}`}
-                style={{ left: valueBasedStyles.max.leftDot }}
+                style={{ left: valueBasedStyles.max.left }}
               />
             </div>
             <Box className={styles.value} fontSize="24px" marginLeft="auto" marginRight="4px">

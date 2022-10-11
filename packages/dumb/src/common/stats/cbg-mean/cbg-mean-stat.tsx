@@ -32,7 +32,7 @@ import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip'
-import { useCBGMeanStat } from './cbg-mean-stat.hook'
+import { computeCBGStyle } from '../cbg-utils'
 
 export interface CBGMeanStatProps {
   cbgStatType: CBGStatType
@@ -46,11 +46,9 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProp
   const { cbgStatType, title, tooltipValue, units, value } = props
   const { t } = useTranslation('main')
 
-  const { computeValueBasedStyle } = useCBGMeanStat()
-
   const valueBasedStyles = useMemo(() => {
-    return computeValueBasedStyle(value)
-  }, [computeValueBasedStyle, value])
+    return computeCBGStyle(value)
+  }, [value])
 
   return (
     <Box
@@ -91,7 +89,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProp
               <div className={`${styles.line} ${styles['line-high']}`} />
               <div
                 className={`${styles.dot} ${valueBasedStyles.backgroundColor}`}
-                style={{ left: valueBasedStyles.leftDot }}
+                style={{ left: valueBasedStyles.left }}
               />
             </div>
             <Box className={valueBasedStyles.color} fontSize="24px" marginLeft="auto" marginRight="4px">

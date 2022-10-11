@@ -25,27 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks/dom'
-import { useCBGMeanStat } from './cbg-standard-deviation.hook'
+import { computeCBGStyle } from './cbg-utils'
 
-describe('CBGMeanStat hook', () => {
-  describe('computeValueBasedStyle', () => {
-    it('should return correct leftDot when value is < 54', () => {
-      const { result } = renderHook(() => useCBGMeanStat())
-      const computedStyle = result.current.computeValueBasedStyle(20)
-      expect(computedStyle.leftDot).toBe('0')
+describe('CBGUtils', () => {
+  describe('computeCBGStyle', () => {
+    it('should return correct left when value is < 54', () => {
+      const computedStyle = computeCBGStyle(20)
+      expect(computedStyle.left).toBe('0')
     })
 
-    it('should return correct leftDot when value is > 250', () => {
-      const { result } = renderHook(() => useCBGMeanStat())
-      const computedStyle = result.current.computeValueBasedStyle(255)
-      expect(computedStyle.leftDot).toBe('234px')
+    it('should return correct left when value is > 250', () => {
+      const computedStyle = computeCBGStyle(255)
+      expect(computedStyle.left).toBe('234px')
     })
 
-    it('should return correct leftDot when value is > 54 and < 250', () => {
-      const { result } = renderHook(() => useCBGMeanStat())
-      const computedStyle = result.current.computeValueBasedStyle(128)
-      expect(computedStyle.leftDot).toBe('88px')
+    it('should return correct left when value is > 54 and < 250', () => {
+      const computedStyle = computeCBGStyle(128)
+      expect(computedStyle.left).toBe('88px')
     })
   })
 })
