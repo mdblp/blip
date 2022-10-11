@@ -25,28 +25,67 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import styles from './cbg-colors.css'
+@import "../../../styles/colors.css";
 
-export interface CBGMeanStatHookReturn {
-  computeValueBasedStyle: Function
+.dot {
+  height: 13px;
+  width: 13px;
+  border-radius: 20px;
+  position: absolute;
+  margin-top: 5px;
 }
 
-export const useCBGMeanStat = (): CBGMeanStatHookReturn => {
-  const computeValueBasedStyle = (value: number): { leftDot: string, backgroundColor: string, color: string } => {
-    if (value < 54) {
-      return { backgroundColor: styles['low-background'], color: styles['low-color'], leftDot: '0' }
-    } else if (value > 250) {
-      return { color: styles['high-color'], backgroundColor: styles['high-background'], leftDot: '234px' }
-    } else {
-      const widhtInPx = 234 // Width of the cbg bar
-      const cbgBarRange = 196 // Number of value included in the cbg bar range (from 54 to 250)
-      const nbOfValuesNotIncludedInRange = 54 // The first 54 values are not included in the range and should be deduced
-      return {
-        backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
-        color: value < 180 ? styles['target-color'] : styles['high-color'],
-        leftDot: `${Math.round(((value - nbOfValuesNotIncludedInRange) * widhtInPx) / cbgBarRange)}px`
-      }
-    }
-  }
-  return { computeValueBasedStyle }
+.disabled-label {
+  color: var(--muted);
+}
+
+.disabled-line {
+  background-color: var(--muted);
+  border-radius: 20px;
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 234px;
+}
+
+.line {
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  opacity: 0.5;
+}
+
+.lines {
+  display: flex;
+  position: relative;
+  width: 234px;
+}
+
+.line-low {
+  background-color: var(--bg-low);
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  width: 19px;
+}
+
+.line-target {
+  background-color: var(--bg-target);
+  width: 131px;
+}
+
+.line-high {
+  background-color: var(--bg-high);
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  flex-grow: 1;
+}
+
+.tooltip-icon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
+}
+
+.tooltip-icon > img {
+  width: 0.9em;
 }

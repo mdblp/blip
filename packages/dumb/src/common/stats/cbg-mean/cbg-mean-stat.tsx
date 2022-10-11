@@ -26,12 +26,12 @@
  */
 
 import React, { FunctionComponent, useMemo } from 'react'
-import { CBGStatType } from './models'
+import { CBGStatType } from '../models'
 import styles from './cbg-mean-stat.css'
 import { Box } from '@material-ui/core'
-import InfoIcon from './assets/info-outline-24-px.svg'
+import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
-import { StatTooltip } from '../tooltips/stat-tooltip'
+import { StatTooltip } from '../../tooltips/stat-tooltip'
 import { useCBGMeanStat } from './cbg-mean-stat.hook'
 
 export interface CBGMeanStatProps {

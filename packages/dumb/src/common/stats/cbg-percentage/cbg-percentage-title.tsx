@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useRef } from 'react'
+import React, { FunctionComponent } from 'react'
 import styles from './cbg-percentage-title.css'
-import cbgColorsStyles from './cbg-colors.css'
-import InfoIcon from './assets/info-outline-24-px.svg'
-import { StatTooltip } from '../tooltips/stat-tooltip'
+import cbgColorsStyles from '../cbg-colors.css'
+import InfoIcon from '../assets/info-outline-24-px.svg'
+import { StatTooltip } from '../../tooltips/stat-tooltip'
 import { useTranslation } from 'react-i18next'
-import { StatLevel } from './models'
+import { StatLevel } from '../models'
 
 interface CBGPercentageTitleProps {
   annotations: []
@@ -43,17 +43,13 @@ interface CBGPercentageTitleProps {
 
 const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: CBGPercentageTitleProps) => {
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
-  const { t } = useTranslation('main')
-
-  const elementRef = useRef<HTMLImageElement>(null)
-  const parentRef = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation('ma  ')
 
   return (
     <>
       <div
         data-testid="cbg-percentage-title"
         className={styles.title}
-        ref={parentRef}
       >
         {title}
         {hoveredStatId &&
@@ -74,7 +70,6 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props: C
                 data-testid="info-icon"
                 src={InfoIcon}
                 alt={t('img-alt-hover-for-more-info')}
-                ref={elementRef}
               />
             </span>
           </StatTooltip>

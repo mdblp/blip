@@ -28,7 +28,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CBGPercentageProps } from './cbg-percentage-stat'
-import { CBGStatType, CBGPercentageData, StatLevel } from './models'
+import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
 
 export interface CBGPercentageStatsHookProps {
   cbgStatType: CBGStatType
@@ -39,27 +39,16 @@ export interface CBGPercentageStatsHookProps {
 }
 
 interface CBGPercentageStatsHookReturn {
-  cbgStatsProps: {
-    veryHighStat: CBGPercentageProps
-    highStat: CBGPercentageProps
-    targetStat: CBGPercentageProps
-    lowStat: CBGPercentageProps
-    veryLowStat: CBGPercentageProps
-  }
+  cbgStatsProps: { veryHighStat: CBGPercentageProps, highStat: CBGPercentageProps, targetStat: CBGPercentageProps, lowStat: CBGPercentageProps, veryLowStat: CBGPercentageProps }
   hoveredStatId: StatLevel | null
   onMouseLeave: Function
-  titleProps: {
-    legendTitle: string
-    showTooltipIcon: boolean
-    title: string
-  }
+  titleProps: { legendTitle: string, showTooltipIcon: boolean, title: string }
 }
 
 export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): CBGPercentageStatsHookReturn => {
   const { cbgStatType, data, hideToolTip, titleKey, total } = props
   const { t } = useTranslation('main')
   const title = t(titleKey)
-
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
   const [titleProps, setTitleProps] = useState({
     legendTitle: '',
@@ -69,15 +58,10 @@ export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): C
 
   const onStatMouseover = useCallback((id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => {
     if (hasValues) {
-      setTitleProps({
-        legendTitle,
-        showTooltipIcon: false,
-        title: `${title}`
-      })
+      setTitleProps({ legendTitle, showTooltipIcon: false, title: `${title}` })
       setHoveredStatId(id)
     }
   }, [])
-
   const onMouseLeave = useCallback(() => {
     setTitleProps({
       legendTitle: '',
@@ -103,7 +87,6 @@ export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): C
       value: stat.value
     }
   }, [cbgStatType, data, hoveredStatId, onStatMouseover, total])
-
   const cbgStatsProps = useMemo(() => ({
     veryHighStat: getCBGPercentageStatsProps(StatLevel.VeryHigh),
     highStat: getCBGPercentageStatsProps(StatLevel.High),
@@ -111,16 +94,10 @@ export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): C
     lowStat: getCBGPercentageStatsProps(StatLevel.Low),
     veryLowStat: getCBGPercentageStatsProps(StatLevel.VeryLow)
   }), [getCBGPercentageStatsProps])
-
   return useMemo(() => ({
     cbgStatsProps,
     onMouseLeave,
     hoveredStatId,
     titleProps
-  }), [
-    cbgStatsProps,
-    onMouseLeave,
-    hoveredStatId,
-    titleProps
-  ])
+  }), [cbgStatsProps, onMouseLeave, hoveredStatId, titleProps])
 }

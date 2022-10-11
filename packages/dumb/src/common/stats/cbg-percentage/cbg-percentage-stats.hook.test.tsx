@@ -28,7 +28,7 @@
 import { act, renderHook } from '@testing-library/react-hooks/dom'
 import { CBGPercentageStatsHookProps, useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
 import { waitFor } from '@testing-library/dom'
-import { CBGStatType, CBGPercentageData, StatLevel } from './models'
+import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
 
 describe('CBGPercentageStats hook', () => {
   const total = 1000
