@@ -18,6 +18,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1740 Make HTTP calls to back instead of computing data in the front
 - YLP-1754 Patient list not updated after accept invitation
 - YLP-1767 Create package to migrate viz components
+- YLP-1797 Make it possible to see what role the users are logged in with matomo
 - YLP-1834 Migrate time in range stats
 ### Fixed
 - YLP-1634 Fix missing UTs
