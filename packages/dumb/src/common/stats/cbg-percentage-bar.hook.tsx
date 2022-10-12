@@ -58,13 +58,14 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
 
   const barValue = useMemo(() => {
-    if (type === CBGStatType.TimeInRange) {
-      return formatDuration(value, { condensed: true })
-    } else if (type === CBGStatType.ReadingsInRange) {
-      return value.toString()
-    } else {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      throw Error(`Unknown stat type ${type}`)
+    switch (type) {
+      case CBGStatType.TimeInRange:
+        return formatDuration(value, { condensed: true })
+      case CBGStatType.ReadingsInRange:
+        return value.toString()
+      default:
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        throw Error(`Unknown stat type ${type}`)
     }
   }, [type, value])
 
