@@ -30,14 +30,14 @@ import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
-  checkDailyTimeInRangeStatsWidgets
+  checkDailyTimeInRangeStatsWidgets, checkSMBGDailyStatsWidgetsTooltips
 } from '../../assert/daily'
 import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import {
+  checkReadingsInRangeStatsWidgets,
   checkAverageGlucoseStatWidget,
-  checkReadingsInRangeStatsTitle,
-  checkReadingsInRangeStatsWidgets, checkStandardDeviationStatWidget,
+  checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import { screen } from '@testing-library/react'
@@ -73,10 +73,11 @@ describe('Daily view for anyone', () => {
       renderPage('/daily')
 
       await checkReadingsInRangeStatsWidgets()
-      await checkReadingsInRangeStatsTitle()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
       expect(screen.queryByTestId('cbg-standard-deviation-stat')).not.toBeInTheDocument()
+
+      await checkSMBGDailyStatsWidgetsTooltips()
     })
   })
 })

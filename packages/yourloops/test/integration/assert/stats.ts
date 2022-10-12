@@ -28,8 +28,6 @@
 import userEvent from '@testing-library/user-event'
 import { BoundFunctions, queries, screen, waitFor, within } from '@testing-library/react'
 
-const READING_IN_RANGE_STAT_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'
-
 export const checkStatTooltip = async (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
   const element = statsWidgets.getByText(infoIconLabel)
   const infoIcon = within(element).getByTestId('info-icon')
@@ -55,9 +53,8 @@ export const checkTimeInRangeStatsTitle = () => {
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryLow-timeInRange', 'Time Below Range ( <54 )')
 }
 
-export const checkReadingsInRangeStatsTitle = async (infoIconLabel = 'Readings In Range') => {
+export const checkReadingsInRangeStats = () => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  await checkStatTooltip(statsWidgets, infoIconLabel, READING_IN_RANGE_STAT_TOOLTIP)
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryHigh-readingsInRange', 'Readings Above Range ( >250 )')
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-high-readingsInRange', 'Readings Above Range ( 180-250 )')
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-target-readingsInRange', 'Readings In Range ( 70-180 )')

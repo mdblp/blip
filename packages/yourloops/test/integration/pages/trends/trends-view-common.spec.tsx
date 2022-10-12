@@ -28,6 +28,7 @@
 import { mockPatientLogin } from '../../mock/auth'
 import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import {
+  checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
@@ -36,8 +37,9 @@ import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewD
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
-  checkReadingsInRangeStatsTitle,
-  checkReadingsInRangeStatsWidgets, checkStandardDeviationStatWidget,
+  checkReadingsInRangeStats,
+  checkReadingsInRangeStatsWidgets,
+  checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 
@@ -79,7 +81,9 @@ describe('Trends view for anyone', () => {
       renderPage('/trends')
 
       await checkReadingsInRangeStatsWidgets()
-      await checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
+      checkReadingsInRangeStats()
+
+      await checkSMBGTrendsStatsWidgetsTooltips()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
 
