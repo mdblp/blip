@@ -34,10 +34,13 @@ import i18n from 'i18next'
 import Footer from '../../../../components/footer/footer'
 import { AuthContext, useAuth, User } from '../../../../lib/auth'
 import diabeloopUrls from '../../../../lib/diabeloop-url'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 
 describe('Footer', () => {
   let auth: AuthContext = null
   let container: HTMLElement | null = null
+  const history = createMemoryHistory({ initialEntries: ['/'] })
 
   const FooterLinksComponent = (data: { user: User }): JSX.Element => {
     auth = useAuth()
@@ -52,7 +55,9 @@ describe('Footer', () => {
     await act(() => {
       return new Promise((resolve) => {
         render(
-          <FooterLinksComponent user={user} />, container, resolve)
+          <Router history={history}>
+            <FooterLinksComponent user={user} />
+          </Router>, container, resolve)
       })
     })
   }
@@ -81,12 +86,10 @@ describe('Footer', () => {
     expect(component).not.toBeNull()
   })
 
-  it('should render language selector and accompanying document selector when user is not logged in', async () => {
+  it('should render language selector when user is not logged in', async () => {
     await mountComponent()
     const languageSelector = document.getElementById('footer-language-box')
-    const documentSelector = document.getElementById('footer-accompanying-documents-box')
     expect(languageSelector).not.toBeNull()
-    expect(documentSelector).not.toBeNull()
   })
 
   it('should not render language selector when user is logged in', async () => {
@@ -100,6 +103,11 @@ describe('Footer', () => {
   it('should privacy policy link redirect to correct url', async () => {
     await mountComponent()
     checkLinkHref('footer-link-url-privacy-policy', diabeloopUrls.getPrivacyPolicyUrL(i18n.language))
+  })
+
+  it('should training link redirect to correct url', async () => {
+    await mountComponent()
+    checkLinkHref('footer-link-url-training', diabeloopUrls.getTrainingUrl(i18n.language))
   })
 
   it('should terms of use link redirect to correct url', async () => {

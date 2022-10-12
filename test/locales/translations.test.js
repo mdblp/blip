@@ -131,7 +131,8 @@ const ignoredTransKeyForYourLoops = [
   'no-new-messages',
   'training',
   'initial-hba1c',
-  'optional'
+  'optional',
+  'training-body'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

@@ -41,6 +41,8 @@ const defaultConfig: AppConfig = {
   API_HOST: `${window.location.protocol}//${window.location.hostname}:8009`,
   DOMAIN_NAME: window.location.hostname,
   LATEST_TERMS: '1970-01-01',
+  LATEST_TRAINING: '1970-01-01',
+  LATEST_RELEASE: '2022-03-03',
   SUPPORT_WEB_ADDRESS: DUMMY_URL,
   ASSETS_URL: DUMMY_URL,
   BRANDING: 'diabeloop_blue',
