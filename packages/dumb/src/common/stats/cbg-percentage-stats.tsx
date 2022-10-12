@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { CBGPercentageStatMemoized as CBGPercentageStat } from './cbg-percentage-stat'
+import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-bar'
 import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
@@ -63,11 +63,11 @@ const CBGPercentageStats: FunctionComponent<CBGPercentageStatsProps> = (props: C
           {...titleProps}
         />
         <Box className={styles.stats} onMouseLeave={() => onMouseLeave()} marginLeft="8px">
-          <CBGPercentageStat {...cbgStatsProps.veryHighStat} />
-          <CBGPercentageStat {...cbgStatsProps.highStat} />
-          <CBGPercentageStat {...cbgStatsProps.targetStat} />
-          <CBGPercentageStat {...cbgStatsProps.lowStat} />
-          <CBGPercentageStat {...cbgStatsProps.veryLowStat} />
+          <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
+          <CBGPercentageBar {...cbgStatsProps.highStat} />
+          <CBGPercentageBar {...cbgStatsProps.targetStat} />
+          <CBGPercentageBar {...cbgStatsProps.lowStat} />
+          <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
         </Box>
       </div>
       <div className={styles['stat-footer']} />

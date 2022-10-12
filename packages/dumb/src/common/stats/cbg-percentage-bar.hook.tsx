@@ -26,19 +26,19 @@
  */
 
 import { useMemo } from 'react'
-import cbgTimeStatStyles from './cbg-percentage-stat.css'
+import cbgTimeStatStyles from './cbg-percentage-bar.css'
 import { formatDuration } from '../../utils/datetime'
 import { CBGStatType } from './models'
 
-export interface CBGPercentageStatHookProps {
-  cbgStatType: CBGStatType
+export interface CBGPercentageBarHookProps {
+  type: CBGStatType
   id: string
   isDisabled: boolean
   total: number
   value: number
 }
 
-interface CBGPercentageStatHookReturn {
+interface CBGPercentageBarHookReturn {
   barClasses: string
   barValue: string
   hasValues: boolean
@@ -47,8 +47,8 @@ interface CBGPercentageStatHookReturn {
   rectangleClasses: string
 }
 
-export const useCBGPercentageStat = (props: CBGPercentageStatHookProps): CBGPercentageStatHookReturn => {
-  const { cbgStatType, id, isDisabled, total, value } = props
+export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercentageBarHookReturn => {
+  const { type, id, isDisabled, total, value } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
   const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : cbgTimeStatStyles[`${id}-background`]
@@ -58,15 +58,15 @@ export const useCBGPercentageStat = (props: CBGPercentageStatHookProps): CBGPerc
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
 
   const barValue = useMemo(() => {
-    if (cbgStatType === CBGStatType.TimeInRange) {
+    if (type === CBGStatType.TimeInRange) {
       return formatDuration(value, { condensed: true })
-    } else if (cbgStatType === CBGStatType.ReadingsInRange) {
+    } else if (type === CBGStatType.ReadingsInRange) {
       return value.toString()
     } else {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      throw Error(`Unknown stat type ${cbgStatType}`)
+      throw Error(`Unknown stat type ${type}`)
     }
-  }, [cbgStatType, value])
+  }, [type, value])
 
   return useMemo(() => ({
     barValue,
