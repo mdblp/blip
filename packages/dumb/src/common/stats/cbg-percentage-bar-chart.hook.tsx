@@ -27,18 +27,18 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGPercentageProps } from './cbg-percentage-stat'
-import { CBGStatType, CBGPercentageData, StatLevel } from './models'
+import { CBGPercentageProps } from './cbg-percentage-bar'
+import { CBGPercentageData, CBGStatType, StatLevel } from './models'
 
-export interface CBGPercentageStatsHookProps {
-  cbgStatType: CBGStatType
+export interface CBGPercentageBarChartHookProps {
+  type: CBGStatType
   data: CBGPercentageData[]
   hideToolTip: boolean
   titleKey: string
   total: number
 }
 
-interface CBGPercentageStatsHookReturn {
+interface CBGPercentageBarChartHookReturn {
   cbgStatsProps: {
     veryHighStat: CBGPercentageProps
     highStat: CBGPercentageProps
@@ -55,8 +55,8 @@ interface CBGPercentageStatsHookReturn {
   }
 }
 
-export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): CBGPercentageStatsHookReturn => {
-  const { cbgStatType, data, hideToolTip, titleKey, total } = props
+export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
+  const { type, data, hideToolTip, titleKey, total } = props
   const { t } = useTranslation('main')
   const title = t(titleKey)
 
@@ -93,7 +93,7 @@ export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): C
       throw Error(`Could not find stat with id ${id}`)
     }
     return {
-      cbgStatType,
+      type,
       id: stat.id,
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
       legendTitle: stat.legendTitle,
@@ -102,7 +102,7 @@ export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): C
       total,
       value: stat.value
     }
-  }, [cbgStatType, data, hoveredStatId, onStatMouseover, total])
+  }, [type, data, hoveredStatId, onStatMouseover, total])
 
   const cbgStatsProps = useMemo(() => ({
     veryHighStat: getCBGPercentageStatsProps(StatLevel.VeryHigh),

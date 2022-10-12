@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGPercentageStatsMemoized as CBGPercentageStats } from './common/stats/cbg-percentage-stats'
+import { CBGPercentageBarChartMemoized as CBGPercentageBarChart } from './common/stats/cbg-percentage-bar-chart'
 import { CBGStatType } from './common/stats/models'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
 import Tooltip from './common/tooltips/tooltip'
 
 export {
-  CBGPercentageStats,
+  CBGPercentageBarChart,
   CBGStatType,
   StatTooltip,
   Tooltip
