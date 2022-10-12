@@ -40,6 +40,7 @@ import {
   checkReadingsInRangeStatsWidgets, checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
+import { screen } from '@testing-library/react'
 
 jest.setTimeout(15000)
 
@@ -75,7 +76,7 @@ describe('Daily view for anyone', () => {
       await checkReadingsInRangeStatsTitle()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
-      checkStandardDeviationStatWidget('Avg. Glucose (BGM)mg/dL101')
+      expect(screen.queryByTestId('cbg-standard-deviation-stat')).not.toBeInTheDocument()
     })
   })
 })

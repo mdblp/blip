@@ -38,19 +38,19 @@ interface CBGPercentageStatsProps {
   annotations: []
   cbgStatType: CBGStatType
   data: CBGPercentageData[]
-  hideToolTip: boolean
+  hideTooltip: boolean
   total: number
   titleKey: string
   units: string
 }
 
 const CBGPercentageStats: FunctionComponent<CBGPercentageStatsProps> = (props: CBGPercentageStatsProps) => {
-  const { annotations, cbgStatType, data, hideToolTip, titleKey, total, units } = props
+  const { annotations, cbgStatType, data, hideTooltip, titleKey, total, units } = props
 
   const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCbgPercentageStatsHook({
     cbgStatType,
     data,
-    hideToolTip,
+    hideTooltip,
     titleKey,
     total
   })

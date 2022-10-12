@@ -89,7 +89,6 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    console.log(stats)
     return stats.map(stat => {
       if (stat.id === CBGStatType.TimeInRange || stat.id === CBGStatType.ReadingsInRange) {
         return (
@@ -97,7 +96,7 @@ class Stats extends React.Component {
             <CBGPercentageStats
               annotations={stat.annotations}
               data={stat.data.data}
-              hideToolTip={hideToolTips}
+              hideTooltip={hideToolTips}
               total={stat.data.total.value}
               titleKey={stat.title}
               cbgStatType={stat.id}
@@ -110,7 +109,7 @@ class Stats extends React.Component {
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
             <CBGMeanStat
-              hideToolTip={hideToolTips}
+              hideTooltip={hideToolTips}
               title={stat.title}
               tooltipValue={stat.annotations[0]}
               units={stat.units}
@@ -125,7 +124,7 @@ class Stats extends React.Component {
             <CbgStandardDeviation
               annotations={stat.annotations}
               averageGlucose={Math.round(stat.data.raw.averageGlucose)}
-              hideToolTip={hideToolTips}
+              hideTooltip={hideToolTips}
               standardDeviation={Math.round(stat.data.raw.standardDeviation)}
               title={stat.title}
               units={stat.units}

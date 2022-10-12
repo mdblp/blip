@@ -63,7 +63,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <Box display="flex">
           {title}
-          {standardDeviation && !hideTooltip && <>
+          {!Number.isNaN(standardDeviation) && !hideTooltip && <>
             &nbsp;
             <span className={styles['title-value']}>
             {'( '}
