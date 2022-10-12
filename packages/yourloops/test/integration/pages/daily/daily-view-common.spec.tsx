@@ -42,7 +42,7 @@ import {
 } from '../../assert/stats'
 import { screen } from '@testing-library/react'
 
-jest.setTimeout(15000)
+jest.setTimeout(20000)
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {
