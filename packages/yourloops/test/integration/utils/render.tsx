@@ -1,7 +1,7 @@
 import { Router } from 'react-router-dom'
 import { AuthContextProvider } from '../../../lib/auth'
 import { MainLobby } from '../../../app/main-lobby'
-import { createMemoryHistory } from 'history'
+import { createMemoryHistory, MemoryHistory } from 'history'
 import { act, render } from '@testing-library/react'
 import React from 'react'
 
@@ -15,11 +15,14 @@ function getMainLobby(history) {
   )
 }
 
-export const renderPage = (url: string) => {
-  const history = createMemoryHistory({ initialEntries: [url] })
-
+export const renderPageFromHistory = (history: MemoryHistory) => {
   act(() => {
     render(getMainLobby(history))
   })
+}
+
+export const renderPage = (url: string) => {
+  const history = createMemoryHistory({ initialEntries: [url] })
+  renderPageFromHistory(history)
   expect(history.location.pathname).toBe(url)
 }
