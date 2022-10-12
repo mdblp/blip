@@ -44,7 +44,8 @@ export const mockUserDataFetch = (firstName: string, lastName: string, userId = 
     lastName,
     fullName: `${firstName} ${lastName}`,
     termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-    privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true }
+    privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   } as Profile)
   jest.spyOn(UserApi, 'getPreferences').mockResolvedValue({} as Preferences)
   jest.spyOn(UserApi, 'getSettings').mockResolvedValue({} as Settings)

@@ -34,6 +34,8 @@ export interface AppConfig {
   DEV: boolean
   TEST: boolean
   LATEST_TERMS?: string
+  LATEST_TRAINING?: string
+  LATEST_RELEASE?: string
   SUPPORT_WEB_ADDRESS?: string
   ASSETS_URL?: string | null
   METRICS_SERVICE?: string | null

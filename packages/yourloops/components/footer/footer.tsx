@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@material-ui/core/Box'
@@ -35,7 +35,6 @@ import Link from '@material-ui/core/Link'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 import LanguageIcon from '@material-ui/icons/Language'
-import HelpOutlinedIcon from '@material-ui/icons/HelpOutlined'
 
 import LanguageSelector from '../language-select'
 import diabeloopUrls from '../../lib/diabeloop-url'
@@ -44,9 +43,9 @@ import config from '../../lib/config'
 import metrics from '../../lib/metrics'
 import diabeloopLabel from 'diabeloop-label.svg'
 import diabeloopLogo from 'diabeloop-logo.svg'
-import DocumentSelect from './document-select'
+import AccompanyingDocumentLinks from './accompanying-document-links'
 
-const footerStyle = makeStyles((theme: Theme) => {
+export const footerStyle = makeStyles((theme: Theme) => {
   return {
     bySpan: {
       paddingLeft: '12px',
@@ -108,10 +107,11 @@ const footerStyle = makeStyles((theme: Theme) => {
     firstLine: {
       display: 'flex',
       justifyContent: 'center',
+      alignItems: 'center',
       marginBottom: '6px',
       width: '100%',
       [theme.breakpoints.down('sm')]: {
-        marginBottom: '0px'
+        marginBottom: '0'
       },
       [theme.breakpoints.down('xs')]: {
         flexWrap: 'wrap'
@@ -127,7 +127,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       },
       [theme.breakpoints.down('xs')]: {
         marginBottom: '15px',
-        marginTop: '0px',
+        marginTop: '0',
         width: '100%',
         justifyContent: 'center'
       }
@@ -145,7 +145,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       alignItems: 'center',
       [theme.breakpoints.down('xs')]: {
         marginBottom: '15px',
-        marginTop: '0px',
+        marginTop: '0',
         width: '100%',
         justifyContent: 'center'
       }
@@ -210,7 +210,7 @@ const footerStyle = makeStyles((theme: Theme) => {
   }
 }, { name: 'footer-component-styles' })
 
-function Footer(): JSX.Element {
+const Footer: FunctionComponent = () => {
   const { t, i18n } = useTranslation('yourloops')
   const { user } = useAuth()
   const classes = footerStyle()
@@ -238,15 +238,11 @@ function Footer(): JSX.Element {
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
             </Box>
-            <Box id="footer-accompanying-documents-box" className={classes.firstLineElement}>
-              <HelpOutlinedIcon className={classes.icon} />
-              <DocumentSelect />
-            </Box>
+            <AccompanyingDocumentLinks user={user} />
           </Box>
         ) : (
           <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
-            <HelpOutlinedIcon className={classes.icon} />
-            <DocumentSelect user={user} />
+            <AccompanyingDocumentLinks user={user} />
             <Box className={classes.separator}>|</Box>
           </Box>
         )}
@@ -306,7 +302,7 @@ function Footer(): JSX.Element {
           {t('brand-name')}
           <Tooltip
             id="footer-link-tooltip-app-release-notes"
-            title={t('tooltip-release-notes') }
+            title={t('tooltip-release-notes')}
             aria-label={t('tooltip-release-notes')}
             placement="right-start"
           >
