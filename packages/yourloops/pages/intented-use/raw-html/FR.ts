@@ -86,33 +86,6 @@ const rawHtmlFR = `
         list-style-type: none
     }
 
-    ol {
-        margin: 0;
-        padding: 0
-    }
-
-    table td, table th {
-        padding: 0
-    }
-
-    .c14 {
-        border-right-style: solid;
-        padding: 5pt 5pt 5pt 5pt;
-        border-bottom-color: #3d9183;
-        border-top-width: 1pt;
-        border-right-width: 1pt;
-        border-left-color: #3d9183;
-        vertical-align: top;
-        border-right-color: #3d9183;
-        border-left-width: 1pt;
-        border-top-style: solid;
-        border-left-style: solid;
-        border-bottom-width: 1pt;
-        width: 228pt;
-        border-top-color: #3d9183;
-        border-bottom-style: solid
-    }
-
     .c36 {
         border-right-style: solid;
         padding: 5pt 5pt 5pt 5pt;
@@ -126,19 +99,8 @@ const rawHtmlFR = `
         border-top-style: solid;
         border-left-style: solid;
         border-bottom-width: 1pt;
-        width: 224.2pt;
         border-top-color: #3d9183;
         border-bottom-style: solid
-    }
-
-    .c20 {
-        color: #000000;
-        font-weight: 400;
-        text-decoration: none;
-        vertical-align: baseline;
-        font-size: 16pt;
-        font-family: "Arial";
-        font-style: normal
     }
 
     .c4 {
@@ -171,16 +133,6 @@ const rawHtmlFR = `
         font-style: normal
     }
 
-    .c8 {
-        color: #039be5;
-        font-weight: 700;
-        text-decoration: none;
-        vertical-align: baseline;
-        font-size: 14pt;
-        font-family: "Arial";
-        font-style: italic
-    }
-
     .c0 {
         padding-top: 0pt;
         padding-bottom: 0pt;
@@ -189,16 +141,6 @@ const rawHtmlFR = `
         widows: 2;
         text-align: left;
         height: 11pt
-    }
-
-    .c16 {
-        color: #000000;
-        font-weight: 400;
-        text-decoration: none;
-        vertical-align: baseline;
-        font-size: 11pt;
-        font-family: "Arial";
-        font-style: normal
     }
 
     .c15 {
@@ -284,26 +226,11 @@ const rawHtmlFR = `
         height: 11pt
     }
 
-    .c27 {
-        color: #000000;
-        text-decoration: none;
-        vertical-align: baseline;
-        font-family: "Arial";
-        font-style: normal
-    }
-
     .c38 {
         padding-top: 0pt;
         padding-bottom: 0pt;
         line-height: 1.0;
         text-align: right
-    }
-
-    .c24 {
-        margin-left: 0.8pt;
-        border-spacing: 0;
-        border-collapse: collapse;
-        margin-right: auto
     }
 
     .c31 {
@@ -350,10 +277,6 @@ const rawHtmlFR = `
         text-decoration: underline
     }
 
-    .c25 {
-        margin-left: 3rem;
-    }
-
     .c13 {
         color: inherit;
         text-decoration: inherit
@@ -378,10 +301,6 @@ const rawHtmlFR = `
         font-weight: 700
     }
 
-    .c35 {
-        height: 91.5pt
-    }
-
     .c28 {
         height: 11pt
     }
@@ -392,10 +311,6 @@ const rawHtmlFR = `
 
     .c21 {
         font-size: 9pt
-    }
-
-    .c23 {
-        font-size: 12pt
     }
 
     .title {
@@ -411,17 +326,16 @@ const rawHtmlFR = `
         text-align: left
     }
 
-    .subtitle {
-        padding-top: 0pt;
-        color: #666666;
-        font-size: 15pt;
-        padding-bottom: 16pt;
-        font-family: "Arial";
-        line-height: 1.15;
-        page-break-after: avoid;
-        orphans: 2;
-        widows: 2;
-        text-align: left
+    .flex-container {
+        display: flex;
+    }
+
+    .address-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 125px;
+        width: 50%;
     }
 
     li {
@@ -483,26 +397,26 @@ const rawHtmlFR = `
     <hr>
     <p class="c0"><span class="c2"></span></p>
     <p class="c0"><span class="c2"></span></p><a id="t.01dd871b06081fb0ac6b9fb856ac0aca41b364bf"></a><a id="t.0"></a>
-    <table class="c24">
-    <tbody>
-      <tr class="c35">
-        <td class="c36" colspan="1" rowspan="1">
-          <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 79.54px; height: 82.00px;"><img alt="" src="${factory}" style="width: 79.54px; height: 82.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-          <p class="c3"><span class="c1">Diabeloop SA</span></p>
-          <p class="c3"><span class="c17">1</span><span class="c17">55-15</span><span class="c17">7 </span><span class="c17">Cours Berriat</span></p>
-          <p class="c3"><span class="c17">380</span><span class="c17">28</span><span class="c17">&nbsp;Grenoble</span><span class="c17">&nbsp;Cedex 1</span><span class="c1">&nbsp;France</span></p>
-          <p class="c3"><span class="c17 c34"><a class="c13" href="mailto:contact@diabeloop.fr">contact@diabeloop.fr</a></span></p>
-        </td>
-        <td class="c14" colspan="1" rowspan="1">
-          <p class="c3 c25"><span class="c23">&nbsp; &nbsp; &nbsp; &nbsp;</span><span class="c17">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 180.50px; height: 95.34px;"><img alt="" src="${ceMark}" style="width: 180.50px; height: 95.34px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-        </td>
-      </tr>
-    </tbody>
-    </table>
+    <div class="flex-container">
+        <div class="c36 address-container" colspan="1" rowspan="1">
+          <div>
+            <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 79.54px; height: 82.00px;"><img alt="" src="${factory}" style="width: 79.54px; height: 82.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+          </div>
+          <div>
+            <p class="c3"><span class="c1">Diabeloop SA</span></p>
+            <p class="c3"><span class="c17">17 Rue Félix Esclangon</span></p>
+            <p class="c3"><span class="c17">38000 Grenoble&nbsp;France</span></p>
+            <p class="c3"><span class="c17 c34"><a class="c13" href="mailto:contact@diabeloop.fr">contact@diabeloop.fr</a></span></p>
+          </div>
+        </div>
+        <div class="c36 address-container" colspan="1" rowspan="1">
+          <span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 180.50px; height: 95.34px;"><img alt="" src="${ceMark}" style="width: 180.50px; height: 95.34px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span>
+        </div>
+    </div>
     <p class="c0"><span class="c9"></span></p>
     <div>
       <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 160.98px; height: 38.00px;"><img alt="" src="${diabeloopLogo}" style="width: 160.98px; height: 38.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-en-Rev</span><span class="c21">0</span><span class="c21">&nbsp;</span></p>
+      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-fr-Rev1</span></p>
     </div>
   </div>
 `
