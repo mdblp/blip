@@ -101,7 +101,7 @@ function TrainingPage(): JSX.Element {
     })
   }
 
-  const training = t('training-materials').toLowerCase()
+  const training = t('training').toLowerCase()
   const trainingLink = (
     <Link aria-label={training} href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)} target="_blank" rel="noreferrer">
       {training}
