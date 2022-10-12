@@ -36,7 +36,7 @@ import { checkPatientLayout } from '../../assert/layout'
 
 jest.setTimeout(10000)
 
-describe('Trends view for HCP', () => {
+describe('Trends view for patient', () => {
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
     mockDataAPIForTrendsView()

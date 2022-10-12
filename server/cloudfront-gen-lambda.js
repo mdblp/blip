@@ -23,8 +23,8 @@ const locales = require('../locales/languages.json')
 
 const reTitle = /<title>([^<]*)<\/title>/
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
-const reTrackerUrl = /const u = "(.*)";/
-const reTrackerSiteId = /const id = ([0-9]);/
+const reTrackerUrl = /const u = '(.*)'/
+const reTrackerSiteId = /const id = ([0-9])/
 const reMatomoJs = /(^\s+<!-- Start of Tracker Code -->\n)(.*\n)*(^\s+<!-- End of Tracker Code -->)/m
 const reStonly = /(^\s+<!-- Start of stonly-widget -->\n)(.*\n)*(^\s+<!-- End of stonly-widget -->)/m
 const reCookieBanner = /(^\s+<!-- Start of cookie-banner -->\n)(.*\n)*(^\s+<!-- End of cookie-banner -->)/m
