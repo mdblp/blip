@@ -40,12 +40,16 @@ import PatientConsentPage from '../pages/patient/patient-consent'
 import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage, LoginPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
+import IntendedUsePage from '../pages/intented-use/intended-use-page'
 
 const RENEW_CONSENT_PATH = '/renew-consent'
 const NEW_CONSENT_PATH = '/new-consent'
 const COMPLETE_SIGNUP_PATH = '/complete-signup'
-const PUBLIC_ROUTES = ['/login']
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, ...PUBLIC_ROUTES]
+const LOGIN_PATH = '/login'
+const INTENDED_USE_PATH = '/intended-use'
+const PUBLIC_ROUTES = [LOGIN_PATH]
+const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
+const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, INTENDED_USE_PATH]
 
 interface StyleProps {
   color: string
@@ -76,6 +80,7 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute)
+  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(currentRoute)
   const theme = getTheme()
   const { palette } = useTheme()
   const classes = routeStyle({
@@ -92,7 +97,7 @@ export function MainLobby(): JSX.Element {
   const checkRedirect = (): void => {
     if (isCurrentRoutePublic && isAuthenticated) {
       redirectTo = '/'
-    } else if (!isAuthenticated && !isCurrentRoutePublic) {
+    } else if (!isAuthenticated && !isCurrentRoutePublic && !isCurrentRouteAlwaysAccessible) {
       redirectTo = '/login'
     } else if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
       redirectTo = '/complete-signup'
@@ -114,6 +119,7 @@ export function MainLobby(): JSX.Element {
             <SnackbarContextProvider context={DefaultSnackbarContext}>
               <div className={style}>
                 <Switch>
+                  <Route exact path="/intended-use" component={IntendedUsePage} />
                   <Route exact path="/login" component={LoginPage} />
                   <Route exact path="/complete-signup" component={CompleteSignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />

@@ -25,15 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import React, { FunctionComponent } from 'react'
+import Link from '@material-ui/core/Link'
+import { Link as RouterLink } from 'react-router-dom'
+import Box from '@material-ui/core/Box'
+import { useTranslation } from 'react-i18next'
+import diabeloopUrls from '../../lib/diabeloop-url'
+import { User } from '../../lib/auth'
+import { footerStyle } from './footer'
 
-export const checkFooter = () => {
-  const footer = within(screen.getByTestId('footer'))
-  expect(footer.getByText('Intended Use')).toBeVisible()
-  expect(footer.getByText('Training')).toBeVisible()
-  expect(footer.getByText('Privacy Policy')).toBeVisible()
-  expect(footer.getByText('Terms of use')).toBeVisible()
-  expect(footer.getByText('Cookies management')).toBeVisible()
-  expect(footer.getByText('Cookies policy')).toBeVisible()
-  expect(footer.getByText('Contact')).toBeVisible()
+const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
+  const { t, i18n } = useTranslation('yourloops')
+  const { link, separator } = footerStyle()
+
+  return (
+    <React.Fragment>
+      <Link
+        id="footer-link-intended-use"
+        component={RouterLink}
+        to="/intended-use"
+        className={link}
+      >
+        {t('intended-use')}
+      </Link>
+      <Box className={separator}>|</Box>
+
+      <Link
+        id="footer-link-url-training"
+        target="_blank"
+        href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)}
+        rel="nofollow"
+        className={link}
+      >
+        {t('training')}
+      </Link>
+    </React.Fragment>
+  )
 }
+
+export default AccompanyingDocumentLinks

@@ -72,6 +72,7 @@ module.exports = {
       ECPS_ENABLED: true,
       YLP820_BASAL_TIME: 0,
       VERSION: '1.0.0',
+      LATEST_RELEASE: '2000-01-01',
       API_HOST: 'http://localhost:8009',
       BRANDING: 'diabeloop/blue'
     }

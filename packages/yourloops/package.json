@@ -41,6 +41,7 @@
     "core-js": "^3.9.1",
     "dayjs": "^1.10.7",
     "emoji-picker-react": "^3.5.1",
+    "html-react-parser": "^3.0.4",
     "i18next": "^19.8.4",
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.31",

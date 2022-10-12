@@ -25,15 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import React, { FunctionComponent, useState } from 'react'
+import parse from 'html-react-parser'
+import i18n from 'i18next'
+import rawHtmlEN from './raw-html/EN'
+import { getCurrentLang } from '../../lib/language'
+import rawHtmlFR from './raw-html/FR'
 
-export const checkFooter = () => {
-  const footer = within(screen.getByTestId('footer'))
-  expect(footer.getByText('Intended Use')).toBeVisible()
-  expect(footer.getByText('Training')).toBeVisible()
-  expect(footer.getByText('Privacy Policy')).toBeVisible()
-  expect(footer.getByText('Terms of use')).toBeVisible()
-  expect(footer.getByText('Cookies management')).toBeVisible()
-  expect(footer.getByText('Cookies policy')).toBeVisible()
-  expect(footer.getByText('Contact')).toBeVisible()
+const IntendedUsePage: FunctionComponent = () => {
+  const getHtml = (): string => {
+    switch (getCurrentLang()) {
+      case 'fr':
+        return rawHtmlFR
+      default:
+        return rawHtmlEN
+    }
+  }
+
+  const [html, setHtml] = useState<string>(getHtml())
+
+  i18n.on('languageChanged', () => {
+    setHtml(getHtml)
+  })
+
+  return (
+    <React.Fragment>
+      {parse(html)}
+    </React.Fragment>
+  )
 }
+
+export default IntendedUsePage
