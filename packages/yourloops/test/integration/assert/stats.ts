@@ -44,6 +44,12 @@ const hoverOnCBGPercentageStat = (statsWidgets: BoundFunctions<typeof queries>, 
   userEvent.unhover(statsWidgets.getByTestId(statId))
 }
 
+export const checkNoTooltip = (statsWidgets: BoundFunctions<typeof queries>, labelToQuery: string) => {
+  const stat = statsWidgets.getByText(labelToQuery)
+  expect(stat).toBeVisible()
+  expect(within(stat).queryByTestId('info-icon')).not.toBeInTheDocument()
+}
+
 export const checkTimeInRangeStatsTitle = () => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
   hoverOnCBGPercentageStat(statsWidgets, 'cbg-percentage-stat-veryHigh-timeInRange', 'Time Above Range ( >250 )')

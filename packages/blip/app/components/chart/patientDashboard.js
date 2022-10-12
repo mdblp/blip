@@ -64,7 +64,7 @@ const PatientDashboard = (props) => {
         trackMetric={trackMetric}
       />
       <Box id="patient-dashboard-content">
-        {<PatientInfoWidget patient={patient} />}
+        <PatientInfoWidget patient={patient} />
         {patient.monitoring?.enabled &&
           <MedicalFilesWidget
             id="dashboard-medical-files-widget"
