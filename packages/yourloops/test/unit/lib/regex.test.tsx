@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { REGEX_EMAIL } from '../../../lib/utils'
+import { REGEX_EMAIL, REGEX_PHONE, REGEX_ZIPCODE_WITH_STRING, REGEX_ZIPCODE_WITHOUT_STRING } from '../../../lib/utils'
 
 const validEmails = [
   'foobar@domain.de',
@@ -61,15 +61,163 @@ const invalidEmails = [
 ]
 
 describe('Regex', () => {
-  it('email regex should accept a list of valid emails', () => {
-    validEmails.forEach((email: string) => {
-      expect(REGEX_EMAIL.test(email)).toBe(true)
+  describe('REGEX_EMAIL', () => {
+    it('email regex should accept a list of valid emails', () => {
+      validEmails.forEach((email: string) => {
+        expect(REGEX_EMAIL.test(email)).toBe(true)
+      })
+    })
+
+    it('email regex should refuse a list of invalid emails', () => {
+      invalidEmails.forEach((email: string) => {
+        expect(REGEX_EMAIL.test(email)).toBe(false)
+      })
     })
   })
 
-  it('email regex should refuse a list of invalid emails', () => {
-    invalidEmails.forEach((email: string) => {
-      expect(REGEX_EMAIL.test(email)).toBe(false)
+  describe('REGEX_PHONE', () => {
+    it('should be valid when given eight numbers', () => {
+      // given
+      const value = '06000000'
+      // when
+      const result = REGEX_PHONE.test(value)
+
+      // then
+      expect(result).toBeTruthy()
+    })
+
+    it('should be invalid when given seven numbers', () => {
+      // given
+      const value = '0600000'
+      // when
+      const result = REGEX_PHONE.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+
+    it('should be invalid when given twelve numbers', () => {
+      // given
+      const value = '060000000000'
+      // when
+      const result = REGEX_PHONE.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+
+    it('should be invalid when given alpha characters', () => {
+      // given
+      const value = 'abcdefghi'
+      // when
+      const result = REGEX_PHONE.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+
+    it('should be invalid when given special characters', () => {
+      // given
+      const value = '8"(è_çà)"'
+      // when
+      const result = REGEX_PHONE.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+
+    it('should be invalid when given alpha-numeric characters', () => {
+      // given
+      const value = 'aaddd789'
+      // when
+      const result = REGEX_PHONE.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+  })
+
+  describe('REGEX_ZIPCODE_WITHOUT_STRING ', () => {
+    it('should be valid when given many numbers with -', () => {
+      // given
+      const value = '8888-8888888888'
+      // when
+      const result = REGEX_ZIPCODE_WITHOUT_STRING.test(value)
+
+      // then
+      expect(result).toBeTruthy()
+    })
+
+    it('should be invalid when given alpha characters', () => {
+      // given
+      const value = 'abcdefghi'
+      // when
+      const result = REGEX_ZIPCODE_WITHOUT_STRING.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+
+    it('should be invalid when given special characters exepted -', () => {
+      // given
+      const value = '8"(è_çà)"'
+      // when
+      const result = REGEX_ZIPCODE_WITHOUT_STRING.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+
+    it('should be invalid when given alpha-numeric characters', () => {
+      // given
+      const value = 'aaddd789'
+      // when
+      const result = REGEX_ZIPCODE_WITHOUT_STRING.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+  })
+
+  describe('REGEX_ZIPCODE_WITH_STRING ', () => {
+    it('should be valid when given many numbers with one space', () => {
+      // given
+      const value = '8888 888888888'
+      // when
+      const result = REGEX_ZIPCODE_WITH_STRING.test(value)
+
+      // then
+      expect(result).toBeTruthy()
+    })
+
+    it('should be valid when given alpha characters with number and space', () => {
+      // given
+      const value = 'ALF 88888'
+      // when
+      const result = REGEX_ZIPCODE_WITH_STRING.test(value)
+
+      // then
+      expect(result).toBeTruthy()
+    })
+
+    it('should be invalid when given special characters excepted space', () => {
+      // given
+      const value = '8"(è_ çà)"'
+      // when
+      const result = REGEX_ZIPCODE_WITH_STRING.test(value)
+
+      // then
+      expect(result).toBeFalsy()
+    })
+
+    it('should be invalid when given alpha-numeric characters in tiny', () => {
+      // given
+      const value = 'aaddd789'
+      // when
+      const result = REGEX_ZIPCODE_WITH_STRING.test(value)
+
+      // then
+      expect(result).toBeFalsy()
     })
   })
 })

@@ -117,7 +117,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const isPhoneNumberValid: boolean = REGEX_PHONE.test(teamPhone)
   const countries: LocalesCountries = locales.countries
   const optionsCountries: JSX.Element[] = []
-  const isZipCodeValid = (country): boolean => {
+  const isZipCodeValid = (country: string): boolean => {
     switch (country) {
       case 'NL':
       case 'GB':
@@ -318,7 +318,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             variant="outlined"
             onChange={(e) => setAddrZipCode(e.target.value)}
             error={zipcodeInputOnError}
-            helperText={isZipCodeValid(addrCountry) || addrZipCode.length === 0 ? null : t('zipcode-helpertext')}
+            helperText={zipcodeInputOnError ? t('zipcode-helpertext') : null}
             name="addr-zip"
             value={addrZipCode}
             label={t('team-edit-dialog-placeholder-addr-zip')}
@@ -355,7 +355,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             variant="outlined"
             onChange={(e) => setTeamPhone(e.target.value)}
             error={phoneNumberInputOnError}
-            helperText={isPhoneNumberValid || teamPhone.length === 0 ? null : t('phone-number-helperText')}
+            helperText={phoneNumberInputOnError ? t('phone-number-helperText') : null}
             InputProps={{
               startAdornment: <InputAdornment position="start">{PhonePrefixCode[addrCountry]}</InputAdornment>
             }}
