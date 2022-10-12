@@ -37,7 +37,7 @@ import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsTitle,
-  checkReadingsInRangeStatsWidgets,
+  checkReadingsInRangeStatsWidgets, checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 
@@ -58,6 +58,8 @@ describe('Trends view for anyone', () => {
       await checkTrendsStatsWidgetsTooltips()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL179')
+
+      checkStandardDeviationStatWidget('Standard Deviation ( 167 - 191 )mg/dL12')
     })
   })
 
@@ -80,6 +82,8 @@ describe('Trends view for anyone', () => {
       await checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
 
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
+
+      checkStandardDeviationStatWidget('Standard Deviation ( 22 - 180 )mg/dL79')
     })
   })
 })

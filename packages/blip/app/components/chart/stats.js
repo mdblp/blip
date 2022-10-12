@@ -110,7 +110,7 @@ class Stats extends React.Component {
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
             <CBGMeanStat
-              cbgStatType={stat.id}
+              hideToolTip={hideToolTips}
               title={stat.title}
               tooltipValue={stat.annotations[0]}
               units={stat.units}
@@ -123,11 +123,11 @@ class Stats extends React.Component {
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
             <CbgStandardDeviation
+              annotations={stat.annotations}
               averageGlucose={Math.round(stat.data.raw.averageGlucose)}
-              cbgStatType={stat.id}
+              hideToolTip={hideToolTips}
               standardDeviation={Math.round(stat.data.raw.standardDeviation)}
               title={stat.title}
-              annotations={stat.annotations}
               units={stat.units}
             />
             <Divider variant="fullWidth" />

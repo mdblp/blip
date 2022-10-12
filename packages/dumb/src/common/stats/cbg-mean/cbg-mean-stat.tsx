@@ -26,7 +26,6 @@
  */
 
 import React, { FunctionComponent, useMemo } from 'react'
-import { CBGStatType } from '../models'
 import styles from './cbg-mean-stat.css'
 import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
@@ -35,7 +34,7 @@ import { StatTooltip } from '../../tooltips/stat-tooltip'
 import { computeCBGStyle } from '../cbg-utils'
 
 export interface CBGMeanStatProps {
-  cbgStatType: CBGStatType
+  hideTooltip: boolean
   title: string
   tooltipValue: string
   units: string
@@ -43,7 +42,7 @@ export interface CBGMeanStatProps {
 }
 
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProps) => {
-  const { cbgStatType, title, tooltipValue, units, value } = props
+  const { hideTooltip, title, tooltipValue, units, value } = props
   const { t } = useTranslation('main')
 
   const valueBasedStyles = useMemo(() => {
@@ -52,14 +51,15 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProp
 
   return (
     <Box
-      data-testid={`cbg-mean-stat-${cbgStatType}`}
+      data-testid="cbg-mean-stat"
       marginLeft="4px"
       marginRight="4px"
     >
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <div>
           {title}
-          <StatTooltip annotations={[tooltipValue]}>
+          {!hideTooltip &&
+            <StatTooltip annotations={[tooltipValue]}>
               <span className={styles['tooltip-icon']}>
                 <img
                   data-testid="info-icon"
@@ -67,7 +67,8 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProp
                   alt={t('img-alt-hover-for-more-info')}
                 />
               </span>
-          </StatTooltip>
+            </StatTooltip>
+          }
         </div>
         <Box fontSize="12px">
           {units}

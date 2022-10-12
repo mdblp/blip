@@ -37,7 +37,7 @@ import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsTitle,
-  checkReadingsInRangeStatsWidgets,
+  checkReadingsInRangeStatsWidgets, checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 
@@ -62,11 +62,12 @@ describe('Daily view for anyone', () => {
       checkTimeInRangeStatsTitle()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
+      checkStandardDeviationStatWidget('Standard Deviation ( 22 - 180 )mg/dL79')
     })
   })
 
   describe('with smbg data', () => {
-    it('should display correct readings in range stats info', async () => {
+    it('should display correct stats widgets', async () => {
       mockDataAPI(smbgData)
       renderPage('/daily')
 
@@ -74,6 +75,7 @@ describe('Daily view for anyone', () => {
       await checkReadingsInRangeStatsTitle()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
+      checkStandardDeviationStatWidget('Avg. Glucose (BGM)mg/dL101')
     })
   })
 })

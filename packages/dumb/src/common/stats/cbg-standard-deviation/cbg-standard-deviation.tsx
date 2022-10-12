@@ -26,7 +26,6 @@
  */
 
 import React, { FunctionComponent, useMemo } from 'react'
-import { CBGStatType } from '../models'
 import styles from './cbg-standard-deviation.css'
 import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
@@ -35,16 +34,16 @@ import { StatTooltip } from '../../tooltips/stat-tooltip'
 import { computeCBGStyle } from '../cbg-utils'
 
 export interface CBGStandardDeviationProps {
+  annotations: string[]
   averageGlucose: number
-  cbgStatType: CBGStatType
+  hideTooltip: boolean
   standardDeviation: number
   title: string
-  annotations: string[]
   units: string
 }
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props: CBGStandardDeviationProps) => {
-  const { averageGlucose, cbgStatType, title, annotations, units, standardDeviation } = props
+  const { annotations, averageGlucose, hideTooltip, standardDeviation, title, units } = props
   const { t } = useTranslation('main')
 
   const standardDeviationMin = averageGlucose - standardDeviation
@@ -57,14 +56,14 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
 
   return (
     <Box
-      data-testid={`cbg-mean-stat-${cbgStatType}`}
+      data-testid="cbg-standard-deviation-stat"
       marginLeft="4px"
       marginRight="4px"
     >
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <Box display="flex">
           {title}
-          {standardDeviation && <>
+          {standardDeviation && !hideTooltip && <>
             &nbsp;
             <span className={styles['title-value']}>
             {'( '}

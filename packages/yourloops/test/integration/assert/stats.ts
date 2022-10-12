@@ -77,5 +77,10 @@ export const checkReadingsInRangeStatsWidgets = async () => {
 
 export const checkAverageGlucoseStatWidget = (expectedTextContent: string) => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  expect(statsWidgets.getByTestId('cbg-mean-stat-averageGlucose')).toHaveTextContent(expectedTextContent)
+  expect(statsWidgets.getByTestId('cbg-mean-stat')).toHaveTextContent(expectedTextContent)
+}
+
+export const checkStandardDeviationStatWidget = (expectedTextContent: string) => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
+  expect(statsWidgets.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent(expectedTextContent)
 }
