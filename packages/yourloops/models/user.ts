@@ -65,6 +65,7 @@ interface Profile {
   lastName?: string
   patient?: Patient
   termsOfUse?: Consent
+  trainingAck?: Consent
   privacyPolicy?: Consent
   contactConsent?: Consent
   hcpProfession?: HcpProfession

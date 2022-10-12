@@ -23,7 +23,8 @@ export const monitoredPatient: ITeamMember = {
     lastName: monitoredPatientLastName,
     patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   },
   settings: null,
   preferences: { displayLanguageCode: 'en' },
@@ -57,7 +58,8 @@ export const unMonitoredPatient: ITeamMember = {
     lastName: unMonitoredPatientLastName,
     patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   },
   settings: null,
   preferences: { displayLanguageCode: 'en' },
@@ -85,7 +87,8 @@ const monitoredPatientTwo: ITeamMember = {
     lastName: monitoredPatientLastName,
     patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   },
   settings: null,
   preferences: { displayLanguageCode: 'en' },

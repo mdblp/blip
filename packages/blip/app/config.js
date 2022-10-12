@@ -23,6 +23,7 @@ const defaultConfig = {
   UPLOAD_API: 'https://tidepool.org/uploader',
   API_HOST: `${window.location.protocol}//${window.location.host}`,
   LATEST_TERMS: '1970-01-01',
+  LATEST_TRAINING: '1970-01-01',
   LATEST_RELEASE: '2022-03-03',
   SUPPORT_WEB_ADDRESS: DUMMY_URL,
   HELP_SCRIPT_URL: null,
