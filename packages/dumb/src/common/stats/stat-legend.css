@@ -1,6 +1,5 @@
-.StatLegend {
-  composes: smallSize from '../../../styles/typography.css';
-  position: relative;
+.stat-legend {
+  composes: smallSize from '../../styles/typography.css';
   list-style: none;
   display: flex;
   margin: 0;
@@ -8,7 +7,7 @@
   color: var(--stat-legend, #6d6d6d);
 }
 
-.StatLegendItem {
+.stat-legend-item {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -16,7 +15,7 @@
   border-bottom: 2px solid;
 }
 
-.StatLegendTitle {
+.stat-legend-title {
   letter-spacing: -.01em;
   white-space: nowrap;
   line-height: 16px;

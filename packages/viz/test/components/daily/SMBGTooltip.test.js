@@ -22,7 +22,6 @@ import { mount } from 'enzyme'
 import { expect } from 'chai'
 
 import { formatClassesAsSelector } from '../../helpers/cssmodules'
-import colors from '../../../src/styles/colors.css'
 
 import SMBGTooltip from '../../../src/components/daily/smbgtooltip/SMBGTooltip'
 import styles from '../../../src/components/daily/smbgtooltip/SMBGTooltip.css'
@@ -42,18 +41,6 @@ const target = {
   type: 'smbg',
   units: 'mg/dL',
   value: 100
-}
-
-const low = {
-  type: 'smbg',
-  units: 'mg/dL',
-  value: 65
-}
-
-const high = {
-  type: 'smbg',
-  units: 'mg/dL',
-  value: 200
 }
 
 const veryHigh = {
@@ -102,36 +89,6 @@ describe('SMBGTooltip', () => {
   it('should render without issue when all properties provided', () => {
     const wrapper = mount(<SMBGTooltip {...props} smbg={target} />)
     expect(wrapper.find(formatClassesAsSelector(styles.bg))).to.have.length(1)
-  })
-
-  it('should render "target" color for target bg', () => {
-    const wrapper = mount(<SMBGTooltip {...props} smbg={target} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.target)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.target)
-  })
-
-  it('should render "high" color for high bg', () => {
-    const wrapper = mount(<SMBGTooltip {...props} smbg={high} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.high)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.high)
-  })
-
-  it('should render "veryHigh" color for very high bg', () => {
-    const wrapper = mount(<SMBGTooltip {...props} smbg={veryHigh} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.veryHigh)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.veryHigh)
-  })
-
-  it('should render "low" color for low bg', () => {
-    const wrapper = mount(<SMBGTooltip {...props} smbg={low} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.low)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.low)
-  })
-
-  it('should render "veryLow" color for very low bg', () => {
-    const wrapper = mount(<SMBGTooltip {...props} smbg={veryLow} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.veryLow)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.veryLow)
   })
 
   it('should render "Calibration" for a manual smbg', () => {

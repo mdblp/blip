@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.1 - 2022-10-11
+## 3.0.2-beta1 - 2022-10-11
 ### Added
 - YLP-1681 HCP can remove a patient
 - YLP-1837 Display training material acknowledgment
@@ -23,6 +23,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1754 Patient list not updated after accept invitation
 - YLP-1767 Create package to migrate viz components
 - YLP-1797 Make it possible to see what role the users are logged in with matomo
+- YLP-1834 Migrate time in range stats
 ### Fixed
 - YLP-1645 A patient can create, edit and delete a medical record
 - YLP-1659 Language is not updated with user preferences
