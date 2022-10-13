@@ -27,11 +27,11 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGPercentageBarProps } from './cbg-percentage-bar'
+import { CBGPercentageProps } from './cbg-percentage-bar'
 import { CBGPercentageData, CBGStatType, StatLevel } from './models'
 
 export interface CBGPercentageBarChartHookProps {
-  cbgStatType: CBGStatType
+  type: CBGStatType
   data: CBGPercentageData[]
   hideTooltip: boolean
   titleKey: string
@@ -39,14 +39,20 @@ export interface CBGPercentageBarChartHookProps {
 }
 
 interface CBGPercentageBarChartHookReturn {
-  cbgStatsProps: { veryHighStat: CBGPercentageBarProps, highStat: CBGPercentageBarProps, targetStat: CBGPercentageBarProps, lowStat: CBGPercentageBarProps, veryLowStat: CBGPercentageBarProps }
+  cbgStatsProps: {
+    veryHighStat: CBGPercentageProps
+    highStat: CBGPercentageProps
+    targetStat: CBGPercentageProps
+    lowStat: CBGPercentageProps
+    veryLowStat: CBGPercentageProps
+  }
   hoveredStatId: StatLevel | null
   onMouseLeave: Function
   titleProps: { legendTitle: string, showTooltipIcon: boolean, title: string }
 }
 
-export const useCbgPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { cbgStatType, data, hideTooltip, titleKey, total } = props
+export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
+  const { type, data, hideTooltip, titleKey, total } = props
   const { t } = useTranslation('main')
   const title = t(titleKey)
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
@@ -77,7 +83,7 @@ export const useCbgPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
       throw Error(`Could not find stat with id ${id}`)
     }
     return {
-      cbgStatType,
+      type,
       id: stat.id,
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
       legendTitle: stat.legendTitle,
@@ -86,7 +92,8 @@ export const useCbgPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
       total,
       value: stat.value
     }
-  }, [cbgStatType, data, hoveredStatId, onStatMouseover, total])
+  }, [type, data, hoveredStatId, onStatMouseover, total])
+
   const cbgStatsProps = useMemo(() => ({
     veryHighStat: getCBGPercentageStatsProps(StatLevel.VeryHigh),
     highStat: getCBGPercentageStatsProps(StatLevel.High),

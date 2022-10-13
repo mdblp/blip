@@ -33,7 +33,7 @@ describe('CBGPercentageBar hook', () => {
   const onMouseLeaveMock = jest.fn()
   const onMouseOverMock = jest.fn()
   const defaultProps = {
-    cbgStatType: CBGStatType.TimeInRange,
+    type: CBGStatType.TimeInRange,
     id: 'fakeId',
     isDisabled: false,
     legendTitle: 'fakeLegendTitle',
@@ -63,14 +63,8 @@ describe('CBGPercentageBar hook', () => {
   })
 
   it('should return barValue equals value when CBGStatType is ReadingsInRange', () => {
-    const props = { ...defaultProps, cbgStatType: CBGStatType.ReadingsInRange }
+    const props = { ...defaultProps, type: CBGStatType.ReadingsInRange }
     const { result } = renderHook(() => useCBGPercentageBar(props))
     expect(result.current.barValue).toBe(defaultProps.value.toString())
-  })
-
-  it('should return barValue as duration when CBGStatType is TimeInRange', () => {
-    const props = { ...defaultProps, total: 300000, value: 100000 }
-    const { result } = renderHook(() => useCBGPercentageBar(props))
-    expect(result.current.barValue).toBe('2undefined')
   })
 })

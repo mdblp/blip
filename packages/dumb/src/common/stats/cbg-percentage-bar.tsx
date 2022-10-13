@@ -27,11 +27,11 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './cbg-percentage-bar.css'
-import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
 import { CBGStatType } from './models'
+import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
-export interface CBGPercentageBarProps {
-  cbgStatType: CBGStatType
+export interface CBGPercentageProps {
+  type: CBGStatType
   id: string
   isDisabled: boolean
   legendTitle: string
@@ -41,8 +41,8 @@ export interface CBGPercentageBarProps {
   value: number
 }
 
-const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props: CBGPercentageBarProps) => {
-  const { cbgStatType, id, isDisabled, onMouseEnter, legendTitle, title, total, value } = props
+const CBGPercentageBar: FunctionComponent<CBGPercentageProps> = (props: CBGPercentageProps) => {
+  const { type, id, isDisabled, onMouseEnter, legendTitle, title, total, value } = props
 
   const {
     barClasses,
@@ -51,11 +51,11 @@ const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props: CBGPe
     percentage,
     percentageClasses,
     rectangleClasses
-  } = useCBGPercentageBar({ cbgStatType, id, isDisabled, total, value })
+  } = useCBGPercentageBar({ type, id, isDisabled, total, value })
 
   return (
     <div
-      data-testid={`cbg-percentage-stat-${id}-${cbgStatType}`}
+      data-testid={`cbg-percentage-stat-${id}-${type}`}
       className={styles.stat}
       onMouseEnter={() => onMouseEnter(id, title, legendTitle, total !== 0)}
     >

@@ -7,6 +7,7 @@ export PORT='3000'
 # Diabeloop specific
 export BRANDING='diabeloop_blue'
 export LATEST_TERMS='1970-01-01'
+export LATEST_TRAINING='1970-01-01'
 export LATEST_RELEASE='2022-03-03'
 
 # External services:

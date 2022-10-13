@@ -29,12 +29,12 @@ import React, { FunctionComponent } from 'react'
 import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-bar'
 import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
-import { useCbgPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
-import { CBGStatType, CBGPercentageData } from './models'
+import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
+import { CBGPercentageData, CBGStatType } from './models'
 import { StatLegend } from './stat-legend'
 import { Box } from '@material-ui/core'
 
-interface CBGPercentageStatsProps {
+interface CBGPercentageBarChartProps {
   annotations: []
   cbgStatType: CBGStatType
   data: CBGPercentageData[]
@@ -44,11 +44,11 @@ interface CBGPercentageStatsProps {
   units: string
 }
 
-const CbgPercentageBarChart: FunctionComponent<CBGPercentageStatsProps> = (props: CBGPercentageStatsProps) => {
+const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props: CBGPercentageBarChartProps) => {
   const { annotations, cbgStatType, data, hideTooltip, titleKey, total, units } = props
 
-  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCbgPercentageBarChartHook({
-    cbgStatType,
+  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCBGPercentageBarChartHook({
+    type: cbgStatType,
     data,
     hideTooltip,
     titleKey,
@@ -75,4 +75,4 @@ const CbgPercentageBarChart: FunctionComponent<CBGPercentageStatsProps> = (props
     </>
   )
 }
-export const CbgPercentageBarChartMemoized = React.memo(CbgPercentageBarChart)
+export const CBGPercentageBarChartMemoized = React.memo(CBGPercentageBarChart)

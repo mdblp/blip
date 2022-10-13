@@ -40,9 +40,11 @@ import PatientConsentPage from '../pages/patient/patient-consent'
 import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage, LoginPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
+import TrainingPage from '../pages/training/training'
 import IntendedUsePage from '../pages/intented-use/intended-use-page'
 
 const RENEW_CONSENT_PATH = '/renew-consent'
+const TRAINING_PATH = '/training'
 const NEW_CONSENT_PATH = '/new-consent'
 const COMPLETE_SIGNUP_PATH = '/complete-signup'
 const LOGIN_PATH = '/login'
@@ -88,6 +90,7 @@ export function MainLobby(): JSX.Element {
   })
   const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH
+  const trainingPath = currentRoute === TRAINING_PATH
   let redirectTo = null
 
   if (!isCurrentRoutePublic && isLoading) {
@@ -105,6 +108,8 @@ export function MainLobby(): JSX.Element {
       redirectTo = '/new-consent'
     } else if (!renewConsentPath && user && user.hasToRenewConsent()) {
       redirectTo = '/renew-consent'
+    } else if (!trainingPath && currentRoute !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
+      redirectTo = '/training'
     }
   }
 
@@ -124,6 +129,7 @@ export function MainLobby(): JSX.Element {
                   <Route exact path="/complete-signup" component={CompleteSignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />
                   <Route exact path="/new-consent" component={PatientConsentPage} />
+                  <Route exact path="/training" component={TrainingPage} />
                   <Route component={MainLayout} />
                 </Switch>
               </div>

@@ -21,6 +21,6 @@ export const renderPageFromHistory = (history: MemoryHistory) => {
 
 export const renderPage = (url: string) => {
   const history = createMemoryHistory({ initialEntries: [url] })
-  render(getMainLobby(history))
+  renderPageFromHistory(history)
   expect(history.location.pathname).toBe(url)
 }

@@ -32,7 +32,7 @@ import { formatDuration } from '../../utils/datetime'
 import { CBGStatType } from './models'
 
 export interface CBGPercentageBarHookProps {
-  cbgStatType: CBGStatType
+  type: CBGStatType
   id: string
   isDisabled: boolean
   total: number
@@ -49,7 +49,7 @@ interface CBGPercentageBarHookReturn {
 }
 
 export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercentageBarHookReturn => {
-  const { cbgStatType, id, isDisabled, total, value } = props
+  const { type, id, isDisabled, total, value } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
   const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : stylesColors[`${id}-background`]
@@ -59,15 +59,16 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
 
   const barValue = useMemo(() => {
-    if (cbgStatType === CBGStatType.TimeInRange) {
-      return formatDuration(value, { condensed: true })
-    } else if (cbgStatType === CBGStatType.ReadingsInRange) {
-      return value.toString()
-    } else {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      throw Error(`Unknown stat type ${cbgStatType}`)
+    switch (type) {
+      case CBGStatType.TimeInRange:
+        return formatDuration(value, { condensed: true })
+      case CBGStatType.ReadingsInRange:
+        return value.toString()
+      default:
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        throw Error(`Unknown stat type ${type}`)
     }
-  }, [cbgStatType, value])
+  }, [type, value])
 
   return useMemo(() => ({
     barValue,

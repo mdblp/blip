@@ -26,7 +26,7 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks/dom'
-import { CBGPercentageBarChartHookProps, useCbgPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
+import { CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { waitFor } from '@testing-library/dom'
 import { CBGPercentageData, CBGStatType, StatLevel } from './models'
 
@@ -42,47 +42,47 @@ describe('CBGPercentageBarChart hook', () => {
   const veryLowStat = createCBGTimeData(StatLevel.VeryLow, 'fakeLegendTitle5', 'fakeTitle5', 50)
 
   const defaultProps: CBGPercentageBarChartHookProps = {
-    cbgStatType: CBGStatType.TimeInRange,
     data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
     hideTooltip: false,
     titleKey: 'fakeTitleKey',
-    total
+    total,
+    type: CBGStatType.TimeInRange
   }
 
   it('should return correct cbgStatsProps', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useCbgPercentageBarChartHook(props))
+    const { result } = renderHook(() => useCBGPercentageBarChartHook(props))
     expect(result.current.cbgStatsProps).toEqual({
       veryHighStat: {
-        cbgStatType: CBGStatType.TimeInRange,
+        type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.any(Function),
         total: defaultProps.total,
         ...veryHighStat
       },
       highStat: {
-        cbgStatType: CBGStatType.TimeInRange,
+        type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.any(Function),
         total: defaultProps.total,
         ...highStat
       },
       targetStat: {
-        cbgStatType: CBGStatType.TimeInRange,
+        type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.any(Function),
         total: defaultProps.total,
         ...targetStat
       },
       lowStat: {
-        cbgStatType: CBGStatType.TimeInRange,
+        type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.any(Function),
         total: defaultProps.total,
         ...lowStat
       },
       veryLowStat: {
-        cbgStatType: CBGStatType.TimeInRange,
+        type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.any(Function),
         total: defaultProps.total,
@@ -98,7 +98,7 @@ describe('CBGPercentageBarChart hook', () => {
       showTooltipIcon: true,
       title: defaultProps.titleKey
     }
-    const { result } = renderHook(() => useCbgPercentageBarChartHook(props))
+    const { result } = renderHook(() => useCBGPercentageBarChartHook(props))
     expect(result.current.hoveredStatId).toBeNull()
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {
