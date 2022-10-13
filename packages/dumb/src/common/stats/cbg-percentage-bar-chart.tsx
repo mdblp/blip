@@ -44,7 +44,7 @@ interface CBGPercentageBarChartProps {
   units: string
 }
 
-const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props: CBGPercentageBarChartProps) => {
+const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
   const { annotations, cbgStatType, data, hideToolTip, titleKey, total, units } = props
 
   const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCBGPercentageBarChartHook({
