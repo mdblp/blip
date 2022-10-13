@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import styles from './cbg-percentage-bar.css'
 import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
-import { CBGStatType } from '../models'
+import { CBGStatType } from './models'
 
 export interface CBGPercentageBarProps {
   cbgStatType: CBGStatType
