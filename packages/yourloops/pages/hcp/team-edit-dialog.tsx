@@ -166,10 +166,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     if (valid && inLimit(email, teamFieldsLimits.email)) {
       valid = REGEX_EMAIL.test(email)
     }
-    if (zipcodeInputOnError || phoneNumberInputOnError) {
-      return true
-    }
-    return !valid
+    return (zipcodeInputOnError || phoneNumberInputOnError) || !valid
   }
 
   const formIsIncomplete = useMemo(isFormIsIncomplete, [
@@ -319,7 +316,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             variant="outlined"
             onChange={(e) => setAddrZipCode(e.target.value)}
             error={zipcodeInputOnError}
-            helperText={zipcodeInputOnError ? t('zipcode-helpertext') : null}
+            helperText={zipcodeInputOnError ? t('zipcode-helper-text') : null}
             name="addr-zip"
             value={addrZipCode}
             label={t('team-edit-dialog-placeholder-addr-zip')}
@@ -356,7 +353,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             variant="outlined"
             onChange={(e) => setTeamPhone(e.target.value)}
             error={phoneNumberInputOnError}
-            helperText={phoneNumberInputOnError ? t('phone-number-helperText') : null}
+            helperText={phoneNumberInputOnError ? t('phone-number-helper-text') : null}
             InputProps={{
               startAdornment: <InputAdornment position="start">{PhonePrefixCode[addrCountry]}</InputAdornment>
             }}

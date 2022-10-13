@@ -263,7 +263,7 @@
   "pending-patients-filter": "Filter on pending patients",
   "personal-information": "Personal Information",
   "phone-number": "Phone number",
-  "phone-number-helperText": "Please enter a valid phone number",
+  "phone-number-helper-text": "Please enter a valid phone number",
   "placeholder-search": "Search…",
   "preferences": "Preferences",
   "prescription": "Prescription",
@@ -387,5 +387,5 @@
   "yes": "Yes",
   "yesterday": "Yesterday",
   "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes.",
-  "zipcode-helpertext": "Please enter a valid zipcode"
+  "zipcode-helper-text": "Please enter a valid zipcode"
 }
