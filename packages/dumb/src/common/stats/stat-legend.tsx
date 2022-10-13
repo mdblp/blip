@@ -9,7 +9,7 @@ interface StatLegendProps {
   units: string
 }
 
-export const StatLegend: FunctionComponent<StatLegendProps> = (props: StatLegendProps) => {
+export const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
   const { items, units } = props
 
   return (

@@ -27,7 +27,7 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGPercentageProps } from './cbg-percentage-bar'
+import { CBGPercentageBarProps } from './cbg-percentage-bar'
 import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
 
 export interface CBGPercentageBarChartHookProps {
@@ -40,11 +40,11 @@ export interface CBGPercentageBarChartHookProps {
 
 interface CBGPercentageBarChartHookReturn {
   cbgStatsProps: {
-    veryHighStat: CBGPercentageProps
-    highStat: CBGPercentageProps
-    targetStat: CBGPercentageProps
-    lowStat: CBGPercentageProps
-    veryLowStat: CBGPercentageProps
+    veryHighStat: CBGPercentageBarProps
+    highStat: CBGPercentageBarProps
+    targetStat: CBGPercentageBarProps
+    lowStat: CBGPercentageBarProps
+    veryLowStat: CBGPercentageBarProps
   }
   hoveredStatId: StatLevel | null
   onMouseLeave: Function
@@ -77,7 +77,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     setHoveredStatId(null)
   }, [hideTooltip, title])
 
-  const getCBGPercentageStatsProps = useCallback((id: string) => {
+  const getCBGPercentageBarProps = useCallback((id: string) => {
     const stat = data.find(timeInRange => timeInRange.id === id)
     if (!stat) {
       throw Error(`Could not find stat with id ${id}`)
@@ -95,12 +95,13 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
   }, [type, data, hoveredStatId, onStatMouseover, total])
 
   const cbgStatsProps = useMemo(() => ({
-    veryHighStat: getCBGPercentageStatsProps(StatLevel.VeryHigh),
-    highStat: getCBGPercentageStatsProps(StatLevel.High),
-    targetStat: getCBGPercentageStatsProps(StatLevel.Target),
-    lowStat: getCBGPercentageStatsProps(StatLevel.Low),
-    veryLowStat: getCBGPercentageStatsProps(StatLevel.VeryLow)
-  }), [getCBGPercentageStatsProps])
+    veryHighStat: getCBGPercentageBarProps(StatLevel.VeryHigh),
+    highStat: getCBGPercentageBarProps(StatLevel.High),
+    targetStat: getCBGPercentageBarProps(StatLevel.Target),
+    lowStat: getCBGPercentageBarProps(StatLevel.Low),
+    veryLowStat: getCBGPercentageBarProps(StatLevel.VeryLow)
+  }), [getCBGPercentageBarProps])
+
   return useMemo(() => ({
     cbgStatsProps,
     onMouseLeave,
