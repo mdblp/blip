@@ -189,4 +189,12 @@ describe('TeamInformation', () => {
     await editTeamInfo()
     expect(errorMock).toHaveBeenCalledWith('team-page-failed-edit')
   })
+
+  it('should not show the phone prefix if the team has no address', () => {
+    const teamWithNoAddress = buildTeam(teamId, [])
+    const phone = '123456789'
+    teamWithNoAddress.phone = phone
+    renderTeamInformation({ team: teamWithNoAddress, refreshParent: refresh })
+    expect(document.getElementById(`team-information-${teamId}-phone`).innerHTML).toEqual(phone)
+  })
 })

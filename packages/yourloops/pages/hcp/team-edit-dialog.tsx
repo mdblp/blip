@@ -27,7 +27,7 @@
  */
 
 import _ from 'lodash'
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -105,15 +105,15 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const { t, i18n } = useTranslation('yourloops')
   const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
-  const [modalOpened, setModalOpened] = React.useState(false)
-  const [teamName, setTeamName] = React.useState(team?.name ?? '')
-  const [teamPhone, setTeamPhone] = React.useState(team?.phone ?? '')
-  const [teamEmail, setTeamEmail] = React.useState(team?.email ?? '')
-  const [addrLine1, setAddrLine1] = React.useState(team?.address?.line1 ?? '')
-  const [addrLine2, setAddrLine2] = React.useState(team?.address?.line2 ?? '')
-  const [addrZipCode, setAddrZipCode] = React.useState(team?.address?.zip ?? '')
-  const [addrCity, setAddrCity] = React.useState(team?.address?.city ?? '')
-  const [addrCountry, setAddrCountry] = React.useState(team?.address?.country ?? auth.user?.settings?.country ?? 'FR')
+  const [modalOpened, setModalOpened] = useState(false)
+  const [teamName, setTeamName] = useState(team?.name ?? '')
+  const [teamPhone, setTeamPhone] = useState(team?.phone ?? '')
+  const [teamEmail, setTeamEmail] = useState(team?.email ?? '')
+  const [addrLine1, setAddrLine1] = useState(team?.address?.line1 ?? '')
+  const [addrLine2, setAddrLine2] = useState(team?.address?.line2 ?? '')
+  const [addrZipCode, setAddrZipCode] = useState(team?.address?.zip ?? '')
+  const [addrCity, setAddrCity] = useState(team?.address?.city ?? '')
+  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? 'FR')
   const isPhoneNumberValid: boolean = REGEX_PHONE.test(teamPhone)
   const countries: LocalesCountries = locales.countries
   const optionsCountries: JSX.Element[] = []
@@ -128,6 +128,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   }
   const zipcodeInputOnError: boolean = !(addrZipCode.length === 0 || isZipCodeValid(addrCountry))
   const phoneNumberInputOnError: boolean = !(teamPhone.length === 0 || isPhoneNumberValid)
+
   for (const entry in countries) {
     if (Object.prototype.hasOwnProperty.call(countries, entry)) {
       const { name } = countries[entry]
@@ -171,7 +172,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     return !valid
   }
 
-  const formIsIncomplete = React.useMemo(isFormIsIncomplete, [
+  const formIsIncomplete = useMemo(isFormIsIncomplete, [
     teamName,
     teamEmail,
     teamPhone,
@@ -213,13 +214,13 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     onSaveTeam(updatedTeam)
   }
 
-  React.useEffect((): void => {
+  useEffect((): void => {
     setModalOpened(teamToEdit !== null)
   }, [teamToEdit])
 
-  let ariaModal = ''
-  let modalTitle = ''
-  let modalButtonValidate = ''
+  let ariaModal: string
+  let modalTitle: string
+  let modalButtonValidate: string
   let infoLine = null
   let warningLines = null
   if (team === null) {
