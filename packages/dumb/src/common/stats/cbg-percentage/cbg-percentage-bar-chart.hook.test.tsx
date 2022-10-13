@@ -26,11 +26,11 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks/dom'
-import { CBGPercentageStatsHookProps, useCbgPercentageStatsHook } from './cbg-percentage-stats.hook'
+import { CBGPercentageBarChartHookProps, useCbgPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { waitFor } from '@testing-library/dom'
 import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
 
-describe('CBGPercentageStats hook', () => {
+describe('CBGPercentageBarChart hook', () => {
   const total = 1000
   const createCBGTimeData = (id: StatLevel, legendTitle: string, title: string, value: number): CBGPercentageData => {
     return { id, legendTitle, title, value }
@@ -41,16 +41,17 @@ describe('CBGPercentageStats hook', () => {
   const lowStat = createCBGTimeData(StatLevel.Low, 'fakeLegendTitle4', 'fakeTitle4', 250)
   const veryLowStat = createCBGTimeData(StatLevel.VeryLow, 'fakeLegendTitle5', 'fakeTitle5', 50)
 
-  const defaultProps: CBGPercentageStatsHookProps = {
+  const defaultProps: CBGPercentageBarChartHookProps = {
     cbgStatType: CBGStatType.TimeInRange,
     data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
+    hideTooltip: false,
     titleKey: 'fakeTitleKey',
     total
   }
 
   it('should return correct cbgStatsProps', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useCbgPercentageStatsHook(props))
+    const { result } = renderHook(() => useCbgPercentageBarChartHook(props))
     expect(result.current.cbgStatsProps).toEqual({
       veryHighStat: {
         cbgStatType: CBGStatType.TimeInRange,
@@ -97,7 +98,7 @@ describe('CBGPercentageStats hook', () => {
       showTooltipIcon: true,
       title: defaultProps.titleKey
     }
-    const { result } = renderHook(() => useCbgPercentageStatsHook(props))
+    const { result } = renderHook(() => useCbgPercentageBarChartHook(props))
     expect(result.current.hoveredStatId).toBeNull()
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {

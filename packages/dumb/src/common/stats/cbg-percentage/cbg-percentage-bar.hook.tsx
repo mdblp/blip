@@ -26,12 +26,12 @@
  */
 
 import { useMemo } from 'react'
-import cbgTimeStatStyles from './cbg-percentage-stat.css'
+import cbgTimeStatStyles from './cbg-percentage-bar.css'
 import stylesColors from '../cbg-colors.css'
 import { formatDuration } from '../../../utils/datetime'
 import { CBGStatType } from '../models'
 
-export interface CBGPercentageStatHookProps {
+export interface CBGPercentageBarHookProps {
   cbgStatType: CBGStatType
   id: string
   isDisabled: boolean
@@ -39,7 +39,7 @@ export interface CBGPercentageStatHookProps {
   value: number
 }
 
-interface CBGPercentageStatHookReturn {
+interface CBGPercentageBarHookReturn {
   barClasses: string
   barValue: string
   hasValues: boolean
@@ -48,7 +48,7 @@ interface CBGPercentageStatHookReturn {
   rectangleClasses: string
 }
 
-export const useCBGPercentageStat = (props: CBGPercentageStatHookProps): CBGPercentageStatHookReturn => {
+export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercentageBarHookReturn => {
   const { cbgStatType, id, isDisabled, total, value } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0

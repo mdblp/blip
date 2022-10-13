@@ -26,11 +26,11 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './cbg-percentage-stat.css'
-import { useCBGPercentageStat } from './cbg-percentage-stat.hook'
+import styles from './cbg-percentage-bar.css'
+import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
 import { CBGStatType } from '../models'
 
-export interface CBGPercentageProps {
+export interface CBGPercentageBarProps {
   cbgStatType: CBGStatType
   id: string
   isDisabled: boolean
@@ -41,7 +41,7 @@ export interface CBGPercentageProps {
   value: number
 }
 
-const CBGPercentageStat: FunctionComponent<CBGPercentageProps> = (props: CBGPercentageProps) => {
+const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props: CBGPercentageBarProps) => {
   const { cbgStatType, id, isDisabled, onMouseEnter, legendTitle, title, total, value } = props
 
   const {
@@ -51,7 +51,7 @@ const CBGPercentageStat: FunctionComponent<CBGPercentageProps> = (props: CBGPerc
     percentage,
     percentageClasses,
     rectangleClasses
-  } = useCBGPercentageStat({ cbgStatType, id, isDisabled, total, value })
+  } = useCBGPercentageBar({ cbgStatType, id, isDisabled, total, value })
 
   return (
     <div
@@ -88,4 +88,4 @@ const CBGPercentageStat: FunctionComponent<CBGPercentageProps> = (props: CBGPerc
   )
 }
 
-export const CBGPercentageStatMemoized = React.memo(CBGPercentageStat)
+export const CBGPercentageBarMemoized = React.memo(CBGPercentageBar)

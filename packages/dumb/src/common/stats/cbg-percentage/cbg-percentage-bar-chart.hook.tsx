@@ -27,10 +27,10 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGPercentageProps } from './cbg-percentage-stat'
+import { CBGPercentageBarProps } from './cbg-percentage-bar'
 import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
 
-export interface CBGPercentageStatsHookProps {
+export interface CBGPercentageBarChartHookProps {
   cbgStatType: CBGStatType
   data: CBGPercentageData[]
   hideTooltip: boolean
@@ -38,14 +38,14 @@ export interface CBGPercentageStatsHookProps {
   total: number
 }
 
-interface CBGPercentageStatsHookReturn {
-  cbgStatsProps: { veryHighStat: CBGPercentageProps, highStat: CBGPercentageProps, targetStat: CBGPercentageProps, lowStat: CBGPercentageProps, veryLowStat: CBGPercentageProps }
+interface CBGPercentageBarChartHookReturn {
+  cbgStatsProps: { veryHighStat: CBGPercentageBarProps, highStat: CBGPercentageBarProps, targetStat: CBGPercentageBarProps, lowStat: CBGPercentageBarProps, veryLowStat: CBGPercentageBarProps }
   hoveredStatId: StatLevel | null
   onMouseLeave: Function
   titleProps: { legendTitle: string, showTooltipIcon: boolean, title: string }
 }
 
-export const useCbgPercentageStatsHook = (props: CBGPercentageStatsHookProps): CBGPercentageStatsHookReturn => {
+export const useCbgPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
   const { cbgStatType, data, hideTooltip, titleKey, total } = props
   const { t } = useTranslation('main')
   const title = t(titleKey)

@@ -26,15 +26,19 @@
  */
 
 import { CBGMeanStatMemoized as CBGMeanStat } from './common/stats/cbg-mean/cbg-mean-stat'
-import { CBGPercentageStatsMemoized as CBGPercentageStats } from './common/stats/cbg-percentage/cbg-percentage-stats'
-import { CbgStandardDeviationMemoized as CbgStandardDeviation } from './common/stats/cbg-standard-deviation/cbg-standard-deviation'
+import {
+  CbgPercentageBarChartMemoized as CbgPercentageBarChart
+} from './common/stats/cbg-percentage/cbg-percentage-bar-chart'
+import {
+  CbgStandardDeviationMemoized as CbgStandardDeviation
+} from './common/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { CBGStatType } from './common/stats/models'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
 import Tooltip from './common/tooltips/tooltip'
 
 export {
   CBGMeanStat,
-  CBGPercentageStats,
+  CbgPercentageBarChart,
   CbgStandardDeviation,
   CBGStatType,
   StatTooltip,

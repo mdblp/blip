@@ -27,9 +27,9 @@
 
 import { renderHook } from '@testing-library/react-hooks/dom'
 import { CBGStatType } from '../models'
-import { CBGPercentageStatHookProps, useCBGPercentageStat } from './cbg-percentage-stat.hook'
+import { CBGPercentageBarHookProps, useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
-describe('CBGPercentageStat hook', () => {
+describe('CBGPercentageBar hook', () => {
   const onMouseLeaveMock = jest.fn()
   const onMouseOverMock = jest.fn()
   const defaultProps = {
@@ -42,35 +42,35 @@ describe('CBGPercentageStat hook', () => {
     title: 'fakeTitle',
     total: 1000,
     value: 200
-  } as CBGPercentageStatHookProps
+  } as CBGPercentageBarHookProps
 
   it('should return correct percentage', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useCBGPercentageStat(props))
+    const { result } = renderHook(() => useCBGPercentageBar(props))
     expect(result.current.percentage).toBe(20)
   })
 
   it('should return hasValues as true when total is not 0', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useCBGPercentageStat(props))
+    const { result } = renderHook(() => useCBGPercentageBar(props))
     expect(result.current.hasValues).toBeTruthy()
   })
 
   it('should return hasValues as false when total is 0', () => {
     const props = { ...defaultProps, total: 0 }
-    const { result } = renderHook(() => useCBGPercentageStat(props))
+    const { result } = renderHook(() => useCBGPercentageBar(props))
     expect(result.current.hasValues).toBeFalsy()
   })
 
   it('should return barValue equals value when CBGStatType is ReadingsInRange', () => {
     const props = { ...defaultProps, cbgStatType: CBGStatType.ReadingsInRange }
-    const { result } = renderHook(() => useCBGPercentageStat(props))
+    const { result } = renderHook(() => useCBGPercentageBar(props))
     expect(result.current.barValue).toBe(defaultProps.value.toString())
   })
 
   it('should return barValue as duration when CBGStatType is TimeInRange', () => {
     const props = { ...defaultProps, total: 300000, value: 100000 }
-    const { result } = renderHook(() => useCBGPercentageStat(props))
+    const { result } = renderHook(() => useCBGPercentageBar(props))
     expect(result.current.barValue).toBe('2undefined')
   })
 })

@@ -4,7 +4,7 @@ import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
-import { CBGMeanStat, CBGPercentageStats, CbgStandardDeviation, CBGStatType } from 'dumb'
+import { CBGMeanStat, CbgPercentageBarChart, CbgStandardDeviation, CBGStatType } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
 const { Stat } = vizComponents
@@ -93,7 +93,7 @@ class Stats extends React.Component {
       if (stat.id === CBGStatType.TimeInRange || stat.id === CBGStatType.ReadingsInRange) {
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
-            <CBGPercentageStats
+            <CbgPercentageBarChart
               annotations={stat.annotations}
               data={stat.data.data}
               hideTooltip={hideToolTips}
