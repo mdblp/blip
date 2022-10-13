@@ -171,7 +171,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               data-testid="team-information-phone"
               className={classes.value}
             >
-              ({PhonePrefixCode[team.address.country]}) {team.phone}
+              {team.address ? `(${PhonePrefixCode[team.address.country] as PhonePrefixCode})` : undefined} {team.phone}
             </Typography>
           </div>
           <div className={classes.teamInfo}>
