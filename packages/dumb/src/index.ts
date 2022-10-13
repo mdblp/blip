@@ -29,10 +29,16 @@ import { CBGPercentageBarChartMemoized as CBGPercentageBarChart } from './common
 import { CBGStatType } from './common/stats/models'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
 import Tooltip from './common/tooltips/tooltip'
+import { CgmTable } from './settings/cgm-table'
+import { PumpTable } from './settings/pump-table'
+import { TerminalTable } from './settings/terminal-table'
 
 export {
   CBGPercentageBarChart,
   CBGStatType,
+  CgmTable,
+  PumpTable,
   StatTooltip,
+  TerminalTable,
   Tooltip
 }
