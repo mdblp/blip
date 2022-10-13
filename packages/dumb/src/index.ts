@@ -27,10 +27,10 @@
 
 import { CBGMeanStatMemoized as CBGMeanStat } from './common/stats/cbg-mean/cbg-mean-stat'
 import {
-  CBGPercentageBarChartMemoized as CbgPercentageBarChart
+  CBGPercentageBarChartMemoized as CBGPercentageBarChart
 } from './common/stats/cbg-percentage/cbg-percentage-bar-chart'
 import {
-  CbgStandardDeviationMemoized as CbgStandardDeviation
+  CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './common/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { CBGStatType } from './common/stats/models'
 import { StatTooltip } from './common/tooltips/stat-tooltip'
@@ -38,8 +38,8 @@ import Tooltip from './common/tooltips/tooltip'
 
 export {
   CBGMeanStat,
-  CbgPercentageBarChart,
-  CbgStandardDeviation,
+  CBGPercentageBarChart,
+  CBGStandardDeviation,
   CBGStatType,
   StatTooltip,
   Tooltip
