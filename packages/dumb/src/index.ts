@@ -28,7 +28,7 @@
 import { CBGMeanStatMemoized as CBGMeanStat } from './common/stats/cbg-mean/cbg-mean-stat'
 import {
   CBGPercentageBarChartMemoized as CbgPercentageBarChart
-} from './common/stats/cbg-percentage-bar-chart'
+} from './common/stats/cbg-percentage/cbg-percentage-bar-chart'
 import {
   CbgStandardDeviationMemoized as CbgStandardDeviation
 } from './common/stats/cbg-standard-deviation/cbg-standard-deviation'
