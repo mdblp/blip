@@ -43,7 +43,7 @@ interface CBGPercentageTitleProps {
 
 const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
-  const { t } = useTranslation('ma  ')
+  const { t } = useTranslation('main')
 
   return (
     <>

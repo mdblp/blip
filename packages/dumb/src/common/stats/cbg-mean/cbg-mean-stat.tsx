@@ -41,7 +41,7 @@ export interface CBGMeanStatProps {
   value: number
 }
 
-const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props: CBGMeanStatProps) => {
+const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
   const { hideTooltip, title, tooltipValue, units, value } = props
   const { t } = useTranslation('main')
 

@@ -42,7 +42,7 @@ export interface CBGStandardDeviationProps {
   units: string
 }
 
-const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props: CBGStandardDeviationProps) => {
+const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props) => {
   const { annotations, averageGlucose, hideTooltip, standardDeviation, title, units } = props
   const { t } = useTranslation('main')
 
