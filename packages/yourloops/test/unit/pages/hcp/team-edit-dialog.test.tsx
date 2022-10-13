@@ -26,9 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import React from 'react'
-
 import { Team, TeamMember } from '../../../../lib/team'
 import TeamEditDialog, { TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
 import { render, unmountComponentAtNode } from 'react-dom'

@@ -163,4 +163,3 @@ export function formatAlarmSettingThreshold(value: number): string {
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {
   return element ? element.offsetWidth < element.scrollWidth : undefined
 }
-
