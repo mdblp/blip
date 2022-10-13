@@ -46,7 +46,7 @@ const StyledTooltip = withStyles(() => ({
   }
 }))(Tooltip)
 
-export const StatTooltip: FunctionComponent<StatTooltipProps> = (props: StatTooltipProps) => {
+export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
   const { annotations, children } = props
 
   return (
