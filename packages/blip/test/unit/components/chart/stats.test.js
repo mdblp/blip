@@ -138,11 +138,6 @@ describe('Stats', () => {
         }
       })
 
-      it('should render without errors when provided all required props', () => {
-        expect(wrapper.find('.Stats')).to.have.length(1)
-        expect(console.error.callCount).to.equal(0)
-      })
-
       it('should show all expected stats when bgSource prop is `cbg`', () => {
         wrapper.setProps({
           ...wrapper.props(),
@@ -153,7 +148,6 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(6)
 
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
           'totalInsulin',
           'carbs',
@@ -161,6 +155,7 @@ describe('Stats', () => {
           'coefficientOfVariation'
         ]
 
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -176,12 +171,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'totalInsulin',
           'carbs'
         ]
 
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -216,11 +211,6 @@ describe('Stats', () => {
         }
       })
 
-      it('should render without errors when provided all required props', () => {
-        expect(wrapper.find('.Stats')).to.have.length(1)
-        expect(console.error.callCount).to.equal(0)
-      })
-
       it('should show all expected stats when bgSource prop is `cbg`', () => {
         wrapper.setProps({
           ...wrapper.props(),
@@ -231,7 +221,6 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(6)
 
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
           'sensorUsage',
           'glucoseManagementIndicator',
@@ -239,6 +228,7 @@ describe('Stats', () => {
           'coefficientOfVariation'
         ]
 
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -254,12 +244,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'standardDev',
           'coefficientOfVariation'
         ]
 
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -277,11 +267,6 @@ describe('Stats', () => {
           wrapper.unmount()
           wrapper = null
         }
-      })
-
-      it('should render without errors when provided all required props', () => {
-        expect(wrapper.find('.Stats')).to.have.length(1)
-        expect(console.error.callCount).to.equal(0)
       })
 
       it('should show all expected stats when bgSource prop is `cbg`', () => {
@@ -324,11 +309,6 @@ describe('Stats', () => {
         }
       })
 
-      it('should render without errors when provided all required props', () => {
-        expect(wrapper.find('.Stats')).to.have.length(1)
-        expect(console.error.callCount).to.equal(0)
-      })
-
       it('should show all expected stats when bgSource prop is `cbg`', () => {
         wrapper.setProps({
           ...wrapper.props(),
@@ -339,12 +319,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
           'averageDailyDose',
           'carbs'
         ]
 
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -363,15 +343,14 @@ describe('Stats', () => {
         })} />)
 
         expect(wrapper.find('.Stats').children()).to.have.length(5)
-
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
           'averageDailyDose',
           'timeInAuto',
           'carbs'
         ]
 
+        expect(wrapper.find({'data-testid': 'stat-timeInRange'})).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -387,11 +366,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'averageDailyDose',
           'carbs'
         ]
+
+        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })

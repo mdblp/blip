@@ -132,9 +132,10 @@ pipeline {
             }
             steps {
                 script {
-                    env.target = "itg"
+                    env.target = "preview"
                     if (env.version == "UNRELEASED" || env.version.contains("BETA") && env.GIT_BRANCH == "dblp") {
                         env.version = "master"
+                        env.target = "sandbox"
                         doPublish = false
                     }
                 }

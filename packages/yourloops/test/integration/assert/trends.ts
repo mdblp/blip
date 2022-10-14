@@ -27,7 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { checkStatTooltip } from './tooltip'
+import { checkStatTooltip } from './stats'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Daily average of the time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is number of readings in range multiplied by the sample frequency.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
@@ -56,4 +56,13 @@ export const checkTrendsStatsWidgetsTooltips = () => {
   checkStatTooltip(statsWidgets, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
   checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
+}
+
+export const checkTrendsTimeInRangeStatsWidgets = async () => {
+  expect(await screen.findByTestId('stats-widgets', {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+  expect(screen.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('1h 36m7%')
+  expect(screen.getByTestId('cbg-percentage-stat-high-timeInRange')).toHaveTextContent('6h 24m27%')
+  expect(screen.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('3h 12m13%')
+  expect(screen.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('4h 48m20%')
+  expect(screen.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('8h33%')
 }

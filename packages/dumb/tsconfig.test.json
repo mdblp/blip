@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "types": [
       "jest"
     ],
@@ -15,8 +15,7 @@
   "exclude": [
     "node_modules",
     "src/coverage",
-    "dist",
-    "src/**/*.test.tsx"
+    "dist"
   ],
   "include": [
     "src/**/*"

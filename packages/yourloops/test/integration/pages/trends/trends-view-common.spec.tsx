@@ -25,27 +25,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
 import { unMonitoredPatient } from '../../mock/mockPatientAPI'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
+import {
+  checkTrendsStatsWidgetsTooltips,
+  checkTrendsTidelineContainerTooltips,
+  checkTrendsTimeInRangeStatsWidgets
+} from '../../assert/trends'
+import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+import {
+  checkReadingsInRangeStatsTitle,
+  checkReadingsInRangeStatsWidgets,
+  checkTimeInRangeStatsTitle
+} from '../../assert/stats'
 
 jest.setTimeout(10000)
 
-describe('Trends view for patient', () => {
+describe('Trends view for anyone', () => {
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
   })
 
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
+  describe('with all kind of data', () => {
+    it('should render correct tooltips and values', async () => {
+      mockDataAPI(minimalTrendViewData)
+      renderPage('/trends')
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient(false)
-    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
+      // Check the tooltips
+      await checkTrendsTidelineContainerTooltips()
+      checkTrendsStatsWidgetsTooltips()
+    })
+  })
+
+  describe('with time in range data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(timeInRangeStatsTrendViewData)
+      renderPage('/trends')
+
+      await checkTrendsTimeInRangeStatsWidgets()
+      checkTimeInRangeStatsTitle()
+    })
+  })
+
+  describe('with smbg data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(smbgData)
+      renderPage('/trends')
+
+      await checkReadingsInRangeStatsWidgets()
+      checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
+    })
   })
 })
