@@ -59,7 +59,7 @@ export const CgmTable: FunctionComponent<CgmTableProps> = (
       </tr>
       <tr>
         <td>{t('Cgm sensor expiration date')}</td>
-        <td data-isodate={cgm.expirationDate}>{cgmSensorExpirationDate}</td>
+        <td>{cgmSensorExpirationDate}</td>
       </tr>
       <tr>
         <td>{t('Cgm transmitter software version')}</td>
