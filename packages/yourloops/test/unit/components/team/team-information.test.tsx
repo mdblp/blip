@@ -28,9 +28,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-
 import ThemeProvider from '@material-ui/styles/ThemeProvider'
-
 import * as authHookMock from '../../../../lib/auth'
 import { getTheme } from '../../../../components/theme'
 import TeamInformation, { TeamInformationProps } from '../../../../components/team/team-information'
@@ -40,6 +38,7 @@ import TeamUtils from '../../../../lib/team/utils'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
 import * as alertHookMock from '../../../../components/utils/snackbar'
+import { PhonePrefixCode } from '../../../../lib/utils'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
@@ -124,7 +123,7 @@ describe('TeamInformation', () => {
     const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`
     renderTeamInformation()
     expect(document.getElementById(`team-information-${teamId}-name`).innerHTML).toEqual(team.name)
-    expect(document.getElementById(`team-information-${teamId}-phone`).innerHTML).toEqual(team.phone)
+    expect(document.getElementById(`team-information-${teamId}-phone`).innerHTML).toEqual(`(${PhonePrefixCode[team.address.country] as PhonePrefixCode}) ${team.phone}`)
     expect(document.getElementById(`team-information-${teamId}-code`).innerHTML).toEqual(team.code)
     expect(document.getElementById(`team-information-${teamId}-address`).innerHTML).toEqual(address)
   })
@@ -189,5 +188,13 @@ describe('TeamInformation', () => {
     render(getTeamInformationJSX())
     await editTeamInfo()
     expect(errorMock).toHaveBeenCalledWith('team-page-failed-edit')
+  })
+
+  it('should not show the phone prefix if the team has no address', () => {
+    const teamWithNoAddress = buildTeam(teamId, [])
+    const phone = '123456789'
+    teamWithNoAddress.phone = phone
+    renderTeamInformation({ team: teamWithNoAddress, refreshParent: refresh })
+    expect(document.getElementById(`team-information-${teamId}-phone`).innerHTML).toEqual(phone)
   })
 })
