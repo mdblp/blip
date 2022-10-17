@@ -24,6 +24,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-1767 Create package to migrate viz components
 - YLP-1797 Make it possible to see what role the users are logged in with matomo
 - YLP-1834 Migrate time in range stats
+### Improvements
+- YLP-1680 getPatientData Api method has a wrong parameter
 ### Fixed
 - YLP-1645 A patient can create, edit and delete a medical record
 - YLP-1659 Language is not updated with user preferences
