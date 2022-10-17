@@ -59,7 +59,7 @@ export default class DataApi {
     const params = {
       startDate: options?.startDate,
       endDate: options?.endDate,
-      withPumpSettings: options?.withPumpSettings ? true : undefined
+      withPumpSettings: options?.withPumpSettings ?? undefined
     }
     const { data } = await HttpService.get<PatientData>({
       url: `/data/v1/dataV2/${patient.userid}`,
