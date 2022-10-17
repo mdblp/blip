@@ -34,10 +34,10 @@ import {
   PARAMETER_ID,
   PHYSICAL_ACTIVITY_ID,
   PHYSICAL_ACTIVITY_TIME,
-  RESERVOIR_CHANGE_ID
+  RESERVOIR_CHANGE_ID, SMBG_ID
 } from '../mock/mockDataAPI'
 import moment from 'moment-timezone'
-import { checkStatTooltip } from './tooltip'
+import { checkStatTooltip } from './stats'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
@@ -67,6 +67,7 @@ export const checkDailyTidelineContainerTooltips = async () => {
   checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmInfusion Site change')
   checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
   checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, '5:30 pmGlucose189')
+  checkTidelineContainerElementTooltip(`smbg_${SMBG_ID}`, '5:15 pmGlucose189Calibration')
 }
 
 export const checkDailyStatsWidgetsTooltips = () => {
@@ -78,4 +79,14 @@ export const checkDailyStatsWidgetsTooltips = () => {
   checkStatTooltip(statsWidgets, 'Total Carbs', TOTAL_CARBS_TOOLTIP)
   checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
+}
+
+export const checkDailyTimeInRangeStatsWidgets = () => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('10m13%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-high-timeInRange')).toHaveTextContent('5m7%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('15m20%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('20m27%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('25m33%')
+  expect(statsWidgets.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
 }

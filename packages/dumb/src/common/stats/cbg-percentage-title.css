@@ -25,14 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import userEvent from '@testing-library/user-event'
-import { BoundFunctions, queries, within, screen } from '@testing-library/react'
+.legend-title {
+  font-size: 12px;
+}
 
-export const checkStatTooltip = (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
-  const element = statsWidgets.getByText(infoIconLabel)
-  const infoIcon = within(element).getByTestId('info-icon')
-  userEvent.hover(infoIcon)
-  const tooltip = screen.getByTestId('tooltip')
-  expect(tooltip).toHaveTextContent(expectedTextContent)
-  userEvent.unhover(infoIcon)
+.stat-footer {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--stat--border);
+  padding: 0.25em 0.625em .375em;
+  overflow: hidden;
+}
+
+.stat-tooltip {
+  z-index: 1;
+  position: relative;
+}
+
+.title {
+  margin-left: 4px;
+  height: 21px;
+}
+
+.tooltip-icon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
+}
+
+.tooltip-icon > img {
+  width: 0.9em;
 }

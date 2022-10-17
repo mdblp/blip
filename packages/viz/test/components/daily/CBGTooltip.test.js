@@ -22,7 +22,6 @@ import { expect } from 'chai'
 import { mount } from 'enzyme'
 
 import { formatClassesAsSelector } from '../../helpers/cssmodules'
-import colors from '../../../src/styles/colors.css'
 
 import CBGTooltip from '../../../src/components/daily/cbgtooltip/CBGTooltip'
 import styles from '../../../src/components/daily/cbgtooltip/CBGTooltip.css'
@@ -42,18 +41,6 @@ const target = {
   type: 'cbg',
   units: 'mg/dL',
   value: 100
-}
-
-const low = {
-  type: 'cbg',
-  units: 'mg/dL',
-  value: 65
-}
-
-const high = {
-  type: 'cbg',
-  units: 'mg/dL',
-  value: 200
 }
 
 const veryHigh = {
@@ -94,36 +81,6 @@ describe('CBGTooltip', () => {
   it('should render without issue when all properties provided', () => {
     const wrapper = mount(<CBGTooltip {...props} cbg={target} />)
     expect(wrapper.find(formatClassesAsSelector(styles.bg))).to.have.length(1)
-  })
-
-  it('should render "target" color for target bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={target} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.target)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.target)
-  })
-
-  it('should render "high" color for high bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={high} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.high)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.high)
-  })
-
-  it('should render "veryHigh" color for high bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={veryHigh} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.veryHigh)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.veryHigh)
-  })
-
-  it('should render "low" color for low bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={low} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.low)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.low)
-  })
-
-  it('should render "veryLow" color for low bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={veryLow} />)
-    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.veryLow)
-    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.veryLow)
   })
 
   it('should render "High" and an annotation for a "very-high" cbg', () => {

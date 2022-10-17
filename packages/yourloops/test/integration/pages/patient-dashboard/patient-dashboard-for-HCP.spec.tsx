@@ -37,7 +37,7 @@ import { checkFooter } from '../../assert/footer'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
+import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
   mockPatientAPI,
@@ -69,7 +69,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()
-    mockDataAPIForDailyView()
+    mockDataAPI()
   })
 
   function getPatientDashboardForHCP(history) {

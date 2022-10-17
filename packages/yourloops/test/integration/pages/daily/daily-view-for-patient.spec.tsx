@@ -29,8 +29,7 @@ import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
 import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltips } from '../../assert/daily'
-import { mockDataAPIForDailyView } from '../../mock/mockDataAPI'
+import { mockDataAPI } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 
@@ -39,23 +38,14 @@ jest.setTimeout(10000)
 describe('Daily view for patient', () => {
   beforeAll(() => {
     mockPatientLogin(unMonitoredPatient)
-    mockDataAPIForDailyView()
   })
 
-  const renderDailyView = () => {
+  it('should render correct layout', async () => {
+    mockDataAPI()
     renderPage('/daily')
-  }
 
-  it('should render correct basic components when navigating to patient daily view', async () => {
-    renderDailyView()
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient(true)
     checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
-  })
-
-  it('should render correct tooltips', async () => {
-    renderDailyView()
-    await checkDailyTidelineContainerTooltips()
-    checkDailyStatsWidgetsTooltips()
   })
 })

@@ -24,7 +24,6 @@ import { formatClassesAsSelector } from '../../helpers/cssmodules'
 
 import ConfidentialToolTip from '../../../src/components/daily/confidentialtooltip/ConfidentialTooltip'
 import styles from '../../../src/components/daily/confidentialtooltip/ConfidentialTooltip.css'
-import tooltipStyles from '../../../src/components/common/tooltips/Tooltip.css'
 
 const ToolTip = {
   type: 'deviceEvent',
@@ -45,9 +44,6 @@ describe('ConfidentialTooltip', () => {
     const t = i18next.t.bind(i18next)
 
     const wrapper = mount(<ConfidentialToolTip {...props} confidential={ToolTip} />)
-    expect(wrapper.
-      find(formatClassesAsSelector(tooltipStyles.content)))
-      .to.have.length(1)
     expect(wrapper.
       find(formatClassesAsSelector('MuiGrid-item')))
       .to.have.length(2)

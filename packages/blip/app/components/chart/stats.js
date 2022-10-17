@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
-import { utils as vizUtils, components as vizComponents } from 'tidepool-viz'
-
+import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
+import { CBGPercentageBarChart, CBGStatType } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
 const { Stat } = vizComponents
@@ -89,12 +89,30 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    return _.map(stats, stat => (
-      <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
-        <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-        <Divider variant="fullWidth"/>
-      </div>
-    ))
+    return stats.map(stat => {
+      if (stat.id === CBGStatType.TimeInRange || stat.id === CBGStatType.ReadingsInRange) {
+        return (
+          <div key={stat.id} data-testid={`stat-${stat.id}`}>
+            <CBGPercentageBarChart
+              annotations={stat.annotations}
+              data={stat.data.data}
+              hideToolTip={hideToolTips}
+              total={stat.data.total.value}
+              titleKey={stat.title}
+              cbgStatType={stat.id}
+              units={stat.units}
+            />
+            <Divider variant="fullWidth" />
+          </div>
+        )
+      }
+      return (
+        <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
+          <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+          <Divider variant="fullWidth" />
+        </div>
+      )
+    })
   }
 
   render() {

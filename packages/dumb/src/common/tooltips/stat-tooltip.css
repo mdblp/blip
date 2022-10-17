@@ -25,27 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/auth'
-import { unMonitoredPatient } from '../../mock/mockPatientAPI'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+.row {
+  composes: smallSize from '../../styles/typography.css';
+  line-height: 20px;
+  max-width: 240px;
+  min-width: 160px;
+  width: max-content;
+}
 
-jest.setTimeout(10000)
+.message {
+  composes: row;
+  color: var(--stat--default);
+}
 
-describe('Trends view for patient', () => {
-  beforeAll(() => {
-    mockPatientLogin(unMonitoredPatient)
-  })
+.message p {
+  margin: 0;
+}
 
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
+.message a {
+  pointer-events: all;
+}
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient(false)
-    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
-  })
-})
+.divider {
+  height: 2px;
+  margin: 5px -10px;
+  background-color: var(--stat--default);
+}

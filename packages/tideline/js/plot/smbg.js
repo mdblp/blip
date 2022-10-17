@@ -68,11 +68,12 @@ function plotSmbg(pool, opts = defaults) {
       circles.enter()
         .append('circle')
         .attr({
-          cx: smbg.xPosition,
-          cy: smbg.yPosition,
-          r: smbg.radius,
-          id: smbg.id,
-          class: getBgBoundaryClass
+          'cx': smbg.xPosition,
+          'cy': smbg.yPosition,
+          'r': smbg.radius,
+          'id': smbg.id,
+          'data-testid': smbg.id,
+          'class': getBgBoundaryClass
         })
         .classed({'d3-smbg': true, 'd3-circle-smbg': true})
 

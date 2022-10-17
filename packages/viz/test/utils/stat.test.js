@@ -32,7 +32,6 @@ describe('stat', () => {
   describe('statTypes', () => {
     it('should export the `statTypes`', () => {
       expect(stat.statTypes).to.eql({
-        barHorizontal: 'barHorizontal',
         barBg: 'barBg',
         noBar: 'noBar',
         lines: 'lines',
@@ -1003,7 +1002,7 @@ describe('stat', () => {
       const def = stat.getStatDefinition(data, commonStats.readingsInRange, opts)
       expect(def).to.include.all.keys(commonStatProperties)
       expect(def.id).to.equal(commonStats.readingsInRange)
-      expect(def.type).to.equal(statTypes.barHorizontal)
+      expect(def.type).to.equal(statTypes.barBg)
       expect(def.dataFormat).to.eql({
         label: statFormats.bgCount,
         summary: statFormats.bgCount,
@@ -1051,7 +1050,7 @@ describe('stat', () => {
       const def = stat.getStatDefinition(data, commonStats.timeInRange, opts)
       expect(def).to.include.all.keys(commonStatProperties)
       expect(def.id).to.equal(commonStats.timeInRange)
-      expect(def.type).to.equal(statTypes.barHorizontal)
+      expect(def.type).to.equal(statTypes.barBg)
       expect(def.dataFormat).to.eql({
         label: statFormats.percentage,
         summary: statFormats.percentage,
