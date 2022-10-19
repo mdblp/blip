@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { createMemoryHistory, MemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 import * as auth0Mock from '@auth0/auth0-react'
@@ -34,12 +34,13 @@ import { Auth0Provider } from '@auth0/auth0-react'
 import * as authHookMock from '../../../lib/auth'
 import { MainLobby } from '../../../app/main-lobby'
 import renderer, { ReactTestRenderer } from 'react-test-renderer'
-import { ConsentPage, LoginPage } from '../../../pages/login'
+import { ConsentPage } from '../../../pages/login'
 import CompleteSignUpPage from '../../../pages/signup/complete-signup-page'
 import User from '../../../lib/auth/user'
 import PatientConsentPage from '../../../pages/patient/patient-consent'
 import DirectShareApi from '../../../lib/share/direct-share-api'
 import TrainingPage from '../../../pages/training/training'
+import LoginPage from '../../../pages/login/loginPage'
 
 jest.mock('../../../lib/auth')
 jest.mock('@auth0/auth0-react')
@@ -64,7 +65,7 @@ describe('Main lobby', () => {
     })
   })
 
-  function checkRenderAndRoute(currentComponent: ReactTestRenderer, history: MemoryHistory, expectedComponent: () => JSX.Element, route: string) {
+  function checkRenderAndRoute(currentComponent: ReactTestRenderer, history: MemoryHistory, expectedComponent: FunctionComponent, route: string) {
     const mainPageLayout = currentComponent.root.findByType(expectedComponent)
     expect(mainPageLayout).toBeDefined()
     expect(history.location.pathname).toBe(route)
