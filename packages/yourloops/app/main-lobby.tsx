@@ -38,10 +38,11 @@ import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/u
 import Footer from '../components/footer/footer'
 import PatientConsentPage from '../pages/patient/patient-consent'
 import CompleteSignUpPage from '../pages/signup/complete-signup-page'
-import { ConsentPage, LoginPage } from '../pages/login'
+import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import IntendedUsePage from '../pages/intented-use/intended-use-page'
+import LoginPage from '../pages/login/loginPage'
 
 const RENEW_CONSENT_PATH = '/renew-consent'
 const TRAINING_PATH = '/training'
@@ -51,7 +52,7 @@ const LOGIN_PATH = '/login'
 const INTENDED_USE_PATH = '/intended-use'
 const PUBLIC_ROUTES = [LOGIN_PATH]
 const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, INTENDED_USE_PATH]
+const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, INTENDED_USE_PATH, TRAINING_PATH]
 
 interface StyleProps {
   color: string

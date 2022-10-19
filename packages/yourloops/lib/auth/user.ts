@@ -49,8 +49,8 @@ export default class User {
     this.id = User.getId(authenticatedUser.sub)
     this.role = User.getRole(authenticatedUser[UserMetadata.Roles])
     this.username = authenticatedUser.email
-    this.latestConsentChangeDate = config.LATEST_TERMS ? new Date(config.LATEST_TERMS) : new Date(0)
-    this.latestTrainingDate = config.LATEST_TRAINING ? new Date(config.LATEST_TRAINING) : new Date(0)
+    this.latestConsentChangeDate = new Date(config.LATEST_TERMS ?? 0)
+    this.latestTrainingDate = new Date(config.LATEST_TRAINING ?? 0)
   }
 
   private static getId(sub: string): string {
