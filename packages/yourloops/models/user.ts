@@ -60,6 +60,7 @@ interface Patient {
 }
 
 interface Profile {
+  email: string
   fullName: string
   firstName?: string
   lastName?: string

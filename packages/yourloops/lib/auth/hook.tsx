@@ -192,6 +192,7 @@ export function AuthContextImpl(): AuthContext {
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
     const now = new Date().toISOString()
     let profile: Profile = {
+      email: auth0user.email,
       fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
       firstName: signupForm.profileFirstname,
       lastName: signupForm.profileLastname,

@@ -28,7 +28,7 @@
 import React from 'react'
 import { Router } from 'react-router-dom'
 import { act, render, screen, waitFor } from '@testing-library/react'
-import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
 import { createMemoryHistory } from 'history'
@@ -45,6 +45,7 @@ describe('Signup stepper', () => {
   const firstName = 'Sandy'
   const lastName = 'Kilo'
   const expectedProfile = {
+    email: loggedInUserEmail,
     firstName,
     lastName,
     fullName: `${firstName} ${lastName}`,

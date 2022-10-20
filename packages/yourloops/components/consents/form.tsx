@@ -67,6 +67,7 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
 
   const checkboxPolicy = (
     <Checkbox
+      id={`${id}-checkbox-privacy-policy`}
       aria-label={t('privacy-policy-checkbox')}
       className={classes.checkbox}
       checked={checked}
@@ -113,6 +114,7 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
 
   const checkboxTerms = (
     <Checkbox
+      id={`${id}-checkbox-terms`}
       aria-label={t('terms-checkbox')}
       className={classes.checkbox}
       checked={checked}
@@ -196,7 +198,7 @@ export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole,
 
   const checkboxFeedback = (
     <Checkbox
-      id="feedback-checkbox"
+      id={`${id}-checkbox-feedback`}
       aria-label={t('feedback-checkbox')}
       className={classes.checkbox}
       checked={checked}
