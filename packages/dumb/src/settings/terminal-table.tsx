@@ -25,28 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
-import {
-  CBGPercentageBarChartMemoized as CBGPercentageBarChart
-} from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
-import {
-  CbgStandardDeviationMemoized as CBGStandardDeviation
-} from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './components/stats/models'
-import { StatTooltip } from './components/tooltips/stat-tooltip'
-import Tooltip from './components/tooltips/tooltip'
-import { CgmTable } from './settings/cgm-table'
-import { PumpTable } from './settings/pump-table'
-import { TerminalTable } from './settings/terminal-table'
+import React, { FunctionComponent } from 'react'
+import styles from './diabeloop.css'
+import { useTranslation } from 'react-i18next'
+import { Device } from './models'
 
-export {
-  CBGMeanStat,
-  CBGPercentageBarChart,
-  CBGStandardDeviation,
-  CBGStatType,
-  CgmTable,
-  PumpTable,
-  StatTooltip,
-  TerminalTable,
-  Tooltip
+const DEFAULT_VALUE = '-'
+
+interface TerminalTableProps {
+  device: Device
+}
+
+export const TerminalTable: FunctionComponent<TerminalTableProps> = (
+  {
+    device = {
+      deviceId: DEFAULT_VALUE,
+      imei: DEFAULT_VALUE,
+      name: DEFAULT_VALUE,
+      manufacturer: DEFAULT_VALUE,
+      swVersion: DEFAULT_VALUE
+    }
+  }
+) => {
+  const { t } = useTranslation('main')
+
+  return (
+    <table data-testid="settings-table-terminal" className={styles.deviceTable}>
+      <caption className={styles.bdlgSettingsHeader}>
+        {device.name}
+      </caption>
+      <tbody>
+      <tr>
+        <td>{t('Manufacturer')}</td>
+        <td>{device.manufacturer}</td>
+      </tr>
+      <tr>
+        <td>{t('Identifier')}</td>
+        <td>{device.deviceId}</td>
+      </tr>
+      <tr>
+        <td>{t('IMEI')}</td>
+        <td>{device.imei}</td>
+      </tr>
+      <tr>
+        <td>{t('Software version')}</td>
+        <td>{device.swVersion}</td>
+      </tr>
+      </tbody>
+    </table>
+  )
 }

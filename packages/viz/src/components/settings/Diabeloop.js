@@ -28,13 +28,11 @@ import HistoryTable from './DiabeloopHistoryParameters'
 
 import * as datetime from '../../utils/datetime'
 import * as dblData from '../../utils/settings/diabeloopData'
-import PumpTable from './PumpTable'
-import CgmTable from './CgmTable'
-import TerminalTable from './TerminalTable'
 
 import { deviceName, getDeviceMeta } from '../../utils/settings/data'
 
 import styles from './Diabeloop.css'
+import { CgmTable, PumpTable, TerminalTable } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 const log = bows('DblSettings')
