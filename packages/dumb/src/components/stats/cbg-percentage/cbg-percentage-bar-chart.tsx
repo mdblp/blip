@@ -70,7 +70,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
           <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
         </Box>
       </div>
-      <div className={styles.statFooter} />
+      <div className={styles['stat-footer']} />
       <StatLegend items={data} units={units} />
     </>
   )

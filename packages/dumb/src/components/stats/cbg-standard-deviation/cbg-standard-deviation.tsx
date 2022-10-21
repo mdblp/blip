@@ -66,7 +66,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
           {!Number.isNaN(standardDeviation) && !hideTooltip &&
             <>
               &nbsp;
-              <span className={styles.titleValue}>
+              <span className={styles['title-value']}>
                 (
                 <span className={`${valueBasedStyles.min.color} ${styles.spacing}`}>{standardDeviationMin}</span>
                 -
@@ -77,7 +77,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
           }
           {!hideTooltip &&
             <StatTooltip annotations={annotations}>
-              <span className={stylesCbgCommon.tooltipIcon}>
+              <span className={stylesCbgCommon['tooltip-icon']}>
                 <img
                   data-testid="info-icon"
                   src={InfoIcon}
@@ -94,23 +94,23 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
       <Box display="flex" marginLeft="6px" marginTop="4px">
         {Number.isNaN(standardDeviation) ? (
           <>
-            <div className={stylesCbgCommon.disabledLine} />
-            <Box className={stylesCbgCommon.disabledLabel} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <div className={stylesCbgCommon['disabled-line']} />
+            <Box className={stylesCbgCommon['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
               --
             </Box>
           </>
         ) : (
           <>
             <div className={stylesCbgCommon.lines}>
-              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon.lineLow}`} />
-              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon.lineTarget}`} />
-              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon.lineHigh}`} />
+              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-low']}`} />
+              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-target']}`} />
+              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-high']}`} />
               <div
-                className={`${stylesCbgCommon.horizontalLine} ${valueBasedStyles.min.backgroundColor}`}
+                className={`${stylesCbgCommon['horizontal-line']} ${valueBasedStyles.min.backgroundColor}`}
                 style={{ left: valueBasedStyles.min.left }}
               />
               <div
-                className={`${stylesCbgCommon.horizontalLine} ${valueBasedStyles.max.backgroundColor}`}
+                className={`${stylesCbgCommon['horizontal-line']} ${valueBasedStyles.max.backgroundColor}`}
                 style={{ left: valueBasedStyles.max.left }}
               />
             </div>

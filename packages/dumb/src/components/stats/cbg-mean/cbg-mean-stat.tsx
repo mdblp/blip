@@ -57,7 +57,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
           {title}
           {!hideTooltip &&
             <StatTooltip annotations={[tooltipValue]}>
-              <span className={styles.tooltipIcon}>
+              <span className={styles['tooltip-icon']}>
                 <img
                   data-testid="info-icon"
                   src={InfoIcon}
@@ -74,17 +74,17 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
       <Box display="flex" marginLeft="6px" marginTop="4px">
         {Number.isNaN(value) ? (
           <>
-            <div className={styles.disabledLine} />
-            <Box className={styles.disabledLabel} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
               --
             </Box>
           </>
         ) : (
           <>
             <div className={styles.lines}>
-              <div className={`${styles.line} ${styles.lineLow}`} />
-              <div className={`${styles.line} ${styles.lineTarget}`} />
-              <div className={`${styles.line} ${styles.lineHigh}`} />
+              <div className={`${styles.line} ${styles['line-low']}`} />
+              <div className={`${styles.line} ${styles['line-target']}`} />
+              <div className={`${styles.line} ${styles['line-high']}`} />
               <div
                 className={`${styles.dot} ${valueBasedStyles.backgroundColor}`}
                 style={{ left: valueBasedStyles.left }}
