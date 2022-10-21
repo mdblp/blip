@@ -116,7 +116,7 @@ const ignoredTransKeyForYourLoops = [
   'modal-add-medical-team-code-no-invite',
   'severe-hypoglycemia-threshold',
   'team-leave-dialog-button-leave',
-  'select-account',
+  'select-account-type',
   'consent',
   'create-profile',
   'until',
@@ -130,7 +130,9 @@ const ignoredTransKeyForYourLoops = [
   'training',
   'initial-hba1c',
   'optional',
-  'training-body'
+  'training-body',
+  'login',
+  'refresh'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

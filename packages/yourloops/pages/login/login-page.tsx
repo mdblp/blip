@@ -97,24 +97,24 @@ const LoginPage: FunctionComponent = () => {
             disableElevation
             onClick={loginWithRedirect}
           >
-            {t('login')}
+            {t(error ? 'refresh' : 'login')}
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            disableElevation
-            onClick={async () => await loginWithRedirect({ screen_hint: 'signup' })}
-          >
-            {t('register')}
-          </Button>
-          {error &&
-            <Button
+          {error
+            ? <Button
               variant="contained"
               color="primary"
               disableElevation
               onClick={onClickLogout}
             >
               {t('logout')}
+            </Button>
+            : <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={async () => await loginWithRedirect({ screen_hint: 'signup' })}
+            >
+              {t('register')}
             </Button>
           }
         </CardActions>

@@ -25,21 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Router } from 'react-router-dom'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
 import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
-import { mockUserApi } from '../../utils/mockUserApi'
+import { mockUserApi } from '../../mock/mockUserApi'
 import { Profile, UserRoles } from '../../../../models/user'
 import userEvent from '@testing-library/user-event'
+import { renderPageFromHistory } from '../../utils/render'
 
 jest.setTimeout(15000)
 
-describe('Signup stepper', () => {
+describe('Signup stepper as caregiver', () => {
   const { updateProfileMock, updatePreferencesMock, updateSettingsMock, updateAuth0UserMetadataMock } = mockUserApi()
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Sandy'
@@ -57,43 +54,29 @@ describe('Signup stepper', () => {
     mockAuth0Hook(null)
   })
 
-  function getStepperPage(history) {
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
-
-  async function renderDom() {
-    act(() => {
-      render(getStepperPage(history))
-    })
-    await waitFor(() => expect(history.location.pathname).toEqual('/complete-signup'))
-  }
-
   it('should be able to create a caregiver account', async () => {
-    await renderDom()
+    renderPageFromHistory(history)
+    expect(history.location.pathname).toEqual('/complete-signup')
+
     checkStepper()
 
     // Step one
     checkAccountSelectorStep()
     userEvent.click(screen.getByLabelText('Create caregiver account'))
-    userEvent.click(screen.getByRole('button', { name: 'Next' }))
+    userEvent.click(screen.getByText('Next'))
 
     // Step two
     checkConsentStep()
     expect(screen.queryByLabelText('Feedback checkbox')).not.toBeInTheDocument()
-    userEvent.click(screen.getByRole('button', { name: 'Next' }))
+    userEvent.click(screen.getByText('Next'))
 
     // Step three
+    const createButton = screen.getByText('Create Account')
     await checkProfileStep(firstName, lastName)
     expect(screen.queryByTestId('hcp-profession-selector')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Create Account' })).not.toBeDisabled()
+    expect(createButton).not.toBeDisabled()
     await act(async () => {
-      userEvent.click(screen.getByRole('button', { name: 'Create Account' }))
+      userEvent.click(createButton)
     })
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(`auth0|${loggedInUserId}`, { role: UserRoles.caregiver })
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expect.objectContaining<Partial<Profile>>(expectedProfile))

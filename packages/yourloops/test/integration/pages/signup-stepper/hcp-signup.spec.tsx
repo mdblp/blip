@@ -25,22 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Router } from 'react-router-dom'
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
 import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
-import { mockUserApi } from '../../utils/mockUserApi'
+import { mockUserApi } from '../../mock/mockUserApi'
 import { HcpProfession } from '../../../../models/hcp-profession'
 import userEvent from '@testing-library/user-event'
 import { UserRoles } from '../../../../models/user'
+import { renderPageFromHistory } from '../../utils/render'
 
 jest.setTimeout(15000)
 
-describe('Signup stepper', () => {
+describe('Signup stepper as hcp', () => {
   const { updateProfileMock, updatePreferencesMock, updateSettingsMock, updateAuth0UserMetadataMock } = mockUserApi()
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Lara'
@@ -60,31 +57,15 @@ describe('Signup stepper', () => {
     mockAuth0Hook(null)
   })
 
-  function getStepperPage(history) {
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
-
-  async function renderDom() {
-    act(() => {
-      render(getStepperPage(history))
-    })
-    await waitFor(() => expect(history.location.pathname).toEqual('/complete-signup'))
-  }
-
   it('should be able to create a hcp account', async () => {
-    await renderDom()
+    renderPageFromHistory(history)
+    expect(history.location.pathname).toEqual('/complete-signup')
     checkStepper()
 
     // Step one
     checkAccountSelectorStep()
     userEvent.click(screen.getByLabelText('Create hcp account'))
-    userEvent.click(screen.getByRole('button', { name: 'Next' }))
+    userEvent.click(screen.getByText('Next'))
 
     // Step two
     const feedbackCheckbox = screen.queryByLabelText('Feedback checkbox')
@@ -93,18 +74,17 @@ describe('Signup stepper', () => {
     expect(feedbackCheckbox).toBeInTheDocument()
 
     userEvent.click(feedbackCheckbox)
-    userEvent.click(screen.getByRole('button', { name: 'Next' }))
+    userEvent.click(screen.getByText('Next'))
 
     // Step three
-    const createButton = screen.getByRole('button', { name: 'Create Account' })
+    const createButton = screen.getByText('Create Account')
     const hcpProfessionSelector = screen.queryByTestId('hcp-profession-selector')
 
     await checkProfileStep(firstName, lastName)
     expect(hcpProfessionSelector).toBeInTheDocument()
 
     fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('button'))
-    screen.getByRole('listbox')
-    userEvent.click(screen.getByRole('option', { name: 'Nurse' }))
+    userEvent.click(screen.getByText('Nurse'))
 
     expect(createButton).not.toBeDisabled()
     await act(async () => {

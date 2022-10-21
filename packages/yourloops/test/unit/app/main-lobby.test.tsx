@@ -40,7 +40,7 @@ import User from '../../../lib/auth/user'
 import PatientConsentPage from '../../../pages/patient/patient-consent'
 import DirectShareApi from '../../../lib/share/direct-share-api'
 import TrainingPage from '../../../pages/training/training'
-import LoginPage from '../../../pages/login/loginPage'
+import LoginPage from '../../../pages/login/login-page'
 
 jest.mock('../../../lib/auth')
 jest.mock('@auth0/auth0-react')

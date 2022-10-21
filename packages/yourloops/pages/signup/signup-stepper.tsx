@@ -63,7 +63,7 @@ const SignUpStepper: FunctionComponent = () => {
   const history = useHistory()
   const [activeStep, setActiveStep] = useState(0)
   const steps = [
-    'select-account',
+    'select-account-type',
     'consent',
     'create-profile'
   ]

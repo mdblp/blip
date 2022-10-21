@@ -63,7 +63,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
   const { signupForm, updateForm } = useSignUpFormState()
   const { handleBack, handleNext } = props
 
-  const isInvalidRole = signupForm.accountRole === UserRoles.unset || signupForm.accountRole === UserRoles.patient
+  const isRoleInvalid = signupForm.accountRole === UserRoles.unset || signupForm.accountRole === UserRoles.patient
 
   const onNext = (): void => {
     handleNext()
@@ -84,7 +84,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
           <FormControlLabel
             className={classes.FormControlLabel}
             value={UserRoles.caregiver}
-            aria-label={t('caregiver-radio-input')}
+            aria-label={t('create-caregiver-account')}
             control={<Radio color="primary" />}
             label={
               <SignupRadioLabel
@@ -113,7 +113,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             disabled
             className={classes.FormControlLabel}
             value={UserRoles.patient}
-            aria-label={t('patient-radio-input')}
+            aria-label={t('create-patient-account')}
             control={<Radio color="primary" />}
             label={
               <SignupRadioLabel
@@ -127,7 +127,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
 
       <SignupStepperActionButtons
         nextButtonLabel={t('next')}
-        disabled={isInvalidRole}
+        disabled={isRoleInvalid}
         onClickBackButton={handleBack}
         onClickNextButton={onNext}
       />

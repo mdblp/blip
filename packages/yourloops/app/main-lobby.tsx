@@ -42,7 +42,7 @@ import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import IntendedUsePage from '../pages/intented-use/intended-use-page'
-import LoginPage from '../pages/login/loginPage'
+import LoginPage from '../pages/login/login-page'
 
 const RENEW_CONSENT_PATH = '/renew-consent'
 const TRAINING_PATH = '/training'

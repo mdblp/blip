@@ -157,12 +157,15 @@ export function AuthContextImpl(): AuthContext {
       const user = new User(auth0user as AuthenticatedUser)
 
       if (auth0user[UserMetadata.Roles]) {
-        user.profile = await UserApi.getProfile(user.id)
-        user.preferences = await UserApi.getPreferences(user.id)
-        user.settings = await UserApi.getSettings(user.id)
+        await Promise.all([
+          user.profile = await UserApi.getProfile(user.id),
+          user.preferences = await UserApi.getPreferences(user.id),
+          user.settings = await UserApi.getSettings(user.id)
+        ])
         updateUserLanguage(user)
       }
 
+      metrics.setUser(user)
       setUser(user)
     } catch (err) {
       console.error(err)
