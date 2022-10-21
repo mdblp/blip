@@ -25,53 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import styles from './diabeloop.css'
-import { useTranslation } from 'react-i18next'
-import { Device } from './models'
-
-const DEFAULT_VALUE = '-'
-
-interface TerminalTableProps {
-  device: Device
+export interface CGM {
+  manufacturer: string
+  name: string
+  expirationDate: string
+  swVersionTransmitter: string
+  transmitterId: string
+  endOfLifeTransmitterDate: string
 }
 
-export const TerminalTable: FunctionComponent<TerminalTableProps> = (
-  {
-    device = {
-      deviceId: DEFAULT_VALUE,
-      imei: DEFAULT_VALUE,
-      name: DEFAULT_VALUE,
-      manufacturer: DEFAULT_VALUE,
-      swVersion: DEFAULT_VALUE
-    }
-  }
-) => {
-  const { t } = useTranslation('main')
+export interface Device {
+  deviceId: string
+  imei: string
+  name: string
+  manufacturer: string
+  swVersion: string
+}
 
-  return (
-    <table data-testid="settings-table-terminal" className={styles.deviceTable}>
-      <caption className={styles.bdlgSettingsHeader}>
-        {device.name}
-      </caption>
-      <tbody>
-      <tr>
-        <td>{t('Manufacturer')}</td>
-        <td>{device.manufacturer}</td>
-      </tr>
-      <tr>
-        <td>{t('Identifier')}</td>
-        <td>{device.deviceId}</td>
-      </tr>
-      <tr>
-        <td>{t('IMEI')}</td>
-        <td>{device.imei}</td>
-      </tr>
-      <tr>
-        <td>{t('Software version')}</td>
-        <td>{device.swVersion}</td>
-      </tr>
-      </tbody>
-    </table>
-  )
+export interface Pump {
+  manufacturer: string
+  serialNumber: string
+  swVersion: string
+  expirationDate: string
+}
+
+export interface TimePrefs {
+  timezoneAware: boolean
+  timezoneName: string
 }
