@@ -2,10 +2,6 @@
   composes: copyButton from './settings.css';
 }
 
-.copyText {
-  composes: copyText from './settings.css';
-}
-
 .categoryTitle {
   composes: mediumContrastText from '../../styles/typography.css';
   width: 100%;
