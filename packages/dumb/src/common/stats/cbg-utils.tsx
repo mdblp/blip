@@ -27,19 +27,25 @@
 
 import styles from './cbg-colors.css'
 
-export const computeCBGStyle = (value: number): { backgroundColor: string, color: string, left: string } => {
+interface CBGStyle {
+  backgroundColor: string
+  color: string
+  left: string
+}
+
+export const computeCBGStyle = (value: number): CBGStyle => {
   if (value < 54) {
     return { backgroundColor: styles['low-background'], color: styles['low-color'], left: '0' }
   } else if (value > 250) {
     return { color: styles['high-color'], backgroundColor: styles['high-background'], left: '234px' }
   } else {
-    const widhtInPx = 234 // Width of the cbg bar
+    const widthInPx = 234 // Width of the cbg bar
     const cbgBarRange = 196 // Number of value included in the cbg bar range (from 54 to 250)
     const nbOfValuesNotIncludedInRange = 54 // The first 54 values are not included in the range and should be deduced
     return {
       backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
       color: value < 180 ? styles['target-color'] : styles['high-color'],
-      left: `${Math.round(((value - nbOfValuesNotIncludedInRange) * widhtInPx) / cbgBarRange)}px`
+      left: `${Math.round(((value - nbOfValuesNotIncludedInRange) * widthInPx) / cbgBarRange)}px`
     }
   }
 }

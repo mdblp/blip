@@ -53,7 +53,7 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
       >
         {title}
         {hoveredStatId &&
-          <span className={styles['legend-title']}>
+          <span className={styles.legendTitle}>
             {' ( '}
             <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
             {legendTitle}
@@ -64,7 +64,7 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
         {showTooltipIcon &&
           <StatTooltip annotations={annotations}>
             <span
-              className={styles['tooltip-icon']}
+              className={styles.tooltipIcon}
             >
               <img
                 data-testid="info-icon"

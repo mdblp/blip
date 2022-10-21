@@ -74,7 +74,7 @@ const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
             <div className={percentageClasses}>
               {percentage}
             </div>
-            <div className={styles['percentage-symbol']}>
+            <div className={styles.percentageSymbol}>
               %
             </div>
           </>

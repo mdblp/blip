@@ -28,7 +28,8 @@
 import React, { FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './stat-tooltip.css'
-import { Tooltip, withStyles } from '@material-ui/core'
+import { withStyles } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip'
 
 interface StatTooltipProps {
   annotations: string[]

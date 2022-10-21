@@ -14,14 +14,14 @@ export const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
 
   return (
     <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
-      <ul className={styles['stat-legend']}>
+      <ul className={styles.statLegend}>
         {items.map(item =>
           <li
-            className={styles['stat-legend-item']}
+            className={styles.statLegendItem}
             key={item.id}
             style={{ borderBottomColor: colors[item.id] }}
           >
-            <span className={styles['stat-legend-title']}>
+            <span className={styles.statLegendTitle}>
               {item.legendTitle}
             </span>
           </li>

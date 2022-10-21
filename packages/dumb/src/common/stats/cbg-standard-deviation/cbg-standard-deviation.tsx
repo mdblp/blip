@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent } from 'react'
 import styles from './cbg-standard-deviation.css'
+import stylesCbgCommon from '../cbg-common.css'
 import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
@@ -38,21 +39,20 @@ export interface CBGStandardDeviationProps {
   averageGlucose: number
   hideTooltip: boolean
   standardDeviation: number
-  title: string
   units: string
 }
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props) => {
-  const { annotations, averageGlucose, hideTooltip, standardDeviation, title, units } = props
+  const { annotations, averageGlucose, hideTooltip, standardDeviation, units } = props
   const { t } = useTranslation('main')
 
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
 
-  const valueBasedStyles = useMemo(() => ({
+  const valueBasedStyles = {
     min: computeCBGStyle(standardDeviationMin),
     max: computeCBGStyle(standardDeviationMax)
-  }), [standardDeviationMax, standardDeviationMin])
+  }
 
   return (
     <Box
@@ -62,27 +62,30 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
     >
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <Box display="flex">
-          {title}
-          {!Number.isNaN(standardDeviation) && !hideTooltip && <>
-            &nbsp;
-            <span className={styles['title-value']}>
-            {'( '}
-              <span className={valueBasedStyles.min.color}>{standardDeviationMin}</span>
-              {' - '}
-              <span className={valueBasedStyles.max.color}>{standardDeviationMax}</span>
-              {' )'}
-          </span>
-          </>
+          {t('Standard Deviation')}
+          {!Number.isNaN(standardDeviation) && !hideTooltip &&
+            <>
+              &nbsp;
+              <span className={styles.titleValue}>
+                (
+                <span className={`${valueBasedStyles.min.color} ${styles.spacing}`}>{standardDeviationMin}</span>
+                -
+                <span className={`${valueBasedStyles.max.color} ${styles.spacing}`}>{standardDeviationMax}</span>
+                )
+              </span>
+            </>
           }
-          <StatTooltip annotations={annotations}>
-              <span className={styles['tooltip-icon']}>
+          {!hideTooltip &&
+            <StatTooltip annotations={annotations}>
+              <span className={stylesCbgCommon.tooltipIcon}>
                 <img
                   data-testid="info-icon"
                   src={InfoIcon}
                   alt={t('img-alt-hover-for-more-info')}
                 />
               </span>
-          </StatTooltip>
+            </StatTooltip>
+          }
         </Box>
         <Box fontSize="12px">
           {units}
@@ -91,23 +94,23 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
       <Box display="flex" marginLeft="6px" marginTop="4px">
         {Number.isNaN(standardDeviation) ? (
           <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <div className={stylesCbgCommon.disabledLine} />
+            <Box className={stylesCbgCommon.disabledLabel} fontSize="24px" marginLeft="auto" marginRight="4px">
               --
             </Box>
           </>
         ) : (
           <>
-            <div className={styles.lines}>
-              <div className={`${styles.line} ${styles['line-low']}`} />
-              <div className={`${styles.line} ${styles['line-target']}`} />
-              <div className={`${styles.line} ${styles['line-high']}`} />
+            <div className={stylesCbgCommon.lines}>
+              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon.lineLow}`} />
+              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon.lineTarget}`} />
+              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon.lineHigh}`} />
               <div
-                className={`${styles.dot} ${valueBasedStyles.min.backgroundColor}`}
+                className={`${stylesCbgCommon.horizontalLine} ${valueBasedStyles.min.backgroundColor}`}
                 style={{ left: valueBasedStyles.min.left }}
               />
               <div
-                className={`${styles.dot} ${valueBasedStyles.max.backgroundColor}`}
+                className={`${stylesCbgCommon.horizontalLine} ${valueBasedStyles.max.backgroundColor}`}
                 style={{ left: valueBasedStyles.max.left }}
               />
             </div>

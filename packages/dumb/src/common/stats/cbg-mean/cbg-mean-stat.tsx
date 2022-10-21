@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo } from 'react'
-import styles from './cbg-mean-stat.css'
+import React, { FunctionComponent } from 'react'
+import styles from '../cbg-common.css'
 import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
@@ -44,10 +44,7 @@ export interface CBGMeanStatProps {
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
   const { hideTooltip, title, tooltipValue, units, value } = props
   const { t } = useTranslation('main')
-
-  const valueBasedStyles = useMemo(() => {
-    return computeCBGStyle(value)
-  }, [value])
+  const valueBasedStyles = computeCBGStyle(value)
 
   return (
     <Box
@@ -60,7 +57,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
           {title}
           {!hideTooltip &&
             <StatTooltip annotations={[tooltipValue]}>
-              <span className={styles['tooltip-icon']}>
+              <span className={styles.tooltipIcon}>
                 <img
                   data-testid="info-icon"
                   src={InfoIcon}
@@ -77,17 +74,17 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
       <Box display="flex" marginLeft="6px" marginTop="4px">
         {Number.isNaN(value) ? (
           <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <div className={styles.disabledLine} />
+            <Box className={styles.disabledLabel} fontSize="24px" marginLeft="auto" marginRight="4px">
               --
             </Box>
           </>
         ) : (
           <>
             <div className={styles.lines}>
-              <div className={`${styles.line} ${styles['line-low']}`} />
-              <div className={`${styles.line} ${styles['line-target']}`} />
-              <div className={`${styles.line} ${styles['line-high']}`} />
+              <div className={`${styles.line} ${styles.lineLow}`} />
+              <div className={`${styles.line} ${styles.lineTarget}`} />
+              <div className={`${styles.line} ${styles.lineHigh}`} />
               <div
                 className={`${styles.dot} ${valueBasedStyles.backgroundColor}`}
                 style={{ left: valueBasedStyles.left }}

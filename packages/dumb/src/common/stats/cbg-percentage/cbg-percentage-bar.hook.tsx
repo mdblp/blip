@@ -52,11 +52,11 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
   const { type, id, isDisabled, total, value } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
-  const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : stylesColors[`${id}-background`]
-  const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : stylesColors[`${id}-color`]
+  const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles.disabledRectangle : stylesColors[`${id}-background`]
+  const labelClass = isDisabled ? cbgTimeStatStyles.disabledLabel : stylesColors[`${id}-color`]
   const rectangleClasses = `${cbgTimeStatStyles.rectangle} ${rectangleBackgroundClass}`
-  const barClasses = `${cbgTimeStatStyles['bar-value']} ${labelClass}`
-  const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
+  const barClasses = `${cbgTimeStatStyles.barValue} ${labelClass}`
+  const percentageClasses = `${cbgTimeStatStyles.percentageValue} ${labelClass}`
 
   const barValue = useMemo(() => {
     switch (type) {
