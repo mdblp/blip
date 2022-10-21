@@ -45,7 +45,7 @@
     "immutability-helper": "^3.1.1",
     "lodash": "^4.17.21",
     "memorystream": "^0.3.1",
-    "moment-timezone": "^0.5.32",
+    "moment-timezone": "^0.5.35",
     "parse-svg-path": "0.1.2",
     "pdfkit": "^0.12.3",
     "prop-types": "^15.7.2",

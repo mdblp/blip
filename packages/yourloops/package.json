@@ -44,7 +44,7 @@
     "html-react-parser": "^3.0.4",
     "i18next": "^19.8.4",
     "lodash": "^4.17.21",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.35",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-i18next": "^11.7.2",

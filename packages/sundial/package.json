@@ -44,6 +44,6 @@
     "security-checks": "npm audit --production --registry=https://registry.npmjs.org/"
   },
   "dependencies": {
-    "moment-timezone": "^0.5.32"
+    "moment-timezone": "^0.5.35"
   }
 }
