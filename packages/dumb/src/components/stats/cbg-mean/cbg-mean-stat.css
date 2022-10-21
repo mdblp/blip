@@ -25,59 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../styles/colors.css";
-
-.disabled-label {
-  color: var(--muted);
-}
-
-.disabled-line {
-  background-color: var(--muted);
+.dot {
+  height: 13px;
+  width: 13px;
   border-radius: 20px;
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  width: 234px;
-}
-
-.line {
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  opacity: 0.5;
-}
-
-.lines {
-  display: flex;
-  position: relative;
-  width: 234px;
-}
-
-.line-low {
-  background-color: var(--bg-low);
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
-  width: 19px;
-}
-
-.line-target {
-  background-color: var(--bg-target);
-  width: 131px;
-}
-
-.line-high {
-  background-color: var(--bg-high);
-  border-bottom-right-radius: 20px;
-  border-top-right-radius: 20px;
-  flex-grow: 1;
-}
-
-.tooltip-icon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
-}
-
-.tooltip-icon > img {
-  width: 0.9em;
+  position: absolute;
+  margin-top: 5px;
 }

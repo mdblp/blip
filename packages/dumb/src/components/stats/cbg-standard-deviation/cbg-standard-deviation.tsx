@@ -106,11 +106,11 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-target']}`} />
               <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-high']}`} />
               <div
-                className={`${stylesCbgCommon['horizontal-line']} ${valueBasedStyles.min.backgroundColor}`}
+                className={`${styles['horizontal-line']} ${valueBasedStyles.min.backgroundColor}`}
                 style={{ left: valueBasedStyles.min.left }}
               />
               <div
-                className={`${stylesCbgCommon['horizontal-line']} ${valueBasedStyles.max.backgroundColor}`}
+                className={`${styles['horizontal-line']} ${valueBasedStyles.max.backgroundColor}`}
                 style={{ left: valueBasedStyles.max.left }}
               />
             </div>

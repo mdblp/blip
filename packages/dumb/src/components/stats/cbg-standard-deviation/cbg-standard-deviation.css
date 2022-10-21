@@ -27,6 +27,13 @@
 
 @import "../../../styles/colors.css";
 
+.horizontal-line {
+  height: 16px;
+  width: 2px;
+  position: absolute;
+  margin-top: 4px;
+}
+
 .spacing {
   margin-left: 2px;
   margin-right: 2px;

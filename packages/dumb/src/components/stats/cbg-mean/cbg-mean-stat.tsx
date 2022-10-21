@@ -27,6 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from '../cbg-common.css'
+import stylesCbgMeanStat from './cbg-mean-stat.css'
 import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
@@ -86,7 +87,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
               <div className={`${styles.line} ${styles['line-target']}`} />
               <div className={`${styles.line} ${styles['line-high']}`} />
               <div
-                className={`${styles.dot} ${valueBasedStyles.backgroundColor}`}
+                className={`${stylesCbgMeanStat.dot} ${valueBasedStyles.backgroundColor}`}
                 style={{ left: valueBasedStyles.left }}
               />
             </div>
