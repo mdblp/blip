@@ -63,7 +63,7 @@ describe('Daily view for anyone', () => {
       checkTimeInRangeStatsTitle()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
-      checkStandardDeviationStatWidget('Standard Deviation ( 22 - 180 )mg/dL79')
+      checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
     })
   })
 

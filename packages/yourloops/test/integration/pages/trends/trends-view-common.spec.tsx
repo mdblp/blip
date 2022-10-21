@@ -61,7 +61,7 @@ describe('Trends view for anyone', () => {
 
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL179')
 
-      checkStandardDeviationStatWidget('Standard Deviation ( 167 - 191 )mg/dL12')
+      checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
     })
   })
 
@@ -87,7 +87,7 @@ describe('Trends view for anyone', () => {
 
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
 
-      checkStandardDeviationStatWidget('Standard Deviation ( 22 - 180 )mg/dL79')
+      checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
     })
   })
 })
