@@ -25,20 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGPercentageBarChartMemoized as CBGPercentageBarChart } from './common/stats/cbg-percentage-bar-chart'
-import { CBGStatType } from './common/stats/models'
-import { StatTooltip } from './common/tooltips/stat-tooltip'
-import Tooltip from './common/tooltips/tooltip'
-import { CgmTable } from './settings/cgm-table'
-import { PumpTable } from './settings/pump-table'
-import { TerminalTable } from './settings/terminal-table'
+import React, { FunctionComponent } from 'react'
+import styles from './diabeloop.css'
+import { useTranslation } from 'react-i18next'
+import { Device } from './models'
 
-export {
-  CBGPercentageBarChart,
-  CBGStatType,
-  CgmTable,
-  PumpTable,
-  StatTooltip,
-  TerminalTable,
-  Tooltip
+const DEFAULT_VALUE = '-'
+
+interface TerminalTableProps {
+  device: Device
+}
+
+export const TerminalTable: FunctionComponent<TerminalTableProps> = (
+  {
+    device = {
+      deviceId: DEFAULT_VALUE,
+      imei: DEFAULT_VALUE,
+      name: DEFAULT_VALUE,
+      manufacturer: DEFAULT_VALUE,
+      swVersion: DEFAULT_VALUE
+    }
+  }
+) => {
+  const { t } = useTranslation('main')
+
+  return (
+    <table data-testid="settings-table-terminal" className={styles.deviceTable}>
+      <caption className={styles.bdlgSettingsHeader}>
+        {device.name}
+      </caption>
+      <tbody>
+      <tr>
+        <td>{t('Manufacturer')}</td>
+        <td>{device.manufacturer}</td>
+      </tr>
+      <tr>
+        <td>{t('Identifier')}</td>
+        <td>{device.deviceId}</td>
+      </tr>
+      <tr>
+        <td>{t('IMEI')}</td>
+        <td>{device.imei}</td>
+      </tr>
+      <tr>
+        <td>{t('Software version')}</td>
+        <td>{device.swVersion}</td>
+      </tr>
+      </tbody>
+    </table>
+  )
 }

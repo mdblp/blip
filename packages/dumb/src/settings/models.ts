@@ -25,20 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGPercentageBarChartMemoized as CBGPercentageBarChart } from './common/stats/cbg-percentage-bar-chart'
-import { CBGStatType } from './common/stats/models'
-import { StatTooltip } from './common/tooltips/stat-tooltip'
-import Tooltip from './common/tooltips/tooltip'
-import { CgmTable } from './settings/cgm-table'
-import { PumpTable } from './settings/pump-table'
-import { TerminalTable } from './settings/terminal-table'
+export interface CGM {
+  manufacturer: string
+  name: string
+  expirationDate: string
+  swVersionTransmitter: string
+  transmitterId: string
+  endOfLifeTransmitterDate: string
+}
 
-export {
-  CBGPercentageBarChart,
-  CBGStatType,
-  CgmTable,
-  PumpTable,
-  StatTooltip,
-  TerminalTable,
-  Tooltip
+export interface Device {
+  deviceId: string
+  imei: string
+  name: string
+  manufacturer: string
+  swVersion: string
+}
+
+export interface Pump {
+  manufacturer: string
+  serialNumber: string
+  swVersion: string
+  expirationDate: string
+}
+
+export interface TimePrefs {
+  timezoneAware: boolean
+  timezoneName: string
 }
