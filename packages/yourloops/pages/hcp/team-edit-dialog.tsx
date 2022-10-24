@@ -114,7 +114,9 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const [addrZipCode, setAddrZipCode] = useState(team?.address?.zip ?? '')
   const [addrCity, setAddrCity] = useState(team?.address?.city ?? '')
   const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? 'FR')
+  const [emailInputError, setEmailInputError] = useState(false)
   const isPhoneNumberValid: boolean = REGEX_PHONE.test(teamPhone)
+  const isEmailValid: boolean = REGEX_EMAIL.test(teamEmail)
   const countries: LocalesCountries = locales.countries
   const optionsCountries: JSX.Element[] = []
   const isZipCodeValid = (country: string): boolean => {
@@ -128,6 +130,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   }
   const zipcodeInputOnError: boolean = !(addrZipCode.length === 0 || isZipCodeValid(addrCountry))
   const phoneNumberInputOnError: boolean = !(teamPhone.length === 0 || isPhoneNumberValid)
+  const emailInputOnError: boolean = !(teamEmail.length === 0 || isEmailValid)
 
   for (const entry in countries) {
     if (Object.prototype.hasOwnProperty.call(countries, entry)) {
@@ -368,6 +371,9 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             className={classes.formChild}
             variant="outlined"
             onChange={(e) => setTeamEmail(e.target.value)}
+            onBlur={() => setEmailInputError(!(teamEmail.length === 0 || isEmailValid))}
+            error={emailInputError}
+            helperText={emailInputError ? t('email-helper-text') : null}
             name="email"
             value={teamEmail}
             label={t('email')}

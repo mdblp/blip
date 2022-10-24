@@ -134,6 +134,7 @@
   "download-prescription-error": "Cannot download the prescription",
   "edit-information": "Edit information",
   "email": "Email",
+  "email-helper-text": "Please enter a valid email",
   "error-failed-display-patients": "Impossible to display patients: {{errorMessage}}",
   "error-http-40x": "An error occurred. Please contact support for assistance",
   "error-http-500": "Something went wrong. Please try again in a few moments. If problem persists, contact support for assistance",
