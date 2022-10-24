@@ -490,7 +490,7 @@ export const getStatTitle = (type, opts = {}) => {
       break
 
     case commonStats.standardDev:
-      title = t('Standard Deviation', { bgSourceLabel: statBgSourceLabels[bgSource] })
+      title = t('Std. Deviation ({{bgSourceLabel}})', { bgSourceLabel: statBgSourceLabels[bgSource] })
       break
 
     case commonStats.timeInAuto:

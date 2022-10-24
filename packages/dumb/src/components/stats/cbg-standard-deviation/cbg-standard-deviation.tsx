@@ -39,11 +39,12 @@ export interface CBGStandardDeviationProps {
   averageGlucose: number
   hideTooltip: boolean
   standardDeviation: number
+  title: string
   units: string
 }
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props) => {
-  const { annotations, averageGlucose, hideTooltip, standardDeviation, units } = props
+  const { annotations, averageGlucose, hideTooltip, standardDeviation, title, units } = props
   const { t } = useTranslation('main')
 
   const standardDeviationMin = averageGlucose - standardDeviation
@@ -62,7 +63,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
     >
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <Box display="flex">
-          {t('Standard Deviation')}
+          {title}
           {!Number.isNaN(standardDeviation) && !hideTooltip &&
             <>
               &nbsp;

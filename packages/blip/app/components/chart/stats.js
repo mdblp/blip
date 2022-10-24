@@ -128,6 +128,7 @@ class Stats extends React.Component {
                 averageGlucose={Math.round(stat.data.raw.averageGlucose)}
                 hideTooltip={hideToolTips}
                 standardDeviation={Math.round(stat.data.raw.standardDeviation)}
+                title={stat.title}
                 units={stat.units}
               />
               <Divider variant="fullWidth" />
