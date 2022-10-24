@@ -130,7 +130,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   }
   const zipcodeInputOnError: boolean = !(addrZipCode.length === 0 || isZipCodeValid(addrCountry))
   const phoneNumberInputOnError: boolean = !(teamPhone.length === 0 || isPhoneNumberValid)
-  const emailInputOnError: boolean = !(teamEmail.length === 0 || isEmailValid)
 
   for (const entry in countries) {
     if (Object.prototype.hasOwnProperty.call(countries, entry)) {
