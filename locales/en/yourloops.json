@@ -134,7 +134,6 @@
   "download-prescription-error": "Cannot download the prescription",
   "edit-information": "Edit information",
   "email": "Email",
-  "email-helper-text": "Please enter a valid email",
   "error-failed-display-patients": "Impossible to display patients: {{errorMessage}}",
   "error-http-40x": "An error occurred. Please contact support for assistance",
   "error-http-500": "Something went wrong. Please try again in a few moments. If problem persists, contact support for assistance",
@@ -165,6 +164,8 @@
   "ins": "INS",
   "intended-use": "Intended Use",
   "invalid-email": "Invalid email address (special characters are not allowed).",
+  "invalid-phone-number": "Please enter a valid phone number",
+  "invalid-zipcode": "Please enter a valid zipcode",
   "invite": "Invite",
   "invite-join-monitoring-team": "You are invited to join the remote monitoring team",
   "join-care-team": "Join care team",
@@ -264,7 +265,6 @@
   "pending-patients-filter": "Filter on pending patients",
   "personal-information": "Personal Information",
   "phone-number": "Phone number",
-  "phone-number-helper-text": "Please enter a valid phone number",
   "placeholder-search": "Search…",
   "preferences": "Preferences",
   "prescription": "Prescription",
@@ -387,6 +387,5 @@
   "write-medical-record": "Write medical record",
   "yes": "Yes",
   "yesterday": "Yesterday",
-  "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes.",
-  "zipcode-helper-text": "Please enter a valid zipcode"
+  "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes."
 }
