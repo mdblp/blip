@@ -32,6 +32,8 @@ import { HttpHeaderKeys } from '../../models/api'
 import { getCurrentLang } from '../language'
 import { Monitoring } from '../../models/monitoring'
 import bows from 'bows'
+import { Team } from './models'
+import { User } from '../auth'
 
 const log = bows('Team API')
 
@@ -41,7 +43,10 @@ interface InviteMemberArgs {
   role: TeamMemberRole.admin | TeamMemberRole.member
 }
 
-type InviteMemberPayload = InviteMemberArgs
+interface InviteMemberPayload {
+  inviteeEmail: string
+  role: TeamMemberRole
+}
 
 interface ChangeMemberRoleArgs extends ChangeMemberRoleFirstPayload {
   userId: string
@@ -62,9 +67,17 @@ interface RemoveMemberArgs {
 }
 
 export default class TeamApi {
-  static async getTeams(): Promise<ITeam[]> {
+  static async getTeams(user: User): Promise<Team[]> {
+    let url: string
+    if (user.isUserHcp()) {
+      url = `/bff/front/v1/hcps/${user.id}/teams`
+    } else if (user.isUserPatient()) {
+      url = `/bff/front/v1/patients/${user.id}/teams`
+    } else {
+      throw Error(`User with role ${user.role} cannot retrieve teams`)
+    }
     try {
-      const { data } = await HttpService.get<ITeam[]>({ url: '/v0/my-teams' })
+      const { data } = await HttpService.get<Team[]>({ url })
       return data
     } catch (err) {
       const error = err as Error
@@ -76,10 +89,10 @@ export default class TeamApi {
     }
   }
 
-  static async inviteMember({ teamId, email, role }: InviteMemberArgs): Promise<INotificationAPI> {
-    const { data } = await HttpService.post<INotificationAPI, InviteMemberPayload>({
-      url: '/confirm/send/team/invite',
-      payload: { teamId, email, role },
+  static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<{ teams: Team[], invitation: INotificationAPI }> {
+    const { data } = await HttpService.post<{ teams: Team[], invitation: INotificationAPI }, InviteMemberPayload>({
+      url: `bff/front/v1/hcps/${userId}/teams/${teamId}/invite`,
+      payload: { inviteeEmail, role },
       config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
     })
     return data

@@ -65,9 +65,8 @@ function NotificationContextImpl(): NotificationContext {
     setReceivedInvitations(r)
   }
 
-  const cancel = async (notification: INotification): Promise<void> => {
-    log.info('Cancel invitation', notification)
-    await NotificationApi.cancelInvitation(notification)
+  const cancel = async (notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> => {
+    await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
     const r = await NotificationApi.getSentInvitations(user.id)
     setSentInvitations(r)
   }

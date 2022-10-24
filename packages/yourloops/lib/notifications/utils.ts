@@ -51,13 +51,11 @@ export function notificationConversion(apin: INotificationAPI): INotification | 
       type = NotificationType.careTeamMonitoringInvitation
       break
     case APINotificationType.medicalTeamDoAdmin:
-      type = NotificationType.careTeamDoAdmin
-      return null
     case APINotificationType.medicalTeamRemoveMember:
-      type = NotificationType.careTeamRemoveMember
       return null
     default:
-      throw new Error('Invalid notification type')
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      throw new Error(`Invalid notification type ${apin.type}`)
   }
   return {
     id: apin.key,

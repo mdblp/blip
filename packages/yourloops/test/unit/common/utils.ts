@@ -171,7 +171,7 @@ export function buildITeam(id = 'fakeTeamId', members: ITeamMember[] = [], name 
 
 export function buildTeamMember(
   userId = 'fakeUserId',
-  invitation: INotification | undefined = undefined,
+  invitationId: string | undefined = undefined,
   role: TeamMemberRole = TeamMemberRole.admin,
   email = 'fake@username.com',
   fullName = 'fake full name',
@@ -183,7 +183,7 @@ export function buildTeamMember(
     profile: { fullName },
     role,
     status,
-    invitation
+    invitationId
   }
 }
 

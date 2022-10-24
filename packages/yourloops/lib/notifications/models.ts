@@ -31,12 +31,10 @@ import { Profile } from '../../models/user'
 import { TeamMemberRole } from '../../models/team'
 
 export enum NotificationType {
-  directInvitation,
-  careTeamProInvitation,
-  careTeamPatientInvitation,
-  careTeamDoAdmin,
-  careTeamRemoveMember,
-  careTeamMonitoringInvitation,
+  directInvitation = 'direct_invitation',
+  careTeamProInvitation = 'care_team_pro_invitation',
+  careTeamPatientInvitation = 'care_team_patient_invitation',
+  careTeamMonitoringInvitation = 'care_team_monitoring_invitation',
 }
 
 export interface INotification {
@@ -64,6 +62,12 @@ export interface INotification {
   }
 }
 
+export interface CancelInvitation {
+  key: string
+  target: { id: string}
+  email: string
+}
+
 export interface NotificationContext {
   initialized: boolean
   receivedInvitations: INotification[]
@@ -71,7 +75,7 @@ export interface NotificationContext {
   update: () => void
   accept: (notification: INotification) => Promise<void>
   decline: (notification: INotification) => Promise<void>
-  cancel: (notification: INotification) => Promise<void>
+  cancel: (notificationId: string, teamId?: string, inviteeEmail?: string) => Promise<void>
   inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>
   cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>
   getInvitation: (teamId: string) => INotification

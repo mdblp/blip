@@ -302,10 +302,10 @@ describe('Notification API', () => {
         throw new Error()
       })
 
-      const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember]
+      const notificationTypes = [NotificationType.careTeamProInvitation, NotificationType.careTeamPatientInvitation]
       const notification: INotification = {
         metricsType: 'join_team',
-        type: NotificationType.careTeamDoAdmin,
+        type: NotificationType.careTeamProInvitation,
         creator: { userid: userId, profile: hcp.profile },
         creatorId: userId2,
         date: new Date().toISOString(),
@@ -458,11 +458,11 @@ describe('Notification API', () => {
     it('should throw an error if the invitation type is invalid', async () => {
       mockedAxios.put.mockResolvedValue(buildAxiosError('test'))
 
-      const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember]
+      const notificationTypes = [NotificationType.careTeamProInvitation, NotificationType.careTeamPatientInvitation]
       const user = hcp
       const notification: INotification = {
         metricsType: 'join_team',
-        type: NotificationType.careTeamDoAdmin,
+        type: NotificationType.careTeamProInvitation,
         creator: { userid: user.id, profile: user.profile },
         creatorId: user.id,
         date: new Date().toISOString(),
@@ -633,14 +633,14 @@ describe('Notification API', () => {
       mockedAxios.post.mockResolvedValue(buildAxiosError('test'))
 
       const notificationTypes = [
-        NotificationType.careTeamDoAdmin,
-        NotificationType.careTeamRemoveMember,
+        NotificationType.careTeamProInvitation,
+        NotificationType.directInvitation,
         NotificationType.careTeamPatientInvitation
       ]
       const user = hcp
       const notification: INotification = {
         metricsType: 'join_team',
-        type: NotificationType.careTeamDoAdmin,
+        type: NotificationType.careTeamProInvitation,
         creator: { userid: user.id, profile: user.profile },
         creatorId: user.id,
         date: new Date().toISOString(),

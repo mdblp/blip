@@ -51,7 +51,7 @@ describe('Main Header', () => {
   const onClickLeftIcon = jest.fn()
   const notifications: INotification[] = [{
     metricsType: 'join_team',
-    type: NotificationType.careTeamDoAdmin,
+    type: NotificationType.careTeamProInvitation,
     creator: { userid: 'creatorUserId', profile: {} as Profile },
     creatorId: 'creatorId',
     date: new Date().toISOString(),

@@ -105,7 +105,7 @@ function PatientCaregiversPage(): JSX.Element {
     if (consent && user) {
       try {
         if (us.status === UserInvitationStatus.pending && typeof us.invitation === 'object') {
-          await notificationHook.cancel(us.invitation)
+          await notificationHook.cancel(us.invitation.id, us.invitation.target?.id, us.invitation.email)
         } else {
           await DirectShareApi.removeDirectShare(user.id, us.user.userid)
         }

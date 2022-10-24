@@ -28,7 +28,6 @@
 
 import { PostalAddress, UserInvitationStatus } from '../../models/generic'
 import { Profile } from '../../models/user'
-import { INotification } from '../notifications/models'
 import { TeamMemberRole, TeamType, TypeTeamMemberRole } from '../../models/team'
 import { Monitoring } from '../../models/monitoring'
 
@@ -42,7 +41,7 @@ export interface TeamMember {
   profile?: Profile | null
   role: TeamMemberRole
   status: UserInvitationStatus
-  invitation?: INotification
+  invitationId?: string
 }
 
 export interface Team {

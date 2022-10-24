@@ -25,7 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { INotification, NotificationType } from './models'
+import { CancelInvitation, INotification, NotificationType } from './models'
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import { INotificationAPI } from '../../models/notification'
@@ -54,26 +54,14 @@ export default class NotificationApi {
     return await NotificationApi.updateInvitation(url, notification.id)
   }
 
-  static async cancelInvitation(notification: INotification): Promise<void> {
-    const payload: Partial<INotificationAPI> = {
-      key: notification.id
-    }
-    switch (notification.type) {
-      case NotificationType.careTeamProInvitation:
-      case NotificationType.careTeamPatientInvitation:
-        if (!notification.target) {
-          throw Error('Missing or invalid team ID in notification')
-        }
-        payload.target = notification.target
-        break
-      case NotificationType.directInvitation:
-        payload.email = notification.email
-        break
-      default:
-        throw new Error('Invalid notification type')
+  static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
+    const payload: CancelInvitation = {
+      key: notificationId,
+      target: { id: teamId },
+      email: inviteeEmail
     }
 
-    await HttpService.post<string, Partial<INotificationAPI>>({
+    await HttpService.post<string, CancelInvitation>({
       url: '/confirm/cancel/invite',
       payload
     })

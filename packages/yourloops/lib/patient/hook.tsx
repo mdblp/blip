@@ -151,7 +151,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const removePatient = useCallback(async (patient: Patient, patientTeam: PatientTeam) => {
     if (patientTeam.status === UserInvitationStatus.pending) {
       const invitation = getInvitation(patientTeam.teamId)
-      await cancelInvitation(invitation)
+      await cancelInvitation(invitation.id, invitation.email)
     }
     if (patientTeam.teamId === 'private') {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
