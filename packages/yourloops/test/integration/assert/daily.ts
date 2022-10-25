@@ -40,7 +40,9 @@ import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
+const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
+const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const TOTAL_INSULIN_TOOLTIP = 'Total Insulin: All basal and bolus insulin delivery (in Units) added togetherHow we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
 const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is 24 hours multiplied by % in loop mode ON or OFF.'
 const TOTAL_CARBS_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 2 carb entries, including rescue carbs.'
@@ -70,15 +72,21 @@ export const checkDailyTidelineContainerTooltips = async () => {
   checkTidelineContainerElementTooltip(`smbg_${SMBG_ID}`, '5:15 pmGlucose189Calibration')
 }
 
-export const checkDailyStatsWidgetsTooltips = () => {
+export const checkDailyStatsWidgetsTooltips = async () => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  checkStatTooltip(statsWidgets, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Total Insulin', TOTAL_INSULIN_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Total Carbs', TOTAL_CARBS_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Total Insulin', TOTAL_INSULIN_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Total Carbs', TOTAL_CARBS_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
+}
+
+export const checkSMBGDailyStatsWidgetsTooltips = async () => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
+  await checkStatTooltip(statsWidgets, 'Readings In Range', READINGS_IN_RANGE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
 }
 
 export const checkDailyTimeInRangeStatsWidgets = () => {

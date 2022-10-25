@@ -1,6 +1,8 @@
 export enum CBGStatType {
-  TimeInRange = 'timeInRange',
+  AverageGlucose = 'averageGlucose',
   ReadingsInRange = 'readingsInRange',
+  StandardDeviation = 'standardDev',
+  TimeInRange = 'timeInRange',
 }
 
 export interface CBGPercentageData {

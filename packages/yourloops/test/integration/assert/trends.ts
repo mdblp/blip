@@ -30,7 +30,9 @@ import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Daily average of the time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is number of readings in range multiplied by the sample frequency.'
+const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
+const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const SENSOR_USAGE_TOOLTIP = 'Sensor Usage: Time the CGM collected data, divided by the total time represented in this view.'
 const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the mean.'
@@ -48,14 +50,14 @@ export const checkTrendsTidelineContainerTooltips = async () => {
   userEvent.unhover(cbgSlice)
 }
 
-export const checkTrendsStatsWidgetsTooltips = () => {
+export const checkTrendsStatsWidgetsTooltips = async () => {
   const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  checkStatTooltip(statsWidgets, 'Avg. Daily Time In Range', TIME_IN_RANGE_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Sensor Usage', SENSOR_USAGE_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
-  checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Avg. Daily Time In Range', TIME_IN_RANGE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Sensor Usage', SENSOR_USAGE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
 }
 
 export const checkTrendsTimeInRangeStatsWidgets = async () => {
@@ -65,4 +67,12 @@ export const checkTrendsTimeInRangeStatsWidgets = async () => {
   expect(screen.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('3h 12m13%')
   expect(screen.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('4h 48m20%')
   expect(screen.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('8h33%')
+}
+
+export const checkSMBGTrendsStatsWidgetsTooltips = async () => {
+  const statsWidgets = within(screen.getByTestId('stats-widgets'))
+  await checkStatTooltip(statsWidgets, 'Readings In Range', READINGS_IN_RANGE_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
+  await checkStatTooltip(statsWidgets, 'CV (BGM)', CV_TOOLTIP)
 }

@@ -43,7 +43,7 @@
     "test-yourloops": "npm run test-yourloops-integration && npm run test-yourloops-unit",
     "test-yourloops-integration": "bash -c 'source config/.env.sh && npm run integration-test -w yourloops'",
     "test-yourloops-unit": "bash -c 'source config/.env.sh && npm run unit-test -w yourloops'",
-    "security-checks": "npm audit --production --audit-level=critical --registry=https://registry.npmjs.org/",
+    "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
     "build-dependencies": "npm run build-dumb && npm run build-medical-domain",
     "build-dumb": "npm run build -w dumb",
     "build-medical-domain": "npm run build -w medical-domain",
