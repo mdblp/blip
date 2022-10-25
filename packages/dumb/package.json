@@ -35,7 +35,7 @@
     "lint": "eslint .",
     "lint-fix": "npm run lint -- --fix",
     "postbuild": "npm run copy-files",
-    "copy-files": "copyfiles src/**/*.css src/**/**/*.css src/**/*.svg dist/"
+    "copy-files": "copyfiles 'src/**/*.css' 'src/**/*.svg' dist/"
   },
   "bugs": {
     "url": "https://github.com/mdblp/blip/issues"

@@ -25,28 +25,66 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
-import {
-  CBGPercentageBarChartMemoized as CBGPercentageBarChart
-} from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
-import {
-  CbgStandardDeviationMemoized as CBGStandardDeviation
-} from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './components/stats/models'
-import { StatTooltip } from './components/tooltips/stat-tooltip'
-import Tooltip from './components/tooltips/tooltip'
-import { CgmTable } from './settings/cgm-table'
-import { PumpTable } from './settings/pump-table'
-import { TerminalTable } from './settings/terminal-table'
+@import "../../../styles/colors.css";
 
-export {
-  CBGMeanStat,
-  CBGPercentageBarChart,
-  CBGStandardDeviation,
-  CBGStatType,
-  CgmTable,
-  PumpTable,
-  StatTooltip,
-  TerminalTable,
-  Tooltip
+.bar {
+  display: flex;
+  align-items: center;
+  width: 234px;
+  position: relative;
+}
+
+.bar-value {
+  background-color: white;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--stat-disabled);
+  border-width: thin;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 12px;
+  position: absolute;
+  right: 0;
+}
+
+.disabled-label {
+  color: var(--muted);
+}
+
+.disabled-rectangle {
+  background-color: var(--muted);
+}
+
+.line {
+  height: 5px;
+  background-color: var(--stat-disabled);
+  flex-grow: 1;
+}
+
+.percentage-symbol {
+  color: #727375;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.percentage-value {
+  font-size: 24px;
+  margin-left: auto;
+  margin-right: 2px;
+}
+
+.rectangle {
+  height: 32px;
+  border-radius: 2px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.title {
+  margin-left: 4px;
 }
