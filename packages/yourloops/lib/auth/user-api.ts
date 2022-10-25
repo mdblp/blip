@@ -16,19 +16,19 @@ export default class UserApi {
     }
   }
 
-  // static async getProfile(userId: string): Promise<Profile | undefined> {
-  //   try {
-  //     const { data } = await HttpService.get<Profile>({ url: `/metadata/${userId}/profile` })
-  //     return data
-  //   } catch (err) {
-  //     const error = err as Error
-  //     if (error.message === ErrorMessageStatus.NotFound) {
-  //       log.info(`No profile for ${userId}`)
-  //       return undefined
-  //     }
-  //     throw err
-  //   }
-  // }
+  static async getProfile(userId: string): Promise<Profile | undefined> {
+    try {
+      const { data } = await HttpService.get<Profile>({ url: `/metadata/${userId}/profile` })
+      return data
+    } catch (err) {
+      const error = err as Error
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No profile for ${userId}`)
+        return undefined
+      }
+      throw err
+    }
+  }
 
   static async getUserInformation(userId: string): Promise<UserInformation | undefined> {
     try {
@@ -44,33 +44,33 @@ export default class UserApi {
     }
   }
 
-  // static async getPreferences(userId: string): Promise<Preferences | undefined> {
-  //   try {
-  //     const { data } = await HttpService.get<Preferences>({ url: `/metadata/${userId}/preferences` })
-  //     return data
-  //   } catch (err) {
-  //     const error = err as Error
-  //     if (error.message === ErrorMessageStatus.NotFound) {
-  //       log.info(`No preferences for ${userId}`)
-  //       return undefined
-  //     }
-  //     throw err
-  //   }
-  // }
-  //
-  // static async getSettings(userId: string): Promise<Settings | undefined> {
-  //   try {
-  //     const { data } = await HttpService.get<Settings>({ url: `/metadata/${userId}/settings` })
-  //     return data
-  //   } catch (err) {
-  //     const error = err as Error
-  //     if (error.message === ErrorMessageStatus.NotFound) {
-  //       log.info(`No settings for ${userId}`)
-  //       return undefined
-  //     }
-  //     throw err
-  //   }
-  // }
+  static async getPreferences(userId: string): Promise<Preferences | undefined> {
+    try {
+      const { data } = await HttpService.get<Preferences>({ url: `/metadata/${userId}/preferences` })
+      return data
+    } catch (err) {
+      const error = err as Error
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No preferences for ${userId}`)
+        return undefined
+      }
+      throw err
+    }
+  }
+
+  static async getSettings(userId: string): Promise<Settings | undefined> {
+    try {
+      const { data } = await HttpService.get<Settings>({ url: `/metadata/${userId}/settings` })
+      return data
+    } catch (err) {
+      const error = err as Error
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No settings for ${userId}`)
+        return undefined
+      }
+      throw err
+    }
+  }
 
   static async updateProfile(userId: string, profile: Profile): Promise<Profile> {
     const { data } = await HttpService.put<Profile, Profile>({
