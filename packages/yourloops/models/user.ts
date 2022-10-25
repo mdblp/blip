@@ -87,6 +87,29 @@ interface Preferences {
   patientsStarred?: string[]
 }
 
+interface UserInformation {
+  fullName: string
+  firstName?: string
+  lastName?: string
+  patient?: Patient
+  termsOfUse?: Consent
+  trainingAck?: Consent
+  privacyPolicy?: Consent
+  contactConsent?: Consent
+  hcpProfession?: HcpProfession
+  displayLanguageCode?: LanguageCodes
+  patientsStarred?: string[]
+  units?: {
+    bg?: Units
+  }
+  country?: string
+  a1c?: {
+    date: string
+    value: string
+  }
+
+}
+
 interface IUser {
   emails?: string[]
   readonly emailVerified?: boolean
@@ -119,4 +142,4 @@ interface AuthenticatedUser {
   sub: string
 }
 
-export { IUser, Profile, Settings, Preferences, Consent, UserRoles, UserMetadata, AuthenticatedUser }
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles, UserMetadata, AuthenticatedUser, UserInformation }

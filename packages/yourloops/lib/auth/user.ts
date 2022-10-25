@@ -32,7 +32,8 @@ import {
   Profile,
   Settings,
   UserMetadata,
-  UserRoles
+  UserRoles,
+  UserInformation
 } from '../../models/user'
 import { MedicalData } from '../../models/device-data'
 import config from '../config'
@@ -47,6 +48,7 @@ export default class User {
   frProId?: string
   role: UserRoles
   medicalData?: MedicalData
+  userInformation?: UserInformation
   preferences?: Preferences
   profile?: Profile
   settings?: Settings

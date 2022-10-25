@@ -166,10 +166,10 @@ export function AuthContextImpl(): AuthContext {
       } catch (err) {
         console.log(err)
       }
-
-      user.profile = await UserApi.getProfile(user.id)
-      user.preferences = await UserApi.getPreferences(user.id)
-      user.settings = await UserApi.getSettings(user.id)
+      user.userInformation = await UserApi.getUserInformation(user.id)
+      // user.profile = await UserApi.getProfile(user.id)
+      // user.preferences = await UserApi.getPreferences(user.id)
+      // user.settings = await UserApi.getSettings(user.id)
       updateUserLanguage(user)
       setUser(user)
     } catch (err) {
