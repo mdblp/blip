@@ -28,7 +28,7 @@
 import { act, renderHook } from '@testing-library/react-hooks/dom'
 import { CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { waitFor } from '@testing-library/dom'
-import { CBGStatType, CBGPercentageData, StatLevel } from './models'
+import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
 
 describe('CBGPercentageBarChart hook', () => {
   const total = 1000
@@ -43,7 +43,7 @@ describe('CBGPercentageBarChart hook', () => {
 
   const defaultProps: CBGPercentageBarChartHookProps = {
     data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
-    hideToolTip: false,
+    hideTooltip: false,
     titleKey: 'fakeTitleKey',
     total,
     type: CBGStatType.TimeInRange

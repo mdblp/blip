@@ -28,6 +28,7 @@
 import { mockPatientLogin } from '../../mock/auth'
 import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import {
+  checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
@@ -35,12 +36,14 @@ import {
 import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import {
-  checkReadingsInRangeStatsTitle,
+  checkAverageGlucoseStatWidget,
+  checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
+  checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 
-jest.setTimeout(10000)
+jest.setTimeout(20000)
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -54,7 +57,11 @@ describe('Trends view for anyone', () => {
 
       // Check the tooltips
       await checkTrendsTidelineContainerTooltips()
-      checkTrendsStatsWidgetsTooltips()
+      await checkTrendsStatsWidgetsTooltips()
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL179')
+
+      checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
     })
   })
 
@@ -74,7 +81,13 @@ describe('Trends view for anyone', () => {
       renderPage('/trends')
 
       await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStatsTitle('Avg. Daily Readings In Range')
+      checkReadingsInRangeStats()
+
+      await checkSMBGTrendsStatsWidgetsTooltips()
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
+
+      checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
     })
   })
 })

@@ -25,36 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.legend-title {
-  font-size: 12px;
-}
+import { computeCBGStyle } from './cbg-utils'
 
-.stat-footer {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--stat--border);
-  padding: 0.25em 0.625em .375em;
-  overflow: hidden;
-}
+describe('CBGUtils', () => {
+  describe('computeCBGStyle', () => {
+    it('should return correct left when value is < 54', () => {
+      const computedStyle = computeCBGStyle(20)
+      expect(computedStyle.left).toBe('0')
+    })
 
-.stat-tooltip {
-  z-index: 1;
-  position: relative;
-}
+    it('should return correct left when value is > 250', () => {
+      const computedStyle = computeCBGStyle(255)
+      expect(computedStyle.left).toBe('234px')
+    })
 
-.title {
-  margin-left: 4px;
-  height: 21px;
-}
-
-.tooltip-icon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
-}
-
-.tooltip-icon > img {
-  width: 0.9em;
-}
+    it('should return correct left when value is > 54 and < 250', () => {
+      const computedStyle = computeCBGStyle(128)
+      expect(computedStyle.left).toBe('88px')
+    })
+  })
+})
