@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.2-beta8 - 2022-10-25
 ### Added
+- YLP-1753 Fix memory leak on useState
 - YLP-1681 HCP can remove a patient
 - YLP-1837 Display training material acknowledgment
 - YLP-1841 Rework of accompanying documents in footer
