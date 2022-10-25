@@ -2,8 +2,9 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta5 - 2022-10-21
+## 3.0.2-beta7 - 2022-10-25
 ### Added
+- YLP-1865 Add-an-error-message-if-email-is-not-valid-in-create-team-form
 - YLP-1681 HCP can remove a patient
 - YLP-1837 Display training material acknowledgment
 - YLP-1841 Rework of accompanying documents in footer
