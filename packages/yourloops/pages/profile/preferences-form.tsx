@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Tune from '@material-ui/icons/Tune'
@@ -42,37 +42,35 @@ import { ConsentFeedback } from '../../components/consents'
 import { UserRoles } from '../../models/user'
 import { Units } from '../../models/generic'
 import { LanguageCodes } from '../../models/locales'
+import { useProfilePageState } from './profile-page-context'
+import { ProfileFormKey } from './models'
+import { useAuth } from '../../lib/auth'
 
 interface PreferencesFormProps {
   classes: ClassNameMap
-  feedbackAccepted: boolean
-  lang: LanguageCodes
-  role: UserRoles
-  unit: Units
-  setFeedbackAccepted: (feedbackAccepted: boolean) => void
-  setLang: (lang: LanguageCodes) => void
-  setUnit: (unit: Units) => void
 }
 
-function PreferencesForm(props: PreferencesFormProps): JSX.Element {
+const PreferencesForm: FunctionComponent<PreferencesFormProps> = ({ classes }) => {
   const { t } = useTranslation('yourloops')
+  const { user } = useAuth()
+  const { profileForm, updateProfileForm } = useProfilePageState()
 
   return (
     <React.Fragment>
-      <Box className={props.classes.categoryLabel}>
+      <Box className={classes.categoryLabel}>
         <Tune color="primary" />
-        <strong className={props.classes.uppercase}>{t('preferences')}</strong>
+        <strong className={classes.uppercase}>{t('preferences')}</strong>
       </Box>
 
-      <Box className={props.classes.inputContainer}>
-        <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
+      <Box className={classes.inputContainer}>
+        <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
           <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
-            disabled={props.role === UserRoles.patient}
+            disabled={user.role === UserRoles.patient}
             labelId="unit-selector"
             id="profile-units-selector"
-            value={props.unit}
-            onChange={event => props.setUnit(event.target.value as Units)}
+            value={profileForm.units}
+            onChange={event => updateProfileForm(ProfileFormKey.units, event.target.value as Units)}
           >
             <MenuItem id="profile-units-mmoll" value={Units.mole}>
               {Units.mole}
@@ -82,13 +80,13 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
+        <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
           <InputLabel id="profile-language-input-label">{t('language')}</InputLabel>
           <Select
             labelId="locale-selector"
             id="profile-locale-selector"
-            value={props.lang}
-            onChange={event => props.setLang(event.target.value as LanguageCodes)}
+            value={profileForm.lang}
+            onChange={event => updateProfileForm(ProfileFormKey.lang, event.target.value as LanguageCodes)}
           >
             {availableLanguageCodes.map((languageCode) => (
               <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
@@ -99,13 +97,13 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
         </FormControl>
       </Box>
 
-      {props.role === UserRoles.hcp &&
+      {user.role === UserRoles.hcp &&
         <Box marginTop={1}>
           <ConsentFeedback
             id="profile"
-            userRole={props.role}
-            checked={props.feedbackAccepted}
-            onChange={() => props.setFeedbackAccepted(!props.feedbackAccepted)}
+            userRole={user.role}
+            checked={profileForm.feedbackAccepted}
+            onChange={() => updateProfileForm(ProfileFormKey.feedbackAccepted, !profileForm.feedbackAccepted)}
           />
         </Box>
       }

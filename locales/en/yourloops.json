@@ -301,7 +301,7 @@
   "professional": "Professional",
   "professional-account-number": "eCPS number",
   "profile-settings": "Profile settings",
-  "profile-update-failed": "Profile update failed",
+  "profile-update-failed": "Profile update failed, not all data could be saved",
   "profile-updated": "Profile updated",
   "progression-proposal": "Progression proposal",
   "referring-doctor": "Referring doctor",

@@ -36,6 +36,7 @@ import {
 } from '../../models/user'
 import { MedicalData } from '../../models/device-data'
 import config from '../config'
+import { REGEX_BIRTHDATE } from '../utils'
 
 export default class User {
   readonly email: string
@@ -76,6 +77,17 @@ export default class User {
 
   get fullName(): string {
     return this.profile?.fullName ?? this.username
+  }
+
+  get birthday(): string | undefined {
+    let birthday = this.profile?.patient?.birthday
+    if (this.role === UserRoles.patient && birthday) {
+      if (birthday.length > 0 && birthday.includes('T')) {
+        birthday = birthday.split('T')[0]
+      }
+      return REGEX_BIRTHDATE.test(birthday) ? birthday : ''
+    }
+    return undefined
   }
 
   isUserHcp(): boolean {

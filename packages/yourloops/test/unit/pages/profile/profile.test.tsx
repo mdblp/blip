@@ -33,7 +33,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { Units } from '../../../../models/generic'
 import ProfilePage from '../../../../pages/profile'
-import { Profile, AuthenticatedUserMetadata, UserRoles } from '../../../../models/user'
+import { UserMetadata, UserRoles } from '../../../../models/user'
 import * as authHookMock from '../../../../lib/auth'
 import User from '../../../../lib/auth/user'
 import { genderLabels } from '../../../../lib/auth/helpers'
@@ -46,6 +46,7 @@ describe('Profile', () => {
   let patient: User
   let hcp: User
   const userId = 'fakeUserId'
+  const birthday = '1964-12-01'
 
   async function mountProfilePage(): Promise<void> {
     await act(() => {
@@ -73,7 +74,7 @@ describe('Profile', () => {
       lastName: 'Dupuis',
       fullName: 'Josephine D.',
       patient: {
-        birthday: '1964-12-01',
+        birthday,
         birthPlace: 'Anywhere',
         diagnosisDate: '2020-12-02',
         diagnosisType: '1',
@@ -125,24 +126,15 @@ describe('Profile', () => {
   })
 
   it('should display mg/dL Units by default if not specified', async () => {
-    const user = hcp
-    delete user.settings?.units?.bg
+    delete hcp.settings?.units?.bg
     await mountProfilePage()
     const selectValue = container.querySelector('#profile-units-selector').innerHTML
     expect(selectValue).toBe(Units.gram)
   })
 
   it('should display birthdate if user is a patient', async () => {
-    const birthday = '1964-12-01';
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          role: UserRoles.patient,
-          isUserPatient: () => true,
-          isUserHcp: () => false,
-          profile: { patient: { birthday } } as Profile
-        } as User
-      }
+      return { user: patient }
     })
     await mountProfilePage()
     const birthDateInput: HTMLInputElement = container.querySelector('#profile-textfield-birthdate')
@@ -156,7 +148,7 @@ describe('Profile', () => {
       }
     })
     await mountProfilePage()
-    const birthPlaceInput = container.querySelector('#profile-textfield-birthplace')
+    const birthPlaceInput: HTMLInputElement = container.querySelector('#profile-textfield-birthplace')
     expect(birthPlaceInput?.value).toBe(patient.profile?.patient?.birthPlace)
   })
 
@@ -178,7 +170,7 @@ describe('Profile', () => {
       }
     })
     await mountProfilePage()
-    const referringDoctorInput = container.querySelector('#profile-textfield-referring-doctor')
+    const referringDoctorInput: HTMLInputElement = container.querySelector('#profile-textfield-referring-doctor')
     expect(referringDoctorInput?.value).toBe(patient.profile?.patient?.referringDoctor)
   })
 
@@ -201,7 +193,7 @@ describe('Profile', () => {
       }
     })
     await mountProfilePage()
-    const insInput = container.querySelector('#profile-textfield-ins')
+    const insInput: HTMLInputElement = container.querySelector('#profile-textfield-ins')
     expect(insInput?.value).toBe(patient.profile?.patient?.ins)
   })
 
@@ -224,7 +216,7 @@ describe('Profile', () => {
       }
     })
     await mountProfilePage()
-    const ssnInput = container.querySelector('#profile-textfield-ssn')
+    const ssnInput: HTMLInputElement = container.querySelector('#profile-textfield-ssn')
     expect(ssnInput?.value).toBe(patient.profile?.patient?.ssn)
   })
 
