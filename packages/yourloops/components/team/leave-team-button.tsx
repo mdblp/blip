@@ -73,8 +73,9 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
           : t('team-page-failed-leave')
         alert.error(message)
       }
+    } else {
+      setModalIsOpen(false)
     }
-    setModalIsOpen(false)
   }
 
   const openLeaveTeamDialog = (): void => {
