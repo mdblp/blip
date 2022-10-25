@@ -28,12 +28,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CBGPercentageBarProps } from './cbg-percentage-bar'
-import { CBGPercentageData, CBGStatType, StatLevel } from './models'
+import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
 
 export interface CBGPercentageBarChartHookProps {
   type: CBGStatType
   data: CBGPercentageData[]
-  hideToolTip: boolean
+  hideTooltip: boolean
   titleKey: string
   total: number
 }
@@ -48,44 +48,34 @@ interface CBGPercentageBarChartHookReturn {
   }
   hoveredStatId: StatLevel | null
   onMouseLeave: Function
-  titleProps: {
-    legendTitle: string
-    showTooltipIcon: boolean
-    title: string
-  }
+  titleProps: { legendTitle: string, showTooltipIcon: boolean, title: string }
 }
 
 export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, data, hideToolTip, titleKey, total } = props
+  const { type, data, hideTooltip, titleKey, total } = props
   const { t } = useTranslation('main')
   const title = t(titleKey)
-
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
   const [titleProps, setTitleProps] = useState({
     legendTitle: '',
-    showTooltipIcon: !hideToolTip,
+    showTooltipIcon: !hideTooltip,
     title
   })
 
   const onStatMouseover = useCallback((id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => {
     if (hasValues) {
-      setTitleProps({
-        legendTitle,
-        showTooltipIcon: false,
-        title: `${title}`
-      })
+      setTitleProps({ legendTitle, showTooltipIcon: false, title: `${title}` })
       setHoveredStatId(id)
     }
   }, [])
-
   const onMouseLeave = useCallback(() => {
     setTitleProps({
       legendTitle: '',
-      showTooltipIcon: !hideToolTip,
+      showTooltipIcon: !hideTooltip,
       title
     })
     setHoveredStatId(null)
-  }, [hideToolTip, title])
+  }, [hideTooltip, title])
 
   const getCBGPercentageBarProps = useCallback((id: string) => {
     const stat = data.find(timeInRange => timeInRange.id === id)
@@ -117,10 +107,5 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     onMouseLeave,
     hoveredStatId,
     titleProps
-  }), [
-    cbgStatsProps,
-    onMouseLeave,
-    hoveredStatId,
-    titleProps
-  ])
+  }), [cbgStatsProps, onMouseLeave, hoveredStatId, titleProps])
 }

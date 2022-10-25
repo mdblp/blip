@@ -30,17 +30,19 @@ import { unMonitoredPatient } from '../../mock/mockPatientAPI'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
-  checkDailyTimeInRangeStatsWidgets
+  checkDailyTimeInRangeStatsWidgets, checkSMBGDailyStatsWidgetsTooltips
 } from '../../assert/daily'
 import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import {
-  checkReadingsInRangeStatsTitle,
   checkReadingsInRangeStatsWidgets,
+  checkAverageGlucoseStatWidget,
+  checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
+import { screen } from '@testing-library/react'
 
-jest.setTimeout(10000)
+jest.setTimeout(30000)
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {
@@ -54,21 +56,28 @@ describe('Daily view for anyone', () => {
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()
-      checkDailyStatsWidgetsTooltips()
+      await checkDailyStatsWidgetsTooltips()
 
       // Check the time in range stats widgets
       checkDailyTimeInRangeStatsWidgets()
       checkTimeInRangeStatsTitle()
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
+      checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
     })
   })
 
   describe('with smbg data', () => {
-    it('should display correct readings in range stats info', async () => {
+    it('should display correct stats widgets', async () => {
       mockDataAPI(smbgData)
       renderPage('/daily')
 
       await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStatsTitle()
+
+      checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
+      expect(screen.queryByTestId('cbg-standard-deviation-stat')).not.toBeInTheDocument()
+
+      await checkSMBGDailyStatsWidgetsTooltips()
     })
   })
 })

@@ -27,74 +27,35 @@
 
 import React, { FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
-
-import colors from '../../styles/colors.css'
 import styles from './stat-tooltip.css'
-import Tooltip from './tooltip'
+import { withStyles } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip'
 
 interface StatTooltipProps {
-  annotations: []
-  title?: string
-  tail?: boolean
-  tailWidth?: number
-  tailHeight?: number
-  parentRef: HTMLDivElement
-  tooltipRef: HTMLImageElement
-  backgroundColor?: string
-  borderColor?: string
-  borderWidth?: number
+  annotations: string[]
+  children: JSX.Element
 }
 
-export const StatTooltip: FunctionComponent<StatTooltipProps> = (
-  {
-    annotations = [],
-    tail = true,
-    tailWidth = 9,
-    tailHeight = 17,
-    borderColor = colors.statDefault,
-    borderWidth = 2,
-    ...props
-  }) => {
-  const {
-    title,
-    backgroundColor,
-    parentRef,
-    tooltipRef
-  } = props
-
-  const { top, left, width, height } = tooltipRef.getBoundingClientRect()
-  const {
-    top: parentTop,
-    left: parentLeft,
-    height: parentHeight
-  } = parentRef.getBoundingClientRect()
-
-  const position = {
-    top: (top - parentTop) + height / 2,
-    left: (left - parentLeft) + width / 2
+const StyledTooltip = withStyles(() => ({
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'var(--stat--default)',
+    border: '1px solid rgb(114, 115, 117)',
+    fontSize: '12px',
+    lineHeight: '20px',
+    borderWidth: '2px'
   }
+}))(Tooltip)
 
-  const offset = {
-    horizontal: width / 2,
-    top: -parentHeight
-  }
-
-  const side = ((document.body.clientWidth ?? 0) - left < 225) ? 'left' : 'right'
+export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
+  const { annotations, children } = props
 
   return (
-    <Tooltip
-      tail={tail}
-      side={side}
-      tailWidth={tailWidth}
-      tailHeight={tailHeight}
-      borderColor={borderColor}
-      borderWidth={borderWidth}
-      position={position}
-      offset={offset}
-      title={title}
-      backgroundColor={backgroundColor}
-      content={
-        <div className={styles.container}>
+    <StyledTooltip
+      disableFocusListener
+      placement="top"
+      title={
+        <div data-testid="stat-tooltip-content" className={styles.container}>
           {annotations.map((message, index) =>
             <div key={`message-${index}`}>
               <ReactMarkdown className={styles.message} linkTarget="_blank">
@@ -109,7 +70,8 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (
             </div>
           )}
         </div>
-      }
-    />
+      }>
+      {children}
+    </StyledTooltip>
   )
 }
