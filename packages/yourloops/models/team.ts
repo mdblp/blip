@@ -65,11 +65,9 @@ export interface ITeam {
   name: string
   readonly code: string
   readonly type: TeamType
-  readonly owner: string
   phone?: string
   email?: string
   address?: PostalAddress
-  description?: string
   members: ITeamMember[]
   monitoring?: Monitoring
 }

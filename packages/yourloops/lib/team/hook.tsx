@@ -91,14 +91,13 @@ function TeamContextImpl(): TeamContext {
 
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     const result = await TeamApi.inviteMember(user.id, team.id, username, role)
-    const teams = TeamUtils.buildTeams(result.teams, user.id)
+    const teams = TeamUtils.buildTeams(result.teams)
     setTeams(teams)
   }
 
   const createTeam = async (team: Partial<Team>): Promise<void> => {
     const apiTeam: Partial<ITeam> = {
       address: team.address,
-      description: team.description,
       email: team.email,
       name: team.name,
       phone: team.phone,

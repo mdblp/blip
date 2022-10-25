@@ -49,12 +49,10 @@ export interface Team {
   name: string
   readonly code: string
   readonly type: TeamType
-  readonly owner: string
   phone?: string
   email?: string
   address?: PostalAddress
-  description?: string
-  members: TeamMember[]
+  members: TeamMember[] // Members are only set when the current logged user has the HCP role
   monitoring?: Monitoring
 }
 

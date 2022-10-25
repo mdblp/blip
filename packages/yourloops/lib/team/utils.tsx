@@ -71,13 +71,12 @@ export default class TeamUtils {
     }, 0)
   }
 
-  static buildTeams(teams: Team[], userId: string): Team[] {
+  static buildTeams(teams: Team[]): Team[] {
     const privateTeam: Team = {
       code: TeamType.private,
       id: TeamType.private,
       members: [],
       name: TeamType.private,
-      owner: userId,
       type: TeamType.private
     }
     teams.push(privateTeam)
@@ -86,7 +85,7 @@ export default class TeamUtils {
 
   static async loadTeams(user: User): Promise<Team[]> {
     const teams = await TeamApi.getTeams(user)
-    return TeamUtils.buildTeams(teams, user.id)
+    return TeamUtils.buildTeams(teams)
   }
 
   static sortTeams(teams: Team[]): Team[] {
