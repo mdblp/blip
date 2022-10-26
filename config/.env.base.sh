@@ -6,8 +6,8 @@ export PORT='3000'
 
 # Diabeloop specific
 export BRANDING='diabeloop_blue'
-export LATEST_TERMS='1970-01-01'
-export LATEST_TRAINING='1970-01-01'
+export LATEST_TRAINING='2021-05-21'
+export LATEST_TERMS='2021-05-21'
 export LATEST_RELEASE='2022-03-03'
 
 # External services:
@@ -32,5 +32,5 @@ export TARGET_ENVIRONMENT='dev'
 
 # Auth0 configuration (yourloops-front-dev app)
 export AUTH0_DOMAIN="mockauth0.itg.your-loops.dev"
-export AUTH0_ISSUER="mockauth0:3043"
+export AUTH0_ISSUER="mockauth0.itg.your-loops.dev"
 export AUTH0_CLIENT_ID="HDp2TbUBxOeR6A9dEfII94HfzmUokQK6"
