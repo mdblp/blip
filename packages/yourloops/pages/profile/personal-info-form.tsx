@@ -37,7 +37,6 @@ import TextField from '@material-ui/core/TextField'
 import appConfig from '../../lib/config'
 import { useAuth } from '../../lib/auth'
 import { ProfileFormKey } from './models'
-import { UserRoles } from '../../models/user'
 import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
 import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
 import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
@@ -68,7 +67,7 @@ const PersonalInfoForm: FunctionComponent = () => {
           onChange={event => updateProfileForm(ProfileFormKey.firstName, event.target.value)}
           error={errors.firstName}
           helperText={errors.firstName && t('required-field')}
-          className={`${classes.formInput} ${classes.halfWide}`}
+          className={classes.formInput}
         />
         <TextField
           id="profile-textfield-lastname"
@@ -77,13 +76,13 @@ const PersonalInfoForm: FunctionComponent = () => {
           onChange={event => updateProfileForm(ProfileFormKey.lastName, event.target.value)}
           error={errors.lastName}
           helperText={errors.lastName && t('required-field')}
-          className={`${classes.formInput} ${classes.halfWide}`}
+          className={classes.formInput}
         />
       </Box>
 
-      {user.role === UserRoles.hcp &&
+      {user.isUserHcp() &&
         <Box className={classes.inputContainer}>
-          <Box className={`${classes.formInput} ${classes.halfWide}`}>
+          <Box className={classes.formInput}>
             <BasicDropdownWithValidation
               onSelect={(value: string) => updateProfileForm(ProfileFormKey.hcpProfession, value)}
               defaultValue={profileForm.hcpProfession}
@@ -105,7 +104,7 @@ const PersonalInfoForm: FunctionComponent = () => {
                   disabled
                   className={classes.formInput}
                 />
-                : <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
+                : <FormControl className={classes.formInput}>
                   <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
                 </FormControl>
               }
@@ -114,9 +113,7 @@ const PersonalInfoForm: FunctionComponent = () => {
         </Box>
       }
 
-      {user.role === UserRoles.patient &&
-        <PatientProfileForm />
-      }
+      {user.isUserPatient() && <PatientProfileForm />}
     </React.Fragment>
   )
 }

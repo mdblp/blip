@@ -5,7 +5,7 @@ import { Units } from '../../models/generic'
 import { getCurrentLang } from '../../lib/language'
 import { LanguageCodes } from '../../models/locales'
 import { HcpProfession } from '../../models/hcp-profession'
-import { Profile, UserRoles, Settings, Preferences } from '../../models/user'
+import { Profile, Settings, Preferences } from '../../models/user'
 import { REGEX_BIRTHDATE } from '../../lib/utils'
 import { isEqual, some } from 'lodash'
 import { useTranslation } from 'react-i18next'
@@ -39,17 +39,27 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
     feedbackAccepted: !!user?.profile?.contactConsent?.isAccepted,
     sex: user.profile?.patient?.sex ?? undefined,
     ins: user.profile?.patient?.ins ?? undefined,
-    ssn: user.profile?.patient?.ssn ?? undefined
+    ssn: user.profile?.patient?.ssn ?? undefined,
+    birthFirstName: user.profile?.patient?.birthFirstName ?? undefined,
+    birthLastName: user.profile?.patient?.birthLastName ?? undefined,
+    birthNames: user.profile?.patient?.birthNames ?? undefined,
+    birthPlaceInseeCode: user.profile?.patient?.birthPlaceInseeCode ?? undefined,
+    oid: user.profile?.patient?.oid ?? undefined
   })
   const [saving, setSaving] = useState<boolean>(false)
 
   const errors: ProfileErrors = {
     firstName: !profileForm.firstName,
     lastName: !profileForm.lastName,
-    hcpProfession: user.role === UserRoles.hcp && profileForm.hcpProfession === HcpProfession.empty,
-    birthday: user.role === UserRoles.patient && !REGEX_BIRTHDATE.test(profileForm.birthday),
-    ins: user.role === UserRoles.patient && profileForm.ins && profileForm.ins.length > 0 && profileForm.ins.length !== 15,
-    ssn: user.role === UserRoles.patient && profileForm.ssn && profileForm.ssn.length > 0 && profileForm.ssn.length !== 15
+    hcpProfession: user.isUserHcp() && profileForm.hcpProfession === HcpProfession.empty,
+    birthday: user.isUserPatient() && !REGEX_BIRTHDATE.test(profileForm.birthday),
+    ins: user.isUserPatient() && profileForm.ins && profileForm.ins.length > 0 && profileForm.ins.length !== 15,
+    ssn: user.isUserPatient() && profileForm.ssn && profileForm.ssn.length > 0 && profileForm.ssn.length !== 15,
+    birthFirstName: user.isUserPatient() && !profileForm.birthFirstName,
+    birthLastName: user.isUserPatient() && !profileForm.birthLastName,
+    birthNames: user.isUserPatient() && !profileForm.birthNames,
+    birthPlaceInseeCode: user.isUserPatient() && !profileForm.birthPlaceInseeCode,
+    oid: user.isUserPatient() && !profileForm.oid
   }
 
   const updatedProfile = useMemo<Profile>(() => {
@@ -64,12 +74,18 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
       profile = {
         ...profile,
         patient: {
+          ...profile.patient,
           birthday: profileForm.birthday,
           birthPlace: profileForm.birthPlace,
           ins: profileForm.ins,
           sex: profileForm.sex,
           ssn: profileForm.ssn,
-          referringDoctor: profileForm.referringDoctor
+          referringDoctor: profileForm.referringDoctor,
+          birthFirstName: profileForm.birthFirstName,
+          birthLastName: profileForm.birthLastName,
+          birthNames: profileForm.birthNames,
+          birthPlaceInseeCode: profileForm.birthPlaceInseeCode,
+          oid: profileForm.oid
         }
       }
     }
@@ -89,7 +105,7 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
     }
 
     return profile
-  }, [profileForm.birthPlace, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.ins, profileForm.lastName, profileForm.referringDoctor, profileForm.sex, profileForm.ssn, user])
+  }, [profileForm.birthFirstName, profileForm.birthLastName, profileForm.birthNames, profileForm.birthPlace, profileForm.birthPlaceInseeCode, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.ins, profileForm.lastName, profileForm.oid, profileForm.referringDoctor, profileForm.sex, profileForm.ssn, user])
 
   const updatedSettings: Settings = {
     ...user.settings,

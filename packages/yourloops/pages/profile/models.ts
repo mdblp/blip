@@ -29,14 +29,7 @@ import { Units } from '../../models/generic'
 import { LanguageCodes } from '../../models/locales'
 import { HcpProfession } from '../../models/hcp-profession'
 
-export interface ProfileErrors {
-  firstName: boolean
-  lastName: boolean
-  birthday: boolean
-  hcpProfession: boolean
-  ins: boolean
-  ssn: boolean
-}
+export type ProfileErrors = Record<string, boolean>
 
 export enum ProfileFormKey {
   firstName = 'firstName',
@@ -51,6 +44,11 @@ export enum ProfileFormKey {
   referringDoctor = 'referringDoctor',
   sex = 'sex',
   ssn = 'ssn',
+  birthLastName = 'birthLastName',
+  birthFirstName = 'birthFirstName',
+  birthNames = 'birthNames',
+  oid = 'oid',
+  birthPlaceInseeCode = 'birthPlaceInseeCode'
 }
 
 export interface ProfileForm {
@@ -66,4 +64,9 @@ export interface ProfileForm {
   referringDoctor: string | undefined
   sex: string | undefined
   ssn: string | undefined
+  birthLastName: string
+  birthFirstName: string
+  birthNames: string
+  oid: string
+  birthPlaceInseeCode: string
 }

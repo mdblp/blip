@@ -60,7 +60,7 @@ const PreferencesForm: FunctionComponent = () => {
       </Box>
 
       <Box className={classes.inputContainer}>
-        <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
+        <FormControl className={classes.formInput}>
           <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
             disabled={user.role === UserRoles.patient}
@@ -77,7 +77,7 @@ const PreferencesForm: FunctionComponent = () => {
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
+        <FormControl className={classes.formInput}>
           <InputLabel id="profile-language-input-label">{t('language')}</InputLabel>
           <Select
             labelId="locale-selector"

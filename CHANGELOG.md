@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
+- YLP-1852 Adding specific INS fields in user profile
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1680 getPatientData Api method has a wrong parameter

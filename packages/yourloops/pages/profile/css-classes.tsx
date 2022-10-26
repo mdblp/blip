@@ -57,17 +57,17 @@ export const profileFormCommonClasses = makeStyles((theme: Theme) => ({
   uppercase: {
     textTransform: 'uppercase'
   },
-  halfWide: {
-    [theme.breakpoints.up('sm')]: {
-      width: 'calc(50% - 16px)'
-    }
-  },
   inputContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     [theme.breakpoints.only('xs')]: {
       flexDirection: 'column'
+    },
+    [theme.breakpoints.up('sm')]: {
+      '& > div': {
+        width: 'calc(50% - 16px)'
+      }
     }
   },
   categoryLabel: {

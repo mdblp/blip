@@ -30,6 +30,7 @@ import React, { FunctionComponent, useMemo } from 'react'
 import { tz } from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 
+import Box from '@material-ui/core/Box'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -55,73 +56,129 @@ const PatientProfileForm: FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      <TextField
-        id="profile-textfield-birthdate"
-        label={t('birthdate')}
-        value={profileForm.birthday}
-        onChange={event => updateProfileForm(ProfileFormKey.birthday, event.target.value)}
-        error={errors.birthday}
-        helperText={errors.birthday && t('required-field')}
-        className={classes.formInput}
-      />
-      <TextField
-        id="profile-textfield-birthplace"
-        label={t('birthplace')}
-        value={profileForm.birthPlace}
-        onChange={event => updateProfileForm(ProfileFormKey.birthPlace, event.target.value)}
-        className={classes.formInput}
-        inputProps={{ maxLength: '50' }}
-      />
-      <FormControl className={`${classes.formInput}`}>
-        <InputLabel
-          id="profile-select-gender-label"
-          htmlFor="profile-select-gender"
-        >
-          {t('gender')}
-        </InputLabel>
-        <Select
-          id="profile-select-gender"
-          labelId="profile-select-gender-label"
-          value={profileForm.sex}
-          onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value as string)}
-        >
-          <MenuItem value="" aria-label={t('none')}>{t('none')}</MenuItem>
-          <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>
-          <MenuItem value="F" aria-label={t('female')}>{t('female')}</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        id="profile-textfield-referring-doctor"
-        label={t('referring-doctor')}
-        value={profileForm.referringDoctor}
-        onChange={event => updateProfileForm(ProfileFormKey.referringDoctor, event.target.value)}
-        className={classes.formInput}
-        inputProps={{ maxLength: '50' }}
-      />
+      <Box className={classes.inputContainer}>
+        <TextField
+          id="profile-textfield-birthdate"
+          label={t('birthdate')}
+          value={profileForm.birthday}
+          onChange={event => updateProfileForm(ProfileFormKey.birthday, event.target.value)}
+          error={errors.birthday}
+          helperText={errors.birthday && t('required-field')}
+          className={classes.formInput}
+          inputProps={{ maxLength: '10' }}
+        />
+        <TextField
+          id="profile-textfield-birthplace"
+          label={t('birthplace')}
+          value={profileForm.birthPlace}
+          onChange={event => updateProfileForm(ProfileFormKey.birthPlace, event.target.value)}
+          className={classes.formInput}
+          inputProps={{ maxLength: '50' }}
+        />
+      </Box>
       {country === 'FR' &&
-        <>
+        <React.Fragment>
+          <Box className={classes.inputContainer}>
+            <TextField
+              label={t('birth-first-name')}
+              value={profileForm.birthFirstName}
+              onChange={event => updateProfileForm(ProfileFormKey.birthFirstName, event.target.value)}
+              error={errors.birthFirstName}
+              helperText={errors.birthFirstName && t('required-field')}
+              className={classes.formInput}
+              inputProps={{ maxLength: '50' }}
+            />
+            <TextField
+              label={t('birth-last-name')}
+              value={profileForm.birthLastName}
+              onChange={event => updateProfileForm(ProfileFormKey.birthLastName, event.target.value)}
+              className={classes.formInput}
+              error={errors.birthLastName}
+              helperText={errors.birthLastName && t('required-field')}
+              inputProps={{ maxLength: '50' }}
+            />
+          </Box>
+          <Box className={classes.inputContainer}>
+            <TextField
+              label={t('birth-names')}
+              value={profileForm.birthNames}
+              onChange={event => updateProfileForm(ProfileFormKey.birthNames, event.target.value)}
+              error={errors.birthNames}
+              helperText={errors.birthNames && t('required-field')}
+              className={classes.formInput}
+              inputProps={{ maxLength: '50' }}
+            />
+            <TextField
+              label={t('birth-place-insee-code')}
+              value={profileForm.birthPlaceInseeCode}
+              onChange={event => updateProfileForm(ProfileFormKey.birthPlaceInseeCode, event.target.value)}
+              className={classes.formInput}
+              error={errors.birthPlaceInseeCode}
+              helperText={errors.birthPlaceInseeCode && t('required-field')}
+            />
+          </Box>
+          <Box className={classes.inputContainer}>
+            <TextField
+              id="profile-textfield-ins"
+              label={t('ins')}
+              value={profileForm.ins}
+              onChange={event => updateProfileForm(ProfileFormKey.ins, event.target.value)}
+              className={classes.formInput}
+              inputProps={{ maxLength: '15' }}
+              error={errors.ins}
+              helperText={errors.ins && t('field-with-exactly-15-characters')}
+            />
+            <TextField
+              id="profile-textfield-ssn"
+              label={t('ssn')}
+              value={profileForm.ssn}
+              onChange={event => updateProfileForm(ProfileFormKey.ssn, event.target.value)}
+              className={classes.formInput}
+              error={errors.ssn}
+              helperText={errors.ssn && t('field-with-exactly-15-characters')}
+              inputProps={{ maxLength: '15' }}
+            />
+          </Box>
           <TextField
-            id="profile-textfield-ins"
-            label={t('ins')}
-            value={profileForm.ins}
-            onChange={event => updateProfileForm(ProfileFormKey.ins, event.target.value)}
+            label={t('oid')}
+            value={profileForm.oid}
+            onChange={event => updateProfileForm(ProfileFormKey.oid, event.target.value)}
             className={classes.formInput}
-            inputProps={{ maxLength: '15' }}
-            error={errors.ins}
-            helperText={errors.ins && t('field-with-exactly-15-characters')}
+            error={errors.oid}
+            helperText={errors.oid && t('required-field')}
           />
-          <TextField
-            id="profile-textfield-ssn"
-            label={t('ssn')}
-            value={profileForm.ssn}
-            onChange={event => updateProfileForm(ProfileFormKey.ssn, event.target.value)}
-            className={classes.formInput}
-            inputProps={{ maxLength: '15' }}
-            error={errors.ssn}
-            helperText={errors.ssn && t('field-with-exactly-15-characters')}
-          />
-        </>
+        </React.Fragment>
       }
+
+      <Box className={classes.inputContainer}>
+        <FormControl className={`${classes.formInput}`}>
+          <InputLabel
+            id="profile-select-gender-label"
+            htmlFor="profile-select-gender"
+          >
+            {t('gender')}
+          </InputLabel>
+          <Select
+            id="profile-select-gender"
+            labelId="profile-select-gender-label"
+            value={profileForm.sex}
+            onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value as string)}
+          >
+            <MenuItem value="" aria-label={t('none')}>{t('none')}</MenuItem>
+            <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>
+            <MenuItem value="F" aria-label={t('female')}>{t('female')}</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          id="profile-textfield-referring-doctor"
+          label={t('referring-doctor')}
+          value={profileForm.referringDoctor}
+          onChange={event => updateProfileForm(ProfileFormKey.referringDoctor, event.target.value)}
+          className={classes.formInput}
+          inputProps={{ maxLength: '50' }}
+        />
+      </Box>
+
       {a1cValue && a1cDate &&
         <TextField
           id="hbA1c"

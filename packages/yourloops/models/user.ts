@@ -55,6 +55,11 @@ export interface Patient {
   sex?: string
   ssn?: string
   referringDoctor?: string
+  birthFirstName?: string
+  birthLastName?: string
+  birthNames?: string
+  birthPlaceInseeCode?: string
+  oid?: string
 }
 
 export interface Profile {
