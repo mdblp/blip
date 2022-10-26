@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import Tune from '@material-ui/icons/Tune'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
 import Box from '@material-ui/core/Box'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -45,15 +44,13 @@ import { LanguageCodes } from '../../models/locales'
 import { useProfilePageState } from './profile-page-context'
 import { ProfileFormKey } from './models'
 import { useAuth } from '../../lib/auth'
+import { profileFormCommonClasses } from './css-classes'
 
-interface PreferencesFormProps {
-  classes: ClassNameMap
-}
-
-const PreferencesForm: FunctionComponent<PreferencesFormProps> = ({ classes }) => {
+const PreferencesForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { profileForm, updateProfileForm } = useProfilePageState()
+  const classes = profileFormCommonClasses()
 
   return (
     <React.Fragment>

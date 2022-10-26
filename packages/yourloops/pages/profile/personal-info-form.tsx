@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import AccountCircle from '@material-ui/icons/AccountCircle'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
 import Box from '@material-ui/core/Box'
 import FormControl from '@material-ui/core/FormControl'
 import TextField from '@material-ui/core/TextField'
@@ -45,15 +44,13 @@ import CertifiedProfessionalIcon from '../../components/icons/certified-professi
 import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-button'
 import PatientProfileForm from './patient-form'
 import { useProfilePageState } from './profile-page-context'
+import { profileFormCommonClasses } from './css-classes'
 
-export interface PersonalInfoFormProps {
-  classes: ClassNameMap
-}
-
-const PersonalInfoForm: FunctionComponent<PersonalInfoFormProps> = ({ classes }) => {
+const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { redirectToProfessionalAccountLogin, user } = useAuth()
   const { profileForm, updateProfileForm, errors } = useProfilePageState()
+  const classes = profileFormCommonClasses()
 
   return (
     <React.Fragment>
@@ -118,7 +115,7 @@ const PersonalInfoForm: FunctionComponent<PersonalInfoFormProps> = ({ classes })
       }
 
       {user.role === UserRoles.patient &&
-        <PatientProfileForm classes={classes} />
+        <PatientProfileForm />
       }
     </React.Fragment>
   )

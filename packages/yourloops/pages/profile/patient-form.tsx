@@ -30,7 +30,6 @@ import React, { FunctionComponent, useMemo } from 'react'
 import { tz } from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -40,15 +39,13 @@ import TextField from '@material-ui/core/TextField'
 import { useAuth } from '../../lib/auth'
 import { ProfileFormKey } from './models'
 import { useProfilePageState } from './profile-page-context'
+import { profileFormCommonClasses } from './css-classes'
 
-interface PatientProfileFormProps {
-  classes: ClassNameMap<'formInput'>
-}
-
-const PatientProfileForm: FunctionComponent<PatientProfileFormProps> = ({ classes }) => {
+const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { errors, profileForm, updateProfileForm } = useProfilePageState()
+  const classes = profileFormCommonClasses()
 
   const browserTimezone = useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, [])
 

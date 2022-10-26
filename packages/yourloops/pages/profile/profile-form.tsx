@@ -9,16 +9,17 @@ import PreferencesForm from './preferences-form'
 import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 import { useTranslation } from 'react-i18next'
 import { useProfilePageState } from './profile-page-context'
-import { ClassNameMap } from '@material-ui/styles/withStyles'
+import { profileFormCommonClasses } from './css-classes'
 
-export const ProfileForm: FunctionComponent<{ classes: ClassNameMap }> = ({ classes }) => {
+export const ProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { canSave, saving, saveProfile } = useProfilePageState()
+  const classes = profileFormCommonClasses()
 
   return (
     <React.Fragment>
-      <PersonalInfoForm classes={classes} />
-      <PreferencesForm classes={classes} />
+      <PersonalInfoForm />
+      <PreferencesForm />
       <Box display="flex" justifyContent="flex-end" my={3}>
         <LinkRedirect className={classes.cancelLink} to="/">
           <Button

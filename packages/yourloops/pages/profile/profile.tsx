@@ -29,7 +29,6 @@
 import React, { useEffect, useState, FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -43,65 +42,11 @@ import metrics from '../../lib/metrics'
 import SwitchRoleDialogs from '../../components/switch-role'
 import { ProfilePageContextProvider } from './profile-page-context'
 import { ProfileForm } from './profile-form'
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      marginLeft: theme.spacing(2)
-    },
-    cancelLink: {
-      textDecoration: 'unset'
-    },
-    formInput: {
-      marginTop: theme.spacing(2)
-    },
-    title: {
-      color: theme.palette.primary.main,
-      textAlign: 'center',
-      width: '100%'
-    },
-    container: {
-      backgroundColor: 'white',
-      marginTop: '32px',
-      padding: 0,
-      [theme.breakpoints.up('sm')]: {
-        border: 'solid',
-        borderRadius: '15px',
-        borderColor: theme.palette.grey[300],
-        borderWidth: '1px',
-        padding: '0 64px'
-      }
-    },
-    uppercase: {
-      textTransform: 'uppercase'
-    },
-    halfWide: {
-      [theme.breakpoints.up('sm')]: {
-        width: 'calc(50% - 16px)'
-      }
-    },
-    inputContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      [theme.breakpoints.only('xs')]: {
-        flexDirection: 'column'
-      }
-    },
-    categoryLabel: {
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: theme.spacing(5),
-      '& > :nth-child(2)': {
-        marginLeft: theme.spacing(1)
-      }
-    }
-  })
-)
+import { profileFormCommonClasses } from './css-classes'
 
 const ProfilePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyles()
+  const classes = profileFormCommonClasses()
   const { user } = useAuth()
 
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
@@ -125,7 +70,7 @@ const ProfilePage: FunctionComponent = () => {
           </DialogTitle>
 
           <ProfilePageContextProvider>
-            <ProfileForm classes={classes} />
+            <ProfileForm />
           </ProfilePageContextProvider>
 
           {/** TODO role changing was performed with a call to shoreline.
