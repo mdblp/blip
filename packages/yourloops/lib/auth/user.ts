@@ -25,7 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AuthenticatedUser, Consent, Preferences, Profile, Settings, UserMetadata, UserRoles } from '../../models/user'
+import {
+  AuthenticatedUser,
+  Consent,
+  Preferences,
+  Profile,
+  Settings,
+  AuthenticatedUserMetadata,
+  UserRoles
+} from '../../models/user'
 import { MedicalData } from '../../models/device-data'
 import config from '../config'
 
@@ -47,7 +55,7 @@ export default class User {
     this.email = authenticatedUser.email
     this.emailVerified = authenticatedUser.emailVerified
     this.id = User.getId(authenticatedUser.sub)
-    this.role = User.getRole(authenticatedUser[UserMetadata.Roles])
+    this.role = User.getRole(authenticatedUser[AuthenticatedUserMetadata.Roles])
     this.username = authenticatedUser.email
     this.latestConsentChangeDate = new Date(config.LATEST_TERMS ?? 0)
     this.latestTrainingDate = new Date(config.LATEST_TRAINING ?? 0)

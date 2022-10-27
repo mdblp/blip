@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Preferences, Profile, Settings } from '../../models/user'
+import { UserMetadata, Preferences, Profile, Settings } from '../../models/user'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import bows from 'bows'
 import appConfig from '../config'
@@ -7,42 +7,14 @@ import appConfig from '../config'
 const log = bows('User API')
 
 export default class UserApi {
-  static async getProfile(userId: string): Promise<Profile | undefined> {
+  static async getUserMetadata(userId: string): Promise<UserMetadata | undefined> {
     try {
-      const { data } = await HttpService.get<Profile>({ url: `/metadata/${userId}/profile` })
+      const { data } = await HttpService.get<UserMetadata>({ url: `/metadata/${userId}` })
       return data
     } catch (err) {
       const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
         log.info(`No profile for ${userId}`)
-        return undefined
-      }
-      throw err
-    }
-  }
-
-  static async getPreferences(userId: string): Promise<Preferences | undefined> {
-    try {
-      const { data } = await HttpService.get<Preferences>({ url: `/metadata/${userId}/preferences` })
-      return data
-    } catch (err) {
-      const error = err as Error
-      if (error.message === ErrorMessageStatus.NotFound) {
-        log.info(`No preferences for ${userId}`)
-        return undefined
-      }
-      throw err
-    }
-  }
-
-  static async getSettings(userId: string): Promise<Settings | undefined> {
-    try {
-      const { data } = await HttpService.get<Settings>({ url: `/metadata/${userId}/settings` })
-      return data
-    } catch (err) {
-      const error = err as Error
-      if (error.message === ErrorMessageStatus.NotFound) {
-        log.info(`No settings for ${userId}`)
         return undefined
       }
       throw err

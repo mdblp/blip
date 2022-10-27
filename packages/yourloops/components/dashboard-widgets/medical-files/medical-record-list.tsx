@@ -132,15 +132,15 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   }
 
   useEffect(() => {
-    (async () => {
-      try {
-        setMedicalRecords(await MedicalFilesApi.getMedicalRecords(patientId, teamId))
-      } catch (err) {
-        setMedicalRecords([])
-        alert.error(t('medical-records-get-failed'))
-      }
-    })()
-  }, [alert, patientId, t, teamId])
+    if (!medicalRecords) {
+      MedicalFilesApi.getMedicalRecords(patientId, teamId)
+        .then(medicalRecords => setMedicalRecords(medicalRecords))
+        .catch(() => {
+          setMedicalRecords([])
+          alert.error(t('medical-records-get-failed'))
+        })
+    }
+  }, [])
 
   return (
     <React.Fragment>

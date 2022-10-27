@@ -38,16 +38,18 @@ import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
 import { unMonitoredPatientId } from './mockPatientAPI'
 
 export const mockUserDataFetch = (firstName: string, lastName: string) => {
-  jest.spyOn(UserApi, 'getProfile').mockResolvedValue({
+  const profile: Profile = {
     firstName,
     lastName,
     fullName: `${firstName} ${lastName}`,
+    email: 'fake@email.com',
     termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  } as Profile)
-  jest.spyOn(UserApi, 'getPreferences').mockResolvedValue({} as Preferences)
-  jest.spyOn(UserApi, 'getSettings').mockResolvedValue({} as Settings)
+  }
+  const preferences = {} as Preferences
+  const settings = {} as Settings
+  jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile, settings, preferences })
 }
 
 export const mockPatientLogin = (patient: ITeamMember) => {

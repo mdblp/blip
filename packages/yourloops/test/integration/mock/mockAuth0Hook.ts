@@ -26,7 +26,7 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { UserMetadata, UserRoles } from '../../../models/user'
+import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
 
 export const loggedInUserId = '919b1575bad58'
 export const loggedInUserEmail = 'john.doe@example.com'
@@ -39,7 +39,7 @@ export const mockAuth0Hook = (role: UserRoles | null = UserRoles.hcp, userId = l
       email: loggedInUserEmail,
       email_verified: true,
       sub: 'auth0|' + userId,
-      [UserMetadata.Roles]: role ? [role] : null
+      [AuthenticatedUserMetadata.Roles]: [role]
     }
   })
 }
