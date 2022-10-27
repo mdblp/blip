@@ -39,7 +39,7 @@ export const mockAuth0Hook = (role: UserRoles | null = UserRoles.hcp, userId = l
       email: loggedInUserEmail,
       email_verified: true,
       sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: [role]
+      [AuthenticatedUserMetadata.Roles]: role ? [role] : null
     }
   })
 }

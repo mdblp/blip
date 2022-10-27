@@ -120,9 +120,9 @@ enum AuthenticatedUserMetadata {
 }
 
 interface AuthenticatedUser {
-  [AuthenticatedUserMetadata.Roles]: string[]
+  [AuthenticatedUserMetadata.Roles]: string[] | null
   email: string
-  emailVerified: boolean
+  email_verified: boolean
   sub: string
 }
 

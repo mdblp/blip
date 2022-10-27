@@ -53,7 +53,7 @@ export default class User {
 
   constructor(authenticatedUser: AuthenticatedUser) {
     this.email = authenticatedUser.email
-    this.emailVerified = authenticatedUser.emailVerified
+    this.emailVerified = authenticatedUser.email_verified
     this.id = User.getId(authenticatedUser.sub)
     this.role = User.getRole(authenticatedUser[AuthenticatedUserMetadata.Roles])
     this.username = authenticatedUser.email

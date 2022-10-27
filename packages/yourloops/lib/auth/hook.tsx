@@ -31,7 +31,14 @@ import bows from 'bows'
 import _ from 'lodash'
 
 import { useAuth0 } from '@auth0/auth0-react'
-import { AuthenticatedUser, Preferences, Profile, Settings, UserMetadata, UserRoles } from '../../models/user'
+import {
+  AuthenticatedUser,
+  AuthenticatedUserMetadata,
+  Preferences,
+  Profile,
+  Settings,
+  UserRoles
+} from '../../models/user'
 import { HcpProfession } from '../../models/hcp-profession'
 import { zendeskLogout } from '../zendesk'
 import User from './user'
@@ -156,7 +163,7 @@ export function AuthContextImpl(): AuthContext {
       setFetchingUser(true)
       const user = new User(auth0user as AuthenticatedUser)
 
-      if (auth0user[UserMetadata.Roles]) {
+      if (auth0user[AuthenticatedUserMetadata.Roles]) {
         const userMetadata = await UserApi.getUserMetadata(user.id)
         if (userMetadata) {
           user.profile = userMetadata.profile
