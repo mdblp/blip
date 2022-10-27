@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Preferences, Profile, Settings } from '../../../../models/user'
+import { Preferences, Profile, Settings, UserMetadata } from '../../../../models/user'
 import UserApi from '../../../../lib/auth/user-api'
 import HttpService, { ErrorMessageStatus } from '../../../../services/http'
 import { AxiosResponse, AxiosResponseHeaders } from 'axios'
@@ -34,6 +34,9 @@ import { HttpHeaderKeys } from '../../../../models/api'
 
 describe('Auth API', () => {
   const userId = 'userId'
+  const profile = { firstName: 'Bernard', lastName: 'Tichaut' } as Profile
+  const settings = { country: 'france' } as Settings
+  const preferences = { displayLanguageCode: 'en' } as Preferences
 
   describe('getShorelineAccessToken', () => {
     it('should get an access token from shoreline service', async () => {
@@ -60,71 +63,25 @@ describe('Auth API', () => {
     })
   })
 
-  describe('getProfile', () => {
-    it('should get the user profile', async () => {
-      const data = { firstName: 'Bernard', lastName: 'Tichaut' } as Profile
+  describe('getUserMetadata', () => {
+    it('should get the user metadata (profile, preferences, settings at once)', async () => {
+      const data: UserMetadata = { profile, settings, preferences }
       jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-      const response = await UserApi.getProfile(userId)
+      const response = await UserApi.getUserMetadata(userId)
       expect(response).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: `/metadata/${userId}/profile` })
+      expect(HttpService.get).toHaveBeenCalledWith({ url: `/metadata/${userId}` })
     })
 
-    it('should return undefined if profile doesn\'t exists', async () => {
+    it('should return undefined if user is not found', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await UserApi.getProfile(userId)
+      const response = await UserApi.getUserMetadata(userId)
       expect(response).toBeUndefined()
     })
 
     it('should throw an error if http call failed', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
-        await UserApi.getProfile(userId)
-      }).rejects.toThrowError('This error was thrown by a mock on purpose')
-    })
-  })
-
-  describe('getPreferences', () => {
-    it('should get the user preferences', async () => {
-      const data = { displayLanguageCode: 'en' } as Preferences
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-      const response = await UserApi.getPreferences(userId)
-      expect(response).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: `/metadata/${userId}/preferences` })
-    })
-
-    it('should return undefined if preferences doesn\'t exist', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await UserApi.getPreferences(userId)
-      expect(response).toBeUndefined()
-    })
-
-    it('should throw an error if http call failed', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
-      await expect(async () => {
-        await UserApi.getPreferences(userId)
-      }).rejects.toThrowError('This error was thrown by a mock on purpose')
-    })
-  })
-
-  describe('getSettings', () => {
-    it('should get the user settings', async () => {
-      const data = { country: 'france' } as Settings
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-      const response = await UserApi.getSettings(userId)
-      expect(response).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: `/metadata/${userId}/settings` })
-    })
-
-    it('should return undefined if settings doesn\'t exist', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await UserApi.getSettings(userId)
-      expect(response).toBeUndefined()
-    })
-
-    it('should throw an error if http call failed', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
-      await expect(async () => {
-        await UserApi.getSettings(userId)
+        await UserApi.getUserMetadata(userId)
       }).rejects.toThrowError('This error was thrown by a mock on purpose')
     })
   })
