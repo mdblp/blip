@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserMetadata, UserRoles } from '../../../../models/user'
+import { AuthenticatedUserMetadata, UserRoles } from '../../../../models/user'
 import config from '../../../../lib/config'
 import User from '../../../../lib/auth/user'
 
@@ -41,7 +41,7 @@ describe('User', () => {
     user = new User({
       sub: 'auth0|abcd',
       email: 'text@example.com',
-      [UserMetadata.Roles]: [UserRoles.unverified],
+      [AuthenticatedUserMetadata.Roles]: [UserRoles.unverified],
       emailVerified: true
     })
   })
