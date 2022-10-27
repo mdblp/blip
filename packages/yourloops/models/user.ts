@@ -87,27 +87,10 @@ interface Preferences {
   patientsStarred?: string[]
 }
 
-interface UserInformation {
-  fullName: string
-  firstName?: string
-  lastName?: string
-  patient?: Patient
-  termsOfUse?: Consent
-  trainingAck?: Consent
-  privacyPolicy?: Consent
-  contactConsent?: Consent
-  hcpProfession?: HcpProfession
-  displayLanguageCode?: LanguageCodes
-  patientsStarred?: string[]
-  units?: {
-    bg?: Units
-  }
-  country?: string
-  a1c?: {
-    date: string
-    value: string
-  }
-
+interface UserMetadata {
+  preferences: Preferences
+  profile: Profile
+  settings: Settings
 }
 
 interface IUser {
@@ -131,15 +114,15 @@ interface IUser {
   unreadMessages?: number
 }
 
-enum UserMetadata {
+enum AuthenticatedUserMetadata {
   Roles = 'http://your-loops.com/roles',
 }
 
 interface AuthenticatedUser {
-  [UserMetadata.Roles]: string[]
+  [AuthenticatedUserMetadata.Roles]: string[]
   email: string
   emailVerified: boolean
   sub: string
 }
 
-export { IUser, Profile, Settings, Preferences, Consent, UserRoles, UserMetadata, AuthenticatedUser, UserInformation }
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles, AuthenticatedUserMetadata, AuthenticatedUser, UserMetadata }

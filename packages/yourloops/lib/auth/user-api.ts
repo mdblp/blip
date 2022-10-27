@@ -1,4 +1,4 @@
-import { UserInformation, IUser, Preferences, Profile, Settings } from '../../models/user'
+import { UserMetadata, IUser, Preferences, Profile, Settings } from '../../models/user'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import { HttpHeaderKeys } from '../../models/api'
 import bows from 'bows'
@@ -30,9 +30,9 @@ export default class UserApi {
     }
   }
 
-  static async getUserInformation(userId: string): Promise<UserInformation | undefined> {
+  static async getUserMetadata(userId: string): Promise<UserMetadata | undefined> {
     try {
-      const { data } = await HttpService.get<UserInformation>({ url: `/metadata/${userId}` })
+      const { data } = await HttpService.get<UserMetadata>({ url: `/metadata/${userId}` })
       return data
     } catch (err) {
       const error = err as Error

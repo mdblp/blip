@@ -31,9 +31,8 @@ import {
   Preferences,
   Profile,
   Settings,
-  UserMetadata,
-  UserRoles,
-  UserInformation
+  AuthenticatedUserMetadata,
+  UserRoles
 } from '../../models/user'
 import { MedicalData } from '../../models/device-data'
 import config from '../config'
@@ -48,7 +47,6 @@ export default class User {
   frProId?: string
   role: UserRoles
   medicalData?: MedicalData
-  userInformation?: UserInformation
   preferences?: Preferences
   profile?: Profile
   settings?: Settings
@@ -57,7 +55,7 @@ export default class User {
     this.email = authenticatedUser.email
     this.emailVerified = authenticatedUser.emailVerified
     this.id = User.getId(authenticatedUser.sub)
-    this.role = authenticatedUser[UserMetadata.Roles][0] as UserRoles
+    this.role = authenticatedUser[AuthenticatedUserMetadata.Roles][0] as UserRoles
     this.username = authenticatedUser.email
     this.latestConsentChangeDate = config.LATEST_TERMS ? new Date(config.LATEST_TERMS) : new Date(0)
     this.latestTrainingDate = config.LATEST_TRAINING ? new Date(config.LATEST_TRAINING) : new Date(0)
