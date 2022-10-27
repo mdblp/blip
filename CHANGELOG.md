@@ -2,7 +2,11 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta6 - 2022-10-21
+## 3.0.2-beta5 - 2022-10-21
+### Engineering use
+- YLP-1874 Fix PDF report generation
+
+## 3.0.1 - 2022-10-11
 ### Added
 - YLP-1681 HCP can remove a patient
 - YLP-1837 Display training material acknowledgment

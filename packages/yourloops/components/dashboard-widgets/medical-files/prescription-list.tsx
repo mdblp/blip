@@ -71,15 +71,15 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
 
   useEffect(() => {
-    (async () => {
-      try {
-        setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId))
-      } catch (err) {
-        setPrescriptions([])
-        alert.error(t('prescriptions-get-failed'))
-      }
-    })()
-  }, [alert, patientId, t, teamId])
+    if (!prescriptions) {
+      MedicalFilesApi.getPrescriptions(patientId, teamId)
+        .then(prescriptions => setPrescriptions(prescriptions))
+        .catch(() => {
+          setPrescriptions([])
+          alert.error(t('prescriptions-get-failed'))
+        })
+    }
+  }, [])
 
   const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription): void => {
     MedicalFilesApi.getPrescription(patientId, teamId, prescription.id).then(data => {
