@@ -8,10 +8,11 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.1 - 2022-10-11
 ### Added
-- YLP-1865 Add-an-error-message-if-email-is-not-valid-in-create-team-form
+
 - YLP-1681 HCP can remove a patient
 - YLP-1837 Display training material acknowledgment
 - YLP-1841 Rework of accompanying documents in footer
+- YLP-1865 Add-an-error-message-if-email-is-not-valid-in-create-team-form
 ### Engineering use
 - YLP-1317 Renaming Shoreline model to a generic name
 - YLP-1626 Refactor team hook to only keep functions impacting the state
