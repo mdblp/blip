@@ -166,6 +166,7 @@ export function AuthContextImpl(): AuthContext {
       } catch (err) {
         console.log(err)
       }
+
       const userMetadata = await UserApi.getUserMetadata(user.id)
       if (userMetadata) {
         user.profile = userMetadata.profile
