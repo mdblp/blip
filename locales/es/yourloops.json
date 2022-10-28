@@ -164,6 +164,8 @@
   "ins": "INS",
   "intended-use": "Uso previsto",
   "invalid-email": "Dirección de correo electrónico no válida.",
+  "invalid-phone-number": "Please enter a valid phone number",
+  "invalid-zipcode": "Please enter a valid zipcode",
   "invite": "Invitar",
   "invite-join-monitoring-team": "You are invited to join the remote monitoring team",
   "join-care-team": "Join care team",
@@ -263,7 +265,6 @@
   "pending-patients-filter": "Filter on pending patients",
   "personal-information": "Información Personal",
   "phone-number": "Número de teléfono",
-  "phone-number-helper-text": "Please enter a valid phone number",
   "placeholder-search": "Buscar...",
   "preferences": "Preferencias",
   "prescription": "Prescription",
@@ -386,6 +387,5 @@
   "write-medical-record": "Write medical record",
   "yes": "Yes",
   "yesterday": "Ayer",
-  "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes.",
-  "zipcode-helper-text": "Please enter a valid zipcode"
+  "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes."
 }
