@@ -156,7 +156,8 @@ export function selectDailyViewData(medicalData, startDate, endDate) {
     const data = {}
     for (const type of dailyDataTypes) {
       /** @type {{epoch:number}[]} */
-      const filteredData = medicalData.medicalData[type].filter((d) => {
+      const medData = medicalData.medicalData[type] ?? []
+      const filteredData = medData.filter((d) => {
         if (d.epochEnd) {
           return minEpoch < d.epochEnd && d.epoch < maxEpoch
         }

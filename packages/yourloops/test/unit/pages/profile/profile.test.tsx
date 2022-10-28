@@ -33,7 +33,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { Units } from '../../../../models/generic'
 import ProfilePage from '../../../../pages/profile'
-import { Profile, UserMetadata, UserRoles } from '../../../../models/user'
+import { Profile, AuthenticatedUserMetadata, UserRoles } from '../../../../models/user'
 import * as authHookMock from '../../../../lib/auth'
 import User from '../../../../lib/auth/user'
 import { genderLabels } from '../../../../lib/auth/helpers'
@@ -65,7 +65,7 @@ describe('Profile', () => {
       email: 'josephine.dupuis@example.com',
       emailVerified: true,
       sub: 'auth0|a0a0a0b0',
-      [UserMetadata.Roles]: [UserRoles.patient]
+      [AuthenticatedUserMetadata.Roles]: [UserRoles.patient]
     })
     patient.settings = { a1c: { date: '2020-01-01', value: '7.5' }, country: 'FR' }
     patient.profile = {
@@ -88,7 +88,7 @@ describe('Profile', () => {
       email: 'john.doe@example.com',
       emailVerified: true,
       sub: 'auth0|a0000000',
-      [UserMetadata.Roles]: [UserRoles.hcp]
+      [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
     })
     hcp.frProId = 'ANS20211229094028'
     hcp.profile = { firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
@@ -145,7 +145,7 @@ describe('Profile', () => {
       }
     })
     await mountProfilePage()
-    const birthDateInput = container.querySelector('#profile-textfield-birthdate')
+    const birthDateInput: HTMLInputElement = container.querySelector('#profile-textfield-birthdate')
     expect(birthDateInput?.value).toBe(birthday)
   })
 

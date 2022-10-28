@@ -3,11 +3,17 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.2-beta8 - 2022-10-25
+### Engineering use
+- YLP-1874 Fix PDF report generation
+
+## 3.0.1 - 2022-10-11
 ### Added
 - YLP-1753 Fix memory leak on useState
 - YLP-1681 HCP can remove a patient
 - YLP-1837 Display training material acknowledgment
 - YLP-1841 Rework of accompanying documents in footer
+- YLP-1865 Add an error message if email is not valid in create team form
+- YLP-1867 Use a single route to fetch user profile, settings and preferences at once
 ### Engineering use
 - YLP-1317 Renaming Shoreline model to a generic name
 - YLP-1626 Refactor team hook to only keep functions impacting the state
