@@ -31,10 +31,10 @@ import { Profile } from '../../models/user'
 import { TeamMemberRole } from '../../models/team'
 
 export enum NotificationType {
-  directInvitation = 'direct_invitation',
-  careTeamProInvitation = 'care_team_pro_invitation',
-  careTeamPatientInvitation = 'care_team_patient_invitation',
-  careTeamMonitoringInvitation = 'care_team_monitoring_invitation',
+  careTeamMonitoringInvitation,
+  careTeamPatientInvitation,
+  careTeamProInvitation,
+  directInvitation,
 }
 
 export interface INotification {
@@ -64,7 +64,7 @@ export interface INotification {
 
 export interface CancelInvitation {
   key: string
-  target: { id: string}
+  target: { id: string }
   email: string
 }
 

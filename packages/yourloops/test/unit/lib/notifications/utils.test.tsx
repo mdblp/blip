@@ -79,7 +79,7 @@ describe('Notification utils', () => {
         error = reason as Error
       }
       expect(error).not.toBeNull()
-      expect(error.message).toBe('Invalid notification type')
+      expect(error.message).toBe(`Invalid notification type ${apiNotification.type}`)
     })
 
     it("should transform 'careteam_invitation' to 'directInvitation'", () => {

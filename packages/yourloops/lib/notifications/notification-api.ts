@@ -49,6 +49,7 @@ export default class NotificationApi {
         break
       default:
         log.info('Unknown notification', notification)
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw Error(`Unknown notification ${notification.type}`)
     }
     return await NotificationApi.updateInvitation(url, notification.id)
@@ -56,9 +57,9 @@ export default class NotificationApi {
 
   static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
     const payload: CancelInvitation = {
+      email: inviteeEmail,
       key: notificationId,
-      target: { id: teamId },
-      email: inviteeEmail
+      target: { id: teamId }
     }
 
     await HttpService.post<string, CancelInvitation>({
@@ -88,6 +89,7 @@ export default class NotificationApi {
         return await NotificationApi.cancelRemoteMonitoringInvite(notification.target?.id, userId)
       default:
         log.info('Unknown notification', notification)
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw Error(`Unknown notification ${notification.type}`)
     }
     return await NotificationApi.updateInvitation(url, notification.id)

@@ -67,15 +67,18 @@ interface RemoveMemberArgs {
 }
 
 export default class TeamApi {
-  static async getTeams(user: User): Promise<Team[]> {
-    let url: string
+  static getTeamsApiUrl(user: User): string {
     if (user.isUserHcp()) {
-      url = `/bff/front/v1/hcps/${user.id}/teams`
+      return `/bff/front/v1/hcps/${user.id}/teams`
     } else if (user.isUserPatient()) {
-      url = `/bff/front/v1/patients/${user.id}/teams`
+      return `/bff/front/v1/patients/${user.id}/teams`
     } else {
       throw Error(`User with role ${user.role} cannot retrieve teams`)
     }
+  }
+
+  static async getTeams(user: User): Promise<Team[]> {
+    const url = TeamApi.getTeamsApiUrl(user)
     try {
       const { data } = await HttpService.get<Team[]>({ url })
       return data
@@ -91,9 +94,9 @@ export default class TeamApi {
 
   static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<{ teams: Team[], invitation: INotificationAPI }> {
     const { data } = await HttpService.post<{ teams: Team[], invitation: INotificationAPI }, InviteMemberPayload>({
-      url: `bff/front/v1/hcps/${userId}/teams/${teamId}/invite`,
+      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
       payload: { inviteeEmail, role },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+      url: `bff/front/v1/hcps/${userId}/teams/${teamId}/invite`
     })
     return data
   }

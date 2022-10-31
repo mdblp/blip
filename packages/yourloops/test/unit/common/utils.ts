@@ -99,13 +99,12 @@ export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSeve
   } as Alarm
 }
 
-export function buildPrivateTeam(userId: string = 'userId'): Team {
+export function buildPrivateTeam(): Team {
   return {
     code: TeamType.private,
     id: TeamType.private,
     members: [],
     name: TeamType.private,
-    owner: userId,
     type: TeamType.private
   }
 }
@@ -115,7 +114,6 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
     id,
     name,
     code: '123456789',
-    owner: 'fakeOwner',
     email: 'fale@email.com',
     type: TeamType.medical,
     members,
@@ -141,7 +139,6 @@ export function buildITeam(id = 'fakeTeamId', members: ITeamMember[] = [], name 
     name,
     code: '123456789',
     type: TeamType.medical,
-    owner: 'fakeOwner',
     phone: 'fakePhone',
     email: 'fake@email.com',
     address: {
@@ -151,7 +148,6 @@ export function buildITeam(id = 'fakeTeamId', members: ITeamMember[] = [], name 
       city: 'fakeCity',
       country: 'fakeCountry'
     },
-    description: 'fakeDescription',
     members,
     monitoring: {
       enabled: true,

@@ -33,9 +33,8 @@ import { Team, TeamContext, TeamContextProvider, useTeam } from '../../../../lib
 import { UserInvitationStatus } from '../../../../models/generic'
 import * as notificationHookMock from '../../../../lib/notifications/hook'
 import { ITeam, TeamMemberRole } from '../../../../models/team'
-import { buildInvite, buildTeam, buildTeamMember } from '../../common/utils'
+import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as authHookMock from '../../../../lib/auth'
-import TeamUtils from '../../../../lib/team/utils'
 import TeamApi from '../../../../lib/team/team-api'
 import { APINotificationType } from '../../../../models/notification'
 
@@ -56,7 +55,7 @@ describe('Team hook', () => {
   const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue(['flaggedPatient'])
   const authHookFlagPatientMock = jest.fn()
-  const loadTeamsSpy = jest.spyOn(TeamUtils, 'loadTeams')
+  const getTeamsSpy = jest.spyOn(TeamApi, 'getTeams')
 
   async function mountComponent() {
     const DummyComponent = (): JSX.Element => {
@@ -74,8 +73,8 @@ describe('Team hook', () => {
   }
 
   beforeAll(async () => {
-    loadTeamsSpy.mockReset()
-    loadTeamsSpy.mockResolvedValue(teams);
+    getTeamsSpy.mockReset()
+    getTeamsSpy.mockResolvedValue(teams);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: { id: 'memberPatientAccepted1' },
@@ -102,7 +101,7 @@ describe('Team hook', () => {
     })
 
     it('should throw an error when there is no invitation for the member team', async () => {
-      const teamMember = buildTeamMember('fakeUserId', buildInvite('wrongTeam'))
+      const teamMember = buildTeamMember('fakeUserId', undefined)
       await expect(async () => {
         await teamHook.removeMember(teamMember, 'fakeTeamId')
       }).rejects.toThrow()
@@ -130,7 +129,7 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.updateTeamAlerts(team1)
         expect(updateTeamAlertsSpy).toHaveBeenCalled()
-        await waitFor(() => expect(TeamUtils.loadTeams).toHaveBeenCalledTimes(3))
+        await waitFor(() => expect(getTeamsSpy).toHaveBeenCalledTimes(3))
       })
     })
   })
@@ -173,7 +172,7 @@ describe('Team hook', () => {
       expect(teams).toHaveLength(initialTeamsLength)
       await act(async () => {
         await teamHook.createTeam(newTeam)
-        expect(loadTeamsSpy).toBeCalledTimes(1)
+        expect(getTeamsSpy).toBeCalledTimes(1)
       })
     })
   })
@@ -181,13 +180,16 @@ describe('Team hook', () => {
   describe('inviteMember', () => {
     it('should invite and add a member in a team', async () => {
       jest.spyOn(TeamApi, 'inviteMember').mockResolvedValueOnce({
-        key: 'key',
-        type: APINotificationType.medicalTeamProInvitation,
-        email: 'hcp@username.com',
-        creatorId: 'currentUserId',
-        created: 'now',
-        shortKey: 'short',
-        creator: { userid: 'currentUserId' }
+        invitation: {
+          key: 'key',
+          type: APINotificationType.medicalTeamProInvitation,
+          email: 'hcp@username.com',
+          creatorId: 'currentUserId',
+          created: 'now',
+          shortKey: 'short',
+          creator: { userid: 'currentUserId' }
+        },
+        teams
       })
       const initialTeamMembersLength = team1.members.length
 
@@ -195,7 +197,6 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.inviteMember(team1, 'new-hcp@mail.com', TeamMemberRole.admin)
       })
-      expect(loadTeamsSpy).toBeCalledTimes(1)
     })
   })
 
@@ -205,7 +206,7 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.changeMemberRole(memberHcp1, TeamMemberRole.admin, 'fakeTeamId')
       })
-      expect(loadTeamsSpy).toBeCalledTimes(1)
+      expect(getTeamsSpy).toBeCalledTimes(1)
     })
   })
 
