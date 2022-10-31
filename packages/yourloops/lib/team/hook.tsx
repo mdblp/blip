@@ -61,7 +61,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const fetchTeams = useCallback(() => {
-    TeamUtils.loadTeams(user)
+    TeamApi.getTeams(user)
       .then((teams: Team[]) => {
         setTeams(teams)
         setErrorMessage(null)
@@ -91,8 +91,7 @@ function TeamContextImpl(): TeamContext {
 
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     const result = await TeamApi.inviteMember(user.id, team.id, username, role)
-    const teams = TeamUtils.buildTeams(result.teams)
-    setTeams(teams)
+    setTeams(result.teams)
   }
 
   const createTeam = async (team: Partial<Team>): Promise<void> => {

@@ -27,10 +27,8 @@
  */
 
 import { Team, TEAM_CODE_LENGTH } from './models'
-import TeamApi from './team-api'
-import { TeamMemberRole, TeamType } from '../../models/team'
+import { TeamMemberRole } from '../../models/team'
 import { UserInvitationStatus } from '../../models/generic'
-import { User } from '../auth'
 
 /**
  * Get the team code for display - Can be use with partial code.
@@ -69,23 +67,6 @@ export default class TeamUtils {
     return team.members.reduce<number>((num, member) => {
       return member.role === TeamMemberRole.patient ? num : num + 1
     }, 0)
-  }
-
-  static buildTeams(teams: Team[]): Team[] {
-    const privateTeam: Team = {
-      code: TeamType.private,
-      id: TeamType.private,
-      members: [],
-      name: TeamType.private,
-      type: TeamType.private
-    }
-    teams.push(privateTeam)
-    return teams
-  }
-
-  static async loadTeams(user: User): Promise<Team[]> {
-    const teams = await TeamApi.getTeams(user)
-    return TeamUtils.buildTeams(teams)
   }
 
   static sortTeams(teams: Team[]): Team[] {
