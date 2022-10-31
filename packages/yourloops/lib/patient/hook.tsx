@@ -93,9 +93,11 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
 
-  const getPatient = useCallback(userId => {
+  const getPatientById = useCallback(userId => {
     return patients.find(patient => patient.userid === userId)
   }, [patients])
+
+  const getPatientByEmail = useCallback((email: string) => patients.find(patient => patient.profile.email === email), [patients])
 
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
     let res = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
@@ -121,13 +123,13 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [refresh, refreshSentInvitations])
 
   const editPatientRemoteMonitoring = useCallback((patient: Patient) => {
-    const patientUpdated = getPatient(patient.userid)
+    const patientUpdated = getPatientById(patient.userid)
     if (!patientUpdated) {
       throw Error(`Cannot update monitoring of patient with id ${patient.userid} as patient was not found`)
     }
     patientUpdated.monitoring = patient.monitoring
     updatePatient(patientUpdated)
-  }, [getPatient, updatePatient])
+  }, [getPatientById, updatePatient])
 
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
     patient.metadata.unreadMessagesSent = 0
@@ -168,20 +170,20 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [cancelInvitation, flagPatient, getFlagPatients, getInvitation, user.id, refresh])
 
   const leaveTeam = useCallback(async (teamId: string) => {
-    const loggedInUserAsPatient = getPatient(user.id)
+    const loggedInUserAsPatient = getPatientById(user.id)
     await PatientApi.removePatient(teamId, loggedInUserAsPatient.userid)
     metrics.send('team_management', 'leave_team')
     refresh()
     refreshTeams()
-  }, [getPatient, refresh, refreshTeams, user.id])
+  }, [getPatientById, refresh, refreshTeams, user.id])
 
   const setPatientMedicalData = useCallback((userId: string, medicalData: MedicalData | null) => {
-    const patient = getPatient(userId)
+    const patient = getPatientById(userId)
     if (patient !== null) {
       patient.metadata.medicalData = medicalData
       updatePatient(patient)
     }
-  }, [getPatient, updatePatient])
+  }, [getPatientById, updatePatient])
 
   useEffect(() => {
     if (!initialized && user) {
@@ -201,7 +203,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     errorMessage,
     initialized,
     refreshInProgress,
-    getPatient,
+    getPatientByEmail,
+    getPatientById,
     filterPatients,
     invitePatient,
     editPatientRemoteMonitoring,
@@ -216,7 +219,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     editPatientRemoteMonitoring,
     errorMessage,
     filterPatients,
-    getPatient,
+    getPatientByEmail,
+    getPatientById,
     initialized,
     invitePatient,
     leaveTeam,

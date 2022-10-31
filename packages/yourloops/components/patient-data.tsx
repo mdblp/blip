@@ -112,7 +112,7 @@ function PatientDataPage(): JSX.Element | null {
       setError('Invalid patient Id')
       return
     }
-    const patientToSet = patientHook.getPatient(patientId)
+    const patientToSet = patientHook.getPatientById(patientId)
     if (patientToSet) {
       setPatient(patientToSet)
     } else {

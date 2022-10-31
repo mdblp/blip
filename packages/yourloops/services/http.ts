@@ -55,7 +55,8 @@ export default class HttpService {
     return await HttpService.retrieveAccessToken()
   }
 
-  static async get<T>({ url, config }: Args): Promise<AxiosResponse<T>> {
+  static async get<T>(args: Args): Promise<AxiosResponse<T>> {
+    const { url, config } = args
     try {
       return await axios.get<T>(url, { ...config })
     } catch (error) {
@@ -63,15 +64,17 @@ export default class HttpService {
     }
   }
 
-  static async post<R, P = undefined>({ url, payload, config }: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
+  static async post<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>, excludedErrorCodes?: number[]): Promise<AxiosResponse<R>> {
+    const { url, payload, config } = argsWithPayload
     try {
       return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
-      throw HttpService.handleError(error as AxiosError)
+      throw HttpService.handleError(error as AxiosError, excludedErrorCodes)
     }
   }
 
-  static async put<R, P = undefined>({ url, payload, config }: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
+  static async put<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
+    const { url, payload, config } = argsWithPayload
     try {
       return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
@@ -79,7 +82,8 @@ export default class HttpService {
     }
   }
 
-  static async delete({ url, config }: Args): Promise<AxiosResponse> {
+  static async delete(args: Args): Promise<AxiosResponse> {
+    const { url, config } = args
     try {
       return await axios.delete(url, { ...config })
     } catch (error) {
@@ -87,19 +91,20 @@ export default class HttpService {
     }
   }
 
-  private static handleError(error: AxiosError): Error {
-    if (error.response) {
-      if (error.response.status >= 400 && error.response.status <= 550) {
-        switch (error.response.status) {
-          case httpStatus.StatusNotFound:
-            throw Error(ErrorMessageStatus.NotFound)
-          case httpStatus.StatusInternalServerError:
-            throw Error(t('error-http-500'))
-          default:
-            throw Error(t('error-http-40x'))
-        }
+  private static handleError(error: AxiosError, excludedErrorCodes?: number[]): Error {
+    if (!error.response || excludedErrorCodes?.includes(error.response.status)) {
+      return error
+    }
+
+    if (error.response.status >= 400 && error.response.status <= 550) {
+      switch (error.response.status) {
+        case httpStatus.StatusNotFound:
+          throw Error(ErrorMessageStatus.NotFound)
+        case httpStatus.StatusInternalServerError:
+          throw Error(t('error-http-500'))
+        default:
+          throw Error(t('error-http-40x'))
       }
     }
-    return error
   }
 }

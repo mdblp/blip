@@ -155,7 +155,7 @@ describe('Patient hook', () => {
       act(() => {
         customHook.editPatientRemoteMonitoring(unmonitoredPatient)
       })
-      expect(customHook.getPatient(unmonitoredPatient.userid).monitoring).toEqual(monitoring)
+      expect(customHook.getPatientById(unmonitoredPatient.userid).monitoring).toEqual(monitoring)
     })
   })
 
@@ -171,12 +171,12 @@ describe('Patient hook', () => {
     })
 
     it('should return a patient when the patient is present in the patient state', () => {
-      const patient = customHook.getPatient(existingPatient.userid)
+      const patient = customHook.getPatientById(existingPatient.userid)
       expect(patient).toBeDefined()
     })
 
     it('should return null when patient is not present in the patient state', () => {
-      const patient = customHook.getPatient(unknownPatient.userid)
+      const patient = customHook.getPatientById(unknownPatient.userid)
       expect(patient).toBeUndefined()
     })
   })
@@ -220,7 +220,7 @@ describe('Patient hook', () => {
         shortKey: 'short',
         creator: { userid: 'currentUserId' }
       })
-      expect(customHook.getPatient(basicPatient.userid).teams.find(t => t.id === team1.id)).toBeUndefined()
+      expect(customHook.getPatientById(basicPatient.userid).teams.find(t => t.id === team1.id)).toBeUndefined()
 
       const initialPatientsLength: number = customHook.patients.length
       await act(async () => {
@@ -288,7 +288,7 @@ describe('Patient hook', () => {
       const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(pendingPatient, pendingPatientTeam)
-        expect(customHook.getPatient(pendingPatient.userid).teams.includes(pendingPatientTeam)).toBeFalsy()
+        expect(customHook.getPatientById(pendingPatient.userid).teams.includes(pendingPatientTeam)).toBeFalsy()
       })
       expect(notificationHookCancelMock).toHaveBeenCalled()
       expect(removePatientMock).toHaveBeenCalled()
@@ -298,7 +298,7 @@ describe('Patient hook', () => {
       const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemovePrivatePractice, patientTeamPrivatePractice)
-        expect(customHook.getPatient(patientToRemovePrivatePractice.userid).teams.includes(patientTeamPrivatePractice)).toBeFalsy()
+        expect(customHook.getPatientById(patientToRemovePrivatePractice.userid).teams.includes(patientTeamPrivatePractice)).toBeFalsy()
       })
       expect(removeDirectShareMock).toHaveBeenCalled()
     })
@@ -307,7 +307,7 @@ describe('Patient hook', () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemove, basicTeam)
-        await waitFor(() => expect(customHook.getPatient(patientToRemove.userid)).toBeUndefined())
+        await waitFor(() => expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined())
         expect(authHookGetFlagPatientMock).toHaveBeenCalled()
         expect(authHookFlagPatientMock).toHaveBeenCalled()
       })
@@ -317,7 +317,7 @@ describe('Patient hook', () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemove2, basicTeam)
-        expect(customHook.getPatient(patientToRemove2.userid).teams).toEqual([pendingPatientTeam])
+        expect(customHook.getPatientById(patientToRemove2.userid).teams).toEqual([pendingPatientTeam])
       })
     })
   })
@@ -336,7 +336,7 @@ describe('Patient hook', () => {
     it('should update patient unread messages to 0', () => {
       act(() => {
         customHook.markPatientMessagesAsRead(basicPatient)
-        expect(customHook.getPatient(basicPatient.userid).metadata.unreadMessagesSent).toBe(0)
+        expect(customHook.getPatientById(basicPatient.userid).metadata.unreadMessagesSent).toBe(0)
       })
     })
   })

@@ -84,7 +84,7 @@ describe('PatientInfoWidget', () => {
     (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return {
         updatePatientMonitoring: updatePatientMonitoringMock,
-        getPatient: getPatientMock
+        getPatientById: getPatientMock
       }
     });
     (RemoteMonitoringPatientDialogMock.default as jest.Mock).mockImplementation((props: RemoteMonitoringPatientDialogProps) => {
