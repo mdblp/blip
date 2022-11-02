@@ -91,7 +91,7 @@ describe('Patient hook', () => {
 
   describe('filterPatients', () => {
     const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
-    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], {} as Monitoring)
     const basicPatient = createPatient('basicPatient1', [basicTeam])
     const bigBrainPatient = createPatient('big brain', [basicTeam])
     bigBrainPatient.profile.firstName = 'big brain'
@@ -159,7 +159,29 @@ describe('Patient hook', () => {
     })
   })
 
-  describe('getPatient', () => {
+  describe('getPatientByEmail', () => {
+    const unknownPatient = createPatient('unknownPatient')
+    const existingPatient = createPatient('existingPatient', [basicTeam], undefined, { email: 'test@test.com' })
+    const allPatients = [existingPatient]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
+    it('should return a patient when the patient is present in the patient state', () => {
+      const patient = customHook.getPatientByEmail(existingPatient.profile.email)
+      expect(patient).toBeDefined()
+    })
+
+    it('should return null when patient is not present in the patient state', () => {
+      const patient = customHook.getPatientByEmail(unknownPatient.profile.email)
+      expect(patient).toBeUndefined()
+    })
+  })
+
+  describe('getPatientById', () => {
     const unknownPatient = createPatient('unknownPatient')
     const existingPatient = createPatient('existingPatient', [basicTeam])
     const allPatients = [existingPatient]
@@ -273,7 +295,7 @@ describe('Patient hook', () => {
   describe('removePatient', () => {
     const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
     const patientTeamPrivatePractice = createPatientTeam('private', UserInvitationStatus.pending)
-    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], {} as Monitoring)
     const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', [patientTeamPrivatePractice])
     const patientToRemove2 = createPatient('patientToRemove2', [basicTeam, pendingPatientTeam])
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]

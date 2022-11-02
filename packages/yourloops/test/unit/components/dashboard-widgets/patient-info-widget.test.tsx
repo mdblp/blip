@@ -60,7 +60,7 @@ jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../lib/notifications/hook')
 describe('PatientInfoWidget', () => {
-  const patient = createPatient('fakePatientId', [])
+  const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
   const adminMember = buildTeamMember()
   const patientMember = buildTeamMember(patient.userid)

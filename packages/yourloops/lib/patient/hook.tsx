@@ -93,11 +93,9 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
 
-  const getPatientById = useCallback(userId => {
-    return patients.find(patient => patient.userid === userId)
-  }, [patients])
-
   const getPatientByEmail = useCallback((email: string) => patients.find(patient => patient.profile.email === email), [patients])
+
+  const getPatientById = useCallback(userId => patients.find(patient => patient.userid === userId), [patients])
 
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
     let res = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
