@@ -385,7 +385,7 @@ class DataUtil {
 
   getLatestPump = () => {
     const pumpSettings = this.sort.byDate(this.filter.byType('pumpSettings').top(Infinity))[0]
-    if (pumpSettings) {
+    if (pumpSettings?.payload?.device?.name && pumpSettings?.payload?.device?.manufacturer) {
       return {
         deviceModel: pumpSettings.payload.device.name,
         manufacturer: pumpSettings.payload.device.manufacturer
