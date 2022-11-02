@@ -384,20 +384,20 @@ class DataUtil {
   }
 
   getLatestPump = () => {
-    const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
-    if (uploadData.length > 0) {
-      const latestPumpUpload = getLatestPumpUpload(uploadData)
-      const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
+    const pumpSettings = this.sort.byDate(this.filter.byType('pumpSettings').top(Infinity))[0]
+    if (pumpSettings) {
       return {
-        deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
-        manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
+        deviceModel: pumpSettings.payload.device.name,
+        manufacturer: pumpSettings.payload.device.manufacturer
       }
     }
-    /*If no upload is found, we can fall back to pumpSettings object*/
-    const pumpSettings = this.sort.byDate(this.filter.byType('pumpSettings').top(Infinity))[0]
+    /*If no pumpSettings is found, we can fall back to old upload object*/
+    const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
+    const latestPumpUpload = getLatestPumpUpload(uploadData)
+    const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
     return {
-      deviceModel: pumpSettings.payload.device.name,
-      manufacturer: pumpSettings.payload.device.manufacturer
+      deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
+      manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
     }
   }
 
