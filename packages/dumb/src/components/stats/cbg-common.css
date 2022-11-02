@@ -27,104 +27,57 @@
 
 @import "../../styles/colors.css";
 
-.bar {
-  display: flex;
-  align-items: center;
-  width: 234px;
-  position: relative;
-}
-
-.bar-value {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
-}
-
 .disabled-label {
   color: var(--muted);
 }
 
-.disabled-rectangle {
+.disabled-line {
   background-color: var(--muted);
+  border-radius: 20px;
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 234px;
 }
 
 .line {
-  height: 5px;
-  background-color: var(--stat-disabled);
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  opacity: 0.5;
+}
+
+.lines {
+  display: flex;
+  position: relative;
+  width: 234px;
+}
+
+.line-low {
+  background-color: var(--bg-low);
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+  width: 19px;
+}
+
+.line-target {
+  background-color: var(--bg-target);
+  width: 131px;
+}
+
+.line-high {
+  background-color: var(--bg-high);
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
   flex-grow: 1;
 }
 
-.percentage-symbol {
-  color: #727375;
-  font-size: 12px;
-  margin-top: 5px;
+.tooltip-icon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
 }
 
-.percentage-value {
-  font-size: 24px;
-  margin-left: auto;
-  margin-right: 2px;
-}
-
-.rectangle {
-  height: 32px;
-  border-radius: 2px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
-}
-
-.title {
-  margin-left: 4px;
-}
-
-.veryHigh-background {
-  background-color: var(--bg-very-high);
-}
-
-.high-background {
-  background-color: var(--bg-high);
-}
-
-.target-background {
-  background-color: var(--bg-target);
-}
-
-.low-background {
-  background-color: var(--bg-low);
-}
-
-.veryLow-background {
-  background-color: var(--bg-very-low);
-}
-
-.veryHigh-label {
-  color: var(--bg-very-high);
-}
-
-.high-label {
-  color: var(--bg-high);
-}
-
-.target-label {
-  color: var(--bg-target);
-}
-
-.low-label {
-  color: var(--bg-low);
-}
-
-.veryLow-label {
-  color: var(--bg-very-low);
+.tooltip-icon > img {
+  width: 0.9em;
 }

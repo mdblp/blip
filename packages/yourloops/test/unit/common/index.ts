@@ -28,7 +28,7 @@
 
 import { User } from '../../../lib/auth'
 import { Units } from '../../../models/generic'
-import { UserMetadata, UserRoles } from '../../../models/user'
+import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
 import { HcpProfession } from '../../../models/hcp-profession'
 
 const getNewHcp = (): User => {
@@ -36,7 +36,7 @@ const getNewHcp = (): User => {
     email: 'john.doe@example.com',
     emailVerified: true,
     sub: 'auth0|123456789',
-    [UserMetadata.Roles]: [UserRoles.hcp]
+    [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
   })
 }
 
@@ -45,7 +45,7 @@ const getHcp = (): User => {
     email: 'john.doe@example.com',
     emailVerified: true,
     sub: 'auth0|a0000000',
-    [UserMetadata.Roles]: [UserRoles.hcp]
+    [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
   })
   hcp.frProId = 'ANS20211229094028'
   hcp.profile = { firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
@@ -59,7 +59,7 @@ const getCaregiver = (): User => {
     email: 'caregiver@example.com',
     emailVerified: true,
     sub: 'auth0|b0000000',
-    [UserMetadata.Roles]: [UserRoles.caregiver]
+    [AuthenticatedUserMetadata.Roles]: [UserRoles.caregiver]
   })
   caregiver.profile = { firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
   caregiver.preferences = { displayLanguageCode: 'de' }
@@ -72,7 +72,7 @@ const getPatient = (): User => {
     email: 'josephine.dupuis@example.com',
     emailVerified: true,
     sub: 'auth0|a0a0a0b0',
-    [UserMetadata.Roles]: [UserRoles.patient]
+    [AuthenticatedUserMetadata.Roles]: [UserRoles.patient]
   })
   patient.settings = { a1c: { date: '2020-01-01', value: '7.5' }, country: 'FR' }
   patient.profile = {

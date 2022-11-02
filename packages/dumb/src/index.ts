@@ -25,14 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGPercentageBarChartMemoized as CBGPercentageBarChart } from './common/stats/cbg-percentage-bar-chart'
-import { CBGStatType } from './common/stats/models'
-import { StatTooltip } from './common/tooltips/stat-tooltip'
-import Tooltip from './common/tooltips/tooltip'
+import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
+import {
+  CBGPercentageBarChartMemoized as CBGPercentageBarChart
+} from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
+import {
+  CbgStandardDeviationMemoized as CBGStandardDeviation
+} from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
+import { CBGStatType } from './components/stats/models'
+import { StatTooltip } from './components/tooltips/stat-tooltip'
+import Tooltip from './components/tooltips/tooltip'
+import { CgmTable } from './settings/cgm-table'
+import { PumpTable } from './settings/pump-table'
+import { TerminalTable } from './settings/terminal-table'
 
 export {
+  CBGMeanStat,
   CBGPercentageBarChart,
+  CBGStandardDeviation,
   CBGStatType,
+  CgmTable,
+  PumpTable,
   StatTooltip,
+  TerminalTable,
   Tooltip
 }

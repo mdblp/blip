@@ -25,20 +25,66 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
+@import "../../../styles/colors.css";
 
-export const loggedInUserId = '919b1575bad58'
+.bar {
+  display: flex;
+  align-items: center;
+  width: 234px;
+  position: relative;
+}
 
-export const mockAuth0Hook = (role = UserRoles.hcp, userId = loggedInUserId) => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
-    user: {
-      email: 'john.doe@example.com',
-      email_verified: true,
-      sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: [role]
-    }
-  })
+.bar-value {
+  background-color: white;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--stat-disabled);
+  border-width: thin;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-size: 12px;
+  position: absolute;
+  right: 0;
+}
+
+.disabled-label {
+  color: var(--muted);
+}
+
+.disabled-rectangle {
+  background-color: var(--muted);
+}
+
+.line {
+  height: 5px;
+  background-color: var(--stat-disabled);
+  flex-grow: 1;
+}
+
+.percentage-symbol {
+  color: #727375;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.percentage-value {
+  font-size: 24px;
+  margin-left: auto;
+  margin-right: 2px;
+}
+
+.rectangle {
+  height: 32px;
+  border-radius: 2px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.title {
+  margin-left: 4px;
 }

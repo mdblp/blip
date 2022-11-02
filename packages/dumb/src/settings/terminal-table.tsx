@@ -25,20 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
+import React, { FunctionComponent } from 'react'
+import styles from './diabeloop.css'
+import { useTranslation } from 'react-i18next'
+import { Device } from './models'
 
-export const loggedInUserId = '919b1575bad58'
+const DEFAULT_VALUE = '-'
 
-export const mockAuth0Hook = (role = UserRoles.hcp, userId = loggedInUserId) => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
-    user: {
-      email: 'john.doe@example.com',
-      email_verified: true,
-      sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: [role]
+interface TerminalTableProps {
+  device: Device
+}
+
+export const TerminalTable: FunctionComponent<TerminalTableProps> = (
+  {
+    device = {
+      deviceId: DEFAULT_VALUE,
+      imei: DEFAULT_VALUE,
+      name: DEFAULT_VALUE,
+      manufacturer: DEFAULT_VALUE,
+      swVersion: DEFAULT_VALUE
     }
-  })
+  }
+) => {
+  const { t } = useTranslation('main')
+
+  return (
+    <table data-testid="settings-table-terminal" className={styles.deviceTable}>
+      <caption className={styles.bdlgSettingsHeader}>
+        {device.name}
+      </caption>
+      <tbody>
+      <tr>
+        <td>{t('Manufacturer')}</td>
+        <td>{device.manufacturer}</td>
+      </tr>
+      <tr>
+        <td>{t('Identifier')}</td>
+        <td>{device.deviceId}</td>
+      </tr>
+      <tr>
+        <td>{t('IMEI')}</td>
+        <td>{device.imei}</td>
+      </tr>
+      <tr>
+        <td>{t('Software version')}</td>
+        <td>{device.swVersion}</td>
+      </tr>
+      </tbody>
+    </table>
+  )
 }

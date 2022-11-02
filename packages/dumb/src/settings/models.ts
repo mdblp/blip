@@ -25,7 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.stats {
-  margin-left: 10px;
-  margin-right: 10px;
+export interface CGM {
+  manufacturer: string
+  name: string
+  expirationDate: string
+  swVersionTransmitter: string
+  transmitterId: string
+  endOfLifeTransmitterDate: string
+}
+
+export interface Device {
+  deviceId: string
+  imei: string
+  name: string
+  manufacturer: string
+  swVersion: string
+}
+
+export interface Pump {
+  manufacturer: string
+  serialNumber: string
+  swVersion: string
+  expirationDate: string
+}
+
+export interface TimePrefs {
+  timezoneAware: boolean
+  timezoneName: string
 }

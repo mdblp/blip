@@ -195,7 +195,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
               </Grid>
               <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Typography variant="body2" id={`patient-info-${key}-value`}>
+                  <Typography variant="body2" id={`patient-info-${key}-value`} data-testid={`patient-info-${key}-value`}>
                     {patientInfo[key]}
                   </Typography>
                   {key === 'remote-monitoring' && showMonitoringButtonAction &&

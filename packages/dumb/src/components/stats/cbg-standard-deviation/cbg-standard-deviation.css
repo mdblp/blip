@@ -25,20 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
+@import "../../../styles/colors.css";
 
-export const loggedInUserId = '919b1575bad58'
+.horizontal-line {
+  height: 16px;
+  width: 2px;
+  position: absolute;
+  margin-top: 4px;
+}
 
-export const mockAuth0Hook = (role = UserRoles.hcp, userId = loggedInUserId) => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
-    user: {
-      email: 'john.doe@example.com',
-      email_verified: true,
-      sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: [role]
-    }
-  })
+.spacing {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+.title-value {
+  font-size: 12px;
+}
+
+.value {
+  color: var(--text-medium-contrast)
 }

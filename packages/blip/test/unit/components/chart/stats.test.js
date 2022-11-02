@@ -17,7 +17,7 @@
 
 import React from 'react'
 import _ from 'lodash'
-import { shallow, mount } from 'enzyme'
+import { mount, shallow } from 'enzyme'
 import * as sinon from 'sinon'
 import chai from 'chai'
 
@@ -148,14 +148,14 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(6)
 
         const expectedStats = [
-          'averageGlucose',
           'totalInsulin',
           'carbs',
-          'standardDev',
           'coefficientOfVariation'
         ]
 
-        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -171,12 +171,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'averageGlucose',
           'totalInsulin',
           'carbs'
         ]
 
-        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -221,14 +221,14 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(6)
 
         const expectedStats = [
-          'averageGlucose',
           'sensorUsage',
           'glucoseManagementIndicator',
-          'standardDev',
           'coefficientOfVariation'
         ]
 
-        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
         _.forEach(expectedStats, statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -243,16 +243,10 @@ describe('Stats', () => {
 
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
-        const expectedStats = [
-          'averageGlucose',
-          'standardDev',
-          'coefficientOfVariation'
-        ]
-
-        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
-        _.forEach(expectedStats, statId => {
-          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
-        })
+        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
+        expect(wrapper.find('#Stat--coefficientOfVariation')).to.have.length(1)
       })
     })
 
@@ -319,12 +313,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'averageGlucose',
           'averageDailyDose',
           'carbs'
         ]
 
-        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-timeInRange'})).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -344,13 +338,13 @@ describe('Stats', () => {
 
         expect(wrapper.find('.Stats').children()).to.have.length(5)
         const expectedStats = [
-          'averageGlucose',
           'averageDailyDose',
           'timeInAuto',
           'carbs'
         ]
 
-        expect(wrapper.find({'data-testid': 'stat-timeInRange'})).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-timeInRange' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -366,12 +360,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'averageGlucose',
           'averageDailyDose',
           'carbs'
         ]
 
-        expect(wrapper.find({'data-testid': 'cbg-percentage-stats-readingsInRange'})).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -643,7 +637,7 @@ describe('Stats', () => {
       const setStateSpy = sinon.spy(instance, 'setState')
       sinon.assert.callCount(setStateSpy, 0)
 
-      instance.componentDidUpdate({...baseProps, bgSource: 'smbg' })
+      instance.componentDidUpdate({ ...baseProps, bgSource: 'smbg' })
 
       sinon.assert.callCount(setStateSpy, 1)
       sinon.assert.calledWith(setStateSpy, { stats: sinon.match.array })
@@ -656,7 +650,7 @@ describe('Stats', () => {
       sinon.assert.callCount(dataUtilEndpointsSpy.set, 0)
       sinon.assert.callCount(updateStatDataSpy, 0)
 
-      const prevProps = {...baseProps, endpoints: ['foo', 'bar'] }
+      const prevProps = { ...baseProps, endpoints: ['foo', 'bar'] }
 
       instance.componentDidUpdate(prevProps)
 

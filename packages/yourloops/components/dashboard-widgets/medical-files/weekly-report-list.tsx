@@ -73,15 +73,15 @@ const WeeklyReportList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
 
   useEffect(() => {
-    (async () => {
-      try {
-        setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId))
-      } catch (err) {
-        setWeeklyReports([])
-        alert.error(t('weekly-reports-get-failed'))
-      }
-    })()
-  }, [alert, patientId, t, teamId])
+    if (!weeklyReports) {
+      MedicalFilesApi.getWeeklyReports(patientId, teamId)
+        .then(weeklyReports => setWeeklyReports(weeklyReports))
+        .catch(() => {
+          setWeeklyReports([])
+          alert.error(t('weekly-reports-get-failed'))
+        })
+    }
+  }, [])
 
   return (
     <React.Fragment>

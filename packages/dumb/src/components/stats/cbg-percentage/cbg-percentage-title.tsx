@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useRef, useState } from 'react'
+import React, { FunctionComponent } from 'react'
 import styles from './cbg-percentage-title.css'
-import cbgPercentageBarStyles from './cbg-percentage-bar.css'
-import InfoIcon from './assets/info-outline-24-px.svg'
-import { StatTooltip } from '../tooltips/stat-tooltip'
+import cbgColorsStyles from '../cbg-colors.css'
+import InfoIcon from '../assets/info-outline-24-px.svg'
+import { StatTooltip } from '../../tooltips/stat-tooltip'
 import { useTranslation } from 'react-i18next'
-import { StatLevel } from './models'
+import { StatLevel } from '../models'
 
 interface CBGPercentageTitleProps {
   annotations: []
@@ -45,55 +45,34 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
   const { t } = useTranslation('main')
 
-  const [showTooltip, setShowTooltip] = useState<boolean>(false)
-
-  const elementRef = useRef<HTMLImageElement>(null)
-  const parentRef = useRef<HTMLDivElement>(null)
-
-  const onTooltipMouseover = (): void => {
-    setShowTooltip(true)
-  }
-
-  const onTooltipMouseLeave = (): void => {
-    setShowTooltip(false)
-  }
   return (
     <>
       <div
         data-testid="cbg-percentage-title"
         className={styles.title}
-        ref={parentRef}
       >
         {title}
         {hoveredStatId &&
           <span className={styles['legend-title']}>
             {' ( '}
-            <span className={cbgPercentageBarStyles[`${hoveredStatId}-label`]}>
+            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
             {legendTitle}
           </span>
             {' )'}
           </span>
         }
-        {showTooltipIcon && <span
-          className={styles['tooltip-icon']}
-        >
-            <img
-              data-testid="info-icon"
-              src={InfoIcon}
-              alt={t('img-alt-hover-for-more-info')}
-              ref={elementRef}
-              onMouseOver={onTooltipMouseover}
-              onMouseOut={onTooltipMouseLeave}
-            />
-          </span>}
-        {showTooltip && elementRef.current && parentRef.current &&
-          <div className={styles['stat-tooltip']}>
-            <StatTooltip
-              annotations={annotations}
-              parentRef={parentRef.current}
-              tooltipRef={elementRef.current}
-            />
-          </div>
+        {showTooltipIcon &&
+          <StatTooltip annotations={annotations}>
+            <span
+              className={styles['tooltip-icon']}
+            >
+              <img
+                data-testid="info-icon"
+                src={InfoIcon}
+                alt={t('img-alt-hover-for-more-info')}
+              />
+            </span>
+          </StatTooltip>
         }
       </div>
     </>

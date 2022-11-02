@@ -55,7 +55,7 @@ const PatientStatistics = (props) => {
   const { t } = useTranslation()
   const classes = useStyles()
   return (
-    <Card id="patient-statistics" className={classes.card}>
+    <Card id="patient-statistics" data-testid="patient-statistics" className={classes.card}>
       <CardHeader
         id="patient-statistics-header"
         avatar={<InsertChartOutlinedIcon/>}

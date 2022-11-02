@@ -25,20 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
+@import "../../styles/colors.css";
 
-export const loggedInUserId = '919b1575bad58'
+.title {
+  margin-left: 4px;
+}
 
-export const mockAuth0Hook = (role = UserRoles.hcp, userId = loggedInUserId) => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
-    user: {
-      email: 'john.doe@example.com',
-      email_verified: true,
-      sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: [role]
-    }
-  })
+.veryHigh-background {
+  background-color: var(--bg-very-high);
+}
+
+.high-background {
+  background-color: var(--bg-high);
+}
+
+.target-background {
+  background-color: var(--bg-target);
+}
+
+.low-background {
+  background-color: var(--bg-low);
+}
+
+.veryLow-background {
+  background-color: var(--bg-very-low);
+}
+
+.veryHigh-color {
+  color: var(--bg-very-high);
+}
+
+.high-color {
+  color: var(--bg-high);
+}
+
+.target-color {
+  color: var(--bg-target);
+}
+
+.low-color {
+  color: var(--bg-low);
+}
+
+.veryLow-color {
+  color: var(--bg-very-low);
 }

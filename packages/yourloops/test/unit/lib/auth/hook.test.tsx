@@ -33,7 +33,14 @@ import _ from 'lodash'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
 
-import { Preferences, Profile, Settings, UserRoles } from '../../../../models/user'
+import {
+  AuthenticatedUserMetadata,
+  Preferences,
+  Profile,
+  Settings,
+  UserMetadata,
+  UserRoles
+} from '../../../../models/user'
 import { AuthContext, AuthContextProvider, SignupForm, useAuth, User } from '../../../../lib/auth'
 import { HcpProfession } from '../../../../models/hcp-profession'
 import UserApi from '../../../../lib/auth/user-api'
@@ -84,14 +91,12 @@ describe('Auth hook', () => {
         email: 'john.doe@example.com',
         email_verified: true,
         sub: `auth0|${id}`,
-        'http://your-loops.com/roles': ['caregiver']
+        [AuthenticatedUserMetadata.Roles]: ['caregiver']
       },
       logout: jest.fn()
     })
     jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ token: 'session-token', id })
-    jest.spyOn(UserApi, 'getProfile').mockResolvedValue(profile)
-    jest.spyOn(UserApi, 'getPreferences').mockResolvedValue(preferences)
-    jest.spyOn(UserApi, 'getSettings').mockResolvedValue(settings)
+    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile, preferences, settings })
   })
 
   describe('Initialization', () => {
@@ -263,10 +268,12 @@ describe('Auth hook', () => {
 
     it('should un-flag a flagged patient', async () => {
       const otherUserId = 'otherUserId'
-      jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce({
-        displayLanguageCode: 'en',
-        patientsStarred: [userId, otherUserId]
-      })
+      jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce({
+        preferences: {
+          displayLanguageCode: 'en',
+          patientsStarred: [userId, otherUserId]
+        }
+      } as UserMetadata)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [otherUserId] })
       await initAuthContext()
       await act(async () => {
@@ -279,10 +286,12 @@ describe('Auth hook', () => {
     it('should add another user to an existing list', async () => {
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [userId1] })
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [userId1, userId2] })
-      jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce({
-        displayLanguageCode: 'en',
-        patientsStarred: []
-      })
+      jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce({
+        preferences: {
+          displayLanguageCode: 'en',
+          patientsStarred: []
+        }
+      } as UserMetadata)
       await initAuthContext()
       expect(auth.getFlagPatients()).toEqual([])
 
@@ -305,10 +314,12 @@ describe('Auth hook', () => {
         displayLanguageCode: 'fr',
         patientsStarred: [userId]
       })
-      jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce(Promise.resolve({
-        displayLanguageCode: 'en',
-        patientsStarred: ['old']
-      }))
+      jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce(Promise.resolve({
+        preferences: {
+          displayLanguageCode: 'en',
+          patientsStarred: ['old']
+        }
+      } as UserMetadata))
       await initAuthContext()
       expect(auth.getFlagPatients()).toEqual(['old'])
       await act(async () => {
@@ -321,9 +332,7 @@ describe('Auth hook', () => {
 
   describe('completeSignup', () => {
     it('should update user profile, preferences and settings', async () => {
-      jest.spyOn(UserApi, 'getProfile').mockResolvedValueOnce(undefined)
-      jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce(undefined)
-      jest.spyOn(UserApi, 'getSettings').mockResolvedValueOnce(undefined)
+      jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)

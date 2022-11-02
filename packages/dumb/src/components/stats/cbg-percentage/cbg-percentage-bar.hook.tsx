@@ -27,8 +27,9 @@
 
 import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-percentage-bar.css'
-import { formatDuration } from '../../utils/datetime'
-import { CBGStatType } from './models'
+import stylesColors from '../cbg-colors.css'
+import { formatDuration } from '../../../utils/datetime'
+import { CBGStatType } from '../models'
 
 export interface CBGPercentageBarHookProps {
   type: CBGStatType
@@ -51,8 +52,8 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
   const { type, id, isDisabled, total, value } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
-  const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : cbgTimeStatStyles[`${id}-background`]
-  const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : cbgTimeStatStyles[`${id}-label`]
+  const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : stylesColors[`${id}-background`]
+  const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : stylesColors[`${id}-color`]
   const rectangleClasses = `${cbgTimeStatStyles.rectangle} ${rectangleBackgroundClass}`
   const barClasses = `${cbgTimeStatStyles['bar-value']} ${labelClass}`
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`

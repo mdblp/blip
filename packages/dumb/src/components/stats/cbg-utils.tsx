@@ -25,20 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
+import styles from './cbg-colors.css'
 
-export const loggedInUserId = '919b1575bad58'
+interface CBGStyle {
+  backgroundColor: string
+  color: string
+  left: string
+}
 
-export const mockAuth0Hook = (role = UserRoles.hcp, userId = loggedInUserId) => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
-    user: {
-      email: 'john.doe@example.com',
-      email_verified: true,
-      sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: [role]
+export const computeCBGStyle = (value: number): CBGStyle => {
+  if (value < 54) {
+    return { backgroundColor: styles['low-background'], color: styles['low-color'], left: '0' }
+  } else if (value > 250) {
+    return { color: styles['high-color'], backgroundColor: styles['high-background'], left: '234px' }
+  } else {
+    const widthInPx = 234 // Width of the cbg bar
+    const cbgBarRange = 196 // Number of value included in the cbg bar range (from 54 to 250)
+    const nbOfValuesNotIncludedInRange = 54 // The first 54 values are not included in the range and should be deduced
+    return {
+      backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
+      color: value < 180 ? styles['target-color'] : styles['high-color'],
+      left: `${Math.round(((value - nbOfValuesNotIncludedInRange) * widthInPx) / cbgBarRange)}px`
     }
-  })
+  }
 }
