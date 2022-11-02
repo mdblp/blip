@@ -8,7 +8,6 @@ import { getTotalBasalFromEndpoints, getBasalGroupDurationsFromEndpoints } from 
 import { getTotalBolus } from './bolus'
 import { cgmSampleFrequency, classifyBgValue, reshapeBgClassesToBgBounds } from './bloodglucose'
 import { addDuration } from './datetime'
-import { getLatestPumpUpload } from './device'
 
 class DataUtil {
   /**
