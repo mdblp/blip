@@ -126,6 +126,7 @@ class MedicalDataService {
         } else {
           message = String(error)
         }
+        console.log(raw)
         console.log(message)
       }
     })
@@ -170,17 +171,19 @@ class MedicalDataService {
         fullList = fullList.concat(medicalDataValues[idx] as Datum[])
       }
     })
-    fullList = fullList.concat(this.fills)
+    if (!excludeKeys.includes('fill')) {
+      fullList = fullList.concat(this.fills)
+    }
     return fullList.sort((a, b) => a.epoch - b.epoch)
   }
 
   // Fixing timezone names + display offsets in the dataset
   // i.e. datasets with time zone with unknown or generic names (like UTC,GMT...) are fixed with the previous known timezone
   private normalizeTimeZones(allData: Datum[]): Datum[] {
-    const firstDatumWithTz = allData.find(d => isValidTimeZone(d.timezone))
+    const firstDatumWithTz = allData.find(d => !d.guessedTimezone && isValidTimeZone(d.timezone))
     let currentTimezone = firstDatumWithTz ? firstDatumWithTz.timezone : this._datumOpts.timePrefs.timezoneName
     return allData.map(d => {
-      if (!isValidTimeZone(d.timezone)) {
+      if (d.guessedTimezone || !isValidTimeZone(d.timezone)) {
         d.timezone = currentTimezone
         d.guessedTimezone = true
         d.displayOffset = getOffset(d.epoch, d.timezone)
@@ -202,7 +205,7 @@ class MedicalDataService {
   }
 
   private setTimeZones(): void {
-    const allData = this.getAllData(['timezoneChanges'])
+    const allData = this.getAllData(['timezoneChanges', 'fill'])
     if (allData.length === 0) {
       this.timezoneList = []
       this.medicalData.timezoneChanges = []
