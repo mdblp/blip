@@ -8,6 +8,7 @@ import { getTotalBasalFromEndpoints, getBasalGroupDurationsFromEndpoints } from 
 import { getTotalBolus } from './bolus'
 import { cgmSampleFrequency, classifyBgValue, reshapeBgClassesToBgBounds } from './bloodglucose'
 import { addDuration } from './datetime'
+import { getLatestPumpUpload } from './device'
 
 class DataUtil {
   /**
@@ -383,6 +384,16 @@ class DataUtil {
   }
 
   getLatestPump = () => {
+    const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
+    if (uploadData.length > 0) {
+      const latestPumpUpload = getLatestPumpUpload(uploadData)
+      const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
+      return {
+        deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
+        manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
+      }
+    }
+    /*If no upload is found, we can fall back to pumpSettings object*/
     const pumpSettings = this.sort.byDate(this.filter.byType('pumpSettings').top(Infinity))[0]
     return {
       deviceModel: pumpSettings.payload.device.name,
