@@ -57,7 +57,7 @@ export default class DataApi {
 
   static async getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
     const params = {
-      starDate: options?.startDate,
+      startDate: options?.startDate,
       endDate: options?.endDate,
       withPumpSettings: options?.withPumpSettings ? true : undefined
     }
