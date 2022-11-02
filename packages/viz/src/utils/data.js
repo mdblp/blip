@@ -384,12 +384,10 @@ class DataUtil {
   }
 
   getLatestPump = () => {
-    const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
-    const latestPumpUpload = getLatestPumpUpload(uploadData)
-    const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
+    const pumpSettings = this.sort.byDate(this.filter.byType('pumpSettings').top(Infinity))[0]
     return {
-      deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
-      manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
+      deviceModel: pumpSettings.payload.device.name,
+      manufacturer: pumpSettings.payload.device.manufacturer
     }
   }
 
