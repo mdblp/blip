@@ -205,7 +205,7 @@ describe('HCP home page', () => {
     fireEvent.change(emailInput, { target: { value: pendingPatient.email } })
     fireEvent.mouseDown(within(select).getByRole('button'))
     screen.getByRole('listbox')
-    fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
+    fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
 
     const pendingErrorMessage = within(addPatientDialog).getByText('This patient has already been invited and hasn\'t confirmed yet.')
     expect(pendingErrorMessage).toBeInTheDocument()

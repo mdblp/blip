@@ -114,7 +114,7 @@ const monitoredPatientTwo: ITeamMember = {
 
 export const pendingPatient: ITeamMember = {
   userId: '1db524f3b65g4',
-  teamId: mySecondTeamId,
+  teamId: myThirdTeamId,
   role: TeamMemberRole.patient,
   profile: {
     firstName: 'Pending',
