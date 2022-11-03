@@ -253,26 +253,26 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
                 </Box>
               </Tooltip>
             </StyledTableCell>
-
-            <StyledTableCell>
-              <Tooltip
-                title={t('remove-patient')}
-                aria-label={t('remove-patient')}
-              >
-                <Box>
-                  <IconActionButton
-                    ariaLabel={`${t('remove-patient')}-${patient.profile.email}`}
-                    icon={<PersonRemoveIcon />}
-                    onClick={onClickRemovePatient}
-                  />
-                </Box>
-              </Tooltip>
-            </StyledTableCell>
           </React.Fragment>
         }
+
+        <StyledTableCell>
+          <Tooltip
+            title={t('remove-patient')}
+            aria-label={t('remove-patient')}
+          >
+            <Box>
+              <IconActionButton
+                ariaLabel={`${t('remove-patient')}-${patient.profile.email}`}
+                icon={<PersonRemoveIcon />}
+                onClick={onClickRemovePatient}
+              />
+            </Box>
+          </Tooltip>
+        </StyledTableCell>
       </StyledTableRow>
 
-      {patientToRemove &&
+      {patientToRemove && isUserHcp &&
         <RemovePatientDialog
           patient={patient}
           onClose={onCloseRemovePatientDialog}
