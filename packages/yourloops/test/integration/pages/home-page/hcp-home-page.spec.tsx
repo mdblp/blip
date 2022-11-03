@@ -44,9 +44,10 @@ import {
   pendingPatient
 } from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
-import { mockTeamAPI, teamThree, teamTwo } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
 import { checkFooter } from '../../assert/footer'
 import { checkHCPLayout } from '../../assert/layout'
+import userEvent from '@testing-library/user-event'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -162,53 +163,57 @@ describe('HCP home page', () => {
     })
 
     const secondaryBar = screen.getByTestId('patients-secondary-bar')
-    const addPatientButton = within(secondaryBar).getByRole('button', { name: 'Add patient' })
-    expect(addPatientButton).toBeInTheDocument()
+    const addPatientButton = within(secondaryBar).getByText('Add patient')
+    expect(addPatientButton).toBeVisible()
 
-    addPatientButton.click()
+    userEvent.click(addPatientButton)
 
     const addPatientDialog = screen.getByRole('dialog')
-    expect(addPatientDialog).toBeInTheDocument()
+    expect(addPatientDialog).toBeVisible()
 
     const title = within(addPatientDialog).getByText('New patient')
-    expect(title).toBeInTheDocument()
+    expect(title).toBeVisible()
 
     const warningLine1 = within(addPatientDialog).getByText('By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations.')
-    expect(warningLine1).toBeInTheDocument()
+    expect(warningLine1).toBeVisible()
 
     const warningLine2 = within(addPatientDialog).getByTestId('modal-add-patient-warning-line2')
     expect(warningLine2).toHaveTextContent('Read our Terms of use and Privacy Policy.')
     const termsOfUseLink = within(addPatientDialog).getByRole('link', { name: 'Terms of use' })
-    expect(termsOfUseLink).toBeInTheDocument()
+    expect(termsOfUseLink).toBeVisible()
     const privacyPolicyLink = within(addPatientDialog).getByRole('link', { name: 'Privacy Policy' })
-    expect(privacyPolicyLink).toBeInTheDocument()
+    expect(privacyPolicyLink).toBeVisible()
 
     const cancelButton = within(addPatientDialog).getByText('Cancel')
-    expect(cancelButton).toBeInTheDocument()
+    expect(cancelButton).toBeVisible()
 
     const invitePatientButton = within(addPatientDialog).getByRole('button', { name: 'Invite' })
-    expect(invitePatientButton).toBeInTheDocument()
+    expect(invitePatientButton).toBeVisible()
 
     const emailInput = within(addPatientDialog).getByRole('textbox', { name: 'Email' })
-    expect(emailInput).toBeInTheDocument()
-    fireEvent.change(emailInput, { target: { value: monitoredPatient.email } })
+    expect(emailInput).toBeVisible()
+    await userEvent.type(emailInput, monitoredPatient.email)
 
     const select = within(addPatientDialog).getByTestId('patient-team-selector')
     fireEvent.mouseDown(within(select).getByRole('button'))
-    screen.getByRole('listbox')
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
     const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient already shared their data with the team.')
-    expect(alreadyInTeamErrorMessage).toBeInTheDocument()
-    expect(invitePatientButton).not.toBeEnabled()
+    expect(alreadyInTeamErrorMessage).toBeVisible()
+    expect(invitePatientButton).toBeDisabled()
 
-    fireEvent.change(emailInput, { target: { value: pendingPatient.email } })
+    userEvent.clear(emailInput)
+    await userEvent.type(emailInput, pendingPatient.email)
     fireEvent.mouseDown(within(select).getByRole('button'))
-    screen.getByRole('listbox')
     fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
 
     const pendingErrorMessage = within(addPatientDialog).getByText('This patient has already been invited and hasn\'t confirmed yet.')
-    expect(pendingErrorMessage).toBeInTheDocument()
-    expect(invitePatientButton).not.toBeEnabled()
+    expect(pendingErrorMessage).toBeVisible()
+    expect(invitePatientButton).toBeDisabled()
+
+    fireEvent.mouseDown(within(select).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: teamOne.name }))
+
+    expect(invitePatientButton).toBeEnabled()
   })
 })

@@ -91,8 +91,8 @@ export default class HttpService {
     }
   }
 
-  private static handleError(error: AxiosError, excludedErrorCodes?: number[]): Error {
-    if (!error.response || excludedErrorCodes?.includes(error.response.status)) {
+  private static handleError(error: AxiosError, excludedErrorCodes: number[] = []): Error {
+    if (!error.response || excludedErrorCodes.includes(error.response.status)) {
       return error
     }
 

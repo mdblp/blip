@@ -89,7 +89,7 @@ const HomePage: FunctionComponent = () => {
     const result = await getPatientEmailAndTeam()
     setPatientToAdd(null) // Close the dialog
 
-    if (result === null) {
+    if (!result) {
       return
     }
 

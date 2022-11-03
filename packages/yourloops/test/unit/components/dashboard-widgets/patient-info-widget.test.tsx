@@ -68,7 +68,7 @@ describe('PatientInfoWidget', () => {
   patient.teams = [{ teamId: remoteMonitoringTeam.id } as PatientTeam]
   const cancelRemoteMonitoringInviteMock = jest.fn()
   const updatePatientMonitoringMock = jest.fn()
-  const getPatientMock = jest.fn().mockReturnValue(patient)
+  const getPatientByIdMock = jest.fn().mockReturnValue(patient)
 
   beforeAll(() => {
     i18n.changeLanguage('en');
@@ -84,7 +84,7 @@ describe('PatientInfoWidget', () => {
     (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return {
         updatePatientMonitoring: updatePatientMonitoringMock,
-        getPatientById: getPatientMock
+        getPatientById: getPatientByIdMock
       }
     });
     (RemoteMonitoringPatientDialogMock.default as jest.Mock).mockImplementation((props: RemoteMonitoringPatientDialogProps) => {

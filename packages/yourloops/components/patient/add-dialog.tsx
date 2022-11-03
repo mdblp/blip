@@ -117,7 +117,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
       return
     }
 
-    if (errorMessage !== null) {
+    if (errorMessage) {
       setErrorMessage(null)
     }
   }
