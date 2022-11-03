@@ -30,7 +30,7 @@ import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
 import React from 'react'
 import { createMemoryHistory } from 'history'
-import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, logDOM, render, screen, within } from '@testing-library/react'
 import PatientAPI from '../../../../lib/patient/patient-api'
 import { checkPatientSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
@@ -41,6 +41,7 @@ import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI, teamThree, teamTwo } from '../../mock/mockTeamAPI'
 import { checkFooter } from '../../assert/footer'
 import { checkHCPLayout } from '../../assert/layout'
+import userEvent from '@testing-library/user-event'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -148,5 +149,32 @@ describe('HCP home page', () => {
     expect(removePatientMock).toHaveBeenCalledWith(unMonitoredPatient.teamId, unMonitoredPatient.userId)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
+  })
+  it('should check that the team creation button is valid if all fields are complete', async () => {
+    await act(async () => {
+      render(getHomePage())
+    })
+    const teamMenu = screen.getByLabelText('Open team menu')
+    userEvent.click(teamMenu)
+    userEvent.click(screen.getByText('New care team'))
+    const dialogTeam = screen.getByRole('dialog')
+    const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
+    const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })
+    const adress1Input: HTMLInputElement = within(dialogTeam).getByRole('textbox', { name: 'Address 1' })
+    const adress2Input: HTMLInputElement = within(dialogTeam).getByRole('textbox', { name: 'Address 2' })
+    const zipcodeInput: HTMLInputElement = within(dialogTeam).getByRole('textbox', { name: 'Zipcode' })
+    const cityInput: HTMLInputElement = within(dialogTeam).getByRole('textbox', { name: 'City (State / Province)' })
+    const phoneNumberInput: HTMLInputElement = within(dialogTeam).getByRole('textbox', { name: 'Phone number' })
+    const emailInput: HTMLInputElement = within(dialogTeam).getByRole('textbox', { name: 'Email' })
+
+    expect(nameInput).toHaveTextContent('')
+    expect(adress1Input).toHaveTextContent('')
+    expect(adress2Input).toHaveTextContent('')
+    expect(zipcodeInput).toHaveTextContent('')
+    expect(cityInput).toHaveTextContent('')
+    expect(phoneNumberInput).toHaveTextContent('')
+    expect(emailInput).toHaveTextContent('')
+    expect(dialogTeam).toBeInTheDocument()
+    expect(createTeamButton).toBeDisabled()
   })
 })
