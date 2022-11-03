@@ -159,7 +159,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   const linkPrivacyPolicy = (
     <Link
       id="patient-list-dialog-add-warning-link-privacy"
-      aria-label={termsOfUse}
+      aria-label={privacyPolicy}
       href={DiabeloopUrl.getPrivacyPolicyUrL(i18n.language)}
       target="_blank"
       rel="noreferrer"
@@ -198,6 +198,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
             </InputLabel>
             <Select
               id="patient-list-dialog-add-team-input"
+              data-testid="patient-team-selector"
               name="teamid"
               value={teamId}
               onChange={handleChangeTeam}
@@ -212,6 +213,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
           </Box>
           <Trans
             id="patient-list-dialog-add-warning-line2"
+            data-testid="modal-add-patient-warning-line2"
             i18nKey="modal-add-patient-warning-line2"
             t={t}
             components={{ linkTerms, linkPrivacyPolicy }}
