@@ -28,7 +28,6 @@
 
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { find, some } from 'lodash'
 
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -105,10 +104,9 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   }
   const checkPatientInTeam = (formEmail: string, formTeamId: string): void => {
     const patient = patientHook.getPatientByEmail(formEmail)
-    const isPatientInTeam = patient && some(patient.teams, (team: PatientTeam) => team.teamId === formTeamId)
+    const patientTeam = patient?.teams.find((team: PatientTeam) => team.teamId === formTeamId)
 
-    if (isPatientInTeam) {
-      const patientTeam = find(patient.teams, (team: PatientTeam) => team.teamId === formTeamId)
+    if (patientTeam) {
       const isPatientPendingInTeam = patientTeam.status === UserInvitationStatus.pending
 
       if (isPatientPendingInTeam) {
