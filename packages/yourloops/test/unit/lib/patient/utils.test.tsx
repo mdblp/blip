@@ -47,21 +47,21 @@ describe('Patient utils', () => {
 
   describe('isInAtLeastATeam', () => {
     it('should return false when team user does not have an accepted status in any team', () => {
-      const members = [
+      const teams = [
         createPatientTeam('team1Id', UserInvitationStatus.pending),
         createPatientTeam('team2Id', UserInvitationStatus.pending)
       ]
-      const teamUser = createPatient('id1', members)
+      const teamUser = createPatient('id1', teams)
       const res = PatientUtils.isInAtLeastATeam(teamUser)
       expect(res).toBe(false)
     })
 
     it('should return true when team user does has an accepted status in a team', () => {
-      const members = [
+      const teams = [
         createPatientTeam('team1Id', UserInvitationStatus.pending),
         createPatientTeam('team2Id', UserInvitationStatus.accepted)
       ]
-      const teamUser = createPatient('id1', members)
+      const teamUser = createPatient('id1', teams)
 
       const res = PatientUtils.isInAtLeastATeam(teamUser)
       expect(res).toBe(true)
@@ -71,7 +71,7 @@ describe('Patient utils', () => {
   describe('getPatientRemoteMonitoringTeam', () => {
     const patientTeam1 = createPatientTeam('team1Id', UserInvitationStatus.accepted, MonitoringStatus.accepted)
     const unknownPatient = createPatient('nigma')
-    const monitoredPatient1 = createPatient('memberPatientAccepted1', [patientTeam1], undefined, undefined, {} as Monitoring)
+    const monitoredPatient1 = createPatient('memberPatientAccepted1', [patientTeam1], {} as Monitoring)
     it('should throw an error if patient is not monitored', () => {
       expect(() => PatientUtils.getRemoteMonitoringTeam(unknownPatient)).toThrowError(`Could not find a monitored team for patient ${unknownPatient.userid}`)
     })
@@ -108,7 +108,7 @@ describe('Patient utils', () => {
       const secondPatient2 = createPatient(secondPatient1.userid, [patientTeamAccepted])
       const secondPatient3 = createPatient(secondPatient1.userid, [])
       const thirdPatient1 = createPatient('patient3', [patientTeamPending])
-      const thirdPatient2 = createPatient(thirdPatient1.userid, [patientTeamMonitoringAccepted], undefined, undefined, monitoring)
+      const thirdPatient2 = createPatient(thirdPatient1.userid, [patientTeamMonitoringAccepted], monitoring)
       const patientWithNoDuplicates = createPatient('patientWithNoDuplicates', [patientTeamAccepted])
       const allPatients = [firstPatient1, firstPatient2, secondPatient1, secondPatient2, secondPatient3, thirdPatient1, thirdPatient2, patientWithNoDuplicates]
 
@@ -118,7 +118,7 @@ describe('Patient utils', () => {
       const secondPatientExpected = createPatient(secondPatient1.userid, [patientTeamPending, patientTeamAccepted])
       secondPatientExpected.profile.birthdate = secondPatient1.profile.birthdate
       secondPatientExpected.settings.a1c = secondPatient1.settings.a1c
-      const thirdPatientExpected = createPatient(thirdPatient1.userid, [patientTeamPending, patientTeamMonitoringAccepted], undefined, undefined, monitoring)
+      const thirdPatientExpected = createPatient(thirdPatient1.userid, [patientTeamPending, patientTeamMonitoringAccepted], monitoring)
       thirdPatientExpected.profile.birthdate = thirdPatient1.profile.birthdate
       thirdPatientExpected.settings.a1c = thirdPatient1.settings.a1c
       const patientWithNoDuplicatesExpected = createPatient(patientWithNoDuplicates.userid, [patientTeamAccepted])

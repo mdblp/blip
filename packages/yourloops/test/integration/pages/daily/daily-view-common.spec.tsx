@@ -26,7 +26,7 @@
  */
 
 import { mockPatientLogin } from '../../mock/auth'
-import { unMonitoredPatient } from '../../mock/mockPatientAPI'
+import { unmonitoredPatient } from '../../mock/mockPatientAPI'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
@@ -46,7 +46,7 @@ jest.setTimeout(30000)
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {
-    mockPatientLogin(unMonitoredPatient)
+    mockPatientLogin(unmonitoredPatient)
   })
 
   describe('with all kind of data', () => {

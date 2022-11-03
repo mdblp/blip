@@ -46,7 +46,7 @@ jest.mock('../../../../../components/dashboard-widgets/medical-files/weekly-repo
 })
 jest.mock('../../../../../lib/auth')
 describe('Medical Files Widget', () => {
-  const patient = createPatient('fakePatientId', [])
+  const patient = createPatient('fakePatientId')
 
   function getMedicalFilesWidgetJSX() {
     return <MedicalFilesWidget patient={patient} />

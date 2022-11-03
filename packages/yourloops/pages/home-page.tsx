@@ -47,6 +47,7 @@ import TeamCodeDialog from '../components/patient/team-code-dialog'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
 import { usePatientContext } from '../lib/patient/provider'
+import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../lib/patient/patient-api'
 
 const log = bows('PatientListPage')
 
@@ -88,21 +89,26 @@ const HomePage: FunctionComponent = () => {
     const result = await getPatientEmailAndTeam()
     setPatientToAdd(null) // Close the dialog
 
-    if (result !== null) {
-      try {
-        const { email, teamId } = result
-        const team = teamHook.getTeam(teamId)
-        await patientHook.invitePatient(team as Team, email)
-        alert.success(t('alert-invitation-sent-success'))
-        metrics.send('invitation', 'send_invitation', 'patient')
-        setTeamCodeToDisplay(team)
-      } catch (reason) {
-        log.error(reason)
-        // TODO Errors:
-        // - "alert-invitation-patient-failed-already-in-team"
-        // - "alert-invitation-patient-failed-already-invited"
-        alert.error(t('alert-invitation-patient-failed'))
+    if (!result) {
+      return
+    }
+
+    try {
+      const { email, teamId } = result
+      const team = teamHook.getTeam(teamId)
+      await patientHook.invitePatient(team as Team, email)
+      alert.success(t('alert-invitation-sent-success'))
+      metrics.send('invitation', 'send_invitation', 'patient')
+      setTeamCodeToDisplay(team)
+    } catch (err) {
+      const error = err as Error
+      log.error(error)
+
+      if (error.message === PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE) {
+        alert.error(t('alert-invitation-patient-failed-already-invited'))
+        return
       }
+      alert.error(t('alert-invitation-patient-failed'))
     }
   }
 

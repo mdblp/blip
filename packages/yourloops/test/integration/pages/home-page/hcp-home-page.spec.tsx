@@ -36,11 +36,18 @@ import { checkPatientSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { mockPatientAPI, monitoredPatient, removePatientMock, unMonitoredPatient } from '../../mock/mockPatientAPI'
+import {
+  mockPatientAPI,
+  monitoredPatient,
+  removePatientMock,
+  unmonitoredPatient,
+  pendingPatient
+} from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
-import { mockTeamAPI, teamThree, teamTwo } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
 import { checkFooter } from '../../assert/footer'
 import { checkHCPLayout } from '../../assert/layout'
+import userEvent from '@testing-library/user-event'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -82,7 +89,7 @@ describe('HCP home page', () => {
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
 
-    const patientRow = screen.queryByTestId(`patient-row-${unMonitoredPatient.userId}`)
+    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
     expect(removeButton).toBeInTheDocument()
 
@@ -95,10 +102,10 @@ describe('HCP home page', () => {
     await act(async () => {
       confirmRemoveButton.click()
     })
-    expect(removePatientMock).toHaveBeenCalledWith(unMonitoredPatient.teamId, unMonitoredPatient.userId)
+    expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teamId, unmonitoredPatient.userId)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
   })
 
   it('should be able to remove a patient who is in many teams', async () => {
@@ -136,8 +143,8 @@ describe('HCP home page', () => {
       render(getHomePage())
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${unMonitoredPatient.userId}`)
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unMonitoredPatient.email}` })
+    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
     removeButton.click()
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
@@ -145,8 +152,68 @@ describe('HCP home page', () => {
     await act(async () => {
       confirmRemoveButton.click()
     })
-    expect(removePatientMock).toHaveBeenCalledWith(unMonitoredPatient.teamId, unMonitoredPatient.userId)
+    expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teamId, unmonitoredPatient.userId)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
+  })
+
+  it('should display Add patient dialog with appropriate error messages depending on the input user and the selected team', async () => {
+    await act(async () => {
+      render(getHomePage())
+    })
+
+    const secondaryBar = screen.getByTestId('patients-secondary-bar')
+    const addPatientButton = within(secondaryBar).getByText('Add patient')
+    expect(addPatientButton).toBeVisible()
+
+    userEvent.click(addPatientButton)
+
+    const addPatientDialog = screen.getByRole('dialog')
+    expect(addPatientDialog).toBeVisible()
+
+    const title = within(addPatientDialog).getByText('New patient')
+    expect(title).toBeVisible()
+
+    const warningLine1 = within(addPatientDialog).getByText('By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations.')
+    expect(warningLine1).toBeVisible()
+
+    const warningLine2 = within(addPatientDialog).getByTestId('modal-add-patient-warning-line2')
+    expect(warningLine2).toHaveTextContent('Read our Terms of use and Privacy Policy.')
+    const termsOfUseLink = within(addPatientDialog).getByRole('link', { name: 'Terms of use' })
+    expect(termsOfUseLink).toBeVisible()
+    const privacyPolicyLink = within(addPatientDialog).getByRole('link', { name: 'Privacy Policy' })
+    expect(privacyPolicyLink).toBeVisible()
+
+    const cancelButton = within(addPatientDialog).getByText('Cancel')
+    expect(cancelButton).toBeVisible()
+
+    const invitePatientButton = within(addPatientDialog).getByRole('button', { name: 'Invite' })
+    expect(invitePatientButton).toBeVisible()
+
+    const emailInput = within(addPatientDialog).getByRole('textbox', { name: 'Email' })
+    expect(emailInput).toBeVisible()
+    await userEvent.type(emailInput, monitoredPatient.email)
+
+    const select = within(addPatientDialog).getByTestId('patient-team-selector')
+    fireEvent.mouseDown(within(select).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
+
+    const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient already shared their data with the team.')
+    expect(alreadyInTeamErrorMessage).toBeVisible()
+    expect(invitePatientButton).toBeDisabled()
+
+    userEvent.clear(emailInput)
+    await userEvent.type(emailInput, pendingPatient.email)
+    fireEvent.mouseDown(within(select).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
+
+    const pendingErrorMessage = within(addPatientDialog).getByText('This patient has already been invited and hasn\'t confirmed yet.')
+    expect(pendingErrorMessage).toBeVisible()
+    expect(invitePatientButton).toBeDisabled()
+
+    fireEvent.mouseDown(within(select).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: teamOne.name }))
+
+    expect(invitePatientButton).toBeEnabled()
   })
 })

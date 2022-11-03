@@ -27,7 +27,7 @@
  */
 
 import { UserInvitationStatus } from '../../../models/generic'
-import { Patient, PatientTeam } from '../../../lib/data/patient'
+import { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam } from '../../../lib/data/patient'
 import { Alarm } from '../../../models/alarm'
 import { Team, TeamMember } from '../../../lib/team'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../../models/team'
@@ -43,37 +43,36 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 export const createPatient = (
   id = 'fakePatientId',
   teams: PatientTeam[] = [],
-  alarm: Alarm = {
-    timeSpentAwayFromTargetRate: 10,
-    timeSpentAwayFromTargetActive: false,
-    frequencyOfSevereHypoglycemiaRate: 20,
-    frequencyOfSevereHypoglycemiaActive: false,
-    nonDataTransmissionRate: 30,
-    nonDataTransmissionActive: false
-  },
-  fullName = 'fakePatientFullName',
   monitoring: Monitoring | undefined = undefined,
-  system: string | undefined = undefined,
-  flagged: boolean | undefined = undefined
+  profile: Partial<PatientProfile> = undefined,
+  settings: Partial<PatientSettings> = undefined,
+  metadata: Partial<PatientMetadata> = undefined
 ): Patient => {
   return {
     profile: {
-      birthdate: new Date(),
-      firstName: 'fakeFirstname',
-      fullName,
-      lastName: 'fakeLastname',
-      email: 'fake@email.com',
-      sex: 'M'
+      birthdate: profile?.birthdate || new Date(),
+      firstName: profile?.firstName || 'fakeFirstname',
+      fullName: profile?.fullName || 'fakePatientFullName',
+      lastName: profile?.lastName || 'fakeLastname',
+      email: profile?.email || 'fake@email.com',
+      sex: profile?.sex || 'M'
     },
     settings: {
-      a1c: { date: new Date().toJSON(), value: 'fakeA1cValue' },
-      system
+      a1c: settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },
+      system: settings?.system
     },
     metadata: {
-      alarm,
-      flagged,
-      medicalData: null,
-      unreadMessagesSent: 0
+      alarm: metadata?.alarm || {
+        timeSpentAwayFromTargetRate: 10,
+        timeSpentAwayFromTargetActive: false,
+        frequencyOfSevereHypoglycemiaRate: 20,
+        frequencyOfSevereHypoglycemiaActive: false,
+        nonDataTransmissionRate: 30,
+        nonDataTransmissionActive: false
+      },
+      flagged: metadata?.flagged,
+      medicalData: metadata?.medicalData || null,
+      unreadMessagesSent: metadata?.unreadMessagesSent || 0
     },
     monitoring,
     teams,
