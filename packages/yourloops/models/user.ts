@@ -46,7 +46,7 @@ export interface Consent {
   isAccepted?: boolean
 }
 
-export interface Patient {
+export interface ProfilePatientFields {
   birthday?: string
   birthPlace?: string
   diagnosisDate?: string
@@ -67,7 +67,7 @@ export interface Profile {
   fullName: string
   firstName?: string
   lastName?: string
-  patient?: Patient
+  patient?: ProfilePatientFields
   termsOfUse?: Consent
   trainingAck?: Consent
   privacyPolicy?: Consent

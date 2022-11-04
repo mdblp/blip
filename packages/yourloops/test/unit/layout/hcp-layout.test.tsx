@@ -61,7 +61,7 @@ jest.mock('../../../lib/notifications/hook')
 jest.mock('../../../layout/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })
-jest.mock('../../../pages/profile', () => () => {
+jest.mock('../../../pages/profile/profile-page', () => () => {
   return <div data-testid={profilePageTestId} />
 })
 jest.mock('../../../pages/notifications', () => () => {

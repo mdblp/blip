@@ -66,6 +66,7 @@ const PreferencesForm: FunctionComponent = () => {
             disabled={user.role === UserRoles.patient}
             labelId="unit-selector"
             id="profile-units-selector"
+            data-testid={t('units')}
             value={profileForm.units}
             onChange={event => updateProfileForm(ProfileFormKey.units, event.target.value as Units)}
           >
@@ -77,11 +78,12 @@ const PreferencesForm: FunctionComponent = () => {
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl className={classes.formInput}>
+        <FormControl className={classes.formInput} data-testid="box-container">
           <InputLabel id="profile-language-input-label">{t('language')}</InputLabel>
           <Select
             labelId="locale-selector"
             id="profile-locale-selector"
+            data-testid={t('language')}
             value={profileForm.lang}
             onChange={event => updateProfileForm(ProfileFormKey.lang, event.target.value as LanguageCodes)}
           >

@@ -108,15 +108,9 @@ describe('Profile', () => {
   })
 
   beforeAll(() => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          role: UserRoles.hcp,
-          isUserPatient: () => false,
-          isUserHcp: () => true
-        } as User
-      }
-    })
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+      user: patient
+    }))
   })
 
   it('should be able to render', async () => {
@@ -133,103 +127,56 @@ describe('Profile', () => {
   })
 
   it('should display birthdate if user is a patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: patient }
-    })
     await mountProfilePage()
     const birthDateInput: HTMLInputElement = container.querySelector('#profile-textfield-birthdate')
     expect(birthDateInput?.value).toBe(birthday)
   })
 
   it('should display birthplace if user is a patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: patient
-      }
-    })
     await mountProfilePage()
     const birthPlaceInput: HTMLInputElement = container.querySelector('#profile-textfield-birthplace')
     expect(birthPlaceInput?.value).toBe(patient.profile?.patient?.birthPlace)
   })
 
   it('should display gender if user is a patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: patient
-      }
-    })
     await mountProfilePage()
     const genderValue = container.querySelector('#profile-select-gender').innerHTML
     expect(genderValue).toBe(genderLabels()[patient.profile?.patient?.sex])
   })
 
   it('should display referring doctor if user is a patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: patient
-      }
-    })
     await mountProfilePage()
     const referringDoctorInput: HTMLInputElement = container.querySelector('#profile-textfield-referring-doctor')
     expect(referringDoctorInput?.value).toBe(patient.profile?.patient?.referringDoctor)
   })
 
   it('should not display INS if user is not a french patient', async () => {
-    patient.settings.country = 'EN';
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: patient
-      }
-    })
+    patient.settings.country = 'EN'
     await mountProfilePage()
     const insInput = container.querySelector('#profile-textfield-ins')
     expect(insInput).toBeNull()
   })
 
   it('should display INS if user is a french patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: patient
-      }
-    })
     await mountProfilePage()
     const insInput: HTMLInputElement = container.querySelector('#profile-textfield-ins')
     expect(insInput?.value).toBe(patient.profile?.patient?.ins)
   })
 
   it('should not display SSN if user is not a french patient', async () => {
-    patient.settings.country = 'EN';
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: patient
-      }
-    })
+    patient.settings.country = 'EN'
     await mountProfilePage()
     const ssnInput = container.querySelector('#profile-textfield-ssn')
     expect(ssnInput).toBeNull()
   })
 
   it('should display SSN if user is a french patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: patient
-      }
-    })
     await mountProfilePage()
     const ssnInput: HTMLInputElement = container.querySelector('#profile-textfield-ssn')
     expect(ssnInput?.value).toBe(patient.profile?.patient?.ssn)
   })
 
   it('should not display profession if user is a patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          role: UserRoles.patient,
-          isUserPatient: () => true,
-          isUserHcp: () => false
-        } as User
-      }
-    })
     await mountProfilePage()
     const hcpProfessionSelectInput = container.querySelector('#profile-hcp-profession-selector + input')
     expect(hcpProfessionSelectInput).toBeNull()

@@ -60,7 +60,7 @@ describe('Patient dashboard for HCP', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()

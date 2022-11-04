@@ -54,7 +54,7 @@ describe('HCP home page', () => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockDirectShareApi()
   })

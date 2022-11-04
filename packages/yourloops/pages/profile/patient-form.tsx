@@ -80,6 +80,7 @@ const PatientProfileForm: FunctionComponent = () => {
         <React.Fragment>
           <Box className={classes.inputContainer}>
             <TextField
+              id={t('birth-first-name')}
               label={t('birth-first-name')}
               value={profileForm.birthFirstName}
               onChange={event => updateProfileForm(ProfileFormKey.birthFirstName, event.target.value)}
@@ -89,6 +90,7 @@ const PatientProfileForm: FunctionComponent = () => {
               inputProps={{ maxLength: '50' }}
             />
             <TextField
+              id={t('birth-last-name')}
               label={t('birth-last-name')}
               value={profileForm.birthLastName}
               onChange={event => updateProfileForm(ProfileFormKey.birthLastName, event.target.value)}
@@ -100,6 +102,7 @@ const PatientProfileForm: FunctionComponent = () => {
           </Box>
           <Box className={classes.inputContainer}>
             <TextField
+              id={t('birth-names')}
               label={t('birth-names')}
               value={profileForm.birthNames}
               onChange={event => updateProfileForm(ProfileFormKey.birthNames, event.target.value)}
@@ -109,6 +112,7 @@ const PatientProfileForm: FunctionComponent = () => {
               inputProps={{ maxLength: '50' }}
             />
             <TextField
+              id={t('birth-place-insee-code')}
               label={t('birth-place-insee-code')}
               value={profileForm.birthPlaceInseeCode}
               onChange={event => updateProfileForm(ProfileFormKey.birthPlaceInseeCode, event.target.value)}
@@ -140,6 +144,7 @@ const PatientProfileForm: FunctionComponent = () => {
             />
           </Box>
           <TextField
+            id={t('oid')}
             label={t('oid')}
             value={profileForm.oid}
             onChange={event => updateProfileForm(ProfileFormKey.oid, event.target.value)}
