@@ -266,7 +266,7 @@
   "pending-patients-filter": "Filter on pending patients",
   "personal-information": "Personal Information",
   "phone-number": "Phone number",
-  "placeholder-search": "Search…",
+  "placeholder-search": "Search for a patient by his first name, last name or birthdate (dd/mm/yyyy)",
   "preferences": "Preferences",
   "prescription": "Prescription",
   "prescription-duration": "Prescription duration",

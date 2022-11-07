@@ -91,11 +91,20 @@ describe('Patient hook', () => {
 
   describe('filterPatients', () => {
     const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
-    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], {} as Monitoring)
-    const basicPatient = createPatient('basicPatient1', [basicTeam])
-    const bigBrainPatient = createPatient('big brain', [basicTeam])
-    bigBrainPatient.profile.firstName = 'big brain'
-    const allPatients = [pendingPatient, basicPatient, bigBrainPatient]
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, { birthdate: new Date(2001, 10, 19, 0, 0, 0, 0) })
+    const basicPatient = createPatient('basicPatient1', [basicTeam], undefined, {
+      birthdate: new Date(2005, 5, 5, 0, 0, 0, 0),
+      firstName: 'small brain',
+      lastName: 'dupont'
+    })
+    const basicPatient2 = createPatient('basicPatient2', [basicTeam], undefined, { birthdate: new Date(2001, 10, 19, 0, 0, 0, 0) })
+    const bigBrainPatient = createPatient('big brain', [basicTeam], undefined, {
+      birthdate: new Date(2005, 5, 5, 0, 0, 0, 0),
+      firstName: 'big brain',
+      lastName: 'smith'
+    })
+
+    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, pendingPatient]
     let customHook
 
     beforeAll(async () => {
@@ -113,8 +122,23 @@ describe('Patient hook', () => {
       expect(patientsReceived).toEqual([basicPatient])
     })
 
-    it('should return correct patients when provided a search filter', () => {
+    it('should return correct patients when provided a first name search filter', () => {
       const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, 'big brain', [])
+      expect(patientsReceived).toEqual([bigBrainPatient])
+    })
+
+    it('should return correct patients when provided a date search filter', () => {
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '19/11/2001', [])
+      expect(patientsReceived).toEqual([basicPatient2])
+    })
+
+    it('should return correct patients when provided a date and first name search filter', () => {
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '05/06/2005 big', [])
+      expect(patientsReceived).toEqual([bigBrainPatient])
+    })
+
+    it('should return correct patients when provided a date and last name search filter', () => {
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '05/06/2005smith', [])
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
   })
