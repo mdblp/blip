@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.2-beta14 - 2022-11-08
 ### Added
+- YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
