@@ -31,7 +31,7 @@ import { Preferences, Profile, Settings, UserRoles } from '../../../../models/us
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { act, screen } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkPatientLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { mockPatientAPI } from '../../mock/mockPatientAPI'
@@ -42,7 +42,7 @@ import UserApi from '../../../../lib/auth/user-api'
 
 describe('Profile page for patient', () => {
   const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
-  // const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
+  const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
   const profile: Profile = {
     firstName: 'Elie',
     lastName: 'Coptere',
@@ -108,22 +108,20 @@ describe('Profile page for patient', () => {
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(saveButton).toBeDisabled()
 
-    // TODO find a way to handle the MUI Select
-    // await act(() => {
-    //   fireEvent.mouseDown(within(fields.languageSelect).getByRole('button'))
-    //   screen.getByRole('listbox')
-    //   userEvent.click(screen.getByRole('option', { name: 'English' }))
-    // })
+    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: 'English' }))
+
     userEvent.clear(fields.firstNameInput)
     userEvent.clear(fields.lastNameInput)
     await userEvent.type(fields.firstNameInput, 'Jean')
     await userEvent.type(fields.lastNameInput, 'Tanrien')
 
     expect(saveButton).not.toBeDisabled()
-    userEvent.click(saveButton)
-    // expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, { displayLanguageCode: 'en' })
-    expect(updateProfileMock).toHaveBeenCalledWith(
-      loggedInUserId,
+    await act(async () => {
+      userEvent.click(saveButton)
+    })
+    expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, { displayLanguageCode: 'en' })
+    expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId,
       { ...profile, firstName: 'Jean', lastName: 'Tanrien', fullName: 'Jean Tanrien' }
     )
   })

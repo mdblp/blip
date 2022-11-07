@@ -24,8 +24,8 @@ interface PatientFieldsHtmlElements extends CommonFieldsHtmlElements {
 const checkCommonFields = (): CommonFieldsHtmlElements => {
   const firstNameInput = screen.getByLabelText('First Name')
   const lastNameInput = screen.getByLabelText('Last Name')
-  const unitsSelect = screen.getByTestId('Units')
-  const languageSelect = screen.getByTestId('Language')
+  const unitsSelect = screen.getByTestId('profile-units-selector')
+  const languageSelect = screen.getByTestId('profile-local-selector')
 
   expect(firstNameInput).toBeInTheDocument()
   expect(lastNameInput).toBeInTheDocument()
