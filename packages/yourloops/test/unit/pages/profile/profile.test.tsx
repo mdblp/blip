@@ -33,7 +33,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { Units } from '../../../../models/generic'
 import ProfilePage from '../../../../pages/profile/profile-page'
-import { UserMetadata, UserRoles } from '../../../../models/user'
+import { AuthenticatedUserMetadata, UserRoles } from '../../../../models/user'
 import * as authHookMock from '../../../../lib/auth'
 import User from '../../../../lib/auth/user'
 import { genderLabels } from '../../../../lib/auth/helpers'
