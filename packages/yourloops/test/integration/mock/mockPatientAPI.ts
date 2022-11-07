@@ -146,3 +146,40 @@ export const removePatientMock = jest.spyOn(PatientAPI, 'removePatient').mockRes
 export const mockPatientAPI = () => {
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, pendingPatient])
 }
+
+export const buildPatient = (member: Partial<ITeamMember>): ITeamMember => {
+  return {
+    userId: member.userId ?? 'fakeUserId',
+    teamId: member.teamId ?? 'fakeUserTeamId',
+    role: TeamMemberRole.patient,
+    profile: {
+      firstName: member.profile.firstName ?? 'fakeFirstName',
+      fullName: member.profile.fullName ?? 'fakeFullName',
+      lastName: member.profile.lastName ?? 'fakeLastName',
+      patient: {
+        birthday: member.profile.patient.birthday ?? '1980-01-01T10:44:34+01:00',
+        diagnosisType: member.profile.patient.diagnosisType ?? 'type1'
+      },
+      privacyPolicy: {
+        acceptanceTimestamp: member.profile.privacyPolicy?.acceptanceTimestamp ?? '2021-05-22',
+        isAccepted: member.profile.privacyPolicy?.isAccepted ?? true
+      },
+      termsOfUse: {
+        acceptanceTimestamp: member.profile.termsOfUse?.acceptanceTimestamp ?? '2021-05-22',
+        isAccepted: member.profile.termsOfUse?.isAccepted ?? true
+      },
+      trainingAck: {
+        acceptanceTimestamp: member.profile.trainingAck?.acceptanceTimestamp ?? '2022-10-11',
+        isAccepted: member.profile.trainingAck?.isAccepted ?? true
+      }
+    },
+    settings: member.settings,
+    preferences: member.preferences,
+    invitationStatus: member.invitationStatus ?? UserInvitationStatus.accepted,
+    email: member.email ?? 'fake@patient.email',
+    idVerified: member.idVerified ?? true,
+    unreadMessages: member.unreadMessages ?? 0,
+    alarms: member.alarms,
+    monitoring: member.monitoring
+  }
+}
