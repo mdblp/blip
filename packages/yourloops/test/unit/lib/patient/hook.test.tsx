@@ -103,8 +103,13 @@ describe('Patient hook', () => {
       firstName: 'big brain',
       lastName: 'smith'
     })
+    const noNamePatient = createPatient('big brain', [basicTeam], undefined, {
+      birthdate: new Date(2006, 6, 6, 0, 0, 0, 0)
+    })
+    noNamePatient.profile.firstName = undefined
+    noNamePatient.profile.lastName = undefined
 
-    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, pendingPatient]
+    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, noNamePatient, pendingPatient]
     let customHook
 
     beforeAll(async () => {

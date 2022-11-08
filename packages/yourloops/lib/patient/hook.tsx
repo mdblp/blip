@@ -99,27 +99,21 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
     const filteredPatients = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
-    if (search.length > 0) {
-      const searchText = search.toLocaleLowerCase()
-      const birthdateAsString = searchText.slice(0, 10)
-      if (moment(birthdateAsString, 'DD/MM/YYYY').toDate().getTime()) {
-        const firstNameOrLastName = searchText.slice(10).trimStart()
-        return filteredPatients.filter((patient: Patient): boolean => {
-          const firstName = patient.profile.firstName ?? ''
-          const lastName = patient.profile.lastName ?? ''
-          const date = patient.profile.birthdate
-          const dateString = moment(date).format('DD/MM/YYYY')
-          return dateString === birthdateAsString &&
-            (firstNameOrLastName.length === 0 || firstName.toLocaleLowerCase().startsWith(firstNameOrLastName) || lastName.toLocaleLowerCase().startsWith(firstNameOrLastName))
-        })
-      }
-      return filteredPatients.filter((patient: Patient): boolean => {
-        const firstName = patient.profile.firstName ?? ''
-        const lastName = patient.profile.lastName ?? ''
-        return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
-      })
+    if (search.length === 0) {
+      return filteredPatients
     }
-    return filteredPatients
+    const searchText = search.toLocaleLowerCase()
+    const birthdateAsString = searchText.slice(0, 10)
+    const searchTextStartsWithBirthdate = !!moment(birthdateAsString, 'DD/MM/YYYY').toDate().getTime()
+    if (searchTextStartsWithBirthdate) {
+      const firstNameOrLastName = searchText.slice(10).trimStart()
+      return PatientUtils.extractPatientsWithBirthdate(filteredPatients, birthdateAsString, firstNameOrLastName)
+    }
+    return filteredPatients.filter(patient => {
+      const firstName = patient.profile.firstName ?? ''
+      const lastName = patient.profile.lastName ?? ''
+      return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
+    })
   }, [patients])
 
   const invitePatient = useCallback(async (team: Team, username: string) => {
