@@ -53,8 +53,9 @@ describe('Caregiver home page', () => {
 
   it('should render the home page with correct components', async () => {
     renderPage('/')
+    expect(await screen.findByTestId('app-main-header')).toBeVisible()
     checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientSecondaryBar()
+    checkPatientSecondaryBar(false, false)
   })
 
   it('should filter patients correctly depending on the search value', async () => {

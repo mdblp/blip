@@ -78,7 +78,7 @@ describe('HCP home page', () => {
     })
     checkHCPLayout(`${firstName} ${lastName}`)
     checkFooter()
-    checkPatientSecondaryBar()
+    checkPatientSecondaryBar(false, true)
   })
 
   it('should display a list of patient and be able to remove one of them', async () => {
