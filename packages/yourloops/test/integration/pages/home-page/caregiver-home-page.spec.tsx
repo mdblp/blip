@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
 import PatientAPI from '../../../../lib/patient/patient-api'
 import { checkPatientSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
