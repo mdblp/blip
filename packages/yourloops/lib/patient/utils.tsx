@@ -132,13 +132,13 @@ export default class PatientUtils {
     }
   }
 
-  static extractPatientsWithBirthdate = (patients: Patient[], birthdateAsString: string, firstNameOrLastName: string): Patient[] => {
+  static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {
     return patients.filter(patient => {
       const firstName = patient.profile.firstName ?? ''
       const lastName = patient.profile.lastName ?? ''
       const date = patient.profile.birthdate
       const dateString = moment(date).format('DD/MM/YYYY')
-      return dateString === birthdateAsString &&
+      return dateString === birthdate &&
         (firstNameOrLastName.length === 0 || firstName.toLocaleLowerCase().startsWith(firstNameOrLastName) || lastName.toLocaleLowerCase().startsWith(firstNameOrLastName))
     })
   }
