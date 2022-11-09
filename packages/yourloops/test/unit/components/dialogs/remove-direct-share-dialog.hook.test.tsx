@@ -1,0 +1,146 @@
+import DirectShareApi from '../../../../lib/share/direct-share-api'
+import * as notificationHookMock from '../../../../lib/notifications/hook'
+import NotificationApi from '../../../../lib/notifications/notification-api'
+import * as authHookMock from '../../../../lib/auth/hook'
+import { act, renderHook } from '@testing-library/react-hooks'
+import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
+import { NotificationType } from '../../../../lib/notifications/models'
+import * as alertMock from '../../../../components/utils/snackbar'
+
+jest.mock('../../../../components/utils/snackbar')
+jest.mock('../../../../lib/notifications/hook')
+jest.mock('../../../../lib/auth/hook')
+
+describe('Remove direct share dialog hook', () => {
+  const userToRemoveEmail = 'fake@email.com'
+  const userToRemove = { id: 'fake-id', email: userToRemoveEmail, fullName: 'Fake User' }
+  const invitation = { id: 'fake-invitation-id', email: userToRemoveEmail, type: NotificationType.directInvitation }
+  const authUserId = 'auth-user-id'
+
+  const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare')
+  const cancelInvitationMock = jest.spyOn(NotificationApi, 'cancelInvitation')
+  const isUserCaregiverMock = jest.fn()
+  const onClose = jest.fn()
+  const onSuccessAlertMock = jest.fn()
+  const onErrorAlertMock = jest.fn()
+
+  let sentInvitationsMock = []
+
+  beforeEach(() => {
+    (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => ({
+      cancel: cancelInvitationMock,
+      sentInvitations: sentInvitationsMock
+    }));
+
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+      user: {
+        id: authUserId,
+        isUserCaregiver: isUserCaregiverMock
+      }
+    }));
+
+    (alertMock.useAlert as jest.Mock).mockImplementation(() => ({
+      success: onSuccessAlertMock,
+      error: onErrorAlertMock
+    }))
+  })
+
+  describe('when a patient removes a pending invitation', () => {
+    beforeEach(() => {
+      isUserCaregiverMock.mockReturnValueOnce(false)
+      sentInvitationsMock = [invitation]
+    })
+
+    it('should show success and close the dialog if the removal is successful', async () => {
+      cancelInvitationMock.mockResolvedValueOnce(undefined)
+
+      const { result } = renderHook(() => useRemoveDirectShareDialog({ userToRemove, onClose }))
+      await act(async () => {
+        await result.current.removeDirectShare()
+      })
+
+      expect(cancelInvitationMock).toHaveBeenCalledWith(invitation)
+      expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-success')
+      expect(onClose).toHaveBeenCalledWith(false)
+    })
+
+    it('should show error and not close the dialog if the removal fails', async () => {
+      cancelInvitationMock.mockRejectedValueOnce('Error')
+
+      const { result } = renderHook(() => useRemoveDirectShareDialog({ userToRemove, onClose }))
+      await act(async () => {
+        await result.current.removeDirectShare()
+      })
+
+      expect(cancelInvitationMock).toHaveBeenCalledWith(invitation)
+      expect(onErrorAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-failure')
+      expect(onClose).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('when a patient removes a direct share', () => {
+    beforeEach(() => {
+      isUserCaregiverMock.mockReturnValueOnce(false)
+      sentInvitationsMock = []
+    })
+
+    it('should show success and close the dialog if the removal is successful', async () => {
+      removeDirectShareMock.mockResolvedValueOnce(undefined)
+
+      const { result } = renderHook(() => useRemoveDirectShareDialog({ userToRemove, onClose }))
+      await act(async () => {
+        await result.current.removeDirectShare()
+      })
+
+      expect(removeDirectShareMock).toHaveBeenCalledWith(authUserId, userToRemove.id)
+      expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-success')
+      expect(onClose).toHaveBeenCalledWith(true)
+    })
+
+    it('should show error and not close the dialog if the removal fails', async () => {
+      removeDirectShareMock.mockRejectedValueOnce('Error')
+
+      const { result } = renderHook(() => useRemoveDirectShareDialog({ userToRemove, onClose }))
+      await act(async () => {
+        await result.current.removeDirectShare()
+      })
+
+      expect(removeDirectShareMock).toHaveBeenCalledWith(authUserId, userToRemove.id)
+      expect(onErrorAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-failure')
+      expect(onClose).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('when a caregiver removes a direct share', () => {
+    beforeEach(() => {
+      isUserCaregiverMock.mockReturnValueOnce(true)
+      sentInvitationsMock = []
+    })
+
+    it('should show success and close the dialog when the removal is successful', async () => {
+      removeDirectShareMock.mockResolvedValueOnce(undefined)
+
+      const { result } = renderHook(() => useRemoveDirectShareDialog({ userToRemove, onClose }))
+      await act(async () => {
+        await result.current.removeDirectShare()
+      })
+
+      expect(removeDirectShareMock).toHaveBeenCalledWith(userToRemove.id, authUserId)
+      expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-caregiver-remove-patient-success')
+      expect(onClose).toHaveBeenCalledWith(true)
+    })
+
+    it('should show error and not close the dialog when the removal fails', async () => {
+      removeDirectShareMock.mockRejectedValueOnce('Error')
+
+      const { result } = renderHook(() => useRemoveDirectShareDialog({ userToRemove, onClose }))
+      await act(async () => {
+        await result.current.removeDirectShare()
+      })
+
+      expect(removeDirectShareMock).toHaveBeenCalledWith(userToRemove.id, authUserId)
+      expect(onErrorAlertMock).toHaveBeenCalledWith('modal-caregiver-remove-patient-failure')
+      expect(onClose).not.toHaveBeenCalled()
+    })
+  })
+})

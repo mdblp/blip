@@ -152,7 +152,8 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
         <TableRow
           key={userId}
           id={`patient-caregivers-table-row-${userId}`}
-          data-userid={userId} data-status={caregiver.status}
+          data-testid={`patient-caregivers-table-row-${userId}`}
+          data-status={caregiver.status}
         >
           <TableCell id={`patient-caregivers-table-row-${userId}-status`}>
             {isPending &&
@@ -178,6 +179,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
             <IconActionButton
               icon={<PersonRemoveIcon />}
               id={`patient-caregivers-table-row-${userId}-button-remove`}
+              ariaLabel={`${t('remove-caregiver')}-${userId}`}
               onClick={onClickRemoveCaregiver}
               tooltip={t('modal-patient-remove-caregiver-remove')} />
           </TableCell>

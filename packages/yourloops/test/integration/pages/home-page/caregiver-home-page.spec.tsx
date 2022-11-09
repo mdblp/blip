@@ -120,4 +120,73 @@ describe('Caregiver home page', () => {
     expect(patientTableBody.queryByText(patient1.profile.fullName)).not.toBeInTheDocument()
     expect(patientTableBody.queryByText(patient3.profile.fullName)).not.toBeInTheDocument()
   })
+
+  it('should display a list of patients and allow to remove one of them', async () => {
+    await act(async () => {
+      renderPage('/')
+    })
+
+    checkCaregiverLayout(`${firstName} ${lastName}`)
+    checkPatientSecondaryBarCommon()
+
+    expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
+    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
+
+    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
+    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
+    expect(removePatientButton).toBeVisible()
+
+    userEvent.click(removePatientButton)
+
+    const removePatientDialog = screen.getByRole('dialog')
+    expect(removePatientDialog).toBeVisible()
+
+    const removePatientDialogTitle = within(removePatientDialog).getByText('Remove a patient')
+    expect(removePatientDialogTitle).toBeVisible()
+
+    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove patient Unmonitored Patient?')
+    expect(removePatientDialogQuestion).toBeVisible()
+
+    const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
+    expect(removePatientDialogCancelButton).toBeVisible()
+
+    const removePatientDialogConfirmButton = within(removePatientDialog).getByRole('button', { name: 'Remove patient' })
+    expect(removePatientDialogConfirmButton).toBeVisible()
+
+    jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatient])
+    await act(async () => {
+      userEvent.click(removePatientDialogConfirmButton)
+    })
+
+    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatient.userId, loggedInUserId)
+    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
+    expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
+  })
+
+  it('should display an error message if patient removal failed', async () => {
+    jest.spyOn(DirectShareApi, 'removeDirectShare').mockRejectedValueOnce('Error')
+
+    await act(async () => {
+      renderPage('/')
+    })
+
+    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
+
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
+
+    userEvent.click(removeButton)
+
+    const removeDialog = screen.getByRole('dialog')
+
+    const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
+
+    await act(async () => {
+      userEvent.click(confirmRemoveButton)
+    })
+
+    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatient.userId, loggedInUserId)
+    expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
+  })
 })

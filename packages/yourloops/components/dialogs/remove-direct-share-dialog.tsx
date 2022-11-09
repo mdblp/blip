@@ -37,6 +37,7 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
   return (
     <Dialog
       id="remove-direct-share-dialog"
+      data-testid="remove-direct-share-dialog"
       open
       aria-labelledby={t(titleKey)}
       onClose={closeDialog}
@@ -63,6 +64,7 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
         </Button>
         <Button
           id="remove-direct-share-dialog-button-remove"
+          data-testid="remove-direct-share-dialog-button-remove"
           className={buttonsClasses.alertActionButton}
           variant="contained"
           disableElevation
