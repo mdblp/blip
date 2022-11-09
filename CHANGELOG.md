@@ -2,13 +2,14 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta14 - 2022-11-08
+## 3.0.2-beta15 - 2022-11-09
 ### Added
 - YLP-1850 Patient search should comply to INS standard
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1873 Fix patient profile update not visible in dashboard
 - YLP-1874 Fix PDF report generation
+- YLP-1901 CSV generation is not using the correct time fork
 
 ## 3.0.1 - 2022-10-11
 ### Added
