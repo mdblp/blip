@@ -132,7 +132,9 @@ pipeline {
             }
             steps {
                 script {
-                    if (env.version != "UNRELEASED" && !env.version.contains("BETA")) {
+                    // On dblp branch, only non BETA versions are released
+                    // BETA versions can only be released on custom branches
+                    if (env.version != "UNRELEASED" && (env.version.contains("BETA") && env.GIT_BRANCH != "dblp") || (!env.version.contains("BETA") && env.GIT_BRANCH == "dblp")) {
                         publish()
                     }
                 }

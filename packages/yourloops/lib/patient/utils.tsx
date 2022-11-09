@@ -29,6 +29,7 @@ import { Patient, PatientTeam } from '../data/patient'
 import PatientApi from './patient-api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
+import moment from 'moment-timezone'
 
 export default class PatientUtils {
   static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {
@@ -129,5 +130,16 @@ export default class PatientUtils {
       default:
         return patients
     }
+  }
+
+  static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {
+    return patients.filter(patient => {
+      const firstName = patient.profile.firstName ?? ''
+      const lastName = patient.profile.lastName ?? ''
+      const date = patient.profile.birthdate
+      const dateString = moment(date).format('DD/MM/YYYY')
+      return dateString === birthdate &&
+        (firstNameOrLastName.length === 0 || firstName.toLocaleLowerCase().startsWith(firstNameOrLastName) || lastName.toLocaleLowerCase().startsWith(firstNameOrLastName))
+    })
   }
 }
