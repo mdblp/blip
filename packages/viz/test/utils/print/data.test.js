@@ -142,12 +142,12 @@ describe('print data utils', () => {
         uploads: [
           new types.Upload({ deviceTime: '2019-05-20T08:59:37', timezone: 'Europe/Paris' })
         ],
+        warmUps: [],
         wizards: [
           new types.Wizard({ deviceTime: '2019-05-22T14:33:15', timezone: 'Europe/Paris' })
         ],
         zenModes: [],
-        timezoneChanges: [],
-        message: []
+        timezoneChanges: []
       }
       tidelineData.add([])
     })
@@ -156,8 +156,11 @@ describe('print data utils', () => {
       const startDate = moment.tz('2019-05-20', 'Europe/Paris').locale('fr').startOf('week')
       const endDate = moment.tz('2019-05-20', 'Europe/Paris').locale('fr').endOf('week')
       filtered = selectDailyViewData(tidelineData, startDate, endDate)
+      console.log(filtered)
       latestFilteredDate = _.last(_.keys(filtered.dataByDate))
+      console.log(latestFilteredDate)
       latestFilteredData = filtered.dataByDate[latestFilteredDate]
+      console.log(latestFilteredData)
     })
 
     it('should export a selectDailyViewData function', () => {
