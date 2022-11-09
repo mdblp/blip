@@ -31,7 +31,7 @@ import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
 export const loggedInUserId = '919b1575bad58'
 export const loggedInUserEmail = 'john.doe@example.com'
 
-export const mockAuth0Hook = (role: UserRoles | null = UserRoles.hcp, userId = loggedInUserId) => {
+export const mockAuth0Hook = (role: UserRoles = UserRoles.hcp, userId = loggedInUserId) => {
   (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
     isAuthenticated: true,
     isLoading: false,
@@ -39,7 +39,7 @@ export const mockAuth0Hook = (role: UserRoles | null = UserRoles.hcp, userId = l
       email: loggedInUserEmail,
       email_verified: true,
       sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: role ? [role] : null
+      [AuthenticatedUserMetadata.Roles]: [role]
     }
   })
 }

@@ -33,22 +33,20 @@ import { HcpProfession } from './hcp-profession'
 import { Alarm } from './alarm'
 import { Monitoring } from './monitoring'
 
-enum UserRoles {
+export enum UserRoles {
   hcp = 'hcp',
   caregiver = 'caregiver',
   patient = 'patient',
   /** Used only for signup-account-selector */
-  unset = 'unset',
-  /** When the account is created but not yet confirm */
-  unverified = 'unverified'
+  unset = 'unset'
 }
 
-interface Consent {
+export interface Consent {
   acceptanceTimestamp?: string
   isAccepted?: boolean
 }
 
-interface Patient {
+export interface Patient {
   birthday?: string
   birthPlace?: string
   diagnosisDate?: string
@@ -59,7 +57,7 @@ interface Patient {
   referringDoctor?: string
 }
 
-interface Profile {
+export interface Profile {
   email: string
   fullName: string
   firstName?: string
@@ -72,7 +70,7 @@ interface Profile {
   hcpProfession?: HcpProfession
 }
 
-interface Settings {
+export interface Settings {
   units?: {
     bg?: Units
   }
@@ -83,18 +81,23 @@ interface Settings {
   }
 }
 
-interface Preferences {
+export interface Preferences {
   displayLanguageCode?: LanguageCodes
   patientsStarred?: string[]
 }
 
-interface UserMetadata {
+export interface UserMetadata {
   preferences: Preferences
   profile: Profile
   settings: Settings
 }
 
-interface IUser {
+export interface CompleteSignupPayload extends UserMetadata {
+  email: string
+  role: UserRoles
+}
+
+export interface IUser {
   emails?: string[]
   readonly emailVerified?: boolean
   frProId?: string
@@ -115,15 +118,13 @@ interface IUser {
   unreadMessages?: number
 }
 
-enum AuthenticatedUserMetadata {
+export enum AuthenticatedUserMetadata {
   Roles = 'http://your-loops.com/roles',
 }
 
-interface AuthenticatedUser {
-  [AuthenticatedUserMetadata.Roles]: string[] | null
+export interface AuthenticatedUser {
+  [AuthenticatedUserMetadata.Roles]: string[]
   email: string
   email_verified: boolean
   sub: string
 }
-
-export { IUser, Profile, Settings, Preferences, Consent, UserRoles, AuthenticatedUserMetadata, AuthenticatedUser, UserMetadata }

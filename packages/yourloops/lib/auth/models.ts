@@ -35,7 +35,6 @@ export enum SignupFormKey {
   AccountRole = 'accountRole',
   Feedback = 'feedback',
   HcpProfession = 'hcpProfession',
-  PreferencesLanguage = 'preferencesLanguage',
   PrivacyPolicy = 'privacyPolicy',
   ProfileCountry = 'profileCountry',
   ProfileFirstname = 'profileFirstname',
@@ -44,15 +43,15 @@ export enum SignupFormKey {
 }
 
 export interface SignupForm {
-  [SignupFormKey.AccountRole]: UserRoles
-  [SignupFormKey.Feedback]?: boolean // Consent to be contacted by Diabeloop
-  [SignupFormKey.HcpProfession]?: HcpProfession
-  [SignupFormKey.PreferencesLanguage]: LanguageCodes
-  [SignupFormKey.PrivacyPolicy]: boolean
-  [SignupFormKey.ProfileCountry]: string
-  [SignupFormKey.ProfileFirstname]: string
-  [SignupFormKey.ProfileLastname]: string
-  [SignupFormKey.Terms]: boolean
+  accountRole: UserRoles
+  feedback?: boolean // Consent to be contacted by Diabeloop
+  hcpProfession?: HcpProfession
+  preferencesLanguage: LanguageCodes
+  privacyPolicy: boolean
+  profileCountry: string
+  profileFirstname: string
+  profileLastname: string
+  terms: boolean
 }
 
 /**

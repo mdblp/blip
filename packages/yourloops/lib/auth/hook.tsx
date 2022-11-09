@@ -31,14 +31,7 @@ import bows from 'bows'
 import _ from 'lodash'
 
 import { useAuth0 } from '@auth0/auth0-react'
-import {
-  AuthenticatedUser,
-  AuthenticatedUserMetadata,
-  Preferences,
-  Profile,
-  Settings,
-  UserRoles
-} from '../../models/user'
+import { AuthenticatedUser, Preferences, Profile, Settings, UserRoles } from '../../models/user'
 import { HcpProfession } from '../../models/hcp-profession'
 import { zendeskLogout } from '../zendesk'
 import User from './user'
@@ -163,7 +156,7 @@ export function AuthContextImpl(): AuthContext {
       setFetchingUser(true)
       const user = new User(auth0user as AuthenticatedUser)
 
-      if (auth0user[AuthenticatedUserMetadata.Roles]) {
+      if (user.role !== UserRoles.unset) {
         const userMetadata = await UserApi.getUserMetadata(user.id)
         if (userMetadata) {
           user.profile = userMetadata.profile
@@ -172,7 +165,6 @@ export function AuthContextImpl(): AuthContext {
         }
         updateUserLanguage(user)
       }
-
       metrics.setUser(user)
       setUser(user)
     } catch (err) {
@@ -200,9 +192,21 @@ export function AuthContextImpl(): AuthContext {
     HttpService.setGetAccessTokenMethod(getAccessToken)
   }, [getAccessTokenSilently])
 
+  /*
+  * This method is a trick to manually refresh auth0 access token.
+  * Auth0 SDK doesn't provide a method to refresh it, it's done automatically when it expires.
+  * But in the case of complete signup we need a new token immediately after updating the role (to get this new role in the token),
+  * so the trick is to call getAccessTokenSilently with ignoreCache option, then make an API call and auth0 will get a fresh new token !!
+   */
+  const refreshAccessToken = async (): Promise<void> => {
+    setAccessToken(true)
+    await UserApi.getUserMetadata(user.id)
+    setAccessToken()
+  }
+
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
     const now = new Date().toISOString()
-    let profile: Profile = {
+    const profile: Profile = {
       email: auth0user.email,
       fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
       firstName: signupForm.profileFirstname,
@@ -211,25 +215,23 @@ export function AuthContextImpl(): AuthContext {
       privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
     }
     if (signupForm.accountRole === UserRoles.hcp) {
-      profile = {
-        ...profile,
-        contactConsent: { acceptanceTimestamp: now, isAccepted: signupForm.feedback },
-        hcpProfession: signupForm.hcpProfession
-      }
+      profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
+      profile.hcpProfession = signupForm.hcpProfession
     }
     const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
     const settings: Settings = { country: signupForm.profileCountry }
 
     const user = getUser()
 
-    setAccessToken(true)
-    await UserApi.updateAuth0UserMetadata(auth0user.sub, { role: signupForm.accountRole })
-    await Promise.all([
-      UserApi.updateProfile(user.id, profile),
-      UserApi.updatePreferences(user.id, preferences),
-      UserApi.updateSettings(user.id, settings)
-    ])
-    setAccessToken()
+    await UserApi.completeUserSignup(user.id, {
+      email: auth0user.email,
+      role: signupForm.accountRole,
+      preferences,
+      profile,
+      settings
+    })
+
+    await refreshAccessToken()
 
     user.role = signupForm.accountRole
     user.preferences = preferences
@@ -244,7 +246,7 @@ export function AuthContextImpl(): AuthContext {
         await getUserInfo()
       }
     })()
-  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, setAccessToken, user])
+  }, [getUserInfo, isAuthenticated, setAccessToken, user])
 
   return {
     user,

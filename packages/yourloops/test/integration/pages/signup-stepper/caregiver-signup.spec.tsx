@@ -30,14 +30,14 @@ import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/moc
 import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/mockUserApi'
-import { Profile, UserRoles } from '../../../../models/user'
+import { UserRoles } from '../../../../models/user'
 import userEvent from '@testing-library/user-event'
 import { renderPageFromHistory } from '../../utils/render'
 
 jest.setTimeout(15000)
 
 describe('Signup stepper as caregiver', () => {
-  const { updateProfileMock, updatePreferencesMock, updateSettingsMock, updateAuth0UserMetadataMock } = mockUserApi()
+  const { updateAuth0UserMetadataMock } = mockUserApi()
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Sandy'
   const lastName = 'Kilo'
@@ -51,7 +51,7 @@ describe('Signup stepper as caregiver', () => {
   }
 
   beforeAll(() => {
-    mockAuth0Hook(null)
+    mockAuth0Hook(UserRoles.unset)
   })
 
   it('should be able to create a caregiver account', async () => {
@@ -78,9 +78,14 @@ describe('Signup stepper as caregiver', () => {
     await act(async () => {
       userEvent.click(createButton)
     })
-    expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(`auth0|${loggedInUserId}`, { role: UserRoles.caregiver })
-    expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expect.objectContaining<Partial<Profile>>(expectedProfile))
-    expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, { country: 'FR' })
-    expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, { displayLanguageCode: 'en' })
+    expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
+      loggedInUserId,
+      expect.objectContaining({
+        role: UserRoles.caregiver,
+        profile: expectedProfile,
+        preferences: { displayLanguageCode: 'en' },
+        settings: { country: 'FR' }
+      })
+    )
   })
 })

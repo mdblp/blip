@@ -38,7 +38,7 @@ import { renderPageFromHistory } from '../../utils/render'
 jest.setTimeout(15000)
 
 describe('Signup stepper as hcp', () => {
-  const { updateProfileMock, updatePreferencesMock, updateSettingsMock, updateAuth0UserMetadataMock } = mockUserApi()
+  const { updateAuth0UserMetadataMock } = mockUserApi()
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Lara'
   const lastName = 'Tatouille'
@@ -54,7 +54,7 @@ describe('Signup stepper as hcp', () => {
   }
 
   beforeAll(() => {
-    mockAuth0Hook(null)
+    mockAuth0Hook(UserRoles.unset)
   })
 
   it('should be able to create a hcp account', async () => {
@@ -91,9 +91,14 @@ describe('Signup stepper as hcp', () => {
       userEvent.click(createButton)
     })
 
-    expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(`auth0|${loggedInUserId}`, { role: UserRoles.hcp })
-    expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
-    expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, { displayLanguageCode: 'en' })
-    expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, { country: 'FR' })
+    expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
+      loggedInUserId,
+      expect.objectContaining({
+        role: UserRoles.hcp,
+        profile: expectedProfile,
+        preferences: { displayLanguageCode: 'en' },
+        settings: { country: 'FR' }
+      })
+    )
   })
 })

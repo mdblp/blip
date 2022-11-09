@@ -1,8 +1,12 @@
-import axios from 'axios'
-import { UserMetadata, Preferences, Profile, Settings } from '../../models/user'
+import {
+  UserMetadata,
+  Preferences,
+  Profile,
+  Settings,
+  CompleteSignupPayload
+} from '../../models/user'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import bows from 'bows'
-import appConfig from '../config'
 
 const log = bows('User API')
 
@@ -45,12 +49,11 @@ export default class UserApi {
     return data
   }
 
-  static async updateAuth0UserMetadata(userId: string, payload: Record<string, string>): Promise<void> {
-    await axios({
-      method: 'patch',
-      url: `/api/v2/users/${userId}`,
-      baseURL: `https://${appConfig.AUTH0_DOMAIN}`,
-      data: { user_metadata: payload }
+  static async completeUserSignup(userId: string, payload: CompleteSignupPayload): Promise<CompleteSignupPayload> {
+    const { data } = await HttpService.post<CompleteSignupPayload, CompleteSignupPayload>({
+      url: `/bff/v1/accounts/${userId}`,
+      payload
     })
+    return data
   }
 }

@@ -332,7 +332,7 @@ describe('Auth hook', () => {
 
   describe('completeSignup', () => {
     it('should update user profile, preferences and settings', async () => {
-      jest.spyOn(UserApi, 'updateAuth0UserMetadata').mockResolvedValueOnce(undefined)
+      jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)

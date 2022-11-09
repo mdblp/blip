@@ -66,8 +66,8 @@ export default class User {
     return parsedSub[parsedSub.length - 1]
   }
 
-  private static getRole(roles: string[] | null): UserRoles {
-    return roles ? roles[0] as UserRoles : UserRoles.unset
+  private static getRole(roles: string[]): UserRoles {
+    return roles[0] !== UserRoles.unset ? roles[0] as UserRoles : UserRoles.unset
   }
 
   get firstName(): string {
