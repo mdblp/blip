@@ -54,7 +54,7 @@ describe('TeamApi', () => {
 
       const teams = await TeamApi.getTeams(hcpUser)
       expect(teams).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/front/v1/hcps/${hcpUser.id}/teams` })
+      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/v1/hcps/${hcpUser.id}/teams` })
     })
 
     it('should get a list a teams when user is patient', async () => {
@@ -66,7 +66,7 @@ describe('TeamApi', () => {
 
       const teams = await TeamApi.getTeams(patientUser)
       expect(teams).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/front/v1/patients/${patientUser.id}/teams` })
+      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/v1/patients/${patientUser.id}/teams` })
     })
 
     it('should return an empty array if not found', async () => {
@@ -92,8 +92,8 @@ describe('TeamApi', () => {
       expect(notification).toEqual(data)
       expect(HttpService.post).toHaveBeenCalledWith({
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
-        payload: { inviteeEmail: email, role },
-        url: `bff/front/v1/hcps/${userId}/teams/${teamId}/invite`
+        payload: { role },
+        url: `bff/v1/hcps/${userId}/teams/${teamId}/members/${email}/invite`
       })
     })
   })
