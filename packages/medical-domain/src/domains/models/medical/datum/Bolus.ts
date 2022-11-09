@@ -25,4 +25,4 @@ type Bolus = BaseDatum & {
 }
 
 export default Bolus
-export { BolusSubType, isBolusSubType }
+export { BolusSubType, isBolusSubType, bolusSubTypes }

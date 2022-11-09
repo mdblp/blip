@@ -201,6 +201,7 @@ class MedicalDataService {
 
     let c = 0
     while (c < this.timezoneList.length && epoch >= this.timezoneList[c].time) c++
+    c = Math.max(c, 1)
     return this.timezoneList[c - 1].timezone
   }
 
@@ -239,7 +240,8 @@ class MedicalDataService {
       this.medicalData.smbg, this.medicalData.messages,
       this.medicalData.physicalActivities, this.medicalData.wizards,
       this.medicalData.confidentialModes, this.medicalData.zenModes,
-      this.medicalData.deviceParametersChanges, this.medicalData.reservoirChanges
+      this.medicalData.deviceParametersChanges, this.medicalData.reservoirChanges,
+      this.medicalData.warmUps
     )
 
     chartData.sort((a, b) => this.sortDatum(a, b))
