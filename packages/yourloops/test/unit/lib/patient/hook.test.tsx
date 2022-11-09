@@ -91,20 +91,20 @@ describe('Patient hook', () => {
 
   describe('filterPatients', () => {
     const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
-    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, { birthdate: new Date(2001, 10, 19, 0, 0, 0, 0) })
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, { birthdate: new Date(2001, 10, 19) })
     const basicPatient = createPatient('basicPatient1', [basicTeam], undefined, {
-      birthdate: new Date(2005, 5, 5, 0, 0, 0, 0),
+      birthdate: new Date(2005, 5, 5),
       firstName: 'small brain',
       lastName: 'dupont'
     })
-    const basicPatient2 = createPatient('basicPatient2', [basicTeam], undefined, { birthdate: new Date(2001, 10, 19, 0, 0, 0, 0) })
+    const basicPatient2 = createPatient('basicPatient2', [basicTeam], undefined, { birthdate: new Date(2001, 10, 19) })
     const bigBrainPatient = createPatient('big brain', [basicTeam], undefined, {
-      birthdate: new Date(2005, 5, 5, 0, 0, 0, 0),
+      birthdate: new Date(2005, 5, 5),
       firstName: 'big brain',
       lastName: 'smith'
     })
     const noNamePatient = createPatient('big brain', [basicTeam], undefined, {
-      birthdate: new Date(2006, 6, 6, 0, 0, 0, 0)
+      birthdate: new Date(2006, 6, 6)
     })
     noNamePatient.profile.firstName = undefined
     noNamePatient.profile.lastName = undefined

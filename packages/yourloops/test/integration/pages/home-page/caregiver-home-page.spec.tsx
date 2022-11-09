@@ -26,7 +26,7 @@
  */
 
 import PatientAPI from '../../../../lib/patient/patient-api'
-import { checkPatientSecondaryBar } from '../../utils/patientSecondaryBar'
+import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
@@ -55,7 +55,7 @@ describe('Caregiver home page', () => {
     renderPage('/')
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientSecondaryBar(false, false)
+    checkSecondaryBar(false, false)
   })
 
   it('should filter patients correctly depending on the search value', async () => {
@@ -98,7 +98,7 @@ describe('Caregiver home page', () => {
     expect(patientTableBody.getByText(patient2.profile.fullName)).toBeVisible()
     expect(patientTableBody.getByText(patient3.profile.fullName)).toBeVisible()
 
-    const searchPatient = screen.getByPlaceholderText('Search for a patient by his first name, last name or birthdate (dd/mm/yyyy)')
+    const searchPatient = screen.getByPlaceholderText('Search for a patient by first name, last name or birthdate (dd/mm/yyyy)')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
