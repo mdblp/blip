@@ -35,7 +35,7 @@ export const checkStatTooltip = async (statsWidgets: BoundFunctions<typeof queri
   const tooltip = await screen.findByTestId('stat-tooltip-content')
   expect(tooltip).toHaveTextContent(expectedTextContent)
   userEvent.unhover(infoIcon)
-  await waitFor(() => expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument())
+  await waitFor(() => expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument(), { timeout: 3000 })
 }
 
 const hoverOnCBGPercentageStat = (statsWidgets: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {

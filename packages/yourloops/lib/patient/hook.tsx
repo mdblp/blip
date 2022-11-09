@@ -42,7 +42,7 @@ import { errorTextFromException } from '../utils'
 import { PatientContextResult } from './provider'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { cancel: cancelInvitation, getInvitation, receivedInvitations, refreshSentInvitations } = useNotification()
+  const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
 
@@ -93,25 +93,27 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
 
-  const getPatient = useCallback(userId => {
-    return patients.find(patient => patient.userid === userId)
-  }, [patients])
+  const getPatientByEmail = useCallback((email: string) => patients.find(patient => patient.profile.email === email), [patients])
+
+  const getPatientById = useCallback(userId => patients.find(patient => patient.userid === userId), [patients])
 
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
-    let res = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
-    const searchByName = search.length > 0
-    if (searchByName) {
-      const searchText = search.toLocaleLowerCase()
-      res = res.filter((patient: Patient): boolean => {
-        const firstName = patient.profile.firstName ?? ''
-        if (firstName.toLocaleLowerCase().includes(searchText)) {
-          return true
-        }
-        const lastName = patient.profile.lastName ?? ''
-        return lastName.toLocaleLowerCase().includes(searchText)
-      })
+    const filteredPatients = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
+    if (search.length === 0) {
+      return filteredPatients
     }
-    return res
+    const searchText = search.toLocaleLowerCase()
+    const birthdateAsString = searchText.slice(0, 10)
+    const searchTextStartsWithBirthdate = !!moment(birthdateAsString, 'DD/MM/YYYY').toDate().getTime()
+    if (searchTextStartsWithBirthdate) {
+      const firstNameOrLastName = searchText.slice(10).trimStart()
+      return PatientUtils.extractPatientsWithBirthdate(filteredPatients, birthdateAsString, firstNameOrLastName)
+    }
+    return filteredPatients.filter(patient => {
+      const firstName = patient.profile.firstName ?? ''
+      const lastName = patient.profile.lastName ?? ''
+      return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
+    })
   }, [patients])
 
   const invitePatient = useCallback(async (team: Team, username: string) => {
@@ -121,13 +123,13 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [refresh, refreshSentInvitations])
 
   const editPatientRemoteMonitoring = useCallback((patient: Patient) => {
-    const patientUpdated = getPatient(patient.userid)
+    const patientUpdated = getPatientById(patient.userid)
     if (!patientUpdated) {
       throw Error(`Cannot update monitoring of patient with id ${patient.userid} as patient was not found`)
     }
     patientUpdated.monitoring = patient.monitoring
     updatePatient(patientUpdated)
-  }, [getPatient, updatePatient])
+  }, [getPatientById, updatePatient])
 
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
     patient.metadata.unreadMessagesSent = 0
@@ -168,20 +170,20 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [cancelInvitation, flagPatient, getFlagPatients, getInvitation, user.id, refresh])
 
   const leaveTeam = useCallback(async (teamId: string) => {
-    const loggedInUserAsPatient = getPatient(user.id)
+    const loggedInUserAsPatient = getPatientById(user.id)
     await PatientApi.removePatient(teamId, loggedInUserAsPatient.userid)
     metrics.send('team_management', 'leave_team')
     refresh()
     refreshTeams()
-  }, [getPatient, refresh, refreshTeams, user.id])
+  }, [getPatientById, refresh, refreshTeams, user.id])
 
   const setPatientMedicalData = useCallback((userId: string, medicalData: MedicalData | null) => {
-    const patient = getPatient(userId)
+    const patient = getPatientById(userId)
     if (patient !== null) {
       patient.metadata.medicalData = medicalData
       updatePatient(patient)
     }
-  }, [getPatient, updatePatient])
+  }, [getPatientById, updatePatient])
 
   useEffect(() => {
     if (!initialized && user) {
@@ -189,19 +191,14 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     }
   }, [fetchPatients, initialized, user])
 
-  useEffect(() => {
-    if (initialized) {
-      refresh()
-    }
-  }, [receivedInvitations, initialized, refresh]) // We want the patient list to refresh when the notifications are updated
-
   return useMemo(() => ({
     patients,
     patientsFilterStats,
     errorMessage,
     initialized,
     refreshInProgress,
-    getPatient,
+    getPatientByEmail,
+    getPatientById,
     filterPatients,
     invitePatient,
     editPatientRemoteMonitoring,
@@ -216,7 +213,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     editPatientRemoteMonitoring,
     errorMessage,
     filterPatients,
-    getPatient,
+    getPatientByEmail,
+    getPatientById,
     initialized,
     invitePatient,
     leaveTeam,

@@ -71,4 +71,4 @@ interface Patient {
   readonly userid: string
 }
 
-export { Patient, PatientTeam }
+export { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam }

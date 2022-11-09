@@ -26,7 +26,7 @@
  */
 
 import { BoundFunctions, queries, screen, within } from '@testing-library/react'
-import { unMonitoredPatientId } from '../mock/mockPatientAPI'
+import { unmonitoredPatientId } from '../mock/mockPatientAPI'
 
 const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>, canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
   const dashboardLink = patientNavBar.getByText('Dashboard')
@@ -45,7 +45,7 @@ const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>, canGe
   }
 }
 
-export const checkPatientNavBarAsHCP = (canGenerateReport = true, patientId = unMonitoredPatientId) => {
+export const checkPatientNavBarAsHCP = (canGenerateReport = true, patientId = unmonitoredPatientId) => {
   const dashboardURL = `/patient/${patientId}/dashboard`
   const dailyURL = `/patient/${patientId}/daily`
   const trendsURL = `/patient/${patientId}/trends`
@@ -54,7 +54,7 @@ export const checkPatientNavBarAsHCP = (canGenerateReport = true, patientId = un
   checkPatientNavBar(patientNavBar, canGenerateReport, dashboardURL, dailyURL, trendsURL)
 }
 
-export const checkPatientNavBarAsCaregiver = (canGenerateReport = true, patientId = unMonitoredPatientId) => {
+export const checkPatientNavBarAsCaregiver = (canGenerateReport = true, patientId = unmonitoredPatientId) => {
   const dashboardURL = `/patient/${patientId}/dashboard`
   const dailyURL = `/patient/${patientId}/daily`
   const trendsURL = `/patient/${patientId}/trends`

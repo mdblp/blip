@@ -231,9 +231,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
       if (user.isUserHcp()) {
         teamHook.refresh()
-      } else {
-        patientHook.refresh()
       }
+      patientHook.refresh()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))

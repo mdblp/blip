@@ -27,7 +27,7 @@
 
 import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
-import { unMonitoredPatient } from '../../mock/mockPatientAPI'
+import { unmonitoredPatient } from '../../mock/mockPatientAPI'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
@@ -37,7 +37,7 @@ jest.setTimeout(10000)
 
 describe('Trends view for patient', () => {
   beforeAll(() => {
-    mockPatientLogin(unMonitoredPatient)
+    mockPatientLogin(unmonitoredPatient)
   })
 
   it('should render correct layout', async () => {
@@ -46,6 +46,6 @@ describe('Trends view for patient', () => {
 
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient(false)
-    checkPatientLayout(`${unMonitoredPatient.profile.firstName} ${unMonitoredPatient.profile.lastName}`)
+    checkPatientLayout(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName}`)
   })
 })

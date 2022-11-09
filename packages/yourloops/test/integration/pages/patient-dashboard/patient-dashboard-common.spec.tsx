@@ -30,7 +30,7 @@ import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
+import { mockPatientAPI, unmonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
@@ -57,7 +57,7 @@ describe('Patient dashboard for anyone', () => {
   })
 
   it('should not render tooltips on patient statistics', async () => {
-    renderPage(`/patient/${unMonitoredPatientId}/dashboard`)
+    renderPage(`/patient/${unmonitoredPatientId}/dashboard`)
     const statsWidgets = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
     checkNoTooltip(statsWidgets, 'Time In Range')
     checkNoTooltip(statsWidgets, 'Avg. Glucose (CGM)')

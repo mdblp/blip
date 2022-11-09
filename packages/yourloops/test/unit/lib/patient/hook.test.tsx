@@ -92,11 +92,25 @@ describe('Patient hook', () => {
 
   describe('filterPatients', () => {
     const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
-    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
-    const basicPatient = createPatient('basicPatient1', [basicTeam])
-    const bigBrainPatient = createPatient('big brain', [basicTeam])
-    bigBrainPatient.profile.firstName = 'big brain'
-    const allPatients = [pendingPatient, basicPatient, bigBrainPatient]
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, { birthdate: new Date(2001, 10, 19) })
+    const basicPatient = createPatient('basicPatient1', [basicTeam], undefined, {
+      birthdate: new Date(2005, 5, 5),
+      firstName: 'small brain',
+      lastName: 'dupont'
+    })
+    const basicPatient2 = createPatient('basicPatient2', [basicTeam], undefined, { birthdate: new Date(2001, 10, 19) })
+    const bigBrainPatient = createPatient('big brain', [basicTeam], undefined, {
+      birthdate: new Date(2005, 5, 5),
+      firstName: 'big brain',
+      lastName: 'smith'
+    })
+    const noNamePatient = createPatient('big brain', [basicTeam], undefined, {
+      birthdate: new Date(2006, 6, 6)
+    })
+    noNamePatient.profile.firstName = undefined
+    noNamePatient.profile.lastName = undefined
+
+    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, noNamePatient, pendingPatient]
     let customHook
 
     beforeAll(async () => {
@@ -114,8 +128,23 @@ describe('Patient hook', () => {
       expect(patientsReceived).toEqual([basicPatient])
     })
 
-    it('should return correct patients when provided a search filter', () => {
+    it('should return correct patients when provided a first name search filter', () => {
       const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, 'big brain', [])
+      expect(patientsReceived).toEqual([bigBrainPatient])
+    })
+
+    it('should return correct patients when provided a date search filter', () => {
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '19/11/2001', [])
+      expect(patientsReceived).toEqual([basicPatient2])
+    })
+
+    it('should return correct patients when provided a date and first name search filter', () => {
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '05/06/2005 big', [])
+      expect(patientsReceived).toEqual([bigBrainPatient])
+    })
+
+    it('should return correct patients when provided a date and last name search filter', () => {
+      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '05/06/2005smith', [])
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
   })
@@ -156,11 +185,33 @@ describe('Patient hook', () => {
       act(() => {
         customHook.editPatientRemoteMonitoring(unmonitoredPatient)
       })
-      expect(customHook.getPatient(unmonitoredPatient.userid).monitoring).toEqual(monitoring)
+      expect(customHook.getPatientById(unmonitoredPatient.userid).monitoring).toEqual(monitoring)
     })
   })
 
-  describe('getPatient', () => {
+  describe('getPatientByEmail', () => {
+    const unknownPatient = createPatient('unknownPatient')
+    const existingPatient = createPatient('existingPatient', [basicTeam], undefined, { email: 'test@test.com' })
+    const allPatients = [existingPatient]
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientHook(allPatients)
+      customHook = res.result.current
+    })
+
+    it('should return a patient when the patient is present in the patient state', () => {
+      const patient = customHook.getPatientByEmail(existingPatient.profile.email)
+      expect(patient).toBeDefined()
+    })
+
+    it('should return null when patient is not present in the patient state', () => {
+      const patient = customHook.getPatientByEmail(unknownPatient.profile.email)
+      expect(patient).toBeUndefined()
+    })
+  })
+
+  describe('getPatientById', () => {
     const unknownPatient = createPatient('unknownPatient')
     const existingPatient = createPatient('existingPatient', [basicTeam])
     const allPatients = [existingPatient]
@@ -172,12 +223,12 @@ describe('Patient hook', () => {
     })
 
     it('should return a patient when the patient is present in the patient state', () => {
-      const patient = customHook.getPatient(existingPatient.userid)
+      const patient = customHook.getPatientById(existingPatient.userid)
       expect(patient).toBeDefined()
     })
 
     it('should return null when patient is not present in the patient state', () => {
-      const patient = customHook.getPatient(unknownPatient.userid)
+      const patient = customHook.getPatientById(unknownPatient.userid)
       expect(patient).toBeUndefined()
     })
   })
@@ -221,7 +272,7 @@ describe('Patient hook', () => {
         shortKey: 'short',
         creator: { userid: 'currentUserId' }
       })
-      expect(customHook.getPatient(basicPatient.userid).teams.find(t => t.id === team1.id)).toBeUndefined()
+      expect(customHook.getPatientById(basicPatient.userid).teams.find(t => t.id === team1.id)).toBeUndefined()
 
       const initialPatientsLength: number = customHook.patients.length
       await act(async () => {
@@ -274,7 +325,7 @@ describe('Patient hook', () => {
   describe('removePatient', () => {
     const pendingPatientTeam = createPatientTeam('pendingTeamId', UserInvitationStatus.pending)
     const patientTeamPrivatePractice = createPatientTeam('private', UserInvitationStatus.pending)
-    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], undefined, undefined, {} as Monitoring)
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam], {} as Monitoring)
     const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', [patientTeamPrivatePractice])
     const patientToRemove2 = createPatient('patientToRemove2', [basicTeam, pendingPatientTeam])
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]
@@ -291,7 +342,7 @@ describe('Patient hook', () => {
       const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(pendingPatient, pendingPatientTeam)
-        expect(customHook.getPatient(pendingPatient.userid).teams.includes(pendingPatientTeam)).toBeFalsy()
+        expect(customHook.getPatientById(pendingPatient.userid).teams.includes(pendingPatientTeam)).toBeFalsy()
       })
       expect(notificationHookCancelMock).toHaveBeenCalled()
       expect(removePatientMock).toHaveBeenCalled()
@@ -301,7 +352,7 @@ describe('Patient hook', () => {
       const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemovePrivatePractice, patientTeamPrivatePractice)
-        expect(customHook.getPatient(patientToRemovePrivatePractice.userid).teams.includes(patientTeamPrivatePractice)).toBeFalsy()
+        expect(customHook.getPatientById(patientToRemovePrivatePractice.userid).teams.includes(patientTeamPrivatePractice)).toBeFalsy()
       })
       expect(removeDirectShareMock).toHaveBeenCalled()
     })
@@ -310,7 +361,7 @@ describe('Patient hook', () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemove, basicTeam)
-        await waitFor(() => expect(customHook.getPatient(patientToRemove.userid)).toBeUndefined())
+        await waitFor(() => expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined())
         expect(authHookGetFlagPatientMock).toHaveBeenCalled()
         expect(authHookFlagPatientMock).toHaveBeenCalled()
       })
@@ -320,7 +371,7 @@ describe('Patient hook', () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemove2, basicTeam)
-        expect(customHook.getPatient(patientToRemove2.userid).teams).toEqual([pendingPatientTeam])
+        expect(customHook.getPatientById(patientToRemove2.userid).teams).toEqual([pendingPatientTeam])
       })
     })
   })
@@ -339,7 +390,7 @@ describe('Patient hook', () => {
     it('should update patient unread messages to 0', () => {
       act(() => {
         customHook.markPatientMessagesAsRead(basicPatient)
-        expect(customHook.getPatient(basicPatient.userid).metadata.unreadMessagesSent).toBe(0)
+        expect(customHook.getPatientById(basicPatient.userid).metadata.unreadMessagesSent).toBe(0)
       })
     })
   })

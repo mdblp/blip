@@ -77,7 +77,7 @@ describe('PatientApi', () => {
         url: '/confirm/send/team/invite',
         payload: { teamId, email, role: UserRoles.patient },
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
-      })
+      }, [409])
     })
   })
 

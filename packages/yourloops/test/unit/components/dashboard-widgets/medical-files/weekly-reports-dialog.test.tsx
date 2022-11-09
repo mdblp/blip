@@ -73,7 +73,7 @@ describe('Weekly report dialog', () => {
 
   beforeAll(() => {
     (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
-      return { getPatient: () => patient }
+      return { getPatientById: () => patient }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { teams }

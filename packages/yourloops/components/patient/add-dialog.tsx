@@ -27,7 +27,7 @@
  */
 
 import React from 'react'
-import { useTranslation, Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -46,6 +46,9 @@ import TextField from '@material-ui/core/TextField'
 import { REGEX_EMAIL } from '../../lib/utils'
 import DiabeloopUrl from '../../lib/diabeloop-url'
 import { AddPatientDialogContentProps } from '../../pages/hcp/types'
+import { usePatientContext } from '../../lib/patient/provider'
+import { PatientTeam } from '../../lib/data/patient'
+import { UserInvitationStatus } from '../../models/generic'
 
 export interface AddDialogProps {
   actions: AddPatientDialogContentProps | null
@@ -56,6 +59,8 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   const [email, setEmail] = React.useState<string>('')
   const [teamId, setTeamId] = React.useState<string>('')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+
+  const patientHook = usePatientContext()
 
   const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
   const resetDialog = (): void => {
@@ -88,9 +93,33 @@ function AddDialog(props: AddDialogProps): JSX.Element {
       setErrorMessage(null)
     }
     setEmail(inputEmail)
+
+    checkPatientInTeam(inputEmail, teamId)
   }
-  const handleChangeTeam = (e: React.ChangeEvent<{ name?: string | undefined, value: unknown }>): void => {
-    setTeamId(e.target.value as string)
+  const handleChangeTeam = (event: React.ChangeEvent<{ name?: string | undefined, value: unknown }>): void => {
+    const inputTeamId = event.target.value as string
+    setTeamId(inputTeamId)
+
+    checkPatientInTeam(email, inputTeamId)
+  }
+  const checkPatientInTeam = (formEmail: string, formTeamId: string): void => {
+    const patient = patientHook.getPatientByEmail(formEmail)
+    const patientTeam = patient?.teams.find((team: PatientTeam) => team.teamId === formTeamId)
+
+    if (patientTeam) {
+      const isPatientPendingInTeam = patientTeam.status === UserInvitationStatus.pending
+
+      if (isPatientPendingInTeam) {
+        setErrorMessage(t('error-patient-already-invited'))
+        return
+      }
+      setErrorMessage(t('error-patient-already-in-team'))
+      return
+    }
+
+    if (errorMessage) {
+      setErrorMessage(null)
+    }
   }
 
   const dialogIsOpen = props.actions !== null
@@ -128,7 +157,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   const linkPrivacyPolicy = (
     <Link
       id="patient-list-dialog-add-warning-link-privacy"
-      aria-label={termsOfUse}
+      aria-label={privacyPolicy}
       href={DiabeloopUrl.getPrivacyPolicyUrL(i18n.language)}
       target="_blank"
       rel="noreferrer"
@@ -167,6 +196,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
             </InputLabel>
             <Select
               id="patient-list-dialog-add-team-input"
+              data-testid="patient-team-selector"
               name="teamid"
               value={teamId}
               onChange={handleChangeTeam}
@@ -181,6 +211,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
           </Box>
           <Trans
             id="patient-list-dialog-add-warning-line2"
+            data-testid="modal-add-patient-warning-line2"
             i18nKey="modal-add-patient-warning-line2"
             t={t}
             components={{ linkTerms, linkPrivacyPolicy }}

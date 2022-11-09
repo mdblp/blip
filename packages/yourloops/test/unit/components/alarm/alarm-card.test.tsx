@@ -43,7 +43,7 @@ import { getTheme } from '../../../../components/theme'
 
 jest.mock('../../../../lib/auth')
 describe('AlarmCard', () => {
-  const patient = createPatient('fakePatientId', [])
+  const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
 
   beforeAll(() => {
@@ -96,7 +96,7 @@ describe('AlarmCard', () => {
   })
 
   it('should display correct title patient has 2 alarms', () => {
-    const alarms: Alarm = {
+    const alarm: Alarm = {
       timeSpentAwayFromTargetRate: 0,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 5,
@@ -104,7 +104,7 @@ describe('AlarmCard', () => {
       nonDataTransmissionRate: 10,
       nonDataTransmissionActive: true
     }
-    const patientWithAlarms = createPatient('fakePatientId', [], alarms)
+    const patientWithAlarms = createPatient('fakePatientId', [], undefined, undefined, undefined, { alarm })
     mountComponent({ patient: patientWithAlarms })
     expect(document.getElementById('alarm-card-header-id').querySelector('.MuiCardHeader-title').innerHTML).toEqual('events (+2)')
   })
@@ -121,7 +121,7 @@ describe('AlarmCard', () => {
     const monitoring: Monitoring = {
       enabled: true
     }
-    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, { alarm })
     mountComponent({ patient: patientWithMonitoring })
     const configureButton = document.getElementById('configure-icon-button-id')
     triggerMouseEvent('click', configureButton)
