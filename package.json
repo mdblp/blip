@@ -6,7 +6,9 @@
   "repository": {
     "url": "https://github.com/mdblp/blip"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "mrproper": "npm run mrproper --workspaces",
     "postmrproper": "rm -rf deploy node_modules cloudfront-dist/deployment/node_modules server/node_modules",
@@ -142,7 +144,6 @@
     "postcss-calc": "^8.0.0",
     "postcss-custom-properties": "^12.0.0",
     "postcss-loader": "^6.1.1",
-    "react-test-renderer": "^16.14.0",
     "redux-mock-store": "^1.5.4",
     "sinon": "^11.1.2",
     "source-map-loader": "^3.0.0",

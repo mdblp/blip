@@ -29,7 +29,7 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { makeStyles, Theme, ThemeProvider, useTheme } from '@material-ui/core/styles'
+import { ThemeProvider, useTheme } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
 import { useAuth } from '../lib/auth'
@@ -42,87 +42,31 @@ import { ConsentPage, LoginPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import IntendedUsePage from '../pages/intented-use/intended-use-page'
-
-const RENEW_CONSENT_PATH = '/renew-consent'
-const TRAINING_PATH = '/training'
-const NEW_CONSENT_PATH = '/new-consent'
-const COMPLETE_SIGNUP_PATH = '/complete-signup'
-const LOGIN_PATH = '/login'
-const INTENDED_USE_PATH = '/intended-use'
-const PUBLIC_ROUTES = [LOGIN_PATH]
-const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, INTENDED_USE_PATH]
-
-interface StyleProps {
-  color: string
-}
-
-const routeStyle = makeStyles<Theme, StyleProps>(() => {
-  return {
-    '@global': {
-      body: {
-        backgroundColor: ({ color }) => color
-      }
-    },
-    public: {
-      flex: '1 0 auto',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    private: {
-      flex: '1 0 auto'
-    }
-  }
-})
+import { useMainLobby } from './main-lobby.hook'
 
 export function MainLobby(): JSX.Element {
   const { isLoading, isAuthenticated } = useAuth0()
-  const { user, fetchingUser } = useAuth()
+  const { fetchingUser, user } = useAuth()
+  const { palette } = useTheme()
   const location = useLocation()
   const currentRoute = location.pathname
-  const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute)
-  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(currentRoute)
+  const { getStyle, getRedirectUrl, isRoutePublic } = useMainLobby()
   const theme = getTheme()
-  const { palette } = useTheme()
-  const classes = routeStyle({
-    color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? palette.background.default : palette.background.paper
-  })
-  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
-  const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH
-  const trainingPath = currentRoute === TRAINING_PATH
-  let redirectTo = null
 
-  if (!isCurrentRoutePublic && isLoading) {
+  if (!isRoutePublic(currentRoute) && isLoading) {
     return <React.Fragment />
   }
 
-  const checkRedirect = (): void => {
-    if (isCurrentRoutePublic && isAuthenticated) {
-      redirectTo = '/'
-    } else if (!isAuthenticated && !isCurrentRoutePublic && !isCurrentRouteAlwaysAccessible) {
-      redirectTo = '/login'
-    } else if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
-      redirectTo = '/complete-signup'
-    } else if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
-      redirectTo = '/new-consent'
-    } else if (!renewConsentPath && user && user.hasToRenewConsent()) {
-      redirectTo = '/renew-consent'
-    } else if (!trainingPath && currentRoute !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
-      redirectTo = '/training'
-    }
-  }
-
-  checkRedirect()
+  const redirectUrl = getRedirectUrl(currentRoute, user, isAuthenticated)
 
   return (
     <React.Fragment>
-      {redirectTo ? <Redirect to={redirectTo} />
+      {redirectUrl ? <Redirect to={redirectUrl} />
         : (!isLoading && !fetchingUser &&
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <SnackbarContextProvider context={DefaultSnackbarContext}>
-              <div className={style}>
+              <div className={getStyle(currentRoute, palette)}>
                 <Switch>
                   <Route exact path="/intended-use" component={IntendedUsePage} />
                   <Route exact path="/login" component={LoginPage} />
