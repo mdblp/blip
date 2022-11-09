@@ -1,0 +1,68 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "Publish"
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Publish release'
+
+jobs:
+  build-and-push-docker-image:
+    name: Build Docker image and push to nexus
+    # run only when code is compiling and tests are passing
+    runs-on: ubuntu-latest
+
+    # steps to perform in job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # setup Docker buld action
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # - name: Login to Github Packages
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Build image and push to Docker Hub and GitHub Container Registry
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     # relative path to the place where source code with Dockerfile is located
+      #     context: ./src/samples/simple
+      #     # Note: tags has to be all lower-case
+      #     tags: |
+      #       oskardudycz/eventsourcing.nodejs.simple:latest
+      #       ghcr.io/oskardudycz/eventsourcing.nodejs/simple:latest
+      #     # build on feature branches, push only on main branch
+      #     push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Image digest
+        run: echo "publish docker image"
+
+
