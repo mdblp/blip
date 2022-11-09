@@ -26,7 +26,7 @@
  */
 
 import { mockPatientLogin } from '../../mock/auth'
-import { unMonitoredPatient } from '../../mock/mockPatientAPI'
+import { unmonitoredPatient } from '../../mock/mockPatientAPI'
 import {
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
@@ -47,7 +47,7 @@ jest.setTimeout(20000)
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
-    mockPatientLogin(unMonitoredPatient)
+    mockPatientLogin(unmonitoredPatient)
   })
 
   describe('with all kind of data', () => {

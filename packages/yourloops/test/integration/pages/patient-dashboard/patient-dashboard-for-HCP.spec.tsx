@@ -43,8 +43,8 @@ import {
   mockPatientAPI,
   monitoredPatientFullName,
   monitoredPatientId,
-  unMonitoredPatientFullName,
-  unMonitoredPatientId
+  unmonitoredPatientFullName,
+  unmonitoredPatientId
 } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
@@ -55,7 +55,7 @@ import { checkHCPLayout } from '../../assert/layout'
 jest.setTimeout(15000)
 
 describe('Patient dashboard for HCP', () => {
-  const unMonitoredPatientDashboardRoute = `/patient/${unMonitoredPatientId}/dashboard`
+  const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
   const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
@@ -119,7 +119,7 @@ describe('Patient dashboard for HCP', () => {
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     expect(history.location.pathname).toBe(unMonitoredPatientDashboardRoute)
-    testPatientDashboardCommonDisplay(dashboard, unMonitoredPatientId, unMonitoredPatientFullName)
+    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
     checkHCPHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
@@ -163,12 +163,12 @@ describe('Patient dashboard for HCP', () => {
 
       expect(patientInfoCard.getByText(monitoredPatientFullName)).toBeVisible()
       fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatientFullName))
-      fireEvent.click(screen.getByText(unMonitoredPatientFullName))
+      fireEvent.click(screen.getByText(unmonitoredPatientFullName))
 
       await waitFor(() => {
         // call this to update the card and catch the new patient
         patientInfoCard = within(screen.getByTestId('patient-info-card'))
-        expect(patientInfoCard.getByText(unMonitoredPatientFullName)).toBeVisible()
+        expect(patientInfoCard.getByText(unmonitoredPatientFullName)).toBeVisible()
       })
     })
   })

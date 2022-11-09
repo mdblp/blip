@@ -53,6 +53,7 @@ import PersonalInfoForm from './personal-info-form'
 import PreferencesForm from './preferences-form'
 import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 import SwitchRoleDialogs from '../../components/switch-role'
+import { usePatientContext } from '../../lib/patient/provider'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -121,6 +122,8 @@ const ProfilePage = (): JSX.Element => {
     updateProfile,
     updateSettings
   } = useAuth()
+
+  const patientHook = usePatientContext()
 
   if (!user) {
     throw new Error('User must be logged-in')
@@ -211,6 +214,9 @@ const ProfilePage = (): JSX.Element => {
   const saveProfile = async (): Promise<void> => {
     try {
       await updateProfile(getUpdatedProfile())
+      if (user.isUserPatient()) {
+        patientHook.refresh()
+      }
     } catch (err) {
       log.error('Updating profile:', err)
       alert.error(t('profile-update-failed'))
