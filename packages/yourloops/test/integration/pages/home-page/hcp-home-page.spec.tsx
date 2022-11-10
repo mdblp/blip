@@ -32,7 +32,7 @@ import React from 'react'
 import { createMemoryHistory } from 'history'
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import PatientAPI from '../../../../lib/patient/patient-api'
-import { checkPatientSecondaryBarForHcp } from '../../utils/patientSecondaryBar'
+import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
@@ -78,7 +78,7 @@ describe('HCP home page', () => {
       renderPage('/')
     })
     checkHCPLayout(`${firstName} ${lastName}`)
-    checkPatientSecondaryBarForHcp(false, true)
+    checkSecondaryBar(false, true)
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {

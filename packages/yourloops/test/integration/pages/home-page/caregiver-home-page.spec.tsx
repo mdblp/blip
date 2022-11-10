@@ -27,21 +27,23 @@
 
 import PatientAPI from '../../../../lib/patient/patient-api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { buildPatient, mockPatientAPI } from '../../mock/mockPatientAPI'
+import { mockDirectShareApi, removeDirectShareMock } from '../../mock/mockDirectShareAPI'
+import { buildPatient, mockPatientAPI, monitoredPatient, unmonitoredPatient } from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
-import { screen, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import DirectShareApi from '../../../../lib/share/direct-share-api'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
+
   beforeAll(() => {
     mockAuth0Hook(UserRoles.caregiver)
     mockNotificationAPI()
@@ -127,7 +129,7 @@ describe('Caregiver home page', () => {
     })
 
     checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientSecondaryBarCommon()
+    checkSecondaryBar(false, false)
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
