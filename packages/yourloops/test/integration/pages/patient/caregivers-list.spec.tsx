@@ -92,7 +92,7 @@ describe('Patient caregivers page', () => {
     const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${caregiverId}`)
     expect(caregiverRow).toBeVisible()
 
-    const removeCaregiverButton = await within(caregiverRow).findByRole('button', { name: `remove-caregiver-${caregiverId}` })
+    const removeCaregiverButton = await within(caregiverRow).findByRole('button', { name: `Remove caregiver-${caregiverId}` })
     expect(removeCaregiverButton).toBeVisible()
 
     userEvent.click(removeCaregiverButton)
