@@ -31,7 +31,7 @@ import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockPatientAPI, unMonitoredPatientId } from '../../mock/mockPatientAPI'
+import { mockPatientAPI, unmonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
@@ -59,7 +59,7 @@ describe('Trends view for caregiver', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
-    renderPage(`/patient/${unMonitoredPatientId}/trends`)
+    renderPage(`/patient/${unmonitoredPatientId}/trends`)
 
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsCaregiver(false)

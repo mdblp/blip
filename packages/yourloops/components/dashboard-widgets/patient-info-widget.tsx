@@ -151,7 +151,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     try {
       patient.monitoring = { ...patient.monitoring, enabled: false, status: undefined, monitoringEnd: undefined }
       await patientHook.updatePatientMonitoring(patient)
-      setPatient(patientHook.getPatient(patient.userid))
+      setPatient(patientHook.getPatientById(patient.userid))
       setActionInProgress(false)
       setShow(false)
     } catch (e) {
@@ -195,7 +195,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
               </Grid>
               <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Typography variant="body2" id={`patient-info-${key}-value`}>
+                  <Typography variant="body2" id={`patient-info-${key}-value`} data-testid={`patient-info-${key}-value`}>
                     {patientInfo[key]}
                   </Typography>
                   {key === 'remote-monitoring' && showMonitoringButtonAction &&

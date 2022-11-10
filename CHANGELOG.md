@@ -2,15 +2,22 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta5 - 2022-10-21
+## 3.0.2-beta14 - 2022-11-08
+### Added
+- YLP-1850 Patient search should comply to INS standard
 ### Engineering use
+- YLP-1624 Fix error messages when inviting a patient already in the team
+- YLP-1873 Fix patient profile update not visible in dashboard
 - YLP-1874 Fix PDF report generation
 
 ## 3.0.1 - 2022-10-11
 ### Added
 - YLP-1681 HCP can remove a patient
+- YLP-1753 Fix memory leak on useState
 - YLP-1837 Display training material acknowledgment
 - YLP-1841 Rework of accompanying documents in footer
+- YLP-1865 Add an error message if email is not valid in create team form
+- YLP-1867 Use a single route to fetch user profile, settings and preferences at once
 ### Engineering use
 - YLP-1317 Renaming Shoreline model to a generic name
 - YLP-1626 Refactor team hook to only keep functions impacting the state
@@ -28,6 +35,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-1767 Create package to migrate viz components
 - YLP-1797 Make it possible to see what role the users are logged in with matomo
 - YLP-1834 Migrate time in range stats
+- Add a route /version to display blip version
+
 ### Fixed
 - YLP-1645 A patient can create, edit and delete a medical record
 - YLP-1659 Language is not updated with user preferences

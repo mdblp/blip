@@ -60,7 +60,7 @@ jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../lib/notifications/hook')
 describe('PatientInfoWidget', () => {
-  const patient = createPatient('fakePatientId', [])
+  const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
   const adminMember = buildTeamMember()
   const patientMember = buildTeamMember(patient.userid)
@@ -68,7 +68,7 @@ describe('PatientInfoWidget', () => {
   patient.teams = [{ teamId: remoteMonitoringTeam.id } as PatientTeam]
   const cancelRemoteMonitoringInviteMock = jest.fn()
   const updatePatientMonitoringMock = jest.fn()
-  const getPatientMock = jest.fn().mockReturnValue(patient)
+  const getPatientByIdMock = jest.fn().mockReturnValue(patient)
 
   beforeAll(() => {
     i18n.changeLanguage('en');
@@ -84,7 +84,7 @@ describe('PatientInfoWidget', () => {
     (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
       return {
         updatePatientMonitoring: updatePatientMonitoringMock,
-        getPatient: getPatientMock
+        getPatientById: getPatientByIdMock
       }
     });
     (RemoteMonitoringPatientDialogMock.default as jest.Mock).mockImplementation((props: RemoteMonitoringPatientDialogProps) => {

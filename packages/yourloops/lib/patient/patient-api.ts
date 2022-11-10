@@ -35,6 +35,9 @@ import { Monitoring } from '../../models/monitoring'
 
 const log = bows('Patient API')
 
+export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
+const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = 409
+
 interface InvitePatientArgs {
   teamId: string
   email: string
@@ -60,12 +63,19 @@ export default class PatientApi {
   }
 
   static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotificationAPI> {
-    const { data } = await HttpService.post<INotificationAPI, InvitePatientPayload>({
-      url: '/confirm/send/team/invite',
-      payload: { teamId, email, role: UserRoles.patient },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
-    })
-    return data
+    try {
+      const { data } = await HttpService.post<INotificationAPI, InvitePatientPayload>({
+        url: '/confirm/send/team/invite',
+        payload: { teamId, email, role: UserRoles.patient },
+        config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+      }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE])
+      return data
+    } catch (error) {
+      if (error.response.status === PATIENT_ALREADY_IN_TEAM_ERROR_CODE) {
+        throw new Error(PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE)
+      }
+      throw error
+    }
   }
 
   static async updatePatientAlerts(teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {

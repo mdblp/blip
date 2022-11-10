@@ -73,7 +73,7 @@ export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.
   const { onClose, weeklyReport } = props
   const teamHook = useTeam()
   const patientHook = usePatientContext()
-  const patient = patientHook.getPatient(weeklyReport.patientId)
+  const patient = patientHook.getPatientById(weeklyReport.patientId)
   const endDatePeriod = new Date(weeklyReport.creationDate)
   const startDatePeriod = new Date(weeklyReport.creationDate)
   startDatePeriod.setDate(startDatePeriod.getDate() - 7)

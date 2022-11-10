@@ -87,6 +87,12 @@ interface Preferences {
   patientsStarred?: string[]
 }
 
+interface UserMetadata {
+  preferences: Preferences
+  profile: Profile
+  settings: Settings
+}
+
 interface IUser {
   emails?: string[]
   readonly emailVerified?: boolean
@@ -108,15 +114,15 @@ interface IUser {
   unreadMessages?: number
 }
 
-enum UserMetadata {
+enum AuthenticatedUserMetadata {
   Roles = 'http://your-loops.com/roles',
 }
 
 interface AuthenticatedUser {
-  [UserMetadata.Roles]: string[]
+  [AuthenticatedUserMetadata.Roles]: string[]
   email: string
   emailVerified: boolean
   sub: string
 }
 
-export { IUser, Profile, Settings, Preferences, Consent, UserRoles, UserMetadata, AuthenticatedUser }
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles, AuthenticatedUserMetadata, AuthenticatedUser, UserMetadata }

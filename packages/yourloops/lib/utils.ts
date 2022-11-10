@@ -54,6 +54,15 @@ export enum PhonePrefixCode {
   GB = '+44',
 }
 
+export const isZipCodeValid = (country: string, zipCode: string): boolean => {
+  switch (country) {
+    case 'NL':
+    case 'GB':
+      return REGEX_ZIPCODE_WITH_STRING.test(zipCode)
+    default:
+      return REGEX_ZIPCODE_WITHOUT_STRING.test(zipCode)
+  }
+}
 /**
  * setTimeout() as promised
  * @param timeout in milliseconds
