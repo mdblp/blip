@@ -127,13 +127,13 @@ function PatientCaregiversPage(): JSX.Element {
 
   useEffect(() => {
     fetchCaregivers()
-  }, [sentInvitations])
+  }, [fetchCaregivers, sentInvitations])
 
   useEffect(() => {
     if (!caregivers && user && haveNotifications) {
       fetchCaregivers()
     }
-  }, [caregivers, user, haveNotifications])
+  }, [caregivers, fetchCaregivers, user, haveNotifications])
 
   useEffect(() => {
     setPageTitle(t('caregivers-title'))

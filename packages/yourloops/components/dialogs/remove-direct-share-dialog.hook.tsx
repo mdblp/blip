@@ -19,10 +19,7 @@ interface RemoveDirectShareDialogHookReturn {
   removeDirectShare: () => Promise<void>
 }
 
-const useRemoveDirectShareDialog = ({
-                                      userToRemove,
-                                      onClose
-                                    }: RemoveDirectShareDialogHookProps): RemoveDirectShareDialogHookReturn => {
+const useRemoveDirectShareDialog = ({ userToRemove, onClose }: RemoveDirectShareDialogHookProps): RemoveDirectShareDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const currentUser = useAuth().user
