@@ -110,6 +110,8 @@ describe('Profile page for patient', () => {
     expect(fields.oidInput).toHaveValue(profile.patient.oid)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
+    expect(fields.genderSelect).toHaveTextContent('Male')
+    expect(fields.referringDoctorInput).toHaveValue(profile.patient.referringDoctor)
     expect(saveButton).toBeDisabled()
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))

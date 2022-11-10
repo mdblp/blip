@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next'
 import Box from '@material-ui/core/Box'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
+import FormHelperText from '@material-ui/core/FormHelperText'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
@@ -156,7 +157,10 @@ const PatientProfileForm: FunctionComponent = () => {
       }
 
       <Box className={classes.inputContainer}>
-        <FormControl className={`${classes.formInput}`}>
+        <FormControl
+          className={`${classes.formInput}`}
+          error={errors.sex}
+        >
           <InputLabel
             id="profile-select-gender-label"
             htmlFor="profile-select-gender"
@@ -167,12 +171,14 @@ const PatientProfileForm: FunctionComponent = () => {
             id="profile-select-gender"
             labelId="profile-select-gender-label"
             value={profileForm.sex}
+            error={errors.sex}
             onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value as string)}
           >
-            <MenuItem value="" aria-label={t('none')}>{t('none')}</MenuItem>
+            <MenuItem value="I" aria-label={t('indeterminate')}>{t('indeterminate')}</MenuItem>
             <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>
             <MenuItem value="F" aria-label={t('female')}>{t('female')}</MenuItem>
           </Select>
+          <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
         </FormControl>
         <TextField
           id="profile-textfield-referring-doctor"

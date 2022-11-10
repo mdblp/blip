@@ -55,6 +55,7 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
     birthday: user.isUserPatient() && !REGEX_BIRTHDATE.test(profileForm.birthday),
     ins: user.isUserPatient() && (!profileForm.ins || (profileForm.ins && profileForm.ins.length !== 15)),
     ssn: user.isUserPatient() && (!profileForm.ssn || (profileForm.ssn && profileForm.ssn.length !== 15)),
+    sex: user.isUserPatient() && !profileForm.sex,
     birthFirstName: user.isUserPatient() && !profileForm.birthFirstName,
     birthLastName: user.isUserPatient() && !profileForm.birthLastName,
     birthNames: user.isUserPatient() && !profileForm.birthNames,

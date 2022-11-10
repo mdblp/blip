@@ -132,8 +132,7 @@ describe('Caregiver Layout', () => {
 
   it('should render home page when route is / and user is caregiver', () => {
     const history = createMemoryHistory({ initialEntries: ['/'] })
-    const { container } = render(getMainLayoutJSX(history))
-    console.log(container)
+    render(getMainLayoutJSX(history))
     checkInDocument(homePagePageTestId)
     expect(history.location.pathname).toBe('/home')
   })

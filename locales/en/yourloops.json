@@ -171,6 +171,7 @@
   "hypoglycemia-tooltip": "By default, this alert threshold is set to:\n>5% of severe hypoglycemia over the given period.\n\nThis value can be modified either at the level of all remotely monitored patients, or patient by patient.",
   "identification-code": "Identification code",
   "incoming-renewal": "Incoming renewal",
+  "indeterminate": "Indeterminate",
   "information": "Information",
   "initial-hba1c": "Initial HbA1c",
   "ins": "INS",
