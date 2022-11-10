@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 
 import Box from '@material-ui/core/Box'
+import FormControl from '@material-ui/core/FormControl'
 import TextField from '@material-ui/core/TextField'
 
 import { useAuth } from '../../lib/auth'
@@ -38,6 +39,7 @@ import { ProfileFormKey } from './models'
 import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
 import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
 import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
+import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-button'
 import PatientProfileForm from './patient-form'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
@@ -45,7 +47,7 @@ import { CountryCodes } from '../../models/locales'
 
 const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const { user } = useAuth()
+  const { redirectToProfessionalAccountLogin, user } = useAuth()
   const { profileForm, updateProfileForm, errors } = useProfilePageState()
   const classes = profileFormCommonClasses()
 
@@ -92,14 +94,21 @@ const PersonalInfoForm: FunctionComponent = () => {
             />
           </Box>
 
-          {user.settings?.country === CountryCodes.France && user.frProId &&
-            <TextField
-              id="professional-account-number-text-field"
-              value={user.frProId}
-              label={t('professional-account-number')}
-              disabled
-              className={classes.formInput}
-            />
+          {user.settings?.country === CountryCodes.France &&
+            <React.Fragment>
+              {user.frProId
+                ? <TextField
+                  id="professional-account-number-text-field"
+                  value={user.getParsedFrProId()}
+                  label={t('professional-account-number')}
+                  disabled
+                  className={classes.formInput}
+                />
+                : <FormControl className={classes.formInput}>
+                  <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
+                </FormControl>
+              }
+            </React.Fragment>
           }
         </Box>
       }

@@ -63,6 +63,9 @@ jest.mock('../../../pages/notifications', () => () => {
 jest.mock('../../../pages/team/team-details-page', () => () => {
   return <div data-testid={teamDetailsPageTestId} />
 })
+jest.mock('../../../pages/hcp/certify-account-page', () => () => {
+  return <div data-testid={certifyAccountPageTestId} />
+})
 describe('Hcp Layout', () => {
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
@@ -106,6 +109,11 @@ describe('Hcp Layout', () => {
       expect(screen.queryByTestId(id)).not.toBeInTheDocument()
     })
   }
+
+  it('should render certify account page when route is /certify and user is hcp', () => {
+    render(getMainLayoutJSX('/certify'))
+    checkInDocument(certifyAccountPageTestId)
+  })
 
   it('should render profile page when route is /preferences', () => {
     render(getMainLayoutJSX('/preferences'))

@@ -35,6 +35,7 @@ import { HcpProfession } from '../../models/hcp-profession'
 import { zendeskLogout } from '../zendesk'
 import User from './user'
 import { AuthContext, SignupForm } from './models'
+import appConfig from '../config'
 import HttpService from '../../services/http'
 import UserApi from './user-api'
 import { availableLanguageCodes, changeLanguage, getCurrentLang } from '../language'
@@ -140,6 +141,8 @@ export function AuthContextImpl(): AuthContext {
     refreshUser()
   }
 
+  const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`)
+
   const updateUserLanguage = (user: User): void => {
     const languageCode = user.preferences?.displayLanguageCode
     if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
@@ -234,6 +237,7 @@ export function AuthContextImpl(): AuthContext {
     user,
     isLoggedIn,
     fetchingUser,
+    redirectToProfessionalAccountLogin,
     updateProfile,
     updatePreferences,
     updateSettings,
