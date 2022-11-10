@@ -63,7 +63,7 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
   }
 
   const updatedProfile = useMemo<Profile>(() => {
-    let profile: Profile = {
+    const profile: Profile = {
       ...user.profile,
       firstName: profileForm.firstName,
       lastName: profileForm.lastName,
@@ -71,36 +71,30 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
     }
 
     if (user.isUserPatient()) {
-      profile = {
-        ...profile,
-        patient: {
-          ...profile.patient,
-          birthday: profileForm.birthday,
-          birthPlace: profileForm.birthPlace,
-          ins: profileForm.ins,
-          sex: profileForm.sex,
-          ssn: profileForm.ssn,
-          referringDoctor: profileForm.referringDoctor,
-          birthFirstName: profileForm.birthFirstName,
-          birthLastName: profileForm.birthLastName,
-          birthNames: profileForm.birthNames,
-          birthPlaceInseeCode: profileForm.birthPlaceInseeCode,
-          oid: profileForm.oid
-        }
+      profile.patient = {
+        ...profile.patient,
+        birthday: profileForm.birthday,
+        birthPlace: profileForm.birthPlace,
+        ins: profileForm.ins,
+        sex: profileForm.sex,
+        ssn: profileForm.ssn,
+        referringDoctor: profileForm.referringDoctor,
+        birthFirstName: profileForm.birthFirstName,
+        birthLastName: profileForm.birthLastName,
+        birthNames: profileForm.birthNames,
+        birthPlaceInseeCode: profileForm.birthPlaceInseeCode,
+        oid: profileForm.oid
       }
     }
 
     if (user.isUserHcp()) {
-      profile = { ...profile, hcpProfession: profileForm.hcpProfession }
+      profile.hcpProfession = profileForm.hcpProfession
     }
 
     if (user.isUserHcp() && !!user?.profile?.contactConsent?.isAccepted !== profileForm.feedbackAccepted) {
-      profile = {
-        ...profile,
-        contactConsent: {
-          isAccepted: profileForm.feedbackAccepted,
-          acceptanceTimestamp: new Date().toISOString()
-        }
+      profile.contactConsent = {
+        isAccepted: profileForm.feedbackAccepted,
+        acceptanceTimestamp: new Date().toISOString()
       }
     }
 

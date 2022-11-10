@@ -140,16 +140,4 @@ describe('User', () => {
     user.profile.privacyPolicy.acceptanceTimestamp = '2021-01-02'
     expect(user.shouldRenewConsent()).toBe(false)
   })
-
-  it('getParsedFrProId should return null when user frProId is null', () => {
-    const res = user.getParsedFrProId()
-    expect(res).toBeNull()
-  })
-
-  it('getParsedFrProId should return correct result when user frProId is not null', () => {
-    const expectedRes = 'value'
-    user.frProId = `key:uid:${expectedRes}`
-    const actualRes = user.getParsedFrProId()
-    expect(actualRes).toBe(expectedRes)
-  })
 })

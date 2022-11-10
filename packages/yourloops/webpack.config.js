@@ -36,7 +36,6 @@ if (!brandings.includes(buildConfig.BRANDING)) {
 const alias = {
   'branding/theme.css': path.resolve(__dirname, '../../branding/theme.css'),
   'classes.css': path.resolve(__dirname, 'css/classes.css'),
-  'pro-sante-connect.svg': path.resolve(__dirname, 'images/pro-sante-connect-gris.svg'),
   'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
   'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
   'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),

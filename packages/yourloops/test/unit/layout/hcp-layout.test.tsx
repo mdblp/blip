@@ -70,9 +70,6 @@ jest.mock('../../../pages/notifications', () => () => {
 jest.mock('../../../pages/team/team-details-page', () => () => {
   return <div data-testid={teamDetailsPageTestId} />
 })
-jest.mock('../../../pages/hcp/certify-account-page', () => () => {
-  return <div data-testid={certifyAccountPageTestId} />
-})
 jest.mock('../../../components/patient-data', () => () => {
   return <div data-testid={patientDataPageTestId} />
 })
@@ -161,12 +158,6 @@ describe('Hcp Layout', () => {
     const history = createMemoryHistory({ initialEntries: ['/teams/fakeTeamId'] })
     render(getMainLayoutJSX(history))
     checkInDocument(teamDetailsPageTestId)
-  })
-
-  it('should render certify account page when route is /certify and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/certify'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(certifyAccountPageTestId)
   })
 
   it('should redirect to /not-found when route is unknown for user with hcp role', () => {

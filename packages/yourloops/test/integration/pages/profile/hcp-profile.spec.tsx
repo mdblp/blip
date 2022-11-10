@@ -27,43 +27,30 @@
 
 import { renderPage } from '../../utils/render'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { Preferences, Profile, Settings, UserRoles } from '../../../../models/user'
+import { Preferences, Profile, Settings } from '../../../../models/user'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { act, fireEvent, screen, within } from '@testing-library/react'
-import { checkPatientLayout } from '../../assert/layout'
+import { checkHCPLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { mockPatientAPI } from '../../mock/mockPatientAPI'
-import { checkPatientProfilePage } from '../../assert/profile'
+import { checkHcpProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Units } from '../../../../models/generic'
 import UserApi from '../../../../lib/auth/user-api'
 import { LanguageCodes } from '../../../../models/locales'
+import { HcpProfession } from '../../../../models/hcp-profession'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
-    firstName: 'Elie',
-    lastName: 'Coptere',
-    fullName: 'Elie Coptere',
-    patient: {
-      birthday: '1964-12-01',
-      birthPlace: 'Anywhere',
-      diagnosisDate: '2020-12-02',
-      diagnosisType: '1',
-      referringDoctor: 'Dr Dre',
-      sex: 'M',
-      ins: '123456789012345',
-      ssn: '012345678901234',
-      birthFirstName: 'Elie',
-      birthLastName: 'Coptere',
-      birthNames: 'Elie Damien Jean',
-      birthPlaceInseeCode: '38100',
-      oid: 'oid'
-    },
+    firstName: 'Djamal',
+    lastName: 'Alatete',
+    fullName: 'Djamal Alatete',
     termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
+    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
+    hcpProfession: HcpProfession.diabeto
   }
   const settings: Settings = {
     a1c: {
@@ -76,7 +63,7 @@ describe('Profile page for patient', () => {
   const preferences: Preferences = { displayLanguageCode: 'fr' }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.patient)
+    mockAuth0Hook()
     mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
@@ -84,41 +71,40 @@ describe('Profile page for patient', () => {
     mockPatientAPI()
   })
 
-  it('should render profile page for a french patient and be able to edit his profile', async () => {
-    const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Tanrien', fullName: 'Jean Tanrien' }
+  it('should render profile page for a french hcp and be able to edit his profile', async () => {
+    const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue', hcpProfession: HcpProfession.nurse }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
+    const expectedSettings = { ...settings, units: { bg: Units.gram } }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
-
+    const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
     await act(async () => {
       renderPage('/preferences')
     })
-    checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
-    const fields = checkPatientProfilePage(settings.country)
+    checkHCPLayout(`${profile.firstName} ${profile.lastName}`)
+    const fields = checkHcpProfilePage(settings.country)
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
     expect(fields.firstNameInput).toHaveValue(profile.firstName)
     expect(fields.lastNameInput).toHaveValue(profile.lastName)
-    expect(fields.birthdayInput).toHaveValue(profile.patient.birthday)
-    expect(fields.birthPlaceInput).toHaveValue(profile.patient.birthPlace)
-    expect(fields.birthFirstNameInput).toHaveValue(profile.patient.birthFirstName)
-    expect(fields.birthLastNameInput).toHaveValue(profile.patient.birthLastName)
-    expect(fields.birthNamesInput).toHaveValue(profile.patient.birthNames)
-    expect(fields.birthPlaceZipcodeInput).toHaveValue(profile.patient.birthPlaceInseeCode)
-    expect(fields.insInput).toHaveValue(profile.patient.ins)
-    expect(fields.ssnInput).toHaveValue(profile.patient.ssn)
-    expect(fields.oidInput).toHaveValue(profile.patient.oid)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
+    expect(fields.hcpProfessionSelect).toHaveTextContent('Diabetologist')
     expect(saveButton).toBeDisabled()
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
+    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: Units.gram }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('hcp-profession-selector')).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
+
     userEvent.clear(fields.firstNameInput)
     userEvent.clear(fields.lastNameInput)
     await userEvent.type(fields.firstNameInput, 'Jean')
-    await userEvent.type(fields.lastNameInput, 'Tanrien')
+    await userEvent.type(fields.lastNameInput, 'Talue')
 
     expect(saveButton).not.toBeDisabled()
     await act(async () => {
@@ -129,15 +115,16 @@ describe('Profile page for patient', () => {
     expect(screen.getByRole('alert')).toBeVisible()
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
+    expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
   })
 
-  it('should render profile page without specific INS fields when patient is not french', async () => {
+  it('should render profile page without professional account number when patient is not french', async () => {
     settings.country = 'EN'
     mockUserDataFetch({ profile, preferences, settings })
     await act(async () => {
       renderPage('/preferences')
     })
-    checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
-    checkPatientProfilePage(settings.country)
+    checkHCPLayout(`${profile.firstName} ${profile.lastName}`)
+    checkHcpProfilePage(settings.country)
   })
 })

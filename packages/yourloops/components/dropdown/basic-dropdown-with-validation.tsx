@@ -46,6 +46,7 @@ export interface Errors {
 
 export interface BasicDropdownWithValidationProps<T> {
   id: string
+  dataTestId?: string
   defaultValue: string
   disabledValues: string[]
   values: string[]
@@ -75,10 +76,12 @@ function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<
         <InputLabel id={`dropdown-${id}-input-label`}>{t(inputTranslationKey)}</InputLabel>
         <Select
           id={`dropdown-${id}-selector`}
+          data-testid={props.dataTestId}
           value={selectedValue}
           error={disabledValues.includes(selectedValue)}
           inputProps={{ id: `dropdown-${id}-selector-input-props`, 'data-testid': `dropdown-${id}-selector-input-props` }}
-          onChange={createHandleSelectChange(setSelectedValue)}>
+          onChange={createHandleSelectChange(setSelectedValue)}
+        >
           {values.map(item => (
             <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
               {t(item)}

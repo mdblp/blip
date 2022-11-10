@@ -132,4 +132,5 @@ export interface AuthenticatedUser {
   email: string
   email_verified: boolean
   sub: string
+  frProId?: string
 }

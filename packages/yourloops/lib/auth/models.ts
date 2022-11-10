@@ -63,7 +63,6 @@ export interface AuthContext {
   getFlagPatients: () => string[]
   isLoggedIn: boolean
   logout: () => Promise<void>
-  redirectToProfessionalAccountLogin: () => void
   setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
   completeSignup: (signupForm: SignupForm) => Promise<void>
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp

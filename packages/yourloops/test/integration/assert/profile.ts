@@ -21,6 +21,11 @@ interface PatientFieldsHtmlElements extends CommonFieldsHtmlElements {
   oidInput?: HTMLElement
 }
 
+interface HcpFieldsHtmlElements extends CommonFieldsHtmlElements {
+  hcpProfessionSelect: HTMLElement
+  frProIdInput?: HTMLElement
+}
+
 const checkCommonFields = (): CommonFieldsHtmlElements => {
   const firstNameInput = screen.getByLabelText('First Name')
   const lastNameInput = screen.getByLabelText('Last Name')
@@ -40,7 +45,28 @@ const checkCommonFields = (): CommonFieldsHtmlElements => {
   }
 }
 
-export const checkPatientProfilePage = (patientCountry: string): PatientFieldsHtmlElements => {
+// the test relating to eCPS account is skipped for now, it will be reactivated in the next PR with eCPS connection in Auth0
+export const checkHcpProfilePage = (country: string): HcpFieldsHtmlElements => {
+  console.log(country)
+  const hcpProfessionSelect = screen.getByTestId('hcp-profession-selector')
+  // const frProIdInput = screen.queryByLabelText('eCPS number')
+  const inputs = {
+    ...checkCommonFields(),
+    hcpProfessionSelect
+  }
+
+  expect(hcpProfessionSelect).toBeInTheDocument()
+
+  // if (country === 'FR') {
+  //   expect(frProIdInput).toBeInTheDocument()
+  //   expect(frProIdInput).toBeDisabled()
+  //   return { ...inputs, frProIdInput }
+  // }
+
+  return inputs
+}
+
+export const checkPatientProfilePage = (country: string): PatientFieldsHtmlElements => {
   const birthdayInput = screen.getByLabelText('Date of birth')
   const birthPlaceInput = screen.getByLabelText('Birth place')
   const genderSelect = screen.getByLabelText('Gender')
@@ -66,7 +92,7 @@ export const checkPatientProfilePage = (patientCountry: string): PatientFieldsHt
   expect(genderSelect).toBeInTheDocument()
   expect(referringDoctorInput).toBeInTheDocument()
 
-  if (patientCountry === 'FR') {
+  if (country === 'FR') {
     expect(birthFirstNameInput).toBeInTheDocument()
     expect(birthLastNameInput).toBeInTheDocument()
     expect(birthNamesInput).toBeInTheDocument()
