@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
@@ -90,7 +90,7 @@ function PatientCaregiversPage(): JSX.Element {
     }
   }
 
-  const getCaregiversFromPendingInvitations = (): ShareUser[] => {
+  const getCaregiversFromPendingInvitations = useCallback((): ShareUser[] => {
     return sentInvitations.reduce((acc: ShareUser[], invitation: INotification) => {
       if (invitation.type !== NotificationType.directInvitation) {
         return acc
@@ -109,9 +109,9 @@ function PatientCaregiversPage(): JSX.Element {
       acc.push(caregiver)
       return acc
     }, [])
-  }
+  }, [sentInvitations])
 
-  const fetchCaregivers = async (): Promise<void> => {
+  const fetchCaregivers = useCallback(async (): Promise<void> => {
     return await DirectShareApi.getDirectShares()
       .catch((reason: unknown) => {
         log.error(reason)
@@ -123,7 +123,7 @@ function PatientCaregiversPage(): JSX.Element {
         caregivers.push(...invitedCaregivers)
         setCaregivers(caregivers)
       })
-  }
+  }, [getCaregiversFromPendingInvitations])
 
   useEffect(() => {
     fetchCaregivers()
@@ -133,7 +133,7 @@ function PatientCaregiversPage(): JSX.Element {
     if (!caregivers && user && haveNotifications) {
       fetchCaregivers()
     }
-  }, [caregivers, fetchCaregivers, user, haveNotifications])
+  }, [caregivers, fetchCaregivers, haveNotifications, user])
 
   useEffect(() => {
     setPageTitle(t('caregivers-title'))
