@@ -26,21 +26,28 @@
  */
 
 import { mockPatientLogin } from '../../mock/auth'
-import { unmonitoredPatient } from '../../mock/mockPatientAPI'
+import { unmonitoredPatient, unmonitoredPatientId } from '../../mock/mockPatientAPI'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
-  checkDailyTimeInRangeStatsWidgets, checkSMBGDailyStatsWidgetsTooltips
+  checkDailyTimeInRangeStatsWidgets,
+  checkSMBGDailyStatsWidgetsTooltips
 } from '../../assert/daily'
-import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
+import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import {
-  checkReadingsInRangeStatsWidgets,
   checkAverageGlucoseStatWidget,
+  checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
-import { screen } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import dayjs from 'dayjs'
+import { weekArrayPlugin, weekdaysPlugin } from '../../../../lib/dayjs'
+import * as constants from '../../../../../viz/src/modules/print/utils/constants'
+import DataApi from '../../../../lib/data/data-api'
+import { User } from '../../../../lib/auth'
 
 jest.setTimeout(30000)
 
@@ -64,6 +71,66 @@ describe('Daily view for anyone', () => {
 
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
       checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+    })
+  })
+
+  describe('with 2 weeks of data', () => {
+    it('should generate CSV or PDF properly', async () => {
+      dayjs.extend(weekArrayPlugin)
+      dayjs.extend(weekdaysPlugin)
+
+      // This is a base64 encoded image
+      constants.Images.logo = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA='
+      constants.Images.siteChangeCannulaImage = 'fakeImage'
+      constants.Images.siteChangeReservoirImage = 'fakeImage'
+      constants.Images.siteChangeTubingImage = 'fakeImage'
+      constants.Images.siteChangeReservoirDiabeloopImage = 'fakeImage'
+
+      mockDataAPI(twoWeeksOfCbg)
+      const windowOpenMock = jest.fn().mockReturnValue(null)
+      window.open = windowOpenMock
+      const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockResolvedValue('')
+
+      renderPage('/daily')
+
+      const generateReportButton = await screen.findByText('Generate report')
+      expect(generateReportButton).toBeVisible()
+
+      userEvent.click(screen.getByText('Generate report'))
+
+      const generateReportDialogFirstPdf = within(screen.getByRole('dialog'))
+      expect(generateReportDialogFirstPdf.getByText('Generate report')).toBeVisible()
+      expect(generateReportDialogFirstPdf.getByText('Choose a fixed period')).toBeVisible()
+      expect(generateReportDialogFirstPdf.getByRole('button', { name: '1 week' })).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialogFirstPdf.getByRole('button', { name: '2 weeks' })).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialogFirstPdf.getByRole('button', { name: '4 weeks' })).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialogFirstPdf.getByRole('button', { name: '3 months' })).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialogFirstPdf.getByText('or a customized period')).toBeVisible()
+      expect(generateReportDialogFirstPdf.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialogFirstPdf.getByTestId('button-calendar-day-2020-01-09')).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialogFirstPdf.getByTestId('button-calendar-day-2020-01-08')).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialogFirstPdf.getByText('Choose an output format')).toBeVisible()
+      expect(generateReportDialogFirstPdf.getByRole('radio', { name: 'PDF' })).toBeChecked()
+      expect(generateReportDialogFirstPdf.getByRole('radio', { name: 'CSV' })).not.toBeChecked()
+      expect(generateReportDialogFirstPdf.getByText('Cancel')).toBeVisible()
+
+      userEvent.click(generateReportDialogFirstPdf.getByText('Generate'))
+      // This checks that we tried to generate a pdf
+      await waitFor(() => expect(windowOpenMock).toBeCalled())
+
+      userEvent.click(screen.getByText('Generate report'))
+      const generateReportDialogFirstCsv = within(screen.getByRole('dialog'))
+      userEvent.click(generateReportDialogFirstCsv.getByRole('radio', { name: 'CSV' }))
+      userEvent.click(generateReportDialogFirstCsv.getByRole('button', { name: '2 weeks' }))
+      expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-01')).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-02')).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
+
+      // const blob = new Blob([''], { type: 'text/csv' })
+      userEvent.click(generateReportDialogFirstCsv.getByText('Generate'))
+
+      // This checks for CSV generation
+      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), unmonitoredPatientId, '2020-01-01T23:00:00.000Z', '2020-01-15T22:59:59.999Z')
     })
   })
 
