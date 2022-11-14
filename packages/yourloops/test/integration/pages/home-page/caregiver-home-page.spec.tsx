@@ -124,6 +124,8 @@ describe('Caregiver home page', () => {
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
+    const patientFullName = 'Unmonitored Patient'
+
     await act(async () => {
       renderPage('/')
     })
@@ -131,8 +133,9 @@ describe('Caregiver home page', () => {
     checkCaregiverLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, false)
 
-    expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
+    const patientTableBody = within(screen.getByTestId('patient-table-body'))
+    const patientData = patientTableBody.getByText(patientFullName)
+    expect(patientData).toBeVisible()
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
     const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
@@ -155,13 +158,24 @@ describe('Caregiver home page', () => {
     const removePatientDialogConfirmButton = within(removePatientDialog).getByRole('button', { name: 'Remove patient' })
     expect(removePatientDialogConfirmButton).toBeVisible()
 
+    userEvent.click(removePatientDialogCancelButton)
+
+    expect(removePatientDialog).not.toBeInTheDocument()
+
+    userEvent.click(removePatientButton)
+
+    const removePatientDialog2 = screen.getByRole('dialog')
+    expect(removePatientDialog2).toBeVisible()
+
+    const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
+
     jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatient])
     await act(async () => {
-      userEvent.click(removePatientDialogConfirmButton)
+      userEvent.click(removePatientDialog2ConfirmButton)
     })
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatient.userId, loggedInUserId)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
+    expect(patientData).not.toBeInTheDocument()
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })

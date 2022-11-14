@@ -241,13 +241,5 @@ describe('Patient row', () => {
       expect(within(cells[6]).queryByText('N/A')).not.toBeNull()
       expect(within(cells[7]).queryByTitle('remove-patient')).not.toBeNull()
     })
-
-    it('should open modal when clicking on remove patient icon', () => {
-      render(getPatientRowJSX())
-      const removeButton = screen.getByRole('button', { name: 'remove-patient-fake@email.com' })
-      expect(screen.queryByTestId(removeDirectShareDialogMockId)).not.toBeInTheDocument()
-      fireEvent.click(removeButton)
-      expect(screen.queryByTestId(removeDirectShareDialogMockId)).toBeInTheDocument()
-    })
   })
 })

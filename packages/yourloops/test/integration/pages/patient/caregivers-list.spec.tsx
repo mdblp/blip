@@ -66,7 +66,7 @@ describe('Patient caregivers page', () => {
     checkPatientLayout(`${firstName} ${lastName}`)
 
     const secondaryBar = screen.getByTestId('patient-caregivers-secondary-bar')
-    expect(secondaryBar).toBeInTheDocument()
+    expect(secondaryBar).toBeVisible()
 
     const addCaregiverButton = within(secondaryBar).getByText('Add Caregiver')
     expect(addCaregiverButton).toBeVisible()
