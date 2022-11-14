@@ -152,6 +152,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
         <TableRow
           key={userId}
           id={`patient-caregivers-table-row-${userId}`}
+          data-userid={userId}
           data-testid={`patient-caregivers-table-row-${userId}`}
           data-status={caregiver.status}
         >
