@@ -7,7 +7,7 @@ on:
     branches: [ 'dblp' ]
 
 jobs:
-  lint_and_test:
+  lint-test-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -59,11 +59,14 @@ jobs:
       - name: Test yourloops integration
         run: npm run test-yourloops-integration
 
-#      - name: Upload working directory
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: yourloops-artifact
-#          path: .
+      - name: Build
+        run: nice bash build.sh
+
+      - name: Upload working directory
+        uses: actions/upload-artifact@v3
+        with:
+          name: yourloops-artifact
+          path: dist/
 
 #  test:
 #    needs: pre-test
