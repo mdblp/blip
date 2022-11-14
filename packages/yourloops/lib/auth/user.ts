@@ -55,7 +55,7 @@ export default class User {
     this.email = authenticatedUser.email
     this.emailVerified = authenticatedUser.email_verified
     this.id = User.getId(authenticatedUser.sub)
-    this.role = User.getRole(authenticatedUser[AuthenticatedUserMetadata.Roles])
+    this.role = authenticatedUser[AuthenticatedUserMetadata.Roles][0] as UserRoles
     this.username = authenticatedUser.email
     this.latestConsentChangeDate = new Date(config.LATEST_TERMS ?? 0)
     this.latestTrainingDate = new Date(config.LATEST_TRAINING ?? 0)
@@ -64,10 +64,6 @@ export default class User {
   private static getId(sub: string): string {
     const parsedSub = sub.split('|')
     return parsedSub[parsedSub.length - 1]
-  }
-
-  private static getRole(roles: string[]): UserRoles {
-    return roles[0] !== UserRoles.unset ? roles[0] as UserRoles : UserRoles.unset
   }
 
   get firstName(): string {

@@ -71,7 +71,7 @@ describe('Signup stepper as hcp', () => {
     const feedbackCheckbox = screen.queryByLabelText('Feedback checkbox')
 
     checkConsentStep()
-    expect(feedbackCheckbox).toBeInTheDocument()
+    expect(feedbackCheckbox).toBeVisible()
 
     userEvent.click(feedbackCheckbox)
     userEvent.click(screen.getByText('Next'))
@@ -81,7 +81,7 @@ describe('Signup stepper as hcp', () => {
     const hcpProfessionSelector = screen.queryByTestId('hcp-profession-selector')
 
     await checkProfileStep(firstName, lastName)
-    expect(hcpProfessionSelector).toBeInTheDocument()
+    expect(hcpProfessionSelector).toBeVisible()
 
     fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('button'))
     userEvent.click(screen.getByText('Nurse'))

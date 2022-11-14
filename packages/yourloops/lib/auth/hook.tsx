@@ -164,8 +164,9 @@ export function AuthContextImpl(): AuthContext {
           user.settings = userMetadata.settings
         }
         updateUserLanguage(user)
+        metrics.setUser(user)
       }
-      metrics.setUser(user)
+
       setUser(user)
     } catch (err) {
       console.error(err)
@@ -185,23 +186,6 @@ export function AuthContextImpl(): AuthContext {
     } catch (err) {
       log.error('logout', err)
     }
-  }
-
-  const setAccessToken = useCallback((ignoreCache: boolean = false): void => {
-    const getAccessToken = async (): Promise<string> => await getAccessTokenSilently({ ignoreCache })
-    HttpService.setGetAccessTokenMethod(getAccessToken)
-  }, [getAccessTokenSilently])
-
-  /*
-  * This method is a trick to manually refresh auth0 access token.
-  * Auth0 SDK doesn't provide a method to refresh it, it's done automatically when it expires.
-  * But in the case of complete signup we need a new token immediately after updating the role (to get this new role in the token),
-  * so the trick is to call getAccessTokenSilently with ignoreCache option, then make an API call and auth0 will get a fresh new token !!
-   */
-  const refreshAccessToken = async (): Promise<void> => {
-    setAccessToken(true)
-    await UserApi.getUserMetadata(user.id)
-    setAccessToken()
   }
 
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
@@ -231,7 +215,8 @@ export function AuthContextImpl(): AuthContext {
       settings
     })
 
-    await refreshAccessToken()
+    // Refreshing access token to get the new role in it
+    await getAccessTokenSilently({ ignoreCache: true })
 
     user.role = signupForm.accountRole
     user.preferences = preferences
@@ -242,11 +227,12 @@ export function AuthContextImpl(): AuthContext {
   useEffect(() => {
     (async () => {
       if (isAuthenticated && !user) {
-        setAccessToken()
+        const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
+        HttpService.setGetAccessTokenMethod(getAccessToken)
         await getUserInfo()
       }
     })()
-  }, [getUserInfo, isAuthenticated, setAccessToken, user])
+  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, user])
 
   return {
     user,
