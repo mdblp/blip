@@ -17,6 +17,21 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     prescriptor: rawData.prescriptor as string,
     wizard: null
   }
+  if (rawData.expectedNormal) {
+    bolus.expectedNormal = rawData.expectedNormal as number
+  }
+  if (rawData.insulinOnBoard) {
+    bolus.insulinOnBoard = rawData.insulinOnBoard as number
+  }
+  if (rawData.part) {
+    bolus.part = rawData.part as string
+  }
+  if (rawData.biphasicId) {
+    bolus.biphasicId = rawData.biphasicId as string
+  } else if (rawData.eventId) {
+    bolus.biphasicId = rawData.eventId as string
+  }
+
   return bolus
 }
 
