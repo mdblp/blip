@@ -57,9 +57,9 @@ export default class DataApi {
 
   static async getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
     const params = {
-      starDate: options?.startDate,
+      startDate: options?.startDate,
       endDate: options?.endDate,
-      withPumpSettings: options?.withPumpSettings ? true : undefined
+      withPumpSettings: options?.withPumpSettings ?? undefined
     }
     const { data } = await HttpService.get<PatientData>({
       url: `/data/v1/dataV2/${patient.userid}`,
