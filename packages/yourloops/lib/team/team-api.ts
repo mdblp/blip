@@ -65,15 +65,17 @@ interface RemoveMemberArgs {
   email: string
 }
 
+const HCP_ROUTE = 'hcps'
+const PATIENTS_ROUTE = 'patients'
+
 export default class TeamApi {
   static getTeamsApiUrl(user: User): string {
-    if (user.isUserHcp()) {
-      return `/bff/v1/hcps/${user.id}/teams`
-    } else if (user.isUserPatient()) {
-      return `/bff/v1/patients/${user.id}/teams`
-    } else {
+    const isUserHcp = user.isUserHcp()
+    if (!isUserHcp && !user.isUserPatient()) {
       throw Error(`User with role ${user.role} cannot retrieve teams`)
     }
+    const userRoute = isUserHcp ? HCP_ROUTE : PATIENTS_ROUTE
+    return `/bff/v1/${userRoute}/${user.id}/teams`
   }
 
   static async getTeams(user: User): Promise<Team[]> {
