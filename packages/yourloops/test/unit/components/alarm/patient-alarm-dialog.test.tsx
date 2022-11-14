@@ -42,7 +42,7 @@ import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../../components
 
 jest.mock('../../../../lib/patient/provider')
 describe('PatientAlarmDialog', () => {
-  const patient = createPatient('fakePatientId', [])
+  const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
   const onClose = jest.fn()
   const alarm: Alarm = {
@@ -93,12 +93,12 @@ describe('PatientAlarmDialog', () => {
   }
 
   it('should throw error when given patient has no monitoring enabled', () => {
-    const patientNoMonitoring = createPatient('fakePatientId', [])
+    const patientNoMonitoring = createPatient('fakePatientId')
     expect(() => mountComponent({ patient: patientNoMonitoring })).toThrow()
   })
 
   it('should execute close when clicking on cancel button', () => {
-    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, { alarm })
     mountComponent({ patient: patientWithMonitoring })
     const cancelButton = document.getElementById('cancel-button-id')
     triggerMouseEvent('click', cancelButton)
@@ -110,7 +110,7 @@ describe('PatientAlarmDialog', () => {
     (patientHook.usePatientContext as jest.Mock).mockImplementation(() => {
       return { updatePatientMonitoring }
     })
-    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, { alarm })
     mountComponent({ patient: patientWithMonitoring })
     const saveButton = document.getElementById('save-button-id')
     await act(async () => {
@@ -128,7 +128,7 @@ describe('PatientAlarmDialog', () => {
     (patientHook.usePatientContext as jest.Mock).mockImplementation(() => {
       return { updatePatientMonitoring }
     })
-    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, { alarm })
     mountComponent({ patient: patientWithMonitoring })
     const saveButton = document.getElementById('save-button-id')
     await act(async () => {

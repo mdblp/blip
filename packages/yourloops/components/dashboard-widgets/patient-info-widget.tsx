@@ -151,7 +151,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     try {
       patient.monitoring = { ...patient.monitoring, enabled: false, status: undefined, monitoringEnd: undefined }
       await patientHook.updatePatientMonitoring(patient)
-      setPatient(patientHook.getPatient(patient.userid))
+      setPatient(patientHook.getPatientById(patient.userid))
       setActionInProgress(false)
       setShow(false)
     } catch (e) {

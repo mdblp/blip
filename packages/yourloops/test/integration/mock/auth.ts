@@ -35,7 +35,7 @@ import PatientAPI from '../../../lib/patient/patient-api'
 import { ITeamMember } from '../../../models/team'
 import { mockChatAPI } from './mockChatAPI'
 import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
-import { unMonitoredPatientId } from './mockPatientAPI'
+import { unmonitoredPatientId } from './mockPatientAPI'
 
 export const mockUserDataFetch = (firstName: string, lastName: string, userId = loggedInUserId) => {
   const profile: Profile = {
@@ -53,7 +53,7 @@ export const mockUserDataFetch = (firstName: string, lastName: string, userId = 
 }
 
 export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRoles.patient, unMonitoredPatientId)
+  mockAuth0Hook(UserRoles.patient, unmonitoredPatientId)
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()

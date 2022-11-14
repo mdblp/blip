@@ -40,36 +40,36 @@ describe('Patient utils', () => {
       const biggerAlarm = createAlarm(11, 0)
 
       it('should return negative number when first patient has a smaller alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], smallerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], biggerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
         expect(res).toBeLessThan(0)
       })
 
       it('should return positive number when second patient has a smaller alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], biggerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], smallerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return 0 when patients have same alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], smallerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], smallerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
         expect(res).toBe(0)
       })
 
       it('should return positive number when first patient has smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], smallerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], biggerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
         expect(res).toBeLessThan(0)
       })
 
       it('should return negative number when second patient has bigger alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], biggerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], smallerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
         expect(res).toBeGreaterThan(0)
       })
@@ -87,36 +87,36 @@ describe('Patient utils', () => {
       const biggerAlarm = createAlarm(0, 11)
 
       it('should return negative number when first patient has a smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], smallerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], biggerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
         expect(res).toBeLessThan(0)
       })
 
       it('should return positive number when second patient has a smaller alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], biggerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], smallerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return 0 when patients have same alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], smallerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], smallerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
         expect(res).toBe(0)
       })
 
       it('should return positive number when first patient has smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], smallerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], biggerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
         expect(res).toBeLessThan(0)
       })
 
       it('should return positive number when second patient has smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], biggerAlarm)
-        const patient2 = createPatient('fakePatient2Id', [], smallerAlarm)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
         expect(res).toBeGreaterThan(0)
       })
@@ -136,43 +136,43 @@ describe('Patient utils', () => {
       const lastRemoteMonitoringEnding = { monitoringEnd: biggerDate } as Monitoring
 
       it('should return negative number when first patient has a more recent date', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', firstRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id', [], null, '', lastRemoteMonitoringEnding)
+        const patient1 = createPatient('fakePatient1Id', [], firstRemoteMonitoringEnding)
+        const patient2 = createPatient('fakePatient2Id', [], lastRemoteMonitoringEnding)
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
         expect(res).toBeLessThan(0)
       })
 
       it('should return positive number when second patient has a more recent date', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', lastRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id', [], null, '', firstRemoteMonitoringEnding)
+        const patient1 = createPatient('fakePatient1Id', [], lastRemoteMonitoringEnding)
+        const patient2 = createPatient('fakePatient2Id', [], firstRemoteMonitoringEnding)
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return 0 when patients have same date', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', firstRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id', [], null, '', firstRemoteMonitoringEnding)
+        const patient1 = createPatient('fakePatient1Id', [], firstRemoteMonitoringEnding)
+        const patient2 = createPatient('fakePatient2Id', [], firstRemoteMonitoringEnding)
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
         expect(res).toBe(0)
       })
 
       it('should return positive number when first patient has no remote monitoring', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '')
-        const patient2 = createPatient('fakePatient2Id', [], null, '', firstRemoteMonitoringEnding)
+        const patient1 = createPatient('fakePatient1Id')
+        const patient2 = createPatient('fakePatient2Id', [], firstRemoteMonitoringEnding)
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return negative number when second patient has no remote monitoring', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', firstRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id', [], null, '')
+        const patient1 = createPatient('fakePatient1Id', [], firstRemoteMonitoringEnding)
+        const patient2 = createPatient('fakePatient2Id')
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
         expect(res).toBeLessThan(0)
       })
 
       it('should return 0 when both patient have no remote monitoring', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '')
-        const patient2 = createPatient('fakePatient2Id', [], null, '')
+        const patient1 = createPatient('fakePatient1Id')
+        const patient2 = createPatient('fakePatient2Id')
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
         expect(res).toBe(0)
       })
@@ -183,43 +183,43 @@ describe('Patient utils', () => {
       const biggerSystemName = 'DBLG2'
 
       it('should return negative number when first patient has a smaller system name', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', null, smallerSystemName)
-        const patient2 = createPatient('fakePatient2Id', [], null, '', null, biggerSystemName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, { system: smallerSystemName })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, { system: biggerSystemName })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system)
         expect(res).toBeLessThan(0)
       })
 
       it('should return positive number when second patient has a smaller system name', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', null, biggerSystemName)
-        const patient2 = createPatient('fakePatient2Id', [], null, '', null, smallerSystemName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, { system: biggerSystemName })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, { system: smallerSystemName })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return 0 when patients have same system name', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', null, smallerSystemName)
-        const patient2 = createPatient('fakePatient2Id', [], null, '', null, smallerSystemName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, { system: smallerSystemName })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, { system: smallerSystemName })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system)
         expect(res).toBe(0)
       })
 
       it('should return positive number when first patient has no system name', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '')
-        const patient2 = createPatient('fakePatient2Id', [], null, '', null, smallerSystemName)
+        const patient1 = createPatient('fakePatient1Id')
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, { system: smallerSystemName })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return negative number when second patient has no system name', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', null, smallerSystemName)
-        const patient2 = createPatient('fakePatient2Id', [], null, '')
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, { system: smallerSystemName })
+        const patient2 = createPatient('fakePatient2Id')
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system)
         expect(res).toBeLessThan(0)
       })
 
       it('should return 0 when both patient have no system name', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '')
-        const patient2 = createPatient('fakePatient2Id', [], null, '')
+        const patient1 = createPatient('fakePatient1Id')
+        const patient2 = createPatient('fakePatient2Id')
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system)
         expect(res).toBe(0)
       })
@@ -230,22 +230,22 @@ describe('Patient utils', () => {
       const biggerPatientName = 'zacchaeus'
 
       it('should return negative number when first patient has a smaller fullname', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, smallerPatientName)
-        const patient2 = createPatient('fakePatient2Id', [], null, biggerPatientName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, { fullName: smallerPatientName })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, { fullName: biggerPatientName })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName)
         expect(res).toBeLessThan(0)
       })
 
       it('should return positive number when second patient has a smaller fullname', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, biggerPatientName)
-        const patient2 = createPatient('fakePatient2Id', [], null, smallerPatientName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, { fullName: biggerPatientName })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, { fullName: smallerPatientName })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return 0 when patients have same fullname', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, smallerPatientName)
-        const patient2 = createPatient('fakePatient2Id', [], null, smallerPatientName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, { fullName: smallerPatientName })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, { fullName: smallerPatientName })
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName)
         expect(res).toBe(0)
       })
@@ -253,23 +253,23 @@ describe('Patient utils', () => {
 
     describe('flag', () => {
       it('should return negative number when first patient is flagged', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', null, null, true)
-        const patient2 = createPatient('fakePatient2Id', [])
-        const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { flagged: true })
+        const patient2 = createPatient('fakePatient2Id')
+        const res = comparePatients(patient1, patient2, PatientTableSortFields.flag)
         expect(res).toBeLessThan(0)
       })
 
       it('should return positive number when second patient is flagged', () => {
-        const patient1 = createPatient('fakePatient1Id', [])
-        const patient2 = createPatient('fakePatient2Id', [], null, '', null, null, true)
-        const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName)
+        const patient1 = createPatient('fakePatient1Id')
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { flagged: true })
+        const res = comparePatients(patient1, patient2, PatientTableSortFields.flag)
         expect(res).toBeGreaterThan(0)
       })
 
       it('should return 0 when patients are flagged', () => {
-        const patient1 = createPatient('fakePatient1Id', [], null, '', null, null, true)
-        const patient2 = createPatient('fakePatient2Id', [], null, '', null, null, true)
-        const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName)
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { flagged: true })
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { flagged: true })
+        const res = comparePatients(patient1, patient2, PatientTableSortFields.flag)
         expect(res).toBe(0)
       })
     })

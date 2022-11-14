@@ -287,7 +287,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
               }
             </TableRow>
           </TableHead>
-          <TableBody id="patient-table-body-id">
+          <TableBody id="patient-table-body-id" data-testid="patient-table-body">
             {patientsToDisplay.map(
               (patient: Patient): JSX.Element => (
                 <PatientRow
