@@ -186,7 +186,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
           </TableCell>
         </TableRow>
 
-        {caregiverToRemove &&
+        {caregiverToRemove && caregiverToRemove.user.userid === userId &&
           <RemoveDirectShareDialog
             userToRemove={userToRemove}
             onClose={onCloseRemoveCaregiverDialog}
