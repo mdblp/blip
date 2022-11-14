@@ -1,0 +1,75 @@
+name: Yourloops front CI
+
+on:
+  push:
+    branches: [ 'dblp' ]
+  pull_request:
+    branches: [ 'dblp' ]
+
+jobs:
+  lint_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build packages dependencies
+        run: npm run build-dependencies
+
+      - name: Test locales
+        run: npm run test-locales
+
+      - name: Test lambda
+        run: npm run test-lambda
+
+      - name: Test sundial
+        run: npm run test-sundial
+
+      - name: Test tideline
+        run: npm run test-tideline
+
+      - name: Test medical domain
+        run: npm run test-medical-domain
+
+      - name: Test dumb
+        run: npm run test-dumb
+
+      - name: Test viz
+        run: npm run test-viz
+
+      - name: Test blip
+        run: npm run test-blip
+
+      - name: Test yourloops unit
+        run: npm run test-yourloops-unit
+
+      - name: Test yourloops integration
+        run: npm run test-yourloops-integration
+
+#      - name: Upload working directory
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: yourloops-artifact
+#          path: .
+
+#  test:
+#    needs: pre-test
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download working directory
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: yourloops-artifact
