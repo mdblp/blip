@@ -126,8 +126,7 @@ class MedicalDataService {
         } else {
           message = String(error)
         }
-        console.log(raw)
-        console.log(message)
+        console.log({ message, rawData: raw })
       }
     })
   }

@@ -147,11 +147,6 @@ const testEndPoints = (medicalData: MedicalDataService) => {
       return epoch < rangeStart.valueOf() || epoch > rangeEnd.valueOf()
     }
   )
-  if (outOfRangeData.length > 0) {
-    console.log(outOfRangeData)
-    console.log(rangeStart)
-    console.log(rangeEnd)
-  }
   expect(outOfRangeData.length).toBe(0)
 }
 
