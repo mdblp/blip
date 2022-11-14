@@ -140,24 +140,22 @@ function PatientCaregiversPage(): JSX.Element {
   }, [t])
 
   return (
-    <React.Fragment>
+    <>
       {!caregivers
         ? <CircularProgress
-          id="patient-page-loading-progress"
           className="centered-spinning-loader"
         />
-        : <React.Fragment>
+        : <>
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">
             <Box marginTop={4}>
               <CaregiverTable caregivers={caregivers} fetchCaregivers={fetchCaregivers}/>
             </Box>
           </Container>
-        </React.Fragment>
+        </>
       }
       <AddCaregiverDialog actions={caregiverToAdd} />
-
-    </React.Fragment>
+    </>
   )
 }
 

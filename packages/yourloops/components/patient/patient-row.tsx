@@ -259,21 +259,19 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         </StyledTableCell>
 
         {isUserHcp &&
-          <React.Fragment>
-            <StyledTableCell className={classes.iconCell}>
-              <Tooltip
-                title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-                aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-              >
-                <Box display="flex" justifyContent="center">
-                  {hasUnreadMessages
-                    ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
-                    : <EmailOpenIcon className={classes.lightGrey} />
-                  }
-                </Box>
-              </Tooltip>
-            </StyledTableCell>
-          </React.Fragment>
+          <StyledTableCell className={classes.iconCell}>
+            <Tooltip
+              title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+              aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+            >
+              <Box display="flex" justifyContent="center">
+                {hasUnreadMessages
+                  ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
+                  : <EmailOpenIcon className={classes.lightGrey} />
+                }
+              </Box>
+            </Tooltip>
+          </StyledTableCell>
         }
 
         <StyledTableCell>

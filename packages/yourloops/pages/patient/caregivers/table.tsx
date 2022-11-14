@@ -216,7 +216,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
                 {t('firstname')}
               </TableSortLabel>
             </TableCell>
-            <TableCell id="patient-caregivers-table-header-email">
+            <TableCell>
               {t('email')}
             </TableCell>
             <TableCell id="patient-caregivers-table-header-actions" />

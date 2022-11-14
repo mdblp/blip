@@ -34,14 +34,13 @@ interface ComputedRow {
 
 const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHookReturn => {
   const { t } = useTranslation('yourloops')
-  const authHook = useAuth()
+  const { user, flagPatient: flagPatientAuth, getFlagPatients } = useAuth()
   const trNA = t('N/A')
-  const isUserHcp = authHook.user?.isUserHcp()
-  const isUserCaregiver = authHook.user?.isUserCaregiver()
+  const isUserHcp = user?.isUserHcp()
+  const isUserCaregiver = user?.isUserCaregiver()
   const patientIsMonitored = patient.monitoring?.enabled
   const patientListCommonClasses = patientListCommonStyle()
-  const flaggedPatients = authHook.getFlagPatients()
-  const isFlagged = flaggedPatients.includes(patient.userid)
+  const isFlagged = getFlagPatients().includes(patient.userid)
 
   const getMonitoringLabel = (monitoring: Monitoring): string => {
     if (!monitoring?.enabled) {
@@ -85,7 +84,7 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
   }
 
   const flagPatient = async (): Promise<void> => {
-    await authHook.flagPatient(patient.userid)
+    await flagPatientAuth(patient.userid)
   }
 
   return {
