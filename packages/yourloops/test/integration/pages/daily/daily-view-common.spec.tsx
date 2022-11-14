@@ -126,9 +126,7 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-02')).toHaveAttribute('aria-selected', 'true')
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
 
-      // const blob = new Blob([''], { type: 'text/csv' })
       userEvent.click(generateReportDialogFirstCsv.getByText('Generate'))
-
       // This checks for CSV generation
       expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), unmonitoredPatientId, '2020-01-01T23:00:00.000Z', '2020-01-15T22:59:59.999Z')
     })
