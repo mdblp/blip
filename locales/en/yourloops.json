@@ -213,7 +213,6 @@
   "modal-patient-add-team-success": "Your care team has now access to your data.",
   "modal-patient-remove-caregiver-failure": "Impossible to remove caregiver. Please try again later.",
   "modal-patient-remove-caregiver-info-2": "They will no longer have access to your data.",
-  "modal-patient-remove-caregiver-remove": "Remove caregiver",
   "modal-patient-remove-caregiver-success": "Your caregiver has no longer access to your data.",
   "modal-patient-remove-caregiver-title": "Remove a caregiver",
   "modal-patient-share-team-privacy": "By accepting this invitation, I recognize this team as my care team and consent to share my personal data with all its members, who are authorized healthcare professionals registered on YourLoops. I acknowledge that I can revoke this access at any time.",

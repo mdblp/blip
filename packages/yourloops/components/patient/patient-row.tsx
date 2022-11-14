@@ -114,12 +114,10 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
   const isAlreadyInATeam = PatientUtils.isInAtLeastATeam(patient)
   const hasUnreadMessages = patient.metadata.unreadMessagesSent > 0
 
-  const removeDirectShareDialogProps = {
-    userToRemove: {
-      id: userId,
-      fullName: patient.profile.fullName,
-      email: patient.profile.email
-    }
+  const userToRemove = {
+    id: userId,
+    fullName: patient.profile.fullName,
+    email: patient.profile.email
   }
 
   const {
@@ -299,7 +297,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
 
       {patientToRemove && isUserCaregiver &&
         <RemoveDirectShareDialog
-          userToRemove={removeDirectShareDialogProps.userToRemove}
+          userToRemove={userToRemove}
           onClose={onCloseRemoveDirectShareDialog}
         />
       }

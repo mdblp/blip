@@ -181,7 +181,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
               id={`patient-caregivers-table-row-${userId}-button-remove`}
               ariaLabel={`${t('remove-caregiver')}-${userId}`}
               onClick={onClickRemoveCaregiver}
-              tooltip={t('modal-patient-remove-caregiver-remove')} />
+              tooltip={t('remove-caregiver')} />
           </TableCell>
         </TableRow>
 

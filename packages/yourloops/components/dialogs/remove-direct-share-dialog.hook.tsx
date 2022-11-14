@@ -31,22 +31,14 @@ import { INotification } from '../../lib/notifications/models'
 import DirectShareApi from '../../lib/share/direct-share-api'
 import { useAuth } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/hook'
-
-interface RemoveDirectShareDialogHookProps {
-  userToRemove: {
-    id: string
-    email: string
-    fullName: string
-  }
-  onClose: (shouldRefresh: boolean) => void
-}
+import { RemoveDirectShareProps } from './remove-direct-share-dialog'
 
 interface RemoveDirectShareDialogHookReturn {
   isCurrentUserCaregiver: boolean
   removeDirectShare: () => Promise<void>
 }
 
-const useRemoveDirectShareDialog = ({ userToRemove, onClose }: RemoveDirectShareDialogHookProps): RemoveDirectShareDialogHookReturn => {
+const useRemoveDirectShareDialog = ({ userToRemove, onClose }: RemoveDirectShareProps): RemoveDirectShareDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { user: currentUser } = useAuth()
