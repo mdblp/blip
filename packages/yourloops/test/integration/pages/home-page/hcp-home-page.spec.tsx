@@ -39,19 +39,22 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import {
   mockPatientAPI,
   monitoredPatient,
+  pendingPatient,
   removePatientMock,
-  unmonitoredPatient,
-  pendingPatient
+  unmonitoredPatient
 } from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
-import { checkFooter } from '../../assert/footer'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
-
+import { PhonePrefixCode } from '../../../../lib/utils'
+import { renderPage } from '../../utils/render'
+import TeamAPI from '../../../../lib/team/team-api'
+jest.setTimeout(20000)
 describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
+
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
@@ -74,14 +77,13 @@ describe('HCP home page', () => {
 
   it('should render the home page with correct components', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
     checkHCPLayout(`${firstName} ${lastName}`)
-    checkFooter()
     checkSecondaryBar(false, true)
   })
 
-  it('should display a list of patient and be able to remove one of them', async () => {
+  it('should display a list of patients and allow to remove one of them', async () => {
     await act(async () => {
       render(getHomePage())
     })
@@ -91,16 +93,16 @@ describe('HCP home page', () => {
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
-    expect(removeButton).toBeInTheDocument()
+    expect(removeButton).toBeVisible()
 
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
-    expect(removeDialog).toBeInTheDocument()
+    expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatient])
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teamId, unmonitoredPatient.userId)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
@@ -108,18 +110,18 @@ describe('HCP home page', () => {
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
   })
 
-  it('should be able to remove a patient who is in many teams', async () => {
+  it('should allow to remove a patient who is in multiple teams', async () => {
     await act(async () => {
       render(getHomePage())
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
-    expect(removeButton).toBeInTheDocument()
+    expect(removeButton).toBeVisible()
 
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
-    expect(removeDialog).toBeInTheDocument()
+    expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     const select = within(removeDialog).getByTestId('patient-team-selector')
@@ -129,7 +131,7 @@ describe('HCP home page', () => {
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teamId, monitoredPatient.userId)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
@@ -140,26 +142,26 @@ describe('HCP home page', () => {
     mockPatientAPI()
     jest.spyOn(PatientAPI, 'removePatient').mockRejectedValueOnce(Error('error'))
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teamId, unmonitoredPatient.userId)
-    expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
+    expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })
 
   it('should display Add patient dialog with appropriate error messages depending on the input user and the selected team', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const secondaryBar = screen.getByTestId('patients-secondary-bar')
@@ -215,5 +217,83 @@ describe('HCP home page', () => {
     fireEvent.click(screen.getByRole('option', { name: teamOne.name }))
 
     expect(invitePatientButton).toBeEnabled()
+  })
+
+  it('should check that the team creation button is valid if all fields are complete', async () => {
+    const createTeamMock = jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
+    await act(async () => {
+      renderPage('/')
+    })
+    const teamMenu = screen.getByLabelText('Open team menu')
+    userEvent.click(teamMenu)
+    userEvent.click(screen.getByText('New care team'))
+    const dialogTeam = screen.getByRole('dialog')
+    const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
+    const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })
+    const address1Input = within(dialogTeam).getByRole('textbox', { name: 'Address 1' })
+    const address2Input = within(dialogTeam).getByRole('textbox', { name: 'Address 2' })
+    const zipcodeInput = within(dialogTeam).getByRole('textbox', { name: 'Zipcode' })
+    const cityInput = within(dialogTeam).getByRole('textbox', { name: 'City (State / Province)' })
+    const phoneNumberInput = within(dialogTeam).getByRole('textbox', { name: 'Phone number' })
+    const prefixPhoneNumber = within(dialogTeam).getByText('+33')
+    const emailInput = within(dialogTeam).getByRole('textbox', { name: 'Email' })
+
+    // Team creation button disabled and all fields empty
+    expect(nameInput).toHaveTextContent('')
+    expect(address1Input).toHaveTextContent('')
+    expect(address2Input).toHaveTextContent('')
+    expect(zipcodeInput).toHaveTextContent('')
+    expect(cityInput).toHaveTextContent('')
+    expect(phoneNumberInput).toHaveTextContent('')
+    expect(emailInput).toHaveTextContent('')
+    expect(dialogTeam).toBeInTheDocument()
+    expect(prefixPhoneNumber).toHaveTextContent(PhonePrefixCode.FR)
+    expect(createTeamButton).toBeDisabled()
+
+    // Team dropdown with prefix phone number
+    fireEvent.mouseDown(within(screen.getByTestId('team-edit-dialog-select-country')).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: 'Austria' }))
+    expect(prefixPhoneNumber).toHaveTextContent(PhonePrefixCode.AT)
+
+    // Team creation button activated and all fields filled
+    await userEvent.type(nameInput, lastName)
+    await userEvent.type(address1Input, '5 rue')
+    await userEvent.type(cityInput, 'Grenoble')
+    await userEvent.type(phoneNumberInput, '0600000000')
+    await userEvent.type(zipcodeInput, '38000')
+    await userEvent.type(emailInput, 'toto@titi.com')
+    expect(createTeamButton).not.toBeDisabled()
+
+    // Team creation button disabled and a field in error with the error message
+    userEvent.clear(zipcodeInput)
+    expect(createTeamButton).toBeDisabled()
+    await userEvent.type(zipcodeInput, '75d')
+    expect(within(dialogTeam).getByText('Please enter a valid zipcode')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    userEvent.clear(zipcodeInput)
+    await userEvent.type(zipcodeInput, '75800')
+    expect(createTeamButton).not.toBeDisabled()
+
+    userEvent.clear(phoneNumberInput)
+    expect(createTeamButton).toBeDisabled()
+    await userEvent.type(phoneNumberInput, '060')
+    expect(within(dialogTeam).getByText('Please enter a valid phone number')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    userEvent.clear(phoneNumberInput)
+    await userEvent.type(phoneNumberInput, '06000000')
+    expect(createTeamButton).not.toBeDisabled()
+
+    userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'tototiti.com')
+    expect(within(dialogTeam).getByText('Invalid email address (special characters are not allowed).')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'toto@titi.com')
+    expect(createTeamButton).not.toBeDisabled()
+
+    await act(async () => {
+      userEvent.click(createTeamButton)
+    })
+    expect(createTeamMock).toHaveBeenCalledTimes(1)
   })
 })

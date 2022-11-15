@@ -325,11 +325,12 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             required
             aria-required="true"
           />
-          <FormControl className={classes.formChild} required variant="outlined">
+          <FormControl data-testid="country" className={classes.formChild} required variant="outlined">
             <InputLabel
               htmlFor="team-edit-dialog-select-country">{t('team-edit-dialog-placeholder-addr-country')}</InputLabel>
             <Select
               id="team-edit-dialog-select-country"
+              data-testid="team-edit-dialog-select-country"
               name="country"
               label={t('team-edit-dialog-placeholder-addr-country')}
               value={addrCountry}

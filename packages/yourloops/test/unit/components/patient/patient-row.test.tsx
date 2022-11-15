@@ -60,7 +60,7 @@ describe('Patient row', () => {
       return {
         flagPatient: flagPatientMock,
         getFlagPatients: jest.fn().mockReturnValue([]),
-        user: { isUserHcp: () => true } as User
+        user: { isUserHcp: () => true, isUserCaregiver: () => false } as User
       }
     })
   })
@@ -133,12 +133,12 @@ describe('Patient row', () => {
       return {
         flagPatient: flagPatientMock,
         getFlagPatients: jest.fn().mockReturnValue([]),
-        user: { isUserHcp: () => false } as User
+        user: { isUserHcp: () => false, isUserCaregiver: () => true } as User
       }
     })
     render(getPatientRowJSX())
     const cells = screen.getAllByRole('cell')
-    expect(cells).toHaveLength(7)
+    expect(cells).toHaveLength(8)
     expect(within(cells[1]).queryByText(patient.profile.fullName)).not.toBeNull()
     expect(within(cells[2]).queryByText('N/A')).not.toBeNull()
     expect(within(cells[3]).queryByText(`${patient.metadata.alarm.timeSpentAwayFromTargetRate}%`)).not.toBeNull()
