@@ -36,21 +36,28 @@ import DialogActions from '@material-ui/core/DialogActions'
 import Button from '@material-ui/core/Button'
 import React, { FunctionComponent } from 'react'
 import useRemoveDirectShareDialog from './remove-direct-share-dialog.hook'
+import { useAuth } from '../../lib/auth'
+
+export interface UserToRemove {
+  id: string
+  email: string
+  fullName: string
+}
+
+export type OnCloseRemoveDirectShareDialog = (shouldRefresh: boolean) => void
 
 export interface RemoveDirectShareProps {
-  userToRemove: {
-    id: string
-    email: string
-    fullName: string
-  }
-  onClose: (shouldRefresh: boolean) => void
+  userToRemove: UserToRemove
+  onClose: OnCloseRemoveDirectShareDialog
 }
 
 const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ onClose, userToRemove }) => {
   const { t } = useTranslation('yourloops')
   const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-buttons' })
   const buttonsClasses = makeButtonsClasses()
-  const { isCurrentUserCaregiver, removeDirectShare } = useRemoveDirectShareDialog({ userToRemove, onClose })
+  const { removeDirectShare } = useRemoveDirectShareDialog(onClose)
+  const { user: currentUser } = useAuth()
+  const isCurrentUserCaregiver = currentUser.isUserCaregiver()
 
   const titleKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-title' : 'modal-patient-remove-caregiver-title'
   const questionKey = isCurrentUserCaregiver ? 'modal-remove-patient-question' : 'modal-remove-caregiver-question'
@@ -59,6 +66,10 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
 
   const closeDialog = (): void => {
     onClose(false)
+  }
+
+  const removeUser = async (): Promise<void> => {
+    await removeDirectShare(userToRemove, currentUser)
   }
 
   return (
@@ -92,7 +103,7 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
           className={buttonsClasses.alertActionButton}
           variant="contained"
           disableElevation
-          onClick={removeDirectShare}
+          onClick={removeUser}
         >
           {t(removeButtonKey)}
         </Button>

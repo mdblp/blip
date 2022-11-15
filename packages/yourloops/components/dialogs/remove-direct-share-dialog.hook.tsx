@@ -29,23 +29,22 @@ import { useTranslation } from 'react-i18next'
 import { useAlert } from '../utils/snackbar'
 import { INotification } from '../../lib/notifications/models'
 import DirectShareApi from '../../lib/share/direct-share-api'
-import { useAuth } from '../../lib/auth'
+import { User } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/hook'
-import { RemoveDirectShareProps } from './remove-direct-share-dialog'
+import { OnCloseRemoveDirectShareDialog, UserToRemove } from './remove-direct-share-dialog'
 
 interface RemoveDirectShareDialogHookReturn {
-  isCurrentUserCaregiver: boolean
-  removeDirectShare: () => Promise<void>
+  removeDirectShare: (userToRemove: UserToRemove, currentUser: User) => Promise<void>
 }
 
-const useRemoveDirectShareDialog = ({ userToRemove, onClose }: RemoveDirectShareProps): RemoveDirectShareDialogHookReturn => {
+const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): RemoveDirectShareDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { user: currentUser } = useAuth()
-  const isCurrentUserCaregiver = currentUser.isUserCaregiver()
   const { cancel, sentInvitations } = useNotification()
 
-  const removeDirectShare = async (): Promise<void> => {
+  const removeDirectShare = async (userToRemove: UserToRemove, currentUser: User): Promise<void> => {
+    const isCurrentUserCaregiver = currentUser.isUserCaregiver()
+
     try {
       const invitation = sentInvitations.find((invitation: INotification) => invitation.email === userToRemove.email)
 
@@ -61,15 +60,14 @@ const useRemoveDirectShareDialog = ({ userToRemove, onClose }: RemoveDirectShare
       const successAlertKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-success' : 'modal-patient-remove-caregiver-success'
       alert.success(t(successAlertKey))
 
-      const shouldRefresh = !invitation
-      onClose(shouldRefresh)
+      onClose(!invitation)
     } catch (reason) {
       const errorAlertKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-failure' : 'modal-patient-remove-caregiver-failure'
       alert.error(t(errorAlertKey))
     }
   }
 
-  return { isCurrentUserCaregiver, removeDirectShare }
+  return { removeDirectShare }
 }
 
 export default useRemoveDirectShareDialog
