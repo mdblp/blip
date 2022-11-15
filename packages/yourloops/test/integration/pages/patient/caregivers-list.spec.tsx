@@ -40,6 +40,7 @@ import DirectShareApi from '../../../../lib/share/direct-share-api'
 import { UserInvitationStatus } from '../../../../models/generic'
 import { INotification } from '../../../../lib/notifications/models'
 
+jest.setTimeout(20000)
 describe('Patient caregivers page', () => {
   const firstName = 'Théo'
   const lastName = 'Cupé'
