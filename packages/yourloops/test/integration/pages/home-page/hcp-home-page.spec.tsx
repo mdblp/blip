@@ -40,16 +40,14 @@ import {
   mockPatientAPIForHcp,
   mockPatientAPIForPatients,
   monitoredPatient,
-  monitoredPatientAsTeamMember,
   pendingPatient,
-  unmonitoredPatient,
-  unmonitoredPatientAsTeamMember
+  unmonitoredPatient
 } from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
-import { checkFooter } from '../../assert/footer'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
+import { renderPage } from '../../utils/render'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -77,14 +75,13 @@ describe('HCP home page', () => {
 
   it('should render the home page with correct components', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
     checkHCPLayout(`${firstName} ${lastName}`)
-    checkFooter()
     checkSecondaryBar(false, true)
   })
 
-  it('should display a list of patient and be able to remove one of them', async () => {
+  it('should display a list of patients and allow to remove one of them', async () => {
     await act(async () => {
       render(getHomePage())
     })
@@ -94,16 +91,16 @@ describe('HCP home page', () => {
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-unmonitored-patient@diabeloop.fr' })
-    expect(removeButton).toBeInTheDocument()
+    expect(removeButton).toBeVisible()
 
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
-    expect(removeDialog).toBeInTheDocument()
+    expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient])
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
@@ -111,18 +108,18 @@ describe('HCP home page', () => {
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
   })
 
-  it('should be able to remove a patient who is in many teams', async () => {
+  it('should allow to remove a patient who is in multiple teams', async () => {
     await act(async () => {
       render(getHomePage())
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${monitoredPatientAsTeamMember.userId}`)
+    const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userid}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-monitored-patient@diabeloop.fr' })
-    expect(removeButton).toBeInTheDocument()
+    expect(removeButton).toBeVisible()
 
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
-    expect(removeDialog).toBeInTheDocument()
+    expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     const select = within(removeDialog).getByTestId('patient-team-selector')
@@ -132,37 +129,37 @@ describe('HCP home page', () => {
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(monitoredPatientAsTeamMember.teamId, monitoredPatientAsTeamMember.userId)
+    expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teams[0].teamId, monitoredPatient.userid)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${monitoredPatientAsTeamMember.profile.firstName} ${monitoredPatientAsTeamMember.profile.lastName} is no longer a member of ${teamTwo.name}`)
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} is no longer a member of ${teamTwo.name}`)
   })
 
   it('should display an error message if patient removal failed', async () => {
     mockPatientAPIForPatients()
     jest.spyOn(PatientAPI, 'removePatient').mockRejectedValueOnce(Error('error'))
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatientAsTeamMember.email}` })
-    removeButton.click()
+    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.profile.email}` })
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.teamId, unmonitoredPatientAsTeamMember.userId)
+    expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })
 
   it('should display dialog to add patient with appropriate error messages depending on the input user and the selected team', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const secondaryBar = screen.getByTestId('patients-secondary-bar')

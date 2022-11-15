@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Patient care givers page: Remove a caregiver dialog
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,85 +25,91 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
 import { useTranslation } from 'react-i18next'
-
 import { makeStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
+import { makeButtonsStyles } from '../theme'
 import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
+import Button from '@material-ui/core/Button'
+import React, { FunctionComponent } from 'react'
+import useRemoveDirectShareDialog from './remove-direct-share-dialog.hook'
+import { useAuth } from '../../lib/auth'
 
-import { makeButtonsStyles } from '../../../components/theme'
-
-import { getUserFirstLastName } from '../../../lib/utils'
-import { RemoveDialogContentProps } from './types'
-
-export interface RemoveDialogProps {
-  actions: RemoveDialogContentProps | null
+export interface UserToRemove {
+  id: string
+  email: string
+  fullName: string
 }
 
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-buttons' })
+export type OnCloseRemoveDirectShareDialog = (shouldRefresh: boolean) => void
 
-/**
- * Remove a caregiver dialog / modale
- */
-function RemoveDialog(props: RemoveDialogProps): JSX.Element {
+export interface RemoveDirectShareProps {
+  userToRemove: UserToRemove
+  onClose: OnCloseRemoveDirectShareDialog
+}
+
+const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ onClose, userToRemove }) => {
   const { t } = useTranslation('yourloops')
+  const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-buttons' })
   const buttonsClasses = makeButtonsClasses()
+  const { removeDirectShare } = useRemoveDirectShareDialog(onClose)
+  const { user: currentUser } = useAuth()
+  const isCurrentUserCaregiver = currentUser.isUserCaregiver()
 
-  const handleClose = (): void => {
-    props.actions?.onDialogResult(false)
-  }
-  const handleRemoveCaregiver = (): void => {
-    props.actions?.onDialogResult(true)
+  const titleKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-title' : 'modal-patient-remove-caregiver-title'
+  const questionKey = isCurrentUserCaregiver ? 'modal-remove-patient-question' : 'modal-remove-caregiver-question'
+  const infoKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-info-2' : 'modal-patient-remove-caregiver-info-2'
+  const removeButtonKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-remove' : 'remove-caregiver'
+
+  const closeDialog = (): void => {
+    onClose(false)
   }
 
-  const dialogIsOpen = props.actions !== null
-  const userName = props.actions !== null ? getUserFirstLastName(props.actions.caregiver.user) : { firstName: '', lastName: '' }
-  const name = t('user-name', userName)
+  const removeUser = async (): Promise<void> => {
+    await removeDirectShare(userToRemove, currentUser)
+  }
 
   return (
     <Dialog
-      id="patient-remove-caregiver-dialog"
-      open={dialogIsOpen}
-      aria-labelledby={t('modal-patient-remove-caregiver-title')}
-      onClose={handleClose}
+      data-testid="remove-direct-share-dialog"
+      open
+      aria-labelledby={t(titleKey)}
+      onClose={closeDialog}
     >
-      <DialogTitle id="patient-remove-caregiver-dialog-title">
-        <strong>{t('modal-patient-remove-caregiver-title')}</strong>
+      <DialogTitle id="remove-direct-share-dialog-title">
+        <strong>{t(titleKey)}</strong>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t('modal-remove-caregiver-question', { name })}
+          {t(questionKey, { name: userToRemove.fullName })}
         </DialogContentText>
         <DialogContentText>
-          {t('modal-patient-remove-caregiver-info-2')}
+          {t(infoKey)}
         </DialogContentText>
       </DialogContent>
 
       <DialogActions>
         <Button
-          id="patient-remove-caregiver-dialog-button-cancel"
-          onClick={handleClose}
+          onClick={closeDialog}
         >
           {t('button-cancel')}
         </Button>
         <Button
-          id="patient-remove-caregiver-dialog-button-remove"
+          data-testid="remove-direct-share-dialog-button-remove"
           className={buttonsClasses.alertActionButton}
           variant="contained"
           disableElevation
-          onClick={handleRemoveCaregiver}
+          onClick={removeUser}
         >
-          {t('modal-patient-remove-caregiver-remove')}
+          {t(removeButtonKey)}
         </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-export default RemoveDialog
+export default RemoveDirectShareDialog
