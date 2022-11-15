@@ -39,13 +39,12 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import {
   mockPatientAPI,
   monitoredPatient,
+  pendingPatient,
   removePatientMock,
-  unmonitoredPatient,
-  pendingPatient
+  unmonitoredPatient
 } from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
-import { checkFooter } from '../../assert/footer'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
@@ -55,6 +54,7 @@ jest.setTimeout(20000)
 describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
+
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
@@ -77,14 +77,13 @@ describe('HCP home page', () => {
 
   it('should render the home page with correct components', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
     checkHCPLayout(`${firstName} ${lastName}`)
-    checkFooter()
     checkSecondaryBar(false, true)
   })
 
-  it('should display a list of patient and be able to remove one of them', async () => {
+  it('should display a list of patients and allow to remove one of them', async () => {
     await act(async () => {
       render(getHomePage())
     })
@@ -94,16 +93,16 @@ describe('HCP home page', () => {
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
-    expect(removeButton).toBeInTheDocument()
+    expect(removeButton).toBeVisible()
 
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
-    expect(removeDialog).toBeInTheDocument()
+    expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatient])
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teamId, unmonitoredPatient.userId)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
@@ -111,18 +110,18 @@ describe('HCP home page', () => {
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
   })
 
-  it('should be able to remove a patient who is in many teams', async () => {
+  it('should allow to remove a patient who is in multiple teams', async () => {
     await act(async () => {
       render(getHomePage())
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
-    expect(removeButton).toBeInTheDocument()
+    expect(removeButton).toBeVisible()
 
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
-    expect(removeDialog).toBeInTheDocument()
+    expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     const select = within(removeDialog).getByTestId('patient-team-selector')
@@ -132,7 +131,7 @@ describe('HCP home page', () => {
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teamId, monitoredPatient.userId)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
@@ -143,26 +142,26 @@ describe('HCP home page', () => {
     mockPatientAPI()
     jest.spyOn(PatientAPI, 'removePatient').mockRejectedValueOnce(Error('error'))
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
     const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
-    removeButton.click()
+    userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     await act(async () => {
-      confirmRemoveButton.click()
+      userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teamId, unmonitoredPatient.userId)
-    expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
+    expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })
 
   it('should display Add patient dialog with appropriate error messages depending on the input user and the selected team', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const secondaryBar = screen.getByTestId('patients-secondary-bar')

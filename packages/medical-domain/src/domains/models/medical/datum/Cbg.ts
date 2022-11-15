@@ -3,12 +3,12 @@ import BaseDatum from './basics/BaseDatum'
 const MGDL_UNITS = 'mg/dL'
 const MMOLL_UNITS = 'mmol/L'
 
-const units = [MGDL_UNITS, MMOLL_UNITS] as const
-type BgUnit = typeof units[number]
+const bgUnits = [MGDL_UNITS, MMOLL_UNITS] as const
+type BgUnit = typeof bgUnits[number]
 
 function isBgUnit(value: unknown): value is BgUnit {
   if (typeof value === 'string') {
-    return units.includes(value as BgUnit)
+    return bgUnits.includes(value as BgUnit)
   }
   return false
 }
@@ -28,4 +28,4 @@ type Cbg = Bg & {
 }
 
 export default Cbg
-export { Bg, MGDL_UNITS, MMOLL_UNITS, BgUnit, isBgUnit }
+export { Bg, MGDL_UNITS, MMOLL_UNITS, bgUnits, BgUnit, isBgUnit }
