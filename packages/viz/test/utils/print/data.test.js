@@ -142,12 +142,12 @@ describe('print data utils', () => {
         uploads: [
           new types.Upload({ deviceTime: '2019-05-20T08:59:37', timezone: 'Europe/Paris' })
         ],
+        warmUps: [],
         wizards: [
           new types.Wizard({ deviceTime: '2019-05-22T14:33:15', timezone: 'Europe/Paris' })
         ],
         zenModes: [],
-        timezoneChanges: [],
-        message: []
+        timezoneChanges: []
       }
       tidelineData.add([])
     })

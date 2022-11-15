@@ -96,7 +96,8 @@ const testNormalizeOk = (data: Record<string, unknown>, normalizeService: DatumP
   expect(res).toEqual({ ...data, mockedData: 'mocked' })
 }
 
-const testNormalizeKo = (data, normalizeService) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const testNormalizeKo = (data: Record<string, unknown>, normalizeService: DatumProcessor<any>) => {
   const correctType = {
     ...data
   }
@@ -109,7 +110,7 @@ const testNormalizeKo = (data, normalizeService) => {
   expect(normalizeService.normalize).toHaveBeenCalledWith(correctType, defaultMedicalDataOptions)
 }
 
-const testNormalizeTypeKo = (data, errorMessage) => {
+const testNormalizeTypeKo = (data: Record<string, unknown>, errorMessage: string) => {
   const correctType = {
     ...data
   }

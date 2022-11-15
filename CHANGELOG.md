@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.2-beta16 - 2022-11-10
 ### Added
+- YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
@@ -11,6 +12,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-1873 Fix patient profile update not visible in dashboard
 - YLP-1874 Fix PDF report generation
 - YLP-1901 CSV generation is not using the correct time frame
+- YLP-1903 Timezone detection should exclude some data types
+- YLP-1680 getPatientData Api method has a wrong parameter
 
 ## 3.0.1 - 2022-10-11
 ### Added
