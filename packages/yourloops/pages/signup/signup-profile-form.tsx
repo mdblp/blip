@@ -199,6 +199,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
       <SignupStepperActionButtons
         nextButtonLabel={t('create-account')}
+        inProgress={saving}
         disabled={_.some(errors) || saving || isFormEmpty}
         onClickBackButton={handleBack}
         onClickNextButton={onFinishSignup}
