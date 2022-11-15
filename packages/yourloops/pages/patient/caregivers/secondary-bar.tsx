@@ -70,7 +70,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
   }
 
   return (
-    <div id="patient-navbar-item-right" className={classes.topBar}>
+    <div id="patient-navbar-item-right" data-testid="patient-caregivers-secondary-bar" className={classes.topBar}>
       <Button
         id="patient-navbar-add-caregiver"
         color="primary"
