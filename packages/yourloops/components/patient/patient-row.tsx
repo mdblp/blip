@@ -217,19 +217,19 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         }
 
         <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
-          {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
           {isUserHcp && timeSpentAwayFromTargetActive &&
             <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={frequencyOfSevereHypoglycemiaRateClasses}>
-          {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
             <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={dataNotTransferredRateClasses}>
-          {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}
           {isUserHcp && nonDataTransmissionActive &&
             <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>

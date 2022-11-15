@@ -46,9 +46,18 @@ export const createPatient = (
   monitoring: Monitoring | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
-  metadata: Partial<PatientMetadata> = undefined
+  metadata: Partial<PatientMetadata> = undefined,
+  alarms: Partial<Alarm> = undefined
 ): Patient => {
   return {
+    alarms: {
+      timeSpentAwayFromTargetRate: alarms?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetActive: alarms?.timeSpentAwayFromTargetActive || false,
+      frequencyOfSevereHypoglycemiaRate: alarms?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaActive: alarms?.frequencyOfSevereHypoglycemiaActive || false,
+      nonDataTransmissionRate: alarms?.nonDataTransmissionRate || 30,
+      nonDataTransmissionActive: alarms?.nonDataTransmissionActive || false
+    },
     profile: {
       birthdate: profile?.birthdate || new Date(),
       firstName: profile?.firstName || 'fakeFirstname',
@@ -62,14 +71,6 @@ export const createPatient = (
       system: settings?.system
     },
     metadata: {
-      alarm: metadata?.alarm || {
-        timeSpentAwayFromTargetRate: 10,
-        timeSpentAwayFromTargetActive: false,
-        frequencyOfSevereHypoglycemiaRate: 20,
-        frequencyOfSevereHypoglycemiaActive: false,
-        nonDataTransmissionRate: 30,
-        nonDataTransmissionActive: false
-      },
       flagged: metadata?.flagged,
       medicalData: metadata?.medicalData || null,
       unreadMessagesSent: metadata?.unreadMessagesSent || 0

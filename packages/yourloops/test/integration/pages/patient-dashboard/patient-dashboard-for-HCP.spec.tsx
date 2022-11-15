@@ -40,10 +40,11 @@ import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
-  mockPatientAPI,
-  monitoredPatientFullName,
+  mockPatientAPIForHcp,
+  monitoredPatient,
   monitoredPatientId,
-  unmonitoredPatientFullName,
+  pendingPatient,
+  unmonitoredPatient,
   unmonitoredPatientId
 } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
@@ -66,7 +67,7 @@ describe('Patient dashboard for HCP', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserDataFetch(firstName, lastName)
-    mockPatientAPI()
+    mockPatientAPIForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
     mockDataAPI()
@@ -119,7 +120,7 @@ describe('Patient dashboard for HCP', () => {
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     expect(history.location.pathname).toBe(unMonitoredPatientDashboardRoute)
-    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
+    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatient.profile.fullName)
     checkHCPHeader(`${firstName} ${lastName}`)
     checkDrawer()
     checkFooter()
@@ -133,7 +134,7 @@ describe('Patient dashboard for HCP', () => {
 
       const dashboard = within(await screen.findByTestId('patient-dashboard'))
       expect(history.location.pathname).toBe(monitoredPatientDashboardRoute)
-      testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatientFullName)
+      testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatient.profile.fullName)
       /* Patient info widget */
       expect(dashboard.getByText('Renew')).toBeVisible()
       expect(dashboard.getByText('Remove')).toBeVisible()
@@ -161,14 +162,14 @@ describe('Patient dashboard for HCP', () => {
       patientInfoCard = within(await screen.findByTestId('patient-info-card'))
       const secondaryHeader = within(await screen.findByTestId('patient-data-subnav-outer'))
 
-      expect(patientInfoCard.getByText(monitoredPatientFullName)).toBeVisible()
-      fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatientFullName))
-      fireEvent.click(screen.getByText(unmonitoredPatientFullName))
+      expect(patientInfoCard.getByText(monitoredPatient.profile.fullName)).toBeVisible()
+      fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatient.profile.fullName))
+      fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
       await waitFor(() => {
         // call this to update the card and catch the new patient
         patientInfoCard = within(screen.getByTestId('patient-info-card'))
-        expect(patientInfoCard.getByText(unmonitoredPatientFullName)).toBeVisible()
+        expect(patientInfoCard.getByText(pendingPatient.profile.fullName)).toBeVisible()
       })
     })
   })

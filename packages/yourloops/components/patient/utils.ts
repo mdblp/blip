@@ -125,16 +125,16 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
 
   switch (orderBy) {
     case PatientTableSortFields.alertTimeTarget:
-      aValue = a.metadata.alarm.timeSpentAwayFromTargetRate
-      bValue = b.metadata.alarm.timeSpentAwayFromTargetRate
+      aValue = a.alarms.timeSpentAwayFromTargetRate
+      bValue = b.alarms.timeSpentAwayFromTargetRate
       break
     case PatientTableSortFields.alertHypoglycemic:
-      aValue = a.metadata.alarm.frequencyOfSevereHypoglycemiaRate
-      bValue = b.metadata.alarm.frequencyOfSevereHypoglycemiaRate
+      aValue = a.alarms.frequencyOfSevereHypoglycemiaRate
+      bValue = b.alarms.frequencyOfSevereHypoglycemiaRate
       break
     case PatientTableSortFields.dataNotTransferred:
-      aValue = a.metadata.alarm.nonDataTransmissionRate
-      bValue = b.metadata.alarm.nonDataTransmissionRate
+      aValue = a.alarms.nonDataTransmissionRate
+      bValue = b.alarms.nonDataTransmissionRate
       break
     case PatientTableSortFields.flag:
       aValue = a.metadata.flagged
@@ -163,6 +163,7 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
+    alarms: iTeamMember.alarms ?? {} as Alarm,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
@@ -177,7 +178,6 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       system: 'DBLG1'
     },
     metadata: {
-      alarm: iTeamMember.alarms ?? {} as Alarm,
       flagged: undefined,
       medicalData: null,
       unreadMessagesSent: iTeamMember.unreadMessages ?? 0

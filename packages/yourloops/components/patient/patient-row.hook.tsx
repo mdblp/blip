@@ -43,9 +43,9 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
   const computeRowInformation = (): ComputedRow => {
     const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`
     const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`
-    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.metadata.alarm?.timeSpentAwayFromTargetActive ? patient.metadata.alarm?.timeSpentAwayFromTargetActive : false
-    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive ? patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive : false
-    const nonDataTransmissionActive = patientIsMonitored && patient.metadata.alarm?.nonDataTransmissionActive ? patient.metadata.alarm?.nonDataTransmissionActive : false
+    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.alarms?.timeSpentAwayFromTargetActive ? patient.alarms?.timeSpentAwayFromTargetActive : false
+    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.alarms?.frequencyOfSevereHypoglycemiaActive ? patient.alarms?.frequencyOfSevereHypoglycemiaActive : false
+    const nonDataTransmissionActive = patientIsMonitored && patient.alarms?.nonDataTransmissionActive ? patient.alarms?.nonDataTransmissionActive : false
     let patientRemoteMonitoring
     if (patient.monitoring?.enabled) {
       if (patient.monitoring.monitoringEnd) {

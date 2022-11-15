@@ -30,7 +30,7 @@ import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { buildPatient, mockPatientAPI } from '../../mock/mockPatientAPI'
+import { buildPatientAsTeamMember, mockPatientAPIForPatients } from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { checkCaregiverLayout } from '../../assert/layout'
@@ -47,7 +47,7 @@ describe('Caregiver home page', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserDataFetch(firstName, lastName)
-    mockPatientAPI()
+    mockPatientAPIForPatients()
     mockDirectShareApi()
   })
 
@@ -59,7 +59,7 @@ describe('Caregiver home page', () => {
   })
 
   it('should filter patients correctly depending on the search value', async () => {
-    const patient1 = buildPatient({
+    const patient1 = buildPatientAsTeamMember({
       userId: 'patientId1',
       profile: {
         firstName: 'Akim',
@@ -68,7 +68,7 @@ describe('Caregiver home page', () => {
         patient: { birthday: '2010-01-20' }
       }
     })
-    const patient2 = buildPatient({
+    const patient2 = buildPatientAsTeamMember({
       userId: 'patientId2',
       profile: {
         firstName: 'Alain',
@@ -77,7 +77,7 @@ describe('Caregiver home page', () => {
         patient: { birthday: '2010-01-20' }
       }
     })
-    const patient3 = buildPatient({
+    const patient3 = buildPatientAsTeamMember({
       userId: 'patientId3',
       profile: {
         firstName: 'Annie',

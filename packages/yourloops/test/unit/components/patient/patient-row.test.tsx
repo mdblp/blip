@@ -118,11 +118,11 @@ describe('Patient row', () => {
     expect(within(cells[1]).queryByText(patient.profile.fullName)).not.toBeNull()
     expect(within(cells[2]).queryByText('N/A')).not.toBeNull()
     expect(within(cells[3]).queryByText('no')).not.toBeNull()
-    expect(within(cells[4]).queryByText(`${patient.metadata.alarm.timeSpentAwayFromTargetRate}%`)).not.toBeNull()
+    expect(within(cells[4]).queryByText(`${patient.alarms.timeSpentAwayFromTargetRate}%`)).not.toBeNull()
     expect(within(cells[4]).queryByTitle('time-away-alert-icon')).toBeNull()
-    expect(within(cells[5]).queryByText(`${patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate}%`)).not.toBeNull()
+    expect(within(cells[5]).queryByText(`${patient.alarms.frequencyOfSevereHypoglycemiaRate}%`)).not.toBeNull()
     expect(within(cells[4]).queryByTitle('severe-hypo-alert-icon')).toBeNull()
-    expect(within(cells[6]).queryByText(`${patient.metadata.alarm.nonDataTransmissionRate}%`)).not.toBeNull()
+    expect(within(cells[6]).queryByText(`${patient.alarms.nonDataTransmissionRate}%`)).not.toBeNull()
     expect(within(cells[4]).queryByTitle('no-data-alert-icon')).toBeNull()
     expect(within(cells[7]).queryByText('N/A')).not.toBeNull()
     expect(within(cells[8]).queryByTitle('unread-messages-icon')).toBeNull()
@@ -141,9 +141,9 @@ describe('Patient row', () => {
     expect(cells).toHaveLength(7)
     expect(within(cells[1]).queryByText(patient.profile.fullName)).not.toBeNull()
     expect(within(cells[2]).queryByText('N/A')).not.toBeNull()
-    expect(within(cells[3]).queryByText(`${patient.metadata.alarm.timeSpentAwayFromTargetRate}%`)).not.toBeNull()
-    expect(within(cells[4]).queryByText(`${patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate}%`)).not.toBeNull()
-    expect(within(cells[5]).queryByText(`${patient.metadata.alarm.nonDataTransmissionRate}%`)).not.toBeNull()
+    expect(within(cells[3]).queryByText(`${patient.alarms.timeSpentAwayFromTargetRate}%`)).not.toBeNull()
+    expect(within(cells[4]).queryByText(`${patient.alarms.frequencyOfSevereHypoglycemiaRate}%`)).not.toBeNull()
+    expect(within(cells[5]).queryByText(`${patient.alarms.nonDataTransmissionRate}%`)).not.toBeNull()
     expect(within(cells[6]).queryByText('N/A')).not.toBeNull()
   })
 
@@ -174,7 +174,7 @@ describe('Patient row', () => {
   it('should display time away alert icon when logged in user is HCP and user has a time away alert', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
-    remoteMonitoredPatient.metadata.alarm.timeSpentAwayFromTargetActive = true
+    remoteMonitoredPatient.alarms.timeSpentAwayFromTargetActive = true
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
       filter: FilterType.pending
@@ -189,7 +189,7 @@ describe('Patient row', () => {
   it('should display severe hypo alert icon when logged in user is HCP and user has a severe hypo alert', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
-    remoteMonitoredPatient.metadata.alarm.frequencyOfSevereHypoglycemiaActive = true
+    remoteMonitoredPatient.alarms.frequencyOfSevereHypoglycemiaActive = true
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
       filter: FilterType.pending
@@ -204,7 +204,7 @@ describe('Patient row', () => {
   it('should display no data alert icon when logged in user is HCP and user has a no data alert', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
-    remoteMonitoredPatient.metadata.alarm.nonDataTransmissionActive = true
+    remoteMonitoredPatient.alarms.nonDataTransmissionActive = true
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
       filter: FilterType.pending

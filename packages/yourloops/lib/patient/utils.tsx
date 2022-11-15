@@ -30,6 +30,7 @@ import PatientApi from './patient-api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
 import moment from 'moment-timezone'
+import { User } from '../auth'
 
 export default class PatientUtils {
   static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {
@@ -47,6 +48,7 @@ export default class PatientUtils {
           }
         })
         const patientToAdd: Patient = {
+          alarms: patient.alarms,
           profile: patient.profile,
           settings: patient.settings,
           metadata: patient.metadata,
@@ -65,7 +67,14 @@ export default class PatientUtils {
     return patientsAsITeamMembers.map(patientAsITeamMember => mapITeamMemberToPatient(patientAsITeamMember))
   }
 
-  static async computePatients(): Promise<Patient[]> {
+  static async computePatients(user: User): Promise<Patient[]> {
+    const userIsHcp = user.isUserHcp()
+    if (!userIsHcp && !user.isUserPatient() && !user.isUserCaregiver()) {
+      throw Error(`Cannot retrieve patients with user having role ${user.role}`)
+    }
+    if (userIsHcp) {
+      return await PatientApi.getPatientsForHcp(user.id)
+    }
     return PatientUtils.removeDuplicates(await PatientUtils.retrievePatients())
   }
 
@@ -115,11 +124,11 @@ export default class PatientUtils {
       case PatientFilterTypes.unread:
         return patients.filter(patient => patient.metadata.unreadMessagesSent > 0)
       case PatientFilterTypes.outOfRange:
-        return patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive)
+        return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive)
       case PatientFilterTypes.severeHypoglycemia:
-        return patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive)
+        return patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive)
       case PatientFilterTypes.dataNotTransferred:
-        return patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive)
+        return patients.filter(patient => patient.alarms.nonDataTransmissionActive)
       case PatientFilterTypes.remoteMonitored:
         return patients.filter(patient => patient.monitoring?.enabled)
       case PatientFilterTypes.private:

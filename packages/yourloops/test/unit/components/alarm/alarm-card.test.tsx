@@ -104,7 +104,7 @@ describe('AlarmCard', () => {
       nonDataTransmissionRate: 10,
       nonDataTransmissionActive: true
     }
-    const patientWithAlarms = createPatient('fakePatientId', [], undefined, undefined, undefined, { alarm })
+    const patientWithAlarms = createPatient('fakePatientId', [], undefined, undefined, undefined, undefined, alarm)
     mountComponent({ patient: patientWithAlarms })
     expect(document.getElementById('alarm-card-header-id').querySelector('.MuiCardHeader-title').innerHTML).toEqual('events (+2)')
   })
@@ -121,7 +121,7 @@ describe('AlarmCard', () => {
     const monitoring: Monitoring = {
       enabled: true
     }
-    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, { alarm })
+    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, undefined, alarm)
     mountComponent({ patient: patientWithMonitoring })
     const configureButton = document.getElementById('configure-icon-button-id')
     triggerMouseEvent('click', configureButton)

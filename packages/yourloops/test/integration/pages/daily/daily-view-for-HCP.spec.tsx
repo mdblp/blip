@@ -31,7 +31,7 @@ import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockPatientAPI, unmonitoredPatientId } from '../../mock/mockPatientAPI'
+import { mockPatientAPIForHcp, mockPatientAPIForPatients, unmonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
@@ -51,7 +51,7 @@ describe('Daily view for HCP', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserDataFetch(firstName, lastName)
-    mockPatientAPI()
+    mockPatientAPIForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
   })

@@ -32,6 +32,7 @@ import { UserRoles } from '../../models/user'
 import { HttpHeaderKeys } from '../../models/api'
 import { getCurrentLang } from '../language'
 import { Monitoring } from '../../models/monitoring'
+import { Patient } from '../data/patient'
 
 const log = bows('Patient API')
 
@@ -60,6 +61,11 @@ export default class PatientApi {
       }
       throw err
     }
+  }
+
+  static async getPatientsForHcp(userId: string): Promise<Patient[]> {
+    const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/patients` })
+    return data ?? []
   }
 
   static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotificationAPI> {

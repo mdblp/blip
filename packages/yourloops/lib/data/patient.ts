@@ -55,7 +55,6 @@ interface PatientSettings {
 }
 
 interface PatientMetadata {
-  alarm: Alarm
   flagged?: boolean
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null
@@ -63,10 +62,11 @@ interface PatientMetadata {
 }
 
 interface Patient {
-  profile: PatientProfile
-  settings: PatientSettings
+  alarms: Alarm
   metadata: PatientMetadata
   monitoring?: Monitoring
+  profile: PatientProfile
+  settings: PatientSettings
   teams: PatientTeam[]
   readonly userid: string
 }

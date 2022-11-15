@@ -68,9 +68,9 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   const loggedInUser = authHook.user
   const classes = alarmCardStyles()
   const [showPatientAlarmDialog, setShowPatientAlarmDialog] = useState(false)
-  const timeSpentAwayFromTargetActive = patient.metadata.alarm.timeSpentAwayFromTargetActive
-  const frequencyOfSevereHypoglycemiaActive = patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive
-  const nonDataTransmissionActive = patient.metadata.alarm.nonDataTransmissionActive
+  const timeSpentAwayFromTargetActive = patient.alarms.timeSpentAwayFromTargetActive
+  const frequencyOfSevereHypoglycemiaActive = patient.alarms.frequencyOfSevereHypoglycemiaActive
+  const nonDataTransmissionActive = patient.alarms.nonDataTransmissionActive
   const noActiveAlarm = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive
 
   const buildNumberOfAlarmsLabel = (): string => {
@@ -123,7 +123,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
           <Box
             marginLeft="auto"
           >
-            {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
+            {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
           </Box>
         </Box>
         <Box
@@ -136,7 +136,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
           <Box
             marginLeft="auto"
           >
-            {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+            {`${Math.round(patient.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           </Box>
         </Box>
         <Box
@@ -145,7 +145,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
           className={nonDataTransmissionActive ? classes.alertColor : ''}
         >
           {t('data-not-transferred')}
-          <Box marginLeft="auto">{`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}</Box>
+          <Box marginLeft="auto">{`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}</Box>
         </Box>
       </Box>
       {showPatientAlarmDialog &&

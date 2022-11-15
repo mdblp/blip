@@ -27,7 +27,7 @@
 
 import { screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/auth'
-import { unmonitoredPatient } from '../../mock/mockPatientAPI'
+import { unmonitoredPatientAsTeamMember } from '../../mock/mockPatientAPI'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
@@ -37,7 +37,7 @@ jest.setTimeout(10000)
 
 describe('Daily view for patient', () => {
   beforeAll(() => {
-    mockPatientLogin(unmonitoredPatient)
+    mockPatientLogin(unmonitoredPatientAsTeamMember)
   })
 
   it('should render correct layout', async () => {
@@ -46,6 +46,6 @@ describe('Daily view for patient', () => {
 
     expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient(true)
-    checkPatientLayout(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName}`)
+    checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
   })
 })
