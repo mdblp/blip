@@ -49,6 +49,7 @@ import { checkFooter } from '../../assert/footer'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
+import { renderPage } from '../../utils/render'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -220,7 +221,7 @@ describe('HCP home page', () => {
 
   it('should check that the team creation button is valid if all fields are complete', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
     const teamMenu = screen.getByLabelText('Open team menu')
     userEvent.click(teamMenu)
@@ -228,8 +229,8 @@ describe('HCP home page', () => {
     const dialogTeam = screen.getByRole('dialog')
     const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
     const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })
-    const adress1Input = within(dialogTeam).getByRole('textbox', { name: 'Address 1' })
-    const adress2Input = within(dialogTeam).getByRole('textbox', { name: 'Address 2' })
+    const address1Input = within(dialogTeam).getByRole('textbox', { name: 'Address 1' })
+    const address2Input = within(dialogTeam).getByRole('textbox', { name: 'Address 2' })
     const zipcodeInput = within(dialogTeam).getByRole('textbox', { name: 'Zipcode' })
     const cityInput = within(dialogTeam).getByRole('textbox', { name: 'City (State / Province)' })
     const phoneNumberInput = within(dialogTeam).getByRole('textbox', { name: 'Phone number' })
@@ -238,8 +239,8 @@ describe('HCP home page', () => {
 
     // Team creation button disabled and all fields empty
     expect(nameInput).toHaveTextContent('')
-    expect(adress1Input).toHaveTextContent('')
-    expect(adress2Input).toHaveTextContent('')
+    expect(address1Input).toHaveTextContent('')
+    expect(address2Input).toHaveTextContent('')
     expect(zipcodeInput).toHaveTextContent('')
     expect(cityInput).toHaveTextContent('')
     expect(phoneNumberInput).toHaveTextContent('')
@@ -255,20 +256,36 @@ describe('HCP home page', () => {
 
     // Team creation button activated and all fields filled
     await userEvent.type(nameInput, lastName)
-    await userEvent.type(adress1Input, '5 rue')
-    await userEvent.type(zipcodeInput, '38000')
+    await userEvent.type(address1Input, '5 rue')
     await userEvent.type(cityInput, 'Grenoble')
     await userEvent.type(phoneNumberInput, '0600000000')
+    await userEvent.type(zipcodeInput, '38000')
     await userEvent.type(emailInput, 'toto@titi.com')
     expect(createTeamButton).not.toBeDisabled()
 
     // Team creation button disabled and a field in error with the error message
+    userEvent.clear(zipcodeInput)
+    expect(createTeamButton).toBeDisabled()
+    await userEvent.type(zipcodeInput, '75d')
+    expect(within(dialogTeam).getByText('Please enter a valid zipcode')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    await userEvent.type(zipcodeInput, '75800')
+    expect(createTeamButton).not.toBeDisabled()
+
     userEvent.clear(phoneNumberInput)
-    userEvent.clear(emailInput)
+    expect(createTeamButton).toBeDisabled()
     await userEvent.type(phoneNumberInput, '060')
     expect(within(dialogTeam).getByText('Please enter a valid phone number')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    userEvent.clear(phoneNumberInput)
+    await userEvent.type(phoneNumberInput, '06000000')
+    expect(createTeamButton).not.toBeDisabled()
+
+    userEvent.clear(emailInput)
     await userEvent.type(emailInput, 'tototiti.com')
     expect(within(dialogTeam).getByText('Invalid email address (special characters are not allowed).')).toBeVisible()
     expect(createTeamButton).toBeDisabled()
+    await userEvent.type(emailInput, 'toto@titi.com')
+    expect(createTeamButton).not.toBeDisabled()
   })
 })
