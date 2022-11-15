@@ -35,6 +35,7 @@ function createBaseData(): BaseDatum {
 function createBaseDurationData(): BaseDatum & Duration {
   const baseData = createBaseData()
   const duration = faker.datatype.number({ min: 60000, max: 300000 })
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   const epochEnd = baseData.epoch + duration
   const normalEnd = new Date(epochEnd).toISOString()
   return {
@@ -51,6 +52,7 @@ function createBaseDurationData(): BaseDatum & Duration {
 function createRandomBasal(): Basal {
   const baseData = createBaseData()
   const duration = faker.datatype.number({ min: 60000, max: 300000 })
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   const epochEnd = baseData.epoch + duration
   const normalEnd = new Date(epochEnd).toISOString()
   return {
