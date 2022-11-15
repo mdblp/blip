@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -50,11 +50,12 @@ import { UserInvitationStatus } from '../../../models/generic'
 import { ShareUser } from '../../../lib/share/models'
 
 import { getUserFirstName, getUserLastName } from '../../../lib/utils'
-import { SortFields, SortDirection } from './types'
+import { SortDirection, SortFields } from './types'
+import RemoveDirectShareDialog from '../../../components/dialogs/remove-direct-share-dialog'
 
 export interface CaregiverTableProps {
-  userShares: ShareUser[]
-  onRemoveCaregiver: (user: ShareUser) => Promise<void>
+  caregivers: ShareUser[]
+  fetchCaregivers: () => void
 }
 
 const tableStyles = makeStyles(
@@ -105,6 +106,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   const classes = tableStyles()
   const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname)
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
+  const [caregiverToRemove, setCaregiverToRemove] = useState<ShareUser | null>(null)
 
   const createSortHandler = (property: SortFields): (() => void) => {
     return (): void => {
@@ -117,49 +119,80 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
     }
   }
 
-  props.userShares.sort((a: ShareUser, b: ShareUser) => {
+  const onCloseRemoveCaregiverDialog = (shouldRefresh: boolean): void => {
+    setCaregiverToRemove(null)
+
+    if (shouldRefresh) {
+      props.fetchCaregivers()
+    }
+  }
+
+  props.caregivers.sort((a: ShareUser, b: ShareUser) => {
     return compareUserShare(orderBy, order, a, b)
   })
 
-  const tableRows = props.userShares.map((userShare) => {
-    const userId = userShare.user.userid
+  const tableRows = props.caregivers.map((caregiver: ShareUser) => {
+    const user = caregiver.user
+    const userId = user.userid
+    const isPending = caregiver.status === UserInvitationStatus.pending
+
+    const userToRemove = {
+      id: userId,
+      email: user.username,
+      fullName: `${getUserFirstName(user)} ${getUserLastName(user)}`
+    }
+
+    const onClickRemoveCaregiver = (event: React.MouseEvent): void => {
+      event.stopPropagation()
+      setCaregiverToRemove(caregiver)
+    }
 
     return (
-      <TableRow
-        key={userId}
-        id={`patient-caregivers-table-row-${userId}`}
-        data-userid={userId} data-status={userShare.status}
-      >
-        <TableCell id={`patient-caregivers-table-row-${userId}-status`}>
-          {userShare.status === UserInvitationStatus.pending &&
+      <React.Fragment key={userId}>
+        <TableRow
+          key={userId}
+          id={`patient-caregivers-table-row-${userId}`}
+          data-userid={userId}
+          data-testid={`patient-caregivers-table-row-${userId}`}
+          data-status={caregiver.status}
+        >
+          <TableCell id={`patient-caregivers-table-row-${userId}-status`}>
+            {isPending &&
+              <Box display="flex">
+                <Tooltip title={t('pending-invitation')} aria-label={t('pending-invitation')} placement="bottom">
+                  <AccessTimeIcon id={`patient-caregivers-table-row-pendingicon-${userId}`} />
+                </Tooltip>
+              </Box>}
+          </TableCell>
+          <TableCell id={`patient-caregivers-table-row-${userId}-lastname`}>
+            {isPending ? '-' : getUserLastName(user)}
+          </TableCell>
+          <TableCell id={`patient-caregivers-table-row-${userId}-firstname`}>
+            {isPending ? '-' : getUserFirstName(user)}
+          </TableCell>
+          <TableCell id={`patient-caregivers-table-row-${userId}-email`}>
             <Box display="flex">
-              <Tooltip title={t('pending-invitation') } aria-label={t('pending-invitation')} placement="bottom">
-                <AccessTimeIcon id={`patient-caregivers-table-row-pendingicon-${userId}`} />
-              </Tooltip>
+              {user.username}
+              {user.idVerified && <CertifiedProfessionalIcon />}
             </Box>
-          }
-        </TableCell>
-        <TableCell id={`patient-caregivers-table-row-${userId}-lastname`}>
-          {userShare.status === UserInvitationStatus.pending ? '-' : getUserLastName(userShare.user)}
-        </TableCell>
-        <TableCell id={`patient-caregivers-table-row-${userId}-firstname`}>
-          {userShare.status === UserInvitationStatus.pending ? '-' : getUserFirstName(userShare.user)}
-        </TableCell>
-        <TableCell id={`patient-caregivers-table-row-${userId}-email`}>
-          <Box display="flex">
-            {userShare.user.username}
-            {userShare.user.idVerified && <CertifiedProfessionalIcon />}
-          </Box>
-        </TableCell>
-        <TableCell id={`patient-caregivers-table-row-${userId}-actions`} className={classes.tableCellActions}>
-          <IconActionButton
-            icon={<PersonRemoveIcon />}
-            id={`patient-caregivers-table-row-${userId}-button-remove`}
-            onClick={async () => await props.onRemoveCaregiver(userShare)}
-            tooltip={t('modal-patient-remove-caregiver-remove')}
+          </TableCell>
+          <TableCell id={`patient-caregivers-table-row-${userId}-actions`} className={classes.tableCellActions}>
+            <IconActionButton
+              icon={<PersonRemoveIcon />}
+              id={`patient-caregivers-table-row-${userId}-button-remove`}
+              ariaLabel={`${t('remove-caregiver')}-${userId}`}
+              onClick={onClickRemoveCaregiver}
+              tooltip={t('remove-caregiver')} />
+          </TableCell>
+        </TableRow>
+
+        {caregiverToRemove && caregiverToRemove.user.userid === userId &&
+          <RemoveDirectShareDialog
+            userToRemove={userToRemove}
+            onClose={onCloseRemoveCaregiverDialog}
           />
-        </TableCell>
-      </TableRow>
+        }
+      </React.Fragment>
     )
   })
 
@@ -170,7 +203,11 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
           <TableRow id="patient-caregivers-table-header-row" className={classes.tableRowHeader}>
             <TableCell id="patient-caregivers-table-header-status" />
             <TableCell id="patient-caregivers-table-header-lastname">
-              <TableSortLabel active={orderBy === 'lastname'} direction={order} onClick={createSortHandler(SortFields.lastname)}>
+              <TableSortLabel
+                active={orderBy === 'lastname'}
+                direction={order}
+                onClick={createSortHandler(SortFields.lastname)}
+              >
                 {t('last-name')}
               </TableSortLabel>
             </TableCell>
@@ -183,7 +220,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
                 {t('first-name')}
               </TableSortLabel>
             </TableCell>
-            <TableCell id="patient-cargivers-table-header-email">
+            <TableCell>
               {t('email')}
             </TableCell>
             <TableCell id="patient-caregivers-table-header-actions" />
