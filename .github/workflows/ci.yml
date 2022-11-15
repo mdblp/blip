@@ -23,56 +23,62 @@ jobs:
           npm run security-checks
           npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Build packages dependencies
-        run: npm run build-dependencies
-
-      - name: Test locales
-        run: npm run test-locales
-
-      - name: Test lambda
-        run: npm run test-lambda
-
-      - name: Test sundial
-        run: npm run test-sundial
-
-      - name: Test tideline
-        run: npm run test-tideline
-
-      - name: Test medical domain
-        run: npm run test-medical-domain
-
-      - name: Test dumb
-        run: npm run test-dumb
-
-      - name: Test viz
-        run: npm run test-viz
-
-      - name: Test blip
-        run: npm run test-blip
-
-      - name: Test yourloops unit
-        run: npm run test-yourloops-unit
-
-      - name: Test yourloops integration
-        run: npm run test-yourloops-integration
+#      - name: Lint
+#        run: npm run lint
+#
+#      - name: Build packages dependencies
+#        run: npm run build-dependencies
+#
+#      - name: Test locales
+#        run: npm run test-locales
+#
+#      - name: Test lambda
+#        run: npm run test-lambda
+#
+#      - name: Test sundial
+#        run: npm run test-sundial
+#
+#      - name: Test tideline
+#        run: npm run test-tideline
+#
+#      - name: Test medical domain
+#        run: npm run test-medical-domain
+#
+#      - name: Test dumb
+#        run: npm run test-dumb
+#
+#      - name: Test viz
+#        run: npm run test-viz
+#
+#      - name: Test blip
+#        run: npm run test-blip
+#
+#      - name: Test yourloops unit
+#        run: npm run test-yourloops-unit
+#
+#      - name: Test yourloops integration
+#        run: npm run test-yourloops-integration
 
       - name: Build
         run: nice bash build.sh
 
-      - name: Upload working directory
-        uses: actions/upload-artifact@v3
+      - name: Log in to the Nexus registry
+        uses: docker/login-action@v2
         with:
-          name: yourloops-artifact
-          path: dist/
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
 
-#  test:
-#    needs: pre-test
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download working directory
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: yourloops-artifact
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.REGISTRY }}/blip
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
