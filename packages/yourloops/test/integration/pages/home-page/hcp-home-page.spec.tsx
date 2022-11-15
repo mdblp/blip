@@ -50,6 +50,7 @@ import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
 import { renderPage } from '../../utils/render'
+import TeamAPI from '../../../../lib/team/team-api'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -220,6 +221,7 @@ describe('HCP home page', () => {
   })
 
   it('should check that the team creation button is valid if all fields are complete', async () => {
+    const createTeamMock = jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
     await act(async () => {
       renderPage('/')
     })
@@ -269,6 +271,7 @@ describe('HCP home page', () => {
     await userEvent.type(zipcodeInput, '75d')
     expect(within(dialogTeam).getByText('Please enter a valid zipcode')).toBeVisible()
     expect(createTeamButton).toBeDisabled()
+    userEvent.clear(zipcodeInput)
     await userEvent.type(zipcodeInput, '75800')
     expect(createTeamButton).not.toBeDisabled()
 
@@ -285,7 +288,11 @@ describe('HCP home page', () => {
     await userEvent.type(emailInput, 'tototiti.com')
     expect(within(dialogTeam).getByText('Invalid email address (special characters are not allowed).')).toBeVisible()
     expect(createTeamButton).toBeDisabled()
+    userEvent.clear(emailInput)
     await userEvent.type(emailInput, 'toto@titi.com')
     expect(createTeamButton).not.toBeDisabled()
+
+    userEvent.click(createTeamButton)
+    expect(createTeamMock).toHaveBeenCalledTimes(1)
   })
 })
