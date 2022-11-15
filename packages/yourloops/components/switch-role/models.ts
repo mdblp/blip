@@ -18,6 +18,7 @@ import { HcpProfession } from '../../models/hcp-profession'
 
 interface SwitchRoleDialogProps {
   open: boolean
+  inProgress?: boolean
 }
 
 export interface SwitchRoleConsequencesDialogProps extends SwitchRoleDialogProps {

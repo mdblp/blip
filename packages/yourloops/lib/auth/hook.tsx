@@ -31,7 +31,7 @@ import bows from 'bows'
 import _ from 'lodash'
 
 import { useAuth0 } from '@auth0/auth0-react'
-import { AuthenticatedUser, Preferences, Profile, Settings, UserRoles } from '../../models/user'
+import { AuthenticatedUser, ChangeUserRolePayload, Preferences, Profile, Settings, UserRoles } from '../../models/user'
 import { HcpProfession } from '../../models/hcp-profession'
 import { zendeskLogout } from '../zendesk'
 import User from './user'
@@ -119,26 +119,21 @@ export function AuthContextImpl(): AuthContext {
 
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
     const user = getUser()
-
-    if (user.role !== UserRoles.caregiver) {
-      throw new Error('invalid-user-role')
+    const now = new Date().toISOString()
+    const payload: ChangeUserRolePayload = {
+      role: UserRoles.hcp,
+      profile: {
+        termsOfUse: { acceptanceTimestamp: now, isAccepted: true },
+        privacyPolicy: { acceptanceTimestamp: now, isAccepted: true },
+        contactConsent: { acceptanceTimestamp: now, isAccepted: feedbackConsent },
+        hcpProfession
+      }
     }
 
-    /** TODO role changing was performed with a call to shoreline.
-     *   Now it has to be done with Auth0 since role is a part of auth0 user metadata.
-     *   see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
-     **/
+    await UserApi.changeUserRoleToHcp(user.id, payload)
 
-    const now = new Date().toISOString()
-    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile
-    updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: true }
-    updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: true }
-    updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackConsent }
-    updatedProfile.hcpProfession = hcpProfession
-    await updateProfile(updatedProfile)
-    // Refresh our data:
     user.role = UserRoles.hcp
-    user.profile = updatedProfile
+    user.profile = { ...user.profile, ...payload.profile }
     refreshUser()
   }
 

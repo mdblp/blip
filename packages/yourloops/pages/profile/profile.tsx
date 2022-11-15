@@ -341,12 +341,11 @@ const ProfilePage = (): JSX.Element => {
             </ProgressIconButtonWrapper>
           </Box>
 
-          {/** TODO role changing was performed with a call to shoreline.
-           *    Now it has to be done with Auth0 since role is a part of auth0 user metadata.
-           *    see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
-           **/}
-          {UserRoles.caregiver === role && false &&
-            <Link id="profile-link-switch-role" component="button" onClick={handleSwitchRoleOpen}>
+          {role === UserRoles.caregiver &&
+            <Link
+              component="button"
+              onClick={handleSwitchRoleOpen}
+            >
               {t('modal-switch-hcp-title')}
             </Link>
           }

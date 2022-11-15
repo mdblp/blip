@@ -39,9 +39,10 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
 import { SwitchRoleProfessionDialogProps } from './models'
 import BasicDropdownWithValidation from '../dropdown/basic-dropdown-with-validation'
+import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 
 function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX.Element {
-  const { open, onAccept, onCancel } = props
+  const { open, onAccept, onCancel, inProgress } = props
   const { t } = useTranslation('yourloops')
 
   const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(HcpProfession.empty)
@@ -86,16 +87,18 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
         >
           {t('button-decline')}
         </Button>
-        <Button
-          id="switch-role-profession-dialog-button-validate"
-          variant="contained"
-          color="primary"
-          disableElevation
-          disabled={hcpProfession === HcpProfession.empty}
-          onClick={handleAccept}
-        >
-          {t('button-validate')}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={inProgress}>
+          <Button
+            id="switch-role-profession-dialog-button-validate"
+            variant="contained"
+            color="primary"
+            disableElevation
+            disabled={hcpProfession === HcpProfession.empty || inProgress}
+            onClick={handleAccept}
+          >
+            {t('button-validate')}
+          </Button>
+        </ProgressIconButtonWrapper>
       </DialogActions>
     </Dialog>
   )

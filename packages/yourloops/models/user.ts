@@ -97,6 +97,11 @@ export interface CompleteSignupPayload extends UserMetadata {
   role: UserRoles
 }
 
+export interface ChangeUserRolePayload {
+  role: UserRoles
+  profile: Partial<Profile>
+}
+
 export interface IUser {
   emails?: string[]
   readonly emailVerified?: boolean
