@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -38,8 +38,6 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { checkHCPLayout } from '../../assert/layout'
-
-jest.setTimeout(10000)
 
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'

@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * UI to display a message in case of a crash
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { browserName, browserVersion } from 'react-device-detect'
 
-import { useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -44,8 +43,6 @@ import ErrorApi from '../lib/error/error-api'
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment-timezone'
 import { useLocation } from 'react-router-dom'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
 
 interface OnErrorProps {
   event: Event | string
@@ -55,6 +52,13 @@ interface OnErrorProps {
   error?: Error
 }
 
+const classes = makeStyles(() => ({
+  errorId: {
+    display: 'block',
+    fontWeight: 'bold'
+  }
+}))
+
 function OnError(props: OnErrorProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
@@ -62,8 +66,10 @@ function OnError(props: OnErrorProps): JSX.Element {
   const [showMore, setShowMore] = React.useState(false)
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
   const errorId = uuidv4()
-
+  const style = classes()
   const errorMessage = props.error?.message ?? 'n/a'
+  const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'N/A'
+  const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
 
   React.useEffect(() => {
     try {
@@ -92,53 +98,43 @@ function OnError(props: OnErrorProps): JSX.Element {
     setShowMore(true)
   }
 
-  let moreInfos: JSX.Element | null
-  if (showMore) {
-    const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'N/A'
-    const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
-    moreInfos = (
-      <React.Fragment>
-        <DialogContentText className="no-margin-bottom">
-          {t('app-crash-info')}
-        </DialogContentText>
-        <TextField
-          id="dialog-app-crash-technical-info"
-          inputProps={{ color: 'grey' }}
-          fullWidth
-          multiline
-          rows={5}
-          value={info}
-        />
-      </React.Fragment>
-    )
-  } else {
-    moreInfos = (
-      <Button
-        id="dialog-app-button-more-info"
-        variant="text"
-        color="primary"
-        onClick={handleShowMore}
-      >
-        {t('app-crash-button-more-info')}
-      </Button>
-    )
-  }
-
   return (
     <Dialog
-      id="dialog-app-crash"
-      open
+      open={true}
       fullScreen={fullScreen}
       fullWidth
       maxWidth="sm"
-    >
-      <DialogTitle id="dialog-app-crash-title">{t('app-crash-title')}</DialogTitle>
+     >
+      <DialogTitle>{t('app-crash-title')}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="dialog-app-crash-explanation" color="textPrimary">
+        <DialogContentText color="textPrimary">
           {t('app-crash-text')}
-          <Box fontWeight="bold">{errorId}</Box>
+          <span className={style.errorId}>{errorId}</span>
         </DialogContentText>
-        {moreInfos}
+        {showMore ? (
+          <>
+            <DialogContentText className="no-margin-bottom">
+              {t('app-crash-info')}
+            </DialogContentText>
+            <TextField
+              data-testid="error-stacktrace"
+              inputProps={{ color: 'grey' }}
+              fullWidth
+              multiline
+              minRows={5}
+              maxRows={8}
+              value={info}
+            />
+          </>
+        ) : (
+          <Button
+            variant="text"
+            color="primary"
+            onClick={handleShowMore}
+          >
+            {t('app-crash-button-more-info')}
+          </Button>)
+        }
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={handleOK}>{t('button-ok')}</Button>

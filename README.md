@@ -20,6 +20,7 @@ This README is focused on just the details of getting blip running locally. For 
 - [Running the tests](#running-the-tests)
 - [Independent server for production or docker](#independent-server-for-production-or-docker)
 - [Documentation for developers](#documentation-for-developers)
+- [Copyright management](#copyright-management)
 
 ## Before you start
 
@@ -230,3 +231,20 @@ Et voila, the deployment starts. Of course you need credentials for the aws acco
     + [webpack](docs/Webpack.md)
 + misc
     + ["fake child accounts"](docs/FakeChildAccounts.md)
+
+
+## Copyright management
+The default copyright profile "Diabeloop" can be found in `Preferences | Editor | Copyright`.
+
+### Enable copyright update on save
+To enable the automatic copyright update on file save
+- Go to `Preferences | Tools | Actions on save`
+- Check the box "Update copyright notice"
+
+### Copyright text
+To update the text of the copyright, go to `Preferences | Editor | Copyright | Copyright profiles`.
+
+As the copyright text is shared at project-level, do not forget to commit the changes to the file `.idea/Diabeloop.xml`.
+
+### Other
+For more copyright management options, check the [IntelliJ documentation](https://jetbrains.com/help/idea/copyright.html).
