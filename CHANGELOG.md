@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1873 Fix patient profile update not visible in dashboard
 - YLP-1874 Fix PDF report generation
 - YLP-1892 Creation of an integration test for the team form
+- YLP-1900 Fix CSS in events configuration modal
 - YLP-1901 CSV generation is not using the correct time frame
 - YLP-1903 Timezone detection should exclude some data types
 - Automate copyright generation on new and updated files

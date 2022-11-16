@@ -84,7 +84,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
     <Dialog
       id="patient-alarm-dialog-id"
       fullWidth={true}
-      maxWidth="md"
+      maxWidth="lg"
       open={true}
       onClose={onClose}
       data-testid="patient-alarm-dialog"

@@ -69,9 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2)
   },
   subCategoryContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '50%'
+    width: '55%'
   },
   subCategoryTitle: {
     fontWeight: 600,
@@ -82,12 +80,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 90
+    width: 110
   },
   valueSelection: {
     display: 'flex',
     alignItems: 'center',
     marginLeft: theme.spacing(3)
+  },
+  typography: {
+    marginLeft: theme.spacing(1)
   }
 }))
 
@@ -294,7 +295,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               />
               <Typography>{t('mg/dL')}</Typography>
             </Box>
-            <Typography>{t('maximum')}</Typography>
+            <Typography className={classes.typography}>{t('maximum')}</Typography>
             <TextField
               id="high-bg-text-field-id"
               value={highBg.value}
@@ -318,7 +319,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.defaultLabel}>{t('default-min-max')}</Typography>
           }
         </div>
-        <div className={classes.subCategoryContainer}>
+        <div>
           <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
           <div className={classes.valueSelection}>
             <Typography>{t('time-spent-off-target')}</Typography>
@@ -379,7 +380,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.defaultLabel}>{t('default', { value: '54mg/dL' })}</Typography>
           }
         </div>
-        <div className={classes.subCategoryContainer}>
+        <div>
           <Typography className={classes.subCategoryTitle}>
             B. {t('event-trigger-threshold')}
           </Typography>
