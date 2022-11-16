@@ -28,6 +28,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { browserName, browserVersion } from 'react-device-detect'
 
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -39,6 +40,12 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import metrics from '../lib/metrics'
+import ErrorApi from '../lib/error/error-api'
+import { v4 as uuidv4 } from 'uuid'
+import moment from 'moment-timezone'
+import { useLocation } from 'react-router-dom'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
 
 interface OnErrorProps {
   event: Event | string
@@ -51,14 +58,24 @@ interface OnErrorProps {
 function OnError(props: OnErrorProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
+  const location = useLocation()
   const [showMore, setShowMore] = React.useState(false)
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const errorId = uuidv4()
 
   const errorMessage = props.error?.message ?? 'n/a'
 
   React.useEffect(() => {
     try {
       metrics.send('error', 'app-crash', errorMessage)
+      ErrorApi.sendError({
+        browserName,
+        browserVersion,
+        date: moment(new Date()).format('DD/MM/YYYY'),
+        err: errorMessage,
+        errorId,
+        path: location.pathname
+      }).catch(error => console.error(error))
     } catch (err) {
       console.error(err)
     }
@@ -119,6 +136,7 @@ function OnError(props: OnErrorProps): JSX.Element {
       <DialogContent>
         <DialogContentText id="dialog-app-crash-explanation" color="textPrimary">
           {t('app-crash-text')}
+          <Box fontWeight="bold">{errorId}</Box>
         </DialogContentText>
         {moreInfos}
       </DialogContent>

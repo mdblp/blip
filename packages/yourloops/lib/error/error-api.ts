@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Main App file
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,45 +24,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import HttpService from '../../services/http'
 
-// Polyfills for compatibility with older browsers:
-import 'core-js/stable'
+export interface ErrorPayload {
+  browserName: string
+  browserVersion: string
+  date: string
+  err: string
+  errorId: string
+  path: string
+}
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-
-import config from '../lib/config'
-import { init as i18nInit } from '../lib/language'
-import initCookiesConcentListener from '../lib/cookies-manager'
-import initDayJS from '../lib/dayjs'
-import initAxios from '../lib/axios'
-import { initTheme } from '../components/theme'
-
-import Yourloops from './app'
-import OnError from './error'
-import { BrowserRouter } from 'react-router-dom'
-
-i18nInit().then(() => {
-  window.onerror = (event, source, lineno, colno, error) => {
-    if (source && !source.endsWith('.js')) {
-      return true
-    }
-    console.error(event, source, lineno, colno, error)
-    ReactDOM.render(<BrowserRouter><OnError event={event} source={source} lineno={lineno} colno={colno} error={error} /></BrowserRouter>, document.body)
-    return false
+export default class ErrorApi {
+  static async sendError(payload: ErrorPayload): Promise<void> {
+    await HttpService.post<void, ErrorPayload>({
+      url: '/bff/v1/errors',
+      payload
+    })
   }
-
-  let div = document.getElementById('app')
-  if (div === null) {
-    div = document.createElement('div')
-    div.id = 'app'
-    document.body.appendChild(div)
-  }
-
-  initDayJS()
-  initCookiesConcentListener()
-  initAxios()
-  initTheme()
-
-  ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, div)
-})
+}

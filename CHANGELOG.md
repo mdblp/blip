@@ -14,7 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1892 Creation of an integration test for the team form
 - YLP-1901 CSV generation is not using the correct time frame
 - YLP-1903 Timezone detection should exclude some data types
-
+- YLP-1910 Retrieve patients from bff v1 route
 
 ## 3.0.1 - 2022-10-11
 ### Added
