@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ 'dblp' ]
 
+env:
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+
 jobs:
   lint-test-build:
     runs-on: ubuntu-latest
