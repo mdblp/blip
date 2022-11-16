@@ -9,12 +9,12 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1680 getPatientData Api method has a wrong parameter
+- YLP-1805 Push error to the backend
 - YLP-1873 Fix patient profile update not visible in dashboard
 - YLP-1874 Fix PDF report generation
 - YLP-1892 Creation of an integration test for the team form
 - YLP-1901 CSV generation is not using the correct time frame
 - YLP-1903 Timezone detection should exclude some data types
-- YLP-1910 Retrieve patients from bff v1 route
 - Automate copyright generation on new and updated files
 
 ## 3.0.1 - 2022-10-11
