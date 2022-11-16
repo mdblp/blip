@@ -44,6 +44,8 @@ import metrics from '../../lib/metrics'
 import diabeloopLabel from 'diabeloop-label.svg'
 import diabeloopLogo from 'diabeloop-logo.svg'
 import AccompanyingDocumentLinks from './accompanying-document-links'
+import { useLocation } from 'react-router-dom'
+import { ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../app/main-lobby'
 
 export const footerStyle = makeStyles((theme: Theme) => {
   return {
@@ -160,7 +162,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
       }
     },
     link: {
-      color: theme.palette.grey[600],
+      color: theme.palette.grey[700],
       fontWeight: 400,
       [theme.breakpoints.down('xs')]: {
         marginBottom: '15px',
@@ -213,6 +215,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
 const Footer: FunctionComponent = () => {
   const { t, i18n } = useTranslation('yourloops')
   const { user } = useAuth()
+  const { pathname } = useLocation()
   const classes = footerStyle()
 
   const handleShowCookieBanner = (): void => {
@@ -231,8 +234,8 @@ const Footer: FunctionComponent = () => {
         <Box className={classes.supportButton} />
       </Box>
       <Box className={classes.centerBox}>
-        {!user ? (
-          <Box className={classes.firstLine}>
+        {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname)
+          ? <Box className={classes.firstLine}>
             <Box id="footer-language-box" className={classes.firstLineElement}>
               <LanguageIcon className={classes.icon} />
               <LanguageSelector />
@@ -240,12 +243,11 @@ const Footer: FunctionComponent = () => {
             </Box>
             <AccompanyingDocumentLinks user={user} />
           </Box>
-        ) : (
-          <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
+          : <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
             <AccompanyingDocumentLinks user={user} />
             <Box className={classes.separator}>|</Box>
           </Box>
-        )}
+        }
 
         <Link
           id="footer-link-url-privacy-policy"

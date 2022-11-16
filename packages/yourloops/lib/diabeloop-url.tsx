@@ -29,7 +29,7 @@ import config from './config'
 import { UserRoles } from '../models/user'
 
 /**
- * Class containing all URLs related to Diableloop
+ * Class containing all URLs related to Diabeloop
  */
 class DiabeloopUrl {
   private readonly rootPathName: string
@@ -58,10 +58,6 @@ class DiabeloopUrl {
   getPrivacyPolicyUrL(currentLangue: string): string {
     this.privacyPolicyUrl = `${this.rootPathName}yourloops-data-privacy.${currentLangue}.pdf`
     return this.privacyPolicyUrl
-  }
-
-  getIntendedUseUrL(currentLangue: string): string {
-    return `${this.rootPathName}intended-use.${currentLangue}.pdf`
   }
 
   getTrainingUrl(currentLangue: string, role?: UserRoles): string {

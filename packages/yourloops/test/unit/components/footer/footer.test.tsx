@@ -29,13 +29,13 @@
 import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { act } from '@testing-library/react-hooks/dom'
-import i18n from 'i18next'
 
 import Footer from '../../../../components/footer/footer'
 import { AuthContext, useAuth, User } from '../../../../lib/auth'
-import diabeloopUrls from '../../../../lib/diabeloop-url'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
+import { ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../../../app/main-lobby'
+import { UserRoles } from '../../../../models/user'
 
 describe('Footer', () => {
   let auth: AuthContext = null
@@ -75,53 +75,24 @@ describe('Footer', () => {
     }
   })
 
-  function checkLinkHref(linkId: string, expectedUrl: string) {
-    const link = document.getElementById(linkId) as HTMLLinkElement
-    expect(link.href).toBe(expectedUrl)
+  function getLanguageSelector(): HTMLElement {
+    return document.getElementById('footer-language-box')
   }
 
-  it('should render', async () => {
+  it('should render language selector on routes requiring it', async () => {
     await mountComponent()
-    const component = document.getElementById('footer-links-container')
-    expect(component).not.toBeNull()
+    ROUTES_REQUIRING_LANGUAGE_SELECTOR.forEach((route: string) => {
+      history.replace(route)
+      expect(getLanguageSelector()).not.toBeNull()
+    })
   })
 
-  it('should render language selector when user is not logged in', async () => {
-    await mountComponent()
-    const languageSelector = document.getElementById('footer-language-box')
-    expect(languageSelector).not.toBeNull()
-  })
-
-  it('should not render language selector when user is logged in', async () => {
-    await mountComponent({} as User)
+  it('should not render language selector when user is logged in on home page', async () => {
+    history.replace('/home')
+    await mountComponent({ role: UserRoles.hcp } as User)
     const languageSelector = document.getElementById('footer-language-box')
     const documentSelector = document.getElementById('footer-accompanying-documents-box')
     expect(languageSelector).toBeNull()
     expect(documentSelector).not.toBeNull()
-  })
-
-  it('should privacy policy link redirect to correct url', async () => {
-    await mountComponent()
-    checkLinkHref('footer-link-url-privacy-policy', diabeloopUrls.getPrivacyPolicyUrL(i18n.language))
-  })
-
-  it('should training link redirect to correct url', async () => {
-    await mountComponent()
-    checkLinkHref('footer-link-url-training', diabeloopUrls.getTrainingUrl(i18n.language))
-  })
-
-  it('should terms of use link redirect to correct url', async () => {
-    await mountComponent()
-    checkLinkHref('footer-link-url-terms', diabeloopUrls.getTermsUrL(i18n.language))
-  })
-
-  it('should cookies policy link redirect to correct url', async () => {
-    await mountComponent()
-    checkLinkHref('footer-link-url-cookies-policy', diabeloopUrls.getCookiesPolicyUrl(i18n.language))
-  })
-
-  it('should release notes link redirect to correct url', async () => {
-    await mountComponent()
-    checkLinkHref('footer-link-url-release-notes', diabeloopUrls.getReleaseNotesURL())
   })
 })

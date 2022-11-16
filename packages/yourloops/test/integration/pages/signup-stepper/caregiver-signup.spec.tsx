@@ -33,6 +33,7 @@ import { mockUserApi } from '../../mock/mockUserApi'
 import { UserRoles } from '../../../../models/user'
 import userEvent from '@testing-library/user-event'
 import { renderPageFromHistory } from '../../utils/render'
+import { checkFooter } from '../../assert/footer'
 
 jest.setTimeout(15000)
 
@@ -57,7 +58,7 @@ describe('Signup stepper as caregiver', () => {
   it('should be able to create a caregiver account', async () => {
     renderPageFromHistory(history)
     expect(history.location.pathname).toEqual('/complete-signup')
-
+    checkFooter()
     checkStepper()
 
     // Step one

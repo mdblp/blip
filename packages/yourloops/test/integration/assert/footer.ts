@@ -26,14 +26,30 @@
  */
 
 import { screen, within } from '@testing-library/react'
+import diabeloopUrl from '../../../lib/diabeloop-url'
+import { getCurrentLang } from '../../../lib/language'
+import { UserRoles } from '../../../models/user'
 
-export const checkFooter = () => {
+export const checkFooter = (role?: UserRoles) => {
   const footer = within(screen.getByTestId('footer'))
-  expect(footer.getByText('Intended Use')).toBeVisible()
-  expect(footer.getByText('Training')).toBeVisible()
-  expect(footer.getByText('Privacy Policy')).toBeVisible()
-  expect(footer.getByText('Terms of use')).toBeVisible()
-  expect(footer.getByText('Cookies management')).toBeVisible()
-  expect(footer.getByText('Cookies policy')).toBeVisible()
-  expect(footer.getByText('Contact')).toBeVisible()
+  const intendedUseLink = footer.getByText('Intended Use')
+  const trainingLink = footer.getByText('Training')
+  const termsOfUseLink = footer.getByText('Terms of use')
+  const privacyPolicyLink = footer.getByText('Privacy Policy')
+  const cookiesManagementLink = footer.getByText('Cookies management')
+  const cookiesPolicyLink = footer.getByText('Cookies policy')
+  const contactLink = footer.getByText('Contact')
+
+  expect(intendedUseLink).toBeVisible()
+  expect(intendedUseLink).toHaveAttribute('href', '/intended-use')
+  expect(trainingLink).toBeVisible()
+  expect(trainingLink).toHaveAttribute('href', diabeloopUrl.getTrainingUrl(getCurrentLang(), role))
+  expect(termsOfUseLink).toBeVisible()
+  expect(termsOfUseLink).toHaveAttribute('href', diabeloopUrl.getTermsUrL(getCurrentLang()))
+  expect(privacyPolicyLink).toBeVisible()
+  expect(privacyPolicyLink).toHaveAttribute('href', diabeloopUrl.getPrivacyPolicyUrL(getCurrentLang()))
+  expect(cookiesManagementLink).toBeVisible()
+  expect(cookiesPolicyLink).toBeVisible()
+  expect(cookiesPolicyLink).toHaveAttribute('href', diabeloopUrl.getCookiesPolicyUrl(getCurrentLang()))
+  expect(contactLink).toBeVisible()
 }

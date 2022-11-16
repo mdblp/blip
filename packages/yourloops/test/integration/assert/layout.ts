@@ -26,23 +26,24 @@
  */
 
 import { checkCaregiverHeader, checkHCPHeader, checkPatientHeader } from './header'
-import { checkDrawerNotVisible, checkDrawer } from './drawer'
+import { checkDrawer, checkDrawerNotVisible } from './drawer'
 import { checkFooter } from './footer'
+import { UserRoles } from '../../../models/user'
 
 export const checkHCPLayout = (fullName: string) => {
   checkHCPHeader(fullName)
   checkDrawer()
-  checkFooter()
+  checkFooter(UserRoles.hcp)
 }
 
 export const checkCaregiverLayout = (fullName: string) => {
   checkCaregiverHeader(fullName)
   checkDrawer()
-  checkFooter()
+  checkFooter(UserRoles.caregiver)
 }
 
 export const checkPatientLayout = (fullName: string) => {
   checkPatientHeader(fullName)
   checkDrawerNotVisible()
-  checkFooter()
+  checkFooter(UserRoles.patient)
 }

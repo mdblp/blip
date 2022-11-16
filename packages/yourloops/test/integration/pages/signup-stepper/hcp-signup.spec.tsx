@@ -34,6 +34,7 @@ import { HcpProfession } from '../../../../models/hcp-profession'
 import userEvent from '@testing-library/user-event'
 import { UserRoles } from '../../../../models/user'
 import { renderPageFromHistory } from '../../utils/render'
+import { checkFooter } from '../../assert/footer'
 
 jest.setTimeout(15000)
 
@@ -60,6 +61,7 @@ describe('Signup stepper as hcp', () => {
   it('should be able to create a hcp account', async () => {
     renderPageFromHistory(history)
     expect(history.location.pathname).toEqual('/complete-signup')
+    checkFooter()
     checkStepper()
 
     // Step one
