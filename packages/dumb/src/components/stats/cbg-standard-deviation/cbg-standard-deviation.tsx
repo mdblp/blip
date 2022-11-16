@@ -31,7 +31,7 @@ import stylesCbgCommon from '../cbg-common.css'
 import { Box } from '@material-ui/core'
 import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
-import { StatTooltip } from '../../tooltips/stat-tooltip'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeCBGStyle } from '../cbg-utils'
 
 export interface CBGStandardDeviationProps {

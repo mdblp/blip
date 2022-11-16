@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,47 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.tooltip {
-  display: block;
-  composes: defaultSize from '../../styles/typography.css';
-  background-color: #FFFFFF;
-  border: solid;
-  pointer-events: none;
-  position: absolute;
-  border-radius: 4px;
+.row {
+  composes: smallSize from '../../../styles/typography.css';
+  line-height: 20px;
+  max-width: 240px;
+  min-width: 160px;
+  width: max-content;
 }
 
-.content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 5px 10px;
-  box-sizing: border-box;
+.message {
+  composes: row;
+  color: var(--stat--default);
 }
 
-.title {
-  composes: mediumContrastText from '../../styles/typography.css';
-  composes: content;
-  background-color: var(--tooltip-title-bg);
+.message p {
+  margin: 0;
 }
 
-.titleContent {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  width: 100%;
+.message a {
+  pointer-events: all;
 }
 
-.titleDate {
-  margin-right: auto;
-}
-
-.tail {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-color: transparent;
-  position: absolute;
+.divider {
+  height: 2px;
+  margin: 5px -10px;
+  background-color: var(--stat--default);
 }
