@@ -28,7 +28,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
 import Typography from '@material-ui/core/Typography'
 import TuneIcon from '@material-ui/icons/Tune'
 import Dialog from '@material-ui/core/Dialog'
@@ -40,6 +39,7 @@ import { Patient } from '../../lib/data/patient'
 import { commonComponentStyles } from '../common'
 import AlarmsContentConfiguration from './alarms-content-configuration'
 import { usePatientContext } from '../../lib/patient/provider'
+import DialogContent from '@material-ui/core/DialogContent'
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -84,32 +84,30 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
     <Dialog
       id="patient-alarm-dialog-id"
       fullWidth={true}
-      maxWidth="lg"
+      maxWidth="md"
       open={true}
       onClose={onClose}
       data-testid="patient-alarm-dialog"
     >
-      <div className={commonClasses.root}>
-        <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
-          <div className={commonClasses.categoryHeader}>
-            <div>
-              <TuneIcon />
-              <Typography className={commonClasses.title}>
-                {t('events-configuration')}
-              </Typography>
+          <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
+            <div className={commonClasses.categoryHeader}>
+              <div>
+                <TuneIcon />
+                <Typography className={commonClasses.title}>
+                  {t('events-configuration')}
+                </Typography>
+              </div>
             </div>
-          </div>
-        </DialogTitle>
+          </DialogTitle>
 
-        <Box paddingX={3} marginBottom={2}>
-          <AlarmsContentConfiguration
-            monitoring={patient.monitoring}
-            patient={patient}
-            onSave={save}
-            saveInProgress={saveInProgress}
-            onClose={onClose} />
-        </Box>
-      </div>
+          <DialogContent className="no-padding-bottom">
+            <AlarmsContentConfiguration
+              monitoring={patient.monitoring}
+              patient={patient}
+              onSave={save}
+              saveInProgress={saveInProgress}
+              onClose={onClose} />
+          </DialogContent>
     </Dialog>
   )
 }
