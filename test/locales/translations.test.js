@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Verify we have (almost) all the locales used
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -233,14 +232,17 @@ describe('Locales tests', () => {
   it('should find all translations from translation.json', async () => {
     const blipFiles = await getFiles(path.resolve(`${__dirname}/../../packages/blip`))
     expect(blipFiles).to.be.an('array').not.empty
-    const vizFiles = await getFiles(path.resolve(`${__dirname}/../../packages/viz`))
-    expect(vizFiles).to.be.an('array').not.empty
+    const dumbFiles = await getFiles(path.resolve(`${__dirname}/../../packages/dumb`))
+    expect(dumbFiles).to.be.an('array').not.empty
     const tidelineFiles = await getFiles(path.resolve(`${__dirname}/../../packages/tideline`))
     expect(tidelineFiles).to.be.an('array').not.empty
+    const vizFiles = await getFiles(path.resolve(`${__dirname}/../../packages/viz`))
+    expect(vizFiles).to.be.an('array').not.empty
 
     const allFiles = blipFiles
-    Array.prototype.push.apply(allFiles, vizFiles)
+    Array.prototype.push.apply(allFiles, dumbFiles)
     Array.prototype.push.apply(allFiles, tidelineFiles)
+    Array.prototype.push.apply(allFiles, vizFiles)
 
     const trKeys = await getTrKeys(allFiles)
     /** @type {string[]} */
