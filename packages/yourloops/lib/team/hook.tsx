@@ -184,7 +184,6 @@ function TeamContextImpl(): TeamContext {
 
   useEffect(() => {
     if (!initialized && notificationHook.initialized) {
-      user.frProId.toString()
       fetchTeams()
     }
   }, [initialized, notificationHook, fetchTeams])
