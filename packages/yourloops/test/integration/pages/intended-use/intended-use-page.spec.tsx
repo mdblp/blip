@@ -33,7 +33,6 @@ import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
 import { renderPageFromHistory } from '../../utils/render'
 
-jest.setTimeout(10000)
 describe('Intended use page', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
 
