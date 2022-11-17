@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -31,9 +31,6 @@ import { Router } from 'react-router-dom'
 import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { AuthContextProvider } from '../../../../lib/auth'
 import { MainLobby } from '../../../../app/main-lobby'
-import { checkHCPHeader } from '../../assert/header'
-import { checkDrawer } from '../../assert/drawer'
-import { checkFooter } from '../../assert/footer'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
@@ -51,8 +48,6 @@ import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkHCPLayout } from '../../assert/layout'
-
-jest.setTimeout(15000)
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -120,9 +115,7 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     expect(history.location.pathname).toBe(unMonitoredPatientDashboardRoute)
     testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
-    checkHCPHeader(`${firstName} ${lastName}`)
-    checkDrawer()
-    checkFooter()
+    checkHCPLayout(`${firstName} ${lastName}`)
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {

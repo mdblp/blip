@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -24,26 +24,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import HttpService from '../../services/http'
 
-import { checkCaregiverHeader, checkHCPHeader, checkPatientHeader } from './header'
-import { checkDrawer, checkDrawerNotVisible } from './drawer'
-import { checkFooter } from './footer'
-import { UserRoles } from '../../../models/user'
-
-export const checkHCPLayout = (fullName: string, needFooterLanguageSelector: boolean = false) => {
-  checkHCPHeader(fullName)
-  checkDrawer()
-  checkFooter({ role: UserRoles.hcp, needFooterLanguageSelector })
+export interface ErrorPayload {
+  browserName: string
+  browserVersion: string
+  date: string
+  err: string
+  errorId: string
+  path: string
 }
 
-export const checkCaregiverLayout = (fullName: string, needFooterLanguageSelector?: true) => {
-  checkCaregiverHeader(fullName)
-  checkDrawer()
-  checkFooter({ role: UserRoles.caregiver, needFooterLanguageSelector })
-}
-
-export const checkPatientLayout = (fullName: string, needFooterLanguageSelector?: true) => {
-  checkPatientHeader(fullName)
-  checkDrawerNotVisible()
-  checkFooter({ role: UserRoles.patient, needFooterLanguageSelector })
+export default class ErrorApi {
+  static async sendError(payload: ErrorPayload): Promise<void> {
+    await HttpService.post<void, ErrorPayload>({
+      url: '/bff/v1/errors',
+      payload
+    })
+  }
 }

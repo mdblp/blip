@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,25 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCaregiverHeader, checkHCPHeader, checkPatientHeader } from './header'
-import { checkDrawer, checkDrawerNotVisible } from './drawer'
-import { checkFooter } from './footer'
-import { UserRoles } from '../../../models/user'
+import HttpService from '../../../../services/http'
+import ErrorApi, { ErrorPayload } from '../../../../lib/error/error-api'
 
-export const checkHCPLayout = (fullName: string, needFooterLanguageSelector: boolean = false) => {
-  checkHCPHeader(fullName)
-  checkDrawer()
-  checkFooter({ role: UserRoles.hcp, needFooterLanguageSelector })
-}
+describe('ErrorApi', () => {
+  describe('sendError', () => {
+    it('should send correct payload to correct url', async () => {
+      const payload: ErrorPayload = {
+        browserName: 'fakeBrowserName',
+        browserVersion: 'fakeBrowserVersion',
+        date: 'fakeDate',
+        err: 'fakeErrorMessage',
+        errorId: 'fakeErrorId',
+        path: '/fake/path'
+      }
+      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
 
-export const checkCaregiverLayout = (fullName: string, needFooterLanguageSelector?: true) => {
-  checkCaregiverHeader(fullName)
-  checkDrawer()
-  checkFooter({ role: UserRoles.caregiver, needFooterLanguageSelector })
-}
-
-export const checkPatientLayout = (fullName: string, needFooterLanguageSelector?: true) => {
-  checkPatientHeader(fullName)
-  checkDrawerNotVisible()
-  checkFooter({ role: UserRoles.patient, needFooterLanguageSelector })
-}
+      await ErrorApi.sendError(payload)
+      expect(HttpService.post).toHaveBeenCalledWith({
+        url: '/bff/v1/errors',
+        payload
+      })
+    })
+  })
+})
