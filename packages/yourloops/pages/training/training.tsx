@@ -54,7 +54,7 @@ const style = makeStyles((theme: Theme) => {
     },
     card: {
       textAlign: 'center',
-      padding: theme.spacing(4)
+      padding: theme.spacing(1)
     },
     cardContent: {
       marginLeft: theme.spacing(2),
@@ -70,10 +70,10 @@ const style = makeStyles((theme: Theme) => {
     buttons: {
       display: 'flex',
       justifyContent: 'space-around',
-      marginTop: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'space-between'
-      }
+      marginTop: theme.spacing(2)
+      // [theme.breakpoints.down('sm')]: {
+      //   justifyContent: 'space-between'
+      // }
     }
   }
 }, { name: 'ylp-training-page' })
