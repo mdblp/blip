@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Patient data page
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,21 +33,21 @@ import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 
-import Blip from 'blip'
-import appConfig from '../lib/config'
+// import Blip from 'blip'
+// import appConfig from '../lib/config'
 import { useAuth } from '../lib/auth'
 import { useData } from '../lib/data/hook'
 import { setPageTitle } from '../lib/utils'
 
-import ProfileDialog from './dialogs/patient-profile'
-import DialogDatePicker from './date-pickers/dialog-date-picker'
-import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
-import DialogPDFOptions from './dialogs/pdf-print-options'
-import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
-import ChatWidget from './chat/chat-widget'
+// import ProfileDialog from './dialogs/patient-profile'
+// import DialogDatePicker from './date-pickers/dialog-date-picker'
+// import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
+// import DialogPDFOptions from './dialogs/pdf-print-options'
+// import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
+// import ChatWidget from './chat/chat-widget'
 import { Patient } from '../lib/data/patient'
-import AlarmCard from './alarm/alarm-card'
-import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
+// import AlarmCard from './alarm/alarm-card'
+// import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/provider'
 
 const patientDataStyles = makeStyles(() => {
@@ -93,8 +92,8 @@ function PatientDataPage(): JSX.Element | null {
   const authUser = authHook.user
   const userId = authUser?.id ?? null
   const userIsPatient = authHook.user?.isUserPatient()
-  const userIsHCP = authHook.user?.isUserHcp()
-  const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
+  // const userIsHCP = authHook.user?.isUserHcp()
+  // const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
 
   const initialized = authHook.isLoggedIn && blipApi
 
@@ -139,23 +138,23 @@ function PatientDataPage(): JSX.Element | null {
 
   return (
     <Container className={classes.container} maxWidth={false}>
-      <Blip
-        config={appConfig}
-        api={blipApi}
-        patient={patient}
-        userIsHCP={!!userIsHCP}
-        patients={patientHook.patients}
-        setPatient={setPatient}
-        profileDialog={ProfileDialog}
-        prefixURL={prefixURL}
-        dialogDatePicker={DialogDatePicker}
-        dialogRangeDatePicker={DialogRangeDatePicker}
-        dialogPDFOptions={DialogPDFOptions}
-        patientInfoWidget={PatientInfoWidget}
-        chatWidget={ChatWidget}
-        alarmCard={AlarmCard}
-        medicalFilesWidget={MedicalFilesWidget}
-      />
+      {/* <Blip */}
+      {/*  config={appConfig} */}
+      {/*  api={blipApi} */}
+      {/*  patient={patient} */}
+      {/*  userIsHCP={!!userIsHCP} */}
+      {/*  patients={patientHook.patients} */}
+      {/*  setPatient={setPatient} */}
+      {/*  profileDialog={ProfileDialog} */}
+      {/*  prefixURL={prefixURL} */}
+      {/*  dialogDatePicker={DialogDatePicker} */}
+      {/*  dialogRangeDatePicker={DialogRangeDatePicker} */}
+      {/*  dialogPDFOptions={DialogPDFOptions} */}
+      {/*  patientInfoWidget={PatientInfoWidget} */}
+      {/*  chatWidget={ChatWidget} */}
+      {/*  alarmCard={AlarmCard} */}
+      {/*  medicalFilesWidget={MedicalFilesWidget} */}
+      {/* /> */}
     </Container>
   )
 }
