@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Patient list table for HCPs
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -220,6 +219,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
               />
               <input
                 id="upload-file-input-id"
+                data-testid="upload-file-input"
                 accept="image/jpeg,image/png,application/pdf"
                 className={classes.input}
                 onChange={handleFileSelected}
