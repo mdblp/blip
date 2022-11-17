@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -40,14 +40,14 @@ const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard dev
 
 export const checkTrendsTidelineContainerTooltips = async () => {
   const cbgSlice = await screen.findByTestId('cbg-slice-rectangle-innerQuartiles')
-  userEvent.hover(cbgSlice)
+  await userEvent.hover(cbgSlice)
   const tooltips = await screen.findAllByTestId('tooltip')
   expect(tooltips).toHaveLength(3)
   expect(tooltips[0]).toHaveTextContent('11:00 am - 11:30 am')
   const trendsTooltips = screen.getByTestId('trends-tooltips')
   expect(within(trendsTooltips).getByText('189')).toBeVisible()
   expect(within(trendsTooltips).getByText('169')).toBeVisible()
-  userEvent.unhover(cbgSlice)
+  await userEvent.unhover(cbgSlice)
 }
 
 export const checkTrendsStatsWidgetsTooltips = async () => {

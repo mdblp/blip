@@ -85,7 +85,7 @@ describe('HCP home page', () => {
 
   it('should display a list of patients and allow to remove one of them', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
@@ -112,7 +112,7 @@ describe('HCP home page', () => {
 
   it('should allow to remove a patient who is in multiple teams', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userId}`)
