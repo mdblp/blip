@@ -94,7 +94,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           fullWidth
           disabled
           id="firstname"
-          label={t('firstname')}
+          label={t('first-name')}
           value={firstName}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -103,7 +103,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           fullWidth
           disabled
           id="lastname"
-          label={t('lastname')}
+          label={t('last-name')}
           value={lastName}
           className={textField}
           InputProps={{ classes: { disabled } }}

@@ -58,6 +58,7 @@ describe('Auth hook', () => {
     firstName: 'John',
     lastName: 'Doe',
     fullName: 'John Doe',
+    email: 'fake@email.com',
     hcpProfession: HcpProfession.diabeto
   }
   const preferences: Preferences = { displayLanguageCode: 'en' }
@@ -93,9 +94,9 @@ describe('Auth hook', () => {
         sub: `auth0|${id}`,
         [AuthenticatedUserMetadata.Roles]: ['caregiver']
       },
-      logout: jest.fn()
+      logout: jest.fn(),
+      getAccessTokenSilently: jest.fn()
     })
-    jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ token: 'session-token', id })
     jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile, preferences, settings })
   })
 
@@ -332,11 +333,13 @@ describe('Auth hook', () => {
 
   describe('completeSignup', () => {
     it('should update user profile, preferences and settings', async () => {
+      jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
       const signupForm: SignupForm = {
+        accountRole: UserRoles.hcp,
         profileFirstname: 'Tim',
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
@@ -356,6 +359,7 @@ describe('Auth hook', () => {
         await auth.completeSignup(signupForm)
       })
 
+      expect(auth.user.role).toEqual(UserRoles.hcp)
       expect(auth.user.profile.firstName).toEqual('Tim')
       expect(auth.user.profile.lastName).toEqual('Hagine')
       expect(auth.user.profile.fullName).toEqual('Tim Hagine')

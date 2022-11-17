@@ -25,12 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Router } from 'react-router-dom'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
-import React from 'react'
-import { createMemoryHistory } from 'history'
-import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import PatientAPI from '../../../../lib/patient/patient-api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
@@ -64,29 +59,13 @@ describe('HCP home page', () => {
     mockDirectShareApi()
   })
 
-  function getHomePage() {
-    const history = createMemoryHistory({ initialEntries: ['/'] })
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
-
-  it('should render the home page with correct components', async () => {
+  it('should display a list of patients and allow to remove one of them', async () => {
     await act(async () => {
       renderPage('/')
     })
+
     checkHCPLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, true)
-  })
-
-  it('should display a list of patients and allow to remove one of them', async () => {
-    await act(async () => {
-      render(getHomePage())
-    })
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
@@ -112,7 +91,7 @@ describe('HCP home page', () => {
 
   it('should allow to remove a patient who is in multiple teams', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userId}`)

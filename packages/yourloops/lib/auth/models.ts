@@ -28,12 +28,24 @@
 
 import User from './user'
 import { LanguageCodes } from '../../models/locales'
-import { Preferences, Profile, Settings } from '../../models/user'
+import { Preferences, Profile, Settings, UserRoles } from '../../models/user'
 import { HcpProfession } from '../../models/hcp-profession'
 
+export enum SignupFormKey {
+  AccountRole = 'accountRole',
+  Feedback = 'feedback',
+  HcpProfession = 'hcpProfession',
+  PrivacyPolicy = 'privacyPolicy',
+  ProfileCountry = 'profileCountry',
+  ProfileFirstname = 'profileFirstname',
+  ProfileLastname = 'profileLastname',
+  Terms = 'terms'
+}
+
 export interface SignupForm {
-  feedback: boolean // Consent to be contacted by Diabeloop
-  hcpProfession: HcpProfession
+  accountRole: UserRoles
+  feedback?: boolean // Consent to be contacted by Diabeloop
+  hcpProfession?: HcpProfession
   preferencesLanguage: LanguageCodes
   privacyPolicy: boolean
   profileCountry: string
