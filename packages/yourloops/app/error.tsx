@@ -68,7 +68,7 @@ function OnError(props: OnErrorProps): JSX.Element {
   const errorId = uuidv4()
   const style = classes()
   const errorMessage = props.error?.message ?? 'n/a'
-  const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'N/A'
+  const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'n/a'
   const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
 
   React.useEffect(() => {
@@ -81,7 +81,7 @@ function OnError(props: OnErrorProps): JSX.Element {
         err: errorMessage,
         errorId,
         path: location.pathname
-      }).catch(error => console.error(error))
+      })
     } catch (err) {
       console.error(err)
     }
@@ -104,7 +104,7 @@ function OnError(props: OnErrorProps): JSX.Element {
       fullScreen={fullScreen}
       fullWidth
       maxWidth="sm"
-     >
+    >
       <DialogTitle>{t('app-crash-title')}</DialogTitle>
       <DialogContent>
         <DialogContentText color="textPrimary">
@@ -133,8 +133,8 @@ function OnError(props: OnErrorProps): JSX.Element {
             onClick={handleShowMore}
           >
             {t('app-crash-button-more-info')}
-          </Button>)
-        }
+          </Button>
+        )}
       </DialogContent>
       <DialogActions>
         <Button color="primary" onClick={handleOK}>{t('button-ok')}</Button>
