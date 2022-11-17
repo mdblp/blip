@@ -138,7 +138,7 @@ function PatientDataPage(): JSX.Element | null {
 
   return (
     <Container className={classes.container} maxWidth={false}>
-       <Blip
+      <Blip
         config={appConfig}
         api={blipApi}
         patient={patient}
@@ -154,7 +154,7 @@ function PatientDataPage(): JSX.Element | null {
         chatWidget={ChatWidget}
         alarmCard={AlarmCard}
         medicalFilesWidget={MedicalFilesWidget}
-       />
+      />
     </Container>
   )
 }
