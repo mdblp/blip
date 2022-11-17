@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -50,7 +50,7 @@ import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
 import { renderPage } from '../../utils/render'
 import TeamAPI from '../../../../lib/team/team-api'
-jest.setTimeout(20000)
+
 describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
