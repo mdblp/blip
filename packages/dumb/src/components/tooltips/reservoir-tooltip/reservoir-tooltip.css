@@ -46,20 +46,6 @@
   flex-grow: 1;
 }
 
-.value {
-  margin-left: 20px;
-}
-
-.units {
-  min-width: 0.7em;
-  margin-left: 10px;
-}
-
-.title {
-  composes: smallSize from '../../../styles/typography.css';
-  text-align: right;
-}
-
 .pa {
   composes: row;
   font-weight: bold;

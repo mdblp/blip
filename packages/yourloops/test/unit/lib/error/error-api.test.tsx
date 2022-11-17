@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,18 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import HttpService from '../../../../services/http'
+import ErrorApi, { ErrorPayload } from '../../../../lib/error/error-api'
 
-  displayName: 'yourloops integration',
+describe('ErrorApi', () => {
+  describe('sendError', () => {
+    it('should send correct payload to correct url', async () => {
+      const payload: ErrorPayload = {
+        browserName: 'fakeBrowserName',
+        browserVersion: 'fakeBrowserVersion',
+        date: 'fakeDate',
+        err: 'fakeErrorMessage',
+        errorId: 'fakeErrorId',
+        path: '/fake/path'
+      }
+      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
 
-  maxWorkers: '30%',
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 30000
-}
+      await ErrorApi.sendError(payload)
+      expect(HttpService.post).toHaveBeenCalledWith({
+        url: '/bff/v1/errors',
+        payload
+      })
+    })
+  })
+})

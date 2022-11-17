@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -51,8 +51,6 @@ import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkHCPLayout } from '../../assert/layout'
-
-jest.setTimeout(15000)
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`

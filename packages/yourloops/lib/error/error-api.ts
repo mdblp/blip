@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -24,19 +24,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import HttpService from '../../services/http'
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+export interface ErrorPayload {
+  browserName: string
+  browserVersion: string
+  date: string
+  err: string
+  errorId: string
+  path: string
+}
 
-  displayName: 'yourloops integration',
-
-  maxWorkers: '30%',
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 30000
+export default class ErrorApi {
+  static async sendError(payload: ErrorPayload): Promise<void> {
+    await HttpService.post<void, ErrorPayload>({
+      url: '/bff/v1/errors',
+      payload
+    })
+  }
 }

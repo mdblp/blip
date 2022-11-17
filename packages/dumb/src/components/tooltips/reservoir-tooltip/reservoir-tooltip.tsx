@@ -59,21 +59,21 @@ enum ChangeType {
   Reservoir = 'reservoir'
 }
 
-const getChangeTypeByManufacturer = (manufacturer: Manufacturer): ChangeType => {
-  switch (manufacturer) {
-    case Manufacturer.Vicentra:
-    case Manufacturer.Roche:
-      return ChangeType.Reservoir
-    case Manufacturer.Default:
-    default:
-      return ChangeType.InfusionSite
-  }
-}
-
 const t = i18next.t.bind(i18next)
 
 export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
   const { reservoir, position, side, timePrefs } = props
+
+  const getChangeTypeByManufacturer = (manufacturer: Manufacturer): ChangeType => {
+    switch (manufacturer) {
+      case Manufacturer.Vicentra:
+      case Manufacturer.Roche:
+        return ChangeType.Reservoir
+      case Manufacturer.Default:
+      default:
+        return ChangeType.InfusionSite
+    }
+  }
 
   const manufacturer = reservoir.pump?.manufacturer || Manufacturer.Default
   const changeType: ChangeType = getChangeTypeByManufacturer(manufacturer)
