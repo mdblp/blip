@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -61,7 +61,7 @@ describe('Signup stepper as hcp', () => {
   it('should be able to create a hcp account', async () => {
     renderPageFromHistory(history)
     expect(history.location.pathname).toEqual('/complete-signup')
-    checkFooter()
+    checkFooter({ needFooterLanguageSelector: true })
     checkStepper()
 
     // Step one

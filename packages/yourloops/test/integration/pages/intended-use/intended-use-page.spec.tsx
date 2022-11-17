@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -48,7 +48,7 @@ describe('Intended use page', () => {
   it('should render intended use with the right selected language', () => {
     renderPageFromHistory(history)
     expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
-    checkFooter()
+    checkFooter({ needFooterLanguageSelector: true })
 
     userEvent.click(screen.getByText('Intended Use'))
 

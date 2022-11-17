@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -30,7 +30,14 @@ import diabeloopUrl from '../../../lib/diabeloop-url'
 import { getCurrentLang } from '../../../lib/language'
 import { UserRoles } from '../../../models/user'
 
-export const checkFooter = (role?: UserRoles) => {
+interface CheckFooterProps {
+  role?: UserRoles
+  needFooterLanguageSelector: boolean
+}
+
+const defaultArgs = { needFooterLanguageSelector: false }
+
+export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterProps = defaultArgs) => {
   const footer = within(screen.getByTestId('footer'))
   const intendedUseLink = footer.getByText('Intended Use')
   const trainingLink = footer.getByText('Training')
@@ -39,6 +46,11 @@ export const checkFooter = (role?: UserRoles) => {
   const cookiesManagementLink = footer.getByText('Cookies management')
   const cookiesPolicyLink = footer.getByText('Cookies policy')
   const contactLink = footer.getByText('Contact')
+  const languageSelector = footer.queryByTestId('language-selector')
+
+  needFooterLanguageSelector
+    ? expect(languageSelector).toBeInTheDocument()
+    : expect(languageSelector).not.toBeInTheDocument()
 
   expect(intendedUseLink).toBeVisible()
   expect(intendedUseLink).toHaveAttribute('href', '/intended-use')

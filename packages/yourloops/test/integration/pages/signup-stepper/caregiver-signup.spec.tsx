@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -58,7 +58,7 @@ describe('Signup stepper as caregiver', () => {
   it('should be able to create a caregiver account', async () => {
     renderPageFromHistory(history)
     expect(history.location.pathname).toEqual('/complete-signup')
-    checkFooter()
+    checkFooter({ needFooterLanguageSelector: true })
     checkStepper()
 
     // Step one

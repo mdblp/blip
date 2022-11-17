@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Generic footer links
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,23 +27,23 @@
 
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { useLocation } from 'react-router-dom'
 
+import diabeloopLabel from 'diabeloop-label.svg'
+import diabeloopLogo from 'diabeloop-logo.svg'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
-import Link from '@material-ui/core/Link'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
 import LanguageIcon from '@material-ui/icons/Language'
+import Link from '@material-ui/core/Link'
+import Tooltip from '@material-ui/core/Tooltip'
 
-import LanguageSelector from '../language-select'
 import diabeloopUrls from '../../lib/diabeloop-url'
 import { useAuth } from '../../lib/auth'
 import config from '../../lib/config'
 import metrics from '../../lib/metrics'
-import diabeloopLabel from 'diabeloop-label.svg'
-import diabeloopLogo from 'diabeloop-logo.svg'
+import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
-import { useLocation } from 'react-router-dom'
 import { ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../app/main-lobby'
 
 export const footerStyle = makeStyles((theme: Theme) => {
@@ -236,7 +235,10 @@ const Footer: FunctionComponent = () => {
       <Box className={classes.centerBox}>
         {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname)
           ? <Box className={classes.firstLine}>
-            <Box id="footer-language-box" className={classes.firstLineElement}>
+            <Box
+              data-testid="language-selector"
+              className={classes.firstLineElement}
+            >
               <LanguageIcon className={classes.icon} />
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
