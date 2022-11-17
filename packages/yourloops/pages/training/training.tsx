@@ -71,9 +71,6 @@ const style = makeStyles((theme: Theme) => {
       display: 'flex',
       justifyContent: 'space-around',
       marginTop: theme.spacing(2)
-      // [theme.breakpoints.down('sm')]: {
-      //   justifyContent: 'space-between'
-      // }
     }
   }
 }, { name: 'ylp-training-page' })
