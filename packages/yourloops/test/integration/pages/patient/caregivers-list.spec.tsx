@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -71,7 +71,7 @@ describe('Patient caregivers page', () => {
     const addCaregiverButton = within(secondaryBar).getByText('Add Caregiver')
     expect(addCaregiverButton).toBeVisible()
 
-    userEvent.click(addCaregiverButton)
+    await userEvent.click(addCaregiverButton)
 
     const addCaregiverDialog = screen.getByRole('dialog')
     expect(addCaregiverDialog).toBeVisible()
@@ -99,7 +99,7 @@ describe('Patient caregivers page', () => {
       status: UserInvitationStatus.accepted
     }])
     await act(async () => {
-      userEvent.click(addCaregiverDialogConfirmButton)
+      await userEvent.click(addCaregiverDialogConfirmButton)
     })
 
     expect(addDirectShareMock).toHaveBeenCalledWith(loggedInUserId, caregiverEmail)
@@ -122,7 +122,7 @@ describe('Patient caregivers page', () => {
     const removeCaregiverButton = await within(caregiverRow).findByRole('button', { name: `Remove caregiver-${caregiverId}` })
     expect(removeCaregiverButton).toBeVisible()
 
-    userEvent.click(removeCaregiverButton)
+    await userEvent.click(removeCaregiverButton)
 
     const removeCaregiverDialog = screen.getByRole('dialog')
     expect(removeCaregiverDialog).toBeVisible()
@@ -143,7 +143,7 @@ describe('Patient caregivers page', () => {
     expect(removeCaregiverDialogConfirmButton).toBeVisible()
 
     await act(async () => {
-      userEvent.click(removeCaregiverDialogConfirmButton)
+      await userEvent.click(removeCaregiverDialogConfirmButton)
     })
 
     expect(caregiverRow).not.toBeVisible()

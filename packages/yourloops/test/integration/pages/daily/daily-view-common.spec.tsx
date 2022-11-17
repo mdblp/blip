@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -60,7 +60,7 @@ describe('Daily view for anyone', () => {
 
       // Check the time in range stats widgets
       checkDailyTimeInRangeStatsWidgets()
-      checkTimeInRangeStatsTitle()
+      await checkTimeInRangeStatsTitle()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
       checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')

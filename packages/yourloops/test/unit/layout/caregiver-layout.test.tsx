@@ -72,7 +72,7 @@ jest.mock('../../../pages/home-page', () => () => {
   return <div data-testid={homePagePageTestId} />
 })
 describe('Caregiver Layout', () => {
-  function getMainLayoutJSX(history: MemoryHistory): JSX.Element {
+  function getMainLayoutJSX(history): JSX.Element {
     return (
       <Router history={history}>
         <CaregiverLayout />

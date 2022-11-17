@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -107,14 +107,14 @@ describe('Caregiver home page', () => {
     expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
     expect(patientTableBody.getByText(patient2.profile.fullName)).toBeVisible()
     expect(patientTableBody.queryByText(patient3.profile.fullName)).not.toBeInTheDocument()
-    userEvent.clear(searchPatient)
+    await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
     expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
     expect(patientTableBody.queryByText(patient2.profile.fullName)).not.toBeInTheDocument()
     expect(patientTableBody.queryByText(patient3.profile.fullName)).not.toBeInTheDocument()
-    userEvent.clear(searchPatient)
+    await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
@@ -141,7 +141,7 @@ describe('Caregiver home page', () => {
     const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
     expect(removePatientButton).toBeVisible()
 
-    userEvent.click(removePatientButton)
+    await userEvent.click(removePatientButton)
 
     const removePatientDialog = screen.getByRole('dialog')
     expect(removePatientDialog).toBeVisible()
@@ -158,11 +158,11 @@ describe('Caregiver home page', () => {
     const removePatientDialogConfirmButton = within(removePatientDialog).getByRole('button', { name: 'Remove patient' })
     expect(removePatientDialogConfirmButton).toBeVisible()
 
-    userEvent.click(removePatientDialogCancelButton)
+    await userEvent.click(removePatientDialogCancelButton)
 
     expect(removePatientDialog).not.toBeInTheDocument()
 
-    userEvent.click(removePatientButton)
+    await userEvent.click(removePatientButton)
 
     const removePatientDialog2 = screen.getByRole('dialog')
     expect(removePatientDialog2).toBeVisible()
@@ -171,7 +171,7 @@ describe('Caregiver home page', () => {
 
     jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatient])
     await act(async () => {
-      userEvent.click(removePatientDialog2ConfirmButton)
+      await userEvent.click(removePatientDialog2ConfirmButton)
     })
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatient.userId, loggedInUserId)
@@ -191,14 +191,14 @@ describe('Caregiver home page', () => {
 
     const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
 
-    userEvent.click(removeButton)
+    await userEvent.click(removeButton)
 
     const removeDialog = screen.getByRole('dialog')
 
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     await act(async () => {
-      userEvent.click(confirmRemoveButton)
+      await userEvent.click(confirmRemoveButton)
     })
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatient.userId, loggedInUserId)

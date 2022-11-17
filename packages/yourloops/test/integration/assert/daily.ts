@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -49,13 +49,13 @@ const TOTAL_CARBS_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue 
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the mean.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 
-const checkTidelineContainerElementTooltip = (id: string, expectedTextContent: string) => {
+const checkTidelineContainerElementTooltip = async (id: string, expectedTextContent: string) => {
   const carbElement = screen.getByTestId(id)
   expect(carbElement).toBeVisible()
-  userEvent.hover(carbElement)
+  await userEvent.hover(carbElement)
   const tooltip = screen.getByTestId('tooltip')
   expect(tooltip).toHaveTextContent(expectedTextContent)
-  userEvent.unhover(carbElement)
+  await userEvent.unhover(carbElement)
 }
 
 export const checkDailyTidelineContainerTooltips = async () => {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -71,7 +71,7 @@ describe('Trends view for anyone', () => {
       renderPage('/trends')
 
       await checkTrendsTimeInRangeStatsWidgets()
-      checkTimeInRangeStatsTitle()
+      await checkTimeInRangeStatsTitle()
     })
   })
 
@@ -81,7 +81,7 @@ describe('Trends view for anyone', () => {
       renderPage('/trends')
 
       await checkReadingsInRangeStatsWidgets()
-      checkReadingsInRangeStats()
+      await checkReadingsInRangeStats()
 
       await checkSMBGTrendsStatsWidgetsTooltips()
 
