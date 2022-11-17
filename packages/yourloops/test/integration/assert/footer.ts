@@ -26,8 +26,7 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import diabeloopUrl from '../../../lib/diabeloop-url'
-import { getCurrentLang } from '../../../lib/language'
+import { diabeloopExternalUrls } from '../../../lib/diabeloop-url'
 import { UserRoles } from '../../../models/user'
 
 interface CheckFooterProps {
@@ -55,13 +54,13 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
   expect(intendedUseLink).toBeVisible()
   expect(intendedUseLink).toHaveAttribute('href', '/intended-use')
   expect(trainingLink).toBeVisible()
-  expect(trainingLink).toHaveAttribute('href', diabeloopUrl.getTrainingUrl(getCurrentLang(), role))
+  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(role))
   expect(termsOfUseLink).toBeVisible()
-  expect(termsOfUseLink).toHaveAttribute('href', diabeloopUrl.getTermsUrL(getCurrentLang()))
+  expect(termsOfUseLink).toHaveAttribute('href', diabeloopExternalUrls.terms)
   expect(privacyPolicyLink).toBeVisible()
-  expect(privacyPolicyLink).toHaveAttribute('href', diabeloopUrl.getPrivacyPolicyUrL(getCurrentLang()))
+  expect(privacyPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.privacyPolicy)
   expect(cookiesManagementLink).toBeVisible()
   expect(cookiesPolicyLink).toBeVisible()
-  expect(cookiesPolicyLink).toHaveAttribute('href', diabeloopUrl.getCookiesPolicyUrl(getCurrentLang()))
+  expect(cookiesPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.cookiesPolicy)
   expect(contactLink).toBeVisible()
 }

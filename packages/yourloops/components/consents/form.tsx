@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Consents common form
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,7 +36,7 @@ import FormGroup from '@material-ui/core/FormGroup'
 import Link from '@material-ui/core/Link'
 
 import { UserRoles } from '../../models/user'
-import diabeloopUrl from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 import { BaseConsentCheck, ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from './models'
 
 const formStyles = makeStyles(
@@ -62,7 +61,7 @@ const formStyles = makeStyles(
 )
 
 export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const classes = formStyles()
 
   const checkboxPolicy = (
@@ -80,7 +79,7 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
   const linkPrivacyPolicy = (
     <Link
       aria-label={privacyPolicy}
-      href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)}
+      href={diabeloopExternalUrls.privacyPolicy}
       target="_blank"
       rel="noreferrer"
     >
@@ -109,7 +108,7 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
 }
 
 export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const classes = formStyles()
 
   const checkboxTerms = (
@@ -125,7 +124,7 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
   )
   const terms = t('terms-of-use')
   const linkTerms = (
-    <Link aria-label={terms} href={diabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
+    <Link aria-label={terms} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
       {terms}
     </Link>
   )
@@ -151,7 +150,7 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
 }
 
 export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id, checked, onChange }) => {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const classes = formStyles()
 
   const checkboxTerms = (
@@ -167,7 +166,7 @@ export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id
   )
   const terms = t('terms-of-use')
   const linkTerms = (
-    <Link aria-label={terms} href={diabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
+    <Link aria-label={terms} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
       {terms}
     </Link>
   )

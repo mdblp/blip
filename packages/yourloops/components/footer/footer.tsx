@@ -38,13 +38,12 @@ import LanguageIcon from '@material-ui/icons/Language'
 import Link from '@material-ui/core/Link'
 import Tooltip from '@material-ui/core/Tooltip'
 
-import diabeloopUrls from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-url'
 import { useAuth } from '../../lib/auth'
 import config from '../../lib/config'
 import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
-import { ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../app/main-lobby'
 
 export const footerStyle = makeStyles((theme: Theme) => {
   return {
@@ -212,7 +211,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
 }, { name: 'footer-component-styles' })
 
 const Footer: FunctionComponent = () => {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { pathname } = useLocation()
   const classes = footerStyle()
@@ -254,7 +253,7 @@ const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-privacy-policy"
           target="_blank"
-          href={diabeloopUrls.getPrivacyPolicyUrL(i18n.language)}
+          href={diabeloopExternalUrls.privacyPolicy}
           rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
           className={classes.link}
@@ -265,7 +264,7 @@ const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-terms"
           target="_blank"
-          href={diabeloopUrls.getTermsUrL(i18n.language)}
+          href={diabeloopExternalUrls.terms}
           rel="nofollow"
           onClick={metricsPdfDocument('terms')}
           className={classes.link}
@@ -284,7 +283,7 @@ const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-cookies-policy"
           target="_blank"
-          href={diabeloopUrls.getCookiesPolicyUrl(i18n.language)}
+          href={diabeloopExternalUrls.cookiesPolicy}
           rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           className={classes.link}
@@ -313,12 +312,12 @@ const Footer: FunctionComponent = () => {
             <Link
               id="footer-link-url-release-notes"
               target="_blank"
-              href={diabeloopUrls.getReleaseNotesURL()}
+              href={diabeloopExternalUrls.releaseNotes}
               rel="nofollow"
               onClick={metricsPdfDocument('release_notes')}
               className={classes.link}
             >
-              <span className={classes.versionSpan}>&nbsp;{`v${config.VERSION}`.substring(0, 10)}</span>
+              <span className={classes.versionSpan}>&nbsp;{`v${config.VERSION}`.substring(0, 20)}</span>
             </Link>
           </Tooltip>
           <span className={classes.bySpan}>by </span>
@@ -327,7 +326,7 @@ const Footer: FunctionComponent = () => {
           id="footer-link-url-diabeloop"
           className={classes.diabeloopLink}
           target="_blank"
-          href={diabeloopUrls.SupportUrl} rel="nofollow"
+          href={diabeloopExternalUrls.support} rel="nofollow"
         >
           <img src={diabeloopLogo} alt={t('alt-img-logo')} className={`${classes.svg} ${classes.diabeloopLogo}`} />
           <img src={diabeloopLabel} alt={t('alt-img-logo')} className={classes.svg} />

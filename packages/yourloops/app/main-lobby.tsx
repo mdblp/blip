@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -43,16 +43,13 @@ import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import IntendedUsePage from '../pages/intented-use/intended-use-page'
 import LoginPage from '../pages/login/login-page'
-
-const RENEW_CONSENT_PATH = '/renew-consent'
-const TRAINING_PATH = '/training'
-const NEW_CONSENT_PATH = '/new-consent'
-const COMPLETE_SIGNUP_PATH = '/complete-signup'
-const LOGIN_PATH = '/login'
-const INTENDED_USE_PATH = '/intended-use'
-const PUBLIC_ROUTES = [LOGIN_PATH]
-const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
-export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [RENEW_CONSENT_PATH, NEW_CONSENT_PATH, TRAINING_PATH, COMPLETE_SIGNUP_PATH, INTENDED_USE_PATH, LOGIN_PATH]
+import {
+  ALWAYS_ACCESSIBLE_ROUTES,
+  COMPLETE_SIGNUP_PATH,
+  NEW_CONSENT_PATH,
+  PUBLIC_ROUTES,
+  RENEW_CONSENT_PATH, TRAINING_PATH
+} from '../lib/diabeloop-url'
 
 const routeStyle = makeStyles<Theme>(() => {
   return {
