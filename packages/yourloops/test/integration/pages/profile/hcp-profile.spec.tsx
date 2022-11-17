@@ -44,6 +44,7 @@ import { HcpProfession } from '../../../../models/hcp-profession'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
+    email: 'djamam@alatete.com',
     firstName: 'Djamal',
     lastName: 'Alatete',
     fullName: 'Djamal Alatete',

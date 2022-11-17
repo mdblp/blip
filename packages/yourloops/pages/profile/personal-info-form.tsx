@@ -60,7 +60,7 @@ const PersonalInfoForm: FunctionComponent = () => {
       <Box className={classes.inputContainer}>
         <TextField
           id="profile-textfield-firstname"
-          label={t('firstname')}
+          label={t('first-name')}
           value={profileForm.firstName}
           onChange={event => updateProfileForm(ProfileFormKey.firstName, event.target.value)}
           error={errors.firstName}
@@ -69,7 +69,7 @@ const PersonalInfoForm: FunctionComponent = () => {
         />
         <TextField
           id="profile-textfield-lastname"
-          label={t('lastname')}
+          label={t('last-name')}
           value={profileForm.lastName}
           onChange={event => updateProfileForm(ProfileFormKey.lastName, event.target.value)}
           error={errors.lastName}

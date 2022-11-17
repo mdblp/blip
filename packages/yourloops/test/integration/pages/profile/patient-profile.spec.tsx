@@ -43,6 +43,7 @@ import { LanguageCodes } from '../../../../models/locales'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
+    email: 'elie@coptere.com',
     firstName: 'Elie',
     lastName: 'Coptere',
     fullName: 'Elie Coptere',

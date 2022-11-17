@@ -46,18 +46,20 @@ interface MockUserDataFetchParams {
 }
 
 export const mockUserDataFetch = ({ firstName, lastName, profile, settings, preferences }: MockUserDataFetchParams) => {
-  jest.spyOn(UserApi, 'getProfile').mockResolvedValue({
-    firstName,
-    lastName,
-    fullName: `${firstName} ${lastName}`,
-    email: 'fake@email.com',
-    termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-    privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
-    ...profile
-  } as Profile)
-  jest.spyOn(UserApi, 'getPreferences').mockResolvedValue(preferences ?? {})
-  jest.spyOn(UserApi, 'getSettings').mockResolvedValue(settings ?? {})
+  jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
+    profile: {
+      firstName,
+      lastName,
+      fullName: `${firstName} ${lastName}`,
+      email: 'fake@email.com',
+      termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+      privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+      trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
+      ...profile
+    } as Profile,
+    settings: settings ?? {},
+    preferences: preferences ?? {}
+  })
 }
 
 export const mockPatientLogin = (patient: ITeamMember) => {
