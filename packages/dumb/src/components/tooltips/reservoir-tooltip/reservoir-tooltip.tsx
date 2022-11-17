@@ -56,6 +56,7 @@ const getChangeTypeByManufacturer = (manufacturer: Manufacturer): ChangeType => 
     case Manufacturer.Roche:
       return ChangeType.Reservoir
     case Manufacturer.Default:
+    default:
       return ChangeType.InfusionSite
   }
 }
