@@ -25,32 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
-import {
-  CBGPercentageBarChartMemoized as CBGPercentageBarChart
-} from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
-import {
-  CbgStandardDeviationMemoized as CBGStandardDeviation
-} from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './components/stats/models'
-import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
-import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
-import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
-import Tooltip from './components/tooltips/tooltip/tooltip'
-import { CgmTable } from './settings/cgm-table'
-import { PumpTable } from './settings/pump-table'
-import { TerminalTable } from './settings/terminal-table'
-
-export {
-  CBGMeanStat,
-  CBGPercentageBarChart,
-  CBGStandardDeviation,
-  CBGStatType,
-  CgmTable,
-  ConfidentialTooltip,
-  PumpTable,
-  ReservoirTooltip,
-  StatTooltip,
-  TerminalTable,
-  Tooltip
+.icon {
+  color: var(--text-black, black);
 }

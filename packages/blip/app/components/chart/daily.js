@@ -36,7 +36,7 @@ import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
 import Header from './header'
 import Footer from './footer'
-import { ReservoirTooltip } from 'dumb'
+import { ConfidentialTooltip, ReservoirTooltip } from 'dumb'
 
 /**
  * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
@@ -51,7 +51,6 @@ const CBGTooltip = vizComponents.CBGTooltip
 const FoodTooltip = vizComponents.FoodTooltip
 const PhysicalTooltip = vizComponents.PhysicalTooltip
 const ParameterTooltip = vizComponents.ParameterTooltip
-const ConfidentialTooltip = vizComponents.ConfidentialTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 /**
@@ -765,14 +764,11 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ConfidentialTooltip
-        confidential={datum.data}
         position={{
           top: datum.top,
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
-        timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
   }

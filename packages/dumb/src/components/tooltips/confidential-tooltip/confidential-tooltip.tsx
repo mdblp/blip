@@ -27,7 +27,11 @@
 
 import React, { FunctionComponent } from 'react'
 import i18next from 'i18next'
-import styles from './reservoir-tooltip.css'
+import Grid from '@material-ui/core/Grid'
+import LockIcon from '@material-ui/icons/LockOutlined'
+import styles from './confidential-tooltip.css'
+import { Tooltip } from '../../../index'
+import colors from '../../../styles/colors.css'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -38,59 +42,21 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { Manufacturer, Pump, Source, TimePrefs, TIMEZONE_UTC } from '../../../settings/models'
-import { Tooltip } from '../../../index'
-import colors from '../../../styles/colors.css'
 
-interface ReservoirTooltipProps {
-  reservoir: {
-    source: Source
-    normalTime: string
-    timezone: string
-    pump: Pump
-  }
+interface ConfidentialTooltipProps {
   position: Position
   side: Side
-  timePrefs: TimePrefs
-}
-
-enum ChangeType {
-  InfusionSite = 'site',
-  Reservoir = 'reservoir'
-}
-
-const getChangeTypeByManufacturer = (manufacturer: Manufacturer): ChangeType => {
-  switch (manufacturer) {
-    case Manufacturer.Vicentra:
-    case Manufacturer.Roche:
-      return ChangeType.Reservoir
-    case Manufacturer.Default:
-    default:
-      return ChangeType.InfusionSite
-  }
 }
 
 const t = i18next.t.bind(i18next)
 
-export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
-  const { reservoir, position, side, timePrefs } = props
-
-  const manufacturer = reservoir.pump?.manufacturer || Manufacturer.Default
-  const changeType: ChangeType = getChangeTypeByManufacturer(manufacturer)
-  const label = (changeType === ChangeType.Reservoir)
-    ? t('Reservoir Change')
-    : t('Infusion site change')
+export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = (props) => {
+  const { position, side } = props
 
   const tooltipParams = {
     position,
     side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors.deviceEvent,
-    dateTitle: {
-      source: reservoir.source || Source.Diabeloop,
-      normalTime: reservoir.normalTime,
-      timezone: reservoir.timezone || TIMEZONE_UTC,
-      timePrefs
-    }
+    borderColor: colors.confidentialMode
   }
 
   return (
@@ -98,18 +64,18 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
       position={tooltipParams.position}
       side={tooltipParams.side}
       borderColor={tooltipParams.borderColor}
-      dateTitle={tooltipParams.dateTitle}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
+      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={styles.container}>
-          <div key={'title'} className={styles.pa}>
-            <div className={styles.label}>{label}</div>
-          </div>
-        </div>
+        <Grid container direction="row" alignItems="center" justifyContent="center">
+          <Grid item>
+            <LockIcon className={styles.icon} />
+          </Grid>
+          <Grid item>{t('Confidential mode')}</Grid>
+        </Grid>
       }
     />
   )
