@@ -52,7 +52,7 @@ export const checkAccountSelectorStep = () => {
   expect(within(patientRadioInput).getByTestId('radio-label-body')).toHaveTextContent('If you use a DBL System, you have to create your account from your handset. You can’t create several accounts with the same email address.')
 }
 
-export const checkConsentStep = () => {
+export const checkConsentStep = async () => {
   const privacyCheckbox = within(screen.getByLabelText('Privacy policy checkbox')).getByRole('checkbox')
   const termsCheckbox = within(screen.getByLabelText('Terms checkbox')).getByRole('checkbox')
   const nextButton = screen.getByRole('button', { name: 'Next' })
@@ -61,8 +61,8 @@ export const checkConsentStep = () => {
   expect(privacyCheckbox).toBeInTheDocument()
   expect(termsCheckbox).toBeInTheDocument()
 
-  userEvent.click(privacyCheckbox)
-  userEvent.click(termsCheckbox)
+  await userEvent.click(privacyCheckbox)
+  await userEvent.click(termsCheckbox)
 
   expect(nextButton).not.toBeDisabled()
 }

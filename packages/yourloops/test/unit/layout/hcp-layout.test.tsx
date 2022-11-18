@@ -26,14 +26,14 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import * as authHookMock from '../../../lib/auth'
 import { User } from '../../../lib/auth'
 import * as teamHookMock from '../../../lib/team'
 import * as notificationsHookMock from '../../../lib/notifications/hook'
 import { UserRoles } from '../../../models/user'
-import { Router } from 'react-router-dom'
-import { createMemoryHistory, MemoryHistory } from 'history'
+import { MemoryRouter, Router } from 'react-router-dom'
+import { createMemoryHistory, History, MemoryHistory } from 'history'
 import * as patientHookMock from '../../../lib/patient/provider'
 import { HcpLayout } from '../../../layout/hcp-layout'
 
@@ -80,11 +80,11 @@ jest.mock('../../../pages/home-page', () => () => {
   return <div data-testid={homePagePageTestId} />
 })
 describe('Hcp Layout', () => {
-  function getMainLayoutJSX(history: MemoryHistory): JSX.Element {
+  function getMainLayoutJSX(initialEntry: string): JSX.Element {
     return (
-      <Router history={history}>
+      <MemoryRouter initialEntries={[initialEntry]}>
         <HcpLayout />
-      </Router>
+      </MemoryRouter>
     )
   }
 
@@ -127,51 +127,42 @@ describe('Hcp Layout', () => {
   }
 
   it('should render profile page when route is /preferences', () => {
-    const history = createMemoryHistory({ initialEntries: ['/preferences'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/preferences'))
     checkInDocument(profilePageTestId)
   })
 
   it('should render notifications page when route is /notifications', () => {
-    const history = createMemoryHistory({ initialEntries: ['/notifications'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/notifications'))
     checkInDocument(notificationsPageTestId)
   })
 
   it('should render home page when route is /home and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/home'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/home'))
     checkInDocument(homePagePageTestId)
   })
 
-  it('should render home page when route is / and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/'] })
-    render(getMainLayoutJSX(history))
+  it('should render home page when route is / and user is hcp', async () => {
+    render(getMainLayoutJSX('/'))
     checkInDocument(homePagePageTestId)
-    expect(history.location.pathname).toBe('/home')
   })
 
   it('should render patient data page when route matches /patient/:patientId and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/patient/fakePatientId'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/patient/fakePatientId'))
     checkInDocument(patientDataPageTestId)
   })
 
   it('should render team details page when route matches /teams/:teamId and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/teams/fakeTeamId'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/teams/fakeTeamId'))
     checkInDocument(teamDetailsPageTestId)
   })
 
   it('should render certify account page when route is /certify and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/certify'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/certify'))
     checkInDocument(certifyAccountPageTestId)
   })
 
   it('should redirect to /not-found when route is unknown for user with hcp role', () => {
-    const history = createMemoryHistory({ initialEntries: ['/wrongRoute'] })
-    render(getMainLayoutJSX(history))
-    expect(history.location.pathname).toBe('/not-found')
+    render(getMainLayoutJSX('/wrongRoute'))
+    expect(window.location.pathname).toBe('/not-found')
   })
 })

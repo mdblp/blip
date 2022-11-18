@@ -25,29 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Router } from 'react-router-dom'
+import { MemoryRouter } from 'react-router-dom'
 import { AuthContextProvider } from '../../../lib/auth'
 import { MainLobby } from '../../../app/main-lobby'
-import { createMemoryHistory, MemoryHistory } from 'history'
 import { render } from '@testing-library/react'
 import React from 'react'
 
-function getMainLobby(history) {
+function getMainLobby(initialEntry: string) {
   return (
-    <Router history={history}>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <AuthContextProvider>
         <MainLobby />
       </AuthContextProvider>
-    </Router>
+    </MemoryRouter>
   )
 }
 
-export const renderPageFromHistory = (history: MemoryHistory) => {
-  render(getMainLobby(history))
+export const renderPageFromHistory = (initialEntry: string) => {
+  render(getMainLobby(initialEntry))
 }
 
 export const renderPage = (url: string) => {
-  const history = createMemoryHistory({ initialEntries: [url] })
-  renderPageFromHistory(history)
-  expect(history.location.pathname).toBe(url)
+  renderPageFromHistory(url)
+  // expect(window.location.pathname).toBe(url)
 }

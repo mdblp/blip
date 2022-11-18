@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Router } from 'react-router-dom'
-import { createMemoryHistory } from 'history'
+import { MemoryRouter } from 'react-router-dom'
 import React from 'react'
 import OnError from '../../../../app/error'
 import ErrorApi from '../../../../lib/error/error-api'
@@ -52,11 +51,10 @@ describe('Error page', () => {
   const url = '/daily'
 
   function renderErrorPage() {
-    const history = createMemoryHistory({ initialEntries: [url] })
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={[url]}>
         <OnError event={event} source={source} lineno={lineno} colno={colno} error={Error(error)} />
-      </Router>
+      </MemoryRouter>
     )
   }
 
@@ -78,7 +76,7 @@ describe('Error page', () => {
     expect(screen.getByText('Sorry! Something went wrong.')).toBeVisible()
     expect(screen.getByText('Please contact yourloops support and forward them the error id:')).toBeVisible()
     const showMoreInfoButton = screen.getByText('Show more information')
-    userEvent.click(showMoreInfoButton)
+    await userEvent.click(showMoreInfoButton)
     expect(screen.getByTestId('error-stacktrace')).toHaveTextContent(/fakeEvent Source: fakeSource:12:56 Error: This is the error we are supposed to throw to harbour Stack: Error: This is the error we are supposed to throw to harbour/)
     expect(ErrorApi.sendError).toBeCalledWith(expectPayload)
     expect(screen.queryByText('Show more information')).not.toBeInTheDocument()
