@@ -26,6 +26,5 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import LoginPage from './login'
 import ConsentPage from './consent'
-export { LoginPage, ConsentPage }
+export { ConsentPage }

@@ -50,9 +50,10 @@ function plotDeviceParameterChange(pool, opts) {
   function parameter(selection) {
     opts.xScale = pool.xScale().copy()
     selection.each(function() {
+      /*We are always cleaning param-group because of multiple rendering when navigating between days*/
+      d3.select(this).selectAll('g.d3-param-group').remove()
       const deviceParameters = pool.filterDataForRender(opts.tidelineData.medicalData.deviceParametersChanges)
       if (deviceParameters.length < 1) {
-        d3.select(this).selectAll('g.d3-param-group').remove()
         return
       }
 

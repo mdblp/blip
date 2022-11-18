@@ -32,6 +32,7 @@ import User from '../../../../lib/auth/user'
 
 describe('User', () => {
   let user: User
+  const email = 'text@example.com'
 
   beforeAll(() => {
     config.LATEST_TERMS = '2021-01-01'
@@ -40,9 +41,9 @@ describe('User', () => {
   beforeEach(() => {
     user = new User({
       sub: 'auth0|abcd',
-      email: 'text@example.com',
-      [AuthenticatedUserMetadata.Roles]: [UserRoles.unverified],
-      emailVerified: true
+      email,
+      [AuthenticatedUserMetadata.Roles]: [UserRoles.unset],
+      email_verified: true
     })
   })
 
@@ -62,7 +63,8 @@ describe('User', () => {
     user.profile = {
       fullName: 'Hello',
       firstName: 'Test',
-      lastName: 'Example'
+      lastName: 'Example',
+      email
     }
     expect(user.firstName).toBe('Test')
   })
@@ -71,13 +73,15 @@ describe('User', () => {
     expect(user.lastName).toBe('text@example.com')
     user.profile = {
       fullName: 'Hello World',
-      firstName: 'Test'
+      firstName: 'Test',
+      email
     }
     expect(user.lastName).toBe('Hello World')
     user.profile = {
       fullName: 'Hello World',
       firstName: 'Test',
-      lastName: 'Example'
+      lastName: 'Example',
+      email
     }
     expect(user.lastName).toBe('Example')
   })
@@ -85,7 +89,8 @@ describe('User', () => {
   it('getFullName', () => {
     expect(user.fullName).toBe('text@example.com')
     user.profile = {
-      fullName: 'Barack Afritt'
+      fullName: 'Barack Afritt',
+      email
     }
     expect(user.fullName).toBe('Barack Afritt')
   })
@@ -94,7 +99,8 @@ describe('User', () => {
     expect(user.shouldAcceptConsent()).toBe(true)
     user.profile = {
       fullName: 'Test Example',
-      termsOfUse: {}
+      termsOfUse: {},
+      email
     }
     expect(user.shouldAcceptConsent()).toBe(true)
     user.profile.termsOfUse.isAccepted = false
@@ -112,7 +118,8 @@ describe('User', () => {
   it('shouldRenewConsent', () => {
     expect(user.shouldRenewConsent()).toBe(true)
     user.profile = {
-      fullName: 'Test Example'
+      fullName: 'Test Example',
+      email
     }
     expect(user.shouldRenewConsent()).toBe(true)
     user.profile.termsOfUse = null
