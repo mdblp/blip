@@ -100,7 +100,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
             </div>
           </DialogTitle>
 
-          <DialogContent className="no-padding-bottom">
+          <DialogContent className={'no-padding'}>
             <AlarmsContentConfiguration
               monitoring={patient.monitoring}
               patient={patient}
