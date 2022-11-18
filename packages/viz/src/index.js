@@ -28,7 +28,6 @@ import BolusTooltip from './components/daily/bolustooltip/BolusTooltip'
 import SMBGTooltip from './components/daily/smbgtooltip/SMBGTooltip'
 import Stat from './components/common/stat/Stat'
 import CBGTooltip from './components/daily/cbgtooltip/CBGTooltip'
-import FoodTooltip from './components/daily/foodtooltip/FoodTooltip'
 import PhysicalTooltip from './components/daily/physicaltooltip/PhysicalTooltip'
 import ParameterTooltip from './components/daily/parametertooltip/ParameterTooltip'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
@@ -37,9 +36,9 @@ import reducers from './redux/reducers/'
 
 import { formatBgValue, formatParameterValue } from './utils/format'
 import { reshapeBgClassesToBgBounds } from './utils/bloodglucose'
-import { getTotalBasalFromEndpoints, getGroupDurations } from './utils/basal'
+import { getGroupDurations, getTotalBasalFromEndpoints } from './utils/basal'
 import { isAutomatedBasalDevice } from './utils/device'
-import { addDuration, getLocalizedCeiling, getTimezoneFromTimePrefs, getLongDayHourFormat } from './utils/datetime'
+import { addDuration, getLocalizedCeiling, getLongDayHourFormat, getTimezoneFromTimePrefs } from './utils/datetime'
 import {
   commonStats,
   getStatAnnotations,
@@ -52,7 +51,7 @@ import {
 import DataUtil from './utils/data'
 import getParametersChanges from './utils/parametersHistory'
 import createPrintPDFPackage from './modules/print'
-import { selectDailyViewData, generatePumpSettings, generatePDFStats } from './utils/print/data'
+import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './utils/print/data'
 
 const components = {
   CBGDateTraceLabel,
@@ -64,7 +63,6 @@ const components = {
   SMBGTooltip,
   Stat,
   CBGTooltip,
-  FoodTooltip,
   PhysicalTooltip,
   ParameterTooltip,
   WarmUpTooltip

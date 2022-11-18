@@ -26,8 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import i18next from 'i18next'
-import styles from './reservoir-tooltip.css'
+import { Source, TimePrefs } from '../../../settings/models'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -38,55 +37,54 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { Manufacturer, Pump, Source, TimePrefs } from '../../../settings/models'
+import styles from './food-tooltip.css'
+import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip.util'
 
-interface ReservoirTooltipProps {
-  reservoir: {
+enum Prescriptor {
+  Auto = 'auto',
+  Modified = 'hybrid',
+  None = 'manual'
+}
+
+interface FoodTooltipProps {
+  food: {
     source: Source
     normalTime: string
     timezone: string
-    pump: Pump
+    nutrition: {
+      carbohydrate: {
+        net: number
+      }
+    }
+    prescriptor: Prescriptor
+    prescribedNutrition: {
+      carbohydrate: {
+        net: number
+      }
+    }
   }
   position: Position
   side: Side
   timePrefs: TimePrefs
 }
 
-enum ChangeType {
-  InfusionSite = 'site',
-  Reservoir = 'reservoir'
-}
+export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
+  const { food, position, side, timePrefs } = props
 
-const t = i18next.t.bind(i18next)
-
-export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
-  const { reservoir, position, side, timePrefs } = props
-
-  const getChangeTypeByManufacturer = (manufacturer: Manufacturer): ChangeType => {
-    switch (manufacturer) {
-      case Manufacturer.Vicentra:
-      case Manufacturer.Roche:
-        return ChangeType.Reservoir
-      case Manufacturer.Default:
-      default:
-        return ChangeType.InfusionSite
-    }
-  }
-
-  const manufacturer = reservoir.pump?.manufacturer || Manufacturer.Default
-  const changeType: ChangeType = getChangeTypeByManufacturer(manufacturer)
-  const label = (changeType === ChangeType.Reservoir)
-    ? t('Reservoir Change')
-    : t('Infusion site change')
+  const actualCarbs = food.nutrition?.carbohydrate?.net || 0
+  const prescribedCarbs = food.prescribedNutrition?.carbohydrate?.net
+  const prescriptor = food.prescriptor
+  const recommendedValue = (prescriptor === Prescriptor.Modified) ? prescribedCarbs : actualCarbs
+  const hasPrescriptor = prescriptor && (prescriptor !== Prescriptor.None)
 
   const tooltipParams = {
     position,
     side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors.deviceEvent,
-    dateTitle: getDateTitle(reservoir, timePrefs)
+    borderColor: colors.rescuecarbs,
+    dateTitle: getDateTitle(food, timePrefs)
   }
 
   return (
@@ -95,15 +93,29 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
       side={tooltipParams.side}
       borderColor={tooltipParams.borderColor}
       dateTitle={tooltipParams.dateTitle}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
+      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={styles.container}>
-          <div key={'title'} className={styles.pa}>
-            <div className={styles.label}>{label}</div>
+          {
+            hasPrescriptor &&
+            <div key={'prescribed'} className={styles.prescribed}>
+              <div className={styles.label}>{i18next.t('Recommended')}</div>
+              <div className={styles.value}>
+                {recommendedValue}
+              </div>
+              <div className={styles.units}>g</div>
+            </div>
+          }
+          <div key={'carb'} className={styles.carb}>
+            <div className={styles.label}>{i18next.t('Confirmed')}</div>
+            <div className={styles.value}>
+              {actualCarbs}
+            </div>
+            <div className={styles.units}>g</div>
           </div>
         </div>
       }

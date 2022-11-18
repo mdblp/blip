@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './diabeloop.css'
-import { formatLocalizedFromUTC } from '../utils/datetime'
+import { formatLocalizedFromUTC } from '../utils/datetime.util'
 import { useTranslation } from 'react-i18next'
 import { CGM, TimePrefs } from './models'
 
