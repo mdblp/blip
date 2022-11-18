@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Generic Chat window
  *
  * All rights reserved.
  *

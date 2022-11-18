@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Tests on DialogPDFOptions
  *
  * All rights reserved.
  *
