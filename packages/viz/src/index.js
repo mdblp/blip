@@ -31,7 +31,6 @@ import CBGTooltip from './components/daily/cbgtooltip/CBGTooltip'
 import FoodTooltip from './components/daily/foodtooltip/FoodTooltip'
 import PhysicalTooltip from './components/daily/physicaltooltip/PhysicalTooltip'
 import ParameterTooltip from './components/daily/parametertooltip/ParameterTooltip'
-import ConfidentialTooltip from './components/daily/confidentialtooltip/ConfidentialTooltip'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
 import reducers from './redux/reducers/'
@@ -68,7 +67,6 @@ const components = {
   FoodTooltip,
   PhysicalTooltip,
   ParameterTooltip,
-  ConfidentialTooltip,
   WarmUpTooltip
 }
 
