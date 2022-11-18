@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Calendar header: Allow to change the current displayed month on the calendar
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
