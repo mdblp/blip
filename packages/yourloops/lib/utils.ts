@@ -62,6 +62,7 @@ export const isZipCodeValid = (country: string, zipCode: string): boolean => {
       return REGEX_ZIPCODE_WITHOUT_STRING.test(zipCode)
   }
 }
+
 /**
  * setTimeout() as promised
  * @param timeout in milliseconds
@@ -133,7 +134,7 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
       }
     }
   }
-  let bgUnit = _.get(settings, 'bg', settings.units?.bg ?? Units.gram) as Units
+  let bgUnit = _.get(settings, 'bg', settings.units?.bg ?? Units.gram)
   if (![Units.gram, Units.mole].includes(bgUnit)) {
     bgUnit = Units.gram
   }

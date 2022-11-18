@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import CertifyAccountPage from '../pages/hcp/certify-account-page'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
