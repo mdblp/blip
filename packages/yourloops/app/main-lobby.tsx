@@ -32,7 +32,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
-import { useAuth } from '../lib/auth'
+import { useAuth, User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import Footer from '../components/footer/footer'
@@ -48,7 +48,8 @@ import {
   COMPLETE_SIGNUP_PATH,
   NEW_CONSENT_PATH,
   PUBLIC_ROUTES,
-  RENEW_CONSENT_PATH, TRAINING_PATH
+  RENEW_CONSENT_PATH,
+  TRAINING_PATH
 } from '../lib/diabeloop-url'
 
 const routeStyle = makeStyles<Theme>(() => {
@@ -65,46 +66,49 @@ const routeStyle = makeStyles<Theme>(() => {
   }
 })
 
+const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route)
+
+export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
+  const routeIsPublic = isRoutePublic(route)
+  const renewConsentPath = route === RENEW_CONSENT_PATH || route === NEW_CONSENT_PATH
+  const trainingPath = route === TRAINING_PATH
+  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(route)
+  if (routeIsPublic && isAuthenticated) {
+    return '/'
+  }
+  if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
+    return '/login'
+  }
+  if (route !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
+    return '/complete-signup'
+  }
+  if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
+    return '/new-consent'
+  }
+  if (!renewConsentPath && user && user.hasToRenewConsent()) {
+    return '/renew-consent'
+  }
+  if (!trainingPath && route !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
+    return '/training'
+  }
+  return undefined
+}
+
 export function MainLobby(): JSX.Element {
   const { isLoading, isAuthenticated } = useAuth0()
-  const { user, fetchingUser } = useAuth()
+  const { fetchingUser, user } = useAuth()
   const location = useLocation()
   const currentRoute = location.pathname
-  const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute)
-  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(currentRoute)
   const theme = getTheme()
   const classes = routeStyle()
-  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
-  const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH
-  const trainingPath = currentRoute === TRAINING_PATH
+  const isCurrentRoutePublic = isRoutePublic(currentRoute)
 
   if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />
   }
 
-  const checkRedirect = (): string => {
-    if (isCurrentRoutePublic && isAuthenticated) {
-      return '/'
-    }
-    if (!isAuthenticated && !isCurrentRoutePublic && !isCurrentRouteAlwaysAccessible) {
-      return '/login'
-    }
-    if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
-      return '/complete-signup'
-    }
-    if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
-      return '/new-consent'
-    }
-    if (!renewConsentPath && user && user.hasToRenewConsent()) {
-      return '/renew-consent'
-    }
-    if (!trainingPath && currentRoute !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
-      return '/training'
-    }
-    return null
-  }
-
-  const redirectTo = checkRedirect()
+  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
+  const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
 
   return (
     <React.Fragment>
