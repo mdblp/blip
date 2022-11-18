@@ -74,6 +74,7 @@ const style = makeStyles((theme: Theme) => {
     }
   }
 }, { name: 'ylp-training-page' })
+
 /**
  * Training Page
  */
@@ -100,7 +101,8 @@ function TrainingPage(): JSX.Element {
 
   const training = t('training').toLowerCase()
   const trainingLink = (
-    <Link aria-label={training} href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)} target="_blank" rel="noreferrer">
+    <Link aria-label={training} href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)} target="_blank"
+          rel="noreferrer">
       {training}
     </Link>
   )
@@ -130,7 +132,7 @@ function TrainingPage(): JSX.Element {
                 i18nKey="training-body"
                 t={t}
                 components={{ trainingLink }}
-                values= {{ training }}>
+                values={{ training }}>
                 New {{ training }} available
               </Trans>
               <div className={classes.buttons}>
