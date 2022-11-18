@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -29,44 +29,98 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { ThemeProvider, useTheme } from '@material-ui/core/styles'
+import { makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
-import { useAuth } from '../lib/auth'
+import { useAuth, User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import Footer from '../components/footer/footer'
 import PatientConsentPage from '../pages/patient/patient-consent'
 import CompleteSignUpPage from '../pages/signup/complete-signup-page'
-import { ConsentPage, LoginPage } from '../pages/login'
+import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import IntendedUsePage from '../pages/intented-use/intended-use-page'
-import { useMainLobby } from './main-lobby.hook'
+import LoginPage from '../pages/login/login-page'
+import {
+  ALWAYS_ACCESSIBLE_ROUTES,
+  COMPLETE_SIGNUP_PATH,
+  NEW_CONSENT_PATH,
+  PUBLIC_ROUTES,
+  RENEW_CONSENT_PATH,
+  TRAINING_PATH
+} from '../lib/diabeloop-url'
+
+const routeStyle = makeStyles<Theme>(() => {
+  return {
+    public: {
+      flex: '1 0 auto',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    private: {
+      flex: '1 0 auto'
+    }
+  }
+})
+
+export const isRoutePublic = (route: string): boolean => {
+  return PUBLIC_ROUTES.includes(route)
+}
+
+export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
+  const routeIsPublic = isRoutePublic(route)
+  const renewConsentPath = route === RENEW_CONSENT_PATH || route === NEW_CONSENT_PATH
+  const trainingPath = route === TRAINING_PATH
+  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(route)
+  if (routeIsPublic && isAuthenticated) {
+    return '/'
+  }
+  if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
+    return '/login'
+  }
+  if (route !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
+    return '/complete-signup'
+  }
+  if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
+    return '/new-consent'
+  }
+  if (!renewConsentPath && user && user.hasToRenewConsent()) {
+    return '/renew-consent'
+  }
+  if (!trainingPath && route !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
+    return '/training'
+  }
+  return undefined
+}
 
 export function MainLobby(): JSX.Element {
   const { isLoading, isAuthenticated } = useAuth0()
   const { fetchingUser, user } = useAuth()
-  const { palette } = useTheme()
   const location = useLocation()
   const currentRoute = location.pathname
-  const { getStyle, getRedirectUrl, isRoutePublic } = useMainLobby()
   const theme = getTheme()
+  const classes = routeStyle()
+  const isCurrentRoutePublic = isRoutePublic(currentRoute)
 
-  if (!isRoutePublic(currentRoute) && isLoading) {
+  if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />
   }
 
-  const redirectUrl = getRedirectUrl(currentRoute, user, isAuthenticated)
+  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
+  const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
 
   return (
     <React.Fragment>
-      {redirectUrl ? <Redirect to={redirectUrl} />
+      {redirectTo
+        ? <Redirect to={redirectTo} />
         : (!isLoading && !fetchingUser &&
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <SnackbarContextProvider context={DefaultSnackbarContext}>
-              <div className={getStyle(currentRoute, palette)}>
+              <div className={style}>
                 <Switch>
                   <Route exact path="/intended-use" component={IntendedUsePage} />
                   <Route exact path="/login" component={LoginPage} />

@@ -114,13 +114,23 @@ const ignoredTransKeyForYourLoops = [
   'consent-monitoring-terms-of-use',
   'not-logged-in',
   'modal-add-medical-team-code-no-invite',
+  'modal-caregiver-remove-patient-failure',
+  'modal-caregiver-remove-patient-info-2',
+  'modal-caregiver-remove-patient-remove',
+  'modal-caregiver-remove-patient-success',
+  'modal-caregiver-remove-patient-title',
+  'modal-patient-remove-caregiver-failure',
+  'modal-patient-remove-caregiver-info-2',
+  'modal-patient-remove-caregiver-success',
+  'modal-patient-remove-caregiver-title',
+  'modal-remove-caregiver-question',
+  'modal-remove-patient-question',
+  'remove-caregiver',
   'severe-hypoglycemia-threshold',
-  'signup-steppers-caregiver-title',
-  'signup-steppers-hcp-title',
-  'signup-steppers-step1',
-  'signup-steppers-step2',
-  'team-card-label-address',
   'team-leave-dialog-button-leave',
+  'select-account-type',
+  'consent',
+  'create-profile',
   'until',
   // Others
   // TODO
@@ -132,12 +142,12 @@ const ignoredTransKeyForYourLoops = [
   'training',
   'initial-hba1c',
   'optional',
-  'training-body'
+  'training-body',
+  'login',
+  'refresh'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
-  'team-card-label-${label}',
-  'signup-steppers-${state.formValues.accountRole}-title',
   // Documentation!
   'translate-me',
   'translate-{{someone}}'

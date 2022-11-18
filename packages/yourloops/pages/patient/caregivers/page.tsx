@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
@@ -43,13 +43,12 @@ import { setPageTitle } from '../../../lib/utils'
 import { useNotification } from '../../../lib/notifications/hook'
 import { ShareUser } from '../../../lib/share/models'
 import { useAlert } from '../../../components/utils/snackbar'
-import { AddDialogContentProps, RemoveDialogContentProps } from './types'
+import { AddDialogContentProps } from './types'
 import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-dialog'
-import RemoveCaregiverDialog from './remove-dialog'
 import CaregiverTable from './table'
 import DirectShareApi from '../../../lib/share/direct-share-api'
-import { NotificationType } from '../../../lib/notifications/models'
+import { INotification, NotificationType } from '../../../lib/notifications/models'
 
 const log = bows('PatientCaregiversPage')
 
@@ -62,7 +61,6 @@ function PatientCaregiversPage(): JSX.Element {
   const { user } = useAuth()
   const notificationHook = useNotification()
   const [caregiverToAdd, setCaregiverToAdd] = React.useState<AddDialogContentProps | null>(null)
-  const [caregiverToRemove, setCaregiverToRemove] = React.useState<RemoveDialogContentProps | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
   const { sentInvitations, initialized: haveNotifications } = notificationHook
 
@@ -92,91 +90,72 @@ function PatientCaregiversPage(): JSX.Element {
     }
   }
 
-  const handleRemoveCaregiver = async (us: ShareUser): Promise<void> => {
-    const getConsent = async (): Promise<boolean> => {
-      return await new Promise((resolve: (consent: boolean) => void) => {
-        setCaregiverToRemove({ caregiver: us, onDialogResult: resolve })
-      })
-    }
-
-    const consent = await getConsent()
-    setCaregiverToRemove(null) // Close the dialog
-
-    if (consent && user) {
-      try {
-        if (us.status === UserInvitationStatus.pending && typeof us.invitation === 'object') {
-          await notificationHook.cancel(us.invitation)
-        } else {
-          await DirectShareApi.removeDirectShare(user.id, us.user.userid)
-        }
-        alert.success(t('modal-patient-remove-caregiver-success'))
-        setCaregivers(null) // Refresh the list
-      } catch (reason) {
-        log.error(reason)
-        alert.error(t('modal-patient-remove-caregiver-failure'))
+  const getCaregiversFromPendingInvitations = useCallback((): ShareUser[] => {
+    return sentInvitations.reduce((acc: ShareUser[], invitation: INotification) => {
+      if (invitation.type !== NotificationType.directInvitation) {
+        return acc
       }
-    }
-  }
 
-  React.useEffect(() => {
+      log.debug('Found pending direct-share invitation: ', invitation)
+      const caregiver: ShareUser = {
+        invitation,
+        status: UserInvitationStatus.pending,
+        user: {
+          username: invitation.email,
+          userid: uuidv4(),
+          role: UserRoles.caregiver
+        }
+      }
+      acc.push(caregiver)
+      return acc
+    }, [])
+  }, [sentInvitations])
+
+  const fetchCaregivers = useCallback(async (): Promise<void> => {
+    return await DirectShareApi.getDirectShares()
+      .catch((reason: unknown) => {
+        log.error(reason)
+
+        return []
+      })
+      .then((caregivers: ShareUser[]) => {
+        const invitedCaregivers = getCaregiversFromPendingInvitations()
+        caregivers.push(...invitedCaregivers)
+        setCaregivers(caregivers)
+      })
+  }, [getCaregiversFromPendingInvitations])
+
+  useEffect(() => {
+    fetchCaregivers()
+  }, [fetchCaregivers, sentInvitations])
+
+  useEffect(() => {
     if (!caregivers && user && haveNotifications) {
-      // Load caregivers
-      const addPendingInvitation = (target: ShareUser[]): void => {
-        for (const invitation of sentInvitations) {
-          if (invitation.type === NotificationType.directInvitation) {
-            // Create a fake share user
-            log.debug('Found pending direct-share invitation: ', invitation)
-            const shareUser: ShareUser = {
-              invitation,
-              status: UserInvitationStatus.pending,
-              user: {
-                username: invitation.email,
-                userid: uuidv4(),
-                role: UserRoles.caregiver
-              }
-            }
-            target.push(shareUser)
-          }
-        }
-      }
-
-      DirectShareApi.getDirectShares().then((value) => {
-        addPendingInvitation(value)
-        setCaregivers(value)
-      }).catch((reason: unknown) => {
-        log.error(reason)
-        const value: ShareUser[] = []
-        addPendingInvitation(value)
-        setCaregivers(value)
-      })
+      fetchCaregivers()
     }
-  }, [caregivers, user, haveNotifications, sentInvitations])
+  }, [caregivers, fetchCaregivers, haveNotifications, user])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setPageTitle(t('caregivers-title'))
   }, [t])
 
-  if (caregivers === null) {
-    return (
-      <CircularProgress
-        id="patient-page-loading-progress"
-        className="centered-spinning-loader"
-      />
-    )
-  }
-
   return (
-    <React.Fragment>
-      <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
-      <Container maxWidth="lg">
-        <Box marginTop={4}>
-          <CaregiverTable userShares={caregivers} onRemoveCaregiver={handleRemoveCaregiver} />
-        </Box>
-      </Container>
-
+    <>
+      {!caregivers
+        ? <CircularProgress
+          className="centered-spinning-loader"
+        />
+        : <>
+          <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
+          <Container maxWidth="lg">
+            <Box marginTop={4}>
+              <CaregiverTable caregivers={caregivers} fetchCaregivers={fetchCaregivers}/>
+            </Box>
+          </Container>
+        </>
+      }
       <AddCaregiverDialog actions={caregiverToAdd} />
-      <RemoveCaregiverDialog actions={caregiverToRemove} />
-    </React.Fragment>
+    </>
   )
 }
 

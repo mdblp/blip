@@ -33,7 +33,7 @@
   --section-title-line-height: 20px;
   --section-title-margin: 0.25em;
   /*equivalent to theme.palette.grey[100] in yourloops*/
-  --card-header-background-color: #F5F5F5;
+  --card-header-background-color: #EEEEEE;
   --chat-widget-private-msg-mine: #329F92;
   --chat-widget-private-msg-not-mine: #5ABCB3;
 }

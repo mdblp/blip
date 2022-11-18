@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Signupform interface props
- */
-interface SignUpFormProps {
-  activeStep?: number
-  handleBack: () => void
-  handleNext: () => void
-}
+import HttpService from '../../../../services/http'
+import ErrorApi, { ErrorPayload } from '../../../../lib/error/error-api'
 
-export default SignUpFormProps
+describe('ErrorApi', () => {
+  describe('sendError', () => {
+    it('should send correct payload to correct url', async () => {
+      const payload: ErrorPayload = {
+        browserName: 'fakeBrowserName',
+        browserVersion: 'fakeBrowserVersion',
+        date: 'fakeDate',
+        err: 'fakeErrorMessage',
+        errorId: 'fakeErrorId',
+        path: '/fake/path'
+      }
+      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
+
+      await ErrorApi.sendError(payload)
+      expect(HttpService.post).toHaveBeenCalledWith({
+        url: '/bff/v1/errors',
+        payload
+      })
+    })
+  })
+})

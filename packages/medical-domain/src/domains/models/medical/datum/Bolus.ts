@@ -1,7 +1,7 @@
 import BaseDatum from './basics/BaseDatum'
 import Wizard from './Wizard'
 
-const bolusSubTypes = ['normal', 'biphasic', 'dual/square', 'square'] as const
+const bolusSubTypes = ['normal', 'biphasic', 'pen', 'dual/square', 'square'] as const
 type BolusSubType = typeof bolusSubTypes[number]
 
 function isBolusSubType(value: unknown): value is BolusSubType {
@@ -18,7 +18,11 @@ type Bolus = BaseDatum & {
   normal: number
   prescriptor: string
   wizard: Wizard | null
+  expectedNormal?: number
+  insulinOnBoard?: number
+  part?: string
+  biphasicId?: string
 }
 
 export default Bolus
-export { BolusSubType, isBolusSubType }
+export { BolusSubType, isBolusSubType, bolusSubTypes }

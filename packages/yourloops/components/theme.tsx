@@ -36,6 +36,7 @@ const DEFAULT_SECONDARY_MAIN_COLOR = '#EDFAFF'
 const DEFAULT_SECONDARY_LIGHT_COLOR = '#F5F9F9'
 const DEFAULT_SECONDARY_DARK_COLOR = '#BBC7CC'
 const DEFAULT_TEXT_BASE_COLOR = '#444444'
+const DEFAULT_BACKGROUND_COLOR = '#FAFAFA'
 
 const appElement = document.getElementById('app')
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
@@ -58,6 +59,9 @@ export function getTheme(): Theme {
           a: {
             color: 'inherit',
             textDecoration: 'none'
+          },
+          body: {
+            backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
           }
         }
       },

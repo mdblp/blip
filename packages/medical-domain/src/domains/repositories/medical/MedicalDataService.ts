@@ -126,7 +126,7 @@ class MedicalDataService {
         } else {
           message = String(error)
         }
-        console.log(message)
+        console.log({ message, rawData: raw })
       }
     })
   }
@@ -170,17 +170,19 @@ class MedicalDataService {
         fullList = fullList.concat(medicalDataValues[idx] as Datum[])
       }
     })
-    fullList = fullList.concat(this.fills)
+    if (!excludeKeys.includes('fill')) {
+      fullList = fullList.concat(this.fills)
+    }
     return fullList.sort((a, b) => a.epoch - b.epoch)
   }
 
   // Fixing timezone names + display offsets in the dataset
   // i.e. datasets with time zone with unknown or generic names (like UTC,GMT...) are fixed with the previous known timezone
   private normalizeTimeZones(allData: Datum[]): Datum[] {
-    const firstDatumWithTz = allData.find(d => isValidTimeZone(d.timezone))
+    const firstDatumWithTz = allData.find(d => !d.guessedTimezone && isValidTimeZone(d.timezone))
     let currentTimezone = firstDatumWithTz ? firstDatumWithTz.timezone : this._datumOpts.timePrefs.timezoneName
     return allData.map(d => {
-      if (!isValidTimeZone(d.timezone)) {
+      if (d.guessedTimezone || !isValidTimeZone(d.timezone)) {
         d.timezone = currentTimezone
         d.guessedTimezone = true
         d.displayOffset = getOffset(d.epoch, d.timezone)
@@ -198,11 +200,12 @@ class MedicalDataService {
 
     let c = 0
     while (c < this.timezoneList.length && epoch >= this.timezoneList[c].time) c++
+    c = Math.max(c, 1)
     return this.timezoneList[c - 1].timezone
   }
 
   private setTimeZones(): void {
-    const allData = this.getAllData(['timezoneChanges'])
+    const allData = this.getAllData(['timezoneChanges', 'fill'])
     if (allData.length === 0) {
       this.timezoneList = []
       this.medicalData.timezoneChanges = []
@@ -236,7 +239,8 @@ class MedicalDataService {
       this.medicalData.smbg, this.medicalData.messages,
       this.medicalData.physicalActivities, this.medicalData.wizards,
       this.medicalData.confidentialModes, this.medicalData.zenModes,
-      this.medicalData.deviceParametersChanges, this.medicalData.reservoirChanges
+      this.medicalData.deviceParametersChanges, this.medicalData.reservoirChanges,
+      this.medicalData.warmUps
     )
 
     chartData.sort((a, b) => this.sortDatum(a, b))

@@ -27,41 +27,51 @@
 
 import { onFulfilled } from '../../../lib/axios'
 import { HttpHeaderKeys } from '../../../models/api'
+import HttpService from '../../../services/http'
+import * as crypto from 'crypto'
+
+Object.defineProperty(global, 'crypto', {
+  value: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getRandomValues: (arr: any) => crypto.randomBytes(arr.length)
+  }
+})
 
 describe('Axios service', () => {
+  jest.spyOn(HttpService, 'getAccessToken').mockResolvedValue('token')
   describe('onFulfilled', () => {
-    it('should return config without added headers', () => {
+    it('should return config without added headers', async () => {
       // given
       const expected = { params: {} }
       const config = { params: { noHeader: true } }
 
       // when
-      const actual = onFulfilled(config)
+      const actual = await onFulfilled(config)
 
       // then
       expect(actual).toStrictEqual(expected)
     })
 
-    it('should return config with header when no param is given', () => {
+    it('should return config with header when no param is given', async () => {
       // given
       // when
-      const actual = onFulfilled({})
+      const actual = await onFulfilled({})
 
       // then
-      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken)
+      expect(actual.headers).toHaveProperty('Authorization')
       expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken)
     })
 
-    it('should return config with added headers', () => {
+    it('should return config with added headers', async () => {
       // given
       const config = { params: { fakeParam: true } }
 
       // when
-      const actual = onFulfilled(config)
+      const actual = await onFulfilled(config)
 
       // then
       expect(actual).toMatchObject(config)
-      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken)
+      expect(actual.headers).toHaveProperty('Authorization')
       expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken)
     })
   })

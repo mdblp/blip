@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -26,14 +26,12 @@
  */
 
 import User from '../../../lib/auth/user'
-import { renderHook } from '@testing-library/react-hooks/dom'
-import { useMainLobby } from '../../../app/main-lobby.hook'
+import { getRedirectUrl } from '../../../app/main-lobby'
 
-describe('Main lobby hook', () => {
+describe('Main lobby', () => {
   describe('getRedirectUrl', () => {
     function testGetRedirectUrl(route: string, user: User, isAuthenticated: boolean, expectedUrlToRedirectTo: string | undefined) {
-      const { result } = renderHook(() => useMainLobby())
-      const urlToRedirectTo = result.current.getRedirectUrl(route, user, isAuthenticated)
+      const urlToRedirectTo = getRedirectUrl(route, user, isAuthenticated)
       expect(urlToRedirectTo).toBe(expectedUrlToRedirectTo)
     }
 

@@ -1,21 +1,16 @@
-import { UserMetadata, IUser, Preferences, Profile, Settings } from '../../models/user'
+import {
+  UserMetadata,
+  Preferences,
+  Profile,
+  Settings,
+  CompleteSignupPayload
+} from '../../models/user'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
-import { HttpHeaderKeys } from '../../models/api'
 import bows from 'bows'
 
 const log = bows('User API')
 
 export default class UserApi {
-  static async getShorelineAccessToken(): Promise<{ token: string, id: string }> {
-    try {
-      const { headers, data } = await HttpService.get<IUser>({ url: 'auth/login' })
-      return { token: headers[HttpHeaderKeys.sessionToken], id: data.userid }
-    } catch (err) {
-      console.log('This profile doesn\'t exists')
-      throw Error('unknown user')
-    }
-  }
-
   static async getUserMetadata(userId: string): Promise<UserMetadata | undefined> {
     try {
       const { data } = await HttpService.get<UserMetadata>({ url: `/metadata/${userId}` })
@@ -50,6 +45,14 @@ export default class UserApi {
     const { data } = await HttpService.put<Settings, Settings>({
       url: `/metadata/${userId}/settings`,
       payload: settings
+    })
+    return data
+  }
+
+  static async completeUserSignup(userId: string, payload: CompleteSignupPayload): Promise<CompleteSignupPayload> {
+    const { data } = await HttpService.post<CompleteSignupPayload, CompleteSignupPayload>({
+      url: `/bff/v1/accounts/${userId}`,
+      payload
     })
     return data
   }
