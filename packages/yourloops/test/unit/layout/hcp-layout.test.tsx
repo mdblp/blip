@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -42,8 +42,8 @@ const notificationsPageTestId = 'mock-notifications-page'
 const teamDetailsPageTestId = 'mock-team-details-page'
 const certifyAccountPageTestId = 'mock-certify-account-page'
 const patientDataPageTestId = 'mock-patient-data-page'
-const caregiverPageTestId = 'mock-caregivers-page'
-const homePagePageTestId = 'mock-caregivers-page'
+const caregiverPageTestId = 'mock-hcp-page'
+const homePagePageTestId = 'mock-hcp-page'
 const allTestIds = [
   profilePageTestId,
   notificationsPageTestId,
