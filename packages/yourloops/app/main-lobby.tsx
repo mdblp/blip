@@ -66,9 +66,7 @@ const routeStyle = makeStyles<Theme>(() => {
   }
 })
 
-export const isRoutePublic = (route: string): boolean => {
-  return PUBLIC_ROUTES.includes(route)
-}
+const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route)
 
 export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
