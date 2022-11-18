@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Commons utilities for all tests
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,52 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import { makeStyles, Theme } from '@material-ui/core/styles'
 
 import metrics from '../../lib/metrics'
 import { ConsentForm } from '../../components/consents'
-import { useSignUpFormState, FormValuesType } from './signup-formstate-context'
-import SignUpFormProps from './signup-form-props'
-import { useAuth } from '../../lib/auth'
+import { useSignUpFormState } from './signup-formstate-context'
+import { SignUpFormProps } from './signup-stepper'
+import SignupStepperActionButtons from './signup-stepper-action-buttons'
+import { SignupFormKey } from '../../lib/auth/models'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  backButton: {
-    marginRight: theme.spacing(2)
-  }
-}))
-
-export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
-  const { user } = useAuth()
-  const userRole = user?.role
+const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyles()
   const { handleBack, handleNext } = props
-  const { state, dispatch } = useSignUpFormState()
-  const consentsChecked = state.formValues.terms && state.formValues.privacyPolicy
+  const { signupForm, updateForm } = useSignUpFormState()
+  const consentsChecked = signupForm.terms && signupForm.privacyPolicy
 
-  const handleChange = (checked: boolean, keyField: FormValuesType): void => {
-    dispatch({ type: 'EDIT_FORMVALUE', key: keyField, value: checked })
-  }
-
-  const setPolicyAccepted: React.Dispatch<boolean> = (value: boolean): void => {
-    handleChange(value, 'privacyPolicy')
-  }
-  const setTermsAccepted: React.Dispatch<boolean> = (value: boolean): void => {
-    handleChange(value, 'terms')
-  }
-  const setFeedbackAccepted: React.Dispatch<boolean> = (value: boolean): void => {
-    handleChange(value, 'feedback')
+  const setPolicyAccepted = (value: boolean): void => {
+    updateForm(SignupFormKey.PrivacyPolicy, value)
   }
 
-  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-    event.preventDefault()
+  const setTermsAccepted = (value: boolean): void => {
+    updateForm(SignupFormKey.Terms, value)
+  }
+
+  const setFeedbackAccepted = (value: boolean): void => {
+    updateForm(SignupFormKey.Feedback, value)
+  }
+
+  const onNext = (): void => {
     handleNext()
-    metrics.send('registration', 'accept_terms', userRole)
+    metrics.send('registration', 'accept_terms', signupForm.accountRole)
   }
 
   return (
@@ -78,43 +65,27 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
       display="flex"
       flexDirection="column"
       justifyContent="center"
+      data-testid="consents"
     >
       <ConsentForm
         id="signup"
-        userRole={userRole}
-        policyAccepted={state.formValues.privacyPolicy}
+        userRole={signupForm.accountRole}
+        policyAccepted={signupForm.privacyPolicy}
         setPolicyAccepted={setPolicyAccepted}
-        termsAccepted={state.formValues.terms}
+        termsAccepted={signupForm.terms}
         setTermsAccepted={setTermsAccepted}
-        feedbackAccepted={state.formValues.feedback}
+        feedbackAccepted={signupForm.feedback}
         setFeedbackAccepted={setFeedbackAccepted}
       />
-      <Box
-        id="signup-consent-button-group"
-        display="flex"
-        justifyContent="end"
-        mx={0}
-        mt={4}
-      >
-        <Button
-          className={classes.backButton}
-          id="button-signup-steppers-back"
-          disabled={props.activeStep === 0}
-          onClick={handleBack}
-        >
-          {t('signup-steppers-back')}
-        </Button>
-        <Button
-          id="button-signup-steppers-next"
-          variant="contained"
-          color="primary"
-          disableElevation
-          disabled={!consentsChecked}
-          onClick={onNext}
-        >
-          {t('signup-steppers-next')}
-        </Button>
-      </Box>
+
+      <SignupStepperActionButtons
+        nextButtonLabel={t('next')}
+        disabled={!consentsChecked}
+        onClickBackButton={handleBack}
+        onClickNextButton={onNext}
+      />
     </Box>
   )
 }
+
+export default SignUpConsent

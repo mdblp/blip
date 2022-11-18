@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Patient list filters (HCP / Caregivers) component for secondary header bar
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

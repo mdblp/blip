@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,29 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.row {
-  composes: smallSize from '../../styles/typography.css';
-  line-height: 20px;
-  max-width: 240px;
-  min-width: 160px;
-  width: max-content;
-}
+import UserApi from '../../../lib/auth/user-api'
 
-.message {
-  composes: row;
-  color: var(--stat--default);
-}
+export const mockUserApi = () => {
+  const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
+  const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
+  const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
+  const updateAuth0UserMetadataMock = jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValue(undefined)
 
-.message p {
-  margin: 0;
-}
-
-.message a {
-  pointer-events: all;
-}
-
-.divider {
-  height: 2px;
-  margin: 5px -10px;
-  background-color: var(--stat--default);
+  return {
+    updateAuth0UserMetadataMock,
+    updateProfileMock,
+    updatePreferencesMock,
+    updateSettingsMock
+  }
 }

@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2021-2022, Diabeloop
- * Auth hook tests
  *
  * All rights reserved.
  *
