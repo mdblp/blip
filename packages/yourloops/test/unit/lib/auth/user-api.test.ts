@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Auth API tests
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,42 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Preferences, Profile, Settings, UserMetadata } from '../../../../models/user'
+import { CompleteSignupPayload, Preferences, Profile, Settings, UserMetadata, UserRoles } from '../../../../models/user'
 import UserApi from '../../../../lib/auth/user-api'
 import HttpService, { ErrorMessageStatus } from '../../../../services/http'
-import { AxiosResponse, AxiosResponseHeaders } from 'axios'
-import { HttpHeaderKeys } from '../../../../models/api'
+import { AxiosResponse } from 'axios'
 
 describe('Auth API', () => {
   const userId = 'userId'
-  const profile = { firstName: 'Bernard', lastName: 'Tichaut' } as Profile
+  const profile: Profile = {
+    firstName: 'Bernard',
+    lastName: 'Tichaut',
+    fullName: 'Bernard Tichaut',
+    email: 'narbe@email.com'
+  }
   const settings = { country: 'france' } as Settings
   const preferences = { displayLanguageCode: 'en' } as Preferences
-
-  describe('getShorelineAccessToken', () => {
-    it('should get an access token from shoreline service', async () => {
-      const token = 'session-token'
-      const data = { token, userid: userId }
-      const headers = { [HttpHeaderKeys.sessionToken]: token } as AxiosResponseHeaders
-      const expectedResponse = { token, id: data.userid }
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({
-        data,
-        headers
-      } as AxiosResponse)
-
-      const response = await UserApi.getShorelineAccessToken()
-
-      expect(response).toEqual(expectedResponse)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: 'auth/login' })
-    })
-
-    it('should throw an error if profile does not exist', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValue('error')
-      await expect(async () => {
-        await UserApi.getShorelineAccessToken()
-      }).rejects.toThrowError('unknown user')
-    })
-  })
 
   describe('getUserMetadata', () => {
     it('should get the user metadata (profile, preferences, settings at once)', async () => {
@@ -88,14 +66,7 @@ describe('Auth API', () => {
 
   describe('updateProfile', () => {
     it('should return the updated profile on success', async () => {
-      const profile: Profile = {
-        fullName: 'Test Example',
-        firstName: 'Text',
-        lastName: 'Example'
-      }
       jest.spyOn(HttpService, 'put').mockResolvedValue({ data: profile } as AxiosResponse)
-      const userId = 'fakeUserId'
-
       const updatedProfile = await UserApi.updateProfile(userId, profile)
       expect(updatedProfile).toEqual(profile)
       expect(HttpService.put).toHaveBeenCalledWith({
@@ -107,12 +78,7 @@ describe('Auth API', () => {
 
   describe('updatePreferences', () => {
     it('should return the updated preferences on success', async () => {
-      const preferences: Preferences = {
-        displayLanguageCode: 'de'
-      }
-      const userId = 'fakeUserId'
       jest.spyOn(HttpService, 'put').mockResolvedValue({ data: preferences } as AxiosResponse)
-
       const updatedPreferences = await UserApi.updatePreferences(userId, preferences)
       expect(updatedPreferences).toEqual(preferences)
 
@@ -125,19 +91,31 @@ describe('Auth API', () => {
 
   describe('updateSettings', () => {
     it('should return the updated settings on success', async () => {
-      const settings: Settings = {
-        country: 'FR'
-      }
-      const userId = 'fakeUserId'
       jest.spyOn(HttpService, 'put').mockResolvedValue({ data: settings } as AxiosResponse)
-
       const updatedSettings = await UserApi.updateSettings(userId, settings)
-
       expect(updatedSettings).toEqual(settings)
-
       expect(HttpService.put).toHaveBeenCalledWith({
         url: `/metadata/${userId}/settings`,
         payload: settings
+      })
+    })
+  })
+
+  describe('completeUserSignup', () => {
+    it('should return the complete signup payload on success', async () => {
+      const payload: CompleteSignupPayload = {
+        profile,
+        settings,
+        preferences,
+        email: 'test@email.com',
+        role: UserRoles.hcp
+      }
+      jest.spyOn(HttpService, 'post').mockResolvedValue({ data: payload } as AxiosResponse)
+      const completedSignup = await UserApi.completeUserSignup(userId, payload)
+      expect(completedSignup).toEqual(payload)
+      expect(HttpService.post).toHaveBeenCalledWith({
+        url: `/bff/v1/accounts/${userId}`,
+        payload
       })
     })
   })

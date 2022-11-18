@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Profile page tests
  *
  * All rights reserved.
  *

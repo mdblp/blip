@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -37,8 +37,6 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { renderPage } from '../../utils/render'
 import { screen, within } from '@testing-library/react'
 import { checkNoTooltip } from '../../assert/stats'
-
-jest.setTimeout(15000)
 
 describe('Patient dashboard for anyone', () => {
   const firstName = 'HCP firstName'

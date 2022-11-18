@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Accept monitoring invite terms
  *
  * All rights reserved.
  *

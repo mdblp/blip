@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -24,42 +24,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import HttpService from '../../services/http'
 
-import ThemeProvider from '@material-ui/styles/ThemeProvider'
-import React from 'react'
-import renderer from 'react-test-renderer'
-import BasicDropdown, { BasicDropdownProps } from '../../../../components/dropdown/basic-dropdown'
-import { getTheme } from '../../../../components/theme'
+export interface ErrorPayload {
+  browserName: string
+  browserVersion: string
+  date: string
+  err: string
+  errorId: string
+  path: string
+}
 
-describe('BasicDropdown', () => {
-  const spyOnSelect = jest.fn()
-
-  function renderBasicDropdown(props: BasicDropdownProps) {
-    return renderer.create(
-      <ThemeProvider theme={getTheme()}>
-        <BasicDropdown
-          id={props.id}
-          onSelect={props.onSelect}
-          defaultValue={props.defaultValue}
-          values={props.values}
-        />
-      </ThemeProvider>
-    )
+export default class ErrorApi {
+  static async sendError(payload: ErrorPayload): Promise<void> {
+    await HttpService.post<void, ErrorPayload>({
+      url: '/bff/v1/errors',
+      payload
+    })
   }
-
-  it('should call onSelect spy when an option is selected', () => {
-    const defaultValue = 'defaultValue'
-    const valueToSelect = 'valueToSelect'
-    const id = 'id'
-    const values = [defaultValue, valueToSelect]
-    const props: BasicDropdownProps = {
-      onSelect: spyOnSelect,
-      defaultValue,
-      values,
-      id
-    }
-    const component = renderBasicDropdown(props)
-    component.root.findByProps({ id: `basic-dropdown-${id}-selector` }).props.onChange({ target: { value: valueToSelect } })
-    expect(spyOnSelect).toHaveBeenCalledWith(valueToSelect)
-  })
-})
+}

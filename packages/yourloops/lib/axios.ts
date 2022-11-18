@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
  *
  * All rights reserved.
  *
@@ -44,10 +43,6 @@ export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequ
         Authorization: `Bearer ${await HttpService.getAccessToken()}`,
         [HttpHeaderKeys.traceToken]: uuidv4()
       }
-    }
-
-    if (HttpService.shorelineAccessToken && config.headers) {
-      config.headers[HttpHeaderKeys.sessionToken] = HttpService.shorelineAccessToken
     }
   }
   return config

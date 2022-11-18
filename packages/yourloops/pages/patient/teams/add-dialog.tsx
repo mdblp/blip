@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Team dialog to add a team
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,7 +46,7 @@ import Link from '@material-ui/core/Link'
 import TextField from '@material-ui/core/TextField'
 import metrics from '../../../lib/metrics'
 import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from '../../../lib/team'
-import diabeloopUrl from '../../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../../lib/diabeloop-url'
 
 interface AddTeamDialogContentProps {
   onDialogResult: (teamId?: string) => void
@@ -206,7 +205,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 }
 
 export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const classes = addTeamDialogClasses()
   const [privacyAccepted, setPrivacyAccepted] = React.useState(false)
 
@@ -231,8 +230,13 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
 
   const privacyPolicy = t('privacy-policy')
   const linkPrivacyPolicy = (
-    <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank"
-      rel="noreferrer" onClick={() => metrics.send('pdf_document', 'view_document', 'privacy_policy')}>
+    <Link
+      aria-label={privacyPolicy}
+      href={diabeloopExternalUrls.privacyPolicy}
+      target="_blank"
+      rel="noreferrer"
+      onClick={() => metrics.send('pdf_document', 'view_document', 'privacy_policy')}
+    >
       {privacyPolicy}
     </Link>
   )
@@ -379,7 +383,7 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
 
   return (
     <Dialog id="team-add-dialog" open={dialogIsOpen} aria-labelledby={t('modal-add-medical-team')}
-      onClose={handleClose}>
+            onClose={handleClose}>
       {content}
     </Dialog>
   )

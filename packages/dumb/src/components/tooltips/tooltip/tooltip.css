@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
+/*
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Signupform interface props
- */
-interface SignUpFormProps {
-  activeStep?: number
-  handleBack: () => void
-  handleNext: () => void
+.tooltip {
+  display: block;
+  composes: defaultSize from '../../../styles/typography.css';
+  background-color: #FFFFFF;
+  border: solid;
+  pointer-events: none;
+  position: absolute;
+  border-radius: 4px;
 }
 
-export default SignUpFormProps
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 10px;
+  box-sizing: border-box;
+}
+
+.title {
+  composes: mediumContrastText from '../../../styles/typography.css';
+  composes: content;
+  background-color: var(--tooltip-title-bg);
+}
+
+.titleContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.titleDate {
+  margin-right: auto;
+}
+
+.tail {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  position: absolute;
+}

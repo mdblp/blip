@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -33,8 +33,9 @@ import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { CBGStatType } from './components/stats/models'
-import { StatTooltip } from './components/tooltips/stat-tooltip'
-import Tooltip from './components/tooltips/tooltip'
+import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
+import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
+import Tooltip from './components/tooltips/tooltip/tooltip'
 import { CgmTable } from './settings/cgm-table'
 import { PumpTable } from './settings/pump-table'
 import { TerminalTable } from './settings/terminal-table'
@@ -46,6 +47,7 @@ export {
   CBGStatType,
   CgmTable,
   PumpTable,
+  ReservoirTooltip,
   StatTooltip,
   TerminalTable,
   Tooltip

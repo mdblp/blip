@@ -36,19 +36,19 @@ import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
 import Header from './header'
 import Footer from './footer'
+import { ReservoirTooltip } from 'dumb'
 
 /**
  * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
  * @typedef { import("../../index").DatePicker } DatePicker
  * @typedef { import("./index").DailyDatePickerProps } DailyDatePickerProps
-*/
+ */
 
 const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
 const SMBGTooltip = vizComponents.SMBGTooltip
 const CBGTooltip = vizComponents.CBGTooltip
 const FoodTooltip = vizComponents.FoodTooltip
-const ReservoirTooltip = vizComponents.ReservoirTooltip
 const PhysicalTooltip = vizComponents.PhysicalTooltip
 const ParameterTooltip = vizComponents.ParameterTooltip
 const ConfidentialTooltip = vizComponents.ConfidentialTooltip
@@ -708,7 +708,6 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })

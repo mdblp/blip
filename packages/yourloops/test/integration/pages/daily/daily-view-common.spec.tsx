@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -30,19 +30,18 @@ import { unmonitoredPatient } from '../../mock/mockPatientAPI'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
-  checkDailyTimeInRangeStatsWidgets, checkSMBGDailyStatsWidgetsTooltips
+  checkDailyTimeInRangeStatsWidgets,
+  checkSMBGDailyStatsWidgetsTooltips
 } from '../../assert/daily'
 import { mockDataAPI, smbgData } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import {
-  checkReadingsInRangeStatsWidgets,
   checkAverageGlucoseStatWidget,
+  checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import { screen } from '@testing-library/react'
-
-jest.setTimeout(30000)
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {
