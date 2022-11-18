@@ -53,8 +53,7 @@ const style = makeStyles((theme: Theme) => {
       }
     },
     card: {
-      textAlign: 'center',
-      padding: theme.spacing(1)
+      textAlign: 'center'
     },
     cardContent: {
       marginLeft: theme.spacing(2),
@@ -68,9 +67,8 @@ const style = makeStyles((theme: Theme) => {
       minHeight: '90vh'
     },
     buttons: {
-      display: 'flex',
       justifyContent: 'space-around',
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(3)
     }
   }
 }, { name: 'ylp-training-page' })
