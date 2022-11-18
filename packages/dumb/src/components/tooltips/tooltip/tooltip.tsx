@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -28,7 +28,7 @@
 import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
-import TooltipTail from './tooltip-tail'
+import TooltipTail from '../tooltip-tail/tooltip-tail'
 
 export interface Offset {
   top: number
@@ -51,6 +51,10 @@ export interface DateTitle {
   }
 }
 
+export type Side = 'top' | 'right' | 'bottom' | 'left'
+
+export const DEFAULT_TOOLTIP_OFFSET = { top: 0, left: 0 }
+
 interface TooltipProps {
   title?: string
   dateTitle?: DateTitle
@@ -58,7 +62,7 @@ interface TooltipProps {
   position: Position
   offset: Offset
   tail?: boolean
-  side: 'top' | 'right' | 'bottom' | 'left'
+  side: Side
   tailWidth: number
   tailHeight: number
   backgroundColor?: string
@@ -74,7 +78,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
     tailHeight = 8,
     borderColor = 'black',
     borderWidth = 2,
-    offset: initialOffset = { top: 0, left: 0 },
+    offset: initialOffset = DEFAULT_TOOLTIP_OFFSET,
     ...props
   }) => {
   const {

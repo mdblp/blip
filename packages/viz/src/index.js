@@ -30,7 +30,6 @@ import Stat from './components/common/stat/Stat'
 import CBGTooltip from './components/daily/cbgtooltip/CBGTooltip'
 import FoodTooltip from './components/daily/foodtooltip/FoodTooltip'
 import PhysicalTooltip from './components/daily/physicaltooltip/PhysicalTooltip'
-import ReservoirTooltip from './components/daily/reservoirtooltip/ReservoirTooltip'
 import ParameterTooltip from './components/daily/parametertooltip/ParameterTooltip'
 import ConfidentialTooltip from './components/daily/confidentialtooltip/ConfidentialTooltip'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
@@ -68,7 +67,6 @@ const components = {
   CBGTooltip,
   FoodTooltip,
   PhysicalTooltip,
-  ReservoirTooltip,
   ParameterTooltip,
   ConfidentialTooltip,
   WarmUpTooltip

@@ -116,12 +116,3 @@ export const AUTOMATED_BASAL_DEVICE_MODELS = {
 export const PRESCRIPTOR_AUTO = 'auto'
 export const PRESCRIPTOR_MODIFIED = 'hybrid'
 export const PRESCRIPTOR_NONE = 'manual'
-
-export const RESERVOIR_CHANGE = 'reservoir'
-export const INFUSION_SITE_CHANGE = 'site'
-
-export const SITE_CHANGE_BY_MANUFACTURER = {
-  [DEFAULT_MANUFACTURER]: INFUSION_SITE_CHANGE,
-  [ROCHE]: RESERVOIR_CHANGE,
-  [VICENTRA]: RESERVOIR_CHANGE
-}
