@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Direct patient / caregivers share API calls
  *
  * All rights reserved.
  *

@@ -1,6 +1,7 @@
-/**
+/*
+ /**
  * Copyright (c) 2014, Tidepool Project
- * Copyright (c) 2020, Diabeloop
+ * Copyright (c) 2020-2022, Diabeloop
  * Display patient data in an iframe
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -22,7 +23,7 @@ import bows from 'bows'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import clsx from 'clsx'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import MedicalDataService, { MGDL_UNITS, TimeService } from 'medical-domain'
 import { components as vizComponents, createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
@@ -454,7 +455,6 @@ class PatientDataPage extends React.Component {
             onClickNavigationBack={this.handleBackToListButton}
           />
         </Route>
-        <Redirect to="/" />
       </Switch>
     )
   }

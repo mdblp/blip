@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import React, { FunctionComponent, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -39,14 +37,15 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 
 import metrics from '../../lib/metrics'
-import { FormValuesType, useSignUpFormState } from './signup-formstate-context'
+import { useSignUpFormState } from './signup-formstate-context'
 import { availableCountries } from '../../lib/language'
-import SignUpFormProps from './signup-form-props'
 import { HcpProfessionList } from '../../models/hcp-profession'
 import { useAuth } from '../../lib/auth'
 import { UserRoles } from '../../models/user'
 import { useAlert } from '../../components/utils/snackbar'
-import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
+import SignupStepperActionButtons from './signup-stepper-action-buttons'
+import { SignUpFormProps } from './signup-stepper'
+import { SignupFormKey } from '../../lib/auth/models'
 
 interface Errors {
   firstName: boolean
@@ -55,97 +54,61 @@ interface Errors {
   hcpProfession: boolean
 }
 
-const formStyle = makeStyles((theme: Theme) => ({
-  backButton: {
-    marginRight: theme.spacing(2)
-  }
-}))
-
-/**
- * SignUpProfileForm Form
- */
-function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
-  const { user, completeSignup } = useAuth()
-  const userRole = user?.role
+const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
+  const { completeSignup } = useAuth()
   const alert = useAlert()
   const { t } = useTranslation('yourloops')
-  const { state, dispatch } = useSignUpFormState()
+  const { signupForm, updateForm } = useSignUpFormState()
   const { handleBack, handleNext } = props
-  const defaultErr = {
+  const [errors, setErrors] = useState<Errors>({
     firstName: false,
     lastName: false,
     country: false,
     hcpProfession: false
-  }
-  const [errors, setErrors] = useState<Errors>(defaultErr)
+  })
   const [saving, setSaving] = useState<boolean>(false)
 
-  const classes = formStyle()
+  const isFormEmpty = useMemo<boolean>(() => {
+    return !_.some(errors) &&
+      !signupForm.profileFirstname &&
+      !signupForm.profileLastname &&
+      !signupForm.profileCountry &&
+      !signupForm.hcpProfession
+  }, [errors, signupForm])
 
-  const onChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    keyField: FormValuesType
-  ): void => {
-    dispatch({
-      type: 'EDIT_FORMVALUE',
-      key: keyField,
-      value: event.target.value
-    })
-  }
-
-  const onSelectChange = (
-    event: React.ChangeEvent<{
-      name?: string | undefined
-      value: string | unknown
-    }>,
-    keyField: FormValuesType
-  ): void => {
-    dispatch({
-      type: 'EDIT_FORMVALUE',
-      key: keyField,
-      value: event.target.value as string
-    })
-  }
-
-  const validateFirstName = (): boolean => {
-    const err = !state.formValues?.profileFirstname.trim()
+  const validateFirstname = (): boolean => {
+    const err = !signupForm.profileFirstname.trim()
     setErrors({ ...errors, firstName: err })
     return !err
   }
 
-  const validateLastName = (): boolean => {
-    const err = !state.formValues?.profileLastname.trim()
+  const validateLastname = (): boolean => {
+    const err = !signupForm.profileLastname.trim()
     setErrors({ ...errors, lastName: err })
     return !err
   }
 
   const validateCountry = (): boolean => {
-    const err = !state.formValues?.profileCountry
+    const err = !signupForm.profileCountry
     setErrors({ ...errors, country: err })
     return !err
   }
 
   const validateHcpProfession = (): boolean => {
     let err = false
-    if (userRole === UserRoles.hcp) {
-      err = !state.formValues?.hcpProfession
+    if (signupForm.accountRole === UserRoles.hcp) {
+      err = !signupForm.hcpProfession
       setErrors({ ...errors, hcpProfession: err })
     }
     return !err
   }
 
-  const onFinishSignup = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
-    event.preventDefault()
-    if (
-      validateFirstName() &&
-      validateLastName() &&
-      validateCountry() &&
-      validateHcpProfession()
-    ) {
+  const onFinishSignup = async (): Promise<void> => {
+    if (validateFirstname() && validateLastname() && validateCountry() && validateHcpProfession()) {
       try {
         setSaving(true)
-        await completeSignup(state.formValues)
-        metrics.send('registration', 'create_profile', userRole)
+        await completeSignup(signupForm)
+        metrics.send('registration', 'create_profile', signupForm.accountRole)
         handleNext()
       } catch (err) {
         alert.error(t('profile-update-failed'))
@@ -161,27 +124,27 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       justifyContent="center"
     >
       <TextField
-        id="firstname"
+        aria-label={t('first-name')}
         margin="normal"
-        label={t('firstname')}
+        label={t('first-name')}
         variant="outlined"
-        value={state.formValues?.profileFirstname}
+        value={signupForm.profileFirstname}
         required
         error={errors.firstName}
-        onBlur={() => validateFirstName()}
-        onChange={(e) => onChange(e, 'profileFirstname')}
+        onBlur={validateFirstname}
+        onChange={event => updateForm(SignupFormKey.ProfileFirstname, event.target.value)}
         helperText={errors.firstName && t('required-field')}
       />
       <TextField
-        id="lastname"
+        aria-label={t('last-name')}
         margin="normal"
-        label={t('lastname')}
+        label={t('last-name')}
         variant="outlined"
-        value={state.formValues?.profileLastname}
+        value={signupForm.profileLastname}
         required
         error={errors.lastName}
-        onBlur={() => validateLastName()}
-        onChange={(e) => onChange(e, 'profileLastname')}
+        onBlur={validateLastname}
+        onChange={event => updateForm(SignupFormKey.ProfileLastname, event.target.value)}
         helperText={errors.lastName && t('required-field')}
       />
       <FormControl
@@ -190,18 +153,16 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         required
         error={errors.country}
       >
-        <InputLabel id="country-selector-input-label">
-          {t('signup-country')}
+        <InputLabel>
+          {t('country')}
         </InputLabel>
         <Select
-          labelId="country-selector-label"
-          label={t('signup-country')}
-          id="country-selector"
-          value={state.formValues?.profileCountry}
-          onBlur={() => validateCountry()}
-          onChange={(e) => onSelectChange(e, 'profileCountry')}
+          label={t('country')}
+          data-testid="country-selector"
+          value={signupForm.profileCountry}
+          onBlur={validateCountry}
+          onChange={event => updateForm(SignupFormKey.ProfileCountry, event.target.value as string)}
         >
-          <MenuItem key="" value="" />
           {availableCountries.map((item) => (
             <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
               {t(item.name)}
@@ -209,60 +170,40 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           ))}
         </Select>
       </FormControl>
-      {userRole === UserRoles.hcp &&
+
+      {signupForm.accountRole === UserRoles.hcp &&
         <FormControl
           variant="outlined"
           margin="normal"
           required
           error={errors.hcpProfession}
         >
-          <InputLabel id="hcp-profession-selector-input-label">
+          <InputLabel>
             {t('hcp-profession')}
           </InputLabel>
           <Select
-            labelId="hcp-profession-selector-label"
             label={t('hcp-profession')}
-            id="hcp-profession-selector"
-            value={state.formValues?.hcpProfession}
+            data-testid="hcp-profession-selector"
+            value={signupForm.hcpProfession}
             onBlur={validateHcpProfession}
-            onChange={(e) => onSelectChange(e, 'hcpProfession')}
+            onChange={event => updateForm(SignupFormKey.HcpProfession, event.target.value as string)}
           >
             {HcpProfessionList.map((item) => (
               <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>
                 {t(item)}
               </MenuItem>
             ))}
-
           </Select>
         </FormControl>
       }
-      <Box
-        id="signup-profileform-button-group"
-        display="flex"
-        justifyContent="end"
-        mx={0}
-        mt={4}
-      >
-        <Button
-          className={classes.backButton}
-          id="button-signup-steppers-back"
-          onClick={handleBack}
-        >
-          {t('signup-steppers-back')}
-        </Button>
-        <ProgressIconButtonWrapper inProgress={saving}>
-          <Button
-            id="button-signup-steppers-next"
-            variant="contained"
-            color="primary"
-            disableElevation
-            disabled={_.some(errors) || saving}
-            onClick={onFinishSignup}
-          >
-            {t('signup-steppers-create-account')}
-          </Button>
-        </ProgressIconButtonWrapper>
-      </Box>
+
+      <SignupStepperActionButtons
+        nextButtonLabel={t('create-account')}
+        inProgress={saving}
+        disabled={_.some(errors) || saving || isFormEmpty}
+        onClickBackButton={handleBack}
+        onClickNextButton={onFinishSignup}
+      />
     </Box>
   )
 }

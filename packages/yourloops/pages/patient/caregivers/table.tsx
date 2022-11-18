@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Patient care givers page - Table of caregivers
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -203,9 +202,12 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
           <TableRow id="patient-caregivers-table-header-row" className={classes.tableRowHeader}>
             <TableCell id="patient-caregivers-table-header-status" />
             <TableCell id="patient-caregivers-table-header-lastname">
-              <TableSortLabel active={orderBy === 'lastname'} direction={order}
-                              onClick={createSortHandler(SortFields.lastname)}>
-                {t('lastname')}
+              <TableSortLabel
+                active={orderBy === 'lastname'}
+                direction={order}
+                onClick={createSortHandler(SortFields.lastname)}
+              >
+                {t('last-name')}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patient-caregivers-table-header-firstname">
@@ -214,7 +216,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
                 direction={order}
                 onClick={createSortHandler(SortFields.firstname)}
               >
-                {t('firstname')}
+                {t('first-name')}
               </TableSortLabel>
             </TableCell>
             <TableCell>

@@ -1,10 +1,11 @@
 :root {
   --text-base-color: #444444;
-  --footer-background-color: #F5F5F5;
+  --footer-background-color: #EEEEEE;
   --monitoring-filter-bg-color: #FFF9F3;
+  --body-background-color: #F7F7F7;
 }
 
-:root .diabeloop-blue{
+:root .diabeloop-blue {
   --color-primary-main: #039be5;
   --color-primary-light: #4dabf5;
   --color-primary-dark: #1769aa;
@@ -32,7 +33,7 @@
   --blip-color-secondary-alt: #ffedf7;
 }
 
-:root .diabeloop-green{
+:root .diabeloop-green {
   --color-primary-main: #109182;
   --color-primary-light: #F7F7F8;
   --color-primary-dark: #006356;

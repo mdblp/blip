@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -43,7 +43,7 @@ export interface Device {
 }
 
 export interface Pump {
-  manufacturer: string
+  manufacturer: Manufacturer
   serialNumber: string
   swVersion: string
   expirationDate: string
@@ -53,3 +53,15 @@ export interface TimePrefs {
   timezoneAware: boolean
   timezoneName: string
 }
+
+export enum Manufacturer {
+  Default = 'default',
+  Roche = 'Roche',
+  Vicentra = 'Vicentra'
+}
+
+export enum Source {
+  Diabeloop = 'Diabeloop'
+}
+
+export const TIMEZONE_UTC = 'UTC'

@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Patient information widget for dashboard
  *
  * All rights reserved.
  *

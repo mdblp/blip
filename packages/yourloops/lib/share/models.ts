@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Direct patient / caregivers share data models
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
