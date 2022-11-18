@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * A state to handle the changing month animation.
  *
  * All rights reserved.
  *

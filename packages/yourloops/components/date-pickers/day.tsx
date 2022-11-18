@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2021-2022, Diabeloop
- * A button for a single day (date of the month) in the calendar
  *
  * All rights reserved.
  *

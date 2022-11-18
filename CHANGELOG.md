@@ -19,6 +19,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1903 Timezone detection should exclude some data types
 - Automate copyright generation on new and updated files
 - Remove react-test-renderer dependency
+- Update copyright on all files in `dumb` and `yourloops` packages
 
 ## 3.0.1 - 2022-10-11
 ### Added
