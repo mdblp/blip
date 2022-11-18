@@ -105,7 +105,7 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
   }
 }, { name: 'dialog-pdf-options' })
 
-function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, format: OutputFormat): { start: string, end: string, preset: Presets, format: OutputFormat } {
+function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, format: OutputFormat): PrintPDFOptions {
   const end = maxDate.format('YYYY-MM-DD')
   let start: Dayjs
   switch (preset) {
