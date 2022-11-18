@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2021-2022, Diabeloop
- * Date picker toolbar (display current year) + selected date
  *
  * All rights reserved.
  *

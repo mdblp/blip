@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Rounded Hospital Icon
  *
  * All rights reserved.
  *

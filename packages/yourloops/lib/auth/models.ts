@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Hook for auth API - Interface declaration
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
