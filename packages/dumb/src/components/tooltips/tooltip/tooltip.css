@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,43 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface CGM {
-  manufacturer: string
-  name: string
-  expirationDate: string
-  swVersionTransmitter: string
-  transmitterId: string
-  endOfLifeTransmitterDate: string
+.tooltip {
+  display: block;
+  composes: defaultSize from '../../../styles/typography.css';
+  background-color: #FFFFFF;
+  border: solid;
+  pointer-events: none;
+  position: absolute;
+  border-radius: 4px;
 }
 
-export interface Device {
-  deviceId: string
-  imei: string
-  name: string
-  manufacturer: string
-  swVersion: string
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 10px;
+  box-sizing: border-box;
 }
 
-export interface Pump {
-  manufacturer: Manufacturer
-  serialNumber: string
-  swVersion: string
-  expirationDate: string
+.title {
+  composes: mediumContrastText from '../../../styles/typography.css';
+  composes: content;
+  background-color: var(--tooltip-title-bg);
 }
 
-export interface TimePrefs {
-  timezoneAware: boolean
-  timezoneName: string
+.titleContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
 }
 
-export enum Manufacturer {
-  Default = 'default',
-  Roche = 'Roche',
-  Vicentra = 'Vicentra'
+.titleDate {
+  margin-right: auto;
 }
 
-export enum Source {
-  Diabeloop = 'Diabeloop'
+.tail {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  position: absolute;
 }
-
-export const TIMEZONE_UTC = 'UTC'
