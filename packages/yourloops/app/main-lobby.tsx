@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -29,7 +29,7 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { makeStyles, Theme, ThemeProvider, useTheme } from '@material-ui/core/styles'
+import { makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
 import { useAuth } from '../lib/auth'
@@ -38,32 +38,21 @@ import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/u
 import Footer from '../components/footer/footer'
 import PatientConsentPage from '../pages/patient/patient-consent'
 import CompleteSignUpPage from '../pages/signup/complete-signup-page'
-import { ConsentPage, LoginPage } from '../pages/login'
+import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import IntendedUsePage from '../pages/intented-use/intended-use-page'
+import LoginPage from '../pages/login/login-page'
+import {
+  ALWAYS_ACCESSIBLE_ROUTES,
+  COMPLETE_SIGNUP_PATH,
+  NEW_CONSENT_PATH,
+  PUBLIC_ROUTES,
+  RENEW_CONSENT_PATH, TRAINING_PATH
+} from '../lib/diabeloop-url'
 
-const RENEW_CONSENT_PATH = '/renew-consent'
-const TRAINING_PATH = '/training'
-const NEW_CONSENT_PATH = '/new-consent'
-const COMPLETE_SIGNUP_PATH = '/complete-signup'
-const LOGIN_PATH = '/login'
-const INTENDED_USE_PATH = '/intended-use'
-const PUBLIC_ROUTES = [LOGIN_PATH]
-const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, INTENDED_USE_PATH]
-
-interface StyleProps {
-  color: string
-}
-
-const routeStyle = makeStyles<Theme, StyleProps>(() => {
+const routeStyle = makeStyles<Theme>(() => {
   return {
-    '@global': {
-      body: {
-        backgroundColor: ({ color }) => color
-      }
-    },
     public: {
       flex: '1 0 auto',
       display: 'flex',
@@ -84,40 +73,43 @@ export function MainLobby(): JSX.Element {
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute)
   const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(currentRoute)
   const theme = getTheme()
-  const { palette } = useTheme()
-  const classes = routeStyle({
-    color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? palette.background.default : palette.background.paper
-  })
+  const classes = routeStyle()
   const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH
   const trainingPath = currentRoute === TRAINING_PATH
-  let redirectTo = null
 
   if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />
   }
 
-  const checkRedirect = (): void => {
+  const checkRedirect = (): string => {
     if (isCurrentRoutePublic && isAuthenticated) {
-      redirectTo = '/'
-    } else if (!isAuthenticated && !isCurrentRoutePublic && !isCurrentRouteAlwaysAccessible) {
-      redirectTo = '/login'
-    } else if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
-      redirectTo = '/complete-signup'
-    } else if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
-      redirectTo = '/new-consent'
-    } else if (!renewConsentPath && user && user.hasToRenewConsent()) {
-      redirectTo = '/renew-consent'
-    } else if (!trainingPath && currentRoute !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
-      redirectTo = '/training'
+      return '/'
     }
+    if (!isAuthenticated && !isCurrentRoutePublic && !isCurrentRouteAlwaysAccessible) {
+      return '/login'
+    }
+    if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
+      return '/complete-signup'
+    }
+    if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
+      return '/new-consent'
+    }
+    if (!renewConsentPath && user && user.hasToRenewConsent()) {
+      return '/renew-consent'
+    }
+    if (!trainingPath && currentRoute !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
+      return '/training'
+    }
+    return null
   }
 
-  checkRedirect()
+  const redirectTo = checkRedirect()
 
   return (
     <React.Fragment>
-      {redirectTo ? <Redirect to={redirectTo} />
+      {redirectTo
+        ? <Redirect to={redirectTo} />
         : (!isLoading && !fetchingUser &&
           <ThemeProvider theme={theme}>
             <CssBaseline />

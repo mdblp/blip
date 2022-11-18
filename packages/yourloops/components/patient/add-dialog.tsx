@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Add a patient for an HCP - Dialog
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,7 +43,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 
 import { REGEX_EMAIL } from '../../lib/utils'
-import DiabeloopUrl from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 import { AddPatientDialogContentProps } from '../../pages/hcp/types'
 import { usePatientContext } from '../../lib/patient/provider'
 import { PatientTeam } from '../../lib/data/patient'
@@ -55,7 +54,7 @@ export interface AddDialogProps {
 }
 
 function AddDialog(props: AddDialogProps): JSX.Element {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const [email, setEmail] = React.useState<string>('')
   const [teamId, setTeamId] = React.useState<string>('')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
@@ -146,7 +145,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
     <Link
       id="patient-list-dialog-add-warning-link-terms"
       aria-label={termsOfUse}
-      href={DiabeloopUrl.getTermsUrL(i18n.language)}
+      href={diabeloopExternalUrls.terms}
       target="_blank"
       rel="noreferrer"
     >
@@ -158,7 +157,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
     <Link
       id="patient-list-dialog-add-warning-link-privacy"
       aria-label={privacyPolicy}
-      href={DiabeloopUrl.getPrivacyPolicyUrL(i18n.language)}
+      href={diabeloopExternalUrls.privacyPolicy}
       target="_blank"
       rel="noreferrer"
     >

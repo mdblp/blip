@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,47 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.tooltip {
-  display: block;
-  composes: defaultSize from '../../styles/typography.css';
-  background-color: #FFFFFF;
-  border: solid;
-  pointer-events: none;
-  position: absolute;
-  border-radius: 4px;
+import React, { FunctionComponent } from 'react'
+import ReactMarkdown from 'react-markdown'
+import styles from './stat-tooltip.css'
+import { withStyles } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip'
+
+interface StatTooltipProps {
+  annotations: string[]
+  children: JSX.Element
 }
 
-.content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 5px 10px;
-  box-sizing: border-box;
-}
+const StyledTooltip = withStyles(() => ({
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'var(--stat--default)',
+    border: '1px solid rgb(114, 115, 117)',
+    fontSize: '12px',
+    lineHeight: '20px',
+    borderWidth: '2px'
+  }
+}))(Tooltip)
 
-.title {
-  composes: mediumContrastText from '../../styles/typography.css';
-  composes: content;
-  background-color: var(--tooltip-title-bg);
-}
+export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
+  const { annotations, children } = props
 
-.titleContent {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.titleDate {
-  margin-right: auto;
-}
-
-.tail {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-color: transparent;
-  position: absolute;
+  return (
+    <StyledTooltip
+      disableFocusListener
+      placement="top"
+      title={
+        <div data-testid="stat-tooltip-content" className={styles.container}>
+          {annotations.map((message, index) =>
+            <div key={`message-${index}`}>
+              <ReactMarkdown className={styles.message} linkTarget="_blank">
+                {message}
+              </ReactMarkdown>
+              {index !== annotations.length - 1 &&
+                <div
+                  key={`divider-${index}`}
+                  className={styles.divider}
+                />
+              }
+            </div>
+          )}
+        </div>
+      }>
+      {children}
+    </StyledTooltip>
+  )
 }

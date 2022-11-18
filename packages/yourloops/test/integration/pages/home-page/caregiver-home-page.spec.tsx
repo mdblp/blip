@@ -39,7 +39,7 @@ import { renderPage } from '../../utils/render'
 import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share-api'
-jest.setTimeout(20000)
+
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
@@ -64,6 +64,7 @@ describe('Caregiver home page', () => {
     const patient1 = buildPatient({
       userId: 'patientId1',
       profile: {
+        email: 'Akim@embett.com',
         firstName: 'Akim',
         lastName: 'Embett',
         fullName: 'Akim Embett',
@@ -73,6 +74,7 @@ describe('Caregiver home page', () => {
     const patient2 = buildPatient({
       userId: 'patientId2',
       profile: {
+        email: 'alain@provist.com',
         firstName: 'Alain',
         lastName: 'Provist',
         fullName: 'Alain Provist',
@@ -82,6 +84,7 @@ describe('Caregiver home page', () => {
     const patient3 = buildPatient({
       userId: 'patientId3',
       profile: {
+        email: 'annie@versaire.com',
         firstName: 'Annie',
         lastName: 'Versaire',
         fullName: 'Annie Versaire',

@@ -41,6 +41,7 @@ import { initTheme } from '../components/theme'
 
 import Yourloops from './app'
 import OnError from './error'
+import { BrowserRouter } from 'react-router-dom'
 
 i18nInit().then(() => {
   window.onerror = (event, source, lineno, colno, error) => {
@@ -48,7 +49,7 @@ i18nInit().then(() => {
       return true
     }
     console.error(event, source, lineno, colno, error)
-    ReactDOM.render(<OnError event={event} source={source} lineno={lineno} colno={colno} error={error} />, document.body)
+    ReactDOM.render(<BrowserRouter><OnError event={event} source={source} lineno={lineno} colno={colno} error={error} /></BrowserRouter>, document.body)
     return false
   }
 

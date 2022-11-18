@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Verify we have (almost) all the locales used
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -127,12 +126,10 @@ const ignoredTransKeyForYourLoops = [
   'modal-remove-patient-question',
   'remove-caregiver',
   'severe-hypoglycemia-threshold',
-  'signup-steppers-caregiver-title',
-  'signup-steppers-hcp-title',
-  'signup-steppers-step1',
-  'signup-steppers-step2',
-  'team-card-label-address',
   'team-leave-dialog-button-leave',
+  'select-account-type',
+  'consent',
+  'create-profile',
   'until',
   // Others
   // TODO
@@ -144,12 +141,12 @@ const ignoredTransKeyForYourLoops = [
   'training',
   'initial-hba1c',
   'optional',
-  'training-body'
+  'training-body',
+  'login',
+  'refresh'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
-  'team-card-label-${label}',
-  'signup-steppers-${state.formValues.accountRole}-title',
   // Documentation!
   'translate-me',
   'translate-{{someone}}'
@@ -233,14 +230,17 @@ describe('Locales tests', () => {
   it('should find all translations from translation.json', async () => {
     const blipFiles = await getFiles(path.resolve(`${__dirname}/../../packages/blip`))
     expect(blipFiles).to.be.an('array').not.empty
-    const vizFiles = await getFiles(path.resolve(`${__dirname}/../../packages/viz`))
-    expect(vizFiles).to.be.an('array').not.empty
+    const dumbFiles = await getFiles(path.resolve(`${__dirname}/../../packages/dumb`))
+    expect(dumbFiles).to.be.an('array').not.empty
     const tidelineFiles = await getFiles(path.resolve(`${__dirname}/../../packages/tideline`))
     expect(tidelineFiles).to.be.an('array').not.empty
+    const vizFiles = await getFiles(path.resolve(`${__dirname}/../../packages/viz`))
+    expect(vizFiles).to.be.an('array').not.empty
 
     const allFiles = blipFiles
-    Array.prototype.push.apply(allFiles, vizFiles)
+    Array.prototype.push.apply(allFiles, dumbFiles)
     Array.prototype.push.apply(allFiles, tidelineFiles)
+    Array.prototype.push.apply(allFiles, vizFiles)
 
     const trKeys = await getTrKeys(allFiles)
     /** @type {string[]} */

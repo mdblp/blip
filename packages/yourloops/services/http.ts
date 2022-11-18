@@ -45,7 +45,6 @@ export enum ErrorMessageStatus {
 
 export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>
-  static shorelineAccessToken: string
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>): void {
     HttpService.retrieveAccessToken = accessTokenMethod

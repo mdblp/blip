@@ -24,30 +24,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import HttpService from '../../services/http'
 
-.row {
-  composes: smallSize from '../../styles/typography.css';
-  line-height: 20px;
-  max-width: 240px;
-  min-width: 160px;
-  width: max-content;
+export interface ErrorPayload {
+  browserName: string
+  browserVersion: string
+  date: string
+  err: string
+  errorId: string
+  path: string
 }
 
-.message {
-  composes: row;
-  color: var(--stat--default);
-}
-
-.message p {
-  margin: 0;
-}
-
-.message a {
-  pointer-events: all;
-}
-
-.divider {
-  height: 2px;
-  margin: 5px -10px;
-  background-color: var(--stat--default);
+export default class ErrorApi {
+  static async sendError(payload: ErrorPayload): Promise<void> {
+    await HttpService.post<void, ErrorPayload>({
+      url: '/bff/v1/errors',
+      payload
+    })
+  }
 }

@@ -25,43 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, RefObject } from 'react'
-import _ from 'lodash'
-import styles from './tooltip.css'
+import HttpService from '../../../../services/http'
+import ErrorApi, { ErrorPayload } from '../../../../lib/error/error-api'
 
-interface TooltipTailProps {
-  borderColor: string
-  borderSide: string
-  marginOuterValue: string
-  tailHeight: number
-  tailElementRef: RefObject<HTMLDivElement>
-  tailWidth: number
-}
+describe('ErrorApi', () => {
+  describe('sendError', () => {
+    it('should send correct payload to correct url', async () => {
+      const payload: ErrorPayload = {
+        browserName: 'fakeBrowserName',
+        browserVersion: 'fakeBrowserVersion',
+        date: 'fakeDate',
+        err: 'fakeErrorMessage',
+        errorId: 'fakeErrorId',
+        path: '/fake/path'
+      }
+      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
 
-const TooltipTail: FunctionComponent<TooltipTailProps> = (props) => {
-  const {
-    borderColor,
-    borderSide,
-    marginOuterValue,
-    tailHeight,
-    tailElementRef,
-    tailWidth
-  } = props
-
-  return (
-    <div>
-      <div
-        ref={tailElementRef}
-        className={styles.tail}
-        style={{
-          marginTop: `-${tailHeight}px`,
-          marginLeft: marginOuterValue,
-          borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
-          [`border${_.upperFirst(borderSide)}Color`]: borderColor
-        }}
-      />
-    </div>
-  )
-}
-
-export default TooltipTail
+      await ErrorApi.sendError(payload)
+      expect(HttpService.post).toHaveBeenCalledWith({
+        url: '/bff/v1/errors',
+        payload
+      })
+    })
+  })
+})

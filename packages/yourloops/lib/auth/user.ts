@@ -53,17 +53,17 @@ export default class User {
 
   constructor(authenticatedUser: AuthenticatedUser) {
     this.email = authenticatedUser.email
-    this.emailVerified = authenticatedUser.emailVerified
+    this.emailVerified = authenticatedUser.email_verified
     this.id = User.getId(authenticatedUser.sub)
     this.role = authenticatedUser[AuthenticatedUserMetadata.Roles][0] as UserRoles
     this.username = authenticatedUser.email
-    this.latestConsentChangeDate = config.LATEST_TERMS ? new Date(config.LATEST_TERMS) : new Date(0)
-    this.latestTrainingDate = config.LATEST_TRAINING ? new Date(config.LATEST_TRAINING) : new Date(0)
+    this.latestConsentChangeDate = new Date(config.LATEST_TERMS ?? 0)
+    this.latestTrainingDate = new Date(config.LATEST_TRAINING ?? 0)
   }
 
   private static getId(sub: string): string {
     const parsedSub = sub.split('|')
-    return parsedSub[1]
+    return parsedSub[parsedSub.length - 1]
   }
 
   get firstName(): string {
@@ -146,7 +146,7 @@ export default class User {
   }
 
   isFirstLogin(): boolean {
-    return !this.profile
+    return this.role === UserRoles.unset
   }
 
   hasToAcceptNewConsent(): boolean {

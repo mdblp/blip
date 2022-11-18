@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -33,7 +33,6 @@ import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
 import { renderPageFromHistory } from '../../utils/render'
 
-jest.setTimeout(10000)
 describe('Intended use page', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
 
@@ -48,7 +47,7 @@ describe('Intended use page', () => {
   it('should render intended use with the right selected language', () => {
     renderPageFromHistory(history)
     expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
-    checkFooter()
+    checkFooter({ needFooterLanguageSelector: true })
 
     userEvent.click(screen.getByText('Intended Use'))
 

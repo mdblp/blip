@@ -43,8 +43,6 @@ import {
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 
-jest.setTimeout(20000)
-
 describe('Trends view for anyone', () => {
   beforeAll(() => {
     mockPatientLogin(unmonitoredPatient)
