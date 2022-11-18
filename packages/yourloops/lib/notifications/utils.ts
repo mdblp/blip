@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { INotificationAPI, APINotificationType } from '../../models/notification'
+import { APINotificationType, INotificationAPI } from '../../models/notification'
 import { INotification, NotificationType } from './models'
 
 /**
@@ -53,8 +53,7 @@ export function notificationConversion(apin: INotificationAPI): INotification | 
     case APINotificationType.medicalTeamRemoveMember:
       return null
     default:
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      throw new Error(`Invalid notification type ${apin.type}`)
+      throw new Error('Invalid notification type')
   }
   return {
     id: apin.key,

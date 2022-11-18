@@ -61,7 +61,7 @@ export interface INotification {
   }
 }
 
-export interface CancelInvitation {
+export interface CancelInvitationPayload {
   key: string
   target: { id: string }
   email: string

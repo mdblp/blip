@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { CancelInvitation, INotification, NotificationType } from './models'
+import { CancelInvitationPayload, INotification, NotificationType } from './models'
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import { INotificationAPI } from '../../models/notification'
@@ -48,20 +48,19 @@ export default class NotificationApi {
         break
       default:
         log.info('Unknown notification', notification)
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        throw Error(`Unknown notification ${notification.type}`)
+        throw Error('Unknown notification')
     }
     return await NotificationApi.updateInvitation(url, notification.id)
   }
 
   static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
-    const payload: CancelInvitation = {
+    const payload: CancelInvitationPayload = {
       email: inviteeEmail,
       key: notificationId,
       target: { id: teamId }
     }
 
-    await HttpService.post<string, CancelInvitation>({
+    await HttpService.post<string, CancelInvitationPayload>({
       url: '/confirm/cancel/invite',
       payload
     })
@@ -88,8 +87,7 @@ export default class NotificationApi {
         return await NotificationApi.cancelRemoteMonitoringInvite(notification.target?.id, userId)
       default:
         log.info('Unknown notification', notification)
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        throw Error(`Unknown notification ${notification.type}`)
+        throw Error('Unknown notification')
     }
     return await NotificationApi.updateInvitation(url, notification.id)
   }

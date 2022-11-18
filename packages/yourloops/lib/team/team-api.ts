@@ -36,7 +36,7 @@ import { User } from '../auth'
 
 const log = bows('Team API')
 
-interface InviteMemberArgs {
+interface ChangeMemberRoleFirstPayload {
   teamId: string
   email: string
   role: TeamMemberRole.admin | TeamMemberRole.member
@@ -50,8 +50,6 @@ interface ChangeMemberRoleArgs extends ChangeMemberRoleFirstPayload {
   userId: string
 }
 
-type ChangeMemberRoleFirstPayload = InviteMemberArgs
-
 interface ChangeMemberRoleSecondPayload {
   teamId: string
   userId: string
@@ -64,11 +62,16 @@ interface RemoveMemberArgs {
   email: string
 }
 
+interface InviteMemberResult {
+  invitation: INotificationAPI
+  teams: Team[]
+}
+
 const HCP_ROUTE = 'hcps'
 const PATIENTS_ROUTE = 'patients'
 
 export default class TeamApi {
-  static getTeamsApiUrl(user: User): string {
+  private static getTeamsApiUrl(user: User): string {
     const isUserHcp = user.isUserHcp()
     if (!isUserHcp && !user.isUserPatient()) {
       throw Error(`User with role ${user.role} cannot retrieve teams`)
@@ -92,8 +95,8 @@ export default class TeamApi {
     }
   }
 
-  static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<{ teams: Team[], invitation: INotificationAPI }> {
-    const { data } = await HttpService.post<{ teams: Team[], invitation: INotificationAPI }, InviteMemberPayload>({
+  static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<InviteMemberResult> {
+    const { data } = await HttpService.post<InviteMemberResult, InviteMemberPayload>({
       config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
       payload: { role },
       url: `bff/v1/hcps/${userId}/teams/${teamId}/members/${inviteeEmail}/invite`
