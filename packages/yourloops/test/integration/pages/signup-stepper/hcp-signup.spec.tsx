@@ -82,8 +82,6 @@ describe('Signup stepper as hcp', () => {
     await checkProfileStep(firstName, lastName)
     expect(hcpProfessionSelector).toBeVisible()
 
-    logDOM(hcpProfessionSelector)
-    logRoles(hcpProfessionSelector)
     fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('button', { hidden: true }))
     await userEvent.click(screen.getByText('Nurse'))
 

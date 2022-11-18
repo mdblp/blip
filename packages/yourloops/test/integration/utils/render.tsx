@@ -47,5 +47,4 @@ export const renderPageFromHistory = (initialEntry: string) => {
 
 export const renderPage = (url: string) => {
   renderPageFromHistory(url)
-  // expect(window.location.pathname).toBe(url)
 }

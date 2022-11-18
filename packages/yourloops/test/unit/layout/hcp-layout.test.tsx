@@ -26,14 +26,13 @@
  */
 
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import * as authHookMock from '../../../lib/auth'
 import { User } from '../../../lib/auth'
 import * as teamHookMock from '../../../lib/team'
 import * as notificationsHookMock from '../../../lib/notifications/hook'
 import { UserRoles } from '../../../models/user'
-import { MemoryRouter, Router } from 'react-router-dom'
-import { createMemoryHistory, History, MemoryHistory } from 'history'
+import { MemoryRouter } from 'react-router-dom'
 import * as patientHookMock from '../../../lib/patient/provider'
 import { HcpLayout } from '../../../layout/hcp-layout'
 
@@ -41,17 +40,11 @@ const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
 const teamDetailsPageTestId = 'mock-team-details-page'
 const certifyAccountPageTestId = 'mock-certify-account-page'
-const patientDataPageTestId = 'mock-patient-data-page'
-const caregiverPageTestId = 'mock-hcp-page'
-const homePagePageTestId = 'mock-hcp-page'
 const allTestIds = [
   profilePageTestId,
   notificationsPageTestId,
   teamDetailsPageTestId,
-  certifyAccountPageTestId,
-  patientDataPageTestId,
-  caregiverPageTestId,
-  homePagePageTestId
+  certifyAccountPageTestId
 ]
 
 /* eslint-disable react/display-name */
@@ -73,21 +66,7 @@ jest.mock('../../../pages/team/team-details-page', () => () => {
 jest.mock('../../../pages/hcp/certify-account-page', () => () => {
   return <div data-testid={certifyAccountPageTestId} />
 })
-jest.mock('../../../components/patient-data', () => () => {
-  return <div data-testid={patientDataPageTestId} />
-})
-jest.mock('../../../pages/home-page', () => () => {
-  return <div data-testid={homePagePageTestId} />
-})
 describe('Hcp Layout', () => {
-  function getMainLayoutJSX(initialEntry: string): JSX.Element {
-    return (
-      <MemoryRouter initialEntries={[initialEntry]}>
-        <HcpLayout />
-      </MemoryRouter>
-    )
-  }
-
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
@@ -103,10 +82,7 @@ describe('Hcp Layout', () => {
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { removeTeamFromList: jest.fn() }
-    })
-  })
-
-  beforeEach(() => {
+    });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
@@ -118,6 +94,14 @@ describe('Hcp Layout', () => {
       }
     })
   })
+
+  function getMainLayoutJSX(initialEntry: string): JSX.Element {
+    return (
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <HcpLayout />
+      </MemoryRouter>
+    )
+  }
 
   function checkInDocument(testId: string) {
     expect(screen.queryByTestId(testId)).toBeInTheDocument()
@@ -136,21 +120,6 @@ describe('Hcp Layout', () => {
     checkInDocument(notificationsPageTestId)
   })
 
-  it('should render home page when route is /home and user is hcp', () => {
-    render(getMainLayoutJSX('/home'))
-    checkInDocument(homePagePageTestId)
-  })
-
-  it('should render home page when route is / and user is hcp', async () => {
-    render(getMainLayoutJSX('/'))
-    checkInDocument(homePagePageTestId)
-  })
-
-  it('should render patient data page when route matches /patient/:patientId and user is hcp', () => {
-    render(getMainLayoutJSX('/patient/fakePatientId'))
-    checkInDocument(patientDataPageTestId)
-  })
-
   it('should render team details page when route matches /teams/:teamId and user is hcp', () => {
     render(getMainLayoutJSX('/teams/fakeTeamId'))
     checkInDocument(teamDetailsPageTestId)
@@ -159,10 +128,5 @@ describe('Hcp Layout', () => {
   it('should render certify account page when route is /certify and user is hcp', () => {
     render(getMainLayoutJSX('/certify'))
     checkInDocument(certifyAccountPageTestId)
-  })
-
-  it('should redirect to /not-found when route is unknown for user with hcp role', () => {
-    render(getMainLayoutJSX('/wrongRoute'))
-    expect(window.location.pathname).toBe('/not-found')
   })
 })
