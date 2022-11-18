@@ -25,36 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
-import {
-  CBGPercentageBarChartMemoized as CBGPercentageBarChart
-} from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
-import {
-  CbgStandardDeviationMemoized as CBGStandardDeviation
-} from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './components/stats/models'
-import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
-import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
-import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
-import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
-import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
-import Tooltip from './components/tooltips/tooltip/tooltip'
-import { CgmTable } from './settings/cgm-table'
-import { PumpTable } from './settings/pump-table'
-import { TerminalTable } from './settings/terminal-table'
+.container {
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 80px;
+  margin: 2px 0;
+  max-width: 180px;
+}
 
-export {
-  CBGMeanStat,
-  CBGPercentageBarChart,
-  CBGStandardDeviation,
-  CBGStatType,
-  CgmTable,
-  ConfidentialTooltip,
-  FoodTooltip,
-  PhysicalTooltip,
-  PumpTable,
-  ReservoirTooltip,
-  StatTooltip,
-  TerminalTable,
-  Tooltip
+.row {
+  composes: smallSize from '../../../styles/typography.css';
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  line-height: 20px;
+}
+
+.title {
+  flex-grow: 0;
+  font-weight: bold;
+  composes: smallSize from '../../../styles/typography.css';
+  text-align: right;
+}
+
+.label {
+  flex-grow: 1;
+}
+
+.value {
+  margin-left: 20px;
+  text-align: right;
+}
+
+.pa {
+  composes: row;
 }

@@ -36,7 +36,7 @@ import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
 import Header from './header'
 import Footer from './footer'
-import { ConfidentialTooltip, FoodTooltip, ReservoirTooltip } from 'dumb'
+import { ConfidentialTooltip, FoodTooltip, PhysicalTooltip, ReservoirTooltip } from 'dumb'
 
 /**
  * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
@@ -48,7 +48,6 @@ const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
 const SMBGTooltip = vizComponents.SMBGTooltip
 const CBGTooltip = vizComponents.CBGTooltip
-const PhysicalTooltip = vizComponents.PhysicalTooltip
 const ParameterTooltip = vizComponents.ParameterTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
