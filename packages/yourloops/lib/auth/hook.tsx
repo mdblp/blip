@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, FunctionComponent, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import bows from 'bows'
 import _ from 'lodash'
 
@@ -155,25 +155,17 @@ export function AuthContextImpl(): AuthContext {
       setFetchingUser(true)
       const user = new User(auth0user as AuthenticatedUser)
 
-      // Temporary here waiting all backend services be compatible with Auth0
-      // see https://diabeloop.atlassian.net/browse/YLP-1553
-      try {
-        const { token, id } = await UserApi.getShorelineAccessToken()
-        HttpService.shorelineAccessToken = token
-        user.id = id
+      if (user.role !== UserRoles.unset) {
+        const userMetadata = await UserApi.getUserMetadata(user.id)
+        if (userMetadata) {
+          user.profile = userMetadata.profile
+          user.preferences = userMetadata.preferences
+          user.settings = userMetadata.settings
+        }
+        updateUserLanguage(user)
         metrics.setUser(user)
-      } catch (err) {
-        console.log(err)
       }
 
-      const userMetadata = await UserApi.getUserMetadata(user.id)
-      if (userMetadata) {
-        user.profile = userMetadata.profile
-        user.preferences = userMetadata.preferences
-        user.settings = userMetadata.settings
-      }
-
-      updateUserLanguage(user)
       setUser(user)
     } catch (err) {
       console.error(err)
@@ -198,21 +190,34 @@ export function AuthContextImpl(): AuthContext {
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
     const now = new Date().toISOString()
     const profile: Profile = {
+      email: auth0user.email,
       fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
       firstName: signupForm.profileFirstname,
       lastName: signupForm.profileLastname,
       termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
-      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy },
-      contactConsent: { acceptanceTimestamp: now, isAccepted: signupForm.feedback },
-      hcpProfession: signupForm.hcpProfession
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
+    }
+    if (signupForm.accountRole === UserRoles.hcp) {
+      profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
+      profile.hcpProfession = signupForm.hcpProfession
     }
     const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
     const settings: Settings = { country: signupForm.profileCountry }
 
     const user = getUser()
-    await UserApi.updateProfile(user.id, profile)
-    await UserApi.updatePreferences(user.id, preferences)
-    await UserApi.updateSettings(user.id, settings)
+
+    await UserApi.completeUserSignup(user.id, {
+      email: auth0user.email,
+      role: signupForm.accountRole,
+      preferences,
+      profile,
+      settings
+    })
+
+    // Refreshing access token to get the new role in it
+    await getAccessTokenSilently({ ignoreCache: true })
+
+    user.role = signupForm.accountRole
     user.preferences = preferences
     user.profile = profile
     user.settings = settings
@@ -255,7 +260,7 @@ export function useAuth(): AuthContext {
  * Provider component that wraps your app and makes auth object available to any child component that calls useAuth().
  * @param props for auth provider & children
  */
-export function AuthContextProvider({ children }: { children: JSX.Element }): JSX.Element {
+export const AuthContextProvider: FunctionComponent = ({ children }) => {
   return (
     <ReactAuthContext.Provider value={AuthContextImpl()}>
       {children}

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -26,23 +26,24 @@
  */
 
 import { checkCaregiverHeader, checkHCPHeader, checkPatientHeader } from './header'
-import { checkDrawerNotVisible, checkDrawer } from './drawer'
+import { checkDrawer, checkDrawerNotVisible } from './drawer'
 import { checkFooter } from './footer'
+import { UserRoles } from '../../../models/user'
 
-export const checkHCPLayout = (fullName: string) => {
+export const checkHCPLayout = (fullName: string, needFooterLanguageSelector: boolean = false) => {
   checkHCPHeader(fullName)
   checkDrawer()
-  checkFooter()
+  checkFooter({ role: UserRoles.hcp, needFooterLanguageSelector })
 }
 
-export const checkCaregiverLayout = (fullName: string) => {
+export const checkCaregiverLayout = (fullName: string, needFooterLanguageSelector?: true) => {
   checkCaregiverHeader(fullName)
   checkDrawer()
-  checkFooter()
+  checkFooter({ role: UserRoles.caregiver, needFooterLanguageSelector })
 }
 
-export const checkPatientLayout = (fullName: string) => {
+export const checkPatientLayout = (fullName: string, needFooterLanguageSelector?: true) => {
   checkPatientHeader(fullName)
   checkDrawerNotVisible()
-  checkFooter()
+  checkFooter({ role: UserRoles.patient, needFooterLanguageSelector })
 }
