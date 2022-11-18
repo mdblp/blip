@@ -1,8 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Display:
- * - a month, with arrow to change the current month.
- * - year selector
  *
  * All rights reserved.
  *

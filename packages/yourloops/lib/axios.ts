@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
  *
  * All rights reserved.
  *

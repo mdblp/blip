@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Chat API tests
  *
  * All rights reserved.
  *
