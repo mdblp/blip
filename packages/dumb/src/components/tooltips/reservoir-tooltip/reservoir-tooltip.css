@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,53 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import ReactMarkdown from 'react-markdown'
-import styles from './stat-tooltip.css'
-import { withStyles } from '@material-ui/core'
-import Tooltip from '@material-ui/core/Tooltip'
-
-interface StatTooltipProps {
-  annotations: string[]
-  children: JSX.Element
+.container {
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 80px;
+  margin: 2px 0;
+  max-width: 180px;
 }
 
-const StyledTooltip = withStyles(() => ({
-  tooltip: {
-    backgroundColor: 'white',
-    color: 'var(--stat--default)',
-    border: '1px solid rgb(114, 115, 117)',
-    fontSize: '12px',
-    lineHeight: '20px',
-    borderWidth: '2px'
-  }
-}))(Tooltip)
+.row {
+  composes: smallSize from '../../../styles/typography.css';
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  line-height: 20px;
+}
 
-export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
-  const { annotations, children } = props
+.label {
+  flex-grow: 1;
+}
 
-  return (
-    <StyledTooltip
-      disableFocusListener
-      placement="top"
-      title={
-        <div data-testid="stat-tooltip-content" className={styles.container}>
-          {annotations.map((message, index) =>
-            <div key={`message-${index}`}>
-              <ReactMarkdown className={styles.message} linkTarget="_blank">
-                {message}
-              </ReactMarkdown>
-              {index !== annotations.length - 1 &&
-                <div
-                  key={`divider-${index}`}
-                  className={styles.divider}
-                />
-              }
-            </div>
-          )}
-        </div>
-      }>
-      {children}
-    </StyledTooltip>
-  )
+.pa {
+  composes: row;
+  font-weight: bold;
 }

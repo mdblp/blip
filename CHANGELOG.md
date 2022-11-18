@@ -44,6 +44,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1767 Create package to migrate viz components
 - YLP-1797 Make it possible to see what role the users are logged in with matomo
 - YLP-1834 Migrate time in range stats
+- YLP-1915 Migrate reservoir tooltip
 - Add a route /version to display blip version
 
 ### Fixed

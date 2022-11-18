@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,43 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, RefObject } from 'react'
-import _ from 'lodash'
-import styles from './tooltip.css'
+import React, { FunctionComponent } from 'react'
+import ReactMarkdown from 'react-markdown'
+import styles from './stat-tooltip.css'
+import { withStyles } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip'
 
-interface TooltipTailProps {
-  borderColor: string
-  borderSide: string
-  marginOuterValue: string
-  tailHeight: number
-  tailElementRef: RefObject<HTMLDivElement>
-  tailWidth: number
+interface StatTooltipProps {
+  annotations: string[]
+  children: JSX.Element
 }
 
-const TooltipTail: FunctionComponent<TooltipTailProps> = (props) => {
-  const {
-    borderColor,
-    borderSide,
-    marginOuterValue,
-    tailHeight,
-    tailElementRef,
-    tailWidth
-  } = props
+const StyledTooltip = withStyles(() => ({
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'var(--stat--default)',
+    border: '1px solid rgb(114, 115, 117)',
+    fontSize: '12px',
+    lineHeight: '20px',
+    borderWidth: '2px'
+  }
+}))(Tooltip)
+
+export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
+  const { annotations, children } = props
 
   return (
-    <div>
-      <div
-        ref={tailElementRef}
-        className={styles.tail}
-        style={{
-          marginTop: `-${tailHeight}px`,
-          marginLeft: marginOuterValue,
-          borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
-          [`border${_.upperFirst(borderSide)}Color`]: borderColor
-        }}
-      />
-    </div>
+    <StyledTooltip
+      disableFocusListener
+      placement="top"
+      title={
+        <div data-testid="stat-tooltip-content" className={styles.container}>
+          {annotations.map((message, index) =>
+            <div key={`message-${index}`}>
+              <ReactMarkdown className={styles.message} linkTarget="_blank">
+                {message}
+              </ReactMarkdown>
+              {index !== annotations.length - 1 &&
+                <div
+                  key={`divider-${index}`}
+                  className={styles.divider}
+                />
+              }
+            </div>
+          )}
+        </div>
+      }>
+      {children}
+    </StyledTooltip>
   )
 }
-
-export default TooltipTail
