@@ -29,6 +29,8 @@ const commonJestConfig = require('../common-jest.config')
 module.exports = {
   ...commonJestConfig,
 
+  bail: true,
+
   displayName: 'yourloops integration',
 
   maxWorkers: '30%',

@@ -41,10 +41,6 @@ function getMainLobby(initialEntry: string) {
   )
 }
 
-export const renderPageFromHistory = (initialEntry: string) => {
-  render(getMainLobby(initialEntry))
-}
-
 export const renderPage = (url: string) => {
-  renderPageFromHistory(url)
+  render(getMainLobby(url))
 }
