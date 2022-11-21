@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Data API
  *
  * All rights reserved.
  *

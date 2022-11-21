@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -65,9 +65,8 @@ function NotificationContextImpl(): NotificationContext {
     setReceivedInvitations(r)
   }
 
-  const cancel = async (notification: INotification): Promise<void> => {
-    log.info('Cancel invitation', notification)
-    await NotificationApi.cancelInvitation(notification)
+  const cancel = async (notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> => {
+    await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
     const invitations = await NotificationApi.getSentInvitations(user.id)
     setSentInvitations(invitations)
   }

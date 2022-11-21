@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -38,7 +38,7 @@ import MemberRow, { TeamMembersProps } from '../../../../components/team/member-
 import { TeamMemberRole } from '../../../../models/team'
 import { UserInvitationStatus } from '../../../../models/generic'
 import { getTheme } from '../../../../components/theme'
-import { buildInvite, buildTeam, buildTeamMember } from '../../common/utils'
+import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamApi from '../../../../lib/team/team-api'
 import TeamUtils from '../../../../lib/team/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
@@ -70,7 +70,7 @@ describe('MemberRow', () => {
   const teamId = 'teamId'
   const teamMember = buildTeamMember(
     'fakeUserId',
-    buildInvite(teamId, 'fakeUserId', TeamMemberRole.member),
+    'fakeInviteId1',
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
@@ -88,27 +88,25 @@ describe('MemberRow', () => {
 
   const pendingTeamMemberWithInviteFromAnotherUser = buildTeamMember(
     'fakeUserId',
-    buildInvite(teamId, 'fakeUserId', TeamMemberRole.member),
+    undefined,
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
     UserInvitationStatus.pending
   )
-  pendingTeamMemberWithInviteFromAnotherUser.invitation.target = { id: 'wrongId', name: 'wrongTeam' }
 
   const pendingTeamMemberWithInviteFromCurrentLoggedInUser = buildTeamMember(
     'fakeUserId',
-    buildInvite(teamId, 'fakeUserId', TeamMemberRole.member),
+    'fakeInviteId3',
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
     UserInvitationStatus.pending
   )
-  pendingTeamMemberWithInviteFromCurrentLoggedInUser.invitation.target = { id: teamId, name: 'correctTeam' }
 
   const loggedInUserAdmin = buildTeamMember(
     loggedInUserId,
-    buildInvite(teamId, loggedInUserId, TeamMemberRole.admin),
+    'fakeInviteId4',
     TeamMemberRole.admin,
     'fake@admin.com',
     'fake admin full name',
@@ -117,7 +115,7 @@ describe('MemberRow', () => {
 
   const loggedInUserNotAdmin = buildTeamMember(
     loggedInUserId,
-    buildInvite(teamId, loggedInUserId, TeamMemberRole.member),
+    'fakeInviteId5',
     TeamMemberRole.member,
     'fake@admin.com',
     'fake admin full name',
@@ -126,17 +124,17 @@ describe('MemberRow', () => {
 
   const pendingTeamMember = buildTeamMember(
     'fakeUserId',
-    buildInvite(teamId, 'fakeUserId', TeamMemberRole.member),
+    'fakeInviteId6',
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
     UserInvitationStatus.pending
   )
 
-  const pendingAdminTeamMember = buildTeamMember('fakeUserId', buildInvite())
+  const pendingAdminTeamMember = buildTeamMember('fakeUserId', 'fakeInviteId7')
   const adminTeamMember = buildTeamMember(
     'fakeUserId',
-    buildInvite(),
+    'fakeInviteId8',
     TeamMemberRole.admin,
     'fake@username.com',
     'fake full name',

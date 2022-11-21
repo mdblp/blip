@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Day.js init & custom plugins
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

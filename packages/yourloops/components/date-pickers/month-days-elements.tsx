@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2021-2022, Diabeloop
- * Display the days off a month
  *
  * All rights reserved.
  *

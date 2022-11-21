@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Notifications models (hydrophone interfaces)
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,12 +30,10 @@ import { Profile } from '../../models/user'
 import { TeamMemberRole } from '../../models/team'
 
 export enum NotificationType {
-  directInvitation,
-  careTeamProInvitation,
-  careTeamPatientInvitation,
-  careTeamDoAdmin,
-  careTeamRemoveMember,
   careTeamMonitoringInvitation,
+  careTeamPatientInvitation,
+  careTeamProInvitation,
+  directInvitation,
 }
 
 export interface INotification {
@@ -64,6 +61,12 @@ export interface INotification {
   }
 }
 
+export interface CancelInvitationPayload {
+  key: string
+  target: { id: string }
+  email: string
+}
+
 export interface NotificationContext {
   initialized: boolean
   receivedInvitations: INotification[]
@@ -71,7 +74,7 @@ export interface NotificationContext {
   update: () => void
   accept: (notification: INotification) => Promise<void>
   decline: (notification: INotification) => Promise<void>
-  cancel: (notification: INotification) => Promise<void>
+  cancel: (notificationId: string, teamId?: string, inviteeEmail?: string) => Promise<void>
   inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>
   cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>
   getInvitation: (teamId: string) => INotification

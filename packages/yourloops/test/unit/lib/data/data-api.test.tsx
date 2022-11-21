@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Auth API tests
  *
  * All rights reserved.
  *

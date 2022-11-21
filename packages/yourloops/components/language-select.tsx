@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,7 +37,7 @@ const languageSelectStyle = makeStyles((theme: Theme) => {
   return {
     select: {
       fontSize: '12px',
-      color: theme.palette.grey[600]
+      color: theme.palette.grey[700]
     }
   }
 })

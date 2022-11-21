@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -30,12 +30,12 @@ import Link from '@material-ui/core/Link'
 import { Link as RouterLink } from 'react-router-dom'
 import Box from '@material-ui/core/Box'
 import { useTranslation } from 'react-i18next'
-import diabeloopUrls from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 import { User } from '../../lib/auth'
 import { footerStyle } from './footer'
 
 const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const { link, separator } = footerStyle()
 
   return (
@@ -53,7 +53,7 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
       <Link
         id="footer-link-url-training"
         target="_blank"
-        href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)}
+        href={diabeloopExternalUrls.training(user?.role)}
         rel="nofollow"
         className={link}
       >

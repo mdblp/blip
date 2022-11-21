@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Commons utilities for all tests
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,10 +29,9 @@ import { UserInvitationStatus } from '../../../models/generic'
 import { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam } from '../../../lib/data/patient'
 import { Alarm } from '../../../models/alarm'
 import { Team, TeamMember } from '../../../lib/team'
-import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../../models/team'
+import { TeamMemberRole, TeamType } from '../../../models/team'
 import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
 import { UNITS_TYPE } from '../../../lib/units/utils'
-import { INotification, NotificationType } from '../../../lib/notifications/models'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true })
@@ -98,13 +96,12 @@ export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSeve
   } as Alarm
 }
 
-export function buildPrivateTeam(userId: string = 'userId'): Team {
+export function buildPrivateTeam(): Team {
   return {
     code: TeamType.private,
     id: TeamType.private,
     members: [],
     name: TeamType.private,
-    owner: userId,
     type: TeamType.private
   }
 }
@@ -114,7 +111,6 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
     id,
     name,
     code: '123456789',
-    owner: 'fakeOwner',
     email: 'fale@email.com',
     type: TeamType.medical,
     members,
@@ -134,43 +130,9 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
   }
 }
 
-export function buildITeam(id = 'fakeTeamId', members: ITeamMember[] = [], name = 'fake team name'): ITeam {
-  return {
-    id,
-    name,
-    code: '123456789',
-    type: TeamType.medical,
-    owner: 'fakeOwner',
-    phone: 'fakePhone',
-    email: 'fake@email.com',
-    address: {
-      line1: 'fakeLine1',
-      line2: 'fakeLine2',
-      zip: 'fakeZip',
-      city: 'fakeCity',
-      country: 'fakeCountry'
-    },
-    description: 'fakeDescription',
-    members,
-    monitoring: {
-      enabled: true,
-      parameters: {
-        bgUnit: UNITS_TYPE.MGDL,
-        lowBg: 1,
-        highBg: 2,
-        outOfRangeThreshold: 10,
-        veryLowBg: 4,
-        hypoThreshold: 15,
-        nonDataTxThreshold: 20,
-        reportingPeriod: 7
-      }
-    }
-  }
-}
-
 export function buildTeamMember(
   userId = 'fakeUserId',
-  invitation: INotification | undefined = undefined,
+  invitationId?: string,
   role: TeamMemberRole = TeamMemberRole.admin,
   email = 'fake@username.com',
   fullName = 'fake full name',
@@ -179,47 +141,9 @@ export function buildTeamMember(
   return {
     userId,
     email,
-    profile: { fullName },
+    profile: { fullName, email },
     role,
     status,
-    invitation
-  }
-}
-
-export function buildITeamMember(
-  teamId = 'fakeTeamId',
-  userId = 'fakeUserId',
-  role: TeamMemberRole = TeamMemberRole.admin,
-  email = 'fake@username.com',
-  fullName = 'fake full name',
-  invitationStatus = UserInvitationStatus.pending
-): ITeamMember {
-  return {
-    userId,
-    teamId,
-    email,
-    role,
-    invitationStatus,
-    profile: { fullName },
-    idVerified: undefined
-  }
-}
-
-export function buildInvite(teamId = 'fakeTeamId', userId = 'fakeUserId', role = TeamMemberRole.admin): INotification {
-  return {
-    id: 'fakeInviteId',
-    type: NotificationType.careTeamProInvitation,
-    metricsType: 'join_team',
-    email: 'fake@email.com',
-    creatorId: 'fakeCreatorId',
-    date: 'fakeDate',
-    target: {
-      id: teamId,
-      name: 'fakeTeamName'
-    },
-    role,
-    creator: {
-      userid: userId
-    }
+    invitationId
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -40,7 +40,7 @@ jest.mock('../../../../lib/notifications/hook')
 describe('Remove direct share dialog hook', () => {
   const userToRemoveEmail = 'fake@email.com'
   const userToRemove = { id: 'fake-id', email: userToRemoveEmail, fullName: 'Fake User' }
-  const invitation = { id: 'fake-invitation-id', email: userToRemoveEmail, type: NotificationType.directInvitation }
+  const invitation = { id: 'fake-invitation-id', email: userToRemoveEmail, type: NotificationType.directInvitation, target: { id: 'fakeTeamId' } }
   const authUserId = 'auth-user-id'
 
   const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare')
@@ -78,7 +78,7 @@ describe('Remove direct share dialog hook', () => {
       const { result } = renderHook(() => useRemoveDirectShareDialog(onClose))
       await result.current.removeDirectShare(userToRemove, currentUser)
 
-      expect(cancelInvitationMock).toHaveBeenCalledWith(invitation)
+      expect(cancelInvitationMock).toHaveBeenCalledWith(invitation.id, invitation.target.id, userToRemove.email)
       expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-success')
       expect(onClose).toHaveBeenCalledWith(false)
     })
@@ -89,7 +89,7 @@ describe('Remove direct share dialog hook', () => {
       const { result } = renderHook(() => useRemoveDirectShareDialog(onClose))
       await result.current.removeDirectShare(userToRemove, currentUser)
 
-      expect(cancelInvitationMock).toHaveBeenCalledWith(invitation)
+      expect(cancelInvitationMock).toHaveBeenCalledWith(invitation.id, invitation.target.id, userToRemove.email)
       expect(onErrorAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-failure')
       expect(onClose).not.toHaveBeenCalled()
     })

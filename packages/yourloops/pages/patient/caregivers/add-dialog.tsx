@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Patient care givers page: Add a caregiver dialog
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Allow to select a date (day/month/year) by displaying each days in a specific month
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

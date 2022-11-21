@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * HCP team edit dialog tests
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

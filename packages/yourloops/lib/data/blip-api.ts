@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Blip API class to be used by blip v1
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

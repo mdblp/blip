@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Display the rendering PDF options
  *
  * All rights reserved.
  *

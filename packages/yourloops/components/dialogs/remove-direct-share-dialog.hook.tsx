@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -49,7 +49,7 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
       const invitation = sentInvitations.find((invitation: INotification) => invitation.email === userToRemove.email)
 
       if (invitation) {
-        await cancel(invitation)
+        await cancel(invitation.id, invitation.target.id, userToRemove.email)
       } else {
         const patientId = isCurrentUserCaregiver ? userToRemove.id : currentUser.id
         const viewerId = isCurrentUserCaregiver ? currentUser.id : userToRemove.id

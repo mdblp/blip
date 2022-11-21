@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -48,8 +48,6 @@ import { weekArrayPlugin, weekdaysPlugin } from '../../../../lib/dayjs'
 import * as constants from '../../../../../viz/src/modules/print/utils/constants'
 import DataApi from '../../../../lib/data/data-api'
 import { User } from '../../../../lib/auth'
-
-jest.setTimeout(30000)
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {

@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Calendar view: Bring the calendar, the header and the toolbar together
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
