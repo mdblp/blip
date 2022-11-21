@@ -55,7 +55,7 @@ export default function connectWithTransitionGroup(connect) {
   ]
 
   willFunctions.forEach((key) => {
-    if(!connect || !connect.prototype){
+    if(!connect?.prototype){
       return
     }
     connect.prototype[key] = function (cb) {
@@ -68,7 +68,7 @@ export default function connectWithTransitionGroup(connect) {
   })
 
   didFunctions.forEach((key) => {
-    if(!connect || !connect.prototype){
+    if(!connect?.prototype){
       return
     }
     connect.prototype[key] = function () {
