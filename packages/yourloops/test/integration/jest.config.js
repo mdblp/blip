@@ -29,6 +29,8 @@ const commonJestConfig = require('../common-jest.config')
 module.exports = {
   ...commonJestConfig,
 
+  bail: true,
+
   displayName: 'yourloops integration',
 
   maxWorkers: '30%',
@@ -38,5 +40,5 @@ module.exports = {
     '<rootDir>/**/*.spec.tsx'
   ],
 
-  testTimeout: 30000
+  testTimeout: 45000
 }
