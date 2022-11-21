@@ -113,7 +113,7 @@ Currently only the data visualization itself for the BGM and CGM versions of the
 
 The variables involved in the layout of the data display inside the Trends view—that is, the code for Trends view contained in this repository—are as follows, all originating in the `TrendsSVGContainer`:
 
-- `containerHeight` and `containerWidth` are the dimensions of the `<div id="tidelineContainer">` that the data portion of every view is rendered within. These are provided on `TrendsSVGContainer` as props via the `Dimensions` higher-order component (HOC) that wraps the SVG container. This `Dimensions` HOC is an external dependency from the [`react-dimensions`](https://github.com/digidem/react-dimensions 'GitHub: react-dimensions').
+- `containerHeight` and `containerWidth` are the dimensions of the `<div id="tidelineContainer">` that the data portion of every view is rendered within. These are provided on `TrendsSVGContainer` as props via the `Dimensions` higher-order component (HOC) that wraps the SVG container.
 - The `MARGINS` (a constant of `top`, `bottom`, `left`, and `right` properties) are the space outside the data display area (gray box) that provide padding around the data display area and space for the x- and y-axis ticks and labels.
 - The `BUMPERS` (a constant of `top` and `bottom` properties) are the internal padding in the data display area.
 

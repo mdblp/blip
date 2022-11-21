@@ -1,3 +1,30 @@
+/*
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
@@ -5,7 +32,6 @@ import bows from 'bows'
 import cx from 'classnames'
 import i18next from 'i18next'
 import { SizeMe } from 'react-sizeme'
-import { Collapse } from 'react-collapse'
 import { formatBgValue, formatDecimalNumber, formatPercentage } from '../../../utils/format'
 import { formatDuration } from '../../../utils/datetime'
 import { classifyBgValue, classifyCvValue, generateBgRangeLabels } from '../../../utils/bloodglucose'
@@ -217,14 +243,9 @@ class Stat extends React.Component {
     const { renderer: Renderer, ...chartProps } = this.chartProps
 
     return (
-      <Collapse
-        isOpened={this.state.isOpened}
-        springConfig={{ stiffness: 200, damping: 23 }}
-      >
-        <div className={styles.chartWrapper}>
-          <Renderer {...chartProps} width={size.width || 298} />
-        </div>
-      </Collapse>
+      <div className={styles.chartWrapper}>
+        <Renderer {...chartProps} width={size.width || 298} />
+      </div>
     )
   }
 

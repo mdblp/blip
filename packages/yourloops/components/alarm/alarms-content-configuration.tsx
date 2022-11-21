@@ -203,7 +203,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
       throw Error(`Cannot find team with id ${monitoredTeam.teamId}`)
     }
     const defaultMonitoring = team.monitoring
-    if (!defaultMonitoring || !defaultMonitoring.parameters) {
+    if (!defaultMonitoring?.parameters) {
       throw Error('The given team has no monitoring values')
     }
     setHighBg({ ...highBg, value: defaultMonitoring.parameters.highBg })
