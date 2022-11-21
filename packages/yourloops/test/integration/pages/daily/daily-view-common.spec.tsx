@@ -65,7 +65,7 @@ describe('Daily view for anyone', () => {
 
       // Check the time in range stats widgets
       checkDailyTimeInRangeStatsWidgets()
-      checkTimeInRangeStatsTitle()
+      await checkTimeInRangeStatsTitle()
 
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
       checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
@@ -94,7 +94,7 @@ describe('Daily view for anyone', () => {
       const generateReportButton = await screen.findByText('Generate report')
       expect(generateReportButton).toBeVisible()
 
-      userEvent.click(screen.getByText('Generate report'))
+      await userEvent.click(screen.getByText('Generate report'))
 
       const generateReportDialogFirstPdf = within(screen.getByRole('dialog'))
       expect(generateReportDialogFirstPdf.getByText('Generate report')).toBeVisible()
@@ -112,19 +112,19 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstPdf.getByRole('radio', { name: 'CSV' })).not.toBeChecked()
       expect(generateReportDialogFirstPdf.getByText('Cancel')).toBeVisible()
 
-      userEvent.click(generateReportDialogFirstPdf.getByText('Generate'))
+      await userEvent.click(generateReportDialogFirstPdf.getByText('Generate'))
       // This checks that we tried to generate a pdf
       await waitFor(() => expect(windowOpenMock).toBeCalled())
 
-      userEvent.click(screen.getByText('Generate report'))
+      await userEvent.click(screen.getByText('Generate report'))
       const generateReportDialogFirstCsv = within(screen.getByRole('dialog'))
-      userEvent.click(generateReportDialogFirstCsv.getByRole('radio', { name: 'CSV' }))
-      userEvent.click(generateReportDialogFirstCsv.getByRole('button', { name: '2 weeks' }))
+      await userEvent.click(generateReportDialogFirstCsv.getByRole('radio', { name: 'CSV' }))
+      await userEvent.click(generateReportDialogFirstCsv.getByRole('button', { name: '2 weeks' }))
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-01')).toHaveAttribute('aria-selected', 'false')
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-02')).toHaveAttribute('aria-selected', 'true')
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
 
-      userEvent.click(generateReportDialogFirstCsv.getByText('Generate'))
+      await userEvent.click(generateReportDialogFirstCsv.getByText('Generate'))
       // This checks for CSV generation
       expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), unmonitoredPatientId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
     })

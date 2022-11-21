@@ -26,16 +26,13 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { createMemoryHistory } from 'history'
 import userEvent from '@testing-library/user-event'
 import { act, screen } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
-import { renderPageFromHistory } from '../../utils/render'
+import { renderPage } from '../../utils/render'
 
 describe('Intended use page', () => {
-  const history = createMemoryHistory({ initialEntries: ['/'] })
-
   beforeAll(() => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
@@ -44,14 +41,13 @@ describe('Intended use page', () => {
     })
   })
 
-  it('should render intended use with the right selected language', () => {
-    renderPageFromHistory(history)
+  it('should render intended use with the right selected language', async () => {
+    renderPage('/')
     expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
     checkFooter({ needFooterLanguageSelector: true })
 
-    userEvent.click(screen.getByText('Intended Use'))
+    await userEvent.click(screen.getByText('Intended Use'))
 
-    expect(history.location.pathname).toEqual('/intended-use')
     expect(screen.getByText('YourLoops, version 1.0.0, released on 2000-01-01')).toBeInTheDocument()
     expect(screen.getByText('Intended Purpose and regulatory information')).toBeInTheDocument()
     expect(screen.getByText('Legal Manufacturer')).toBeInTheDocument()

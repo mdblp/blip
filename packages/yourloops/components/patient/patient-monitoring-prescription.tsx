@@ -219,6 +219,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
               />
               <input
                 id="upload-file-input-id"
+                data-testid="upload-file-input"
                 accept="image/jpeg,image/png,application/pdf"
                 className={classes.input}
                 onChange={handleFileSelected}
