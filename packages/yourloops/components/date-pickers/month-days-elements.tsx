@@ -114,6 +114,7 @@ function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
     return (
       <Day
         id={`button-calendar-day-${dayISO}`}
+        data-testid={`button-calendar-day-${dayISO}`}
         key={`day-${dayISO}`}
         day={dateOfMonth.toString(10)}
         selected={selected}
