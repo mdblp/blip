@@ -28,7 +28,60 @@
 import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime.util'
 import { TimePrefs } from '../settings/models'
 import { InputTime } from '../components/tooltips/physical-tooltip/physical-tooltip'
+import { Unit } from '../components/tooltips/parameter-tooltip/parameter-tooltip'
+
+const NO_VALUE_STRING = '--'
 
 export const formatInputTime = (utcTime: InputTime, timePrefs: TimePrefs): string => {
   return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat())
+}
+
+const convertValueToNumber = (value: string | number): number => {
+  if (typeof value === 'string') {
+    if (value.includes('.')) {
+      return Number.parseFloat(value)
+    }
+    return Number.parseInt(value, 10)
+  }
+  return value
+}
+
+const getDecimalsCount = (unit: Unit): number => {
+  switch (unit) {
+    case Unit.Percent:
+    case Unit.Minute:
+      return 0
+    case Unit.Gram:
+    case Unit.Kilogram:
+    case Unit.InsulinUnit:
+    case Unit.MmolPerLiter:
+    case Unit.MilligramPerDeciliter:
+      return 1
+    case Unit.InsulinUnitPerGram:
+      return 3
+    default:
+      return 2
+  }
+}
+
+export const formatParameterValue = (value: number | string, unit: Unit): string => {
+  const valueNumber = convertValueToNumber(value)
+  const decimalsCount = getDecimalsCount(unit)
+
+  if (Number.isNaN(valueNumber)) {
+    return NO_VALUE_STRING
+  }
+  if (Number.isInteger(valueNumber) && decimalsCount === 0) {
+    return valueNumber.toString(10)
+  }
+
+  const valueAbsolute = Math.abs(valueNumber)
+  if (valueAbsolute < Number.EPSILON) {
+    return valueNumber.toFixed(1)
+  }
+  if (valueAbsolute < 1e-2 || valueAbsolute > 9999) {
+    return valueNumber.toExponential(2)
+  }
+
+  return valueNumber.toFixed(decimalsCount)
 }

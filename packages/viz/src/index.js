@@ -28,7 +28,6 @@ import BolusTooltip from './components/daily/bolustooltip/BolusTooltip'
 import SMBGTooltip from './components/daily/smbgtooltip/SMBGTooltip'
 import Stat from './components/common/stat/Stat'
 import CBGTooltip from './components/daily/cbgtooltip/CBGTooltip'
-import ParameterTooltip from './components/daily/parametertooltip/ParameterTooltip'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
 import reducers from './redux/reducers/'
@@ -62,7 +61,6 @@ const components = {
   SMBGTooltip,
   Stat,
   CBGTooltip,
-  ParameterTooltip,
   WarmUpTooltip
 }
 

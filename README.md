@@ -234,7 +234,7 @@ Et voila, the deployment starts. Of course you need credentials for the aws acco
 
 
 ## Copyright management
-The default copyright profile "Diabeloop" can be found in `Preferences | Editor | Copyright`.
+The copyright profile "Diabeloop" can be found in `Preferences | Editor | Copyright`.
 
 ### Enable copyright update on save
 To enable the automatic copyright update on file save

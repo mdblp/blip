@@ -35,6 +35,7 @@ import {
 import { CBGStatType } from './components/stats/models'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
+import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
@@ -51,6 +52,7 @@ export {
   CgmTable,
   ConfidentialTooltip,
   FoodTooltip,
+  ParameterTooltip,
   PhysicalTooltip,
   PumpTable,
   ReservoirTooltip,

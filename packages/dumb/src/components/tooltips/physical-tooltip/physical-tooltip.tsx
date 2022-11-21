@@ -70,7 +70,7 @@ enum Intensity {
   Medium = 'medium'
 }
 
-enum DurationUnit {
+export enum DurationUnit {
   Hours = 'hours',
   Minutes = 'minutes',
   Seconds = 'seconds'
