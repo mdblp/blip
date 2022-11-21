@@ -35,8 +35,6 @@ import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
 
-jest.setTimeout(15000)
-
 describe('Signup stepper as hcp', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
   const firstName = 'Lara'

@@ -34,8 +34,6 @@ import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
 
-jest.setTimeout(15000)
-
 describe('Signup stepper as caregiver', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
   const firstName = 'Sandy'
