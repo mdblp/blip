@@ -67,7 +67,6 @@ const style = makeStyles((theme: Theme) => {
       minHeight: '90vh'
     },
     buttons: {
-      justifyContent: 'space-around',
       marginTop: theme.spacing(3)
     }
   }
