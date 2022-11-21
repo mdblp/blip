@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * File Chart Outlined Icon
  *
  * All rights reserved.
  *

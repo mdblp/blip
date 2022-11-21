@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -40,6 +40,7 @@ import { UserInvitationStatus } from '../../../../models/generic'
 import { INotification } from '../../../../lib/notifications/models'
 import { mockPatientAPIForPatients } from '../../mock/mockPatientAPI'
 
+jest.setTimeout(20000)
 describe('Patient caregivers page', () => {
   const firstName = 'Théo'
   const lastName = 'Cupé'
@@ -107,10 +108,10 @@ describe('Patient caregivers page', () => {
     const caregiversTable = screen.getByLabelText('Table caregiver list')
     expect(caregiversTable).toBeVisible()
 
-    const caregiversTableLastNameHeader = within(caregiversTable).getByText('Last Name')
+    const caregiversTableLastNameHeader = within(caregiversTable).getByText('Last name')
     expect(caregiversTableLastNameHeader).toBeVisible()
 
-    const caregiversTableFirstNameHeader = within(caregiversTable).getByText('First Name')
+    const caregiversTableFirstNameHeader = within(caregiversTable).getByText('First name')
     expect(caregiversTableFirstNameHeader).toBeVisible()
 
     const caregiversTableEmailHeader = within(caregiversTable).getByText('Email')

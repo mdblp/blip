@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -27,8 +27,9 @@
 
 import { useCallback, useMemo } from 'react'
 import { DateTitle, Offset, Position } from './tooltip'
-import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../utils/datetime'
+import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../../utils/datetime'
 import moment from 'moment-timezone'
+import { Source, TIMEZONE_UTC } from '../../../settings/models'
 
 export interface TooltipHookProps {
   borderWidth: number
@@ -110,11 +111,11 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
       return undefined
     }
     let dateValue
-    if (dateTitle.source === 'Diabeloop') {
+    if (dateTitle.source === Source.Diabeloop) {
       // For diabeloop device, use the timezone of the object
-      const { timezoneName } = dateTitle.timePrefs
+      const timezoneName = dateTitle ? dateTitle?.timePrefs?.timezoneName : ''
       const { timezone: datumTimezone } = dateTitle
-      const mNormalTime = moment.tz(dateTitle.normalTime, datumTimezone === 'UTC' ? timezoneName : datumTimezone)
+      const mNormalTime = moment.tz(dateTitle.normalTime, datumTimezone === TIMEZONE_UTC ? timezoneName : datumTimezone)
       dateValue = mNormalTime.format(getHourMinuteFormat())
     } else {
       dateValue = formatLocalizedFromUTC(dateTitle.normalTime, dateTitle.timePrefs, getHourMinuteFormat())

@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Http service to make requests
  *
  * All rights reserved.
  *
@@ -45,7 +44,6 @@ export enum ErrorMessageStatus {
 
 export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>
-  static shorelineAccessToken: string
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>): void {
     HttpService.retrieveAccessToken = accessTokenMethod

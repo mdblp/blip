@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -39,8 +39,6 @@ import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
-
-jest.setTimeout(10000)
 
 describe('Daily view for caregiver', () => {
   const firstName = 'Caregiver firstName'

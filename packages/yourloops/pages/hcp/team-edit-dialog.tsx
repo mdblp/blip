@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Modal (pop-up) displayed to create or edit a team
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +44,7 @@ import TextField from '@material-ui/core/TextField'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import locales from '../../../../locales/languages.json'
-import DiabeloopUrl from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 import { Team } from '../../lib/team'
 import {
   isZipCodeValid,
@@ -100,7 +99,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const classes = modalStyles()
   const auth = useAuth()
   const theme = useTheme()
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   const [modalOpened, setModalOpened] = useState(false)
@@ -223,7 +222,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     )
     const termsOfUse = t('terms-of-use')
     const linkTerms = (
-      <Link aria-label={termsOfUse} href={DiabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
+      <Link aria-label={termsOfUse} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
         {termsOfUse}
       </Link>
     )
@@ -325,11 +324,12 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             required
             aria-required="true"
           />
-          <FormControl className={classes.formChild} required variant="outlined">
+          <FormControl data-testid="country" className={classes.formChild} required variant="outlined">
             <InputLabel
               htmlFor="team-edit-dialog-select-country">{t('team-edit-dialog-placeholder-addr-country')}</InputLabel>
             <Select
               id="team-edit-dialog-select-country"
+              data-testid="team-edit-dialog-select-country"
               name="country"
               label={t('team-edit-dialog-placeholder-addr-country')}
               value={addrCountry}

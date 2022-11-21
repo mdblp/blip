@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -69,6 +69,7 @@ describe('Caregiver home page', () => {
     const patient1 = buildPatientAsTeamMember({
       userId: 'patientId1',
       profile: {
+        email: 'Akim@embett.com',
         firstName: 'Akim',
         lastName: 'Embett',
         fullName: 'Akim Embett',
@@ -78,6 +79,7 @@ describe('Caregiver home page', () => {
     const patient2 = buildPatientAsTeamMember({
       userId: 'patientId2',
       profile: {
+        email: 'alain@provist.com',
         firstName: 'Alain',
         lastName: 'Provist',
         fullName: 'Alain Provist',
@@ -87,6 +89,7 @@ describe('Caregiver home page', () => {
     const patient3 = buildPatientAsTeamMember({
       userId: 'patientId3',
       profile: {
+        email: 'annie@versaire.com',
         firstName: 'Annie',
         lastName: 'Versaire',
         fullName: 'Annie Versaire',

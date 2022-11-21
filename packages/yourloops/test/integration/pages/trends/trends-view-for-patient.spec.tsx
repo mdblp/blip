@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -32,8 +32,6 @@ import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
-
-jest.setTimeout(10000)
 
 describe('Trends view for patient', () => {
   beforeAll(() => {

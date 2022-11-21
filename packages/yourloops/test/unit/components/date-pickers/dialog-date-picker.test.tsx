@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Simple DatePicker to select a single day
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

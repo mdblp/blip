@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- *  Diabeloop Url
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,63 +26,53 @@
  */
 import config from './config'
 import { UserRoles } from '../models/user'
+import { getCurrentLang } from './language'
 
 /**
- * Class containing all URLs related to Diableloop
+ * Class containing all external URLs related to Diabeloop
  */
-class DiabeloopUrl {
+class DiabeloopExternalUrls {
   private readonly rootPathName: string
-  private termsUrl: string
-  private privacyPolicyUrl: string
-  private cookiesPolicyUrL: string
-  private readonly supportUrL: string
+  readonly support: string
+  readonly releaseNotes: string
 
   constructor() {
     this.rootPathName = `${config.ASSETS_URL}`
-    this.termsUrl = `${this.rootPathName}terms.pdf`
-    this.privacyPolicyUrl = `${this.rootPathName}data-privacy.pdf`
-    this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.pdf`
-    this.supportUrL = 'https://www.diabeloop.com'
+    this.support = 'https://www.diabeloop.com'
+    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
   }
 
-  get SupportUrl(): string {
-    return this.supportUrL
+  get cookiesPolicy(): string {
+    return `${this.rootPathName}yourloops-cookiepolicy.${getCurrentLang()}.pdf`
   }
 
-  getTermsUrL(currentLangue: string): string {
-    this.termsUrl = `${this.rootPathName}yourloops-terms-of-use.${currentLangue}.pdf`
-    return this.termsUrl
+  get privacyPolicy(): string {
+    return `${this.rootPathName}yourloops-data-privacy.${getCurrentLang()}.pdf`
   }
 
-  getPrivacyPolicyUrL(currentLangue: string): string {
-    this.privacyPolicyUrl = `${this.rootPathName}yourloops-data-privacy.${currentLangue}.pdf`
-    return this.privacyPolicyUrl
+  get terms(): string {
+    return `${this.rootPathName}yourloops-terms-of-use.${getCurrentLang()}.pdf`
   }
 
-  getIntendedUseUrL(currentLangue: string): string {
-    return `${this.rootPathName}intended-use.${currentLangue}.pdf`
-  }
-
-  getTrainingUrl(currentLangue: string, role?: UserRoles): string {
+  training(role?: UserRoles): string {
     if (role === UserRoles.patient) {
-      return `${this.rootPathName}yourloops-patient-training.${currentLangue}.pdf`
+      return `${this.rootPathName}yourloops-patient-training.${getCurrentLang()}.pdf`
     } else if (role === UserRoles.hcp) {
-      return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`
+      return `${this.rootPathName}yourloops-hcp-training.${getCurrentLang()}.pdf`
     } else if (role === UserRoles.caregiver) {
-      return `${this.rootPathName}yourloops-caregiver-training.${currentLangue}.pdf`
+      return `${this.rootPathName}yourloops-caregiver-training.${getCurrentLang()}.pdf`
     }
-    return `${this.rootPathName}yourloops-login-training.${currentLangue}.pdf`
-  }
-
-  getCookiesPolicyUrl(currentLangue: string): string {
-    this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.${currentLangue}.pdf`
-    return this.cookiesPolicyUrL
-  }
-
-  getReleaseNotesURL(): string {
-    return `${config.ASSETS_URL}yourloops-release-notes.pdf`
+    return `${this.rootPathName}yourloops-login-training.${getCurrentLang()}.pdf`
   }
 }
 
-const diabeloopUrl = new DiabeloopUrl()
-export default diabeloopUrl
+export const diabeloopExternalUrls = new DiabeloopExternalUrls()
+export const RENEW_CONSENT_PATH = '/renew-consent'
+export const TRAINING_PATH = '/training'
+export const NEW_CONSENT_PATH = '/new-consent'
+export const COMPLETE_SIGNUP_PATH = '/complete-signup'
+export const LOGIN_PATH = '/login'
+export const INTENDED_USE_PATH = '/intended-use'
+export const PUBLIC_ROUTES = [LOGIN_PATH]
+export const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
+export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [RENEW_CONSENT_PATH, NEW_CONSENT_PATH, TRAINING_PATH, COMPLETE_SIGNUP_PATH, INTENDED_USE_PATH, LOGIN_PATH]

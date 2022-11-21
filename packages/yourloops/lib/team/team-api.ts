@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Teams management - API calls
  *
  * All rights reserved.
  *
@@ -32,22 +31,24 @@ import { HttpHeaderKeys } from '../../models/api'
 import { getCurrentLang } from '../language'
 import { Monitoring } from '../../models/monitoring'
 import bows from 'bows'
+import { Team } from './models'
+import { User } from '../auth'
 
 const log = bows('Team API')
 
-interface InviteMemberArgs {
+interface ChangeMemberRoleFirstPayload {
   teamId: string
   email: string
   role: TeamMemberRole.admin | TeamMemberRole.member
 }
 
-type InviteMemberPayload = InviteMemberArgs
+interface InviteMemberPayload {
+  role: TeamMemberRole
+}
 
 interface ChangeMemberRoleArgs extends ChangeMemberRoleFirstPayload {
   userId: string
 }
-
-type ChangeMemberRoleFirstPayload = InviteMemberArgs
 
 interface ChangeMemberRoleSecondPayload {
   teamId: string
@@ -61,10 +62,28 @@ interface RemoveMemberArgs {
   email: string
 }
 
+interface InviteMemberResult {
+  invitation: INotificationAPI
+  teams: Team[]
+}
+
+const HCP_ROUTE = 'hcps'
+const PATIENTS_ROUTE = 'patients'
+
 export default class TeamApi {
-  static async getTeams(): Promise<ITeam[]> {
+  private static getTeamsApiUrl(user: User): string {
+    const isUserHcp = user.isUserHcp()
+    if (!isUserHcp && !user.isUserPatient()) {
+      throw Error(`User with role ${user.role} cannot retrieve teams`)
+    }
+    const userRoute = isUserHcp ? HCP_ROUTE : PATIENTS_ROUTE
+    return `/bff/v1/${userRoute}/${user.id}/teams`
+  }
+
+  static async getTeams(user: User): Promise<Team[]> {
+    const url = TeamApi.getTeamsApiUrl(user)
     try {
-      const { data } = await HttpService.get<ITeam[]>({ url: '/v0/my-teams' })
+      const { data } = await HttpService.get<Team[]>({ url })
       return data
     } catch (err) {
       const error = err as Error
@@ -76,11 +95,11 @@ export default class TeamApi {
     }
   }
 
-  static async inviteMember({ teamId, email, role }: InviteMemberArgs): Promise<INotificationAPI> {
-    const { data } = await HttpService.post<INotificationAPI, InviteMemberPayload>({
-      url: '/confirm/send/team/invite',
-      payload: { teamId, email, role },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+  static async inviteMember(userId: string, teamId: string, inviteeEmail: string, role: TeamMemberRole): Promise<InviteMemberResult> {
+    const { data } = await HttpService.post<InviteMemberResult, InviteMemberPayload>({
+      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
+      payload: { role },
+      url: `bff/v1/hcps/${userId}/teams/${teamId}/members/${inviteeEmail}/invite`
     })
     return data
   }

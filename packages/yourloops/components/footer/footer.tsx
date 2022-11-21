@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Generic footer links
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,21 +27,22 @@
 
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { useLocation } from 'react-router-dom'
 
+import diabeloopLabel from 'diabeloop-label.svg'
+import diabeloopLogo from 'diabeloop-logo.svg'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
-import Link from '@material-ui/core/Link'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
 import LanguageIcon from '@material-ui/icons/Language'
+import Link from '@material-ui/core/Link'
+import Tooltip from '@material-ui/core/Tooltip'
 
-import LanguageSelector from '../language-select'
-import diabeloopUrls from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-url'
 import { useAuth } from '../../lib/auth'
 import config from '../../lib/config'
 import metrics from '../../lib/metrics'
-import diabeloopLabel from 'diabeloop-label.svg'
-import diabeloopLogo from 'diabeloop-logo.svg'
+import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 
 export const footerStyle = makeStyles((theme: Theme) => {
@@ -160,7 +160,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
       }
     },
     link: {
-      color: theme.palette.grey[600],
+      color: theme.palette.grey[700],
       fontWeight: 400,
       [theme.breakpoints.down('xs')]: {
         marginBottom: '15px',
@@ -211,8 +211,9 @@ export const footerStyle = makeStyles((theme: Theme) => {
 }, { name: 'footer-component-styles' })
 
 const Footer: FunctionComponent = () => {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const { user } = useAuth()
+  const { pathname } = useLocation()
   const classes = footerStyle()
 
   const handleShowCookieBanner = (): void => {
@@ -231,26 +232,28 @@ const Footer: FunctionComponent = () => {
         <Box className={classes.supportButton} />
       </Box>
       <Box className={classes.centerBox}>
-        {!user ? (
-          <Box className={classes.firstLine}>
-            <Box id="footer-language-box" className={classes.firstLineElement}>
+        {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname)
+          ? <Box className={classes.firstLine}>
+            <Box
+              data-testid="language-selector"
+              className={classes.firstLineElement}
+            >
               <LanguageIcon className={classes.icon} />
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
             </Box>
             <AccompanyingDocumentLinks user={user} />
           </Box>
-        ) : (
-          <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
+          : <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
             <AccompanyingDocumentLinks user={user} />
             <Box className={classes.separator}>|</Box>
           </Box>
-        )}
+        }
 
         <Link
           id="footer-link-url-privacy-policy"
           target="_blank"
-          href={diabeloopUrls.getPrivacyPolicyUrL(i18n.language)}
+          href={diabeloopExternalUrls.privacyPolicy}
           rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
           className={classes.link}
@@ -261,7 +264,7 @@ const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-terms"
           target="_blank"
-          href={diabeloopUrls.getTermsUrL(i18n.language)}
+          href={diabeloopExternalUrls.terms}
           rel="nofollow"
           onClick={metricsPdfDocument('terms')}
           className={classes.link}
@@ -280,7 +283,7 @@ const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-cookies-policy"
           target="_blank"
-          href={diabeloopUrls.getCookiesPolicyUrl(i18n.language)}
+          href={diabeloopExternalUrls.cookiesPolicy}
           rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           className={classes.link}
@@ -309,12 +312,12 @@ const Footer: FunctionComponent = () => {
             <Link
               id="footer-link-url-release-notes"
               target="_blank"
-              href={diabeloopUrls.getReleaseNotesURL()}
+              href={diabeloopExternalUrls.releaseNotes}
               rel="nofollow"
               onClick={metricsPdfDocument('release_notes')}
               className={classes.link}
             >
-              <span className={classes.versionSpan}>&nbsp;{`v${config.VERSION}`.substring(0, 10)}</span>
+              <span className={classes.versionSpan}>&nbsp;{`v${config.VERSION}`.substring(0, 20)}</span>
             </Link>
           </Tooltip>
           <span className={classes.bySpan}>by </span>
@@ -323,7 +326,7 @@ const Footer: FunctionComponent = () => {
           id="footer-link-url-diabeloop"
           className={classes.diabeloopLink}
           target="_blank"
-          href={diabeloopUrls.SupportUrl} rel="nofollow"
+          href={diabeloopExternalUrls.support} rel="nofollow"
         >
           <img src={diabeloopLogo} alt={t('alt-img-logo')} className={`${classes.svg} ${classes.diabeloopLogo}`} />
           <img src={diabeloopLabel} alt={t('alt-img-logo')} className={classes.svg} />

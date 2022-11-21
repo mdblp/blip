@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,12 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Router } from 'react-router-dom'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
-import React from 'react'
-import { createMemoryHistory } from 'history'
-import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import PatientAPI from '../../../../lib/patient/patient-api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
@@ -47,7 +42,9 @@ import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
+import { PhonePrefixCode } from '../../../../lib/utils'
 import { renderPage } from '../../utils/render'
+import TeamAPI from '../../../../lib/team/team-api'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -62,29 +59,13 @@ describe('HCP home page', () => {
     mockDirectShareApi()
   })
 
-  function getHomePage() {
-    const history = createMemoryHistory({ initialEntries: ['/'] })
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
-
-  it('should render the home page with correct components', async () => {
+  it('should display a list of patients and allow to remove one of them', async () => {
     await act(async () => {
       renderPage('/')
     })
+
     checkHCPLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, true)
-  })
-
-  it('should display a list of patients and allow to remove one of them', async () => {
-    await act(async () => {
-      render(getHomePage())
-    })
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(3)
@@ -110,7 +91,7 @@ describe('HCP home page', () => {
 
   it('should allow to remove a patient who is in multiple teams', async () => {
     await act(async () => {
-      render(getHomePage())
+      renderPage('/')
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userid}`)
@@ -215,5 +196,83 @@ describe('HCP home page', () => {
     fireEvent.click(screen.getByRole('option', { name: teamOne.name }))
 
     expect(invitePatientButton).toBeEnabled()
+  })
+
+  it('should check that the team creation button is valid if all fields are complete', async () => {
+    const createTeamMock = jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
+    await act(async () => {
+      renderPage('/')
+    })
+    const teamMenu = screen.getByLabelText('Open team menu')
+    userEvent.click(teamMenu)
+    userEvent.click(screen.getByText('New care team'))
+    const dialogTeam = screen.getByRole('dialog')
+    const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
+    const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })
+    const address1Input = within(dialogTeam).getByRole('textbox', { name: 'Address 1' })
+    const address2Input = within(dialogTeam).getByRole('textbox', { name: 'Address 2' })
+    const zipcodeInput = within(dialogTeam).getByRole('textbox', { name: 'Zipcode' })
+    const cityInput = within(dialogTeam).getByRole('textbox', { name: 'City (State / Province)' })
+    const phoneNumberInput = within(dialogTeam).getByRole('textbox', { name: 'Phone number' })
+    const prefixPhoneNumber = within(dialogTeam).getByText('+33')
+    const emailInput = within(dialogTeam).getByRole('textbox', { name: 'Email' })
+
+    // Team creation button disabled and all fields empty
+    expect(nameInput).toHaveTextContent('')
+    expect(address1Input).toHaveTextContent('')
+    expect(address2Input).toHaveTextContent('')
+    expect(zipcodeInput).toHaveTextContent('')
+    expect(cityInput).toHaveTextContent('')
+    expect(phoneNumberInput).toHaveTextContent('')
+    expect(emailInput).toHaveTextContent('')
+    expect(dialogTeam).toBeInTheDocument()
+    expect(prefixPhoneNumber).toHaveTextContent(PhonePrefixCode.FR)
+    expect(createTeamButton).toBeDisabled()
+
+    // Team dropdown with prefix phone number
+    fireEvent.mouseDown(within(screen.getByTestId('team-edit-dialog-select-country')).getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: 'Austria' }))
+    expect(prefixPhoneNumber).toHaveTextContent(PhonePrefixCode.AT)
+
+    // Team creation button activated and all fields filled
+    await userEvent.type(nameInput, lastName)
+    await userEvent.type(address1Input, '5 rue')
+    await userEvent.type(cityInput, 'Grenoble')
+    await userEvent.type(phoneNumberInput, '0600000000')
+    await userEvent.type(zipcodeInput, '38000')
+    await userEvent.type(emailInput, 'toto@titi.com')
+    expect(createTeamButton).not.toBeDisabled()
+
+    // Team creation button disabled and a field in error with the error message
+    userEvent.clear(zipcodeInput)
+    expect(createTeamButton).toBeDisabled()
+    await userEvent.type(zipcodeInput, '75d')
+    expect(within(dialogTeam).getByText('Please enter a valid zipcode')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    userEvent.clear(zipcodeInput)
+    await userEvent.type(zipcodeInput, '75800')
+    expect(createTeamButton).not.toBeDisabled()
+
+    userEvent.clear(phoneNumberInput)
+    expect(createTeamButton).toBeDisabled()
+    await userEvent.type(phoneNumberInput, '060')
+    expect(within(dialogTeam).getByText('Please enter a valid phone number')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    userEvent.clear(phoneNumberInput)
+    await userEvent.type(phoneNumberInput, '06000000')
+    expect(createTeamButton).not.toBeDisabled()
+
+    userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'tototiti.com')
+    expect(within(dialogTeam).getByText('Invalid email address (special characters are not allowed).')).toBeVisible()
+    expect(createTeamButton).toBeDisabled()
+    userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'toto@titi.com')
+    expect(createTeamButton).not.toBeDisabled()
+
+    await act(async () => {
+      userEvent.click(createTeamButton)
+    })
+    expect(createTeamMock).toHaveBeenCalledTimes(1)
   })
 })

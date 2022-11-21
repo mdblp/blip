@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Login page
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -56,7 +55,7 @@ const loginStyle = makeStyles((theme: Theme) => {
   }
 }, { name: 'login-page-styles' })
 
-function Login(): JSX.Element {
+const LoginPage: FunctionComponent = () => {
   const { loginWithRedirect, error, logout } = useAuth0()
   const { t } = useTranslation('yourloops')
   const { cardContent, card, cardActions } = loginStyle()
@@ -97,16 +96,24 @@ function Login(): JSX.Element {
             disableElevation
             onClick={loginWithRedirect}
           >
-            {t('login')}
+            {t(error ? 'refresh' : 'login')}
           </Button>
-          {error &&
-            <Button
+          {error
+            ? <Button
               variant="contained"
               color="primary"
               disableElevation
               onClick={onClickLogout}
             >
               {t('logout')}
+            </Button>
+            : <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={async () => await loginWithRedirect({ screen_hint: 'signup' })}
+            >
+              {t('register')}
             </Button>
           }
         </CardActions>
@@ -115,4 +122,4 @@ function Login(): JSX.Element {
   )
 }
 
-export default Login
+export default LoginPage

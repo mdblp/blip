@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Calendar view: Bring the calendar, the header and the toolbar together
  *
  * All rights reserved.
  *

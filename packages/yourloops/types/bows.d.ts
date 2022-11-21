@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Module declaration for bows which lack of typescript type
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

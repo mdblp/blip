@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -85,7 +85,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
       <Box className={props.classes.inputContainer}>
         <TextField
           id="profile-textfield-firstname"
-          label={t('firstname')}
+          label={t('first-name')}
           value={props.firstName}
           onChange={event => props.setFirstName(event.target.value)}
           error={props.errors.firstName}
@@ -94,7 +94,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
         />
         <TextField
           id="profile-textfield-lastname"
-          label={t('lastname')}
+          label={t('last-name')}
           value={props.lastName}
           onChange={event => props.setLastName(event.target.value)}
           error={props.errors.lastName}

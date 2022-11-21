@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -42,8 +42,6 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
-
-jest.setTimeout(20000)
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {

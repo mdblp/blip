@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="dumb + medical-domain + yourloops" pattern="file[blip]:packages/dumb//*||file[blip]:packages/yourloops//*||file[blip]:packages/medical-domain//*" />
+</component>

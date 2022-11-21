@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -26,14 +26,41 @@
  */
 
 import { screen, within } from '@testing-library/react'
+import { diabeloopExternalUrls } from '../../../lib/diabeloop-url'
+import { UserRoles } from '../../../models/user'
 
-export const checkFooter = () => {
+interface CheckFooterProps {
+  role?: UserRoles
+  needFooterLanguageSelector: boolean
+}
+
+const defaultArgs = { needFooterLanguageSelector: false }
+
+export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterProps = defaultArgs) => {
   const footer = within(screen.getByTestId('footer'))
-  expect(footer.getByText('Intended Use')).toBeVisible()
-  expect(footer.getByText('Training')).toBeVisible()
-  expect(footer.getByText('Privacy Policy')).toBeVisible()
-  expect(footer.getByText('Terms of use')).toBeVisible()
-  expect(footer.getByText('Cookies management')).toBeVisible()
-  expect(footer.getByText('Cookies policy')).toBeVisible()
-  expect(footer.getByText('Contact')).toBeVisible()
+  const intendedUseLink = footer.getByText('Intended Use')
+  const trainingLink = footer.getByText('Training')
+  const termsOfUseLink = footer.getByText('Terms of use')
+  const privacyPolicyLink = footer.getByText('Privacy Policy')
+  const cookiesManagementLink = footer.getByText('Cookies management')
+  const cookiesPolicyLink = footer.getByText('Cookies policy')
+  const contactLink = footer.getByText('Contact')
+  const languageSelector = footer.queryByTestId('language-selector')
+
+  needFooterLanguageSelector
+    ? expect(languageSelector).toBeInTheDocument()
+    : expect(languageSelector).not.toBeInTheDocument()
+
+  expect(intendedUseLink).toBeVisible()
+  expect(intendedUseLink).toHaveAttribute('href', '/intended-use')
+  expect(trainingLink).toBeVisible()
+  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(role))
+  expect(termsOfUseLink).toBeVisible()
+  expect(termsOfUseLink).toHaveAttribute('href', diabeloopExternalUrls.terms)
+  expect(privacyPolicyLink).toBeVisible()
+  expect(privacyPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.privacyPolicy)
+  expect(cookiesManagementLink).toBeVisible()
+  expect(cookiesPolicyLink).toBeVisible()
+  expect(cookiesPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.cookiesPolicy)
+  expect(contactLink).toBeVisible()
 }

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles, Theme } from '@material-ui/core/styles'
@@ -53,13 +53,13 @@ const formStyle = makeStyles((theme: Theme) => ({
   }
 }), { name: 'signup-page-styles' })
 
-function CompleteSignUpPage(): JSX.Element {
+const CompleteSignUpPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const classes = formStyle()
 
   return (
     <Container maxWidth="sm">
-      <Grid container spacing={0} alignItems="center" justify="center">
+      <Grid container spacing={0} alignItems="center" justifyContent="center">
         <Grid item xs={12}>
           <SignUpFormStateProvider>
             <Card id="card-signup" className={classes.card} elevation={4}>

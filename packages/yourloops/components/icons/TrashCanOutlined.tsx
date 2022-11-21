@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Trash Can Outlined Icon
  *
  * All rights reserved.
  *
