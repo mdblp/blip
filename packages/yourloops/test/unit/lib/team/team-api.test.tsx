@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -34,36 +34,51 @@ import { INotificationAPI } from '../../../../models/notification'
 import { HttpHeaderKeys } from '../../../../models/api'
 import { getCurrentLang } from '../../../../lib/language'
 import { PostalAddress } from '../../../../models/generic'
+import { User } from '../../../../lib/auth'
 
 describe('TeamApi', () => {
   const userId = 'userId'
   const teamId = 'teamId'
   const email = 'email@test.com'
   const role = TeamMemberRole.admin
+  const hcpUser = { id: 'fakeUserId', isUserHcp: () => true } as User
+  const patientUser = { id: 'fakeUserId', isUserHcp: () => false, isUserPatient: () => true } as User
 
   describe('getTeams', () => {
-    it('should get a list a teams', async () => {
+    it('should get a list a teams when user is HCP', async () => {
       const data: ITeam[] = [
         { name: 'team1' } as ITeam,
         { name: 'team2' } as ITeam
       ]
       jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
 
-      const teams = await TeamApi.getTeams()
+      const teams = await TeamApi.getTeams(hcpUser)
       expect(teams).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: '/v0/my-teams' })
+      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/v1/hcps/${hcpUser.id}/teams` })
+    })
+
+    it('should get a list a teams when user is patient', async () => {
+      const data: ITeam[] = [
+        { name: 'team1' } as ITeam,
+        { name: 'team2' } as ITeam
+      ]
+      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
+
+      const teams = await TeamApi.getTeams(patientUser)
+      expect(teams).toEqual(data)
+      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/v1/patients/${patientUser.id}/teams` })
     })
 
     it('should return an empty array if not found', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await TeamApi.getTeams()
+      const response = await TeamApi.getTeams(hcpUser)
       expect(response).toBeInstanceOf(Array)
     })
 
     it('should throw an error if http call failed', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
-        await TeamApi.getTeams()
+        await TeamApi.getTeams(hcpUser)
       }).rejects.toThrowError('This error was thrown by a mock on purpose')
     })
   })
@@ -73,12 +88,12 @@ describe('TeamApi', () => {
       const data = { creatorId: 'creatorId' } as INotificationAPI
       jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data } as AxiosResponse)
 
-      const notification = await TeamApi.inviteMember({ teamId, email, role })
+      const notification = await TeamApi.inviteMember(userId, teamId, email, role)
       expect(notification).toEqual(data)
       expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/confirm/send/team/invite',
-        payload: { teamId, email, role },
-        config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+        config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
+        payload: { role },
+        url: `bff/v1/hcps/${userId}/teams/${teamId}/members/${email}/invite`
       })
     })
   })

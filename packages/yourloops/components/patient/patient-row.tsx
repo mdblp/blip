@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -52,6 +52,8 @@ import { useHistory } from 'react-router-dom'
 import { Patient } from '../../lib/data/patient'
 import RemovePatientDialog from './remove-patient-dialog'
 import EmailOpenIcon from '../icons/EmailOpenIcon'
+import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
+import { usePatientContext } from '../../lib/patient/provider'
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -96,6 +98,7 @@ const patientListStyle = makeStyles(
 
 const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => {
   const historyHook = useHistory()
+  const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
   const classes = patientListStyle()
   const patientListCommonClasses = patientListCommonStyle()
@@ -111,11 +114,18 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
   const isAlreadyInATeam = PatientUtils.isInAtLeastATeam(patient)
   const hasUnreadMessages = patient.metadata.unreadMessagesSent > 0
 
+  const userToRemove = {
+    id: userId,
+    fullName: patient.profile.fullName,
+    email: patient.profile.email
+  }
+
   const {
     computeRowInformation,
     flagPatient,
     trNA,
     isUserHcp,
+    isUserCaregiver,
     isFlagged
   } = usePatientRow({ patient, classes })
 
@@ -147,6 +157,14 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
 
   const onCloseRemovePatientDialog = (): void => {
     setPatientToRemove(null)
+  }
+
+  const onCloseRemoveDirectShareDialog = (shouldRefresh?: boolean): void => {
+    setPatientToRemove(null)
+
+    if (shouldRefresh) {
+      patientHook.refresh()
+    }
   }
 
   const { lastUpload } = useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA])
@@ -239,43 +257,48 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         </StyledTableCell>
 
         {isUserHcp &&
-          <React.Fragment>
-            <StyledTableCell className={classes.iconCell}>
-              <Tooltip
-                title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-                aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-              >
-                <Box display="flex" justifyContent="center">
-                  {hasUnreadMessages
-                    ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
-                    : <EmailOpenIcon className={classes.lightGrey} />
-                  }
-                </Box>
-              </Tooltip>
-            </StyledTableCell>
-
-            <StyledTableCell>
-              <Tooltip
-                title={t('remove-patient')}
-                aria-label={t('remove-patient')}
-              >
-                <Box>
-                  <IconActionButton
-                    ariaLabel={`${t('remove-patient')}-${patient.profile.email}`}
-                    icon={<PersonRemoveIcon />}
-                    onClick={onClickRemovePatient}
-                  />
-                </Box>
-              </Tooltip>
-            </StyledTableCell>
-          </React.Fragment>
+          <StyledTableCell className={classes.iconCell}>
+            <Tooltip
+              title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+              aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+            >
+              <Box display="flex" justifyContent="center">
+                {hasUnreadMessages
+                  ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
+                  : <EmailOpenIcon className={classes.lightGrey} />
+                }
+              </Box>
+            </Tooltip>
+          </StyledTableCell>
         }
+
+        <StyledTableCell>
+          <Tooltip
+            title={t('remove-patient')}
+            aria-label={t('remove-patient')}
+          >
+            <Box>
+              <IconActionButton
+                ariaLabel={`${t('remove-patient')}-${patient.profile.email}`}
+                icon={<PersonRemoveIcon />}
+                onClick={onClickRemovePatient}
+              />
+            </Box>
+          </Tooltip>
+        </StyledTableCell>
       </StyledTableRow>
 
-      {patientToRemove &&
+      {patientToRemove && isUserHcp &&
         <RemovePatientDialog
           patient={patient}
           onClose={onCloseRemovePatientDialog}
+        />
+      }
+
+      {patientToRemove && isUserCaregiver &&
+        <RemoveDirectShareDialog
+          userToRemove={userToRemove}
+          onClose={onCloseRemoveDirectShareDialog}
         />
       }
     </React.Fragment>

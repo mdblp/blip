@@ -1,6 +1,7 @@
-/**
+/*
+ /**
  * Copyright (c) 2014, Tidepool Project
- * Copyright (c) 2020, Diabeloop
+ * Copyright (c) 2020-2022, Diabeloop
  * Display patient data in an iframe
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -22,7 +23,7 @@ import bows from 'bows'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import clsx from 'clsx'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import MedicalDataService, { MGDL_UNITS, TimeService } from 'medical-domain'
 import { components as vizComponents, createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
@@ -454,7 +455,6 @@ class PatientDataPage extends React.Component {
             onClickNavigationBack={this.handleBackToListButton}
           />
         </Route>
-        <Redirect to="/" />
       </Switch>
     )
   }
@@ -559,12 +559,9 @@ class PatientDataPage extends React.Component {
 
   async generateCSV(printOptions) {
     const { api, patient } = this.props
-    const { medicalData } = this.state
 
-    const startTimeZone = medicalData.getTimezoneAt(TimeService.getEpoch(printOptions.start))
-    const endTimeZone = medicalData.getTimezoneAt(TimeService.getEpoch(printOptions.end))
-    const startDate = moment.tz(printOptions.start, startTimeZone).startOf('day').toISOString()
-    const endDate = moment.tz(printOptions.end, endTimeZone).endOf('day').toISOString()
+    const startDate = moment.utc(printOptions.start).startOf('day').toISOString()
+    const endDate = moment.utc(printOptions.end).endOf('day').toISOString()
     return api.exportData(patient, startDate, endDate)
   }
 
@@ -966,11 +963,15 @@ class PatientDataPage extends React.Component {
       bgUnits: medicalData.opts.bgUnits,
       bgClasses: medicalData.opts.bgClasses
     }
-    this.dataUtil = new DataUtil(medicalData.data, { bgPrefs: bgPrefsUpdated, timePrefs, endpoints: medicalData.endpoints })
+    this.dataUtil = new DataUtil(medicalData.data, {
+      bgPrefs: bgPrefsUpdated,
+      timePrefs,
+      endpoints: medicalData.endpoints
+    })
     let newLocation = epochLocation
     if (epochLocation === 0) {
       // First loading, display the last day in the daily chart
-      newLocation = moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY/2
+      newLocation = moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2
     }
     let newRange = msRange
     if (msRange === 0) {

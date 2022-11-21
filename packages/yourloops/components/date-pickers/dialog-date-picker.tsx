@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2021-2022, Diabeloop
- * Display a dialog with a date-picker to select a single day
  *
  * All rights reserved.
  *

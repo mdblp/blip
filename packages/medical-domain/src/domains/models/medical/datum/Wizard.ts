@@ -8,6 +8,11 @@ export type Wizard = BaseDatum & {
   carbInput: number
   units: string
   bolus: Bolus | null
+  recommended?: {
+    carb: number
+    correction: number
+    net: number
+  }
 }
 
 export default Wizard

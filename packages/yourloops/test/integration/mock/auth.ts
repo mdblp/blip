@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -27,7 +27,7 @@
 
 import UserApi from '../../../lib/auth/user-api'
 import { Preferences, Profile, Settings, UserRoles } from '../../../models/user'
-import { loggedInUserId, mockAuth0Hook } from './mockAuth0Hook'
+import { mockAuth0Hook } from './mockAuth0Hook'
 import { mockNotificationAPI } from './mockNotificationAPI'
 import { mockDirectShareApi } from './mockDirectShareAPI'
 import { mockTeamAPI } from './mockTeamAPI'
@@ -37,18 +37,18 @@ import { mockChatAPI } from './mockChatAPI'
 import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
 import { unmonitoredPatientId } from './mockPatientAPI'
 
-export const mockUserDataFetch = (firstName: string, lastName: string, userId = loggedInUserId) => {
+export const mockUserDataFetch = (firstName: string, lastName: string) => {
   const profile: Profile = {
     firstName,
     lastName,
     fullName: `${firstName} ${lastName}`,
+    email: 'fake@email.com',
     termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   }
   const preferences = {} as Preferences
   const settings = {} as Settings
-  jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: userId, token: null })
   jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile, settings, preferences })
 }
 
@@ -57,7 +57,7 @@ export const mockPatientLogin = (patient: ITeamMember) => {
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()
-  mockUserDataFetch(patient.profile.firstName, patient.profile.lastName, patient.userId)
+  mockUserDataFetch(patient.profile.firstName, patient.profile.lastName)
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
   mockChatAPI()
   mockMedicalFilesAPI()

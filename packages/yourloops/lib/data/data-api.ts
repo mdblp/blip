@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Data API
  *
  * All rights reserved.
  *
@@ -57,9 +56,9 @@ export default class DataApi {
 
   static async getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
     const params = {
-      starDate: options?.startDate,
+      startDate: options?.startDate,
       endDate: options?.endDate,
-      withPumpSettings: options?.withPumpSettings ? true : undefined
+      withPumpSettings: options?.withPumpSettings ?? undefined
     }
     const { data } = await HttpService.get<PatientData>({
       url: `/data/v1/dataV2/${patient.userid}`,
@@ -96,9 +95,9 @@ export default class DataApi {
     })
   }
 
-  static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<Blob> {
+  static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<string> {
     const bgUnits = user.settings?.units ?? Units.gram
-    const { data } = await HttpService.get<Blob>({
+    const { data } = await HttpService.get<string>({
       url: `/export/${patientId}`,
       config: {
         headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.csv },

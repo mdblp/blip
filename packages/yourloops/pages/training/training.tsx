@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -43,7 +43,7 @@ import CardContent from '@material-ui/core/CardContent'
 import Container from '@material-ui/core/Container'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
-import diabeloopUrls from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 
 const style = makeStyles((theme: Theme) => {
   return {
@@ -53,8 +53,7 @@ const style = makeStyles((theme: Theme) => {
       }
     },
     card: {
-      textAlign: 'center',
-      padding: theme.spacing(4)
+      textAlign: 'center'
     },
     cardContent: {
       marginLeft: theme.spacing(2),
@@ -68,20 +67,16 @@ const style = makeStyles((theme: Theme) => {
       minHeight: '90vh'
     },
     buttons: {
-      display: 'flex',
-      justifyContent: 'space-around',
-      marginTop: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'space-between'
-      }
+      marginTop: theme.spacing(3)
     }
   }
 }, { name: 'ylp-training-page' })
+
 /**
  * Training Page
  */
 function TrainingPage(): JSX.Element {
-  const { t, i18n } = useTranslation('yourloops')
+  const { t } = useTranslation('yourloops')
   const auth = useAuth()
   const log = bows('consent')
   const historyHook = useHistory<HistoryState>()
@@ -103,7 +98,7 @@ function TrainingPage(): JSX.Element {
 
   const training = t('training').toLowerCase()
   const trainingLink = (
-    <Link aria-label={training} href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)} target="_blank" rel="noreferrer">
+    <Link aria-label={training} href={diabeloopExternalUrls.training(user?.role)} target="_blank" rel="noreferrer">
       {training}
     </Link>
   )
@@ -114,7 +109,7 @@ function TrainingPage(): JSX.Element {
         container
         spacing={0}
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         className={classes.centeredGrid}
       >
         <Grid item xs={12}>
@@ -133,7 +128,7 @@ function TrainingPage(): JSX.Element {
                 i18nKey="training-body"
                 t={t}
                 components={{ trainingLink }}
-                values= {{ training }}>
+                values={{ training }}>
                 New {{ training }} available
               </Trans>
               <div className={classes.buttons}>

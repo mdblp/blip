@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Day.js init & custom plugins
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +38,7 @@ const nbDaysPerWeek = 7
  *
  * Based on https://github.com/dmtrKovalenko/date-io/blob/e70582f726e4612ba08acb4083112803f790994f/packages/dayjs/src/dayjs-utils.ts#L339
  */
-const weekArrayPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
+export const weekArrayPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
   c.prototype.getNestedWeekArray = function getNestedWeekArray() {
     const start = this.startOf('month').startOf('week')
     const end = this.endOf('month').endOf('week')
@@ -77,7 +76,7 @@ const weekArrayPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
   }
 }
 
-const weekdaysPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
+export const weekdaysPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
   c.prototype.getWeekdays = function getWeekdays(format = 'dd') {
     const start = this.startOf('week')
     // eslint-disable-next-line no-magic-numbers

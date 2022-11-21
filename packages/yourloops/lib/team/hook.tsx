@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Teams management & helpers - hook version
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,7 +60,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const fetchTeams = useCallback(() => {
-    TeamUtils.loadTeams(user.id, notificationHook.sentInvitations)
+    TeamApi.getTeams(user)
       .then((teams: Team[]) => {
         setTeams(teams)
         setErrorMessage(null)
@@ -74,7 +73,7 @@ function TeamContextImpl(): TeamContext {
         setInitialized(true)
         setRefreshInProgress(false)
       })
-  }, [notificationHook.sentInvitations, user])
+  }, [user])
 
   const refresh = (): void => {
     setRefreshInProgress(true)
@@ -90,14 +89,13 @@ function TeamContextImpl(): TeamContext {
   }
 
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
-    await TeamApi.inviteMember({ teamId: team.id, email: username, role })
-    refresh()
+    const result = await TeamApi.inviteMember(user.id, team.id, username, role)
+    setTeams(result.teams)
   }
 
   const createTeam = async (team: Partial<Team>): Promise<void> => {
     const apiTeam: Partial<ITeam> = {
       address: team.address,
-      description: team.description,
       email: team.email,
       name: team.name,
       phone: team.phone,
@@ -148,10 +146,10 @@ function TeamContextImpl(): TeamContext {
 
   const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
-      if (!member.invitation || teamId !== member.invitation.target?.id) {
+      if (!member.invitationId) {
         throw new Error('Missing invitation!')
       }
-      await notificationHook.cancel(member.invitation)
+      await notificationHook.cancel(member.invitationId, teamId, member.email)
     } else {
       await TeamApi.removeMember({
         teamId,
@@ -184,10 +182,10 @@ function TeamContextImpl(): TeamContext {
   }
 
   useEffect(() => {
-    if (!initialized && notificationHook.initialized) {
+    if (!initialized) {
       fetchTeams()
     }
-  }, [initialized, notificationHook, fetchTeams])
+  }, [initialized, fetchTeams])
 
   return {
     teams,

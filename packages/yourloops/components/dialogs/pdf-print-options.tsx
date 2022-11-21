@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Display the rendering PDF options
  *
  * All rights reserved.
  *
@@ -30,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs, { Dayjs } from 'dayjs'
 
-import { useTheme, makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 
 import DateRangeIcon from '@material-ui/icons/DateRange'
 
@@ -105,7 +104,7 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
   }
 }, { name: 'dialog-pdf-options' })
 
-function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs): { start: string, end: string, preset: Presets, format: OutputFormat } {
+function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, format: OutputFormat): PrintPDFOptions {
   const end = maxDate.format('YYYY-MM-DD')
   let start: Dayjs
   switch (preset) {
@@ -126,8 +125,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs): { 
   if (start.isBefore(minDate)) {
     start = minDate
   }
-  const outputFormat: OutputFormat = 'pdf'
-  return { start: start.format('YYYY-MM-DD'), end, preset, format: outputFormat }
+  return { start: start.format('YYYY-MM-DD'), end, preset, format }
 }
 
 function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
@@ -157,7 +155,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
   }, [props.minDate, props.maxDate, customStartDate])
 
   const [openState, setOpenState] = React.useState(false)
-  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate))
+  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, 'pdf'))
   const { start, end, displayedDates } = React.useMemo(() => {
     const startDate = customStartDate ?? dayjs(pdfOptions.start, { utc: true })
     const endDate = customStartDate ?? dayjs(pdfOptions.end, { utc: true })
@@ -171,15 +169,15 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
     // It's a workaround to mimic the prevProps param of React.Component.componentDidUpdate(prevProps)
     if (open && !openState) {
       setOpenState(true)
-      setPDFOptions(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate))
+      setPDFOptions(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, pdfOptions.format))
     }
     if (!open && openState) {
       setOpenState(false)
     }
-  }, [defaultPreset, open, openState, minDate, maxDate])
+  }, [defaultPreset, open, openState, minDate, maxDate, pdfOptions.format])
 
   const handleClickPreset = (preset: Presets): void => {
-    setPDFOptions(getDatesFromPreset(preset, minDate, maxDate))
+    setPDFOptions(getDatesFromPreset(preset, minDate, maxDate, pdfOptions.format))
   }
 
   const handleChangeCustomDate = (d: Dayjs): void => {
@@ -299,7 +297,8 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
             <FormControlLabel
               value="csv"
               control={
-                <Radio id="dialog-pdf-options-selector-csv" data-testid="dialog-pdf-options-selector-csv" color="primary" />
+                <Radio id="dialog-pdf-options-selector-csv" data-testid="dialog-pdf-options-selector-csv"
+                       color="primary" />
               }
               label={t('dialog-pdf-options-output-format-csv')} />
           </RadioGroup>

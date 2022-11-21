@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Display a dialog with a date-picker to select a range of days
  *
  * All rights reserved.
  *

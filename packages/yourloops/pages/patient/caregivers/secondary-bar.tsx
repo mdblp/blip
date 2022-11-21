@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Caregivers list for Patients - Second app bar
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -70,7 +69,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
   }
 
   return (
-    <div id="patient-navbar-item-right" className={classes.topBar}>
+    <div id="patient-navbar-item-right" data-testid="patient-caregivers-secondary-bar" className={classes.topBar}>
       <Button
         id="patient-navbar-add-caregiver"
         color="primary"

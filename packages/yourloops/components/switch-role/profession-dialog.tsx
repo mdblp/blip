@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Switch role from caregiver to HCP dialog - Request profession
  *
  * All rights reserved.
  *

@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Display team code after an invitation sent - Dialog
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

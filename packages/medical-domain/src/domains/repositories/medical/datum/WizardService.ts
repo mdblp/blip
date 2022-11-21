@@ -15,6 +15,14 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     units: rawData.units as string,
     bolus: null
   }
+  if (rawData.recommended) {
+    const recommended = rawData?.recommended as Record<string, unknown>
+    wizard.recommended = {
+      carb: recommended.carb as number,
+      correction: recommended.correction as number,
+      net: recommended.net as number
+    }
+  }
   return wizard
 }
 
