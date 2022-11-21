@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="Diabeloop" />
+  <settings>
+    <module2copyright>
+      <element module="dumb + medical-domain + yourloops" copyright="Diabeloop" />
+    </module2copyright>
+  </settings>
 </component>
