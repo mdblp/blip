@@ -26,44 +26,48 @@ jobs:
           npm run security-checks
           npm ci
 
-#      - name: Lint
-#        run: npm run lint
-#
-#      - name: Build packages dependencies
-#        run: npm run build-dependencies
-#
-#      - name: Test locales
-#        run: npm run test-locales
-#
-#      - name: Test lambda
-#        run: npm run test-lambda
-#
-#      - name: Test sundial
-#        run: npm run test-sundial
-#
-#      - name: Test tideline
-#        run: npm run test-tideline
-#
-#      - name: Test medical domain
-#        run: npm run test-medical-domain
-#
-#      - name: Test dumb
-#        run: npm run test-dumb
-#
-#      - name: Test viz
-#        run: npm run test-viz
-#
-#      - name: Test blip
-#        run: npm run test-blip
-#
-#      - name: Test yourloops unit
-#        run: npm run test-yourloops-unit
-#
-#      - name: Test yourloops integration
-#        run: npm run test-yourloops-integration
+      - name: Lint
+        run: npm run lint
+
+      - name: Build packages dependencies
+        run: npm run build-dependencies
+
+      - name: Test locales
+        run: npm run test-locales
+
+      - name: Test lambda
+        run: npm run test-lambda
+
+      - name: Test sundial
+        run: npm run test-sundial
+
+      - name: Test tideline
+        run: npm run test-tideline
+
+      - name: Test medical domain
+        run: npm run test-medical-domain
+
+      - name: Test dumb
+        run: npm run test-dumb
+
+      - name: Test viz
+        run: npm run test-viz
+
+      - name: Test blip
+        run: npm run test-blip
+
+      - name: Test yourloops unit
+        run: npm run test-yourloops-unit
+
+      - name: Test yourloops integration
+        run: npm run test-yourloops-integration
 
       - name: Gen lambda
         run: nice bash build.sh
+
+      - name: Get yourloops version from package.json
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@main
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -83,6 +87,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.REGISTRY }}/blip
+          tags: type=ref,enable=true,prefix=${{ steps.package-version.outputs.current-version}}-PR-,event=pr
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
