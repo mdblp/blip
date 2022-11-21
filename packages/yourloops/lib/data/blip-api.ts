@@ -131,7 +131,7 @@ class BlipApi {
     return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public async exportData(patient: IUser, startDate: string, endDate: string): Promise<Blob> {
+  public async exportData(patient: IUser, startDate: string, endDate: string): Promise<string> {
     this.log.debug('exportData', { userId: patient.userid })
     const user = this.authHook.user
     if (user) {
