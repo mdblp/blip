@@ -25,8 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
-
 import { Units } from '../models/generic'
 import { IUser, Settings } from '../models/user'
 import { t } from './language'
@@ -126,7 +124,7 @@ export function getUserFirstLastName(user: IUser): { firstName: string, lastName
  * @returns Fixed settings
  */
 export function fixYLP878Settings(settings: Settings | undefined | null): Settings {
-  if (_.isNil(settings)) {
+  if (!settings) {
     return {
       country: 'FR',
       units: {
@@ -134,7 +132,7 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
       }
     }
   }
-  let bgUnit = _.get(settings, 'bg', settings.units?.bg ?? Units.gram)
+  let bgUnit = settings.units?.bg ?? Units.gram
   if (![Units.gram, Units.mole].includes(bgUnit)) {
     bgUnit = Units.gram
   }
