@@ -97,7 +97,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
     userUpdateInProgress
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
-    (teamMember.status === UserInvitationStatus.pending && (!teamMember.invitation || team.id !== teamMember.invitation.target?.id)) // This condition basically means that the logged in user did not invite the pending user
+    (teamMember.status === UserInvitationStatus.pending && !teamMember.invitationId) // This condition basically means that the logged in user did not invite the pending user
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked
@@ -151,7 +151,12 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           className={classes.iconCell}
         >
           {currentUserIsPending &&
-            <AccessTimeIcon id={`${rowId}-pending-icon`} aria-label={t('team-member-pending-status')} titleAccess="pending-user-icon" className={classes.icon} />
+            <AccessTimeIcon
+              id={`${rowId}-pending-icon`}
+              aria-label={t('team-member-pending-status')}
+              titleAccess="pending-user-icon"
+              className={classes.icon}
+            />
           }
         </StyledTableCell>
         <StyledTableCell
