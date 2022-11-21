@@ -69,9 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2)
   },
   subCategoryContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '50%'
+    width: '55%'
   },
   subCategoryTitle: {
     fontWeight: 600,
@@ -82,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 90
+    width: 95
   },
   valueSelection: {
     display: 'flex',
@@ -181,8 +179,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
       hypoThreshold.error ||
       nonDataTxThreshold.error ||
       saveInProgress
-  },
-  [highBg.error, hypoThreshold.error, lowBg.error, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.error])
+  }, [highBg.error, hypoThreshold.error, lowBg.error, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.error])
 
   const onChange = (
     value: number,
@@ -258,176 +255,177 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
 
   return (
     <React.Fragment>
-      <Typography className={classes.categoryTitle}>
-        1. {t('time-away-from-target')}
-      </Typography>
-      <Typography variant="caption" className={classes.categoryInfo}>
-        {t('current-trigger-setting-tir', { tir: outOfRangeThreshold.value, lowBg: lowBg.value, highBg: highBg.value })}
-      </Typography>
-      <Box display="flex" marginTop={2}>
-        <div className={classes.subCategoryContainer}>
-          <Typography className={classes.subCategoryTitle}>
-            A. {t('glycemic-target')}
-          </Typography>
-          <div className={classes.valueSelection}>
-            <Box display="flex" alignItems="center" marginRight={2}>
-              <Typography>{t('minimum')}</Typography>
+      <Box paddingX={3}>
+        <Typography className={classes.categoryTitle}>
+          1. {t('time-away-from-target')}
+        </Typography>
+        <Typography variant="caption" className={classes.categoryInfo}>
+          {t('current-trigger-setting-tir', { tir: outOfRangeThreshold.value, lowBg: lowBg.value, highBg: highBg.value })}
+        </Typography>
+        <Box display="flex">
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>
+              A. {t('glycemic-target')}
+            </Typography>
+            <div className={classes.valueSelection}>
+              <Box display="flex" alignItems="center" marginRight={2}>
+                <Typography>{t('minimum')}</Typography>
+                <TextField
+                  id="low-bg-text-field-id"
+                  value={lowBg.value}
+                  error={lowBg.error}
+                  type="number"
+                  className={classes.textField}
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: MIN_LOW_BG,
+                      max: MAX_LOW_BG
+                    }
+                  }}
+                  onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
+                  data-testid="low-bg-text-field-id"
+                />
+                <Typography>{t('mg/dL')}</Typography>
+              </Box>
+              <Box display="flex" alignItems="center">
+                <Typography>{t('maximum')}</Typography>
+                <TextField
+                  id="high-bg-text-field-id"
+                  value={highBg.value}
+                  error={highBg.error}
+                  type="number"
+                  className={classes.textField}
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: MIN_HIGH_BG,
+                      max: MAX_HIGH_BG
+                    }
+                  }}
+                  onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
+                  data-testid="high-bg-text-field-id"
+                />
+                <Typography>{t('mg/dL')}</Typography>
+              </Box>
+            </div>
+            {!patient &&
+              <Typography className={classes.defaultLabel}>{t('default-min-max')}</Typography>
+            }
+          </div>
+          <div>
+            <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t('time-spent-off-target')}</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  key={`out-of-range-${outOfRangeThreshold.value}`}
+                  id="out-of-range"
+                  defaultValue={`${outOfRangeThreshold.value}%` ?? ''}
+                  values={PERCENTAGES}
+                  error={outOfRangeThreshold.error}
+                  onSelect={(value) => onBasicDropdownSelect(value, setOutOfRangeThreshold)}
+                />
+              </div>
+            </div>
+            {!patient &&
+              <Typography className={classes.defaultLabel}>{t('default', { value: '50%' })}</Typography>
+            }
+          </div>
+        </Box>
+        <Divider variant="middle" className={classes.divider} />
+        <Typography className={classes.categoryTitle}>
+          2. {t('severe-hypoglycemia')}
+        </Typography>
+        <Typography variant="caption" className={classes.categoryInfo}>
+          {t('current-trigger-setting-hypoglycemia', { hypoThreshold: hypoThreshold.value, veryLowBg: veryLowBg.value })}
+        </Typography>
+        <Box display="flex">
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
+              hypoThreshold: hypoThreshold.value,
+              veryLowBg: veryLowBg.value
+            })}:</Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t('severe-hypoglycemia-below')}</Typography>
               <TextField
-                id="low-bg-text-field-id"
-                value={lowBg.value}
-                error={lowBg.error}
+                id="very-low-bg-text-field-id"
+                value={veryLowBg.value}
+                error={veryLowBg.error}
                 type="number"
                 className={classes.textField}
                 variant="outlined"
                 size="small"
                 InputProps={{
                   inputProps: {
-                    min: MIN_LOW_BG,
-                    max: MAX_LOW_BG
+                    min: MIN_VERY_LOW_BG,
+                    max: MAX_VERY_LOW_BG
                   }
                 }}
-                onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
-                data-testid="low-bg-text-field-id"
+                onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
+                data-testid="very-low-bg-text-field-id"
               />
               <Typography>{t('mg/dL')}</Typography>
-            </Box>
-            <Typography>{t('maximum')}</Typography>
-            <TextField
-              id="high-bg-text-field-id"
-              value={highBg.value}
-              error={highBg.error}
-              type="number"
-              className={classes.textField}
-              variant="outlined"
-              size="small"
-              InputProps={{
-                inputProps: {
-                  min: MIN_HIGH_BG,
-                  max: MAX_HIGH_BG
-                }
-              }}
-              onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
-              data-testid="high-bg-text-field-id"
-            />
-            <Typography>{t('mg/dL')}</Typography>
-          </div>
-          {!patient &&
-            <Typography className={classes.defaultLabel}>{t('default-min-max')}</Typography>
-          }
-        </div>
-        <div className={classes.subCategoryContainer}>
-          <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
-          <div className={classes.valueSelection}>
-            <Typography>{t('time-spent-off-target')}</Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                key={`out-of-range-${outOfRangeThreshold.value}`}
-                id="out-of-range"
-                defaultValue={`${outOfRangeThreshold.value}%` ?? ''}
-                values={PERCENTAGES}
-                error={outOfRangeThreshold.error}
-                onSelect={(value) => onBasicDropdownSelect(value, setOutOfRangeThreshold)}
-              />
             </div>
+            {!patient &&
+              <Typography className={classes.defaultLabel}>{t('default', { value: '54mg/dL' })}</Typography>
+            }
           </div>
-          {!patient &&
-            <Typography className={classes.defaultLabel}>{t('default', { value: '50%' })}</Typography>
-          }
-        </div>
-      </Box>
-
-      <Divider variant="middle" className={classes.divider} />
-
-      <Typography className={classes.categoryTitle}>
-        2. {t('severe-hypoglycemia')}
-      </Typography>
-      <Typography variant="caption" className={classes.categoryInfo}>
-        {t('current-trigger-setting-hypoglycemia', { hypoThreshold: hypoThreshold.value, veryLowBg: veryLowBg.value })}
-      </Typography>
-      <Box display="flex" marginTop={2}>
-        <div className={classes.subCategoryContainer}>
-          <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
-            hypoThreshold: hypoThreshold.value,
-            veryLowBg: veryLowBg.value
-          })}:</Typography>
-          <div className={classes.valueSelection}>
-            <Typography>{t('severe-hypoglycemia-below')}</Typography>
-            <TextField
-              id="very-low-bg-text-field-id"
-              value={veryLowBg.value}
-              error={veryLowBg.error}
-              type="number"
-              className={classes.textField}
-              variant="outlined"
-              size="small"
-              InputProps={{
-                inputProps: {
-                  min: MIN_VERY_LOW_BG,
-                  max: MAX_VERY_LOW_BG
-                }
-              }}
-              onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
-              data-testid="very-low-bg-text-field-id"
-            />
-            <Typography>{t('mg/dL')}</Typography>
-          </div>
-          {!patient &&
-            <Typography className={classes.defaultLabel}>{t('default', { value: '54mg/dL' })}</Typography>
-          }
-        </div>
-        <div className={classes.subCategoryContainer}>
-          <Typography className={classes.subCategoryTitle}>
-            B. {t('event-trigger-threshold')}
-          </Typography>
-          <div className={classes.valueSelection}>
-            <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                key={`hypo-threshold-${hypoThreshold.value}`}
-                id="hypo-threshold"
-                defaultValue={`${hypoThreshold.value}%` ?? ''}
-                values={PERCENTAGES}
-                error={hypoThreshold.error}
-                onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
-              />
+          <div>
+            <Typography className={classes.subCategoryTitle}>
+              B. {t('event-trigger-threshold')}
+            </Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  key={`hypo-threshold-${hypoThreshold.value}`}
+                  id="hypo-threshold"
+                  defaultValue={`${hypoThreshold.value}%` ?? ''}
+                  values={PERCENTAGES}
+                  error={hypoThreshold.error}
+                  onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
+                />
+              </div>
             </div>
+            {!patient &&
+              <Typography className={classes.defaultLabel}>{t('default', { value: '5%' })}</Typography>
+            }
           </div>
-          {!patient &&
-            <Typography className={classes.defaultLabel}>{t('default', { value: '5%' })}</Typography>
-          }
-        </div>
-      </Box>
+        </Box>
+        <Divider variant="middle" className={classes.divider} />
 
-      <Divider variant="middle" className={classes.divider} />
-
-      <Typography className={classes.categoryTitle}>
-        3. {t('data-not-transmitted')}
-      </Typography>
-      <Typography variant="caption" className={classes.categoryInfo}>
-        {t('current-trigger-setting-data', { nonDataThreshold: nonDataTxThreshold.value })}
-      </Typography>
-      <Box display="flex" marginTop={2}>
-        <div className={classes.subCategoryContainer}>
-          <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
-          <div className={classes.valueSelection}>
-            <Typography>{t('time-spent-without-uploaded-data')}</Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                key={`tir-dropdown-${nonDataTxThreshold.value}`}
-                id={'non-data'}
-                defaultValue={`${nonDataTxThreshold.value}%` ?? ''}
-                values={PERCENTAGES.slice(0, 10)}
-                error={nonDataTxThreshold.error}
-                onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
-              />
+        <Typography className={classes.categoryTitle}>
+          3. {t('data-not-transmitted')}
+        </Typography>
+        <Typography variant="caption" className={classes.categoryInfo}>
+          {t('current-trigger-setting-data', { nonDataThreshold: nonDataTxThreshold.value })}
+        </Typography>
+        <Box display="flex">
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t('time-spent-without-uploaded-data')}</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  key={`tir-dropdown-${nonDataTxThreshold.value}`}
+                  id="non-data"
+                  defaultValue={`${nonDataTxThreshold.value}%` ?? ''}
+                  values={PERCENTAGES.slice(0, 10)}
+                  error={nonDataTxThreshold.error}
+                  onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
+                />
+              </div>
             </div>
+            {!patient &&
+              <Typography className={classes.defaultLabel}>{t('default', { value: '50%' })}</Typography>
+            }
           </div>
-          {!patient &&
-            <Typography className={classes.defaultLabel}>{t('default', { value: '50%' })}</Typography>
-          }
-        </div>
+        </Box>
       </Box>
-      <Box display="flex" justifyContent="space-between" marginTop={2}>
+      <Box display="flex" justifyContent="space-between" margin={2}>
         <Box>
           {patient &&
             <Button
