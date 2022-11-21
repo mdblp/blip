@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta27 - 2022-11-18
+## 3.0.2-beta28 - 2022-11-18
 ### Added
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
@@ -11,6 +11,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
 - YLP-1805 Push error to the backend
+- YLP-1868 Add route to invite team member
 - YLP-1873 Fix patient profile update not visible in dashboard
 - YLP-1874 Fix PDF report generation
 - YLP-1894 Retrieve pump settings in pump settings object if no upload object available
