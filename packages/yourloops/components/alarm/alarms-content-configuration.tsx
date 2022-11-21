@@ -411,7 +411,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               <div className={classes.dropdown}>
                 <BasicDropdown
                   key={`tir-dropdown-${nonDataTxThreshold.value}`}
-                  id={'non-data'}
+                  id={"non-data"}
                   defaultValue={`${nonDataTxThreshold.value}%` ?? ''}
                   values={PERCENTAGES.slice(0, 10)}
                   error={nonDataTxThreshold.error}
