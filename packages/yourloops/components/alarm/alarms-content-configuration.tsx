@@ -42,6 +42,7 @@ import { convertBG, UNITS_TYPE } from '../../lib/units/utils'
 import { useTeam } from '../../lib/team'
 import { Patient } from '../../lib/data/patient'
 import PatientUtils from '../../lib/patient/utils'
+import { isInteger } from 'lodash'
 
 const useStyles = makeStyles((theme: Theme) => ({
   cancelButton: {
@@ -67,6 +68,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   dropdown: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2)
+  },
+  inputHelperText: {
+    position: 'absolute',
+    bottom: -20
+
   },
   subCategoryContainer: {
     width: '55%'
@@ -136,7 +142,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
   convertMonitoring()
 
   const isError = (value: number, lowValue: number, highValue: number): boolean => {
-    return !(value >= lowValue && value <= highValue)
+    return !(value >= lowValue && value <= highValue && isInteger(value))
   }
 
   const isInvalidPercentage = (value: number): boolean => {
@@ -260,7 +266,11 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
           1. {t('time-away-from-target')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-tir', { tir: outOfRangeThreshold.value, lowBg: lowBg.value, highBg: highBg.value })}
+          {t('current-trigger-setting-tir', {
+            tir: outOfRangeThreshold.value,
+            lowBg: lowBg.value,
+            highBg: highBg.value
+          })}
         </Typography>
         <Box display="flex">
           <div className={classes.subCategoryContainer}>
@@ -274,6 +284,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   id="low-bg-text-field-id"
                   value={lowBg.value}
                   error={lowBg.error}
+                  helperText={lowBg.error && t('integer')}
                   type="number"
                   className={classes.textField}
                   variant="outlined"
@@ -282,6 +293,11 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     inputProps: {
                       min: MIN_LOW_BG,
                       max: MAX_LOW_BG
+                    }
+                  }}
+                  FormHelperTextProps={{
+                    classes: {
+                      root: classes.inputHelperText
                     }
                   }}
                   onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
@@ -295,6 +311,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   id="high-bg-text-field-id"
                   value={highBg.value}
                   error={highBg.error}
+                  helperText={highBg.error && t('integer')}
                   type="number"
                   className={classes.textField}
                   variant="outlined"
@@ -305,10 +322,15 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                       max: MAX_HIGH_BG
                     }
                   }}
+                  FormHelperTextProps={{
+                    classes: {
+                      root: classes.inputHelperText
+                    }
+                  }}
                   onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
                   data-testid="high-bg-text-field-id"
                 />
-                <Typography>{t('mg/dL')}</Typography>
+                <Typography>{t(' mg/dL')}</Typography>
               </Box>
             </div>
             {!patient &&
@@ -340,7 +362,10 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
           2. {t('severe-hypoglycemia')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-hypoglycemia', { hypoThreshold: hypoThreshold.value, veryLowBg: veryLowBg.value })}
+          {t('current-trigger-setting-hypoglycemia', {
+            hypoThreshold: hypoThreshold.value,
+            veryLowBg: veryLowBg.value
+          })}
         </Typography>
         <Box display="flex">
           <div className={classes.subCategoryContainer}>
@@ -354,6 +379,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 id="very-low-bg-text-field-id"
                 value={veryLowBg.value}
                 error={veryLowBg.error}
+                helperText={veryLowBg.error && t('integer')}
                 type="number"
                 className={classes.textField}
                 variant="outlined"
@@ -362,6 +388,11 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   inputProps: {
                     min: MIN_VERY_LOW_BG,
                     max: MAX_VERY_LOW_BG
+                  }
+                }}
+                FormHelperTextProps={{
+                  classes: {
+                    root: classes.inputHelperText
                   }
                 }}
                 onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
