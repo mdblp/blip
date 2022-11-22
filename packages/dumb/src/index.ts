@@ -39,6 +39,7 @@ import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
+import { SmbgTooltip } from './components/tooltips/smbg-tooltip/smbg-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
@@ -58,6 +59,7 @@ export {
   PhysicalTooltip,
   PumpTable,
   ReservoirTooltip,
+  SmbgTooltip,
   StatTooltip,
   TerminalTable,
   Tooltip

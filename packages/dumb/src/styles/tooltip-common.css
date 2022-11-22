@@ -51,6 +51,11 @@
   font-weight: bold;
 }
 
+.rowColorDarkGray {
+  composes: row;
+  color: var(--gray-dark);
+}
+
 .label {
   flex-grow: 1;
 }
@@ -61,4 +66,9 @@
 
 .units {
   min-width: 0.7em;
+}
+
+.dividerLarge {
+  height: 4px;
+  margin: 5px -10px;
 }

@@ -29,7 +29,7 @@ import { Unit } from './unit.model'
 import { Source } from './settings.model'
 import { Annotation } from './annotation.model'
 
-export interface Cbg {
+export interface BloodGlucoseData {
   value: number
   annotations?: Annotation[]
   source: Source
