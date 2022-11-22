@@ -26,18 +26,19 @@
  */
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime.util'
-import { BgPrefs, TimePrefs, Unit } from '../settings/models'
-import { InputTime } from '../components/tooltips/physical-tooltip/physical-tooltip'
+import { TimePrefs } from '../settings/models'
 import { convertBG } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
-import { BgClass } from './blood-glucose.util'
+import { InputTime } from '../models/physical-activity.model'
+import { Unit } from '../models/unit.model'
+import { BgClass, BgPrefs } from '../models/blood-glucose.model'
 
 const t = i18next.t.bind(i18next)
 
 const NO_VALUE_STRING = '--'
-const BG_HIGH = 'High'
-const BG_LOW = 'Low'
+const BG_HIGH_LABEL_KEY = 'High'
+const BG_LOW_LABEL_KEY = 'Low'
 
 const EXPONENTIAL_LOW_VALUE = 1e-2
 const EXPONENTIAL_HIGH_VALUE = 9999
@@ -108,10 +109,10 @@ export const formatBgValue = (value: number, bgPrefs: BgPrefs, outOfRangeThresho
     const highThresholdInMgPerDl = isUnitMmolPerLiter ? convertBG(highThreshold, Unit.MilligramPerDeciliter) : highThreshold
 
     if (lowThresholdInMgPerDl && value < lowThresholdInMgPerDl) {
-      return t(BG_LOW)
+      return t(BG_LOW_LABEL_KEY)
     }
     if (highThresholdInMgPerDl && value > highThresholdInMgPerDl) {
-      return t(BG_HIGH)
+      return t(BG_HIGH_LABEL_KEY)
     }
   }
   if (isUnitMmolPerLiter) {

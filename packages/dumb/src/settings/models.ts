@@ -54,38 +54,6 @@ export interface TimePrefs {
   timezoneName: string
 }
 
-export enum Unit {
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Kilogram = 'kg',
-  Gram = 'g',
-  MilligramPerDeciliter = 'mg/dL',
-  MmolPerLiter = 'mmol/L',
-  Minute = 'min',
-  Percent = '%'
-}
-
-export type BgUnits = Unit.MilligramPerDeciliter | Unit.MmolPerLiter
-
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
-
-export interface BgPrefs {
-  bgUnits: BgUnits
-  bgBounds: BgBounds
-  bgClasses: {
-    'very-low': { boundary: number }
-    low: { boundary: number }
-    target: { boundary: number }
-    high: { boundary: number }
-    'very-high': { boundary: number }
-  }
-}
-
 export enum Manufacturer {
   Default = 'default',
   Roche = 'Roche',

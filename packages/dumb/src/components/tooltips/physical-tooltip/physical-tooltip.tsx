@@ -36,50 +36,21 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { Source, TimePrefs } from '../../../settings/models'
+import { TimePrefs } from '../../../settings/models'
 import { Tooltip } from 'dumb'
 import styles from './physical-tooltip.css'
 import commonStyles from '../tooltip-common.css'
 import i18next from 'i18next'
 import { formatInputTime } from '../../../utils/format.util'
-import moment from 'moment-timezone'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip.util'
-
-export type InputTime = string | number | Date | moment.Moment
+import { Duration, DurationUnit, PhysicalActivity } from '../../../models/physical-activity.model'
 
 interface PhysicalTooltipProps {
-  physicalActivity: {
-    duration: {
-      units: DurationUnit
-      value: number
-    }
-    reportedIntensity: Intensity
-    inputTime: number
-    source: Source
-    normalTime: string
-    timezone: string
-  }
+  physicalActivity: PhysicalActivity
   position: Position
   side: Side
   timePrefs: TimePrefs
-}
-
-enum Intensity {
-  High = 'high',
-  Low = 'low',
-  Medium = 'medium'
-}
-
-export enum DurationUnit {
-  Hours = 'hours',
-  Minutes = 'minutes',
-  Seconds = 'seconds'
-}
-
-interface Duration {
-  units: DurationUnit
-  value: number
 }
 
 const t = i18next.t.bind(i18next)

@@ -25,36 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import i18next from 'i18next'
-import { assign } from 'lodash'
-import { ANNOTATION_CODE_BG_OUT_OF_RANGE } from './blood-glucose.util'
-import { Annotation, Message } from '../models/annotation.model'
+import { Pump, Source } from '../settings/models'
 
-const t = i18next.t.bind(i18next)
-
-const ANNOTATION_VALUE_LOW = 'low'
-
-export const getOutOfRangeAnnotationMessages = (annotations?: Annotation[]): Message[] => {
-  if (!annotations || annotations.length === 0) {
-    return []
-  }
-
-  const bgValueLowerLabel = t('* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.')
-  const bgValueHigherLabel = t('* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.')
-
-  return annotations.reduce((messages: Message[], annotation: Annotation) => {
-    const annotationCode = annotation.code || ''
-    if (annotationCode !== ANNOTATION_CODE_BG_OUT_OF_RANGE) {
-      return messages
-    }
-    const value = annotation.value
-    const messageValue = value === ANNOTATION_VALUE_LOW ? bgValueLowerLabel : bgValueHigherLabel
-    const message = assign({}, annotation, {
-      message: {
-        value: messageValue
-      }
-    })
-    messages.push(message)
-    return messages
-  }, [])
+export interface Reservoir {
+  source: Source
+  normalTime: string
+  timezone: string
+  pump: Pump
 }

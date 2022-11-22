@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { Source, TimePrefs, Unit } from '../../../settings/models'
+import { TimePrefs } from '../../../settings/models'
 import styles from './parameter-tooltip.css'
 import commonStyles from '../tooltip-common.css'
 import moment from 'moment-timezone'
@@ -46,24 +46,10 @@ import {
   Side
 } from '../tooltip/tooltip'
 import colors from '../../../styles/colors.css'
-
-interface Parameter {
-  id: string
-  name: string
-  value: string | number
-  previousValue: string
-  units: Unit
-  epoch: number
-  timezone: string
-}
+import { Parameter, ParameterData } from '../../../models/parameter.model'
 
 interface ParameterTooltipProps {
-  parameter: {
-    params: Parameter[]
-    source: Source
-    normalTime: string
-    timezone: string
-  }
+  parameter: ParameterData
   position: Position
   side: Side
   timePrefs: TimePrefs

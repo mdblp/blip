@@ -25,36 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import i18next from 'i18next'
-import { assign } from 'lodash'
-import { ANNOTATION_CODE_BG_OUT_OF_RANGE } from './blood-glucose.util'
-import { Annotation, Message } from '../models/annotation.model'
+import { Unit } from './unit.model'
+import { Source } from '../settings/models'
+import { Annotation } from './annotation.model'
 
-const t = i18next.t.bind(i18next)
+export interface Cbg {
+  value: number
+  annotations?: Annotation[]
+  source: Source
+  normalTime: string
+  timezone: string
+}
 
-const ANNOTATION_VALUE_LOW = 'low'
+export type BgUnits = Unit.MilligramPerDeciliter | Unit.MmolPerLiter
 
-export const getOutOfRangeAnnotationMessages = (annotations?: Annotation[]): Message[] => {
-  if (!annotations || annotations.length === 0) {
-    return []
+export interface BgBounds {
+  veryHighThreshold: number
+  targetUpperBound: number
+  targetLowerBound: number
+  veryLowThreshold: number
+}
+
+export interface BgPrefs {
+  bgUnits: BgUnits
+  bgBounds: BgBounds
+  bgClasses: {
+    'very-low': { boundary: number }
+    low: { boundary: number }
+    target: { boundary: number }
+    high: { boundary: number }
+    'very-high': { boundary: number }
   }
+}
 
-  const bgValueLowerLabel = t('* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.')
-  const bgValueHigherLabel = t('* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.')
+export enum ClassificationType {
+  FiveWay = 'fiveWay',
+  ThreeWay = 'threeWay'
+}
 
-  return annotations.reduce((messages: Message[], annotation: Annotation) => {
-    const annotationCode = annotation.code || ''
-    if (annotationCode !== ANNOTATION_CODE_BG_OUT_OF_RANGE) {
-      return messages
-    }
-    const value = annotation.value
-    const messageValue = value === ANNOTATION_VALUE_LOW ? bgValueLowerLabel : bgValueHigherLabel
-    const message = assign({}, annotation, {
-      message: {
-        value: messageValue
-      }
-    })
-    messages.push(message)
-    return messages
-  }, [])
+export enum BgClass {
+  High = 'high',
+  Low = 'low',
+  Target = 'target',
+  VeryHigh = 'veryHigh',
+  VeryLow = 'veryLow',
 }

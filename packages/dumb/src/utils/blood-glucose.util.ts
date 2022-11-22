@@ -25,24 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BgBounds, BgPrefs } from '../settings/models'
 import { isNumber } from 'lodash'
-import { Annotation } from './annotations.util'
+import { BgBounds, BgClass, BgPrefs, ClassificationType } from '../models/blood-glucose.model'
+import { Annotation } from '../models/annotation.model'
 
 export const ANNOTATION_CODE_BG_OUT_OF_RANGE = 'bg/out-of-range'
-
-export enum ClassificationType {
-  FiveWay = 'fiveWay',
-  ThreeWay = 'threeWay'
-}
-
-export enum BgClass {
-  High = 'high',
-  Low = 'low',
-  Target = 'target',
-  VeryHigh = 'veryHigh',
-  VeryLow = 'veryLow',
-}
 
 export const reshapeBgClassesToBgBounds = (bgPrefs: BgPrefs): BgBounds => {
   const { bgClasses } = bgPrefs

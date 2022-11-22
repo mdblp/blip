@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { Source, TimePrefs } from '../../../settings/models'
+import { TimePrefs } from '../../../settings/models'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -43,30 +43,10 @@ import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip.util'
-
-enum Prescriptor {
-  Auto = 'auto',
-  Modified = 'hybrid',
-  None = 'manual'
-}
+import { Food, Prescriptor } from '../../../models/food.model'
 
 interface FoodTooltipProps {
-  food: {
-    source: Source
-    normalTime: string
-    timezone: string
-    nutrition: {
-      carbohydrate: {
-        net: number
-      }
-    }
-    prescriptor: Prescriptor
-    prescribedNutrition: {
-      carbohydrate: {
-        net: number
-      }
-    }
-  }
+  food: Food
   position: Position
   side: Side
   timePrefs: TimePrefs

@@ -27,10 +27,9 @@
 
 import React, { FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
-import { BgPrefs, Source, TimePrefs } from '../../../settings/models'
+import { TimePrefs } from '../../../settings/models'
 import colors from '../../../styles/colors.css'
 import {
-  ClassificationType,
   getBgClass,
   getOutOfRangeThreshold,
   reshapeBgClassesToBgBounds
@@ -39,7 +38,7 @@ import { getDateTitle } from '../../../utils/tooltip.util'
 import i18next from 'i18next'
 import styles from './cbg-tooltip.css'
 import commonStyles from '../tooltip-common.css'
-import { Annotation, getOutOfRangeAnnotationMessages } from '../../../utils/annotations.util'
+import { getOutOfRangeAnnotationMessages } from '../../../utils/annotations.util'
 import { formatBgValue } from '../../../utils/format.util'
 import {
   COMMON_TOOLTIP_SIDE,
@@ -51,16 +50,11 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
+import { BgPrefs, Cbg, ClassificationType } from '../../../models/blood-glucose.model'
 
 interface CbgTooltipProps {
   bgPrefs: BgPrefs
-  cbg: {
-    value: number
-    annotations?: Annotation[]
-    source: Source
-    normalTime: string
-    timezone: string
-  }
+  cbg: Cbg
   position: Position
   side: Side
   timePrefs: TimePrefs

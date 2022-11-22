@@ -38,18 +38,14 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { Manufacturer, Pump, Source, TimePrefs } from '../../../settings/models'
+import { Manufacturer, TimePrefs } from '../../../settings/models'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip.util'
+import { Reservoir } from '../../../models/reservoir.model'
 
 interface ReservoirTooltipProps {
-  reservoir: {
-    source: Source
-    normalTime: string
-    timezone: string
-    pump: Pump
-  }
+  reservoir: Reservoir
   position: Position
   side: Side
   timePrefs: TimePrefs
