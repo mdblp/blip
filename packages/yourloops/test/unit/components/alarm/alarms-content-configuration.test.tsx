@@ -46,11 +46,12 @@ import { PatientTeam } from '../../../../lib/data/patient'
 import { Monitoring } from '../../../../models/monitoring'
 import PatientUtils from '../../../../lib/patient/utils'
 
+
 jest.mock('../../../../lib/team')
 describe('AlarmsContentConfiguration', () => {
   const onSave = jest.fn()
   const getTeamMock = jest.fn()
-  const monitoring = {
+  const getDefaultMonitoring = (): Monitoring => ({
     enabled: true,
     parameters: {
       bgUnit: UNITS_TYPE.MGDL,
@@ -62,7 +63,7 @@ describe('AlarmsContentConfiguration', () => {
       nonDataTxThreshold: 15,
       reportingPeriod: 7
     }
-  }
+  })
   const patient = createPatient()
   const teamId = 'teamId'
   const team = buildTeam(teamId)
@@ -104,7 +105,6 @@ describe('AlarmsContentConfiguration', () => {
   })
 
   function getTeamAlarmsContentJSX(props: AlarmsContentConfigurationProps = {
-    monitoring,
     onSave,
     saveInProgress: false
   }) {
@@ -114,7 +114,6 @@ describe('AlarmsContentConfiguration', () => {
   }
 
   function renderTeamAlarmsContent(props: AlarmsContentConfigurationProps = {
-    monitoring,
     onSave,
     saveInProgress: false
   }) {
@@ -131,7 +130,7 @@ describe('AlarmsContentConfiguration', () => {
   function initRenderingWithPatient() {
     jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ teamId } as PatientTeam)
     getTeamMock.mockReturnValue(team)
-    render(getTeamAlarmsContentJSX({ monitoring, onSave, saveInProgress: false, patient }))
+    render(getTeamAlarmsContentJSX({ monitoring: getDefaultMonitoring(), onSave, saveInProgress: false, patient }))
   }
 
   function checkMonitoringValues(monitoring: Monitoring) {
@@ -147,6 +146,7 @@ describe('AlarmsContentConfiguration', () => {
 
   it('should display correct alarm information and execute save function on click', () => {
     renderTeamAlarmsContent()
+    const monitoring = getDefaultMonitoring()
     expect((document.getElementById('low-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.lowBg.toString())
     expect((document.getElementById('high-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.highBg.toString())
     expect((document.getElementById('very-low-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.veryLowBg.toString())
@@ -157,7 +157,7 @@ describe('AlarmsContentConfiguration', () => {
     expect((saveButton as HTMLButtonElement).disabled).toBeFalsy()
     triggerMouseEvent('click', saveButton)
     expect(onSave).toHaveBeenCalledTimes(1)
-    expect(onSave).toHaveBeenCalledWith(monitoring)
+    expect(onSave).toHaveBeenCalledWith(getDefaultMonitoring())
   })
 
   it('should display correct alarm information in mg/dL when given mmol/L', () => {
@@ -174,6 +174,7 @@ describe('AlarmsContentConfiguration', () => {
         reportingPeriod: 7
       }
     }
+    const monitoring = getDefaultMonitoring()
     monitoring.parameters.veryLowBg = MIN_VERY_LOW_BG + 1
     renderTeamAlarmsContent({ monitoring: monitoringInMMOLL, onSave, saveInProgress: false })
     expect((document.getElementById('low-bg-text-field-id') as HTMLInputElement).value).toEqual(MIN_LOW_BG.toString())
@@ -190,21 +191,21 @@ describe('AlarmsContentConfiguration', () => {
   })
 
   it('save button should be disabled when low bg value is not in correct range', () => {
-    const incorrectMonitoring = monitoring
+    const incorrectMonitoring = getDefaultMonitoring()
     incorrectMonitoring.parameters.lowBg--
     renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
     checkSaveButtonDisabled()
   })
 
   it('save button should be disabled when high bg value is not in correct range', () => {
-    const incorrectMonitoring = monitoring
+    const incorrectMonitoring = getDefaultMonitoring()
     incorrectMonitoring.parameters.highBg--
     renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
     checkSaveButtonDisabled()
   })
 
   it('save button should be disabled when very low bg value is not in correct range', () => {
-    const incorrectMonitoring = monitoring
+    const incorrectMonitoring = getDefaultMonitoring()
     incorrectMonitoring.parameters.veryLowBg--
     renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
     checkSaveButtonDisabled()
@@ -265,7 +266,7 @@ describe('AlarmsContentConfiguration', () => {
   })
 
   it('save button should be disabled when save in progress is true', () => {
-    renderTeamAlarmsContent({ monitoring, onSave, saveInProgress: true })
+    renderTeamAlarmsContent({ monitoring: getDefaultMonitoring(), onSave, saveInProgress: true })
     checkSaveButtonDisabled()
   })
 
@@ -281,7 +282,7 @@ describe('AlarmsContentConfiguration', () => {
 
   it('clicking on default values button should set the team values', () => {
     initRenderingWithPatient()
-    checkMonitoringValues(monitoring)
+    checkMonitoringValues(getDefaultMonitoring())
     fireEvent.click(screen.getByRole('button', { name: 'default-values' }))
     checkMonitoringValues(team.monitoring)
   })
@@ -296,5 +297,23 @@ describe('AlarmsContentConfiguration', () => {
     render(getTeamAlarmsContentJSX())
     expect(screen.queryByText('default-min-max')).not.toBeNull()
     expect(screen.queryAllByText('default')).toHaveLength(4)
+  })
+
+  it('save button should be disabled when low bg value is not in correct range', () => {
+    const toto = {
+      enabled: true,
+      parameters: {
+        bgUnit: UNITS_TYPE.MGDL,
+        lowBg: 60.7,
+        highBg: MIN_HIGH_BG,
+        outOfRangeThreshold: 5,
+        veryLowBg: MIN_VERY_LOW_BG,
+        hypoThreshold: 10,
+        nonDataTxThreshold: 15,
+        reportingPeriod: 7
+      }
+    }
+    renderTeamAlarmsContent({ monitoring: toto, onSave, saveInProgress: false })
+    checkSaveButtonDisabled()
   })
 })
