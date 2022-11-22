@@ -29,15 +29,10 @@ import React, { FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
 import { TimePrefs } from '../../../models/settings.model'
 import colors from '../../../styles/colors.css'
-import {
-  convertBgClassesToBgBounds,
-  getBgClass,
-  getOutOfRangeThreshold
-} from '../../../utils/blood-glucose/blood-glucose.util'
+import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import i18next from 'i18next'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { getOutOfRangeAnnotationMessages } from '../../../utils/annotations/annotations.util'
 import { formatBgValue } from '../../../utils/format/format.util'
 import {
   COMMON_TOOLTIP_SIDE,
@@ -64,11 +59,7 @@ const t = i18next.t.bind(i18next)
 export const CbgTooltip: FunctionComponent<CbgTooltipProps> = (props) => {
   const { bgPrefs, cbg, position, side, timePrefs } = props
 
-  const hasAnnotations = cbg.annotations && cbg.annotations.length > 0
-  const outOfRangeMessages = hasAnnotations ? getOutOfRangeAnnotationMessages(cbg.annotations) : []
-  const outOfRangeThreshold = getOutOfRangeThreshold(cbg.annotations)
-  const formattedValue = formatBgValue(cbg.value, bgPrefs, outOfRangeThreshold)
-  const hasMessages = outOfRangeMessages.length !== 0
+  const formattedValue = formatBgValue(cbg.value, bgPrefs)
 
   const bgClass = getBgClass(
     convertBgClassesToBgBounds(bgPrefs.bgClasses),
@@ -102,19 +93,6 @@ export const CbgTooltip: FunctionComponent<CbgTooltipProps> = (props) => {
               {formattedValue}
             </div>
           </div>
-          {
-            hasMessages &&
-            <>
-              <div
-                key={'divider'}
-                className={commonStyles.dividerLarge}
-                style={{ backgroundColor: colors[bgClass] }}
-              />
-              <div key={'outOfRange'} className={commonStyles.rowColorDarkGray}>
-                {outOfRangeMessages[0].message.value}
-              </div>
-            </>
-          }
         </div>
       }
     />

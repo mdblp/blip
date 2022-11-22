@@ -37,7 +37,7 @@ import {
   Side
 } from '../tooltip/tooltip'
 import { TimePrefs } from '../../../models/settings.model'
-import { Tooltip } from 'dumb'
+import { Tooltip } from '../../../index'
 import styles from './physical-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import i18next from 'i18next'

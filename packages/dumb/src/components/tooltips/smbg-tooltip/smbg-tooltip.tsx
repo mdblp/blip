@@ -29,15 +29,10 @@ import React, { FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { TimePrefs } from '../../../models/settings.model'
-import {
-  convertBgClassesToBgBounds,
-  getBgClass,
-  getOutOfRangeThreshold
-} from '../../../utils/blood-glucose/blood-glucose.util'
+import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { BgPrefs, BloodGlucoseData, ClassificationType } from '../../../models/blood-glucose.model'
 import i18next from 'i18next'
 import { formatBgValue } from '../../../utils/format/format.util'
-import { getOutOfRangeAnnotationMessages } from '../../../utils/annotations/annotations.util'
 import commonStyles from '../../../styles/tooltip-common.css'
 import colors from '../../../styles/colors.css'
 import {
@@ -64,10 +59,7 @@ const t = i18next.t.bind(i18next)
 export const SmbgTooltip: FunctionComponent<SmbgTooltipProps> = (props) => {
   const { bgPrefs, position, side, smbg, timePrefs } = props
 
-  const hasAnnotations = smbg.annotations && smbg.annotations.length > 0
-  const outOfRangeMessages = hasAnnotations ? getOutOfRangeAnnotationMessages(smbg.annotations) : []
-  const hasMessages = outOfRangeMessages.length !== 0
-  const formattedValue = formatBgValue(smbg.value, bgPrefs, getOutOfRangeThreshold(smbg.annotations))
+  const formattedValue = formatBgValue(smbg.value, bgPrefs)
 
   const bgClass = getBgClass(
     convertBgClassesToBgBounds(bgPrefs.bgClasses),
@@ -94,7 +86,7 @@ export const SmbgTooltip: FunctionComponent<SmbgTooltipProps> = (props) => {
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={commonStyles.container}>
+        <div className={commonStyles.containerFlex}>
           <div key={'bg'} className={commonStyles.rowBold}>
             <div className={commonStyles.label}>{t('BG')}</div>
             <div className={commonStyles.value}>
@@ -104,19 +96,6 @@ export const SmbgTooltip: FunctionComponent<SmbgTooltipProps> = (props) => {
           <div key={'source'} className={commonStyles.rowColorDarkGray}>
             <div className={commonStyles.label}>{t('Calibration')}</div>
           </div>
-          {
-            hasMessages &&
-            <>
-              <div
-                key={'divider'}
-                className={commonStyles.dividerLarge}
-                style={{ backgroundColor: colors[bgClass] }}
-              />
-              <div key={'outOfRange'} className={commonStyles.rowColorDarkGray}>
-                {outOfRangeMessages[0].message.value}
-              </div>
-            </>
-          }
         </div>
       }
     />

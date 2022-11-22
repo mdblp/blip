@@ -27,9 +27,6 @@
 
 import { isNumber } from 'lodash'
 import { BgBounds, BgClass, BgClasses, ClassificationType } from '../../models/blood-glucose.model'
-import { Annotation } from '../../models/annotation.model'
-
-export const ANNOTATION_CODE_BG_OUT_OF_RANGE = 'bg/out-of-range'
 
 export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
   return {
@@ -69,16 +66,4 @@ export const getBgClass = (bgBounds: BgBounds, bgValue?: number, classificationT
     return BgClass.VeryHigh
   }
   return BgClass.Target
-}
-
-export const getOutOfRangeThreshold = (annotations?: Annotation[]): { [annotation: string]: number } | undefined => {
-  if (!annotations || annotations.length === 0) {
-    return
-  }
-
-  const annotation = annotations.find((annotation: Annotation) => annotation.code === ANNOTATION_CODE_BG_OUT_OF_RANGE)
-  if (!annotation || !annotation.threshold) {
-    return
-  }
-  return { [annotation.value]: annotation.threshold }
 }

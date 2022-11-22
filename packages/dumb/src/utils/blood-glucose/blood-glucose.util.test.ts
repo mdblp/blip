@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getBgClass, getOutOfRangeThreshold } from './blood-glucose.util'
+import { getBgClass } from './blood-glucose.util'
 import { BgBounds, ClassificationType } from '../../models/blood-glucose.model'
 
 const bgBounds = {
@@ -147,40 +147,6 @@ describe('BloodGlucoseUtil', () => {
       it('should return `veryHigh` for a value > the `veryHighThreshold`', () => {
         expect(getBgClass(bgBounds, 301, ClassificationType.FiveWay)).toEqual('veryHigh')
       })
-    })
-  })
-
-  describe('getOutOfRangeThreshold', () => {
-    it('should return a high out-of-range threshold for a high datum', () => {
-      const annotations = [
-        {
-          code: 'bg/out-of-range',
-          threshold: 600,
-          value: 'high'
-        }
-      ]
-
-      expect(getOutOfRangeThreshold(annotations)).toEqual({
-        high: 600
-      })
-    })
-
-    it('should return a low out-of-range threshold for a low datum', () => {
-      const annotations = [
-        {
-          code: 'bg/out-of-range',
-          threshold: 40,
-          value: 'low'
-        }
-      ]
-
-      expect(getOutOfRangeThreshold(annotations)).toEqual({
-        low: 40
-      })
-    })
-
-    it('should return undefined for an in-range datum', () => {
-      expect(getOutOfRangeThreshold()).toEqual(undefined)
     })
   })
 })
