@@ -27,7 +27,7 @@
 
 .container {
   composes: smallSize from '../../../styles/typography.css';
-  composes: container from '../tooltip-common.css';
+  composes: container from '../../../styles/tooltip-common.css';
   line-height: 20px;
   display: grid;
   grid-template-columns: repeat(6, auto);

@@ -33,10 +33,10 @@
 }
 
 .value {
-  composes: value from '../tooltip-common.css';
+  composes: value from '../../../styles/tooltip-common.css';
   text-align: right;
 }
 
 .pa {
-  composes: row from '../tooltip-common.css';
+  composes: row from '../../../styles/tooltip-common.css';
 }

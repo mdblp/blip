@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import i18next from 'i18next'
-import commonStyles from '../tooltip-common.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,

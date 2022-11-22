@@ -28,6 +28,7 @@
 import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
+import { DurationUnit } from '../models/physical-activity.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -322,4 +323,15 @@ export const getLocalizedCeiling = (utc: string | number | Date | moment.Moment,
     return startOfDay.toDate()
   }
   return startOfDay.add(1, 'day').toDate()
+}
+
+export const convertValueToMinutes = (durationValue: number, durationUnit: DurationUnit): number => {
+  switch (durationUnit) {
+    case DurationUnit.Seconds:
+      return Math.round(durationValue / 60)
+    case DurationUnit.Hours:
+      return durationValue * 60
+    default:
+      return durationValue
+  }
 }

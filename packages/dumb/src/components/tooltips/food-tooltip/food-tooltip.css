@@ -26,15 +26,6 @@
  */
 
 .units {
-  composes: units from '../tooltip-common.css';
+  composes: units from '../../../styles/tooltip-common.css';
   margin-left: 10px;
 }
-
-/*.carb {*/
-/*  composes: row from '../tooltip-common.css';*/
-/*  font-weight: bold;*/
-/*}*/
-
-/*.prescribed {*/
-/*  composes: row from '../tooltip-common.css';*/
-/*}*/

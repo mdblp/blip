@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import { TimePrefs } from '../../../settings/models'
 import styles from './parameter-tooltip.css'
-import commonStyles from '../tooltip-common.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import { Tooltip } from '../../../index'

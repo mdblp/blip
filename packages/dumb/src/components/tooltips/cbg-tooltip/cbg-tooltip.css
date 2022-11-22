@@ -26,12 +26,12 @@
  */
 
 .bg {
-  composes: row from '../tooltip-common.css';
+  composes: row from '../../../styles/tooltip-common.css';
   font-weight: bold;
 }
 
 .subType {
-  composes: row from '../tooltip-common.css';
+  composes: row from '../../../styles/tooltip-common.css';
   color: var(--gray-dark);
 }
 

@@ -39,12 +39,13 @@ import {
 import { TimePrefs } from '../../../settings/models'
 import { Tooltip } from 'dumb'
 import styles from './physical-tooltip.css'
-import commonStyles from '../tooltip-common.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import i18next from 'i18next'
 import { formatInputTime } from '../../../utils/format.util'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip.util'
 import { Duration, DurationUnit, PhysicalActivity } from '../../../models/physical-activity.model'
+import { convertValueToMinutes } from '../../../utils/datetime.util'
 
 interface PhysicalTooltipProps {
   physicalActivity: PhysicalActivity
@@ -57,17 +58,6 @@ const t = i18next.t.bind(i18next)
 
 export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) => {
   const { physicalActivity, position, side, timePrefs } = props
-
-  const convertValueToMinutes = (durationValue: number, durationUnit: DurationUnit): number => {
-    switch (durationUnit) {
-      case DurationUnit.Seconds:
-        return Math.round(durationValue / 60)
-      case DurationUnit.Hours:
-        return durationValue * 60
-      default:
-        return durationValue
-    }
-  }
 
   const getDurationInMinutes = (): Duration => {
     const units = props.physicalActivity?.duration?.units

@@ -38,7 +38,7 @@ import {
   Side
 } from '../tooltip/tooltip'
 import styles from './food-tooltip.css'
-import commonStyles from '../tooltip-common.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'

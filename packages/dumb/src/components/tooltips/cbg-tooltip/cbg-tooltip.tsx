@@ -29,15 +29,11 @@ import React, { FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
 import { TimePrefs } from '../../../settings/models'
 import colors from '../../../styles/colors.css'
-import {
-  getBgClass,
-  getOutOfRangeThreshold,
-  reshapeBgClassesToBgBounds
-} from '../../../utils/blood-glucose.util'
+import { getBgClass, getOutOfRangeThreshold, reshapeBgClassesToBgBounds } from '../../../utils/blood-glucose.util'
 import { getDateTitle } from '../../../utils/tooltip.util'
 import i18next from 'i18next'
 import styles from './cbg-tooltip.css'
-import commonStyles from '../tooltip-common.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import { getOutOfRangeAnnotationMessages } from '../../../utils/annotations.util'
 import { formatBgValue } from '../../../utils/format.util'
 import {
