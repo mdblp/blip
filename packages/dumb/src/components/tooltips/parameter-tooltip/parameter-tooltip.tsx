@@ -32,9 +32,9 @@ import commonStyles from '../../../styles/tooltip-common.css'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import { Tooltip } from '../../../index'
-import { formatParameterValue } from '../../../utils/format.util'
-import { getHourMinuteFormat } from '../../../utils/datetime.util'
-import { getDateTitle } from '../../../utils/tooltip.util'
+import { formatParameterValue } from '../../../utils/format/format.util'
+import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
+import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,

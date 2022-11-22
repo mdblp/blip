@@ -41,11 +41,11 @@ import { Tooltip } from 'dumb'
 import styles from './physical-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import i18next from 'i18next'
-import { formatInputTime } from '../../../utils/format.util'
+import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
-import { getDateTitle } from '../../../utils/tooltip.util'
+import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { Duration, DurationUnit, PhysicalActivity } from '../../../models/physical-activity.model'
-import { convertValueToMinutes } from '../../../utils/datetime.util'
+import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
 
 interface PhysicalTooltipProps {
   physicalActivity: PhysicalActivity

@@ -25,50 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Unit } from './unit.model'
-import { Source } from './settings.model'
-import { Annotation } from './annotation.model'
+import { DateTitle } from '../../components/tooltips/tooltip/tooltip'
+import { Source, TimePrefs, TIMEZONE_UTC } from '../../models/settings.model'
 
-export interface Cbg {
-  value: number
-  annotations?: Annotation[]
-  source: Source
-  normalTime: string
-  timezone: string
-}
-
-export type BgUnits = Unit.MilligramPerDeciliter | Unit.MmolPerLiter
-
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
-
-export interface BgClasses {
-  'very-low': { boundary: number }
-  low: { boundary: number }
-  target: { boundary: number }
-  high: { boundary: number }
-  'very-high': { boundary: number }
-}
-
-export interface BgPrefs {
-  bgUnits: BgUnits
-  bgBounds: BgBounds
-  bgClasses: BgClasses
-}
-
-export enum ClassificationType {
-  FiveWay = 'fiveWay',
-  ThreeWay = 'threeWay'
-}
-
-export enum BgClass {
-  High = 'high',
-  Low = 'low',
-  Target = 'target',
-  VeryHigh = 'veryHigh',
-  VeryLow = 'veryLow',
+export const getDateTitle = (data: { source?: Source, normalTime: string, timezone?: string }, timePrefs: TimePrefs): DateTitle => {
+  return {
+    source: data.source ?? Source.Diabeloop,
+    normalTime: data.normalTime,
+    timezone: data.timezone ?? TIMEZONE_UTC,
+    timePrefs
+  }
 }

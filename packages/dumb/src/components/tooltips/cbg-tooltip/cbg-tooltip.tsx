@@ -29,13 +29,17 @@ import React, { FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
 import { TimePrefs } from '../../../models/settings.model'
 import colors from '../../../styles/colors.css'
-import { getBgClass, getOutOfRangeThreshold, reshapeBgClassesToBgBounds } from '../../../utils/blood-glucose.util'
-import { getDateTitle } from '../../../utils/tooltip.util'
+import {
+  convertBgClassesToBgBounds,
+  getBgClass,
+  getOutOfRangeThreshold
+} from '../../../utils/blood-glucose/blood-glucose.util'
+import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import i18next from 'i18next'
 import styles from './cbg-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { getOutOfRangeAnnotationMessages } from '../../../utils/annotations.util'
-import { formatBgValue } from '../../../utils/format.util'
+import { getOutOfRangeAnnotationMessages } from '../../../utils/annotations/annotations.util'
+import { formatBgValue } from '../../../utils/format/format.util'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -68,7 +72,7 @@ export const CbgTooltip: FunctionComponent<CbgTooltipProps> = (props) => {
   const hasMessages = outOfRangeMessages.length !== 0
 
   const bgClass = getBgClass(
-    reshapeBgClassesToBgBounds(bgPrefs),
+    convertBgClassesToBgBounds(bgPrefs.bgClasses),
     cbg.value,
     ClassificationType.FiveWay
   )

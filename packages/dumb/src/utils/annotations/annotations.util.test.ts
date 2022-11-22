@@ -25,14 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DateTitle } from '../components/tooltips/tooltip/tooltip'
-import { Source, TimePrefs, TIMEZONE_UTC } from '../models/settings.model'
+import { getOutOfRangeAnnotationMessages } from './annotations.util'
 
-export const getDateTitle = (data: { source: Source, normalTime: string, timezone: string }, timePrefs: TimePrefs): DateTitle => {
-  return {
-    source: data.source || Source.Diabeloop,
-    normalTime: data.normalTime,
-    timezone: data.timezone || TIMEZONE_UTC,
-    timePrefs
+jest.mock('i18next', () => ({
+  t: (value: string) => value
+}))
+
+const veryHigh = [
+  {
+    code: 'bg/out-of-range',
+    value: 'high',
+    threshold: 600
   }
-}
+]
+
+const veryLow = [
+  {
+    code: 'bg/out-of-range',
+    value: 'low',
+    threshold: 40
+  }
+]
+
+describe('AnnotationsUtil', () => {
+  describe('getOutOfRangeAnnotationMessages', () => {
+    it('should return empty array for non-annotated and in-range datum', () => {
+      expect(getOutOfRangeAnnotationMessages(undefined)).toEqual([])
+    })
+
+    it('should return annotation messages for annotated datum', () => {
+      expect(getOutOfRangeAnnotationMessages(veryHigh)[0].message.value).toEqual(
+        '* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.'
+      )
+      expect(getOutOfRangeAnnotationMessages(veryLow)[0].message.value).toEqual(
+        '* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.'
+      )
+    })
+  })
+})

@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime.util'
-import { TimePrefs } from '../models/settings.model'
+import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
+import { TimePrefs } from '../../models/settings.model'
 import { convertBG } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
-import { InputTime } from '../models/physical-activity.model'
-import { Unit } from '../models/unit.model'
-import { BgClass, BgPrefs } from '../models/blood-glucose.model'
+import { InputTime } from '../../models/physical-activity.model'
+import { Unit } from '../../models/unit.model'
+import { BgClass, BgPrefs } from '../../models/blood-glucose.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -45,6 +45,52 @@ const EXPONENTIAL_HIGH_VALUE = 9999
 
 export const formatInputTime = (utcTime: InputTime, timePrefs: TimePrefs): string => {
   return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat())
+}
+
+export const formatParameterValue = (value: number | string, unit: Unit): string => {
+  const valueNumber = convertValueToNumber(value)
+  const decimalsCount = getDecimalsCount(unit)
+
+  if (Number.isNaN(valueNumber)) {
+    return NO_VALUE_STRING
+  }
+  if (Number.isInteger(valueNumber) && decimalsCount === 0) {
+    return valueNumber.toString(10)
+  }
+
+  const valueAbsolute = Math.abs(valueNumber)
+  if (valueAbsolute < Number.EPSILON) {
+    return valueNumber.toFixed(1)
+  }
+  if (valueAbsolute < EXPONENTIAL_LOW_VALUE || valueAbsolute > EXPONENTIAL_HIGH_VALUE) {
+    return valueNumber.toExponential(2)
+  }
+
+  return valueNumber.toFixed(decimalsCount)
+}
+
+export const formatBgValue = (value: number, bgPrefs?: BgPrefs, outOfRangeThresholds?: { [value: string]: number }): string => {
+  const unit = bgPrefs?.bgUnits ?? Unit.MilligramPerDeciliter
+  const isUnitMmolPerLiter = unit === Unit.MmolPerLiter
+
+  if (outOfRangeThresholds) {
+    const lowThreshold = outOfRangeThresholds[BgClass.Low]
+    const highThreshold = outOfRangeThresholds[BgClass.High]
+
+    const lowThresholdInMgPerDl = isUnitMmolPerLiter ? convertBG(lowThreshold, Unit.MilligramPerDeciliter) : lowThreshold
+    const highThresholdInMgPerDl = isUnitMmolPerLiter ? convertBG(highThreshold, Unit.MilligramPerDeciliter) : highThreshold
+
+    if (lowThresholdInMgPerDl && value < lowThresholdInMgPerDl) {
+      return t(BG_LOW_LABEL_KEY)
+    }
+    if (highThresholdInMgPerDl && value > highThresholdInMgPerDl) {
+      return t(BG_HIGH_LABEL_KEY)
+    }
+  }
+  if (isUnitMmolPerLiter) {
+    return format('.1f')(value)
+  }
+  return format('d')(value)
 }
 
 const convertValueToNumber = (value: string | number): number => {
@@ -73,50 +119,4 @@ const getDecimalsCount = (unit: Unit): number => {
     default:
       return 2
   }
-}
-
-export const formatParameterValue = (value: number | string, unit: Unit): string => {
-  const valueNumber = convertValueToNumber(value)
-  const decimalsCount = getDecimalsCount(unit)
-
-  if (Number.isNaN(valueNumber)) {
-    return NO_VALUE_STRING
-  }
-  if (Number.isInteger(valueNumber) && decimalsCount === 0) {
-    return valueNumber.toString(10)
-  }
-
-  const valueAbsolute = Math.abs(valueNumber)
-  if (valueAbsolute < Number.EPSILON) {
-    return valueNumber.toFixed(1)
-  }
-  if (valueAbsolute < EXPONENTIAL_LOW_VALUE || valueAbsolute > EXPONENTIAL_HIGH_VALUE) {
-    return valueNumber.toExponential(2)
-  }
-
-  return valueNumber.toFixed(decimalsCount)
-}
-
-export const formatBgValue = (value: number, bgPrefs: BgPrefs, outOfRangeThresholds?: { [value: string]: number }): string => {
-  const unit = bgPrefs.bgUnits || Unit.MilligramPerDeciliter
-  const isUnitMmolPerLiter = unit === Unit.MmolPerLiter
-
-  if (outOfRangeThresholds) {
-    const lowThreshold = outOfRangeThresholds[BgClass.Low]
-    const highThreshold = outOfRangeThresholds[BgClass.High]
-
-    const lowThresholdInMgPerDl = isUnitMmolPerLiter ? convertBG(lowThreshold, Unit.MilligramPerDeciliter) : lowThreshold
-    const highThresholdInMgPerDl = isUnitMmolPerLiter ? convertBG(highThreshold, Unit.MilligramPerDeciliter) : highThreshold
-
-    if (lowThresholdInMgPerDl && value < lowThresholdInMgPerDl) {
-      return t(BG_LOW_LABEL_KEY)
-    }
-    if (highThresholdInMgPerDl && value > highThresholdInMgPerDl) {
-      return t(BG_HIGH_LABEL_KEY)
-    }
-  }
-  if (isUnitMmolPerLiter) {
-    return format('.1f')(value)
-  }
-  return format('d')(value)
 }

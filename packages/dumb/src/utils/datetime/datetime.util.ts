@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
-import { DurationUnit } from '../models/physical-activity.model'
+import { DurationUnit } from '../../models/physical-activity.model'
 
 const t = i18next.t.bind(i18next)
 

@@ -42,7 +42,7 @@ import commonStyles from '../../../styles/tooltip-common.css'
 import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
-import { getDateTitle } from '../../../utils/tooltip.util'
+import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { Food, Prescriptor } from '../../../models/food.model'
 
 interface FoodTooltipProps {

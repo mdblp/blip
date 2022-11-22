@@ -25,50 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Unit } from './unit.model'
-import { Source } from './settings.model'
-import { Annotation } from './annotation.model'
+import { getDateTitle } from './tooltip.util'
+import { Source } from '../../models/settings.model'
 
-export interface Cbg {
-  value: number
-  annotations?: Annotation[]
-  source: Source
-  normalTime: string
-  timezone: string
-}
+describe('TooltipUtil', () => {
+  const timePrefs = {
+    timezoneAware: true,
+    timezoneName: 'Timezone'
+  }
+  const customNormalTime = 'Normal time'
 
-export type BgUnits = Unit.MilligramPerDeciliter | Unit.MmolPerLiter
+  describe('getDateTitle', () => {
+    it('should return the values from data if provided', () => {
+      const customSource = 'Other source'
+      const customTimezone = 'Custom timezone'
+      const data = {
+        source: customSource as Source,
+        normalTime: customNormalTime,
+        timezone: customTimezone
+      }
 
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
+      expect(getDateTitle(data, timePrefs)).toEqual({
+        source: customSource,
+        normalTime: customNormalTime,
+        timezone: customTimezone,
+        timePrefs
+      })
+    })
 
-export interface BgClasses {
-  'very-low': { boundary: number }
-  low: { boundary: number }
-  target: { boundary: number }
-  high: { boundary: number }
-  'very-high': { boundary: number }
-}
+    it('should return default values if some information is missing from data', () => {
+      const data = { normalTime: customNormalTime }
 
-export interface BgPrefs {
-  bgUnits: BgUnits
-  bgBounds: BgBounds
-  bgClasses: BgClasses
-}
-
-export enum ClassificationType {
-  FiveWay = 'fiveWay',
-  ThreeWay = 'threeWay'
-}
-
-export enum BgClass {
-  High = 'high',
-  Low = 'low',
-  Target = 'target',
-  VeryHigh = 'veryHigh',
-  VeryLow = 'veryLow',
-}
+      expect(getDateTitle(data, timePrefs)).toEqual({
+        source: 'Diabeloop',
+        normalTime: customNormalTime,
+        timezone: 'UTC',
+        timePrefs
+      })
+    })
+  })
+})

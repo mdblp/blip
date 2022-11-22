@@ -27,8 +27,8 @@
 
 import i18next from 'i18next'
 import { assign } from 'lodash'
-import { ANNOTATION_CODE_BG_OUT_OF_RANGE } from './blood-glucose.util'
-import { Annotation, Message } from '../models/annotation.model'
+import { ANNOTATION_CODE_BG_OUT_OF_RANGE } from '../blood-glucose/blood-glucose.util'
+import { Annotation, Message } from '../../models/annotation.model'
 
 const t = i18next.t.bind(i18next)
 

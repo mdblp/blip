@@ -26,13 +26,12 @@
  */
 
 import { isNumber } from 'lodash'
-import { BgBounds, BgClass, BgPrefs, ClassificationType } from '../models/blood-glucose.model'
-import { Annotation } from '../models/annotation.model'
+import { BgBounds, BgClass, BgClasses, ClassificationType } from '../../models/blood-glucose.model'
+import { Annotation } from '../../models/annotation.model'
 
 export const ANNOTATION_CODE_BG_OUT_OF_RANGE = 'bg/out-of-range'
 
-export const reshapeBgClassesToBgBounds = (bgPrefs: BgPrefs): BgBounds => {
-  const { bgClasses } = bgPrefs
+export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
   return {
     veryHighThreshold: bgClasses.high.boundary,
     targetUpperBound: bgClasses.target.boundary,
@@ -41,7 +40,7 @@ export const reshapeBgClassesToBgBounds = (bgPrefs: BgPrefs): BgBounds => {
   }
 }
 
-export const getBgClass = (bgBounds: BgBounds, bgValue: number, classificationType = ClassificationType.ThreeWay): BgClass => {
+export const getBgClass = (bgBounds: BgBounds, bgValue?: number, classificationType = ClassificationType.ThreeWay): BgClass => {
   if (!bgBounds || !isNumber(bgBounds.targetLowerBound) || !isNumber(bgBounds.targetUpperBound)) {
     throw new Error(
       'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
