@@ -21,6 +21,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1903 Timezone detection should exclude some data types
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
+- YLP-1919-Detect-and-verify-that-in-the-inputs-is-integer-numbers-of-the-preferences-
 - Automate copyright generation on new and updated files
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages

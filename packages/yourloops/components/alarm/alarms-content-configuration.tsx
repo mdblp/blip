@@ -266,11 +266,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
           1. {t('time-away-from-target')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-tir', {
-            tir: outOfRangeThreshold.value,
-            lowBg: lowBg.value,
-            highBg: highBg.value
-          })}
+          {t('current-trigger-setting-tir', { tir: outOfRangeThreshold.value, lowBg: lowBg.value, highBg: highBg.value })}
         </Typography>
         <Box display="flex">
           <div className={classes.subCategoryContainer}>
@@ -330,7 +326,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
                   data-testid="high-bg-text-field-id"
                 />
-                <Typography>{t(' mg/dL')}</Typography>
+                <Typography>{t('mg/dL')}</Typography>
               </Box>
             </div>
             {!patient &&
@@ -362,10 +358,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
           2. {t('severe-hypoglycemia')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-hypoglycemia', {
-            hypoThreshold: hypoThreshold.value,
-            veryLowBg: veryLowBg.value
-          })}
+          {t('current-trigger-setting-hypoglycemia', { hypoThreshold: hypoThreshold.value, veryLowBg: veryLowBg.value })}
         </Typography>
         <Box display="flex">
           <div className={classes.subCategoryContainer}>
