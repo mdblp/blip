@@ -38,6 +38,7 @@ import {
   Side
 } from '../tooltip/tooltip'
 import styles from './food-tooltip.css'
+import commonStyles from '../tooltip-common.css'
 import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
@@ -99,20 +100,20 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={styles.container}>
+        <div className={commonStyles.containerFlex}>
           {
             hasPrescriptor &&
-            <div key={'prescribed'} className={styles.prescribed}>
-              <div className={styles.label}>{i18next.t('Recommended')}</div>
-              <div className={styles.value}>
+            <div key={'prescribed'} className={commonStyles.row}>
+              <div className={commonStyles.label}>{i18next.t('Recommended')}</div>
+              <div className={commonStyles.value}>
                 {recommendedValue}
               </div>
               <div className={styles.units}>g</div>
             </div>
           }
-          <div key={'carb'} className={styles.carb}>
-            <div className={styles.label}>{i18next.t('Confirmed')}</div>
-            <div className={styles.value}>
+          <div key={'carb'} className={commonStyles.rowBold}>
+            <div className={commonStyles.label}>{i18next.t('Confirmed')}</div>
+            <div className={commonStyles.value}>
               {actualCarbs}
             </div>
             <div className={styles.units}>g</div>

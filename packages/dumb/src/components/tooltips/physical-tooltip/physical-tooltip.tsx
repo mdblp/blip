@@ -39,6 +39,7 @@ import {
 import { Source, TimePrefs } from '../../../settings/models'
 import { Tooltip } from 'dumb'
 import styles from './physical-tooltip.css'
+import commonStyles from '../tooltip-common.css'
 import i18next from 'i18next'
 import { formatInputTime } from '../../../utils/format.util'
 import moment from 'moment-timezone'
@@ -129,24 +130,24 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={styles.container}>
-          <div key={'title'} className={styles.pa}>
+        <div className={commonStyles.containerFlex}>
+          <div key={'title'} className={commonStyles.row}>
             <div id="tooltip-physical-activity-title" className={styles.title}>{t('Physical Activity')}</div>
           </div>
-          <div key={'physical'} className={styles.pa}>
-            <div className={styles.label}>{t('Intensity')}</div>
+          <div key={'physical'} className={commonStyles.row}>
+            <div className={commonStyles.label}>{t('Intensity')}</div>
             <div className={styles.value}>
               {t(`${physicalActivity.reportedIntensity}-pa`)}
             </div>
           </div>
-          <div key={'duration'} className={styles.pa}>
-            <div className={styles.label}>{t('Duration')}</div>
+          <div key={'duration'} className={commonStyles.row}>
+            <div className={commonStyles.label}>{t('Duration')}</div>
             <div className={styles.value}>{`${duration.value} ${t(duration.units)}`}</div>
           </div>
           {
             physicalActivity.inputTime &&
-            <div key={'inputTime'} className={styles.pa}>
-              <div className={styles.label}>
+            <div key={'inputTime'} className={commonStyles.row}>
+              <div className={commonStyles.label}>
                 {t('Entered at')}
               </div>
               <div className={styles.value}>

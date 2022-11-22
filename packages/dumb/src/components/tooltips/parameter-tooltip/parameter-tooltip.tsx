@@ -26,8 +26,9 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { Source, TimePrefs } from '../../../settings/models'
+import { Source, TimePrefs, Unit } from '../../../settings/models'
 import styles from './parameter-tooltip.css'
+import commonStyles from '../tooltip-common.css'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import { Tooltip } from '../../../index'
@@ -45,17 +46,6 @@ import {
   Side
 } from '../tooltip/tooltip'
 import colors from '../../../styles/colors.css'
-
-export enum Unit {
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Kilogram = 'kg',
-  Gram = 'g',
-  MilligramPerDeciliter = 'mg/dL',
-  MmolPerLiter = 'mmol/L',
-  Minute = 'min',
-  Percent = '%'
-}
 
 interface Parameter {
   id: string
@@ -116,7 +106,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
         }
         <span id={`tooltip-daily-parameter-${parameterId}-value`} className={valueClasses}
               key={`${parameterId}-value`}>{value}</span>
-        <span id={`tooltip-daily-parameter-${parameterId}-units`} className={styles.units}
+        <span id={`tooltip-daily-parameter-${parameterId}-units`} className={commonStyles.units}
               key={`${parameterId}-units`}>{i18next.t(parameter.units)}</span>
       </React.Fragment>
     )

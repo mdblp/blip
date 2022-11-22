@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import i18next from 'i18next'
-import styles from './reservoir-tooltip.css'
+import commonStyles from '../tooltip-common.css'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -101,9 +101,9 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={styles.container}>
-          <div key={'title'} className={styles.pa}>
-            <div className={styles.label}>{label}</div>
+        <div className={commonStyles.containerFlex}>
+          <div key={'title'} className={commonStyles.rowBold}>
+            <div className={commonStyles.label}>{label}</div>
           </div>
         </div>
       }

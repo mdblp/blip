@@ -105,7 +105,7 @@ export const CbgTooltip: FunctionComponent<CbgTooltipProps> = (props) => {
         <div className={commonStyles.containerFlex}>
           <div key={'bg'} className={styles.bg}>
             <div className={commonStyles.label}>{t('BG')}</div>
-            <div className={styles.value}>
+            <div className={commonStyles.value}>
               {formattedValue}
             </div>
           </div>

@@ -28,7 +28,6 @@
 .container {
   opacity: 1;
   min-width: 80px;
-  max-width: 180px;
   margin: 2px 0;
 }
 
@@ -36,6 +35,7 @@
   composes: container;
   display: flex;
   flex-direction: column;
+  max-width: 180px;
 }
 
 .row {
@@ -46,6 +46,19 @@
   line-height: 20px;
 }
 
+.rowBold {
+  composes: row;
+  font-weight: bold;
+}
+
 .label {
   flex-grow: 1;
+}
+
+.value {
+  margin-left: 20px;
+}
+
+.units {
+  min-width: 0.7em;
 }

@@ -26,10 +26,8 @@
  */
 
 .container {
-  opacity: 1;
-  min-width: 80px;
-  margin: 2px 0;
   composes: smallSize from '../../../styles/typography.css';
+  composes: container from '../tooltip-common.css';
   line-height: 20px;
   display: grid;
   grid-template-columns: repeat(6, auto);
@@ -61,8 +59,3 @@
   grid-column-start: 3;
   grid-column-end: span 3;
 }
-
-.units {
-  min-width: 0.7em;
-}
-
