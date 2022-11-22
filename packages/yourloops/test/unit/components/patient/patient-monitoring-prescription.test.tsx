@@ -84,7 +84,7 @@ describe('PatientMonitoringPrescription', () => {
     fireEvent.click(items.getByText(elementToSelect))
   }
 
-  it('should call setPrescription with correct parameters', () => {
+  it('should call setPrescription with correct parameters', async () => {
     render(getPatientMonitoringPrescriptionJSX())
     const allButtons = screen.getAllByRole('button')
 
@@ -97,11 +97,21 @@ describe('PatientMonitoringPrescription', () => {
     expect(setPrescriptionInfoMock).not.toHaveBeenCalled()
 
     // Upload a prescription file
-    userEvent.upload(screen.getByRole('button', { name: 'browse' }), file)
-    waitFor(() => expect(setPrescriptionInfoMock).toHaveBeenCalledWith(teamId1, member1Id, file, 3))
+    await userEvent.upload(screen.getByTestId('upload-file-input'), file)
+    await waitFor(() => expect(setPrescriptionInfoMock).toHaveBeenCalledWith({
+      file,
+      memberId: member1Id,
+      numberOfMonth: 3,
+      teamId: teamId1
+    }))
 
     // Select a number of month
     selectItem(allButtons[3], '6 month')
-    waitFor(() => expect(setPrescriptionInfoMock).toHaveBeenCalledWith(teamId1, member1Id, file, 6))
+    await waitFor(() => expect(setPrescriptionInfoMock).toHaveBeenCalledWith({
+      file,
+      memberId: member1Id,
+      numberOfMonth: 6,
+      teamId: teamId1
+    }))
   })
 })

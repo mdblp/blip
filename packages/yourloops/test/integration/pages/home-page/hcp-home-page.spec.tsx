@@ -74,14 +74,14 @@ describe('HCP home page', () => {
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-unmonitored-patient@diabeloop.fr' })
     expect(removeButton).toBeVisible()
 
-    userEvent.click(removeButton)
+    await userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient])
     await act(async () => {
-      userEvent.click(confirmRemoveButton)
+      await userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
@@ -98,7 +98,7 @@ describe('HCP home page', () => {
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-monitored-patient@diabeloop.fr' })
     expect(removeButton).toBeVisible()
 
-    userEvent.click(removeButton)
+    await userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
@@ -110,7 +110,7 @@ describe('HCP home page', () => {
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
     await act(async () => {
-      userEvent.click(confirmRemoveButton)
+      await userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teams[0].teamId, monitoredPatient.userid)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
@@ -126,12 +126,12 @@ describe('HCP home page', () => {
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
     const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.profile.email}` })
-    userEvent.click(removeButton)
+    await userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     await act(async () => {
-      userEvent.click(confirmRemoveButton)
+      await userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
@@ -147,7 +147,7 @@ describe('HCP home page', () => {
     const addPatientButton = within(secondaryBar).getByText('Add patient')
     expect(addPatientButton).toBeVisible()
 
-    userEvent.click(addPatientButton)
+    await userEvent.click(addPatientButton)
 
     const addPatientDialog = screen.getByRole('dialog')
     expect(addPatientDialog).toBeVisible()
@@ -183,7 +183,7 @@ describe('HCP home page', () => {
     expect(alreadyInTeamErrorMessage).toBeVisible()
     expect(invitePatientButton).toBeDisabled()
 
-    userEvent.clear(emailInput)
+    await userEvent.clear(emailInput)
     await userEvent.type(emailInput, pendingPatient.profile.email)
     fireEvent.mouseDown(within(select).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
@@ -204,8 +204,8 @@ describe('HCP home page', () => {
       renderPage('/')
     })
     const teamMenu = screen.getByLabelText('Open team menu')
-    userEvent.click(teamMenu)
-    userEvent.click(screen.getByText('New care team'))
+    await userEvent.click(teamMenu)
+    await userEvent.click(screen.getByText('New care team'))
     const dialogTeam = screen.getByRole('dialog')
     const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
     const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })
@@ -244,34 +244,34 @@ describe('HCP home page', () => {
     expect(createTeamButton).not.toBeDisabled()
 
     // Team creation button disabled and a field in error with the error message
-    userEvent.clear(zipcodeInput)
+    await userEvent.clear(zipcodeInput)
     expect(createTeamButton).toBeDisabled()
     await userEvent.type(zipcodeInput, '75d')
     expect(within(dialogTeam).getByText('Please enter a valid zipcode')).toBeVisible()
     expect(createTeamButton).toBeDisabled()
-    userEvent.clear(zipcodeInput)
+    await userEvent.clear(zipcodeInput)
     await userEvent.type(zipcodeInput, '75800')
     expect(createTeamButton).not.toBeDisabled()
 
-    userEvent.clear(phoneNumberInput)
+    await userEvent.clear(phoneNumberInput)
     expect(createTeamButton).toBeDisabled()
     await userEvent.type(phoneNumberInput, '060')
     expect(within(dialogTeam).getByText('Please enter a valid phone number')).toBeVisible()
     expect(createTeamButton).toBeDisabled()
-    userEvent.clear(phoneNumberInput)
+    await userEvent.clear(phoneNumberInput)
     await userEvent.type(phoneNumberInput, '06000000')
     expect(createTeamButton).not.toBeDisabled()
 
-    userEvent.clear(emailInput)
+    await userEvent.clear(emailInput)
     await userEvent.type(emailInput, 'tototiti.com')
     expect(within(dialogTeam).getByText('Invalid email address (special characters are not allowed).')).toBeVisible()
     expect(createTeamButton).toBeDisabled()
-    userEvent.clear(emailInput)
+    await userEvent.clear(emailInput)
     await userEvent.type(emailInput, 'toto@titi.com')
     expect(createTeamButton).not.toBeDisabled()
 
     await act(async () => {
-      userEvent.click(createTeamButton)
+      await userEvent.click(createTeamButton)
     })
     expect(createTeamMock).toHaveBeenCalledTimes(1)
   })

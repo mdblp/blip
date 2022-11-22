@@ -27,20 +27,16 @@
 
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/mockUserApi'
 import { HcpProfession } from '../../../../models/hcp-profession'
 import userEvent from '@testing-library/user-event'
 import { UserRoles } from '../../../../models/user'
-import { renderPageFromHistory } from '../../utils/render'
+import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
-
-jest.setTimeout(15000)
 
 describe('Signup stepper as hcp', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
-  const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Lara'
   const lastName = 'Tatouille'
   const expectedProfile = {
@@ -59,24 +55,23 @@ describe('Signup stepper as hcp', () => {
   })
 
   it('should be able to create a hcp account', async () => {
-    renderPageFromHistory(history)
-    expect(history.location.pathname).toEqual('/complete-signup')
+    renderPage('/')
     checkFooter({ needFooterLanguageSelector: true })
     checkStepper()
 
     // Step one
     checkAccountSelectorStep()
-    userEvent.click(screen.getByLabelText('Create hcp account'))
-    userEvent.click(screen.getByText('Next'))
+    await userEvent.click(screen.getByLabelText('Create hcp account'))
+    await userEvent.click(screen.getByText('Next'))
 
     // Step two
     const feedbackCheckbox = screen.queryByLabelText('Feedback checkbox')
 
-    checkConsentStep()
+    await checkConsentStep()
     expect(feedbackCheckbox).toBeVisible()
 
-    userEvent.click(feedbackCheckbox)
-    userEvent.click(screen.getByText('Next'))
+    await userEvent.click(feedbackCheckbox)
+    await userEvent.click(screen.getByText('Next'))
 
     // Step three
     const createButton = screen.getByText('Create Account')
@@ -85,12 +80,12 @@ describe('Signup stepper as hcp', () => {
     await checkProfileStep(firstName, lastName)
     expect(hcpProfessionSelector).toBeVisible()
 
-    fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('button'))
-    userEvent.click(screen.getByText('Nurse'))
+    fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('button', { hidden: true }))
+    await userEvent.click(screen.getByText('Nurse'))
 
     expect(createButton).not.toBeDisabled()
     await act(async () => {
-      userEvent.click(createButton)
+      await userEvent.click(screen.getByText('Create Account'))
     })
 
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(

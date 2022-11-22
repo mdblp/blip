@@ -18,7 +18,7 @@ import _ from 'lodash'
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
-import { TransitionMotion, spring } from 'react-motion'
+import { TransitionMotion, spring } from '@serprex/react-motion'
 
 import { classifyBgValue } from '../../../utils/bloodglucose'
 import { springConfig } from '../../../utils/constants'
