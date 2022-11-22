@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
@@ -33,13 +34,11 @@ import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { CBGStatType } from './components/stats/models'
-import { CbgTooltip } from './components/tooltips/cbg-tooltip/cbg-tooltip'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
-import { SmbgTooltip } from './components/tooltips/smbg-tooltip/smbg-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
@@ -47,11 +46,11 @@ import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
 
 export {
+  BloodGlucoseTooltip,
   CBGMeanStat,
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
-  CbgTooltip,
   CgmTable,
   ConfidentialTooltip,
   FoodTooltip,
@@ -59,7 +58,6 @@ export {
   PhysicalTooltip,
   PumpTable,
   ReservoirTooltip,
-  SmbgTooltip,
   StatTooltip,
   TerminalTable,
   Tooltip

@@ -37,13 +37,12 @@ import BgSourceToggle from './bgSourceToggle'
 import Header from './header'
 import Footer from './footer'
 import {
-  CbgTooltip,
+  BloodGlucoseTooltip,
   ConfidentialTooltip,
   FoodTooltip,
   ParameterTooltip,
   PhysicalTooltip,
-  ReservoirTooltip,
-  SmbgTooltip
+  ReservoirTooltip
 } from 'dumb'
 
 /**
@@ -655,8 +654,9 @@ class Daily extends React.Component {
   handleSMBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <SmbgTooltip
-        smbg={datum.data}
+      <BloodGlucoseTooltip
+        isSmbg={true}
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -671,8 +671,8 @@ class Daily extends React.Component {
   handleCBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <CbgTooltip
-        cbg={datum.data}
+      <BloodGlucoseTooltip
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left

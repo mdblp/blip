@@ -32,6 +32,7 @@ import colors from '../../../styles/colors.css'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import i18next from 'i18next'
+import styles from './blood-glucose-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatBgValue } from '../../../utils/format/format.util'
 import {
@@ -46,24 +47,25 @@ import {
 } from '../tooltip/tooltip'
 import { BgPrefs, BloodGlucoseData, ClassificationType } from '../../../models/blood-glucose.model'
 
-interface CbgTooltipProps {
+interface BloodGlucoseTooltipProps {
   bgPrefs: BgPrefs
-  cbg: BloodGlucoseData
+  data: BloodGlucoseData
   position: Position
   side: Side
   timePrefs: TimePrefs
+  isSmbg?: boolean
 }
 
 const t = i18next.t.bind(i18next)
 
-export const CbgTooltip: FunctionComponent<CbgTooltipProps> = (props) => {
-  const { bgPrefs, cbg, position, side, timePrefs } = props
+export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = (props) => {
+  const { bgPrefs, data, position, side, timePrefs, isSmbg } = props
 
-  const formattedValue = formatBgValue(cbg.value, bgPrefs)
+  const formattedValue = formatBgValue(data.value, bgPrefs)
 
   const bgClass = getBgClass(
     convertBgClassesToBgBounds(bgPrefs.bgClasses),
-    cbg.value,
+    data.value,
     ClassificationType.FiveWay
   )
 
@@ -71,7 +73,7 @@ export const CbgTooltip: FunctionComponent<CbgTooltipProps> = (props) => {
     position,
     side: side || COMMON_TOOLTIP_SIDE,
     borderColor: colors[bgClass] || colors.bolus,
-    dateTitle: getDateTitle(cbg, timePrefs)
+    dateTitle: getDateTitle(data, timePrefs)
   }
 
   return (
@@ -93,6 +95,12 @@ export const CbgTooltip: FunctionComponent<CbgTooltipProps> = (props) => {
               {formattedValue}
             </div>
           </div>
+          {
+            isSmbg &&
+            <div key={'source'} className={styles.rowColorDarkGray}>
+              <div className={commonStyles.label}>{t('Calibration')}</div>
+            </div>
+          }
         </div>
       }
     />
