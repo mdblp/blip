@@ -280,7 +280,8 @@ describe('Patient utils', () => {
       const profile: Profile = {
         fullName: 'fake full name',
         firstName: 'fake full',
-        lastName: 'name'
+        lastName: 'name',
+        email: 'fake@email.com'
       }
       const teamMember: ITeamMember = {
         idVerified: false,
@@ -306,7 +307,7 @@ describe('Patient utils', () => {
         metadata: {
           flagged: undefined,
           medicalData: null,
-          unreadMessagesSent: teamMember.unreadMessages
+          hasSentUnreadMessages: teamMember.unreadMessages > 0
         },
         monitoring: undefined,
         profile: {

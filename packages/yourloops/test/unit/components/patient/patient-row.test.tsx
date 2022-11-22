@@ -219,7 +219,7 @@ describe('Patient row', () => {
   it('should display unread messages icon when patient has unread messages and is monitored', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true }
-    remoteMonitoredPatient.metadata.unreadMessagesSent = 3
+    remoteMonitoredPatient.metadata.hasSentUnreadMessages = true
     const componentProps: PatientRowProps = {
       patient: remoteMonitoredPatient,
       filter: FilterType.pending

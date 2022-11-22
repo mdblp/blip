@@ -122,7 +122,7 @@ export default class PatientUtils {
       case PatientFilterTypes.flagged:
         return patients.filter(patient => flaggedPatients.includes(patient.userid))
       case PatientFilterTypes.unread:
-        return patients.filter(patient => patient.metadata.unreadMessagesSent > 0)
+        return patients.filter(patient => patient.metadata.hasSentUnreadMessages)
       case PatientFilterTypes.outOfRange:
         return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive)
       case PatientFilterTypes.severeHypoglycemia:

@@ -64,7 +64,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       setInitialized(true)
       setRefreshInProgress(false)
     })
-  }, [errorMessage])
+  }, [errorMessage, user])
 
   const refresh = useCallback(() => {
     setRefreshInProgress(true)
@@ -82,7 +82,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       all: patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
       pending: patients.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
       directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
-      unread: patients.filter(patient => patient.metadata.unreadMessagesSent > 0).length,
+      unread: patients.filter(patient => patient.metadata.hasSentUnreadMessages).length,
       outOfRange: patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
       severeHypoglycemia: patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
       dataNotTransferred: patients.filter(patient => patient.alarms.nonDataTransmissionActive).length,
@@ -132,7 +132,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [getPatientById, updatePatient])
 
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
-    patient.metadata.unreadMessagesSent = 0
+    patient.metadata.hasSentUnreadMessages = false
     updatePatient(patient)
   }, [updatePatient])
 

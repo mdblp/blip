@@ -378,7 +378,7 @@ describe('Patient hook', () => {
 
   describe('markPatientMessagesAsRead', () => {
     const basicPatient = createPatient('basicPatient1', [basicTeam])
-    basicPatient.metadata.unreadMessagesSent = 23
+    basicPatient.metadata.hasSentUnreadMessages = true
     const allPatients = [basicPatient]
     let customHook
 

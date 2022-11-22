@@ -112,7 +112,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
   const patientFullName = patient.profile.fullName
   const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
   const isAlreadyInATeam = PatientUtils.isInAtLeastATeam(patient)
-  const hasUnreadMessages = patient.metadata.unreadMessagesSent > 0
+  const hasUnreadMessages = patient.metadata.hasSentUnreadMessages
 
   const userToRemove = {
     id: userId,

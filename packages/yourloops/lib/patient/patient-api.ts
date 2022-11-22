@@ -65,7 +65,7 @@ export default class PatientApi {
 
   static async getPatientsForHcp(userId: string): Promise<Patient[]> {
     const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/patients` })
-    return data ?? []
+    return data
   }
 
   static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotificationAPI> {

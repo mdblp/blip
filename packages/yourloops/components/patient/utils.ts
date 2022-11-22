@@ -179,7 +179,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
     metadata: {
       flagged: undefined,
       medicalData: null,
-      unreadMessagesSent: iTeamMember.unreadMessages ?? 0
+      hasSentUnreadMessages: iTeamMember.unreadMessages ? iTeamMember.unreadMessages > 0 : false
     },
     monitoring: iTeamMember.monitoring,
     teams: iTeamMember.teamId === ''
