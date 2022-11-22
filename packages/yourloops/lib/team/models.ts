@@ -27,7 +27,6 @@
 
 import { PostalAddress, UserInvitationStatus } from '../../models/generic'
 import { Profile } from '../../models/user'
-import { INotification } from '../notifications/models'
 import { TeamMemberRole, TeamType, TypeTeamMemberRole } from '../../models/team'
 import { Monitoring } from '../../models/monitoring'
 
@@ -41,7 +40,7 @@ export interface TeamMember {
   profile?: Profile | null
   role: TeamMemberRole
   status: UserInvitationStatus
-  invitation?: INotification
+  invitationId?: string
 }
 
 export interface Team {
@@ -49,12 +48,10 @@ export interface Team {
   name: string
   readonly code: string
   readonly type: TeamType
-  readonly owner: string
   phone?: string
   email?: string
   address?: PostalAddress
-  description?: string
-  members: TeamMember[]
+  members: TeamMember[] // Members are only set when the current logged user has the HCP role
   monitoring?: Monitoring
 }
 

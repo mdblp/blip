@@ -301,24 +301,24 @@ describe('Notification API', () => {
         throw new Error()
       })
 
-      const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember]
       const notification: INotification = {
         metricsType: 'join_team',
-        type: NotificationType.careTeamDoAdmin,
+        type: NotificationType.careTeamProInvitation,
         creator: { userid: userId, profile: hcp.profile },
         creatorId: userId2,
         date: new Date().toISOString(),
         email,
         id: 'fakeId'
       }
-      for (const notificationType of notificationTypes) {
-        try {
-          await NotificationApi.acceptInvitation(userId, { ...notification, type: notificationType })
-        } catch (reason) {
-          err = reason as Error
-        }
-        expect(err).not.toBeNull()
+      try {
+        await NotificationApi.acceptInvitation(userId, {
+          ...notification,
+          type: 'unknownType' as unknown as NotificationType
+        })
+      } catch (reason) {
+        err = reason as Error
       }
+      expect(err).not.toBeNull()
       expect(mockedAxios.put).toHaveBeenCalledTimes(0)
     })
 
@@ -457,11 +457,11 @@ describe('Notification API', () => {
     it('should throw an error if the invitation type is invalid', async () => {
       mockedAxios.put.mockResolvedValue(buildAxiosError('test'))
 
-      const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember]
+      const notificationTypes = [NotificationType.careTeamProInvitation, NotificationType.careTeamPatientInvitation]
       const user = hcp
       const notification: INotification = {
         metricsType: 'join_team',
-        type: NotificationType.careTeamDoAdmin,
+        type: NotificationType.careTeamProInvitation,
         creator: { userid: user.id, profile: user.profile },
         creatorId: user.id,
         date: new Date().toISOString(),
@@ -628,68 +628,16 @@ describe('Notification API', () => {
   })
 
   describe('cancelInvitation', () => {
-    it('should throw an error if the invitation type is invalid', async () => {
-      mockedAxios.post.mockResolvedValue(buildAxiosError('test'))
-
-      const notificationTypes = [
-        NotificationType.careTeamDoAdmin,
-        NotificationType.careTeamRemoveMember,
-        NotificationType.careTeamPatientInvitation
-      ]
-      const user = hcp
-      const notification: INotification = {
-        metricsType: 'join_team',
-        type: NotificationType.careTeamDoAdmin,
-        creator: { userid: user.id, profile: user.profile },
-        creatorId: user.id,
-        date: new Date().toISOString(),
-        email: user.username,
-        id: 'fakeId'
-      }
-      for (const notificationType of notificationTypes) {
-        try {
-          await NotificationApi.cancelInvitation({ ...notification, type: notificationType })
-        } catch (reason) {
-          err = reason as Error
-        }
-        expect(err).not.toBeNull()
-      }
-      expect(mockedAxios.post).toHaveBeenCalledTimes(0)
-    })
-
-    it('should resolve when the reply is ok (directInvitation)', async () => {
+    it('should call API with correct parameters', async () => {
       mockedAxios.post.mockResolvedValue(resolveOK)
+      const notificationId = 'fakeNotificationId'
+      const teamId = 'fakeTeamId'
+      const inviteeEmail = 'fakeEmail'
 
-      await NotificationApi.cancelInvitation(directInvitationNotification)
+      await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
       expect(mockedAxios.post).toHaveBeenCalledTimes(1)
       const expectedArgs = '/confirm/cancel/invite'
-      const expectedBody = { key: directInvitationNotification.id, email }
-      expect(mockedAxios.post).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
-    })
-
-    it('should throw an error if the teamId is missing (careTeamProInvitation)', async () => {
-      mockedAxios.post.mockResolvedValue(buildAxiosError('careTeamProInvitation'))
-
-      try {
-        await NotificationApi.cancelInvitation(careTeamProInvitationNotificationNoTarget)
-      } catch (reason) {
-        err = reason as Error
-      }
-      expect(err).not.toBeNull()
-      expect(mockedAxios.post).toHaveBeenCalledTimes(0)
-      expect(mockedAxios.post).toHaveBeenCalledTimes(0)
-    })
-
-    it('should resolve when the reply is ok (careTeamProInvitation)', async () => {
-      mockedAxios.post.mockResolvedValue(resolveOK)
-
-      await NotificationApi.cancelInvitation(careTeamProInvitationNotification)
-      expect(mockedAxios.post).toHaveBeenCalledTimes(1)
-      const expectedArgs = '/confirm/cancel/invite'
-      const expectedBody = {
-        key: careTeamProInvitationNotification.id,
-        target: careTeamProInvitationNotification.target
-      }
+      const expectedBody = { email: inviteeEmail, key: notificationId, target: { id: teamId } }
       expect(mockedAxios.post).toHaveBeenCalledWith(expectedArgs, expectedBody, {})
     })
   })

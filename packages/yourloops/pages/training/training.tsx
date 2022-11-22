@@ -53,8 +53,7 @@ const style = makeStyles((theme: Theme) => {
       }
     },
     card: {
-      textAlign: 'center',
-      padding: theme.spacing(4)
+      textAlign: 'center'
     },
     cardContent: {
       marginLeft: theme.spacing(2),
@@ -68,15 +67,11 @@ const style = makeStyles((theme: Theme) => {
       minHeight: '90vh'
     },
     buttons: {
-      display: 'flex',
-      justifyContent: 'space-around',
-      marginTop: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'space-between'
-      }
+      marginTop: theme.spacing(3)
     }
   }
 }, { name: 'ylp-training-page' })
+
 /**
  * Training Page
  */
@@ -133,7 +128,7 @@ function TrainingPage(): JSX.Element {
                 i18nKey="training-body"
                 t={t}
                 components={{ trainingLink }}
-                values= {{ training }}>
+                values={{ training }}>
                 New {{ training }} available
               </Trans>
               <div className={classes.buttons}>

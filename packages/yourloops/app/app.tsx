@@ -46,7 +46,7 @@ const Yourloops = (): JSX.Element => {
       clientId={appConfig.AUTH0_CLIENT_ID}
       redirectUri={window.location.origin}
       useRefreshTokens
-      audience={`https://${appConfig.AUTH0_DOMAIN}/api/v2/`}
+      audience="https://api-ext.your-loops.com"
     >
       <BrowserRouter>
         <MetricsLocationListener />

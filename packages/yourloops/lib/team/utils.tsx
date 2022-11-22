@@ -25,11 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Team, TEAM_CODE_LENGTH, TeamMember } from './models'
-import TeamApi from './team-api'
-import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
+import { Team, TEAM_CODE_LENGTH } from './models'
+import { TeamMemberRole } from '../../models/team'
 import { UserInvitationStatus } from '../../models/generic'
-import { INotification } from '../notifications/models'
 
 /**
  * Get the team code for display - Can be use with partial code.
@@ -51,17 +49,16 @@ export function getDisplayTeamCode(code: string): string {
 
 export default class TeamUtils {
   static isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
-    const admins = team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted)
+    const admins = team.members ? team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted) : []
     return admins.length === 1 && admins[0].userId === userId
   }
 
   static isUserAdministrator = (team: Team, userId: string): boolean => {
-    const result = team.members.find((member) => member.role === TeamMemberRole.admin && member.userId === userId)
-    return typeof result === 'object'
+    return team.members && !!team.members.find((member) => member.role === TeamMemberRole.admin && member.userId === userId)
   }
 
   static teamHasOnlyOneMember = (team: Team): boolean => {
-    const numMembers = team.members.reduce((p, t) => t.role === TeamMemberRole.patient ? p : p + 1, 0)
+    const numMembers = team.members ? team.members.reduce((p, t) => t.role === TeamMemberRole.patient ? p : p + 1, 0) : 0
     return numMembers < 2
   }
 
@@ -69,58 +66,6 @@ export default class TeamUtils {
     return team.members.reduce<number>((num, member) => {
       return member.role === TeamMemberRole.patient ? num : num + 1
     }, 0)
-  }
-
-  static iMemberToMember(iTeamMember: ITeamMember, teamId: string, invitations: INotification[]): TeamMember {
-    const {
-      userId,
-      invitationStatus,
-      role,
-      email,
-      profile
-    } = iTeamMember
-    return {
-      userId,
-      email,
-      profile,
-      role,
-      status: invitationStatus,
-      invitation: invitations.find(invitation => invitation.target.id === teamId && invitation.email === email)
-    }
-  }
-
-  static async loadTeams(userId: string, invitations: INotification[]): Promise<Team[]> {
-    const iTeams = await TeamApi.getTeams()
-
-    const privateTeam: Team = {
-      code: TeamType.private,
-      id: TeamType.private,
-      members: [],
-      name: TeamType.private,
-      owner: userId,
-      type: TeamType.private
-    }
-
-    const teams: Team[] = [privateTeam]
-    iTeams.forEach((iTeam: ITeam) => {
-      const members = iTeam.members.map(iTeamMember => TeamUtils.iMemberToMember(iTeamMember, iTeam.id, invitations))
-      const team: Team = {
-        id: iTeam.id,
-        name: iTeam.name,
-        code: iTeam.code,
-        type: iTeam.type,
-        owner: iTeam.owner,
-        phone: iTeam.phone,
-        email: iTeam.email,
-        address: iTeam.address,
-        description: iTeam.description,
-        members,
-        monitoring: iTeam.monitoring
-      }
-      teams.push(team)
-    })
-
-    return teams
   }
 
   static sortTeams(teams: Team[]): Team[] {

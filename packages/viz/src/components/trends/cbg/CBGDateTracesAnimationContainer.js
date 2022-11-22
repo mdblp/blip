@@ -24,7 +24,7 @@ import CBGDateTraceAnimated from './CBGDateTraceAnimated'
 const CBGDateTracesAnimationContainer = (props) => {
   const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props
   return (
-    <g component="g" id="cbgDateTraces">
+    <g id="cbgDateTraces">
       {_.map(data, (datum, localDate) => (
         <CBGDateTraceAnimated
           bgBounds={bgBounds}
