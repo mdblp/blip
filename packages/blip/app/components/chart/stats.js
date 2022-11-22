@@ -18,8 +18,7 @@ class Stats extends React.Component {
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
-    hideToolTips: PropTypes.bool.isRequired,
-    bgClasses: PropTypes.object.isRequired
+    hideToolTips: PropTypes.bool.isRequired
   }
   static defaultProps = {
     hideToolTips: false
@@ -90,16 +89,12 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    const { bgClasses } = this.props
-    if(!bgClasses){
-      console.log('bg classes should be defined in order to display stats components')
-      return null
-    }
+    const { bgPrefs } = this.props
     const bgClassesMapped: BgClasses = {
-      high: bgClasses.high.boundary,
-      low: bgClasses.low.boundary,
-      target: bgClasses.target.boundary,
-      veryLow: bgClasses['very-low'].boundary
+      high: bgPrefs.bgClasses.high.boundary,
+      low: bgPrefs.bgClasses.low.boundary,
+      target: bgPrefs.bgClasses.target.boundary,
+      veryLow: bgPrefs.bgClasses['very-low'].boundary
     }
     return stats.map(stat => {
       switch (stat.id) {

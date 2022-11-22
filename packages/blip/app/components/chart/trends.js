@@ -690,7 +690,6 @@ class Trends extends React.Component {
             <div className="patient-data-sidebar-inner">
               <div id="toggle-bg-replacement" style={{height: 36 }} />
               <Stats
-                bgClasses={tidelineData.opts.bgClasses}
                 bgPrefs={this.props.bgPrefs}
                 bgSource={this.props.dataUtil.bgSource}
                 chartPrefs={chartPrefs}

@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
 
 const PatientStatistics = (props) => {
   //eslint-disable-next-line
-  const { bgClasses, bgPrefs, loading, chartPrefs, dataUtil, endpoints } = props;
+  const { bgPrefs, loading, chartPrefs, dataUtil, endpoints } = props;
   const { t } = useTranslation()
   const classes = useStyles()
   return (
@@ -65,7 +65,6 @@ const PatientStatistics = (props) => {
       <CardContent id="patient-statistics-content" className={classes.cardContent}>
         <Stats
           bgPrefs={bgPrefs}
-          bgClasses={bgClasses}
           //eslint-disable-next-line
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
@@ -85,8 +84,7 @@ PatientStatistics.propType = {
   loading: PropTypes.bool.isRequired,
   chartPrefs: PropTypes.object.isRequired,
   dataUtil: PropTypes.object.isRequired,
-  endpoints: PropTypes.arrayOf(PropTypes.string),
-  bgClasses: PropTypes.object.isRequired
+  endpoints: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default PatientStatistics

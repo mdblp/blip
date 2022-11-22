@@ -81,7 +81,6 @@ const PatientDashboard = (props) => {
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
-          bgClasses={tidelineData.opts.bgClasses}
         />
         <DeviceUsage
           id="dashboard-device-usage"
