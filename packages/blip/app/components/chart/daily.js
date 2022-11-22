@@ -36,7 +36,7 @@ import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
 import Header from './header'
 import Footer from './footer'
-import { ConfidentialTooltip, FoodTooltip, ParameterTooltip, PhysicalTooltip, ReservoirTooltip } from 'dumb'
+import { CbgTooltip, ConfidentialTooltip, FoodTooltip, ParameterTooltip, PhysicalTooltip, ReservoirTooltip } from 'dumb'
 
 /**
  * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
@@ -47,7 +47,6 @@ import { ConfidentialTooltip, FoodTooltip, ParameterTooltip, PhysicalTooltip, Re
 const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
 const SMBGTooltip = vizComponents.SMBGTooltip
-const CBGTooltip = vizComponents.CBGTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 /**
@@ -665,7 +664,7 @@ class Daily extends React.Component {
   handleCBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <CBGTooltip
+      <CbgTooltip
         cbg={datum.data}
         position={{
           top: datum.top,

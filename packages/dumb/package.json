@@ -41,10 +41,14 @@
     "url": "https://github.com/mdblp/blip/issues"
   },
   "dependencies": {
-    "i18next": "^19.8.4",
     "@material-ui/core": "^4.11.4",
+    "d3-format": "^3.1.0",
+    "i18next": "^19.8.4",
     "moment-timezone": "^0.5.32",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/d3-format": "^3.0.1"
   }
 }

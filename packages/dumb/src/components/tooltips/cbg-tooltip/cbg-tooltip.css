@@ -25,75 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface CGM {
-  manufacturer: string
-  name: string
-  expirationDate: string
-  swVersionTransmitter: string
-  transmitterId: string
-  endOfLifeTransmitterDate: string
+.value {
+  margin-left: 20px;
 }
 
-export interface Device {
-  deviceId: string
-  imei: string
-  name: string
-  manufacturer: string
-  swVersion: string
+.bg {
+  composes: row from '../tooltip-common.css';
+  font-weight: bold;
 }
 
-export interface Pump {
-  manufacturer: Manufacturer
-  serialNumber: string
-  swVersion: string
-  expirationDate: string
+.subType {
+  composes: row from '../tooltip-common.css';
+  color: var(--gray-dark);
 }
 
-export interface TimePrefs {
-  timezoneAware: boolean
-  timezoneName: string
+.annotation {
+  composes: subType;
 }
 
-export enum Unit {
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Kilogram = 'kg',
-  Gram = 'g',
-  MilligramPerDeciliter = 'mg/dL',
-  MmolPerLiter = 'mmol/L',
-  Minute = 'min',
-  Percent = '%'
+.dividerLarge {
+  height: 4px;
+  margin: 5px -10px;
 }
-
-export type BgUnits = Unit.MilligramPerDeciliter | Unit.MmolPerLiter
-
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
-
-export interface BgPrefs {
-  bgUnits: BgUnits
-  bgBounds: BgBounds
-  bgClasses: {
-    'very-low': { boundary: number }
-    low: { boundary: number }
-    target: { boundary: number }
-    high: { boundary: number }
-    'very-high': { boundary: number }
-  }
-}
-
-export enum Manufacturer {
-  Default = 'default',
-  Roche = 'Roche',
-  Vicentra = 'Vicentra'
-}
-
-export enum Source {
-  Diabeloop = 'Diabeloop'
-}
-
-export const TIMEZONE_UTC = 'UTC'

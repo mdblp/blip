@@ -25,75 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface CGM {
-  manufacturer: string
-  name: string
-  expirationDate: string
-  swVersionTransmitter: string
-  transmitterId: string
-  endOfLifeTransmitterDate: string
+import i18next from 'i18next'
+import { assign } from 'lodash'
+import { ANNOTATION_CODE_BG_OUT_OF_RANGE } from './blood-glucose.util'
+
+interface Message {
+  value: string
+  code: string
+  message: { value: string }
 }
 
-export interface Device {
-  deviceId: string
-  imei: string
-  name: string
-  manufacturer: string
-  swVersion: string
+export interface Annotation {
+  value: string
+  code: string
+  threshold?: number
 }
 
-export interface Pump {
-  manufacturer: Manufacturer
-  serialNumber: string
-  swVersion: string
-  expirationDate: string
-}
+const t = i18next.t.bind(i18next)
 
-export interface TimePrefs {
-  timezoneAware: boolean
-  timezoneName: string
-}
+const ANNOTATION_VALUE_LOW = 'low'
 
-export enum Unit {
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Kilogram = 'kg',
-  Gram = 'g',
-  MilligramPerDeciliter = 'mg/dL',
-  MmolPerLiter = 'mmol/L',
-  Minute = 'min',
-  Percent = '%'
-}
-
-export type BgUnits = Unit.MilligramPerDeciliter | Unit.MmolPerLiter
-
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
-
-export interface BgPrefs {
-  bgUnits: BgUnits
-  bgBounds: BgBounds
-  bgClasses: {
-    'very-low': { boundary: number }
-    low: { boundary: number }
-    target: { boundary: number }
-    high: { boundary: number }
-    'very-high': { boundary: number }
+export const getOutOfRangeAnnotationMessages = (annotations?: Annotation[]): Message[] => {
+  if (!annotations || annotations.length === 0) {
+    return []
   }
-}
 
-export enum Manufacturer {
-  Default = 'default',
-  Roche = 'Roche',
-  Vicentra = 'Vicentra'
-}
+  const bgValueLowerLabel = t('* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.')
+  const bgValueHigherLabel = t('* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.')
 
-export enum Source {
-  Diabeloop = 'Diabeloop'
+  return annotations.reduce((messages: Message[], annotation: Annotation) => {
+    const annotationCode = annotation.code || ''
+    if (annotationCode !== ANNOTATION_CODE_BG_OUT_OF_RANGE) {
+      return messages
+    }
+    const value = annotation.value
+    const messageValue = value === ANNOTATION_VALUE_LOW ? bgValueLowerLabel : bgValueHigherLabel
+    const message = assign({}, annotation, {
+      message: {
+        value: messageValue
+      }
+    })
+    messages.push(message)
+    return messages
+  }, [])
 }
-
-export const TIMEZONE_UTC = 'UTC'
