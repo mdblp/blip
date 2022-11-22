@@ -41,9 +41,9 @@ import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/tooltip/tooltip'
-import { CgmTable } from './settings/cgm-table'
-import { PumpTable } from './settings/pump-table'
-import { TerminalTable } from './settings/terminal-table'
+import { CgmTable } from './components/settings/cgm-table'
+import { PumpTable } from './components/settings/pump-table'
+import { TerminalTable } from './components/settings/terminal-table'
 
 export {
   CBGMeanStat,

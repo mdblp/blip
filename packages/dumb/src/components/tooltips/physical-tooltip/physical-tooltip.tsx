@@ -36,7 +36,7 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { TimePrefs } from '../../../settings/models'
+import { TimePrefs } from '../../../models/settings.model'
 import { Tooltip } from 'dumb'
 import styles from './physical-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'

@@ -26,7 +26,7 @@
  */
 
 import { Unit } from './unit.model'
-import { Source } from '../settings/models'
+import { Source } from './settings.model'
 import { Annotation } from './annotation.model'
 
 export interface Cbg {

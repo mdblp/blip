@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import '../styles/colors.css';
+@import '../../styles/colors.css';
 
 .copyButton {
-  composes: defaultSize from '../styles/typography.css';
+  composes: defaultSize from '../../styles/typography.css';
   float: right;
   padding: 5px;
   border-radius: 0;
@@ -53,7 +53,7 @@
 }
 
 .settingsTable {
-  composes: defaultSize mediumContrastText from '../styles/typography.css';
+  composes: defaultSize mediumContrastText from '../../styles/typography.css';
   width: 100%;
   border-spacing: 1px 0;
   border-collapse: separate;
@@ -112,7 +112,7 @@
 }
 
 .settingsHeaderText {
-  composes: defaultSize mediumContrastText boldText from '../styles/typography.css';
+  composes: defaultSize mediumContrastText boldText from '../../styles/typography.css';
 }
 
 .settingsHeader {
@@ -124,7 +124,7 @@
 }
 
 .secondaryText {
-  composes: lightText from '../styles/typography.css';
+  composes: lightText from '../../styles/typography.css';
   padding-left: 8px;
 }
 
@@ -135,7 +135,7 @@
   }
 
   .settingsTable {
-    composes: defaultSize mediumContrastText from '../styles/typography.css';
+    composes: defaultSize mediumContrastText from '../../styles/typography.css';
     min-width: 250px;
     width: 100%;
     border: solid 1px #000;
@@ -157,7 +157,7 @@
   }
 
   .settingsHeaderText {
-    composes: defaultSize mediumContrastText from '../styles/typography.css';
+    composes: defaultSize mediumContrastText from '../../styles/typography.css';
   }
 
   .basalTable {
@@ -171,7 +171,7 @@
   .mainHeaderText {
     color: var(--text-black);
     font-weight: normal;
-    composes: largeSize from '../styles/typography.css';
+    composes: largeSize from '../../styles/typography.css';
   }
 
   .basalHeaderBackground, .bolusHeaderBackground {
@@ -183,7 +183,7 @@
   }
 
   .secondaryText {
-    composes: lightText largeSize from '../styles/typography.css';
+    composes: lightText largeSize from '../../styles/typography.css';
     color: var(--text-black);
     padding-left: 8px;
   }

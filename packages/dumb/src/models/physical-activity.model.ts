@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Source } from '../settings/models'
+import { Source } from './settings.model'
 import moment from 'moment-timezone'
 
 export interface PhysicalActivity {

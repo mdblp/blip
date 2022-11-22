@@ -29,7 +29,7 @@ import { useCallback, useMemo } from 'react'
 import { DateTitle, Offset, Position } from './tooltip'
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../../utils/datetime.util'
 import moment from 'moment-timezone'
-import { Source, TIMEZONE_UTC } from '../../../settings/models'
+import { Source, TIMEZONE_UTC } from '../../../models/settings.model'
 
 export interface TooltipHookProps {
   borderWidth: number

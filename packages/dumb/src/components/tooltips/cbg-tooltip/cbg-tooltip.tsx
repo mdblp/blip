@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
-import { TimePrefs } from '../../../settings/models'
+import { TimePrefs } from '../../../models/settings.model'
 import colors from '../../../styles/colors.css'
 import { getBgClass, getOutOfRangeThreshold, reshapeBgClassesToBgBounds } from '../../../utils/blood-glucose.util'
 import { getDateTitle } from '../../../utils/tooltip.util'

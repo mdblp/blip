@@ -38,7 +38,7 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { Manufacturer, TimePrefs } from '../../../settings/models'
+import { Manufacturer, TimePrefs } from '../../../models/settings.model'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip.util'

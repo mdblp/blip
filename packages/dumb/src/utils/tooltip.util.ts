@@ -26,7 +26,7 @@
  */
 
 import { DateTitle } from '../components/tooltips/tooltip/tooltip'
-import { Source, TimePrefs, TIMEZONE_UTC } from '../settings/models'
+import { Source, TimePrefs, TIMEZONE_UTC } from '../models/settings.model'
 
 export const getDateTitle = (data: { source: Source, normalTime: string, timezone: string }, timePrefs: TimePrefs): DateTitle => {
   return {

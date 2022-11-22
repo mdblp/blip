@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Pump, Source } from '../settings/models'
+import { Pump, Source } from './settings.model'
 
 export interface Reservoir {
   source: Source

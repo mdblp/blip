@@ -26,15 +26,15 @@
  */
 
 .copyButton {
-  composes: copyButton from './settings.css';
+  composes: copyButton from 'settings.css';
 }
 
 .copyText {
-  composes: copyText from './settings.css';
+  composes: copyText from 'settings.css';
 }
 
 .categoryTitle {
-  composes: mediumContrastText from '../styles/typography.css';
+  composes: mediumContrastText from '../../styles/typography.css';
   width: 100%;
   padding-bottom: 10px;
 }
@@ -47,25 +47,25 @@
 }
 
 .settingsTable {
-  composes: settingsTable from './settings.css';
+  composes: settingsTable from 'settings.css';
 }
 
 .deviceTable {
-  composes: settingsTable from './settings.css';
+  composes: settingsTable from 'settings.css';
 }
 
 .pumpTable {
-  composes: settingsTable from './settings.css';
+  composes: settingsTable from 'settings.css';
 }
 
 .cgmTable {
-  composes: settingsTable from './settings.css';
+  composes: settingsTable from 'settings.css';
 }
 
 
 .secondaryLabelWithMain {
-  composes: lightText from '../styles/typography.css';
-  composes: secondaryLeftPadding from './settings.css';
+  composes: lightText from '../../styles/typography.css';
+  composes: secondaryLeftPadding from 'settings.css';
 }
 
 .categoryContainer {
@@ -86,7 +86,7 @@
 }
 
 .bdlgSettingsHeader {
-  composes: bolusHeaderBackground settingsHeader from './settings.css';
+  composes: bolusHeaderBackground settingsHeader from 'settings.css';
 }
 .settingsTable .spannedRow td {
   text-align: center;

@@ -26,7 +26,7 @@
  */
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime.util'
-import { TimePrefs } from '../settings/models'
+import { TimePrefs } from '../models/settings.model'
 import { convertBG } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'

@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { TimePrefs } from '../../../settings/models'
+import { TimePrefs } from '../../../models/settings.model'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,

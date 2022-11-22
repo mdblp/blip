@@ -27,58 +27,49 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './diabeloop.css'
-import { formatLocalizedFromUTC } from '../utils/datetime.util'
 import { useTranslation } from 'react-i18next'
-import { Pump, TimePrefs } from './models'
+import { Device } from '../../models/settings.model'
 
 const DEFAULT_VALUE = '-'
 
-interface PumpTableProps {
-  pump: Pump
-  timePrefs: TimePrefs
+interface TerminalTableProps {
+  device: Device
 }
 
-export const PumpTable: FunctionComponent<PumpTableProps> = (
+export const TerminalTable: FunctionComponent<TerminalTableProps> = (
   {
-    pump = {
-      expirationDate: DEFAULT_VALUE,
+    device = {
+      deviceId: DEFAULT_VALUE,
+      imei: DEFAULT_VALUE,
+      name: DEFAULT_VALUE,
       manufacturer: DEFAULT_VALUE,
-      serialNumber: DEFAULT_VALUE,
       swVersion: DEFAULT_VALUE
-    },
-    ...props
+    }
   }
 ) => {
-  const { timePrefs } = props
   const { t } = useTranslation('main')
 
-  const formatDate = (value: string): string => {
-    return value === '' ? DEFAULT_VALUE : formatLocalizedFromUTC(value, timePrefs, t('MMM D, YYYY'))
-  }
-
-  const pumpExpirationDate = formatDate(pump.expirationDate)
-
   return (
-    <table data-testid="settings-table-pump" className={styles.pumpTable}>
+    <table data-testid="settings-table-terminal" className={styles.deviceTable}>
       <caption className={styles.bdlgSettingsHeader}>
-        {t('Pump')}
+        {device.name}
       </caption>
       <tbody>
       <tr>
         <td>{t('Manufacturer')}</td>
-        <td>{pump.manufacturer}</td>
+        <td>{device.manufacturer}</td>
       </tr>
       <tr>
-        <td>{t('Serial Number')}</td>
-        <td>{pump.serialNumber}</td>
+        <td>{t('Identifier')}</td>
+        <td>{device.deviceId}</td>
       </tr>
       <tr>
-        <td>{t('Pump version')}</td>
-        <td>{pump.swVersion}</td>
+        <td>{t('IMEI')}</td>
+        <td>{device.imei}</td>
       </tr>
       <tr>
-        <td>{t('Pump cartridge expiration date')}</td>
-        <td>{pumpExpirationDate}</td>
+        <td>{t('Software version')}</td>
+        <td>{device.swVersion}</td>
       </tr>
       </tbody>
     </table>
