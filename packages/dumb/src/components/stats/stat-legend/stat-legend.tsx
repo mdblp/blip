@@ -48,11 +48,26 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
   return (
     <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
       <ul className={styles['stat-legend']}>
-        <StatLegendElement style={{ borderBottomColor: colors.veryLow }} value={`<${veryLowValue}`} />
-        <StatLegendElement style={{ borderBottomColor: colors.low }} value={`${veryLowValue}-${lowValue}`} />
-        <StatLegendElement style={{ borderBottomColor: colors.target }} value={`${lowValue}-${targetValue}`} />
-        <StatLegendElement style={{ borderBottomColor: colors.high }} value={`${targetValue}-${highValue}`} />
-        <StatLegendElement style={{ borderBottomColor: colors.veryHigh }} value={`>${highValue}`} />
+        <StatLegendElement
+          style={{ borderBottomColor: colors.veryLow }}
+          value={`<${veryLowValue}`}
+        />
+        <StatLegendElement
+          style={{ borderBottomColor: colors.low }}
+          value={`${veryLowValue}-${lowValue}`}
+        />
+        <StatLegendElement
+          style={{ borderBottomColor: colors.target }}
+          value={`${lowValue}-${targetValue}`}
+        />
+        <StatLegendElement
+          style={{ borderBottomColor: colors.high }}
+          value={`${targetValue}-${highValue}`}
+        />
+        <StatLegendElement
+          style={{ borderBottomColor: colors.veryHigh }}
+          value={`>${highValue}`}
+        />
       </ul>
       <Box marginLeft="auto" marginRight="4px" fontSize="12px">
         {units}

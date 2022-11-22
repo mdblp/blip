@@ -92,6 +92,7 @@ class Stats extends React.Component {
   renderStats(stats, animate, hideToolTips) {
     const { bgClasses } = this.props
     if(!bgClasses){
+      console.log('bg classes should be defined in order to display stats components')
       return null
     }
     const bgClassesMapped: BgClasses = {
