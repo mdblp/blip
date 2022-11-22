@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { computeCBGStyle } from './cbg-utils'
+import { computeBgClassesBarStyle, computeCBGStyle } from './cbg-utils'
 import { BgClasses } from './models'
 
 describe('CBGUtils', () => {
@@ -33,7 +33,7 @@ describe('CBGUtils', () => {
     high: 100,
     target: 80,
     low: 60,
-    veryLow: 40
+    veryLow: 30
   }
   describe('computeCBGStyle', () => {
     it('should return correct left when value is inferior to very low bg', () => {
@@ -48,12 +48,19 @@ describe('CBGUtils', () => {
 
     it('should return correct left when value is superior to low bg and inferior to target bg', () => {
       const computedStyle = computeCBGStyle(70, bgClasses)
-      expect(computedStyle.left).toBe('117px')
+      expect(computedStyle.left).toBe('134px')
     })
 
     it('should return correct left when value is superior to very low bg and inferior to low bg', () => {
       const computedStyle = computeCBGStyle(50, bgClasses)
-      expect(computedStyle.left).toBe('39px')
+      expect(computedStyle.left).toBe('67px')
+    })
+  })
+  describe('computeBgClassesBarStyle', () => {
+    it('should return correct left when value is inferior to very low bg', () => {
+      const computedStyle = computeBgClassesBarStyle(bgClasses)
+      expect(computedStyle.lowWidth).toBe('100px')
+      expect(computedStyle.targetWidth).toBe('67px')
     })
   })
 })
