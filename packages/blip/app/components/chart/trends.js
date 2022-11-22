@@ -652,8 +652,7 @@ class Trends extends React.Component {
       chartPrefs,
       trendsState,
       loading,
-      patient,
-      tidelineData
+      patient
     } = this.props
 
     const currentPatientInViewId = patient.userid

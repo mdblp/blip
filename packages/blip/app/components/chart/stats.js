@@ -90,7 +90,7 @@ class Stats extends React.Component {
 
   renderStats(stats, animate, hideToolTips) {
     const { bgPrefs } = this.props
-    const bgClassesMapped: BgClasses = {
+    const bgClasses: BgClasses = {
       high: bgPrefs.bgClasses.high.boundary,
       low: bgPrefs.bgClasses.low.boundary,
       target: bgPrefs.bgClasses.target.boundary,
@@ -104,7 +104,7 @@ class Stats extends React.Component {
             <div key={stat.id} data-testid={`stat-${stat.id}`}>
               <CBGPercentageBarChart
                 annotations={stat.annotations}
-                bgClasses={bgClassesMapped}
+                bgClasses={bgClasses}
                 data={stat.data.data}
                 hideTooltip={hideToolTips}
                 total={stat.data.total.value}
@@ -119,7 +119,7 @@ class Stats extends React.Component {
           return (
             <div key={stat.id} data-testid={`stat-${stat.id}`}>
               <CBGMeanStat
-                bgClasses={bgClassesMapped}
+                bgClasses={bgClasses}
                 hideTooltip={hideToolTips}
                 title={stat.title}
                 tooltipValue={stat.annotations[0]}
@@ -135,7 +135,7 @@ class Stats extends React.Component {
               <CBGStandardDeviation
                 annotations={stat.annotations}
                 averageGlucose={Math.round(stat.data.raw.averageGlucose)}
-                bgClasses={bgClassesMapped}
+                bgClasses={bgClasses}
                 hideTooltip={hideToolTips}
                 standardDeviation={Math.round(stat.data.raw.standardDeviation)}
                 title={stat.title}
