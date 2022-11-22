@@ -26,7 +26,7 @@
  */
 
 .stat-legend {
-  composes: smallSize from '../../styles/typography.css';
+  composes: smallSize from '../../../styles/typography.css';
   list-style: none;
   display: flex;
   margin: 0;

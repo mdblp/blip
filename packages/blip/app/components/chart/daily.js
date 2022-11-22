@@ -497,6 +497,7 @@ class Daily extends React.Component {
                 dataUtil={this.props.dataUtil}
                 endpoints={endpoints}
                 loading={loading}
+                bgClasses={tidelineData.opts.bgClasses}
               />
             </div>
           </div>

@@ -26,6 +26,9 @@
  */
 
 import styles from './cbg-colors.css'
+import { BgClasses } from './models'
+
+const CBG_BAR_WIDTH = 234 // Width of the cbg bar in px
 
 interface CBGStyle {
   backgroundColor: string
@@ -33,19 +36,42 @@ interface CBGStyle {
   left: string
 }
 
-export const computeCBGStyle = (value: number): CBGStyle => {
-  if (value < 54) {
+interface BgClassesBarStyle {
+  lowWidth: string
+  targetWidth: string
+}
+
+export const computeCBGStyle = (value: number, bgClasses: BgClasses): CBGStyle => {
+  const veryLowValue = bgClasses.veryLow
+  const lowValue = bgClasses.low
+  const targetValue = bgClasses.target
+  const highValue = bgClasses.high
+  if (value < veryLowValue) {
     return { backgroundColor: styles['low-background'], color: styles['low-color'], left: '0' }
-  } else if (value > 250) {
-    return { color: styles['high-color'], backgroundColor: styles['high-background'], left: '234px' }
-  } else {
-    const widthInPx = 234 // Width of the cbg bar
-    const cbgBarRange = 196 // Number of value included in the cbg bar range (from 54 to 250)
-    const nbOfValuesNotIncludedInRange = 54 // The first 54 values are not included in the range and should be deduced
-    return {
-      backgroundColor: value < 180 ? styles['target-background'] : styles['high-background'],
-      color: value < 180 ? styles['target-color'] : styles['high-color'],
-      left: `${Math.round(((value - nbOfValuesNotIncludedInRange) * widthInPx) / cbgBarRange)}px`
-    }
+  }
+  if (value > highValue) {
+    return { color: styles['high-color'], backgroundColor: styles['high-background'], left: `${CBG_BAR_WIDTH}px` }
+  }
+  const cbgBarRange = highValue - veryLowValue // Number of value included in the cbg bar range (default is from 54 to 250)
+  const left = `${Math.round(((value - veryLowValue) * CBG_BAR_WIDTH) / cbgBarRange)}px`
+  if (value > targetValue) {
+    return { color: styles['high-color'], backgroundColor: styles['high-background'], left }
+  }
+  if (value < lowValue) {
+    return { color: styles['low-color'], backgroundColor: styles['low-background'], left }
+  }
+  return { color: styles['target-color'], backgroundColor: styles['target-background'], left }
+}
+
+export const computeBgClassesBarStyle = (bgClasses: BgClasses): BgClassesBarStyle => {
+  const veryLowValue = bgClasses.veryLow
+  const lowValue = bgClasses.low
+  const targetValue = bgClasses.target
+  const highValue = bgClasses.high
+  const cbgBarRange = highValue - veryLowValue
+  const lowWidth = Math.round(((lowValue - veryLowValue) * CBG_BAR_WIDTH) / cbgBarRange)
+  return {
+    lowWidth: `${lowWidth}px`,
+    targetWidth: `${Math.round(((targetValue - veryLowValue) * CBG_BAR_WIDTH) / cbgBarRange) - lowWidth}px`
   }
 }

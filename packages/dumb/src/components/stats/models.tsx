@@ -46,3 +46,10 @@ export enum StatLevel {
   Low = 'low',
   VeryLow = 'veryLow'
 }
+
+export interface BgClasses {
+  high: number
+  low: number
+  target: number
+  veryLow: number
+}
