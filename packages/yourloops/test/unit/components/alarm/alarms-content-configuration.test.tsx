@@ -301,6 +301,7 @@ describe('AlarmsContentConfiguration', () => {
     const incorrectMonitoring = { ...monitoring }
     incorrectMonitoring.parameters.lowBg = 60.5
     renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    expect((document.getElementById('low-bg-text-field-id-helper-text') as HTMLInputElement)).toHaveTextContent('mandatory-integer')
     checkSaveButtonDisabled()
   })
 
@@ -308,6 +309,7 @@ describe('AlarmsContentConfiguration', () => {
     const incorrectMonitoring = { ...monitoring }
     incorrectMonitoring.parameters.highBg = 145.5
     renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    expect((document.getElementById('high-bg-text-field-id-helper-text') as HTMLInputElement)).toHaveTextContent('mandatory-integer')
     checkSaveButtonDisabled()
   })
 
@@ -315,6 +317,7 @@ describe('AlarmsContentConfiguration', () => {
     const incorrectMonitoring = { ...monitoring }
     incorrectMonitoring.parameters.veryLowBg = 40.5
     renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    expect((document.getElementById('very-low-bg-text-field-id-helper-text') as HTMLInputElement)).toHaveTextContent('mandatory-integer')
     checkSaveButtonDisabled()
   })
 })

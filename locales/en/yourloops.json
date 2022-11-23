@@ -173,7 +173,7 @@
   "information": "Information",
   "initial-hba1c": "Initial HbA1c",
   "ins": "INS",
-  "integer": "Integer",
+  "mandatory-integer": "Must be a integer",
   "intended-use": "Intended Use",
   "invalid-email": "Invalid email address (special characters are not allowed).",
   "invalid-phone-number": "Please enter a valid phone number",

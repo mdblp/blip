@@ -280,7 +280,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   id="low-bg-text-field-id"
                   value={lowBg.value}
                   error={lowBg.error}
-                  helperText={lowBg.error && t('integer')}
+                  helperText={lowBg.error && t('mandatory-integer')}
                   type="number"
                   className={classes.textField}
                   variant="outlined"
@@ -307,7 +307,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   id="high-bg-text-field-id"
                   value={highBg.value}
                   error={highBg.error}
-                  helperText={highBg.error && t('integer')}
+                  helperText={highBg.error && t('mandatory-integer')}
                   type="number"
                   className={classes.textField}
                   variant="outlined"
@@ -372,7 +372,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 id="very-low-bg-text-field-id"
                 value={veryLowBg.value}
                 error={veryLowBg.error}
-                helperText={veryLowBg.error && t('integer')}
+                helperText={veryLowBg.error && t('mandatory-integer')}
                 type="number"
                 className={classes.textField}
                 variant="outlined"
