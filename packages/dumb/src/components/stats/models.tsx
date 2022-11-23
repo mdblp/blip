@@ -48,8 +48,8 @@ export enum StatLevel {
 }
 
 export interface BgClasses {
-  high: number
-  low: number
-  target: number
-  veryLow: number
+  high: number // High threshold represents all the values between target and high. The veyHigh threshold are all the values greater than high.
+  low: number // Low threshold represents all the values between veryLow and target
+  target: number // Target threshold represents all the values between low and target
+  veryLow: number // Very low threshold represents all the values between 0 and veryLow
 }
