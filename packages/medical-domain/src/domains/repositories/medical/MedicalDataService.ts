@@ -1,3 +1,30 @@
+/*
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import { MGDL_UNITS } from '../../models/medical/datum/Cbg'
 import ConfidentialMode from '../../models/medical/datum/ConfidentialMode'
 import DeviceParameterChange from '../../models/medical/datum/DeviceParameterChange'
@@ -20,15 +47,31 @@ import PhysicalActivityService from './datum/PhysicalActivityService'
 import TimeZoneChangeService from './datum/TimeZoneChangeService'
 import DatumService from './DatumService'
 
-import MedicalDataOptions, { BG_CLAMP_THRESHOLD, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS } from '../../models/medical/MedicalDataOptions'
+import MedicalDataOptions, {
+  BG_CLAMP_THRESHOLD,
+  DEFAULT_BG_BOUNDS,
+  defaultMedicalDataOptions
+} from '../../models/medical/MedicalDataOptions'
 import Datum from '../../models/medical/Datum'
-import { datumTypes, DatumType } from '../../models/medical/datum/basics/BaseDatum'
+import { DatumType, datumTypes } from '../../models/medical/datum/basics/BaseDatum'
 import TimeZoneItem from '../../models/time/TimeZones'
 import {
-  getOffset, isValidTimeZone, getStartOfDay, getEndOfDay,
-  toISOString, MS_IN_DAY, getEpoch, format, addMilliseconds, epochAtTimezone,
-  addAtTimezone, substractAtTimezone, getHours, twoWeeksAgo
+  addAtTimezone,
+  addMilliseconds,
+  epochAtTimezone,
+  format,
+  getEndOfDay,
+  getEpoch,
+  getHours,
+  getOffset,
+  getStartOfDay,
+  isValidTimeZone,
+  MS_IN_DAY,
+  substractAtTimezone,
+  toISOString,
+  twoWeeksAgo
 } from '../time/TimeService'
+import PumpSettings from '../../models/medical/datum/PumpSettings'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -138,6 +181,11 @@ class MedicalDataService {
   }
 
   private join(): void {
+    this.joinBolus()
+    this.joinReservoirChanges()
+  }
+
+  private joinBolus(): void {
     const bolusMap = new Map(
       this.medicalData.bolus.map((bolus, idx) => {
         return [bolus.id, { bolus: { ...bolus }, idx }]
@@ -154,6 +202,20 @@ class MedicalDataService {
         }
       }
       return wizard
+    })
+  }
+
+  private joinReservoirChanges(): void {
+    const sortedDescPumpSettings = this.medicalData.pumpSettings.sort((pumpSettings1: PumpSettings, pumpSettings2: PumpSettings) => {
+      const date1 = Number(new Date(pumpSettings1.normalTime))
+      const date2 = Number(new Date(pumpSettings2.normalTime))
+      return date2 - date1
+    })
+    const lastPumpSettings: PumpSettings = sortedDescPumpSettings[0]
+
+    this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
+      reservoirChange.pump = lastPumpSettings.payload.pump
+      return reservoirChange
     })
   }
 
@@ -326,7 +388,7 @@ class MedicalDataService {
     this.fills = fillData
   }
 
-  getLocaleTimeEndpoints(endInclusive = true, dateFormat = 'YYYY-MM-DD'): {startDate: string, endDate: string} {
+  getLocaleTimeEndpoints(endInclusive = true, dateFormat = 'YYYY-MM-DD'): { startDate: string, endDate: string } {
     const startEpoch = getEpoch(this.endpoints[0])
     const startTimezone = this.getTimezoneAt(startEpoch)
 

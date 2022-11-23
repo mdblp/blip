@@ -27,11 +27,9 @@
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
 import { TimePrefs } from '../../models/settings.model'
-import { convertBG } from 'medical-domain'
+import { convertBG, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
-import { InputTime } from '../../models/physical-activity.model'
-import { Unit } from '../../models/unit.model'
 import { BgClass, BgPrefs } from '../../models/blood-glucose.model'
 
 const t = i18next.t.bind(i18next)
@@ -43,7 +41,7 @@ const BG_LOW_LABEL_KEY = 'Low'
 const EXPONENTIAL_LOW_VALUE = 1e-2
 const EXPONENTIAL_HIGH_VALUE = 9999
 
-export const formatInputTime = (utcTime: InputTime, timePrefs: TimePrefs): string => {
+export const formatInputTime = (utcTime: string, timePrefs: TimePrefs): string => {
   return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat())
 }
 

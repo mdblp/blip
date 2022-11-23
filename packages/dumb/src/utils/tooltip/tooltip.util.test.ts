@@ -26,7 +26,7 @@
  */
 
 import { getDateTitle } from './tooltip.util'
-import { Source } from '../../models/settings.model'
+import { BaseDatum, Source } from 'medical-domain'
 
 describe('TooltipUtil', () => {
   const timePrefs = {
@@ -43,7 +43,7 @@ describe('TooltipUtil', () => {
         source: customSource as Source,
         normalTime: customNormalTime,
         timezone: customTimezone
-      }
+      } as BaseDatum
 
       expect(getDateTitle(data, timePrefs)).toEqual({
         source: customSource,
@@ -54,7 +54,7 @@ describe('TooltipUtil', () => {
     })
 
     it('should return default values if some information is missing from data', () => {
-      const data = { normalTime: customNormalTime }
+      const data = { normalTime: customNormalTime } as BaseDatum
 
       expect(getDateTitle(data, timePrefs)).toEqual({
         source: 'Diabeloop',

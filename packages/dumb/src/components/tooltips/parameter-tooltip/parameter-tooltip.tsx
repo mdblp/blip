@@ -46,10 +46,10 @@ import {
   Side
 } from '../tooltip/tooltip'
 import colors from '../../../styles/colors.css'
-import { Parameter, ParameterData } from '../../../models/parameter.model'
+import { DeviceParameterChange, Parameter } from 'medical-domain'
 
 interface ParameterTooltipProps {
-  parameter: ParameterData
+  parameter: DeviceParameterChange
   position: Position
   side: Side
   timePrefs: TimePrefs

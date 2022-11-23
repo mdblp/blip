@@ -26,8 +26,8 @@
  */
 
 import { formatBgValue, formatParameterValue } from './format.util'
-import { Unit } from '../../models/unit.model'
 import { BgPrefs } from '../../models/blood-glucose.model'
+import { Unit } from 'medical-domain'
 
 jest.mock('i18next', () => ({
   t: (value: string) => value

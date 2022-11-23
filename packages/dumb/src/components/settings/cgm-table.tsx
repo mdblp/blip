@@ -29,12 +29,13 @@ import React, { FunctionComponent } from 'react'
 import styles from './diabeloop.css'
 import { formatLocalizedFromUTC } from '../../utils/datetime/datetime.util'
 import { useTranslation } from 'react-i18next'
-import { CGM, TimePrefs } from '../../models/settings.model'
+import { TimePrefs } from '../../models/settings.model'
+import { CgmConfig } from 'medical-domain'
 
 const DEFAULT_VALUE = '-'
 
 interface CgmTableProps {
-  cgm: CGM
+  cgm: CgmConfig
   timePrefs: TimePrefs
 }
 

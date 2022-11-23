@@ -25,36 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Source } from './settings.model'
-import moment from 'moment-timezone'
-
-export interface PhysicalActivity {
-  duration: {
-    units: DurationUnit
-    value: number
-  }
-  reportedIntensity: Intensity
-  inputTime: number
-  source: Source
-  normalTime: string
-  timezone: string
-}
-
-enum Intensity {
-  High = 'high',
-  Low = 'low',
-  Medium = 'medium'
-}
-
-export enum DurationUnit {
+enum DurationUnit {
   Hours = 'hours',
   Minutes = 'minutes',
   Seconds = 'seconds'
 }
 
-export interface Duration {
-  units: DurationUnit
-  value: number
-}
-
-export type InputTime = string | number | Date | moment.Moment
+export default DurationUnit

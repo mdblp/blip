@@ -45,11 +45,12 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { BgPrefs, BloodGlucoseData, ClassificationType } from '../../../models/blood-glucose.model'
+import { BgPrefs, ClassificationType } from '../../../models/blood-glucose.model'
+import { Cbg, Smbg } from 'medical-domain'
 
 interface BloodGlucoseTooltipProps {
   bgPrefs: BgPrefs
-  data: BloodGlucoseData
+  data: Cbg | Smbg
   position: Position
   side: Side
   timePrefs: TimePrefs

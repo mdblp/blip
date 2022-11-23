@@ -26,9 +26,10 @@
  */
 
 import { DateTitle } from '../../components/tooltips/tooltip/tooltip'
-import { Source, TimePrefs, TIMEZONE_UTC } from '../../models/settings.model'
+import { TimePrefs, TIMEZONE_UTC } from '../../models/settings.model'
+import { BaseDatum, Source } from 'medical-domain'
 
-export const getDateTitle = (data: { source?: Source, normalTime: string, timezone?: string }, timePrefs: TimePrefs): DateTitle => {
+export const getDateTitle = (data: BaseDatum, timePrefs: TimePrefs): DateTitle => {
   return {
     source: data.source ?? Source.Diabeloop,
     normalTime: data.normalTime,

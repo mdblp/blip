@@ -43,10 +43,10 @@ import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
-import { Food, Prescriptor } from '../../../models/food.model'
+import { Meal, Prescriptor } from 'medical-domain'
 
 interface FoodTooltipProps {
-  food: Food
+  food: Meal
   position: Position
   side: Side
   timePrefs: TimePrefs
@@ -58,8 +58,8 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
   const actualCarbs = food.nutrition?.carbohydrate?.net || 0
   const prescribedCarbs = food.prescribedNutrition?.carbohydrate?.net
   const prescriptor = food.prescriptor
-  const recommendedValue = (prescriptor === Prescriptor.Modified) ? prescribedCarbs : actualCarbs
-  const hasPrescriptor = prescriptor && (prescriptor !== Prescriptor.None)
+  const recommendedValue = (prescriptor === Prescriptor.Hybrid) ? prescribedCarbs : actualCarbs
+  const hasPrescriptor = prescriptor && (prescriptor !== Prescriptor.Manual)
 
   const tooltipParams = {
     position,

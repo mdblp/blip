@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Pump, Source } from './settings.model'
-
-export interface Reservoir {
-  source: Source
-  normalTime: string
-  timezone: string
-  pump: Pump
+enum PumpManufacturer {
+  Dana = 'DANA',
+  Default = 'DEFAULT',
+  Roche = 'ROCHE',
+  Vicentra = 'VICENTRA'
 }
+
+export default PumpManufacturer

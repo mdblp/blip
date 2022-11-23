@@ -29,7 +29,8 @@ import { useCallback, useMemo } from 'react'
 import { DateTitle, Offset, Position } from './tooltip'
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
 import moment from 'moment-timezone'
-import { Source, TIMEZONE_UTC } from '../../../models/settings.model'
+import { TIMEZONE_UTC } from '../../../models/settings.model'
+import { Source } from 'medical-domain'
 
 export interface TooltipHookProps {
   borderWidth: number

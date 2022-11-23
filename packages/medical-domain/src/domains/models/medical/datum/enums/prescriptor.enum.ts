@@ -25,13 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum Unit {
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Kilogram = 'kg',
-  Gram = 'g',
-  MilligramPerDeciliter = 'mg/dL',
-  MmolPerLiter = 'mmol/L',
-  Minute = 'min',
-  Percent = '%'
+enum Prescriptor {
+  Auto = 'auto',
+  Hybrid = 'hybrid',
+  Manual = 'manual'
 }
+
+export default Prescriptor

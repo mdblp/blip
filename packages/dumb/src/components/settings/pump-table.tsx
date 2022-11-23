@@ -29,12 +29,13 @@ import React, { FunctionComponent } from 'react'
 import styles from './diabeloop.css'
 import { formatLocalizedFromUTC } from '../../utils/datetime/datetime.util'
 import { useTranslation } from 'react-i18next'
-import { Pump, TimePrefs } from '../../models/settings.model'
+import { TimePrefs } from '../../models/settings.model'
+import { PumpConfig } from 'medical-domain'
 
 const DEFAULT_VALUE = '-'
 
 interface PumpTableProps {
-  pump: Pump
+  pump: PumpConfig
   timePrefs: TimePrefs
 }
 

@@ -25,22 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Source } from './settings.model'
-import { Unit } from './unit.model'
-
-export interface ParameterData {
-  params: Parameter[]
-  source: Source
-  normalTime: string
-  timezone: string
+enum Unit {
+  InsulinUnit = 'U',
+  InsulinUnitPerGram = 'U/g',
+  Kilogram = 'kg',
+  Gram = 'g',
+  MilligramPerDeciliter = 'mg/dL',
+  Minute = 'min',
+  MmolPerLiter = 'mmol/L',
+  Percent = '%'
 }
 
-export interface Parameter {
-  id: string
-  name: string
-  value: string | number
-  previousValue: string
-  units: Unit
-  epoch: number
-  timezone: string
-}
+export default Unit

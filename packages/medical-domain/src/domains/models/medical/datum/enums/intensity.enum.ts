@@ -25,27 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Source } from './settings.model'
-
-export interface Food {
-  source: Source
-  normalTime: string
-  timezone: string
-  nutrition: {
-    carbohydrate: {
-      net: number
-    }
-  }
-  prescriptor: Prescriptor
-  prescribedNutrition: {
-    carbohydrate: {
-      net: number
-    }
-  }
+enum Intensity {
+  High = 'high',
+  Low = 'low',
+  Medium = 'medium'
 }
 
-export enum Prescriptor {
-  Auto = 'auto',
-  Modified = 'hybrid',
-  None = 'manual'
-}
+export default Intensity

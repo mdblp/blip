@@ -38,14 +38,14 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { Manufacturer, TimePrefs } from '../../../models/settings.model'
+import { TimePrefs } from '../../../models/settings.model'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
-import { Reservoir } from '../../../models/reservoir.model'
+import { PumpManufacturer, ReservoirChange } from 'medical-domain'
 
 interface ReservoirTooltipProps {
-  reservoir: Reservoir
+  reservoir: ReservoirChange
   position: Position
   side: Side
   timePrefs: TimePrefs
@@ -61,18 +61,18 @@ const t = i18next.t.bind(i18next)
 export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
   const { reservoir, position, side, timePrefs } = props
 
-  const getChangeTypeByManufacturer = (manufacturer: Manufacturer): ChangeType => {
+  const getChangeTypeByManufacturer = (manufacturer: PumpManufacturer): ChangeType => {
     switch (manufacturer) {
-      case Manufacturer.Vicentra:
-      case Manufacturer.Roche:
+      case PumpManufacturer.Vicentra:
+      case PumpManufacturer.Roche:
         return ChangeType.Reservoir
-      case Manufacturer.Default:
+      case PumpManufacturer.Default:
       default:
         return ChangeType.InfusionSite
     }
   }
 
-  const manufacturer = reservoir.pump?.manufacturer || Manufacturer.Default
+  const manufacturer = reservoir.pump?.manufacturer || PumpManufacturer.Default
   const changeType: ChangeType = getChangeTypeByManufacturer(manufacturer)
   const label = (changeType === ChangeType.Reservoir)
     ? t('Reservoir Change')

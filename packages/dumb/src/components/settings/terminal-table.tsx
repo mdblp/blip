@@ -28,12 +28,12 @@
 import React, { FunctionComponent } from 'react'
 import styles from './diabeloop.css'
 import { useTranslation } from 'react-i18next'
-import { Device } from '../../models/settings.model'
+import { DeviceConfig } from 'medical-domain'
 
 const DEFAULT_VALUE = '-'
 
 interface TerminalTableProps {
-  device: Device
+  device: DeviceConfig
 }
 
 export const TerminalTable: FunctionComponent<TerminalTableProps> = (

@@ -25,17 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Unit } from './unit.model'
-import { Source } from './settings.model'
-
-export interface BloodGlucoseData {
-  value: number
-  source: Source
-  normalTime: string
-  timezone: string
-}
-
-export type BgUnits = Unit.MilligramPerDeciliter | Unit.MmolPerLiter
+import { BgUnit } from 'medical-domain'
 
 export interface BgBounds {
   veryHighThreshold: number
@@ -53,7 +43,7 @@ export interface BgClasses {
 }
 
 export interface BgPrefs {
-  bgUnits: BgUnits
+  bgUnits: BgUnit
   bgBounds: BgBounds
   bgClasses: BgClasses
 }
