@@ -297,7 +297,6 @@ describe('AlarmsContentConfiguration', () => {
     expect(screen.queryByText('default-min-max')).not.toBeNull()
     expect(screen.queryAllByText('default')).toHaveLength(4)
   })
-
   it('save button should be disabled when low bg value is not integer', () => {
     const incorrectMonitoring = { ...monitoring }
     incorrectMonitoring.parameters.lowBg = 60.5
