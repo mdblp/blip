@@ -26,8 +26,6 @@
  */
 
 import React, { FunctionComponent, memo } from 'react'
-
-import colors from '../../../styles/colors.css'
 import styles from './stat-legend.css'
 import { Box } from '@material-ui/core'
 import { BgClasses } from '../models'
@@ -49,23 +47,23 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
     <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
       <ul className={styles['stat-legend']}>
         <StatLegendElement
-          style={{ borderBottomColor: colors.veryLow }}
+          cbgClassName="very-high"
           value={`<${veryLowValue}`}
         />
         <StatLegendElement
-          style={{ borderBottomColor: colors.low }}
+          cbgClassName="high"
           value={`${veryLowValue}-${lowValue}`}
         />
         <StatLegendElement
-          style={{ borderBottomColor: colors.target }}
+          cbgClassName="target"
           value={`${lowValue}-${targetValue}`}
         />
         <StatLegendElement
-          style={{ borderBottomColor: colors.high }}
+          cbgClassName="low"
           value={`${targetValue}-${highValue}`}
         />
         <StatLegendElement
-          style={{ borderBottomColor: colors.veryHigh }}
+          cbgClassName="very-low"
           value={`>${highValue}`}
         />
       </ul>

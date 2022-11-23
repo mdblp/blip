@@ -29,21 +29,20 @@ import React, { FunctionComponent } from 'react'
 import styles from './stat-legend.css'
 
 interface StatLegendElementProps {
-  style: React.CSSProperties
+  cbgClassName: string
   value: string
 }
 
 export const StatLegendElement: FunctionComponent<StatLegendElementProps> = (props) => {
-  const { style, value } = props
+  const { cbgClassName, value } = props
 
   return (
     <li
-      className={styles['stat-legend-item']}
-      style={style}
+      className={`${styles['stat-legend-item']} ${styles[`${cbgClassName}-border-bottom`]}`}
     >
-            <span className={styles['stat-legend-title']}>
-              {value}
-            </span>
+      <span className={styles['stat-legend-title']}>
+        {value}
+      </span>
     </li>
   )
 }
