@@ -9,7 +9,7 @@ on:
     branches: '*'
     inputs:
       tag:
-        description: 'Add new tag'
+        description: 'Add new GitHub tag'
         required: true
         type: boolean
 
@@ -87,6 +87,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: npm ci
+
       - name: Download artifact
         uses: actions/download-artifact@v3
 
@@ -127,4 +135,25 @@ jobs:
         if: ${{ inputs.tag }}
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ steps.package-version.outputs.current-version }}
+          tag: v${{ steps.meta.outputs.version }}
+
+      - name: Generating documentation
+        env:
+          soupFileName: blip-${{ steps.meta.outputs.version }}-soup.md
+        uses: addnab/docker-run-action@v3
+        with:
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          registry: ${{ secrets.REGISTRY }}
+          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
+          image: docker.ci.diabeloop.eu/ci-toolbox:latest
+          run: |
+            echo Generating soup file ${{ env.soupFileName }}
+            cd blip
+            release-helper gen-dep-report --deep-dep 'blip,dumb,medical-domain,sundial,tideline,tidepool-viz' "${{ env.soupFileName }}"
+
+      - name: Upload soup file
+        uses: actions/upload-artifact@v3
+        with:
+          name: soup-list
+          path: blip-${{ steps.meta.outputs.version }}-soup.md

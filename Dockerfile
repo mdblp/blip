@@ -1,5 +1,5 @@
 # This part contains the deployment source code only
-FROM node:14-alpine3.14 as base
+FROM node:16-alpine3.16 as base
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
     apk --no-cache add curl && \

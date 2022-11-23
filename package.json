@@ -58,15 +58,7 @@
   },
   "engines": {
     "node": ">=16.x",
-    "npm": ">=7.x"
-  },
-  "dependencies": {
-    "blip": "file:packages/blip",
-    "dumb": "file:packages/dumb",
-    "sundial": "file:packages/sundial",
-    "tideline": "file:packages/tideline",
-    "tidepool-viz": "file:packages/viz",
-    "yourloops": "file:packages/yourloops"
+    "npm": ">=8.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
