@@ -77,23 +77,46 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
 
     return (
       <React.Fragment key={parameterId}>
-        <span id={`tooltip-daily-parameter-${parameterId}-date`} className={styles.date}
-              key={`${parameterId}-date`}>{displayHour}</span>
-        <span id={`tooltip-daily-parameter-${parameterId}-name`} className={styles.label} key={`${parameterId}-name`}>
-        {i18next.t(`params|${parameter.name}`)}
-      </span>
+        <span id={`tooltip-daily-parameter-${parameterId}-date`}
+              className={styles.date}
+              key={`${parameterId}-date`}
+        >
+          {displayHour}
+        </span>
+        <span id={`tooltip-daily-parameter-${parameterId}-name`}
+              data-testid={'parameter-name'}
+              className={styles.label}
+              key={`${parameterId}-name`}
+        >
+          {i18next.t(`params|${parameter.name}`)}
+        </span>
         {
           hasPreviousValue &&
           <>
-            <span id={`tooltip-daily-parameter-${parameterId}-prev`} className={styles.previous}
-                  key={`${parameterId}-prev`}>{formattedPreviousValue}</span>
+            <span id={`tooltip-daily-parameter-${parameterId}-prev`}
+                  data-testid={'parameter-previous-value'}
+                  className={styles.previous}
+                  key={`${parameterId}-prev`}
+            >
+              {formattedPreviousValue}
+            </span>
             <span id={`tooltip-daily-parameter-${parameterId}-arrow`} key={`${parameterId}-arrow`}>&rarr;</span>
           </>
         }
-        <span id={`tooltip-daily-parameter-${parameterId}-value`} className={valueClasses}
-              key={`${parameterId}-value`}>{value}</span>
-        <span id={`tooltip-daily-parameter-${parameterId}-units`} className={commonStyles.units}
-              key={`${parameterId}-units`}>{i18next.t(parameter.units)}</span>
+        <span id={`tooltip-daily-parameter-${parameterId}-value`}
+              data-testid={'parameter-value'}
+              className={valueClasses}
+              key={`${parameterId}-value`}
+        >
+          {value}
+        </span>
+        <span id={`tooltip-daily-parameter-${parameterId}-units`}
+              data-testid={'parameter-units'}
+              className={commonStyles.units}
+              key={`${parameterId}-units`}
+        >
+          {i18next.t(parameter.units)}
+        </span>
       </React.Fragment>
     )
   }
