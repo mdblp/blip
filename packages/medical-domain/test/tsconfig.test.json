@@ -1,10 +1,14 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "strict": false
+    "strict": false,
+    "rootDir": "../../medical-domain",
+    "types": ["jest", "node"]
   },
   "exclude": [
     "coverage"
   ],
-  "include": ["**/*"]
+  "include": [
+    "../../**/*",
+  ]
 }
