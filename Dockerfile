@@ -2,8 +2,7 @@
 FROM node:16-alpine3.16 as base
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
-    apk --no-cache add curl && \
-    npm install -g npm@8.5.5
+    apk --no-cache add curl
 
 FROM base as deployment
 WORKDIR /cloudfront-dist
