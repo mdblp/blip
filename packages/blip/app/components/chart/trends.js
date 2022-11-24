@@ -20,7 +20,6 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
-import WindowSizeListener from 'react-window-size-listener'
 
 import DateRangeIcon from '@material-ui/icons/DateRange'
 import InputAdornment from '@material-ui/core/InputAdornment'
