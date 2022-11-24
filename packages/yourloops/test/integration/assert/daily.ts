@@ -65,7 +65,7 @@ export const checkDailyTidelineContainerTooltips = async () => {
   await checkTidelineContainerElementTooltip('poolBolus_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip('poolBasal_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip(`wizard_group_${CARB_ID1}`, '8:25 pmMealCarbs45gLoop modeBolus TypeStandardDelivered1.3U')
-  await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID2}`, '2:00 pmConfirmed15g')
+  await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID2}`, '2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymediumDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
