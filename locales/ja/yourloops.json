@@ -279,7 +279,7 @@
   "pdf-generate-report": "レポートの生成",
   "pending": "Pending",
   "pending-invitation": "Pending invitation",
-  "pending-patients-filter": "Filter on pending patients",
+  "pending-patients-filter": "保留中の患者にフィルターを設定する",
   "personal-information": "個人情報",
   "phone-number": "電話番号",
   "placeholder-search": "Search for a patient by first name, last name or birthdate (dd/mm/yyyy)",
