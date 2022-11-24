@@ -13,9 +13,6 @@ on:
         required: true
         type: boolean
 
-env:
-  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-
 jobs:
   lint-test-build:
     runs-on: ubuntu-latest
@@ -83,24 +80,20 @@ jobs:
     if: github.event_name != 'pull_request'
     needs: lint-test-build
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install npm dependencies
-        run: npm ci
 
       - name: Download artifact
         uses: actions/download-artifact@v3
 
       - name: Get yourloops version from package.json
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@main
+        run: |
+          echo $(cat ./package.json | jq '.version' | tr -d '"')
+          echo "semver=$(cat ./package.json | jq '.version' | tr -d '"')" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -120,7 +113,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.REGISTRY }}/blip
-          tags: type=ref,enable=true,prefix=${{ steps.package-version.outputs.current-version }}-PR-,event=pr
+          tags: |
+            type=ref,enable=true,prefix=${{ steps.package-version.outputs.semver }}-PR-,event=pr
+            type=ref,enabled=true,event=branch
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
@@ -137,23 +132,51 @@ jobs:
         with:
           tag: v${{ steps.meta.outputs.version }}
 
+  documentation:
+    if: github.ref_name == 'dblp'
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: npm ci
+
       - name: Generating documentation
         env:
-          soupFileName: blip-${{ steps.meta.outputs.version }}-soup.md
+          soupFileName: blip-${{ needs.publish.outputs.version }}-soup.md
         uses: addnab/docker-run-action@v3
         with:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
           registry: ${{ secrets.REGISTRY }}
-          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
+          options: -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
           image: docker.ci.diabeloop.eu/ci-toolbox:latest
           run: |
             echo Generating soup file ${{ env.soupFileName }}
             cd blip
             release-helper gen-dep-report --deep-dep 'blip,dumb,medical-domain,sundial,tideline,tidepool-viz' "${{ env.soupFileName }}"
 
-      - name: Upload soup file
+      - name: Upload soup file on artifact
         uses: actions/upload-artifact@v3
         with:
           name: soup-list
-          path: blip-${{ steps.meta.outputs.version }}-soup.md
+          path: blip-${{ needs.publish.outputs.version }}-soup.md
+
+      - name: Upload soup file to S3 bucket
+        uses: addnab/docker-run-action@v3
+        with:
+          options: -v ${{ github.workspace }}:/blip:rw --user 0:0
+          image: amazon/aws-cli
+          run: |
+            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_KEY_ID }}
+            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            export AWS_DEFAULT_REGION=eu-west-1
+            cd /blip
+            aws s3 cp blip-${{ needs.publish.outputs.version }}-soup.md s3://${{ secrets.AWS_BUCKET }}/soup/blip/
