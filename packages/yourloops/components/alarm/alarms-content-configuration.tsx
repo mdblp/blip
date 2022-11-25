@@ -124,31 +124,11 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
   const teamHook = useTeam()
   const { t } = useTranslation('yourloops')
 
-  // const convertMonitoring = (): void => {
-  //   if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UNITS_TYPE.MMOLL) {
-  //     monitoring.parameters = {
-  //       bgUnit: UNITS_TYPE.MGDL,
-  //       lowBg: convertBG(monitoring.parameters.lowBg, UNITS_TYPE.MMOLL),
-  //       highBg: convertBG(monitoring.parameters.highBg, UNITS_TYPE.MMOLL),
-  //       outOfRangeThreshold: monitoring.parameters.outOfRangeThreshold,
-  //       veryLowBg: convertBG(monitoring.parameters.veryLowBg, UNITS_TYPE.MMOLL),
-  //       hypoThreshold: monitoring.parameters?.hypoThreshold,
-  //       nonDataTxThreshold: monitoring.parameters?.nonDataTxThreshold,
-  //       reportingPeriod: monitoring.parameters.reportingPeriod
-  //     }
-  //   }
-  // }
-  //
-  // convertMonitoring()
-  //   const isFloat = (value: number): boolean => {
-  //     return (String(value) === value.toFixed(1) && false)
-  //   }
-  // || (bgUnit === UNITS_TYPE.MMOLL && isFloat(value))
-  // bgUnit === UNITS_TYPE.MGDL &&
-  //   (bgUnit === UNITS_TYPE.MGDL && Number.isInteger(value))
-
   const isError = (value: number, lowValue: number, highValue: number): boolean => {
-    return !(value >= lowValue && value <= highValue) || ((bgUnit === UNITS_TYPE.MGDL && Number.isInteger(value)) || (bgUnit === UNITS_TYPE.MMOLL && value % 1 === 0))
+    const isInRange: boolean = value >= lowValue && value <= highValue
+    const isInteger: boolean = bgUnit === UNITS_TYPE.MGDL && Number.isInteger(value)
+    const isFloat: boolean = bgUnit === UNITS_TYPE.MMOLL && value % 1 !== 0
+    return !(isInRange && (isInteger || isFloat))
   }
 
   const isInvalidPercentage = (value: number): boolean => {
@@ -271,7 +251,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
         <Typography className={classes.categoryTitle}>
           1. {t('time-away-from-target')}
         </Typography>
-        <Typography variant="caption" className={classes.categoryInfo}>
+        <Typography variant="caption" data-testid="current-trigger-setting-tir" className={classes.categoryInfo}>
           {t('current-trigger-setting-tir', {
             tir: outOfRangeThreshold.value,
             lowBg: lowBg.value,
@@ -300,7 +280,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     inputProps: {
                       min: MIN_LOW_BG,
                       max: MAX_LOW_BG,
-                      step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1'
+                      step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1',
+                      'aria-label': t('low-bg-input')
                     }
                   }}
                   FormHelperTextProps={{
@@ -311,7 +292,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
                   data-testid="low-bg-text-field-id"
                 />
-                <Typography>{bgUnit}</Typography>
+                <Typography data-testid="bgUnits-minimum">{bgUnit}</Typography>
               </Box>
               <Box display="flex" alignItems="center">
                 <Typography>{t('maximum')}</Typography>
@@ -328,7 +309,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     inputProps: {
                       min: MIN_HIGH_BG,
                       max: MAX_HIGH_BG,
-                      step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1'
+                      step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1',
+                      'aria-label': t('high-bg-input')
                     }
                   }}
                   FormHelperTextProps={{
@@ -339,7 +321,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
                   data-testid="high-bg-text-field-id"
                 />
-                <Typography>{bgUnit}</Typography>
+                <Typography data-testid="bgUnits-maximum">{bgUnit}</Typography>
               </Box>
             </div>
             {!patient &&
@@ -398,7 +380,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   inputProps: {
                     min: MIN_VERY_LOW_BG,
                     max: MAX_VERY_LOW_BG,
-                    step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1'
+                    step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1',
+                    'aria-label': t('very-low-bg-input')
                   }
                 }}
                 FormHelperTextProps={{
@@ -409,7 +392,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
                 data-testid="very-low-bg-text-field-id"
               />
-              <Typography>{bgUnit}</Typography>
+              <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
             </div>
             {!patient &&
               <Typography className={classes.defaultLabel}>{t('default', { value: `54${bgUnit}` })}</Typography>
