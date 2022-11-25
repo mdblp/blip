@@ -20,17 +20,12 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
-import WindowSizeListener from 'react-window-size-listener'
 
 import DateRangeIcon from '@material-ui/icons/DateRange'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import TextField from '@material-ui/core/TextField'
 
-import {
-  components as vizComponents,
-  containers as vizContainers,
-  utils as vizUtils
-} from 'tidepool-viz'
+import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
 import Header from './header'
@@ -39,13 +34,13 @@ import Stats from './stats'
 import Footer from './footer'
 
 /**
- * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
- * @typedef { import("../../index").DialogRangeDatePicker } DialogRangeDatePicker
+ * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
+ * @typedef { import('../../index').DialogRangeDatePicker } DialogRangeDatePicker
  *
- * @typedef { import("./index").TrendsDatePickerProps } TrendsDatePickerProps
- * @typedef { import("./index").TrendsProps } TrendsProps
- * @typedef { import("./index").TrendsState } TrendsState
-*/
+ * @typedef { import('./index').TrendsDatePickerProps } TrendsDatePickerProps
+ * @typedef { import('./index').TrendsProps } TrendsProps
+ * @typedef { import('./index').TrendsState } TrendsState
+ */
 
 const t = i18next.t.bind(i18next)
 const CBGDateTraceLabel = vizComponents.CBGDateTraceLabel
@@ -219,9 +214,7 @@ class Trends extends React.Component {
       currentCbgData: []
     }
 
-    this.chartRef = React.createRef()
 
-    this.handleWindowResize = this.handleWindowResize.bind(this)
     this.handleClickBack = this.handleClickBack.bind(this)
     this.handleClickDaily = this.handleClickDaily.bind(this)
     this.handleClickForward = this.handleClickForward.bind(this)
@@ -340,13 +333,6 @@ class Trends extends React.Component {
       dates.push(endPoints[0].format(ISO_DAY_FORMAT))
     }
     return dates
-  }
-
-  getChart() {
-    if (this.chartRef.current) {
-      return this.chartRef.current.getWrappedInstance()
-    }
-    return null
   }
 
   getMaxExtendsSize() {
@@ -489,10 +475,6 @@ class Trends extends React.Component {
     )
   }
 
-  handleWindowResize(/* windowSize */) {
-    this.getChart()?.mountData()
-  }
-
   handleClickBack(e) {
     if (e) {
       e.preventDefault()
@@ -551,7 +533,7 @@ class Trends extends React.Component {
     }
     const extentSize = Math.round(this.props.chartPrefs.trends.extentSize)
     const msRange = extentSize * TimeService.MS_IN_DAY
-    this.props.onDatetimeLocationChange(this.endDate.valueOf() - Math.floor(msRange/2), msRange)
+    this.props.onDatetimeLocationChange(this.endDate.valueOf() - Math.floor(msRange / 2), msRange)
     if (event) {
       // If event is set, it's a click, so we can track this change
       this.props.trackMetric('data_visualization', 'select_period', 'most_recent')
@@ -667,7 +649,8 @@ class Trends extends React.Component {
     // Get the component here, for the tests: Avoid having redux set
     const { RangeSelect } = vizComponents
     rightFooter = (
-      <RangeSelect displayFlags={trendsState[currentPatientInViewId].cbgFlags} currentPatientInViewId={currentPatientInViewId} />
+      <RangeSelect displayFlags={trendsState[currentPatientInViewId].cbgFlags}
+        currentPatientInViewId={currentPatientInViewId} />
     )
 
     return (
@@ -677,7 +660,7 @@ class Trends extends React.Component {
           <div className="container-box-inner patient-data-content-inner">
             {this.renderSubNav()}
             <div className="patient-data-content">
-              {loading && <Loader show overlay={true} /> }
+              {loading && <Loader show overlay={true} />}
               <div id="tidelineContainer" className="patient-data-chart-trends">
                 {this.renderChart()}
               </div>
@@ -687,7 +670,7 @@ class Trends extends React.Component {
           </div>
           <div className="container-box-inner patient-data-sidebar">
             <div className="patient-data-sidebar-inner">
-              <div id="toggle-bg-replacement" style={{height: 36 }} />
+              <div id="toggle-bg-replacement" style={{ height: 36 }} />
               <Stats
                 bgPrefs={this.props.bgPrefs}
                 bgSource={this.props.dataUtil.bgSource}
@@ -703,7 +686,6 @@ class Trends extends React.Component {
         <Footer onClickRefresh={this.props.onClickRefresh}>
           {rightFooter}
         </Footer>
-        <WindowSizeListener onResize={this.handleWindowResize} />
       </div>
     )
   }
@@ -776,7 +758,6 @@ class Trends extends React.Component {
         tidelineData={this.props.tidelineData}
         // handlers
         onSelectDate={this.handleSelectDate}
-        ref={this.chartRef}
       />
     )
   }
