@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { ITeamMember } from '../../models/team'
-import HttpService, { ErrorMessageStatus } from '../../services/http'
+import HttpService, { ErrorMessageStatus } from '../../services/http.service'
 import bows from 'bows'
-import { INotificationAPI } from '../../models/notification'
+import { INotificationAPI } from '../../models/notification-api.model'
 import { UserRoles } from '../../models/user'
-import { HttpHeaderKeys } from '../../models/api'
+import { HttpHeaderKeys } from '../../models/api.model'
 import { getCurrentLang } from '../language'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring } from '../../models/monitoring.model'
 
 const log = bows('Patient API')
 

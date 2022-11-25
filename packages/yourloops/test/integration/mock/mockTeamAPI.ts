@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import TeamAPI from '../../../lib/team/team-api'
+import TeamAPI from '../../../lib/team/team.api'
 import { UNITS_TYPE } from '../../../lib/units/utils'
 import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
 import { ITeam, TeamMemberRole, TeamType } from '../../../models/team'
 import { loggedInUserId } from './mockAuth0Hook'
-import { HcpProfession } from '../../../models/hcp-profession'
-import { UserInvitationStatus } from '../../../models/generic'
-import { MonitoringStatus } from '../../../models/monitoring'
+import { HcpProfession } from '../../../models/hcp-profession.model'
+import { UserInvitationStatus } from '../../../models/generic.model'
+import { MonitoringStatus } from '../../../models/monitoring.model'
 
 export const monitoringParameters = {
   bgUnit: UNITS_TYPE.MGDL,

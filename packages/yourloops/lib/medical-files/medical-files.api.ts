@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { MedicalRecord, NewMedicalRecord, Prescription, WeeklyReport } from './model'
-import HttpService from '../../services/http'
+import HttpService from '../../services/http.service'
 
 export default class MedicalFilesApi {
   static async getPrescriptions(patientId: string, teamId: string): Promise<Prescription[]> {

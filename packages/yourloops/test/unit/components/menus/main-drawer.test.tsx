@@ -39,8 +39,8 @@ import * as patientHookMock from '../../../../lib/patient/provider'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { PatientFilterStats } from '../../../../lib/team/models'
-import User from '../../../../lib/auth/user'
-import { PatientFilterTypes } from '../../../../models/generic'
+import User from '../../../../lib/auth/user.model'
+import { PatientFilterTypes } from '../../../../models/generic.model'
 import { MemoryRouter } from 'react-router-dom'
 
 jest.mock('../../../../lib/team')

@@ -28,9 +28,9 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 
-import { HttpHeaderKeys } from '../models/api'
+import { HttpHeaderKeys } from '../models/api.model'
 import appConfig from './config'
-import HttpService from '../services/http'
+import HttpService from '../services/http.service'
 
 export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
   if (config.params?.noHeader) {

@@ -42,8 +42,8 @@ import AlarmsContentConfiguration, {
 } from '../../../../components/alarm/alarms-content-configuration'
 import { fireEvent, render, screen } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
-import { PatientTeam } from '../../../../lib/data/patient'
-import { Monitoring } from '../../../../models/monitoring'
+import { PatientTeam } from '../../../../lib/data/patient.model'
+import { Monitoring } from '../../../../models/monitoring.model'
 import PatientUtils from '../../../../lib/patient/utils'
 
 jest.mock('../../../../lib/team')

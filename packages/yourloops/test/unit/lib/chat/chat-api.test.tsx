@@ -26,7 +26,7 @@
  */
 
 import { Message } from '../../../../components/chat/chat-widget'
-import HttpService from '../../../../services/http'
+import HttpService from '../../../../services/http.service'
 import { AxiosResponse } from 'axios'
 import ChatApi from '../../../../lib/chat/api'
 

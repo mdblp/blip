@@ -27,7 +27,7 @@
 
 import { AuthenticatedUserMetadata, UserRoles } from '../../../../models/user'
 import config from '../../../../lib/config'
-import User from '../../../../lib/auth/user'
+import User from '../../../../lib/auth/user.model'
 
 describe('User', () => {
   let user: User

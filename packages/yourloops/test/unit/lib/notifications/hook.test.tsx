@@ -32,7 +32,7 @@ import * as authHookMock from '../../../../lib/auth/hook'
 import { INotification, NotificationContext, NotificationType } from '../../../../lib/notifications/models'
 import { NotificationContextProvider, useNotification } from '../../../../lib/notifications/hook'
 import { loggedInUsers } from '../../common'
-import NotificationApi from '../../../../lib/notifications/notification-api'
+import NotificationApi from '../../../../lib/notifications/notification.api'
 import { render, waitFor } from '@testing-library/react'
 
 jest.mock('../../../../lib/auth/hook')
@@ -180,7 +180,7 @@ describe('Notification hook', () => {
         }
       }
       await act(async () => {
-        await notifications.cancel(notification)
+        await notifications.cancel(notification.id)
       })
       expect(NotificationApi.cancelInvitation).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)

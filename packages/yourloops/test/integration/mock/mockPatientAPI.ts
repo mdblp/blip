@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientAPI from '../../../lib/patient/patient-api'
+import PatientAPI from '../../../lib/patient/patient.api'
 import { ITeamMember, TeamMemberRole } from '../../../models/team'
-import { UserInvitationStatus } from '../../../models/generic'
-import { MonitoringStatus } from '../../../models/monitoring'
+import { UserInvitationStatus } from '../../../models/generic.model'
+import { MonitoringStatus } from '../../../models/monitoring.model'
 import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
 
 export const unmonitoredPatientId = '1db524f3b65f2'

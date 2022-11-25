@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from '../../../../models/generic'
+import { UserInvitationStatus } from '../../../../models/generic.model'
 import { createPatient, createPatientTeam } from '../../common/utils'
-import { Patient } from '../../../../lib/data/patient'
+import { Patient } from '../../../../lib/data/patient.model'
 import PatientUtils from '../../../../lib/patient/utils'
-import { Monitoring, MonitoringStatus } from '../../../../models/monitoring'
+import { Monitoring, MonitoringStatus } from '../../../../models/monitoring.model'
 import { UNITS_TYPE } from '../../../../lib/units/utils'
 
 describe('Patient utils', () => {

@@ -46,8 +46,8 @@ import { REGEX_EMAIL } from '../../lib/utils'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 import { AddPatientDialogContentProps } from '../../pages/hcp/types'
 import { usePatientContext } from '../../lib/patient/provider'
-import { PatientTeam } from '../../lib/data/patient'
-import { UserInvitationStatus } from '../../models/generic'
+import { PatientTeam } from '../../lib/data/patient.model'
+import { UserInvitationStatus } from '../../models/generic.model'
 
 export interface AddDialogProps {
   actions: AddPatientDialogContentProps | null

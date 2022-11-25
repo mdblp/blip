@@ -30,9 +30,9 @@
  */
 
 import { Profile, Settings, Preferences } from './user'
-import { UserInvitationStatus, PostalAddress } from './generic'
-import { Alarm } from './alarm'
-import { Monitoring } from './monitoring'
+import { UserInvitationStatus, PostalAddress } from './generic.model'
+import { Alarm } from './alarm.model'
+import { Monitoring } from './monitoring.model'
 
 export enum TeamType {
   medical = 'medical',

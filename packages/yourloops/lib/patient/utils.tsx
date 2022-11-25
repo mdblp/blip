@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Patient, PatientTeam } from '../data/patient'
-import PatientApi from './patient-api'
+import { Patient, PatientTeam } from '../data/patient.model'
+import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
-import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
+import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic.model'
 import moment from 'moment-timezone'
 
 export default class PatientUtils {

@@ -46,7 +46,7 @@ import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
 import { weekArrayPlugin, weekdaysPlugin } from '../../../../lib/dayjs'
 import * as constants from '../../../../../viz/src/modules/print/utils/constants'
-import DataApi from '../../../../lib/data/data-api'
+import DataApi from '../../../../lib/data/data.api'
 import { User } from '../../../../lib/auth'
 
 describe('Daily view for anyone', () => {

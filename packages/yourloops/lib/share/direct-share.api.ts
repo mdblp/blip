@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { DirectShareAPI, ShareUser } from './models'
-import HttpService from '../../services/http'
-import { UserInvitationStatus } from '../../models/generic'
+import HttpService from '../../services/http.service'
+import { UserInvitationStatus } from '../../models/generic.model'
 import { fixYLP878Settings } from '../utils'
 import { UserRoles } from '../../models/user'
-import { HttpHeaderKeys } from '../../models/api'
+import { HttpHeaderKeys } from '../../models/api.model'
 import { getCurrentLang } from '../language'
 
 export default class DirectShareApi {

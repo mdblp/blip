@@ -26,15 +26,15 @@
  */
 
 import { sortBy } from 'lodash'
-import HttpService, { ErrorMessageStatus } from '../../services/http'
-import { Patient } from './patient'
+import HttpService, { ErrorMessageStatus } from '../../services/http.service'
+import { Patient } from './patient.model'
 import { GetPatientDataOptions } from './models'
-import { PatientData } from '../../models/device-data'
+import { PatientData } from '../../models/device-data.model'
 import { IUser } from '../../models/user'
-import MessageNote from '../../models/message'
-import User from '../auth/user'
-import { HttpHeaderKeys, HttpHeaderValues } from '../../models/api'
-import { Units } from '../../models/generic'
+import MessageNote from '../../models/message-note.model'
+import User from '../auth/user.model'
+import { HttpHeaderKeys, HttpHeaderValues } from '../../models/api.model'
+import { Units } from '../../models/generic.model'
 import bows from 'bows'
 
 const log = bows('Data API')

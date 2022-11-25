@@ -26,8 +26,8 @@
  */
 
 import { CompleteSignupPayload, Preferences, Profile, Settings, UserMetadata, UserRoles } from '../../../../models/user'
-import UserApi from '../../../../lib/auth/user-api'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http'
+import UserApi from '../../../../lib/auth/user.api'
+import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
 import { AxiosResponse } from 'axios'
 
 describe('Auth API', () => {

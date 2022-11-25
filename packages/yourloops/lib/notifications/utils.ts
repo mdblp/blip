@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { APINotificationType, INotificationAPI } from '../../models/notification'
+import { APINotificationType, INotificationAPI } from '../../models/notification-api.model'
 import { INotification, NotificationType } from './models'
 
 /**

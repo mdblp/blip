@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import { FilterType, UserInvitationStatus } from '../../../../models/generic'
+import { FilterType, UserInvitationStatus } from '../../../../models/generic.model'
 import * as authHookMock from '../../../../lib/auth'
 import { User } from '../../../../lib/auth'
 import { createPatient, createPatientTeam } from '../../common/utils'

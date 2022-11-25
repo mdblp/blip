@@ -28,7 +28,7 @@
 import { useTranslation } from 'react-i18next'
 import { useAlert } from '../utils/snackbar'
 import { INotification } from '../../lib/notifications/models'
-import DirectShareApi from '../../lib/share/direct-share-api'
+import DirectShareApi from '../../lib/share/direct-share.api'
 import { User } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/hook'
 import { OnCloseRemoveDirectShareDialog, UserToRemove } from './remove-direct-share-dialog'

@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService, { ErrorMessageStatus } from '../../../../services/http'
+import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
 import { ITeamMember } from '../../../../models/team'
 import { AxiosResponse } from 'axios'
-import { INotificationAPI } from '../../../../models/notification'
+import { INotificationAPI } from '../../../../models/notification-api.model'
 import { UserRoles } from '../../../../models/user'
-import { HttpHeaderKeys } from '../../../../models/api'
+import { HttpHeaderKeys } from '../../../../models/api.model'
 import { getCurrentLang } from '../../../../lib/language'
-import PatientApi from '../../../../lib/patient/patient-api'
+import PatientApi from '../../../../lib/patient/patient.api'
 
 describe('PatientApi', () => {
   const userId = 'userId'

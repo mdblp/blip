@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DirectShareApi from '../../../../lib/share/direct-share-api'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
 import * as notificationHookMock from '../../../../lib/notifications/hook'
-import NotificationApi from '../../../../lib/notifications/notification-api'
+import NotificationApi from '../../../../lib/notifications/notification.api'
 import { renderHook } from '@testing-library/react-hooks'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
 import { NotificationType } from '../../../../lib/notifications/models'

@@ -34,7 +34,7 @@ import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/utils'
 import TeamMembers, { TeamMembersProps } from '../../../../components/team/team-members'
 import { TeamMemberRole } from '../../../../models/team'
-import { UserInvitationStatus } from '../../../../models/generic'
+import { UserInvitationStatus } from '../../../../models/generic.model'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 
 jest.mock('../../../../components/utils/snackbar')

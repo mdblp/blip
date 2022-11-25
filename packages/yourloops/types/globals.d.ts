@@ -27,7 +27,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { AppConfig } from '../models/config'
+import { AppConfig } from '../models/app-config.model'
 
 declare global {
   interface CookiesComplete {

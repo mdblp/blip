@@ -28,7 +28,7 @@
 import React, { createContext, FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
 import _ from 'lodash'
 
-import { UserInvitationStatus } from '../../models/generic'
+import { UserInvitationStatus } from '../../models/generic.model'
 import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
 
 import { errorTextFromException } from '../utils'
@@ -36,7 +36,7 @@ import metrics from '../metrics'
 import { useAuth } from '../auth'
 import { useNotification } from '../notifications/hook'
 import { Team, TeamContext, TeamMember } from './models'
-import TeamApi from './team-api'
+import TeamApi from './team.api'
 import TeamUtils from './utils'
 import { CircularProgress } from '@material-ui/core'
 

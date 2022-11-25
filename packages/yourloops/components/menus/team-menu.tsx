@@ -52,7 +52,7 @@ import { useAuth } from '../../lib/auth'
 import { ShareUser } from '../../lib/share/models'
 import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import { errorTextFromException } from '../../lib/utils'
-import DirectShareApi from '../../lib/share/direct-share-api'
+import DirectShareApi from '../../lib/share/direct-share.api'
 
 const classes = makeStyles((theme: Theme) => ({
   teamIcon: {

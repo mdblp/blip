@@ -34,7 +34,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import { PatientFilterTypes } from '../../../models/generic'
+import { PatientFilterTypes } from '../../../models/generic.model'
 
 const classes = makeStyles((theme: Theme) => ({
   countLabel: {

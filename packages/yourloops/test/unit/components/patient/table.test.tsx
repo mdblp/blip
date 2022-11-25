@@ -29,7 +29,7 @@ import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
 
-import { PatientTableSortFields, SortDirection, UserInvitationStatus } from '../../../../models/generic'
+import { PatientTableSortFields, SortDirection, UserInvitationStatus } from '../../../../models/generic.model'
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 

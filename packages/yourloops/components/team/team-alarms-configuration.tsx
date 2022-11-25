@@ -34,7 +34,7 @@ import TuneIcon from '@material-ui/icons/Tune'
 
 import { commonComponentStyles } from '../common'
 import { Team, useTeam } from '../../lib/team'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring } from '../../models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
 import AlarmsContentConfiguration from '../alarm/alarms-content-configuration'
 

@@ -30,7 +30,7 @@ import bows from 'bows'
 
 import { useAuth } from '../auth'
 
-import BlipApi from './blip-api'
+import BlipApi from './blip.api'
 
 export interface DataContext {
   blipApi: BlipApi | null

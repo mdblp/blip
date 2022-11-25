@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from '../../models/hcp-profession'
+import { HcpProfession } from '../../models/hcp-profession.model'
 
 interface SwitchRoleDialogProps {
   open: boolean

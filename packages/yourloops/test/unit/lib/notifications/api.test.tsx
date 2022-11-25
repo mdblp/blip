@@ -26,11 +26,11 @@
  */
 
 import HttpStatus from '../../../../lib/http-status-codes'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http'
-import { APINotificationType, INotificationAPI } from '../../../../models/notification'
+import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
+import { APINotificationType, INotificationAPI } from '../../../../models/notification-api.model'
 import { loggedInUsers } from '../../common'
 import axios, { AxiosResponse } from 'axios'
-import NotificationApi from '../../../../lib/notifications/notification-api'
+import NotificationApi from '../../../../lib/notifications/notification.api'
 import { INotification, NotificationType } from '../../../../lib/notifications/models'
 
 jest.mock('axios')
@@ -164,6 +164,7 @@ describe('Notification API', () => {
     })
 
     it('should return the converted notifications', async () => {
+      const email = patient.username
       const apiNotifications: INotificationAPI[] = [
         {
           key: 'fakeId',
@@ -173,13 +174,14 @@ describe('Notification API', () => {
           creator: {
             userid: 'abcd',
             profile: {
+              email,
               fullName: 'Test',
               firstName: 'Test',
               lastName: 'Test'
             }
           },
           shortKey: 'abcdef',
-          email: patient.username
+          email
         }
       ]
       const resolveOK: AxiosResponse<INotificationAPI[]> = {
@@ -245,6 +247,7 @@ describe('Notification API', () => {
     })
 
     it('should return the converted notifications', async () => {
+      const email = 'patient@yourloops.com'
       const apiNotifications: INotificationAPI[] = [
         {
           key: 'fakeId',
@@ -254,13 +257,14 @@ describe('Notification API', () => {
           creator: {
             userid: 'abcd',
             profile: {
+              email,
               fullName: 'Test',
               firstName: 'Test',
               lastName: 'Test'
             }
           },
           shortKey: 'abcdef',
-          email: 'patient@yourloops.com'
+          email
         }
       ]
       mockedAxios.get.mockResolvedValue({

@@ -27,16 +27,16 @@
 
 import bows from 'bows'
 
-import { PatientData } from 'models/device-data'
-import MessageNote from 'models/message'
+import { PatientData } from 'models/device-data.model'
+import MessageNote from 'models/message-note.model'
 import { IUser } from '../../models/user'
 import { AuthContext, User } from '../auth'
 import { t as translate } from '../language'
 import metrics from '../metrics'
 
 import { GetPatientDataOptions } from './models'
-import { Patient } from './patient'
-import DataApi from './data-api'
+import { Patient } from './patient.model'
+import DataApi from './data.api'
 
 /**
  * Wrapper for blip v1 to be able to call the API

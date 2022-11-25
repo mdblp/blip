@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import User from '../../../lib/auth/user'
+import User from '../../../lib/auth/user.model'
 import { getRedirectUrl } from '../../../app/main-lobby'
 
 describe('Main lobby', () => {

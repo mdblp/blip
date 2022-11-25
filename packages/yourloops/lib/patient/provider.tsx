@@ -27,11 +27,11 @@
 
 import React, { createContext, FunctionComponent, useContext } from 'react'
 
-import { Patient, PatientTeam } from '../data/patient'
+import { Patient, PatientTeam } from '../data/patient.model'
 import { Team } from '../team'
 import { PatientFilterStats } from '../team/models'
-import { PatientFilterTypes } from '../../models/generic'
-import { MedicalData } from '../../models/device-data'
+import { PatientFilterTypes } from '../../models/generic.model'
+import { MedicalData } from '../../models/device-data.model'
 import { CircularProgress } from '@material-ui/core'
 import usePatientProviderCustomHook from './hook'
 

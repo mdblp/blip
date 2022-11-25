@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import User from './user'
-import { LanguageCodes } from '../../models/locales'
+import User from './user.model'
+import { LanguageCodes } from '../../models/locales.model'
 import { Preferences, Profile, Settings, UserRoles } from '../../models/user'
-import { HcpProfession } from '../../models/hcp-profession'
+import { HcpProfession } from '../../models/hcp-profession.model'
 
 export enum SignupFormKey {
   AccountRole = 'accountRole',

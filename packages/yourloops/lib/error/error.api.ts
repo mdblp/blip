@@ -24,21 +24,22 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import HttpService from '../../services/http.service'
 
-import User from '../lib/auth/user'
+export interface ErrorPayload {
+  browserName: string
+  browserVersion: string
+  date: string
+  err: string
+  errorId: string
+  path: string
+}
 
-/**
- * Message interface
- */
-export interface IMessage {
-  readonly id: string
-  patientId: string
-  teamId: string
-  authorId: string
-  destAck: boolean
-  private: boolean
-  text: string
-  timezone: string
-  timestamp: string
-  user: User
+export default class ErrorApi {
+  static async sendError(payload: ErrorPayload): Promise<void> {
+    await HttpService.post<void, ErrorPayload>({
+      url: '/bff/v1/errors',
+      payload
+    })
+  }
 }

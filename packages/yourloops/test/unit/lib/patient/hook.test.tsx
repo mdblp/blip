@@ -25,21 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PatientFilterTypes, UserInvitationStatus } from '../../../../models/generic'
+import { PatientFilterTypes, UserInvitationStatus } from '../../../../models/generic.model'
 import usePatientProviderCustomHook from '../../../../lib/patient/hook'
 import { renderHook } from '@testing-library/react-hooks/dom'
 import PatientUtils from '../../../../lib/patient/utils'
 import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
-import { Monitoring, MonitoringStatus } from '../../../../models/monitoring'
+import { Monitoring, MonitoringStatus } from '../../../../models/monitoring.model'
 import * as notificationHookMock from '../../../../lib/notifications/hook'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { act, waitFor } from '@testing-library/react'
-import { Patient } from '../../../../lib/data/patient'
+import { Patient } from '../../../../lib/data/patient.model'
 import { UNITS_TYPE } from '../../../../lib/units/utils'
-import PatientApi from '../../../../lib/patient/patient-api'
-import { APINotificationType } from '../../../../models/notification'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
+import PatientApi from '../../../../lib/patient/patient.api'
+import { APINotificationType } from '../../../../models/notification-api.model'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { INotification } from '../../../../lib/notifications/models'
 
 jest.mock('../../../../lib/auth')

@@ -26,15 +26,15 @@
  */
 
 import { IUser } from '../../../../models/user'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http'
+import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
 import { AxiosResponse } from 'axios'
-import { HttpHeaderKeys, HttpHeaderValues } from '../../../../models/api'
-import DataApi from '../../../../lib/data/data-api'
-import { PatientData, PatientDatum } from '../../../../models/device-data'
-import { Patient } from '../../../../lib/data/patient'
+import { HttpHeaderKeys, HttpHeaderValues } from '../../../../models/api.model'
+import DataApi from '../../../../lib/data/data.api'
+import { PatientData, PatientDatum } from '../../../../models/device-data.model'
+import { Patient } from '../../../../lib/data/patient.model'
 import { GetPatientDataOptions } from '../../../../lib/data/models'
-import MessageNote from '../../../../models/message'
-import { Units } from '../../../../models/generic'
+import MessageNote from '../../../../models/message-note.model'
+import { Units } from '../../../../models/generic.model'
 import { User } from '../../../../lib/auth'
 import { sortBy } from 'lodash'
 

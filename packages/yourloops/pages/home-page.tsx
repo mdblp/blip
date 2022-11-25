@@ -34,7 +34,7 @@ import Alert from '@material-ui/lab/Alert'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 
-import { PatientFilterTypes } from '../models/generic'
+import { PatientFilterTypes } from '../models/generic.model'
 import metrics from '../lib/metrics'
 import { useAlert } from '../components/utils/snackbar'
 import { errorTextFromException, setPageTitle } from '../lib/utils'
@@ -46,7 +46,7 @@ import TeamCodeDialog from '../components/patient/team-code-dialog'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
 import { usePatientContext } from '../lib/patient/provider'
-import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../lib/patient/patient-api'
+import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../lib/patient/patient.api'
 
 const log = bows('PatientListPage')
 

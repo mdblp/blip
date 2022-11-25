@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import TeamApi from '../../../../lib/team/team-api'
-import { Monitoring } from '../../../../models/monitoring'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http'
+import TeamApi from '../../../../lib/team/team.api'
+import { Monitoring } from '../../../../models/monitoring.model'
+import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
 import { ITeam, TeamMemberRole, TeamType } from '../../../../models/team'
 import { AxiosResponse } from 'axios'
-import { INotificationAPI } from '../../../../models/notification'
-import { HttpHeaderKeys } from '../../../../models/api'
+import { INotificationAPI } from '../../../../models/notification-api.model'
+import { HttpHeaderKeys } from '../../../../models/api.model'
 import { getCurrentLang } from '../../../../lib/language'
-import { PostalAddress } from '../../../../models/generic'
+import { PostalAddress } from '../../../../models/generic.model'
 import { User } from '../../../../lib/auth'
 
 describe('TeamApi', () => {

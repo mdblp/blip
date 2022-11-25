@@ -31,7 +31,7 @@ import MedicalRecordDeleteDialog, {
   MedicalRecordDeleteDialogProps
 } from '../../../../../components/dialogs/medical-record-delete-dialog'
 import { MedicalRecord } from '../../../../../lib/medical-files/model'
-import MedicalFilesApi from '../../../../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
 
 jest.mock('../../../../../components/utils/snackbar')

@@ -32,7 +32,7 @@ import { useLocation } from 'react-router-dom'
 import { useQueryParams } from '../../../lib/custom-hooks/useQueryParams'
 import { MainDrawerProps } from './main-drawer'
 import { PatientFilterStats } from '../../../lib/team/models'
-import { PatientFilterTypes } from '../../../models/generic'
+import { PatientFilterTypes } from '../../../models/generic.model'
 import { usePatientContext } from '../../../lib/patient/provider'
 
 interface MainDrawerHookReturn {

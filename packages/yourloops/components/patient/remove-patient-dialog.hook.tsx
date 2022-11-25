@@ -26,12 +26,12 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { UserInvitationStatus } from '../../models/generic'
+import { UserInvitationStatus } from '../../models/generic.model'
 import { useEffect, useState } from 'react'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/provider'
 import { Team, useTeam } from '../../lib/team'
-import { Patient } from '../../lib/data/patient'
+import { Patient } from '../../lib/data/patient.model'
 import TeamUtils from '../../lib/team/utils'
 
 interface RemovePatientDialogHookProps {

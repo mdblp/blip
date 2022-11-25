@@ -30,13 +30,13 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
 import { BrowserRouter } from 'react-router-dom'
 
-import { Units } from '../../../../models/generic'
+import { Units } from '../../../../models/generic.model'
 import ProfilePage from '../../../../pages/profile'
-import { Profile, AuthenticatedUserMetadata, UserRoles } from '../../../../models/user'
+import { AuthenticatedUserMetadata, Profile, UserRoles } from '../../../../models/user'
 import * as authHookMock from '../../../../lib/auth'
-import User from '../../../../lib/auth/user'
+import User from '../../../../lib/auth/user.model'
 import { genderLabels } from '../../../../lib/auth/helpers'
-import { HcpProfession } from '../../../../models/hcp-profession'
+import { HcpProfession } from '../../../../models/hcp-profession.model'
 
 jest.mock('../../../../lib/auth')
 
@@ -60,14 +60,16 @@ describe('Profile', () => {
   beforeEach(() => {
     container = document.createElement('div')
     document.body.appendChild(container)
+    const email = 'josephine.dupuis@example.com'
     patient = new User({
-      email: 'josephine.dupuis@example.com',
-      emailVerified: true,
+      email,
+      email_verified: true,
       sub: 'auth0|a0a0a0b0',
       [AuthenticatedUserMetadata.Roles]: [UserRoles.patient]
     })
     patient.settings = { a1c: { date: '2020-01-01', value: '7.5' }, country: 'FR' }
     patient.profile = {
+      email,
       firstName: 'Josephine',
       lastName: 'Dupuis',
       fullName: 'Josephine D.',
@@ -83,14 +85,15 @@ describe('Profile', () => {
       }
     }
     patient.preferences = { displayLanguageCode: 'fr' }
+    const hcpEmail = 'john.doe@example.com'
     hcp = new User({
-      email: 'john.doe@example.com',
-      emailVerified: true,
+      email: hcpEmail,
+      email_verified: true,
       sub: 'auth0|a0000000',
       [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
     })
     hcp.frProId = 'ANS20211229094028'
-    hcp.profile = { firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
+    hcp.profile = { email: hcpEmail, firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
     hcp.preferences = { displayLanguageCode: 'en' }
     hcp.settings = { units: { bg: Units.gram }, country: 'FR' }
   })

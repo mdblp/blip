@@ -41,9 +41,9 @@ import {
   UserRoles
 } from '../../../../models/user'
 import { AuthContext, AuthContextProvider, SignupForm, useAuth, User } from '../../../../lib/auth'
-import { HcpProfession } from '../../../../models/hcp-profession'
-import UserApi from '../../../../lib/auth/user-api'
-import { Units } from '../../../../models/generic'
+import { HcpProfession } from '../../../../models/hcp-profession.model'
+import UserApi from '../../../../lib/auth/user.api'
+import { Units } from '../../../../models/generic.model'
 
 jest.mock('@auth0/auth0-react')
 

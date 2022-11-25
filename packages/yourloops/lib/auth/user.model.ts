@@ -34,7 +34,7 @@ import {
   AuthenticatedUserMetadata,
   UserRoles
 } from '../../models/user'
-import { MedicalData } from '../../models/device-data'
+import { MedicalData } from '../../models/device-data.model'
 import config from '../config'
 
 export default class User {

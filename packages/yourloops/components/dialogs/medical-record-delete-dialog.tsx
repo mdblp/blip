@@ -38,7 +38,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 import { makeButtonsStyles } from '../theme'
 import { MedicalRecord } from '../../lib/medical-files/model'
-import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 

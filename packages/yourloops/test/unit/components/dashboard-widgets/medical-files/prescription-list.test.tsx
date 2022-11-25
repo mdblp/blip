@@ -28,10 +28,10 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import PrescriptionList from '../../../../../components/dashboard-widgets/medical-files/prescription-list'
-import MedicalFilesApi from '../../../../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import { Prescription } from '../../../../../lib/medical-files/model'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/user'
+import User from '../../../../../lib/auth/user.model'
 
 jest.mock('../../../../../lib/auth')
 describe('Prescription list', () => {

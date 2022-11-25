@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientAPI from '../../../../lib/patient/patient-api'
+import PatientAPI from '../../../../lib/patient/patient.api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
@@ -38,7 +38,7 @@ import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'

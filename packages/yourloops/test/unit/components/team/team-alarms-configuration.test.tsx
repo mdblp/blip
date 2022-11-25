@@ -35,7 +35,7 @@ import TeamAlarmsConfiguration, {
   TeamAlarmsConfigurationProps
 } from '../../../../components/team/team-alarms-configuration'
 import { AlarmsContentConfigurationProps } from '../../../../components/alarm/alarms-content-configuration'
-import { Monitoring } from '../../../../models/monitoring'
+import { Monitoring } from '../../../../models/monitoring.model'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../components/alarm/alarms-content-configuration', () => (props: AlarmsContentConfigurationProps) => {

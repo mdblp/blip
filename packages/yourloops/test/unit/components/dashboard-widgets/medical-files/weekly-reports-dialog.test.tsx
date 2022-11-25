@@ -32,9 +32,9 @@ import { WeeklyReport } from '../../../../../lib/medical-files/model'
 import * as patientHookMock from '../../../../../lib/patient/provider'
 import * as teamHookMock from '../../../../../lib/team'
 import { buildTeam, createPatient, createPatientTeam } from '../../../common/utils'
-import { UserInvitationStatus } from '../../../../../models/generic'
+import { UserInvitationStatus } from '../../../../../models/generic.model'
 import { UNITS_TYPE } from '../../../../../lib/units/utils'
-import { Alarm } from '../../../../../models/alarm'
+import { Alarm } from '../../../../../models/alarm.model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../../../../lib/utils'
 
 jest.mock('../../../../../lib/patient/provider')

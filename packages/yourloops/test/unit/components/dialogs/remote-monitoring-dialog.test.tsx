@@ -40,8 +40,8 @@ import {
   PrescriptionInfo
 } from '../../../../components/patient/patient-monitoring-prescription'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { PatientTeam } from '../../../../lib/data/patient'
-import MedicalFilesApi from '../../../../lib/medical-files/medical-files-api'
+import { PatientTeam } from '../../../../lib/data/patient.model'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 import { Prescription } from '../../../../lib/medical-files/model'
 import PatientUtils from '../../../../lib/patient/utils'
 

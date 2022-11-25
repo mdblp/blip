@@ -34,13 +34,13 @@ import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 
 import BasicDropdown from '../dropdown/basic-dropdown'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring } from '../../models/monitoring.model'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { convertBG, UNITS_TYPE } from '../../lib/units/utils'
 import { useTeam } from '../../lib/team'
-import { Patient } from '../../lib/data/patient'
+import { Patient } from '../../lib/data/patient.model'
 import PatientUtils from '../../lib/patient/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({

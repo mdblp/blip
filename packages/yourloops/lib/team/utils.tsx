@@ -27,7 +27,7 @@
 
 import { Team, TEAM_CODE_LENGTH } from './models'
 import { TeamMemberRole } from '../../models/team'
-import { UserInvitationStatus } from '../../models/generic'
+import { UserInvitationStatus } from '../../models/generic.model'
 
 /**
  * Get the team code for display - Can be use with partial code.

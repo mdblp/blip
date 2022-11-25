@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from '../../models/generic'
+import { UserInvitationStatus } from '../../models/generic.model'
 import { IUser, Preferences, Profile, Settings } from '../../models/user'
 import { INotification } from '../notifications/models'
 

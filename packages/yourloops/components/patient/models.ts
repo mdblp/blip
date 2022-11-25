@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { FilterType, PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
-import { Patient } from '../../lib/data/patient'
+import { FilterType, PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic.model'
+import { Patient } from '../../lib/data/patient.model'
 
 export interface PatientTableProps {
   filter?: FilterType | string

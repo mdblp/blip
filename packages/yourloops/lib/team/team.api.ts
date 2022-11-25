@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
-import HttpService, { ErrorMessageStatus } from '../../services/http'
-import { INotificationAPI } from '../../models/notification'
-import { HttpHeaderKeys } from '../../models/api'
+import HttpService, { ErrorMessageStatus } from '../../services/http.service'
+import { INotificationAPI } from '../../models/notification-api.model'
+import { HttpHeaderKeys } from '../../models/api.model'
 import { getCurrentLang } from '../language'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring } from '../../models/monitoring.model'
 import bows from 'bows'
 import { Team } from './models'
 import { User } from '../auth'

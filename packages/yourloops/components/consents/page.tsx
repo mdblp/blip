@@ -42,7 +42,7 @@ import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
-import { HistoryState } from '../../models/generic'
+import { HistoryState } from '../../models/generic.model'
 import { Profile } from '../../models/user'
 import { useAuth } from '../../lib/auth'
 import ConsentForm from './form'

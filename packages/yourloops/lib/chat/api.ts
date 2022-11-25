@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { IMessage } from '../../models/chat'
-import HttpService from '../../services/http'
+import { IMessage } from '../../models/message.model'
+import HttpService from '../../services/http.service'
 
 export default class ChatApi {
   static async getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {

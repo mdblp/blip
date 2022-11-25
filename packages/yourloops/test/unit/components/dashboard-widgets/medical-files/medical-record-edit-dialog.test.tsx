@@ -28,14 +28,14 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { MedicalRecord } from '../../../../../lib/medical-files/model'
-import MedicalFilesApi from '../../../../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
 import MedicalRecordEditDialog, {
   MedicalRecordEditDialogProps
 } from '../../../../../components/dialogs/medical-record-edit-dialog'
 import userEvent from '@testing-library/user-event'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/user'
+import User from '../../../../../lib/auth/user.model'
 import { UserRoles } from '../../../../../models/user'
 
 jest.mock('../../../../../lib/auth')

@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from '../../../models/generic'
-import { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam } from '../../../lib/data/patient'
-import { Alarm } from '../../../models/alarm'
+import { UserInvitationStatus } from '../../../models/generic.model'
+import { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam } from '../../../lib/data/patient.model'
+import { Alarm } from '../../../models/alarm.model'
 import { Team, TeamMember } from '../../../lib/team'
 import { TeamMemberRole, TeamType } from '../../../models/team'
-import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
+import { Monitoring, MonitoringStatus } from '../../../models/monitoring.model'
 import { UNITS_TYPE } from '../../../lib/units/utils'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {

@@ -36,8 +36,8 @@ import { act, screen, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
-import { UserInvitationStatus } from '../../../../models/generic'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
+import { UserInvitationStatus } from '../../../../models/generic.model'
 import { INotification } from '../../../../lib/notifications/models'
 
 describe('Patient caregivers page', () => {

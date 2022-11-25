@@ -26,9 +26,9 @@
  */
 
 import { MedicalRecord, NewMedicalRecord, Prescription, WeeklyReport } from '../../../../lib/medical-files/model'
-import HttpService from '../../../../services/http'
+import HttpService from '../../../../services/http.service'
 import { AxiosResponse } from 'axios'
-import MedicalFilesApi from '../../../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 
 describe('Medical files API', () => {
   const patientId = 'patientId'

@@ -37,9 +37,9 @@ import * as teamHookMock from '../../../../lib/team'
 import { Team } from '../../../../lib/team'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import MainHeader from '../../../../components/header-bars/main-header'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { Profile, UserRoles } from '../../../../models/user'
-import User from '../../../../lib/auth/user'
+import User from '../../../../lib/auth/user.model'
 import { INotification, NotificationType } from '../../../../lib/notifications/models'
 
 jest.mock('../../../../lib/notifications/hook')

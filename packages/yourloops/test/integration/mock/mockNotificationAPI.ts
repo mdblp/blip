@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import NotificationApi from '../../../lib/notifications/notification-api'
+import NotificationApi from '../../../lib/notifications/notification.api'
 
 export const mockNotificationAPI = () => {
   jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([])

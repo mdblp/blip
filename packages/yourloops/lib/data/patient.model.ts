@@ -24,22 +24,51 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import HttpService from '../../services/http'
 
-export interface ErrorPayload {
-  browserName: string
-  browserVersion: string
-  date: string
-  err: string
-  errorId: string
-  path: string
+import { MedicalData } from '../../models/device-data.model'
+import { Alarm } from '../../models/alarm.model'
+import { UserInvitationStatus } from '../../models/generic.model'
+import { Monitoring, MonitoringStatus } from '../../models/monitoring.model'
+
+interface PatientTeam {
+  status: UserInvitationStatus
+  teamId: string
+  monitoringStatus?: MonitoringStatus
 }
 
-export default class ErrorApi {
-  static async sendError(payload: ErrorPayload): Promise<void> {
-    await HttpService.post<void, ErrorPayload>({
-      url: '/bff/v1/errors',
-      payload
-    })
+interface PatientProfile {
+  birthdate?: Date
+  firstName?: string
+  fullName: string
+  lastName?: string
+  email: string
+  sex: string
+  referringDoctor?: string
+}
+
+interface PatientSettings {
+  a1c?: {
+    date: string
+    value: string
   }
+  system?: string
 }
+
+interface PatientMetadata {
+  alarm: Alarm
+  flagged?: boolean
+  /** Patient medical data. undefined means not fetched, null if the fetch failed */
+  medicalData?: MedicalData | null
+  unreadMessagesSent: number
+}
+
+interface Patient {
+  profile: PatientProfile
+  settings: PatientSettings
+  metadata: PatientMetadata
+  monitoring?: Monitoring
+  teams: PatientTeam[]
+  readonly userid: string
+}
+
+export { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam }

@@ -39,10 +39,10 @@ import TableSortLabel from '@material-ui/core/TableSortLabel'
 import { TablePagination, Typography } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
 
-import { PatientTableSortFields, SortDirection } from '../../models/generic'
+import { PatientTableSortFields, SortDirection } from '../../models/generic.model'
 import { PatientTableProps } from './models'
 import PatientRow from './patient-row'
-import { Patient } from '../../lib/data/patient'
+import { Patient } from '../../lib/data/patient.model'
 import { StyledTableCell, StyledTooltip } from '../styled-components'
 import { useAuth } from '../../lib/auth'
 

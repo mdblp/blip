@@ -41,11 +41,11 @@ import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
-import PersonRemoveIcon from '../../../components/icons/PersonRemoveIcon'
+import PersonRemoveIcon from '../../../components/icons/person-remove-icon'
 import IconActionButton from '../../../components/buttons/icon-action'
 import CertifiedProfessionalIcon from '../../../components/icons/certified-professional-icon'
 
-import { UserInvitationStatus } from '../../../models/generic'
+import { UserInvitationStatus } from '../../../models/generic.model'
 import { ShareUser } from '../../../lib/share/models'
 
 import { getUserFirstName, getUserLastName } from '../../../lib/utils'

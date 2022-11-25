@@ -28,7 +28,7 @@
 import { MemoryRouter } from 'react-router-dom'
 import React from 'react'
 import OnError from '../../../../app/error'
-import ErrorApi from '../../../../lib/error/error-api'
+import ErrorApi from '../../../../lib/error/error.api'
 import { act, render, screen } from '@testing-library/react'
 
 import crypto from 'crypto'

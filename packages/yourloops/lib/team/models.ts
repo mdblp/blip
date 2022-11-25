@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PostalAddress, UserInvitationStatus } from '../../models/generic'
+import { PostalAddress, UserInvitationStatus } from '../../models/generic.model'
 import { Profile } from '../../models/user'
 import { TeamMemberRole, TeamType, TypeTeamMemberRole } from '../../models/team'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring } from '../../models/monitoring.model'
 
 export const TEAM_CODE_LENGTH = 9
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/

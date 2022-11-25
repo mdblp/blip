@@ -32,7 +32,7 @@ import moment from 'moment-timezone'
 import { initReactI18next } from 'react-i18next'
 
 import locales from '../../../locales/languages.json'
-import { Country, LanguageCodes } from '../models/locales'
+import { Country, LanguageCodes } from '../models/locales.model'
 import getLocale from './browser-locale'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'

@@ -38,7 +38,7 @@ import TextField from '@material-ui/core/TextField'
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
-import { Units } from '../../models/generic'
+import { Units } from '../../models/generic.model'
 import { Settings, IUser } from '../../models/user'
 import { getUserFirstName, getUserLastName } from '../../lib/utils'
 

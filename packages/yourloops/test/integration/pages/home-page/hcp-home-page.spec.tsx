@@ -26,7 +26,7 @@
  */
 
 import { act, fireEvent, screen, within } from '@testing-library/react'
-import PatientAPI from '../../../../lib/patient/patient-api'
+import PatientAPI from '../../../../lib/patient/patient.api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
@@ -44,7 +44,7 @@ import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
 import { renderPage } from '../../utils/render'
-import TeamAPI from '../../../../lib/team/team-api'
+import TeamAPI from '../../../../lib/team/team.api'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'

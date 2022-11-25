@@ -40,10 +40,10 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 
-import MedicalServiceIcon from '../icons/MedicalServiceIcon'
+import MedicalServiceIcon from '../icons/medical-service-icon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { makeButtonsStyles } from '../theme'
-import { Patient } from '../../lib/data/patient'
+import { Patient } from '../../lib/data/patient.model'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
 
 interface RemovePatientDialogProps {

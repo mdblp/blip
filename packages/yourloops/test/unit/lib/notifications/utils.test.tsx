@@ -26,20 +26,21 @@
  */
 
 import { TeamMemberRole } from '../../../../models/team'
-import { APINotificationType, INotificationAPI } from '../../../../models/notification'
+import { APINotificationType, INotificationAPI } from '../../../../models/notification-api.model'
 import { notificationConversion } from '../../../../lib/notifications/utils'
 import { INotification, NotificationType } from '../../../../lib/notifications/models'
 
 describe('Notification utils', () => {
   describe('notificationConversion', () => {
+    const email = 'user2@diabeloop.com'
     const baseAPINotification: INotificationAPI = {
       key: 'abcd',
       type: APINotificationType.careTeamInvitation,
       created: new Date().toISOString(),
-      email: 'user2@diabeloop.com',
+      email,
       creator: {
         userid: 'abcdef',
-        profile: { fullName: 'The user Two' }
+        profile: { email, fullName: 'The user Two' }
       },
       creatorId: 'abcdef',
       shortKey: '0123456',
@@ -55,11 +56,11 @@ describe('Notification utils', () => {
       type: NotificationType.careTeamProInvitation,
       creator: {
         userid: 'abcdef',
-        profile: { fullName: 'The user Two' }
+        profile: { email, fullName: 'The user Two' }
       },
       creatorId: 'abcdef',
       date: baseAPINotification.created,
-      email: 'user2@diabeloop.com',
+      email,
       role: TeamMemberRole.member,
       target: {
         id: 'team-id',

@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../../../../services/http'
-import ErrorApi, { ErrorPayload } from '../../../../lib/error/error-api'
+import HttpService from '../../../../services/http.service'
+import ErrorApi, { ErrorPayload } from '../../../../lib/error/error.api'
 
 describe('ErrorApi', () => {
   describe('sendError', () => {

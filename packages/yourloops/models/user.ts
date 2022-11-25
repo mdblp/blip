@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Units } from './generic'
-import { LanguageCodes } from './locales'
-import { MedicalData } from './device-data'
-import { HcpProfession } from './hcp-profession'
-import { Alarm } from './alarm'
-import { Monitoring } from './monitoring'
+import { Units } from './generic.model'
+import { LanguageCodes } from './locales.model'
+import { MedicalData } from './device-data.model'
+import { HcpProfession } from './hcp-profession.model'
+import { Alarm } from './alarm.model'
+import { Monitoring } from './monitoring.model'
 
 export enum UserRoles {
   hcp = 'hcp',

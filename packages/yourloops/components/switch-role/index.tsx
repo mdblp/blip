@@ -29,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import bows from 'bows'
 
-import { HcpProfession } from '../../models/hcp-profession'
+import { HcpProfession } from '../../models/hcp-profession.model'
 import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from './models'
 import metrics from '../../lib/metrics'
 import { useAuth } from '../../lib/auth'

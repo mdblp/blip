@@ -26,55 +26,59 @@
  */
 
 import { User } from '../../../lib/auth'
-import { Units } from '../../../models/generic'
+import { Units } from '../../../models/generic.model'
 import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
-import { HcpProfession } from '../../../models/hcp-profession'
+import { HcpProfession } from '../../../models/hcp-profession.model'
 
 const getNewHcp = (): User => {
   return new User({
     email: 'john.doe@example.com',
-    emailVerified: true,
+    email_verified: true,
     sub: 'auth0|123456789',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
   })
 }
 
 const getHcp = (): User => {
+  const email = 'john.doe@example.com'
   const hcp = new User({
-    email: 'john.doe@example.com',
-    emailVerified: true,
+    email,
+    email_verified: true,
     sub: 'auth0|a0000000',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
   })
   hcp.frProId = 'ANS20211229094028'
-  hcp.profile = { firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
+  hcp.profile = { email, firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
   hcp.preferences = { displayLanguageCode: 'en' }
   hcp.settings = { units: { bg: Units.gram }, country: 'FR' }
   return hcp
 }
 
 const getCaregiver = (): User => {
+  const email = 'caregiver@example.com'
   const caregiver = new User({
-    email: 'caregiver@example.com',
-    emailVerified: true,
+    email,
+    email_verified: true,
     sub: 'auth0|b0000000',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.caregiver]
   })
-  caregiver.profile = { firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
+  caregiver.profile = { email, firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
   caregiver.preferences = { displayLanguageCode: 'de' }
   caregiver.settings = { country: 'DE', units: { bg: Units.mole } }
   return caregiver
 }
 
 const getPatient = (): User => {
+  const email = 'josephine.dupuis@example.com'
   const patient = new User({
-    email: 'josephine.dupuis@example.com',
-    emailVerified: true,
+    email,
+    email_verified: true,
     sub: 'auth0|a0a0a0b0',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.patient]
   })
   patient.settings = { a1c: { date: '2020-01-01', value: '7.5' }, country: 'FR' }
   patient.profile = {
+    email,
     firstName: 'Josephine',
     lastName: 'Dupuis',
     fullName: 'Josephine D.',

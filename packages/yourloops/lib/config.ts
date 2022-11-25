@@ -26,7 +26,7 @@
  */
 
 import _ from 'lodash'
-import { AppConfig } from '../models/config'
+import { AppConfig } from '../models/app-config.model'
 
 declare const BUILD_CONFIG: AppConfig | string
 

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DirectShareApi from '../../../lib/share/direct-share-api'
+import DirectShareApi from '../../../lib/share/direct-share.api'
 
 export const addDirectShareMock = jest.spyOn(DirectShareApi, 'addDirectShare').mockResolvedValue(undefined)
 export const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)

@@ -27,9 +27,9 @@
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import useRemovePatientDialog from '../../../../components/patient/remove-patient-dialog.hook'
-import PatientAPI from '../../../../lib/patient/patient-api'
-import { Patient, PatientTeam } from '../../../../lib/data/patient'
-import { UserInvitationStatus } from '../../../../models/generic'
+import PatientAPI from '../../../../lib/patient/patient.api'
+import { Patient, PatientTeam } from '../../../../lib/data/patient.model'
+import { UserInvitationStatus } from '../../../../models/generic.model'
 import * as usePatientContextMock from '../../../../lib/patient/provider'
 import * as teamHookMock from '../../../../lib/team'
 import * as alertMock from '../../../../components/utils/snackbar'

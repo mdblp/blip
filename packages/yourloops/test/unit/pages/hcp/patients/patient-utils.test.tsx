@@ -27,10 +27,10 @@
 
 import { createAlarm, createPatient } from '../../../common/utils'
 import { comparePatients, mapITeamMemberToPatient } from '../../../../../components/patient/utils'
-import { PatientTableSortFields, UserInvitationStatus } from '../../../../../models/generic'
-import { Patient } from '../../../../../lib/data/patient'
+import { PatientTableSortFields, UserInvitationStatus } from '../../../../../models/generic.model'
+import { Patient } from '../../../../../lib/data/patient.model'
 import { Profile } from '../../../../../models/user'
-import { Monitoring } from '../../../../../models/monitoring'
+import { Monitoring } from '../../../../../models/monitoring.model'
 import { ITeamMember, TeamMemberRole } from '../../../../../models/team'
 
 describe('Patient utils', () => {
@@ -277,7 +277,9 @@ describe('Patient utils', () => {
 
   describe('mapTeamUserToPatient', () => {
     it('should map correctly', () => {
+      const email = 'fake@email.com'
       const profile: Profile = {
+        email,
         fullName: 'fake full name',
         firstName: 'fake full',
         lastName: 'name'
@@ -288,7 +290,7 @@ describe('Patient utils', () => {
         role: TeamMemberRole.patient,
         teamId: 'fakeTeamId',
         userId: 'fakeTeamMember',
-        email: 'fake@email.com',
+        email,
         profile,
         alarms: {
           timeSpentAwayFromTargetRate: 10,

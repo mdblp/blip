@@ -29,13 +29,13 @@ import React from 'react'
 import { act, render, waitFor } from '@testing-library/react'
 
 import { Team, TeamContext, TeamContextProvider, useTeam } from '../../../../lib/team'
-import { UserInvitationStatus } from '../../../../models/generic'
+import { UserInvitationStatus } from '../../../../models/generic.model'
 import * as notificationHookMock from '../../../../lib/notifications/hook'
 import { ITeam, TeamMemberRole } from '../../../../models/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as authHookMock from '../../../../lib/auth'
-import TeamApi from '../../../../lib/team/team-api'
-import { APINotificationType } from '../../../../models/notification'
+import TeamApi from '../../../../lib/team/team.api'
+import { APINotificationType } from '../../../../models/notification-api.model'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/notifications/hook')

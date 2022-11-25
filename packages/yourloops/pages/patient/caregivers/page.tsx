@@ -34,7 +34,7 @@ import Box from '@material-ui/core/Box'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 
-import { UserInvitationStatus } from '../../../models/generic'
+import { UserInvitationStatus } from '../../../models/generic.model'
 import { UserRoles } from '../../../models/user'
 import { useAuth } from '../../../lib/auth'
 import metrics from '../../../lib/metrics'
@@ -46,7 +46,7 @@ import { AddDialogContentProps } from './types'
 import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-dialog'
 import CaregiverTable from './table'
-import DirectShareApi from '../../../lib/share/direct-share-api'
+import DirectShareApi from '../../../lib/share/direct-share.api'
 import { INotification, NotificationType } from '../../../lib/notifications/models'
 
 const log = bows('PatientCaregiversPage')

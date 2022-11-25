@@ -26,8 +26,8 @@
  */
 
 import { onFulfilled } from '../../../lib/axios'
-import { HttpHeaderKeys } from '../../../models/api'
-import HttpService from '../../../services/http'
+import { HttpHeaderKeys } from '../../../models/api.model'
+import HttpService from '../../../services/http.service'
 import * as crypto from 'crypto'
 
 Object.defineProperty(global, 'crypto', {

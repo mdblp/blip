@@ -26,8 +26,8 @@
  */
 import { CancelInvitationPayload, INotification, NotificationType } from './models'
 import bows from 'bows'
-import HttpService, { ErrorMessageStatus } from '../../services/http'
-import { INotificationAPI } from '../../models/notification'
+import HttpService, { ErrorMessageStatus } from '../../services/http.service'
+import { INotificationAPI } from '../../models/notification-api.model'
 import { notificationConversion } from './utils'
 
 const log = bows('Notification API')

@@ -29,7 +29,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { MedicalRecord } from '../../lib/medical-files/model'
-import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import { useAlert } from '../utils/snackbar'
 

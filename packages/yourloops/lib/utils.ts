@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Units } from '../models/generic'
+import { Units } from '../models/generic.model'
 import { IUser, Settings } from '../models/user'
 import { t } from './language'
 import metrics from './metrics'

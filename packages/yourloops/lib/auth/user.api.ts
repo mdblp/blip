@@ -32,7 +32,7 @@ import {
   Settings,
   CompleteSignupPayload
 } from '../../models/user'
-import HttpService, { ErrorMessageStatus } from '../../services/http'
+import HttpService, { ErrorMessageStatus } from '../../services/http.service'
 import bows from 'bows'
 
 const log = bows('User API')

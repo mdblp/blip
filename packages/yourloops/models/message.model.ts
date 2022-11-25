@@ -25,50 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from '../../models/device-data'
-import { Alarm } from '../../models/alarm'
-import { UserInvitationStatus } from '../../models/generic'
-import { Monitoring, MonitoringStatus } from '../../models/monitoring'
+import User from '../lib/auth/user.model'
 
-interface PatientTeam {
-  status: UserInvitationStatus
+/**
+ * Message interface
+ */
+export interface IMessage {
+  readonly id: string
+  patientId: string
   teamId: string
-  monitoringStatus?: MonitoringStatus
+  authorId: string
+  destAck: boolean
+  private: boolean
+  text: string
+  timezone: string
+  timestamp: string
+  user: User
 }
-
-interface PatientProfile {
-  birthdate?: Date
-  firstName?: string
-  fullName: string
-  lastName?: string
-  email: string
-  sex: string
-  referringDoctor?: string
-}
-
-interface PatientSettings {
-  a1c?: {
-    date: string
-    value: string
-  }
-  system?: string
-}
-
-interface PatientMetadata {
-  alarm: Alarm
-  flagged?: boolean
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null
-  unreadMessagesSent: number
-}
-
-interface Patient {
-  profile: PatientProfile
-  settings: PatientSettings
-  metadata: PatientMetadata
-  monitoring?: Monitoring
-  teams: PatientTeam[]
-  readonly userid: string
-}
-
-export { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam }
