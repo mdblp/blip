@@ -143,9 +143,7 @@ function TrainingPage(): JSX.Element {
                       aria-label={t('training-checkbox')}
                       className={classes.checkbox}
                       checked={checked}
-                      onChange={() => {
-                        setChecked(true)
-                      }}
+                      onChange={() => { setChecked(true) }}
                       name="training"
                       color="primary"
                     />
@@ -153,7 +151,7 @@ function TrainingPage(): JSX.Element {
                   label={t('acknowledge-training')}
                   className={classes.formControlLabel}
                 />
-                : t('training-body', { training })
+                : t('training-body')
               }
               <div className={classes.buttons}>
                 {trainingOpened
@@ -179,7 +177,7 @@ function TrainingPage(): JSX.Element {
                       disableElevation
                       onClick={openTraining}
                     >
-                      {t('open-training', { training })}
+                      {t('open-training')}
                     </Button>
                   </Link>
                 }
