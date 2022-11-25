@@ -101,7 +101,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         action={
           <div>
             {!loggedInUser?.isUserPatient() &&
-              <IconButton id="configure-icon-button-id" aria-label="settings" data-testid="alarm-card-configure-button"
+              <IconButton id="configure-icon-button-id" aria-label={t('configure-alarms')} data-testid="alarm-card-configure-button"
                 onClick={() => setShowPatientAlarmDialog(true)}>
                 <TuneIcon />
               </IconButton>
