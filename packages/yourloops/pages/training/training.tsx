@@ -158,7 +158,7 @@ function TrainingPage(): JSX.Element {
                     onClick={ackTraining}
                     disabled={!checked}
                   >
-                    {t('button-accept')}
+                    {t('confirm')}
                   </Button>
                   : <Link
                     underline="none"
