@@ -28,7 +28,7 @@
 import React, { useState } from 'react'
 
 import { useAuth } from '../../lib/auth'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Profile } from '../../models/user'
 import bows from 'bows'
 import { useHistory } from 'react-router-dom'
@@ -44,6 +44,8 @@ import Container from '@material-ui/core/Container'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 const style = makeStyles((theme: Theme) => {
   return {
@@ -68,6 +70,13 @@ const style = makeStyles((theme: Theme) => {
     },
     buttons: {
       marginTop: theme.spacing(3)
+    },
+    checkbox: {
+      marginBottom: 'auto'
+    },
+    formControlLabel: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
   }
 }, { name: 'ylp-training-page' })
@@ -84,6 +93,21 @@ function TrainingPage(): JSX.Element {
   const user = auth.user
   const classes = style()
   const [trainingOpened, setTrainingOpened] = useState(false)
+  const [checked, setChecked] = useState(false)
+
+  const checkbox = (
+    <Checkbox
+      id={'checkbox-training'}
+      aria-label={t('training-checkbox')}
+      className={classes.checkbox}
+      checked={checked}
+      onChange={() => {
+        setChecked(true)
+      }}
+      name="training"
+      color="primary"
+    />
+  )
 
   const ackTraining = (): void => {
     const now = new Date().toISOString()
@@ -124,7 +148,16 @@ function TrainingPage(): JSX.Element {
               </Box>
             </CardMedia>
             <CardContent className={classes.cardContent}>
-              {t('training-body', { training })}
+              {
+                trainingOpened
+                  ? <FormControlLabel
+                    id={'form-control-training'}
+                    control={checkbox}
+                    label={t('acknowledge-training')}
+                    className={classes.formControlLabel}
+                  />
+                  : t('training-body', { training })
+              }
               <div className={classes.buttons}>
                 {
                   trainingOpened
@@ -133,8 +166,9 @@ function TrainingPage(): JSX.Element {
                       color="primary"
                       disableElevation
                       onClick={ackTraining}
+                      disabled={!checked}
                     >
-                      {t('button-acknowledge-training')}
+                      {t('button-accept')}
                     </Button>
                     : <Link aria-label={training} href={diabeloopExternalUrls.training(user?.role)} target="_blank"
                             rel="noreferrer">
