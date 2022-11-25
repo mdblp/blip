@@ -61,19 +61,12 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
   const recommendedValue = (prescriptor === Prescriptor.Hybrid) ? prescribedCarbs : actualCarbs
   const hasPrescriptor = prescriptor && (prescriptor !== Prescriptor.Manual)
 
-  const tooltipParams = {
-    position,
-    side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors.rescuecarbs,
-    dateTitle: getDateTitle(food, timePrefs)
-  }
-
   return (
     <Tooltip
-      position={tooltipParams.position}
-      side={tooltipParams.side}
-      borderColor={tooltipParams.borderColor}
-      dateTitle={tooltipParams.dateTitle}
+      position={position}
+      side={side || COMMON_TOOLTIP_SIDE}
+      borderColor={colors.rescuecarbs}
+      dateTitle={getDateTitle(food, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
@@ -83,7 +76,7 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
         <div className={commonStyles.containerFlex}>
           {
             hasPrescriptor &&
-            <div key={'prescribed'} className={commonStyles.row}>
+            <div className={commonStyles.row}>
               <div className={commonStyles.label}>{i18next.t('Recommended')}</div>
               <div className={commonStyles.value}>
                 {recommendedValue}
@@ -91,7 +84,7 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
               <div className={styles.units}>g</div>
             </div>
           }
-          <div key={'carb'} className={commonStyles.rowBold}>
+          <div className={commonStyles.rowBold}>
             <div className={commonStyles.label}>{i18next.t('Confirmed')}</div>
             <div className={commonStyles.value}>
               {actualCarbs}

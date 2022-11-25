@@ -78,19 +78,12 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
     ? t('Reservoir Change')
     : t('Infusion site change')
 
-  const tooltipParams = {
-    position,
-    side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors.deviceEvent,
-    dateTitle: getDateTitle(reservoir, timePrefs)
-  }
-
   return (
     <Tooltip
-      position={tooltipParams.position}
-      side={tooltipParams.side}
-      borderColor={tooltipParams.borderColor}
-      dateTitle={tooltipParams.dateTitle}
+      position={position}
+      side={side || COMMON_TOOLTIP_SIDE}
+      borderColor={colors.deviceEvent}
+      dateTitle={getDateTitle(reservoir, timePrefs)}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tail={DEFAULT_TOOLTIP_TAIL}
@@ -98,7 +91,7 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <div key={'title'} className={commonStyles.rowBold}>
+          <div className={commonStyles.rowBold}>
             <div className={commonStyles.label}>{label}</div>
           </div>
         </div>

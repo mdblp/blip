@@ -53,17 +53,11 @@ const t = i18next.t.bind(i18next)
 export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = (props) => {
   const { position, side } = props
 
-  const tooltipParams = {
-    position,
-    side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors.confidentialMode
-  }
-
   return (
     <Tooltip
-      position={tooltipParams.position}
-      side={tooltipParams.side}
-      borderColor={tooltipParams.borderColor}
+      position={position}
+      side={side || COMMON_TOOLTIP_SIDE}
+      borderColor={colors.confidentialMode}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}

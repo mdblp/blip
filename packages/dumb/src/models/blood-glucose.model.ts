@@ -34,7 +34,7 @@ export interface BgBounds {
   veryLowThreshold: number
 }
 
-export interface BgClasses {
+export interface BgClassesRaw {
   'very-low': { boundary: number }
   low: { boundary: number }
   target: { boundary: number }
@@ -45,7 +45,7 @@ export interface BgClasses {
 export interface BgPrefs {
   bgUnits: BgUnit
   bgBounds: BgBounds
-  bgClasses: BgClasses
+  bgClasses: BgClassesRaw
 }
 
 export enum ClassificationType {

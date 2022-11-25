@@ -72,19 +72,12 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
 
   const duration = getDurationInMinutes()
 
-  const tooltipParams = {
-    position,
-    side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors.physicalActivity,
-    dateTitle: getDateTitle(physicalActivity, timePrefs)
-  }
-
   return (
     <Tooltip
-      position={tooltipParams.position}
-      side={tooltipParams.side}
-      borderColor={tooltipParams.borderColor}
-      dateTitle={tooltipParams.dateTitle}
+      position={position}
+      side={side || COMMON_TOOLTIP_SIDE}
+      borderColor={colors.physicalActivity}
+      dateTitle={getDateTitle(physicalActivity, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
@@ -92,22 +85,22 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <div key={'title'} className={commonStyles.row}>
+          <div className={commonStyles.row}>
             <div id="tooltip-physical-activity-title" className={styles.title}>{t('Physical Activity')}</div>
           </div>
-          <div key={'physical'} className={commonStyles.row}>
+          <div className={commonStyles.row}>
             <div className={commonStyles.label}>{t('Intensity')}</div>
             <div className={styles.value}>
               {t(`${physicalActivity.reportedIntensity}-pa`)}
             </div>
           </div>
-          <div key={'duration'} className={commonStyles.row}>
+          <div className={commonStyles.row}>
             <div className={commonStyles.label}>{t('Duration')}</div>
             <div className={styles.value}>{`${duration.value} ${t(duration.units)}`}</div>
           </div>
           {
             physicalActivity.inputTime &&
-            <div key={'inputTime'} className={commonStyles.row}>
+            <div className={commonStyles.row}>
               <div className={commonStyles.label}>
                 {t('Entered at')}
               </div>

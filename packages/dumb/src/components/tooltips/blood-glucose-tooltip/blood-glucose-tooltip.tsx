@@ -70,19 +70,12 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
     ClassificationType.FiveWay
   )
 
-  const tooltipParams = {
-    position,
-    side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors[bgClass] || colors.bolus,
-    dateTitle: getDateTitle(data, timePrefs)
-  }
-
   return (
     <Tooltip
-      position={tooltipParams.position}
-      side={tooltipParams.side}
-      borderColor={tooltipParams.borderColor}
-      dateTitle={tooltipParams.dateTitle}
+      position={position}
+      side={side || COMMON_TOOLTIP_SIDE}
+      borderColor={colors[bgClass] || colors.bolus}
+      dateTitle={getDateTitle(data, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
@@ -90,7 +83,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <div key={'bg'} className={commonStyles.rowBold}>
+          <div className={commonStyles.rowBold}>
             <div className={commonStyles.label}>{t('BG')}</div>
             <div className={commonStyles.value}>
               {formattedValue}
@@ -98,7 +91,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
           </div>
           {
             isSmbg &&
-            <div key={'source'} className={styles.rowColorDarkGray}>
+            <div className={styles.rowColorDarkGray}>
               <div className={commonStyles.label}>{t('Calibration')}</div>
             </div>
           }

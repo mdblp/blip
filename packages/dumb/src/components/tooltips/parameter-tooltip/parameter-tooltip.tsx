@@ -60,13 +60,6 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
 
   const hourMinuteFormat = getHourMinuteFormat()
 
-  const tooltipParams = {
-    position,
-    side: side || COMMON_TOOLTIP_SIDE,
-    borderColor: colors.deviceEvent,
-    dateTitle: getDateTitle(parameter, timePrefs)
-  }
-
   const renderParameter = (parameter: Parameter): JSX.Element => {
     const parameterId = parameter.id
     const hasPreviousValue = !!parameter.previousValue
@@ -79,14 +72,12 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
       <React.Fragment key={parameterId}>
         <span id={`tooltip-daily-parameter-${parameterId}-date`}
               className={styles.date}
-              key={`${parameterId}-date`}
         >
           {displayHour}
         </span>
         <span id={`tooltip-daily-parameter-${parameterId}-name`}
               data-testid={'parameter-name'}
               className={styles.label}
-              key={`${parameterId}-name`}
         >
           {i18next.t(`params|${parameter.name}`)}
         </span>
@@ -96,24 +87,21 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
             <span id={`tooltip-daily-parameter-${parameterId}-prev`}
                   data-testid={'parameter-previous-value'}
                   className={styles.previous}
-                  key={`${parameterId}-prev`}
             >
               {formattedPreviousValue}
             </span>
-            <span id={`tooltip-daily-parameter-${parameterId}-arrow`} key={`${parameterId}-arrow`}>&rarr;</span>
+            <span id={`tooltip-daily-parameter-${parameterId}-arrow`}>&rarr;</span>
           </>
         }
         <span id={`tooltip-daily-parameter-${parameterId}-value`}
               data-testid={'parameter-value'}
               className={valueClasses}
-              key={`${parameterId}-value`}
         >
           {value}
         </span>
         <span id={`tooltip-daily-parameter-${parameterId}-units`}
               data-testid={'parameter-units'}
               className={commonStyles.units}
-              key={`${parameterId}-units`}
         >
           {i18next.t(parameter.units)}
         </span>
@@ -123,10 +111,10 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
 
   return (
     <Tooltip
-      position={tooltipParams.position}
-      side={tooltipParams.side}
-      borderColor={tooltipParams.borderColor}
-      dateTitle={tooltipParams.dateTitle}
+      position={position}
+      side={side || COMMON_TOOLTIP_SIDE}
+      borderColor={colors.deviceEvent}
+      dateTitle={getDateTitle(parameter, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
