@@ -107,10 +107,6 @@ function TrainingPage(): JSX.Element {
     })
   }
 
-  const openTraining = (): void => {
-    setTrainingOpened(true)
-  }
-
   const training = t('training').toLowerCase()
 
   return (
@@ -175,7 +171,7 @@ function TrainingPage(): JSX.Element {
                       variant="contained"
                       color="primary"
                       disableElevation
-                      onClick={openTraining}
+                      onClick={() => { setTrainingOpened(true) }}
                     >
                       {t('open-training')}
                     </Button>
