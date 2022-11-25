@@ -92,7 +92,6 @@ jobs:
       - name: Get yourloops version from package.json
         id: package-version
         run: |
-          echo $(cat ./package.json | jq '.version' | tr -d '"')
           echo "semver=$(cat ./package.json | jq '.version' | tr -d '"')" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
