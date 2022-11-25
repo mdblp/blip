@@ -95,20 +95,6 @@ function TrainingPage(): JSX.Element {
   const [trainingOpened, setTrainingOpened] = useState(false)
   const [checked, setChecked] = useState(false)
 
-  const checkbox = (
-    <Checkbox
-      id={'checkbox-training'}
-      aria-label={t('training-checkbox')}
-      className={classes.checkbox}
-      checked={checked}
-      onChange={() => {
-        setChecked(true)
-      }}
-      name="training"
-      color="primary"
-    />
-  )
-
   const ackTraining = (): void => {
     const now = new Date().toISOString()
     const updatedProfile = user.profile ? user.profile : {} as Profile
@@ -148,37 +134,54 @@ function TrainingPage(): JSX.Element {
               </Box>
             </CardMedia>
             <CardContent className={classes.cardContent}>
-              {
-                trainingOpened
-                  ? <FormControlLabel
-                    id={'form-control-training'}
-                    control={checkbox}
-                    label={t('acknowledge-training')}
-                    className={classes.formControlLabel}
-                  />
-                  : t('training-body', { training })
+              {trainingOpened
+                ? <FormControlLabel
+                  id={'form-control-training'}
+                  control={
+                    <Checkbox
+                      id={'checkbox-training'}
+                      aria-label={t('training-checkbox')}
+                      className={classes.checkbox}
+                      checked={checked}
+                      onChange={() => {
+                        setChecked(true)
+                      }}
+                      name="training"
+                      color="primary"
+                    />
+                  }
+                  label={t('acknowledge-training')}
+                  className={classes.formControlLabel}
+                />
+                : t('training-body', { training })
               }
               <div className={classes.buttons}>
-                {
-                  trainingOpened
-                    ? <Button
+                {trainingOpened
+                  ? <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    onClick={ackTraining}
+                    disabled={!checked}
+                  >
+                    {t('button-accept')}
+                  </Button>
+                  : <Link
+                    underline="none"
+                    aria-label={training}
+                    href={diabeloopExternalUrls.training(user?.role)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button
                       variant="contained"
                       color="primary"
                       disableElevation
-                      onClick={ackTraining}
-                      disabled={!checked}
+                      onClick={openTraining}
                     >
-                      {t('button-accept')}
+                      {t('open-training', { training })}
                     </Button>
-                    : <Link aria-label={training} href={diabeloopExternalUrls.training(user?.role)} target="_blank"
-                            rel="noreferrer">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        disableElevation
-                        onClick={openTraining}
-                      >{t('open-training', { training })}</Button>
-                    </Link>
+                  </Link>
                 }
               </div>
             </CardContent>
