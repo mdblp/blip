@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2021-2022, Diabeloop
- * Date picker common definitions
  *
  * All rights reserved.
  *

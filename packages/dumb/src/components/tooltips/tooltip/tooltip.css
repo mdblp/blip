@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -27,7 +27,7 @@
 
 .tooltip {
   display: block;
-  composes: defaultSize from '../../styles/typography.css';
+  composes: defaultSize from '../../../styles/typography.css';
   background-color: #FFFFFF;
   border: solid;
   pointer-events: none;
@@ -45,7 +45,7 @@
 }
 
 .title {
-  composes: mediumContrastText from '../../styles/typography.css';
+  composes: mediumContrastText from '../../../styles/typography.css';
   composes: content;
   background-color: var(--tooltip-title-bg);
 }

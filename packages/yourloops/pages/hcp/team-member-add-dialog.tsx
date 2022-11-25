@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Team dialog to add a new HCP member
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

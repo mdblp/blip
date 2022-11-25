@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Utilities for notifications hook
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { INotificationAPI, APINotificationType } from '../../models/notification'
+import { APINotificationType, INotificationAPI } from '../../models/notification'
 import { INotification, NotificationType } from './models'
 
 /**
@@ -51,10 +50,7 @@ export function notificationConversion(apin: INotificationAPI): INotification | 
       type = NotificationType.careTeamMonitoringInvitation
       break
     case APINotificationType.medicalTeamDoAdmin:
-      type = NotificationType.careTeamDoAdmin
-      return null
     case APINotificationType.medicalTeamRemoveMember:
-      type = NotificationType.careTeamRemoveMember
       return null
     default:
       throw new Error('Invalid notification type')

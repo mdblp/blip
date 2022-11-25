@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 import styles from './cbg-percentage-title.css'
 import cbgColorsStyles from '../cbg-colors.css'
 import InfoIcon from '../assets/info-outline-24-px.svg'
-import { StatTooltip } from '../../tooltips/stat-tooltip'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { useTranslation } from 'react-i18next'
 import { StatLevel } from '../models'
 

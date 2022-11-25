@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * Medical Service Icon
  *
  * All rights reserved.
  *

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -32,24 +32,17 @@ import { User } from '../../../lib/auth'
 import * as teamHookMock from '../../../lib/team'
 import * as notificationsHookMock from '../../../lib/notifications/hook'
 import { UserRoles } from '../../../models/user'
-import { Router } from 'react-router-dom'
-import { createMemoryHistory, MemoryHistory } from 'history'
+import { MemoryRouter } from 'react-router-dom'
 import * as patientHookMock from '../../../lib/patient/provider'
 import { PatientLayout } from '../../../layout/patient-layout'
 
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
 const teamDetailsPageTestId = 'mock-team-details-page'
-const patientDataPageTestId = 'mock-patient-data-page'
-const caregiverPageTestId = 'mock-caregivers-page'
-const homePagePageTestId = 'mock-caregivers-page'
 const allTestIds = [
   profilePageTestId,
   notificationsPageTestId,
-  teamDetailsPageTestId,
-  patientDataPageTestId,
-  caregiverPageTestId,
-  homePagePageTestId
+  teamDetailsPageTestId
 ]
 
 /* eslint-disable react/display-name */
@@ -68,21 +61,7 @@ jest.mock('../../../pages/notifications', () => () => {
 jest.mock('../../../pages/team/team-details-page', () => () => {
   return <div data-testid={teamDetailsPageTestId} />
 })
-jest.mock('../../../components/patient-data', () => () => {
-  return <div data-testid={patientDataPageTestId} />
-})
-jest.mock('../../../pages/patient/caregivers/page', () => () => {
-  return <div data-testid={caregiverPageTestId} />
-})
 describe('Patient Layout', () => {
-  function getMainLayoutJSX(history: MemoryHistory): JSX.Element {
-    return (
-      <Router history={history}>
-        <PatientLayout />
-      </Router>
-    )
-  }
-
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
@@ -98,10 +77,7 @@ describe('Patient Layout', () => {
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { removeTeamFromList: jest.fn() }
-    })
-  })
-
-  beforeEach(() => {
+    });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
@@ -114,6 +90,14 @@ describe('Patient Layout', () => {
     })
   })
 
+  function getMainLayoutJSX(initialEntry: string): JSX.Element {
+    return (
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <PatientLayout />
+      </MemoryRouter>
+    )
+  }
+
   function checkInDocument(testId: string) {
     expect(screen.queryByTestId(testId)).toBeInTheDocument()
     allTestIds.filter(id => testId !== id).forEach(id => {
@@ -122,40 +106,17 @@ describe('Patient Layout', () => {
   }
 
   it('should render profile page when route is /preferences', () => {
-    const history = createMemoryHistory({ initialEntries: ['/preferences'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/preferences'))
     checkInDocument(profilePageTestId)
   })
 
   it('should render notifications page when route is /notifications', () => {
-    const history = createMemoryHistory({ initialEntries: ['/notifications'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/notifications'))
     checkInDocument(notificationsPageTestId)
   })
 
-  it('should render patient data page when route is /home and user is patient', () => {
-    const history = createMemoryHistory({ initialEntries: ['/home'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(patientDataPageTestId)
-  })
-
-  it('should render patient data page when route is / and user is patient', () => {
-    const history = createMemoryHistory({ initialEntries: ['/'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(patientDataPageTestId)
-    expect(history.location.pathname).toBe('/dashboard')
-  })
-
-  it('should render patient data page when user is patient and route is unknown', () => {
-    const history = createMemoryHistory({ initialEntries: ['/wrongRoute'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(patientDataPageTestId)
-    expect(history.location.pathname).toBe('/wrongRoute')
-  })
-
   it('should render team details page when route matches /teams/:teamId and user is patient', () => {
-    const history = createMemoryHistory({ initialEntries: ['/teams/fakeTeamId'] })
-    render(getMainLayoutJSX(history))
+    render(getMainLayoutJSX('/teams/fakeTeamId'))
     checkInDocument(teamDetailsPageTestId)
   })
 })

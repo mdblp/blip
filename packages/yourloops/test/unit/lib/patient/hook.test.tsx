@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -40,6 +40,7 @@ import { UNITS_TYPE } from '../../../../lib/units/utils'
 import PatientApi from '../../../../lib/patient/patient-api'
 import { APINotificationType } from '../../../../models/notification'
 import DirectShareApi from '../../../../lib/share/direct-share-api'
+import { INotification } from '../../../../lib/notifications/models'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
@@ -333,6 +334,8 @@ describe('Patient hook', () => {
     beforeAll(async () => {
       const res = await renderPatientHook(allPatients)
       customHook = res.result.current
+      const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as INotification
+      getInvitationMock.mockReturnValue(invitation)
     })
 
     it('should call notification hook cancel method if invitation is pending and call removePatient method', async () => {

@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Yourloops utils functions
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import _ from 'lodash'
 
 import { Units } from '../models/generic'
 import { IUser, Settings } from '../models/user'
@@ -63,6 +60,7 @@ export const isZipCodeValid = (country: string, zipCode: string): boolean => {
       return REGEX_ZIPCODE_WITHOUT_STRING.test(zipCode)
   }
 }
+
 /**
  * setTimeout() as promised
  * @param timeout in milliseconds
@@ -126,7 +124,7 @@ export function getUserFirstLastName(user: IUser): { firstName: string, lastName
  * @returns Fixed settings
  */
 export function fixYLP878Settings(settings: Settings | undefined | null): Settings {
-  if (_.isNil(settings)) {
+  if (!settings) {
     return {
       country: 'FR',
       units: {
@@ -134,7 +132,7 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
       }
     }
   }
-  let bgUnit = _.get(settings, 'bg', settings.units?.bg ?? Units.gram) as Units
+  let bgUnit = settings.units?.bg ?? Units.gram
   if (![Units.gram, Units.mole].includes(bgUnit)) {
     bgUnit = Units.gram
   }

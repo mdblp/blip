@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -184,7 +184,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
           <Select
             label={t('hcp-profession')}
             data-testid="hcp-profession-selector"
-            value={signupForm.hcpProfession}
+            value={signupForm.hcpProfession ?? ''}
             onBlur={validateHcpProfession}
             onChange={event => updateForm(SignupFormKey.HcpProfession, event.target.value as string)}
           >

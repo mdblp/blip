@@ -1,6 +1,5 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
- * API Notification tests
  *
  * All rights reserved.
  *

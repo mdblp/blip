@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -28,9 +28,7 @@
 import React from 'react'
 import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import { act } from 'react-dom/test-utils'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { createMemoryHistory } from 'history'
-import { Router } from 'react-router-dom'
+import { render, screen } from '@testing-library/react'
 
 import MainDrawer, {
   mainDrawerDefaultWidth,
@@ -43,6 +41,7 @@ import * as authHookMock from '../../../../lib/auth'
 import { PatientFilterStats } from '../../../../lib/team/models'
 import User from '../../../../lib/auth/user'
 import { PatientFilterTypes } from '../../../../models/generic'
+import { MemoryRouter } from 'react-router-dom'
 
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/patient/provider')
@@ -60,7 +59,6 @@ describe('Main Drawer', () => {
     remoteMonitored: 8,
     renew: 9
   }
-  const history = createMemoryHistory({ initialEntries: ['/'] })
   const flaggedPatients = ['fakeFlaggedPatientId']
   const userId = 'fakeUserId'
   const teamMember = buildTeamMember(userId)
@@ -70,9 +68,7 @@ describe('Main Drawer', () => {
   const getFlagPatientsMock = jest.fn().mockReturnValue(flaggedPatients)
 
   function getMainDrawerJSX(miniVariant = true): JSX.Element {
-    return <Router history={history}>
-      <MainDrawer miniVariant={miniVariant} />
-    </Router>
+    return <MemoryRouter><MainDrawer miniVariant={miniVariant} /></MemoryRouter>
   }
 
   async function mountComponent(miniVariant = true): Promise<void> {
@@ -105,12 +101,6 @@ describe('Main Drawer', () => {
     }
   })
 
-  async function checkFilterAction(filterLabel: string, urlFilterName: string) {
-    const link = await screen.findByRole('link', { name: urlFilterName })
-    fireEvent.click(link)
-    await waitFor(() => expect(`${history.location.pathname}${history.location.search}`).toBe(`/home?filter=${urlFilterName}`))
-  }
-
   function computeButtonName(filterLabel: string, filterNumber?: number) {
     return filterNumber ? `${filterLabel} (${filterNumber})` : filterLabel
   }
@@ -119,14 +109,14 @@ describe('Main Drawer', () => {
     render(getMainDrawerJSX())
     const buttonName = computeButtonName(filterLabel, filterNumber)
     expect(await screen.findByText(buttonName)).toBeInTheDocument()
-    await checkFilterAction(filterLabel, urlFilterName)
+    expect(await screen.findByRole('link', { name: urlFilterName })).toBeVisible()
   }
 
   async function checkFilterActionByRole(filterLabel: string, urlFilterName: string, filterNumber?: number) {
     render(getMainDrawerJSX())
     const buttonName = computeButtonName(filterLabel, filterNumber)
     expect(await screen.findByRole('button', { name: buttonName })).toBeInTheDocument()
-    await checkFilterAction(filterLabel, urlFilterName)
+    expect(await screen.findByRole('link', { name: urlFilterName })).toBeVisible()
   }
 
   async function checkFilterLabel(patientsFilterStatsUpdated: PatientFilterStats, buttonLabel: string) {
@@ -229,27 +219,5 @@ describe('Main Drawer', () => {
   it('unread messages filter should not display a number when there are 0 patients in this alert', async () => {
     const patientsFilterStatsUpdated: PatientFilterStats = { ...patientsFilterStats, unread: 0 }
     await checkFilterLabel(patientsFilterStatsUpdated, 'unread-messages')
-  })
-
-  it('should highlight the selected filter', async () => {
-    await mountComponent()
-    const link = await screen.findByRole('link', { name: PatientFilterTypes.outOfRange.toString() })
-    const item = await within(link).findByRole('button', { name: `time-away-from-target ${patientsFilterStats.outOfRange}` })
-
-    expect(item).not.toHaveClass('Mui-selected')
-    fireEvent.click(link)
-    expect(item).toHaveClass('Mui-selected')
-  })
-
-  it('should highlight "all" filter by default when on home page', async () => {
-    await mountComponent()
-    history.push('/preferences')
-
-    const link = await screen.findByRole('link', { name: PatientFilterTypes.all.toString() })
-    const item = await within(link).findByRole('button')
-
-    expect(item).not.toHaveClass('Mui-selected')
-    history.push('/home')
-    expect(item).toHaveClass('Mui-selected')
   })
 })

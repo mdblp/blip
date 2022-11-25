@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Profile page - Patient part
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

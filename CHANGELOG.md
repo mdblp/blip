@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta26 - 2022-11-17
+## 3.0.2-beta32 - 2022-11-21
 ### Added
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
@@ -12,13 +12,19 @@ It is based on Tidepool Blip 1.27.
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
 - YLP-1805 Push error to the backend
+- YLP-1868 Add route to invite team member
 - YLP-1873 Fix patient profile update not visible in dashboard
 - YLP-1874 Fix PDF report generation
 - YLP-1894 Retrieve pump settings in pump settings object if no upload object available
 - YLP-1892 Creation of an integration test for the team form
+- YLP-1900 Fix CSS in events configuration modal
 - YLP-1901 CSV generation is not using the correct time frame
 - YLP-1903 Timezone detection should exclude some data types
+- YLP-1904 CSV generation outputs a pdf
+- YLP-1906-Fix-training-modal-CSS
 - Automate copyright generation on new and updated files
+- Remove react-test-renderer dependency
+- Update copyright on all files in `dumb` and `yourloops` packages
 
 ## 3.0.1 - 2022-10-11
 ### Added
@@ -45,6 +51,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1767 Create package to migrate viz components
 - YLP-1797 Make it possible to see what role the users are logged in with matomo
 - YLP-1834 Migrate time in range stats
+- YLP-1915 Migrate reservoir tooltip
 - Add a route /version to display blip version
 
 ### Fixed

@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Yourloops API client type definition for shoreline
+/*
+ * Copyright (c) 2021-2022, Diabeloop
  *
  * All rights reserved.
  *

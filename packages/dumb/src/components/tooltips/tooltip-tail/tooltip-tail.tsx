@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,29 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.row {
-  composes: smallSize from '../../styles/typography.css';
-  line-height: 20px;
-  max-width: 240px;
-  min-width: 160px;
-  width: max-content;
+import React, { FunctionComponent, RefObject } from 'react'
+import _ from 'lodash'
+import styles from '../tooltip/tooltip.css'
+
+interface TooltipTailProps {
+  borderColor: string
+  borderSide: string
+  marginOuterValue: string
+  tailHeight: number
+  tailElementRef: RefObject<HTMLDivElement>
+  tailWidth: number
 }
 
-.message {
-  composes: row;
-  color: var(--stat--default);
+const TooltipTail: FunctionComponent<TooltipTailProps> = (props) => {
+  const {
+    borderColor,
+    borderSide,
+    marginOuterValue,
+    tailHeight,
+    tailElementRef,
+    tailWidth
+  } = props
+
+  return (
+    <div>
+      <div
+        ref={tailElementRef}
+        className={styles.tail}
+        style={{
+          marginTop: `-${tailHeight}px`,
+          marginLeft: marginOuterValue,
+          borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
+          [`border${_.upperFirst(borderSide)}Color`]: borderColor
+        }}
+      />
+    </div>
+  )
 }
 
-.message p {
-  margin: 0;
-}
-
-.message a {
-  pointer-events: all;
-}
-
-.divider {
-  height: 2px;
-  margin: 5px -10px;
-  background-color: var(--stat--default);
-}
+export default TooltipTail

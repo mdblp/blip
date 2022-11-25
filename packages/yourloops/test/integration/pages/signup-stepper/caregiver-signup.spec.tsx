@@ -27,19 +27,15 @@
 
 import { act, screen } from '@testing-library/react'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { createMemoryHistory } from 'history'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/mockUserApi'
 import { UserRoles } from '../../../../models/user'
 import userEvent from '@testing-library/user-event'
-import { renderPageFromHistory } from '../../utils/render'
+import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
-
-jest.setTimeout(15000)
 
 describe('Signup stepper as caregiver', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
-  const history = createMemoryHistory({ initialEntries: ['/'] })
   const firstName = 'Sandy'
   const lastName = 'Kilo'
   const expectedProfile = {
@@ -56,20 +52,19 @@ describe('Signup stepper as caregiver', () => {
   })
 
   it('should be able to create a caregiver account', async () => {
-    renderPageFromHistory(history)
-    expect(history.location.pathname).toEqual('/complete-signup')
+    renderPage('/')
     checkFooter({ needFooterLanguageSelector: true })
     checkStepper()
 
     // Step one
     checkAccountSelectorStep()
-    userEvent.click(screen.getByLabelText('Create caregiver account'))
-    userEvent.click(screen.getByText('Next'))
+    await userEvent.click(screen.getByLabelText('Create caregiver account'))
+    await userEvent.click(screen.getByText('Next'))
 
     // Step two
-    checkConsentStep()
+    await checkConsentStep()
     expect(screen.queryByLabelText('Feedback checkbox')).not.toBeInTheDocument()
-    userEvent.click(screen.getByText('Next'))
+    await userEvent.click(screen.getByText('Next'))
 
     // Step three
     const createButton = screen.getByText('Create Account')
@@ -77,7 +72,7 @@ describe('Signup stepper as caregiver', () => {
     expect(screen.queryByTestId('hcp-profession-selector')).not.toBeInTheDocument()
     expect(createButton).not.toBeDisabled()
     await act(async () => {
-      userEvent.click(createButton)
+      await userEvent.click(createButton)
     })
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,

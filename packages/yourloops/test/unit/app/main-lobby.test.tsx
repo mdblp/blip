@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -25,148 +25,94 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { createMemoryHistory, MemoryHistory } from 'history'
-import { Router } from 'react-router-dom'
-import * as auth0Mock from '@auth0/auth0-react'
-import { Auth0Provider } from '@auth0/auth0-react'
-
-import * as authHookMock from '../../../lib/auth'
-import { MainLobby } from '../../../app/main-lobby'
-import renderer, { ReactTestRenderer } from 'react-test-renderer'
-import { ConsentPage } from '../../../pages/login'
-import CompleteSignUpPage from '../../../pages/signup/complete-signup-page'
 import User from '../../../lib/auth/user'
-import PatientConsentPage from '../../../pages/patient/patient-consent'
-import DirectShareApi from '../../../lib/share/direct-share-api'
-import TrainingPage from '../../../pages/training/training'
-import LoginPage from '../../../pages/login/login-page'
+import { getRedirectUrl } from '../../../app/main-lobby'
 
-jest.mock('../../../lib/auth')
-jest.mock('@auth0/auth0-react')
 describe('Main lobby', () => {
-  function renderMainLayout(history: MemoryHistory) {
-    return renderer.create(
-      <Auth0Provider clientId="__test_client_id__" domain="__test_domain__">
-        <Router history={history}>
-          <MainLobby />
-        </Router>
-      </Auth0Provider>
-    )
-  }
+  describe('getRedirectUrl', () => {
+    function testGetRedirectUrl(route: string, user: User, isAuthenticated: boolean, expectedUrlToRedirectTo: string | undefined) {
+      const urlToRedirectTo = getRedirectUrl(route, user, isAuthenticated)
+      expect(urlToRedirectTo).toBe(expectedUrlToRedirectTo)
+    }
 
-  beforeEach(() => {
-    (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: true,
-      isLoading: false
+    it("should return renew consent url when user is logged in and did not consent and route is '/'", () => {
+      const user = {
+        hasToAcceptNewConsent: () => false,
+        hasToRenewConsent: () => true,
+        isFirstLogin: () => false,
+        isUserHcp: () => true,
+        hasToDisplayTrainingInfoPage: () => false
+      } as User
+
+      testGetRedirectUrl('/', user, true, '/renew-consent')
     })
-  })
 
-  function checkRenderAndRoute(currentComponent: ReactTestRenderer, history: MemoryHistory, expectedComponent: FunctionComponent, route: string) {
-    const mainPageLayout = currentComponent.root.findByType(expectedComponent)
-    expect(mainPageLayout).toBeDefined()
-    expect(history.location.pathname).toBe(route)
-  }
+    it("should return new consent url when user is logged in and did not consent and route is '/' and role is patient", () => {
+      const user = {
+        hasToAcceptNewConsent: () => true,
+        hasToRenewConsent: () => false,
+        isFirstLogin: () => false,
+        isUserHcp: () => false,
+        isUserPatient: () => true,
+        hasToDisplayTrainingInfoPage: () => false
+      } as User
 
-  beforeAll(() => {
-    jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([])
-  })
-
-  it("should render ConsentPage when user is logged in and did not consent and route is '/'", () => {
-    const history = createMemoryHistory({ initialEntries: ['/'] });
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          hasToAcceptNewConsent: () => false,
-          hasToRenewConsent: () => true,
-          isFirstLogin: () => false,
-          isUserHcp: () => true,
-          hasToDisplayTrainingInfoPage: () => false
-        } as User
-      }
+      testGetRedirectUrl('/', user, true, '/new-consent')
     })
-    const component = renderMainLayout(history)
-    checkRenderAndRoute(component, history, ConsentPage, '/renew-consent')
-  })
 
-  it("should render PatientConsentPage when user is logged in and did not consent and route is '/' and role is patient", () => {
-    const history = createMemoryHistory({ initialEntries: ['/'] });
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          hasToAcceptNewConsent: () => true,
-          hasToRenewConsent: () => false,
-          isFirstLogin: () => false,
-          isUserHcp: () => false,
-          isUserPatient: () => true,
-          hasToDisplayTrainingInfoPage: () => false
-        } as User
-      }
-    })
-    const component = renderMainLayout(history)
-    checkRenderAndRoute(component, history, PatientConsentPage, '/new-consent')
-  })
+    it("should return undefined when user is not logged in and route is '/login'", () => {
+      const user = {
+        hasToAcceptNewConsent: () => false,
+        hasToRenewConsent: () => false,
+        isFirstLogin: () => false,
+        hasToDisplayTrainingInfoPage: () => false
+      } as User
 
-  it("should render LoginPage when user is not logged in route is '/login'", () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false
-    });
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          hasToAcceptNewConsent: () => false,
-          hasToRenewConsent: () => false,
-          isFirstLogin: () => false,
-          hasToDisplayTrainingInfoPage: () => false
-        } as User
-      }
+      testGetRedirectUrl('/login', user, false, undefined)
     })
-    const history = createMemoryHistory({ initialEntries: ['/login'] })
-    const component = renderMainLayout(history)
-    checkRenderAndRoute(component, history, LoginPage, '/login')
-  })
 
-  it('should render CompleteSignupPage when a new user is logged in and have no profile yet', () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: true,
-      isLoading: false
-    });
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          hasToAcceptNewConsent: () => false,
-          hasToRenewConsent: () => false,
-          isFirstLogin: () => true,
-          hasToDisplayTrainingInfoPage: () => false
-        } as User
-      }
-    })
-    const history = createMemoryHistory({ initialEntries: ['/complete-signup'] })
-    const component = renderMainLayout(history)
-    checkRenderAndRoute(component, history, CompleteSignUpPage, '/complete-signup')
-  })
+    it("should return default route when user is logged in and route is '/login'", () => {
+      const user = {
+        hasToAcceptNewConsent: () => false,
+        hasToRenewConsent: () => false,
+        isFirstLogin: () => false,
+        hasToDisplayTrainingInfoPage: () => false
+      } as User
 
-  it('should render Training page when a new user is logged in, consents are done and profile is created', () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: true,
-      isLoading: false
-    });
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          hasToAcceptNewConsent: () => false,
-          hasToRenewConsent: () => false,
-          isFirstLogin: () => false,
-          hasToDisplayTrainingInfoPage: () => true
-        } as User
-      }
+      testGetRedirectUrl('/login', user, true, '/')
     })
-    const history = createMemoryHistory({ initialEntries: ['/training'] })
-    const component = renderMainLayout(history)
-    checkRenderAndRoute(component, history, TrainingPage, '/training')
+
+    it("should return login route when user is not logged in and route is '/'", () => {
+      const user = {
+        hasToAcceptNewConsent: () => false,
+        hasToRenewConsent: () => false,
+        isFirstLogin: () => false,
+        hasToDisplayTrainingInfoPage: () => false
+      } as User
+
+      testGetRedirectUrl('/', user, false, '/login')
+    })
+
+    it('should return complete signup url when a new user is logged in and have no profile yet', () => {
+      const user = {
+        hasToAcceptNewConsent: () => false,
+        hasToRenewConsent: () => false,
+        isFirstLogin: () => true,
+        hasToDisplayTrainingInfoPage: () => false
+      } as User
+
+      testGetRedirectUrl('/', user, true, '/complete-signup')
+    })
+
+    it('should return training url when a new user is logged in, consents are done and profile is created', () => {
+      const user = {
+        hasToAcceptNewConsent: () => false,
+        hasToRenewConsent: () => false,
+        isFirstLogin: () => false,
+        hasToDisplayTrainingInfoPage: () => true
+      } as User
+
+      testGetRedirectUrl('/', user, true, '/training')
+    })
   })
 })
