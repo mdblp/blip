@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -39,7 +39,7 @@ import { checkPatientProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Units } from '../../../../models/generic'
 import UserApi from '../../../../lib/auth/user-api'
-import { LanguageCodes } from '../../../../models/locales'
+import { CountryCodes, LanguageCodes } from '../../../../models/locales'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
@@ -55,12 +55,7 @@ describe('Profile page for patient', () => {
       referringDoctor: 'Dr Dre',
       sex: 'M',
       ins: '123456789012345',
-      ssn: '012345678901234',
-      birthFirstName: 'Elie',
-      birthLastName: 'Coptere',
-      birthNames: 'Elie Damien Jean',
-      birthPlaceInseeCode: '38100',
-      oid: 'oid'
+      ssn: '012345678901234'
     },
     termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
@@ -71,7 +66,7 @@ describe('Profile page for patient', () => {
       date: '2020-01-01',
       value: '7.5'
     },
-    country: 'FR',
+    country: CountryCodes.France,
     units: { bg: Units.mole }
   }
   const preferences: Preferences = { displayLanguageCode: 'fr' }
@@ -102,13 +97,8 @@ describe('Profile page for patient', () => {
     expect(fields.lastNameInput).toHaveValue(profile.lastName)
     expect(fields.birthdayInput).toHaveValue(profile.patient.birthday)
     expect(fields.birthPlaceInput).toHaveValue(profile.patient.birthPlace)
-    expect(fields.birthFirstNameInput).toHaveValue(profile.patient.birthFirstName)
-    expect(fields.birthLastNameInput).toHaveValue(profile.patient.birthLastName)
-    expect(fields.birthNamesInput).toHaveValue(profile.patient.birthNames)
-    expect(fields.birthPlaceZipcodeInput).toHaveValue(profile.patient.birthPlaceInseeCode)
     expect(fields.insInput).toHaveValue(profile.patient.ins)
     expect(fields.ssnInput).toHaveValue(profile.patient.ssn)
-    expect(fields.oidInput).toHaveValue(profile.patient.oid)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(fields.genderSelect).toHaveTextContent('Male')
@@ -118,14 +108,14 @@ describe('Profile page for patient', () => {
     fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
-    userEvent.clear(fields.firstNameInput)
-    userEvent.clear(fields.lastNameInput)
+    await userEvent.clear(fields.firstNameInput)
+    await userEvent.clear(fields.lastNameInput)
     await userEvent.type(fields.firstNameInput, 'Jean')
     await userEvent.type(fields.lastNameInput, 'Tanrien')
 
     expect(saveButton).not.toBeDisabled()
     await act(async () => {
-      userEvent.click(saveButton)
+      await userEvent.click(saveButton)
     })
 
     expect(saveButton).toBeDisabled()
@@ -135,12 +125,11 @@ describe('Profile page for patient', () => {
   })
 
   it('should render profile page without specific INS fields when patient is not french', async () => {
-    settings.country = 'EN'
+    settings.country = CountryCodes.UnitedKingdom
     mockUserDataFetch({ profile, preferences, settings })
     await act(async () => {
       renderPage('/preferences')
     })
-    checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
     checkPatientProfilePage(settings.country)
   })
 })

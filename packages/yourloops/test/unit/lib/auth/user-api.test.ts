@@ -29,6 +29,7 @@ import { CompleteSignupPayload, Preferences, Profile, Settings, UserMetadata, Us
 import UserApi from '../../../../lib/auth/user-api'
 import HttpService, { ErrorMessageStatus } from '../../../../services/http'
 import { AxiosResponse } from 'axios'
+import { CountryCodes } from '../../../../models/locales'
 
 describe('Auth API', () => {
   const userId = 'userId'
@@ -38,7 +39,7 @@ describe('Auth API', () => {
     fullName: 'Bernard Tichaut',
     email: 'narbe@email.com'
   }
-  const settings = { country: 'france' } as Settings
+  const settings = { country: CountryCodes.France } as Settings
   const preferences = { displayLanguageCode: 'en' } as Preferences
 
   describe('getUserMetadata', () => {

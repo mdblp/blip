@@ -25,32 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AuthenticatedUserMetadata, UserRoles } from '../../../../models/user'
+import { AuthenticatedUserMetadata, Profile, UserRoles } from '../../../../models/user'
 import config from '../../../../lib/config'
 import User from '../../../../lib/auth/user'
 
 describe('User', () => {
-  let user: User
   const email = 'text@example.com'
 
   beforeAll(() => {
     config.LATEST_TERMS = '2021-01-01'
   })
 
-  beforeEach(() => {
-    user = new User({
+  function createUser(role: UserRoles = UserRoles.unset) {
+    return new User({
       sub: 'auth0|abcd',
       email,
-      [AuthenticatedUserMetadata.Roles]: [UserRoles.unset],
+      [AuthenticatedUserMetadata.Roles]: [role],
       email_verified: true
     })
-  })
-
-  afterEach(() => {
-    user = null
-  })
+  }
 
   it('should create the user', () => {
+    const user = createUser()
     expect(user.id).toBe('abcd')
     expect(user.username).toBe('text@example.com')
     expect(user.latestConsentChangeDate).toBeInstanceOf(Date)
@@ -58,6 +54,7 @@ describe('User', () => {
   })
 
   it('getFirstName', () => {
+    const user = createUser()
     expect(user.firstName).toBe('')
     user.profile = {
       fullName: 'Hello',
@@ -69,6 +66,7 @@ describe('User', () => {
   })
 
   it('getLastName', () => {
+    const user = createUser()
     expect(user.lastName).toBe('text@example.com')
     user.profile = {
       fullName: 'Hello World',
@@ -86,6 +84,7 @@ describe('User', () => {
   })
 
   it('getFullName', () => {
+    const user = createUser()
     expect(user.fullName).toBe('text@example.com')
     user.profile = {
       fullName: 'Barack Afritt',
@@ -95,6 +94,7 @@ describe('User', () => {
   })
 
   it('shouldAcceptConsent', () => {
+    const user = createUser()
     expect(user.shouldAcceptConsent()).toBe(true)
     user.profile = {
       fullName: 'Test Example',
@@ -115,6 +115,7 @@ describe('User', () => {
   })
 
   it('shouldRenewConsent', () => {
+    const user = createUser()
     expect(user.shouldRenewConsent()).toBe(true)
     user.profile = {
       fullName: 'Test Example',
@@ -138,5 +139,23 @@ describe('User', () => {
     expect(user.shouldRenewConsent()).toBe(true)
     user.profile.privacyPolicy.acceptanceTimestamp = '2021-01-02'
     expect(user.shouldRenewConsent()).toBe(false)
+  })
+
+  describe('Get birthday', () => {
+    it('should return the birthday if user is a patient and has a birthday in his profile', () => {
+      const user = createUser(UserRoles.patient)
+      user.profile = { patient: { birthday: '1985-05-23T05:45:00Z07:00' } } as Profile
+      expect(user.birthday).toEqual('1985-05-23')
+    })
+
+    it('should return an empty string if patient has no birthday in his profile', () => {
+      const user = createUser(UserRoles.patient)
+      expect(user.birthday).toEqual('')
+    })
+
+    it('should return undefined if user is not a patient', () => {
+      const user = createUser(UserRoles.hcp)
+      expect(user.birthday).toBeUndefined()
+    })
   })
 })

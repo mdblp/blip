@@ -58,13 +58,13 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: '1em',
       '& input:disabled': {
         backgroundColor: 'white',
-        color: theme.palette.grey[800] // eslint-disable-line no-magic-numbers
+        color: theme.palette.grey[800]
       }
     },
     disabled: {
       '&&:before': {
         borderBottom: '0.5px solid',
-        color: theme.palette.grey[400] // eslint-disable-line no-magic-numbers
+        color: theme.palette.grey[400]
       }
     }
   })

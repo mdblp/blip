@@ -41,6 +41,7 @@ import { useAuth } from '../../lib/auth'
 import { ProfileFormKey } from './models'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
+import { CountryCodes } from '../../models/locales'
 
 const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -52,7 +53,7 @@ const PatientProfileForm: FunctionComponent = () => {
 
   const a1cDate = user.settings?.a1c?.date
   const a1cValue = user.settings?.a1c?.value
-  const country = user.settings?.country ?? ''
+  const country = user.settings?.country ?? CountryCodes.Unknown
 
   return (
     <React.Fragment>
@@ -76,51 +77,8 @@ const PatientProfileForm: FunctionComponent = () => {
           inputProps={{ maxLength: '50' }}
         />
       </Box>
-      {country === 'FR' &&
+      {country === CountryCodes.France &&
         <React.Fragment>
-          <Box className={classes.inputContainer}>
-            <TextField
-              id={t('birth-first-name')}
-              label={t('birth-first-name')}
-              value={profileForm.birthFirstName}
-              onChange={event => updateProfileForm(ProfileFormKey.birthFirstName, event.target.value)}
-              error={errors.birthFirstName}
-              helperText={errors.birthFirstName && t('required-field')}
-              className={classes.formInput}
-              inputProps={{ maxLength: '50' }}
-            />
-            <TextField
-              id={t('birth-last-name')}
-              label={t('birth-last-name')}
-              value={profileForm.birthLastName}
-              onChange={event => updateProfileForm(ProfileFormKey.birthLastName, event.target.value)}
-              className={classes.formInput}
-              error={errors.birthLastName}
-              helperText={errors.birthLastName && t('required-field')}
-              inputProps={{ maxLength: '50' }}
-            />
-          </Box>
-          <Box className={classes.inputContainer}>
-            <TextField
-              id={t('birth-names')}
-              label={t('birth-names')}
-              value={profileForm.birthNames}
-              onChange={event => updateProfileForm(ProfileFormKey.birthNames, event.target.value)}
-              error={errors.birthNames}
-              helperText={errors.birthNames && t('required-field')}
-              className={classes.formInput}
-              inputProps={{ maxLength: '50' }}
-            />
-            <TextField
-              id={t('birth-place-insee-code')}
-              label={t('birth-place-insee-code')}
-              value={profileForm.birthPlaceInseeCode}
-              onChange={event => updateProfileForm(ProfileFormKey.birthPlaceInseeCode, event.target.value)}
-              className={classes.formInput}
-              error={errors.birthPlaceInseeCode}
-              helperText={errors.birthPlaceInseeCode && t('required-field')}
-            />
-          </Box>
           <Box className={classes.inputContainer}>
             <TextField
               id="profile-textfield-ins"
@@ -143,15 +101,6 @@ const PatientProfileForm: FunctionComponent = () => {
               inputProps={{ maxLength: '15' }}
             />
           </Box>
-          <TextField
-            id={t('oid')}
-            label={t('oid')}
-            value={profileForm.oid}
-            onChange={event => updateProfileForm(ProfileFormKey.oid, event.target.value)}
-            className={classes.formInput}
-            error={errors.oid}
-            helperText={errors.oid && t('required-field')}
-          />
         </React.Fragment>
       }
 

@@ -1,3 +1,30 @@
+/*
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import React, { createContext, FunctionComponent, useContext, useMemo, useState } from 'react'
 import { ProfileErrors, ProfileForm, ProfileFormKey } from './models'
 import { useAuth } from '../../lib/auth'
@@ -26,41 +53,32 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
   const alert = useAlert()
   const { t, i18n } = useTranslation('yourloops')
   const { user, updateProfile, updatePreferences, updateSettings } = useAuth()
+  const isUserPatient = user.isUserPatient()
+  const isUserHcp = user.isUserHcp()
 
   const [profileForm, setProfileForm] = useState<ProfileForm>({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    units: user.settings?.units?.bg ?? Units.gram,
     birthday: user.birthday,
     birthPlace: user.profile?.patient?.birthPlace ?? '',
-    lang: user.preferences?.displayLanguageCode ?? getCurrentLang(),
-    hcpProfession: user.profile?.hcpProfession ?? HcpProfession.empty,
-    referringDoctor: user.profile?.patient?.referringDoctor ?? undefined,
     feedbackAccepted: !!user?.profile?.contactConsent?.isAccepted,
-    sex: user.profile?.patient?.sex ?? undefined,
+    firstName: user.firstName,
+    hcpProfession: user.profile?.hcpProfession ?? HcpProfession.empty,
     ins: user.profile?.patient?.ins ?? undefined,
+    lang: user.preferences?.displayLanguageCode ?? getCurrentLang(),
+    lastName: user.lastName,
+    referringDoctor: user.profile?.patient?.referringDoctor ?? undefined,
+    sex: user.profile?.patient?.sex ?? undefined,
     ssn: user.profile?.patient?.ssn ?? undefined,
-    birthFirstName: user.profile?.patient?.birthFirstName ?? undefined,
-    birthLastName: user.profile?.patient?.birthLastName ?? undefined,
-    birthNames: user.profile?.patient?.birthNames ?? undefined,
-    birthPlaceInseeCode: user.profile?.patient?.birthPlaceInseeCode ?? undefined,
-    oid: user.profile?.patient?.oid ?? undefined
+    units: user.settings?.units?.bg ?? Units.gram
   })
   const [saving, setSaving] = useState<boolean>(false)
 
   const errors: ProfileErrors = {
+    birthday: isUserPatient && !REGEX_BIRTHDATE.test(profileForm.birthday),
     firstName: !profileForm.firstName,
+    hcpProfession: isUserHcp && profileForm.hcpProfession === HcpProfession.empty,
+    ins: isUserPatient && (!profileForm.ins || (profileForm.ins && profileForm.ins.length !== 15)),
     lastName: !profileForm.lastName,
-    hcpProfession: user.isUserHcp() && profileForm.hcpProfession === HcpProfession.empty,
-    birthday: user.isUserPatient() && !REGEX_BIRTHDATE.test(profileForm.birthday),
-    ins: user.isUserPatient() && (!profileForm.ins || (profileForm.ins && profileForm.ins.length !== 15)),
-    ssn: user.isUserPatient() && (!profileForm.ssn || (profileForm.ssn && profileForm.ssn.length !== 15)),
-    sex: user.isUserPatient() && !profileForm.sex,
-    birthFirstName: user.isUserPatient() && !profileForm.birthFirstName,
-    birthLastName: user.isUserPatient() && !profileForm.birthLastName,
-    birthNames: user.isUserPatient() && !profileForm.birthNames,
-    birthPlaceInseeCode: user.isUserPatient() && !profileForm.birthPlaceInseeCode,
-    oid: user.isUserPatient() && !profileForm.oid
+    ssn: isUserPatient && (!profileForm.ssn || (profileForm.ssn && profileForm.ssn.length !== 15))
   }
 
   const updatedProfile = useMemo<Profile>(() => {
@@ -71,7 +89,7 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
       fullName: `${profileForm.firstName} ${profileForm.lastName}`
     }
 
-    if (user.isUserPatient()) {
+    if (isUserPatient) {
       profile.patient = {
         ...profile.patient,
         birthday: profileForm.birthday,
@@ -79,12 +97,7 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
         ins: profileForm.ins,
         sex: profileForm.sex,
         ssn: profileForm.ssn,
-        referringDoctor: profileForm.referringDoctor,
-        birthFirstName: profileForm.birthFirstName,
-        birthLastName: profileForm.birthLastName,
-        birthNames: profileForm.birthNames,
-        birthPlaceInseeCode: profileForm.birthPlaceInseeCode,
-        oid: profileForm.oid
+        referringDoctor: profileForm.referringDoctor
       }
     }
 
@@ -92,7 +105,7 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
       profile.hcpProfession = profileForm.hcpProfession
     }
 
-    if (user.isUserHcp() && !!user?.profile?.contactConsent?.isAccepted !== profileForm.feedbackAccepted) {
+    if (isUserHcp && !!user?.profile?.contactConsent?.isAccepted !== profileForm.feedbackAccepted) {
       profile.contactConsent = {
         isAccepted: profileForm.feedbackAccepted,
         acceptanceTimestamp: new Date().toISOString()
@@ -100,7 +113,7 @@ export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
     }
 
     return profile
-  }, [profileForm.birthFirstName, profileForm.birthLastName, profileForm.birthNames, profileForm.birthPlace, profileForm.birthPlaceInseeCode, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.ins, profileForm.lastName, profileForm.oid, profileForm.referringDoctor, profileForm.sex, profileForm.ssn, user])
+  }, [isUserHcp, isUserPatient, profileForm.birthPlace, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.ins, profileForm.lastName, profileForm.referringDoctor, profileForm.sex, profileForm.ssn, user])
 
   const updatedSettings: Settings = {
     ...user.settings,

@@ -27,11 +27,11 @@
 
 import {
   AuthenticatedUser,
+  AuthenticatedUserMetadata,
   Consent,
   Preferences,
   Profile,
   Settings,
-  AuthenticatedUserMetadata,
   UserRoles
 } from '../../models/user'
 import { MedicalData } from '../../models/device-data'
@@ -80,14 +80,19 @@ export default class User {
   }
 
   get birthday(): string | undefined {
-    let birthday = this.profile?.patient?.birthday
-    if (this.role === UserRoles.patient && birthday) {
-      if (birthday.length > 0 && birthday.includes('T')) {
-        birthday = birthday.split('T')[0]
-      }
+    if (this.role === UserRoles.patient) {
+      const birthday = this.getRawBirthday()
       return REGEX_BIRTHDATE.test(birthday) ? birthday : ''
     }
     return undefined
+  }
+
+  private getRawBirthday(): string {
+    const birthday = this.profile?.patient?.birthday
+    if (birthday && birthday.length > 0 && birthday.includes('T')) {
+      return birthday.split('T')[0]
+    }
+    return birthday
   }
 
   isUserHcp(): boolean {

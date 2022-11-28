@@ -44,6 +44,7 @@ import { AuthContext, AuthContextProvider, SignupForm, useAuth, User } from '../
 import { HcpProfession } from '../../../../models/hcp-profession'
 import UserApi from '../../../../lib/auth/user-api'
 import { Units } from '../../../../models/generic'
+import { CountryCodes } from '../../../../models/locales'
 
 jest.mock('@auth0/auth0-react')
 
@@ -61,7 +62,7 @@ describe('Auth hook', () => {
     hcpProfession: HcpProfession.diabeto
   }
   const preferences: Preferences = { displayLanguageCode: 'en' }
-  const settings: Settings = { country: 'FR', units: { bg: Units.gram } }
+  const settings: Settings = { country: CountryCodes.France, units: { bg: Units.gram } }
 
   const initAuthContext = async (): Promise<void> => {
     auth = null
@@ -122,7 +123,7 @@ describe('Auth hook', () => {
       ...profile,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
     }
-    const updatedSettings: Settings = { ...settings, country: 'EN' }
+    const updatedSettings: Settings = { ...settings, country: CountryCodes.UnitedKingdom }
 
     beforeAll(() => {
       jest.spyOn(UserApi, 'updateProfile').mockResolvedValueOnce(updatedProfile)

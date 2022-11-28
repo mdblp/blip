@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
@@ -39,12 +39,12 @@ import { checkHcpProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Units } from '../../../../models/generic'
 import UserApi from '../../../../lib/auth/user-api'
-import { LanguageCodes } from '../../../../models/locales'
+import { CountryCodes, LanguageCodes } from '../../../../models/locales'
 import { HcpProfession } from '../../../../models/hcp-profession'
 
-describe('Profile page for patient', () => {
+describe('Profile page for hcp', () => {
   const profile: Profile = {
-    email: 'djamam@alatete.com',
+    email: 'djamal@alatete.com',
     firstName: 'Djamal',
     lastName: 'Alatete',
     fullName: 'Djamal Alatete',
@@ -58,7 +58,7 @@ describe('Profile page for patient', () => {
       date: '2020-01-01',
       value: '7.5'
     },
-    country: 'FR',
+    country: CountryCodes.France,
     units: { bg: Units.mole }
   }
   const preferences: Preferences = { displayLanguageCode: 'fr' }
@@ -83,7 +83,7 @@ describe('Profile page for patient', () => {
       renderPage('/preferences')
     })
     checkHCPLayout(`${profile.firstName} ${profile.lastName}`)
-    const fields = checkHcpProfilePage(settings.country)
+    const fields = checkHcpProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
     expect(fields.firstNameInput).toHaveValue(profile.firstName)
@@ -99,17 +99,17 @@ describe('Profile page for patient', () => {
     fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: Units.gram }))
 
-    fireEvent.mouseDown(within(screen.getByTestId('hcp-profession-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
 
-    userEvent.clear(fields.firstNameInput)
-    userEvent.clear(fields.lastNameInput)
+    await userEvent.clear(fields.firstNameInput)
+    await userEvent.clear(fields.lastNameInput)
     await userEvent.type(fields.firstNameInput, 'Jean')
     await userEvent.type(fields.lastNameInput, 'Talue')
 
     expect(saveButton).not.toBeDisabled()
     await act(async () => {
-      userEvent.click(saveButton)
+      await userEvent.click(saveButton)
     })
 
     expect(saveButton).toBeDisabled()
@@ -117,15 +117,5 @@ describe('Profile page for patient', () => {
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
-  })
-
-  it('should render profile page without professional account number when patient is not french', async () => {
-    settings.country = 'EN'
-    mockUserDataFetch({ profile, preferences, settings })
-    await act(async () => {
-      renderPage('/preferences')
-    })
-    checkHCPLayout(`${profile.firstName} ${profile.lastName}`)
-    checkHcpProfilePage(settings.country)
   })
 })

@@ -31,41 +31,31 @@ import { HcpProfession } from '../../models/hcp-profession'
 export type ProfileErrors = Record<string, boolean>
 
 export enum ProfileFormKey {
-  firstName = 'firstName',
-  lastName = 'lastName',
-  lang = 'lang',
-  units = 'units',
   birthday = 'birthday',
   birthPlace = 'birthPlace',
   feedbackAccepted = 'feedbackAccepted',
+  firstName = 'firstName',
   hcpProfession = 'hcpProfession',
   ins = 'ins',
+  lang = 'lang',
+  lastName = 'lastName',
   referringDoctor = 'referringDoctor',
   sex = 'sex',
   ssn = 'ssn',
-  birthLastName = 'birthLastName',
-  birthFirstName = 'birthFirstName',
-  birthNames = 'birthNames',
-  oid = 'oid',
-  birthPlaceInseeCode = 'birthPlaceInseeCode'
+  units = 'units'
 }
 
 export interface ProfileForm {
-  firstName: string
-  lastName: string
-  lang: LanguageCodes
-  units: Units
   birthday: string | undefined
   birthPlace: string
   feedbackAccepted: boolean | undefined
+  firstName: string
   hcpProfession: HcpProfession
   ins: string | undefined
+  lang: LanguageCodes
+  lastName: string
   referringDoctor: string | undefined
   sex: string | undefined
   ssn: string | undefined
-  birthLastName: string
-  birthFirstName: string
-  birthNames: string
-  oid: string
-  birthPlaceInseeCode: string
+  units: Units
 }

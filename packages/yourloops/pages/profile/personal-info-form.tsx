@@ -33,7 +33,6 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
 
-import appConfig from '../../lib/config'
 import { useAuth } from '../../lib/auth'
 import { ProfileFormKey } from './models'
 import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
@@ -42,6 +41,7 @@ import CertifiedProfessionalIcon from '../../components/icons/certified-professi
 import PatientProfileForm from './patient-form'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
+import { CountryCodes } from '../../models/locales'
 
 const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -54,7 +54,7 @@ const PersonalInfoForm: FunctionComponent = () => {
       <Box className={classes.categoryLabel}>
         <AccountCircle color="primary" />
         <strong className={classes.uppercase}>{t('personal-information')}</strong>
-        {user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${user.id}`} />}
+        {user.frProId && <CertifiedProfessionalIcon />}
       </Box>
 
       <Box className={classes.inputContainer}>
@@ -87,24 +87,19 @@ const PersonalInfoForm: FunctionComponent = () => {
               disabledValues={[HcpProfession.empty]}
               values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
               id="profession"
-              dataTestId="hcp-profession-selector"
               inputTranslationKey="hcp-profession"
               errorTranslationKey="profession-dialog-title"
             />
           </Box>
 
-          {appConfig.ECPS_ENABLED && user.settings?.country === 'FR' &&
-            <React.Fragment>
-              {user.frProId &&
-                <TextField
-                  id="professional-account-number-text-field"
-                  value={user.frProId}
-                  label={t('professional-account-number')}
-                  disabled
-                  className={classes.formInput}
-                />
-              }
-            </React.Fragment>
+          {user.settings?.country === CountryCodes.France && user.frProId &&
+            <TextField
+              id="professional-account-number-text-field"
+              value={user.frProId}
+              label={t('professional-account-number')}
+              disabled
+              className={classes.formInput}
+            />
           }
         </Box>
       }

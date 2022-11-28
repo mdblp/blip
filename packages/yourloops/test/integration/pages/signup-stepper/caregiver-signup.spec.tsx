@@ -33,6 +33,7 @@ import { UserRoles } from '../../../../models/user'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
+import { CountryCodes } from '../../../../models/locales'
 
 describe('Signup stepper as caregiver', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
@@ -80,7 +81,7 @@ describe('Signup stepper as caregiver', () => {
         role: UserRoles.caregiver,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
-        settings: { country: 'FR' }
+        settings: { country: CountryCodes.France }
       })
     )
   })

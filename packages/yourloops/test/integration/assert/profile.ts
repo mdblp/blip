@@ -1,4 +1,32 @@
-import { screen } from '@testing-library/react'
+/*
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+import { screen, within } from '@testing-library/react'
+import { CountryCodes } from '../../../models/locales'
 
 interface CommonFieldsHtmlElements {
   firstNameInput: HTMLElement
@@ -32,10 +60,10 @@ const checkCommonFields = (): CommonFieldsHtmlElements => {
   const unitsSelect = screen.getByTestId('profile-units-selector')
   const languageSelect = screen.getByTestId('profile-local-selector')
 
-  expect(firstNameInput).toBeInTheDocument()
-  expect(lastNameInput).toBeInTheDocument()
-  expect(unitsSelect).toBeInTheDocument()
-  expect(lastNameInput).toBeInTheDocument()
+  expect(firstNameInput).toBeVisible()
+  expect(lastNameInput).toBeVisible()
+  expect(unitsSelect).toBeVisible()
+  expect(lastNameInput).toBeVisible()
 
   return {
     firstNameInput,
@@ -45,39 +73,22 @@ const checkCommonFields = (): CommonFieldsHtmlElements => {
   }
 }
 
-// the test relating to eCPS account is skipped for now, it will be reactivated in the next PR with eCPS connection in Auth0
-export const checkHcpProfilePage = (country: string): HcpFieldsHtmlElements => {
-  console.log(country)
-  const hcpProfessionSelect = screen.getByTestId('hcp-profession-selector')
-  // const frProIdInput = screen.queryByLabelText('eCPS number')
-  const inputs = {
+export const checkHcpProfilePage = (): HcpFieldsHtmlElements => {
+  const hcpProfessionSelect = screen.getByTestId('dropdown-profession-selector')
+  expect(hcpProfessionSelect).toBeVisible()
+  return {
     ...checkCommonFields(),
     hcpProfessionSelect
   }
-
-  expect(hcpProfessionSelect).toBeInTheDocument()
-
-  // if (country === 'FR') {
-  //   expect(frProIdInput).toBeInTheDocument()
-  //   expect(frProIdInput).toBeDisabled()
-  //   return { ...inputs, frProIdInput }
-  // }
-
-  return inputs
 }
 
-export const checkPatientProfilePage = (country: string): PatientFieldsHtmlElements => {
+export const checkPatientProfilePage = (country: CountryCodes): PatientFieldsHtmlElements => {
   const birthdayInput = screen.getByLabelText('Date of birth')
   const birthPlaceInput = screen.getByLabelText('Birth place')
   const genderSelect = screen.getByLabelText('Gender')
   const referringDoctorInput = screen.getByLabelText('Referring doctor')
-  const birthFirstNameInput = screen.queryByLabelText('Birth first name')
-  const birthLastNameInput = screen.queryByLabelText('Birth last name')
-  const birthNamesInput = screen.queryByLabelText('Birth name(s)')
-  const birthPlaceZipcodeInput = screen.queryByLabelText('Birth place INSEE zipcode')
   const insInput = screen.queryByLabelText('INS')
   const ssnInput = screen.queryByLabelText('SSN')
-  const oidInput = screen.queryByLabelText('OID')
   const inputs = {
     ...checkCommonFields(),
     birthdayInput,
@@ -86,39 +97,24 @@ export const checkPatientProfilePage = (country: string): PatientFieldsHtmlEleme
     referringDoctorInput
   }
 
-  expect(inputs.unitsSelect).toHaveClass('Mui-disabled')
-  expect(birthdayInput).toBeInTheDocument()
-  expect(birthPlaceInput).toBeInTheDocument()
-  expect(genderSelect).toBeInTheDocument()
-  expect(referringDoctorInput).toBeInTheDocument()
+  expect(within(inputs.unitsSelect).getByRole('button')).toHaveAttribute('aria-disabled', 'true')
+  expect(birthdayInput).toBeVisible()
+  expect(birthPlaceInput).toBeVisible()
+  expect(genderSelect).toBeVisible()
+  expect(referringDoctorInput).toBeVisible()
 
-  if (country === 'FR') {
-    expect(birthFirstNameInput).toBeInTheDocument()
-    expect(birthLastNameInput).toBeInTheDocument()
-    expect(birthNamesInput).toBeInTheDocument()
-    expect(birthPlaceZipcodeInput).toBeInTheDocument()
-    expect(insInput).toBeInTheDocument()
-    expect(ssnInput).toBeInTheDocument()
-    expect(oidInput).toBeInTheDocument()
+  if (country === CountryCodes.France) {
+    expect(insInput).toBeVisible()
+    expect(ssnInput).toBeVisible()
 
     return {
       ...inputs,
-      birthFirstNameInput,
-      birthLastNameInput,
-      birthNamesInput,
-      birthPlaceZipcodeInput,
       insInput,
-      ssnInput,
-      oidInput
+      ssnInput
     }
   }
-  expect(birthFirstNameInput).not.toBeInTheDocument()
-  expect(birthLastNameInput).not.toBeInTheDocument()
-  expect(birthNamesInput).not.toBeInTheDocument()
-  expect(birthPlaceZipcodeInput).not.toBeInTheDocument()
   expect(insInput).not.toBeInTheDocument()
   expect(ssnInput).not.toBeInTheDocument()
-  expect(oidInput).not.toBeInTheDocument()
 
   return inputs
 }

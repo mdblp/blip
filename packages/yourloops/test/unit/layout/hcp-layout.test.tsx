@@ -121,9 +121,4 @@ describe('Hcp Layout', () => {
     render(getMainLayoutJSX('/teams/fakeTeamId'))
     checkInDocument(teamDetailsPageTestId)
   })
-
-  it('should render certify account page when route is /certify and user is hcp', () => {
-    render(getMainLayoutJSX('/certify'))
-    checkInDocument(certifyAccountPageTestId)
-  })
 })

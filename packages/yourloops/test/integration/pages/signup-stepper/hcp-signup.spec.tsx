@@ -34,6 +34,7 @@ import userEvent from '@testing-library/user-event'
 import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
+import { CountryCodes } from '../../../../models/locales'
 
 describe('Signup stepper as hcp', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
@@ -94,7 +95,7 @@ describe('Signup stepper as hcp', () => {
         role: UserRoles.hcp,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
-        settings: { country: 'FR' }
+        settings: { country: CountryCodes.France }
       })
     )
   })

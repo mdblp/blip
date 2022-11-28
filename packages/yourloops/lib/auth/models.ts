@@ -26,7 +26,7 @@
  */
 
 import User from './user'
-import { LanguageCodes } from '../../models/locales'
+import { CountryCodes, LanguageCodes } from '../../models/locales'
 import { Preferences, Profile, Settings, UserRoles } from '../../models/user'
 import { HcpProfession } from '../../models/hcp-profession'
 
@@ -47,7 +47,7 @@ export interface SignupForm {
   hcpProfession?: HcpProfession
   preferencesLanguage: LanguageCodes
   privacyPolicy: boolean
-  profileCountry: string
+  profileCountry: CountryCodes
   profileFirstname: string
   profileLastname: string
   terms: boolean
@@ -68,5 +68,5 @@ export interface AuthContext {
   updatePreferences: (preferences: Preferences) => Promise<void>
   updateProfile: (profile: Profile) => Promise<void>
   updateSettings: (settings: Settings) => Promise<void>
-  user: Readonly<User> | null
+  user: User | null
 }
