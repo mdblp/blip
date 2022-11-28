@@ -25,34 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-
-import colors from '../../styles/colors.css'
+import React, { FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
 import { Box } from '@material-ui/core'
+import { BgClasses } from '../models'
+import { StatLegendElement } from './stat-legend-element'
 
 interface StatLegendProps {
-  items: Array<{ id: string, legendTitle: string }>
+  bgClasses: BgClasses
   units: string
 }
 
-export const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
-  const { items, units } = props
+const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
+  const { bgClasses, units } = props
+  const veryLowValue = Math.round(bgClasses.veryLow)
+  const lowValue = Math.round(bgClasses.low)
+  const targetValue = Math.round(bgClasses.target)
+  const highValue = Math.round(bgClasses.high)
 
   return (
     <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
       <ul className={styles['stat-legend']}>
-        {items.map(item =>
-          <li
-            className={styles['stat-legend-item']}
-            key={item.id}
-            style={{ borderBottomColor: colors[item.id] }}
-          >
-            <span className={styles['stat-legend-title']}>
-              {item.legendTitle}
-            </span>
-          </li>
-        )}
+        <StatLegendElement
+          cbgClassName="very-low"
+          value={`<${veryLowValue}`}
+        />
+        <StatLegendElement
+          cbgClassName="low"
+          value={`${veryLowValue}-${lowValue}`}
+        />
+        <StatLegendElement
+          cbgClassName="target"
+          value={`${lowValue}-${targetValue}`}
+        />
+        <StatLegendElement
+          cbgClassName="high"
+          value={`${targetValue}-${highValue}`}
+        />
+        <StatLegendElement
+          cbgClassName="very-high"
+          value={`>${highValue}`}
+        />
       </ul>
       <Box marginLeft="auto" marginRight="4px" fontSize="12px">
         {units}
@@ -60,3 +73,5 @@ export const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
     </Box>
   )
 }
+
+export const StatLegendMemoized = memo(StatLegend)
