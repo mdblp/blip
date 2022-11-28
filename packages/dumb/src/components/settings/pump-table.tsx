@@ -29,8 +29,7 @@ import React, { FunctionComponent } from 'react'
 import styles from './diabeloop.css'
 import { formatLocalizedFromUTC } from '../../utils/datetime/datetime.util'
 import { useTranslation } from 'react-i18next'
-import { TimePrefs } from '../../models/settings.model'
-import { PumpConfig } from 'medical-domain'
+import { PumpConfig, TimePrefs } from 'medical-domain'
 
 const DEFAULT_VALUE = '-'
 

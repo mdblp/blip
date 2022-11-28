@@ -206,11 +206,7 @@ class MedicalDataService {
   }
 
   private joinReservoirChanges(): void {
-    const sortedDescPumpSettings = this.medicalData.pumpSettings.sort((pumpSettings1: PumpSettings, pumpSettings2: PumpSettings) => {
-      const date1 = Number(new Date(pumpSettings1.normalTime))
-      const date2 = Number(new Date(pumpSettings2.normalTime))
-      return date2 - date1
-    })
+    const sortedDescPumpSettings = this.medicalData.pumpSettings.sort((pumpSettings1: PumpSettings, pumpSettings2: PumpSettings) => this.sortDatum(pumpSettings2, pumpSettings1))
     const lastPumpSettings: PumpSettings = sortedDescPumpSettings[0]
 
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {

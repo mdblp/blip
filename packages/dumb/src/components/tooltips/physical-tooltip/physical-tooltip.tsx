@@ -36,7 +36,6 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { TimePrefs } from '../../../models/settings.model'
 import { Tooltip } from '../../../index'
 import styles from './physical-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
@@ -45,7 +44,7 @@ import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
-import { DurationUnit, DurationValue, PhysicalActivity } from 'medical-domain'
+import { DurationUnit, DurationValue, PhysicalActivity, TimePrefs } from 'medical-domain'
 
 interface PhysicalTooltipProps {
   physicalActivity: PhysicalActivity

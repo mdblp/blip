@@ -26,8 +26,7 @@
  */
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
-import { TimePrefs } from '../../models/settings.model'
-import { convertBG, Unit } from 'medical-domain'
+import { convertBG, TimePrefs, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
 import { BgClass, BgPrefs } from '../../models/blood-glucose.model'

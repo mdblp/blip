@@ -27,7 +27,6 @@
 
 import React, { FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
-import { TimePrefs } from '../../../models/settings.model'
 import colors from '../../../styles/colors.css'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
@@ -46,7 +45,7 @@ import {
   Side
 } from '../tooltip/tooltip'
 import { BgPrefs, ClassificationType } from '../../../models/blood-glucose.model'
-import { Cbg, Smbg } from 'medical-domain'
+import { Cbg, Smbg, TimePrefs } from 'medical-domain'
 
 interface BloodGlucoseTooltipProps {
   bgPrefs: BgPrefs

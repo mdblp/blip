@@ -26,7 +26,6 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { TimePrefs } from '../../../models/settings.model'
 import styles from './parameter-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import moment from 'moment-timezone'
@@ -46,7 +45,7 @@ import {
   Side
 } from '../tooltip/tooltip'
 import colors from '../../../styles/colors.css'
-import { DeviceParameterChange, Parameter } from 'medical-domain'
+import { DeviceParameterChange, Parameter, TimePrefs } from 'medical-domain'
 
 interface ParameterTooltipProps {
   parameter: DeviceParameterChange

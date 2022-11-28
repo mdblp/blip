@@ -43,11 +43,7 @@ interface MedicalDataOptions {
     classes: Record<number, string>
     duration: number
   }
-  timePrefs: {
-    timezoneAware: boolean
-    timezoneName: string
-    timezoneOffset: number
-  }
+  timePrefs: TimePrefs
 }
 
 interface BgClasses {
@@ -56,6 +52,12 @@ interface BgClasses {
   'target': {boundary: number}
   'high': {boundary: number}
   'very-high': {boundary: number}
+}
+
+interface TimePrefs {
+  timezoneAware: boolean
+  timezoneName: string
+  timezoneOffset: number
 }
 
 const DEFAULT_BG_BOUNDS = {
@@ -113,4 +115,4 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
 }
 
 export default MedicalDataOptions
-export { BgClasses, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }
+export { BgClasses, TimePrefs, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }

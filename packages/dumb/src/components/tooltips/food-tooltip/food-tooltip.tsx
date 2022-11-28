@@ -26,7 +26,6 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { TimePrefs } from '../../../models/settings.model'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -43,7 +42,7 @@ import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
-import { Meal, Prescriptor } from 'medical-domain'
+import { Meal, Prescriptor, TimePrefs } from 'medical-domain'
 
 interface FoodTooltipProps {
   food: Meal
