@@ -371,7 +371,7 @@
   "today": "Aujourd'hui",
   "tooltip-release-notes": "Notes de version",
   "training": "Formation",
-  "training-body": "Un nouveau document de <trainingLink>{{training}}</trainingLink> est disponible, merci d'en prendre connaissance avant de continuer sur yourloops. Vous pouvez également le lire plus tard, en cliquant sur le lien {{training}} disponible en bas de page.",
+  "training-body": "Un nouveau document de formation est disponible, merci d'en prendre connaissance avant de continuer sur yourloops.",
   "training-checkbox": "Case à cocher de validation de lecture de la formation",
   "training-subject": "Sujet de la formation",
   "units": "Unités",
