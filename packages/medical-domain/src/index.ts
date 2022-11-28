@@ -48,11 +48,11 @@ import Wizard from './domains/models/medical/datum/Wizard'
 import ZenMode from './domains/models/medical/datum/ZenMode'
 import MedicalDataService from './domains/repositories/medical/MedicalDataService'
 import { convertBG } from './domains/repositories/medical/datum/CbgService'
-import { defaultMedicalDataOptions } from './domains/models/medical/MedicalDataOptions'
+import { BgClasses, defaultMedicalDataOptions } from './domains/models/medical/MedicalDataOptions'
 import * as TimeService from './domains/repositories/time/TimeService'
 
 export {
-  Basal, BaseDatum, BgUnit, Bolus, Cbg, CgmConfig, ConfidentialMode, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
+  Basal, BaseDatum, BgClasses, BgUnit, Bolus, Cbg, CgmConfig, ConfidentialMode, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
   Parameter, PhysicalActivity, Prescriptor, PumpManufacturer, PumpConfig, PumpSettings, ReservoirChange, Smbg, Source, Unit, Upload, Wizard, ZenMode,
   defaultMedicalDataOptions, TimeService, MGDL_UNITS, MMOLL_UNITS, convertBG
 }

@@ -38,13 +38,7 @@ interface MedicalDataOptions {
     end: number
   }
   defaultPumpManufacturer: string
-  bgClasses: {
-    'very-low': {boundary: number}
-    'low': {boundary: number}
-    'target': {boundary: number}
-    'high': {boundary: number}
-    'very-high': {boundary: number}
-  }
+  bgClasses: BgClasses
   fillOpts: {
     classes: Record<number, string>
     duration: number
@@ -54,6 +48,14 @@ interface MedicalDataOptions {
     timezoneName: string
     timezoneOffset: number
   }
+}
+
+interface BgClasses {
+  'very-low': {boundary: number}
+  'low': {boundary: number}
+  'target': {boundary: number}
+  'high': {boundary: number}
+  'very-high': {boundary: number}
 }
 
 const DEFAULT_BG_BOUNDS = {
@@ -111,4 +113,4 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
 }
 
 export default MedicalDataOptions
-export { defaultMedicalDataOptions, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }
+export { BgClasses, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }

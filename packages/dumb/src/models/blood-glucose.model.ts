@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BgUnit } from 'medical-domain'
+import { BgClasses, BgUnit } from 'medical-domain'
 
 export interface BgBounds {
   veryHighThreshold: number
@@ -34,18 +34,10 @@ export interface BgBounds {
   veryLowThreshold: number
 }
 
-export interface BgClassesRaw {
-  'very-low': { boundary: number }
-  low: { boundary: number }
-  target: { boundary: number }
-  high: { boundary: number }
-  'very-high': { boundary: number }
-}
-
 export interface BgPrefs {
   bgUnits: BgUnit
   bgBounds: BgBounds
-  bgClasses: BgClassesRaw
+  bgClasses: BgClasses
 }
 
 export enum ClassificationType {

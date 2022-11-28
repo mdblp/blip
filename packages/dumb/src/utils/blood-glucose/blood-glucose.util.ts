@@ -26,9 +26,10 @@
  */
 
 import { isNumber } from 'lodash'
-import { BgBounds, BgClass, BgClassesRaw, ClassificationType } from '../../models/blood-glucose.model'
+import { BgBounds, BgClass, ClassificationType } from '../../models/blood-glucose.model'
+import { BgClasses } from 'medical-domain'
 
-export const convertBgClassesToBgBounds = (bgClasses: BgClassesRaw): BgBounds => {
+export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
   return {
     veryHighThreshold: bgClasses.high.boundary,
     targetUpperBound: bgClasses.target.boundary,
