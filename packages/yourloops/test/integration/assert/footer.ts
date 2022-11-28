@@ -38,7 +38,7 @@ const defaultArgs = { needFooterLanguageSelector: false }
 
 export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterProps = defaultArgs) => {
   const footer = within(screen.getByTestId('footer'))
-  const intendedUseLink = footer.getByText('Intended Use')
+  const intendedUseLink = footer.getByText('Product Labelling')
   const trainingLink = footer.getByText('Training')
   const termsOfUseLink = footer.getByText('Terms of use')
   const privacyPolicyLink = footer.getByText('Privacy Policy')

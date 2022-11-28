@@ -132,10 +132,8 @@ function TrainingPage(): JSX.Element {
             <CardContent className={classes.cardContent}>
               {trainingOpened
                 ? <FormControlLabel
-                  id={'form-control-training'}
                   control={
                     <Checkbox
-                      id={'checkbox-training'}
                       aria-label={t('training-checkbox')}
                       className={classes.checkbox}
                       checked={checked}
@@ -162,7 +160,6 @@ function TrainingPage(): JSX.Element {
                   </Button>
                   : <Link
                     underline="none"
-                    aria-label={training}
                     href={diabeloopExternalUrls.training(user?.role)}
                     target="_blank"
                     rel="noreferrer"
