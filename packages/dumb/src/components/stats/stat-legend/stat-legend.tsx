@@ -47,11 +47,11 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
     <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
       <ul className={styles['stat-legend']}>
         <StatLegendElement
-          cbgClassName="very-high"
+          cbgClassName="very-low"
           value={`<${veryLowValue}`}
         />
         <StatLegendElement
-          cbgClassName="high"
+          cbgClassName="low"
           value={`${veryLowValue}-${lowValue}`}
         />
         <StatLegendElement
@@ -59,11 +59,11 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
           value={`${lowValue}-${targetValue}`}
         />
         <StatLegendElement
-          cbgClassName="low"
+          cbgClassName="high"
           value={`${targetValue}-${highValue}`}
         />
         <StatLegendElement
-          cbgClassName="very-low"
+          cbgClassName="very-high"
           value={`>${highValue}`}
         />
       </ul>

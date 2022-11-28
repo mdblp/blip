@@ -90,7 +90,7 @@ class Stats extends React.Component {
 
   renderStats(stats, animate, hideToolTips) {
     const { bgPrefs } = this.props
-    const bgClasses: BgClasses = {
+    const bgClasses = {
       high: bgPrefs.bgClasses.high.boundary,
       low: bgPrefs.bgClasses.low.boundary,
       target: bgPrefs.bgClasses.target.boundary,
