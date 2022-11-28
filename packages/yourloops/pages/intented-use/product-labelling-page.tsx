@@ -32,7 +32,7 @@ import rawHtmlEN from './raw-html/EN'
 import { getCurrentLang } from '../../lib/language'
 import rawHtmlFR from './raw-html/FR'
 
-const IntendedUsePage: FunctionComponent = () => {
+const ProductLabellingPage: FunctionComponent = () => {
   const getHtml = (): string => {
     switch (getCurrentLang()) {
       case 'fr':
@@ -55,4 +55,4 @@ const IntendedUsePage: FunctionComponent = () => {
   )
 }
 
-export default IntendedUsePage
+export default ProductLabellingPage

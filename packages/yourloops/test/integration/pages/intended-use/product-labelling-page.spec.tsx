@@ -34,7 +34,7 @@ import i18n from 'i18next'
 import { renderPageFromHistory } from '../../utils/render'
 
 jest.setTimeout(10000)
-describe('Intended use page', () => {
+describe('Product labelling page', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
 
   beforeAll(() => {
@@ -45,14 +45,14 @@ describe('Intended use page', () => {
     })
   })
 
-  it('should render intended use with the right selected language', () => {
+  it('should render product labelling with the right selected language', () => {
     renderPageFromHistory(history)
     expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
     checkFooter()
 
-    userEvent.click(screen.getByText('Intended Use'))
+    userEvent.click(screen.getByText('Product Labelling'))
 
-    expect(history.location.pathname).toEqual('/intended-use')
+    expect(history.location.pathname).toEqual('/product-labelling')
     expect(screen.getByText('YourLoops, version 1.0.0, released on 2000-01-01')).toBeInTheDocument()
     expect(screen.getByText('Intended Purpose and regulatory information')).toBeInTheDocument()
     expect(screen.getByText('Legal Manufacturer')).toBeInTheDocument()

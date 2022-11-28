@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useAuth } from '../../lib/auth'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Profile } from '../../models/user'
 import bows from 'bows'
 import { useHistory } from 'react-router-dom'
@@ -44,6 +44,8 @@ import Container from '@material-ui/core/Container'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
 import diabeloopUrls from '../../lib/diabeloop-url'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const style = makeStyles((theme: Theme) => {
   return {
@@ -74,6 +76,13 @@ const style = makeStyles((theme: Theme) => {
       [theme.breakpoints.down('sm')]: {
         justifyContent: 'space-between'
       }
+    },
+    checkbox: {
+      marginBottom: 'auto'
+    },
+    formControlLabel: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
   }
 }, { name: 'ylp-training-page' })
@@ -88,6 +97,8 @@ function TrainingPage(): JSX.Element {
   const fromPath = historyHook.location.state?.from?.pathname
   const user = auth.user
   const classes = style()
+  const [trainingOpened, setTrainingOpened] = useState(false)
+  const [checked, setChecked] = useState(false)
 
   const ackTraining = (): void => {
     const now = new Date().toISOString()
@@ -100,13 +111,6 @@ function TrainingPage(): JSX.Element {
       historyHook.push(fromPath ?? '/')
     })
   }
-
-  const training = t('training').toLowerCase()
-  const trainingLink = (
-    <Link aria-label={training} href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)} target="_blank" rel="noreferrer">
-      {training}
-    </Link>
-  )
 
   return (
     <Container maxWidth="sm" className={classes.mainContainer} data-testid="training-container">
@@ -129,22 +133,50 @@ function TrainingPage(): JSX.Element {
               </Box>
             </CardMedia>
             <CardContent className={classes.cardContent}>
-              <Trans
-                i18nKey="training-body"
-                t={t}
-                components={{ trainingLink }}
-                values= {{ training }}>
-                New {{ training }} available
-              </Trans>
+              {trainingOpened
+                ? <FormControlLabel
+                  control={
+                    <Checkbox
+                      aria-label={t('training-checkbox')}
+                      className={classes.checkbox}
+                      checked={checked}
+                      onChange={() => setChecked(true)}
+                      name="training"
+                      color="primary"
+                    />
+                  }
+                  label={t('acknowledge-training')}
+                  className={classes.formControlLabel}
+                />
+                : t('training-body')
+              }
               <div className={classes.buttons}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disableElevation
-                  onClick={ackTraining}
-                >
-                  {t('button-acknowledge')}
-                </Button>
+                {trainingOpened
+                  ? <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    onClick={ackTraining}
+                    disabled={!checked}
+                  >
+                    {t('confirm')}
+                  </Button>
+                  : <Link
+                    underline="none"
+                    href={diabeloopUrls.getTrainingUrl(i18n.language, user?.role)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                      onClick={() => setTrainingOpened(true)}
+                    >
+                      {t('open-training')}
+                    </Button>
+                  </Link>
+                }
               </div>
             </CardContent>
           </Card>
