@@ -107,8 +107,6 @@ function TrainingPage(): JSX.Element {
     })
   }
 
-  const training = t('training').toLowerCase()
-
   return (
     <Container maxWidth="sm" className={classes.mainContainer} data-testid="training-container">
       <Grid
