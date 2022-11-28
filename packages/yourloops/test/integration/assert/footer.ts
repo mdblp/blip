@@ -38,7 +38,7 @@ const defaultArgs = { needFooterLanguageSelector: false }
 
 export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterProps = defaultArgs) => {
   const footer = within(screen.getByTestId('footer'))
-  const intendedUseLink = footer.getByText('Product Labelling')
+  const productLabellingLink = footer.getByText('Product Labelling')
   const trainingLink = footer.getByText('Training')
   const termsOfUseLink = footer.getByText('Terms of use')
   const privacyPolicyLink = footer.getByText('Privacy Policy')
@@ -51,8 +51,8 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
     ? expect(languageSelector).toBeInTheDocument()
     : expect(languageSelector).not.toBeInTheDocument()
 
-  expect(intendedUseLink).toBeVisible()
-  expect(intendedUseLink).toHaveAttribute('href', '/product-labelling')
+  expect(productLabellingLink).toBeVisible()
+  expect(productLabellingLink).toHaveAttribute('href', '/product-labelling')
   expect(trainingLink).toBeVisible()
   expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(role))
   expect(termsOfUseLink).toBeVisible()
