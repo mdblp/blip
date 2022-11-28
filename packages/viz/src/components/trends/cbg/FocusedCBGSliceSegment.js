@@ -25,12 +25,13 @@ const FocusedCBGSliceSegment = (props) => {
     return null
   }
   const { focusedSlice: { position }, focusedSliceKeys, sliceWidth } = props
+  const stroke = styles.stroke ?? 0
   return (
     <rect
       className={styles.segment}
-      x={position.left - sliceWidth / 2 + styles.stroke / 2}
+      x={position.left - sliceWidth / 2 + stroke / 2}
       y={position.yPositions[focusedSliceKeys[1]]}
-      width={sliceWidth - styles.stroke}
+      width={sliceWidth - stroke}
       height={position.yPositions[focusedSliceKeys[0]] - position.yPositions[focusedSliceKeys[1]]}
     />
   )
