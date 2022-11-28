@@ -9,7 +9,7 @@ on:
     types: [ 'created', 'edited' ]
 
 jobs:
-  lint-test-build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -18,6 +18,8 @@ jobs:
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
+          cache: 'npm'
+          cache-dependency-path: packages/*/package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -31,36 +33,217 @@ jobs:
       - name: Build packages dependencies
         run: npm run build-dependencies
 
-      - name: Test locales
-        run: npm run test-locales
+  test-lambda:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/*/package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
 
       - name: Test lambda
         run: npm run test-lambda
 
+  test-sundial:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/sundial/package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
+
       - name: Test sundial
         run: npm run test-sundial
+
+
+  test-tideline:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/tideline/package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
 
       - name: Test tideline
         run: npm run test-tideline
 
+
+  test-medical:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/medical-domain/package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
       - name: Test medical domain
         run: npm run test-medical-domain
+
+  test-dumb:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/dumb/package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
 
       - name: Test dumb
         run: npm run test-dumb
 
+
+  test-viz:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/viz/package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
+
       - name: Test viz
         run: npm run test-viz
 
+  test-blip:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/yourloops/package-lock.json
+          node-version: 16
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
       - name: Test blip
         run: npm run test-blip
 
+  test-yourloops-unit:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/yourloops/package-lock.json
+          node-version: 16
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
       - name: Test yourloops unit
         run: npm run test-yourloops-unit
 
+  test-yourloops-integration:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/*/package-lock.json
+          node-version: 16
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
       - name: Test yourloops integration
         run: npm run test-yourloops-integration
 
+  build:
+    runs-on: ubuntu-latest
+    needs: [test-lambda, test-sundial, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: packages/*/package-lock.json
+          node-version: 16
+      - name: Install npm dependencies
+        run: |
+          npm run security-checks
+          npm ci
       - name: Build
         run: nice bash build.sh
 
@@ -73,7 +256,7 @@ jobs:
 
   publish:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish'}}
-    needs: lint-test-build
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.meta.outputs.version }}
