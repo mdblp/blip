@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta33 - 2022-11-25
+## 3.0.2-beta34 - 2022-11-25
 ### Added
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
@@ -23,6 +23,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
 - Automate copyright generation on new and updated files
+- Changing CI from Jenkins to GitHub Actions
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
 
