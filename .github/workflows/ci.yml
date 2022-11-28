@@ -30,9 +30,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build packages dependencies
-        run: npm run build-dependencies
-
   test-lambda:
     runs-on: ubuntu-latest
     needs: lint
@@ -184,6 +181,8 @@ jobs:
         run: |
           npm run security-checks
           npm ci
+          npm run build-dependencies
+
       - name: Test blip
         run: npm run test-blip
 
@@ -204,6 +203,8 @@ jobs:
         run: |
           npm run security-checks
           npm ci
+          npm run build-dependencies
+
       - name: Test yourloops unit
         run: npm run test-yourloops-unit
 
@@ -224,6 +225,8 @@ jobs:
         run: |
           npm run security-checks
           npm ci
+          npm run build-dependencies
+
       - name: Test yourloops integration
         run: npm run test-yourloops-integration
 
