@@ -55,6 +55,7 @@ export const ProfileForm: FunctionComponent = () => {
         </LinkRedirect>
         <ProgressIconButtonWrapper inProgress={saving}>
           <Button
+            id="profile-button-save"
             variant="contained"
             disabled={!canSave}
             color="primary"

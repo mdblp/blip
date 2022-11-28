@@ -36,6 +36,8 @@ import { Units } from '../../models/generic'
 import { REGEX_BIRTHDATE } from '../../lib/utils'
 import { Preferences, Profile, Settings } from '../../models/user'
 import { isEqual, some } from 'lodash'
+import { CountryCodes } from '../../models/locales'
+import { usePatientContext } from '../../lib/patient/provider'
 
 interface UseProfilePageContextHookReturn {
   canSave: boolean
@@ -50,6 +52,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
   const alert = useAlert()
   const { t, i18n } = useTranslation('yourloops')
   const { user, updateProfile, updatePreferences, updateSettings } = useAuth()
+  const patientHook = usePatientContext()
   const isUserPatient = user.isUserPatient()
   const isUserHcp = user.isUserHcp()
 
@@ -73,9 +76,9 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     birthday: isUserPatient && !REGEX_BIRTHDATE.test(profileForm.birthday),
     firstName: !profileForm.firstName,
     hcpProfession: isUserHcp && profileForm.hcpProfession === HcpProfession.empty,
-    ins: isUserPatient && (!profileForm.ins || (profileForm.ins && profileForm.ins.length !== 15)),
+    ins: isUserPatient && user.settings?.country === CountryCodes.France && (!profileForm.ins || (profileForm.ins && profileForm.ins.length !== 15)),
     lastName: !profileForm.lastName,
-    ssn: isUserPatient && (!profileForm.ssn || (profileForm.ssn && profileForm.ssn.length !== 15))
+    ssn: isUserPatient && user.settings?.country === CountryCodes.France && (!profileForm.ssn || (profileForm.ssn && profileForm.ssn.length !== 15))
   }
 
   const updatedProfile = useMemo<Profile>(() => {
@@ -144,6 +147,10 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
       if (preferencesChanged) {
         await updatePreferences(updatedPreferences)
         await i18n.changeLanguage(profileForm.lang)
+      }
+
+      if (user.isUserPatient()) {
+        patientHook.refresh()
       }
       alert.success(t('profile-updated'))
     } catch (err) {
