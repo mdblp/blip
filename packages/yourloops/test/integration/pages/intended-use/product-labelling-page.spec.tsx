@@ -32,7 +32,7 @@ import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
 
-describe('Intended use page', () => {
+describe('Product labelling page', () => {
   beforeAll(() => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
@@ -41,12 +41,12 @@ describe('Intended use page', () => {
     })
   })
 
-  it('should render intended use with the right selected language', async () => {
+  it('should render product labelling with the right selected language', async () => {
     renderPage('/')
     expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
     checkFooter({ needFooterLanguageSelector: true })
 
-    await userEvent.click(screen.getByText('Intended Use'))
+    await userEvent.click(screen.getByText('Product Labelling'))
 
     expect(screen.getByText('YourLoops, version 1.0.0, released on 2000-01-01')).toBeInTheDocument()
     expect(screen.getByText('Intended Purpose and regulatory information')).toBeInTheDocument()

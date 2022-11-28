@@ -25,38 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useState } from 'react'
+import parse from 'html-react-parser'
+import i18n from 'i18next'
+import rawHtmlEN from './raw-html/EN'
+import { getCurrentLang } from '../../lib/language'
+import rawHtmlFR from './raw-html/FR'
 
-import colors from '../../styles/colors.css'
-import styles from './stat-legend.css'
-import { Box } from '@material-ui/core'
+const ProductLabellingPage: FunctionComponent = () => {
+  const getHtml = (): string => {
+    switch (getCurrentLang()) {
+      case 'fr':
+        return rawHtmlFR
+      default:
+        return rawHtmlEN
+    }
+  }
 
-interface StatLegendProps {
-  items: Array<{ id: string, legendTitle: string }>
-  units: string
-}
+  const [html, setHtml] = useState<string>(getHtml())
 
-export const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
-  const { items, units } = props
+  i18n.on('languageChanged', () => {
+    setHtml(getHtml)
+  })
 
   return (
-    <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
-      <ul className={styles['stat-legend']}>
-        {items.map(item =>
-          <li
-            className={styles['stat-legend-item']}
-            key={item.id}
-            style={{ borderBottomColor: colors[item.id] }}
-          >
-            <span className={styles['stat-legend-title']}>
-              {item.legendTitle}
-            </span>
-          </li>
-        )}
-      </ul>
-      <Box marginLeft="auto" marginRight="4px" fontSize="12px">
-        {units}
-      </Box>
-    </Box>
+    <React.Fragment>
+      {parse(html)}
+    </React.Fragment>
   )
 }
+
+export default ProductLabellingPage

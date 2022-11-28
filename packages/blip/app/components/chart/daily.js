@@ -46,9 +46,9 @@ import {
 } from 'dumb'
 
 /**
- * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
- * @typedef { import("../../index").DatePicker } DatePicker
- * @typedef { import("./index").DailyDatePickerProps } DailyDatePickerProps
+ * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
+ * @typedef { import('../../index').DatePicker } DatePicker
+ * @typedef { import('./index').DailyDatePickerProps } DailyDatePickerProps
  */
 
 const Loader = vizComponents.Loader
@@ -106,6 +106,7 @@ function DailyDatePicker(props) {
     </React.Fragment>
   )
 }
+
 DailyDatePicker.propTypes = {
   dialogDatePicker: PropTypes.func.isRequired,
   date: PropTypes.oneOfType([
@@ -451,7 +452,7 @@ class Daily extends React.Component {
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">
-              {loading && <Loader show overlay={true} /> }
+              {loading && <Loader show overlay={true} />}
               <DailyChart
                 loading={loading}
                 bgClasses={this.props.bgPrefs.bgClasses}
