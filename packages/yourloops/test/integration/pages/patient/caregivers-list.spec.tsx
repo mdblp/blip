@@ -36,7 +36,9 @@ import { act, screen, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
+import DirectShareApi, {
+  PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
+} from '../../../../lib/share/direct-share-api'
 import { UserInvitationStatus } from '../../../../models/generic'
 import { INotification } from '../../../../lib/notifications/models'
 
@@ -48,6 +50,8 @@ describe('Patient caregivers page', () => {
   const caregiverFirstName = 'Claire'
   const caregiverLastName = 'Hyère'
   const caregiverEmail = 'caregiver@email.com'
+
+  const otherPatientEmail = 'other-patient@email.com'
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.patient)
@@ -104,6 +108,15 @@ describe('Patient caregivers page', () => {
 
     expect(addDirectShareMock).toHaveBeenCalledWith(loggedInUserId, caregiverEmail)
 
+    const invitationSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+    expect(invitationSuccessfulSnackbar).toHaveTextContent('Invitation sent!')
+
+    const invitationSuccessfulSnackbarCloseButton = within(invitationSuccessfulSnackbar).getByTitle('Close')
+
+    await userEvent.click(invitationSuccessfulSnackbarCloseButton)
+
+    expect(invitationSuccessfulSnackbar).not.toBeVisible()
+
     const caregiversTable = screen.getByLabelText('Table caregiver list')
     expect(caregiversTable).toBeVisible()
 
@@ -147,5 +160,35 @@ describe('Patient caregivers page', () => {
     })
 
     expect(caregiverRow).not.toBeVisible()
+
+    const removeCaregiverSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+    expect(removeCaregiverSuccessfulSnackbar).toHaveTextContent('Your caregiver has no longer access to your data.')
+
+    const removeCaregiverSuccessfulSnackbarCloseButton = within(removeCaregiverSuccessfulSnackbar).getByTitle('Close')
+
+    await userEvent.click(removeCaregiverSuccessfulSnackbarCloseButton)
+
+    expect(removeCaregiverSuccessfulSnackbar).not.toBeVisible()
+
+    const secondaryBar2 = screen.getByTestId('patient-caregivers-secondary-bar')
+    expect(secondaryBar2).toBeVisible()
+
+    const addCaregiverButton2 = within(secondaryBar2).getByText('Add Caregiver')
+    expect(addCaregiverButton2).toBeVisible()
+
+    await userEvent.click(addCaregiverButton2)
+
+    const addCaregiverDialog2 = screen.getByRole('dialog')
+    const addCaregiverDialogEmailInput2 = within(addCaregiverDialog2).getByRole('textbox', { name: 'Email' })
+    const addCaregiverDialogConfirmButton2 = within(addCaregiverDialog2).getByRole('button', { name: 'Invite' })
+
+    await userEvent.type(addCaregiverDialogEmailInput2, otherPatientEmail)
+
+    jest.spyOn(DirectShareApi, 'addDirectShare').mockRejectedValueOnce(new Error(PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE))
+    await act(async () => {
+      await userEvent.click(addCaregiverDialogConfirmButton2)
+    })
+
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You cannot share your data with this user as they are not a caregiver.')
   })
 })

@@ -21,6 +21,7 @@
   "admin": "Admin",
   "alert-hypoglycemic": "Severe hypoglycemia",
   "alert-invitation-caregiver-failed": "Impossible to add a caregiver. Please Try again later.",
+  "alert-invitation-caregiver-user-is-patient": "You cannot share your data with this user as they are not a caregiver.",
   "alert-invitation-patient-failed": "Impossible to add a patient. Please try again later.",
   "alert-invitation-patient-failed-already-invited": "This patient has already been invited to this team. Please refresh the patient list.",
   "alert-invitation-sent-success": "Invitation sent!",

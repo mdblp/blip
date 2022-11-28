@@ -46,7 +46,7 @@ import { AddDialogContentProps } from './types'
 import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-dialog'
 import CaregiverTable from './table'
-import DirectShareApi from '../../../lib/share/direct-share-api'
+import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share-api'
 import { INotification, NotificationType } from '../../../lib/notifications/models'
 
 const log = bows('PatientCaregiversPage')
@@ -83,7 +83,13 @@ function PatientCaregiversPage(): JSX.Element {
         // And refresh the list
         setCaregivers(null)
       } catch (reason) {
+        const error = reason as Error
         log.error(reason)
+
+        if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
+          alert.error(t('alert-invitation-caregiver-user-is-patient'))
+          return
+        }
         alert.error(t('alert-invitation-caregiver-failed'))
       }
     }

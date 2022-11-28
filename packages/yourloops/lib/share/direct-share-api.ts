@@ -32,13 +32,24 @@ import { UserRoles } from '../../models/user'
 import { HttpHeaderKeys } from '../../models/api'
 import { getCurrentLang } from '../language'
 
+export const PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE = 'patient-cannot-be-invited-as-caregiver'
+const PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_CODE = 405
+
 export default class DirectShareApi {
   static async addDirectShare(userId: string, email: string): Promise<void> {
-    await HttpService.post<void, { email: string }>({
-      url: `/confirm/send/invite/${userId}`,
-      payload: { email },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
-    })
+    try {
+      const { data } = await HttpService.post<void, { email: string }>({
+        url: `/confirm/send/invite/${userId}`,
+        payload: { email },
+        config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+      }, [PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_CODE])
+      return data
+    } catch (error) {
+      if (error.response.status === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_CODE) {
+        throw new Error(PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE)
+      }
+      throw error
+    }
   }
 
   static async getDirectShares(): Promise<ShareUser[]> {
