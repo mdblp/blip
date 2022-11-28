@@ -2,10 +2,12 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.2-beta - 2022-11-22
+## 3.0.2-beta - 2022-11-25
 ### Added
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
+- YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
+- YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1680 getPatientData Api method has a wrong parameter
