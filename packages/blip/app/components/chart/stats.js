@@ -4,7 +4,7 @@ import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
-import { BgClasses, CBGMeanStat, CBGPercentageBarChart, CBGStandardDeviation, CBGStatType } from 'dumb'
+import { CBGMeanStat, CBGPercentageBarChart, CBGStandardDeviation, CBGStatType } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
 const { Stat } = vizComponents
