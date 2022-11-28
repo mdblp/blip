@@ -30,12 +30,13 @@ import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-b
 import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
-import { CBGPercentageData, CBGStatType } from '../models'
-import { StatLegend } from '../stat-legend'
+import { BgClasses, CBGPercentageData, CBGStatType } from '../models'
+import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import { Box } from '@material-ui/core'
 
 interface CBGPercentageBarChartProps {
   annotations: []
+  bgClasses: BgClasses
   cbgStatType: CBGStatType
   data: CBGPercentageData[]
   hideTooltip: boolean
@@ -45,7 +46,7 @@ interface CBGPercentageBarChartProps {
 }
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
-  const { annotations, cbgStatType, data, hideTooltip, titleKey, total, units } = props
+  const { annotations, bgClasses, cbgStatType, data, hideTooltip, titleKey, total, units } = props
 
   const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCBGPercentageBarChartHook({
     type: cbgStatType,
@@ -71,7 +72,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
         </Box>
       </div>
       <div className={styles['stat-footer']} />
-      <StatLegend items={data} units={units} />
+      <StatLegend bgClasses={bgClasses} units={units} />
     </>
   )
 }

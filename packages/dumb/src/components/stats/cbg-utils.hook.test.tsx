@@ -25,23 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { computeCBGStyle } from './cbg-utils'
+import { computeBgClassesBarStyle, computeCBGStyle } from './cbg-utils'
+import { BgClasses } from './models'
 
 describe('CBGUtils', () => {
+  const bgClasses: BgClasses = {
+    high: 100,
+    target: 80,
+    low: 60,
+    veryLow: 30
+  }
   describe('computeCBGStyle', () => {
-    it('should return correct left when value is < 54', () => {
-      const computedStyle = computeCBGStyle(20)
+    it('should return correct left when value is inferior to very low bg', () => {
+      const computedStyle = computeCBGStyle(20, bgClasses)
       expect(computedStyle.left).toBe('0')
     })
 
-    it('should return correct left when value is > 250', () => {
-      const computedStyle = computeCBGStyle(255)
+    it('should return correct left when value is superior to high bg', () => {
+      const computedStyle = computeCBGStyle(110, bgClasses)
       expect(computedStyle.left).toBe('234px')
     })
 
-    it('should return correct left when value is > 54 and < 250', () => {
-      const computedStyle = computeCBGStyle(128)
-      expect(computedStyle.left).toBe('88px')
+    it('should return correct left when value is superior to low bg and inferior to target bg', () => {
+      const computedStyle = computeCBGStyle(70, bgClasses)
+      expect(computedStyle.left).toBe('134px')
+    })
+
+    it('should return correct left when value is superior to very low bg and inferior to low bg', () => {
+      const computedStyle = computeCBGStyle(50, bgClasses)
+      expect(computedStyle.left).toBe('67px')
+    })
+  })
+  describe('computeBgClassesBarStyle', () => {
+    it('should return correct left when value is inferior to very low bg', () => {
+      const computedStyle = computeBgClassesBarStyle(bgClasses)
+      expect(computedStyle.lowWidth).toBe('100px')
+      expect(computedStyle.targetWidth).toBe('67px')
     })
   })
 })

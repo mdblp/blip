@@ -26,7 +26,7 @@
  */
 
 .stat-legend {
-  composes: smallSize from '../../styles/typography.css';
+  composes: smallSize from '../../../styles/typography.css';
   list-style: none;
   display: flex;
   margin: 0;
@@ -46,4 +46,24 @@
   letter-spacing: -.01em;
   white-space: nowrap;
   line-height: 16px;
+}
+
+.very-high-border-bottom {
+  border-bottom-color: var(--bg-very-high);
+}
+
+.high-border-bottom {
+  border-bottom-color: var(--bg-high);
+}
+
+.target-border-bottom {
+  border-bottom-color: var(--bg-target);
+}
+
+.low-border-bottom {
+  border-bottom-color: var(--bg-low);
+}
+
+.very-low-border-bottom {
+  border-bottom-color: var(--bg-very-low);
 }
