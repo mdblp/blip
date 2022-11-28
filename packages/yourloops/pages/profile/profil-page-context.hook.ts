@@ -149,7 +149,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
         await i18n.changeLanguage(profileForm.lang)
       }
 
-      if (user.isUserPatient()) {
+      if (isUserPatient) {
         patientHook.refresh()
       }
       alert.success(t('profile-updated'))

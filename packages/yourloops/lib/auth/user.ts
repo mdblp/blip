@@ -80,11 +80,11 @@ export default class User {
   }
 
   get birthday(): string | undefined {
-    if (this.role === UserRoles.patient) {
-      const birthday = this.getRawBirthday()
-      return REGEX_BIRTHDATE.test(birthday) ? birthday : ''
+    if (this.role !== UserRoles.patient) {
+      return undefined
     }
-    return undefined
+    const birthday = this.getRawBirthday()
+    return REGEX_BIRTHDATE.test(birthday) ? birthday : ''
   }
 
   private getRawBirthday(): string {

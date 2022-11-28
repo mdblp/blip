@@ -27,7 +27,9 @@
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import * as authHookMock from '../../../../lib/auth'
+import * as patientContext from '../../../../lib/patient/provider'
 import * as alertMock from '../../../../components/utils/snackbar'
+
 import { Preferences, Profile, Settings, UserRoles } from '../../../../models/user'
 import { User } from '../../../../lib/auth'
 import useProfilePageContextHook from '../../../../pages/profile/profil-page-context.hook'
@@ -36,6 +38,7 @@ import { Units } from '../../../../models/generic'
 import { ProfileFormKey } from '../../../../pages/profile/models'
 
 jest.mock('../../../../lib/auth')
+jest.mock('../../../../lib/patient/provider')
 jest.mock('../../../../components/utils/snackbar')
 
 describe('Profile page context hook', () => {
@@ -72,8 +75,12 @@ describe('Profile page context hook', () => {
   const updateProfileMock = jest.fn()
   const updateSettingsMock = jest.fn()
   const updatePreferencesMock = jest.fn()
+  const refreshPatientMock = jest.fn()
 
   beforeEach(() => {
+    (patientContext.usePatientContext as jest.Mock).mockImplementation(() => ({
+      refresh: refreshPatientMock
+    }));
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({
       success: onSuccessAlertMock,
       error: onErrorAlertMock
@@ -123,11 +130,13 @@ describe('Profile page context hook', () => {
       updateProfileForm(ProfileFormKey.lang, 'en')
 
       await result.current.saveProfile()
-      expect(updateProfileMock).toHaveBeenCalledWith(expectedProfile)
-      expect(updateSettingsMock).toHaveBeenCalledWith(expectedSettings)
-      expect(updatePreferencesMock).toHaveBeenCalledWith(expectedPreferences)
-      expect(onSuccessAlertMock).toHaveBeenCalled()
     })
+
+    expect(updateProfileMock).toHaveBeenCalledWith(expectedProfile)
+    expect(updateSettingsMock).toHaveBeenCalledWith(expectedSettings)
+    expect(updatePreferencesMock).toHaveBeenCalledWith(expectedPreferences)
+    expect(refreshPatientMock).toHaveBeenCalled()
+    expect(onSuccessAlertMock).toHaveBeenCalled()
   })
 
   it('should throw an error if a problem occurred when saving profile', async () => {
@@ -146,7 +155,7 @@ describe('Profile page context hook', () => {
       const { result } = await renderCustomHook()
 
       await result.current.saveProfile()
-      expect(onErrorAlertMock).toHaveBeenCalled()
     })
+    expect(onErrorAlertMock).toHaveBeenCalled()
   })
 })
