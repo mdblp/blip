@@ -32,7 +32,7 @@ import {
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './components/stats/models'
+import { BgClasses, CBGStatType } from './components/stats/models'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/tooltip/tooltip'
@@ -41,6 +41,7 @@ import { PumpTable } from './settings/pump-table'
 import { TerminalTable } from './settings/terminal-table'
 
 export {
+  BgClasses,
   CBGMeanStat,
   CBGPercentageBarChart,
   CBGStandardDeviation,

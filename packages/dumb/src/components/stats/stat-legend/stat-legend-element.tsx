@@ -25,25 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.stat-legend {
-  composes: smallSize from '../../styles/typography.css';
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-  color: var(--stat-legend, #6d6d6d);
+import React, { FunctionComponent } from 'react'
+import styles from './stat-legend.css'
+
+interface StatLegendElementProps {
+  cbgClassName: string
+  value: string
 }
 
-.stat-legend-item {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  margin: 0 1em 0 0;
-  border-bottom: 2px solid;
-}
+export const StatLegendElement: FunctionComponent<StatLegendElementProps> = (props) => {
+  const { cbgClassName, value } = props
 
-.stat-legend-title {
-  letter-spacing: -.01em;
-  white-space: nowrap;
-  line-height: 16px;
+  return (
+    <li
+      className={`${styles['stat-legend-item']} ${styles[`${cbgClassName}-border-bottom`]}`}
+    >
+      <span className={styles['stat-legend-title']}>
+        {value}
+      </span>
+    </li>
+  )
 }
