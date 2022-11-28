@@ -25,18 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useContext, useMemo, useState } from 'react'
+import React, { createContext, FunctionComponent, useContext } from 'react'
 import { ProfileErrors, ProfileForm, ProfileFormKey } from './models'
-import { useAuth } from '../../lib/auth'
 import { Units } from '../../models/generic'
-import { getCurrentLang } from '../../lib/language'
 import { LanguageCodes } from '../../models/locales'
 import { HcpProfession } from '../../models/hcp-profession'
-import { Profile, Settings, Preferences } from '../../models/user'
-import { REGEX_BIRTHDATE } from '../../lib/utils'
-import { isEqual, some } from 'lodash'
-import { useTranslation } from 'react-i18next'
-import { useAlert } from '../../components/utils/snackbar'
+import useProfilePageContextHook from './profil-page-context.hook'
 
 interface ProfilePageContext {
   canSave: boolean
@@ -50,111 +44,14 @@ interface ProfilePageContext {
 const ProfilePageStateContext = createContext<ProfilePageContext>({} as ProfilePageContext)
 
 export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
-  const alert = useAlert()
-  const { t, i18n } = useTranslation('yourloops')
-  const { user, updateProfile, updatePreferences, updateSettings } = useAuth()
-  const isUserPatient = user.isUserPatient()
-  const isUserHcp = user.isUserHcp()
-
-  const [profileForm, setProfileForm] = useState<ProfileForm>({
-    birthday: user.birthday,
-    birthPlace: user.profile?.patient?.birthPlace ?? '',
-    feedbackAccepted: !!user?.profile?.contactConsent?.isAccepted,
-    firstName: user.firstName,
-    hcpProfession: user.profile?.hcpProfession ?? HcpProfession.empty,
-    ins: user.profile?.patient?.ins ?? undefined,
-    lang: user.preferences?.displayLanguageCode ?? getCurrentLang(),
-    lastName: user.lastName,
-    referringDoctor: user.profile?.patient?.referringDoctor ?? undefined,
-    sex: user.profile?.patient?.sex ?? undefined,
-    ssn: user.profile?.patient?.ssn ?? undefined,
-    units: user.settings?.units?.bg ?? Units.gram
-  })
-  const [saving, setSaving] = useState<boolean>(false)
-
-  const errors: ProfileErrors = {
-    birthday: isUserPatient && !REGEX_BIRTHDATE.test(profileForm.birthday),
-    firstName: !profileForm.firstName,
-    hcpProfession: isUserHcp && profileForm.hcpProfession === HcpProfession.empty,
-    ins: isUserPatient && (!profileForm.ins || (profileForm.ins && profileForm.ins.length !== 15)),
-    lastName: !profileForm.lastName,
-    ssn: isUserPatient && (!profileForm.ssn || (profileForm.ssn && profileForm.ssn.length !== 15))
-  }
-
-  const updatedProfile = useMemo<Profile>(() => {
-    const profile: Profile = {
-      ...user.profile,
-      firstName: profileForm.firstName,
-      lastName: profileForm.lastName,
-      fullName: `${profileForm.firstName} ${profileForm.lastName}`
-    }
-
-    if (isUserPatient) {
-      profile.patient = {
-        ...profile.patient,
-        birthday: profileForm.birthday,
-        birthPlace: profileForm.birthPlace,
-        ins: profileForm.ins,
-        sex: profileForm.sex,
-        ssn: profileForm.ssn,
-        referringDoctor: profileForm.referringDoctor
-      }
-    }
-
-    if (user.isUserHcp()) {
-      profile.hcpProfession = profileForm.hcpProfession
-    }
-
-    if (isUserHcp && !!user?.profile?.contactConsent?.isAccepted !== profileForm.feedbackAccepted) {
-      profile.contactConsent = {
-        isAccepted: profileForm.feedbackAccepted,
-        acceptanceTimestamp: new Date().toISOString()
-      }
-    }
-
-    return profile
-  }, [isUserHcp, isUserPatient, profileForm.birthPlace, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.ins, profileForm.lastName, profileForm.referringDoctor, profileForm.sex, profileForm.ssn, user])
-
-  const updatedSettings: Settings = {
-    ...user.settings,
-    units: { bg: profileForm.units }
-  }
-  const updatedPreferences: Preferences = {
-    ...user.preferences,
-    displayLanguageCode: profileForm.lang
-  }
-
-  const profileChanged: boolean = !isEqual(user.profile, updatedProfile)
-  const preferencesChanged: boolean = !isEqual(user.preferences, updatedPreferences)
-  const settingsChanged: boolean = !isEqual(user.settings, updatedSettings)
-  const canSave: boolean = (preferencesChanged || profileChanged || settingsChanged) && !some(errors)
-
-  const updateProfileForm = (key: ProfileFormKey, value: unknown): void => {
-    setProfileForm(prevState => ({ ...prevState, [key]: value }))
-  }
-
-  const saveProfile = async (): Promise<void> => {
-    try {
-      setSaving(true)
-      if (profileChanged) {
-        await updateProfile(updatedProfile)
-      }
-
-      if (settingsChanged) {
-        await updateSettings(updatedSettings)
-      }
-
-      if (preferencesChanged) {
-        await updatePreferences(updatedPreferences)
-        await i18n.changeLanguage(profileForm.lang)
-      }
-      alert.success(t('profile-updated'))
-    } catch (err) {
-      alert.error(t('profile-update-failed'))
-    } finally {
-      setSaving(false)
-    }
-  }
+  const {
+    canSave,
+    errors,
+    profileForm,
+    saveProfile,
+    saving,
+    updateProfileForm
+  } = useProfilePageContextHook()
 
   return (
     <ProfilePageStateContext.Provider value={{ profileForm, updateProfileForm, errors, canSave, saving, saveProfile }}>
