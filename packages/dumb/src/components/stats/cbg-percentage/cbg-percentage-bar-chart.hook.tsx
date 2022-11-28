@@ -28,7 +28,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CBGPercentageBarProps } from './cbg-percentage-bar'
-import { CBGPercentageData, CBGStatType, StatLevel } from '../models'
+import { CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
 
 export interface CBGPercentageBarChartHookProps {
   type: CBGStatType

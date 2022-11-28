@@ -26,7 +26,7 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks/dom'
-import { CBGStatType } from '../models'
+import { CBGStatType } from '../../../models/stats.model'
 import { CBGPercentageBarHookProps, useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
 describe('CBGPercentageBar hook', () => {

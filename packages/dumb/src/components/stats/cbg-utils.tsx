@@ -26,7 +26,7 @@
  */
 
 import styles from './cbg-colors.css'
-import { BgClasses } from './models'
+import { BgClasses } from '../../models/stats.model'
 
 const CBG_BAR_WIDTH_IN_PX = 234
 

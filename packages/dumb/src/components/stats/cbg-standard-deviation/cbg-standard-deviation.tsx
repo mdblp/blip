@@ -33,7 +33,7 @@ import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../cbg-utils'
-import { BgClasses } from '../models'
+import { BgClasses } from '../../../models/stats.model'
 
 export interface CBGStandardDeviationProps {
   annotations: string[]

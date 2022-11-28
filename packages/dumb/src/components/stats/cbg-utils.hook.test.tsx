@@ -26,7 +26,7 @@
  */
 
 import { computeBgClassesBarStyle, computeCBGStyle } from './cbg-utils'
-import { BgClasses } from './models'
+import { BgClasses } from '../../models/stats.model'
 
 describe('CBGUtils', () => {
   const bgClasses: BgClasses = {

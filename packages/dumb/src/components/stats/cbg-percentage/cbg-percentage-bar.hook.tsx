@@ -29,7 +29,7 @@ import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-percentage-bar.css'
 import stylesColors from '../cbg-colors.css'
 import { formatDuration } from '../../../utils/datetime/datetime.util'
-import { CBGStatType } from '../models'
+import { CBGStatType } from '../../../models/stats.model'
 
 export interface CBGPercentageBarHookProps {
   type: CBGStatType
