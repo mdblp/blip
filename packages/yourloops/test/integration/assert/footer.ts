@@ -52,7 +52,7 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
     : expect(languageSelector).not.toBeInTheDocument()
 
   expect(intendedUseLink).toBeVisible()
-  expect(intendedUseLink).toHaveAttribute('href', '/intended-use')
+  expect(intendedUseLink).toHaveAttribute('href', '/product-labelling')
   expect(trainingLink).toBeVisible()
   expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(role))
   expect(termsOfUseLink).toBeVisible()
