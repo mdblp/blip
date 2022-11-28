@@ -25,34 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
-import parse from 'html-react-parser'
-import i18n from 'i18next'
-import rawHtmlEN from './raw-html/EN'
-import { getCurrentLang } from '../../lib/language'
-import rawHtmlFR from './raw-html/FR'
+import React, { FunctionComponent } from 'react'
+import styles from './stat-legend.css'
 
-const IntendedUsePage: FunctionComponent = () => {
-  const getHtml = (): string => {
-    switch (getCurrentLang()) {
-      case 'fr':
-        return rawHtmlFR
-      default:
-        return rawHtmlEN
-    }
-  }
-
-  const [html, setHtml] = useState<string>(getHtml())
-
-  i18n.on('languageChanged', () => {
-    setHtml(getHtml)
-  })
-
-  return (
-    <React.Fragment>
-      {parse(html)}
-    </React.Fragment>
-  )
+interface StatLegendElementProps {
+  cbgClassName: string
+  value: string
 }
 
-export default IntendedUsePage
+export const StatLegendElement: FunctionComponent<StatLegendElementProps> = (props) => {
+  const { cbgClassName, value } = props
+
+  return (
+    <li
+      className={`${styles['stat-legend-item']} ${styles[`${cbgClassName}-border-bottom`]}`}
+    >
+      <span className={styles['stat-legend-title']}>
+        {value}
+      </span>
+    </li>
+  )
+}

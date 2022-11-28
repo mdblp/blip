@@ -132,7 +132,8 @@ PatientDashboard.propTypes = {
   onSwitchPatient: PropTypes.func.isRequired,
   onClickNavigationBack: PropTypes.func.isRequired,
   canPrint: PropTypes.bool,
-  onClickPrint: PropTypes.func.isRequired
+  onClickPrint: PropTypes.func.isRequired,
+  tidelineData: PropTypes.object.isRequired
 }
 
 export default PatientDashboard
