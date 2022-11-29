@@ -37,7 +37,7 @@ const defaultSessionTimeout = 1800000
 
 const defaultConfig: AppConfig = {
   VERSION: '0.0.0',
-  API_HOST: `${window.location.protocol}//${window.location.hostname}:8009`,
+  API_HOST: `${window.location.protocol}//${window.location.hostname}:3000`,
   DOMAIN_NAME: window.location.hostname,
   LATEST_TERMS: '1970-01-01',
   LATEST_TRAINING: '1970-01-01',
