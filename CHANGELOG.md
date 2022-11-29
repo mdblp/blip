@@ -22,6 +22,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
 - YLP-1935 CBG thresholds should be used from medical data service
+- YLP-1945 Migrate NoBar component to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Remove react-test-renderer dependency

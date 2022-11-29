@@ -29,8 +29,6 @@ import React, { FunctionComponent } from 'react'
 import styles from '../cbg-common.css'
 import stylesCbgMeanStat from './cbg-mean-stat.css'
 import { Box } from '@material-ui/core'
-import InfoIcon from '../assets/info-outline-24-px.svg'
-import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../cbg-utils'
 import { BgClasses } from '../models'
@@ -46,7 +44,6 @@ export interface CBGMeanStatProps {
 
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
   const { bgClasses, hideTooltip, title, tooltipValue, units, value } = props
-  const { t } = useTranslation('main')
   const valueBasedStyles = computeCBGStyle(value, bgClasses)
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
@@ -60,15 +57,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         <div>
           {title}
           {!hideTooltip &&
-            <StatTooltip annotations={[tooltipValue]}>
-              <span className={styles['tooltip-icon']}>
-                <img
-                  data-testid="info-icon"
-                  src={InfoIcon}
-                  alt={t('img-alt-hover-for-more-info')}
-                />
-              </span>
-            </StatTooltip>
+            <StatTooltip annotations={[tooltipValue]}/>
           }
         </div>
         <Box fontSize="12px">

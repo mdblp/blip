@@ -29,8 +29,6 @@ import React, { FunctionComponent } from 'react'
 import styles from './cbg-standard-deviation.css'
 import stylesCbgCommon from '../cbg-common.css'
 import { Box } from '@material-ui/core'
-import InfoIcon from '../assets/info-outline-24-px.svg'
-import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../cbg-utils'
 import { BgClasses } from '../models'
@@ -47,7 +45,6 @@ export interface CBGStandardDeviationProps {
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props) => {
   const { annotations, averageGlucose, bgClasses, hideTooltip, standardDeviation, title, units } = props
-  const { t } = useTranslation('main')
 
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
@@ -80,15 +77,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
             </>
           }
           {!hideTooltip &&
-            <StatTooltip annotations={annotations}>
-              <span className={stylesCbgCommon['tooltip-icon']}>
-                <img
-                  data-testid="info-icon"
-                  src={InfoIcon}
-                  alt={t('img-alt-hover-for-more-info')}
-                />
-              </span>
-            </StatTooltip>
+            <StatTooltip annotations={annotations}/>
           }
         </Box>
         <Box fontSize="12px">
