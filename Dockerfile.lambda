@@ -1,0 +1,41 @@
+ARG APP_VERSION
+
+FROM docker.ci.diabeloop.eu/blip:${APP_VERSION} AS config_builder
+
+ENV AWS_ACCOUNT ""
+ENV AWS_DEFAULT_REGION "eu-west-1"
+ENV STACK_PREFIX_NAME "itg"
+ENV STACK_VERSION $APP_VERSION
+ENV APP_VERSION $APP_VERSION
+ENV DOMAIN_NAME "www.itg.your-loops.dev"
+ENV ALT_DOMAIN_NAME "app.itg.your-loops.dev"
+ENV DNS_ZONE "itg.your-loops.dev"
+ENV TARGET_ENVIRONMENT "itg"
+ENV API_HOST "https://api-ext.itg.your-loops.dev"
+ENV BRANDING "diabeloop_blue"
+ENV LATEST_TERMS "2021-04-21"
+ENV LATEST_TRAINING: "1970-01-01"
+ENV LATEST_RELEASE "2022-03-03"
+ENV HELP_SCRIPT_URL "https://static.zdassets.com/ekr/snippet.js?key=997bae05-53be-4335-a57f-116f7db3a71d"
+ENV HELP_PAGE_URL "https://yourloops.zendesk.com"
+ENV ASSETS_URL "https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/"
+ENV METRICS_SERVICE "disabled"
+ENV SUPPORT_WEB_ADDRESS "https://yourloops.zendesk.com/hc"
+ENV STONLY_WID ""
+ENV COOKIE_BANNER_CLIENT_ID ""
+ENV AXEPTIO_CONFIGURATION "yourloops-base"
+ENV YLP820_BASAL_TIME "30000"
+ENV CBG_BUCKETS_ENABLED "True"
+ENV ECPS_ENABLED "True"
+ENV ALLOW_SEARCH_ENGINE_ROBOTS "False"
+
+RUN mkdir -p -v /dist/lambda && \
+    chown -v node:node /dist/lambda &&\
+    chmod -v 755 /dist/lambda &&\
+    cd /dist/server && npm run gen-lambda
+
+
+FROM mlupin/docker-lambda:nodejs14.x
+ENV DOCKER_LAMBDA_STAY_OPEN "1"
+COPY --from=config_builder /dist/lambda /var/task
+CMD ["cloudfront-itg-blip-request-viewer.handler"]
