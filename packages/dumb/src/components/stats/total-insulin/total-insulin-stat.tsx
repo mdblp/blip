@@ -53,7 +53,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   }
 
   return (
-    <>
+    <div data-testid="total-insulin-stat">
       <Box className={styles.title}>
         {title}
         <span className={styles.titleData}>
@@ -86,7 +86,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           )
         })}
       </div>
-    </>
+    </div>
   )
 }
 
