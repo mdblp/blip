@@ -25,34 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum CBGStatType {
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
+.title {
+  display: flex;
+  color: var(--stat--default);
+  composes: largeSize from '../../../styles/typography.css';
+  font-weight: 500;
+  line-height: 1;
+  margin: 4px 4px 4px;
+  white-space: nowrap;
 }
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
+.rescueCarb {
+  display: flex;
+  color: var(--stat--default);
+  composes: largeSize from '../../../styles/typography.css';
+  font-weight: 500;
+  line-height: 1;
+  padding-left: 10px;
+  padding-right: 10px;
+  white-space: nowrap;
+  margin-bottom: 8px;
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
+.total {
+  line-height: 1;
+  justify-content: space-between;
+  margin-left: auto;
+  color: var(--text-medium-contrast);
 }
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
+.value {
+  composes: extraLargeSize from '../../../styles/typography.css';
+  opacity: 1;
+  display: inline-block;
+  font-weight: 500;
+}
+
+.suffix {
+  composes: smallSize from '../../../styles/typography.css';
+  color: var(--stat--default);
+  font-weight: normal;
+  position: relative;
+  bottom: 1px;
+  padding-left: 1px;
 }

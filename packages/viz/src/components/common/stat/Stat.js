@@ -40,7 +40,6 @@ import { statFormats, statTypes } from '../../../utils/stat'
 import styles from './Stat.css'
 import colors from '../../../styles/colors.css'
 import { bgPrefsPropType } from '../../../propTypes'
-import Lines from './Lines'
 import WheelPercent from './Wheel'
 import CollapseIconOpen from './assets/expand-more-24-px.svg'
 import CollapseIconClose from './assets/chevron-right-24-px.svg'
@@ -162,7 +161,7 @@ class Stat extends React.Component {
           </span>
         )}
         {!hideToolTips && annotations && !isDatumHovered && (
-          <StatTooltip annotations={this.props.annotations}/>
+          <StatTooltip annotations={this.props.annotations} />
         )}
       </div>
     )
@@ -409,13 +408,6 @@ class Stat extends React.Component {
           on: this.formatDatum(data.data[1], props.dataFormat.summary).value,
           off: this.formatDatum(data.data[0], props.dataFormat.summary).value
         }
-        break
-
-      case 'lines':
-        chartProps.renderer = Lines
-        chartProps.data = data.data
-        chartProps.id = props.id
-        chartProps.animate = false
         break
 
       case 'simple':

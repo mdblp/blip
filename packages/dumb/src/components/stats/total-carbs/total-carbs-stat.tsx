@@ -24,35 +24,53 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { FunctionComponent, memo } from 'react'
+import styles from './total-carbs-stat.css'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
+import { Box } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 
-export enum CBGStatType {
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
-}
-
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
+export interface TotalInsulinStatProps {
+  annotations: []
+  foodCarbs: number
+  hideTooltip: boolean
   title: string
-  value: number
+  totalCarbs: number
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
+const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
+  const { annotations, hideTooltip, title, totalCarbs, foodCarbs } = props
+  const { t } = useTranslation('main')
+
+  return (
+    <div data-testid="total-carbs-stat">
+      <Box className={styles.title}>
+        {title}
+        {!hideTooltip &&
+          <StatTooltip annotations={annotations} />
+        }
+        <div className={styles.total}>
+          <span className={styles.value}>
+            {totalCarbs}
+          </span>
+          <span className={styles.suffix}>
+            g
+          </span>
+        </div>
+      </Box>
+      <Box className={styles.rescueCarb}>
+        {t('Rescuecarbs')}
+        <div className={styles.total}>
+          <span className={styles.value}>
+            {foodCarbs}
+          </span>
+          <span className={styles.suffix}>
+            g
+          </span>
+        </div>
+      </Box>
+    </div>
+  )
 }
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
-}
+export const TotalCarbsStatMemoized = memo(TotalCarbsStat)
