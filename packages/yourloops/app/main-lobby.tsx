@@ -41,17 +41,17 @@ import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage, LoginPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
-import IntendedUsePage from '../pages/intented-use/intended-use-page'
+import ProductLabellingPage from '../pages/intented-use/product-labelling-page'
 
 const RENEW_CONSENT_PATH = '/renew-consent'
 const TRAINING_PATH = '/training'
 const NEW_CONSENT_PATH = '/new-consent'
 const COMPLETE_SIGNUP_PATH = '/complete-signup'
 const LOGIN_PATH = '/login'
-const INTENDED_USE_PATH = '/intended-use'
+const PRODUCT_LABELLING = '/product-labelling'
 const PUBLIC_ROUTES = [LOGIN_PATH]
-const ALWAYS_ACCESSIBLE_ROUTES = [INTENDED_USE_PATH]
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, INTENDED_USE_PATH]
+const ALWAYS_ACCESSIBLE_ROUTES = [PRODUCT_LABELLING]
+const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, LOGIN_PATH, PRODUCT_LABELLING]
 
 interface StyleProps {
   color: string
@@ -124,7 +124,7 @@ export function MainLobby(): JSX.Element {
             <SnackbarContextProvider context={DefaultSnackbarContext}>
               <div className={style}>
                 <Switch>
-                  <Route exact path="/intended-use" component={IntendedUsePage} />
+                  <Route exact path="/product-labelling" component={ProductLabellingPage} />
                   <Route exact path="/login" component={LoginPage} />
                   <Route exact path="/complete-signup" component={CompleteSignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />

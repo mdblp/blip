@@ -60,10 +60,6 @@ class DiabeloopUrl {
     return this.privacyPolicyUrl
   }
 
-  getIntendedUseUrL(currentLangue: string): string {
-    return `${this.rootPathName}intended-use.${currentLangue}.pdf`
-  }
-
   getTrainingUrl(currentLangue: string, role?: UserRoles): string {
     if (role === UserRoles.patient) {
       return `${this.rootPathName}yourloops-patient-training.${currentLangue}.pdf`

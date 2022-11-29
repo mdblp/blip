@@ -29,7 +29,7 @@ import { screen, within } from '@testing-library/react'
 
 export const checkFooter = () => {
   const footer = within(screen.getByTestId('footer'))
-  expect(footer.getByText('Intended Use')).toBeVisible()
+  expect(footer.getByText('Product Labelling')).toBeVisible()
   expect(footer.getByText('Training')).toBeVisible()
   expect(footer.getByText('Privacy Policy')).toBeVisible()
   expect(footer.getByText('Terms of use')).toBeVisible()
