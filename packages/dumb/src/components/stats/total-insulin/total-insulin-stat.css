@@ -25,39 +25,88 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.row {
-  composes: smallSize from '../../../styles/typography.css';
-  line-height: 20px;
-  max-width: 240px;
-  min-width: 160px;
-  width: max-content;
+.chartTitle {
+  color: var(--stat--default);
+  composes: largeSize from '../../../styles/typography.css';
+  font-weight: 500;
+  line-height: 1;
+  margin: 4px 4px 8px;
+  white-space: nowrap;
 }
 
-.message {
-  composes: row;
+.chartTitleTotal {
+  color: #0096D1;
+  margin-left: 4px;
+}
+
+.chartTitleData {
+  composes: smallSize from '../../../styles/typography.css';
+  padding-left: .25em;
+  align-items: center;
+  position: relative;
+  top: -1px;
   color: var(--stat--default);
 }
 
-.message p {
-  margin: 0;
+.chartTitleData span {
+  margin-top: 1px;
 }
 
-.message a {
-  pointer-events: all;
+.chartTitleSuffix {
+  font-weight: normal;
+  padding-left: 1px;
+  margin-right: 4px;
 }
 
-.divider {
-  height: 2px;
-  margin: 5px -10px;
-  background-color: var(--stat--default);
+.nobar {
+  display: grid;
+  row-gap: 4px;
+  margin-bottom: 0.5em;
+  pointer-events: none;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.tooltipIcon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
+.nobar .nobarRowTitle {
+  color: var(--stat--default);
 }
 
-.tooltipIcon > img {
-  width: 0.9em;
+.nobar .nobarRowValue {
+  border-width: 2px;
+  border-color: var(--stat-disabled);
+  border-style: solid;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nobar .nobarRowPercent {
+  text-align: right;
+}
+
+.nobar .nobarRowPercent .nobarPercentValue {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.nobar .nobarRowPercent .nobarPercentUnits {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-medium-contrast);
+}
+
+.nobarTotalInsulin {
+  grid-template-columns: auto 3.5em 3.5em;
+}
+
+.nobarTotalInsulin-basal {
+  color: var(--basal-automated);
+}
+
+.nobarTotalInsulin-bolus {
+  color: var(--bolus-meal);
 }

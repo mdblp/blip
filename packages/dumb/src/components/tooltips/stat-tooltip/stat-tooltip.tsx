@@ -30,10 +30,11 @@ import ReactMarkdown from 'react-markdown'
 import styles from './stat-tooltip.css'
 import { withStyles } from '@material-ui/core'
 import Tooltip from '@material-ui/core/Tooltip'
+import InfoIcon from '../../stats/assets/info-outline-24-px.svg'
+import { useTranslation } from 'react-i18next'
 
 interface StatTooltipProps {
   annotations: string[]
-  children: JSX.Element
 }
 
 const StyledTooltip = withStyles(() => ({
@@ -48,7 +49,8 @@ const StyledTooltip = withStyles(() => ({
 }))(Tooltip)
 
 export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
-  const { annotations, children } = props
+  const { annotations } = props
+  const { t } = useTranslation('main')
 
   return (
     <StyledTooltip
@@ -70,8 +72,15 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
             </div>
           )}
         </div>
-      }>
-      {children}
+      }
+    >
+      <span className={styles.tooltipIcon}>
+        <img
+          data-testid="info-icon"
+          src={InfoIcon}
+          alt={t('img-alt-hover-for-more-info')}
+        />
+      </span>
     </StyledTooltip>
   )
 }
