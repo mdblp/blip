@@ -67,7 +67,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm ci -w sundial
+          npm ci
 
       - name: Test sundial
         run: npm run test-sundial
@@ -89,7 +89,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm ci -w tideline
+          npm ci
 
       - name: Test tideline
         run: npm run test-tideline
@@ -111,7 +111,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm ci -w medical-domain
+          npm ci
 
       - name: Test medical domain
         run: npm run test-medical-domain
@@ -132,7 +132,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm ci -w dumb
+          npm ci
 
       - name: Test dumb
         run: npm run test-dumb
@@ -154,7 +154,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm ci -w tidepool-viz
+          npm ci
 
       - name: Test viz
         run: npm run test-viz
@@ -174,7 +174,7 @@ jobs:
           node-version: 16
       - name: Install npm dependencies
         run: |
-          npm ci -w blip
+          npm ci
           npm run build-dependencies
 
       - name: Test blip
