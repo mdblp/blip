@@ -75,14 +75,9 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
               <span className={`${styles.rowTitle} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
                 {entry.title}
               </span>
-               <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
+              <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
                 {`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
-               </span>
-              {/* <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}> */}
-              {/*  {entry.value > 0 ? entry.valueString : '0'} */}
-              {/*  &nbsp; */}
-              {/*  {entry.units} */}
-              {/* </span> */}
+              </span>
               <div className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
                 <span className={styles.rowPercentValue}>{percent(Math.max(entry.value, 0))}</span>
                 <span className={styles.rowPercentUnits}>%</span>
