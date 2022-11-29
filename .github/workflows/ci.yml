@@ -297,7 +297,7 @@ jobs:
             type=ref,enable=true,prefix=${{ steps.package-version.outputs.semver }}-PR-,event=pr
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Docker image
+      - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -306,7 +306,17 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Creating new tag
+      - name: Build and push Lambda Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile.lambda
+          push: true
+          platforms: linux/arm64,linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}-lambda
+          labels: ${{ steps.meta.outputs.labels }}-lambda
+
+      - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
           tag: ${{ steps.meta.outputs.version }}
