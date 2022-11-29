@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.chartTitle {
+.title {
   color: var(--stat--default);
   composes: largeSize from '../../../styles/typography.css';
   font-weight: 500;
@@ -34,12 +34,12 @@
   white-space: nowrap;
 }
 
-.chartTitleTotal {
+.titleTotal {
   color: #0096D1;
   margin-left: 4px;
 }
 
-.chartTitleData {
+.titleData {
   composes: smallSize from '../../../styles/typography.css';
   padding-left: .25em;
   align-items: center;
@@ -48,17 +48,17 @@
   color: var(--stat--default);
 }
 
-.chartTitleData span {
+.titleData span {
   margin-top: 1px;
 }
 
-.chartTitleSuffix {
+.titleSuffix {
   font-weight: normal;
   padding-left: 1px;
   margin-right: 4px;
 }
 
-.nobar {
+.rows {
   display: grid;
   row-gap: 4px;
   margin-bottom: 0.5em;
@@ -67,11 +67,11 @@
   padding-right: 10px;
 }
 
-.nobar .nobarRowTitle {
+.rows .rowTitle {
   color: var(--stat--default);
 }
 
-.nobar .nobarRowValue {
+.rows .rowValue {
   border-width: 2px;
   border-color: var(--stat-disabled);
   border-style: solid;
@@ -81,32 +81,33 @@
   font-weight: 500;
   padding-left: 10px;
   padding-right: 10px;
+  white-space: pre;
 }
 
-.nobar .nobarRowPercent {
+.rows .rowPercent {
   text-align: right;
 }
 
-.nobar .nobarRowPercent .nobarPercentValue {
+.rows .rowPercent .rowPercentValue {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
   font-weight: 500;
   font-size: 24px;
 }
 
-.nobar .nobarRowPercent .nobarPercentUnits {
+.rows .rowPercent .rowPercentUnits {
   font-size: 12px;
   font-weight: 400;
   color: var(--text-medium-contrast);
 }
 
-.nobarTotalInsulin {
+.rowsTotalInsulin {
   grid-template-columns: auto 3.5em 3.5em;
 }
 
-.nobarTotalInsulin-basal {
+.rowsTotalInsulin-basal {
   color: var(--basal-automated);
 }
 
-.nobarTotalInsulin-bolus {
+.rowsTotalInsulin-bolus {
   color: var(--bolus-meal);
 }
