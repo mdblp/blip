@@ -183,4 +183,4 @@ function UserMenu(): JSX.Element {
   )
 }
 
-export default UserMenu
+export const UserMenuMemoized = React.memo(UserMenu)

@@ -37,24 +37,27 @@ import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile'
 import NotificationsPage from '../pages/notifications'
+import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
 
 export function HcpLayout(): JSX.Element {
   return (
     <TeamContextProvider>
       <PatientProvider>
-        <DashboardLayout>
-          <Switch>
-            <Route exact path="/not-found" component={InvalidRoute} />
-            <Route exact path="/preferences" component={ProfilePage} />
-            <Route exact path="/notifications" component={NotificationsPage} />
-            <Route exact path="/home" component={HomePage} />
-            <Route path="/patient/:patientId" component={PatientDataPage} />
-            <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-            <Route exact path="/certify" component={CertifyAccountPage} />
-            <Redirect exact from="/" to="/home" />
-            <Redirect to="/not-found" />
-          </Switch>
-        </DashboardLayout>
+        <SelectedTeamProvider>
+          <DashboardLayout>
+            <Switch>
+              <Route exact path="/not-found" component={InvalidRoute} />
+              <Route exact path="/preferences" component={ProfilePage} />
+              <Route exact path="/notifications" component={NotificationsPage} />
+              <Route exact path="/home" component={HomePage} />
+              <Route path="/patient/:patientId" component={PatientDataPage} />
+              <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
+              <Route exact path="/certify" component={CertifyAccountPage} />
+              <Redirect exact from="/" to="/home" />
+              <Redirect to="/not-found" />
+            </Switch>
+          </DashboardLayout>
+        </SelectedTeamProvider>
       </PatientProvider>
     </TeamContextProvider>
   )

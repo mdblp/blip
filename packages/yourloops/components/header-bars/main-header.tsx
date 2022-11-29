@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import MenuIcon from '@material-ui/icons/Menu'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
@@ -42,9 +42,12 @@ import Toolbar from '@material-ui/core/Toolbar'
 import config from '../../lib/config'
 import { useNotification } from '../../lib/notifications/hook'
 import { useAuth } from '../../lib/auth'
-import { UserRoles } from '../../models/user'
-import TeamMenu from '../menus/team-menu'
-import UserMenu from '../menus/user-menu'
+import { TeamMenuMemoized as TeamMenu } from '../menus/team-menu'
+import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
+import { Team, useTeam } from '../../lib/team'
+import Dropdown from '../dropdown/dropdown'
+import TeamUtils from '../../lib/team/utils'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -71,16 +74,39 @@ const classes = makeStyles((theme: Theme) => ({
     backgroundColor: 'var(--text-base-color)',
     margin: `0 ${theme.spacing(2)}px`
   },
+  teamsDropdown: {
+    paddingLeft: theme.spacing(2)
+  },
   toolbar: {
     padding: `0 ${theme.spacing(2)}px`
   }
 }))
 
-function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
-  const { desktopLogo, separator, appBar, leftIcon, toolbar } = classes()
+const PATIENT_DASHBOARD_REGEX = /^\/patient\/[0-9a-f]+\/dashboard/
+
+function MainHeader(props: MainHeaderProps): JSX.Element {
+  const { onClickShrinkIcon, withShrinkIcon } = props
+  const { appBar, desktopLogo, leftIcon, separator, teamsDropdown, toolbar } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
+  const { getMedicalAndPrivateTeams } = useTeam()
+  const { selectedTeamId, selectTeam } = useSelectedTeamContext()
+  const location = useLocation()
+  const isPatientDashboard = location.pathname.match(PATIENT_DASHBOARD_REGEX)
+  const shouldDisplayTeamsDropdown = user.isUserHcp() && isPatientDashboard
+
+  const getDropdownTeams = (): Map<string, string> => {
+    const teams = getMedicalAndPrivateTeams()
+    const sortedTeams = TeamUtils.sortTeams(teams)
+    const teamsMap = new Map<string, string>()
+    sortedTeams.forEach((team: Team) => teamsMap.set(team.id, team.name))
+    return teamsMap
+  }
+
+  const onSelectTeam = (teamId: string): void => {
+    selectTeam(teamId)
+  }
 
   return (
     <AppBar
@@ -98,7 +124,10 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
           alignItems="center"
         >
           <Box display="flex" alignItems="center">
-            {withShrinkIcon && <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon} onClick={onClickShrinkIcon} />}
+            {
+              withShrinkIcon &&
+              <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon} onClick={onClickShrinkIcon} />
+            }
             <Link to="/">
               <Avatar
                 id="header-main-logo"
@@ -109,6 +138,17 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
                 className={desktopLogo}
               />
             </Link>
+            {
+              shouldDisplayTeamsDropdown &&
+              <Box className={teamsDropdown}>
+                <Dropdown
+                  data-testid="select-team-dropdown"
+                  defaultKey={selectedTeamId}
+                  values={getDropdownTeams()}
+                  onSelect={onSelectTeam}
+                />
+              </Box>
+            }
           </Box>
 
           <Box display="flex" alignItems="center">
@@ -124,7 +164,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
               </Badge>
             </Link>
             <div className={separator} />
-            {user?.role !== UserRoles.caregiver &&
+            {!user?.isUserCaregiver() &&
               <React.Fragment>
                 <TeamMenu />
                 <div className={separator} />

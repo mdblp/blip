@@ -47,6 +47,7 @@ export const monitoringParameters = {
 
 export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
 export const myThirdTeamId = '62fe00defc9374b2fed32bce'
+export const mySecondTeamName = 'MySecondTeam'
 
 export const teamOne: ITeam = {
   name: 'MyTeam',
@@ -80,7 +81,7 @@ export const teamOne: ITeam = {
 }
 
 export const teamTwo: ITeam = {
-  name: 'MySecondTeam',
+  name: mySecondTeamName,
   id: mySecondTeamId,
   code: '241548778',
   type: TeamType.medical,

@@ -81,7 +81,15 @@ function TeamContextImpl(): TeamContext {
   }
 
   const getMedicalTeams = (): Team[] => {
-    return teams.filter((team: Team): boolean => team.type === TeamType.medical)
+    return getTeamsByType([TeamType.medical])
+  }
+
+  const getMedicalAndPrivateTeams = (): Team[] => {
+    return getTeamsByType([TeamType.medical, TeamType.private])
+  }
+
+  const getTeamsByType = (types: TeamType[]): Team[] => {
+    return teams.filter((team: Team) => types.includes(team.type))
   }
 
   const getRemoteMonitoringTeams = (): Team[] => {
@@ -195,6 +203,7 @@ function TeamContextImpl(): TeamContext {
     refresh,
     getTeam,
     getMedicalTeams,
+    getMedicalAndPrivateTeams,
     getRemoteMonitoringTeams,
     inviteMember,
     createTeam,

@@ -263,4 +263,4 @@ function TeamMenu(): JSX.Element {
   )
 }
 
-export default TeamMenu
+export const TeamMenuMemoized = React.memo(TeamMenu)

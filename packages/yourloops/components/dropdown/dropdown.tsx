@@ -34,7 +34,7 @@ import { Theme } from '@material-ui/core/styles'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 
 export interface BasicDropdownProps {
-  id: string
+  id?: string
   defaultKey?: string
   disabled?: boolean
   values: Map<string, string> // Map<key, value>

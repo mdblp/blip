@@ -6,6 +6,8 @@ import PatientStatistics from './patientStatistics'
 import Header from './header'
 import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
+import { useTeam } from 'yourloops/lib/team'
+import { useSelectedTeamContext } from 'yourloops/lib/selected-team/selected-team.provider'
 
 const PatientDashboard = (props) => {
   const {
@@ -28,6 +30,12 @@ const PatientDashboard = (props) => {
     //eslint-disable-next-line
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
   } = props
+  const { selectedTeamId } = useSelectedTeamContext()
+  const { getMedicalTeams } = useTeam()
+  const isSelectedTeamMedical = getMedicalTeams().some((team) => team.id === selectedTeamId)
+  const isMonitoringEnabled = patient.monitoring?.enabled
+  const shouldDisplayChatWidget = user.isUserHcp() ? isMonitoringEnabled && isSelectedTeamMedical : isMonitoringEnabled
+
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString()
     const end = moment.utc(epochLocation).toISOString()
@@ -96,10 +104,10 @@ const PatientDashboard = (props) => {
           loading={loading}
           onSwitchToDaily={onSwitchToDaily}
         />
-        {patient.monitoring?.enabled &&
+        {isMonitoringEnabled &&
           <AlarmCard patient={patient} />
         }
-        {patient.monitoring?.enabled &&
+        {shouldDisplayChatWidget &&
           <ChatWidget
             id="dashboard-chat-widget"
             patient={patient}

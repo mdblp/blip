@@ -45,6 +45,7 @@ import { Patient } from '../../lib/data/patient'
 import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -136,6 +137,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const authHook = useAuth()
   const teamHook = useTeam()
   const patientHook = usePatientContext()
+  const { selectedTeamId } = useSelectedTeamContext()
+  const { user } = useAuth()
   const [showPicker, setShowPicker] = useState(false)
   const [privateMessage, setPrivateMessage] = useState(false)
   const [inputText, setInputText] = useState('')
@@ -144,7 +147,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
-  const team = PatientUtils.getRemoteMonitoringTeam(patient)
+  const teamId = user.isUserHcp() ? selectedTeamId : PatientUtils.getRemoteMonitoringTeam(patient).teamId
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number): void => {
@@ -157,7 +160,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages(): Promise<void> {
-      const messages = await ChatApi.getChatMessages(team.teamId, patient.userid)
+      const messages = await ChatApi.getChatMessages(teamId, patient.userid)
       if (patient.metadata.unreadMessagesSent > 0) {
         patientHook.markPatientMessagesAsRead(patient)
       }
@@ -166,7 +169,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     }
 
     fetchMessages()
-  }, [userId, authHook, patient.userid, team.teamId, patient, teamHook, patientHook])
+  }, [userId, authHook, patient.userid, teamId, patient, teamHook, patientHook])
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData): void => {
     setShowPicker(false)
@@ -182,8 +185,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }
 
   const sendMessage = async (): Promise<void> => {
-    await ChatApi.sendChatMessage(team.teamId, patient.userid, inputText, privateMessage)
-    const messages = await ChatApi.getChatMessages(team.teamId, patient.userid)
+    await ChatApi.sendChatMessage(teamId, patient.userid, inputText, privateMessage)
+    const messages = await ChatApi.getChatMessages(teamId, patient.userid)
     setMessages(messages)
     setInputText('')
     resetInputSize()
