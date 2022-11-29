@@ -54,35 +54,38 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   return (
     <>
-      <Box className={styles.chartTitle}>
+      <Box className={styles.title}>
         {title}
-        <span className={styles.chartTitleData}>
+        <span className={styles.titleData}>
           (
-          <span className={styles.chartTitleTotal}>
+          <span className={styles.titleTotal}>
             {total}
           </span>
-          <span className={styles.chartTitleSuffix}>
+          <span className={styles.titleSuffix}>
             U
           </span>
           )
           </span>
         <StatTooltip annotations={annotations} />
       </Box>
-      <div className={`${styles.nobar} ${styles.nobarTotalInsulin}`}>
+      <div className={`${styles.rows} ${styles.rowsTotalInsulin}`}>
         {data.map(entry => {
           return (
             <React.Fragment key={entry.id}>
-              <span className={`${styles.nobarRowTitle} ${styles[`nobarTotalInsulin-${entry.id}`]}`}>
+              <span className={`${styles.rowTitle} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
                 {entry.title}
               </span>
-              <span className={`${styles.nobarRowValue} ${styles[`nobarTotalInsulin-${entry.id}`]}`}>
-                {entry.value > 0 ? entry.valueString : '0'}
-                &nbsp;
-                {entry.units}
-              </span>
-              <div className={`${styles.nobarRowPercent} ${styles[`nobarTotalInsulin-${entry.id}`]}`}>
-                <span className={styles.nobarPercentValue}>{percent(Math.max(entry.value, 0))}</span>
-                <span className={styles.nobarPercentUnits}>%</span>
+               <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
+                {`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
+               </span>
+              {/* <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}> */}
+              {/*  {entry.value > 0 ? entry.valueString : '0'} */}
+              {/*  &nbsp; */}
+              {/*  {entry.units} */}
+              {/* </span> */}
+              <div className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
+                <span className={styles.rowPercentValue}>{percent(Math.max(entry.value, 0))}</span>
+                <span className={styles.rowPercentUnits}>%</span>
               </div>
             </React.Fragment>
           )
