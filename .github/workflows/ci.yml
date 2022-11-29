@@ -46,7 +46,6 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm run security-checks
           npm ci
 
       - name: Test lambda
@@ -68,8 +67,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm run security-checks
-          npm ci
+          npm ci -w sundial
 
       - name: Test sundial
         run: npm run test-sundial
@@ -91,8 +89,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm run security-checks
-          npm ci
+          npm ci -w tideline
 
       - name: Test tideline
         run: npm run test-tideline
@@ -114,8 +111,8 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm run security-checks
-          npm ci
+          npm ci -w medical-domain
+
       - name: Test medical domain
         run: npm run test-medical-domain
 
@@ -135,8 +132,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm run security-checks
-          npm ci
+          npm ci -w dumb
 
       - name: Test dumb
         run: npm run test-dumb
@@ -158,8 +154,7 @@ jobs:
 
       - name: Install npm dependencies
         run: |
-          npm run security-checks
-          npm ci
+          npm ci -w tidepool-viz
 
       - name: Test viz
         run: npm run test-viz
@@ -179,8 +174,7 @@ jobs:
           node-version: 16
       - name: Install npm dependencies
         run: |
-          npm run security-checks
-          npm ci
+          npm ci -w blip
           npm run build-dependencies
 
       - name: Test blip
@@ -201,7 +195,6 @@ jobs:
           node-version: 16
       - name: Install npm dependencies
         run: |
-          npm run security-checks
           npm ci
           npm run build-dependencies
 
@@ -221,9 +214,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: packages/*/package-lock.json
           node-version: 16
+
       - name: Install npm dependencies
         run: |
-          npm run security-checks
           npm ci
           npm run build-dependencies
 
@@ -245,7 +238,6 @@ jobs:
           node-version: 16
       - name: Install npm dependencies
         run: |
-          npm run security-checks
           npm ci
       - name: Build
         run: nice bash build.sh
