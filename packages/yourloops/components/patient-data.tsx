@@ -49,6 +49,8 @@ import { Patient } from '../lib/data/patient'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/provider'
+import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
+import { useTeam } from '../lib/team'
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -79,7 +81,7 @@ function PatientDataPageError({ msg }: PatientDataPageErrorProps): JSX.Element {
 function PatientDataPage(): JSX.Element | null {
   const { t } = useTranslation('yourloops')
   const paramHook = useParams()
-  const authHook = useAuth()
+  const { user, isLoggedIn } = useAuth()
   const patientHook = usePatientContext()
   const dataHook = useData()
   const classes = patientDataStyles()
@@ -89,13 +91,16 @@ function PatientDataPage(): JSX.Element | null {
 
   const { blipApi } = dataHook
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam
-  const authUser = authHook.user
-  const userId = authUser?.id ?? null
-  const userIsPatient = authHook.user?.isUserPatient()
-  const userIsHCP = authHook.user?.isUserHcp()
+  const userId = user?.id ?? null
+  const userIsPatient = user?.isUserPatient()
+  const userIsHCP = user?.isUserHcp()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
 
-  const initialized = authHook.isLoggedIn && blipApi
+  const { selectedTeamId } = useSelectedTeamContext()
+  const { getMedicalTeams } = useTeam()
+  const isSelectedTeamMedical = !user.isUserCaregiver() ? getMedicalTeams().some((team) => team.id === selectedTeamId) : false
+
+  const initialized = isLoggedIn && blipApi
 
   React.useEffect(() => {
     if (!initialized) {
@@ -103,8 +108,8 @@ function PatientDataPage(): JSX.Element | null {
     }
 
     let patientId = paramPatientId ?? userId
-    if (userIsPatient && authUser) {
-      patientId = authUser.id
+    if (userIsPatient && user) {
+      patientId = user.id
     }
     if (!patientId) {
       log.error('Invalid patient Id')
@@ -118,7 +123,7 @@ function PatientDataPage(): JSX.Element | null {
       log.error('Patient not found')
       setError('Patient not found')
     }
-  }, [initialized, paramPatientId, userId, patientHook, authUser, userIsPatient])
+  }, [initialized, paramPatientId, userId, patientHook, user, userIsPatient])
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
@@ -145,6 +150,7 @@ function PatientDataPage(): JSX.Element | null {
         userIsHCP={!!userIsHCP}
         patients={patientHook.patients}
         setPatient={setPatient}
+        isSelectedTeamMedical={isSelectedTeamMedical}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}

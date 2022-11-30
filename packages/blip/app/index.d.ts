@@ -34,7 +34,7 @@ import DialogDatePicker from "../../yourloops/components/date-pickers/dialog-dat
 import DialogRangeDatePicker from "../../yourloops/components/date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-options";
 import PatientInfoWidget from "../../yourloops/components/dashboard-widgets/patient-info-widget";
-import { PatientDatum, PatientData } from "yourloops/models/device-data";
+import { PatientData, PatientDatum } from "yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
 import { Patient } from "../../yourloops/lib/data/patient";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
@@ -50,6 +50,7 @@ interface BlipProperties {
   setPatient: Function;
   patients: Patient[];
   userIsHCP: boolean;
+  isSelectedTeamMedical: boolean;
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
   dialogDatePicker: typeof DialogDatePicker;

@@ -6,8 +6,6 @@ import PatientStatistics from './patientStatistics'
 import Header from './header'
 import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
-import { useTeam } from 'yourloops/lib/team'
-import { useSelectedTeamContext } from 'yourloops/lib/selected-team/selected-team.provider'
 
 const PatientDashboard = (props) => {
   const {
@@ -28,13 +26,10 @@ const PatientDashboard = (props) => {
     canPrint,
     onClickPrint,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, isSelectedTeamMedical, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
   } = props
-  const { selectedTeamId } = useSelectedTeamContext()
-  const { getMedicalTeams } = useTeam()
-  const isSelectedTeamMedical = getMedicalTeams().some((team) => team.id === selectedTeamId)
   const isMonitoringEnabled = patient.monitoring?.enabled
-  const shouldDisplayChatWidget = user.isUserHcp() ? isMonitoringEnabled && isSelectedTeamMedical : isMonitoringEnabled
+  const shouldDisplayChatWidget = userIsHCP ? isMonitoringEnabled && isSelectedTeamMedical : isMonitoringEnabled
 
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString()

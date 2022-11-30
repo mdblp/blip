@@ -41,7 +41,7 @@ import '../../tideline/css/tideline.less'
 import './style.less'
 
 import { updateConfig } from './config'
-import { initStore, cleanStore } from './redux'
+import { cleanStore, initStore } from './redux'
 import PatientData from './components/patient-data'
 
 const log = bows('Blip')
@@ -62,6 +62,7 @@ function ReduxProvider(props) {
         setPatient={props.setPatient}
         patients={props.patients}
         userIsHCP={props.userIsHCP}
+        isSelectedTeamMedical={props.isSelectedTeamMedical}
         profileDialog={props.profileDialog}
         prefixURL={props.prefixURL}
         history={historyHook}
@@ -83,6 +84,7 @@ ReduxProvider.propTypes = {
   setPatient: PropTypes.func.isRequired,
   patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
+  isSelectedTeamMedical: PropTypes.bool.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
@@ -100,7 +102,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === 'object') {
     try {
-      const { config, api, patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget, medicalFilesWidget } = props
+      const { config, api, patient, setPatient, patients, userIsHCP, isSelectedTeamMedical, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget, medicalFilesWidget } = props
       updateConfig(config)
 
       return (
@@ -110,6 +112,7 @@ function Blip(props) {
           patients={patients}
           setPatient={setPatient}
           userIsHCP={userIsHCP}
+          isSelectedTeamMedical={isSelectedTeamMedical}
           profileDialog={profileDialog}
           prefixURL={prefixURL}
           dialogDatePicker={dialogDatePicker}
@@ -137,6 +140,7 @@ Blip.propTypes = {
   setPatient: PropTypes.func.isRequired,
   patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
+  isSelectedTeamMedical: PropTypes.bool.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
