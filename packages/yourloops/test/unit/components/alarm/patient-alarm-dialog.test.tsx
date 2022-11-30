@@ -34,16 +34,11 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import * as patientHook from '../../../../lib/patient/provider'
 import { Alarm } from '../../../../models/alarm'
 import { Monitoring } from '../../../../models/monitoring'
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import PatientAlarmDialog from '../../../../components/alarm/patient-alarm-dialog'
 import { UNITS_TYPE } from '../../../../lib/units/utils'
 import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../../components/alarm/alarms-content-configuration'
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 jest.mock('../../../../lib/patient/provider')
 describe('PatientAlarmDialog', () => {

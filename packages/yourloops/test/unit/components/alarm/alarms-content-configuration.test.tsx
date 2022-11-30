@@ -28,9 +28,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-
-import ThemeProvider from '@mui/styles/ThemeProvider'
-
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
 import { convertBG, UNITS_TYPE } from '../../../../lib/units/utils'

@@ -33,7 +33,7 @@ import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
 import { Theme, useTheme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Badge from '@mui/material/Badge'
 import Box from '@mui/material/Box'

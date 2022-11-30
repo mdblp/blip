@@ -30,7 +30,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { Theme, ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 
 import { useAuth, User } from '../lib/auth'
@@ -52,11 +52,6 @@ import {
   RENEW_CONSENT_PATH,
   TRAINING_PATH
 } from '../lib/diabeloop-url'
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 const routeStyle = makeStyles<Theme>(() => {
   return {

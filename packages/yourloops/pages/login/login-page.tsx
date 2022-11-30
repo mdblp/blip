@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'

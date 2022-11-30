@@ -30,7 +30,7 @@ import clsx from 'clsx'
 import { Dayjs, isDayjs } from 'dayjs'
 import { Theme } from '@mui/material/styles'
 
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 
 import { CalendarSelection, CalendarSelectionRange } from './models'
 import Day from './day'

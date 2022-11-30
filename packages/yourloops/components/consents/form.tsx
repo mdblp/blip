@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'

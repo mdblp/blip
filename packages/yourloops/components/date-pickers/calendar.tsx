@@ -30,7 +30,7 @@ import React from 'react'
 import { Dayjs } from 'dayjs'
 import clsx from 'clsx'
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 
 import {

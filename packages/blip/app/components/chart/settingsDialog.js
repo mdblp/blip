@@ -25,7 +25,7 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import bows from 'bows'
 
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'

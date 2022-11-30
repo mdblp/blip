@@ -28,7 +28,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 
 interface YearSelectorProps {

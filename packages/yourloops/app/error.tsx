@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { browserName, browserVersion } from 'react-device-detect'
 
 import { useTheme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'

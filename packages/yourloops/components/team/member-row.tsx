@@ -29,7 +29,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Checkbox from '@mui/material/Checkbox'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import IconButton from '@mui/material/IconButton'

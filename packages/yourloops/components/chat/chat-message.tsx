@@ -28,11 +28,11 @@
 import React from 'react'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Face from '@mui/icons-material/Face'
 import { useTranslation } from 'react-i18next'
 import { CheckSharp } from '@mui/icons-material'
-import green from '@mui/material/colors/green'
+import { green } from '@mui/material/colors'
 
 export interface ChatMessageProps {
   text: string

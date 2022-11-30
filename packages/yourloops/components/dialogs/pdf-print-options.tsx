@@ -31,7 +31,7 @@ import dayjs, { Dayjs } from 'dayjs'
 
 import { Theme, useTheme } from '@mui/material/styles'
 
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 
 import DateRangeIcon from '@mui/icons-material/DateRange'
 

@@ -29,7 +29,7 @@ import React, { useState } from 'react'
 import moment from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import { commonComponentStyles } from '../common'
 
 import Button from '@mui/material/Button'

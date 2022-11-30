@@ -28,7 +28,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-import ThemeProvider from '@mui/styles/ThemeProvider'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import * as authHookMock from '../../../../lib/auth'
 import { getTheme } from '../../../../components/theme'
 import TeamInformation, { TeamInformationProps } from '../../../../components/team/team-information'

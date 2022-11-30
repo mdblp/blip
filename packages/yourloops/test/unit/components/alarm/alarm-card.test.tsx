@@ -28,9 +28,7 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, unmountComponentAtNode } from 'react-dom'
-
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material'
-
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import i18n from '../../../../lib/language'
@@ -40,11 +38,6 @@ import User from '../../../../lib/auth/user'
 import { Alarm } from '../../../../models/alarm'
 import { Monitoring } from '../../../../models/monitoring'
 import { getTheme } from '../../../../components/theme'
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 jest.mock('../../../../lib/auth')
 describe('AlarmCard', () => {

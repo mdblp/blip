@@ -31,7 +31,7 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import { useTranslation } from 'react-i18next'
 
 const languageSelectStyle = makeStyles((theme: Theme) => {

@@ -30,7 +30,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Picker, { IEmojiData } from 'emoji-picker-react'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'

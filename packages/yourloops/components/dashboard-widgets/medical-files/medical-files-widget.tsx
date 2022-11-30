@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import Card from '@mui/material/Card'

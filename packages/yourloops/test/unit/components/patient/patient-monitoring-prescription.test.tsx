@@ -35,14 +35,9 @@ import { RemoteMonitoringDialogAction } from '../../../../components/dialogs/rem
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import { TeamMemberRole } from '../../../../models/team'
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import userEvent from '@testing-library/user-event'
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 jest.mock('../../../../lib/team')
 describe('PatientMonitoringPrescription', () => {

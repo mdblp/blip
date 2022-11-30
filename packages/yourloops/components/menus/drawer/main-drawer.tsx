@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined'
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle'
 import Drawer from '@mui/material/Drawer'

@@ -28,7 +28,7 @@
 import React, { FunctionComponent, ReactElement } from 'react'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Box from '@mui/material/Box'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'

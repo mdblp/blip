@@ -28,7 +28,7 @@
 import React from 'react'
 import clsx from 'clsx'
 import { alpha, Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase'
 
 interface DayProps extends ButtonBaseProps {

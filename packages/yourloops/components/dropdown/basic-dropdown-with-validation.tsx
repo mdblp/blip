@@ -34,7 +34,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>
 type SelectChangeEvent = React.ChangeEvent<{ name?: string, value: unknown }>

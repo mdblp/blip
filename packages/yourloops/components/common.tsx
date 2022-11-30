@@ -27,7 +27,7 @@
 
 import { Theme } from '@mui/material/styles'
 
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 
 export const commonComponentStyles = makeStyles((theme: Theme) => ({
   button: {

@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import { Box, Typography } from '@mui/material'
 import { Patient } from '../../lib/data/patient'
 import { useTranslation } from 'react-i18next'

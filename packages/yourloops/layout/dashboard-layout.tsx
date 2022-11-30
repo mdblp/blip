@@ -29,7 +29,7 @@ import React, { useState } from 'react'
 
 import { Theme } from '@mui/material/styles'
 
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'

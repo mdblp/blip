@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createTheme, Theme, adaptV4Theme } from '@mui/material/styles'
+import { createTheme, Theme } from '@mui/material/styles'
 import config from '../lib/config'
 
 const DEFAULT_PRIMARY_MAIN_COLOR = '#039BE5'
@@ -51,46 +51,58 @@ export function initTheme(): void {
 }
 
 export function getTheme(): Theme {
-  return createTheme(adaptV4Theme({
-    overrides: {
+  return createTheme({
+    components: {
       MuiCssBaseline: {
-        '@global': {
-          a: {
-            color: 'inherit',
-            textDecoration: 'none'
-          },
-          body: {
-            backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
+        styleOverrides: {
+          '@global': {
+            a: {
+              color: 'inherit',
+              textDecoration: 'none'
+            },
+            body: {
+              backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
+            }
           }
         }
       },
       MuiButton: {
-        root: {
-          fontWeight: 600
+        styleOverrides: {
+          root: {
+            fontWeight: 600
+          }
         }
       },
       MuiDialogActions: {
-        spacing: {
-          padding: 16,
-          '& > :last-child': {
-            marginLeft: 16
+        styleOverrides: {
+          spacing: {
+            padding: 16,
+            '& > :last-child': {
+              marginLeft: 16
+            }
           }
         }
       },
       MuiSvgIcon: {
-        root: {
-          margin: 0
+        styleOverrides: {
+          root: {
+            margin: 0
+          }
         }
       },
       MuiListItemIcon: {
-        root: {
-          minWidth: 40,
-          color: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
+        styleOverrides: {
+          root: {
+            minWidth: 40,
+            color: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
+          }
         }
       },
       MuiPaper: {
-        rounded: {
-          borderRadius: 12
+        styleOverrides: {
+          rounded: {
+            borderRadius: 12
+          }
         }
       }
     },
@@ -110,7 +122,7 @@ export function getTheme(): Theme {
         dark: appElement ? cssVar('--color-secondary-dark') : DEFAULT_SECONDARY_DARK_COLOR
       }
     }
-  }))
+  })
 }
 
 /**

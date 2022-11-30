@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import ThemeProvider from '@mui/styles/ThemeProvider'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'

@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './stat-tooltip.css'
-import withStyles from '@mui/styles/withStyles'
+import { withStyles } from '@mui/styles'
 import Tooltip from '@mui/material/Tooltip'
 
 interface StatTooltipProps {

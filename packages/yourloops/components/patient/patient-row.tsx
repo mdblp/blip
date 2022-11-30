@@ -29,7 +29,7 @@ import React, { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import EmailIcon from '@mui/icons-material/Email'
 import Tooltip from '@mui/material/Tooltip'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'

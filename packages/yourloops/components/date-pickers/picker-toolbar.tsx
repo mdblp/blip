@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 
 import { Theme } from '@mui/material/styles'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 

@@ -34,16 +34,11 @@ import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 
 import PatientTable from '../../../../components/patient/table'
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import { createPatient, createPatientTeam } from '../../common/utils'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')

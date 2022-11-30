@@ -30,7 +30,7 @@ import { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import IconButton from '@mui/material/IconButton'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'

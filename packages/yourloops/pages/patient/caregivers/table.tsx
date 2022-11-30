@@ -28,7 +28,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from '@mui/styles'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
