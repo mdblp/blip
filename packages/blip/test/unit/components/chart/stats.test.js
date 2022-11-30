@@ -147,11 +147,6 @@ describe('Stats', () => {
 
         expect(wrapper.find('.Stats').children()).to.have.length(6)
 
-        const expectedStats = [
-          'carbs',
-          'coefficientOfVariation'
-        ]
-
         expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
