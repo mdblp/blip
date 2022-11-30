@@ -34,6 +34,7 @@ import * as notificationsHookMock from '../../../lib/notifications/hook'
 import { UserRoles } from '../../../models/user'
 import { MemoryRouter } from 'react-router-dom'
 import * as patientHookMock from '../../../lib/patient/provider'
+import * as selectedTeamHookMock from '../../../lib/selected-team/selected-team.provider'
 import { HcpLayout } from '../../../layout/hcp-layout'
 
 const profilePageTestId = 'mock-profile-page'
@@ -72,6 +73,9 @@ describe('Hcp Layout', () => {
       return children
     });
     (patientHookMock.PatientProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children
+    });
+    (selectedTeamHookMock.SelectedTeamProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
     });
     (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {

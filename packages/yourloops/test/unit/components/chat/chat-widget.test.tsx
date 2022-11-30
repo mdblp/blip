@@ -35,8 +35,12 @@ import { IMessage } from '../../../../models/chat'
 import User from '../../../../lib/auth/user'
 import ChatApi from '../../../../lib/chat/api'
 import PatientUtils from '../../../../lib/patient/utils'
+import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
+import * as authHookMock from '../../../../lib/auth/hook'
 
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/selected-team/selected-team.provider')
+jest.mock('../../../../lib/auth/hook')
 describe('Chat widget', () => {
   const teamId = '777'
   const patientTeam = { teamId } as PatientTeam
@@ -58,7 +62,14 @@ describe('Chat widget', () => {
 
   beforeAll(() => {
     Element.prototype.scroll = jest.fn()
-    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue(patientTeam)
+    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue(patientTeam);
+
+    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
+      return { selectedTeamId: teamId }
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { isUserHcp: () => true } }
+    })
   })
 
   beforeEach(() => {

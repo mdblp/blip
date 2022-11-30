@@ -92,8 +92,8 @@ function MainHeader(props: MainHeaderProps): JSX.Element {
   const { user } = useAuth()
   const { getMedicalAndPrivateTeams } = useTeam()
   const { selectedTeamId, selectTeam } = useSelectedTeamContext()
-  const location = useLocation()
-  const isPatientDashboard = location.pathname.match(PATIENT_DASHBOARD_REGEX)
+  const { pathname } = useLocation()
+  const isPatientDashboard = pathname.match(PATIENT_DASHBOARD_REGEX)
   const shouldDisplayTeamsDropdown = user.isUserHcp() && isPatientDashboard
 
   const getDropdownTeams = (): Map<string, string> => {

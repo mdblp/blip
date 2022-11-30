@@ -38,13 +38,17 @@ import { Team } from '../../../../lib/team'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import MainHeader from '../../../../components/header-bars/main-header'
 import DirectShareApi from '../../../../lib/share/direct-share-api'
-import { Profile, UserRoles } from '../../../../models/user'
+import { Profile } from '../../../../models/user'
 import User from '../../../../lib/auth/user'
 import { INotification, NotificationType } from '../../../../lib/notifications/models'
 
 jest.mock('../../../../lib/notifications/hook')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom')),
+  useLocation: () => ({ pathname: '' })
+}))
 describe('Main Header', () => {
   let container: HTMLElement | null = null
   const history = createMemoryHistory({ initialEntries: ['/preferences'] })
@@ -89,7 +93,7 @@ describe('Main Header', () => {
     document.body.appendChild(container);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.hcp, isUserHcp: () => true, isUserPatient: () => false } as User
+        user: { isUserHcp: () => true, isUserPatient: () => false, isUserCaregiver: () => false } as User
       }
     })
   })
@@ -125,7 +129,7 @@ describe('Main Header', () => {
   it('Team Menu should not be rendered for Caregivers', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.caregiver } as User
+        user: { isUserCaregiver: () => true, isUserHcp: () => false } as User
       }
     })
     mountComponent()
@@ -142,7 +146,7 @@ describe('Main Header', () => {
   it('Team Menu should be rendered for Patient', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.patient, isUserHcp: () => false, isUserPatient: () => true } as User
+        user: { isUserHcp: () => false, isUserPatient: () => true, isUserCaregiver: () => false } as User
       }
     })
     mountComponent()

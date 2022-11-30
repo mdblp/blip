@@ -35,7 +35,7 @@ import FaceIcon from '@material-ui/icons/Face'
 import RoundedHospitalIcon from '../../../../components/icons/RoundedHospitalIcon'
 import StethoscopeIcon from '../../../../components/icons/StethoscopeIcon'
 
-import UserMenu from '../../../../components/menus/user-menu'
+import { UserMenuMemoized as UserMenu } from '../../../../components/menus/user-menu'
 import { triggerMouseEvent } from '../../common/utils'
 import User from '../../../../lib/auth/user'
 import * as authHookMock from '../../../../lib/auth/hook'
