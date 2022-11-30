@@ -27,19 +27,21 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
+import makeStyles from '@mui/styles/makeStyles'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import Divider from '@material-ui/core/Divider'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import Divider from '@mui/material/Divider'
+import DialogTitle from '@mui/material/DialogTitle'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
 import { MedicalRecord } from '../../lib/medical-files/model'
 import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'

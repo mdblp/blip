@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import SvgIcon, { SvgIconProps } from '@material-ui/core/SvgIcon'
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
 
 const TrashCanOutlined = (props: SvgIconProps): JSX.Element => {
   return (

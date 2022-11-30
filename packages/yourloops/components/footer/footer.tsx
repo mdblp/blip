@@ -27,16 +27,17 @@
 
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
 import { useLocation } from 'react-router-dom'
 
 import diabeloopLabel from 'diabeloop-label.svg'
 import diabeloopLogo from 'diabeloop-logo.svg'
-import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
-import LanguageIcon from '@material-ui/icons/Language'
-import Link from '@material-ui/core/Link'
-import Tooltip from '@material-ui/core/Tooltip'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import LanguageIcon from '@mui/icons-material/Language'
+import Link from '@mui/material/Link'
+import Tooltip from '@mui/material/Tooltip'
 
 import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-url'
 import { useAuth } from '../../lib/auth'
@@ -50,7 +51,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
     bySpan: {
       paddingLeft: '12px',
       paddingRight: '12px',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         paddingRight: '0'
       }
     },
@@ -63,13 +64,13 @@ export const footerStyle = makeStyles((theme: Theme) => {
       [theme.breakpoints.up('sm')]: {
         flexWrap: 'wrap'
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap',
         order: 1,
         textAlign: 'center',
         width: '100%'
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         justifyContent: 'space-around',
         marginLeft: '10px',
         marginRight: '10px'
@@ -87,7 +88,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
       paddingBottom: '11px',
       paddingTop: '11px',
       zIndex: theme.zIndex.drawer + 1,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap'
       }
     },
@@ -100,7 +101,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
       paddingRight: '3px'
     },
     diabeloopLink: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginTop: '12px'
       }
     },
@@ -110,10 +111,10 @@ export const footerStyle = makeStyles((theme: Theme) => {
       alignItems: 'center',
       marginBottom: '6px',
       width: '100%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginBottom: '0'
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         flexWrap: 'wrap'
       }
     },
@@ -121,11 +122,11 @@ export const footerStyle = makeStyles((theme: Theme) => {
       display: 'flex',
       height: '20px',
       alignItems: 'center',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginTop: '10px',
         marginBottom: '17px'
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginBottom: '15px',
         marginTop: '0',
         width: '100%',
@@ -143,7 +144,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
       display: 'flex',
       height: '20px',
       alignItems: 'center',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginBottom: '15px',
         marginTop: '0',
         width: '100%',
@@ -155,14 +156,14 @@ export const footerStyle = makeStyles((theme: Theme) => {
     },
     leftBox: {
       width: '134px',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         order: 2
       }
     },
     link: {
       color: theme.palette.grey[700],
       fontWeight: 400,
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginBottom: '15px',
         marginLeft: '0.5rem',
         marginRight: '0.5rem',
@@ -172,10 +173,10 @@ export const footerStyle = makeStyles((theme: Theme) => {
     rightBox: {
       display: 'flex',
       justifyContent: 'right',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         order: 3
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         display: 'flex',
         flexDirection: 'column',
         textAlign: 'right'
@@ -184,7 +185,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
     separator: {
       paddingLeft: '15px',
       paddingRight: '15px',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         display: 'none',
         visibility: 'hidden'
       }
@@ -195,7 +196,7 @@ export const footerStyle = makeStyles((theme: Theme) => {
     supportButton: {
       height: '46px',
       width: '134px',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginTop: '10px'
       }
     },

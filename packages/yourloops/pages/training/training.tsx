@@ -33,24 +33,25 @@ import { Profile } from '../../models/user'
 import bows from 'bows'
 import { useHistory } from 'react-router-dom'
 import { HistoryState } from '../../models/generic'
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-import Card from '@material-ui/core/Card'
-import CardMedia from '@material-ui/core/CardMedia'
-import Box from '@material-ui/core/Box'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import Box from '@mui/material/Box'
 import appConfig from '../../lib/config'
-import CardContent from '@material-ui/core/CardContent'
-import Container from '@material-ui/core/Container'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Link from '@material-ui/core/Link'
+import CardContent from '@mui/material/CardContent'
+import Container from '@mui/material/Container'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Link from '@mui/material/Link'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 const style = makeStyles((theme: Theme) => {
   return {
     mainContainer: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         padding: 0
       }
     },
@@ -60,7 +61,7 @@ const style = makeStyles((theme: Theme) => {
     cardContent: {
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(0),
         marginRight: theme.spacing(0)
       }

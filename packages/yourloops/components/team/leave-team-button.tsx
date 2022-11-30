@@ -27,8 +27,8 @@
 
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Button from '@material-ui/core/Button'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import Button from '@mui/material/Button'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 
 import { Team, useTeam } from '../../lib/team'
 import { commonComponentStyles } from '../common'

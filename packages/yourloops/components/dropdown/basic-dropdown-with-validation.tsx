@@ -28,13 +28,13 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import FormControl from '@material-ui/core/FormControl'
-import FormGroup from '@material-ui/core/FormGroup'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import { makeStyles } from '@material-ui/core/styles'
+import FormControl from '@mui/material/FormControl'
+import FormGroup from '@mui/material/FormGroup'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import makeStyles from '@mui/styles/makeStyles'
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>
 type SelectChangeEvent = React.ChangeEvent<{ name?: string, value: unknown }>

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createTheme, Theme } from '@material-ui/core/styles'
+import { createTheme, Theme, adaptV4Theme } from '@mui/material/styles'
 import config from '../lib/config'
 
 const DEFAULT_PRIMARY_MAIN_COLOR = '#039BE5'
@@ -51,7 +51,7 @@ export function initTheme(): void {
 }
 
 export function getTheme(): Theme {
-  return createTheme({
+  return createTheme(adaptV4Theme({
     overrides: {
       MuiCssBaseline: {
         '@global': {
@@ -95,7 +95,7 @@ export function getTheme(): Theme {
       }
     },
     palette: {
-      type: 'light',
+      mode: 'light',
       text: {
         primary: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
       },
@@ -110,7 +110,7 @@ export function getTheme(): Theme {
         dark: appElement ? cssVar('--color-secondary-dark') : DEFAULT_SECONDARY_DARK_COLOR
       }
     }
-  })
+  }))
 }
 
 /**

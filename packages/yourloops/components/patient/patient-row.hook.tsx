@@ -26,7 +26,7 @@
  */
 
 import moment from 'moment'
-import { ClassNameMap } from '@material-ui/styles/withStyles'
+import { ClassNameMap } from '@mui/styles/withStyles'
 import { useTranslation } from 'react-i18next'
 import { Patient } from '../../lib/data/patient'
 import { patientListCommonStyle } from './table'

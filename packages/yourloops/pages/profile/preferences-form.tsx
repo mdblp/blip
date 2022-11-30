@@ -28,14 +28,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Tune from '@material-ui/icons/Tune'
+import Tune from '@mui/icons-material/Tune'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
-import Box from '@material-ui/core/Box'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import { ClassNameMap } from '@mui/styles/withStyles'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 
 import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'

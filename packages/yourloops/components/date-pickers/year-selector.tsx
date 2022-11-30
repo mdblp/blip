@@ -27,8 +27,9 @@
 
 import React from 'react'
 import clsx from 'clsx'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Typography from '@mui/material/Typography'
 
 interface YearSelectorProps {
   selectedYear: number
@@ -48,7 +49,7 @@ const yearSelectorStyles = makeStyles((theme: Theme) => {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         height: 303,
         marginLeft: 'auto',
         marginRight: 'auto'

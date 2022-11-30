@@ -28,9 +28,9 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import Typography from '@material-ui/core/Typography'
-import TuneIcon from '@material-ui/icons/Tune'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import TuneIcon from '@mui/icons-material/Tune'
 
 import { commonComponentStyles } from '../common'
 import { Team, useTeam } from '../../lib/team'

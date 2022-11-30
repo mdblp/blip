@@ -28,7 +28,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-import ThemeProvider from '@material-ui/styles/ThemeProvider'
+import ThemeProvider from '@mui/styles/ThemeProvider'
 import * as authHookMock from '../../../../lib/auth'
 import { getTheme } from '../../../../components/theme'
 import TeamInformation, { TeamInformationProps } from '../../../../components/team/team-information'
@@ -105,12 +105,16 @@ describe('TeamInformation', () => {
   }
 
   function getTeamInformationJSX(props: TeamInformationProps = { team, refreshParent: refresh }): JSX.Element {
-    return <ThemeProvider theme={getTheme()}>
-      <TeamInformation
-        team={props.team}
-        refreshParent={props.refreshParent}
-      />
-    </ThemeProvider>
+    return (
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={getTheme()}>
+          <TeamInformation
+            team={props.team}
+            refreshParent={props.refreshParent}
+          />
+        </ThemeProvider>
+      </StyledEngineProvider>
+    )
   }
 
   function renderTeamInformation(props: TeamInformationProps = { team, refreshParent: refresh }) {

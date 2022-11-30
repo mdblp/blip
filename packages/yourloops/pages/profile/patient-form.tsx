@@ -29,12 +29,12 @@ import React from 'react'
 import { tz } from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
-import InputLabel from '@material-ui/core/InputLabel'
-import FormControl from '@material-ui/core/FormControl'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
+import { ClassNameMap } from '@mui/styles/withStyles'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
 import { User } from '../../lib/auth'
 import { Errors } from './models'
@@ -95,7 +95,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
           id="profile-select-gender"
           labelId="profile-select-gender-label"
           value={sex}
-          onChange={event => setSex(event.target.value as string)}
+          onChange={event => setSex(event.target.value)}
         >
           <MenuItem value="" aria-label={t('none')}>{t('none')}</MenuItem>
           <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>

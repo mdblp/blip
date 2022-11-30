@@ -28,8 +28,8 @@
 import React, { FunctionComponent } from 'react'
 import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 
 interface SignupStepperActionButtonsProps {

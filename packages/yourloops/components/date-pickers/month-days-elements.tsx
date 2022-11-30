@@ -28,7 +28,9 @@
 import React from 'react'
 import clsx from 'clsx'
 import { Dayjs, isDayjs } from 'dayjs'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
+
+import makeStyles from '@mui/styles/makeStyles'
 
 import { CalendarSelection, CalendarSelectionRange } from './models'
 import Day from './day'
@@ -49,7 +51,7 @@ export const dayStyles = makeStyles((theme: Theme) => ({
     height: 40,
     placeSelf: 'center',
     borderRadius: '50%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 32,
       height: 32
     }

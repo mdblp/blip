@@ -27,18 +27,18 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import makeStyles from '@mui/styles/makeStyles'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 
 import MedicalServiceIcon from '../icons/MedicalServiceIcon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
@@ -93,7 +93,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
             data-testid="patient-team-selector"
             label={t('select-team')}
             value={selectedTeamId}
-            onChange={(e) => setSelectedTeamId(e.target.value as string)}
+            onChange={(e) => setSelectedTeamId(e.target.value)}
           >
             {sortedTeams.map((team, index) => (
               <MenuItem

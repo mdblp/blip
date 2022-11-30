@@ -29,8 +29,9 @@ import _ from 'lodash'
 import React from 'react'
 import { Dayjs } from 'dayjs'
 import clsx from 'clsx'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Typography from '@mui/material/Typography'
 
 import {
   CalendarPosition,
@@ -66,20 +67,20 @@ const calendarStyles = makeStyles((theme: Theme) => {
       justifyContent: 'center',
       rowGap: 3,
       minWidth: '100%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         rowGap: 1
       }
     },
     oneMonthHeight: {
       // Fix the height to be sure days buttons stay aligned during transition (animation)
       height: '255px', // 6 * 40px + 5*3px (weekdays + 6 lines for days in a month + 5 * rowGap)
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         height: '233px' // 6 * 38px + 5*1px
       }
     },
     dayLabel: {
       textAlign: 'center',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         height: '20px'
       }
     },

@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import SvgIcon, { SvgIconProps } from '@material-ui/core/SvgIcon'
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
 
 function PersonRemoveIcon(props: SvgIconProps): JSX.Element {
   // For some reason this icon is not available with material-ui

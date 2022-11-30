@@ -28,11 +28,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Button from '@mui/material/Button'
 
-import AddIcon from '@material-ui/icons/Add'
-import Box from '@material-ui/core/Box'
+import AddIcon from '@mui/icons-material/Add'
+import Box from '@mui/material/Box'
 
 interface BarProps {
   /** Add a caregiver */
@@ -51,7 +52,7 @@ const pageBarStyles = makeStyles(
         marginLeft: 'auto'
       },
       buttonAddCaregiverText: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
           display: 'none'
         }
       }

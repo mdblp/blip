@@ -26,10 +26,10 @@
  */
 
 import React from 'react'
-import ThemeProvider from '@material-ui/styles/ThemeProvider'
+import ThemeProvider from '@mui/styles/ThemeProvider'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
 
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
@@ -168,17 +168,21 @@ describe('MemberRow', () => {
   }
 
   function getMemberRowJSX(memberProps: TeamMembersProps = props): JSX.Element {
-    return <ThemeProvider theme={getTheme()}>
-      <Table>
-        <TableBody>
-          <MemberRow
-            team={memberProps.team}
-            teamMember={memberProps.teamMember}
-            refreshParent={memberProps.refreshParent}
-          />
-        </TableBody>
-      </Table>
-    </ThemeProvider>
+    return (
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={getTheme()}>
+          <Table>
+            <TableBody>
+              <MemberRow
+                team={memberProps.team}
+                teamMember={memberProps.teamMember}
+                refreshParent={memberProps.refreshParent}
+              />
+            </TableBody>
+          </Table>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    )
   }
 
   it('should display correct information when user is a pending admin', () => {

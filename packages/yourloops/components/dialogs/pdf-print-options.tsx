@@ -29,22 +29,24 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs, { Dayjs } from 'dayjs'
 
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
+import { Theme, useTheme } from '@mui/material/styles'
 
-import DateRangeIcon from '@material-ui/icons/DateRange'
+import makeStyles from '@mui/styles/makeStyles'
 
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Button from '@material-ui/core/Button'
-import Box from '@material-ui/core/Box'
-import Chip from '@material-ui/core/Chip'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import { Radio, RadioGroup } from '@material-ui/core'
+import DateRangeIcon from '@mui/icons-material/DateRange'
+
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import Chip from '@mui/material/Chip'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import { Radio, RadioGroup } from '@mui/material'
 
 import { CalendarOrientation } from '../date-pickers/models'
 import RangeDatePicker from '../date-pickers/range-date-picker'
@@ -86,7 +88,7 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
     presetButtons: {
       marginTop: theme.spacing(1),
       marginRight: theme.spacing(1),
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginRight: 0,
         width: 'calc(50% - 5px)'
       }
@@ -133,7 +135,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
   const matchLandscape = useMediaQuery(theme.breakpoints.up('sm'))
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
   const classes = printOptionsStyle()
   const orientation: CalendarOrientation = matchLandscape ? 'landscape' : 'portrait'
 

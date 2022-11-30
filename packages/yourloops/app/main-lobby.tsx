@@ -29,8 +29,9 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
+import { Theme, ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import CssBaseline from '@mui/material/CssBaseline'
 
 import { useAuth, User } from '../lib/auth'
 import { getTheme } from '../components/theme'
@@ -51,6 +52,11 @@ import {
   RENEW_CONSENT_PATH,
   TRAINING_PATH
 } from '../lib/diabeloop-url'
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 const routeStyle = makeStyles<Theme>(() => {
   return {
@@ -115,23 +121,25 @@ export function MainLobby(): JSX.Element {
       {redirectTo
         ? <Redirect to={redirectTo} />
         : (!isLoading && !fetchingUser &&
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <SnackbarContextProvider context={DefaultSnackbarContext}>
-              <div className={style}>
-                <Switch>
-                  <Route exact path="/product-labelling" component={ProductLabellingPage} />
-                  <Route exact path="/login" component={LoginPage} />
-                  <Route exact path="/complete-signup" component={CompleteSignUpPage} />
-                  <Route exact path="/renew-consent" component={ConsentPage} />
-                  <Route exact path="/new-consent" component={PatientConsentPage} />
-                  <Route exact path="/training" component={TrainingPage} />
-                  <Route component={MainLayout} />
-                </Switch>
-              </div>
-            </SnackbarContextProvider>
-            <Footer />
-          </ThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <SnackbarContextProvider context={DefaultSnackbarContext}>
+                <div className={style}>
+                  <Switch>
+                    <Route exact path="/product-labelling" component={ProductLabellingPage} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/complete-signup" component={CompleteSignUpPage} />
+                    <Route exact path="/renew-consent" component={ConsentPage} />
+                    <Route exact path="/new-consent" component={PatientConsentPage} />
+                    <Route exact path="/training" component={TrainingPage} />
+                    <Route component={MainLayout} />
+                  </Switch>
+                </div>
+              </SnackbarContextProvider>
+              <Footer />
+            </ThemeProvider>
+          </StyledEngineProvider>
           )}
     </React.Fragment>
   )

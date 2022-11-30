@@ -31,24 +31,24 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 
-import { makeStyles } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CardHeader from '@material-ui/core/CardHeader'
-import Divider from '@material-ui/core/Divider'
-import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableRow from '@material-ui/core/TableRow'
-import Typography from '@material-ui/core/Typography'
+import makeStyles from '@mui/styles/makeStyles'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import Divider from '@mui/material/Divider'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableRow from '@mui/material/TableRow'
+import Typography from '@mui/material/Typography'
 import SettingsDialog from './settingsDialog'
 
-import PhonelinkSetupOutlinedIcon from '@material-ui/icons/PhonelinkSetupOutlined'
-import MoreHorizOutlinedIcon from '@material-ui/icons/MoreHorizOutlined'
+import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
+import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 
 import { BasicsChart } from 'tideline'
 import Stats from './stats'
@@ -151,103 +151,105 @@ const DeviceUsage = (props) => {
     }
   }
 
-  return (
-    <>
-      <Card id="device-usage" className={classes.card}>
-        <CardHeader
-          id="device-usage-header"
-          avatar={<PhonelinkSetupOutlinedIcon/>}
-          className={classes.cardHeader}
-          title={t('device-usage')}
-          action={
-            <IconButton data-testid="settings-button" aria-label="settings" onClick={()=>setDialogOpened(true)}>
-              <MoreHorizOutlinedIcon />
-            </IconButton>
-          }
-        />
-        <CardContent id="device-usage-content" className={classes.cardContent}>
-          <Box id="device-usage-device">
-            <Typography className={classes.sectionTitles}>{t('devices')}</Typography>
-            <Grid className={classes.sectionContent} container spacing={1}>
-              {Object.keys(deviceData).map(
-                (key) =>
-                  <React.Fragment key={key}>
-                    <Grid item xs={6}>
-                      <div className={`${classes.deviceLabels} device-label`}>
-                        {deviceData[key].label}
-                      </div>
-                    </Grid>
-                    <Grid item xs={6} className="device-value">
-                      {deviceData[key].value}
-                    </Grid>
-                  </React.Fragment>
-              )}
-            </Grid>
-          </Box>
-          <Divider variant="fullWidth" className={classes.divider}/>
-          <Box id="device-usage-updates" className={classes.parameterChanges}>
-            <Typography className={classes.sectionTitles}>{t('last-updates')}</Typography>
-            <TableContainer className={classes.parameterChangesTable}>
-              <Table>
-                <TableBody className={classes.sectionContent}>
-                  {paramChanges.map((row) =>
-                    (
-                      <TableRow
-                        key={row.key}
-                        data-param={row.name}
-                        data-changetype={row.changeType}
-                        data-isodate={row.effectiveDate}
-                        className={`${classes.tableRows} parameter-update`}
-                      >
-                        {['date', 'value'].map((column) => {
-                          return (
-                            <TableCell className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`} key={`${column}-${row.key}`}>
-                              {column === 'date' ? row.parameterDate : getLabel(row, t)}
-                            </TableCell>
-                          )
-                        })}
-                      </TableRow>
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-          <Divider variant="fullWidth" className={classes.divider}/>
-          <Stats
-            bgPrefs={bgPrefs}
-            //eslint-disable-next-line
-            bgSource={dataUtil.bgSource}
-            chartPrefs={chartPrefs}
-            chartType="deviceUsage"
-            dataUtil={dataUtil}
-            endpoints={endpoints}
-            loading={loading}
-          />
-          <BasicsChart
-            //eslint-disable-next-line
-            bgClasses={bgPrefs.bgClasses}
-            //eslint-disable-next-line
-            bgUnits={bgPrefs.bgUnits}
-            onSelectDay={()=>null}
-            patient={patient}
-            tidelineData={tidelineData}
-            permsOfLoggedInUser={permsOfLoggedInUser}
-            timePrefs={timePrefs}
-            trackMetric={trackMetric} />
-        </CardContent>
-      </Card>
-      <SettingsDialog
-        bgPrefs={bgPrefs}
-        timePrefs={timePrefs}
-        patientData={tidelineData}
-        onSwitchToDaily={onSwitchToDaily}
-        trackMetric={trackMetric}
-        open={dialogOpened}
-        setOpen={setDialogOpened}
+  return <>
+    <Card id="device-usage" className={classes.card}>
+      <CardHeader
+        id="device-usage-header"
+        avatar={<PhonelinkSetupOutlinedIcon/>}
+        className={classes.cardHeader}
+        title={t('device-usage')}
+        action={
+          <IconButton
+            data-testid="settings-button"
+            aria-label="settings"
+            onClick={()=>setDialogOpened(true)}
+            size="large">
+            <MoreHorizOutlinedIcon />
+          </IconButton>
+        }
       />
-    </>
-  )
+      <CardContent id="device-usage-content" className={classes.cardContent}>
+        <Box id="device-usage-device">
+          <Typography className={classes.sectionTitles}>{t('devices')}</Typography>
+          <Grid className={classes.sectionContent} container spacing={1}>
+            {Object.keys(deviceData).map(
+              (key) =>
+                <React.Fragment key={key}>
+                  <Grid item xs={6}>
+                    <div className={`${classes.deviceLabels} device-label`}>
+                      {deviceData[key].label}
+                    </div>
+                  </Grid>
+                  <Grid item xs={6} className="device-value">
+                    {deviceData[key].value}
+                  </Grid>
+                </React.Fragment>
+            )}
+          </Grid>
+        </Box>
+        <Divider variant="fullWidth" className={classes.divider}/>
+        <Box id="device-usage-updates" className={classes.parameterChanges}>
+          <Typography className={classes.sectionTitles}>{t('last-updates')}</Typography>
+          <TableContainer className={classes.parameterChangesTable}>
+            <Table>
+              <TableBody className={classes.sectionContent}>
+                {paramChanges.map((row) =>
+                  (
+                    <TableRow
+                      key={row.key}
+                      data-param={row.name}
+                      data-changetype={row.changeType}
+                      data-isodate={row.effectiveDate}
+                      className={`${classes.tableRows} parameter-update`}
+                    >
+                      {['date', 'value'].map((column) => {
+                        return (
+                          <TableCell className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`} key={`${column}-${row.key}`}>
+                            {column === 'date' ? row.parameterDate : getLabel(row, t)}
+                          </TableCell>
+                        )
+                      })}
+                    </TableRow>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+        <Divider variant="fullWidth" className={classes.divider}/>
+        <Stats
+          bgPrefs={bgPrefs}
+          //eslint-disable-next-line
+          bgSource={dataUtil.bgSource}
+          chartPrefs={chartPrefs}
+          chartType="deviceUsage"
+          dataUtil={dataUtil}
+          endpoints={endpoints}
+          loading={loading}
+        />
+        <BasicsChart
+          //eslint-disable-next-line
+          bgClasses={bgPrefs.bgClasses}
+          //eslint-disable-next-line
+          bgUnits={bgPrefs.bgUnits}
+          onSelectDay={()=>null}
+          patient={patient}
+          tidelineData={tidelineData}
+          permsOfLoggedInUser={permsOfLoggedInUser}
+          timePrefs={timePrefs}
+          trackMetric={trackMetric} />
+      </CardContent>
+    </Card>
+    <SettingsDialog
+      bgPrefs={bgPrefs}
+      timePrefs={timePrefs}
+      patientData={tidelineData}
+      onSwitchToDaily={onSwitchToDaily}
+      trackMetric={trackMetric}
+      open={dialogOpened}
+      setOpen={setDialogOpened}
+    />
+  </>
 }
 
 DeviceUsage.propType = {

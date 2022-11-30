@@ -27,12 +27,12 @@
 
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
-import AssignmentIcon from '@material-ui/icons/Assignment'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
+import AssignmentIcon from '@mui/icons-material/Assignment'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
 import MedicalRecordList from './medical-record-list'
 import PrescriptionList from './prescription-list'
 import { Patient } from '../../../lib/data/patient'

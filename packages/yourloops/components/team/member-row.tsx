@@ -28,10 +28,11 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Checkbox from '@material-ui/core/Checkbox'
-import AccessTimeIcon from '@material-ui/icons/AccessTime'
-import IconButton from '@material-ui/core/IconButton'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Checkbox from '@mui/material/Checkbox'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import IconButton from '@mui/material/IconButton'
 
 import { Team, TeamMember, useTeam } from '../../lib/team'
 import { UserInvitationStatus } from '../../models/generic'
@@ -46,7 +47,7 @@ import TeamUtils from '../../lib/team/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkboxTableCellBody: {
-    padding: `0 ${theme.spacing(2)}px !important`
+    padding: `0 ${theme.spacing(2)} !important`
   },
   deleteCell: {
     color: theme.palette.primary.main
@@ -193,7 +194,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
               disabled={removeMemberDisabled}
               aria-label="remove-member-button"
               onClick={() => setShowConfirmRemoveDialog(true)}
-            >
+              size="large">
               <PersonRemoveIcon />
             </IconButton>
           </StyledTableCell>

@@ -29,14 +29,15 @@ import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
 
 import appConfig from '../../lib/config'
 
@@ -47,7 +48,7 @@ const loginStyle = makeStyles((theme: Theme) => {
     },
     cardContent: {
       textAlign: 'center',
-      margin: `${theme.spacing(2)}px 0`
+      margin: `${theme.spacing(2)} 0`
     },
     cardActions: {
       justifyContent: 'center'

@@ -18,8 +18,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import i18next from 'i18next'
-import Grid from '@material-ui/core/Grid'
-import LockIcon from '@material-ui/icons/LockOutlined'
+import Grid from '@mui/material/Grid'
+import LockIcon from '@mui/icons-material/LockOutlined'
 
 import colors from '../../../styles/colors.css'
 import styles from './ConfidentialTooltip.css'

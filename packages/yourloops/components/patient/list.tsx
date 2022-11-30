@@ -29,7 +29,7 @@ import _ from 'lodash'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Container from '@material-ui/core/Container'
+import Container from '@mui/material/Container'
 
 import { PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
 import metrics from '../../lib/metrics'

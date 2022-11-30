@@ -32,7 +32,7 @@ import { Team } from '../team'
 import { PatientFilterStats } from '../team/models'
 import { PatientFilterTypes } from '../../models/generic'
 import { MedicalData } from '../../models/device-data'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@mui/material'
 import usePatientProviderCustomHook from './hook'
 
 export interface PatientContextResult {

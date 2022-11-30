@@ -28,10 +28,10 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import Tooltip from '@material-ui/core/Tooltip'
+import Box from '@mui/material/Box'
+import Tooltip from '@mui/material/Tooltip'
 
-import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined'
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 
 function CertifiedProfessionalIcon({ id }: { id?: string }): JSX.Element {
   const { t } = useTranslation('yourloops')

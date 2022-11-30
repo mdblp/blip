@@ -22,9 +22,9 @@ import moment from 'moment-timezone'
 import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import TextField from '@material-ui/core/TextField'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
 
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'

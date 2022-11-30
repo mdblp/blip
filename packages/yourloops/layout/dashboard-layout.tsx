@@ -27,10 +27,12 @@
 
 import React, { useState } from 'react'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
-import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
+import makeStyles from '@mui/styles/makeStyles'
+
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 
 import MainHeader from '../components/header-bars/main-header'
 import MainDrawer from '../components/menus/drawer/main-drawer'

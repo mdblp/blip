@@ -25,13 +25,13 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import bows from 'bows'
 
-import { makeStyles } from '@material-ui/core/styles'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import CloseIcon from '@material-ui/icons/Close'
+import makeStyles from '@mui/styles/makeStyles'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import CloseIcon from '@mui/icons-material/Close'
 
 import * as viz from 'tidepool-viz'
 
@@ -106,7 +106,11 @@ const SettingsDialog = (props) => {
         <Typography className={classes.dialogTitle}>
           <strong>{t('device-usage')}</strong>
         </Typography>
-        <IconButton data-testid="close-settings-dialog" className={classes.closeButton} onClick={()=>setOpen(false)}>
+        <IconButton
+          data-testid="close-settings-dialog"
+          className={classes.closeButton}
+          onClick={()=>setOpen(false)}
+          size="large">
           <CloseIcon />
         </IconButton>
       </DialogTitle>

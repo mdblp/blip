@@ -29,9 +29,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 
 import {
   CalendarOrientation,

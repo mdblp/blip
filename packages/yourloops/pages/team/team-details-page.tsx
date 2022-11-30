@@ -29,14 +29,15 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory, useParams } from 'react-router-dom'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import Box from '@material-ui/core/Box'
-import DesktopMacIcon from '@material-ui/icons/DesktopMac'
-import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import Box from '@mui/material/Box'
+import DesktopMacIcon from '@mui/icons-material/DesktopMac'
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
 import { Team, useTeam } from '../../lib/team'
 import BasicDropdown from '../../components/dropdown/basic-dropdown'
@@ -145,7 +146,11 @@ function TeamDetailsPage(): JSX.Element {
       {dropdownData.selectedTeam &&
         <Box role="main" paddingLeft={2}>
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.disableRipple} aria-label="back-button" onClick={redirectToDashboard}>
+            <IconButton
+              className={classes.disableRipple}
+              aria-label="back-button"
+              onClick={redirectToDashboard}
+              size="large">
               <ArrowBackIcon />
             </IconButton>
             <GroupOutlinedIcon />

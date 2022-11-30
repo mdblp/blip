@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import Menu, { MenuProps } from '@material-ui/core/Menu'
+import Menu, { MenuProps } from '@mui/material/Menu'
 
 interface MenuLayoutProps extends MenuProps {
   open: boolean

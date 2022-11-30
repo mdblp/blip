@@ -20,22 +20,22 @@ import PropTypes from 'prop-types'
 import cx from 'classnames'
 import i18next from 'i18next'
 
-import FormControl from '@material-ui/core/FormControl'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import GetAppIcon from '@material-ui/icons/GetApp'
-import Face from '@material-ui/icons/Face'
-import ArrowBack from '@material-ui/icons/ArrowBack'
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
-import SkipNextIcon from '@material-ui/icons/SkipNext'
-import AccessTime from '@material-ui/icons/AccessTime'
-import IconButton from '@material-ui/core/IconButton'
-import Dashboard from '@material-ui/icons/Dashboard'
-import Today from '@material-ui/icons/Today'
-import TrendingUp from '@material-ui/icons/TrendingUp'
+import FormControl from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import GetAppIcon from '@mui/icons-material/GetApp'
+import Face from '@mui/icons-material/Face'
+import ArrowBack from '@mui/icons-material/ArrowBack'
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import SkipNextIcon from '@mui/icons-material/SkipNext'
+import AccessTime from '@mui/icons-material/AccessTime'
+import IconButton from '@mui/material/IconButton'
+import Dashboard from '@mui/icons-material/Dashboard'
+import Today from '@mui/icons-material/Today'
+import TrendingUp from '@mui/icons-material/TrendingUp'
 
 const t = i18next.t.bind(i18next)
 
@@ -137,7 +137,7 @@ class TidelineHeader extends React.Component {
           <div className="subnav-left-container">
             {this.props.userIsHCP &&
             <div id="subnav-hcp-container" data-testid="patient-dropdown">
-              <IconButton onClick={() => this.props.onClickNavigationBack()}>
+              <IconButton onClick={() => this.props.onClickNavigationBack()} size="large">
                 <ArrowBack id="subnav-arrow-back" data-testid="subnav-arrow-back" />
               </IconButton>
               <Face className="subnav-icon" />
@@ -237,7 +237,13 @@ class TidelineHeader extends React.Component {
     }
 
     return (
-      <IconButton id={id} type="button" className={buttonClass} onClick={onClick} disabled={disabled}>
+      <IconButton
+        id={id}
+        type="button"
+        className={buttonClass}
+        onClick={onClick}
+        disabled={disabled}
+        size="large">
         {iconComponent}
       </IconButton>
     )

@@ -29,12 +29,12 @@ import React, { FunctionComponent, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
 import metrics from '../../lib/metrics'
 import { useSignUpFormState } from './signup-formstate-context'
@@ -161,7 +161,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
           data-testid="country-selector"
           value={signupForm.profileCountry}
           onBlur={validateCountry}
-          onChange={event => updateForm(SignupFormKey.ProfileCountry, event.target.value as string)}
+          onChange={event => updateForm(SignupFormKey.ProfileCountry, event.target.value)}
         >
           {availableCountries.map((item) => (
             <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
@@ -186,7 +186,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
             data-testid="hcp-profession-selector"
             value={signupForm.hcpProfession ?? ''}
             onBlur={validateHcpProfession}
-            onChange={event => updateForm(SignupFormKey.HcpProfession, event.target.value as string)}
+            onChange={event => updateForm(SignupFormKey.HcpProfession, event.target.value)}
           >
             {HcpProfessionList.map((item) => (
               <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>

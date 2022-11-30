@@ -29,9 +29,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import proSanteLogo from 'pro-sante-connect.svg'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 interface Props {
   onClick: () => void

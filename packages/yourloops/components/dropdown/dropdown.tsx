@@ -27,11 +27,11 @@
 
 import React from 'react'
 
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import { makeStyles } from '@material-ui/styles'
-import { Theme } from '@material-ui/core/styles'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import { makeStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
+import OutlinedInput from '@mui/material/OutlinedInput'
 
 export interface BasicDropdownProps {
   id: string

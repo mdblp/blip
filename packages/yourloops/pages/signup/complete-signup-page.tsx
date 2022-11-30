@@ -28,12 +28,13 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
 
 import SignUpStepper from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
@@ -46,7 +47,7 @@ const formStyle = makeStyles((theme: Theme) => ({
   cardContent: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    padding: `0 ${theme.spacing(4)}px`
+    padding: `0 ${theme.spacing(4)}`
   },
   logoHeader: {
     margin: theme.spacing(2)

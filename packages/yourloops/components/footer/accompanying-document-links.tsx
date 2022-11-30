@@ -26,9 +26,9 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import Link from '@material-ui/core/Link'
+import Link from '@mui/material/Link'
 import { Link as RouterLink } from 'react-router-dom'
-import Box from '@material-ui/core/Box'
+import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 import { User } from '../../lib/auth'

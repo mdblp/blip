@@ -26,7 +26,7 @@
  */
 
 import { Dayjs } from 'dayjs'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 export type CalendarOrientation = 'landscape' | 'portrait'
 export type CalendarPosition = 'first' | 'last'

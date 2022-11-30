@@ -28,10 +28,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import InputBase from '@material-ui/core/InputBase'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import InputBase from '@mui/material/InputBase'
 
-import SearchIcon from '@material-ui/icons/Search'
+import SearchIcon from '@mui/icons-material/Search'
 
 export interface PatientFiltersProps {
   filter: string
@@ -43,12 +44,12 @@ const filtersStyles = makeStyles((theme: Theme) => {
     formControl: {
       marginRight: theme.spacing(1),
       minWidth: 120,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(1),
         marginLeft: 0,
         width: '50%'
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         width: '100%',
         marginRight: 0,
         marginBottom: theme.spacing(2),
@@ -62,7 +63,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`, // eslint-disable-line no-magic-numbers
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`, // eslint-disable-line no-magic-numbers
       transition: theme.transitions.create('width'),
       width: '100%'
     },
@@ -80,7 +81,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       [theme.breakpoints.up('sm')]: {
         width: '100%'
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '50%',
         marginRight: 0,
         marginLeft: theme.spacing(1),
@@ -88,7 +89,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
           width: '100%'
         }
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         width: '100%',
         marginLeft: 0,
         height: '3em'
@@ -111,7 +112,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       [theme.breakpoints.up('sm')]: {
         width: '15em'
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: 'initial'
       }
     },

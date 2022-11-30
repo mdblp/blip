@@ -31,16 +31,17 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import CardMedia from '@material-ui/core/CardMedia'
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-import CardContent from '@material-ui/core/CardContent'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import CardContent from '@mui/material/CardContent'
 
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 
 import { HistoryState } from '../../models/generic'
 import { Profile } from '../../models/user'
@@ -55,7 +56,7 @@ interface ConsentProps {
 const style = makeStyles((theme: Theme) => {
   return {
     mainContainer: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         padding: 0
       }
     },
@@ -66,7 +67,7 @@ const style = makeStyles((theme: Theme) => {
     cardContent: {
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(0),
         marginRight: theme.spacing(0)
       }
@@ -78,7 +79,7 @@ const style = makeStyles((theme: Theme) => {
       display: 'flex',
       justifyContent: 'space-around',
       marginTop: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         justifyContent: 'space-between'
       }
     }
@@ -132,7 +133,7 @@ function Page(props: ConsentProps): JSX.Element {
           container
           spacing={0}
           alignItems="center"
-          justify="center"
+          justifyContent="center"
           className={classes.centeredGrid}
         >
           <Grid item xs={12}>

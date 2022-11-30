@@ -30,9 +30,9 @@ import React, { FunctionComponent, useMemo } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 
-import Alert from '@material-ui/lab/Alert'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 import { PatientFilterTypes } from '../models/generic'
 import metrics from '../lib/metrics'

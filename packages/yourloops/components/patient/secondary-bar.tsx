@@ -28,13 +28,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Button from '@mui/material/Button'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { useAuth } from '../../lib/auth'
 import PatientFilters from '../header-bars/patient-filters'
-import AccessTime from '@material-ui/icons/AccessTime'
-import { Box } from '@material-ui/core'
+import AccessTime from '@mui/icons-material/AccessTime'
+import { Box } from '@mui/material'
 
 export interface PatientListBarProps {
   filter: string
@@ -65,7 +66,7 @@ const pageBarStyles = makeStyles(
         marginLeft: 'auto'
       },
       buttonAddPatientText: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
           display: 'none'
         }
       },

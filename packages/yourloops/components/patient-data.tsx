@@ -30,8 +30,8 @@ import bows from 'bows'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
+import makeStyles from '@mui/styles/makeStyles'
+import Container from '@mui/material/Container'
 
 import Blip from 'blip'
 import appConfig from '../lib/config'

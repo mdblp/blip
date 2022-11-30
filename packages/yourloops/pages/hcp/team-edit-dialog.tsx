@@ -28,20 +28,21 @@
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import FormControl from '@material-ui/core/FormControl'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import InputLabel from '@material-ui/core/InputLabel'
-import Link from '@material-ui/core/Link'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { Theme, useTheme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import FormControl from '@mui/material/FormControl'
+import InputAdornment from '@mui/material/InputAdornment'
+import InputLabel from '@mui/material/InputLabel'
+import Link from '@mui/material/Link'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import locales from '../../../../locales/languages.json'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
@@ -54,7 +55,7 @@ import {
 } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import { TeamEditModalContentProps } from './types'
-import Box from '@material-ui/core/Box'
+import Box from '@mui/material/Box'
 
 interface LocalesCountries {
   [code: string]: {
@@ -333,7 +334,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               name="country"
               label={t('team-edit-dialog-placeholder-addr-country')}
               value={addrCountry}
-              onChange={(e) => setAddrCountry(e.target.value as string)}
+              onChange={(e) => setAddrCountry(e.target.value)}
             >
               {optionsCountries}
             </Select>

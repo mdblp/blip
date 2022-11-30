@@ -38,7 +38,7 @@ import { useNotification } from '../notifications/hook'
 import { Team, TeamContext, TeamMember } from './models'
 import TeamApi from './team-api'
 import TeamUtils from './utils'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@mui/material'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 

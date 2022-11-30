@@ -28,11 +28,11 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import InsertChartOutlinedIcon from '@material-ui/icons/InsertChartOutlined'
+import makeStyles from '@mui/styles/makeStyles'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import { useTranslation } from 'react-i18next'
 import Stats from './stats'
 

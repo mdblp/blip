@@ -28,18 +28,19 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import Paper from '@material-ui/core/Paper'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Table from '@material-ui/core/Table'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Button from '@material-ui/core/Button'
-import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
-import TableBody from '@material-ui/core/TableBody'
-import GroupAddIcon from '@material-ui/icons/GroupAdd'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Typography from '@mui/material/Typography'
+import Table from '@mui/material/Table'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Button from '@mui/material/Button'
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
+import TableBody from '@mui/material/TableBody'
+import GroupAddIcon from '@mui/icons-material/GroupAdd'
 
 import { Team, TeamMember, useTeam } from '../../lib/team'
 import MemberRow from './member-row'
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(2)
   },
   checkboxTableCellHeader: {
-    padding: `0 ${theme.spacing(1)}px !important`
+    padding: `0 ${theme.spacing(1)} !important`
   },
   tableCellHeader: {
     backgroundColor: theme.palette.common.white,

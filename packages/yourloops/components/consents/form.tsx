@@ -28,12 +28,13 @@
 import React, { FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { Theme, makeStyles } from '@material-ui/core/styles'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormGroup from '@material-ui/core/FormGroup'
-import Link from '@material-ui/core/Link'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import Checkbox from '@mui/material/Checkbox'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
+import Link from '@mui/material/Link'
 
 import { UserRoles } from '../../models/user'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
@@ -51,9 +52,6 @@ const formStyles = makeStyles(
       },
       checkbox: {
         marginBottom: 'auto'
-      },
-      labelMandatory: {
-        marginLeft: theme.spacing(1) + 9
       }
     }
   },

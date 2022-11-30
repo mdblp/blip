@@ -26,8 +26,8 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 
 interface IconActionButtonProps {
   ariaLabel?: string

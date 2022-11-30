@@ -29,14 +29,16 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import GroupIcon from '@material-ui/icons/Group'
-import PersonIcon from '@material-ui/icons/Person'
-import HelpIcon from '@material-ui/icons/Help'
+import { Theme } from '@mui/material/styles'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
+import GroupIcon from '@mui/icons-material/Group'
+import PersonIcon from '@mui/icons-material/Person'
+import HelpIcon from '@mui/icons-material/Help'
 import MedicalServiceIcon from '../../components/icons/MedicalServiceIcon'
-import IconButton from '@material-ui/core/IconButton'
-import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
+import Tooltip from '@mui/material/Tooltip'
 
 import { IUser, UserRoles } from '../../models/user'
 import { INotification, NotificationType } from '../../lib/notifications/models'
@@ -67,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       width: '100%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap',
         padding: theme.spacing(1)
       }
@@ -77,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '100%',
         marginTop: theme.spacing(1)
       }
@@ -85,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) =>
     notificationSpan: { marginLeft: '1em', flex: '1' },
     buttonAccept: {
       marginLeft: '1em',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: 'auto'
       }
     },

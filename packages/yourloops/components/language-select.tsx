@@ -26,11 +26,12 @@
  */
 
 import React from 'react'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
 import { useTranslation } from 'react-i18next'
 
 const languageSelectStyle = makeStyles((theme: Theme) => {

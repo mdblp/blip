@@ -25,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import TableCell from '@material-ui/core/TableCell'
-import { Tooltip, withStyles } from '@material-ui/core'
-import TableRow from '@material-ui/core/TableRow'
-import { styled } from '@material-ui/core/styles'
+import TableCell from '@mui/material/TableCell'
+import { Tooltip } from '@mui/material'
+import withStyles from '@mui/styles/withStyles'
+import TableRow from '@mui/material/TableRow'
+import { styled } from '@mui/material/styles'
 
 export const StyledTableCell = styled(TableCell)((props) => ({
   '&': {

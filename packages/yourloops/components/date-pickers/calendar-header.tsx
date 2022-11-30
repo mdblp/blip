@@ -30,11 +30,11 @@ import { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
 
-import { makeStyles } from '@material-ui/core/styles'
-import IconButton from '@material-ui/core/IconButton'
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
-import Typography from '@material-ui/core/Typography'
+import makeStyles from '@mui/styles/makeStyles'
+import IconButton from '@mui/material/IconButton'
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import Typography from '@mui/material/Typography'
 
 import { CalendarOrientation, CalendarPosition, CalendarChangeMonth, animationStyle } from './models'
 
@@ -186,7 +186,7 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
         aria-label={t('aria-calendar-button-prev-month')}
         onClick={onPrevButtonEvent}
         onKeyUp={onPrevButtonEvent}
-      >
+        size="large">
         <NavigateBeforeIcon />
       </IconButton>
 
@@ -202,7 +202,7 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
         aria-label={t('aria-calendar-button-next-month')}
         onClick={onNextButtonEvent}
         onKeyUp={onNextButtonEvent}
-      >
+        size="large">
         <NavigateNextIcon />
       </IconButton>
     </div>

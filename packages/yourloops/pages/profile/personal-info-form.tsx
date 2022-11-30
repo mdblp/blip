@@ -28,12 +28,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import AccountCircle from '@material-ui/icons/AccountCircle'
+import AccountCircle from '@mui/icons-material/AccountCircle'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
-import Box from '@material-ui/core/Box'
-import FormControl from '@material-ui/core/FormControl'
-import TextField from '@material-ui/core/TextField'
+import { ClassNameMap } from '@mui/styles/withStyles'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
 
 import appConfig from '../../lib/config'
 import { useAuth, User } from '../../lib/auth'

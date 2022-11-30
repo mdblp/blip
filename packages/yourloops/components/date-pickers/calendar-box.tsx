@@ -28,7 +28,9 @@
 import React from 'react'
 import { Dayjs } from 'dayjs'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
+
+import makeStyles from '@mui/styles/makeStyles'
 
 import {
   CalendarOrientation,
@@ -68,7 +70,7 @@ const calendarBoxStyles = makeStyles((theme: Theme) => {
       overflowY: 'auto',
       overflowX: 'hidden',
       width: 300,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: 250,
         marginLeft: 'auto',
         marginRight: 'auto'

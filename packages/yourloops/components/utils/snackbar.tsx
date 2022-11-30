@@ -29,8 +29,8 @@ import React from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 
-import SnackbarUI from '@material-ui/core/Snackbar'
-import Alert from '@material-ui/lab/Alert'
+import SnackbarUI from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
 
 export enum AlertSeverity {
   error = 'error',

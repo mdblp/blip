@@ -30,9 +30,9 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 
-import Box from '@material-ui/core/Box'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
 
 import { UserInvitationStatus } from '../../../models/generic'
 import { UserRoles } from '../../../models/user'

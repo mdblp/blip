@@ -26,8 +26,9 @@
  */
 
 import React from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Box, Typography } from '@material-ui/core'
+import { Theme } from '@mui/material/styles'
+import makeStyles from '@mui/styles/makeStyles'
+import { Box, Typography } from '@mui/material'
 import { Patient } from '../../lib/data/patient'
 import { useTranslation } from 'react-i18next'
 import { genderLabels } from '../../lib/auth/helpers'

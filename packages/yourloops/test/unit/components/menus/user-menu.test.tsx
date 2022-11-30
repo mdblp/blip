@@ -31,7 +31,7 @@ import { renderToString } from 'react-dom/server'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-import FaceIcon from '@material-ui/icons/Face'
+import FaceIcon from '@mui/icons-material/Face'
 import RoundedHospitalIcon from '../../../../components/icons/RoundedHospitalIcon'
 import StethoscopeIcon from '../../../../components/icons/StethoscopeIcon'
 
