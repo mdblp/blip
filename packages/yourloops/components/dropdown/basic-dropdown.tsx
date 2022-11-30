@@ -29,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 import OutlinedInput from '@mui/material/OutlinedInput'
@@ -75,7 +75,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
     }
   }
 
-  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
+  const handleSelectChange = (event: SelectChangeEvent<unknown>): void => {
     const value = event.target.value as string
     setSelectedValue(value)
     onSelect(value)
@@ -87,11 +87,10 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       data-testid={`basic-dropdown-${id}-selector`}
       value={selectedValue}
       className={classes.select}
-      variant="outlined"
       input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}
       MenuProps={MenuProps}
-      classes={error ? { root: classes.error } : undefined}
+      classes={error ? { select: classes.error } : undefined}
     >
       {values.map(item => (
         <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item} data-testid={`basic-dropdown-${id}-menuitem-${item}`}>

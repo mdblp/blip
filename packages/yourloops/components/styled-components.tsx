@@ -28,13 +28,13 @@
 import TableCell from '@mui/material/TableCell'
 import { Tooltip } from '@mui/material'
 import TableRow from '@mui/material/TableRow'
-import { styled, withStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
+import { withStyles } from '@mui/styles'
+import { styled } from '@mui/material/styles'
 
-export const StyledTableCell = styled(TableCell)((props: Theme) => ({
+export const StyledTableCell = styled(TableCell)((props) => ({
   '&': {
     border: 'unset',
-    borderRight: `0.5px solid ${props.palette.divider}`,
+    borderRight: `0.5px solid ${props.theme.palette.divider}`,
     fontSize: '15px',
     height: 'inherit'
   }
@@ -51,9 +51,9 @@ export const StyledTooltip = withStyles((theme) => ({
   }
 }))(Tooltip)
 
-export const StyledTableRow = styled(TableRow)((props: Theme) => ({
+export const StyledTableRow = styled(TableRow)((props) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: props.palette.grey[100]
+    backgroundColor: props.theme.palette.grey[100]
   },
   '&': {
     whiteSpace: 'nowrap',

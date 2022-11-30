@@ -39,7 +39,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Link from '@mui/material/Link'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../lib/utils'
@@ -95,7 +95,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
 
     checkPatientInTeam(inputEmail, teamId)
   }
-  const handleChangeTeam = (event: React.ChangeEvent<{ name?: string | undefined, value: unknown }>): void => {
+  const handleChangeTeam = (event: SelectChangeEvent<unknown>): void => {
     const inputTeamId = event.target.value as string
     setTeamId(inputTeamId)
 
@@ -181,7 +181,6 @@ function AddDialog(props: AddDialogProps): JSX.Element {
             id="patient-list-dialog-add-email"
             margin="normal"
             label={t('email')}
-            variant="outlined"
             value={email}
             required
             error={errorMessage !== null}
@@ -189,7 +188,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
             onChange={handleChangeEmail}
             helperText={errorMessage}
           />
-          <FormControl>
+          <FormControl variant="standard">
             <InputLabel id="patient-list-dialog-add-team-label" htmlFor="patient-list-dialog-add-team-input">
               {t('team')}
             </InputLabel>

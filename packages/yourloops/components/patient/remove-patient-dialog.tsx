@@ -86,7 +86,6 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
         <FormControl
           fullWidth
           required
-          variant="outlined"
         >
           <InputLabel>{t('select-team')}</InputLabel>
           <Select

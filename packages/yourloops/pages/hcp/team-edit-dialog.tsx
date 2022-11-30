@@ -272,7 +272,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-name"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setTeamName(e.target.value)}
             name="name"
             value={teamName}
@@ -283,7 +282,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-line1"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrLine1(e.target.value)}
             name="addr-line1"
             value={addrLine1}
@@ -294,7 +292,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-line2"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrLine2(e.target.value)}
             name="addr-line2"
             value={addrLine2}
@@ -304,7 +301,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-zip"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrZipCode(e.target.value)}
             error={zipcodeInputOnError}
             helperText={zipcodeInputOnError ? t('invalid-zipcode') : null}
@@ -317,7 +313,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-city"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrCity(e.target.value)}
             name="addr-city"
             value={addrCity}
@@ -325,9 +320,14 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             required
             aria-required="true"
           />
-          <FormControl data-testid="country" className={classes.formChild} required variant="outlined">
-            <InputLabel
-              htmlFor="team-edit-dialog-select-country">{t('team-edit-dialog-placeholder-addr-country')}</InputLabel>
+          <FormControl
+            data-testid="country"
+            className={classes.formChild}
+            required
+          >
+            <InputLabel htmlFor="team-edit-dialog-select-country">
+              {t('team-edit-dialog-placeholder-addr-country')}
+            </InputLabel>
             <Select
               id="team-edit-dialog-select-country"
               data-testid="team-edit-dialog-select-country"
@@ -342,7 +342,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-phone"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setTeamPhone(e.target.value)}
             error={phoneNumberInputOnError}
             helperText={phoneNumberInputOnError ? t('invalid-phone-number') : null}
@@ -358,7 +357,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-email"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setTeamEmail(e.target.value)}
             error={emailInputOnError}
             helperText={emailInputOnError ? t('invalid-email') : null}

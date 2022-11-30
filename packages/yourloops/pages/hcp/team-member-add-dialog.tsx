@@ -98,7 +98,6 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
         <Box display="flex" flexDirection="column">
           <TextField
             id="team-add-member-dialog-field-email"
-            variant="outlined"
             onChange={handleChangeEMail}
             name="email"
             value={email}
@@ -114,7 +113,6 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
                 checked={role === TeamMemberRole.admin}
                 onChange={handleChangeRole}
                 name="role"
-                color="primary"
               />
             }
             label={t('team-add-member-dialog-checkbox-admin')}

@@ -55,14 +55,15 @@ export function getTheme(): Theme {
     components: {
       MuiCssBaseline: {
         styleOverrides: {
-          '@global': {
-            a: {
-              color: 'inherit',
-              textDecoration: 'none'
-            },
-            body: {
-              backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
-            }
+          a: {
+            color: 'inherit',
+            textDecoration: 'none'
+          },
+          body: {
+            backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
+            // fontSize: '0.875rem',
+            // lineHeight: 1.43,
+            // letterSpacing: '0.01071em'
           }
         }
       },
@@ -88,6 +89,11 @@ export function getTheme(): Theme {
           root: {
             margin: 0
           }
+        }
+      },
+      MuiLink: {
+        defaultProps: {
+          underline: 'hover'
         }
       },
       MuiListItemIcon: {

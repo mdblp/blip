@@ -65,7 +65,7 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
       </Box>
 
       <Box className={props.classes.inputContainer}>
-        <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
+        <FormControl variant="standard" className={`${props.classes.formInput} ${props.classes.halfWide}`}>
           <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
             disabled={props.role === UserRoles.patient}
@@ -82,7 +82,7 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
+        <FormControl variant="standard" className={`${props.classes.formInput} ${props.classes.halfWide}`}>
           <InputLabel id="profile-language-input-label">{t('language')}</InputLabel>
           <Select
             labelId="locale-selector"

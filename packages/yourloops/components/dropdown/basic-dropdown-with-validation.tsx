@@ -33,11 +33,10 @@ import FormGroup from '@mui/material/FormGroup'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { makeStyles } from '@mui/styles'
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>
-type SelectChangeEvent = React.ChangeEvent<{ name?: string, value: unknown }>
 type HandleChange<E> = (event: E) => void
 
 export interface Errors {
@@ -63,22 +62,31 @@ function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<
   const classes = dropdownStyles()
   const { t } = useTranslation('yourloops')
 
-  const [selectedValue, setSelectedValue] = React.useState(defaultValue)
-  const createHandleSelectChange = <K extends string>(setState: SetState<K>): HandleChange<SelectChangeEvent> => (event) => {
+  const [selectedValue, setSelectedValue] = React.useState<string>(defaultValue)
+
+  const createHandleSelectChange = <K extends string>(setState: SetState<K>): HandleChange<SelectChangeEvent<unknown>> => (event) => {
     setState(event.target.value as K)
     onSelect(event.target.value as T)
   }
 
   return (
-    <FormControl id={`dropdown-form-${id}`} className={classes.formControl}>
+    <FormControl
+      id={`dropdown-form-${id}`}
+      variant="standard"
+      className={classes.formControl}
+    >
       <FormGroup>
         <InputLabel id={`dropdown-${id}-input-label`}>{t(inputTranslationKey)}</InputLabel>
         <Select
           id={`dropdown-${id}-selector`}
           value={selectedValue}
           error={disabledValues.includes(selectedValue)}
-          inputProps={{ id: `dropdown-${id}-selector-input-props`, 'data-testid': `dropdown-${id}-selector-input-props` }}
-          onChange={createHandleSelectChange(setSelectedValue)}>
+          inputProps={{
+            id: `dropdown-${id}-selector-input-props`,
+            'data-testid': `dropdown-${id}-selector-input-props`
+          }}
+          onChange={createHandleSelectChange(setSelectedValue)}
+        >
           {values.map(item => (
             <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
               {t(item)}

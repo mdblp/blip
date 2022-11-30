@@ -208,7 +208,6 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
               <Box marginX={2}>
                 <TextField
                   defaultValue={physician}
-                  variant="outlined"
                   size="small"
                   onChange={(e) => setPhysician(e.target.value)}
                   data-testid="remote-monitoring-dialog-referring-doctor"

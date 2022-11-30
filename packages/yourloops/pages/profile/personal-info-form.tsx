@@ -86,6 +86,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
         <TextField
           id="profile-textfield-firstname"
           label={t('first-name')}
+          variant="standard"
           value={props.firstName}
           onChange={event => props.setFirstName(event.target.value)}
           error={props.errors.firstName}
@@ -95,6 +96,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
         <TextField
           id="profile-textfield-lastname"
           label={t('last-name')}
+          variant="standard"
           value={props.lastName}
           onChange={event => props.setLastName(event.target.value)}
           error={props.errors.lastName}
@@ -124,6 +126,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
                   id="professional-account-number-text-field"
                   value={props.user.getParsedFrProId()}
                   label={t('professional-account-number')}
+                  variant="standard"
                   disabled
                   className={props.classes.formInput}
                 />

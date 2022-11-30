@@ -39,7 +39,6 @@ function MenuLayout(props: MenuLayoutProps): JSX.Element {
     <Menu
       open={props.open}
       anchorEl={props.anchorEl}
-      getContentAnchorEl={null}
       anchorOrigin={props.anchorOrigin || { vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={props.transformOrigin || { vertical: -10, horizontal: 'right' }}
       onClose={props.onClose}

@@ -207,7 +207,6 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
             <Typography>{t('prescription')}:</Typography>
             <Box display="flex" alignItems="center">
               <TextField
-                variant="outlined"
                 size="small"
                 classes={{ root: classes.fileTextField }}
                 InputProps={{

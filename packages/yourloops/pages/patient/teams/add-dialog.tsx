@@ -174,6 +174,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
             <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
               <TextField
                 id="team-add-dialog-field-code"
+                variant="standard"
                 value={idCode}
                 onChange={handleChangeCode}
                 fullWidth
@@ -248,7 +249,6 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
       checked={privacyAccepted}
       onChange={handleChange}
       name="policy"
-      color="primary"
       className={classes.checkboxPrivacy}
     />
   )

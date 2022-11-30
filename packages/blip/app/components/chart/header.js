@@ -142,7 +142,10 @@ class TidelineHeader extends React.Component {
               </IconButton>
               <Face className="subnav-icon" />
               <span>{ t('patient') } :</span>
-              <FormControl id="subnav-patient-list" variant="outlined" data-testid="subnav-patient-list">
+              <FormControl
+                id="subnav-patient-list"
+                data-testid="subnav-patient-list"
+              >
                 <Select
                   data-testid="drop-down-patient"
                   defaultValue={this.props.patient.userid}
@@ -169,13 +172,8 @@ class TidelineHeader extends React.Component {
             {this.props.iconMostRecent ? this.renderNavButton('button-nav-mostrecent', mostRecentClass, this.props.onClickMostRecent, 'most-recent', mostRecentDisabled) : null}
           </div>
           <div>
-            <Tabs
-              value={this.selectedTab()}
-              textColor="primary"
-              indicatorColor="primary"
-            >
-              <Tab className={'subnav-tab'} data-testid="dashboard-tab" href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
-                onClick={this.props.onClickDashboard}/>
+            <Tabs value={this.selectedTab()}>
+              <Tab className={'subnav-tab'} data-testid="dashboard-tab" href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />} onClick={this.props.onClickDashboard}/>
               <Tab label="" className={'dashboard-divider'} disabled />
               <Tab className={'subnav-tab'} data-testid="daily-tab" href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
               <Tab className={'subnav-tab'} data-testid="trends-tab" href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}

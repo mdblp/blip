@@ -177,7 +177,6 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
             disabled={checkboxAdminDisabled}
             id={`members-row-${rowId}-role-checkbox`}
             data-testid="members-row-checkbox"
-            color="primary"
             checked={currentUserIsAdmin}
             onChange={switchRole}
           />

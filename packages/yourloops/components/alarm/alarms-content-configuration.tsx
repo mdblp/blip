@@ -277,7 +277,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   error={lowBg.error}
                   type="number"
                   className={classes.textField}
-                  variant="outlined"
                   size="small"
                   InputProps={{
                     inputProps: {
@@ -298,7 +297,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   error={highBg.error}
                   type="number"
                   className={classes.textField}
-                  variant="outlined"
                   size="small"
                   InputProps={{
                     inputProps: {
@@ -357,7 +355,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 error={veryLowBg.error}
                 type="number"
                 className={classes.textField}
-                variant="outlined"
                 size="small"
                 InputProps={{
                   inputProps: {

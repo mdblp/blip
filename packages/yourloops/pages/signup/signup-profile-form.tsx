@@ -127,7 +127,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         aria-label={t('first-name')}
         margin="normal"
         label={t('first-name')}
-        variant="outlined"
         value={signupForm.profileFirstname}
         required
         error={errors.firstName}
@@ -139,7 +138,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         aria-label={t('last-name')}
         margin="normal"
         label={t('last-name')}
-        variant="outlined"
         value={signupForm.profileLastname}
         required
         error={errors.lastName}
@@ -148,7 +146,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         helperText={errors.lastName && t('required-field')}
       />
       <FormControl
-        variant="outlined"
         margin="normal"
         required
         error={errors.country}
@@ -173,7 +170,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
       {signupForm.accountRole === UserRoles.hcp &&
         <FormControl
-          variant="outlined"
           margin="normal"
           required
           error={errors.hcpProfession}

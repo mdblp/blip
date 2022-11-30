@@ -216,7 +216,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
              justifyContent={matchLandscape ? 'start' : 'space-between'}>
           <Chip
             id="pdf-options-button-one-week"
-            variant={presetSelected === '1week' ? 'default' : 'outlined'}
+            variant={presetSelected === '1week' ? 'filled' : 'outlined'}
             color={presetSelected === '1week' ? 'primary' : 'default'}
             aria-selected={presetSelected === '1week'}
             onClick={() => handleClickPreset('1week')}
@@ -225,7 +225,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
           />
           <Chip
             id="pdf-options-button-two-weeks"
-            variant={presetSelected === '2weeks' ? 'default' : 'outlined'}
+            variant={presetSelected === '2weeks' ? 'filled' : 'outlined'}
             color={presetSelected === '2weeks' ? 'primary' : 'default'}
             aria-selected={presetSelected === '2weeks'}
             onClick={() => handleClickPreset('2weeks')}
@@ -234,7 +234,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
           />
           <Chip
             id="pdf-options-button-four-weeks"
-            variant={presetSelected === '4weeks' ? 'default' : 'outlined'}
+            variant={presetSelected === '4weeks' ? 'filled' : 'outlined'}
             color={presetSelected === '4weeks' ? 'primary' : 'default'}
             aria-selected={presetSelected === '4weeks'}
             onClick={() => handleClickPreset('4weeks')}
@@ -243,7 +243,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
           />
           <Chip
             id="pdf-options-button-three-months"
-            variant={presetSelected === '3months' ? 'default' : 'outlined'}
+            variant={presetSelected === '3months' ? 'filled' : 'outlined'}
             color={presetSelected === '3months' ? 'primary' : 'default'}
             aria-selected={presetSelected === '3months'}
             onClick={() => handleClickPreset('3months')}
@@ -290,17 +290,18 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
             row
             onChange={handleOutputFormat}
           >
-            <FormControlLabel value="pdf"
-                              control={
-                                <Radio id="dialog-pdf-options-selector-pdf" color="primary" />
-                              }
-                              label={t('dialog-pdf-options-output-format-pdf')}
+            <FormControlLabel
+              value="pdf"
+              control={<Radio id="dialog-pdf-options-selector-pdf" />}
+              label={t('dialog-pdf-options-output-format-pdf')}
             />
             <FormControlLabel
               value="csv"
               control={
-                <Radio id="dialog-pdf-options-selector-csv" data-testid="dialog-pdf-options-selector-csv"
-                       color="primary" />
+                <Radio
+                  id="dialog-pdf-options-selector-csv"
+                  data-testid="dialog-pdf-options-selector-csv"
+                />
               }
               label={t('dialog-pdf-options-output-format-csv')} />
           </RadioGroup>

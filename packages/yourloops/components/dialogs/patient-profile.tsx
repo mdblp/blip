@@ -92,6 +92,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
         <TextField
           fullWidth
           disabled
+          variant="standard"
           id="firstname"
           label={t('first-name')}
           value={firstName}
@@ -101,6 +102,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
         <TextField
           fullWidth
           disabled
+          variant="standard"
           id="lastname"
           label={t('last-name')}
           value={lastName}
@@ -110,6 +112,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
         <TextField
           fullWidth
           disabled
+          variant="standard"
           id="birthDate"
           label={t('birthdate')}
           value={birthDate}
@@ -119,6 +122,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
         <TextField
           fullWidth
           disabled
+          variant="standard"
           id="mail"
           label={t('email')}
           value={mail}
@@ -129,6 +133,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           <TextField
             fullWidth
             disabled
+            variant="standard"
             id="hbA1c"
             label={t('patient-profile-hba1c', { hba1cDate: hbA1c?.date })}
             value={hbA1c?.value + '%'}
@@ -139,6 +144,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
         <TextField
           fullWidth
           disabled
+          variant="standard"
           id="units"
           label={t('units')}
           value={user.settings?.units?.bg ?? Units.gram}

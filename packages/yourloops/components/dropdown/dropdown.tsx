@@ -28,7 +28,7 @@
 import React from 'react'
 
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 import OutlinedInput from '@mui/material/OutlinedInput'
@@ -58,7 +58,7 @@ function Dropdown(props: BasicDropdownProps): JSX.Element {
   const classes = styles()
   const [selectedValue, setSelectedValue] = React.useState(defaultKey || '')
 
-  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
+  const handleSelectChange = (event: SelectChangeEvent<unknown>): void => {
     const value = event.target.value as string
     setSelectedValue(value)
     onSelect(value)
@@ -69,7 +69,6 @@ function Dropdown(props: BasicDropdownProps): JSX.Element {
       id={`basic-dropdown-${id}-selector`}
       value={selectedValue}
       className={classes.select}
-      variant="outlined"
       disabled={disabled}
       input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}

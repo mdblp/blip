@@ -75,6 +75,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
       <TextField
         id="profile-textfield-birthdate"
         label={t('birthdate')}
+        variant="standard"
         value={birthDate}
         onChange={event => setBirthDate(event.target.value)}
         error={errors.birthDate}
@@ -84,12 +85,13 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
       <TextField
         id="profile-textfield-birthplace"
         label={t('birthplace')}
+        variant="standard"
         value={birthPlace}
         onChange={event => setBirthPlace(event.target.value)}
         className={classes.formInput}
         inputProps={{ maxlength: '50' }}
       />
-      <FormControl className={`${props.classes.formInput}`}>
+      <FormControl variant="standard" className={`${props.classes.formInput}`}>
         <InputLabel id="profile-select-gender-label" htmlFor="profile-select-gender">{t('gender')}</InputLabel>
         <Select
           id="profile-select-gender"
@@ -105,6 +107,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
       <TextField
         id="profile-textfield-referring-doctor"
         label={t('referring-doctor')}
+        variant="standard"
         value={referringDoctor}
         onChange={event => setReferringDoctor(event.target.value)}
         className={classes.formInput}
@@ -115,6 +118,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
         <TextField
           id="profile-textfield-ins"
           label={t('ins')}
+          variant="standard"
           value={ins}
           onChange={event => setIns(event.target.value)}
           className={classes.formInput}
@@ -125,6 +129,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
         <TextField
           id="profile-textfield-ssn"
           label={t('ssn')}
+          variant="standard"
           value={ssn}
           onChange={event => setSsn(event.target.value)}
           className={classes.formInput}
@@ -138,6 +143,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
         <TextField
           id="hbA1c"
           label={t('patient-profile-hba1c', { hba1cMoment: tz(a1cDate, browserTimezone).format('L') })}
+          variant="standard"
           disabled
           value={`${a1cValue}%`}
           className={classes.formInput}

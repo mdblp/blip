@@ -103,7 +103,6 @@ function AddDialog(props: AddDialogProps): JSX.Element {
         <TextField
           id="patient-add-caregiver-dialog-email"
           label={t('email')}
-          variant="outlined"
           value={email}
           required
           error={errorMessage !== null}

@@ -259,7 +259,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
             maxRows={3}
             value={inputText}
             onChange={inputHandler}
-            variant="outlined"
             InputLabelProps={{ shrink: false }}
             data-testid="chat-card-input"
           />

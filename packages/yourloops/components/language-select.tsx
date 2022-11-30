@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
@@ -48,9 +48,9 @@ function LanguageSelect(): JSX.Element {
   const [val, setVal] = React.useState(i18n.language)
   const classes = languageSelectStyle()
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
+  const handleChange = async (event: SelectChangeEvent<unknown>): Promise<void> => {
     const lang = event.target.value as string
-    i18n.changeLanguage(lang)
+    await i18n.changeLanguage(lang)
     setVal(lang)
   }
 
@@ -67,7 +67,7 @@ function LanguageSelect(): JSX.Element {
   }
 
   return (
-    <FormControl>
+    <FormControl variant="standard">
       <Select
         id="language-selector"
         name="language-select"

@@ -138,7 +138,6 @@ function TrainingPage(): JSX.Element {
                       checked={checked}
                       onChange={() => setChecked(true)}
                       name="training"
-                      color="primary"
                     />
                   }
                   label={t('acknowledge-training')}

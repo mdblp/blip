@@ -119,6 +119,7 @@ function OnError(props: OnErrorProps): JSX.Element {
             </DialogContentText>
             <TextField
               data-testid="error-stacktrace"
+              variant="standard"
               inputProps={{ color: 'grey' }}
               fullWidth
               multiline

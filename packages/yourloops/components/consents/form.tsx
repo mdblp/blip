@@ -70,7 +70,6 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
       checked={checked}
       onChange={onChange}
       name="policy"
-      color="primary"
     />
   )
   const privacyPolicy = t('privacy-policy')
@@ -117,7 +116,6 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
       checked={checked}
       onChange={onChange}
       name="terms"
-      color="primary"
     />
   )
   const terms = t('terms-of-use')
@@ -158,7 +156,6 @@ export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id
       checked={checked}
       onChange={onChange}
       name="terms"
-      color="primary"
       data-testid={`${id}-checkbox-terms`}
     />
   )
@@ -201,7 +198,6 @@ export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole,
       checked={checked}
       onChange={onChange}
       name="feedback"
-      color="primary"
     />
   )
 
