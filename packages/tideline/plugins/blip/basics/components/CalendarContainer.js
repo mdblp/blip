@@ -69,6 +69,7 @@ class CalendarContainer extends React.Component {
 
       // If the default selected option has no value, choose the first option that does
       if (selectedOption.path && !this.getOptionValue(selectedOption, data)) {
+        // eslint-disable-next-line no-use-before-define
         selectedOption = _.find(_.reject(_.union(options.primary, rows), { key: selected }), (option) => {
           return this.getOptionValue(option, data) > 0
         })
