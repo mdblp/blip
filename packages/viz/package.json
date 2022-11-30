@@ -27,8 +27,6 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@material-ui/core": "^4.11.4",
-    "@material-ui/icons": "^4.11.2",
     "blob-stream": "^0.1.3",
     "bows": "1.7.2",
     "classnames": "^2.3.1",
