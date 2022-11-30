@@ -65,7 +65,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             U
           </span>
           )
-          </span>
+        </span>
         <StatTooltip annotations={annotations} />
       </Box>
       <div className={`${styles.rows} ${styles.rowsTotalInsulin}`}>
