@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/*/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -62,7 +62,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/sundial/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -84,7 +84,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/tideline/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -106,7 +106,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/medical-domain/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -127,7 +127,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/dumb/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -149,7 +149,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/viz/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -212,7 +212,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/*/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
