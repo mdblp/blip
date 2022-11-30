@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './stat-tooltip.css'
-import { withStyles } from 'tss-react/mui'
+import { styled } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
 
 interface StatTooltipProps {
@@ -36,7 +36,7 @@ interface StatTooltipProps {
   children: JSX.Element
 }
 
-const StyledTooltip = withStyles(Tooltip, () => ({
+const StyledTooltip = styled(Tooltip)(() => ({
   tooltip: {
     backgroundColor: 'white',
     color: 'var(--stat--default)',
