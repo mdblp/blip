@@ -155,4 +155,3 @@ describe('generateClassifiers', () => {
     })
   })
 })
-/* eslint-enable max-len, lodash/prefer-lodash-method */
