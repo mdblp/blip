@@ -25,7 +25,7 @@
     "lint-blip": "eslint packages",
     "lint-fix-blip": "npm run lint-blip -- --fix",
     "lint-yourloops": "npm run lint -w yourloops",
-    "lint-fix-yourloops": "npm run lint-yourloops -- --fix",
+    "lint-fix-yourloops": "npm run lint-fix -w yourloops",
     "lint-medical-domain": "npm run lint -w medical-domain",
     "lint-fix-medical-domain": "npm run lint-fix -w medical-domain",
     "lint-dumb": "npm run lint -w dumb",
