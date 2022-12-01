@@ -182,7 +182,7 @@ describe('Stats', () => {
         })} />)
 
         expect(wrapper.find('.Stats').children()).to.have.length(7)
-        expect(wrapper.find('#Stat--timeInAuto')).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-timeInAuto' })).to.have.length(1)
       })
     })
 
@@ -319,17 +319,12 @@ describe('Stats', () => {
         })} />)
 
         expect(wrapper.find('.Stats').children()).to.have.length(5)
-        const expectedStats = [
-          'averageDailyDose',
-          'timeInAuto'
-        ]
 
         expect(wrapper.find({ 'data-testid': 'stat-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
-        expectedStats.forEach(statId => {
-          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
-        })
+        expect(wrapper.find({ 'data-testid': 'stat-timeInAuto' })).to.have.length(1)
+        expect(wrapper.find('#Stat--averageDailyDose')).to.have.length(1)
 
       })
 
