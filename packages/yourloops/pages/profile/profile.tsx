@@ -32,7 +32,7 @@ import { Link as LinkRedirect } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles, createStyles } from '@mui/styles'
+import { makeStyles } from '@mui/styles'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
@@ -55,60 +55,58 @@ import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-bu
 import SwitchRoleDialogs from '../../components/switch-role'
 import { usePatientContext } from '../../lib/patient/provider'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      marginLeft: theme.spacing(2)
-    },
-    cancelLink: {
-      textDecoration: 'unset'
-    },
-    formInput: {
-      marginTop: theme.spacing(2)
-    },
-    title: {
-      color: theme.palette.primary.main,
-      textAlign: 'center',
-      width: '100%'
-    },
-    container: {
-      backgroundColor: 'white',
-      marginTop: '32px',
-      padding: 0,
-      [theme.breakpoints.up('sm')]: {
-        border: 'solid',
-        borderRadius: '15px',
-        borderColor: theme.palette.grey[300],
-        borderWidth: '1px',
-        padding: '0 64px'
-      }
-    },
-    uppercase: {
-      textTransform: 'uppercase'
-    },
-    halfWide: {
-      [theme.breakpoints.up('sm')]: {
-        width: 'calc(50% - 16px)'
-      }
-    },
-    inputContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      [theme.breakpoints.only('xs')]: {
-        flexDirection: 'column'
-      }
-    },
-    categoryLabel: {
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: theme.spacing(5),
-      '& > :nth-child(2)': {
-        marginLeft: theme.spacing(1)
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    marginLeft: theme.spacing(2)
+  },
+  cancelLink: {
+    textDecoration: 'unset'
+  },
+  formInput: {
+    marginTop: theme.spacing(2)
+  },
+  title: {
+    color: theme.palette.primary.main,
+    textAlign: 'center',
+    width: '100%'
+  },
+  container: {
+    backgroundColor: 'white',
+    marginTop: '32px',
+    padding: 0,
+    [theme.breakpoints.up('sm')]: {
+      border: 'solid',
+      borderRadius: '15px',
+      borderColor: theme.palette.grey[300],
+      borderWidth: '1px',
+      padding: '0 64px'
     }
-  })
-)
+  },
+  uppercase: {
+    textTransform: 'uppercase'
+  },
+  halfWide: {
+    [theme.breakpoints.up('sm')]: {
+      width: 'calc(50% - 16px)'
+    }
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    [theme.breakpoints.only('xs')]: {
+      flexDirection: 'column'
+    }
+  },
+  categoryLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(5),
+    '& > :nth-child(2)': {
+      marginLeft: theme.spacing(1)
+    }
+  }
+}))
 
 const log = bows('ProfilePage')
 
@@ -252,7 +250,7 @@ const ProfilePage = (): JSX.Element => {
     if (preferencesChanged) {
       await savePreferences()
       if (lang !== getCurrentLang()) {
-        i18n.changeLanguage(lang)
+        await i18n.changeLanguage(lang)
       }
     }
     alert.success(t('profile-updated'))

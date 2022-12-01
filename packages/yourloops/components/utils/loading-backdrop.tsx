@@ -27,18 +27,16 @@
 
 import React from 'react'
 import { Theme } from '@mui/material/styles'
-import { makeStyles, createStyles } from '@mui/styles'
+import { makeStyles } from '@mui/styles'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: theme.palette.common.white
-    }
-  })
-)
+const useStyles = makeStyles((theme: Theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: theme.palette.common.white
+  }
+}))
 
 function LoadingBackdrop({ open }: { open: boolean }): JSX.Element {
   const { backdrop } = useStyles()

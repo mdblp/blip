@@ -29,7 +29,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles, createStyles } from '@mui/styles'
+import { makeStyles } from '@mui/styles'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import List from '@mui/material/List'
@@ -45,27 +45,25 @@ import SwitchRoleDialogs from '../../components/switch-role'
 
 import { Notification } from './notification'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    homeIcon: {
-      marginRight: '0.5em'
-    },
-    breadcrumbLink: {
-      display: 'flex'
-    },
-    toolBar: {
-      display: 'grid',
-      gridTemplateRows: 'auto',
-      gridTemplateColumns: 'auto auto auto',
-      paddingLeft: '6em',
-      paddingRight: '6em'
-    },
-    noNotificationMessage: {
-      textAlign: 'center',
-      margin: theme.spacing(4)
-    }
-  }), { name: 'ylp-page-notifications-list' }
-)
+const useStyles = makeStyles((theme: Theme) => ({
+  homeIcon: {
+    marginRight: '0.5em'
+  },
+  breadcrumbLink: {
+    display: 'flex'
+  },
+  toolBar: {
+    display: 'grid',
+    gridTemplateRows: 'auto',
+    gridTemplateColumns: 'auto auto auto',
+    paddingLeft: '6em',
+    paddingRight: '6em'
+  },
+  noNotificationMessage: {
+    textAlign: 'center',
+    margin: theme.spacing(4)
+  }
+}), { name: 'ylp-page-notifications-list' })
 
 const NotificationsPage = (): JSX.Element => {
   const { t } = useTranslation('yourloops')

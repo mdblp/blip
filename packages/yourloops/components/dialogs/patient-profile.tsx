@@ -36,7 +36,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { Theme } from '@mui/material/styles'
-import { createStyles, makeStyles } from '@mui/styles'
+import { makeStyles } from '@mui/styles'
 
 import { Units } from '../../models/generic'
 import { Settings, IUser } from '../../models/user'
@@ -48,27 +48,25 @@ interface ProfileDialogProps {
   handleClose: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    title: {
-      textAlign: 'center',
-      color: theme.palette.primary.main
-    },
-    textField: {
-      marginTop: '1em',
-      '& input:disabled': {
-        backgroundColor: 'white',
-        color: theme.palette.grey[800] // eslint-disable-line no-magic-numbers
-      }
-    },
-    disabled: {
-      '&&:before': {
-        borderBottom: '0.5px solid',
-        color: theme.palette.grey[400] // eslint-disable-line no-magic-numbers
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  title: {
+    textAlign: 'center',
+    color: theme.palette.primary.main
+  },
+  textField: {
+    marginTop: '1em',
+    '& input:disabled': {
+      backgroundColor: 'white',
+      color: theme.palette.grey[800]
     }
-  })
-)
+  },
+  disabled: {
+    '&&:before': {
+      borderBottom: '0.5px solid',
+      color: theme.palette.grey[400]
+    }
+  }
+}))
 
 const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOpen, handleClose }: ProfileDialogProps) => {
   const { t } = useTranslation('yourloops')

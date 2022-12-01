@@ -30,7 +30,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles, createStyles } from '@mui/styles'
+import { makeStyles } from '@mui/styles'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
 import HelpIcon from '@mui/icons-material/Help'
@@ -62,39 +62,37 @@ interface NotificationProps {
   onHelp: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-      [theme.breakpoints.down('md')]: {
-        flexWrap: 'wrap',
-        padding: theme.spacing(1)
-      }
-    },
-    rightSide: {
-      width: '300px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      [theme.breakpoints.down('md')]: {
-        width: '100%',
-        marginTop: theme.spacing(1)
-      }
-    },
-    notificationSpan: { marginLeft: '1em', flex: '1' },
-    buttonAccept: {
-      marginLeft: '1em',
-      [theme.breakpoints.down('md')]: {
-        marginLeft: 'auto'
-      }
-    },
-    buttonDecline: {
-      marginLeft: '1em'
+const useStyles = makeStyles((theme: Theme) => ({
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    [theme.breakpoints.down('md')]: {
+      flexWrap: 'wrap',
+      padding: theme.spacing(1)
     }
-  }), { name: 'ylp-page-notification' }
-)
+  },
+  rightSide: {
+    width: '300px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      marginTop: theme.spacing(1)
+    }
+  },
+  notificationSpan: { marginLeft: '1em', flex: '1' },
+  buttonAccept: {
+    marginLeft: '1em',
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 'auto'
+    }
+  },
+  buttonDecline: {
+    marginLeft: '1em'
+  }
+}), { name: 'ylp-page-notification' })
 
 export const NotificationSpan = ({ notification, id }: NotificationSpanProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
