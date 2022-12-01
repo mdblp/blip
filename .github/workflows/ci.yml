@@ -121,7 +121,7 @@ jobs:
       - name: Creating new tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ steps.meta.outputs.tags }}
+          tag: ${{ steps.meta.outputs.version }}
           force_push_tag: true
 
   documentation:
