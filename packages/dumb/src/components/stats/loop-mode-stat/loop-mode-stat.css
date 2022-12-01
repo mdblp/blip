@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+svg.statWheelTimeInAuto {
+  width: 290px;
+  height: 80px;
+  height: auto;
+  margin-bottom: 0.25em;
+}
+svg.statWheelTimeInAuto g.onColor rect.legendBackground {
+  fill: var(--basal-automated, #12d3d8);
+}
+svg.statWheelTimeInAuto g.onColor text.legendLabelText {
+  fill: var(--text-on-basal-automated, black);
+}
+svg.statWheelTimeInAuto g.offColor rect.legendBackground {
+  fill: var(--basal, rgb(168, 200, 212));
+}
+svg.statWheelTimeInAuto g.offColor text.legendLabelText {
+  fill: var(--text-on-basal, black);
+}
+svg.statWheelTimeInAuto g.labelOnValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOnValueUnits text.labelRawValue {
+  fill: var(--text-basal-automated, black);
+}
+svg.statWheelTimeInAuto g.labelOffValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOffValueUnits text.labelRawValue {
+  fill: var(--text-basal, black);
+}
+svg.donutChart text.legendLabelText, svg.donutChart text.labelRawValue {
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+}
+svg.donutChart text.labelValueUnits {
+  pointer-events: none;
+}
+svg.donutChart tspan.legendLabelValue {
+  font-size: 24px;
+	font-weight: 500;
+}
+svg.donutChart tspan.legendLabelUnits {
+  fill: rgb(114, 115, 117);
+	font-size: 12px;
+	letter-spacing: normal;
+}
+svg.donutChart tspan.legendLabelPercent {
+  font-size: 12px;
+  fill: var(--stat--default);
+  font-weight: normal;
+}
+svg.statWheelTimeInAuto .onEllipse {
+  fill: var(--basal-automated, #12d3d8);
+}
+svg.statWheelTimeInAuto .offEllipse {
+  fill: var(--basal, rgb(168, 200, 212));
+}

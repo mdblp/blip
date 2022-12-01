@@ -9,6 +9,7 @@ import {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
+  LoopModeStat,
   TotalCarbsStat,
   TotalInsulinStat
 } from 'dumb'
@@ -105,6 +106,20 @@ class Stats extends React.Component {
     }
     return stats.map(stat => {
       switch (stat.id) {
+        case CBGStatType.TimeInAuto:
+          return (
+            <div key={stat.id} data-testid={`stat-${stat.id}`}>
+              <LoopModeStat
+                annotations={stat.annotations}
+                automated={stat.data.raw.automated}
+                hideTooltip={hideToolTips}
+                manual={stat.data.raw.manual}
+                title={stat.title}
+                total={stat.data.total.value}
+              />
+              <Divider variant="fullWidth" />
+            </div>
+          )
         case CBGStatType.TotalInsulin:
           return (
             <div key={stat.id} data-testid={`stat-${stat.id}`}>

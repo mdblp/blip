@@ -34,6 +34,7 @@ import {
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { BgClasses, CBGStatType } from './components/stats/models'
 import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
+import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/total-carbs/total-carbs-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
@@ -49,6 +50,7 @@ export {
   CBGStandardDeviation,
   CBGStatType,
   CgmTable,
+  LoopModeStat,
   PumpTable,
   ReservoirTooltip,
   StatTooltip,

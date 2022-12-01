@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2020-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum CBGStatType {
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
-}
+import React, { FunctionComponent } from 'react'
+import styles from './loop-mode-stat.css'
+import { useTranslation } from 'react-i18next'
+import { formatDuration } from '../../../utils/datetime'
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
+interface LoopModePercentageDetailProps {
+  className: string
+  percentage: number
+  transform: string
   value: number
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
-}
+export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetailProps> = (props) => {
+  const { className, percentage, transform, value } = props
+  const { t } = useTranslation('main')
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
+  const percentageIsNan = Number.isNaN(percentage)
+
+  return (
+    <g className={className} transform={transform}>
+      <text className={styles.labelValueUnits} textAnchor="middle">
+        <tspan className={styles.legendLabelValue}>{percentageIsNan ? t('N/A') : percentage}</tspan>
+        {!percentageIsNan && <tspan className={styles.legendLabelUnits} dy="-4">%</tspan>}
+      </text>
+      {!percentageIsNan &&
+        <text
+          className={styles.labelRawValue}
+          textAnchor="middle"
+          dy="12"
+        >
+          {formatDuration(value, { condensed: true })}
+        </text>
+      }
+    </g>
+  )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2020-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum CBGStatType {
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
+import React, { FunctionComponent } from 'react'
+import styles from './loop-mode-stat.css'
+import { useTranslation } from 'react-i18next'
+
+interface LoopModeStatProps {
+  className: string
+  transform: string
+  translationKey: string
 }
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
-}
+export const LoopModeLabel: FunctionComponent<LoopModeStatProps> = (props) => {
+  const { className, transform, translationKey } = props
+  const { t } = useTranslation('main')
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
-}
-
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
+  return (
+    <g className={className} transform={transform}>
+      <rect className={styles.legendBackground} width="40" height="20" rx="8" />
+      <text
+        x="20"
+        y="10"
+        textAnchor="middle"
+        dominantBaseline="central"
+        className={styles.legendLabelText}
+      >
+        {t(translationKey)}
+      </text>
+    </g>
+  )
 }
