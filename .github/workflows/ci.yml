@@ -65,14 +65,12 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish'}}
     needs: lint-test-build
     runs-on: ubuntu-latest
     outputs:
@@ -123,7 +121,7 @@ jobs:
       - name: Creating new tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ steps.meta.outputs.version }}
+          tag: ${{ steps.meta.outputs.tags }}
           force_push_tag: true
 
   documentation:
