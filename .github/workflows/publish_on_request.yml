@@ -98,17 +98,6 @@ jobs:
           platforms: linux/arm64,linux/amd64
           tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.package-version.outputs.semver }}-PR-${{env.PR_NUMBER}}
 
-      - name: Build and push Lambda Docker image
-        uses: docker/build-push-action@v3
-        env:
-          PR_NUMBER: ${{github.event.issue.number}}
-        with:
-          context: .
-          file: ./Dockerfile.lambda
-          push: true
-          platforms: linux/arm64,linux/amd64
-          tags:  ${{ secrets.REGISTRY }}/blip-lambda:${{ steps.package-version.outputs.semver }}-PR-${{env.PR_NUMBER}}
-
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
