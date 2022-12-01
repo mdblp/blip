@@ -29,7 +29,7 @@ const PatientDashboard = (props) => {
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, isSelectedTeamMedical, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
   } = props
   const isMonitoringEnabled = patient.monitoring?.enabled
-  const shouldDisplayChatWidget = userIsHCP ? isMonitoringEnabled && isSelectedTeamMedical : isMonitoringEnabled
+  const shouldDisplayChatWidget = isMonitoringEnabled && (!userIsHCP || isSelectedTeamMedical)
 
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString()

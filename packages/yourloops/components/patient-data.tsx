@@ -102,12 +102,10 @@ function PatientDataPage(): JSX.Element | null {
 
   useEffect(() => {
     if (userIsHCP) {
-      console.warn(paramPatientId)
       const patientTeams = getPatientById(paramPatientId)?.teams
       const isPatientInSelectedTeam = patientTeams.some((team: PatientTeam) => team.teamId === selectedTeamId)
       if (!isPatientInSelectedTeam) {
         const defaultPatientTeamId = patientTeams[0].teamId
-        console.log(`Patient not in team ${selectedTeamId}, selecting team ${defaultPatientTeamId} instead`)
         selectTeam(defaultPatientTeamId)
       }
     }
@@ -136,7 +134,7 @@ function PatientDataPage(): JSX.Element | null {
       log.error('Patient not found')
       setError('Patient not found')
     }
-  }, [initialized, paramPatientId, userId, user, userIsPatient])
+  }, [initialized, paramPatientId, userId, user, userIsPatient, getPatientById])
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {

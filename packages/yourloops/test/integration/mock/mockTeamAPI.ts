@@ -45,13 +45,15 @@ export const monitoringParameters = {
   reportingPeriod: 7
 }
 
+export const myTeamId = '62fe00defc9374b2fed32bcc'
 export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
 export const myThirdTeamId = '62fe00defc9374b2fed32bce'
 export const mySecondTeamName = 'MySecondTeam'
+export const myThirdTeamName = 'MyThirdTeam - to be deleted'
 
 export const teamOne: ITeam = {
   name: 'MyTeam',
-  id: '62fe00defc9374b2fed32bcc',
+  id: myTeamId,
   code: '036038775',
   type: TeamType.medical,
   owner: loggedInUserId,
@@ -118,7 +120,7 @@ export const teamTwo: ITeam = {
 }
 
 export const teamThree: ITeam = {
-  name: 'MyThirdTeam - to be deleted',
+  name: myThirdTeamName,
   id: myThirdTeamId,
   code: '263381988',
   type: TeamType.medical,

@@ -28,7 +28,7 @@
 import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI, mySecondTeamName, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, mySecondTeamName, myTeamId, myThirdTeamName } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
@@ -44,10 +44,6 @@ import { queries } from '@testing-library/dom'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
-import TeamAPI from '../../../../lib/team/team-api'
-import { TeamType } from '../../../../models/team'
-import { Team } from '../../../../lib/team'
-import userEvent from '@testing-library/user-event'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -95,7 +91,35 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Device Usage')).toBeVisible()
   }
 
-  function testPatientDashboardCommonWidgets(dashboard: BoundFunctions<typeof queries>): void {
+  it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
+    localStorage.setItem('selectedTeamId', '')
+
+    act(() => {
+      renderPage(unMonitoredPatientDashboardRoute)
+    })
+
+    const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
+    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
+    checkHCPLayout(`${firstName} ${lastName}`)
+
+    const header = within(screen.getByTestId('app-main-header'))
+    const teamsDropdown = header.getByText(myThirdTeamName)
+    expect(teamsDropdown).toBeVisible()
+  })
+
+  it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
+    localStorage.setItem('selectedTeamId', myTeamId)
+
+    await act(async () => {
+      renderPage(monitoredPatientDashboardRoute)
+    })
+
+    const header = within(screen.getByTestId('app-main-header'))
+    const teamsDropdown = header.getByText(mySecondTeamName)
+    expect(teamsDropdown).toBeVisible()
+
+    const dashboard = within(await screen.findByTestId('patient-dashboard'))
+    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatientFullName)
     /* Patient info widget */
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()
@@ -106,46 +130,10 @@ describe('Patient dashboard for HCP', () => {
 
     /* Events widget */
     expect(dashboard.getByText('Events')).toBeVisible()
-  }
 
-  it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
-    act(() => {
-      renderPage(unMonitoredPatientDashboardRoute)
-    })
-
-    const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
-    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
+    /* Chat widget */
+    expect(dashboard.getByText('Messages')).toBeVisible()
     checkHCPLayout(`${firstName} ${lastName}`)
-  })
-
-  it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
-    console.log('My test')
-    
-    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne, teamTwo, teamThree, { id: 'private', name: 'private', type: TeamType.private } as Team])
-
-    await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
-    })
-
-    const header = within(screen.getByTestId('app-main-header'))
-    const teamsDropdown = header.getByText(mySecondTeamName)
-    expect(teamsDropdown).toBeVisible()
-
-    // const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    // testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatientFullName)
-    //
-    // testPatientDashboardCommonWidgets(dashboard)
-    //
-    // /* Chat widget */
-    // expect(dashboard.getByText('Messages')).toBeVisible()
-    // checkHCPLayout(`${firstName} ${lastName}`)
-    //
-    // await userEvent.click(teamsDropdown)
-    // await userEvent.click(screen.getByRole('option', { name: 'private' }))
-    //
-    // testPatientDashboardCommonWidgets(dashboard)
-    //
-    // expect(dashboard.queryByText('Messages')).not.toBeInTheDocument()
   })
 
   it('should switch between patients by using the dropdown', async () => {
@@ -157,7 +145,7 @@ describe('Patient dashboard for HCP', () => {
 
     expect(patientInfoCard.getByText(monitoredPatientFullName)).toBeVisible()
     fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatientFullName))
-    await userEvent.click(screen.getByText(unmonitoredPatientFullName))
+    fireEvent.click(screen.getByText(unmonitoredPatientFullName))
 
     await waitFor(() => {
       // call this to update the card and catch the new patient

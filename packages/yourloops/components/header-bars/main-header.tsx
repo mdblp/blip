@@ -113,7 +113,6 @@ function MainHeader(props: MainHeaderProps): JSX.Element {
     const patientId = patientDashboardRegexMatch[1]
     const isPatientInSelectedTeam = getPatientById(patientId)?.teams.some((team: PatientTeam) => team.teamId === teamId)
     if (!isPatientInSelectedTeam) {
-      console.log('Patient not in team')
       history.push('/')
     }
     selectTeam(teamId)
@@ -153,6 +152,10 @@ function MainHeader(props: MainHeaderProps): JSX.Element {
               shouldDisplayTeamsDropdown &&
               <Box className={teamsDropdown}>
                 <Dropdown
+                  // "key" attribute is passed to force the component to render every time `selectedTeamId` changes,
+                  // in order to display the adequate default value (otherwise, the value of the dropdown cannot be
+                  // changed outside the dropdown itself)
+                  key={selectedTeamId}
                   id="team"
                   defaultKey={selectedTeamId}
                   values={getDropdownTeams()}
