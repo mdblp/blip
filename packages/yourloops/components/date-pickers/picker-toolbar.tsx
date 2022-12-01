@@ -27,10 +27,9 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import clsx from 'clsx'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
@@ -47,7 +46,7 @@ interface PickerToolbarProps {
   onClickYear?: () => void
 }
 
-const toolbarStyles = makeStyles((theme: Theme) => {
+const toolbarStyles = makeStyles({ name: 'date-pickers-toolbar' })((theme: Theme) => {
   return {
     root: {
       backgroundColor: theme.palette.primary.main,
@@ -71,10 +70,10 @@ const toolbarStyles = makeStyles((theme: Theme) => {
       marginRight: 'auto'
     }
   }
-}, { name: 'date-pickers-toolbar' })
+})
 
 function SinglePickerToolbar(props: PickerToolbarProps): JSX.Element {
-  const classes = toolbarStyles()
+  const { classes } = toolbarStyles()
   const { t } = useTranslation('yourloops')
 
   const onClickYear = (e: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>): void => {
@@ -117,7 +116,7 @@ function SinglePickerToolbar(props: PickerToolbarProps): JSX.Element {
 
 function RangePickerToolbar(props: PickerToolbarProps): JSX.Element {
   const { selected, maxSelectableDays } = (props.selection as CalendarSelectionRange)
-  const classes = toolbarStyles()
+  const { classes } = toolbarStyles()
   const { t } = useTranslation('yourloops')
   const dateFormat = t('date-picker-toolbar-date-format')
 
@@ -150,9 +149,9 @@ function RangePickerToolbar(props: PickerToolbarProps): JSX.Element {
 
 function PickerToolbar(props: PickerToolbarProps): JSX.Element {
   const { selection } = props
-  const classes = toolbarStyles()
+  const { classes, cx } = toolbarStyles()
 
-  const toolbarClasses = clsx(classes.root, { [classes.landscape]: props.orientation === 'landscape' })
+  const toolbarClasses = cx(classes.root, { [classes.landscape]: props.orientation === 'landscape' })
   return (
     <div id="date-picker-toolbar" className={toolbarClasses}>
       {selection.mode === 'single' && <SinglePickerToolbar {...props} />}

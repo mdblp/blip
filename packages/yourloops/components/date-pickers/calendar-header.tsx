@@ -28,9 +28,8 @@
 import React from 'react'
 import { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import clsx from 'clsx'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import IconButton from '@mui/material/IconButton'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
@@ -52,7 +51,7 @@ interface CalendarHeaderProps {
   changingMonth?: CalendarChangeMonth | null
 }
 
-const calendarStyles = makeStyles(() => {
+const calendarStyles = makeStyles({ name: 'date-pickers-calendar-header' })(() => {
   return {
     root: {
       display: 'flex',
@@ -96,14 +95,14 @@ const calendarStyles = makeStyles(() => {
       visibility: 'hidden'
     }
   }
-}, { name: 'date-pickers-calendar-header' })
+})
 
 function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
   const { currentMonth, changingMonth, position, onPrevMonth, onNextMonth } = props
 
   const { t } = useTranslation('yourloops')
-  const classes = calendarStyles()
-  const animClasses = animationStyle()
+  const { classes, cx } = calendarStyles()
+  const { classes: animClasses } = animationStyle()
 
   const displayFormat = t('date-picker-header-date-format')
   const currMonthYear = currentMonth.format(displayFormat)
@@ -117,11 +116,11 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
   if (changingMonth) {
     const isBefore = changingMonth.direction === 'left'
     const newMonth = isBefore ? currentMonth.subtract(1, 'month') : currentMonth.add(1, 'month')
-    const divScrollClasses = clsx(classes.divScroll, {
+    const divScrollClasses = cx(classes.divScroll, {
       [animClasses.animatedMonthLTR]: isBefore,
       [animClasses.animatedMonthRTL]: !isBefore
     })
-    const changingMonthClasses = clsx(classes.month, classes.monthTranslated)
+    const changingMonthClasses = cx(classes.month, classes.monthTranslated)
     const changingMonthYear = newMonth.format(displayFormat)
 
     displayedMonths = (
@@ -171,7 +170,7 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
     }
   }
 
-  const headerClasses = clsx(classes.root, {
+  const headerClasses = cx(classes.root, {
     [classes.rootLandscape]: props.orientation === 'landscape',
     [classes.rootPortrait]: props.orientation === 'portrait'
   })
@@ -180,7 +179,7 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
     <div id={id} className={headerClasses}>
       <IconButton
         id={`${id}-button-prev-month`}
-        className={clsx({ [classes.buttonHidden]: prevButtonHidden })}
+        className={cx({ [classes.buttonHidden]: prevButtonHidden })}
         disabled={prevButtonDisabled}
         aria-disabled={prevButtonDisabled || prevButtonHidden}
         aria-label={t('aria-calendar-button-prev-month')}
@@ -196,7 +195,7 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
 
       <IconButton
         id={`${id}-button-next-month`}
-        className={clsx({ [classes.buttonHidden]: nextButtonHidden })}
+        className={cx({ [classes.buttonHidden]: nextButtonHidden })}
         disabled={nextButtonDisabled}
         aria-disabled={nextButtonDisabled || nextButtonHidden}
         aria-label={t('aria-calendar-button-next-month')}

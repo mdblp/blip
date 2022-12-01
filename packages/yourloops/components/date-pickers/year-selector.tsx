@@ -26,9 +26,8 @@
  */
 
 import React from 'react'
-import clsx from 'clsx'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 
 interface YearSelectorProps {
@@ -38,7 +37,7 @@ interface YearSelectorProps {
   onSelectYear: (year: number) => void
 }
 
-const yearSelectorStyles = makeStyles((theme: Theme) => {
+const yearSelectorStyles = makeStyles({ name: 'date-pickers-year-selector' })((theme: Theme) => {
   return {
     root: {
       cursor: 'pointer',
@@ -68,12 +67,12 @@ const yearSelectorStyles = makeStyles((theme: Theme) => {
       marginBottom: theme.spacing(1)
     }
   }
-}, { name: 'date-pickers-year-selector' })
+})
 
 function YearSelector(props: YearSelectorProps): JSX.Element {
   const { minYear } = props
   const maxYear = props.maxYear + 1
-  const classes = yearSelectorStyles()
+  const { classes, cx } = yearSelectorStyles()
   const refSelected = React.useRef<HTMLDivElement>(null)
   const refSelector = React.useRef<HTMLDivElement>(null)
   const [selectedYear, setSelectedYear] = React.useState(props.selectedYear)
@@ -123,7 +122,7 @@ function YearSelector(props: YearSelectorProps): JSX.Element {
         id={`year-${displayedYear}`}
         variant={isSelectedYear ? 'h6' : 'subtitle1'}
         component="div"
-        className={clsx(classes.year, { [classes.selectedYear]: isSelectedYear })}
+        className={cx(classes.year, { [classes.selectedYear]: isSelectedYear })}
         onClick={() => props.onSelectYear(i)}
         role="option"
         aria-selected={isSelectedYear}

@@ -27,11 +27,8 @@
 
 import React from 'react'
 import { Dayjs } from 'dayjs'
-
 import { Theme } from '@mui/material/styles'
-
-import { makeStyles } from '@mui/styles'
-
+import { makeStyles } from 'tss-react/mui'
 import {
   CalendarOrientation,
   CalendarPosition,
@@ -61,7 +58,7 @@ interface CalendarBoxProps {
   onSelectYear?: (year: number) => void
 }
 
-const calendarBoxStyles = makeStyles((theme: Theme) => {
+const calendarBoxStyles = makeStyles({ name: 'date-pickers-calendar-views' })((theme: Theme) => {
   return {
     calendarBox: {
       backgroundColor: theme.palette.background.paper,
@@ -77,7 +74,7 @@ const calendarBoxStyles = makeStyles((theme: Theme) => {
       }
     }
   }
-}, { name: 'date-pickers-calendar-views' })
+})
 
 /**
  * Display:
@@ -85,7 +82,7 @@ const calendarBoxStyles = makeStyles((theme: Theme) => {
  * - year selector
  */
 function CalendarBox(props: CalendarBoxProps): JSX.Element {
-  const classes = calendarBoxStyles(props)
+  const { classes } = calendarBoxStyles()
   const {
     selection,
     currentMonth,

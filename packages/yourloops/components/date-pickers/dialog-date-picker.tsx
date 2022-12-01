@@ -30,7 +30,7 @@ import dayjs, { Dayjs, isDayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
 import { useTheme, Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -55,7 +55,7 @@ interface DatePickerProps {
   onSelectedDateChange?: (date?: string) => void
 }
 
-const datePickerStyle = makeStyles((theme: Theme) => {
+const datePickerStyle = makeStyles<CalendarStylesProps>({ name: 'date-picker-single-day' })((theme: Theme, { orientation }) => {
   return {
     dialogPaper: {
       margin: 0,
@@ -68,14 +68,14 @@ const datePickerStyle = makeStyles((theme: Theme) => {
     },
     content: {
       display: 'flex',
-      flexDirection: (props: CalendarStylesProps) => props.orientation === 'landscape' ? 'row' : 'column',
+      flexDirection: orientation === 'landscape' ? 'row' : 'column',
       backgroundColor: 'transparent',
       width: 'fit-content',
       margin: 0,
       padding: '0px !important'
     }
   }
-}, { name: 'date-picker-single-day' })
+})
 
 const dummyDate = dayjs()
 
@@ -85,7 +85,7 @@ function DialogDatePicker(props: DatePickerProps): JSX.Element {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
   const orientation: CalendarOrientation = matches ? 'landscape' : 'portrait'
-  const classes = datePickerStyle({ orientation })
+  const { classes } = datePickerStyle({ orientation })
 
   const { date, minDate, maxDate } = React.useMemo(() => {
     if (!isOpen) {

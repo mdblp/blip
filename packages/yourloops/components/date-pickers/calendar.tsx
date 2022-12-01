@@ -28,9 +28,8 @@
 import _ from 'lodash'
 import React from 'react'
 import { Dayjs } from 'dayjs'
-import clsx from 'clsx'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 
 import {
@@ -54,7 +53,7 @@ interface CalendarProps {
   onChange: (date: Dayjs, updateCurrentMonth?: boolean) => void
 }
 
-const calendarStyles = makeStyles((theme: Theme) => {
+const calendarStyles = makeStyles({ name: 'date-pickers-calendar' })((theme: Theme) => {
   return {
     calendar: {
       display: 'flex',
@@ -93,15 +92,16 @@ const calendarStyles = makeStyles((theme: Theme) => {
       flexDirection: 'row'
     }
   }
-}, { name: 'date-pickers-calendar' })
+})
 
 function Calendar(props: CalendarProps): JSX.Element {
   // use startOf() here to clone the date, and to be sure we use the same timezone offset
   // dayjs don't handle properly the clone of the timezone
   const { selection, currentMonth, changeMonth, position } = props
-  const dayClasses = dayStyles()
-  const animClasses = animationStyle()
-  const classes = calendarStyles()
+  const { classes: dayClasses } = dayStyles()
+  const { classes: animClasses } = animationStyle()
+  const { classes, cx } = calendarStyles()
+
   const { daysArray, weekDays, currentMonthNumber } = React.useMemo(() => ({
     daysArray: currentMonth.getWeekArray(),
     weekDays: currentMonth.getWeekdays(),
@@ -131,7 +131,7 @@ function Calendar(props: CalendarProps): JSX.Element {
 
   // Disable callback during change month animation:
   const onChange = eventsDisabled ? _.noop : props.onChange
-  const oneMonthClasses = clsx(classes.daysGrid, classes.oneMonthHeight)
+  const oneMonthClasses = cx(classes.daysGrid, classes.oneMonthHeight)
   const weekdaysValues = (
     <div id={`${id}-weekdays-values-current`} role="grid" className={oneMonthClasses}>
       <MonthDayElements
@@ -162,14 +162,19 @@ function Calendar(props: CalendarProps): JSX.Element {
         />
       </div>
     )
-    const classChangeMonth = clsx({
+    const classChangeMonth = cx({
       [classes.divScrollLeft]: changeMonth?.direction === 'left',
       [classes.divScrollRight]: changeMonth?.direction === 'right',
       [animClasses.animatedMonthLTR]: isBefore,
       [animClasses.animatedMonthRTL]: !isBefore
     })
     weekdaysDiv = (
-      <div id={`${id}-change-month-anim`} className={classChangeMonth} onAnimationEnd={changeMonth.onAnimationEnd} aria-busy="true">
+      <div
+        id={`${id}-change-month-anim`}
+        className={classChangeMonth}
+        onAnimationEnd={changeMonth.onAnimationEnd}
+        aria-busy="true"
+      >
         {weekdaysValues}
         {changingWeekdaysValues}
       </div>

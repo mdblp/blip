@@ -28,10 +28,9 @@
 import React from 'react'
 import dayjs, { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import clsx from 'clsx'
 
 import { useTheme, Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -58,7 +57,7 @@ interface DatePickerProps {
   onSelectedDateChange?: (start?: string, end?: string) => void
 }
 
-const datePickerStyle = makeStyles((theme: Theme) => {
+const datePickerStyle = makeStyles({ name: 'date-picker-days-range' })((theme: Theme) => {
   return {
     dialogPaper: {
       margin: 0,
@@ -83,7 +82,7 @@ const datePickerStyle = makeStyles((theme: Theme) => {
       cursor: 'pointer'
     }
   }
-}, { name: 'date-picker-days-range' })
+})
 
 const dummyDate = dayjs()
 
@@ -92,7 +91,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
   const orientation: CalendarOrientation = matches ? 'landscape' : 'portrait'
-  const classes = datePickerStyle()
+  const { classes, cx } = datePickerStyle()
   const { maxSelectableDays, isOpen, onSelectedDateChange } = props
 
   const { startDate, endDate, minDate, maxDate } = React.useMemo(() => {
@@ -187,7 +186,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
     }
   }
 
-  const contentClasses = clsx(classes.content, {
+  const contentClasses = cx(classes.content, {
     [classes.contentLandscape]: orientation === 'landscape',
     [classes.contentPortrait]: orientation === 'portrait'
   })
