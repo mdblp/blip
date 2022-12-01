@@ -32,7 +32,7 @@ import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percenta
 import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { BgClasses, CBGPercentageData, CBGStatType } from '../models'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 
 interface CBGPercentageBarChartProps {
   annotations: []

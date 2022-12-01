@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import styles from '../cbg-common.css'
 import stylesCbgMeanStat from './cbg-mean-stat.css'
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import InfoIcon from '../assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
