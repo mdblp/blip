@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { browserName, browserVersion } from 'react-device-detect'
 
 import { useTheme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -53,7 +53,7 @@ interface OnErrorProps {
   error?: Error
 }
 
-const classes = makeStyles(() => ({
+const classes = makeStyles()(() => ({
   errorId: {
     display: 'block',
     fontWeight: 'bold'
@@ -67,7 +67,7 @@ function OnError(props: OnErrorProps): JSX.Element {
   const [showMore, setShowMore] = React.useState(false)
   const fullScreen = useMediaQuery(theme.breakpoints.down('lg'))
   const errorId = uuidv4()
-  const style = classes()
+  const { classes: style } = classes()
   const errorMessage = props.error?.message ?? 'n/a'
   const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'n/a'
   const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`

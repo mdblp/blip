@@ -30,7 +30,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Picker, { IEmojiData } from 'emoji-picker-react'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
@@ -47,7 +47,7 @@ import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
-const chatWidgetStyles = makeStyles((theme: Theme) => {
+const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
   return {
     chatWidget: {
       width: '400px',
@@ -117,7 +117,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       margin: theme.spacing(1)
     }
   }
-}, { name: 'ylp-chat-widget' })
+})
 
 export interface Message {
   text: string
@@ -133,7 +133,7 @@ export interface ChatWidgetProps {
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { patient, userId, userRole } = props
-  const classes = chatWidgetStyles()
+  const { classes } = chatWidgetStyles()
   const authHook = useAuth()
   const teamHook = useTeam()
   const patientHook = usePatientContext()
@@ -216,17 +216,23 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         className={classes.chatWidgetHeader}
         title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       />
-      <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent} data-testid="chat-card-messages">
-        {messages.map(
-          (msg): JSX.Element => (
-            <ChatMessage key={msg.id} text={msg.text}
-              privateMsg={msg.private}
-              author={msg.user.fullName}
-              timestamp={msg.timestamp}
-              ack={msg.destAck}
-              isMine={msg.authorId === userId} />
-          ))
-        }
+      <div
+        ref={content}
+        id="chat-widget-messages"
+        className={classes.chatWidgetContent}
+        data-testid="chat-card-messages"
+      >
+        {messages.map((msg): JSX.Element => (
+          <ChatMessage
+            key={msg.id}
+            text={msg.text}
+            privateMsg={msg.private}
+            author={msg.user.fullName}
+            timestamp={msg.timestamp}
+            ack={msg.destAck}
+            isMine={msg.authorId === userId}
+          />
+        ))}
       </div>
       {showPicker &&
         <div id="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
@@ -238,11 +244,11 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           {userRole === UserRoles.hcp &&
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example"
-                onChange={handleChange}>
+                    onChange={handleChange}>
                 <Tab className={classes.chatWidgetTab} label={t('chat-footer-reply')} data-testid="chat-card-reply"
-                  onClick={() => setPrivateMessage(false)} />
+                     onClick={() => setPrivateMessage(false)} />
                 <Tab className={classes.chatWidgetTab} label={t('chat-footer-private')} data-testid="chat-card-private"
-                  onClick={() => setPrivateMessage(true)} />
+                     onClick={() => setPrivateMessage(true)} />
               </Tabs>
             </div>
           }
@@ -262,8 +268,14 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
             InputLabelProps={{ shrink: false }}
             data-testid="chat-card-input"
           />
-          <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton} arial-label={t('send')} data-testid="chat-card-send"
-            onClick={sendMessage}>
+          <Button
+            id="chat-widget-send-button"
+            disabled={inputText.length < 1}
+            className={classes.iconButton}
+            arial-label={t('send')}
+            data-testid="chat-card-send"
+            onClick={sendMessage}
+          >
             <SendIcon />
           </Button>
         </div>

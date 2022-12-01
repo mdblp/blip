@@ -29,7 +29,7 @@ import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
@@ -44,7 +44,7 @@ import { useTeam } from '../../lib/team'
 import { Patient } from '../../lib/data/patient'
 import PatientUtils from '../../lib/patient/utils'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
     marginRight: theme.spacing(2)
   },
@@ -112,10 +112,9 @@ export const MAX_LOW_BG = 100
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
 
-// eslint-disable-next-line complexity
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { monitoring, saveInProgress, patient, onSave, onClose } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const teamHook = useTeam()
   const { t } = useTranslation('yourloops')
 

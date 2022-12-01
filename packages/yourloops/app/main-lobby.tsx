@@ -29,8 +29,8 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { Theme, ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 import CssBaseline from '@mui/material/CssBaseline'
 
 import { useAuth, User } from '../lib/auth'
@@ -53,7 +53,7 @@ import {
   TRAINING_PATH
 } from '../lib/diabeloop-url'
 
-const routeStyle = makeStyles<Theme>(() => {
+const routeStyle = makeStyles()(() => {
   return {
     public: {
       flex: '1 0 auto',
@@ -101,7 +101,7 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const theme = getTheme()
-  const classes = routeStyle()
+  const { classes } = routeStyle()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
 
   if (!isCurrentRoutePublic && isLoading) {

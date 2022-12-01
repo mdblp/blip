@@ -32,7 +32,7 @@ import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
@@ -53,7 +53,7 @@ interface ConsentProps {
   messageKey: string
 }
 
-const style = makeStyles((theme: Theme) => {
+const style = makeStyles({ name: 'ylp-component-consent' })((theme: Theme) => {
   return {
     mainContainer: {
       [theme.breakpoints.down('sm')]: {
@@ -84,7 +84,7 @@ const style = makeStyles((theme: Theme) => {
       }
     }
   }
-}, { name: 'ylp-component-consent' })
+})
 
 /**
  * Renew consents page
@@ -93,7 +93,7 @@ function Page(props: ConsentProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const historyHook = useHistory<HistoryState>()
   const auth = useAuth()
-  const classes = style()
+  const { classes } = style()
   const [policyAccepted, setPolicyAccepted] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.profile?.contactConsent?.isAccepted)

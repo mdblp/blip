@@ -29,7 +29,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import { Box, CardHeader, IconButton } from '@mui/material'
 import TuneIcon from '@mui/icons-material/Tune'
 import AnnouncementIcon from '@mui/icons-material/Announcement'
@@ -39,7 +39,7 @@ import { Patient } from '../../lib/data/patient'
 import PatientAlarmDialog from './patient-alarm-dialog'
 import { useAuth } from '../../lib/auth'
 
-const alarmCardStyles = makeStyles((theme: Theme) => {
+const alarmCardStyles = makeStyles()((theme: Theme) => {
   return {
     alertColor: {
       color: theme.palette.warning.main
@@ -67,7 +67,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   const { patient } = props
   const authHook = useAuth()
   const loggedInUser = authHook.user
-  const classes = alarmCardStyles()
+  const { classes } = alarmCardStyles()
   const [showPatientAlarmDialog, setShowPatientAlarmDialog] = useState(false)
   const timeSpentAwayFromTargetActive = patient.metadata.alarm.timeSpentAwayFromTargetActive
   const frequencyOfSevereHypoglycemiaActive = patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive

@@ -26,10 +26,9 @@
  */
 
 import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 
-import { makeStyles } from '@mui/styles'
-
-export const commonComponentStyles = makeStyles((theme: Theme) => ({
+export const commonComponentStyles = makeStyles()((theme: Theme) => ({
   button: {
     textTransform: 'capitalize'
   },

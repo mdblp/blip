@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React from 'react'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import CircularProgress from '@mui/material/CircularProgress'
 
 interface Props {
@@ -33,7 +33,7 @@ interface Props {
   inProgress: boolean
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles()(() =>
   ({
     wrapper: {
       position: 'relative'
@@ -45,11 +45,10 @@ const useStyles = makeStyles(() =>
       marginTop: -12,
       marginLeft: -12
     }
-  })
-)
+  }))
 
 function ProgressIconButtonWrapper({ children, inProgress }: Props): JSX.Element {
-  const { wrapper, progressButton } = useStyles()
+  const { classes: { wrapper, progressButton } } = useStyles()
 
   return (
     <div className={wrapper}>
