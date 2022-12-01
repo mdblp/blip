@@ -62,7 +62,9 @@ const ignoredTransKeysForBlip = [
   'YYYY-MM-DD',
   'carbs',
   'delivered',
-  'level'
+  'level',
+  'wheel-label-off',
+  'wheel-label-on'
 ]
 const ignoredTransKeyInBlipFiles = [
   '${pa.reportedIntensity}-pa',
