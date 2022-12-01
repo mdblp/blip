@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 
 import MenuIcon from '@material-ui/icons/Menu'
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
@@ -48,6 +48,8 @@ import { Team, useTeam } from '../../lib/team'
 import Dropdown from '../dropdown/dropdown'
 import TeamUtils from '../../lib/team/utils'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { usePatientContext } from '../../lib/patient/provider'
+import { PatientTeam } from '../../lib/data/patient'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -82,7 +84,7 @@ const classes = makeStyles((theme: Theme) => ({
   }
 }))
 
-const PATIENT_DASHBOARD_REGEX = /^\/patient\/[0-9a-f]+\/dashboard/
+const PATIENT_DASHBOARD_REGEX = /^\/patient\/([0-9a-f]+)\/dashboard/
 
 function MainHeader(props: MainHeaderProps): JSX.Element {
   const { onClickShrinkIcon, withShrinkIcon } = props
@@ -93,7 +95,10 @@ function MainHeader(props: MainHeaderProps): JSX.Element {
   const { getMedicalAndPrivateTeams } = useTeam()
   const { selectedTeamId, selectTeam } = useSelectedTeamContext()
   const { pathname } = useLocation()
-  const isPatientDashboard = pathname.match(PATIENT_DASHBOARD_REGEX)
+  const { getPatientById } = usePatientContext()
+  const history = useHistory()
+  const patientDashboardRegexMatch = pathname.match(PATIENT_DASHBOARD_REGEX)
+  const isPatientDashboard = !!patientDashboardRegexMatch
   const shouldDisplayTeamsDropdown = user.isUserHcp() && isPatientDashboard
 
   const getDropdownTeams = (): Map<string, string> => {
@@ -105,6 +110,12 @@ function MainHeader(props: MainHeaderProps): JSX.Element {
   }
 
   const onSelectTeam = (teamId: string): void => {
+    const patientId = patientDashboardRegexMatch[1]
+    const isPatientInSelectedTeam = getPatientById(patientId)?.teams.some((team: PatientTeam) => team.teamId === teamId)
+    if (!isPatientInSelectedTeam) {
+      console.log('Patient not in team')
+      history.push('/')
+    }
     selectTeam(teamId)
   }
 
@@ -142,7 +153,7 @@ function MainHeader(props: MainHeaderProps): JSX.Element {
               shouldDisplayTeamsDropdown &&
               <Box className={teamsDropdown}>
                 <Dropdown
-                  data-testid="select-team-dropdown"
+                  id="team"
                   defaultKey={selectedTeamId}
                   values={getDropdownTeams()}
                   onSelect={onSelectTeam}

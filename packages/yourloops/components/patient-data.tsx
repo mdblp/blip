@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import bows from 'bows'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -45,12 +45,12 @@ import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
 import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
 import ChatWidget from './chat/chat-widget'
-import { Patient } from '../lib/data/patient'
+import { Patient, PatientTeam } from '../lib/data/patient'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/provider'
 import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
-import { useTeam } from '../lib/team'
+import { Team, useTeam } from '../lib/team'
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -82,7 +82,7 @@ function PatientDataPage(): JSX.Element | null {
   const { t } = useTranslation('yourloops')
   const paramHook = useParams()
   const { user, isLoggedIn } = useAuth()
-  const patientHook = usePatientContext()
+  const { getPatientById, patients } = usePatientContext()
   const dataHook = useData()
   const classes = patientDataStyles()
 
@@ -96,9 +96,22 @@ function PatientDataPage(): JSX.Element | null {
   const userIsHCP = user?.isUserHcp()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
 
-  const { selectedTeamId } = useSelectedTeamContext()
+  const { selectedTeamId, selectTeam } = useSelectedTeamContext()
   const { getMedicalTeams } = useTeam()
-  const isSelectedTeamMedical = !user.isUserCaregiver() ? getMedicalTeams().some((team) => team.id === selectedTeamId) : false
+  const isSelectedTeamMedical = user.isUserHcp() && getMedicalTeams().some((team: Team) => team.id === selectedTeamId)
+
+  useEffect(() => {
+    if (userIsHCP) {
+      console.warn(paramPatientId)
+      const patientTeams = getPatientById(paramPatientId)?.teams
+      const isPatientInSelectedTeam = patientTeams.some((team: PatientTeam) => team.teamId === selectedTeamId)
+      if (!isPatientInSelectedTeam) {
+        const defaultPatientTeamId = patientTeams[0].teamId
+        console.log(`Patient not in team ${selectedTeamId}, selecting team ${defaultPatientTeamId} instead`)
+        selectTeam(defaultPatientTeamId)
+      }
+    }
+  }, [getPatientById, paramPatientId, selectTeam, selectedTeamId, userIsHCP])
 
   const initialized = isLoggedIn && blipApi
 
@@ -116,14 +129,14 @@ function PatientDataPage(): JSX.Element | null {
       setError('Invalid patient Id')
       return
     }
-    const patientToSet = patientHook.getPatientById(patientId)
+    const patientToSet = getPatientById(patientId)
     if (patientToSet) {
       setPatient(patientToSet)
     } else {
       log.error('Patient not found')
       setError('Patient not found')
     }
-  }, [initialized, paramPatientId, userId, patientHook, user, userIsPatient])
+  }, [initialized, paramPatientId, userId, user, userIsPatient])
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
@@ -148,7 +161,7 @@ function PatientDataPage(): JSX.Element | null {
         api={blipApi}
         patient={patient}
         userIsHCP={!!userIsHCP}
-        patients={patientHook.patients}
+        patients={patients}
         setPatient={setPatient}
         isSelectedTeamMedical={isSelectedTeamMedical}
         profileDialog={ProfileDialog}
