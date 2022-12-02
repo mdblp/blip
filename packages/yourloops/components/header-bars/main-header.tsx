@@ -156,7 +156,7 @@ function MainHeader(props: MainHeaderProps): JSX.Element {
                   // in order to display the adequate default value (otherwise, the value of the dropdown cannot be
                   // changed outside the dropdown itself)
                   key={selectedTeamId}
-                  id="team"
+                  id="selected-team"
                   defaultKey={selectedTeamId}
                   values={getDropdownTeams()}
                   onSelect={onSelectTeam}
