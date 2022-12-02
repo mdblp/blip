@@ -41,7 +41,7 @@ import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
-import IntendedUsePage from '../pages/intented-use/intended-use-page'
+import ProductLabellingPage from '../pages/intented-use/product-labelling-page'
 import LoginPage from '../pages/login/login-page'
 import {
   ALWAYS_ACCESSIBLE_ROUTES,
@@ -120,7 +120,7 @@ export function MainLobby(): JSX.Element {
             <SnackbarContextProvider context={DefaultSnackbarContext}>
               <div className={style}>
                 <Switch>
-                  <Route exact path="/intended-use" component={IntendedUsePage} />
+                  <Route exact path="/product-labelling" component={ProductLabellingPage} />
                   <Route exact path="/login" component={LoginPage} />
                   <Route exact path="/complete-signup" component={CompleteSignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />

@@ -41,12 +41,12 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
   return (
     <React.Fragment>
       <Link
-        id="footer-link-intended-use"
+        id="footer-link-product-labelling"
         component={RouterLink}
-        to="/intended-use"
+        to="/product-labelling"
         className={link}
       >
-        {t('intended-use')}
+        {t('product-labelling')}
       </Link>
       <Box className={separator}>|</Box>
 
