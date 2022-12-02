@@ -28,7 +28,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
@@ -57,19 +57,16 @@ export interface CaregiverTableProps {
   fetchCaregivers: () => void
 }
 
-const tableStyles = makeStyles(
-  () => {
-    return {
-      tableRowHeader: {
-        textTransform: 'uppercase'
-      },
-      tableCellActions: {
-        textAlign: 'right'
-      }
+const tableStyles = makeStyles({ name: 'ylp-patient-caregivers-table' })(() => {
+  return {
+    tableRowHeader: {
+      textTransform: 'uppercase'
+    },
+    tableCellActions: {
+      textAlign: 'right'
     }
-  },
-  { name: 'ylp-patient-caregivers-table' }
-)
+  }
+})
 
 function compareUserShare(orderBy: SortFields, order: SortDirection, a: ShareUser, b: ShareUser): number {
   let value = 0
@@ -102,7 +99,7 @@ function compareUserShare(orderBy: SortFields, order: SortDirection, a: ShareUse
 
 function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const classes = tableStyles()
+  const { classes } = tableStyles()
   const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname)
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
   const [caregiverToRemove, setCaregiverToRemove] = useState<ShareUser | null>(null)

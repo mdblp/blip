@@ -29,7 +29,7 @@ import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Theme, useTheme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -67,7 +67,7 @@ export interface TeamEditModalProps {
   teamToEdit: TeamEditModalContentProps | null
 }
 
-const modalStyles = makeStyles((theme: Theme) => {
+const modalStyles = makeStyles()((theme: Theme) => {
   return {
     dialogContent: {
       maxHeight: '28em'
@@ -97,7 +97,7 @@ const teamFieldsLimits = {
 function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const { teamToEdit } = props
   const { team, onSaveTeam } = teamToEdit ?? ({ team: null, onSaveTeam: _.noop } as TeamEditModalContentProps)
-  const classes = modalStyles()
+  const { classes } = modalStyles()
   const auth = useAuth()
   const theme = useTheme()
   const { t } = useTranslation('yourloops')

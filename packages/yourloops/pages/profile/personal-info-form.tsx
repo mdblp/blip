@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import AccountCircle from '@mui/icons-material/AccountCircle'
 
-import { ClassNameMap } from '@mui/styles/withStyles'
 import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
@@ -44,6 +43,7 @@ import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdow
 import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
 import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-button'
 import PatientProfileForm from './patient-form'
+import { ClassNameMap } from '@mui/styles'
 
 export interface PersonalInfoFormProps {
   birthDate?: string

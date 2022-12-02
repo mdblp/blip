@@ -26,27 +26,23 @@
  */
 
 import React, { useState } from 'react'
-
-import { Theme } from '@mui/material/styles'
-
-import { makeStyles } from '@mui/styles'
-
+import { useTheme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-
 import MainHeader from '../components/header-bars/main-header'
 import MainDrawer from '../components/menus/drawer/main-drawer'
 import { useAuth } from '../lib/auth'
 
-const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
-  toolbar: { ...theme.mixins.toolbar },
+const dashboardLayoutStyle = makeStyles()(() => ({
   container: {
     padding: '0px'
   }
 }))
 
 function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
-  const classes = dashboardLayoutStyle()
+  const { classes } = dashboardLayoutStyle()
+  const theme = useTheme()
   const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true)
   const authHook = useAuth()
   const isUserPatient = authHook.user?.isUserPatient()
@@ -60,7 +56,7 @@ function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
         <MainDrawer miniVariant={drawerMiniVariant} />
       }
       <Container maxWidth={false} className={classes.container}>
-        <div className={classes.toolbar} />
+        <Box sx={{ ...theme.mixins.toolbar }} />
         {children}
       </Container>
     </Box>

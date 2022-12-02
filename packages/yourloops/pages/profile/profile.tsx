@@ -32,7 +32,7 @@ import { Link as LinkRedirect } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
@@ -55,7 +55,7 @@ import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-bu
 import SwitchRoleDialogs from '../../components/switch-role'
 import { usePatientContext } from '../../lib/patient/provider'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     marginLeft: theme.spacing(2)
   },
@@ -112,7 +112,7 @@ const log = bows('ProfilePage')
 
 const ProfilePage = (): JSX.Element => {
   const { t, i18n } = useTranslation('yourloops')
-  const classes = useStyles()
+  const { classes } = useStyles()
   const alert = useAlert()
   const {
     user,

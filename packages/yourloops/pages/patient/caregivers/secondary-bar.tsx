@@ -29,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 
 import AddIcon from '@mui/icons-material/Add'
@@ -40,29 +40,26 @@ interface BarProps {
   onShowAddCaregiverDialog: () => Promise<void>
 }
 
-const pageBarStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      topBar: {
-        display: 'flex',
-        flexDirection: 'row-reverse',
-        margin: theme.spacing(1)
-      },
-      buttonAddCaregiver: {
-        marginLeft: 'auto'
-      },
-      buttonAddCaregiverText: {
-        [theme.breakpoints.down('sm')]: {
-          display: 'none'
-        }
+const pageBarStyles = makeStyles({ name: 'ylp-patient-caregivers-secondary-bar' })((theme: Theme) => {
+  return {
+    topBar: {
+      display: 'flex',
+      flexDirection: 'row-reverse',
+      margin: theme.spacing(1)
+    },
+    buttonAddCaregiver: {
+      marginLeft: 'auto'
+    },
+    buttonAddCaregiverText: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
       }
     }
-  },
-  { name: 'ylp-patient-caregivers-secondary-bar' }
-)
+  }
+})
 
 function SecondaryBar(props: BarProps): JSX.Element {
-  const classes = pageBarStyles()
+  const { classes } = pageBarStyles()
   const { t } = useTranslation('yourloops')
 
   const handleOpenAddCaregiverDialog = async (): Promise<void> => {

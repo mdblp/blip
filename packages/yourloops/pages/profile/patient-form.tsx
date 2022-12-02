@@ -29,7 +29,6 @@ import React from 'react'
 import { tz } from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 
-import { ClassNameMap } from '@mui/styles/withStyles'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
@@ -38,6 +37,7 @@ import TextField from '@mui/material/TextField'
 
 import { User } from '../../lib/auth'
 import { Errors } from './models'
+import { ClassNameMap } from '@mui/styles'
 
 interface PatientProfileFormProps {
   user: User

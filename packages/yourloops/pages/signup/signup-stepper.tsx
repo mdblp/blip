@@ -30,7 +30,7 @@ import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stepper from '@mui/material/Stepper'
@@ -48,7 +48,7 @@ export interface SignUpFormProps {
   handleNext: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   stepper: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const { stepper } = useStyles()
+  const { classes: { stepper } } = useStyles()
   const { logout } = useAuth()
   const history = useHistory()
   const [activeStep, setActiveStep] = useState(0)

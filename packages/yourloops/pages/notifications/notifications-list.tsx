@@ -29,7 +29,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import List from '@mui/material/List'
@@ -45,7 +45,7 @@ import SwitchRoleDialogs from '../../components/switch-role'
 
 import { Notification } from './notification'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Theme) => ({
   homeIcon: {
     marginRight: '0.5em'
   },
@@ -63,11 +63,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     margin: theme.spacing(4)
   }
-}), { name: 'ylp-page-notifications-list' })
+}))
 
 const NotificationsPage = (): JSX.Element => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { user } = useAuth()
   const notificationsHook = useNotification()
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)

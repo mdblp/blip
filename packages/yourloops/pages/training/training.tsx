@@ -42,13 +42,13 @@ import appConfig from '../../lib/config'
 import CardContent from '@mui/material/CardContent'
 import Container from '@mui/material/Container'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Link from '@mui/material/Link'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 
-const style = makeStyles((theme: Theme) => {
+const style = makeStyles({ name: 'ylp-training-page' })((theme: Theme) => {
   return {
     mainContainer: {
       [theme.breakpoints.down('sm')]: {
@@ -80,7 +80,7 @@ const style = makeStyles((theme: Theme) => {
       marginBottom: theme.spacing(2)
     }
   }
-}, { name: 'ylp-training-page' })
+})
 
 /**
  * Training Page
@@ -92,7 +92,7 @@ function TrainingPage(): JSX.Element {
   const historyHook = useHistory<HistoryState>()
   const fromPath = historyHook.location.state?.from?.pathname
   const user = auth.user
-  const classes = style()
+  const { classes } = style()
   const [trainingOpened, setTrainingOpened] = useState(false)
   const [checked, setChecked] = useState(false)
 

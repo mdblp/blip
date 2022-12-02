@@ -30,7 +30,7 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -78,23 +78,20 @@ export interface DisplayErrorMessageProps {
   handleClose: () => void
 }
 
-const addTeamDialogClasses = makeStyles(
-  (theme: Theme) => {
-    return {
-      formControl: {
-        marginBottom: theme.spacing(2)
-      },
-      divTeamCodeField: {
-        marginTop: theme.spacing(2),
-        width: '8em'
-      },
-      checkboxPrivacy: {
-        marginBottom: 'auto'
-      }
+const addTeamDialogClasses = makeStyles({ name: 'ylp-patient-join-team-dialog' })((theme: Theme) => {
+  return {
+    formControl: {
+      marginBottom: theme.spacing(2)
+    },
+    divTeamCodeField: {
+      marginTop: theme.spacing(2),
+      width: '8em'
+    },
+    checkboxPrivacy: {
+      marginBottom: 'auto'
     }
-  },
-  { name: 'ylp-patient-join-team-dialog' }
-)
+  }
+})
 
 function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
   const { t } = useTranslation('yourloops')
@@ -122,7 +119,7 @@ function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
 
 export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const classes = addTeamDialogClasses()
+  const { classes } = addTeamDialogClasses()
   const inputRef = React.createRef<HTMLInputElement>()
   const [idCode, setIdCode] = React.useState('')
   const { teamName } = props
@@ -209,7 +206,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 
 export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const classes = addTeamDialogClasses()
+  const { classes } = addTeamDialogClasses()
   const [privacyAccepted, setPrivacyAccepted] = React.useState(false)
 
   const { address } = props.team

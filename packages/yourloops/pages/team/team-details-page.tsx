@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { useHistory, useParams } from 'react-router-dom'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
 import DesktopMacIcon from '@mui/icons-material/DesktopMac'
@@ -47,7 +47,7 @@ import { commonComponentStyles } from '../../components/common'
 import { useAuth } from '../../lib/auth'
 import TeamAlarmsConfiguration from '../../components/team/team-alarms-configuration'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   activeLink: {
     color: theme.palette.primary.main
   },
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function TeamDetailsPage(): JSX.Element {
   const { getTeam, getMedicalTeams } = useTeam()
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
   const history = useHistory()

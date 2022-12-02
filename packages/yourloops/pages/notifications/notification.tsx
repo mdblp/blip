@@ -30,7 +30,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
 import HelpIcon from '@mui/icons-material/Help'
@@ -62,7 +62,7 @@ interface NotificationProps {
   onHelp: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles({ name: 'ylp-page-notification' })((theme: Theme) => ({
   container: {
     display: 'flex',
     alignItems: 'center',
@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonDecline: {
     marginLeft: '1em'
   }
-}), { name: 'ylp-page-notification' })
+}))
 
 export const NotificationSpan = ({ notification, id }: NotificationSpanProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
@@ -101,7 +101,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   const lastName = getUserLastName(creator as IUser)
   const careTeam = notification.target?.name ?? ''
   const values = { firstName, lastName, careteam: careTeam }
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   let notificationText: JSX.Element
   switch (type) {
@@ -210,7 +210,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const { user } = useAuth()
   const patientHook = usePatientContext()
   const [inProgress, setInProgress] = React.useState(false)
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { notification } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = React.useState(false)

@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -41,7 +41,7 @@ import Typography from '@mui/material/Typography'
 
 import appConfig from '../../lib/config'
 
-const loginStyle = makeStyles((theme: Theme) => {
+const loginStyle = makeStyles({ name: 'login-page-styles' })((theme: Theme) => {
   return {
     card: {
       padding: theme.spacing(2)
@@ -54,12 +54,12 @@ const loginStyle = makeStyles((theme: Theme) => {
       justifyContent: 'center'
     }
   }
-}, { name: 'login-page-styles' })
+})
 
 const LoginPage: FunctionComponent = () => {
   const { loginWithRedirect, error, logout } = useAuth0()
   const { t } = useTranslation('yourloops')
-  const { cardContent, card, cardActions } = loginStyle()
+  const { classes: { cardContent, card, cardActions } } = loginStyle()
 
   const onClickLogout = async (): Promise<void> => {
     await logout({ returnTo: window.location.origin })

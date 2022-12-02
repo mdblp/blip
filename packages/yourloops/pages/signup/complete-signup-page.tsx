@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
@@ -40,7 +40,7 @@ import SignUpStepper from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
 import appConfig from '../../lib/config'
 
-const formStyle = makeStyles((theme: Theme) => ({
+const formStyle = makeStyles({ name: 'signup-page-styles' })((theme: Theme) => ({
   card: {
     marginTop: theme.spacing(2)
   },
@@ -52,11 +52,11 @@ const formStyle = makeStyles((theme: Theme) => ({
   logoHeader: {
     margin: theme.spacing(2)
   }
-}), { name: 'signup-page-styles' })
+}))
 
 const CompleteSignUpPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const classes = formStyle()
+  const { classes } = formStyle()
 
   return (
     <Container maxWidth="sm">

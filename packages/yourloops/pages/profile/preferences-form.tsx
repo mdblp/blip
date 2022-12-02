@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import Tune from '@mui/icons-material/Tune'
 
-import { ClassNameMap } from '@mui/styles/withStyles'
 import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -42,6 +41,7 @@ import { ConsentFeedback } from '../../components/consents'
 import { UserRoles } from '../../models/user'
 import { Units } from '../../models/generic'
 import { LanguageCodes } from '../../models/locales'
+import { ClassNameMap } from '@mui/material'
 
 interface PreferencesFormProps {
   classes: ClassNameMap
