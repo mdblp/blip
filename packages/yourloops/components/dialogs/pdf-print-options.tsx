@@ -31,7 +31,7 @@ import dayjs, { Dayjs } from 'dayjs'
 
 import { Theme, useTheme } from '@mui/material/styles'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import DateRangeIcon from '@mui/icons-material/DateRange'
 
@@ -77,7 +77,7 @@ interface DialogPDFOptionsProps {
 const DEFAULT_PRESET: Presets = '4weeks'
 const MAX_SELECTABLE_DAYS = 90
 
-const printOptionsStyle = makeStyles((theme: Theme) => {
+const printOptionsStyle = makeStyles({ name: 'dialog-pdf-options' })((theme: Theme) => {
   return {
     marginTop: {
       marginTop: theme.spacing(2)
@@ -104,7 +104,7 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
       }
     }
   }
-}, { name: 'dialog-pdf-options' })
+})
 
 function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, format: OutputFormat): PrintPDFOptions {
   const end = maxDate.format('YYYY-MM-DD')
@@ -136,7 +136,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
   const theme = useTheme()
   const matchLandscape = useMediaQuery(theme.breakpoints.up('sm'))
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
-  const classes = printOptionsStyle()
+  const { classes } = printOptionsStyle()
   const orientation: CalendarOrientation = matchLandscape ? 'landscape' : 'portrait'
 
   const [customStartDate, setCustomStartDate] = React.useState<Dayjs | null>(null)

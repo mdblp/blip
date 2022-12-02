@@ -31,7 +31,7 @@ import { useTranslation } from 'react-i18next'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import TableBody from '@mui/material/TableBody'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
@@ -47,51 +47,49 @@ import { Patient } from '../../lib/data/patient'
 import { StyledTableCell, StyledTooltip } from '../styled-components'
 import { useAuth } from '../../lib/auth'
 
-const patientListStyle = makeStyles(
-  (theme: Theme) => {
-    return {
-      flagSort: {
-        width: '100%',
-        justifyContent: 'center'
+const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-table' })((theme: Theme) => {
+  return {
+    flagSort: {
+      width: '100%',
+      justifyContent: 'center'
+    },
+    pagination: {
+      '& .MuiTablePagination-spacer': {
+        display: 'none'
       },
-      pagination: {
-        '& .MuiTablePagination-spacer': {
-          display: 'none'
-        },
-        '& .MuiTablePagination-caption:last-of-type': {
-          marginLeft: 'auto'
-        }
-      },
-      infoIcon: {
-        marginLeft: theme.spacing(1),
-        marginRight: '2px'
-      },
-      tableContainer: {
-        boxShadow: theme.shadows[2]
-      },
-      tableRowHeader: {
-        padding: 0,
-        height: '62px'
-      },
-      tableCellHeader: {
-        backgroundColor: theme.palette.common.white,
-        fontSize: '15px',
-        fontWeight: 600,
-        padding: 0,
-        paddingLeft: '11px'
-      },
-      alertTimeTargetHeader: {
-        maxWidth: '210px'
-      },
-      tableHeaderIcon: {
-        width: '56px',
-        padding: 0
+      '& .MuiTablePagination-caption:last-of-type': {
+        marginLeft: 'auto'
       }
+    },
+    infoIcon: {
+      marginLeft: theme.spacing(1),
+      marginRight: '2px'
+    },
+    tableContainer: {
+      boxShadow: theme.shadows[2]
+    },
+    tableRowHeader: {
+      padding: 0,
+      height: '62px'
+    },
+    tableCellHeader: {
+      backgroundColor: theme.palette.common.white,
+      fontSize: '15px',
+      fontWeight: 600,
+      padding: 0,
+      paddingLeft: '11px'
+    },
+    alertTimeTargetHeader: {
+      maxWidth: '210px'
+    },
+    tableHeaderIcon: {
+      width: '56px',
+      padding: 0
     }
-  },
-  { name: 'ylp-hcp-patients-table' }
-)
-export const patientListCommonStyle = makeStyles(() => {
+  }
+})
+// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
+export const patientListCommonStyle = makeStyles()(() => {
   return {
     largeCell: {
       maxWidth: '300px'
@@ -100,8 +98,7 @@ export const patientListCommonStyle = makeStyles(() => {
       maxWidth: '200px'
     }
   }
-}
-)
+})
 
 function PatientTable(props: PatientTableProps): JSX.Element {
   const {
@@ -112,8 +109,8 @@ function PatientTable(props: PatientTableProps): JSX.Element {
     onSortList
   } = props
   const { t } = useTranslation('yourloops')
-  const classes = patientListStyle()
-  const patientListCommonClasses = patientListCommonStyle()
+  const { classes } = patientListStyle()
+  const { classes: patientListCommonClasses } = patientListCommonStyle()
   const authHook = useAuth()
   const isUserHcp = authHook.user?.isUserHcp()
   const [page, setPage] = React.useState<number>(0)

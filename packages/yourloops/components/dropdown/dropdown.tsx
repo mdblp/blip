@@ -29,7 +29,7 @@ import React from 'react'
 
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
 import OutlinedInput from '@mui/material/OutlinedInput'
 
@@ -41,7 +41,7 @@ export interface BasicDropdownProps {
   onSelect: (value: string) => void
 }
 
-const styles = makeStyles((theme: Theme) => ({
+const styles = makeStyles()((theme: Theme) => ({
   select: {
     backgroundColor: theme.palette.grey[100],
     height: '40px',
@@ -55,7 +55,7 @@ const styles = makeStyles((theme: Theme) => ({
 
 function Dropdown(props: BasicDropdownProps): JSX.Element {
   const { onSelect, defaultKey, values, id, disabled } = props
-  const classes = styles()
+  const { classes } = styles()
   const [selectedValue, setSelectedValue] = React.useState(defaultKey || '')
 
   const handleSelectChange = (event: SelectChangeEvent<unknown>): void => {

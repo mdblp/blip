@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
@@ -51,7 +51,7 @@ import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600,
     textTransform: 'uppercase'
@@ -88,9 +88,9 @@ export interface RemoteMonitoringPatientDialogProps {
 }
 
 function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps): JSX.Element {
-  const commonClasses = commonComponentStyles()
+  const { classes: commonClasses } = commonComponentStyles()
   const { patient, action, onClose } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { t } = useTranslation('yourloops')
   const notificationHook = useNotification()
   const patientHook = usePatientContext()

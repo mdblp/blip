@@ -29,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { useAuth } from '../../lib/auth'
@@ -43,46 +43,44 @@ export interface PatientListBarProps {
   onInvitePatient: () => Promise<void>
 }
 
-const pageBarStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      topBar: {
-        display: 'flex',
-        margin: theme.spacing(1)
-      },
-      toolBarLeft: {
-        display: 'flex',
-        alignItems: 'center',
-        color: theme.palette.grey[800]
-      },
-      toolBarMiddle: {
-        display: 'flex',
-        flexDirection: 'row',
-        marginRight: theme.spacing(2),
-        marginLeft: theme.spacing(2),
-        flex: '1 1'
-      },
-      buttonAddPatient: {
-        marginLeft: 'auto'
-      },
-      buttonAddPatientText: {
-        [theme.breakpoints.down('sm')]: {
-          display: 'none'
-        }
-      },
-      modalAddPatient: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+const pageBarStyles = makeStyles()((theme: Theme) => {
+  return {
+    topBar: {
+      display: 'flex',
+      margin: theme.spacing(1)
+    },
+    toolBarLeft: {
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.palette.grey[800]
+    },
+    toolBarMiddle: {
+      display: 'flex',
+      flexDirection: 'row',
+      marginRight: theme.spacing(2),
+      marginLeft: theme.spacing(2),
+      flex: '1 1'
+    },
+    buttonAddPatient: {
+      marginLeft: 'auto'
+    },
+    buttonAddPatientText: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
       }
+    },
+    modalAddPatient: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     }
   }
-)
+})
 
 function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const { filter, onFilter, onInvitePatient } = props
   const { t } = useTranslation('yourloops')
-  const classes = pageBarStyles()
+  const { classes } = pageBarStyles()
   const authHook = useAuth()
 
   const handleOpenModalAddPatient = (): void => {

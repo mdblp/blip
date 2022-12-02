@@ -28,7 +28,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -50,7 +50,7 @@ export interface WeeklyReportDialogProps {
   weeklyReport: WeeklyReport
 }
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   divider: {
     margin: '30px 0 10px 16px'
   },
@@ -69,7 +69,7 @@ const classes = makeStyles((theme: Theme) => ({
 }))
 
 export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.Element {
-  const { title, divider, explanatoryText } = classes()
+  const { classes: { title, divider, explanatoryText } } = classes()
   const { t } = useTranslation('yourloops')
   const { onClose, weeklyReport } = props
   const teamHook = useTeam()

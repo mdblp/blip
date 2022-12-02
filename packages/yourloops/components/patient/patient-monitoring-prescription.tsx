@@ -29,7 +29,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -43,7 +43,7 @@ import { Team, TeamMember, useTeam } from '../../lib/team'
 import { commonComponentStyles } from '../common'
 import { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600,
     textTransform: 'uppercase'
@@ -97,8 +97,8 @@ export interface PatientMonitoringPrescriptionProps {
 
 function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps): JSX.Element {
   const { defaultTeamId, action, setPrescriptionInfo } = props
-  const classes = useStyles()
-  const commonClasses = commonComponentStyles()
+  const { classes } = useStyles()
+  const { classes: commonClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
   const month = t('month').toLowerCase()

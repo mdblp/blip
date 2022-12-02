@@ -36,7 +36,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import { Units } from '../../models/generic'
 import { Settings, IUser } from '../../models/user'
@@ -48,7 +48,7 @@ interface ProfileDialogProps {
   handleClose: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   title: {
     textAlign: 'center',
     color: theme.palette.primary.main
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOpen, handleClose }: ProfileDialogProps) => {
   const { t } = useTranslation('yourloops')
-  const { textField, title, disabled } = useStyles()
+  const { classes: { textField, title, disabled } } = useStyles()
 
   const mail = user?.emails ? user.emails[0] : ''
   const hbA1c: Settings['a1c'] = user?.settings?.a1c

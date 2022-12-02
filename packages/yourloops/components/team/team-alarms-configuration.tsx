@@ -44,7 +44,7 @@ export interface TeamAlarmsConfigurationProps {
 
 function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Element {
   const { team } = props
-  const commonTeamClasses = commonComponentStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
   const alert = useAlert()

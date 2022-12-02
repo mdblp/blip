@@ -28,8 +28,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
-
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 
@@ -55,7 +54,7 @@ export interface MedicalRecordEditDialogProps extends CategoryProps {
   medicalRecord?: MedicalRecord
 }
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   divider: {
     margin: '30px 0 10px 16px'
   },
@@ -77,7 +76,7 @@ const classes = makeStyles((theme: Theme) => ({
 }))
 
 export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
-  const { title, textArea, divider } = classes()
+  const { classes: { title, textArea, divider } } = classes()
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { onClose, onSaved, medicalRecord, teamId, patientId } = props

@@ -29,7 +29,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Checkbox from '@mui/material/Checkbox'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import IconButton from '@mui/material/IconButton'
@@ -45,7 +45,7 @@ import PersonRemoveIcon from '../icons/PersonRemoveIcon'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import TeamUtils from '../../lib/team/utils'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   checkboxTableCellBody: {
     padding: `0 ${theme.spacing(2)} !important`
   },
@@ -81,7 +81,7 @@ export interface TeamMembersProps {
 
 function MemberRow(props: TeamMembersProps): JSX.Element {
   const { teamMember, team, refreshParent } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const rowId = teamMember.userId.replace(/@/g, '_')
   const teamHook = useTeam()
   const authContext = useAuth()

@@ -29,15 +29,15 @@ import React, { FunctionComponent, ReactElement } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
-import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
 import { PatientFilterTypes } from '../../../models/generic'
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   countLabel: {
     borderRadius: '50%',
     marginLeft: 'auto',
@@ -74,12 +74,12 @@ interface DrawerLinkItemProps {
 }
 
 const DrawerLinkItem: FunctionComponent<DrawerLinkItemProps> = (props) => {
-  const { selectedColor, listItemRoot, countLabel, monitoringBackgroundColor } = classes()
+  const { classes: { selectedColor, listItemRoot, countLabel, monitoringBackgroundColor } } = classes()
   const selected = props.filter === props.selectedFilter
 
   return (
     <Link to={`/home?filter=${props.filter}`} aria-label={props.filter}>
-      <ListItem button selected={selected} classes={{ root: listItemRoot }}>
+      <ListItemButton selected={selected} classes={{ root: listItemRoot }}>
         <ListItemIcon aria-label={props.ariaLabel} className={selected ? selectedColor : undefined}>
           {props.icon}
         </ListItemIcon>
@@ -93,7 +93,7 @@ const DrawerLinkItem: FunctionComponent<DrawerLinkItemProps> = (props) => {
             }
           </Box>
         </ListItemText>
-      </ListItem>
+      </ListItemButton>
     </Link>
   )
 }

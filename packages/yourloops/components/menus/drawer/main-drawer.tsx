@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined'
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle'
 import Drawer from '@mui/material/Drawer'
@@ -60,7 +60,7 @@ export interface MainDrawerProps {
 export const mainDrawerDefaultWidth = '300px'
 export const mainDrawerMiniVariantWidth = '57px'
 
-const styles = makeStyles((theme: Theme) => ({
+const styles = makeStyles()((theme: Theme) => ({
   divider: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2)
@@ -101,14 +101,16 @@ const styles = makeStyles((theme: Theme) => ({
 const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
   const { t } = useTranslation('yourloops')
   const {
-    divider,
-    drawer,
-    drawerPaper,
-    miniDrawer,
-    miniDrawerPaper,
-    enterTransition,
-    leaveTransition,
-    drawerBoxShadow
+    classes: {
+      divider,
+      drawer,
+      drawerPaper,
+      miniDrawer,
+      miniDrawerPaper,
+      enterTransition,
+      leaveTransition,
+      drawerBoxShadow
+    }
   } = styles()
 
   const {

@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import { useLocation } from 'react-router-dom'
 
 import diabeloopLabel from 'diabeloop-label.svg'
@@ -46,7 +46,8 @@ import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 
-export const footerStyle = makeStyles((theme: Theme) => {
+// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
+export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme: Theme) => {
   return {
     bySpan: {
       paddingLeft: '12px',
@@ -209,13 +210,13 @@ export const footerStyle = makeStyles((theme: Theme) => {
       textDecoration: 'underline'
     }
   }
-}, { name: 'footer-component-styles' })
+})
 
 const Footer: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { pathname } = useLocation()
-  const classes = footerStyle()
+  const { classes } = footerStyle()
 
   const handleShowCookieBanner = (): void => {
     if (typeof window.openAxeptioCookies === 'function') {

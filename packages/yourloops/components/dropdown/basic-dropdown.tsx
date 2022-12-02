@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
 import OutlinedInput from '@mui/material/OutlinedInput'
 
@@ -42,7 +42,7 @@ export interface BasicDropdownProps {
   onSelect: (value: string) => void
 }
 
-const styles = makeStyles((theme: Theme) => ({
+const styles = makeStyles()((theme: Theme) => ({
   select: {
     backgroundColor: theme.palette.grey[100],
     height: '40px',
@@ -63,7 +63,7 @@ const ITEM_PADDING_TOP = 8
 function BasicDropdown(props: BasicDropdownProps): JSX.Element {
   const { onSelect, defaultValue, values, id, error } = props
   const { t } = useTranslation('yourloops')
-  const classes = styles()
+  const { classes } = styles()
   const [selectedValue, setSelectedValue] = React.useState(defaultValue)
 
   const MenuProps = {

@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import Card from '@mui/material/Card'
@@ -39,7 +39,7 @@ import { Patient } from '../../../lib/data/patient'
 import WeeklyReportList from './weekly-report-list'
 import PatientUtils from '../../../lib/patient/utils'
 
-const useStyle = makeStyles(() => ({
+const useStyle = makeStyles()(() => ({
   cardContent: {
     maxHeight: 450,
     overflow: 'auto'
@@ -65,7 +65,7 @@ export interface CategoryProps {
 
 const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyle()
+  const { classes } = useStyle()
   const { patient } = props
 
   const team = PatientUtils.getRemoteMonitoringTeam(patient)

@@ -29,7 +29,7 @@ import React, { useState } from 'react'
 import moment from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import { commonComponentStyles } from '../common'
 
 import Button from '@mui/material/Button'
@@ -54,7 +54,7 @@ import { TeamMemberRole } from '../../models/team'
 import { usePatientContext } from '../../lib/patient/provider'
 import PatientUtils from '../../lib/patient/utils'
 
-const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
+const patientInfoWidgetStyles = makeStyles({ name: 'patient-info-widget' })((theme: Theme) => ({
   card: {
     width: 430
   },
@@ -71,15 +71,15 @@ const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
   marginLeft: {
     marginLeft: theme.spacing(2)
   }
-}), { name: 'patient-info-widget' })
+}))
 
 export interface PatientInfoWidgetProps {
   patient: Patient
 }
 
 function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
-  const classes = patientInfoWidgetStyles()
-  const commonStyles = commonComponentStyles()
+  const { classes } = patientInfoWidgetStyles()
+  const { classes: commonStyles } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const trNA = t('N/A')
   const authHook = useAuth()

@@ -37,7 +37,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/StethoscopeIcon'
 
 import { Theme, useTheme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -54,7 +54,7 @@ import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   clickableMenu: {
     cursor: 'pointer'
   },
@@ -69,7 +69,7 @@ const classes = makeStyles((theme: Theme) => ({
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
-  const { clickableMenu, typography } = classes()
+  const { classes: { clickableMenu, typography } } = classes()
   const history = useHistory()
   const theme = useTheme()
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))

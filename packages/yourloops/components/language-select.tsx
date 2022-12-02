@@ -31,10 +31,10 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 
-const languageSelectStyle = makeStyles((theme: Theme) => {
+const languageSelectStyle = makeStyles()((theme: Theme) => {
   return {
     select: {
       fontSize: '12px',
@@ -46,7 +46,7 @@ const languageSelectStyle = makeStyles((theme: Theme) => {
 function LanguageSelect(): JSX.Element {
   const { i18n } = useTranslation()
   const [val, setVal] = React.useState(i18n.language)
-  const classes = languageSelectStyle()
+  const { classes } = languageSelectStyle()
 
   const handleChange = async (event: SelectChangeEvent<unknown>): Promise<void> => {
     const lang = event.target.value as string

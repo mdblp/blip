@@ -28,13 +28,13 @@
 import React, { FunctionComponent, ReactElement } from 'react'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   title: {
     fontWeight: 700,
     lineHeight: '20px',
@@ -51,7 +51,7 @@ interface DrawerCategoryItemProps {
 }
 
 const DrawerCategoryItem: FunctionComponent<DrawerCategoryItemProps> = (props) => {
-  const { title, icon } = classes()
+  const { classes: { title, icon } } = classes()
 
   return (
     <ListItem>

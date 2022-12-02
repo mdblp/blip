@@ -31,7 +31,7 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 import Table from '@mui/material/Table'
 import TableContainer from '@mui/material/TableContainer'
@@ -55,7 +55,7 @@ import { useAlert } from '../utils/snackbar'
 import { errorTextFromException } from '../../lib/utils'
 import TeamUtils from '../../lib/team/utils'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   addTeamMemberButton: {
     marginLeft: theme.spacing(2)
   },
@@ -83,12 +83,12 @@ export interface TeamMembersProps {
 function TeamMembers(props: TeamMembersProps): JSX.Element {
   const { team, refreshParent } = props
   const teamHook = useTeam()
-  const classes = useStyles()
+  const { classes } = useStyles()
   const authContext = useAuth()
   const alert = useAlert()
   const loggedInUserId = authContext.user?.id
   const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId)
-  const commonTeamClasses = commonComponentStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null)
 

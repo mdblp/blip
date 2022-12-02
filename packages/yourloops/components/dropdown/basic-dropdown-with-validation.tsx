@@ -34,7 +34,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>
 type HandleChange<E> = (event: E) => void
@@ -53,13 +53,13 @@ export interface BasicDropdownWithValidationProps<T> {
   onSelect: (value: T) => void
 }
 
-const dropdownStyles = makeStyles(() => ({
+const dropdownStyles = makeStyles({ name: 'component-basic-dropdown-with-validation' })(() => ({
   formControl: { display: 'flex' }
-}), { name: 'component-basic-dropdown-with-validation' })
+}))
 
 function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<T>): JSX.Element {
   const { onSelect, defaultValue, disabledValues, values, inputTranslationKey, errorTranslationKey, id } = props
-  const classes = dropdownStyles()
+  const { classes } = dropdownStyles()
   const { t } = useTranslation('yourloops')
 
   const [selectedValue, setSelectedValue] = React.useState<string>(defaultValue)

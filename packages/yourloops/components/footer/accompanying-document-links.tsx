@@ -36,7 +36,7 @@ import { footerStyle } from './footer'
 
 const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
   const { t } = useTranslation('yourloops')
-  const { link, separator } = footerStyle()
+  const { classes: { link, separator } } = footerStyle()
 
   return (
     <React.Fragment>

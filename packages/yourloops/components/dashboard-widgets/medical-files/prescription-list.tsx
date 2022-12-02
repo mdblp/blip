@@ -29,7 +29,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -44,7 +44,7 @@ import { CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 
-const useStyle = makeStyles((theme: Theme) => ({
+const useStyle = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600
   },
@@ -67,7 +67,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 
 const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId }) => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyle()
+  const { classes } = useStyle()
   const alert = useAlert()
   const [prescriptions, setPrescriptions] = useState<Prescription[] | null>(null)
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)

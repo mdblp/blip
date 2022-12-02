@@ -29,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -47,33 +47,30 @@ export interface TeamCodeDialogProps {
 }
 
 const reCode = /^([0-9]{3})([0-9]{3})([0-9]{3})$/
-const dialogClasses = makeStyles(
-  (theme: Theme) => {
-    return {
-      contentCode: {
-        display: 'flex',
-        fontSize: 'x-large'
-      },
-      divTeamCode: {
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        backgroundColor: theme.palette.grey[200], // eslint-disable-line no-magic-numbers
-        paddingLeft: '1rem',
-        paddingRight: '1rem',
-        paddingTop: '0.3rem',
-        paddingBottom: '0.3rem',
-        borderColor: theme.palette.grey[200], // eslint-disable-line no-magic-numbers
-        borderWidth: '1px',
-        borderRadius: theme.shape.borderRadius
-      }
+const dialogClasses = makeStyles({ name: 'ylp-dialog-team-code' })((theme: Theme) => {
+  return {
+    contentCode: {
+      display: 'flex',
+      fontSize: 'x-large'
+    },
+    divTeamCode: {
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      backgroundColor: theme.palette.grey[200], // eslint-disable-line no-magic-numbers
+      paddingLeft: '1rem',
+      paddingRight: '1rem',
+      paddingTop: '0.3rem',
+      paddingBottom: '0.3rem',
+      borderColor: theme.palette.grey[200], // eslint-disable-line no-magic-numbers
+      borderWidth: '1px',
+      borderRadius: theme.shape.borderRadius
     }
-  },
-  { name: 'ylp-dialog-team-code' }
-)
+  }
+})
 
 function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const classes = dialogClasses()
+  const { classes } = dialogClasses()
   const { code, name, onClose } = props
   const dialogIsOpen = !!code.match(reCode)
 

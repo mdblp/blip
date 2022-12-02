@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 function TeamDetailsPage(): JSX.Element {
   const { getTeam, getMedicalTeams } = useTeam()
   const classes = useStyles()
-  const commonTeamClasses = commonComponentStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
   const history = useHistory()
   const authContext = useAuth()

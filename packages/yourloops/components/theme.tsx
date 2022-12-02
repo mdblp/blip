@@ -130,19 +130,3 @@ export function getTheme(): Theme {
     }
   })
 }
-
-/**
- * For some reason, return makeStyle(...) here don't work with our theme
- * @param theme Main theme
- * @returns The styles for buttons
- */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const makeButtonsStyles = (theme: Theme) => ({
-  alertActionButton: {
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.error.main,
-    '&:hover': {
-      backgroundColor: theme.palette.error.dark
-    }
-  }
-})

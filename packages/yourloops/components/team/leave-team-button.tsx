@@ -50,7 +50,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const alert = useAlert()
   const { user } = useAuth()
   const historyHook = useHistory()
-  const commonTeamClasses = commonComponentStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 

@@ -29,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import InputBase from '@mui/material/InputBase'
 
 import SearchIcon from '@mui/icons-material/Search'
@@ -39,7 +39,7 @@ export interface PatientFiltersProps {
   onFilter: (text: string) => void
 }
 
-const filtersStyles = makeStyles((theme: Theme) => {
+const filtersStyles = makeStyles({ name: 'ylp-secondary-bar-patient-filters' })((theme: Theme) => {
   return {
     formControl: {
       marginRight: theme.spacing(1),
@@ -133,7 +133,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       }
     }
   }
-}, { name: 'ylp-secondary-bar-patient-filters' })
+})
 
 /**
  * Patient list filters (HCP / Caregivers) component for secondary header bar
@@ -142,7 +142,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
  */
 function PatientFilters(props: PatientFiltersProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const classes = filtersStyles()
+  const { classes } = filtersStyles()
   const { filter, onFilter } = props
 
   const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {

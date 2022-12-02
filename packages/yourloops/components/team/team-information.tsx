@@ -29,7 +29,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
@@ -50,7 +50,7 @@ import LeaveTeamButton from './leave-team-button'
 import TeamUtils from '../../lib/team/utils'
 import { PhonePrefixCode } from '../../lib/utils'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   body: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -87,12 +87,12 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const { team, refreshParent } = props
   const teamHook = useTeam()
   const alert = useAlert()
-  const classes = useStyles()
+  const { classes } = useStyles()
   const authContext = useAuth()
   const loggedInUserId = authContext.user?.id
   const isUserPatient = authContext.user?.isUserPatient()
   const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId)
-  const commonTeamClasses = commonComponentStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`
   const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null)

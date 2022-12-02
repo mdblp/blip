@@ -29,7 +29,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -45,7 +45,7 @@ import WeeklyReportDialog from '../../dialogs/weekly-report-dialog'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 
-const useStyle = makeStyles((theme: Theme) => ({
+const useStyle = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600
   },
@@ -68,7 +68,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 
 const WeeklyReportList: FunctionComponent<CategoryProps> = ({ teamId, patientId }) => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyle()
+  const { classes } = useStyle()
   const alert = useAlert()
   const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[] | null>(null)
   const [displayWeeklyReportDetails, setDisplayWeeklyReportDetails] = useState<WeeklyReport | undefined>(undefined)
