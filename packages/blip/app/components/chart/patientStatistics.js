@@ -28,7 +28,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
@@ -36,7 +36,7 @@ import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import { useTranslation } from 'react-i18next'
 import Stats from './stats'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   card: {
     maxWidth: 345
   },
@@ -53,7 +53,7 @@ const PatientStatistics = (props) => {
   //eslint-disable-next-line
   const { bgPrefs, loading, chartPrefs, dataUtil, endpoints } = props;
   const { t } = useTranslation()
-  const classes = useStyles()
+  const { classes } = useStyles()
   return (
     <Card id="patient-statistics" data-testid="patient-statistics" className={classes.card}>
       <CardHeader

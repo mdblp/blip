@@ -31,7 +31,7 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -54,7 +54,7 @@ import { BasicsChart } from 'tideline'
 import Stats from './stats'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   card: {
     width: 430
   },
@@ -125,7 +125,7 @@ const DeviceUsage = (props) => {
   } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
-  const classes = useStyles()
+  const { classes } = useStyles()
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0];
 

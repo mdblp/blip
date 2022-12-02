@@ -25,7 +25,7 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import bows from 'bows'
 
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from 'tss-react/mui'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -38,7 +38,7 @@ import * as viz from 'tidepool-viz'
 
 const PumpSettingsContainer = viz.containers.PumpSettingsContainer
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   dialogTitle: {
     textAlign: 'center',
     fontSize: theme.typography.h5
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingsDialog = (props) => {
   const {patientData, timePrefs, bgPrefs, onSwitchToDaily, trackMetric, open, setOpen } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const log = bows('SettingsDialog')
   const { t } = useTranslation()
   const renderChart = () => {
