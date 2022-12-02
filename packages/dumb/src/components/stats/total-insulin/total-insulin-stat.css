@@ -25,33 +25,76 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum CBGStatType {
-  AverageGlucose = 'averageGlucose',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
+.title {
+  line-height: 1;
+  margin: 4px 4px 8px;
 }
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
+.titleTotal {
+  color: #0096D1;
+  margin-left: 4px;
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
+.titleData {
+  composes: smallSize from '../../../styles/typography.css';
+  padding-left: .25em;
+  position: relative;
+  top: -1px;
 }
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
+.titleSuffix {
+  padding-left: 1px;
+  margin-right: 4px;
+}
+
+.rows {
+  display: grid;
+  row-gap: 4px;
+  margin-bottom: 0.5em;
+  pointer-events: none;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.rows .rowTitle {
+  color: var(--stat--default);
+}
+
+.rows .rowValue {
+  border-width: 2px;
+  border-color: var(--stat-disabled);
+  border-style: solid;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 14px;
+  white-space: pre;
+}
+
+.rows .rowPercent {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.rows .rowPercent .rowPercentValue {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+  font-size: 24px;
+}
+
+.rows .rowPercent .rowPercentUnits {
+  font-size: 12px;
+  color: var(--text-medium-contrast);
+  align-self: flex-end;
+}
+
+.rowsTotalInsulin {
+  grid-template-columns: auto 3.5em 3.5em;
+}
+
+.rowsTotalInsulin-basal {
+  color: var(--basal-automated);
+}
+
+.rowsTotalInsulin-bolus {
+  color: var(--bolus-meal);
 }
