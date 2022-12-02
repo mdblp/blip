@@ -276,15 +276,15 @@ class Stat extends React.Component {
 
     if (outputPath && output) {
       switch (output.type) {
-      case 'divisor':
-        calc.dividend = _.get(this.props.data, _.get(output, 'dataPaths.dividend'), {}).value
-        datum.value = calc.dividend / datum.value
-        calc.result = this.formatDatum(datum, format)
-        break
+        case 'divisor':
+          calc.dividend = _.get(this.props.data, _.get(output, 'dataPaths.dividend'), {}).value
+          datum.value = calc.dividend / datum.value
+          calc.result = this.formatDatum(datum, format)
+          break
 
-      default:
-        calc.result = this.formatDatum(datum, format)
-        break
+        default:
+          calc.result = this.formatDatum(datum, format)
+          break
       }
     }
 
@@ -345,26 +345,26 @@ class Stat extends React.Component {
     }
 
     switch (props.type) {
-    case 'input':
-      input = _.get(props.data, props.data.dataPaths.input, {})
-      isOpened = _.get(this.state, 'isOpened', props.isOpened)
-      state.inputSuffix = _.get(this.state, 'inputSuffix', input.suffix)
-      state.inputValue = input.value
-      state.isCollapsible = props.collapsible
-      state.isOpened = isOpened
-      state.showFooter = isOpened
-      break
+      case 'input':
+        input = _.get(props.data, props.data.dataPaths.input, {})
+        isOpened = _.get(this.state, 'isOpened', props.isOpened)
+        state.inputSuffix = _.get(this.state, 'inputSuffix', input.suffix)
+        state.inputValue = input.value
+        state.isCollapsible = props.collapsible
+        state.isOpened = isOpened
+        state.showFooter = isOpened
+        break
 
-    case 'barBg':
-      isOpened = _.get(this.state, 'isOpened', props.isOpened)
-      state.isCollapsible = props.collapsible
-      state.isOpened = isOpened
-      break
+      case 'barBg':
+        isOpened = _.get(this.state, 'isOpened', props.isOpened)
+        state.isCollapsible = props.collapsible
+        state.isOpened = isOpened
+        break
 
-    case 'simple':
-      state.isOpened = false
-      state.showFooter = false
-      break
+      case 'simple':
+        state.isOpened = false
+        state.showFooter = false
+        break
     }
 
     return state
@@ -395,30 +395,30 @@ class Stat extends React.Component {
     const chartProps = this.getDefaultChartProps(props)
 
     switch (type) {
-    case 'wheel':
-      total = _.get(data, 'total.value', 0)
-      value = _.get(data, 'data[1].value', 0)
-      chartProps.renderer = WheelPercent
-      chartProps.className = styles.statWheelTimeInAuto
-      chartProps.values = {
-        on: Math.round(100 * value / total),
-        off: 100 - Math.round(100 * value / total)
-      }
-      chartProps.rawValues = {
-        on: this.formatDatum(data.data[1], props.dataFormat.summary).value,
-        off: this.formatDatum(data.data[0], props.dataFormat.summary).value
-      }
-      break
+      case 'wheel':
+        total = _.get(data, 'total.value', 0)
+        value = _.get(data, 'data[1].value', 0)
+        chartProps.renderer = WheelPercent
+        chartProps.className = styles.statWheelTimeInAuto
+        chartProps.values = {
+          on: Math.round(100 * value / total),
+          off: 100 - Math.round(100 * value / total)
+        }
+        chartProps.rawValues = {
+          on: this.formatDatum(data.data[1], props.dataFormat.summary).value,
+          off: this.formatDatum(data.data[0], props.dataFormat.summary).value
+        }
+        break
 
-    case 'simple':
-    case 'input':
-      break
+      case 'simple':
+      case 'input':
+        break
 
-    default:
-      this.log.error(`Invalid chart type ${type}`)
-      chartProps.height = 20
-      chartProps.renderer = () => <div>{`Invalid chart type ${type}`}</div>
-      break
+      default:
+        this.log.error(`Invalid chart type ${type}`)
+        chartProps.height = 20
+        chartProps.renderer = () => <div>{`Invalid chart type ${type}`}</div>
+        break
     }
 
     return chartProps
@@ -485,145 +485,145 @@ class Stat extends React.Component {
     }
 
     switch (format) {
-    case statFormats.bgCount:
-      if (value >= 0) {
-        const precision = value < 0.05 ? 2 : 1
-        // Note: the + converts the rounded, fixed string back to a number
-        // This allows 2.67777777 to render as 2.7 and 3.0000001 to render as 3 (not 3.0)
-        value = +value.toFixed(precision)
-      } else {
-        disableStat()
-      }
-      break
-
-    case statFormats.bgRange:
-      value = generateBgRangeLabels(bgPrefs, { condensed: true })[id]
-      break
-
-    case statFormats.bgValue:
-      if (value >= 0) {
-        id = classifyBgValue(bgBounds, value)
-        value = formatBgValue(value, bgPrefs)
-      } else {
-        disableStat()
-      }
-      break
-
-    case statFormats.carbs:
-      if (value >= 0) {
-        value = datum.valueString
-        suffix = datum.units
-      } else {
-        disableStat()
-      }
-      break
-
-    case statFormats.cv:
-      if (value >= 0) {
-        id = classifyCvValue(value)
-        value = formatDecimalNumber(value)
-        suffix = '%'
-      } else {
-        disableStat()
-      }
-      break
-
-    case statFormats.duration:
-      if (value >= 0) {
-        value = formatDuration(value, { condensed: true })
-      } else {
-        disableStat()
-      }
-      break
-
-    case statFormats.gmi:
-      if (value >= 0) {
-        value = formatDecimalNumber(value, 1)
-        suffix = '%'
-      } else {
-        disableStat()
-      }
-      break
-
-    case statFormats.percentage:
-      if (total && total >= 0) {
-        value = _.max([value, 0])
-        const percentage = (value / total) * 100
-        let precision = 0
-        // We want to show extra precision on very small percentages so that we avoid showing 0%
-        // when there is some data there.
-        if (percentage > 0 && percentage < 0.5) {
-          precision = percentage < 0.05 ? 2 : 1
+      case statFormats.bgCount:
+        if (value >= 0) {
+          const precision = value < 0.05 ? 2 : 1
+          // Note: the + converts the rounded, fixed string back to a number
+          // This allows 2.67777777 to render as 2.7 and 3.0000001 to render as 3 (not 3.0)
+          value = +value.toFixed(precision)
+        } else {
+          disableStat()
         }
-        value = formatDecimalNumber(percentage, precision)
-        suffix = '%'
-      } else {
-        disableStat()
-      }
-      break
+        break
 
-    case statFormats.standardDevRange:
-      deviation = _.get(datum, 'deviation.value', -1)
-      if (value >= 0 && deviation >= 0) {
-        lowerValue = value - deviation
-        lowerColorId = lowerValue >= 0
-          ? classifyBgValue(bgBounds, lowerValue)
-          : 'low'
+      case statFormats.bgRange:
+        value = generateBgRangeLabels(bgPrefs, { condensed: true })[id]
+        break
 
-        upperValue = value + deviation
-        upperColorId = classifyBgValue(bgBounds, upperValue)
+      case statFormats.bgValue:
+        if (value >= 0) {
+          id = classifyBgValue(bgBounds, value)
+          value = formatBgValue(value, bgPrefs)
+        } else {
+          disableStat()
+        }
+        break
 
-        value = (
-          <span>
+      case statFormats.carbs:
+        if (value >= 0) {
+          value = datum.valueString
+          suffix = datum.units
+        } else {
+          disableStat()
+        }
+        break
+
+      case statFormats.cv:
+        if (value >= 0) {
+          id = classifyCvValue(value)
+          value = formatDecimalNumber(value)
+          suffix = '%'
+        } else {
+          disableStat()
+        }
+        break
+
+      case statFormats.duration:
+        if (value >= 0) {
+          value = formatDuration(value, { condensed: true })
+        } else {
+          disableStat()
+        }
+        break
+
+      case statFormats.gmi:
+        if (value >= 0) {
+          value = formatDecimalNumber(value, 1)
+          suffix = '%'
+        } else {
+          disableStat()
+        }
+        break
+
+      case statFormats.percentage:
+        if (total && total >= 0) {
+          value = _.max([value, 0])
+          const percentage = (value / total) * 100
+          let precision = 0
+          // We want to show extra precision on very small percentages so that we avoid showing 0%
+          // when there is some data there.
+          if (percentage > 0 && percentage < 0.5) {
+            precision = percentage < 0.05 ? 2 : 1
+          }
+          value = formatDecimalNumber(percentage, precision)
+          suffix = '%'
+        } else {
+          disableStat()
+        }
+        break
+
+      case statFormats.standardDevRange:
+        deviation = _.get(datum, 'deviation.value', -1)
+        if (value >= 0 && deviation >= 0) {
+          lowerValue = value - deviation
+          lowerColorId = lowerValue >= 0
+            ? classifyBgValue(bgBounds, lowerValue)
+            : 'low'
+
+          upperValue = value + deviation
+          upperColorId = classifyBgValue(bgBounds, upperValue)
+
+          value = (
+            <span>
               <span style={{
                 color: colors[lowerColorId]
               }}>
                 {formatBgValue(value - deviation, bgPrefs)}
               </span>
             &nbsp;-&nbsp;
-            <span style={{
-              color: colors[upperColorId]
-            }}>
+              <span style={{
+                color: colors[upperColorId]
+              }}>
                 {formatBgValue(value + deviation, bgPrefs)}
               </span>
             </span>
-        )
-      } else {
-        disableStat()
-      }
-      break
+          )
+        } else {
+          disableStat()
+        }
+        break
 
-    case statFormats.standardDevValue:
-      if (value >= 0) {
-        value = formatBgValue(value, bgPrefs)
-      } else {
-        disableStat()
-      }
-      break
+      case statFormats.standardDevValue:
+        if (value >= 0) {
+          value = formatBgValue(value, bgPrefs)
+        } else {
+          disableStat()
+        }
+        break
 
-    case statFormats.units:
-      if (value >= 0) {
-        value = formatDecimalNumber(value, 1)
-        suffix = t('U')
-      } else {
-        disableStat()
-      }
-      break
+      case statFormats.units:
+        if (value >= 0) {
+          value = formatDecimalNumber(value, 1)
+          suffix = t('U')
+        } else {
+          disableStat()
+        }
+        break
 
-    case statFormats.unitsPerKg:
-      if (suffix === t('lb')) {
-        value = value * LBS_PER_KG
-      }
-      suffix = t('U/kg')
-      if (value > 0 && _.isFinite(value)) {
-        value = formatDecimalNumber(value, 2)
-      } else {
-        disableStat()
-      }
-      break
+      case statFormats.unitsPerKg:
+        if (suffix === t('lb')) {
+          value = value * LBS_PER_KG
+        }
+        suffix = t('U/kg')
+        if (value > 0 && _.isFinite(value)) {
+          value = formatDecimalNumber(value, 2)
+        } else {
+          disableStat()
+        }
+        break
 
-    default:
-      break
+      default:
+        break
     }
 
     return {
