@@ -5,13 +5,8 @@ on:
     branches: [ 'dblp' ]
   pull_request:
     branches: [ 'dblp' ]
-  workflow_dispatch:
-    branches: '*'
-    inputs:
-      tag:
-        description: 'Add new GitHub tag'
-        required: true
-        type: boolean
+  issue_comment:
+    types: [ 'created', 'edited' ]
 
 jobs:
   lint-test-build:
@@ -70,14 +65,14 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: github.event_name != 'pull_request'
+        if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
-    if: github.event_name != 'pull_request'
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish'}}
     needs: lint-test-build
     runs-on: ubuntu-latest
     outputs:
@@ -114,7 +109,7 @@ jobs:
           images: ${{ secrets.REGISTRY }}/blip
           tags: |
             type=ref,enable=true,prefix=${{ steps.package-version.outputs.semver }}-PR-,event=pr
-            type=ref,enabled=true,event=branch
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
@@ -126,10 +121,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Creating new tag
-        if: ${{ inputs.tag }}
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: v${{ steps.meta.outputs.version }}
+          tag: ${{ steps.meta.outputs.version }}
+          force_push_tag: true
 
   documentation:
     if: github.ref_name == 'dblp'
