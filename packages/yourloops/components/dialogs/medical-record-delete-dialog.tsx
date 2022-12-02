@@ -27,7 +27,6 @@
 
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@mui/styles'
 
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -36,7 +35,6 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 
-import { makeButtonsStyles } from '../theme'
 import { MedicalRecord } from '../../lib/medical-files/model'
 import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
 import { useAlert } from '../utils/snackbar'
@@ -48,10 +46,7 @@ export interface MedicalRecordDeleteDialogProps {
   medicalRecord: MedicalRecord
 }
 
-const buttons = makeStyles(makeButtonsStyles)
-
 export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete }: MedicalRecordDeleteDialogProps): JSX.Element {
-  const { alertActionButton } = buttons()
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
 
@@ -101,7 +96,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
             variant="contained"
             disableElevation
             disabled={inProgress}
-            className={alertActionButton}
+            color="error"
             onClick={deleteMedicalRecord}
           >
             {t('delete')}

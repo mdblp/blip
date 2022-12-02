@@ -28,8 +28,6 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@mui/styles'
-
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -39,7 +37,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 
 import { Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
-import { makeButtonsStyles } from '../theme'
 import TeamUtils from '../../lib/team/utils'
 
 export interface LeaveTeamDialogProps {
@@ -56,8 +53,6 @@ interface LeaveTeamDialogElementsProps {
   handleClose: () => void
   handleLeaveTeam: () => void
 }
-
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'YlpLeaveTeamDialogButtons' })
 
 function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element {
   const { teamName, onlyHcpMember, userIsTheOnlyAdministrator } = props
@@ -139,7 +134,6 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
 
 function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Element {
   const { onlyHcpMember, userIsTheOnlyAdministrator, handleClose, handleLeaveTeam } = props
-  const buttonClasses = makeButtonsClasses()
 
   const { t } = useTranslation('yourloops')
 
@@ -166,7 +160,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         : <Button
           id="team-leave-dialog-button-leave"
           onClick={handleLeaveTeam}
-          className={buttonClasses.alertActionButton}
+          color="error"
           variant="contained"
           disableElevation
         >

@@ -26,8 +26,6 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@mui/styles'
-import { makeButtonsStyles } from '../theme'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -53,8 +51,6 @@ export interface RemoveDirectShareProps {
 
 const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ onClose, userToRemove }) => {
   const { t } = useTranslation('yourloops')
-  const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-buttons' })
-  const buttonsClasses = makeButtonsClasses()
   const { removeDirectShare } = useRemoveDirectShareDialog(onClose)
   const { user: currentUser } = useAuth()
   const isCurrentUserCaregiver = currentUser.isUserCaregiver()
@@ -100,7 +96,7 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
         </Button>
         <Button
           data-testid="remove-direct-share-dialog-button-remove"
-          className={buttonsClasses.alertActionButton}
+          color="error"
           variant="contained"
           disableElevation
           onClick={removeUser}

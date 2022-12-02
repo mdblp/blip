@@ -27,7 +27,6 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@mui/styles'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -42,7 +41,6 @@ import Select from '@mui/material/Select'
 
 import MedicalServiceIcon from '../icons/MedicalServiceIcon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { makeButtonsStyles } from '../theme'
 import { Patient } from '../../lib/data/patient'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
 
@@ -51,11 +49,8 @@ interface RemovePatientDialogProps {
   onClose: () => void
 }
 
-const makeButtonClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-remove-patient-dialog-buttons' })
-
 const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
   const { t } = useTranslation('yourloops')
-  const buttonClasses = makeButtonClasses()
   const {
     selectedTeamId,
     sortedTeams,
@@ -133,7 +128,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
         <ProgressIconButtonWrapper inProgress={processing}>
           <Button
             data-testid="remove-patient-dialog-validate-button"
-            className={buttonClasses.alertActionButton}
+            color="error"
             disabled={!selectedTeamId || processing}
             variant="contained"
             disableElevation
