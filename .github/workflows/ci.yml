@@ -10,7 +10,7 @@ on:
 
 env:
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-  
+
 jobs:
   lint-test-build:
     runs-on: ubuntu-latest
@@ -68,12 +68,14 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
+        if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish'}}
     needs: lint-test-build
     runs-on: ubuntu-latest
     outputs:
