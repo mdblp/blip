@@ -29,7 +29,10 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
+import { CacheProvider } from '@emotion/react'
+import { TssCacheProvider } from 'tss-react'
+import createCache from '@emotion/cache'
 import { makeStyles } from 'tss-react/mui'
 import CssBaseline from '@mui/material/CssBaseline'
 
@@ -66,6 +69,16 @@ const routeStyle = makeStyles()(() => {
     }
   }
 })
+
+const muiCache = createCache({
+  key: 'mui',
+  prepend: true
+})
+
+const tssCache = createCache({
+  key: 'tss'
+})
+tssCache.compat = true
 
 const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route)
 
@@ -116,25 +129,27 @@ export function MainLobby(): JSX.Element {
       {redirectTo
         ? <Redirect to={redirectTo} />
         : (!isLoading && !fetchingUser &&
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <SnackbarContextProvider context={DefaultSnackbarContext}>
-                <div className={style}>
-                  <Switch>
-                    <Route exact path="/product-labelling" component={ProductLabellingPage} />
-                    <Route exact path="/login" component={LoginPage} />
-                    <Route exact path="/complete-signup" component={CompleteSignUpPage} />
-                    <Route exact path="/renew-consent" component={ConsentPage} />
-                    <Route exact path="/new-consent" component={PatientConsentPage} />
-                    <Route exact path="/training" component={TrainingPage} />
-                    <Route component={MainLayout} />
-                  </Switch>
-                </div>
-              </SnackbarContextProvider>
-              <Footer />
-            </ThemeProvider>
-          </StyledEngineProvider>
+          <CacheProvider value={muiCache}>
+            <TssCacheProvider value={tssCache}>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <SnackbarContextProvider context={DefaultSnackbarContext}>
+                  <div className={style}>
+                    <Switch>
+                      <Route exact path="/product-labelling" component={ProductLabellingPage} />
+                      <Route exact path="/login" component={LoginPage} />
+                      <Route exact path="/complete-signup" component={CompleteSignUpPage} />
+                      <Route exact path="/renew-consent" component={ConsentPage} />
+                      <Route exact path="/new-consent" component={PatientConsentPage} />
+                      <Route exact path="/training" component={TrainingPage} />
+                      <Route component={MainLayout} />
+                    </Switch>
+                  </div>
+                </SnackbarContextProvider>
+                <Footer />
+              </ThemeProvider>
+            </TssCacheProvider>
+          </CacheProvider>
           )}
     </React.Fragment>
   )
