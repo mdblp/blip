@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ 'dblp' ]
 
-env:
-  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -235,16 +232,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
-          cache-dependency-path: packages/*/package-lock.json
+          cache-dependency-path: package-lock.json
           node-version: 16
+
       - name: Install npm dependencies
-        run: |
-          npm ci
+        run: npm ci
+
       - name: Build
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
+        if: github.ref_name == 'dblp'
         uses: actions/upload-artifact@v3
         with:
           name: dist
