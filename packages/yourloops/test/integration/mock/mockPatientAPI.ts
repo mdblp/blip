@@ -29,7 +29,7 @@ import PatientAPI from '../../../lib/patient/patient-api'
 import { ITeamMember, TeamMemberRole } from '../../../models/team'
 import { UserInvitationStatus } from '../../../models/generic'
 import { MonitoringStatus } from '../../../models/monitoring'
-import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
+import { monitoringParameters, monitoringParametersBgUnitMmol, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
 
 export const unmonitoredPatientId = '1db524f3b65f2'
 export const unmonitoredPatientFirstName = 'Unmonitored'
@@ -45,6 +45,7 @@ export const monitoredPatient: ITeamMember = {
   teamId: mySecondTeamId,
   role: TeamMemberRole.patient,
   profile: {
+    email: 'ylp.ui.test.patient28@diabeloop.fr',
     firstName: monitoredPatientFirstName,
     fullName: monitoredPatientFullName,
     lastName: monitoredPatientLastName,
@@ -80,6 +81,7 @@ export const unmonitoredPatient: ITeamMember = {
   teamId: myThirdTeamId,
   role: TeamMemberRole.patient,
   profile: {
+    email: 'ylp.ui.test.patient28@diabeloop.fr',
     firstName: unmonitoredPatientFirstName,
     fullName: unmonitoredPatientFullName,
     lastName: unmonitoredPatientLastName,
@@ -109,6 +111,7 @@ const monitoredPatientTwo: ITeamMember = {
   teamId: myThirdTeamId,
   role: TeamMemberRole.patient,
   profile: {
+    email: 'ylp.ui.test.patient28@diabeloop.fr',
     firstName: monitoredPatientFirstName,
     fullName: monitoredPatientFullName,
     lastName: monitoredPatientLastName,
@@ -138,12 +141,20 @@ const monitoredPatientTwo: ITeamMember = {
     parameters: monitoringParameters
   }
 }
+export const monitoredPatientWithMmol: ITeamMember = {
+  ...monitoredPatientTwo,
+  monitoring: {
+    ...monitoredPatientTwo.monitoring,
+    parameters: monitoringParametersBgUnitMmol
+  }
+}
 
 export const pendingPatient: ITeamMember = {
   userId: '1db524f3b65g4',
   teamId: myThirdTeamId,
   role: TeamMemberRole.patient,
   profile: {
+    email: 'ylp.ui.test.patient29@diabeloop.fr',
     firstName: 'Pending',
     fullName: 'Pending Patient',
     lastName: 'Patient',
@@ -171,7 +182,7 @@ export const pendingPatient: ITeamMember = {
 
 export const removePatientMock = jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
 export const mockPatientAPI = () => {
-  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, pendingPatient])
+  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
 }
 
 export const buildPatient = (member: Partial<ITeamMember>): ITeamMember => {
@@ -180,6 +191,7 @@ export const buildPatient = (member: Partial<ITeamMember>): ITeamMember => {
     teamId: member.teamId ?? 'fakeUserTeamId',
     role: TeamMemberRole.patient,
     profile: {
+      email: member.profile.email,
       firstName: member.profile.firstName ?? 'fakeFirstName',
       fullName: member.profile.fullName ?? 'fakeFullName',
       lastName: member.profile.lastName ?? 'fakeLastName',
