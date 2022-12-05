@@ -60,10 +60,6 @@
     "text-table": "0.2.0",
     "translate-svg-path": "0.0.1",
     "victory": "36.6.8",
-    "voilab-pdf-table": "0.4.0",
-    "sundial": "file:../sundial",
-    "tideline": "file:../tideline",
-    "medical-domain": "file:../medical-domain",
-    "dumb": "file:../dumb"
+    "voilab-pdf-table": "0.4.0"
   }
 }

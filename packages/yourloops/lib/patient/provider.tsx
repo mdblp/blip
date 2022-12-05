@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useContext } from 'react'
+import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
 
 import { Patient, PatientTeam } from '../data/patient'
 import { Team } from '../team'
@@ -56,7 +56,7 @@ export interface PatientContextResult {
 
 const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
 
-export const PatientProvider: FunctionComponent = ({ children }) => {
+export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const patientProviderCustomHook = usePatientProviderCustomHook()
 
   return patientProviderCustomHook.initialized

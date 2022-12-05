@@ -57,7 +57,7 @@ function LanguageSelect(): JSX.Element {
   const langs = []
   for (const lang in i18n.options.resources) {
     if (Object.prototype.hasOwnProperty.call(i18n.options.resources, lang)) {
-      const language = i18n.options.resources[lang].name
+      const language = i18n.options.resources[lang].name as string
       langs.push(
         <MenuItem id={`language-selector-${lang}`} key={lang} value={lang}>
           {language}

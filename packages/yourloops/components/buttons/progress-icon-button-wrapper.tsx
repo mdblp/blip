@@ -24,14 +24,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React from 'react'
+import React, { FunctionComponent, PropsWithChildren } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import CircularProgress from '@mui/material/CircularProgress'
-
-interface Props {
-  children: JSX.Element // The button element
-  inProgress: boolean
-}
 
 const useStyles = makeStyles()(() =>
   ({
@@ -47,13 +42,13 @@ const useStyles = makeStyles()(() =>
     }
   }))
 
-function ProgressIconButtonWrapper({ children, inProgress }: Props): JSX.Element {
-  const { classes: { wrapper, progressButton } } = useStyles()
+export const ProgressIconButtonWrapper: FunctionComponent<PropsWithChildren<{ inProgress: boolean }>> = ({ children, inProgress }) => {
+  const { classes } = useStyles()
 
   return (
-    <div className={wrapper}>
+    <div className={classes.wrapper}>
       {children}
-      {inProgress && <CircularProgress role="progressbar" size={24} className={progressButton} />}
+      {inProgress && <CircularProgress role="progressbar" size={24} className={classes.progressButton} />}
     </div>
   )
 }

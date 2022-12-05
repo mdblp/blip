@@ -25,7 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react'
 import _ from 'lodash'
 
 import { UserInvitationStatus } from '../../models/generic'
@@ -208,7 +216,7 @@ function TeamContextImpl(): TeamContext {
   }
 }
 
-export const TeamContextProvider: FunctionComponent = ({ children }) => {
+export const TeamContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const context = TeamContextImpl()
   return context.initialized
     ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
