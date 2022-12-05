@@ -30,6 +30,7 @@ export enum CBGStatType {
   ReadingsInRange = 'readingsInRange',
   StandardDeviation = 'standardDev',
   TimeInRange = 'timeInRange',
+  TotalInsulin = 'totalInsulin',
 }
 
 export interface CBGPercentageData {
@@ -45,4 +46,12 @@ export enum StatLevel {
   Target = 'target',
   Low = 'low',
   VeryLow = 'veryLow'
+}
+
+export interface BgClasses {
+  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
+  high: number // High threshold represents all the values between target and high.
+  low: number // Low threshold represents all the values between veryLow and target
+  target: number // Target threshold represents all the values between low and target
+  veryLow: number // Very low threshold represents all the values between 0 and veryLow
 }

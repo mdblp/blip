@@ -1,6 +1,6 @@
 # Blip
 
-[![Build Status](https://jenkins.ci.diabeloop.eu/job/mdblp/job/blip/job/dblp/badge/icon)](https://jenkins.ci.diabeloop.eu/job/mdblp/job/blip/job/dblp/)
+[![Yourloops front CI](https://github.com/mdblp/blip/actions/workflows/ci.yml/badge.svg)](https://github.com/mdblp/blip/actions/workflows/ci.yml)
 
 Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform. It allows patients and their "care team" (family, doctors) to visualize their diabetes device data (from insulin pumps, BGMs, and/or CGMs) and message each other.
 
@@ -30,17 +30,15 @@ If this is the first time you're looking at Yoorloops (blip) locally, start with
 
 Requirements:
 - [NVM](https://github.com/nvm-sh/nvm) for managing your nodejs
-- [Node.js](http://nodejs.org/ 'Node.js') version 14.x or higher
-- [npm](https://www.npmjs.com/ 'npm') version 7.x or higher
-- [Lerna](https://lerna.js.org/) version 2.x
-
+- [Node.js](http://nodejs.org/ 'Node.js') version 16.x or higher
+- [npm](https://www.npmjs.com/ 'npm') version 8.x or higher
 
 Clone this repo [from GitHub](https://github.com/mdblp/blip 'GitHub: blip'), then install the dependencies:
 
-After cloning this repository to your local machine, first make sure that you have node >= `14.x` and npm >= `7.x` installed. If you have a different major version of node installed, consider using [nvm](https://github.com/creationix/nvm 'GitHub: Node Version Manager') to manage and switch between multiple node (& npm) installations.
+After cloning this repository to your local machine, first make sure that you have node >= `16.x` and npm >= `8.x` installed. If you have a different major version of node installed, consider using [nvm](https://github.com/creationix/nvm 'GitHub: Node Version Manager') to manage and switch between multiple node (& npm) installations.
 You can install the latest npm version with: `npm install -g npm@latest`.
 
-Once your environment is setup with node, lerna and npm, install the dependencies:
+Once your environment is setup with node and npm, install the dependencies:
 
 ```bash
 $ npm install
@@ -87,7 +85,7 @@ and the changes will be available in the browser
 $ npm run start-dev
 ```
 
-The application will be available at: http://app-frontend:3001/
+The application will be available at: http://localhost:3001/
 Hit `CTRL+C` to stop the server.
 
 ### Production build
@@ -143,12 +141,6 @@ $ npm run test
 $ npm run test-<the targeted package>
 ```
 
-To run the unit tests in watch mode, use:
-
-```bash
-$ npm run test-watch
-```
-
 To debug unit test, use:
 
 ```bash
@@ -166,7 +158,7 @@ it.only('test name')
 ## Independent server for production or docker
 
 For a production ready archive, or an independent docker image, the `server` directory is used.
-To do it automatically, see the `artifact.sh` & `.travis.yml` usage.
+To do it automatically, see the `artifact.sh` usage.
 
 To do it manually, fist be sure to set the environment variables needed (see the [Configuration](#configuration) part).
 

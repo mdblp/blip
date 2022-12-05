@@ -4,7 +4,7 @@ import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
-import { CBGMeanStat, CBGPercentageBarChart, CBGStandardDeviation, CBGStatType } from 'dumb'
+import { CBGMeanStat, CBGPercentageBarChart, CBGStandardDeviation, CBGStatType , TotalInsulinStat } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
 const { Stat } = vizComponents
@@ -89,14 +89,34 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
+    const { bgPrefs } = this.props
+    const bgClasses = {
+      high: bgPrefs.bgClasses.high.boundary,
+      low: bgPrefs.bgClasses.low.boundary,
+      target: bgPrefs.bgClasses.target.boundary,
+      veryLow: bgPrefs.bgClasses['very-low'].boundary
+    }
     return stats.map(stat => {
       switch (stat.id) {
+        case CBGStatType.TotalInsulin:
+          return (
+            <div key={stat.id} data-testid={`stat-${stat.id}`}>
+              <TotalInsulinStat
+                annotations={stat.annotations}
+                data={stat.data.data}
+                title={stat.title}
+                total={Math.round(stat.data.total.value * 10) / 10}
+              />
+              <Divider variant="fullWidth" />
+            </div>
+          )
         case CBGStatType.TimeInRange:
         case CBGStatType.ReadingsInRange:
           return (
             <div key={stat.id} data-testid={`stat-${stat.id}`}>
               <CBGPercentageBarChart
                 annotations={stat.annotations}
+                bgClasses={bgClasses}
                 data={stat.data.data}
                 hideTooltip={hideToolTips}
                 total={stat.data.total.value}
@@ -111,6 +131,7 @@ class Stats extends React.Component {
           return (
             <div key={stat.id} data-testid={`stat-${stat.id}`}>
               <CBGMeanStat
+                bgClasses={bgClasses}
                 hideTooltip={hideToolTips}
                 title={stat.title}
                 tooltipValue={stat.annotations[0]}
@@ -126,6 +147,7 @@ class Stats extends React.Component {
               <CBGStandardDeviation
                 annotations={stat.annotations}
                 averageGlucose={Math.round(stat.data.raw.averageGlucose)}
+                bgClasses={bgClasses}
                 hideTooltip={hideToolTips}
                 standardDeviation={Math.round(stat.data.raw.standardDeviation)}
                 title={stat.title}

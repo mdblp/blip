@@ -25,38 +25,76 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-
-import colors from '../../styles/colors.css'
-import styles from './stat-legend.css'
-import { Box } from '@material-ui/core'
-
-interface StatLegendProps {
-  items: Array<{ id: string, legendTitle: string }>
-  units: string
+.title {
+  line-height: 1;
+  margin: 4px 4px 8px;
 }
 
-export const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
-  const { items, units } = props
+.titleTotal {
+  color: #0096D1;
+  margin-left: 4px;
+}
 
-  return (
-    <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
-      <ul className={styles['stat-legend']}>
-        {items.map(item =>
-          <li
-            className={styles['stat-legend-item']}
-            key={item.id}
-            style={{ borderBottomColor: colors[item.id] }}
-          >
-            <span className={styles['stat-legend-title']}>
-              {item.legendTitle}
-            </span>
-          </li>
-        )}
-      </ul>
-      <Box marginLeft="auto" marginRight="4px" fontSize="12px">
-        {units}
-      </Box>
-    </Box>
-  )
+.titleData {
+  composes: smallSize from '../../../styles/typography.css';
+  padding-left: .25em;
+  position: relative;
+  top: -1px;
+}
+
+.titleSuffix {
+  padding-left: 1px;
+  margin-right: 4px;
+}
+
+.rows {
+  display: grid;
+  row-gap: 4px;
+  margin-bottom: 0.5em;
+  pointer-events: none;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.rows .rowTitle {
+  color: var(--stat--default);
+}
+
+.rows .rowValue {
+  border-width: 2px;
+  border-color: var(--stat-disabled);
+  border-style: solid;
+  border-radius: 14px;
+  text-align: center;
+  font-size: 14px;
+  white-space: pre;
+}
+
+.rows .rowPercent {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.rows .rowPercent .rowPercentValue {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+  font-size: 24px;
+}
+
+.rows .rowPercent .rowPercentUnits {
+  font-size: 12px;
+  color: var(--text-medium-contrast);
+  align-self: flex-end;
+}
+
+.rowsTotalInsulin {
+  grid-template-columns: auto 3.5em 3.5em;
+}
+
+.rowsTotalInsulin-basal {
+  color: var(--basal-automated);
+}
+
+.rowsTotalInsulin-bolus {
+  color: var(--bolus-meal);
 }

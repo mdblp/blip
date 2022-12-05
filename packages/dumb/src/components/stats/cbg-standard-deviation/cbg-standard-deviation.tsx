@@ -29,14 +29,14 @@ import React, { FunctionComponent } from 'react'
 import styles from './cbg-standard-deviation.css'
 import stylesCbgCommon from '../cbg-common.css'
 import { Box } from '@material-ui/core'
-import InfoIcon from '../assets/info-outline-24-px.svg'
-import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { computeCBGStyle } from '../cbg-utils'
+import { computeBgClassesBarStyle, computeCBGStyle } from '../cbg-utils'
+import { BgClasses } from '../models'
 
 export interface CBGStandardDeviationProps {
   annotations: string[]
   averageGlucose: number
+  bgClasses: BgClasses
   hideTooltip: boolean
   standardDeviation: number
   title: string
@@ -44,16 +44,16 @@ export interface CBGStandardDeviationProps {
 }
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props) => {
-  const { annotations, averageGlucose, hideTooltip, standardDeviation, title, units } = props
-  const { t } = useTranslation('main')
+  const { annotations, averageGlucose, bgClasses, hideTooltip, standardDeviation, title, units } = props
 
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
 
   const valueBasedStyles = {
-    min: computeCBGStyle(standardDeviationMin),
-    max: computeCBGStyle(standardDeviationMax)
+    min: computeCBGStyle(standardDeviationMin, bgClasses),
+    max: computeCBGStyle(standardDeviationMax, bgClasses)
   }
+  const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (
     <Box
@@ -77,15 +77,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
             </>
           }
           {!hideTooltip &&
-            <StatTooltip annotations={annotations}>
-              <span className={stylesCbgCommon['tooltip-icon']}>
-                <img
-                  data-testid="info-icon"
-                  src={InfoIcon}
-                  alt={t('img-alt-hover-for-more-info')}
-                />
-              </span>
-            </StatTooltip>
+            <StatTooltip annotations={annotations}/>
           }
         </Box>
         <Box fontSize="12px">
@@ -103,9 +95,17 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
         ) : (
           <>
             <div className={stylesCbgCommon.lines}>
-              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-low']}`} />
-              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-target']}`} />
-              <div className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-high']}`} />
+              <div
+                className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-low']}`}
+                style={{ width: bgClassesBarStyle.lowWidth }}
+              />
+              <div
+                className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-target']}`}
+                style={{ width: bgClassesBarStyle.targetWidth }}
+              />
+              <div
+                className={`${stylesCbgCommon.line} ${stylesCbgCommon['line-high']}`}
+              />
               <div
                 className={`${styles['horizontal-line']} ${valueBasedStyles.min.backgroundColor}`}
                 style={{ left: valueBasedStyles.min.left }}

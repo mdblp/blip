@@ -41,11 +41,9 @@ import styles from './Stat.css'
 import colors from '../../../styles/colors.css'
 import { bgPrefsPropType } from '../../../propTypes'
 import Lines from './Lines'
-import NoBar from './NoBar'
 import WheelPercent from './Wheel'
 import CollapseIconOpen from './assets/expand-more-24-px.svg'
 import CollapseIconClose from './assets/chevron-right-24-px.svg'
-import InfoIcon from './assets/info-outline-24-px.svg'
 import { StatTooltip } from 'dumb'
 
 const t = i18next.t.bind(i18next)
@@ -164,17 +162,7 @@ class Stat extends React.Component {
           </span>
         )}
         {!hideToolTips && annotations && !isDatumHovered && (
-          <StatTooltip annotations={this.props.annotations}>
-            <span
-              className={styles.tooltipIcon}
-            >
-              <img
-                data-testid="info-icon"
-                src={InfoIcon}
-                alt={t('img-alt-hover-for-more-info')}
-              />
-            </span>
-          </StatTooltip>
+          <StatTooltip annotations={this.props.annotations}/>
         )}
       </div>
     )
@@ -421,13 +409,6 @@ class Stat extends React.Component {
           on: this.formatDatum(data.data[1], props.dataFormat.summary).value,
           off: this.formatDatum(data.data[0], props.dataFormat.summary).value
         }
-        break
-
-      case 'noBar':
-        chartProps.renderer = NoBar
-        chartProps.data = data.data
-        chartProps.id = props.id
-        chartProps.animate = false
         break
 
       case 'lines':

@@ -25,57 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../styles/colors.css";
-
-.disabled-label {
-  color: var(--muted);
-}
-
-.disabled-line {
-  background-color: var(--muted);
-  border-radius: 20px;
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  width: 234px;
-}
-
-.line {
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  opacity: 0.5;
-}
-
-.lines {
+.stat-legend {
+  composes: smallSize from '../../../styles/typography.css';
+  list-style: none;
   display: flex;
-  position: relative;
-  width: 234px;
+  margin: 0;
+  padding: 0;
+  color: var(--stat-legend, #6d6d6d);
 }
 
-.line-low {
-  background-color: var(--bg-low);
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
+.stat-legend-item {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin: 0 1em 0 0;
+  border-bottom: 2px solid;
 }
 
-.line-target {
-  background-color: var(--bg-target);
+.stat-legend-title {
+  letter-spacing: -.01em;
+  white-space: nowrap;
+  line-height: 16px;
 }
 
-.line-high {
-  background-color: var(--bg-high);
-  border-bottom-right-radius: 20px;
-  border-top-right-radius: 20px;
-  flex-grow: 1;
+.very-high-border-bottom {
+  border-bottom-color: var(--bg-very-high);
 }
 
-.tooltip-icon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
+.high-border-bottom {
+  border-bottom-color: var(--bg-high);
 }
 
-.tooltip-icon > img {
-  width: 0.9em;
+.target-border-bottom {
+  border-bottom-color: var(--bg-target);
+}
+
+.low-border-bottom {
+  border-bottom-color: var(--bg-low);
+}
+
+.very-low-border-bottom {
+  border-bottom-color: var(--bg-very-low);
 }

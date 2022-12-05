@@ -29,12 +29,12 @@ import React, { FunctionComponent } from 'react'
 import styles from '../cbg-common.css'
 import stylesCbgMeanStat from './cbg-mean-stat.css'
 import { Box } from '@material-ui/core'
-import InfoIcon from '../assets/info-outline-24-px.svg'
-import { useTranslation } from 'react-i18next'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { computeCBGStyle } from '../cbg-utils'
+import { computeBgClassesBarStyle, computeCBGStyle } from '../cbg-utils'
+import { BgClasses } from '../models'
 
 export interface CBGMeanStatProps {
+  bgClasses: BgClasses
   hideTooltip: boolean
   title: string
   tooltipValue: string
@@ -43,9 +43,9 @@ export interface CBGMeanStatProps {
 }
 
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
-  const { hideTooltip, title, tooltipValue, units, value } = props
-  const { t } = useTranslation('main')
-  const valueBasedStyles = computeCBGStyle(value)
+  const { bgClasses, hideTooltip, title, tooltipValue, units, value } = props
+  const valueBasedStyles = computeCBGStyle(value, bgClasses)
+  const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (
     <Box
@@ -57,15 +57,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         <div>
           {title}
           {!hideTooltip &&
-            <StatTooltip annotations={[tooltipValue]}>
-              <span className={styles['tooltip-icon']}>
-                <img
-                  data-testid="info-icon"
-                  src={InfoIcon}
-                  alt={t('img-alt-hover-for-more-info')}
-                />
-              </span>
-            </StatTooltip>
+            <StatTooltip annotations={[tooltipValue]}/>
           }
         </div>
         <Box fontSize="12px">
@@ -83,9 +75,17 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         ) : (
           <>
             <div className={styles.lines}>
-              <div className={`${styles.line} ${styles['line-low']}`} />
-              <div className={`${styles.line} ${styles['line-target']}`} />
-              <div className={`${styles.line} ${styles['line-high']}`} />
+              <div
+                className={`${styles.line} ${styles['line-low']}`}
+                style={{ width: bgClassesBarStyle.lowWidth }}
+              />
+              <div
+                className={`${styles.line} ${styles['line-target']}`}
+                style={{ width: bgClassesBarStyle.targetWidth }}
+              />
+              <div
+                className={`${styles.line} ${styles['line-high']}`}
+              />
               <div
                 className={`${stylesCbgMeanStat.dot} ${valueBasedStyles.backgroundColor}`}
                 style={{ left: valueBasedStyles.left }}

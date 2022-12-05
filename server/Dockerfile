@@ -1,4 +1,4 @@
-FROM node:14-alpine3.14 AS base
+FROM node:16alpine3.16 AS base
 RUN apk --no-cache update && \
   apk --no-cache upgrade && \
   apk add --no-cache --virtual .user-deps shadow && \

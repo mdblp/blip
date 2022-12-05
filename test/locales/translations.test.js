@@ -136,7 +136,7 @@ const ignoredTransKeyForYourLoops = [
   'alert-invitation-patient-failed-already-in-team',
   'alert-invitation-patient-failed-already-invited',
   'accompanying-documents',
-  'intended-use',
+  'product-labelling',
   'no-new-messages',
   'training',
   'initial-hba1c',
