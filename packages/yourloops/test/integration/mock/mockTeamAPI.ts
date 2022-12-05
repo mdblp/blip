@@ -44,6 +44,16 @@ export const monitoringParameters = {
   nonDataTxThreshold: 15,
   reportingPeriod: 7
 }
+export const monitoringParametersBgUnitMmol = {
+  bgUnit: UNITS_TYPE.MMOLL,
+  lowBg: 50.5,
+  highBg: 140.5,
+  outOfRangeThreshold: 5,
+  veryLowBg: 40.5,
+  hypoThreshold: 10,
+  nonDataTxThreshold: 15,
+  reportingPeriod: 7
+}
 
 export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
 export const myThirdTeamId = '62fe00defc9374b2fed32bce'
@@ -53,16 +63,15 @@ export const teamOne: ITeam = {
   id: '62fe00defc9374b2fed32bcc',
   code: '036038775',
   type: TeamType.medical,
-  owner: loggedInUserId,
   phone: '0476000000',
   email: 'hey@hey.hey',
   address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
-  description: 'Test MyTeam',
   members: [{
     userId: loggedInUserId,
     teamId: '62fe00defc9374b2fed32bcc',
     role: TeamMemberRole.admin,
     profile: {
+      email: 'hey@hey.hey',
       firstName: 'Yourloops UI 28.0',
       fullName: 'Yourloops UI 28.0 HCP 0',
       hcpProfession: HcpProfession.other,
@@ -84,16 +93,15 @@ export const teamTwo: ITeam = {
   id: mySecondTeamId,
   code: '241548778',
   type: TeamType.medical,
-  owner: loggedInUserId,
   phone: '0476000000',
   email: 'hey@hey.hey',
   address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
-  description: 'Test My second Team',
   members: [{
     userId: loggedInUserId,
     teamId: mySecondTeamId,
     role: TeamMemberRole.admin,
     profile: {
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
       firstName: 'Yourloops UI 28.0',
       fullName: 'Yourloops UI 28.0 HCP 0',
       hcpProfession: HcpProfession.other,
@@ -121,16 +129,15 @@ export const teamThree: ITeam = {
   id: myThirdTeamId,
   code: '263381988',
   type: TeamType.medical,
-  owner: loggedInUserId,
   phone: '0476000000',
   email: 'hey@third.hey',
   address: { line1: 'Guiness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'IE' },
-  description: 'Test My third Team',
   members: [{
     userId: loggedInUserId,
     teamId: myThirdTeamId,
     role: TeamMemberRole.admin,
     profile: {
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
       firstName: 'Yourloops UI 28.0',
       fullName: 'Yourloops UI 28.0 HCP 0',
       hcpProfession: HcpProfession.other,
@@ -149,6 +156,7 @@ export const teamThree: ITeam = {
     teamId: myThirdTeamId,
     role: TeamMemberRole.admin,
     profile: {
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
       firstName: 'Yourloops UI 28.1',
       fullName: 'Yourloops UI 28.1 HCP 1',
       hcpProfession: HcpProfession.other,
