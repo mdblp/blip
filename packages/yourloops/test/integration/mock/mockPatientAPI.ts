@@ -39,6 +39,7 @@ export const monitoredPatientId = '2db524f3b65f2'
 export const monitoredPatientFirstName = 'Monitored'
 export const monitoredPatientLastName = 'Patient'
 export const monitoredPatientFullName = `${monitoredPatientFirstName} ${monitoredPatientLastName}`
+export const monitoredPatientWithMmolId = '3db654'
 
 export const monitoredPatient: ITeamMember = {
   userId: monitoredPatientId,
@@ -143,6 +144,7 @@ const monitoredPatientTwo: ITeamMember = {
 }
 export const monitoredPatientWithMmol: ITeamMember = {
   ...monitoredPatientTwo,
+  userId: monitoredPatientWithMmolId,
   monitoring: {
     ...monitoredPatientTwo.monitoring,
     parameters: monitoringParametersBgUnitMmol
