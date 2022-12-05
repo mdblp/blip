@@ -116,9 +116,9 @@ export const MAX_LOW_BG = 100
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
 
-// eslint-disable-next-line complexity
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { monitoring, saveInProgress, patient, onSave, onClose } = props
+  // patient.monitoring.parameters.bgUnit = UNITS_TYPE.MGDL
   const bgUnit = monitoring?.parameters?.bgUnit ?? UNITS_TYPE.MGDL
   const classes = useStyles()
   const teamHook = useTeam()
