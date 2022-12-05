@@ -29,6 +29,7 @@ It is based on Tidepool Blip 1.27.
 - Changing CI from Jenkins to GitHub Actions
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
+- YLP-1960 enhance pipeline
 
 ## 3.0.1 - 2022-10-11
 ### Added
