@@ -47,15 +47,31 @@ import PhysicalActivityService from './datum/PhysicalActivityService'
 import TimeZoneChangeService from './datum/TimeZoneChangeService'
 import DatumService from './DatumService'
 
-import MedicalDataOptions, { BG_CLAMP_THRESHOLD, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS } from '../../models/medical/MedicalDataOptions'
+import MedicalDataOptions, {
+  BG_CLAMP_THRESHOLD,
+  DEFAULT_BG_BOUNDS,
+  defaultMedicalDataOptions
+} from '../../models/medical/MedicalDataOptions'
 import Datum from '../../models/medical/Datum'
-import { datumTypes, DatumType } from '../../models/medical/datum/basics/BaseDatum'
+import { DatumType, datumTypes } from '../../models/medical/datum/basics/BaseDatum'
 import TimeZoneItem from '../../models/time/TimeZones'
 import {
-  getOffset, isValidTimeZone, getStartOfDay, getEndOfDay,
-  toISOString, MS_IN_DAY, getEpoch, format, addMilliseconds, epochAtTimezone,
-  addAtTimezone, substractAtTimezone, getHours, twoWeeksAgo
+  addAtTimezone,
+  addMilliseconds,
+  epochAtTimezone,
+  format,
+  getEndOfDay,
+  getEpoch,
+  getHours,
+  getOffset,
+  getStartOfDay,
+  isValidTimeZone,
+  MS_IN_DAY,
+  substractAtTimezone,
+  toISOString,
+  twoWeeksAgo
 } from '../time/TimeService'
+import PumpSettings from '../../models/medical/datum/PumpSettings'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -165,6 +181,11 @@ class MedicalDataService {
   }
 
   private join(): void {
+    this.joinBolus()
+    this.joinReservoirChanges()
+  }
+
+  private joinBolus(): void {
     const bolusMap = new Map(
       this.medicalData.bolus.map((bolus, idx) => {
         return [bolus.id, { bolus: { ...bolus }, idx }]
@@ -181,6 +202,16 @@ class MedicalDataService {
         }
       }
       return wizard
+    })
+  }
+
+  private joinReservoirChanges(): void {
+    const sortedDescPumpSettings = this.medicalData.pumpSettings.sort((pumpSettings1: PumpSettings, pumpSettings2: PumpSettings) => this.sortDatum(pumpSettings2, pumpSettings1))
+    const lastPumpSettings: PumpSettings = sortedDescPumpSettings[0]
+
+    this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
+      reservoirChange.pump = lastPumpSettings.payload.pump
+      return reservoirChange
     })
   }
 
@@ -353,7 +384,7 @@ class MedicalDataService {
     this.fills = fillData
   }
 
-  getLocaleTimeEndpoints(endInclusive = true, dateFormat = 'YYYY-MM-DD'): {startDate: string, endDate: string} {
+  getLocaleTimeEndpoints(endInclusive = true, dateFormat = 'YYYY-MM-DD'): { startDate: string, endDate: string } {
     const startEpoch = getEpoch(this.endpoints[0])
     const startTimezone = this.getTimezoneAt(startEpoch)
 
