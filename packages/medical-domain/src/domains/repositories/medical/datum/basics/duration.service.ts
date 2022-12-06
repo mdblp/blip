@@ -25,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import DurationUnit from '../../../../models/medical/datum/enums/duration-unit.enum'
 import Duration from '../../../../models/medical/datum/basics/duration.model'
-import { DatumProcessor } from '../../../../models/medical/datum.model'
 import MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 import { getNormalizedEnd } from '../../../time/time.service'
+import { DatumProcessor } from '../../../../models/medical/datum.model'
 
 const normalize = (rawData: Record<string, unknown>, _opts: MedicalDataOptions): Duration => {
   if (typeof rawData.time !== 'string') {
@@ -37,7 +38,7 @@ const normalize = (rawData: Record<string, unknown>, _opts: MedicalDataOptions):
   const strTime = rawData.time
   const rawDuration = (rawData?.duration ?? {}) as Record<string, unknown>
   const duration = {
-    units: (rawDuration?.units ?? 'hours') as string,
+    units: (rawDuration?.units ?? DurationUnit.Hours) as DurationUnit,
     value: (rawDuration?.value ?? 0) as number
   }
   const out: Duration = {

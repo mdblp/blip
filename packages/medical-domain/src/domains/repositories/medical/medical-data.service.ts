@@ -71,7 +71,7 @@ import {
   toISOString,
   twoWeeksAgo
 } from '../time/time.service'
-import PumpSettings from '../../models/medical/datum/PumpSettings'
+import PumpSettings from '../../models/medical/datum/pump-settings.model'
 
 class MedicalDataService {
   medicalData: MedicalData = {

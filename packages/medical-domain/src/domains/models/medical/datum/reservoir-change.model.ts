@@ -26,7 +26,7 @@
  */
 
 import BaseDatum from './basics/base-datum.model'
-import { PumpConfig } from './PumpSettings'
+import { PumpConfig } from './pump-settings.model'
 
 type ReservoirChange = BaseDatum & {
   type: 'deviceEvent'

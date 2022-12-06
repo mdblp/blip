@@ -25,30 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import Intensity from '../../../models/medical/datum/enums/intensity.enum'
+import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import BaseDatumService from './basics/base-datum.service'
 import DurationService from './basics/duration.service'
 import PhysicalActivity from '../../../models/medical/datum/physical-activity.model'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { DatumProcessor } from '../../../models/medical/datum.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PhysicalActivity => {
   const base = BaseDatumService.normalize(rawData, opts)
   const duration = DurationService.normalize(rawData, opts)
-  let eventId = base.id
-  if (typeof rawData.eventId === 'string' && rawData.eventId.trim() !== '') {
-    eventId = rawData.eventId
-  }
-  let inputTime = base.normalTime
-  if (typeof rawData.inputTime === 'string' && rawData.inputTime.trim() !== '') {
-    inputTime = rawData.inputTime
-  }
+  const isValidRawDataEventId = typeof rawData.eventId === 'string' && rawData.eventId.trim() !== ''
+  const eventId = isValidRawDataEventId ? rawData.eventId as string : base.id
+  const isValidRawDataInputTime = typeof rawData.inputTime === 'string' && rawData.inputTime.trim() !== ''
+  const inputTime = isValidRawDataInputTime ? rawData.inputTime as string : base.normalTime
   const physicalActivity: PhysicalActivity = {
     ...base,
     ...duration,
     type: 'physicalActivity',
     uploadId: rawData.uploadId as string,
     guid: rawData.guid as string,
-    reportedIntensity: rawData.reportedIntensity as string,
+    reportedIntensity: rawData.reportedIntensity as Intensity,
     eventId,
     inputTime
   }
@@ -61,7 +58,7 @@ const deduplicate = (data: PhysicalActivity[], _opts: MedicalDataOptions): Physi
     // For each eventID take the most recent item
     if (
       previous[current.eventId] === undefined ||
-        previous[current.eventId].inputTime < current.inputTime
+      previous[current.eventId].inputTime < current.inputTime
     ) {
       previous[current.eventId] = current
     }

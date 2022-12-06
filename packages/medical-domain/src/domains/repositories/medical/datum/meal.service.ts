@@ -25,31 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Prescriptor from '../../../models/medical/datum/enums/prescriptor.enum'
+import Unit from '../../../models/medical/datum/enums/unit.enum'
+import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import Meal from '../../../models/medical/datum/meal.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { DatumProcessor } from '../../../models/medical/datum.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Meal => {
   const base = BaseDatumService.normalize(rawData, opts)
   const rawNutrition = (rawData?.nutrition ?? {}) as Record<string, unknown>
-  const carboHydrate = (rawNutrition?.carbohydrate ?? {}) as Record<string, unknown>
-  if (!(carboHydrate?.net && carboHydrate?.units)) {
+  const carbohydrate = (rawNutrition?.carbohydrate ?? {}) as Record<string, unknown>
+  const rawPrescribedNutrition = (rawData?.prescribedNutrition ?? {}) as Record<string, unknown>
+  const prescribedCarbohydrate = (rawPrescribedNutrition?.carbohydrate ?? {}) as Record<string, unknown>
+  const prescriptor = (rawData?.prescriptor ?? '') as Prescriptor
+
+  if (!(carbohydrate?.net && carbohydrate?.units)) {
     throw new Error('Missing nutrition data on meal datum')
   }
+
   const nutrition = {
     carbohydrate: {
-      net: carboHydrate.net as number,
-      units: carboHydrate.units as string
+      net: carbohydrate.net as number,
+      units: carbohydrate.units as Unit
     }
   }
+
+  const prescribedNutrition = {
+    carbohydrate: {
+      net: prescribedCarbohydrate?.net as number,
+      units: prescribedCarbohydrate?.units as Unit
+    }
+  }
+
   const meal: Meal = {
     ...base,
     type: 'food',
     meal: 'rescuecarbs',
     uploadId: rawData.uploadId as string,
-    nutrition
+    nutrition,
+    prescribedNutrition,
+    prescriptor
   }
   return meal
 }

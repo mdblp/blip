@@ -27,11 +27,12 @@
 
 import Datum from './domains/models/medical/datum.model'
 import Basal from './domains/models/medical/datum/basal.model'
+import BaseDatum from './domains/models/medical/datum/basics/base-datum.model'
 import Bolus from './domains/models/medical/datum/bolus.model'
 import Cbg, { BgUnit, MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/cbg.model'
 import ConfidentialMode from './domains/models/medical/datum/confidential-mode.model'
 import DeviceParameterChange, { Parameter } from './domains/models/medical/datum/device-parameter-change.model'
-import { DurationValue } from './domains/models/medical/datum/basics/Duration'
+import { DurationValue } from './domains/models/medical/datum/basics/duration.model'
 import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
 import Meal from './domains/models/medical/datum/meal.model'
 import Message from './domains/models/medical/datum/message.model'

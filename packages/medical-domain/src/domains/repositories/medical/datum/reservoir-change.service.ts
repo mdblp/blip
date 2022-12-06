@@ -25,11 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ReservoirChange from '../../../models/medical/datum/reservoir-change.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
-import BaseDatumService from './basics/base-datum.service'
-import DatumService from '../datum.service'
+import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import ReservoirChange from '../../../models/medical/datum/reservoir-change.model'
+import BaseDatumService from './basics/base-datum.service'
+import { PumpConfig } from '../../../models/medical/datum/pump-settings.model'
+import DatumService from '../datum.service'
+import { DatumProcessor } from '../../../models/medical/datum.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ReservoirChange => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -37,7 +39,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...base,
     type: 'deviceEvent',
     subType: 'reservoirChange',
-    uploadId: rawData.uploadId as string
+    uploadId: rawData.uploadId as string,
+    pump: { manufacturer: PumpManufacturer.Default } as PumpConfig
   }
   return reservoirChange
 }

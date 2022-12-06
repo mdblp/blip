@@ -25,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import Source from '../../../../models/medical/datum/enums/source.enum'
+import MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
+import BaseTimeService from './base-time.service'
 import BaseDatum, { DatumType } from '../../../../models/medical/datum/basics/base-datum.model'
 import { DatumProcessor } from '../../../../models/medical/datum.model'
-import BaseTimeService from './base-time.service'
-import MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 
 /**
  * extracted from packages/tideline/js/tidelinedata.js
@@ -57,7 +58,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...baseTime,
     id,
     type: rawData.type as DatumType,
-    source: (rawData.source ?? opts.defaultSource) as string
+    source: (rawData.source ?? opts.defaultSource) as Source
   }
   return out
 }
