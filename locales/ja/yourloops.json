@@ -170,6 +170,7 @@
   "hypoglycemia-tooltip": "初期設定では、このアラートの閾値は次のように設定されています：\n指定された期間内に発生した重度の低血糖が5%を超えた場合。\n\nこの値は、リモートでモニタリングされている全患者、または患者毎に設定することができます。",
   "identification-code": "識別コード",
   "incoming-renewal": "Incoming renewal",
+  "indeterminate": "Indeterminate",
   "information": "Information",
   "initial-hba1c": "初期HbA1c",
   "ins": "INS",
