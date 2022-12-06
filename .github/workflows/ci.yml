@@ -5,11 +5,12 @@ on:
     branches: [ 'dblp' ]
   pull_request:
     branches: [ 'dblp' ]
-  issue_comment:
-    types: [ 'created', 'edited' ]
+
+env:
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 jobs:
-  lint-test-build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -18,6 +19,8 @@ jobs:
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
           node-version: 16
 
       - name: Install npm dependencies
@@ -28,58 +31,236 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build packages dependencies
-        run: npm run build-dependencies
+  test-lambda:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Test locales
-        run: npm run test-locales
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
 
       - name: Test lambda
         run: npm run test-lambda
 
+  test-sundial:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
+
       - name: Test sundial
         run: npm run test-sundial
+
+
+  test-tideline:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
 
       - name: Test tideline
         run: npm run test-tideline
 
+
+  test-medical:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
+
       - name: Test medical domain
         run: npm run test-medical-domain
+
+  test-dumb:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
 
       - name: Test dumb
         run: npm run test-dumb
 
+
+  test-viz:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
+
       - name: Test viz
         run: npm run test-viz
+
+  test-blip:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+      - name: Install npm dependencies
+        run: |
+          npm ci
+          npm run build-dependencies
 
       - name: Test blip
         run: npm run test-blip
 
+  test-yourloops-unit:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+      - name: Install npm dependencies
+        run: |
+          npm ci
+          npm run build-dependencies
+
       - name: Test yourloops unit
         run: npm run test-yourloops-unit
+
+  test-yourloops-integration:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
+          npm run build-dependencies
 
       - name: Test yourloops integration
         run: npm run test-yourloops-integration
 
+  build:
+    runs-on: ubuntu-latest
+    needs: [test-lambda, test-sundial, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration, test-blip, test-viz]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: npm ci
+
       - name: Build
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
+        if: github.ref_name == 'dblp'
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish'}}
-    needs: lint-test-build
+    if: github.ref_name == 'dblp'
+    needs: build
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.meta.outputs.version }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Download artifact
         uses: actions/download-artifact@v3
@@ -108,10 +289,9 @@ jobs:
         with:
           images: ${{ secrets.REGISTRY }}/blip
           tags: |
-            type=ref,enable=true,prefix=${{ steps.package-version.outputs.semver }}-PR-,event=pr
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Docker image
+      - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -120,11 +300,12 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Creating new tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: ${{ steps.meta.outputs.version }}
-          force_push_tag: true
+      # for now disable as we not used the changelog (missing UNRELEASED info)
+      # - name: Creating new github tag
+      #   uses: rickstaa/action-create-tag@v1
+      #   with:
+      #     tag: v${{ steps.meta.outputs.version }}
+      #     force_push_tag: true
 
   documentation:
     if: github.ref_name == 'dblp'

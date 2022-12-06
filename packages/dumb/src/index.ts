@@ -38,6 +38,7 @@ import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
+import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/tooltip/tooltip'
@@ -60,5 +61,6 @@ export {
   ReservoirTooltip,
   StatTooltip,
   TerminalTable,
-  Tooltip
+  Tooltip,
+  TotalInsulinStat
 }
