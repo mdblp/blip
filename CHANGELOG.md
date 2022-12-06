@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1850 Patient search should comply to INS standard
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
+- YLP-1962 User should be able to uncheck the training check box
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1680 getPatientData Api method has a wrong parameter
@@ -30,6 +31,7 @@ It is based on Tidepool Blip 1.27.
 - Changing CI from Jenkins to GitHub Actions
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
+- YLP-1960 enhance pipeline
 
 ## 3.0.1 - 2022-10-11
 ### Added
