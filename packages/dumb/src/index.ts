@@ -33,6 +33,7 @@ import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { BgClasses, CBGStatType } from './components/stats/models'
+import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/tooltip/tooltip'
@@ -51,5 +52,6 @@ export {
   ReservoirTooltip,
   StatTooltip,
   TerminalTable,
-  Tooltip
+  Tooltip,
+  TotalInsulinStat
 }

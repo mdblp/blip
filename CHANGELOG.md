@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 - YLP-1947 Add team selection dropdown on patient dashboard for HCP
+- YLP-1962 User should be able to uncheck the training check box
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1680 getPatientData Api method has a wrong parameter
@@ -25,6 +26,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
 - YLP-1935 CBG thresholds should be used from medical data service
+- YLP-1945 Migrate NoBar component to dumb
+- YLP-1960 enhance pipeline
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Remove react-test-renderer dependency
