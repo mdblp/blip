@@ -27,19 +27,24 @@
 
 import React, { FunctionComponent } from 'react'
 import i18next from 'i18next'
-import styles from './reservoir-tooltip.css'
-import { DEFAULT_TOOLTIP_OFFSET, Position, Side } from '../tooltip/tooltip'
-import { Manufacturer, Pump, Source, TimePrefs, TIMEZONE_UTC } from '../../../settings/models'
+import commonStyles from '../../../styles/tooltip-common.css'
+import {
+  COMMON_TOOLTIP_SIDE,
+  COMMON_TOOLTIP_TAIL_HEIGHT,
+  COMMON_TOOLTIP_TAIL_WIDTH,
+  DEFAULT_TOOLTIP_BORDER_WIDTH,
+  DEFAULT_TOOLTIP_OFFSET,
+  DEFAULT_TOOLTIP_TAIL,
+  Position,
+  Side
+} from '../tooltip/tooltip'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
+import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
+import { PumpManufacturer, ReservoirChange, TimePrefs } from 'medical-domain'
 
 interface ReservoirTooltipProps {
-  reservoir: {
-    source: Source
-    normalTime: string
-    timezone: string
-    pump: Pump
-  }
+  reservoir: ReservoirChange
   position: Position
   side: Side
   timePrefs: TimePrefs
@@ -50,57 +55,43 @@ enum ChangeType {
   Reservoir = 'reservoir'
 }
 
+const t = i18next.t.bind(i18next)
+
 export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
   const { reservoir, position, side, timePrefs } = props
 
-  const getChangeTypeByManufacturer = (manufacturer: Manufacturer): ChangeType => {
+  const getChangeTypeByManufacturer = (manufacturer: PumpManufacturer): ChangeType => {
     switch (manufacturer) {
-      case Manufacturer.Vicentra:
-      case Manufacturer.Roche:
+      case PumpManufacturer.Vicentra:
+      case PumpManufacturer.Roche:
         return ChangeType.Reservoir
-      case Manufacturer.Default:
+      case PumpManufacturer.Default:
       default:
         return ChangeType.InfusionSite
     }
   }
 
-  const manufacturer = reservoir.pump?.manufacturer || Manufacturer.Default
+  const manufacturer = reservoir.pump?.manufacturer || PumpManufacturer.Default
   const changeType: ChangeType = getChangeTypeByManufacturer(manufacturer)
   const label = (changeType === ChangeType.Reservoir)
-    ? i18next.t('Reservoir Change')
-    : i18next.t('Infusion site change')
-
-  const tooltipParams = {
-    position,
-    side: side || 'right',
-    tail: true,
-    tailWidth: 9,
-    tailHeight: 17,
-    borderColor: colors.deviceEvent,
-    borderWidth: 2,
-    dateTitle: {
-      source: reservoir.source || Source.Diabeloop,
-      normalTime: reservoir.normalTime,
-      timezone: reservoir.timezone || TIMEZONE_UTC,
-      timePrefs
-    }
-  }
+    ? t('Reservoir Change')
+    : t('Infusion site change')
 
   return (
     <Tooltip
-      position={tooltipParams.position}
-      side={tooltipParams.side}
-      tail={tooltipParams.tail}
-      tailHeight={tooltipParams.tailHeight}
-      tailWidth={tooltipParams.tailWidth}
-      borderColor={tooltipParams.borderColor}
-      borderWidth={tooltipParams.borderWidth}
-      dateTitle={tooltipParams.dateTitle}
+      position={position}
+      side={side || COMMON_TOOLTIP_SIDE}
+      borderColor={colors.deviceEvent}
+      dateTitle={getDateTitle(reservoir, timePrefs)}
+      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
+      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
+      tail={DEFAULT_TOOLTIP_TAIL}
+      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={styles.container}>
-          <div key={'title'} className={styles.pa}>
-            <div className={styles.label}>{label}</div>
+        <div className={commonStyles.containerFlex}>
+          <div className={commonStyles.rowBold}>
+            <div className={commonStyles.label}>{label}</div>
           </div>
         </div>
       }

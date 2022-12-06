@@ -36,7 +36,14 @@ import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
 import Header from './header'
 import Footer from './footer'
-import { ReservoirTooltip } from 'dumb'
+import {
+  BloodGlucoseTooltip,
+  ConfidentialTooltip,
+  FoodTooltip,
+  ParameterTooltip,
+  PhysicalTooltip,
+  ReservoirTooltip
+} from 'dumb'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -46,12 +53,6 @@ import { ReservoirTooltip } from 'dumb'
 
 const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
-const SMBGTooltip = vizComponents.SMBGTooltip
-const CBGTooltip = vizComponents.CBGTooltip
-const FoodTooltip = vizComponents.FoodTooltip
-const PhysicalTooltip = vizComponents.PhysicalTooltip
-const ParameterTooltip = vizComponents.ParameterTooltip
-const ConfidentialTooltip = vizComponents.ConfidentialTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 /**
@@ -654,8 +655,9 @@ class Daily extends React.Component {
   handleSMBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <SMBGTooltip
-        smbg={datum.data}
+      <BloodGlucoseTooltip
+        isSmbg={true}
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -670,8 +672,8 @@ class Daily extends React.Component {
   handleCBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <CBGTooltip
-        cbg={datum.data}
+      <BloodGlucoseTooltip
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -693,7 +695,6 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
@@ -740,7 +741,6 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
@@ -766,14 +766,11 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ConfidentialTooltip
-        confidential={datum.data}
         position={{
           top: datum.top,
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
-        timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
   }

@@ -53,7 +53,13 @@ export interface DateTitle {
 
 export type Side = 'top' | 'right' | 'bottom' | 'left'
 
+export const COMMON_TOOLTIP_SIDE = 'right'
+export const COMMON_TOOLTIP_TAIL_WIDTH = 9
+export const COMMON_TOOLTIP_TAIL_HEIGHT = 17
+
+export const DEFAULT_TOOLTIP_TAIL = true
 export const DEFAULT_TOOLTIP_OFFSET = { top: 0, left: 0 }
+export const DEFAULT_TOOLTIP_BORDER_WIDTH = 2
 
 interface TooltipProps {
   title?: string
@@ -72,12 +78,12 @@ interface TooltipProps {
 
 const Tooltip: FunctionComponent<TooltipProps> = (
   {
-    tail = true,
+    tail = DEFAULT_TOOLTIP_TAIL,
     side = 'left',
     tailWidth = 7,
     tailHeight = 8,
     borderColor = 'black',
-    borderWidth = 2,
+    borderWidth = DEFAULT_TOOLTIP_BORDER_WIDTH,
     offset: initialOffset = DEFAULT_TOOLTIP_OFFSET,
     ...props
   }) => {
