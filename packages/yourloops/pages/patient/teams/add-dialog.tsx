@@ -155,8 +155,8 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
   return (
     <React.Fragment>
       <Box textAlign="center" p={3}>
-        <DialogTitle id="team-add-dialog-title">
-          <strong>{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
+        <DialogTitle>
+          <strong id="team-add-dialog-title">{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
         </DialogTitle>
 
         <DialogContent id="team-add-dialog-content">

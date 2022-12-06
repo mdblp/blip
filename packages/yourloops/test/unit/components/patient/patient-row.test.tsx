@@ -107,7 +107,7 @@ describe('Patient row', () => {
     expect(screen.queryByTitle('flag-icon-inactive')).toBeNull()
     expect(screen.queryByTitle('pending-icon')).not.toBeNull()
     expect(screen.queryByText(/pending-invitation/)).toBeNull()
-    userEvent.hover(screen.getByTitle('pending-invitation'))
+    userEvent.hover(screen.getByLabelText('pending-invitation'))
     expect(screen.findByText('pending-invitation')).not.toBeNull()
   })
 

@@ -88,8 +88,8 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
       onClose={handleClickClose}
       fullWidth
     >
-      <DialogTitle id="team-add-member-dialog-title">
-        <strong>{t('team-add-member-dialog-title')}</strong>
+      <DialogTitle>
+        <strong id="team-add-member-dialog-title">{t('team-add-member-dialog-title')}</strong>
         <br />
         <span id="team-add-member-dialog-title-team-name">{teamName}</span>
       </DialogTitle>
