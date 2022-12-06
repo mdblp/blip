@@ -36,6 +36,7 @@ import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>): ParametersChange[] => {
   return rawHistory.map(h => {
@@ -77,9 +78,10 @@ const normalizeDevice = (rawDevice: Record<string, unknown>): DeviceConfig => {
 }
 
 const normalizePump = (rawPump: Record<string, unknown>): PumpConfig => {
+  const manufacturer = (rawPump?.manufacturer ?? '') as string
   return {
     expirationDate: (rawPump?.expirationDate ?? '') as string,
-    manufacturer: (rawPump?.manufacturer ?? '') as string,
+    manufacturer: manufacturer.toUpperCase() as PumpManufacturer,
     name: (rawPump?.name ?? '') as string,
     serialNumber: (rawPump?.serialNumber ?? '') as string,
     swVersion: (rawPump?.swVersion ?? '') as string

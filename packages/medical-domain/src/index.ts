@@ -28,26 +28,32 @@
 import Datum from './domains/models/medical/datum.model'
 import Basal from './domains/models/medical/datum/basal.model'
 import Bolus from './domains/models/medical/datum/bolus.model'
-import Cbg, { MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/cbg.model'
+import Cbg, { BgUnit, MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/cbg.model'
 import ConfidentialMode from './domains/models/medical/datum/confidential-mode.model'
-import DeviceParameterChange from './domains/models/medical/datum/device-parameter-change.model'
+import DeviceParameterChange, { Parameter } from './domains/models/medical/datum/device-parameter-change.model'
+import { DurationValue } from './domains/models/medical/datum/basics/Duration'
+import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
 import Meal from './domains/models/medical/datum/meal.model'
 import Message from './domains/models/medical/datum/message.model'
 import PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
-import PumpSettings from './domains/models/medical/datum/pump-settings.model'
+import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
+import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
+import PumpSettings, { CgmConfig, DeviceConfig, PumpConfig } from './domains/models/medical/datum/pump-settings.model'
 import ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
 import Smbg from './domains/models/medical/datum/smbg.model'
+import Source from './domains/models/medical/datum/enums/source.enum'
+import Unit from './domains/models/medical/datum/enums/unit.enum'
 import Upload from './domains/models/medical/datum/upload.model'
 import Wizard from './domains/models/medical/datum/wizard.model'
 import ZenMode from './domains/models/medical/datum/zen-mode.model'
 import MedicalDataService from './domains/repositories/medical/medical-data.service'
 import { convertBG } from './domains/repositories/medical/datum/cbg.service'
-import { defaultMedicalDataOptions } from './domains/models/medical/medical-data-options.model'
+import { BgClasses, defaultMedicalDataOptions, TimePrefs } from './domains/models/medical/medical-data-options.model'
 import * as TimeService from './domains/repositories/time/time.service'
 
 export {
-  Basal, Bolus, Cbg, ConfidentialMode, Datum, DeviceParameterChange, Meal, Message,
-  PhysicalActivity, PumpSettings, ReservoirChange, Smbg, Upload, Wizard, ZenMode,
+  Basal, BaseDatum, BgClasses, BgUnit, Bolus, Cbg, CgmConfig, ConfidentialMode, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
+  Parameter, PhysicalActivity, Prescriptor, PumpManufacturer, PumpConfig, PumpSettings, ReservoirChange, Smbg, Source, TimePrefs, Unit, Upload, Wizard, ZenMode,
   defaultMedicalDataOptions, TimeService, MGDL_UNITS, MMOLL_UNITS, convertBG
 }
 

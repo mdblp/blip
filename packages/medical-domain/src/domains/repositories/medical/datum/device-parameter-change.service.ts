@@ -29,6 +29,7 @@ import DeviceParameterChange from '../../../models/medical/datum/device-paramete
 import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import Unit from '../../../models/medical/datum/enums/unit.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -51,7 +52,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
         uploadId: rawData.uploadId as string,
         name: rawData.name as string,
         level: rawData.level as string,
-        units: rawData.units as string,
+        units: rawData.units as Unit,
         value: rawData.value as string,
         previousValue: rawData.previousValue as string,
         lastUpdateDate: rawData.lastUpdateDate as string

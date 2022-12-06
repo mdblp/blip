@@ -65,7 +65,7 @@ const ignoredTransKeysForBlip = [
   'level'
 ]
 const ignoredTransKeyInBlipFiles = [
-  '${pa.reportedIntensity}-pa',
+  '${physicalActivity.reportedIntensity}-pa',
   'bolus_${bolusType}',
   'params|${parameter.name}',
   'params|${row.name}'
