@@ -29,11 +29,12 @@ import { User } from '../../../lib/auth'
 import { Units } from '../../../models/generic'
 import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
 import { HcpProfession } from '../../../models/hcp-profession'
+import { CountryCodes } from '../../../models/locales'
 
 const getNewHcp = (): User => {
   return new User({
     email: 'john.doe@example.com',
-    emailVerified: true,
+    email_verified: true,
     sub: 'auth0|123456789',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
   })
@@ -42,39 +43,51 @@ const getNewHcp = (): User => {
 const getHcp = (): User => {
   const hcp = new User({
     email: 'john.doe@example.com',
-    emailVerified: true,
+    email_verified: true,
     sub: 'auth0|a0000000',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
   })
   hcp.frProId = 'ANS20211229094028'
-  hcp.profile = { firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
+  hcp.profile = {
+    firstName: 'John',
+    lastName: 'Doe',
+    fullName: 'John Doe',
+    hcpProfession: HcpProfession.diabeto,
+    email: 'fake@email.com'
+  }
   hcp.preferences = { displayLanguageCode: 'en' }
-  hcp.settings = { units: { bg: Units.gram }, country: 'FR' }
+  hcp.settings = { units: { bg: Units.gram }, country: CountryCodes.France }
   return hcp
 }
 
 const getCaregiver = (): User => {
   const caregiver = new User({
     email: 'caregiver@example.com',
-    emailVerified: true,
+    email_verified: true,
     sub: 'auth0|b0000000',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.caregiver]
   })
-  caregiver.profile = { firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
+  caregiver.profile = {
+    firstName: 'Caregiver',
+    lastName: 'Example',
+    fullName: 'Caregiver Example',
+    email: 'fake@email.com'
+  }
   caregiver.preferences = { displayLanguageCode: 'de' }
-  caregiver.settings = { country: 'DE', units: { bg: Units.mole } }
+  caregiver.settings = { country: CountryCodes.Germany, units: { bg: Units.mole } }
   return caregiver
 }
 
 const getPatient = (): User => {
   const patient = new User({
     email: 'josephine.dupuis@example.com',
-    emailVerified: true,
+    email_verified: true,
     sub: 'auth0|a0a0a0b0',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.patient]
   })
-  patient.settings = { a1c: { date: '2020-01-01', value: '7.5' }, country: 'FR' }
+  patient.settings = { a1c: { date: '2020-01-01', value: '7.5' }, country: CountryCodes.France }
   patient.profile = {
+    email: 'fake@email.com',
     firstName: 'Josephine',
     lastName: 'Dupuis',
     fullName: 'Josephine D.',

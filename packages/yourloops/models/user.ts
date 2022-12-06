@@ -26,7 +26,7 @@
  */
 
 import { Units } from './generic'
-import { LanguageCodes } from './locales'
+import { CountryCodes, LanguageCodes } from './locales'
 import { MedicalData } from './device-data'
 import { HcpProfession } from './hcp-profession'
 import { Alarm } from './alarm'
@@ -36,7 +36,6 @@ export enum UserRoles {
   hcp = 'hcp',
   caregiver = 'caregiver',
   patient = 'patient',
-  /** Used only for signup-account-selector */
   unset = 'unset'
 }
 
@@ -45,7 +44,7 @@ export interface Consent {
   isAccepted?: boolean
 }
 
-export interface Patient {
+export interface ProfilePatientFields {
   birthday?: string
   birthPlace?: string
   diagnosisDate?: string
@@ -61,7 +60,7 @@ export interface Profile {
   fullName: string
   firstName?: string
   lastName?: string
-  patient?: Patient
+  patient?: ProfilePatientFields
   termsOfUse?: Consent
   trainingAck?: Consent
   privacyPolicy?: Consent
@@ -73,7 +72,7 @@ export interface Settings {
   units?: {
     bg?: Units
   }
-  country?: string
+  country?: CountryCodes
   a1c?: {
     date: string
     value: string
@@ -126,4 +125,5 @@ export interface AuthenticatedUser {
   email: string
   email_verified: boolean
   sub: string
+  frProId?: string
 }

@@ -53,7 +53,7 @@ describe('Patient caregivers page', () => {
     mockAuth0Hook(UserRoles.patient)
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockDirectShareApi()
   })
@@ -107,10 +107,10 @@ describe('Patient caregivers page', () => {
     const caregiversTable = screen.getByLabelText('Table caregiver list')
     expect(caregiversTable).toBeVisible()
 
-    const caregiversTableLastNameHeader = within(caregiversTable).getByText('Last name')
+    const caregiversTableLastNameHeader = within(caregiversTable).getByText('Last Name')
     expect(caregiversTableLastNameHeader).toBeVisible()
 
-    const caregiversTableFirstNameHeader = within(caregiversTable).getByText('First name')
+    const caregiversTableFirstNameHeader = within(caregiversTable).getByText('First Name')
     expect(caregiversTableFirstNameHeader).toBeVisible()
 
     const caregiversTableEmailHeader = within(caregiversTable).getByText('Email')

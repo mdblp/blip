@@ -49,7 +49,7 @@ describe('Daily view for caregiver', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()

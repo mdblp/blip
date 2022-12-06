@@ -25,64 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-import proSanteLogo from 'pro-sante-connect.svg'
-
 import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
 
-interface Props {
-  onClick: () => void
-}
-
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    textAlign: 'center',
-    [theme.breakpoints.only('xs')]: {
-      display: 'flex',
-      alignItems: 'center'
-    }
-  },
+export const profileFormCommonClasses = makeStyles((theme: Theme) => ({
   button: {
-    width: '90%',
-    '&:hover': {
-      backgroundColor: 'transparent'
-    },
-    [theme.breakpoints.only('xs')]: {
-      width: '70%'
+    marginLeft: theme.spacing(2)
+  },
+  cancelLink: {
+    textDecoration: 'unset'
+  },
+  formInput: {
+    marginTop: theme.spacing(2)
+  },
+  title: {
+    color: theme.palette.primary.main,
+    textAlign: 'center',
+    width: '100%'
+  },
+  container: {
+    backgroundColor: 'white',
+    marginTop: '32px',
+    padding: 0,
+    [theme.breakpoints.up('sm')]: {
+      border: 'solid',
+      borderRadius: '15px',
+      borderColor: theme.palette.grey[300],
+      borderWidth: '1px',
+      padding: '0 64px'
     }
   },
-  label: {
-    fontSize: 12,
+  uppercase: {
+    textTransform: 'uppercase'
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     [theme.breakpoints.only('xs')]: {
-      fontWeight: 600,
-      padding: 5
+      flexDirection: 'column'
+    },
+    [theme.breakpoints.up('sm')]: {
+      '& > div': {
+        width: 'calc(50% - 16px)'
+      }
+    }
+  },
+  categoryLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(5),
+    '& > :nth-child(2)': {
+      marginLeft: theme.spacing(1)
     }
   }
 }))
-
-const ProSanteConnectButton: FunctionComponent<Props> = ({ onClick }) => {
-  const { button, label, container } = useStyles()
-  const { t } = useTranslation('yourloops')
-
-  return (
-    <Box className={container}>
-      <Button
-        id="pro-sante-connect-button"
-        href=""
-        disableRipple
-        disableElevation
-        disableFocusRipple
-        className={button}
-        onClick={onClick}
-      >
-        <img src={proSanteLogo} alt={t('alt-img-pro-sante-logo')} />
-      </Button>
-      <span className={label}>{t('certify-professional-account')}</span>
-    </Box>
-  )
-}
-
-export default ProSanteConnectButton

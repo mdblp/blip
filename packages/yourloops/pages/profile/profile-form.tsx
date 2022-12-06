@@ -26,63 +26,47 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-import proSanteLogo from 'pro-sante-connect.svg'
+import { Link as LinkRedirect } from 'react-router-dom'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 
-interface Props {
-  onClick: () => void
-}
+import PersonalInfoForm from './personal-info-form'
+import PreferencesForm from './preferences-form'
+import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
+import { useTranslation } from 'react-i18next'
+import { useProfilePageState } from './profile-page-context'
+import { profileFormCommonClasses } from './css-classes'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    textAlign: 'center',
-    [theme.breakpoints.only('xs')]: {
-      display: 'flex',
-      alignItems: 'center'
-    }
-  },
-  button: {
-    width: '90%',
-    '&:hover': {
-      backgroundColor: 'transparent'
-    },
-    [theme.breakpoints.only('xs')]: {
-      width: '70%'
-    }
-  },
-  label: {
-    fontSize: 12,
-    [theme.breakpoints.only('xs')]: {
-      fontWeight: 600,
-      padding: 5
-    }
-  }
-}))
-
-const ProSanteConnectButton: FunctionComponent<Props> = ({ onClick }) => {
-  const { button, label, container } = useStyles()
+export const ProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
+  const { canSave, saving, saveProfile } = useProfilePageState()
+  const classes = profileFormCommonClasses()
 
   return (
-    <Box className={container}>
-      <Button
-        id="pro-sante-connect-button"
-        href=""
-        disableRipple
-        disableElevation
-        disableFocusRipple
-        className={button}
-        onClick={onClick}
-      >
-        <img src={proSanteLogo} alt={t('alt-img-pro-sante-logo')} />
-      </Button>
-      <span className={label}>{t('certify-professional-account')}</span>
-    </Box>
+    <React.Fragment>
+      <PersonalInfoForm />
+      <PreferencesForm />
+      <Box display="flex" justifyContent="flex-end" my={3}>
+        <LinkRedirect className={classes.cancelLink} to="/">
+          <Button>
+            {t('button-cancel')}
+          </Button>
+        </LinkRedirect>
+        <ProgressIconButtonWrapper inProgress={saving}>
+          <Button
+            id="profile-button-save"
+            variant="contained"
+            disabled={!canSave}
+            color="primary"
+            disableElevation
+            className={classes.button}
+            onClick={saveProfile}
+          >
+            {t('button-save')}
+          </Button>
+        </ProgressIconButtonWrapper>
+      </Box>
+    </React.Fragment>
   )
 }
-
-export default ProSanteConnectButton
