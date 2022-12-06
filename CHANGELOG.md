@@ -24,10 +24,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-1903 Timezone detection should exclude some data types
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
+- YLP-1916 Migrate tooltips from viz to dumb
 - YLP-1935 CBG thresholds should be used from medical data service
 - YLP-1945 Migrate NoBar component to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
+- Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
 - YLP-1960 enhance pipeline

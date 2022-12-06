@@ -56,6 +56,7 @@ import {
 import { useAuth } from '../../lib/auth'
 import { TeamEditModalContentProps } from './types'
 import Box from '@mui/material/Box'
+import { CountryCodes } from '../../models/locales'
 
 interface LocalesCountries {
   [code: string]: {
@@ -111,7 +112,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const [addrLine2, setAddrLine2] = useState(team?.address?.line2 ?? '')
   const [addrZipCode, setAddrZipCode] = useState(team?.address?.zip ?? '')
   const [addrCity, setAddrCity] = useState(team?.address?.city ?? '')
-  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? 'FR')
+  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? CountryCodes.France)
   const isPhoneNumberValid: boolean = REGEX_PHONE.test(teamPhone)
   const isEmailValid: boolean = REGEX_EMAIL.test(teamEmail)
   const countries: LocalesCountries = locales.countries

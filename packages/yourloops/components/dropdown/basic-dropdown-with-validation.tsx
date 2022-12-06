@@ -79,6 +79,7 @@ function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<
         <InputLabel id={`dropdown-${id}-input-label`}>{t(inputTranslationKey)}</InputLabel>
         <Select
           id={`dropdown-${id}-selector`}
+          data-testid={`dropdown-${id}-selector`}
           value={selectedValue}
           error={disabledValues.includes(selectedValue)}
           inputProps={{
