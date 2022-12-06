@@ -31,7 +31,7 @@ import PrescriptionList from '../../../../../components/dashboard-widgets/medica
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import { Prescription } from '../../../../../lib/medical-files/model'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/user.model'
+import User from '../../../../../lib/auth/models/user.model'
 
 jest.mock('../../../../../lib/auth')
 describe('Prescription list', () => {

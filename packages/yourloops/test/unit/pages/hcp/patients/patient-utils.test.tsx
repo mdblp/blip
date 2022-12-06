@@ -27,11 +27,13 @@
 
 import { createAlarm, createPatient } from '../../../common/utils'
 import { comparePatients, mapITeamMemberToPatient } from '../../../../../components/patient/utils'
-import { PatientTableSortFields, UserInvitationStatus } from '../../../../../models/generic.model'
-import { Patient } from '../../../../../lib/data/patient.model'
-import { Profile } from '../../../../../models/user'
-import { Monitoring } from '../../../../../models/monitoring.model'
-import { ITeamMember, TeamMemberRole } from '../../../../../models/team'
+import { Monitoring } from '../../../../../lib/team/models/monitoring.model'
+import { Patient } from '../../../../../lib/patient/models/patient.model'
+import { UserInvitationStatus } from '../../../../../lib/team/models/enums/user-invitation-status.enum'
+import { TeamMemberRole } from '../../../../../lib/team/models/enums/team-member-role.enum'
+import { ITeamMember } from '../../../../../lib/team/models/i-team-member.model'
+import { Profile } from '../../../../../lib/auth/models/profile.model'
+import { PatientTableSortFields } from '../../../../../components/patient/models/enums/patient-table-sort-fields.enum'
 
 describe('Patient utils', () => {
   describe('comparePatients', () => {

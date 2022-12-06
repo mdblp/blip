@@ -37,12 +37,12 @@ import StethoscopeIcon from '../../../../components/icons/stethoscope-icon'
 
 import UserMenu from '../../../../components/menus/user-menu'
 import { triggerMouseEvent } from '../../common/utils'
-import User from '../../../../lib/auth/user.model'
-import * as authHookMock from '../../../../lib/auth/hook'
-import { UserRoles } from '../../../../models/user'
+import User from '../../../../lib/auth/models/user.model'
+import * as authHookMock from '../../../../lib/auth/auth.hook'
 import { render, waitFor } from '@testing-library/react'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
-jest.mock('../../../../lib/auth/hook')
+jest.mock('../../../../lib/auth/auth.hook')
 describe('User Menu', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const logout = jest.fn()

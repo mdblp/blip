@@ -39,12 +39,13 @@ import TableSortLabel from '@material-ui/core/TableSortLabel'
 import { TablePagination, Typography } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
 
-import { PatientTableSortFields, SortDirection } from '../../models/generic.model'
-import { PatientTableProps } from './models'
 import PatientRow from './patient-row'
-import { Patient } from '../../lib/data/patient.model'
 import { StyledTableCell, StyledTooltip } from '../styled-components'
 import { useAuth } from '../../lib/auth'
+import { PatientTableProps } from './models/patient-table-props.model'
+import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { SortDirection } from './models/enums/sort-direction.enum'
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {

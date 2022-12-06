@@ -39,19 +39,19 @@ import Select from '@material-ui/core/Select'
 
 import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
-import { UserRoles } from '../../models/user'
-import { Units } from '../../models/generic.model'
-import { LanguageCodes } from '../../models/locales.model'
+import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 
 interface PreferencesFormProps {
   classes: ClassNameMap
   feedbackAccepted: boolean
   lang: LanguageCodes
   role: UserRoles
-  unit: Units
+  unit: UnitsType
   setFeedbackAccepted: (feedbackAccepted: boolean) => void
   setLang: (lang: LanguageCodes) => void
-  setUnit: (unit: Units) => void
+  setUnit: (unit: UnitsType) => void
 }
 
 function PreferencesForm(props: PreferencesFormProps): JSX.Element {
@@ -72,13 +72,13 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
             labelId="unit-selector"
             id="profile-units-selector"
             value={props.unit}
-            onChange={event => props.setUnit(event.target.value as Units)}
+            onChange={event => props.setUnit(event.target.value as UnitsType)}
           >
-            <MenuItem id="profile-units-mmoll" value={Units.mole}>
-              {Units.mole}
+            <MenuItem id="profile-units-mmoll" value={UnitsType.MMOLL}>
+              {UnitsType.MMOLL}
             </MenuItem>
-            <MenuItem id="profile-units-mgdl" value={Units.gram}>
-              {Units.gram}
+            <MenuItem id="profile-units-mgdl" value={UnitsType.MGDL}>
+              {UnitsType.MGDL}
             </MenuItem>
           </Select>
         </FormControl>

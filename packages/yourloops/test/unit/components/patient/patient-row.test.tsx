@@ -27,17 +27,18 @@
 
 import React from 'react'
 
-import { FilterType, UserInvitationStatus } from '../../../../models/generic.model'
 import * as authHookMock from '../../../../lib/auth'
 import { User } from '../../../../lib/auth'
 import { createPatient, createPatientTeam } from '../../common/utils'
 import PatientRow from '../../../../components/patient/patient-row'
-import { PatientRowProps } from '../../../../components/patient/models'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import userEvent from '@testing-library/user-event'
-import PatientUtils from '../../../../lib/patient/utils'
+import PatientUtils from '../../../../lib/patient/patient.util'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { PatientRowProps } from '../../../../components/patient/models/patient-table-props.model'
+import { FilterType } from '../../../../lib/patient/models/enums/filter-type.enum'
 
 const removePatientDialogMockId = 'remove-patient-dialog-id'
 // eslint-disable-next-line react/display-name

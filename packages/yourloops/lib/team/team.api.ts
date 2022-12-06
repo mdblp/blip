@@ -24,15 +24,17 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
 import HttpService, { ErrorMessageStatus } from '../../services/http.service'
-import { INotificationAPI } from '../../models/notification-api.model'
-import { HttpHeaderKeys } from '../../models/api.model'
+import { INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
-import { Monitoring } from '../../models/monitoring.model'
+import { Monitoring } from './models/monitoring.model'
 import bows from 'bows'
-import { Team } from './models'
 import { User } from '../auth'
+import { TeamMemberRole } from './models/enums/team-member-role.enum'
+import { Team } from './models/team.model'
+import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
+import { ITeam } from './models/i-team.model'
+import { TeamType } from './models/enums/team-type.enum'
 
 const log = bows('Team API')
 
@@ -63,7 +65,7 @@ interface RemoveMemberArgs {
 }
 
 interface InviteMemberResult {
-  invitation: INotificationAPI
+  invitation: INotification
   teams: Team[]
 }
 

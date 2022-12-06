@@ -29,8 +29,8 @@ import React, { createContext, FunctionComponent, useContext, useState } from 'r
 
 import { getCurrentLang } from '../../lib/language'
 import { SignupForm } from '../../lib/auth'
-import { UserRoles } from '../../models/user'
-import { SignupFormKey } from '../../lib/auth/models'
+import { SignupFormKey } from './models/enums/signup-form-key.enum'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 interface ISignUpFormStateContext {
   signupForm: SignupForm

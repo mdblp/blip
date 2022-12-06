@@ -35,17 +35,18 @@ import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
-import * as patientHookMock from '../../../../lib/patient/provider'
-import * as notificationsHookMock from '../../../../lib/notifications/hook'
-import User from '../../../../lib/auth/user.model'
-import { genderLabels } from '../../../../lib/auth/helpers'
-import { Monitoring, MonitoringStatus } from '../../../../models/monitoring.model'
+import * as patientHookMock from '../../../../lib/patient/patient.provider'
+import * as notificationsHookMock from '../../../../lib/notifications/notification.hook'
+import User from '../../../../lib/auth/models/user.model'
+import { genderLabels } from '../../../../lib/auth/auth.helper'
+import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as RemoteMonitoringPatientDialogMock from '../../../../components/dialogs/remote-monitoring-dialog'
 import { RemoteMonitoringPatientDialogProps } from '../../../../components/dialogs/remote-monitoring-dialog'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
-import { PatientTeam } from '../../../../lib/data/patient.model'
-import PatientUtils from '../../../../lib/patient/utils'
+import PatientUtils from '../../../../lib/patient/patient.util'
+import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 
 /* eslint-disable-next-line react/display-name */
 jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: ConfirmDialogProps) => {
@@ -57,8 +58,8 @@ jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: Confirm
 jest.mock('../../../../components/dialogs/remote-monitoring-dialog')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/patient/provider')
-jest.mock('../../../../lib/notifications/hook')
+jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/notifications/notification.hook')
 describe('PatientInfoWidget', () => {
   const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null

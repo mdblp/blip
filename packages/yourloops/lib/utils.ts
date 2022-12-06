@@ -25,11 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Units } from '../models/generic.model'
-import { IUser, Settings } from '../models/user'
 import { t } from './language'
 import metrics from './metrics'
 import moment from 'moment-timezone'
+import { IUser } from './data/models/i-user.model'
+import { Settings } from './auth/models/settings.model'
+import { UnitsType } from './units/models/enums/units-type.enum'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
 export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/
@@ -38,6 +39,7 @@ export const REGEX_PHONE = /^[0-9]{8,10}$/
 export const REGEX_ZIPCODE_WITHOUT_STRING = /^[0-9-]*$/
 export const REGEX_ZIPCODE_WITH_STRING = /^[A-Z0-9 ]*$/
 
+// TODO to put in components models
 export enum PhonePrefixCode {
   FR = '+33',
   AT = '+43',
@@ -128,13 +130,13 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
     return {
       country: 'FR',
       units: {
-        bg: Units.gram
+        bg: UnitsType.MGDL
       }
     }
   }
-  let bgUnit = settings.units?.bg ?? Units.gram
-  if (![Units.gram, Units.mole].includes(bgUnit)) {
-    bgUnit = Units.gram
+  let bgUnit = settings.units?.bg ?? UnitsType.MGDL
+  if (![UnitsType.MGDL, UnitsType.MMOLL].includes(bgUnit)) {
+    bgUnit = UnitsType.MGDL
   }
   const newSettings: Settings = {
     country: settings.country ?? 'FR',

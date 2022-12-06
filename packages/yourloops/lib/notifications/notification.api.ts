@@ -24,16 +24,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { CancelInvitationPayload, INotification, NotificationType } from './models'
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../../services/http.service'
-import { INotificationAPI } from '../../models/notification-api.model'
-import { notificationConversion } from './utils'
+import { notificationConversion } from './notification.util'
+import { Notification } from './models/notification.model'
+import { NotificationType } from './models/enums/notification-type.enum'
+import { CancelInvitationPayload } from './models/cancel-invitation-payload.model'
+import { INotification } from './models/i-notification.model'
 
 const log = bows('Notification API')
 
 export default class NotificationApi {
-  static async acceptInvitation(userId: string, notification: INotification): Promise<void> {
+  static async acceptInvitation(userId: string, notification: Notification): Promise<void> {
     let url: string
     switch (notification.type) {
       case NotificationType.directInvitation:
@@ -66,7 +68,7 @@ export default class NotificationApi {
     })
   }
 
-  static async declineInvitation(userId: string, notification: INotification): Promise<void> {
+  static async declineInvitation(userId: string, notification: Notification): Promise<void> {
     let url: string
     switch (notification.type) {
       case NotificationType.directInvitation:
@@ -96,11 +98,11 @@ export default class NotificationApi {
     await HttpService.put({ url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}` })
   }
 
-  static async getReceivedInvitations(userId: string): Promise<INotification[]> {
+  static async getReceivedInvitations(userId: string): Promise<Notification[]> {
     return await NotificationApi.getInvitations(`/confirm/invitations/${userId}`)
   }
 
-  static async getSentInvitations(userId: string): Promise<INotification[]> {
+  static async getSentInvitations(userId: string): Promise<Notification[]> {
     return await NotificationApi.getInvitations(`/confirm/invite/${userId}`)
   }
 
@@ -115,9 +117,9 @@ export default class NotificationApi {
     await HttpService.put<string, { key: string }>({ url, payload: { key } })
   }
 
-  private static async getInvitations(url: string): Promise<INotification[]> {
+  private static async getInvitations(url: string): Promise<Notification[]> {
     try {
-      const { data } = await HttpService.get<INotificationAPI[]>({ url })
+      const { data } = await HttpService.get<INotification[]>({ url })
       return NotificationApi.convertNotifications(data)
     } catch (err) {
       const error = err as Error
@@ -129,8 +131,8 @@ export default class NotificationApi {
     }
   }
 
-  private static convertNotifications(notificationsFromApi: INotificationAPI[]): INotification[] {
-    const convertedNotifications: INotification[] = []
+  private static convertNotifications(notificationsFromApi: INotification[]): Notification[] {
+    const convertedNotifications: Notification[] = []
     notificationsFromApi.forEach((notificationFromApi) => {
       const notification = notificationConversion(notificationFromApi)
       if (notification) {

@@ -24,13 +24,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { DirectShareAPI, ShareUser } from './models'
 import HttpService from '../../services/http.service'
-import { UserInvitationStatus } from '../../models/generic.model'
 import { fixYLP878Settings } from '../utils'
-import { UserRoles } from '../../models/user'
-import { HttpHeaderKeys } from '../../models/api.model'
 import { getCurrentLang } from '../language'
+import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
+import { ShareUser } from './models/share-user.model'
+import { DirectShareAPI } from './models/direct-share-api.model'
+import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
+import { UserRoles } from '../auth/models/enums/user-roles.enum'
 
 export default class DirectShareApi {
   static async addDirectShare(userId: string, email: string): Promise<void> {

@@ -25,22 +25,21 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import { AppConfig } from 'yourloops/models/config';
-import { IUser } from "yourloops/models/user";
-import BlipApi from "../../yourloops/lib/data/blip-api";
-import ProfileDialog from "../../yourloops/components/dialogs/patient-profile";
-import DialogDatePicker from "../../yourloops/components/date-pickers/dialog-date-picker";
-import DialogRangeDatePicker from "../../yourloops/components/date-pickers/dialog-range-date-picker";
-import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-options";
-import PatientInfoWidget from "../../yourloops/components/dashboard-widgets/patient-info-widget";
-import { PatientData, PatientDatum } from "yourloops/models/device-data";
-import MessageNote from "../../yourloops/models/message-note.model";
-import { Patient } from "../../yourloops/lib/data/patient.model";
-import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
-import ChatWidget from "../../yourloops/components/chat/chat-widget";
-import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files/medical-files-widget";
-import AlarmCard from "../../yourloops/components/alarm/alarm-card";
+import { AppConfig } from 'yourloops/lib/config/models/app-config.model'
+import { Patient } from 'yourloops/lib/patient/models/patient.model'
+import ChatWidget from 'yourloops/components/chat/chat-widget'
+import MedicalFilesWidget from 'yourloops/components/dashboard-widgets/medical-files/medical-files-widget'
+import AlarmCard from 'yourloops/components/alarm/alarm-card'
+import BlipApi from 'yourloops/lib/data/blip.api'
+import ProfileDialog from 'yourloops/components/dialogs/patient-profile'
+import DialogDatePicker from 'yourloops/components/date-pickers/dialog-date-picker'
+import DialogRangeDatePicker from 'yourloops/components/date-pickers/dialog-range-date-picker'
+import DialogPDFOptions from 'yourloops/components/dialogs/pdf-print-options'
+import PatientInfoWidget from 'yourloops/components/dashboard-widgets/patient-info-widget'
+import { IUser } from 'yourloops/lib/data/models/i-user.model'
+import { PatientData, PatientDatum } from 'yourloops/lib/data/models/patient-datum.model'
+import { MessageNote } from 'yourloops/lib/data/models/message-note.model'
+import { GetPatientDataOptions, GetPatientDataOptionsV0 } from 'yourloops/lib/data/models/get-patient-data-options.model'
 
 interface BlipProperties {
   config: AppConfig;
@@ -78,7 +77,7 @@ export {
   MessageNote,
   GetPatientDataOptions,
   GetPatientDataOptionsV0,
-  cleanStore,
+  cleanStore
 };
 
 declare function Blip(props: BlipProperties): JSX.Element;

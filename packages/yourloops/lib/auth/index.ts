@@ -25,17 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  AuthContext,
-  SignupForm
-} from './models'
+import { AuthContext } from './models/auth-context.model'
+import { SignupForm } from './models/signup-form.model'
 
 import {
   AuthContextProvider,
   useAuth
-} from './hook'
+} from './auth.hook'
 
-import User from './user.model'
+import User from './models/user.model'
 
 export {
   AuthContext,

@@ -27,15 +27,16 @@
 
 import { sortBy } from 'lodash'
 import HttpService, { ErrorMessageStatus } from '../../services/http.service'
-import { Patient } from './patient.model'
-import { GetPatientDataOptions } from './models'
-import { PatientData } from '../../models/device-data.model'
-import { IUser } from '../../models/user'
-import MessageNote from '../../models/message-note.model'
-import User from '../auth/user.model'
-import { HttpHeaderKeys, HttpHeaderValues } from '../../models/api.model'
-import { Units } from '../../models/generic.model'
+import { GetPatientDataOptions } from './models/get-patient-data-options.model'
+import User from '../auth/models/user.model'
 import bows from 'bows'
+import { Patient } from '../patient/models/patient.model'
+import { PatientData } from './models/patient-datum.model'
+import { IUser } from './models/i-user.model'
+import { MessageNote } from './models/message-note.model'
+import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
+import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
+import { UnitsType } from '../units/models/enums/units-type.enum'
 
 const log = bows('Data API')
 
@@ -96,7 +97,7 @@ export default class DataApi {
   }
 
   static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<string> {
-    const bgUnits = user.settings?.units ?? Units.gram
+    const bgUnits = user.settings?.units ?? UnitsType.MGDL
     const { data } = await HttpService.get<string>({
       url: `/export/${patientId}`,
       config: {

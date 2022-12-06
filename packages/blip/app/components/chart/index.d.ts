@@ -28,7 +28,7 @@
 
 import MedicalDataService, { Datum } from "medical-domain";
 import { utils as vizUtils } from "tidepool-viz";
-import { IUser } from "../../../../yourloops/models/user";
+import { IUser } from "yourloops/models/consent.model";
 import ProfileDialog from "../../../../yourloops/components/dialogs/patient-profile";
 import DialogDatePicker from "../../../../yourloops/components/date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "../../../../yourloops/components/date-pickers/dialog-range-date-picker";

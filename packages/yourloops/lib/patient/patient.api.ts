@@ -24,14 +24,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { ITeamMember } from '../../models/team'
 import HttpService, { ErrorMessageStatus } from '../../services/http.service'
 import bows from 'bows'
-import { INotificationAPI } from '../../models/notification-api.model'
-import { UserRoles } from '../../models/user'
-import { HttpHeaderKeys } from '../../models/api.model'
+import { INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
-import { Monitoring } from '../../models/monitoring.model'
+import { Monitoring } from '../team/models/monitoring.model'
+import { UserRoles } from '../auth/models/enums/user-roles.enum'
+import { ITeamMember } from '../team/models/i-team-member.model'
+import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 
 const log = bows('Patient API')
 
@@ -62,9 +62,9 @@ export default class PatientApi {
     }
   }
 
-  static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotificationAPI> {
+  static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotification> {
     try {
-      const { data } = await HttpService.post<INotificationAPI, InvitePatientPayload>({
+      const { data } = await HttpService.post<INotification, InvitePatientPayload>({
         url: '/confirm/send/team/invite',
         payload: { teamId, email, role: UserRoles.patient },
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }

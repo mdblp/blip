@@ -26,9 +26,10 @@
  */
 
 import { User } from '../../../lib/auth'
-import { Units } from '../../../models/generic.model'
-import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
-import { HcpProfession } from '../../../models/hcp-profession.model'
+import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
+import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 
 const getNewHcp = (): User => {
   return new User({
@@ -50,7 +51,7 @@ const getHcp = (): User => {
   hcp.frProId = 'ANS20211229094028'
   hcp.profile = { email, firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
   hcp.preferences = { displayLanguageCode: 'en' }
-  hcp.settings = { units: { bg: Units.gram }, country: 'FR' }
+  hcp.settings = { units: { bg: UnitsType.MGDL }, country: 'FR' }
   return hcp
 }
 
@@ -64,7 +65,7 @@ const getCaregiver = (): User => {
   })
   caregiver.profile = { email, firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
   caregiver.preferences = { displayLanguageCode: 'de' }
-  caregiver.settings = { country: 'DE', units: { bg: Units.mole } }
+  caregiver.settings = { country: 'DE', units: { bg: UnitsType.MMOLL } }
   return caregiver
 }
 

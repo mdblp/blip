@@ -29,18 +29,18 @@ import React from 'react'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 
 import * as teamHookMock from '../../../../lib/team'
-import * as patientHookMock from '../../../../lib/patient/provider'
+import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as authHookMock from '../../../../lib/auth'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import LeaveTeamButton, { LeaveTeamButtonProps } from '../../../../components/team/leave-team-button'
-import TeamUtils from '../../../../lib/team/utils'
+import TeamUtils from '../../../../lib/team/team.util'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/patient/provider')
+jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../lib/auth')
 describe('TeamMembers', () => {
   const leaveTeamMock = jest.fn()

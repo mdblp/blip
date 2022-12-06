@@ -45,13 +45,13 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 
-import { UserRoles } from '../../models/user'
 import { useAuth } from '../../lib/auth'
 import RoundedHospitalIcon from '../icons/rounded-hospital-icon'
-import config from '../../lib/config'
+import config from '../../lib/config/config'
 import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 const classes = makeStyles((theme: Theme) => ({
   clickableMenu: {

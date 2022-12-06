@@ -26,10 +26,12 @@
  */
 
 import PatientAPI from '../../../lib/patient/patient.api'
-import { ITeamMember, TeamMemberRole } from '../../../models/team'
-import { UserInvitationStatus } from '../../../models/generic.model'
-import { MonitoringStatus } from '../../../models/monitoring.model'
 import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
+import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
+import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
+import { Profile } from '../../../lib/auth/models/profile.model'
 
 export const unmonitoredPatientId = '1db524f3b65f2'
 export const unmonitoredPatientFirstName = 'Unmonitored'
@@ -52,7 +54,7 @@ export const monitoredPatient: ITeamMember = {
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  },
+  } as Profile,
   settings: null,
   preferences: { displayLanguageCode: 'en' },
   invitationStatus: UserInvitationStatus.accepted,
@@ -87,7 +89,7 @@ export const unmonitoredPatient: ITeamMember = {
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  },
+  } as Profile,
   settings: null,
   preferences: { displayLanguageCode: 'en' },
   invitationStatus: UserInvitationStatus.accepted,
@@ -116,7 +118,7 @@ const monitoredPatientTwo: ITeamMember = {
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  },
+  } as Profile,
   settings: null,
   preferences: { displayLanguageCode: 'en' },
   invitationStatus: UserInvitationStatus.accepted,
@@ -151,7 +153,7 @@ export const pendingPatient: ITeamMember = {
     privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  },
+  } as Profile,
   settings: null,
   preferences: { displayLanguageCode: 'en' },
   invitationStatus: UserInvitationStatus.pending,
@@ -199,7 +201,7 @@ export const buildPatient = (member: Partial<ITeamMember>): ITeamMember => {
         acceptanceTimestamp: member.profile.trainingAck?.acceptanceTimestamp ?? '2022-10-11',
         isAccepted: member.profile.trainingAck?.isAccepted ?? true
       }
-    },
+    } as Profile,
     settings: member.settings,
     preferences: member.preferences,
     invitationStatus: member.invitationStatus ?? UserInvitationStatus.accepted,

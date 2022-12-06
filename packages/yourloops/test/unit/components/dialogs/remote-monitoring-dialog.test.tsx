@@ -27,8 +27,8 @@
 
 import React from 'react'
 
-import * as patientHookMock from '../../../../lib/patient/provider'
-import * as notificationsHookMock from '../../../../lib/notifications/hook'
+import * as patientHookMock from '../../../../lib/patient/patient.provider'
+import * as notificationsHookMock from '../../../../lib/notifications/notification.hook'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import RemoteMonitoringPatientDialog, {
   RemoteMonitoringDialogAction,
@@ -40,10 +40,10 @@ import {
   PrescriptionInfo
 } from '../../../../components/patient/patient-monitoring-prescription'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { PatientTeam } from '../../../../lib/data/patient.model'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
-import { Prescription } from '../../../../lib/medical-files/model'
-import PatientUtils from '../../../../lib/patient/utils'
+import PatientUtils from '../../../../lib/patient/patient.util'
+import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { Prescription } from '../../../../lib/medical-files/models/prescription.model'
 
 const mockCorrectPrescription: PrescriptionInfo = {
   teamId: 'fakeTeamId',
@@ -57,8 +57,8 @@ jest.mock('../../../../components/patient/patient-monitoring-prescription', () =
   return <button onClick={() => props.setPrescriptionInfo(mockCorrectPrescription)}>set-correct-prescription</button>
 })
 jest.mock('../../../../components/utils/snackbar')
-jest.mock('../../../../lib/notifications/hook')
-jest.mock('../../../../lib/patient/provider')
+jest.mock('../../../../lib/notifications/notification.hook')
+jest.mock('../../../../lib/patient/patient.provider')
 describe('RemoteMonitoringPatientDialog', () => {
   const inviteRemoteMonitoringMock = jest.fn()
   const editPatientRemoteMonitoringMock = jest.fn()

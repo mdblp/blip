@@ -35,15 +35,15 @@ import Box from '@material-ui/core/Box'
 import FormControl from '@material-ui/core/FormControl'
 import TextField from '@material-ui/core/TextField'
 
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
 import { useAuth, User } from '../../lib/auth'
 import { Errors } from './models'
-import { UserRoles } from '../../models/user'
-import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession.model'
+import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
 import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
 import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-button'
 import PatientProfileForm from './patient-form'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 export interface PersonalInfoFormProps {
   birthDate?: string

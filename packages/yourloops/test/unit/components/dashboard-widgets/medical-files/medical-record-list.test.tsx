@@ -31,7 +31,7 @@ import { buildTeam, buildTeamMember, createPatient } from '../../../common/utils
 import { CategoryProps } from '../../../../../components/dashboard-widgets/medical-files/medical-files-widget'
 import MedicalRecordList from '../../../../../components/dashboard-widgets/medical-files/medical-record-list'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/user.model'
+import User from '../../../../../lib/auth/models/user.model'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import { MedicalRecord } from '../../../../../lib/medical-files/model'
 import { MedicalRecordEditDialogProps } from '../../../../../components/dialogs/medical-record-edit-dialog'

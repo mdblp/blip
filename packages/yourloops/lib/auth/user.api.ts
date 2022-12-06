@@ -25,15 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  UserMetadata,
-  Preferences,
-  Profile,
-  Settings,
-  CompleteSignupPayload
-} from '../../models/user'
 import HttpService, { ErrorMessageStatus } from '../../services/http.service'
 import bows from 'bows'
+import { UserMetadata } from './models/user-metadata.model'
+import { Profile } from './models/profile.model'
+import { Preferences } from './models/preferences.model'
+import { Settings } from './models/settings.model'
+import { CompleteSignupPayload } from './models/complete-signup-payload.model'
 
 const log = bows('User API')
 

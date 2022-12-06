@@ -27,7 +27,6 @@
 
 import React from 'react'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { MedicalRecord } from '../../../../../lib/medical-files/model'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
 import MedicalRecordEditDialog, {
@@ -35,8 +34,9 @@ import MedicalRecordEditDialog, {
 } from '../../../../../components/dialogs/medical-record-edit-dialog'
 import userEvent from '@testing-library/user-event'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/user.model'
-import { UserRoles } from '../../../../../models/user'
+import User from '../../../../../lib/auth/models/user.model'
+import { MedicalRecord } from '../../../../../lib/medical-files/models/medical-record.model'
+import { UserRoles } from '../../../../../lib/auth/models/enums/user-roles.enum'
 
 jest.mock('../../../../../lib/auth')
 jest.mock('../../../../../components/utils/snackbar')

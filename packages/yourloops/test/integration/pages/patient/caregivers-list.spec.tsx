@@ -26,7 +26,6 @@
  */
 
 import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { IUser, UserRoles } from '../../../../models/user'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockUserDataFetch } from '../../mock/auth'
@@ -37,8 +36,10 @@ import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
-import { UserInvitationStatus } from '../../../../models/generic.model'
-import { INotification } from '../../../../lib/notifications/models'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { IUser } from '../../../../lib/data/models/i-user.model'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { Notification } from '../../../../lib/notifications/models/notification.model'
 
 describe('Patient caregivers page', () => {
   const firstName = 'Théo'
@@ -95,7 +96,7 @@ describe('Patient caregivers page', () => {
 
     jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValueOnce([{
       user: { userid: caregiverId, profile: { firstName: caregiverFirstName, lastName: caregiverLastName } } as IUser,
-      invitation: { email: caregiverEmail } as INotification,
+      invitation: { email: caregiverEmail } as Notification,
       status: UserInvitationStatus.accepted
     }])
     await act(async () => {

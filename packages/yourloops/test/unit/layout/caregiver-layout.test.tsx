@@ -29,11 +29,11 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import * as authHookMock from '../../../lib/auth'
 import { User } from '../../../lib/auth'
-import * as patientHookMock from '../../../lib/patient/provider'
-import * as notificationsHookMock from '../../../lib/notifications/hook'
-import { UserRoles } from '../../../models/user'
+import * as patientHookMock from '../../../lib/patient/patient.provider'
+import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
 import { MemoryRouter } from 'react-router-dom'
 import { CaregiverLayout } from '../../../layout/caregiver-layout'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
@@ -44,8 +44,8 @@ const allTestIds = [
 
 /* eslint-disable react/display-name */
 jest.mock('../../../lib/auth')
-jest.mock('../../../lib/notifications/hook')
-jest.mock('../../../lib/patient/provider')
+jest.mock('../../../lib/notifications/notification.hook')
+jest.mock('../../../lib/patient/patient.provider')
 jest.mock('../../../layout/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })

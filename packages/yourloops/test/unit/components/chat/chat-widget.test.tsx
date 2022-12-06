@@ -30,11 +30,11 @@ import { act, Simulate } from 'react-dom/test-utils'
 
 import ChatWidget from '../../../../components/chat/chat-widget'
 import { render, unmountComponentAtNode } from 'react-dom'
-import { Patient, PatientTeam } from '../../../../lib/data/patient.model'
-import { IMessage } from '../../../../models/message.model'
-import User from '../../../../lib/auth/user.model'
-import ChatApi from '../../../../lib/chat/api'
-import PatientUtils from '../../../../lib/patient/utils'
+import { Patient, PatientTeam } from '../../../../lib/data/models/patient.model'
+import { IMessage } from '../../../../lib/chat/models/i-message.model'
+import User from '../../../../lib/auth/models/user.model'
+import ChatApi from '../../../../lib/chat/chat.api'
+import PatientUtils from '../../../../lib/patient/patient.util'
 
 jest.mock('../../../../lib/team')
 describe('Chat widget', () => {

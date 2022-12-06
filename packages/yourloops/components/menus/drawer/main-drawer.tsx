@@ -47,10 +47,10 @@ import Box from '@material-ui/core/Box'
 
 import MedicalServiceIcon from '../../icons/medical-service-icon'
 import PendingIcon from '../../icons/pending-icon'
-import { PatientFilterTypes } from '../../../models/generic.model'
 import DrawerLinkItem from './drawer-link-item'
 import useMainDrawer from './main-drawer.hook'
 import DrawerCategoryItem from './drawer-category-item'
+import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 
 export interface MainDrawerProps {
   miniVariant?: boolean

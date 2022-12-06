@@ -35,16 +35,16 @@ import MainDrawer, {
   mainDrawerMiniVariantWidth
 } from '../../../../components/menus/drawer/main-drawer'
 import { buildTeam, buildTeamMember, triggerMouseEvent } from '../../common/utils'
-import * as patientHookMock from '../../../../lib/patient/provider'
+import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
-import { PatientFilterStats } from '../../../../lib/team/models'
-import User from '../../../../lib/auth/user.model'
-import { PatientFilterTypes } from '../../../../models/generic.model'
+import { PatientFilterStats } from '../../../../lib/patient/models/patient-filter-stats.model'
+import User from '../../../../lib/auth/models/user.model'
 import { MemoryRouter } from 'react-router-dom'
+import { PatientFilterTypes } from '../../../../lib/patient/models/enums/patient-filter-type.enum'
 
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/patient/provider')
+jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../lib/auth')
 describe('Main Drawer', () => {
   let container: HTMLElement | null = null

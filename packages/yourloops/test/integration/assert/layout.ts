@@ -28,7 +28,7 @@
 import { checkCaregiverHeader, checkHCPHeader, checkPatientHeader } from './header'
 import { checkDrawer, checkDrawerNotVisible } from './drawer'
 import { checkFooter } from './footer'
-import { UserRoles } from '../../../models/user'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 
 export const checkHCPLayout = (fullName: string, needFooterLanguageSelector: boolean = false) => {
   checkHCPHeader(fullName)

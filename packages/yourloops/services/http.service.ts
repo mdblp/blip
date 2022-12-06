@@ -26,7 +26,7 @@
  */
 
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import httpStatus from '../lib/http-status-codes'
+import httpStatus from '../lib/http/models/enums/http-status.enum'
 import { t } from '../lib/language'
 
 interface Args {

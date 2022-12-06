@@ -30,7 +30,7 @@ import { render, screen } from '@testing-library/react'
 
 import PatientInfo, { PatientInfoProps } from '../../../../components/patient/patient-info'
 import { createPatient } from '../../common/utils'
-import { genderLabels } from '../../../../lib/auth/helpers'
+import { genderLabels } from '../../../../lib/auth/auth.helper'
 
 describe('PatientInfo', () => {
   const patient = createPatient()

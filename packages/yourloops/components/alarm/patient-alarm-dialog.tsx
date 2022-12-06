@@ -33,13 +33,13 @@ import TuneIcon from '@material-ui/icons/Tune'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { makeStyles } from '@material-ui/core/styles'
-import { Monitoring } from '../../models/monitoring.model'
+import { Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
-import { Patient } from '../../lib/data/patient.model'
 import { commonComponentStyles } from '../common'
 import AlarmsContentConfiguration from './alarms-content-configuration'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 import DialogContent from '@material-ui/core/DialogContent'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 const useStyles = makeStyles(() => ({
   title: {

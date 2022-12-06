@@ -26,16 +26,20 @@
  */
 
 import TeamAPI from '../../../lib/team/team.api'
-import { UNITS_TYPE } from '../../../lib/units/utils'
 import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
-import { ITeam, TeamMemberRole, TeamType } from '../../../models/team'
 import { loggedInUserId } from './mockAuth0Hook'
-import { HcpProfession } from '../../../models/hcp-profession.model'
-import { UserInvitationStatus } from '../../../models/generic.model'
-import { MonitoringStatus } from '../../../models/monitoring.model'
+import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
+import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
+import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
+import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
+import { Team } from '../../../lib/team'
+import { Profile } from '../../../lib/auth/models/profile.model'
+import { ITeam } from '../../../lib/team/models/i-team.model'
 
 export const monitoringParameters = {
-  bgUnit: UNITS_TYPE.MGDL,
+  bgUnit: UnitsType.MGDL,
   lowBg: MIN_LOW_BG,
   highBg: MIN_HIGH_BG,
   outOfRangeThreshold: 5,
@@ -48,7 +52,7 @@ export const monitoringParameters = {
 export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
 export const myThirdTeamId = '62fe00defc9374b2fed32bce'
 
-export const teamOne: ITeam = {
+export const teamOne: Team = {
   name: 'MyTeam',
   id: '62fe00defc9374b2fed32bcc',
   code: '036038775',
@@ -69,7 +73,7 @@ export const teamOne: ITeam = {
       lastName: 'HCP 0',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
+    } as Profile,
     settings: null,
     preferences: { displayLanguageCode: 'en' },
     invitationStatus: UserInvitationStatus.accepted,
@@ -100,7 +104,7 @@ export const teamTwo: ITeam = {
       lastName: 'HCP 0',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
+    } as Profile,
     settings: null,
     preferences: { displayLanguageCode: 'en' },
     invitationStatus: UserInvitationStatus.accepted,
@@ -116,7 +120,7 @@ export const teamTwo: ITeam = {
   }
 }
 
-export const teamThree: ITeam = {
+export const teamThree: Team = {
   name: 'MyThirdTeam - to be deleted',
   id: myThirdTeamId,
   code: '263381988',
@@ -137,7 +141,7 @@ export const teamThree: ITeam = {
       lastName: 'HCP 0',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
+    } as Profile,
     settings: null,
     preferences: { displayLanguageCode: 'en' },
     invitationStatus: UserInvitationStatus.accepted,
@@ -155,7 +159,7 @@ export const teamThree: ITeam = {
       lastName: 'HCP 1',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
+    } as Profile,
     settings: null,
     preferences: { displayLanguageCode: 'en' },
     invitationStatus: UserInvitationStatus.accepted,

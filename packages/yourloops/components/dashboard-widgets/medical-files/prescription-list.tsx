@@ -36,11 +36,11 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 
 import FileChartOutlinedIcon from '../../icons/file-chart-outlined-icon'
-import { Prescription } from '../../../lib/medical-files/model'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
+import { Prescription } from '../../../lib/medical-files/models/prescription.model'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {

@@ -29,7 +29,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
 
-import { HcpProfession, HcpProfessionList } from '../../../../models/hcp-profession.model'
+import { HcpProfession, HcpProfessionList } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import { SwitchRoleProfessionDialogProps } from '../../../../components/switch-role/models'
 import SwitchRoleProfessionDialog from '../../../../components/switch-role/profession-dialog'
 

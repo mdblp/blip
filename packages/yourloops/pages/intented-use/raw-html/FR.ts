@@ -30,7 +30,7 @@ import diabeloopLogo from '../images/diabeloop-logo.png'
 import yourloopsLogo from '../images/yourloops-logo.png'
 import factory from '../images/factory.png'
 import ceMark from '../images/ce-mark.png'
-import appConfig from '../../../lib/config'
+import appConfig from '../../../lib/config/config'
 
 const rawHtmlFR = `
   <style type="text/css">@import url('https://themes.googleusercontent.com/fonts/css?kit=dpiI8CyVsrzWsJLBFKehGpLhv3qFjX7dUn1mYxfCXhI');

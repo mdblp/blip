@@ -24,8 +24,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { MedicalRecord, NewMedicalRecord, Prescription, WeeklyReport } from './model'
 import HttpService from '../../services/http.service'
+import { Prescription } from './models/prescription.model'
+import { WeeklyReport } from './models/weekly-report.model'
+import { MedicalRecord, NewMedicalRecord } from './models/medical-record.model'
 
 export default class MedicalFilesApi {
   static async getPrescriptions(patientId: string, teamId: string): Promise<Prescription[]> {

@@ -40,10 +40,11 @@ import { User } from '../../../../lib/auth'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as alertHookMock from '../../../../components/utils/snackbar'
-import { ShareUser } from '../../../../lib/share/models'
-import { UserInvitationStatus } from '../../../../models/generic.model'
+import { ShareUser } from '../../../../lib/share/models/share-user.model'
 import { AddTeamDialogProps } from '../../../../pages/patient/teams/add-dialog'
 import { TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { IUser } from '../../../../lib/data/models/i-user.model'
 
 /* eslint-disable react/display-name */
 jest.mock('../../../../pages/patient/teams/add-dialog', () => (props: AddTeamDialogProps) => {
@@ -67,8 +68,8 @@ describe('Team Menu', () => {
   const teams: Team[] = [buildTeam('team1Id', []), buildTeam('team2Id', [])]
 
   const caregivers: ShareUser[] = [
-    { user: {} as User, status: UserInvitationStatus.accepted },
-    { user: {} as User, status: UserInvitationStatus.accepted }
+    { user: {} as IUser, status: UserInvitationStatus.accepted },
+    { user: {} as IUser, status: UserInvitationStatus.accepted }
   ]
 
   const createTeamMock = jest.fn()

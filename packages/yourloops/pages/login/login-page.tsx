@@ -38,7 +38,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
 
 const loginStyle = makeStyles((theme: Theme) => {
   return {

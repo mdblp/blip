@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 import { Link as LinkRedirect } from 'react-router-dom'
@@ -39,10 +39,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Link from '@material-ui/core/Link'
 
 import { Errors } from './models'
-import { Units } from '../../models/generic.model'
-import { HcpProfession } from '../../models/hcp-profession.model'
-import { LanguageCodes } from '../../models/locales.model'
-import { Preferences, Profile, Settings, UserRoles } from '../../models/user'
+import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { getCurrentLang } from '../../lib/language'
 import { REGEX_BIRTHDATE, setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
@@ -52,7 +49,13 @@ import PersonalInfoForm from './personal-info-form'
 import PreferencesForm from './preferences-form'
 import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 import SwitchRoleDialogs from '../../components/switch-role'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
+import { Preferences } from '../../lib/auth/models/preferences.model'
+import { Profile } from '../../lib/auth/models/profile.model'
+import { Settings } from '../../lib/auth/models/settings.model'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -133,7 +136,7 @@ const ProfilePage = (): JSX.Element => {
 
   const [firstName, setFirstName] = useState<string>(user.firstName)
   const [lastName, setLastName] = useState<string>(user.lastName)
-  const [unit, setUnit] = useState<Units>(user.settings?.units?.bg ?? Units.gram)
+  const [unit, setUnit] = useState<UnitsType>(user.settings?.units?.bg ?? UnitsType.MGDL)
   const [birthDate, setBirthDate] = useState<string>(user.profile?.patient?.birthday ?? '')
   const [birthPlace, setBirthPlace] = useState<string>(user.profile?.patient?.birthPlace ?? '')
   const [sex, setSex] = useState<string>(user.profile?.patient?.sex ?? '')

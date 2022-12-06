@@ -30,13 +30,15 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
 import { BrowserRouter } from 'react-router-dom'
 
-import { Units } from '../../../../models/generic.model'
 import ProfilePage from '../../../../pages/profile'
-import { AuthenticatedUserMetadata, Profile, UserRoles } from '../../../../models/user'
 import * as authHookMock from '../../../../lib/auth'
-import User from '../../../../lib/auth/user.model'
-import { genderLabels } from '../../../../lib/auth/helpers'
-import { HcpProfession } from '../../../../models/hcp-profession.model'
+import User from '../../../../lib/auth/models/user.model'
+import { genderLabels } from '../../../../lib/auth/auth.helper'
+import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
+import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { Profile } from '../../../../lib/auth/models/profile.model'
 
 jest.mock('../../../../lib/auth')
 
@@ -95,7 +97,7 @@ describe('Profile', () => {
     hcp.frProId = 'ANS20211229094028'
     hcp.profile = { email: hcpEmail, firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
     hcp.preferences = { displayLanguageCode: 'en' }
-    hcp.settings = { units: { bg: Units.gram }, country: 'FR' }
+    hcp.settings = { units: { bg: UnitsType.MGDL }, country: 'FR' }
   })
 
   afterEach(() => {
@@ -131,7 +133,7 @@ describe('Profile', () => {
     delete user.settings?.units?.bg
     await mountProfilePage()
     const selectValue = container.querySelector('#profile-units-selector').innerHTML
-    expect(selectValue).toBe(Units.gram)
+    expect(selectValue).toBe(UnitsType.MGDL)
   })
 
   it('should display birthdate if user is a patient', async () => {
@@ -333,7 +335,7 @@ describe('Profile', () => {
     const unitSelectInput = container?.querySelector('#profile-units-selector + input')
 
     expect(saveButton.disabled).toBeTruthy()
-    Simulate.change(unitSelectInput, { target: { value: Units.mole } } as unknown as SyntheticEventData)
+    Simulate.change(unitSelectInput, { target: { value: UnitsType.MMOLL } } as unknown as SyntheticEventData)
     expect(saveButton.disabled).toBeFalsy()
     Simulate.click(saveButton)
     expect(updateSettings).toHaveBeenCalledTimes(1)

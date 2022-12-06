@@ -27,11 +27,13 @@
 
 import React from 'react'
 import { NotificationSpan, NotificationSpanProps } from '../../../../pages/notifications/notification'
-import { INotification, NotificationType } from '../../../../lib/notifications/models'
 import { render, screen } from '@testing-library/react'
+import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { Profile } from '../../../../lib/auth/models/profile.model'
+import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 describe('NotificationSpan', () => {
-  const careTeamMonitoringNotification: INotification = {
+  const careTeamMonitoringNotification: Notification = {
     id: 'fakeId',
     metricsType: 'share_data',
     date: '2021-02-18T10:00:00',
@@ -39,7 +41,7 @@ describe('NotificationSpan', () => {
       userid: '1',
       profile: {
         fullName: 'Yvan Tendu'
-      }
+      } as Profile
     },
     creatorId: 'fakeCreatorId',
     email: 'fake@email.com',

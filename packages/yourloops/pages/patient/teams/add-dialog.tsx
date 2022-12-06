@@ -46,7 +46,7 @@ import Link from '@material-ui/core/Link'
 import TextField from '@material-ui/core/TextField'
 import metrics from '../../../lib/metrics'
 import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from '../../../lib/team'
-import { diabeloopExternalUrls } from '../../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 
 interface AddTeamDialogContentProps {
   onDialogResult: (teamId?: string) => void

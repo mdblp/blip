@@ -43,7 +43,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
 
-import { MedicalRecord } from '../../../lib/medical-files/model'
 import { useAuth, User } from '../../../lib/auth'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import MedicalRecordEditDialog from '../../dialogs/medical-record-edit-dialog'
@@ -53,6 +52,7 @@ import { CategoryProps } from './medical-files-widget'
 import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
+import { MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {

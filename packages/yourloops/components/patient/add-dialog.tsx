@@ -43,11 +43,11 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 
 import { REGEX_EMAIL } from '../../lib/utils'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { AddPatientDialogContentProps } from '../../pages/hcp/types'
-import { usePatientContext } from '../../lib/patient/provider'
-import { PatientTeam } from '../../lib/data/patient.model'
-import { UserInvitationStatus } from '../../models/generic.model'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import { PatientTeam } from '../../lib/patient/models/patient-team.model'
+import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 
 export interface AddDialogProps {
   actions: AddPatientDialogContentProps | null

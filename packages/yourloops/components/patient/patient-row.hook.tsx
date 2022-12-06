@@ -28,10 +28,10 @@
 import moment from 'moment'
 import { ClassNameMap } from '@material-ui/styles/withStyles'
 import { useTranslation } from 'react-i18next'
-import { Patient } from '../../lib/data/patient.model'
 import { patientListCommonStyle } from './table'
 import { useAuth } from '../../lib/auth'
-import { Monitoring } from '../../models/monitoring.model'
+import { Monitoring } from '../../lib/team/models/monitoring.model'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 interface PatientRowHookProps {
   classes: ClassNameMap
