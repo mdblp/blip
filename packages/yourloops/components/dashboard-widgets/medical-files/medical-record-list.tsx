@@ -140,6 +140,8 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
           alert.error(t('medical-records-get-failed'))
         })
     }
+    // We don't have exhaustive deps here because we want to run the effect only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

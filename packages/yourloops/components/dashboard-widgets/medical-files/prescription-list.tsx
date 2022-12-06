@@ -79,6 +79,8 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
           alert.error(t('prescriptions-get-failed'))
         })
     }
+    // We don't have exhaustive deps here because we want to run the effect only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription): void => {

@@ -4,7 +4,7 @@ import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
-import { CBGMeanStat, CBGPercentageBarChart, CBGStandardDeviation, CBGStatType } from 'dumb'
+import { CBGMeanStat, CBGPercentageBarChart, CBGStandardDeviation, CBGStatType , TotalInsulinStat } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
 const { Stat } = vizComponents
@@ -98,6 +98,18 @@ class Stats extends React.Component {
     }
     return stats.map(stat => {
       switch (stat.id) {
+        case CBGStatType.TotalInsulin:
+          return (
+            <div key={stat.id} data-testid={`stat-${stat.id}`}>
+              <TotalInsulinStat
+                annotations={stat.annotations}
+                data={stat.data.data}
+                title={stat.title}
+                total={Math.round(stat.data.total.value * 10) / 10}
+              />
+              <Divider variant="fullWidth" />
+            </div>
+          )
         case CBGStatType.TimeInRange:
         case CBGStatType.ReadingsInRange:
           return (
