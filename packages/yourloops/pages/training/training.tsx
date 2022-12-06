@@ -135,7 +135,7 @@ function TrainingPage(): JSX.Element {
                       aria-label={t('training-checkbox')}
                       className={classes.checkbox}
                       checked={checked}
-                      onChange={() => setChecked(true)}
+                      onChange={() => setChecked(!checked)}
                       name="training"
                       color="primary"
                     />

@@ -134,6 +134,7 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm ci
+          npm run build-dependencies
 
       - name: Test dumb
         run: npm run test-dumb

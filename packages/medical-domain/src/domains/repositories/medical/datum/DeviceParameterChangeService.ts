@@ -1,7 +1,35 @@
+/*
+ * Copyright (c) 2022, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import DeviceParameterChange from '../../../models/medical/datum/DeviceParameterChange'
 import { DatumProcessor } from '../../../models/medical/Datum'
 import BaseDatumService from './basics/BaseDatumService'
 import MedicalDataOptions from '../../../models/medical/MedicalDataOptions'
+import Unit from '../../../models/medical/datum/enums/unit.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -24,7 +52,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
         uploadId: rawData.uploadId as string,
         name: rawData.name as string,
         level: rawData.level as string,
-        units: rawData.units as string,
+        units: rawData.units as Unit,
         value: rawData.value as string,
         previousValue: rawData.previousValue as string,
         lastUpdateDate: rawData.lastUpdateDate as string
