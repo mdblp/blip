@@ -27,7 +27,7 @@
 
 import Datum from './domains/models/medical/datum.model'
 import Basal from './domains/models/medical/datum/basal.model'
-import BolusModel from './domains/models/medical/datum/bolus.model'
+import Bolus from './domains/models/medical/datum/bolus.model'
 import Cbg, { MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/cbg.model'
 import ConfidentialMode from './domains/models/medical/datum/confidential-mode.model'
 import DeviceParameterChange from './domains/models/medical/datum/device-parameter-change.model'
@@ -46,7 +46,7 @@ import { defaultMedicalDataOptions } from './domains/models/medical/medical-data
 import * as TimeService from './domains/repositories/time/time.service'
 
 export {
-  Basal, BolusModel, Cbg, ConfidentialMode, Datum, DeviceParameterChange, Meal, Message,
+  Basal, Bolus, Cbg, ConfidentialMode, Datum, DeviceParameterChange, Meal, Message,
   PhysicalActivity, PumpSettings, ReservoirChange, Smbg, Upload, Wizard, ZenMode,
   defaultMedicalDataOptions, TimeService, MGDL_UNITS, MMOLL_UNITS, convertBG
 }
