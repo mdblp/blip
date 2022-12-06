@@ -46,7 +46,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
 import { MedicalRecord } from '../../../lib/medical-files/model'
-import { useAuth, User } from '../../../lib/auth'
+import { useAuth } from '../../../lib/auth'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
 import MedicalRecordEditDialog from '../../dialogs/medical-record-edit-dialog'
 import MedicalRecordDeleteDialog from '../../dialogs/medical-record-delete-dialog'
@@ -78,10 +78,9 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { classes } = useStyle()
   const { teamId, patientId } = props
-  const authHook = useAuth()
+  const { user } = useAuth()
   const alert = useAlert()
   const { classes: commonStyles } = commonComponentStyles()
-  const user = authHook.user as User
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)

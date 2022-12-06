@@ -26,50 +26,47 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import Grid from '@mui/material/Grid'
-import LockIcon from '@mui/icons-material/LockOutlined'
-import styles from './confidential-tooltip.css'
-import { Tooltip } from '../../../index'
-import colors from '../../../styles/colors.css'
-import {
-  COMMON_TOOLTIP_SIDE,
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
-} from '../tooltip/tooltip'
+import { Link as LinkRedirect } from 'react-router-dom'
+
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+
+import PersonalInfoForm from './personal-info-form'
+import PreferencesForm from './preferences-form'
+import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 import { useTranslation } from 'react-i18next'
+import { useProfilePageState } from './profile-page-context'
+import { profileFormCommonClasses } from './css-classes'
 
-interface ConfidentialTooltipProps {
-  position: Position
-  side: Side
-}
-
-export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = (props) => {
-  const { position, side } = props
-  const { t } = useTranslation('main')
+export const ProfileForm: FunctionComponent = () => {
+  const { t } = useTranslation('yourloops')
+  const { canSave, saving, saveProfile } = useProfilePageState()
+  const classes = profileFormCommonClasses()
 
   return (
-    <Tooltip
-      position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
-      borderColor={colors.confidentialMode}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
-      offset={DEFAULT_TOOLTIP_OFFSET}
-      content={
-        <Grid container direction="row" alignItems="center" justifyContent="center">
-          <Grid item>
-            <LockIcon className={styles.icon} />
-          </Grid>
-          <Grid item>{t('Confidential mode')}</Grid>
-        </Grid>
-      }
-    />
+    <React.Fragment>
+      <PersonalInfoForm />
+      <PreferencesForm />
+      <Box display="flex" justifyContent="flex-end" my={3}>
+        <LinkRedirect className={classes.cancelLink} to="/">
+          <Button>
+            {t('button-cancel')}
+          </Button>
+        </LinkRedirect>
+        <ProgressIconButtonWrapper inProgress={saving}>
+          <Button
+            id="profile-button-save"
+            variant="contained"
+            disabled={!canSave}
+            color="primary"
+            disableElevation
+            className={classes.button}
+            onClick={saveProfile}
+          >
+            {t('button-save')}
+          </Button>
+        </ProgressIconButtonWrapper>
+      </Box>
+    </React.Fragment>
   )
 }

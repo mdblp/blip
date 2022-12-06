@@ -29,7 +29,6 @@ import React, { FunctionComponent } from 'react'
 import styles from './parameter-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import moment from 'moment-timezone'
-import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import { formatParameterValue } from '../../../utils/format/format.util'
 import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
@@ -46,6 +45,7 @@ import {
 } from '../tooltip/tooltip'
 import colors from '../../../styles/colors.css'
 import { DeviceParameterChange, Parameter, TimePrefs } from 'medical-domain'
+import { useTranslation } from 'react-i18next'
 
 interface ParameterTooltipProps {
   parameter: DeviceParameterChange
@@ -56,6 +56,7 @@ interface ParameterTooltipProps {
 
 export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props) => {
   const { parameter, position, side, timePrefs } = props
+  const { t } = useTranslation('main')
 
   const hourMinuteFormat = getHourMinuteFormat()
 
@@ -78,7 +79,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
               data-testid={'parameter-name'}
               className={styles.label}
         >
-          {i18next.t(`params|${parameter.name}`)}
+          {t(`params|${parameter.name}`)}
         </span>
         {
           hasPreviousValue &&
@@ -102,7 +103,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
               data-testid={'parameter-units'}
               className={commonStyles.units}
         >
-          {i18next.t(parameter.units)}
+          {t(parameter.units)}
         </span>
       </React.Fragment>
     )

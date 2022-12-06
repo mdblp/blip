@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export type LanguageCodes = 'en' | 'de' | 'es' | 'fr' | 'it' | 'nl' | 'jp'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-export interface Country {
-  code: CountryCodes
-  name: string
-}
-
-export enum CountryCodes {
-  Austria = 'AT',
-  Belgium = 'BE',
-  UnitedKingdom = 'GB',
-  France = 'FR',
-  Germany = 'DE',
-  Italy = 'IT',
-  Japan = 'JP',
-  Netherlands = 'NL',
-  Spain = 'SP',
-  Switzerland = 'CH',
-  Unknown = ''
-}
+export const profileFormCommonClasses = makeStyles((theme: Theme) => ({
+  button: {
+    marginLeft: theme.spacing(2)
+  },
+  cancelLink: {
+    textDecoration: 'unset'
+  },
+  formInput: {
+    marginTop: theme.spacing(2)
+  },
+  title: {
+    color: theme.palette.primary.main,
+    textAlign: 'center',
+    width: '100%'
+  },
+  container: {
+    backgroundColor: 'white',
+    marginTop: '32px',
+    padding: 0,
+    [theme.breakpoints.up('sm')]: {
+      border: 'solid',
+      borderRadius: '15px',
+      borderColor: theme.palette.grey[300],
+      borderWidth: '1px',
+      padding: '0 64px'
+    }
+  },
+  uppercase: {
+    textTransform: 'uppercase'
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    [theme.breakpoints.only('xs')]: {
+      flexDirection: 'column'
+    },
+    [theme.breakpoints.up('sm')]: {
+      '& > div': {
+        width: 'calc(50% - 16px)'
+      }
+    }
+  },
+  categoryLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(5),
+    '& > :nth-child(2)': {
+      marginLeft: theme.spacing(1)
+    }
+  }
+}))

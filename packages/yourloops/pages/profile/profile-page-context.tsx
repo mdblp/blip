@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,6 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ProfilePage from './profile'
+import React, { createContext, FunctionComponent, useContext } from 'react'
+import { ProfileErrors, ProfileForm, ProfileFormKey } from './models'
+import { Units } from '../../models/generic'
+import { LanguageCodes } from '../../models/locales'
+import { HcpProfession } from '../../models/hcp-profession'
+import useProfilePageContextHook from './profil-page-context.hook'
 
-export default ProfilePage
+interface ProfilePageContext {
+  canSave: boolean
+  errors: ProfileErrors
+  profileForm: ProfileForm
+  saveProfile: () => Promise<void>
+  saving: boolean
+  updateProfileForm: (key: ProfileFormKey, value: boolean | string | LanguageCodes | Units | HcpProfession) => void
+}
+
+const ProfilePageStateContext = createContext<ProfilePageContext>({} as ProfilePageContext)
+
+export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
+  const {
+    canSave,
+    errors,
+    profileForm,
+    saveProfile,
+    saving,
+    updateProfileForm
+  } = useProfilePageContextHook()
+
+  return (
+    <ProfilePageStateContext.Provider value={{ profileForm, updateProfileForm, errors, canSave, saving, saveProfile }}>
+      {children}
+    </ProfilePageStateContext.Provider>
+  )
+}
+
+export const useProfilePageState = (): ProfilePageContext => useContext(ProfilePageStateContext)

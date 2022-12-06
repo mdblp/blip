@@ -54,7 +54,7 @@ describe('HCP home page', () => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockDirectShareApi()
   })
@@ -106,7 +106,6 @@ describe('HCP home page', () => {
     const select = within(removeDialog).getByTestId('patient-team-selector')
     fireEvent.mouseDown(within(select).getByRole('button'))
 
-    screen.getByRole('listbox')
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
     await act(async () => {
