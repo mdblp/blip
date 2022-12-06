@@ -33,7 +33,7 @@ import ThemeProvider from '@material-ui/styles/ThemeProvider'
 
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
-import { convertBG, UNITS_TYPE } from '../../../../lib/units/utils'
+import { UNITS_TYPE } from '../../../../lib/units/utils'
 import AlarmsContentConfiguration, {
   AlarmsContentConfigurationProps,
   MIN_HIGH_BG,
@@ -153,35 +153,6 @@ describe('AlarmsContentConfiguration', () => {
     expect(document.getElementById('basic-dropdown-out-of-range-selector').innerHTML).toEqual(`${monitoring.parameters.outOfRangeThreshold}%`)
     expect(document.getElementById('basic-dropdown-hypo-threshold-selector').innerHTML).toEqual(`${monitoring.parameters.hypoThreshold}%`)
     expect(document.getElementById('basic-dropdown-non-data-selector').innerHTML).toEqual(`${monitoring.parameters.nonDataTxThreshold}%`)
-    const saveButton = document.getElementById('save-button-id')
-    expect((saveButton as HTMLButtonElement).disabled).toBeFalsy()
-    triggerMouseEvent('click', saveButton)
-    expect(onSave).toHaveBeenCalledTimes(1)
-    expect(onSave).toHaveBeenCalledWith(monitoring)
-  })
-
-  it('should display correct alarm information in mg/dL when given mmol/L', () => {
-    const monitoringInMMOLL = {
-      enabled: true,
-      parameters: {
-        bgUnit: UNITS_TYPE.MMOLL,
-        lowBg: convertBG(MIN_LOW_BG, UNITS_TYPE.MGDL),
-        highBg: convertBG(MIN_HIGH_BG, UNITS_TYPE.MGDL),
-        outOfRangeThreshold: 5,
-        veryLowBg: convertBG(MIN_VERY_LOW_BG + 1, UNITS_TYPE.MGDL),
-        hypoThreshold: 10,
-        nonDataTxThreshold: 15,
-        reportingPeriod: 7
-      }
-    }
-    monitoring.parameters.veryLowBg = MIN_VERY_LOW_BG + 1
-    renderTeamAlarmsContent({ monitoring: monitoringInMMOLL, onSave, saveInProgress: false })
-    expect((document.getElementById('low-bg-text-field-id') as HTMLInputElement).value).toEqual(MIN_LOW_BG.toString())
-    expect((document.getElementById('high-bg-text-field-id') as HTMLInputElement).value).toEqual(MIN_HIGH_BG.toString())
-    expect(+(document.getElementById('very-low-bg-text-field-id') as HTMLInputElement).value).toBeCloseTo(MIN_VERY_LOW_BG + 1)
-    expect(document.getElementById('basic-dropdown-out-of-range-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.outOfRangeThreshold}%`)
-    expect(document.getElementById('basic-dropdown-hypo-threshold-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.hypoThreshold}%`)
-    expect(document.getElementById('basic-dropdown-non-data-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.nonDataTxThreshold}%`)
     const saveButton = document.getElementById('save-button-id')
     expect((saveButton as HTMLButtonElement).disabled).toBeFalsy()
     triggerMouseEvent('click', saveButton)
