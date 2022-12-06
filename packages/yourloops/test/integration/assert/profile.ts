@@ -40,18 +40,12 @@ interface PatientFieldsHtmlElements extends CommonFieldsHtmlElements {
   birthPlaceInput: HTMLElement
   genderSelect: HTMLElement
   referringDoctorInput: HTMLElement
-  birthFirstNameInput?: HTMLElement
-  birthLastNameInput?: HTMLElement
-  birthNamesInput?: HTMLElement
-  birthPlaceZipcodeInput?: HTMLElement
   insInput?: HTMLElement
   ssnInput?: HTMLElement
-  oidInput?: HTMLElement
 }
 
 interface HcpFieldsHtmlElements extends CommonFieldsHtmlElements {
   hcpProfessionSelect: HTMLElement
-  frProIdInput?: HTMLElement
 }
 
 const checkCommonFields = (): CommonFieldsHtmlElements => {
