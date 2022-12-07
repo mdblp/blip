@@ -28,6 +28,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1935 CBG thresholds should be used from medical data service
 - YLP-1942 Rename files in yourloops and medical-domain
 - YLP-1945 Migrate NoBar component to dumb
+- YLP-1949 Migrate Lines component to dumb
 - YLP-1960 enhance pipeline
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
