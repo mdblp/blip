@@ -35,13 +35,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 
-import FileChartOutlinedIcon from '../../icons/FileChartOutlinedIcon'
-import { WeeklyReport } from '../../../lib/medical-files/model'
-import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import FileChartOutlinedIcon from '../../icons/file-chart-outlined-icon'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { CategoryProps } from './medical-files-widget'
 import WeeklyReportDialog from '../../dialogs/weekly-report-dialog'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
+import { WeeklyReport } from '../../../lib/medical-files/models/weekly-report.model'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {

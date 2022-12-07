@@ -36,9 +36,9 @@ import { createPatient, triggerMouseEvent } from '../../common/utils'
 import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
 import AlarmCard from '../../../../components/alarm/alarm-card'
-import User from '../../../../lib/auth/user'
-import { Alarm } from '../../../../models/alarm'
-import { Monitoring } from '../../../../models/monitoring'
+import User from '../../../../lib/auth/models/user.model'
+import { Alarm } from '../../../../lib/patient/models/alarm.model'
+import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { getTheme } from '../../../../components/theme'
 
 jest.mock('../../../../lib/auth')

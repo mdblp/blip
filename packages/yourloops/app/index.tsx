@@ -31,9 +31,9 @@ import 'core-js/stable'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import config from '../lib/config'
+import config from '../lib/config/config'
 import { init as i18nInit } from '../lib/language'
-import initCookiesConcentListener from '../lib/cookies-manager'
+import initCookiesConsentListener from '../lib/cookies-manager'
 import initDayJS from '../lib/dayjs'
 import initAxios from '../lib/axios'
 import { initTheme } from '../components/theme'
@@ -60,7 +60,7 @@ i18nInit().then(() => {
   }
 
   initDayJS()
-  initCookiesConcentListener()
+  initCookiesConsentListener()
   initAxios()
   initTheme()
 

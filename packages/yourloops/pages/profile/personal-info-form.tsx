@@ -35,15 +35,15 @@ import FormControl from '@material-ui/core/FormControl'
 import TextField from '@material-ui/core/TextField'
 
 import { useAuth } from '../../lib/auth'
-import { ProfileFormKey } from './models'
-import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
+import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
 import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
 import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-button'
 import PatientProfileForm from './patient-form'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
-import { CountryCodes } from '../../models/locales'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { CountryCodes } from '../../lib/auth/models/country.model'
 
 const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')

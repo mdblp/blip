@@ -36,8 +36,8 @@ import { useAlert } from '../utils/snackbar'
 import { useHistory } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
-import TeamUtils from '../../lib/team/utils'
-import { usePatientContext } from '../../lib/patient/provider'
+import TeamUtils from '../../lib/team/team.util'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 
 export interface LeaveTeamButtonProps {
   team: Team

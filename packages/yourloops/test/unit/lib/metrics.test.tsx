@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import config from '../../../lib/config'
+import config from '../../../lib/config/config'
 import metrics from '../../../lib/metrics'
 import { loggedInUsers } from '../common'
 

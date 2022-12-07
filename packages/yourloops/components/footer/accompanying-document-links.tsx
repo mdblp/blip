@@ -30,7 +30,7 @@ import Link from '@material-ui/core/Link'
 import { Link as RouterLink } from 'react-router-dom'
 import Box from '@material-ui/core/Box'
 import { useTranslation } from 'react-i18next'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { User } from '../../lib/auth'
 import { footerStyle } from './footer'
 

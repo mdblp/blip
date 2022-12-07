@@ -25,17 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ShareUser } from '../../../lib/share/models'
-
-export interface AddDialogContentProps {
-  onDialogResult: (email: string | null) => void
-}
-
-export interface RemoveDialogContentProps {
-  caregiver: ShareUser
-  onDialogResult: (remove: boolean) => void
-}
-
 export enum SortDirection {
   asc = 'asc',
   desc = 'desc',
