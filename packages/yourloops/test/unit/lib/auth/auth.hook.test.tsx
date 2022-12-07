@@ -38,11 +38,11 @@ import UserApi from '../../../../lib/auth/user.api'
 import { Profile } from '../../../../lib/auth/models/profile.model'
 import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { Settings } from '../../../../lib/auth/models/settings.model'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
-import { CountryCodes } from '../../../../models/locales'
+import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 
 jest.mock('@auth0/auth0-react')
 
@@ -60,7 +60,7 @@ describe('Auth hook', () => {
     hcpProfession: HcpProfession.diabeto
   }
   const preferences: Preferences = { displayLanguageCode: 'en' }
-  const settings: Settings = { country: CountryCodes.France, units: { bg: Units.gram } }
+  const settings: Settings = { country: CountryCodes.France, units: { bg: UnitsType.MGDL } }
 
   const initAuthContext = async (): Promise<void> => {
     auth = null
@@ -184,7 +184,7 @@ describe('Auth hook', () => {
       const now = Date.now()
       await initAuthContext()
 
-      const user: User = { ...auth.user }
+      const user = { ...auth.user } as User
       user.role = UserRoles.hcp
       await act(async () => await auth.switchRoleToHCP(false, HcpProfession.diabeto))
       const updatedUser: User = auth.user

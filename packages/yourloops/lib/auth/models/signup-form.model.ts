@@ -28,6 +28,7 @@
 import { HcpProfession } from './enums/hcp-profession.enum'
 import { UserRoles } from './enums/user-roles.enum'
 import { LanguageCodes } from './language-codes.model'
+import { CountryCodes } from './country.model'
 
 export interface SignupForm {
   accountRole: UserRoles
@@ -35,7 +36,7 @@ export interface SignupForm {
   hcpProfession?: HcpProfession
   preferencesLanguage: LanguageCodes
   privacyPolicy: boolean
-  profileCountry: string
+  profileCountry: CountryCodes
   profileFirstname: string
   profileLastname: string
   terms: boolean

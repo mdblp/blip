@@ -34,7 +34,7 @@ import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CompleteSignupPayload } from '../../../../lib/auth/models/complete-signup-payload.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
-import { CountryCodes } from '../../../../models/locales'
+import { CountryCodes } from '../../../../lib/auth/models/country.model'
 
 describe('Auth API', () => {
   const userId = 'userId'

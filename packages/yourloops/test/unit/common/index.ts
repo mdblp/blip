@@ -30,7 +30,7 @@ import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enu
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
-import { CountryCodes } from '../../../models/locales'
+import { CountryCodes } from '../../../lib/auth/models/country.model'
 
 const getNewHcp = (): User => {
   return new User({

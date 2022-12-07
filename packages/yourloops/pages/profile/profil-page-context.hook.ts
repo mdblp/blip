@@ -29,15 +29,18 @@ import { useAlert } from '../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
 import { useMemo, useState } from 'react'
-import { ProfileErrors, ProfileForm, ProfileFormKey } from './models'
-import { HcpProfession } from '../../models/hcp-profession'
 import { getCurrentLang } from '../../lib/language'
-import { Units } from '../../models/generic'
 import { REGEX_BIRTHDATE } from '../../lib/utils'
-import { Preferences, Profile, Settings } from '../../models/user'
 import { isEqual, some } from 'lodash'
-import { CountryCodes } from '../../models/locales'
-import { usePatientContext } from '../../lib/patient/provider'
+import { ProfileErrors, ProfileForm } from './models/profile-form.model'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { CountryCodes } from '../../lib/auth/models/country.model'
+import { Profile } from '../../lib/auth/models/profile.model'
+import { Settings } from '../../lib/auth/models/settings.model'
+import { Preferences } from '../../lib/auth/models/preferences.model'
 
 interface UseProfilePageContextHookReturn {
   canSave: boolean
@@ -68,7 +71,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     referringDoctor: user.profile?.patient?.referringDoctor ?? undefined,
     sex: user.profile?.patient?.sex ?? undefined,
     ssn: user.profile?.patient?.ssn ?? undefined,
-    units: user.settings?.units?.bg ?? Units.gram
+    units: user.settings?.units?.bg ?? UnitsType.MGDL
   })
   const [saving, setSaving] = useState<boolean>(false)
 

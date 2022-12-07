@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AuthenticatedPatient {
+export interface ProfilePatientFields {
   birthday?: string
   birthPlace?: string
   diagnosisDate?: string

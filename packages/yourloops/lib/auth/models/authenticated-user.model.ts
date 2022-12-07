@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2022, Diabeloop
  *
@@ -33,4 +32,5 @@ export interface AuthenticatedUser {
   email: string
   email_verified: boolean
   sub: string
+  frProId?: string
 }

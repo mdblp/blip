@@ -42,9 +42,9 @@ import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
 import { useProfilePageState } from './profile-page-context'
-import { ProfileFormKey } from './models'
 import { useAuth } from '../../lib/auth'
 import { profileFormCommonClasses } from './css-classes'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
 
 const PreferencesForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')

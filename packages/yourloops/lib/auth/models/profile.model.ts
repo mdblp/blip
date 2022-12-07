@@ -27,14 +27,14 @@
 
 import { HcpProfession } from './enums/hcp-profession.enum'
 import { Consent } from './consent.model'
-import { AuthenticatedPatient } from './authenticated-patient.model'
+import { ProfilePatientFields } from './profile-patient-fields.model'
 
 export interface Profile {
   email: string
   fullName: string
   firstName?: string
   lastName?: string
-  patient?: AuthenticatedPatient
+  patient?: ProfilePatientFields
   termsOfUse?: Consent
   trainingAck?: Consent
   privacyPolicy?: Consent

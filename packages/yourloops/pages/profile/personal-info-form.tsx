@@ -34,9 +34,7 @@ import Box from '@material-ui/core/Box'
 import FormControl from '@material-ui/core/FormControl'
 import TextField from '@material-ui/core/TextField'
 
-import appConfig from '../../lib/config/config'
-import { useAuth, User } from '../../lib/auth'
-import { Errors } from './models'
+import { useAuth } from '../../lib/auth'
 import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
 import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
@@ -44,9 +42,8 @@ import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-bu
 import PatientProfileForm from './patient-form'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
-import { CountryCodes } from '../../models/locales'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
-import { ProfileFormKey } from './models'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { CountryCodes } from '../../lib/auth/models/country.model'
 
 const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')

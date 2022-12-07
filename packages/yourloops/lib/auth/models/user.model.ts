@@ -34,7 +34,7 @@ import { Profile } from './profile.model'
 import { Settings } from './settings.model'
 import { AuthenticatedUser } from './authenticated-user.model'
 import { AuthenticatedUserMetadata } from './enums/authenticated-user-metadata.enum'
-import { REGEX_BIRTHDATE } from '../utils'
+import { REGEX_BIRTHDATE } from '../../utils'
 
 export default class User {
   readonly email: string

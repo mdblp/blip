@@ -50,7 +50,7 @@ import { isZipCodeValid, PhonePrefixCode, REGEX_EMAIL, REGEX_PHONE } from '../..
 import { useAuth } from '../../lib/auth'
 import { TeamEditModalContentProps } from './types'
 import Box from '@material-ui/core/Box'
-import { CountryCodes } from '../../models/locales'
+import { CountryCodes } from '../../lib/auth/models/country.model'
 
 interface LocalesCountries {
   [code: string]: {

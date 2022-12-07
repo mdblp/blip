@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState, FunctionComponent } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@material-ui/core/Box'
@@ -33,7 +33,6 @@ import Container from '@material-ui/core/Container'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Link from '@material-ui/core/Link'
 
-import { UserRoles } from '../../models/user'
 import { getCurrentLang } from '../../lib/language'
 import { setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
@@ -42,6 +41,7 @@ import SwitchRoleDialogs from '../../components/switch-role'
 import { ProfilePageContextProvider } from './profile-page-context'
 import { ProfileForm } from './profile-form'
 import { profileFormCommonClasses } from './css-classes'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 const ProfilePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')

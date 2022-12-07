@@ -25,16 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from '../../units/models/enums/units-type.enum'
-import { CountryCodes } from './country.model'
-
-export interface Settings {
-  units?: {
-    bg?: UnitsType
-  }
-  country?: CountryCodes
-  a1c?: {
-    date: string
-    value: string
-  }
+export enum ProfileFormKey {
+  birthday = 'birthday',
+  birthPlace = 'birthPlace',
+  feedbackAccepted = 'feedbackAccepted',
+  firstName = 'firstName',
+  hcpProfession = 'hcpProfession',
+  ins = 'ins',
+  lang = 'lang',
+  lastName = 'lastName',
+  referringDoctor = 'referringDoctor',
+  sex = 'sex',
+  ssn = 'ssn',
+  units = 'units'
 }

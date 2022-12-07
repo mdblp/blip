@@ -31,7 +31,7 @@ import { getCurrentLang } from '../../lib/language'
 import { SignupForm } from '../../lib/auth'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
-import { CountryCodes } from '../../models/locales'
+import { CountryCodes } from '../../lib/auth/models/country.model'
 
 interface ISignUpFormStateContext {
   signupForm: SignupForm
