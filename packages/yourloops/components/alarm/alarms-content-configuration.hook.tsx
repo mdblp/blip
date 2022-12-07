@@ -33,7 +33,7 @@ import { Patient } from '../../lib/data/patient'
 
 export interface AlarmsContentConfigurationHookProps {
   monitoring?: Monitoring
-  saveInProgress: boolean
+  saveInProgress?: boolean
   patient?: Patient
   onClose?: () => void
   onSave: (monitoring: Monitoring) => void
