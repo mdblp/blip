@@ -24,12 +24,38 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { Units } from '../../models/generic'
+import { LanguageCodes } from '../../models/locales'
+import { HcpProfession } from '../../models/hcp-profession'
 
-export interface Errors {
-  firstName: boolean
-  lastName: boolean
-  birthDate: boolean
-  hcpProfession: boolean
-  ins: boolean
-  ssn: boolean
+export type ProfileErrors = Record<string, boolean>
+
+export enum ProfileFormKey {
+  birthday = 'birthday',
+  birthPlace = 'birthPlace',
+  feedbackAccepted = 'feedbackAccepted',
+  firstName = 'firstName',
+  hcpProfession = 'hcpProfession',
+  ins = 'ins',
+  lang = 'lang',
+  lastName = 'lastName',
+  referringDoctor = 'referringDoctor',
+  sex = 'sex',
+  ssn = 'ssn',
+  units = 'units'
+}
+
+export interface ProfileForm {
+  birthday: string | undefined
+  birthPlace: string
+  feedbackAccepted: boolean | undefined
+  firstName: string
+  hcpProfession: HcpProfession
+  ins: string | undefined
+  lang: LanguageCodes
+  lastName: string
+  referringDoctor: string | undefined
+  sex: string | undefined
+  ssn: string | undefined
+  units: Units
 }
