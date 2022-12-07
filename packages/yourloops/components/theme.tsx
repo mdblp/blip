@@ -26,7 +26,7 @@
  */
 
 import { createTheme, Theme } from '@material-ui/core/styles'
-import config from '../lib/config'
+import config from '../lib/config/config'
 
 const DEFAULT_PRIMARY_MAIN_COLOR = '#039BE5'
 const DEFAULT_PRIMARY_LIGHT_COLOR = '#4DABF5'

@@ -34,15 +34,15 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import IconButton from '@material-ui/core/IconButton'
 
 import { Team, TeamMember, useTeam } from '../../lib/team'
-import { UserInvitationStatus } from '../../models/generic'
-import { TeamMemberRole } from '../../models/team'
 import { useAuth } from '../../lib/auth'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
 import { errorTextFromException } from '../../lib/utils'
 import { useAlert } from '../utils/snackbar'
-import PersonRemoveIcon from '../icons/PersonRemoveIcon'
+import PersonRemoveIcon from '../icons/person-remove-icon'
 import ConfirmDialog from '../dialogs/confirm-dialog'
-import TeamUtils from '../../lib/team/utils'
+import TeamUtils from '../../lib/team/team.util'
+import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
+import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkboxTableCellBody: {

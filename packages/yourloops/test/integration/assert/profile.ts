@@ -26,7 +26,7 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { CountryCodes } from '../../../models/locales'
+import { CountryCodes } from '../../../lib/auth/models/country.model'
 
 interface CommonFieldsHtmlElements {
   firstNameInput: HTMLElement

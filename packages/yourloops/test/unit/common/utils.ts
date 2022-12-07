@@ -25,13 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from '../../../models/generic'
-import { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam } from '../../../lib/data/patient'
-import { Alarm } from '../../../models/alarm'
+import { Alarm } from '../../../lib/patient/models/alarm.model'
 import { Team, TeamMember } from '../../../lib/team'
-import { TeamMemberRole, TeamType } from '../../../models/team'
-import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
-import { UNITS_TYPE } from '../../../lib/units/utils'
+import { PatientProfile } from '../../../lib/patient/models/patient-profile.model'
+import { PatientSettings } from '../../../lib/patient/models/patient-settings.model'
+import { PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import { Monitoring } from '../../../lib/team/models/monitoring.model'
+import { PatientTeam } from '../../../lib/patient/models/patient-team.model'
+import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
+import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
+import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true })
@@ -117,7 +123,7 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
     monitoring: {
       enabled: true,
       parameters: {
-        bgUnit: UNITS_TYPE.MGDL,
+        bgUnit: UnitsType.MGDL,
         lowBg: 1,
         highBg: 2,
         outOfRangeThreshold: 10,

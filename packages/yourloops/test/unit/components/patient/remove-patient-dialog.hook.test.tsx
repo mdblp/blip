@@ -27,16 +27,17 @@
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import useRemovePatientDialog from '../../../../components/patient/remove-patient-dialog.hook'
-import PatientAPI from '../../../../lib/patient/patient-api'
-import { Patient, PatientTeam } from '../../../../lib/data/patient'
-import { UserInvitationStatus } from '../../../../models/generic'
-import * as usePatientContextMock from '../../../../lib/patient/provider'
+import PatientAPI from '../../../../lib/patient/patient.api'
+import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../lib/team'
+import { Team } from '../../../../lib/team'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { buildPrivateTeam, buildTeam } from '../../common/utils'
-import { Team } from '../../../../lib/team'
+import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { Patient } from '../../../../lib/patient/models/patient.model'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
-jest.mock('../../../../lib/patient/provider')
+jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../components/utils/snackbar')
 describe('Remove patient dialog hook', () => {

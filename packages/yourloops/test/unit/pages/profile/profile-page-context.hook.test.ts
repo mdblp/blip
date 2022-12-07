@@ -27,18 +27,20 @@
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import * as authHookMock from '../../../../lib/auth'
-import * as patientContext from '../../../../lib/patient/provider'
-import * as alertMock from '../../../../components/utils/snackbar'
-
-import { Preferences, Profile, Settings, UserRoles } from '../../../../models/user'
 import { User } from '../../../../lib/auth'
+import * as patientContext from '../../../../lib/patient/patient.provider'
+import * as alertMock from '../../../../components/utils/snackbar'
 import useProfilePageContextHook from '../../../../pages/profile/profil-page-context.hook'
-import { CountryCodes } from '../../../../models/locales'
-import { Units } from '../../../../models/generic'
-import { ProfileFormKey } from '../../../../pages/profile/models'
+import { Profile } from '../../../../lib/auth/models/profile.model'
+import { Settings } from '../../../../lib/auth/models/settings.model'
+import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { Preferences } from '../../../../lib/auth/models/preferences.model'
+import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { ProfileFormKey } from '../../../../pages/profile/models/enums/profile-form-key.enum'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/patient/provider')
+jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../components/utils/snackbar')
 
 describe('Profile page context hook', () => {
@@ -67,7 +69,7 @@ describe('Profile page context hook', () => {
       value: '7.5'
     },
     country: CountryCodes.France,
-    units: { bg: Units.mole }
+    units: { bg: UnitsType.MMOLL }
   }
   const preferences: Preferences = { displayLanguageCode: 'fr' }
   const onSuccessAlertMock = jest.fn()
@@ -118,7 +120,7 @@ describe('Profile page context hook', () => {
     const firstName = 'Odile'
     const lastName = 'Deray'
     const expectedProfile = { ...profile, firstName, lastName, fullName: `${firstName} ${lastName}` }
-    const expectedSettings = { ...settings, units: { bg: Units.gram } }
+    const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
     const expectedPreferences = { displayLanguageCode: 'en' }
 
     await act(async () => {
@@ -126,7 +128,7 @@ describe('Profile page context hook', () => {
       const { updateProfileForm } = result.current
       updateProfileForm(ProfileFormKey.firstName, firstName)
       updateProfileForm(ProfileFormKey.lastName, lastName)
-      updateProfileForm(ProfileFormKey.units, Units.gram)
+      updateProfileForm(ProfileFormKey.units, UnitsType.MGDL)
       updateProfileForm(ProfileFormKey.lang, 'en')
 
       await result.current.saveProfile()

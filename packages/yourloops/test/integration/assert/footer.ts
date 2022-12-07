@@ -26,8 +26,8 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { diabeloopExternalUrls } from '../../../lib/diabeloop-url'
-import { UserRoles } from '../../../models/user'
+import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
+import { UserRoles } from '../../../lib/auth/models/consent.model'
 
 interface CheckFooterProps {
   role?: UserRoles

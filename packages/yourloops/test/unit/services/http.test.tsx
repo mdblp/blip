@@ -27,7 +27,7 @@
 
 import axios, { AxiosError, AxiosResponse } from 'axios'
 
-import HttpService from '../../../services/http'
+import HttpService from '../../../services/http.service'
 
 describe('HTTP', () => {
   const url = 'myFakeUrl'

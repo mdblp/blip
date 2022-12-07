@@ -27,14 +27,14 @@
 
 import React from 'react'
 
-import { UserRoles } from '../models/user'
 import { useAuth } from '../lib/auth'
-import { NotificationContextProvider } from '../lib/notifications/hook'
+import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 import { Redirect } from 'react-router-dom'
 import { HcpLayout } from './hcp-layout'
 import { CaregiverLayout } from './caregiver-layout'
 import { PatientLayout } from './patient-layout'
-import { DataContextProvider, DefaultDataContext } from '../lib/data/hook'
+import { DataContextProvider, DefaultDataContext } from '../lib/data/data.hook'
+import { UserRoles } from '../lib/auth/models/enums/user-roles.enum'
 
 export function MainLayout(): JSX.Element {
   const { user } = useAuth()

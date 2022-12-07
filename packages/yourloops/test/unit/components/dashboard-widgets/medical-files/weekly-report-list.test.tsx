@@ -27,11 +27,11 @@
 
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import MedicalFilesApi from '../../../../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import { WeeklyReport } from '../../../../../lib/medical-files/model'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/user'
-import { Alarm } from '../../../../../models/alarm'
+import User from '../../../../../lib/auth/models/user.model'
+import { Alarm } from '../../../../../lib/patient/models/alarm.model'
 import WeeklyReportList from '../../../../../components/dashboard-widgets/medical-files/weekly-report-list'
 import { WeeklyReportDialogProps } from '../../../../../components/dialogs/weekly-report-dialog'
 
