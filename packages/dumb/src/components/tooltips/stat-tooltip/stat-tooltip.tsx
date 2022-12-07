@@ -28,8 +28,8 @@
 import React, { FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './stat-tooltip.css'
-import { styled } from '@mui/material/styles'
-import Tooltip from '@mui/material/Tooltip'
+import { styled } from '@mui/styles'
+import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
 import InfoIcon from '../../stats/assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
 
@@ -37,8 +37,10 @@ interface StatTooltipProps {
   annotations: string[]
 }
 
-const StyledTooltip = styled(Tooltip)(() => ({
-  tooltip: {
+const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(() => ({
+  [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: 'white',
     color: 'var(--stat--default)',
     border: '1px solid rgb(114, 115, 117)',

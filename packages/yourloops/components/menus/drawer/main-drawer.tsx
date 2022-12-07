@@ -41,7 +41,7 @@ import TimelineIcon from '@mui/icons-material/Timeline'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import FeedbackIcon from '@mui/icons-material/Feedback'
 import SignalWifiOffIcon from '@mui/icons-material/SignalWifiOff'
-import DesktopMacIcon from '@mui/icons-material/DesktopMac'
+import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import HistoryIcon from '@mui/icons-material/History'
 import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
@@ -223,7 +223,7 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
         {loggedUserIsHcpInMonitoring &&
           <Box bgcolor="var(--monitoring-filter-bg-color)" marginTop={2}>
             <DrawerCategoryItem
-              icon={<DesktopMacIcon />}
+              icon={<DesktopMacOutlinedIcon />}
               text={t('remote-monitoring')}
             />
             {drawerRemoteMonitoringItems.map((item, index) => (

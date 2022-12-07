@@ -33,7 +33,7 @@ import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
-import DesktopMacIcon from '@mui/icons-material/DesktopMac'
+import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -201,7 +201,7 @@ function TeamDetailsPage(): JSX.Element {
                     onClick={() => scrollTo(teamAlarms)}
                     onKeyDown={() => scrollTo(teamAlarms)}
                   >
-                    <DesktopMacIcon className={commonTeamClasses.icon} />
+                    <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                     <Typography className={classes.title}>
                       {t('events-configuration')}
                     </Typography>

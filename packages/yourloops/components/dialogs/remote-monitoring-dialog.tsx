@@ -34,7 +34,7 @@ import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
-import DesktopMacIcon from '@mui/icons-material/DesktopMac'
+import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogActions from '@mui/material/DialogActions'
@@ -177,8 +177,8 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
       data-testid="remote-monitoring-dialog"
     >
       <DialogTitle id="remote-monitoring-dialog-title" className={classes.title}>
-        <Box display="flex">
-          <DesktopMacIcon />
+        <Box display="flex" alignItems="center">
+          <DesktopMacOutlinedIcon />
           <Typography className={commonClasses.title}>
             {t('remote-monitoring-patient-dialog-title', { action: t(action) })}
           </Typography>

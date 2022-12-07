@@ -25,11 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { styled } from '@mui/material/styles'
-import Button from '@mui/material/Button'
+import { styled } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
-import Tooltip from '@mui/material/Tooltip'
+import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
+import React from 'react'
+
+declare module '@mui/styles/defaultTheme' {
+  interface DefaultTheme extends Theme {}
+}
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   '&': {
@@ -40,13 +45,15 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   }
 }))
 
-export const StyledTooltip = styled(Tooltip)(({ theme }) => ({
-  tooltip: {
+export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.primary.main,
     boxShadow: theme.shadows[1],
     whiteSpace: 'pre-line'
   },
-  arrow: {
+  [`& .${tooltipClasses.arrow}`]: {
     color: theme.palette.primary.main
   }
 }))
@@ -59,13 +66,5 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
-  }
-}))
-
-export const AlertActionButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.common.white,
-  backgroundColor: theme.palette.error.main,
-  '&:hover': {
-    backgroundColor: theme.palette.error.dark
   }
 }))
