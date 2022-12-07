@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useContext } from 'react'
+import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
 import { ProfileErrors, ProfileForm, ProfileFormKey } from './models'
 import { Units } from '../../models/generic'
 import { LanguageCodes } from '../../models/locales'
@@ -43,7 +43,7 @@ interface ProfilePageContext {
 
 const ProfilePageStateContext = createContext<ProfilePageContext>({} as ProfilePageContext)
 
-export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
+export const ProfilePageContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const {
     canSave,
     errors,

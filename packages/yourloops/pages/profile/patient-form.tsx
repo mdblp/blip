@@ -47,7 +47,7 @@ const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { errors, profileForm, updateProfileForm } = useProfilePageState()
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
 
   const browserTimezone = useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, [])
 
@@ -123,7 +123,7 @@ const PatientProfileForm: FunctionComponent = () => {
             labelId="profile-select-gender-label"
             value={profileForm.sex}
             error={errors.sex}
-            onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value as string)}
+            onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value)}
           >
             <MenuItem value="I" aria-label={t('indeterminate')}>{t('indeterminate')}</MenuItem>
             <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>

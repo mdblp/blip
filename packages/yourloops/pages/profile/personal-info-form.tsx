@@ -50,7 +50,7 @@ const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { redirectToProfessionalAccountLogin, user } = useAuth()
   const { profileForm, updateProfileForm, errors } = useProfilePageState()
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
 
   return (
     <React.Fragment>
