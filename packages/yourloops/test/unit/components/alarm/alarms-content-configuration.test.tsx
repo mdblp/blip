@@ -35,11 +35,13 @@ import { getTheme } from '../../../../components/theme'
 import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
 import { UNITS_TYPE } from '../../../../lib/units/utils'
 import AlarmsContentConfiguration, {
-  AlarmsContentConfigurationProps,
+  AlarmsContentConfigurationProps
+} from '../../../../components/alarm/alarms-content-configuration'
+import {
   MIN_HIGH_BG,
   MIN_LOW_BG,
   MIN_VERY_LOW_BG
-} from '../../../../components/alarm/alarms-content-configuration'
+} from '../../../../components/alarm/alarms-content-configuration.hook'
 import { fireEvent, render, screen } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
 import { PatientTeam } from '../../../../lib/data/patient'
