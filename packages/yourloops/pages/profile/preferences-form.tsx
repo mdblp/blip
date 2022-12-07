@@ -50,7 +50,7 @@ const PreferencesForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { profileForm, updateProfileForm } = useProfilePageState()
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
 
   return (
     <React.Fragment>
