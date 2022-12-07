@@ -381,6 +381,13 @@ const rawHtmlFR = `
     hr {
       width: 100%;
     }
+
+    #udi-version {
+        position: relative;
+        top: 70px;
+        left: 377px;
+        z-index: 100;
+    }
   </style>
   <div class="c5 doc-content">
     <div>
@@ -398,7 +405,7 @@ const rawHtmlFR = `
     </p>
     <p class="c0"><span class="c15"></span></p>
     <p class="c0"><span class="c15"></span></p>
-    <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 494.00px; height: 99.00px;"><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+    <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 494.00px; height: 99.00px;"><p id="udi-version">${appConfig.VERSION}</p><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
     <p class="c18"><span class="c10 c30">Usage pr&eacute;vu</span></p>
     <hr>
     <p class="c18"><span class="c1">&nbsp;</span></p>
@@ -443,7 +450,7 @@ const rawHtmlFR = `
     <p class="c0"><span class="c9"></span></p>
     <div>
       <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 160.98px; height: 38.00px;"><img alt="" src="${diabeloopLogo}" style="width: 160.98px; height: 38.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-fr-Rev1</span></p>
+      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-fr-Rev${appConfig.YLPZ_RA_LAD_001_FR_REV}</span></p>
     </div>
   </div>
 `

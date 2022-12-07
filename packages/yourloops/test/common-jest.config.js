@@ -101,7 +101,9 @@ module.exports = {
       VERSION: '1.0.0',
       LATEST_RELEASE: '2000-01-01',
       API_HOST: 'http://localhost:8009',
-      BRANDING: 'diabeloop/blue'
+      BRANDING: 'diabeloop/blue',
+      YLPZ_RA_LAD_001_FR_REV: '2',
+      YLPZ_RA_LAD_001_EN_REV: '2'
     }
   },
 

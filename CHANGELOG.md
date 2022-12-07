@@ -34,6 +34,13 @@ It is based on Tidepool Blip 1.27.
 - Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
+- YLP-1960 enhance pipeline
+- YLP-1956 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
+
+## 3.0.2 - 2022-11-28
+### Added
+- YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
+- YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 
 ## 3.0.1 - 2022-10-11
 ### Added
