@@ -294,8 +294,6 @@ jobs:
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
-        env:
-          PR_NUMBER: ${{github.event.issue.number}}
         with:
           context: .
           push: true
