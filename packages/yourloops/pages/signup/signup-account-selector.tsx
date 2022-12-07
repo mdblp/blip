@@ -40,9 +40,9 @@ import metrics from '../../lib/metrics'
 import SignupRadioLabel from './signup-radio-label'
 import { useSignUpFormState } from './signup-formstate-context'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
-import { UserRoles } from '../../models/user'
 import { SignUpFormProps } from './signup-stepper'
-import { SignupFormKey } from '../../lib/auth/models'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   Paper: {

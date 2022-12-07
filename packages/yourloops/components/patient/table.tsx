@@ -40,12 +40,13 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { TablePagination, Typography } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
 
-import { PatientTableSortFields, SortDirection } from '../../models/generic'
-import { PatientTableProps } from './models'
 import PatientRow from './patient-row'
-import { Patient } from '../../lib/data/patient'
 import { StyledTableCell, StyledTooltip } from '../styled-components'
 import { useAuth } from '../../lib/auth'
+import { PatientTableProps } from './models/patient-table-props.model'
+import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { SortDirection } from './models/enums/sort-direction.enum'
 
 const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-table' })((theme: Theme) => {
   return {

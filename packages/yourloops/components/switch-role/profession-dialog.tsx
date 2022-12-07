@@ -35,7 +35,7 @@ import DialogContent from '@mui/material/DialogContent'
 import Box from '@mui/material/Box'
 import DialogTitle from '@mui/material/DialogTitle'
 
-import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
+import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { SwitchRoleProfessionDialogProps } from './models'
 import BasicDropdownWithValidation from '../dropdown/basic-dropdown-with-validation'
 

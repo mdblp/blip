@@ -35,14 +35,14 @@ import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { User } from '../../../../lib/auth'
 import MemberRow, { TeamMembersProps } from '../../../../components/team/member-row'
-import { TeamMemberRole } from '../../../../models/team'
-import { UserInvitationStatus } from '../../../../models/generic'
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, buildTeamMember } from '../../common/utils'
-import TeamApi from '../../../../lib/team/team-api'
-import TeamUtils from '../../../../lib/team/utils'
+import TeamApi from '../../../../lib/team/team.api'
+import TeamUtils from '../../../../lib/team/team.util'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
+import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: ConfirmDialogProps) => {

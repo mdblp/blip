@@ -39,7 +39,7 @@ import CardMedia from '@mui/material/CardMedia'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
 
 const loginStyle = makeStyles({ name: 'login-page-styles' })((theme: Theme) => {
   return {

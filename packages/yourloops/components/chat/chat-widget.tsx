@@ -36,16 +36,16 @@ import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfi
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
 import Card from '@mui/material/Card'
 import ChatMessage from './chat-message'
-import ChatApi from '../../lib/chat/api'
+import ChatApi from '../../lib/chat/chat.api'
 import { useAuth } from '../../lib/auth'
-import { IMessage } from '../../models/chat'
+import { IMessage } from '../../lib/chat/models/i-message.model'
 import { Button, CardHeader, Tab, Tabs, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { UserRoles } from '../../models/user'
-import { Patient } from '../../lib/data/patient'
 import { useTeam } from '../../lib/team'
-import { usePatientContext } from '../../lib/patient/provider'
-import PatientUtils from '../../lib/patient/utils'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import PatientUtils from '../../lib/patient/patient.util'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
   return {

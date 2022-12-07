@@ -27,7 +27,6 @@
 
 import { renderPage } from '../../utils/render'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { Preferences, Profile, Settings } from '../../../../models/user'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
@@ -37,10 +36,14 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { mockPatientAPI } from '../../mock/mockPatientAPI'
 import { checkHcpProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
-import { Units } from '../../../../models/generic'
-import UserApi from '../../../../lib/auth/user-api'
-import { CountryCodes, LanguageCodes } from '../../../../models/locales'
-import { HcpProfession } from '../../../../models/hcp-profession'
+import { Profile } from '../../../../lib/auth/models/profile.model'
+import { Settings } from '../../../../lib/auth/models/settings.model'
+import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
+import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
+import UserApi from '../../../../lib/auth/user.api'
+import { Preferences } from '../../../../lib/auth/models/preferences.model'
+import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {
@@ -59,7 +62,7 @@ describe('Profile page for hcp', () => {
       value: '7.5'
     },
     country: CountryCodes.France,
-    units: { bg: Units.mole }
+    units: { bg: UnitsType.MMOLL }
   }
   const preferences: Preferences = { displayLanguageCode: 'fr' }
 
@@ -75,7 +78,7 @@ describe('Profile page for hcp', () => {
   it('should render profile page for a french hcp and be able to edit his profile', async () => {
     const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue', hcpProfession: HcpProfession.nurse }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings = { ...settings, units: { bg: Units.gram } }
+    const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
@@ -97,7 +100,7 @@ describe('Profile page for hcp', () => {
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: Units.gram }))
+    fireEvent.click(screen.getByRole('option', { name: UnitsType.MGDL }))
 
     fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))

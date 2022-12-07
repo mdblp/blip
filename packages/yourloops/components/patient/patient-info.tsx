@@ -29,9 +29,9 @@ import React from 'react'
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { Box, Typography } from '@mui/material'
-import { Patient } from '../../lib/data/patient'
 import { useTranslation } from 'react-i18next'
-import { genderLabels } from '../../lib/auth/helpers'
+import { genderLabels } from '../../lib/auth/auth.helper'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   body: {

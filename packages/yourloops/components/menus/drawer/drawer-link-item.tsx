@@ -34,8 +34,7 @@ import Box from '@mui/material/Box'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-
-import { PatientFilterTypes } from '../../../models/generic'
+import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   countLabel: {

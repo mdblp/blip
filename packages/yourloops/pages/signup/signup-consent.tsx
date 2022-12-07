@@ -35,7 +35,7 @@ import { ConsentForm } from '../../components/consents'
 import { useSignUpFormState } from './signup-formstate-context'
 import { SignUpFormProps } from './signup-stepper'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
-import { SignupFormKey } from '../../lib/auth/models'
+import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
 const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')

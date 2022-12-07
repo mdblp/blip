@@ -39,10 +39,10 @@ import Typography from '@mui/material/Typography'
 import metrics from '../../lib/metrics'
 import { setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
-import { INotification } from '../../lib/notifications/models'
-import { useNotification } from '../../lib/notifications/hook'
+import { useNotification } from '../../lib/notifications/notification.hook'
 import SwitchRoleDialogs from '../../components/switch-role'
 
+import { Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { Notification } from './notification'
 
 const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Theme) => ({
@@ -105,7 +105,7 @@ const NotificationsPage = (): JSX.Element => {
       <Container maxWidth="lg">
         <List>
           {notifications.length > 0 ? (
-            notifications.map((notification: INotification, index: number) => (
+            notifications.map((notification: NotificationModel, index: number) => (
               <ListItem
                 key={notification.id}
                 disableGutters

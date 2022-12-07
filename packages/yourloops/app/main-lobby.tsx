@@ -54,7 +54,7 @@ import {
   PUBLIC_ROUTES,
   RENEW_CONSENT_PATH,
   TRAINING_PATH
-} from '../lib/diabeloop-url'
+} from '../lib/diabeloop-urls.model'
 
 const routeStyle = makeStyles()(() => {
   return {

@@ -30,14 +30,16 @@ import moment from 'moment-timezone'
 import _ from 'lodash'
 import { getByText, render, screen } from '@testing-library/react'
 
-import { UserRoles } from '../../../../models/user'
 import { Notification } from '../../../../pages/notifications/notification'
-import { INotification, NotificationType } from '../../../../lib/notifications/models'
-import * as notificationHookMock from '../../../../lib/notifications/hook'
+import { Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
+import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
+import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
+import { Profile } from '../../../../lib/auth/models/profile.model'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
-jest.mock('../../../../lib/notifications/hook')
+jest.mock('../../../../lib/notifications/notification.hook')
 describe('Notification', () => {
-  const notif: INotification = {
+  const notif: NotificationModel = {
     id: '11',
     metricsType: 'share_data',
     date: '2021-02-18T10:00:00',
@@ -46,14 +48,14 @@ describe('Notification', () => {
       profile: {
         email: 'jeanne.dubois@email.com',
         fullName: 'Jeanne Dubois'
-      }
+      } as Profile
     },
     creatorId: 'a',
     email: 'a@example.com',
     type: NotificationType.directInvitation
   }
 
-  const teamNotif: INotification = {
+  const teamNotif: NotificationModel = {
     id: '12',
     metricsType: 'share_data',
     date: '2021-02-18T10:00:00',
@@ -62,7 +64,7 @@ describe('Notification', () => {
       profile: {
         email: 'jeanne.dubois@email.com',
         fullName: 'Jeanne Dubois'
-      }
+      } as Profile
     },
     creatorId: 'a',
     email: 'a@example.com',
@@ -75,7 +77,7 @@ describe('Notification', () => {
   }
 
   const fakeNotification = (
-    notification: INotification = notif,
+    notification: NotificationModel = notif,
     role: UserRoles = UserRoles.hcp,
     onHelp = () => _.noop
   ): JSX.Element => (
@@ -188,7 +190,7 @@ describe('Notification', () => {
   describe('instanciated notification', () => {
     let container: HTMLElement | null = null
 
-    const NotificationComponent = (props: { notif: INotification }): JSX.Element => {
+    const NotificationComponent = (props: { notif: NotificationModel }): JSX.Element => {
       return (
         <Notification
           notification={props.notif}

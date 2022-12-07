@@ -41,16 +41,16 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Tooltip from '@mui/material/Tooltip'
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import PersonRemoveIcon from '../../../components/icons/PersonRemoveIcon'
+import PersonRemoveIcon from '../../../components/icons/person-remove-icon'
 import IconActionButton from '../../../components/buttons/icon-action'
 import CertifiedProfessionalIcon from '../../../components/icons/certified-professional-icon'
 
-import { UserInvitationStatus } from '../../../models/generic'
-import { ShareUser } from '../../../lib/share/models'
+import { ShareUser } from '../../../lib/share/models/share-user.model'
 
 import { getUserFirstName, getUserLastName } from '../../../lib/utils'
 import { SortDirection, SortFields } from './types'
 import RemoveDirectShareDialog from '../../../components/dialogs/remove-direct-share-dialog'
+import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 
 export interface CaregiverTableProps {
   caregivers: ShareUser[]

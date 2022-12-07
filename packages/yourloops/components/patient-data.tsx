@@ -34,9 +34,9 @@ import { makeStyles } from 'tss-react/mui'
 import Container from '@mui/material/Container'
 
 import Blip from 'blip'
-import appConfig from '../lib/config'
+import appConfig from '../lib/config/config'
 import { useAuth } from '../lib/auth'
-import { useData } from '../lib/data/hook'
+import { useData } from '../lib/data/data.hook'
 import { setPageTitle } from '../lib/utils'
 
 import ProfileDialog from './dialogs/patient-profile'
@@ -45,10 +45,10 @@ import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
 import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
 import ChatWidget from './chat/chat-widget'
-import { Patient } from '../lib/data/patient'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
-import { usePatientContext } from '../lib/patient/provider'
+import { usePatientContext } from '../lib/patient/patient.provider'
+import { Patient } from '../lib/patient/models/patient.model'
 
 const patientDataStyles = makeStyles()(() => {
   return {

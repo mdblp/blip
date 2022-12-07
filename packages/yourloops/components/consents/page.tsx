@@ -43,11 +43,11 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
-import { HistoryState } from '../../models/generic'
-import { Profile } from '../../models/user'
 import { useAuth } from '../../lib/auth'
 import ConsentForm from './form'
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
+import { Profile } from '../../lib/auth/models/profile.model'
+import { HistoryState } from '../../models/history-state.model'
 
 interface ConsentProps {
   messageKey: string

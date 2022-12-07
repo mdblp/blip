@@ -35,9 +35,9 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import MedicalRecordList from './medical-record-list'
 import PrescriptionList from './prescription-list'
-import { Patient } from '../../../lib/data/patient'
 import WeeklyReportList from './weekly-report-list'
-import PatientUtils from '../../../lib/patient/utils'
+import PatientUtils from '../../../lib/patient/patient.util'
+import { Patient } from '../../../lib/patient/models/patient.model'
 
 const useStyle = makeStyles()(() => ({
   cardContent: {

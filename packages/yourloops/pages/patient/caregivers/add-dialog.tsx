@@ -36,8 +36,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../../lib/utils'
-
-import { AddDialogContentProps } from './types'
+import { AddDialogContentProps } from './models/add-dialog-content-props.model'
 
 export interface AddDialogProps {
   actions: AddDialogContentProps | null

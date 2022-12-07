@@ -38,7 +38,7 @@ import Grid from '@mui/material/Grid'
 
 import SignUpStepper from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
 
 const formStyle = makeStyles({ name: 'signup-page-styles' })((theme: Theme) => ({
   card: {

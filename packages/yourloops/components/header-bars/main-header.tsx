@@ -40,12 +40,12 @@ import Badge from '@mui/material/Badge'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 
-import config from '../../lib/config'
-import { useNotification } from '../../lib/notifications/hook'
+import config from '../../lib/config/config'
+import { useNotification } from '../../lib/notifications/notification.hook'
 import { useAuth } from '../../lib/auth'
-import { UserRoles } from '../../models/user'
 import TeamMenu from '../menus/team-menu'
 import UserMenu from '../menus/user-menu'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean

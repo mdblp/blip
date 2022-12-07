@@ -27,11 +27,11 @@
 
 import moment from 'moment'
 import { useTranslation } from 'react-i18next'
-import { Patient } from '../../lib/data/patient'
 import { patientListCommonStyle } from './table'
 import { useAuth } from '../../lib/auth'
-import { Monitoring } from '../../models/monitoring'
 import { ClassNameMap } from '@mui/material'
+import { Monitoring } from '../../lib/team/models/monitoring.model'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 interface PatientRowHookProps {
   classes: ClassNameMap

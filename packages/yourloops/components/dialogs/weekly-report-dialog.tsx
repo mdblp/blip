@@ -40,10 +40,10 @@ import Typography from '@mui/material/Typography'
 import DialogContentText from '@mui/material/DialogContentText'
 import Divider from '@mui/material/Divider'
 
-import { WeeklyReport } from '../../lib/medical-files/model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../lib/utils'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
+import { WeeklyReport } from '../../lib/medical-files/models/weekly-report.model'
 
 export interface WeeklyReportDialogProps {
   onClose: () => void

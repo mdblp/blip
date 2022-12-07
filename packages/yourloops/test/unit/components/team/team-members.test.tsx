@@ -31,13 +31,13 @@ import userEvent from '@testing-library/user-event'
 
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
-import TeamUtils from '../../../../lib/team/utils'
+import TeamUtils from '../../../../lib/team/team.util'
 import TeamMembers, { TeamMembersProps } from '../../../../components/team/team-members'
-import { TeamMemberRole } from '../../../../models/team'
-import { UserInvitationStatus } from '../../../../models/generic'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { getTheme } from '../../../../components/theme'
 import { ThemeProvider } from '@mui/material/styles'
+import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')

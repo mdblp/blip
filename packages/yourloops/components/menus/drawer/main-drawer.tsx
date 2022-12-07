@@ -46,12 +46,12 @@ import HistoryIcon from '@mui/icons-material/History'
 import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
 
-import MedicalServiceIcon from '../../icons/MedicalServiceIcon'
-import PendingIcon from '../../icons/PendingIcon'
-import { PatientFilterTypes } from '../../../models/generic'
+import MedicalServiceIcon from '../../icons/medical-service-icon'
+import PendingIcon from '../../icons/pending-icon'
 import DrawerLinkItem from './drawer-link-item'
 import useMainDrawer from './main-drawer.hook'
 import DrawerCategoryItem from './drawer-category-item'
+import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 
 export interface MainDrawerProps {
   miniVariant?: boolean

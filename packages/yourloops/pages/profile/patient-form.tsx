@@ -38,10 +38,10 @@ import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 
 import { useAuth } from '../../lib/auth'
-import { ProfileFormKey } from './models'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
-import { CountryCodes } from '../../models/locales'
+import { CountryCodes } from '../../lib/auth/models/country.model'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
 
 const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')

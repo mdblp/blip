@@ -34,7 +34,7 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined'
 import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
-import StethoscopeIcon from '../icons/StethoscopeIcon'
+import StethoscopeIcon from '../icons/stethoscope-icon'
 
 import { Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -46,13 +46,13 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Tooltip from '@mui/material/Tooltip'
 
-import { UserRoles } from '../../models/user'
 import { useAuth } from '../../lib/auth'
-import RoundedHospitalIcon from '../icons/RoundedHospitalIcon'
-import config from '../../lib/config'
+import RoundedHospitalIcon from '../icons/rounded-hospital-icon'
+import config from '../../lib/config/config'
 import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   clickableMenu: {

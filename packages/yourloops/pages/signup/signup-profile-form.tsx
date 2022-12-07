@@ -39,13 +39,13 @@ import TextField from '@mui/material/TextField'
 import metrics from '../../lib/metrics'
 import { useSignUpFormState } from './signup-formstate-context'
 import { availableCountries } from '../../lib/language'
-import { HcpProfessionList } from '../../models/hcp-profession'
+import { HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { useAuth } from '../../lib/auth'
-import { UserRoles } from '../../models/user'
 import { useAlert } from '../../components/utils/snackbar'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { SignUpFormProps } from './signup-stepper'
-import { SignupFormKey } from '../../lib/auth/models'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
 interface Errors {
   firstName: boolean

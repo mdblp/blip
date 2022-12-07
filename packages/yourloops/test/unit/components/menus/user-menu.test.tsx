@@ -32,17 +32,17 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
 import FaceIcon from '@mui/icons-material/Face'
-import RoundedHospitalIcon from '../../../../components/icons/RoundedHospitalIcon'
-import StethoscopeIcon from '../../../../components/icons/StethoscopeIcon'
+import RoundedHospitalIcon from '../../../../components/icons/rounded-hospital-icon'
+import StethoscopeIcon from '../../../../components/icons/stethoscope-icon'
 
 import UserMenu from '../../../../components/menus/user-menu'
 import { triggerMouseEvent } from '../../common/utils'
-import User from '../../../../lib/auth/user'
-import * as authHookMock from '../../../../lib/auth/hook'
-import { UserRoles } from '../../../../models/user'
+import User from '../../../../lib/auth/models/user.model'
+import * as authHookMock from '../../../../lib/auth/auth.hook'
 import { render, waitFor } from '@testing-library/react'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
-jest.mock('../../../../lib/auth/hook')
+jest.mock('../../../../lib/auth/auth.hook')
 describe('User Menu', () => {
   const history = createMemoryHistory({ initialEntries: ['/'] })
   const logout = jest.fn()

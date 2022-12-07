@@ -34,7 +34,7 @@ import TuneIcon from '@mui/icons-material/Tune'
 
 import { commonComponentStyles } from '../common'
 import { Team, useTeam } from '../../lib/team'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
 import AlarmsContentConfiguration from '../alarm/alarms-content-configuration'
 

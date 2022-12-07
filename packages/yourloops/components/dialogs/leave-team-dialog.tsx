@@ -37,7 +37,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 
 import { Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
-import TeamUtils from '../../lib/team/utils'
+import TeamUtils from '../../lib/team/team.util'
 
 export interface LeaveTeamDialogProps {
   team: Readonly<Team>

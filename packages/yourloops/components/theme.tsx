@@ -26,7 +26,7 @@
  */
 
 import { createTheme, Theme } from '@mui/material/styles'
-import config from '../lib/config'
+import config from '../lib/config/config'
 
 const DEFAULT_PRIMARY_MAIN_COLOR = '#039BE5'
 const DEFAULT_PRIMARY_LIGHT_COLOR = '#4DABF5'
@@ -61,9 +61,6 @@ export function getTheme(): Theme {
           },
           body: {
             backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
-            // fontSize: '0.875rem',
-            // lineHeight: 1.43,
-            // letterSpacing: '0.01071em'
           }
         }
       },

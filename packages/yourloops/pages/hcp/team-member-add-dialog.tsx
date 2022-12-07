@@ -38,10 +38,10 @@ import DialogTitle from '@mui/material/DialogTitle'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import TextField from '@mui/material/TextField'
 
-import { TeamMemberRole, TypeTeamMemberRole } from '../../models/team'
 import { REGEX_EMAIL } from '../../lib/utils'
 
 import { AddMemberDialogContentProps } from './types'
+import { TeamMemberRole, TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
 export interface AddMemberDialogProps {
   addMember: null | AddMemberDialogContentProps

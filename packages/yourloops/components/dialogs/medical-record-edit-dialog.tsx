@@ -42,11 +42,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
-import { MedicalRecord } from '../../lib/medical-files/model'
 import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import useMedicalRecordEditDialog from './medical-record-edit-dialog.hook'
 import { useAuth } from '../../lib/auth'
+import { MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
 
 export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void

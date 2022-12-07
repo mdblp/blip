@@ -34,30 +34,32 @@ import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
 import HelpIcon from '@mui/icons-material/Help'
-import MedicalServiceIcon from '../../components/icons/MedicalServiceIcon'
+import MedicalServiceIcon from '../../components/icons/medical-service-icon'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 
-import { IUser, UserRoles } from '../../models/user'
-import { INotification, NotificationType } from '../../lib/notifications/models'
 import { errorTextFromException, getUserFirstName, getUserLastName } from '../../lib/utils'
-import { useNotification } from '../../lib/notifications/hook'
+import { useNotification } from '../../lib/notifications/notification.hook'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
 import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
+import { Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { IUser } from '../../lib/data/models/i-user.model'
+import { NotificationType } from '../../lib/notifications/models/enums/notification-type.enum'
 
 export interface NotificationSpanProps {
   id: string
-  notification: INotification
+  notification: NotificationModel
 }
 
 interface NotificationProps {
-  notification: INotification
+  notification: NotificationModel
   userRole: UserRoles
   onHelp: () => void
 }

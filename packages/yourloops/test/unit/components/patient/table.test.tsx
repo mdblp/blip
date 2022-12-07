@@ -29,7 +29,6 @@ import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
 
-import { PatientTableSortFields, SortDirection, UserInvitationStatus } from '../../../../models/generic'
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 
@@ -39,6 +38,9 @@ import { getTheme } from '../../../../components/theme'
 import { createPatient, createPatientTeam } from '../../common/utils'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { SortDirection } from '../../../../components/patient/models/enums/sort-direction.enum'
+import { PatientTableSortFields } from '../../../../components/patient/models/enums/patient-table-sort-fields.enum'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')

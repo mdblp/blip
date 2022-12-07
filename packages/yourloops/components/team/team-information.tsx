@@ -47,7 +47,7 @@ import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamButton from './leave-team-button'
-import TeamUtils from '../../lib/team/utils'
+import TeamUtils from '../../lib/team/team.util'
 import { PhonePrefixCode } from '../../lib/utils'
 
 const useStyles = makeStyles()((theme: Theme) => ({

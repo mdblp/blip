@@ -44,7 +44,6 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 
 import { Team, TeamMember, useTeam } from '../../lib/team'
 import MemberRow from './member-row'
-import { TeamMemberRole, TypeTeamMemberRole } from '../../models/team'
 import AddMemberDialog from '../../pages/hcp/team-member-add-dialog'
 import { AddMemberDialogContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
@@ -53,7 +52,8 @@ import { useAuth } from '../../lib/auth'
 import { StyledTableCell } from '../styled-components'
 import { useAlert } from '../utils/snackbar'
 import { errorTextFromException } from '../../lib/utils'
-import TeamUtils from '../../lib/team/utils'
+import TeamUtils from '../../lib/team/team.util'
+import { TeamMemberRole, TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addTeamMemberButton: {

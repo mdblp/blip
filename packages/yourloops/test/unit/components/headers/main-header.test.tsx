@@ -31,25 +31,27 @@ import { act } from 'react-dom/test-utils'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-import * as notificationHookMock from '../../../../lib/notifications/hook'
+import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 import { Team } from '../../../../lib/team'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import MainHeader from '../../../../components/header-bars/main-header'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
-import { Profile, UserRoles } from '../../../../models/user'
-import User from '../../../../lib/auth/user'
-import { INotification, NotificationType } from '../../../../lib/notifications/models'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
+import User from '../../../../lib/auth/models/user.model'
+import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
+import { Profile } from '../../../../lib/auth/models/profile.model'
+import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
-jest.mock('../../../../lib/notifications/hook')
+jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
 describe('Main Header', () => {
   let container: HTMLElement | null = null
   const history = createMemoryHistory({ initialEntries: ['/preferences'] })
   const onClickLeftIcon = jest.fn()
-  const notifications: INotification[] = [{
+  const notifications: Notification[] = [{
     metricsType: 'join_team',
     type: NotificationType.careTeamProInvitation,
     creator: { userid: 'creatorUserId', profile: {} as Profile },

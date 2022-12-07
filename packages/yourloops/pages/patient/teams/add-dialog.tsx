@@ -48,7 +48,7 @@ import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import metrics from '../../../lib/metrics'
 import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from '../../../lib/team'
-import { diabeloopExternalUrls } from '../../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 
 interface AddTeamDialogContentProps {
   onDialogResult: (teamId?: string) => void

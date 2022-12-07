@@ -26,11 +26,12 @@
  */
 
 import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
-import { ProfileErrors, ProfileForm, ProfileFormKey } from './models'
-import { Units } from '../../models/generic'
-import { LanguageCodes } from '../../models/locales'
-import { HcpProfession } from '../../models/hcp-profession'
 import useProfilePageContextHook from './profil-page-context.hook'
+import { ProfileErrors, ProfileForm } from './models/profile-form.model'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 
 interface ProfilePageContext {
   canSave: boolean
@@ -38,7 +39,7 @@ interface ProfilePageContext {
   profileForm: ProfileForm
   saveProfile: () => Promise<void>
   saving: boolean
-  updateProfileForm: (key: ProfileFormKey, value: boolean | string | LanguageCodes | Units | HcpProfession) => void
+  updateProfileForm: (key: ProfileFormKey, value: boolean | string | LanguageCodes | UnitsType | HcpProfession) => void
 }
 
 const ProfilePageStateContext = createContext<ProfilePageContext>({} as ProfilePageContext)

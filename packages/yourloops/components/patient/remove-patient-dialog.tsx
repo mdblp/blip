@@ -39,10 +39,10 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 
-import MedicalServiceIcon from '../icons/MedicalServiceIcon'
+import MedicalServiceIcon from '../icons/medical-service-icon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { Patient } from '../../lib/data/patient'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 interface RemovePatientDialogProps {
   patient: Patient | null

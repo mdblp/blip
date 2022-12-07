@@ -36,9 +36,11 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import Link from '@mui/material/Link'
 
-import { UserRoles } from '../../models/user'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
-import { BaseConsentCheck, ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from './models'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
+import { BaseConsentCheck, ConsentCheck } from './models/consent-check.model'
+import { ConsentFormProps } from './models/consent-form-props.model'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { MonitoringConsentFormProps } from './models/monitoring-consent-form-props.model'
 
 const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
   return {
