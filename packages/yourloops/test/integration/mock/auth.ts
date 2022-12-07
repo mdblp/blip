@@ -40,19 +40,29 @@ import { Settings } from '../../../lib/auth/models/settings.model'
 import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 
-export const mockUserDataFetch = (firstName: string, lastName: string) => {
-  const profile: Profile = {
-    firstName,
-    lastName,
-    fullName: `${firstName} ${lastName}`,
-    email: 'fake@email.com',
-    termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-    privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  }
-  const preferences = {} as Preferences
-  const settings = {} as Settings
-  jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile, settings, preferences })
+interface MockUserDataFetchParams {
+  firstName?: string
+  lastName?: string
+  profile?: Profile
+  preferences?: Preferences
+  settings?: Settings
+}
+
+export const mockUserDataFetch = ({ firstName, lastName, profile, settings, preferences }: MockUserDataFetchParams) => {
+  jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
+    profile: {
+      firstName,
+      lastName,
+      fullName: `${firstName} ${lastName}`,
+      email: 'fake@email.com',
+      termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+      privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+      trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
+      ...profile
+    } as Profile,
+    settings: settings ?? {},
+    preferences: preferences ?? {}
+  })
 }
 
 export const mockPatientLogin = (patient: ITeamMember) => {
@@ -60,7 +70,7 @@ export const mockPatientLogin = (patient: ITeamMember) => {
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()
-  mockUserDataFetch(patient.profile.firstName, patient.profile.lastName)
+  mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
   mockChatAPI()
   mockMedicalFilesAPI()

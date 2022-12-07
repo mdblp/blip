@@ -31,6 +31,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1960 enhance pipeline
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
+- Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
 

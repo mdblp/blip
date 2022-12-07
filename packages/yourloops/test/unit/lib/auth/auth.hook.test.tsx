@@ -42,6 +42,7 @@ import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
+import { CountryCodes } from '../../../../models/locales'
 
 jest.mock('@auth0/auth0-react')
 
@@ -59,7 +60,7 @@ describe('Auth hook', () => {
     hcpProfession: HcpProfession.diabeto
   }
   const preferences: Preferences = { displayLanguageCode: 'en' }
-  const settings: Settings = { country: 'FR', units: { bg: UnitsType.MGDL } }
+  const settings: Settings = { country: CountryCodes.France, units: { bg: Units.gram } }
 
   const initAuthContext = async (): Promise<void> => {
     auth = null
@@ -120,7 +121,7 @@ describe('Auth hook', () => {
       ...profile,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
     }
-    const updatedSettings: Settings = { ...settings, country: 'EN' }
+    const updatedSettings: Settings = { ...settings, country: CountryCodes.UnitedKingdom }
 
     beforeAll(() => {
       jest.spyOn(UserApi, 'updateProfile').mockResolvedValueOnce(updatedProfile)

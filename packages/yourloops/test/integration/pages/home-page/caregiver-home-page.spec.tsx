@@ -48,7 +48,7 @@ describe('Caregiver home page', () => {
     mockAuth0Hook(UserRoles.caregiver)
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockDirectShareApi()
   })

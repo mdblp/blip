@@ -34,6 +34,7 @@ import { Profile } from './profile.model'
 import { Settings } from './settings.model'
 import { AuthenticatedUser } from './authenticated-user.model'
 import { AuthenticatedUserMetadata } from './enums/authenticated-user-metadata.enum'
+import { REGEX_BIRTHDATE } from '../utils'
 
 export default class User {
   readonly email: string
@@ -74,6 +75,22 @@ export default class User {
 
   get fullName(): string {
     return this.profile?.fullName ?? this.username
+  }
+
+  get birthday(): string | undefined {
+    if (this.role !== UserRoles.patient) {
+      return undefined
+    }
+    const birthday = this.getRawBirthday()
+    return REGEX_BIRTHDATE.test(birthday) ? birthday : ''
+  }
+
+  private getRawBirthday(): string {
+    const birthday = this.profile?.patient?.birthday
+    if (birthday && birthday.length > 0 && birthday.includes('T')) {
+      return birthday.split('T')[0]
+    }
+    return birthday
   }
 
   isUserHcp(): boolean {

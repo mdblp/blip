@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import User from './user.model'
-import { HcpProfession } from './enums/hcp-profession.enum'
-import { SignupForm } from './signup-form.model'
-import { Preferences } from './preferences.model'
-import { Profile } from './profile.model'
-import { Settings } from './settings.model'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-/**
- * The auth provider hook return values.
- */
-export interface AuthContext {
-  fetchingUser: boolean
-  flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
-  getFlagPatients: () => string[]
-  isLoggedIn: boolean
-  logout: () => Promise<void>
-  redirectToProfessionalAccountLogin: () => void
-  setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
-  completeSignup: (signupForm: SignupForm) => Promise<void>
-  switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp
-  updatePreferences: (preferences: Preferences) => Promise<void>
-  updateProfile: (profile: Profile) => Promise<void>
-  updateSettings: (settings: Settings) => Promise<void>
-  user: User | null
-}
+export const profileFormCommonClasses = makeStyles((theme: Theme) => ({
+  button: {
+    marginLeft: theme.spacing(2)
+  },
+  cancelLink: {
+    textDecoration: 'unset'
+  },
+  formInput: {
+    marginTop: theme.spacing(2)
+  },
+  title: {
+    color: theme.palette.primary.main,
+    textAlign: 'center',
+    width: '100%'
+  },
+  container: {
+    backgroundColor: 'white',
+    marginTop: '32px',
+    padding: 0,
+    [theme.breakpoints.up('sm')]: {
+      border: 'solid',
+      borderRadius: '15px',
+      borderColor: theme.palette.grey[300],
+      borderWidth: '1px',
+      padding: '0 64px'
+    }
+  },
+  uppercase: {
+    textTransform: 'uppercase'
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    [theme.breakpoints.only('xs')]: {
+      flexDirection: 'column'
+    },
+    [theme.breakpoints.up('sm')]: {
+      '& > div': {
+        width: 'calc(50% - 16px)'
+      }
+    }
+  },
+  categoryLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(5),
+    '& > :nth-child(2)': {
+      marginLeft: theme.spacing(1)
+    }
+  }
+}))

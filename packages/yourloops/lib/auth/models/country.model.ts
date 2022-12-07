@@ -26,6 +26,20 @@
  */
 
 export interface Country {
-  code: string
+  code: CountryCodes
   name: string
+}
+
+export enum CountryCodes {
+  Austria = 'AT',
+  Belgium = 'BE',
+  UnitedKingdom = 'GB',
+  France = 'FR',
+  Germany = 'DE',
+  Italy = 'IT',
+  Japan = 'JP',
+  Netherlands = 'NL',
+  Spain = 'SP',
+  Switzerland = 'CH',
+  Unknown = ''
 }

@@ -34,6 +34,7 @@ import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CompleteSignupPayload } from '../../../../lib/auth/models/complete-signup-payload.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { CountryCodes } from '../../../../models/locales'
 
 describe('Auth API', () => {
   const userId = 'userId'
@@ -43,7 +44,7 @@ describe('Auth API', () => {
     fullName: 'Bernard Tichaut',
     email: 'narbe@email.com'
   }
-  const settings = { country: 'france' } as Settings
+  const settings = { country: CountryCodes.France } as Settings
   const preferences = { displayLanguageCode: 'en' } as Preferences
 
   describe('getUserMetadata', () => {

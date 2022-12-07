@@ -31,6 +31,7 @@ import { getCurrentLang } from '../../lib/language'
 import { SignupForm } from '../../lib/auth'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { CountryCodes } from '../../models/locales'
 
 interface ISignUpFormStateContext {
   signupForm: SignupForm
@@ -41,7 +42,7 @@ const initialState: SignupForm = {
   accountRole: UserRoles.unset,
   profileFirstname: '',
   profileLastname: '',
-  profileCountry: '',
+  profileCountry: CountryCodes.Unknown,
   preferencesLanguage: getCurrentLang(),
   terms: false,
   privacyPolicy: false
