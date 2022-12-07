@@ -32,7 +32,7 @@ import { PatientProvider } from '../lib/patient/provider'
 import DashboardLayout from './dashboard-layout'
 import HomePage from '../pages/home-page'
 import InvalidRoute from '../components/invalid-route'
-import ProfilePage from '../pages/profile'
+import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
 
 export function CaregiverLayout(): JSX.Element {

@@ -30,6 +30,7 @@ import { IUser, Settings } from '../models/user'
 import { t } from './language'
 import metrics from './metrics'
 import moment from 'moment-timezone'
+import { CountryCodes } from '../models/locales'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
 export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/
@@ -51,7 +52,7 @@ export enum PhonePrefixCode {
   GB = '+44',
 }
 
-export const isZipCodeValid = (country: string, zipCode: string): boolean => {
+export const isZipCodeValid = (country: CountryCodes | string, zipCode: string): boolean => {
   switch (country) {
     case 'NL':
     case 'GB':
@@ -126,7 +127,7 @@ export function getUserFirstLastName(user: IUser): { firstName: string, lastName
 export function fixYLP878Settings(settings: Settings | undefined | null): Settings {
   if (!settings) {
     return {
-      country: 'FR',
+      country: CountryCodes.France,
       units: {
         bg: Units.gram
       }
@@ -137,7 +138,7 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
     bgUnit = Units.gram
   }
   const newSettings: Settings = {
-    country: settings.country ?? 'FR',
+    country: settings.country ?? CountryCodes.France,
     units: { bg: bgUnit }
   }
   if (settings.a1c) {

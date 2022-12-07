@@ -40,7 +40,7 @@ describe('Invalid Route', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockNotificationAPI()
   })
 

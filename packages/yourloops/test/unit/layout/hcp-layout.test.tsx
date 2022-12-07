@@ -54,7 +54,7 @@ jest.mock('../../../lib/notifications/hook')
 jest.mock('../../../layout/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })
-jest.mock('../../../pages/profile', () => () => {
+jest.mock('../../../pages/profile/profile-page', () => () => {
   return <div data-testid={profilePageTestId} />
 })
 jest.mock('../../../pages/notifications', () => () => {
@@ -110,6 +110,11 @@ describe('Hcp Layout', () => {
     })
   }
 
+  it('should render certify account page when route is /certify and user is hcp', () => {
+    render(getMainLayoutJSX('/certify'))
+    checkInDocument(certifyAccountPageTestId)
+  })
+
   it('should render profile page when route is /preferences', () => {
     render(getMainLayoutJSX('/preferences'))
     checkInDocument(profilePageTestId)
@@ -123,10 +128,5 @@ describe('Hcp Layout', () => {
   it('should render team details page when route matches /teams/:teamId and user is hcp', () => {
     render(getMainLayoutJSX('/teams/fakeTeamId'))
     checkInDocument(teamDetailsPageTestId)
-  })
-
-  it('should render certify account page when route is /certify and user is hcp', () => {
-    render(getMainLayoutJSX('/certify'))
-    checkInDocument(certifyAccountPageTestId)
   })
 })
