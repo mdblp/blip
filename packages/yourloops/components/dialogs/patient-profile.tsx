@@ -38,9 +38,10 @@ import TextField from '@material-ui/core/TextField'
 
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
-import { Units } from '../../models/generic'
-import { Settings, IUser } from '../../models/user'
 import { getUserFirstName, getUserLastName } from '../../lib/utils'
+import { Settings } from '../../lib/auth/models/settings.model'
+import { IUser } from '../../lib/data/models/i-user.model'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 
 interface ProfileDialogProps {
   user: IUser
@@ -58,13 +59,13 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: '1em',
       '& input:disabled': {
         backgroundColor: 'white',
-        color: theme.palette.grey[800] // eslint-disable-line no-magic-numbers
+        color: theme.palette.grey[800]
       }
     },
     disabled: {
       '&&:before': {
         borderBottom: '0.5px solid',
-        color: theme.palette.grey[400] // eslint-disable-line no-magic-numbers
+        color: theme.palette.grey[400]
       }
     }
   })
@@ -141,7 +142,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           disabled
           id="units"
           label={t('units')}
-          value={user.settings?.units?.bg ?? Units.gram}
+          value={user.settings?.units?.bg ?? UnitsType.MGDL}
           className={textField}
           InputProps={{ classes: { disabled } }}
         />

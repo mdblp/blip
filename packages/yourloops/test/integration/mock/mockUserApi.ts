@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import UserApi from '../../../lib/auth/user-api'
+import UserApi from '../../../lib/auth/user.api'
 
 export const mockUserApi = () => {
   const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)

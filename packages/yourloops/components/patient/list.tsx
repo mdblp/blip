@@ -31,16 +31,18 @@ import { useTranslation } from 'react-i18next'
 
 import Container from '@material-ui/core/Container'
 
-import { PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
 import metrics from '../../lib/metrics'
 import { useAuth } from '../../lib/auth'
 import { setPageTitle } from '../../lib/utils'
 import PatientsTable from './table'
-import { Patient } from '../../lib/data/patient'
-import { PatientListProps } from './models'
 import { comparePatients } from './utils'
-import { usePatientContext } from '../../lib/patient/provider'
-import PatientUtils from '../../lib/patient/utils'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import PatientUtils from '../../lib/patient/patient.util'
+import { PatientListProps } from './models/patient-table-props.model'
+import { SortDirection } from './models/enums/sort-direction.enum'
+import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
+import { PatientFilterTypes } from '../../lib/patient/models/enums/patient-filter-type.enum'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true })
 

@@ -44,17 +44,13 @@ import TextField from '@material-ui/core/TextField'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import locales from '../../../../locales/languages.json'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { Team } from '../../lib/team'
-import {
-  isZipCodeValid,
-  PhonePrefixCode,
-  REGEX_EMAIL,
-  REGEX_PHONE
-} from '../../lib/utils'
+import { isZipCodeValid, PhonePrefixCode, REGEX_EMAIL, REGEX_PHONE } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import { TeamEditModalContentProps } from './types'
 import Box from '@material-ui/core/Box'
+import { CountryCodes } from '../../lib/auth/models/country.model'
 
 interface LocalesCountries {
   [code: string]: {
@@ -110,7 +106,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const [addrLine2, setAddrLine2] = useState(team?.address?.line2 ?? '')
   const [addrZipCode, setAddrZipCode] = useState(team?.address?.zip ?? '')
   const [addrCity, setAddrCity] = useState(team?.address?.city ?? '')
-  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? 'FR')
+  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? CountryCodes.France)
   const isPhoneNumberValid: boolean = REGEX_PHONE.test(teamPhone)
   const isEmailValid: boolean = REGEX_EMAIL.test(teamEmail)
   const countries: LocalesCountries = locales.countries

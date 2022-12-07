@@ -40,7 +40,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import { makeButtonsStyles } from '../theme'
-import TeamUtils from '../../lib/team/utils'
+import TeamUtils from '../../lib/team/team.util'
 
 export interface LeaveTeamDialogProps {
   team: Readonly<Team>

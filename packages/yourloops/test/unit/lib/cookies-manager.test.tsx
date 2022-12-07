@@ -27,10 +27,10 @@
 
 /* eslint-disable no-underscore-dangle */
 
-import config from '../../../lib/config'
+import config from '../../../lib/config/config'
 import metrics from '../../../lib/metrics'
 import { isZendeskAllowCookies } from '../../../lib/zendesk'
-import initCookiesConcentListener from '../../../lib/cookies-manager'
+import initCookiesConsentListener from '../../../lib/cookies-manager'
 
 type AxceptIOCallback = (a: AxeptIO) => void
 
@@ -56,13 +56,13 @@ describe('Cookie manager', () => {
   it('should do nothing if axeptio is not available', () => {
     window._axcb = undefined
     config.COOKIE_BANNER_CLIENT_ID = 'ok'
-    initCookiesConcentListener()
+    initCookiesConsentListener()
     expect(sendMetrics).toHaveBeenCalledTimes(0)
   })
 
   it('should accept all if axeptio is disabled', () => {
     config.COOKIE_BANNER_CLIENT_ID = 'disabled'
-    initCookiesConcentListener()
+    initCookiesConsentListener()
     expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(1)
     expect(sendMetrics).toHaveBeenCalledTimes(1)
     expect(sendMetrics).toHaveBeenCalledWith('metrics', 'enabled')
@@ -73,7 +73,7 @@ describe('Cookie manager', () => {
     const pushSpy = jest.fn()
     window._axcb = { push: pushSpy }
     config.COOKIE_BANNER_CLIENT_ID = 'abcdef'
-    initCookiesConcentListener()
+    initCookiesConsentListener()
     expect(pushSpy).toHaveBeenCalledTimes(1)
   })
 
@@ -93,7 +93,7 @@ describe('Cookie manager', () => {
     }
 
     config.COOKIE_BANNER_CLIENT_ID = 'abcdef'
-    initCookiesConcentListener()
+    initCookiesConsentListener()
     expect(callbackFn).toBeInstanceOf(Function);
     (callbackFn as unknown as AxceptIOCallback)(axeptIO)
 

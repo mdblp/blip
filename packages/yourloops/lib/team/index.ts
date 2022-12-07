@@ -25,21 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  Team,
-  TeamContext,
-  TeamMember,
-  TEAM_CODE_LENGTH,
-  REGEX_TEAM_CODE,
-  REGEX_TEAM_CODE_DISPLAY
-} from './models'
+import { TeamMember } from './models/team-member.model'
+import { REGEX_TEAM_CODE, REGEX_TEAM_CODE_DISPLAY, Team, TEAM_CODE_LENGTH } from './models/team.model'
+import { TeamContext } from './models/team-context.model'
 
-import {
-  TeamContextProvider,
-  useTeam
-} from './hook'
+import { TeamContextProvider, useTeam } from './team.hook'
 
-import { getDisplayTeamCode } from './utils'
+import { getDisplayTeamCode } from './team.util'
 
 export {
   Team,

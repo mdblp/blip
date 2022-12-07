@@ -67,7 +67,7 @@ const ignoredTransKeysForBlip = [
   'wheel-label-on'
 ]
 const ignoredTransKeyInBlipFiles = [
-  '${pa.reportedIntensity}-pa',
+  '${physicalActivity.reportedIntensity}-pa',
   'bolus_${bolusType}',
   'params|${parameter.name}',
   'params|${row.name}'
@@ -138,7 +138,7 @@ const ignoredTransKeyForYourLoops = [
   'alert-invitation-patient-failed-already-in-team',
   'alert-invitation-patient-failed-already-invited',
   'accompanying-documents',
-  'intended-use',
+  'product-labelling',
   'no-new-messages',
   'training',
   'initial-hba1c',

@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TypeTeamMemberRole } from '../../models/team'
 import { Team } from '../../lib/team'
+import { TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
 export interface AddPatientDialogResult {
   email: string

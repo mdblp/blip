@@ -25,25 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.title {
+.row {
   display: flex;
   color: var(--stat--default);
   composes: largeSize from '../../../styles/typography.css';
   font-weight: 500;
   line-height: 1;
-  margin: 4px 4px 4px;
   white-space: nowrap;
 }
 
+.title {
+  margin: 4px 4px 4px;
+}
+
 .rescueCarb {
-  display: flex;
-  color: var(--stat--default);
-  composes: largeSize from '../../../styles/typography.css';
-  font-weight: 500;
-  line-height: 1;
   padding-left: 10px;
   padding-right: 10px;
-  white-space: nowrap;
   margin-bottom: 8px;
 }
 

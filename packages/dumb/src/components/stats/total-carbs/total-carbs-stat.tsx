@@ -29,6 +29,7 @@ import styles from './total-carbs-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { Box } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
+import { Unit } from 'medical-domain'
 
 export interface TotalInsulinStatProps {
   annotations: []
@@ -44,7 +45,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   return (
     <div data-testid="total-carbs-stat">
-      <Box className={styles.title}>
+      <Box className={`${styles.title} ${styles.row}`}>
         {title}
         {!hideTooltip &&
           <StatTooltip annotations={annotations} />
@@ -54,18 +55,18 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             {totalCarbs}
           </span>
           <span className={styles.suffix}>
-            g
+            {Unit.Gram}
           </span>
         </div>
       </Box>
-      <Box className={styles.rescueCarb}>
+      <Box className={`${styles.rescueCarb} ${styles.row}`}>
         {t('Rescuecarbs')}
         <div className={styles.total}>
           <span className={styles.value}>
             {foodCarbs}
           </span>
           <span className={styles.suffix}>
-            g
+            {Unit.Gram}
           </span>
         </div>
       </Box>

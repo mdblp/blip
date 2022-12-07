@@ -37,7 +37,7 @@ import Grid from '@material-ui/core/Grid'
 
 import SignUpStepper from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
 
 const formStyle = makeStyles((theme: Theme) => ({
   card: {

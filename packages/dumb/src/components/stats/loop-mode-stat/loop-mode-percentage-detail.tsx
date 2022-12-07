@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import styles from './loop-mode-stat.css'
 import { useTranslation } from 'react-i18next'
-import { formatDuration } from '../../../utils/datetime'
+import { formatDuration } from '../../../utils/datetime/datetime.util'
 
 interface LoopModePercentageDetailProps {
   className: string

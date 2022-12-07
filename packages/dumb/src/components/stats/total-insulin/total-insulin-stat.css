@@ -26,12 +26,8 @@
  */
 
 .title {
-  color: var(--stat--default);
-  composes: largeSize from '../../../styles/typography.css';
-  font-weight: 500;
   line-height: 1;
   margin: 4px 4px 8px;
-  white-space: nowrap;
 }
 
 .titleTotal {
@@ -42,18 +38,11 @@
 .titleData {
   composes: smallSize from '../../../styles/typography.css';
   padding-left: .25em;
-  align-items: center;
   position: relative;
   top: -1px;
-  color: var(--stat--default);
-}
-
-.titleData span {
-  margin-top: 1px;
 }
 
 .titleSuffix {
-  font-weight: normal;
   padding-left: 1px;
   margin-right: 4px;
 }
@@ -78,24 +67,24 @@
   border-radius: 14px;
   text-align: center;
   font-size: 14px;
-  font-weight: 500;
   white-space: pre;
 }
 
 .rows .rowPercent {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .rows .rowPercent .rowPercentValue {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
-  font-weight: 500;
   font-size: 24px;
 }
 
 .rows .rowPercent .rowPercentUnits {
   font-size: 12px;
-  font-weight: 400;
   color: var(--text-medium-contrast);
+  align-self: flex-end;
 }
 
 .rowsTotalInsulin {
