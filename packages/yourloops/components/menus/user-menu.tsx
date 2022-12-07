@@ -135,7 +135,7 @@ function UserMenu(): JSX.Element {
         </Box>
         {!isMobileBreakpoint &&
           <React.Fragment>
-            <Tooltip title={tooltipText}>
+            <Tooltip title={tooltipText} disableInteractive>
               <Typography id="user-menu-full-name" className={typography}>
                 {user?.fullName}
               </Typography>

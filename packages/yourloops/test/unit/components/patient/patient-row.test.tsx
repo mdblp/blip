@@ -38,6 +38,8 @@ import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import userEvent from '@testing-library/user-event'
 import PatientUtils from '../../../../lib/patient/utils'
+import { ThemeProvider } from '@mui/material/styles'
+import { getTheme } from '../../../../components/theme'
 
 const removePatientDialogMockId = 'remove-patient-dialog-id'
 // eslint-disable-next-line react/display-name
@@ -67,14 +69,16 @@ describe('Patient row', () => {
 
   const getPatientRowJSX = (patientElementProps: PatientRowProps = props): JSX.Element => {
     return (
-      <Table>
-        <TableBody>
-          <PatientRow
-            patient={patientElementProps.patient}
-            filter={patientElementProps.filter}
-          />
-        </TableBody>
-      </Table>
+      <ThemeProvider theme={getTheme()}>
+        <Table>
+          <TableBody>
+            <PatientRow
+              patient={patientElementProps.patient}
+              filter={patientElementProps.filter}
+            />
+          </TableBody>
+        </Table>
+      </ThemeProvider>
     )
   }
 

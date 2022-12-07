@@ -36,6 +36,8 @@ import TeamMembers, { TeamMembersProps } from '../../../../components/team/team-
 import { TeamMemberRole } from '../../../../models/team'
 import { UserInvitationStatus } from '../../../../models/generic'
 import * as alertHookMock from '../../../../components/utils/snackbar'
+import { getTheme } from '../../../../components/theme'
+import { ThemeProvider } from '@mui/material/styles'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
@@ -77,10 +79,14 @@ describe('TeamMembers', () => {
   })
 
   function getTeamMembersJSX(props: TeamMembersProps = { team, refreshParent: refresh }) {
-    return <TeamMembers
-      team={props.team}
-      refreshParent={props.refreshParent}
-    />
+    return (
+      <ThemeProvider theme={getTheme()}>
+        <TeamMembers
+          team={props.team}
+          refreshParent={props.refreshParent}
+        />
+      </ThemeProvider>
+    )
   }
 
   it('should hide add member button when logged in user is not admin', () => {

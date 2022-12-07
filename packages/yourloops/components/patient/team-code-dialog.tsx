@@ -81,8 +81,8 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
       open={dialogIsOpen}
       onClose={onClose}
     >
-      <DialogTitle id="patient-list-dialog-team-code-title">
-        <strong>{name}</strong>
+      <DialogTitle>
+        <strong id="patient-list-dialog-team-code-title">{name}</strong>
       </DialogTitle>
 
       <DialogContent id="patient-list-dialog-team-code-content-placeholder">
