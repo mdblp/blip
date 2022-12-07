@@ -44,7 +44,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   return (
     <div data-testid="total-carbs-stat">
-      <Box className={styles.title}>
+      <Box className={`${styles.title} ${styles.row}`}>
         {title}
         {!hideTooltip &&
           <StatTooltip annotations={annotations} />
@@ -58,7 +58,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           </span>
         </div>
       </Box>
-      <Box className={styles.rescueCarb}>
+      <Box className={`${styles.rescueCarb} ${styles.row}`}>
         {t('Rescuecarbs')}
         <div className={styles.total}>
           <span className={styles.value}>
