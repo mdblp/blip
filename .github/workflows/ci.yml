@@ -31,6 +31,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Test locales
+        run: npm run test-locales
+
   test-lambda:
     runs-on: ubuntu-latest
     needs: lint

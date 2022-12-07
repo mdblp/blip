@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useContext } from 'react'
-import { CircularProgress } from '@material-ui/core'
+import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
+import CircularProgress from '@mui/material/CircularProgress'
 import usePatientProviderCustomHook from './patient.hook'
 import { PatientContextResult } from './models/patient-context-result.model'
 
 const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
 
-export const PatientProvider: FunctionComponent = ({ children }) => {
+export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const patientProviderCustomHook = usePatientProviderCustomHook()
 
   return patientProviderCustomHook.initialized
