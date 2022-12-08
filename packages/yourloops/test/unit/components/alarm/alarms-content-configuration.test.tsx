@@ -28,7 +28,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
 import { convertBG } from '../../../../lib/units/units.util'
@@ -108,11 +108,9 @@ describe('AlarmsContentConfiguration', () => {
     saveInProgress: false
   }) {
     return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={getTheme()}>
-          <AlarmsContentConfiguration {...props} />
-        </ThemeProvider>
-      </StyledEngineProvider>
+      <ThemeProvider theme={getTheme()}>
+        <AlarmsContentConfiguration {...props} />
+      </ThemeProvider>
     )
   }
 

@@ -32,7 +32,7 @@ import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamDetailsPage from '../../../../pages/team/team-details-page'
 import { getTheme } from '../../../../components/theme'
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
@@ -75,11 +75,9 @@ describe('TeamDetailsPage', () => {
   function getTeamDetailsPageJSX(): JSX.Element {
     return (
       <Router history={history}>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={getTheme()}>
-            <TeamDetailsPage />
-          </ThemeProvider>
-        </StyledEngineProvider>
+        <ThemeProvider theme={getTheme()}>
+          <TeamDetailsPage />
+        </ThemeProvider>
       </Router>
     )
   }

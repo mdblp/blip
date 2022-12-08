@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -169,19 +169,17 @@ describe('MemberRow', () => {
 
   function getMemberRowJSX(memberProps: TeamMembersProps = props): JSX.Element {
     return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={getTheme()}>
-          <Table>
-            <TableBody>
-              <MemberRow
-                team={memberProps.team}
-                teamMember={memberProps.teamMember}
-                refreshParent={memberProps.refreshParent}
-              />
-            </TableBody>
-          </Table>
-        </ThemeProvider>
-      </StyledEngineProvider>
+      <ThemeProvider theme={getTheme()}>
+        <Table>
+          <TableBody>
+            <MemberRow
+              team={memberProps.team}
+              teamMember={memberProps.teamMember}
+              refreshParent={memberProps.refreshParent}
+            />
+          </TableBody>
+        </Table>
+      </ThemeProvider>
     )
   }
 

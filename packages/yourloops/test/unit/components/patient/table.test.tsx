@@ -33,7 +33,7 @@ import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 
 import PatientTable from '../../../../components/patient/table'
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import { createPatient, createPatientTeam } from '../../common/utils'
 import { Router } from 'react-router-dom'
@@ -99,16 +99,14 @@ describe('Patient list table', () => {
   const PatientTableComponent = (): JSX.Element => {
     return (
       <Router history={history}>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={getTheme()}>
-            <PatientTable
-              patients={allPatients}
-              order={SortDirection.asc}
-              orderBy={PatientTableSortFields.patientFullName}
-              onSortList={jest.fn()}
-            />
-          </ThemeProvider>
-        </StyledEngineProvider>
+        <ThemeProvider theme={getTheme()}>
+          <PatientTable
+            patients={allPatients}
+            order={SortDirection.asc}
+            orderBy={PatientTableSortFields.patientFullName}
+            onSortList={jest.fn()}
+          />
+        </ThemeProvider>
       </Router>
     )
   }

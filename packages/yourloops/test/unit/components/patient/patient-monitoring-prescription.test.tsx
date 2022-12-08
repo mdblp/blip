@@ -34,7 +34,7 @@ import PatientMonitoringPrescription, {
 import { RemoteMonitoringDialogAction } from '../../../../components/dialogs/remote-monitoring-dialog'
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import userEvent from '@testing-library/user-event'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
@@ -72,11 +72,9 @@ describe('PatientMonitoringPrescription', () => {
 
   function getPatientMonitoringPrescriptionJSX(props: PatientMonitoringPrescriptionProps = defaultProps) {
     return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={getTheme()}>
-          <PatientMonitoringPrescription {...props} />
-        </ThemeProvider>
-      </StyledEngineProvider>
+      <ThemeProvider theme={getTheme()}>
+        <PatientMonitoringPrescription {...props} />
+      </ThemeProvider>
     )
   }
 

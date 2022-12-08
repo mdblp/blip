@@ -28,7 +28,7 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, unmountComponentAtNode } from 'react-dom'
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import i18n from '../../../../lib/language'
@@ -67,13 +67,11 @@ describe('AlarmCard', () => {
   function mountComponent(props: PatientInfoWidgetProps = { patient }) {
     act(() => {
       render(
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={getTheme()}>
-            <AlarmCard
-              patient={props.patient}
-            />
-          </ThemeProvider>
-        </StyledEngineProvider>, container)
+        <ThemeProvider theme={getTheme()}>
+          <AlarmCard
+            patient={props.patient}
+          />
+        </ThemeProvider>, container)
     })
   }
 
