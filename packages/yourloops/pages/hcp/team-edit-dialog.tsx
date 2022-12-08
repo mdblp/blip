@@ -214,8 +214,8 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     modalTitle = t('team-modal-add-title')
     modalButtonValidate = t('button-create-team')
     infoLine = (
-      <Box px={2}>
-        <p id="team-edit-dialog-info-line">{t('team-modal-create-info')}</p>
+      <Box paddingX={2} paddingBottom={2}>
+        <span id="team-edit-dialog-info-line">{t('team-modal-create-info')}</span>
       </Box>
     )
     const termsOfUse = t('terms-of-use')
@@ -262,7 +262,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
         <strong>{modalTitle}</strong>
       </DialogTitle>
 
-      {infoLine}
+      {infoLine ?? <Box />}
 
       <DialogContent className={classes.dialogContent}>
         <Box display="flex" flexDirection="column">
