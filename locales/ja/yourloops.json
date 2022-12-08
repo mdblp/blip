@@ -400,7 +400,7 @@
   "unread-messages": "Unread messages",
   "until": "Until",
   "upload-prescription": "Upload prescription",
-  "user-name": "{{lastName}}{{firstName}}",
+  "user-name": "{{lastName}} {{firstName}}",
   "valid-email-alert": "Account verification is needed before login, please check your emails",
   "weekly-report-pdf": "Weekly_report_{{pdfName}}",
   "weekly-reports": "Weekly reports",
