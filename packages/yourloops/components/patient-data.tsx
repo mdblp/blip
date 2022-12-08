@@ -49,6 +49,7 @@ import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { Patient } from '../lib/patient/models/patient.model'
+import { useUserName } from '../lib/custom-hooks/user-name.hook'
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -94,6 +95,7 @@ function PatientDataPage(): JSX.Element | null {
   const userIsPatient = authHook.user?.isUserPatient()
   const userIsHCP = authHook.user?.isUserHcp()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
+  const { getUserName } = useUserName()
 
   const initialized = authHook.isLoggedIn && blipApi
 
@@ -122,7 +124,9 @@ function PatientDataPage(): JSX.Element | null {
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
-      setPageTitle(t('user-name', patient.profile.lastName), 'PatientName')
+      const { firstName, fullName, lastName } = patient?.profile
+      const pageTitle = getUserName(firstName, lastName, fullName)
+      setPageTitle(pageTitle, 'PatientName')
     } else {
       setPageTitle()
     }

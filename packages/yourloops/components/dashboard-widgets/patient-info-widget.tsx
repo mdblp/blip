@@ -52,6 +52,7 @@ import { Patient } from '../../lib/patient/models/patient.model'
 import { Settings } from '../../lib/auth/models/settings.model'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
+import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -96,6 +97,9 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format('L') }
     : undefined
   const birthdate = moment.utc(patient.profile.birthdate).format('L')
+  const { getUserName } = useUserName()
+  const { firstName, fullName, lastName } = patient.profile
+  const patientName = getUserName(firstName, lastName, fullName)
 
   const isLoggedInUserHcpAdmin = (): boolean => {
     return authHook.user?.isUserHcp() &&
@@ -114,7 +118,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   }
 
   const patientInfo: Record<string, string> = {
-    patient: patient.profile.fullName,
+    patient: patientName,
     gender: patient.profile.sex,
     birthdate,
     email: patient.profile.email,
@@ -280,7 +284,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       {showConfirmCancelDialog &&
         <ConfirmDialog
           title={t('cancel-remote-monitoring-invite')}
-          label={t('cancel-remote-monitoring-invite-confirm', { fullName: patient.profile.fullName })}
+          label={t('cancel-remote-monitoring-invite-confirm', { fullName: patientName })}
           inProgress={confirmCancelDialogActionInProgress}
           onClose={() => setShowConfirmCancelDialog(false)}
           onConfirm={onConfirmCancelInviteDialog}
@@ -289,7 +293,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       {showConfirmDeleteDialog &&
         <ConfirmDialog
           title={t('remove-remote-monitoring')}
-          label={t('remove-remote-monitoring-confirm', { fullName: patient.profile.fullName })}
+          label={t('remove-remote-monitoring-confirm', { fullName: patientName })}
           inProgress={confirmDeleteDialogActionInProgress}
           onClose={() => setShowConfirmDeleteDialog(false)}
           onConfirm={onConfirmDeleteDialog}

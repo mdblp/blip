@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 - YLP-1962 User should be able to uncheck the training check box
 ### Engineering use
+- YLP-1444 Handle user name display for Japanese
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0

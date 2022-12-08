@@ -35,7 +35,6 @@ import metrics from '../../lib/metrics'
 import { useAuth } from '../../lib/auth'
 import { setPageTitle } from '../../lib/utils'
 import PatientsTable from './table'
-import { comparePatients } from './utils'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
 import { PatientListProps } from './models/patient-table-props.model'
@@ -43,6 +42,7 @@ import { SortDirection } from './models/enums/sort-direction.enum'
 import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
 import { PatientFilterTypes } from '../../lib/patient/models/enums/patient-filter-type.enum'
 import { Patient } from '../../lib/patient/models/patient.model'
+import { useComparePatients } from '../../lib/custom-hooks/compare-patients.hook'
 
 const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true })
 
@@ -54,6 +54,7 @@ function PatientList(props: PatientListProps): JSX.Element {
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
   const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName)
   const flagged = authHook.getFlagPatients()
+  const { comparePatients } = useComparePatients()
 
   const updatePatientList = useCallback(
     (

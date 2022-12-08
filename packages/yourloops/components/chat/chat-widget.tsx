@@ -45,6 +45,7 @@ import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -145,6 +146,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
   const team = PatientUtils.getRemoteMonitoringTeam(patient)
+  const { getUserName } = useUserName()
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number): void => {
@@ -220,7 +222,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           (msg): JSX.Element => (
             <ChatMessage key={msg.id} text={msg.text}
               privateMsg={msg.private}
-              author={msg.user.fullName}
+              author={getUserName(msg.user.firstName, msg.user.lastName, msg.user.fullName)}
               timestamp={msg.timestamp}
               ack={msg.destAck}
               isMine={msg.authorId === userId} />
