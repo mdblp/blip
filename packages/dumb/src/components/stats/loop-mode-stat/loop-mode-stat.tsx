@@ -28,7 +28,7 @@
 import React, { FunctionComponent, memo } from 'react'
 import styles from './loop-mode-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { Box } from '@material-ui/core'
+import Box from '@material-ui/core/Box'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
 import { LoopModeLabel } from './loop-mode-label'
 import { LoopModeGraph } from './loop-mode-graph'
