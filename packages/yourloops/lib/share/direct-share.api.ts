@@ -32,9 +32,10 @@ import { ShareUser } from './models/share-user.model'
 import { DirectShareAPI } from './models/direct-share-api.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { UserRoles } from '../auth/models/enums/user-roles.enum'
+import HttpStatus from '../http/models/enums/http-status.enum'
 
 export const PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE = 'patient-cannot-be-invited-as-caregiver'
-const PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_CODE = 405
+const PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_CODE = HttpStatus.StatusMethodNotAllowed
 
 export default class DirectShareApi {
   static async addDirectShare(userId: string, email: string): Promise<void> {
