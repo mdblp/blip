@@ -33,7 +33,7 @@ import { AddMemberDialogContentProps } from '../../../../pages/hcp/types'
 import ReactDOM from 'react-dom'
 import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'
-import { TeamMemberRole } from '../../../../models/team'
+import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 
 describe('AddMemberDialog', () => {
   const addMember: AddMemberDialogContentProps = {

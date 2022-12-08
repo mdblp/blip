@@ -47,7 +47,7 @@ describe('Patient dashboard for anyone', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockChatAPI()
     mockMedicalFilesAPI()

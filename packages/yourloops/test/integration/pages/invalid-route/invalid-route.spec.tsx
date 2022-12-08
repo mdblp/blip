@@ -28,8 +28,8 @@
 import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockUserDataFetch } from '../../mock/auth'
-import PatientApi from '../../../../lib/patient/patient-api'
-import TeamApi from '../../../../lib/team/team-api'
+import PatientApi from '../../../../lib/patient/patient.api'
+import TeamApi from '../../../../lib/team/team.api'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
@@ -40,7 +40,7 @@ describe('Invalid Route', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockNotificationAPI()
   })
 

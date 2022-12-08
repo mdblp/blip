@@ -26,13 +26,13 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { UserInvitationStatus } from '../../models/generic'
 import { useEffect, useState } from 'react'
 import { useAlert } from '../utils/snackbar'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 import { Team, useTeam } from '../../lib/team'
-import { Patient } from '../../lib/data/patient'
-import TeamUtils from '../../lib/team/utils'
+import TeamUtils from '../../lib/team/team.util'
+import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void

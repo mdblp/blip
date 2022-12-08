@@ -33,7 +33,7 @@ import '@fontsource/roboto'
 import 'branding/theme.css'
 import 'classes.css'
 
-import appConfig from '../lib/config'
+import appConfig from '../lib/config/config'
 import { AuthContextProvider } from '../lib/auth'
 import { MainLobby } from './main-lobby'
 import MetricsLocationListener from '../components/MetricsLocationListener'

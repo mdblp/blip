@@ -30,11 +30,11 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
 import CaregiversPage from '../pages/patient/caregivers/page'
-import { PatientProvider } from '../lib/patient/provider'
+import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
-import ProfilePage from '../pages/profile'
+import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
 
 export function PatientLayout(): JSX.Element {

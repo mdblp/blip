@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { monitoredPatientId } from './mockPatientAPI'
 import { monitoringParameters } from './mockTeamAPI'
 

@@ -25,17 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DirectShareApi from '../../../../lib/share/direct-share-api'
-import * as notificationHookMock from '../../../../lib/notifications/hook'
-import NotificationApi from '../../../../lib/notifications/notification-api'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
+import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
+import NotificationApi from '../../../../lib/notifications/notification.api'
 import { renderHook } from '@testing-library/react-hooks'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
-import { NotificationType } from '../../../../lib/notifications/models'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { User } from '../../../../lib/auth'
+import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 jest.mock('../../../../components/utils/snackbar')
-jest.mock('../../../../lib/notifications/hook')
+jest.mock('../../../../lib/notifications/notification.hook')
 
 describe('Remove direct share dialog hook', () => {
   const userToRemoveEmail = 'fake@email.com'

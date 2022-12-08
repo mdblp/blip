@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import proSanteLogo from 'pro-sante-connect.svg'
 
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
-function ProSanteConnectButton({ onClick }: Props): JSX.Element {
+const ProSanteConnectButton: FunctionComponent<Props> = ({ onClick }) => {
   const { button, label, container } = useStyles()
   const { t } = useTranslation('yourloops')
 

@@ -28,7 +28,7 @@
 import i18n from 'i18next'
 import moment from 'moment-timezone'
 
-import config from '../../../lib/config'
+import config from '../../../lib/config/config'
 import { getCurrentLang, getLangName } from '../../../lib/language'
 
 describe('Language', () => {

@@ -147,18 +147,12 @@ describe('Stats', () => {
 
         expect(wrapper.find('.Stats').children()).to.have.length(6)
 
-        const expectedStats = [
-          'totalInsulin',
-          'carbs',
-          'coefficientOfVariation'
-        ]
-
         expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
-        _.forEach(expectedStats, statId => {
-          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
-        })
+        expect(wrapper.find({ 'data-testid': 'stat-totalInsulin' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
+        expect(wrapper.find('#Stat--coefficientOfVariation')).to.have.length(1)
       })
 
       it('should show all expected stats when bgSource prop is `smbg`', () => {
@@ -170,16 +164,10 @@ describe('Stats', () => {
 
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
-        const expectedStats = [
-          'totalInsulin',
-          'carbs'
-        ]
-
         expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
-        _.forEach(expectedStats, statId => {
-          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
-        })
+        expect(wrapper.find({ 'data-testid': 'stat-totalInsulin' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
       })
 
       it('should render the Time in Auto stat for automated basal devices', () => {
@@ -312,16 +300,10 @@ describe('Stats', () => {
 
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
-        const expectedStats = [
-          'averageDailyDose',
-          'carbs'
-        ]
-
         expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
-        expectedStats.forEach(statId => {
-          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
-        })
+        expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
+        expect(wrapper.find('#Stat--averageDailyDose')).to.have.length(1)
       })
 
       it('should render the Time in Auto stat for automated basal devices', () => {
@@ -339,12 +321,12 @@ describe('Stats', () => {
         expect(wrapper.find('.Stats').children()).to.have.length(5)
         const expectedStats = [
           'averageDailyDose',
-          'timeInAuto',
-          'carbs'
+          'timeInAuto'
         ]
 
         expect(wrapper.find({ 'data-testid': 'stat-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
+        expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
         expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
         })
@@ -359,16 +341,10 @@ describe('Stats', () => {
         wrapper.update()
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
-        const expectedStats = [
-          'averageDailyDose',
-          'carbs'
-        ]
-
         expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
-        expectedStats.forEach(statId => {
-          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1)
-        })
+        expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
+        expect(wrapper.find('#Stat--averageDailyDose')).to.have.length(1)
       })
     })
   })

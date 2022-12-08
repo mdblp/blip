@@ -42,11 +42,11 @@ import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
-import { HistoryState } from '../../models/generic'
-import { Profile } from '../../models/user'
 import { useAuth } from '../../lib/auth'
 import ConsentForm from './form'
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
+import { Profile } from '../../lib/auth/models/profile.model'
+import { HistoryState } from '../../models/history-state.model'
 
 interface ConsentProps {
   messageKey: string
