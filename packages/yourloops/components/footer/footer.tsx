@@ -46,7 +46,6 @@ import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 
-// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme: Theme) => {
   return {
     bySpan: {
