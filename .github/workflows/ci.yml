@@ -292,7 +292,7 @@ jobs:
         with:
           images: ${{ secrets.REGISTRY }}/blip
           tags: |
-            echo "semver=$(cat ./package.json | jq '.version' | tr -d '"')" >> $GITHUB_OUTPUT
+            type=ref,enable=true,prefix=${{ steps.package-version.outputs.semver }}-PR-,event=pr
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
