@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { act, BoundFunctions, fireEvent, logDOM, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
@@ -149,6 +149,7 @@ describe('Patient dashboard for HCP', () => {
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
+    logDOM()
     const configureAlarmsButton = await screen.findByRole('button', { name: 'Configure alarms' }, { timeout: 3000 })
     await userEvent.click(configureAlarmsButton)
     const dialog = screen.getByRole('dialog')
@@ -156,32 +157,32 @@ describe('Patient dashboard for HCP', () => {
     const highBgInput = within(dialog).getByRole('spinbutton', { name: 'High blood glucose input' })
     const veryLowBgInput = within(dialog).getByRole('spinbutton', { name: 'Very low blood glucose input' })
     const saveButton = within(dialog).getByTestId('alarm-config-save')
-    // expect(within(dialog).getByText('Current trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)')).toBeVisible()
-    expect(within(within(dialog).getByTestId('bgUnits-minimum')).getByText('mg/dL')).toBeVisible()
-    expect(within(dialog).getByTestId('bgUnits-maximum')).toHaveTextContent('mg/dL')
-    expect(within(dialog).getByTestId('bgUnits-severalHypo')).toHaveTextContent('mg/dL')
+    expect(within(within(dialog).getByTestId('current-trigger-setting-tir')).getByText('Current trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)')).toBeVisible()
+    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
+    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
+    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
     expect(lowBgInput).toHaveValue(50)
     expect(highBgInput).toHaveValue(140)
     expect(veryLowBgInput).toHaveValue(40)
     expect(saveButton).not.toBeDisabled()
 
     await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '50,5')
-    expect(within(screen.getByTestId('low-bg-text-field-id')).getByText('Is not integer')).toBeInTheDocument()
+    await userEvent.type(lowBgInput, '50.5')
+    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('enter a integer number')).toBeVisible()
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(lowBgInput)
     await userEvent.type(lowBgInput, '50')
     await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '140,5')
-    expect(within(screen.getByTestId('high-bg-text-field-id')).getByText('Is not integer')).toBeInTheDocument()
+    await userEvent.type(highBgInput, '140.5')
+    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('enter a integer number')).toBeVisible()
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(highBgInput)
     await userEvent.type(highBgInput, '140')
     await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '40,5')
-    expect(within(screen.getByTestId('very-low-bg-text-field-id')).getByText('Is not integer')).toBeInTheDocument()
+    await userEvent.type(veryLowBgInput, '40.5')
+    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('enter a integer number')).toBeVisible()
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(veryLowBgInput)
@@ -189,9 +190,9 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('Should have units in mmol/L, integer values in the inputs and the button displayed', async () => {
-    await act(async () => {
+    logDOM(await act(async () => {
       renderPage(monitoredPatientDashboardRouteMmoL)
-    })
+    }))
     const configureAlarmsButton = await screen.findByRole('button', { name: 'Configure alarms' }, { timeout: 3000 })
     await userEvent.click(configureAlarmsButton)
     const dialog = screen.getByRole('dialog')
@@ -200,38 +201,35 @@ describe('Patient dashboard for HCP', () => {
     const veryLowBgInput = within(dialog).getByRole('spinbutton', { name: 'Very low blood glucose input' })
     const saveButton = within(dialog).getByTestId('alarm-config-save')
 
-    expect(within(dialog).getByText('Current trigger setting: 5% of time off target (min at 50.5 mmol/L max at 140.5 mmol/L)')).toBeVisible()
-    expect(within(dialog).getByText('Current trigger setting: 5% of time below 3.9 mmol/L threshold')).toBeVisible()
-    expect(within(within(dialog).getByTestId('bgUnits-minimum')).getByText('mmol/L')).toBeVisible()
-    expect(within(dialog).getByTestId('bgUnits-maximum')).toHaveTextContent('mmol/L')
-    expect(within(dialog).getByTestId('bgUnits-severalHypo')).toHaveTextContent('mmol/L')
-    expect(lowBgInput).toHaveValue(50.5)
-    expect(highBgInput).toHaveValue(140.5)
-    expect(veryLowBgInput).toHaveValue(40.5)
+    expect(within(within(dialog).getByTestId('current-trigger-setting-tir')).getByText('Current trigger setting: 40% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)')).toBeVisible()
+    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+    expect(lowBgInput).toHaveValue(2.8)
+    expect(highBgInput).toHaveValue(7.8)
+    expect(veryLowBgInput).toHaveValue(2.2)
     expect(saveButton).not.toBeDisabled()
 
     await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '50')
-    expect(within(screen.getByTestId('low-bg-text-field-id')).getByText('Is not float')).toBeInTheDocument()
+    await userEvent.type(lowBgInput, '3')
+    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('enter a float number')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '50,5')
+    await userEvent.type(lowBgInput, '2.8')
 
-    // logDOM(saveButton)
-    // Value in the field highBg false test of the button save disable
     await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '140')
-    expect(within(screen.getByTestId('high-bg-text-field-id')).getByText('Is not float')).toBeInTheDocument()
+    await userEvent.type(highBgInput, '8')
+    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('enter a float number')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '140,5')
+    await userEvent.type(highBgInput, '7.8')
 
     // Value in the field very lowBg false test of the button save disable
     await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '40')
-    expect(within(screen.getByTestId('very-low-bg-text-field-id')).getByText('Is not float')).toBeInTheDocument()
+    await userEvent.type(veryLowBgInput, '3')
+    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('enter a float number')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '40,5')
+    await userEvent.type(veryLowBgInput, '2.2')
   })
 })
