@@ -39,12 +39,12 @@ import Badge from '@material-ui/core/Badge'
 import Box from '@material-ui/core/Box'
 import Toolbar from '@material-ui/core/Toolbar'
 
-import config from '../../lib/config'
-import { useNotification } from '../../lib/notifications/hook'
+import config from '../../lib/config/config'
+import { useNotification } from '../../lib/notifications/notification.hook'
 import { useAuth } from '../../lib/auth'
-import { UserRoles } from '../../models/user'
 import TeamMenu from '../menus/team-menu'
 import UserMenu from '../menus/user-menu'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean

@@ -38,13 +38,13 @@ import Select from '@material-ui/core/Select'
 
 import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
-import { UserRoles } from '../../models/user'
-import { Units } from '../../models/generic'
-import { LanguageCodes } from '../../models/locales'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
 import { useProfilePageState } from './profile-page-context'
-import { ProfileFormKey } from './models'
 import { useAuth } from '../../lib/auth'
 import { profileFormCommonClasses } from './css-classes'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
 
 const PreferencesForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -68,13 +68,13 @@ const PreferencesForm: FunctionComponent = () => {
             id="profile-units-selector"
             data-testid="profile-units-selector"
             value={profileForm.units}
-            onChange={event => updateProfileForm(ProfileFormKey.units, event.target.value as Units)}
+            onChange={event => updateProfileForm(ProfileFormKey.units, event.target.value as UnitsType)}
           >
-            <MenuItem id="profile-units-mmoll" value={Units.mole}>
-              {Units.mole}
+            <MenuItem id="profile-units-mmoll" value={UnitsType.MMOLL}>
+              {UnitsType.MMOLL}
             </MenuItem>
-            <MenuItem id="profile-units-mgdl" value={Units.gram}>
-              {Units.gram}
+            <MenuItem id="profile-units-mgdl" value={UnitsType.MGDL}>
+              {UnitsType.MGDL}
             </MenuItem>
           </Select>
         </FormControl>

@@ -27,11 +27,11 @@
 
 import { useTranslation } from 'react-i18next'
 import { useAlert } from '../utils/snackbar'
-import { INotification } from '../../lib/notifications/models'
-import DirectShareApi from '../../lib/share/direct-share-api'
+import DirectShareApi from '../../lib/share/direct-share.api'
 import { User } from '../../lib/auth'
-import { useNotification } from '../../lib/notifications/hook'
+import { useNotification } from '../../lib/notifications/notification.hook'
 import { OnCloseRemoveDirectShareDialog, UserToRemove } from './remove-direct-share-dialog'
+import { Notification } from '../../lib/notifications/models/notification.model'
 
 interface RemoveDirectShareDialogHookReturn {
   removeDirectShare: (userToRemove: UserToRemove, currentUser: User) => Promise<void>
@@ -46,7 +46,7 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
     const isCurrentUserCaregiver = currentUser.isUserCaregiver()
 
     try {
-      const invitation = sentInvitations.find((invitation: INotification) => invitation.email === userToRemove.email)
+      const invitation = sentInvitations.find((invitation: Notification) => invitation.email === userToRemove.email)
 
       if (invitation) {
         await cancel(invitation.id, invitation.target.id, userToRemove.email)

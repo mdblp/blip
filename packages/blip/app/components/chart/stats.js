@@ -4,7 +4,14 @@ import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@material-ui/core/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
-import { CBGMeanStat, CBGPercentageBarChart, CBGStandardDeviation, CBGStatType , TotalInsulinStat } from 'dumb'
+import {
+  CBGMeanStat,
+  CBGPercentageBarChart,
+  CBGStandardDeviation,
+  CBGStatType,
+  TotalCarbsStat,
+  TotalInsulinStat
+} from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
 const { Stat } = vizComponents
@@ -106,6 +113,19 @@ class Stats extends React.Component {
                 data={stat.data.data}
                 title={stat.title}
                 total={Math.round(stat.data.total.value * 10) / 10}
+              />
+              <Divider variant="fullWidth" />
+            </div>
+          )
+        case CBGStatType.Carbs:
+          return (
+            <div key={stat.id} data-testid={`stat-${stat.id}`}>
+              <TotalCarbsStat
+                annotations={stat.annotations}
+                foodCarbs={stat.data.raw.foodCarbs}
+                hideTooltip={hideToolTips}
+                title={stat.title}
+                totalCarbs={stat.data.raw.totalCarbs}
               />
               <Divider variant="fullWidth" />
             </div>

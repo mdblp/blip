@@ -34,13 +34,13 @@ import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 
 import BasicDropdown from '../dropdown/basic-dropdown'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring } from '../../lib/team/models/monitoring.model'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { UNITS_TYPE } from '../../lib/units/utils'
-import { Patient } from '../../lib/data/patient'
-import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import useAlarmsContentConfiguration, { PERCENTAGES } from './alarms-content-configuration.hook'
 
 const useStyles = makeStyles((theme: Theme) => ({
   cancelButton: {
@@ -69,8 +69,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inputHelperText: {
     position: 'absolute',
-    bottom: -20,
-    marginLeft: 2
+    marginLeft: -2,
+    top: 41,
+    width: 173
   },
   subCategoryContainer: {
     width: '55%'
@@ -123,23 +124,17 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     setOutOfRangeThreshold,
     setHypoThreshold,
     setNonDataTxThreshold,
-    MIN_VERY_LOW_BG,
-    MIN_HIGH_BG,
-    MAX_LOW_BG,
-    MAX_HIGH_BG,
-    MAX_VERY_LOW_BG,
-    MIN_LOW_BG,
-    PERCENTAGES,
-    bgUnit
+    bgUnit,
+    thresholds
   } = useAlarmsContentConfiguration(props)
-
+  const { MIN_LOW_BG, MAX_LOW_BG, MIN_HIGH_BG, MAX_HIGH_BG, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG } = thresholds
   return (
     <React.Fragment>
       <Box paddingX={3}>
         <Typography className={classes.categoryTitle}>
           1. {t('time-away-from-target')}
         </Typography>
-        <Typography variant="caption" data-testid="current-trigger-setting-tir" className={classes.categoryInfo}>
+        <Typography variant="caption" className={classes.categoryInfo}>
           {t('current-trigger-setting-tir', {
             tir: outOfRangeThreshold.value,
             lowBg: lowBg.value,
@@ -158,8 +153,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 <TextField
                   id="low-bg-text-field-id"
                   value={lowBg.value}
-                  error={lowBg.error}
-                  helperText={lowBg.error && (bgUnit === UNITS_TYPE.MGDL ? t('mandatory-integer') : t('mandatory-float'))}
+                  error={!!lowBg.errorMessage}
+                  helperText={lowBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   variant="outlined"
@@ -168,7 +163,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     inputProps: {
                       min: MIN_LOW_BG,
                       max: MAX_LOW_BG,
-                      step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1',
+                      step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
                       'aria-label': t('low-bg-input')
                     }
                   }}
@@ -187,8 +182,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 <TextField
                   id="high-bg-text-field-id"
                   value={highBg.value}
-                  error={highBg.error}
-                  helperText={highBg.error && (bgUnit === UNITS_TYPE.MGDL ? t('mandatory-integer') : t('mandatory-float'))}
+                  error={!!highBg.errorMessage}
+                  helperText={highBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   variant="outlined"
@@ -197,7 +192,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     inputProps: {
                       min: MIN_HIGH_BG,
                       max: MAX_HIGH_BG,
-                      step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1',
+                      step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
                       'aria-label': t('high-bg-input')
                     }
                   }}
@@ -207,7 +202,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     }
                   }}
                   onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
-                  data-testid="high-bg-text-field-id"
                 />
                 <Typography data-testid="bgUnits-maximum">{bgUnit}</Typography>
               </Box>
@@ -258,8 +252,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               <TextField
                 id="very-low-bg-text-field-id"
                 value={veryLowBg.value}
-                error={veryLowBg.error}
-                helperText={veryLowBg.error && (bgUnit === UNITS_TYPE.MGDL ? t('mandatory-integer') : t('mandatory-float'))}
+                error={!!veryLowBg.errorMessage}
+                helperText={veryLowBg.errorMessage}
                 type="number"
                 className={classes.textField}
                 variant="outlined"
@@ -268,7 +262,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   inputProps: {
                     min: MIN_VERY_LOW_BG,
                     max: MAX_VERY_LOW_BG,
-                    step: bgUnit === UNITS_TYPE.MGDL ? '1' : '0.1',
+                    step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
                     'aria-label': t('very-low-bg-input')
                   }
                 }}

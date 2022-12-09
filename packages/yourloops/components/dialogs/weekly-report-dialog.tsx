@@ -39,10 +39,10 @@ import Typography from '@material-ui/core/Typography'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import Divider from '@material-ui/core/Divider'
 
-import { WeeklyReport } from '../../lib/medical-files/model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../lib/utils'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
+import { WeeklyReport } from '../../lib/medical-files/models/weekly-report.model'
 
 export interface WeeklyReportDialogProps {
   onClose: () => void

@@ -34,9 +34,9 @@ import TuneIcon from '@material-ui/icons/Tune'
 import AnnouncementIcon from '@material-ui/icons/Announcement'
 
 import Card from '@material-ui/core/Card'
-import { Patient } from '../../lib/data/patient'
 import PatientAlarmDialog from './patient-alarm-dialog'
 import { useAuth } from '../../lib/auth'
+import { Patient } from '../../lib/patient/models/patient.model'
 
 const alarmCardStyles = makeStyles((theme: Theme) => {
   return {

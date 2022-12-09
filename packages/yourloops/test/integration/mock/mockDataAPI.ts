@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DataAPI from '../../../lib/data/data-api'
+import DataAPI from '../../../lib/data/data.api'
 
 const CARB_BOLUS_ID = 'carbBolusId'
 export const CBG_ID = 'cbgId'

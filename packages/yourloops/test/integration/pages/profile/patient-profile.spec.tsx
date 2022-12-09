@@ -27,7 +27,6 @@
 
 import { renderPage } from '../../utils/render'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { Preferences, Profile, Settings, UserRoles } from '../../../../models/user'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
@@ -37,9 +36,14 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { mockPatientAPI } from '../../mock/mockPatientAPI'
 import { checkPatientProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
-import { Units } from '../../../../models/generic'
-import UserApi from '../../../../lib/auth/user-api'
-import { CountryCodes, LanguageCodes } from '../../../../models/locales'
+import { Profile } from '../../../../lib/auth/models/profile.model'
+import { Settings } from '../../../../lib/auth/models/settings.model'
+import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { Preferences } from '../../../../lib/auth/models/preferences.model'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
+import UserApi from '../../../../lib/auth/user.api'
+import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
@@ -67,7 +71,7 @@ describe('Profile page for patient', () => {
       value: '7.5'
     },
     country: CountryCodes.France,
-    units: { bg: Units.mole }
+    units: { bg: UnitsType.MMOLL }
   }
   const preferences: Preferences = { displayLanguageCode: 'fr' }
 

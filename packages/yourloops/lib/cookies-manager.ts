@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import bows from 'bows'
 
-import config from './config'
+import config from './config/config'
 import metrics from './metrics'
 import { zendeskAllowCookies, zendeskTrackWidgetOpen } from './zendesk'
 
@@ -56,7 +56,7 @@ function acceptCookiesListener(choices: CookiesComplete): void {
   }
 }
 
-function initCookiesConcentListener(): void {
+function initCookiesConsentListener(): void {
   // eslint-disable-next-line no-underscore-dangle
   const axeptioCb = window._axcb
   log.debug('Waiting for acceptation')
@@ -71,4 +71,4 @@ function initCookiesConcentListener(): void {
   }
 }
 
-export default initCookiesConcentListener
+export default initCookiesConsentListener

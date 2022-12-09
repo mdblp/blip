@@ -32,10 +32,11 @@ import moment from 'moment-timezone'
 import { initReactI18next } from 'react-i18next'
 
 import locales from '../../../locales/languages.json'
-import { Country, LanguageCodes } from '../models/locales'
+import { Country } from './auth/models/country.model'
 import getLocale from './browser-locale'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
+import { LanguageCodes } from './auth/models/language-codes.model'
 
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {

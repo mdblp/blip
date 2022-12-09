@@ -24,29 +24,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { UNITS_TYPE } from '../../lib/units/utils'
+import { convertBG } from '../../lib/units/units.util'
 import { useTeam } from '../../lib/team'
-import { Monitoring } from '../../models/monitoring'
-import React, { useState, useMemo, Dispatch } from 'react'
-import PatientUtils from '../../lib/patient/utils'
-import { Patient } from '../../lib/data/patient'
-
+import { Monitoring } from '../../lib/team/models/monitoring.model'
+import React, { useMemo, useState } from 'react'
+import PatientUtils from '../../lib/patient/patient.util'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { useTranslation } from 'react-i18next'
+import { isInvalidPercentage, onBasicDropdownSelect } from './alarm-content-configuration.utils'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 export interface AlarmsContentConfigurationHookProps {
   monitoring?: Monitoring
   saveInProgress?: boolean
   patient?: Patient
   onClose?: () => void
-  onSave: (monitoring: Monitoring) => void
+  onSave?: (monitoring: Monitoring) => void
 }
 
 interface AlarmsContentConfigurationHookReturn {
-  isError: (value: number, lowValue: number, highValue: number) => boolean
-  lowBg: ValueErrorPair
-  setLowBg: React.Dispatch<ValueErrorPair>
-  veryLowBg: ValueErrorPair
-  setVeryLowBg: React.Dispatch<ValueErrorPair>
-  highBg: ValueErrorPair
-  setHighBg: React.Dispatch<ValueErrorPair>
+  lowBg: ValueErrorMessagePair
+  setLowBg: React.Dispatch<ValueErrorMessagePair>
+  veryLowBg: ValueErrorMessagePair
+  setVeryLowBg: React.Dispatch<ValueErrorMessagePair>
+  highBg: ValueErrorMessagePair
+  setHighBg: React.Dispatch<ValueErrorMessagePair>
   nonDataTxThreshold: ValueErrorPair
   setNonDataTxThreshold: React.Dispatch<ValueErrorPair>
   outOfRangeThreshold: ValueErrorPair
@@ -58,53 +59,71 @@ interface AlarmsContentConfigurationHookReturn {
   save: () => void
   resetToTeamDefaultValues: () => void
   onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
-  MIN_HIGH_BG: number
-  MAX_HIGH_BG: number
-  MIN_VERY_LOW_BG: number
-  MAX_VERY_LOW_BG: number
-  MIN_LOW_BG: number
-  MAX_LOW_BG: number
-  PERCENTAGES: string[]
-  bgUnit: UNITS_TYPE
+  bgUnit: UnitsType
+  thresholds: Record<string, number>
+}
+
+interface ValueErrorMessagePair {
+  value?: number
+  errorMessage?: string
 }
 
 interface ValueErrorPair {
   value?: number
-  error: boolean
+  error?: boolean
 }
 
-export const MIN_HIGH_BG = 140
-export const MAX_HIGH_BG = 250
-export const MIN_VERY_LOW_BG = 40
-export const MAX_VERY_LOW_BG = 90
-export const MIN_LOW_BG = 50
-export const MAX_LOW_BG = 100
+export const DEFAULT_THRESHOLDS_IN_MGDL = {
+  MIN_HIGH_BG: 140,
+  MAX_HIGH_BG: 250,
+  MIN_VERY_LOW_BG: 40,
+  MAX_VERY_LOW_BG: 90,
+  MIN_LOW_BG: 50,
+  MAX_LOW_BG: 100
+}
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
 
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
-  const bgUnit = monitoring?.parameters?.bgUnit ?? UNITS_TYPE.MGDL
-  const isInvalidPercentage = (value: number): boolean => {
-    return !PERCENTAGES.includes(`${value}%`)
+  const bgUnit = monitoring?.parameters?.bgUnit ?? UnitsType.MGDL
+  const thresholds = { ...DEFAULT_THRESHOLDS_IN_MGDL }
+  const { t } = useTranslation('yourloops')
+  const convertThresholdsToMmol = (): void => {
+    if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UnitsType.MMOLL) {
+      thresholds.MIN_HIGH_BG = Math.round(convertBG(thresholds.MIN_HIGH_BG, UnitsType.MGDL) * 10) / 10
+      thresholds.MAX_HIGH_BG = Math.round(convertBG(thresholds.MAX_HIGH_BG, UnitsType.MGDL) * 10) / 10
+      thresholds.MIN_VERY_LOW_BG = Math.round(convertBG(thresholds.MIN_VERY_LOW_BG, UnitsType.MGDL) * 10) / 10
+      thresholds.MAX_VERY_LOW_BG = Math.round(convertBG(thresholds.MAX_VERY_LOW_BG, UnitsType.MGDL) * 10) / 10
+      thresholds.MIN_LOW_BG = Math.round(convertBG(thresholds.MIN_LOW_BG, UnitsType.MGDL) * 10) / 10
+      thresholds.MAX_LOW_BG = Math.round(convertBG(thresholds.MAX_LOW_BG, UnitsType.MGDL) * 10) / 10
+    }
   }
-  const isError = (value: number, lowValue: number, highValue: number): boolean => {
-    const isInRange: boolean = value >= lowValue && value <= highValue
-    const isInteger: boolean = bgUnit === UNITS_TYPE.MGDL && Number.isInteger(value)
-    const isFloat: boolean = bgUnit === UNITS_TYPE.MMOLL && value % 1 !== 0
-    return !(isInRange && (isInteger || isFloat))
+  convertThresholdsToMmol()
+
+  const getIsErrorMessage = (value: number, lowValue: number, highValue: number): string => {
+    if (bgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
+      return t('mandatory-integer')
+    }
+    if (value < lowValue || value > highValue) {
+      return t('mandatory-range', { bgUnit, lowValue, highValue })
+    }
+    if (bgUnit === UnitsType.MMOLL && !(value % 1 !== 0)) {
+      return t('mandatory-float')
+    }
+    return null
   }
   const teamHook = useTeam()
-  const [highBg, setHighBg] = useState<ValueErrorPair>({
+  const [highBg, setHighBg] = useState<ValueErrorMessagePair>({
     value: monitoring?.parameters?.highBg,
-    error: !monitoring?.parameters?.highBg || isError(monitoring?.parameters?.highBg, MIN_HIGH_BG, MAX_HIGH_BG)
+    errorMessage: getIsErrorMessage(monitoring?.parameters?.highBg, thresholds.MIN_HIGH_BG, thresholds.MAX_HIGH_BG)
   })
-  const [veryLowBg, setVeryLowBg] = useState<ValueErrorPair>({
+  const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>({
     value: monitoring?.parameters?.veryLowBg,
-    error: !monitoring?.parameters?.veryLowBg || isError(monitoring?.parameters?.veryLowBg, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG)
+    errorMessage: getIsErrorMessage(monitoring?.parameters?.veryLowBg, thresholds.MIN_VERY_LOW_BG, thresholds.MAX_VERY_LOW_BG)
   })
-  const [lowBg, setLowBg] = useState<ValueErrorPair>({
+  const [lowBg, setLowBg] = useState<ValueErrorMessagePair>({
     value: monitoring?.parameters?.lowBg,
-    error: !monitoring?.parameters?.lowBg || isError(monitoring?.parameters?.lowBg, MIN_LOW_BG, MAX_LOW_BG)
+    errorMessage: getIsErrorMessage(monitoring?.parameters?.lowBg, thresholds.MIN_LOW_BG, thresholds.MAX_LOW_BG)
   })
   const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(
     {
@@ -122,23 +141,23 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       error: monitoring?.parameters?.hypoThreshold === undefined || isInvalidPercentage(monitoring.parameters.hypoThreshold)
     })
   const saveButtonDisabled = useMemo(() => {
-    return lowBg.error ||
-      highBg.error ||
-      veryLowBg.error ||
+    return !!lowBg.errorMessage ||
+      !!highBg.errorMessage ||
+      !!veryLowBg.errorMessage ||
       outOfRangeThreshold.error ||
       hypoThreshold.error ||
       nonDataTxThreshold.error ||
       saveInProgress
-  }, [highBg.error, hypoThreshold.error, lowBg.error, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.error])
+  }, [highBg.errorMessage, hypoThreshold.error, lowBg.errorMessage, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.errorMessage])
   const onChange = (
     value: number,
     lowValue: number,
     highValue: number,
-    setValue: React.Dispatch<ValueErrorPair>
+    setValue: React.Dispatch<ValueErrorMessagePair>
   ): void => {
     setValue({
       value,
-      error: isError(value, lowValue, highValue)
+      errorMessage: getIsErrorMessage(value, lowValue, highValue)
     })
   }
 
@@ -178,7 +197,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
         status: monitoring?.status,
         monitoringEnd: monitoring?.monitoringEnd,
         parameters: {
-          bgUnit: monitoring?.parameters?.bgUnit ?? UNITS_TYPE.MGDL,
+          bgUnit: monitoring?.parameters?.bgUnit ?? UnitsType.MGDL,
           lowBg: lowBg.value,
           highBg: highBg.value,
           outOfRangeThreshold: outOfRangeThreshold.value,
@@ -193,17 +212,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       throw Error('Cannot update team monitoring as some values are not defined')
     }
   }
-
-  const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
-    const valueAsNumber = +value.slice(0, -1)
-    setValue({
-      value: valueAsNumber,
-      error: false
-    })
-  }
-
   return {
-    isError,
     lowBg,
     saveButtonDisabled,
     onBasicDropdownSelect,
@@ -221,14 +230,8 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     setHypoThreshold,
     setVeryLowBg,
     setNonDataTxThreshold,
-    MIN_HIGH_BG,
-    MAX_HIGH_BG,
-    MAX_LOW_BG,
-    MAX_VERY_LOW_BG,
-    MIN_VERY_LOW_BG,
-    MIN_LOW_BG,
-    PERCENTAGES,
-    bgUnit
+    bgUnit,
+    thresholds
   }
 }
 export default useAlarmsContentConfiguration

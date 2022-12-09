@@ -25,17 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import TeamAPI from '../../../lib/team/team-api'
-import { UNITS_TYPE } from '../../../lib/units/utils'
-import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration.hook'
-import { ITeam, TeamMemberRole, TeamType } from '../../../models/team'
+import TeamAPI from '../../../lib/team/team.api'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
+import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { loggedInUserId } from './mockAuth0Hook'
-import { HcpProfession } from '../../../models/hcp-profession'
-import { UserInvitationStatus } from '../../../models/generic'
-import { MonitoringStatus } from '../../../models/monitoring'
+import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
+import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
+import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
+import { Team } from '../../../lib/team'
+import { Profile } from '../../../lib/auth/models/profile.model'
+import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms-content-configuration.hook'
 
+const {
+  MIN_VERY_LOW_BG,
+  MIN_LOW_BG,
+  MIN_HIGH_BG
+} = DEFAULT_THRESHOLDS_IN_MGDL
 export const monitoringParameters = {
-  bgUnit: UNITS_TYPE.MGDL,
+  bgUnit: UnitsType.MGDL,
   lowBg: MIN_LOW_BG,
   highBg: MIN_HIGH_BG,
   outOfRangeThreshold: 5,
@@ -45,7 +53,7 @@ export const monitoringParameters = {
   reportingPeriod: 7
 }
 export const monitoringParametersBgUnitMmol = {
-  bgUnit: UNITS_TYPE.MMOLL,
+  bgUnit: UnitsType.MMOLL,
   lowBg: 50.5,
   highBg: 140.5,
   outOfRangeThreshold: 5,
@@ -58,7 +66,7 @@ export const monitoringParametersBgUnitMmol = {
 export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
 export const myThirdTeamId = '62fe00defc9374b2fed32bce'
 
-export const teamOne: ITeam = {
+export const teamOne: Team = {
   name: 'MyTeam',
   id: '62fe00defc9374b2fed32bcc',
   code: '036038775',
@@ -68,7 +76,6 @@ export const teamOne: ITeam = {
   address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
   members: [{
     userId: loggedInUserId,
-    teamId: '62fe00defc9374b2fed32bcc',
     role: TeamMemberRole.admin,
     profile: {
       email: 'hey@hey.hey',
@@ -78,17 +85,13 @@ export const teamOne: ITeam = {
       lastName: 'HCP 0',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
-    settings: null,
-    preferences: { displayLanguageCode: 'en' },
-    invitationStatus: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-    idVerified: false,
-    unreadMessages: 0
+    } as Profile,
+    status: UserInvitationStatus.accepted,
+    email: 'ylp.ui.test.hcp.28@diabeloop.fr'
   }]
 }
 
-export const teamTwo: ITeam = {
+export const teamTwo: Team = {
   name: 'MySecondTeam',
   id: mySecondTeamId,
   code: '241548778',
@@ -98,7 +101,6 @@ export const teamTwo: ITeam = {
   address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
   members: [{
     userId: loggedInUserId,
-    teamId: mySecondTeamId,
     role: TeamMemberRole.admin,
     profile: {
       email: 'ylp.ui.test.hcp.28@diabeloop.fr',
@@ -108,13 +110,9 @@ export const teamTwo: ITeam = {
       lastName: 'HCP 0',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
-    settings: null,
-    preferences: { displayLanguageCode: 'en' },
-    invitationStatus: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-    idVerified: false,
-    unreadMessages: 0
+    } as Profile,
+    status: UserInvitationStatus.accepted,
+    email: 'ylp.ui.test.hcp.28@diabeloop.fr'
   }],
   monitoring: {
     enabled: true,
@@ -124,7 +122,7 @@ export const teamTwo: ITeam = {
   }
 }
 
-export const teamThree: ITeam = {
+export const teamThree: Team = {
   name: 'MyThirdTeam - to be deleted',
   id: myThirdTeamId,
   code: '263381988',
@@ -134,7 +132,6 @@ export const teamThree: ITeam = {
   address: { line1: 'Guiness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'IE' },
   members: [{
     userId: loggedInUserId,
-    teamId: myThirdTeamId,
     role: TeamMemberRole.admin,
     profile: {
       email: 'ylp.ui.test.hcp.28@diabeloop.fr',
@@ -144,16 +141,11 @@ export const teamThree: ITeam = {
       lastName: 'HCP 0',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
-    settings: null,
-    preferences: { displayLanguageCode: 'en' },
-    invitationStatus: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-    idVerified: false,
-    unreadMessages: 0
+    } as Profile,
+    status: UserInvitationStatus.accepted,
+    email: 'ylp.ui.test.hcp.28@diabeloop.fr'
   }, {
     userId: '4d9afc649ae4',
-    teamId: myThirdTeamId,
     role: TeamMemberRole.admin,
     profile: {
       email: 'ylp.ui.test.hcp.28@diabeloop.fr',
@@ -163,13 +155,9 @@ export const teamThree: ITeam = {
       lastName: 'HCP 1',
       privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
       termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    },
-    settings: null,
-    preferences: { displayLanguageCode: 'en' },
-    invitationStatus: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28.1@diabeloop.fr',
-    idVerified: false,
-    unreadMessages: 0
+    } as Profile,
+    status: UserInvitationStatus.accepted,
+    email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
   }]
 }
 

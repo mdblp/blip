@@ -29,11 +29,11 @@ import { act, screen } from '@testing-library/react'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/mockUserApi'
-import { UserRoles } from '../../../../models/user'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
-import { CountryCodes } from '../../../../models/locales'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { CountryCodes } from '../../../../lib/auth/models/country.model'
 
 describe('Signup stepper as caregiver', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
