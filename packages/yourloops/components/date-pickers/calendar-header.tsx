@@ -185,7 +185,8 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
         aria-label={t('aria-calendar-button-prev-month')}
         onClick={onPrevButtonEvent}
         onKeyUp={onPrevButtonEvent}
-        size="large">
+        size="large"
+      >
         <NavigateBeforeIcon />
       </IconButton>
 
@@ -201,7 +202,8 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
         aria-label={t('aria-calendar-button-next-month')}
         onClick={onNextButtonEvent}
         onKeyUp={onNextButtonEvent}
-        size="large">
+        size="large"
+      >
         <NavigateNextIcon />
       </IconButton>
     </div>

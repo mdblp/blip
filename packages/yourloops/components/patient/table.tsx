@@ -89,7 +89,7 @@ const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-table' })((theme: 
     }
   }
 })
-// TODO jss-to-tss-react codemod: usages of this hook outside of this file will not be converted.
+
 export const patientListCommonStyle = makeStyles()(() => {
   return {
     largeCell: {

@@ -206,18 +206,12 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   let ariaModal: string
   let modalTitle: string
   let modalButtonValidate: string
-  let infoLine = null
   let warningLines = null
   if (team === null) {
     // Create a new team
     ariaModal = t('button-create-a-team')
     modalTitle = t('team-modal-add-title')
     modalButtonValidate = t('button-create-team')
-    infoLine = (
-      <Box paddingX={2} paddingBottom={2}>
-        <span id="team-edit-dialog-info-line">{t('team-modal-create-info')}</span>
-      </Box>
-    )
     const termsOfUse = t('terms-of-use')
     const linkTerms = (
       <Link aria-label={termsOfUse} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
@@ -258,11 +252,16 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
       fullWidth
       fullScreen={isXSBreakpoint}
     >
-      <DialogTitle id="team-edit-dialog-title">
+      <DialogTitle>
         <strong>{modalTitle}</strong>
       </DialogTitle>
 
-      {infoLine ?? <Box />}
+      {team
+        ? <Box paddingX={2} paddingBottom={2}>
+          <span id="team-edit-dialog-info-line">{t('team-modal-create-info')}</span>
+        </Box>
+        : <Box />
+      }
 
       <DialogContent className={classes.dialogContent}>
         <Box display="flex" flexDirection="column">
