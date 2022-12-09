@@ -170,7 +170,6 @@ class Stat extends React.Component {
     const showSummary = this.props.alwaysShowSummary || !this.state.isOpened
     const summaryDataValue = _.get(summaryData, 'value')
 
-    // console.log(summaryDataValue)
     return (
       <div className={styles.chartSummary}>
         {summaryDataValue && showSummary && (
@@ -286,8 +285,6 @@ class Stat extends React.Component {
           break
       }
     }
-
-    console.log(calc.result)
 
     const outputValueClasses = cx({
       [styles.outputValue]: true,

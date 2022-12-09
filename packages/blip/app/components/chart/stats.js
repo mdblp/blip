@@ -9,7 +9,9 @@ import {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
-  LoopModeStat, StatBoy,
+  LoopModeStat,
+  SimpleStat,
+  InputStat,
   TotalCarbsStat,
   TotalInsulinStat
 } from 'dumb'
@@ -192,17 +194,32 @@ class Stats extends React.Component {
               <Divider variant="fullWidth" />
             </div>
           )
-        default:
-          return (
-            <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
+        default: {
+          if (stat.type === 'simple') {
+            return (
+              <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
               AAAAAAAAAAAAAAAAAAAAAAA
-              <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-              <StatBoy hideToolTips={hideToolTips} {...stat} />
+                <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+                <SimpleStat hideToolTips={hideToolTips} {...stat} />
               AAAAAAAAAAAAAAAAAAAAAAA
-              <Divider variant="fullWidth" />
-            </div>
-          )
+                <Divider variant="fullWidth" />
+              </div>
+            )
+          }
+          if (stat.type === 'input') {
+            return (
+              <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
+              AAAAAAAAAAAAAAAAAAAAAAA
+                <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+                <InputStat hideToolTips={hideToolTips} {...stat} />
+              AAAAAAAAAAAAAAAAAAAAAAA
+                <Divider variant="fullWidth" />
+              </div>
+            )
+          }
+        }
       }
+      throw Error(`Stat id ${stat.id} and type ${stat.type}`)
     })
   }
 
