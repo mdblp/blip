@@ -9,7 +9,7 @@ import {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
-  LoopModeStat,
+  LoopModeStat, StatBoy,
   TotalCarbsStat,
   TotalInsulinStat
 } from 'dumb'
@@ -104,6 +104,7 @@ class Stats extends React.Component {
       target: bgPrefs.bgClasses.target.boundary,
       veryLow: bgPrefs.bgClasses['very-low'].boundary
     }
+    // console.log(stats)
     return stats.map(stat => {
       switch (stat.id) {
         case CBGStatType.TimeInAuto:
@@ -194,7 +195,10 @@ class Stats extends React.Component {
         default:
           return (
             <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
+              AAAAAAAAAAAAAAAAAAAAAAA
               <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+              <StatBoy hideToolTips={hideToolTips} {...stat} />
+              AAAAAAAAAAAAAAAAAAAAAAA
               <Divider variant="fullWidth" />
             </div>
           )

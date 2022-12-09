@@ -47,6 +47,7 @@ import Tooltip from './components/tooltips/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
+import { StatBoy } from './components/stats/stats'
 
 export {
   BloodGlucoseTooltip,
@@ -62,6 +63,7 @@ export {
   PhysicalTooltip,
   PumpTable,
   ReservoirTooltip,
+  StatBoy,
   StatTooltip,
   TerminalTable,
   Tooltip,

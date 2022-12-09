@@ -223,6 +223,7 @@ const DeviceUsage = (props) => {
             dataUtil={dataUtil}
             endpoints={endpoints}
             loading={loading}
+            hideToolTips={true}
           />
           <BasicsChart
             //eslint-disable-next-line

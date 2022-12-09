@@ -30,6 +30,7 @@ import { convertBG, TimePrefs, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
 import { BgClass, BgPrefs } from '../../models/blood-glucose.model'
+import _ from 'lodash'
 
 const t = i18next.t.bind(i18next)
 
@@ -116,4 +117,18 @@ const getDecimalsCount = (unit: Unit): number => {
     default:
       return 2
   }
+}
+/**
+ * formatDecimalNumber
+ * @param {Number} val - numeric value to format
+ * @param {Number} [places] - optional number of decimal places to display;
+ *                            if not provided, will display as integer (0 decimal places)
+ *
+ * @return {String} numeric value rounded to the desired number of decimal places
+ */
+export const formatDecimalNumber = (val: number, places = 0): string => {
+  if (_.isNil(places)) {
+    return format('d')(val)
+  }
+  return format(`.${places}f`)(val)
 }

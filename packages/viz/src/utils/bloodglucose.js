@@ -74,7 +74,7 @@ export function classifyCvValue(value) {
     return 'target'
   }
   return 'high'
-}
+} //TODO TIM DELETE THIS METHOD
 
 /**
  * reshapeBgClassesToBgBounds

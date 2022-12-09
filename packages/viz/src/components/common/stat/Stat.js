@@ -31,10 +31,9 @@ import _ from 'lodash'
 import bows from 'bows'
 import cx from 'classnames'
 import i18next from 'i18next'
-import { SizeMe } from 'react-sizeme'
 import { formatBgValue, formatDecimalNumber, formatPercentage } from '../../../utils/format'
 import { formatDuration } from '../../../utils/datetime'
-import { classifyBgValue, classifyCvValue, generateBgRangeLabels } from '../../../utils/bloodglucose'
+import { classifyBgValue, classifyCvValue } from '../../../utils/bloodglucose'
 import { LBS_PER_KG } from '../../../utils/constants'
 import { statFormats, statTypes } from '../../../utils/stat'
 import styles from './Stat.css'
@@ -171,6 +170,7 @@ class Stat extends React.Component {
     const showSummary = this.props.alwaysShowSummary || !this.state.isOpened
     const summaryDataValue = _.get(summaryData, 'value')
 
+    // console.log(summaryDataValue)
     return (
       <div className={styles.chartSummary}>
         {summaryDataValue && showSummary && (
@@ -287,6 +287,8 @@ class Stat extends React.Component {
       }
     }
 
+    console.log(calc.result)
+
     const outputValueClasses = cx({
       [styles.outputValue]: true,
       [styles.outputValueDisabled]: calc.result.value === this.props.emptyDataPlaceholder
@@ -317,11 +319,6 @@ class Stat extends React.Component {
       <div className={styles.StatWrapper}>
         <div ref={this.setStatRef} className={statClasses}>
           {this.renderStatHeader()}
-          {this.chartProps.renderer &&
-            <div className={styles.statMain}>
-              <SizeMe render={({ size }) => (this.renderChart(size))} />
-            </div>
-          }
           {this.props.type === statTypes.input && this.renderWeight()}
           {this.state.showFooter && this.renderStatFooter()}
         </div>
@@ -466,39 +463,6 @@ class Stat extends React.Component {
     }
 
     switch (format) {
-      case statFormats.bgCount:
-        if (value >= 0) {
-          const precision = value < 0.05 ? 2 : 1
-          // Note: the + converts the rounded, fixed string back to a number
-          // This allows 2.67777777 to render as 2.7 and 3.0000001 to render as 3 (not 3.0)
-          value = +value.toFixed(precision)
-        } else {
-          disableStat()
-        }
-        break
-
-      case statFormats.bgRange:
-        value = generateBgRangeLabels(bgPrefs, { condensed: true })[id]
-        break
-
-      case statFormats.bgValue:
-        if (value >= 0) {
-          id = classifyBgValue(bgBounds, value)
-          value = formatBgValue(value, bgPrefs)
-        } else {
-          disableStat()
-        }
-        break
-
-      case statFormats.carbs:
-        if (value >= 0) {
-          value = datum.valueString
-          suffix = datum.units
-        } else {
-          disableStat()
-        }
-        break
-
       case statFormats.cv:
         if (value >= 0) {
           id = classifyCvValue(value)
