@@ -31,7 +31,6 @@ import { buildPatient } from '../../mock/mockPatientAPI'
 import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockUserApi } from '../../mock/mockUserApi'
-import { createMemoryHistory } from 'history'
 
 describe('Training page when new training available', () => {
   beforeAll(() => {
