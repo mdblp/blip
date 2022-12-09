@@ -28,6 +28,7 @@
 import * as auth0Mock from '@auth0/auth0-react'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
+import { Profile } from '../../../lib/auth/models/profile.model'
 
 export const loggedInUserId = '919b1575bad58'
 export const loggedInUserEmail = 'john.doe@example.com'
@@ -41,6 +42,9 @@ export const mockAuth0Hook = (role: UserRoles = UserRoles.hcp, userId = loggedIn
       email_verified: true,
       sub: 'auth0|' + userId,
       [AuthenticatedUserMetadata.Roles]: [role]
+    },
+    updateProfile: async function (profile: Profile): Promise<void> {
+      console.log(profile)
     }
   })
 }
