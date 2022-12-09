@@ -46,6 +46,7 @@ describe('Notification', () => {
     creator: {
       userid: '1',
       profile: {
+        email: 'jeanne.dubois@email.com',
         fullName: 'Jeanne Dubois'
       } as Profile
     },
@@ -61,6 +62,7 @@ describe('Notification', () => {
     creator: {
       userid: '1',
       profile: {
+        email: 'jeanne.dubois@email.com',
         fullName: 'Jeanne Dubois'
       } as Profile
     },

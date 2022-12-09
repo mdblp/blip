@@ -29,14 +29,15 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory, useParams } from 'react-router-dom'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import Box from '@material-ui/core/Box'
-import DesktopMacIcon from '@material-ui/icons/DesktopMac'
-import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import Box from '@mui/material/Box'
+import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
 import { Team, useTeam } from '../../lib/team'
 import BasicDropdown from '../../components/dropdown/basic-dropdown'
@@ -46,7 +47,7 @@ import { commonComponentStyles } from '../../components/common'
 import { useAuth } from '../../lib/auth'
 import TeamAlarmsConfiguration from '../../components/team/team-alarms-configuration'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   activeLink: {
     color: theme.palette.primary.main
   },
@@ -94,8 +95,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function TeamDetailsPage(): JSX.Element {
   const { getTeam, getMedicalTeams } = useTeam()
-  const classes = useStyles()
-  const commonTeamClasses = commonComponentStyles()
+  const { classes } = useStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
   const history = useHistory()
   const authContext = useAuth()
@@ -145,7 +146,11 @@ function TeamDetailsPage(): JSX.Element {
       {dropdownData.selectedTeam &&
         <Box role="main" paddingLeft={2}>
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.disableRipple} aria-label="back-button" onClick={redirectToDashboard}>
+            <IconButton
+              className={classes.disableRipple}
+              aria-label="back-button"
+              onClick={redirectToDashboard}
+              size="large">
               <ArrowBackIcon />
             </IconButton>
             <GroupOutlinedIcon />
@@ -196,7 +201,7 @@ function TeamDetailsPage(): JSX.Element {
                     onClick={() => scrollTo(teamAlarms)}
                     onKeyDown={() => scrollTo(teamAlarms)}
                   >
-                    <DesktopMacIcon className={commonTeamClasses.icon} />
+                    <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                     <Typography className={classes.title}>
                       {t('events-configuration')}
                     </Typography>

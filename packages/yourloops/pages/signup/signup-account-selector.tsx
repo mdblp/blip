@@ -28,12 +28,13 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Radio from '@material-ui/core/Radio'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import Paper from '@material-ui/core/Paper'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import Paper from '@mui/material/Paper'
 
 import metrics from '../../lib/metrics'
 import SignupRadioLabel from './signup-radio-label'
@@ -43,7 +44,7 @@ import { SignUpFormProps } from './signup-stepper'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   Paper: {
     textAlign: 'start',
     marginTop: theme.spacing(2),
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { signupForm, updateForm } = useSignUpFormState()
   const { handleBack, handleNext } = props
 
@@ -85,7 +86,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             className={classes.FormControlLabel}
             value={UserRoles.caregiver}
             aria-label={t('create-caregiver-account')}
-            control={<Radio color="primary" />}
+            control={<Radio />}
             label={
               <SignupRadioLabel
                 header={t('caregiver-and-family')}
@@ -99,7 +100,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             className={classes.FormControlLabel}
             value={UserRoles.hcp}
             aria-label={t('hcp-radio-input')}
-            control={<Radio color="primary" />}
+            control={<Radio />}
             label={
               <SignupRadioLabel
                 header={t('professional')}
@@ -114,7 +115,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             className={classes.FormControlLabel}
             value={UserRoles.patient}
             aria-label={t('create-patient-account')}
-            control={<Radio color="primary" />}
+            control={<Radio />}
             label={
               <SignupRadioLabel
                 header={t('patient')}

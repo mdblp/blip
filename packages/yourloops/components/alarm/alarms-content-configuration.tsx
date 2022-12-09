@@ -28,15 +28,16 @@
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Divider from '@material-ui/core/Divider'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import Typography from '@mui/material/Typography'
 
 import BasicDropdown from '../dropdown/basic-dropdown'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 import { Monitoring } from '../../lib/team/models/monitoring.model'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { convertBG } from '../../lib/units/units.util'
 import { useTeam } from '../../lib/team'
@@ -44,7 +45,7 @@ import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
     marginRight: theme.spacing(2)
   },
@@ -112,10 +113,9 @@ export const MAX_LOW_BG = 100
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
 
-// eslint-disable-next-line complexity
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { monitoring, saveInProgress, patient, onSave, onClose } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const teamHook = useTeam()
   const { t } = useTranslation('yourloops')
 
@@ -277,7 +277,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   error={lowBg.error}
                   type="number"
                   className={classes.textField}
-                  variant="outlined"
                   size="small"
                   InputProps={{
                     inputProps: {
@@ -298,7 +297,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   error={highBg.error}
                   type="number"
                   className={classes.textField}
-                  variant="outlined"
                   size="small"
                   InputProps={{
                     inputProps: {
@@ -357,7 +355,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 error={veryLowBg.error}
                 type="number"
                 className={classes.textField}
-                variant="outlined"
                 size="small"
                 InputProps={{
                   inputProps: {

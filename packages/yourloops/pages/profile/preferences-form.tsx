@@ -28,13 +28,13 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Tune from '@material-ui/icons/Tune'
+import Tune from '@mui/icons-material/Tune'
 
-import Box from '@material-ui/core/Box'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 
 import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
@@ -50,7 +50,7 @@ const PreferencesForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { profileForm, updateProfileForm } = useProfilePageState()
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
 
   return (
     <React.Fragment>
@@ -60,7 +60,7 @@ const PreferencesForm: FunctionComponent = () => {
       </Box>
 
       <Box className={classes.inputContainer}>
-        <FormControl className={classes.formInput}>
+        <FormControl variant="standard" className={classes.formInput}>
           <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
             disabled={user.role === UserRoles.patient}
@@ -78,7 +78,7 @@ const PreferencesForm: FunctionComponent = () => {
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl className={classes.formInput}>
+        <FormControl variant="standard" className={classes.formInput}>
           <InputLabel id="profile-language-input-label">{t('language')}</InputLabel>
           <Select
             labelId="locale-selector"

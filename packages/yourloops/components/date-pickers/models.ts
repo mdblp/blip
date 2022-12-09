@@ -26,7 +26,7 @@
  */
 
 import { Dayjs } from 'dayjs'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 
 export type CalendarOrientation = 'landscape' | 'portrait'
 export type CalendarPosition = 'first' | 'last'
@@ -69,7 +69,7 @@ export const MIN_YEAR = 1900
 /** Exclusive */
 export const MAX_YEAR = 2100
 
-export const animationStyle = makeStyles(() => {
+export const animationStyle = makeStyles({ name: 'date-pickers-calendar-animation' })(() => {
   const keyFrames = {
     '@keyframes calendar-translate-ltr': {
       from: {
@@ -105,4 +105,4 @@ export const animationStyle = makeStyles(() => {
       animationDelay: '50ms'
     }
   }
-}, { name: 'date-pickers-calendar-animation' })
+})

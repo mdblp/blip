@@ -26,14 +26,15 @@
  */
 
 import React from 'react'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 
-const languageSelectStyle = makeStyles((theme: Theme) => {
+const languageSelectStyle = makeStyles()((theme: Theme) => {
   return {
     select: {
       fontSize: '12px',
@@ -45,18 +46,18 @@ const languageSelectStyle = makeStyles((theme: Theme) => {
 function LanguageSelect(): JSX.Element {
   const { i18n } = useTranslation()
   const [val, setVal] = React.useState(i18n.language)
-  const classes = languageSelectStyle()
+  const { classes } = languageSelectStyle()
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
+  const handleChange = async (event: SelectChangeEvent<unknown>): Promise<void> => {
     const lang = event.target.value as string
-    i18n.changeLanguage(lang)
+    await i18n.changeLanguage(lang)
     setVal(lang)
   }
 
   const langs = []
   for (const lang in i18n.options.resources) {
     if (Object.prototype.hasOwnProperty.call(i18n.options.resources, lang)) {
-      const language = i18n.options.resources[lang].name
+      const language = i18n.options.resources[lang].name as string
       langs.push(
         <MenuItem id={`language-selector-${lang}`} key={lang} value={lang}>
           {language}
@@ -66,7 +67,7 @@ function LanguageSelect(): JSX.Element {
   }
 
   return (
-    <FormControl>
+    <FormControl variant="standard">
       <Select
         id="language-selector"
         name="language-select"
