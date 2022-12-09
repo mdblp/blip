@@ -29,19 +29,21 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Badge from '@material-ui/core/Badge'
-import Box from '@material-ui/core/Box'
-import Divider from '@material-ui/core/Divider'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListSubheader from '@material-ui/core/ListSubheader'
-import MenuItem from '@material-ui/core/MenuItem'
-import Typography from '@material-ui/core/Typography'
+import { Theme, useTheme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Badge from '@mui/material/Badge'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListSubheader from '@mui/material/ListSubheader'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
 
 import { Team, useTeam } from '../../lib/team'
 import MenuLayout from '../../layout/menu-layout'
@@ -54,7 +56,7 @@ import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import { errorTextFromException } from '../../lib/utils'
 import DirectShareApi from '../../lib/share/direct-share.api'
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
     marginRight: theme.spacing(2)
   },
@@ -77,7 +79,7 @@ const classes = makeStyles((theme: Theme) => ({
 
 function TeamMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const { badge, teamIcon, clickableMenu, separator } = classes()
+  const { classes: { badge, teamIcon, clickableMenu, separator } } = classes()
   const { teams, createTeam, joinTeam } = useTeam()
   const history = useHistory()
   const alert = useAlert()
@@ -195,18 +197,17 @@ function TeamMenu(): JSX.Element {
 
         {filteredTeams.length
           ? filteredTeams.map(team => (
-            <ListItem
+            <ListItemButton
               key={team.id}
               id={`team-menu-list-item-${team.id}`}
               className="team-menu-list-item"
-              button
               onClick={() => {
                 redirectToTeamDetails(team.id)
               }}
             >
               <Box marginX={1}>•</Box>
               <Typography>{team.name}</Typography>
-            </ListItem>
+            </ListItemButton>
           ))
           : <ListItem>
             <Typography>{t('care-team-no-membership')}</Typography>

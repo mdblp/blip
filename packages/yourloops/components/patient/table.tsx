@@ -28,16 +28,17 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Paper from '@material-ui/core/Paper'
-import Table from '@material-ui/core/Table'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import TableBody from '@material-ui/core/TableBody'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
-import { TablePagination, Typography } from '@material-ui/core'
-import InfoIcon from '@material-ui/icons/Info'
+import Paper from '@mui/material/Paper'
+import Table from '@mui/material/Table'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import TableBody from '@mui/material/TableBody'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import TableSortLabel from '@mui/material/TableSortLabel'
+import { TablePagination, Typography } from '@mui/material'
+import InfoIcon from '@mui/icons-material/Info'
 
 import PatientRow from './patient-row'
 import { StyledTableCell, StyledTooltip } from '../styled-components'
@@ -47,51 +48,49 @@ import { PatientTableSortFields } from './models/enums/patient-table-sort-fields
 import { Patient } from '../../lib/patient/models/patient.model'
 import { SortDirection } from './models/enums/sort-direction.enum'
 
-const patientListStyle = makeStyles(
-  (theme: Theme) => {
-    return {
-      flagSort: {
-        width: '100%',
-        justifyContent: 'center'
+const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-table' })((theme: Theme) => {
+  return {
+    flagSort: {
+      width: '100%',
+      justifyContent: 'center'
+    },
+    pagination: {
+      '& .MuiTablePagination-spacer': {
+        display: 'none'
       },
-      pagination: {
-        '& .MuiTablePagination-spacer': {
-          display: 'none'
-        },
-        '& .MuiTablePagination-caption:last-of-type': {
-          marginLeft: 'auto'
-        }
-      },
-      infoIcon: {
-        marginLeft: theme.spacing(1),
-        marginRight: '2px'
-      },
-      tableContainer: {
-        boxShadow: theme.shadows[2]
-      },
-      tableRowHeader: {
-        padding: 0,
-        height: '62px'
-      },
-      tableCellHeader: {
-        backgroundColor: theme.palette.common.white,
-        fontSize: '15px',
-        fontWeight: 600,
-        padding: 0,
-        paddingLeft: '11px'
-      },
-      alertTimeTargetHeader: {
-        maxWidth: '210px'
-      },
-      tableHeaderIcon: {
-        width: '56px',
-        padding: 0
+      '& .MuiTablePagination-caption:last-of-type': {
+        marginLeft: 'auto'
       }
+    },
+    infoIcon: {
+      marginLeft: theme.spacing(1),
+      marginRight: '2px'
+    },
+    tableContainer: {
+      boxShadow: theme.shadows[2]
+    },
+    tableRowHeader: {
+      padding: 0,
+      height: '62px'
+    },
+    tableCellHeader: {
+      backgroundColor: theme.palette.common.white,
+      fontSize: '15px',
+      fontWeight: 600,
+      padding: 0,
+      paddingLeft: '11px'
+    },
+    alertTimeTargetHeader: {
+      maxWidth: '210px'
+    },
+    tableHeaderIcon: {
+      width: '56px',
+      padding: 0
     }
-  },
-  { name: 'ylp-hcp-patients-table' }
-)
-export const patientListCommonStyle = makeStyles(() => {
+  }
+})
+
+export const patientListCommonStyle = makeStyles()(() => {
   return {
     largeCell: {
       maxWidth: '300px'
@@ -100,8 +99,7 @@ export const patientListCommonStyle = makeStyles(() => {
       maxWidth: '200px'
     }
   }
-}
-)
+})
 
 function PatientTable(props: PatientTableProps): JSX.Element {
   const {
@@ -112,8 +110,8 @@ function PatientTable(props: PatientTableProps): JSX.Element {
     onSortList
   } = props
   const { t } = useTranslation('yourloops')
-  const classes = patientListStyle()
-  const patientListCommonClasses = patientListCommonStyle()
+  const { classes } = patientListStyle()
+  const { classes: patientListCommonClasses } = patientListCommonStyle()
   const authHook = useAuth()
   const isUserHcp = authHook.user?.isUserHcp()
   const [page, setPage] = React.useState<number>(0)

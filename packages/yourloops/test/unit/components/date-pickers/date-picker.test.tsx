@@ -284,7 +284,7 @@ describe('Date picker', () => {
 
     const buttonYear = document.getElementById('date-picker-button-change-year')
     expect(buttonYear).not.toBeNull()
-    expect(buttonYear.querySelector('.MuiButton-label').innerHTML).toBe('2021')
+    expect(buttonYear.textContent).toBe('2021')
 
     buttonYear.click()
     await waitTimeout(1)

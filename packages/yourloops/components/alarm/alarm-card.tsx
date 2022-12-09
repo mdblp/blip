@@ -28,17 +28,18 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Box, CardHeader, IconButton } from '@material-ui/core'
-import TuneIcon from '@material-ui/icons/Tune'
-import AnnouncementIcon from '@material-ui/icons/Announcement'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import { Box, CardHeader, IconButton } from '@mui/material'
+import TuneIcon from '@mui/icons-material/Tune'
+import AnnouncementIcon from '@mui/icons-material/Announcement'
 
-import Card from '@material-ui/core/Card'
+import Card from '@mui/material/Card'
 import PatientAlarmDialog from './patient-alarm-dialog'
 import { useAuth } from '../../lib/auth'
 import { Patient } from '../../lib/patient/models/patient.model'
 
-const alarmCardStyles = makeStyles((theme: Theme) => {
+const alarmCardStyles = makeStyles()((theme: Theme) => {
   return {
     alertColor: {
       color: theme.palette.warning.main
@@ -66,7 +67,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   const { patient } = props
   const authHook = useAuth()
   const loggedInUser = authHook.user
-  const classes = alarmCardStyles()
+  const { classes } = alarmCardStyles()
   const [showPatientAlarmDialog, setShowPatientAlarmDialog] = useState(false)
   const timeSpentAwayFromTargetActive = patient.metadata.alarm.timeSpentAwayFromTargetActive
   const frequencyOfSevereHypoglycemiaActive = patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive
@@ -101,8 +102,12 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         action={
           <div>
             {!loggedInUser?.isUserPatient() &&
-              <IconButton id="configure-icon-button-id" aria-label={t('configure-alarms')} data-testid="alarm-card-configure-button"
-                onClick={() => setShowPatientAlarmDialog(true)}>
+              <IconButton
+                id="configure-icon-button-id"
+                aria-label="settings"
+                data-testid="alarm-card-configure-button"
+                onClick={() => setShowPatientAlarmDialog(true)}
+                size="large">
                 <TuneIcon />
               </IconButton>
             }

@@ -34,7 +34,7 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import * as patientHook from '../../../../lib/patient/patient.provider'
 import { Alarm } from '../../../../lib/patient/models/alarm.model'
 import { Monitoring } from '../../../../lib/team/models/monitoring.model'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import PatientAlarmDialog from '../../../../components/alarm/patient-alarm-dialog'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
@@ -88,12 +88,12 @@ describe('PatientAlarmDialog', () => {
   function mountComponent(props: PatientInfoWidgetProps = { patient }) {
     act(() => {
       render(
-        <ThemeProvider theme={getTheme()}>
-          <PatientAlarmDialog
-            patient={props.patient}
-            onClose={onClose}
-          />
-        </ThemeProvider>, container)
+          <ThemeProvider theme={getTheme()}>
+            <PatientAlarmDialog
+              patient={props.patient}
+              onClose={onClose}
+            />
+          </ThemeProvider>, container)
     })
   }
 

@@ -38,11 +38,11 @@ import {
 } from '../tooltip/tooltip'
 import styles from './food-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
-import i18next from 'i18next'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { Meal, Prescriptor, TimePrefs } from 'medical-domain'
+import { useTranslation } from 'react-i18next'
 
 interface FoodTooltipProps {
   food: Meal
@@ -53,6 +53,7 @@ interface FoodTooltipProps {
 
 export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
   const { food, position, side, timePrefs } = props
+  const { t } = useTranslation('main')
 
   const actualCarbs = food.nutrition?.carbohydrate?.net || 0
   const prescribedCarbs = food.prescribedNutrition?.carbohydrate?.net
@@ -76,7 +77,7 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
           {
             hasPrescriptor &&
             <div className={commonStyles.row}>
-              <div className={commonStyles.label}>{i18next.t('Recommended')}</div>
+              <div className={commonStyles.label}>{t('Recommended')}</div>
               <div className={commonStyles.value}>
                 {recommendedValue}
               </div>
@@ -84,7 +85,7 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
             </div>
           }
           <div className={commonStyles.rowBold}>
-            <div className={commonStyles.label}>{i18next.t('Confirmed')}</div>
+            <div className={commonStyles.label}>{t('Confirmed')}</div>
             <div className={commonStyles.value}>
               {actualCarbs}
             </div>

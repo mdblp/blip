@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useContext, useState } from 'react'
+import React, { createContext, FunctionComponent, PropsWithChildren, useContext, useState } from 'react'
 
 import { getCurrentLang } from '../../lib/language'
 import { SignupForm } from '../../lib/auth'
@@ -56,7 +56,7 @@ const SignUpFormStateContext = createContext<ISignUpFormStateContext>({} as ISig
 /*
  * Provide a signup form state context
  */
-export const SignUpFormStateProvider: FunctionComponent = ({ children }) => {
+export const SignUpFormStateProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const [signupForm, setSignupForm] = useState<SignupForm>(initialState)
 
   const updateForm = (key: SignupFormKey, value: unknown): void => {

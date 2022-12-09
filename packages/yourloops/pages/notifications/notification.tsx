@@ -29,14 +29,15 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import GroupIcon from '@material-ui/icons/Group'
-import PersonIcon from '@material-ui/icons/Person'
-import HelpIcon from '@material-ui/icons/Help'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import GroupIcon from '@mui/icons-material/Group'
+import PersonIcon from '@mui/icons-material/Person'
+import HelpIcon from '@mui/icons-material/Help'
 import MedicalServiceIcon from '../../components/icons/medical-service-icon'
-import IconButton from '@material-ui/core/IconButton'
-import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
+import Tooltip from '@mui/material/Tooltip'
 
 import { errorTextFromException, getUserFirstName, getUserLastName } from '../../lib/utils'
 import { useNotification } from '../../lib/notifications/notification.hook'
@@ -63,39 +64,37 @@ interface NotificationProps {
   onHelp: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-      [theme.breakpoints.down('sm')]: {
-        flexWrap: 'wrap',
-        padding: theme.spacing(1)
-      }
-    },
-    rightSide: {
-      width: '300px',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      [theme.breakpoints.down('sm')]: {
-        width: '100%',
-        marginTop: theme.spacing(1)
-      }
-    },
-    notificationSpan: { marginLeft: '1em', flex: '1' },
-    buttonAccept: {
-      marginLeft: '1em',
-      [theme.breakpoints.down('sm')]: {
-        marginLeft: 'auto'
-      }
-    },
-    buttonDecline: {
-      marginLeft: '1em'
+const useStyles = makeStyles({ name: 'ylp-page-notification' })((theme: Theme) => ({
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    [theme.breakpoints.down('md')]: {
+      flexWrap: 'wrap',
+      padding: theme.spacing(1)
     }
-  }), { name: 'ylp-page-notification' }
-)
+  },
+  rightSide: {
+    width: '300px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      marginTop: theme.spacing(1)
+    }
+  },
+  notificationSpan: { marginLeft: '1em', flex: '1' },
+  buttonAccept: {
+    marginLeft: '1em',
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 'auto'
+    }
+  },
+  buttonDecline: {
+    marginLeft: '1em'
+  }
+}))
 
 export const NotificationSpan = ({ notification, id }: NotificationSpanProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
@@ -104,7 +103,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   const lastName = getUserLastName(creator as IUser)
   const careTeam = notification.target?.name ?? ''
   const values = { firstName, lastName, careteam: careTeam }
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   let notificationText: JSX.Element
   switch (type) {
@@ -213,7 +212,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const { user } = useAuth()
   const patientHook = usePatientContext()
   const [inProgress, setInProgress] = React.useState(false)
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { notification } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = React.useState(false)

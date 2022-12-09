@@ -25,7 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useCallback, useContext, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react'
 import _ from 'lodash'
 
 import { errorTextFromException } from '../utils'
@@ -34,7 +42,6 @@ import { useAuth } from '../auth'
 import { useNotification } from '../notifications/notification.hook'
 import TeamApi from './team.api'
 import TeamUtils from './team.util'
-import { CircularProgress } from '@material-ui/core'
 import { Team } from './models/team.model'
 import { TeamContext } from './models/team-context.model'
 import { TeamMember } from './models/team-member.model'
@@ -42,6 +49,7 @@ import { ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
 import { TeamType } from './models/enums/team-type.enum'
+import { CircularProgress } from '@mui/material'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
@@ -211,7 +219,7 @@ function TeamContextImpl(): TeamContext {
   }
 }
 
-export const TeamContextProvider: FunctionComponent = ({ children }) => {
+export const TeamContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const context = TeamContextImpl()
   return context.initialized
     ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>

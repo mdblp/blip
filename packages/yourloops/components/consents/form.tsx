@@ -28,12 +28,13 @@
 import React, { FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormGroup from '@material-ui/core/FormGroup'
-import Link from '@material-ui/core/Link'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Checkbox from '@mui/material/Checkbox'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
+import Link from '@mui/material/Link'
 
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { BaseConsentCheck, ConsentCheck } from './models/consent-check.model'
@@ -41,30 +42,24 @@ import { ConsentFormProps } from './models/consent-form-props.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { MonitoringConsentFormProps } from './models/monitoring-consent-form-props.model'
 
-const formStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      formControlLabel: {
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2)
-      },
-      formGroup: {
-        textAlign: 'left'
-      },
-      checkbox: {
-        marginBottom: 'auto'
-      },
-      labelMandatory: {
-        marginLeft: theme.spacing(1) + 9
-      }
+const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
+  return {
+    formControlLabel: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    },
+    formGroup: {
+      textAlign: 'left'
+    },
+    checkbox: {
+      marginBottom: 'auto'
     }
-  },
-  { name: 'ylp-form-consents' }
-)
+  }
+})
 
 export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
   const { t } = useTranslation('yourloops')
-  const classes = formStyles()
+  const { classes } = formStyles()
 
   const checkboxPolicy = (
     <Checkbox
@@ -74,7 +69,6 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
       checked={checked}
       onChange={onChange}
       name="policy"
-      color="primary"
     />
   )
   const privacyPolicy = t('privacy-policy')
@@ -111,7 +105,7 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
 
 export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
   const { t } = useTranslation('yourloops')
-  const classes = formStyles()
+  const { classes } = formStyles()
 
   const checkboxTerms = (
     <Checkbox
@@ -121,7 +115,6 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
       checked={checked}
       onChange={onChange}
       name="terms"
-      color="primary"
     />
   )
   const terms = t('terms-of-use')
@@ -153,7 +146,7 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
 
 export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id, checked, onChange }) => {
   const { t } = useTranslation('yourloops')
-  const classes = formStyles()
+  const { classes } = formStyles()
 
   const checkboxTerms = (
     <Checkbox
@@ -162,7 +155,6 @@ export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id
       checked={checked}
       onChange={onChange}
       name="terms"
-      color="primary"
       data-testid={`${id}-checkbox-terms`}
     />
   )
@@ -195,7 +187,7 @@ export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id
 
 export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
   const { t } = useTranslation('yourloops')
-  const classes = formStyles()
+  const { classes } = formStyles()
 
   const checkboxFeedback = (
     <Checkbox
@@ -205,7 +197,6 @@ export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole,
       checked={checked}
       onChange={onChange}
       name="feedback"
-      color="primary"
     />
   )
 
@@ -239,7 +230,7 @@ const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
     setFeedbackAccepted
   } = props
 
-  const classes = formStyles()
+  const { classes } = formStyles()
   const showFeedback = typeof setFeedbackAccepted === 'function' && userRole === UserRoles.hcp
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -298,7 +289,7 @@ export const MonitoringConsentForm: FunctionComponent<MonitoringConsentFormProps
     setTermsAccepted
   } = props
 
-  const classes = formStyles()
+  const { classes } = formStyles()
 
   const handleChange = (): void => {
     setTermsAccepted(!termsAccepted)

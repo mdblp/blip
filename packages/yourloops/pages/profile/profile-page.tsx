@@ -28,10 +28,10 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Link from '@material-ui/core/Link'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import DialogTitle from '@mui/material/DialogTitle'
+import Link from '@mui/material/Link'
 
 import { getCurrentLang } from '../../lib/language'
 import { setPageTitle } from '../../lib/utils'
@@ -45,7 +45,7 @@ import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
 const ProfilePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
   const { user } = useAuth()
 
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)

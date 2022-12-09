@@ -28,21 +28,22 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Divider from '@material-ui/core/Divider'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import Typography from '@mui/material/Typography'
 
 import BasicDropdown from '../dropdown/basic-dropdown'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 import { Monitoring } from '../../lib/team/models/monitoring.model'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import useAlarmsContentConfiguration, { PERCENTAGES } from './alarms-content-configuration.hook'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
     marginRight: theme.spacing(2)
   },
@@ -104,7 +105,7 @@ export interface AlarmsContentConfigurationProps {
 
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { saveInProgress, patient, onClose } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { t } = useTranslation('yourloops')
   const {
     lowBg,
@@ -157,7 +158,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   helperText={lowBg.errorMessage}
                   type="number"
                   className={classes.textField}
-                  variant="outlined"
                   size="small"
                   InputProps={{
                     inputProps: {
@@ -186,7 +186,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   helperText={highBg.errorMessage}
                   type="number"
                   className={classes.textField}
-                  variant="outlined"
                   size="small"
                   InputProps={{
                     inputProps: {
@@ -256,7 +255,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 helperText={veryLowBg.errorMessage}
                 type="number"
                 className={classes.textField}
-                variant="outlined"
                 size="small"
                 InputProps={{
                   inputProps: {

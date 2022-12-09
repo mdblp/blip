@@ -28,9 +28,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-
-import ThemeProvider from '@material-ui/styles/ThemeProvider'
-
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
 import { convertBG } from '../../../../lib/units/units.util'
@@ -115,9 +113,11 @@ describe('AlarmsContentConfiguration', () => {
     onSave,
     saveInProgress: false
   }) {
-    return <ThemeProvider theme={getTheme()}>
-      <AlarmsContentConfiguration {...props} />
-    </ThemeProvider>
+    return (
+      <ThemeProvider theme={getTheme()}>
+        <AlarmsContentConfiguration {...props} />
+      </ThemeProvider>
+    )
   }
 
   function renderTeamAlarmsContent(props: AlarmsContentConfigurationProps = {
