@@ -30,6 +30,8 @@ import { mockPatientLogin } from '../../mock/auth'
 import { buildPatient } from '../../mock/mockPatientAPI'
 import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { mockUserApi } from '../../mock/mockUserApi'
+import { createMemoryHistory } from 'history'
 
 describe('Training page when new training available', () => {
   beforeAll(() => {
@@ -48,11 +50,15 @@ describe('Training page when new training available', () => {
     })
     mockPatientLogin(notAckTrainingPatient)
     mockAuth0Hook()
+    mockUserApi()
   })
 
   it('should render a button opening the training, then a checkbox and a validate button', async () => {
+    let router
+    let spyPush
     await act(async () => {
-      renderPage('/training')
+      router = renderPage('/training')
+      spyPush = jest.spyOn(router.current.history, 'push')
     })
 
     expect(screen.getByText('New training available, please read what\'s new before continuing on yourloops.')).toBeVisible()
@@ -69,7 +75,10 @@ describe('Training page when new training available', () => {
     expect(confirmButton.parentElement).toBeDisabled()
     ackText.click()
     expect(confirmButton.parentElement).toBeEnabled()
-    confirmButton.click()
-    // expect(screen.getByTestId('app-main-header'))
+    await act(async () => {
+      confirmButton.click()
+    })
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    expect(spyPush).toHaveBeenCalledWith('/')
   })
 })
