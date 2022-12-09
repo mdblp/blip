@@ -5,7 +5,7 @@ on:
     branches: [ 'dblp' ]
   pull_request:
     branches: [ 'dblp' ]
-    
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
