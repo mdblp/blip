@@ -30,8 +30,10 @@ It is based on Tidepool Blip 1.27.
 - YLP-1945 Migrate NoBar component to dumb
 - YLP-1949 Migrate Lines component to dumb
 - YLP-1960 enhance pipeline
+- YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
+- Migrate MUI 4 to MUI 5
 - Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
