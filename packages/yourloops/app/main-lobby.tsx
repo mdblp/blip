@@ -41,7 +41,7 @@ import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
-import ProductLabellingPage from '../pages/intented-use/product-labelling-page'
+import ProductLabellingPage from '../pages/product-labelling/product-labelling-page'
 import LoginPage from '../pages/login/login-page'
 import {
   ALWAYS_ACCESSIBLE_ROUTES,

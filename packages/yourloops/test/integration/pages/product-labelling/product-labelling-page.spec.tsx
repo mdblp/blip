@@ -41,21 +41,23 @@ describe('Product labelling page', () => {
     })
   })
 
-  it('should render product labelling with the right selected language', async () => {
+  it('should render product labelling with the right selected language and version', async () => {
     renderPage('/')
     expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
     checkFooter({ needFooterLanguageSelector: true })
 
     await userEvent.click(screen.getByText('Product Labelling'))
 
-    expect(screen.getByText('YourLoops, version 1.0.0, released on 2000-01-01')).toBeInTheDocument()
+    expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, released on 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YLPZ-RA-LAD-001-en-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_EN_REV as string}`)).toBeInTheDocument()
     expect(screen.getByText('Intended Purpose and regulatory information')).toBeInTheDocument()
     expect(screen.getByText('Legal Manufacturer')).toBeInTheDocument()
 
     act(() => {
       i18n.changeLanguage('fr')
     })
-    expect(screen.getByText('YourLoops, version 1.0.0, libérée le 2000-01-01')).toBeInTheDocument()
+    expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, libérée le 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YLPZ-RA-LAD-001-fr-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_FR_REV as string}`)).toBeInTheDocument()
     expect(screen.getByText('Usage prévu et informations réglementaires')).toBeInTheDocument()
     expect(screen.getByText('Fabricant')).toBeInTheDocument()
   })
