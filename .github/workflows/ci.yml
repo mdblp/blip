@@ -250,14 +250,14 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: github.ref_name == 'dblp'
+#        if: github.ref_name == 'dblp'
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
-    if: github.ref_name == 'dblp'
+#    if: github.ref_name == 'dblp'
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -292,7 +292,7 @@ jobs:
         with:
           images: ${{ secrets.REGISTRY }}/blip
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            echo "semver=$(cat ./package.json | jq '.version' | tr -d '"')" >> $GITHUB_OUTPUT
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
@@ -306,11 +306,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       # for now disable as we not used the changelog (missing UNRELEASED info)
-#      - name: Creating new github tag
-#        uses: rickstaa/action-create-tag@v1
-#        with:
-#          tag: ${{ steps.meta.outputs.version }}
-#          force_push_tag: true
+      - name: Creating new github tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ steps.meta.outputs.version }}
+          force_push_tag: true
 
   documentation:
     if: github.ref_name == 'dblp'
