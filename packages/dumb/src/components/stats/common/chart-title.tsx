@@ -26,44 +26,49 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
-import cbgColorsStyles from '../common/cbg-colors.css'
+import styles from './chart-title.css'
+import colors from '../../../styles/colors.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { StatLevel } from '../../../models/stats.model'
 
-interface CBGPercentageTitleProps {
-  annotations: []
-  hoveredStatId: StatLevel | null
-  legendTitle: string
-  showTooltipIcon: boolean
+interface ChartTitleProps {
+  annotations: string[]
+  emptyDataPlaceholder: string
   title: string
+  titleData: { id?: string, value: number | string, suffix: string }
+  hideToolTips: boolean
 }
 
-const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
+export const ChartTitle: FunctionComponent<ChartTitleProps> = (props) => {
+  const {
+    annotations,
+    emptyDataPlaceholder,
+    hideToolTips,
+    title,
+    titleData
+  } = props
 
   return (
-    <>
-      <div
-        data-testid="cbg-percentage-title"
-        className={styles.title}
-      >
-        {title}
-        {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
+    <div className={styles.chartTitle}>
+      {title}
+      {titleData && titleData.value !== emptyDataPlaceholder && titleData.value !== '' && (
+        <span className={styles.chartTitleData}>
+            (&nbsp;
+          <span
+            style={{
+              color: titleData.id ? (colors[titleData.id] ?? colors.statDefault) : colors.statDefault
+            }}
+          >
+            {titleData.value}
           </span>
-            {' )'}
+          <span className={styles.chartTitleSuffix}>
+            {titleData.suffix}
           </span>
-        }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations}/>
-        }
-      </div>
-    </>
+          &nbsp;)
+        </span>
+      )}
+      {!hideToolTips && annotations && (
+        <StatTooltip annotations={annotations} />
+      )}
+    </div>
   )
 }
-
-export const CbgPercentageTitleMemoized = React.memo(CBGPercentageTitle)

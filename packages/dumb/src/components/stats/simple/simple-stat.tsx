@@ -28,10 +28,10 @@
 import React, { FunctionComponent } from 'react'
 import _ from 'lodash'
 import cx from 'classnames'
-import styles from './stat.css'
+import styles from './simple-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
-import { ChartTitle } from './chart-title'
-import { ChartSummary } from './chart-summary'
+import { ChartTitle } from '../common/chart-title'
+import { ChartSummary } from '../common/chart-summary'
 
 enum StatFormats {
   cv = 'cv',

@@ -29,7 +29,7 @@ class Stats extends React.Component {
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
     hideToolTips: PropTypes.bool.isRequired,
-    parametersConfig: PropTypes.object
+    parametersConfig: PropTypes.array
   }
   static defaultProps = {
     hideToolTips: false

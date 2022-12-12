@@ -25,45 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
-import cbgColorsStyles from '../common/cbg-colors.css'
-import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { StatLevel } from '../../../models/stats.model'
+@import "../../../styles/colors.css";
 
-interface CBGPercentageTitleProps {
-  annotations: []
-  hoveredStatId: StatLevel | null
-  legendTitle: string
-  showTooltipIcon: boolean
-  title: string
+.disabled-label {
+  color: var(--muted);
 }
 
-const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
-
-  return (
-    <>
-      <div
-        data-testid="cbg-percentage-title"
-        className={styles.title}
-      >
-        {title}
-        {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
-          </span>
-            {' )'}
-          </span>
-        }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations}/>
-        }
-      </div>
-    </>
-  )
+.disabled-line {
+  background-color: var(--muted);
+  border-radius: 20px;
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 234px;
 }
 
-export const CbgPercentageTitleMemoized = React.memo(CBGPercentageTitle)
+.line {
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  opacity: 0.5;
+}
+
+.lines {
+  display: flex;
+  position: relative;
+  width: 234px;
+}
+
+.line-low {
+  background-color: var(--bg-low);
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+}
+
+.line-target {
+  background-color: var(--bg-target);
+}
+
+.line-high {
+  background-color: var(--bg-high);
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  flex-grow: 1;
+}
+
+.tooltip-icon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
+}
+
+.tooltip-icon > img {
+  width: 0.9em;
+}

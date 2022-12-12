@@ -28,11 +28,11 @@
 import React, { FunctionComponent } from 'react'
 import _ from 'lodash'
 import cx from 'classnames'
-import styles from './stat.css'
+import styles from './average-daily-dose-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { useTranslation } from 'react-i18next'
-import { ChartTitle } from '../basic/chart-title'
-import { ChartSummary } from '../basic/chart-summary'
+import { ChartTitle } from '../common/chart-title'
+import { ChartSummary } from '../common/chart-summary'
 import { ParameterConfig } from 'medical-domain'
 
 enum StatFormats {

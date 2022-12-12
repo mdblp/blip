@@ -26,44 +26,47 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
-import cbgColorsStyles from '../common/cbg-colors.css'
-import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { StatLevel } from '../../../models/stats.model'
+import styles from './chart-summary.css'
+import colors from '../../../styles/colors.css'
 
-interface CBGPercentageTitleProps {
-  annotations: []
-  hoveredStatId: StatLevel | null
-  legendTitle: string
-  showTooltipIcon: boolean
-  title: string
+interface ChartSummaryProps {
+  isOpened: boolean
+  units: string | boolean
+  showSummary: boolean
+  summaryData: { id?: string, value: number | string, suffix: string }
 }
 
-const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
+export const ChartSummary: FunctionComponent<ChartSummaryProps> = (props) => {
+  const {
+    isOpened,
+    units,
+    showSummary,
+    summaryData
+  } = props
 
   return (
-    <>
-      <div
-        data-testid="cbg-percentage-title"
-        className={styles.title}
-      >
-        {title}
-        {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
+    <div className={styles.chartSummary}>
+      {summaryData.value && showSummary && (
+        <div
+          className={styles.summaryData}
+          style={{
+            color: summaryData.id ? (colors[summaryData.id] ?? colors.statDefault) : colors.statDefault
+          }}
+        >
+          <span className={styles.summaryValue}>
+            {summaryData.value}
           </span>
-            {' )'}
+          <span className={styles.summarySuffix}>
+              {summaryData.suffix}
           </span>
-        }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations}/>
-        }
-      </div>
-    </>
+        </div>
+      )}
+
+      {units && !isOpened &&
+        <div className={styles.units}>
+          {units}
+        </div>
+      }
+    </div>
   )
 }
-
-export const CbgPercentageTitleMemoized = React.memo(CBGPercentageTitle)

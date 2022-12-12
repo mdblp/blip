@@ -25,48 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import styles from './stat.css'
-import colors from '../../../styles/colors.css'
-
-interface ChartSummaryProps {
-  isOpened: boolean
-  units: string | boolean
-  showSummary: boolean
-  summaryData: { id?: string, value: number | string, suffix: string }
+.chartTitle {
+  composes: largeSize from '../../../styles/typography.css';
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  margin-top: .25em;
+  color: var(--stat--default);
 }
 
-export const ChartSummary: FunctionComponent<ChartSummaryProps> = (props) => {
-  const {
-    isOpened,
-    units,
-    showSummary,
-    summaryData
-  } = props
+.chartTitleData {
+  composes: smallSize from '../../../styles/typography.css';
+  display: none;
+  padding-left: .25em;
+  align-items: center;
+  position: relative;
+  top: -1px;
+  color: var(--stat--default);
+}
 
-  return (
-    <div className={styles.chartSummary}>
-      {summaryData.value && showSummary && (
-        <div
-          className={styles.summaryData}
-          style={{
-            color: summaryData.id ? (colors[summaryData.id] ?? colors.statDefault) : colors.statDefault
-          }}
-        >
-          <span className={styles.summaryValue}>
-            {summaryData.value}
-          </span>
-          <span className={styles.summarySuffix}>
-              {summaryData.suffix}
-          </span>
-        </div>
-      )}
+.chartTitleData span {
+  margin-top: 1px;
+}
 
-      {units && !isOpened &&
-        <div className={styles.units}>
-          {units}
-        </div>
-      }
-    </div>
-  )
+.chartTitleSuffix {
+  font-weight: normal;
+  padding-left: 1px;
+}
+
+.Stat.isOpen .chartTitleData {
+  display: inline-flex;
 }
