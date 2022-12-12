@@ -26,10 +26,10 @@
  */
 
 import moment from 'moment'
-import { ClassNameMap } from '@material-ui/styles/withStyles'
 import { useTranslation } from 'react-i18next'
 import { patientListCommonStyle } from './table'
 import { useAuth } from '../../lib/auth'
+import { ClassNameMap } from '@mui/material'
 import { Monitoring } from '../../lib/team/models/monitoring.model'
 import { Patient } from '../../lib/patient/models/patient.model'
 
@@ -66,7 +66,7 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
   const isUserHcp = user?.isUserHcp()
   const isUserCaregiver = user?.isUserCaregiver()
   const patientIsMonitored = patient.monitoring?.enabled
-  const patientListCommonClasses = patientListCommonStyle()
+  const { classes: patientListCommonClasses } = patientListCommonStyle()
   const isFlagged = getFlagPatients().includes(patient.userid)
 
   const getMonitoringLabel = (monitoring: Monitoring): string => {

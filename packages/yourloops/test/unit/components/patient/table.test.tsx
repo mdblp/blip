@@ -33,7 +33,7 @@ import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 
 import PatientTable from '../../../../components/patient/table'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import { createPatient, createPatientTeam } from '../../common/utils'
 import { Router } from 'react-router-dom'

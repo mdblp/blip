@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
-import Divider from '@material-ui/core/Divider'
+import Divider from '@mui/material/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
 import {
+  AverageDailyDoseStat,
   CBGMeanStat,
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
-  AverageDailyDoseStat,
   LoopModeStat,
   SimpleStat,
   TotalCarbsStat,
@@ -99,8 +99,105 @@ class Stats extends React.Component {
       : false
   }
 
+  getStatElementById(stat, hideToolTips, bgClasses, animate) {
+    const { parametersConfig } = this.props
+    switch (stat.id) {
+      case CBGStatType.TimeInAuto:
+        return (
+          <LoopModeStat
+            annotations={stat.annotations}
+            automated={stat.data.raw.automated}
+            showTooltipIcon={!hideToolTips}
+            manual={stat.data.raw.manual}
+            title={stat.title}
+            total={stat.data.total.value}
+          />
+        )
+      case CBGStatType.TotalInsulin:
+        return (
+          <TotalInsulinStat
+            annotations={stat.annotations}
+            data={stat.data.data}
+            title={stat.title}
+            total={Math.round(stat.data.total.value * 10) / 10}
+          />
+        )
+      case CBGStatType.Carbs:
+        return (
+          <TotalCarbsStat
+            annotations={stat.annotations}
+            foodCarbs={stat.data.raw.foodCarbs}
+            hideTooltip={hideToolTips}
+            title={stat.title}
+            totalCarbs={stat.data.raw.totalCarbs}
+          />
+        )
+      case CBGStatType.TimeInRange:
+      case CBGStatType.ReadingsInRange:
+        return (
+          <CBGPercentageBarChart
+            annotations={stat.annotations}
+            bgClasses={bgClasses}
+            data={stat.data.data}
+            hideTooltip={hideToolTips}
+            total={stat.data.total.value}
+            titleKey={stat.title}
+            cbgStatType={stat.id}
+            units={stat.units}
+          />
+        )
+      case CBGStatType.AverageGlucose:
+        return (
+          <CBGMeanStat
+            bgClasses={bgClasses}
+            hideTooltip={hideToolTips}
+            title={stat.title}
+            tooltipValue={stat.annotations[0]}
+            units={stat.units}
+            value={Math.round(stat.data.raw.averageGlucose)}
+          />
+        )
+      case CBGStatType.StandardDeviation:
+        return (
+          <CBGStandardDeviation
+            annotations={stat.annotations}
+            averageGlucose={Math.round(stat.data.raw.averageGlucose)}
+            bgClasses={bgClasses}
+            hideTooltip={hideToolTips}
+            standardDeviation={Math.round(stat.data.raw.standardDeviation)}
+            title={stat.title}
+            units={stat.units}
+          />
+        )
+      case CBGStatType.AverageDailyDose:
+        return (
+          <div key={stat.id} data-testid={`stat-${stat.id}`}>
+          AAAAAAAAAAAAAAAAAAAAAAA
+            <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+            <AverageDailyDoseStat parametersConfig={parametersConfig} hideToolTips={hideToolTips} {...stat} />
+          AAAAAAAAAAAAAAAAAAAAAAA
+            <Divider variant="fullWidth" />
+          </div>
+        )
+      default: {
+        if (stat.type === 'simple') {
+          return (
+            <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
+            AAAAAAAAAAAAAAAAAAAAAAA
+              <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+              <SimpleStat hideToolTips={hideToolTips} {...stat} />
+            AAAAAAAAAAAAAAAAAAAAAAA
+              <Divider variant="fullWidth" />
+            </div>
+          )
+        }
+      }
+    }
+    throw Error(`Stat id ${stat.id} and type ${stat.type}`)
+  }
+
   renderStats(stats, animate, hideToolTips) {
-    const { bgPrefs, parametersConfig } = this.props
+    const { bgPrefs } = this.props
     const bgClasses = {
       high: bgPrefs.bgClasses.high.boundary,
       low: bgPrefs.bgClasses.low.boundary,
@@ -108,117 +205,12 @@ class Stats extends React.Component {
       veryLow: bgPrefs.bgClasses['very-low'].boundary
     }
     return stats.map(stat => {
-      switch (stat.id) {
-        case CBGStatType.TimeInAuto:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <LoopModeStat
-                annotations={stat.annotations}
-                automated={stat.data.raw.automated}
-                hideTooltip={hideToolTips}
-                manual={stat.data.raw.manual}
-                title={stat.title}
-                total={stat.data.total.value}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.TotalInsulin:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <TotalInsulinStat
-                annotations={stat.annotations}
-                data={stat.data.data}
-                title={stat.title}
-                total={Math.round(stat.data.total.value * 10) / 10}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.Carbs:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <TotalCarbsStat
-                annotations={stat.annotations}
-                foodCarbs={stat.data.raw.foodCarbs}
-                hideTooltip={hideToolTips}
-                title={stat.title}
-                totalCarbs={stat.data.raw.totalCarbs}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.TimeInRange:
-        case CBGStatType.ReadingsInRange:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <CBGPercentageBarChart
-                annotations={stat.annotations}
-                bgClasses={bgClasses}
-                data={stat.data.data}
-                hideTooltip={hideToolTips}
-                total={stat.data.total.value}
-                titleKey={stat.title}
-                cbgStatType={stat.id}
-                units={stat.units}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.AverageGlucose:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <CBGMeanStat
-                bgClasses={bgClasses}
-                hideTooltip={hideToolTips}
-                title={stat.title}
-                tooltipValue={stat.annotations[0]}
-                units={stat.units}
-                value={Math.round(stat.data.raw.averageGlucose)}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.StandardDeviation:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <CBGStandardDeviation
-                annotations={stat.annotations}
-                averageGlucose={Math.round(stat.data.raw.averageGlucose)}
-                bgClasses={bgClasses}
-                hideTooltip={hideToolTips}
-                standardDeviation={Math.round(stat.data.raw.standardDeviation)}
-                title={stat.title}
-                units={stat.units}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.AverageDailyDose:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              AAAAAAAAAAAAAAAAAAAAAAA
-              <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-              <AverageDailyDoseStat parametersConfig={parametersConfig} hideToolTips={hideToolTips} {...stat} />
-              AAAAAAAAAAAAAAAAAAAAAAA
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        default: {
-          if (stat.type === 'simple') {
-            return (
-              <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
-              AAAAAAAAAAAAAAAAAAAAAAA
-                <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-                <SimpleStat hideToolTips={hideToolTips} {...stat} />
-              AAAAAAAAAAAAAAAAAAAAAAA
-                <Divider variant="fullWidth" />
-              </div>
-            )
-          }
-        }
-      }
-      throw Error(`Stat id ${stat.id} and type ${stat.type}`)
+      return (
+        <div key={stat.id} data-testid={`stat-${stat.id}`}>
+          {this.getStatElementById(stat, hideToolTips, bgClasses, animate)}
+          <Divider variant="fullWidth" />
+        </div>
+      )
     })
   }
 

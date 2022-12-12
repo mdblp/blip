@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
+import Box from '@mui/material/Box'
 
 import metrics from '../../lib/metrics'
 import { ConsentForm } from '../../components/consents'

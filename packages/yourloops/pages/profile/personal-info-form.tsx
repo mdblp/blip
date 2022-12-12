@@ -28,11 +28,11 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import AccountCircle from '@material-ui/icons/AccountCircle'
+import AccountCircle from '@mui/icons-material/AccountCircle'
 
-import Box from '@material-ui/core/Box'
-import FormControl from '@material-ui/core/FormControl'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import TextField from '@mui/material/TextField'
 
 import { useAuth } from '../../lib/auth'
 import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
@@ -49,7 +49,7 @@ const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { redirectToProfessionalAccountLogin, user } = useAuth()
   const { profileForm, updateProfileForm, errors } = useProfilePageState()
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
 
   return (
     <React.Fragment>
@@ -63,6 +63,7 @@ const PersonalInfoForm: FunctionComponent = () => {
         <TextField
           id="profile-textfield-firstname"
           label={t('first-name')}
+          variant="standard"
           value={profileForm.firstName}
           onChange={event => updateProfileForm(ProfileFormKey.firstName, event.target.value)}
           error={errors.firstName}
@@ -72,6 +73,7 @@ const PersonalInfoForm: FunctionComponent = () => {
         <TextField
           id="profile-textfield-lastname"
           label={t('last-name')}
+          variant="standard"
           value={profileForm.lastName}
           onChange={event => updateProfileForm(ProfileFormKey.lastName, event.target.value)}
           error={errors.lastName}
@@ -101,6 +103,7 @@ const PersonalInfoForm: FunctionComponent = () => {
                   id="professional-account-number-text-field"
                   value={user.getParsedFrProId()}
                   label={t('professional-account-number')}
+                  variant="standard"
                   disabled
                   className={classes.formInput}
                 />

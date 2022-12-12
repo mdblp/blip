@@ -41,15 +41,15 @@ export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetai
   const { className, percentage, transform, value } = props
   const { t } = useTranslation('main')
 
-  const percentageIsNan = Number.isNaN(percentage)
+  const isPercentageValid = !Number.isNaN(percentage)
 
   return (
     <g className={className} transform={transform}>
       <text className={styles.labelValueUnits} textAnchor="middle">
-        <tspan className={styles.legendLabelValue}>{percentageIsNan ? t('N/A') : percentage}</tspan>
-        {!percentageIsNan && <tspan className={styles.legendLabelUnits} dy="-4">%</tspan>}
+        <tspan className={styles.legendLabelValue}>{isPercentageValid ? percentage : t('N/A') }</tspan>
+        {isPercentageValid && <tspan className={styles.legendLabelUnits} dy="-4">%</tspan>}
       </text>
-      {!percentageIsNan &&
+      {isPercentageValid &&
         <text
           className={styles.labelRawValue}
           textAnchor="middle"

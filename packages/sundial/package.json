@@ -42,8 +42,5 @@
     "mrproper": "rm -rf node_modules",
     "test": "TZ=UTC LANG=C mocha --exit --check-leaks test/**/*.test.js ",
     "security-checks": "npm audit --production --registry=https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "moment-timezone": "^0.5.32"
   }
 }

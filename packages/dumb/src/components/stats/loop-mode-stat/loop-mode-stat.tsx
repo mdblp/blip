@@ -28,36 +28,31 @@
 import React, { FunctionComponent, memo } from 'react'
 import styles from './loop-mode-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
 import { LoopModeLabel } from './loop-mode-label'
+import { LoopModeGraph } from './loop-mode-graph'
 
 interface LoopModeStatProps {
   annotations: []
   automated: number
-  hideTooltip: boolean
   manual: number
+  showTooltipIcon: boolean
   title: string
   total: number
 }
 
-const circleRadius = 70
-
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
-  const { annotations, automated, hideTooltip, manual, title, total } = props
+  const { annotations, automated, showTooltipIcon, manual, title, total } = props
 
   const automatedPercentage = Math.round(100 * automated / total)
   const manualPercentage = Math.round(100 * manual / total)
-
-  const angle = manualPercentage * Math.PI / 100
-  const x = circleRadius * 2.0 * Math.cos(angle)
-  const y = -circleRadius * 2.0 * Math.sin(angle)
 
   return (
     <div data-testid="loop-mode-stat">
       <Box className={styles.title}>
         {title}
-        {!hideTooltip &&
+        {showTooltipIcon &&
           <StatTooltip annotations={annotations} />
         }
       </Box>
@@ -79,36 +74,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
           transform="translate(260 63)"
           value={manual}
         />
-        <g transform="translate(145 75)">
-          <mask id="half-wheel-mask">
-            <rect x="-70" y="-70" width="140" height="70" fill="white" />
-            <circle cx="0" cy="0" r="40" fill="black" />
-          </mask>
-          <clipPath id="half-circle-percent-clip">
-            {x && y
-              ? (manualPercentage > 50
-                  ? <>
-                    <path d="M0,0 l140,0 l0,-140 l-140,0 Z" />
-                    <path d={`M0,0 l0,-140 L${x},${y} Z`} />
-                  </>
-                  : <path d={`M0,0 L${circleRadius * 2.0},0 L${x},${y} Z`} />
-                )
-              : <rect x="-70" y="-70" width="140" height="140" />
-            }
-          </clipPath>
-          <circle className={styles.onEllipse} cx="0" cy="0" r="70" fill="blue" mask="url(#half-wheel-mask)" />
-          {automatedPercentage !== 100 &&
-            <circle
-              className={styles.offEllipse}
-              cx="0"
-              cy="0"
-              r="70"
-              fill="grey"
-              mask="url(#half-wheel-mask)"
-              clipPath="url(#half-circle-percent-clip)"
-            />
-          }
-        </g>
+        <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage} />
       </svg>
     </div>
   )

@@ -27,30 +27,51 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './loop-mode-stat.css'
-import { useTranslation } from 'react-i18next'
 
-interface LoopModeLabelProps {
-  className: string
-  transform: string
-  translationKey: string
+interface LoopModeGraphProps {
+  automatedPercentage: number
+  manualPercentage: number
 }
 
-export const LoopModeLabel: FunctionComponent<LoopModeLabelProps> = (props) => {
-  const { className, transform, translationKey } = props
-  const { t } = useTranslation('main')
+const circleRadius = 70
+
+export const LoopModeGraph: FunctionComponent<LoopModeGraphProps> = (props) => {
+  const { automatedPercentage, manualPercentage } = props
+
+  const angle = manualPercentage * Math.PI / 100
+  const x = circleRadius * 2.0 * Math.cos(angle)
+  const y = -circleRadius * 2.0 * Math.sin(angle)
 
   return (
-    <g className={className} transform={transform}>
-      <rect className={styles.legendBackground} width="40" height="20" rx="8" />
-      <text
-        x="20"
-        y="10"
-        textAnchor="middle"
-        dominantBaseline="central"
-        className={styles.legendLabelText}
-      >
-        {t(translationKey)}
-      </text>
+    <g transform="translate(145 75)">
+      <mask id="half-wheel-mask">
+        <rect x="-70" y="-70" width="140" height="70" fill="white" />
+        <circle cx="0" cy="0" r="40" fill="black" />
+      </mask>
+      <clipPath id="half-circle-percent-clip">
+        {x && y
+          ? (manualPercentage > 50
+              ? <>
+                <path d="M0,0 l140,0 l0,-140 l-140,0 Z" />
+                <path d={`M0,0 l0,-140 L${x},${y} Z`} />
+              </>
+              : <path d={`M0,0 L${circleRadius * 2.0},0 L${x},${y} Z`} />
+            )
+          : <rect x="-70" y="-70" width="140" height="140" />
+        }
+      </clipPath>
+      <circle className={styles.onEllipse} cx="0" cy="0" r="70" fill="blue" mask="url(#half-wheel-mask)" />
+      {automatedPercentage !== 100 &&
+        <circle
+          className={styles.offEllipse}
+          cx="0"
+          cy="0"
+          r="70"
+          fill="grey"
+          mask="url(#half-wheel-mask)"
+          clipPath="url(#half-circle-percent-clip)"
+        />
+      }
     </g>
   )
 }

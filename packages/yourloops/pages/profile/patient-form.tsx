@@ -29,13 +29,13 @@ import React, { FunctionComponent, useMemo } from 'react'
 import { tz } from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import InputLabel from '@material-ui/core/InputLabel'
-import FormControl from '@material-ui/core/FormControl'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
+import FormHelperText from '@mui/material/FormHelperText'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
 import { useAuth } from '../../lib/auth'
 import { useProfilePageState } from './profile-page-context'
@@ -47,7 +47,7 @@ const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { errors, profileForm, updateProfileForm } = useProfilePageState()
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
 
   const browserTimezone = useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, [])
 
@@ -61,6 +61,7 @@ const PatientProfileForm: FunctionComponent = () => {
         <TextField
           id="profile-textfield-birthdate"
           label={t('birthdate')}
+          variant="standard"
           value={profileForm.birthday}
           onChange={event => updateProfileForm(ProfileFormKey.birthday, event.target.value)}
           error={errors.birthday}
@@ -71,6 +72,7 @@ const PatientProfileForm: FunctionComponent = () => {
         <TextField
           id="profile-textfield-birthplace"
           label={t('birthplace')}
+          variant="standard"
           value={profileForm.birthPlace}
           onChange={event => updateProfileForm(ProfileFormKey.birthPlace, event.target.value)}
           className={classes.formInput}
@@ -83,6 +85,7 @@ const PatientProfileForm: FunctionComponent = () => {
             <TextField
               id="profile-textfield-ins"
               label={t('ins')}
+              variant="standard"
               value={profileForm.ins}
               onChange={event => updateProfileForm(ProfileFormKey.ins, event.target.value)}
               className={classes.formInput}
@@ -93,6 +96,7 @@ const PatientProfileForm: FunctionComponent = () => {
             <TextField
               id="profile-textfield-ssn"
               label={t('ssn')}
+              variant="standard"
               value={profileForm.ssn}
               onChange={event => updateProfileForm(ProfileFormKey.ssn, event.target.value)}
               className={classes.formInput}
@@ -106,7 +110,8 @@ const PatientProfileForm: FunctionComponent = () => {
 
       <Box className={classes.inputContainer}>
         <FormControl
-          className={`${classes.formInput}`}
+          variant="standard"
+          className={classes.formInput}
           error={errors.sex}
         >
           <InputLabel
@@ -120,7 +125,7 @@ const PatientProfileForm: FunctionComponent = () => {
             labelId="profile-select-gender-label"
             value={profileForm.sex}
             error={errors.sex}
-            onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value as string)}
+            onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value)}
           >
             <MenuItem value="I" aria-label={t('indeterminate')}>{t('indeterminate')}</MenuItem>
             <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>
@@ -142,6 +147,7 @@ const PatientProfileForm: FunctionComponent = () => {
         <TextField
           id="hbA1c"
           label={t('patient-profile-hba1c', { hba1cMoment: tz(a1cDate, browserTimezone).format('L') })}
+          variant="standard"
           disabled
           value={`${a1cValue}%`}
           className={classes.formInput}
