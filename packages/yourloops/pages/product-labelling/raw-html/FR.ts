@@ -423,7 +423,7 @@ const rawHtmlFR = `
     <p class="c18"><span class="c10 c30">Mises en garde et pr&eacute;cautions requises devant &ecirc;tre imm&eacute;diatement port&eacute;es &nbsp;&agrave; l&#39;attention de l&#39;utilisateur du dispositif ou de toute autre personne</span></p>
     <hr>
     <p class="c18 c28"><span class="c1"></span></p>
-    <p class="c22"><span class="c17 c33">AVERTISSEMENT</span><span class="c17">&nbsp;: Ce logiciel ne fournit pas d&rsquo;avis m&eacute;dical et ne doit pas &ecirc;tre utilis&eacute; &agrave;cet effet. Les utilisateurs &agrave; domicile doivent consulter un professionnel de sant&eacute; avant de faire des ajustements th&eacute;rapeutiques dans leur traitement &agrave; partir des informations de ce logiciel.</span></p>
+    <p class="c22"><span class="c17 c33">AVERTISSEMENT</span><span class="c17">&nbsp;: Ce logiciel ne fournit pas d&rsquo;avis m&eacute;dical et ne doit pas &ecirc;tre utilis&eacute; &agrave; cet effet. Les utilisateurs &agrave; domicile doivent consulter un professionnel de sant&eacute; avant de faire des ajustements th&eacute;rapeutiques dans leur traitement &agrave; partir des informations de ce logiciel.</span></p>
     <p class="c19"><span class="c1"></span></p>
     <p class="c22"><span class="c33 c17">AVERTISSEMENT</span><span class="c17">&nbsp;: Les professionnels de sant&eacute; doivent utiliser les informations de ce logiciel conjointement aux autres informations cliniques qui sont &agrave; leur disposition.</span></p>
     <p class="c19"><span class="c4"></span></p>
