@@ -401,7 +401,7 @@ const rawHtmlFR = `
     <p class="c0"><span class="c2"></span></p>
     <p class="c3">
       <span class="c11">&nbsp; </span>
-      <span class="c11">YourLoops, version ${appConfig.VERSION}, lib&eacute;r&eacute;e le ${appConfig.LATEST_RELEASE}</span>
+      <span class="c11">YourLoops, version ${appConfig.VERSION}, publi&eacute;e le ${appConfig.LATEST_RELEASE}</span>
     </p>
     <p class="c0"><span class="c15"></span></p>
     <p class="c0"><span class="c15"></span></p>
