@@ -42,6 +42,7 @@ import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import useAlarmsContentConfiguration, { PERCENTAGES } from './alarms-content-configuration.hook'
+import { onBasicDropdownSelect } from './alarm-content-configuration.utils'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -118,7 +119,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     onChange,
     saveButtonDisabled,
     save,
-    onBasicDropdownSelect,
     setHighBg,
     setLowBg,
     setVeryLowBg,

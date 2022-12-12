@@ -31,7 +31,7 @@ import React, { useMemo, useState } from 'react'
 import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
-import { isInvalidPercentage, onBasicDropdownSelect } from './alarm-content-configuration.utils'
+import { isInvalidPercentage } from './alarm-content-configuration.utils'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 
 export interface AlarmsContentConfigurationHookProps {
@@ -56,7 +56,6 @@ interface AlarmsContentConfigurationHookReturn {
   hypoThreshold: ValueErrorPair
   setHypoThreshold: React.Dispatch<ValueErrorPair>
   saveButtonDisabled: boolean
-  onBasicDropdownSelect: (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>) => void
   save: () => void
   resetToTeamDefaultValues: () => void
   onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
@@ -216,7 +215,6 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
   return {
     lowBg,
     saveButtonDisabled,
-    onBasicDropdownSelect,
     save,
     resetToTeamDefaultValues,
     onChange,

@@ -32,7 +32,7 @@ export const isInvalidPercentage = (value: number): boolean => {
   return !PERCENTAGES.includes(`${value}%`)
 }
 export const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
-  const valueAsNumber = +value.slice(0, -1)
+  const valueAsNumber = parseFloat(value)
   setValue({
     value: valueAsNumber,
     error: false
