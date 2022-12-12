@@ -4,7 +4,7 @@ import _ from 'lodash'
 import bows from 'bows'
 
 import { convertBG, MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
-import { getTotalBasalFromEndpoints, getBasalGroupDurationsFromEndpoints } from './basal'
+import { getBasalGroupDurationsFromEndpoints, getTotalBasalFromEndpoints } from './basal'
 import { getTotalBolus } from './bolus'
 import { cgmSampleFrequency, classifyBgValue, reshapeBgClassesToBgBounds } from './bloodglucose'
 import { addDuration } from './datetime'
@@ -111,7 +111,7 @@ class DataUtil {
       // here is a more realistic version of calculating days, fixing a bug in stats
       this.days = 0
       let start = moment.utc(this._endpoints[0])
-      for(let i = 1; i <= daysInRange; i++) {
+      for (let i = 1; i <= daysInRange; i++) {
         if (activeDays.includes(start.day())) {
           this.days += 1
         }
@@ -291,7 +291,7 @@ class DataUtil {
       }
     }
     return {
-      coefficientOfVariation : _.meanBy(_.map(coefficientOfVariationByDate)),
+      coefficientOfVariation: _.meanBy(_.map(coefficientOfVariationByDate)),
       total
     }
   }
@@ -499,7 +499,7 @@ class DataUtil {
           result[key] = value
           return result
         },
-        {},
+        {}
       )
       : Number.NaN
 

@@ -9,9 +9,9 @@ import {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
+  AverageDailyDoseStat,
   LoopModeStat,
   SimpleStat,
-  InputStat,
   TotalCarbsStat,
   TotalInsulinStat
 } from 'dumb'
@@ -28,7 +28,8 @@ class Stats extends React.Component {
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
-    hideToolTips: PropTypes.bool.isRequired
+    hideToolTips: PropTypes.bool.isRequired,
+    parametersConfig: PropTypes.object
   }
   static defaultProps = {
     hideToolTips: false
@@ -99,14 +100,13 @@ class Stats extends React.Component {
   }
 
   renderStats(stats, animate, hideToolTips) {
-    const { bgPrefs } = this.props
+    const { bgPrefs, parametersConfig } = this.props
     const bgClasses = {
       high: bgPrefs.bgClasses.high.boundary,
       low: bgPrefs.bgClasses.low.boundary,
       target: bgPrefs.bgClasses.target.boundary,
       veryLow: bgPrefs.bgClasses['very-low'].boundary
     }
-    // console.log(stats)
     return stats.map(stat => {
       switch (stat.id) {
         case CBGStatType.TimeInAuto:
@@ -194,6 +194,16 @@ class Stats extends React.Component {
               <Divider variant="fullWidth" />
             </div>
           )
+        case CBGStatType.AverageDailyDose:
+          return (
+            <div key={stat.id} data-testid={`stat-${stat.id}`}>
+              AAAAAAAAAAAAAAAAAAAAAAA
+              <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+              <AverageDailyDoseStat parametersConfig={parametersConfig} hideToolTips={hideToolTips} {...stat} />
+              AAAAAAAAAAAAAAAAAAAAAAA
+              <Divider variant="fullWidth" />
+            </div>
+          )
         default: {
           if (stat.type === 'simple') {
             return (
@@ -201,17 +211,6 @@ class Stats extends React.Component {
               AAAAAAAAAAAAAAAAAAAAAAA
                 <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
                 <SimpleStat hideToolTips={hideToolTips} {...stat} />
-              AAAAAAAAAAAAAAAAAAAAAAA
-                <Divider variant="fullWidth" />
-              </div>
-            )
-          }
-          if (stat.type === 'input') {
-            return (
-              <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
-              AAAAAAAAAAAAAAAAAAAAAAA
-                <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-                <InputStat hideToolTips={hideToolTips} {...stat} />
               AAAAAAAAAAAAAAAAAAAAAAA
                 <Divider variant="fullWidth" />
               </div>

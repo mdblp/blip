@@ -52,8 +52,8 @@ interface StatProps {
     dataPaths: {
       input: string | []
       output: string | []
-      summary: string | []
-      title: string | []
+      summary: string
+      title: string
     }
   }
   dataFormat: {
@@ -107,15 +107,14 @@ export const SimpleStat: FunctionComponent<StatProps> = (
     return 'high'
   }
 
-  const formatDatum = (datum: { id?: string, value: number, suffix: string }, format: string): { id?: string, value: number | string, suffix: string } => {
+  const formatDatum = (datum: Datum, format: string): { id?: string, value: number | string, suffix: string } => {
     const id = datum.id
     const value: number | string = datum.value
-    const suffix = datum.suffix || ''
     if (format !== StatFormats.cv && format !== StatFormats.gmi && format !== StatFormats.percentage && format !== StatFormats.unitsPerKg && format !== StatFormats.units) {
       return {
         id,
         value: datum.value,
-        suffix
+        suffix: ''
       }
     }
     if (format === StatFormats.cv && value >= 0) {
@@ -153,20 +152,19 @@ export const SimpleStat: FunctionComponent<StatProps> = (
     return {
       id: 'statDisabled',
       value: emptyDataPlaceholder,
-      suffix
+      suffix: ''
     }
   }
 
-  const getFormattedDataByKey = (key: string, format: StatFormats): { id?: string, value: number | string, suffix: string } => {
-    const path = _.get(data, `dataPaths.${key}`)
-    if (!path) {
+  const getFormattedData = (format: StatFormats): { id?: string, value: number | string, suffix: string } => {
+    if (!data?.data?.[0]) {
       return { id: undefined, value: '', suffix: '' }
     }
-    return formatDatum(_.get(data, path), format)
+    return formatDatum(data.data[0], format)
   }
 
-  const titleData = getFormattedDataByKey('title', dataFormat.title)
-  const summaryData = getFormattedDataByKey('summary', dataFormat.summary)
+  const titleData = getFormattedData(dataFormat.title)
+  const summaryData = getFormattedData(dataFormat.summary)
   return (
     <div className={styles.StatWrapper}>
       <div className={statClasses}>

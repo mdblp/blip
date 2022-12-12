@@ -47,10 +47,11 @@ export const ChartTitle: FunctionComponent<ChartTitleProps> = (props) => {
     titleData
   } = props
 
+  console.log(titleData.value)
   return (
     <div className={styles.chartTitle}>
       {title}
-      {titleData && titleData.value !== emptyDataPlaceholder && (
+      {titleData && titleData.value !== emptyDataPlaceholder && titleData.value !== '' && (
         <span className={styles.chartTitleData}>
             (&nbsp;
           <span

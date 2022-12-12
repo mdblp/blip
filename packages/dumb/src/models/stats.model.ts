@@ -26,6 +26,7 @@
  */
 
 export enum CBGStatType {
+  AverageDailyDose = 'averageDailyDose',
   AverageGlucose = 'averageGlucose',
   Carbs = 'carbs',
   ReadingsInRange = 'readingsInRange',

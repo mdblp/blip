@@ -31,9 +31,9 @@ import cx from 'classnames'
 import styles from './stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { useTranslation } from 'react-i18next'
-import { LBS_PER_KG } from '../../../utils/constants/constants.utils'
-import { ChartTitle } from './chart-title'
-import { ChartSummary } from './chart-summary'
+import { ChartTitle } from '../basic/chart-title'
+import { ChartSummary } from '../basic/chart-summary'
+import { ParameterConfig } from 'medical-domain'
 
 enum StatFormats {
   cv = 'cv',
@@ -68,6 +68,7 @@ interface StatProps {
   title: string
   units: string | boolean
   hideToolTips: boolean
+  parametersConfig: ParameterConfig[]
 }
 
 interface Datum {
@@ -76,7 +77,7 @@ interface Datum {
   title: string
 }
 
-export const InputStat: FunctionComponent<StatProps> = (
+export const AverageDailyDoseStat: FunctionComponent<StatProps> = (
   {
     alwaysShowSummary = false,
     emptyDataPlaceholder = '--',
@@ -89,12 +90,14 @@ export const InputStat: FunctionComponent<StatProps> = (
     annotations,
     data,
     dataFormat,
-    title
+    title,
+    parametersConfig
   } = props
 
   const { t } = useTranslation('main')
 
   const input = _.get(data, data.dataPaths.input, {})
+  input.value = parametersConfig.find(param => param.name === 'WEIGHT')?.value ?? -1
 
   const statClasses = cx({
     [styles.Stat]: true,
@@ -107,16 +110,6 @@ export const InputStat: FunctionComponent<StatProps> = (
     const suffix = datum.suffix || ''
 
     if (format === StatFormats.unitsPerKg) {
-      if (suffix === t('lb')) {
-        const val = value * LBS_PER_KG
-        if (val > 0 && _.isFinite(val)) {
-          return {
-            id,
-            value: formatDecimalNumber(val, 2),
-            suffix: t('U/kg')
-          }
-        }
-      }
       if (value > 0 && _.isFinite(value)) {
         return {
           id,
@@ -138,7 +131,6 @@ export const InputStat: FunctionComponent<StatProps> = (
         suffix: t('U')
       }
     }
-
     return {
       id: 'statDisabled',
       value: emptyDataPlaceholder,
@@ -226,12 +218,12 @@ export const InputStat: FunctionComponent<StatProps> = (
             {input.label}
           </div>
           <div>
-          <span className={styles.inputValue}>
-            {input.value}
-          </span>
+            <span className={styles.inputValue}>
+              {input.value}
+            </span>
             <span className={styles.units}>
-            {input.suffix}
-          </span>
+              {input.suffix}
+            </span>
           </div>
         </div>
         {isOpened &&

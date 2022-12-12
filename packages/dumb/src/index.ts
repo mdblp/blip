@@ -47,7 +47,7 @@ import Tooltip from './components/tooltips/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
-import { InputStat } from './components/stats/basic/input-stat'
+import { AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStat } from './components/stats/basic/simple-stat'
 
 export {
@@ -57,7 +57,6 @@ export {
   CBGStandardDeviation,
   CBGStatType,
   CgmTable,
-  InputStat,
   LoopModeStat,
   ConfidentialTooltip,
   FoodTooltip,
@@ -70,5 +69,6 @@ export {
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
-  TotalCarbsStat
+  TotalCarbsStat,
+  AverageDailyDoseStat
 }
