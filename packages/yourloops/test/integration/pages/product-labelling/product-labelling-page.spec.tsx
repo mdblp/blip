@@ -56,7 +56,7 @@ describe('Product labelling page', () => {
     act(() => {
       i18n.changeLanguage('fr')
     })
-    expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, libérée le 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, publiée le 2000-01-01`)).toBeInTheDocument()
     expect(screen.getByText(`YLPZ-RA-LAD-001-fr-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_FR_REV as string}`)).toBeInTheDocument()
     expect(screen.getByText('Usage prévu et informations réglementaires')).toBeInTheDocument()
     expect(screen.getByText('Fabricant')).toBeInTheDocument()
