@@ -32,7 +32,7 @@ import factory from '../images/factory.png'
 import ceMark from '../images/ce-mark.png'
 import appConfig from '../../../lib/config/config'
 
-const rawHtmlEN = `
+const rawHtmlFR = `
   <style type="text/css">@import url('https://themes.googleusercontent.com/fonts/css?kit=dpiI8CyVsrzWsJLBFKehGpLhv3qFjX7dUn1mYxfCXhI');
     .lst-kix_y7fyeal6lle0-0 > li:before {
         content: "-  "
@@ -381,47 +381,53 @@ const rawHtmlEN = `
     hr {
       width: 100%;
     }
+
+    #udi-version {
+        position: relative;
+        top: 70px;
+        left: 377px;
+        z-index: 100;
+    }
   </style>
   <div class="c5 doc-content">
     <div>
       <a href="/"><p class="c37"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 176.57px; height: 51.50px;"><img alt="" src="${yourloopsLogo}" style="width: 176.57px; height: 51.50px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p></a>
     </div>
     <p class="c0"><span class="c21 c29"></span></p>
-    <p class="c3"><span class="c30 c31">Intended Purpose and regulatory information</span></p>
+    <p class="c3"><span class="c30 c31">Usage pr&eacute;vu et informations r&eacute;glementaires</span></p>
     <p class="c0"><span class="c26"></span></p>
-    <p class="c3"><span class="c10">About</span></p>
+    <p class="c3"><span class="c10">&Agrave; propos</span></p>
     <hr>
     <p class="c0"><span class="c2"></span></p>
     <p class="c3">
       <span class="c11">&nbsp; </span>
-      <span class="c11">YourLoops, version ${appConfig.VERSION}, released on ${appConfig.LATEST_RELEASE}</span>
+      <span class="c11">YourLoops, version ${appConfig.VERSION}, lib&eacute;r&eacute;e le ${appConfig.LATEST_RELEASE}</span>
     </p>
     <p class="c0"><span class="c15"></span></p>
     <p class="c0"><span class="c15"></span></p>
-    <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 494.00px; height: 99.00px;"><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-    <p class="c18"><span class="c10 c30">Intended purpose</span></p>
+    <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 494.00px; height: 99.00px;"><p id="udi-version">${appConfig.VERSION}</p><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+    <p class="c18"><span class="c10 c30">Usage pr&eacute;vu</span></p>
     <hr>
     <p class="c18"><span class="c1">&nbsp;</span></p>
-    <p class="c7"><span class="c4">YourLoops is intended to be used by people affected by diabetes mellitus to assist in accessing and reviewing their diabetes data.</span></p>
-    <p class="c7"><span class="c4">Yourloops is intended to be used by other people to whom the person with diabetes would like to share their data and contextual data (e.g., a parent, friend, teacher or school nurse).</span></p>
-    <p class="c7"><span class="c4">Yourloops is also intended to be used by healthcare professionals (e.g., doctors, nurses, certified diabetes educators, clinic staff) .</span></p>
-    <p class="c7"><span class="c21">Yourloops displays information gathered from an A</span><span class="c21">utomated Insulin Delivery system </span><span class="c4">developed by Diabeloop.</span></p>
-    <p class="c7"><span class="c4">YourLoops is not intended to be used to take immediate action but permits to visualize data and trends on long term.</span></p>
-    <p class="c7"><span class="c4">YourLoops is used in the two following ways: </span></p>
+    <p class="c7"><span class="c4">YourLoops est con&ccedil;u pour &ecirc;tre utilis&eacute; par des personnes vivant avec un diab&egrave;te mellitus dans le but de les aider &agrave; acc&eacute;der et &agrave; visualiser leurs donn&eacute;es de sant&eacute;.</span></p>
+    <p class="c7"><span class="c4">YourLoops est &eacute;galement destin&eacute; &agrave; &nbsp;&ecirc;tre utilis&eacute; par des professionnels de sant&eacute; (m&eacute;decins, infirmier&middot;e&middot;s, formateurs&middot;rices) ainsi que par les personnes avec lesquelles le&middot;la patient&middot;e souhaite&nbsp;partager ses donn&eacute;es (proche, parent, infirmier&middot;e scolaire, enseignant&middot;e).</span></p>
+    <p class="c7"><span class="c4">YourLoops collecte et affiche les donn&eacute;es recueillies par un syst&egrave;me d&rsquo;automatisation de la d&eacute;livrance d&#39;insuline d&eacute;velopp&eacute;&nbsp;par Diabeloop.</span></p>
+    <p class="c7"><span class="c21">YourLoops n&rsquo;est pas destin&eacute; &agrave; &ecirc;tre utilis&eacute; pour prendre des d&eacute;cisions imm&eacute;diates mais il permet de visualiser les donn&eacute;es et les tendances sur le long terme.</span></p>
+    <p class="c7"><span class="c4">Yourloops est utilis&eacute; des deux mani&egrave;res suivantes:</span></p>
     <ul class="c12 lst-kix_y7fyeal6lle0-0 start">
-        <li class="c7 c32 li-bullet-0"><span class="c4">Yourloops is used as a secondary viewer.</span></li>
-        <li class="c7 c32 li-bullet-0"><span class="c4">Yourloops is used to remotely monitor the patients and to facilitate the healthcare professionals recommendations for the patients treatment..</span></li>
+        <li class="c7 c32 li-bullet-0"><span class="c4">Yourloops est utilis&eacute; comme visualiseur secondaire.</span></li>
+        <li class="c7 c32 li-bullet-0"><span class="c4">Yourloops est utilis&eacute; pour surveiller &agrave; distance les patients et faciliter les recommandations des professionnels de sant&eacute; pour le traitement des patients.</span></li>
     </ul>
-    <p class="c7"><span class="c21">This device is not intended to replace self-monitoring practices as advised by a doctor.</span></p>
+    <p class="c7"><span class="c21">YourLoops n&rsquo;est pas destin&eacute; &agrave; remplacer les pratiques d&#39;autosurveillance recommand&eacute;es par un m&eacute;decin.</span></p>
     <p class="c18 c28"><span class="c4"></span></p>
-    <p class="c18"><span class="c10 c30">Warnings or precautions to be taken that need to be brought to the immediate attention of the user of the device, and to any other person</span></p>
+    <p class="c18"><span class="c10 c30">Mises en garde et pr&eacute;cautions requises devant &ecirc;tre imm&eacute;diatement port&eacute;es &nbsp;&agrave; l&#39;attention de l&#39;utilisateur du dispositif ou de toute autre personne</span></p>
     <hr>
     <p class="c18 c28"><span class="c1"></span></p>
-    <p class="c22"><span class="c17 c33">WARNING</span><span class="c17">: </span><span class="c21">This software does not provide any medical advice and may not be relied upon for that purpose. </span><span class="c21">Home users</span><span class="c21">&nbsp;must consult a healthcare professional before making any medical interpretation and therapy adjustments from the information in the software.</span></p>
+    <p class="c22"><span class="c17 c33">AVERTISSEMENT</span><span class="c17">&nbsp;: Ce logiciel ne fournit pas d&rsquo;avis m&eacute;dical et ne doit pas &ecirc;tre utilis&eacute; &agrave;cet effet. Les utilisateurs &agrave; domicile doivent consulter un professionnel de sant&eacute; avant de faire des ajustements th&eacute;rapeutiques dans leur traitement &agrave; partir des informations de ce logiciel.</span></p>
     <p class="c19"><span class="c1"></span></p>
-    <p class="c22"><span class="c33 c17">WARNING</span><span class="c17">: </span><span class="c21">Healthcare professionals should use information in the software in conjunction with other clinical information available to them.</span></p>
+    <p class="c22"><span class="c33 c17">AVERTISSEMENT</span><span class="c17">&nbsp;: Les professionnels de sant&eacute; doivent utiliser les informations de ce logiciel conjointement aux autres informations cliniques qui sont &agrave; leur disposition.</span></p>
     <p class="c19"><span class="c4"></span></p>
-    <p class="c18"><span class="c10">Legal Manufacturer </span></p>
+    <p class="c18"><span class="c10">Fabricant</span></p>
     <hr>
     <p class="c0"><span class="c2"></span></p>
     <p class="c0"><span class="c2"></span></p><a id="t.01dd871b06081fb0ac6b9fb856ac0aca41b364bf"></a><a id="t.0"></a>
@@ -444,9 +450,9 @@ const rawHtmlEN = `
     <p class="c0"><span class="c9"></span></p>
     <div>
       <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 160.98px; height: 38.00px;"><img alt="" src="${diabeloopLogo}" style="width: 160.98px; height: 38.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-en-Rev1</span></p>
+      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-fr-Rev${appConfig.YLPZ_RA_LAD_001_FR_REV}</span></p>
     </div>
   </div>
 `
 
-export default rawHtmlEN
+export default rawHtmlFR

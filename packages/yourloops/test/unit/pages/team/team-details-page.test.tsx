@@ -32,7 +32,7 @@ import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamDetailsPage from '../../../../pages/team/team-details-page'
 import { getTheme } from '../../../../components/theme'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@mui/material/styles'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
@@ -73,11 +73,13 @@ describe('TeamDetailsPage', () => {
   })
 
   function getTeamDetailsPageJSX(): JSX.Element {
-    return <Router history={history}>
-      <ThemeProvider theme={getTheme()}>
-        <TeamDetailsPage />
-      </ThemeProvider>
-    </Router>
+    return (
+      <Router history={history}>
+        <ThemeProvider theme={getTheme()}>
+          <TeamDetailsPage />
+        </ThemeProvider>
+      </Router>
+    )
   }
 
   it('should render empty component if there is no selected team', () => {

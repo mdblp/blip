@@ -40,6 +40,7 @@ import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parame
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
 import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/total-carbs/total-carbs-stat'
+import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/tooltip/tooltip'
@@ -56,6 +57,7 @@ export {
   CgmTable,
   ConfidentialTooltip,
   FoodTooltip,
+  LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,

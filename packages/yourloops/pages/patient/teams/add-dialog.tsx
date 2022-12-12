@@ -28,22 +28,24 @@
 import _ from 'lodash'
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import InputLabel from '@material-ui/core/InputLabel'
-import Link from '@material-ui/core/Link'
-import TextField from '@material-ui/core/TextField'
+import { makeStyles } from 'tss-react/mui'
+
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import CircularProgress from '@mui/material/CircularProgress'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import InputLabel from '@mui/material/InputLabel'
+import Link from '@mui/material/Link'
+import TextField from '@mui/material/TextField'
 import metrics from '../../../lib/metrics'
 import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from '../../../lib/team'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
@@ -76,23 +78,20 @@ export interface DisplayErrorMessageProps {
   handleClose: () => void
 }
 
-const addTeamDialogClasses = makeStyles(
-  (theme: Theme) => {
-    return {
-      formControl: {
-        marginBottom: theme.spacing(2)
-      },
-      divTeamCodeField: {
-        marginTop: theme.spacing(2),
-        width: '8em'
-      },
-      checkboxPrivacy: {
-        marginBottom: 'auto'
-      }
+const addTeamDialogClasses = makeStyles({ name: 'ylp-patient-join-team-dialog' })((theme: Theme) => {
+  return {
+    formControl: {
+      marginBottom: theme.spacing(2)
+    },
+    divTeamCodeField: {
+      marginTop: theme.spacing(2),
+      width: '8em'
+    },
+    checkboxPrivacy: {
+      marginBottom: 'auto'
     }
-  },
-  { name: 'ylp-patient-join-team-dialog' }
-)
+  }
+})
 
 function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
   const { t } = useTranslation('yourloops')
@@ -120,7 +119,7 @@ function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
 
 export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const classes = addTeamDialogClasses()
+  const { classes } = addTeamDialogClasses()
   const inputRef = React.createRef<HTMLInputElement>()
   const [idCode, setIdCode] = React.useState('')
   const { teamName } = props
@@ -156,8 +155,8 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
   return (
     <React.Fragment>
       <Box textAlign="center" p={3}>
-        <DialogTitle id="team-add-dialog-title">
-          <strong>{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
+        <DialogTitle>
+          <strong id="team-add-dialog-title">{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
         </DialogTitle>
 
         <DialogContent id="team-add-dialog-content">
@@ -172,6 +171,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
             <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
               <TextField
                 id="team-add-dialog-field-code"
+                variant="standard"
                 value={idCode}
                 onChange={handleChangeCode}
                 fullWidth
@@ -206,7 +206,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 
 export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const classes = addTeamDialogClasses()
+  const { classes } = addTeamDialogClasses()
   const [privacyAccepted, setPrivacyAccepted] = React.useState(false)
 
   const { address } = props.team
@@ -246,7 +246,6 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
       checked={privacyAccepted}
       onChange={handleChange}
       name="policy"
-      color="primary"
       className={classes.checkboxPrivacy}
     />
   )

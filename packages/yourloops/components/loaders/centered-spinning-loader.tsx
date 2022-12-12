@@ -26,8 +26,8 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import Box from '@material-ui/core/Box'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 
 interface CenteredSpinningLoaderProps {
   size?: number

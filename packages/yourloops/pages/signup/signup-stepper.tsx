@@ -29,13 +29,14 @@ import React, { FunctionComponent, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Stepper from '@material-ui/core/Stepper'
-import Step from '@material-ui/core/Step'
-import StepLabel from '@material-ui/core/StepLabel'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Stepper from '@mui/material/Stepper'
+import Step from '@mui/material/Step'
+import StepLabel from '@mui/material/StepLabel'
+import Typography from '@mui/material/Typography'
 
 import SignUpProfileForm from './signup-profile-form'
 import SignUpConsent from './signup-consent'
@@ -47,7 +48,7 @@ export interface SignUpFormProps {
   handleNext: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   stepper: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const { stepper } = useStyles()
+  const { classes: { stepper } } = useStyles()
   const { logout } = useAuth()
   const history = useHistory()
   const [activeStep, setActiveStep] = useState(0)

@@ -98,10 +98,12 @@ module.exports = {
       DEV: false,
       ECPS_ENABLED: true,
       YLP820_BASAL_TIME: 0,
-      VERSION: '1.0.0',
+      VERSION: '3.0.2',
       LATEST_RELEASE: '2000-01-01',
       API_HOST: 'http://localhost:8009',
-      BRANDING: 'diabeloop/blue'
+      BRANDING: 'diabeloop/blue',
+      YLPZ_RA_LAD_001_FR_REV: '1',
+      YLPZ_RA_LAD_001_EN_REV: '2'
     }
   },
 

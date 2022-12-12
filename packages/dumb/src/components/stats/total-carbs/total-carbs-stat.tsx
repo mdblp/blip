@@ -27,7 +27,7 @@
 import React, { FunctionComponent, memo } from 'react'
 import styles from './total-carbs-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { Unit } from 'medical-domain'
 

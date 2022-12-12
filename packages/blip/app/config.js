@@ -35,7 +35,9 @@ const defaultConfig = {
   DEV: true,
   TEST: false,
   CBG_BUCKETS_ENABLED: true,
-  ECPS_ENABLED: true
+  ECPS_ENABLED: true,
+  YLPZ_RA_LAD_001_FR_REV: '2',
+  YLPZ_RA_LAD_001_EN_REV: '2'
 }
 
 /** @typedef {typeof defaultConfig} AppConfig */

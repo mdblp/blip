@@ -26,10 +26,9 @@
  */
 
 import React from 'react'
-import clsx from 'clsx'
 import { Dayjs, isDayjs } from 'dayjs'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 import { CalendarSelection, CalendarSelectionRange } from './models'
 import Day from './day'
 
@@ -43,13 +42,13 @@ interface MonthDayElementsProps {
   onHoverDay?: (data: Dayjs) => void
 }
 
-export const dayStyles = makeStyles((theme: Theme) => ({
+export const dayStyles = makeStyles({ name: 'date-pickers-day' })((theme: Theme) => ({
   dayElement: {
     width: 40,
     height: 40,
     placeSelf: 'center',
     borderRadius: '50%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 32,
       height: 32
     }
@@ -65,13 +64,13 @@ export const dayStyles = makeStyles((theme: Theme) => ({
     borderTopRightRadius: '0%',
     borderBottomRightRadius: '0%'
   }
-}), { name: 'date-pickers-day' })
+}))
 
 const WEEK_DAYS_COUNT = 7
 const WEEK_DAY_LAST_IDX = 6
 
 function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
-  const classes = dayStyles()
+  const { classes, cx } = dayStyles()
   const { selection, currentMonth, daysArray, onChange, onHoverDay, minDate, maxDate } = props
 
   const getADay = (index: number, day: Dayjs, dateOfMonth: number, month: number, dayISO: string): JSX.Element => {
@@ -122,7 +121,7 @@ function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
         disabled={disabled}
         aria-selected={selected}
         aria-hidden={disabled}
-        className={clsx(dayClasses)}
+        className={cx(dayClasses)}
         onClick={() => onChange(day)}
         onMouseEnter={() => { if (onHoverDay) onHoverDay(day) }}
       />

@@ -28,17 +28,18 @@
 import React, { useState } from 'react'
 import moment from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 import { commonComponentStyles } from '../common'
 
-import Button from '@material-ui/core/Button'
-import Box from '@material-ui/core/Box'
-import LocalHospitalOutlinedIcon from '@material-ui/icons/LocalHospitalOutlined'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
+import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
 
 import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 import { useAuth } from '../../lib/auth'
@@ -53,7 +54,7 @@ import { Settings } from '../../lib/auth/models/settings.model'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 
-const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
+const patientInfoWidgetStyles = makeStyles({ name: 'patient-info-widget' })((theme: Theme) => ({
   card: {
     width: 430
   },
@@ -70,15 +71,15 @@ const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
   marginLeft: {
     marginLeft: theme.spacing(2)
   }
-}), { name: 'patient-info-widget' })
+}))
 
 export interface PatientInfoWidgetProps {
   patient: Patient
 }
 
 function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
-  const classes = patientInfoWidgetStyles()
-  const commonStyles = commonComponentStyles()
+  const { classes } = patientInfoWidgetStyles()
+  const { classes: commonStyles } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const trNA = t('N/A')
   const authHook = useAuth()

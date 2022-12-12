@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles } from 'tss-react/mui'
 
-export const profileFormCommonClasses = makeStyles((theme: Theme) => ({
+export const profileFormCommonClasses = makeStyles()((theme) => ({
   button: {
     marginLeft: theme.spacing(2)
   },
