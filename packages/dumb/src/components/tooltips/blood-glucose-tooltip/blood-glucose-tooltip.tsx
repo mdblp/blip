@@ -30,7 +30,6 @@ import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
-import i18next from 'i18next'
 import styles from './blood-glucose-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatBgValue } from '../../../utils/format/format.util'
@@ -46,6 +45,7 @@ import {
 } from '../tooltip/tooltip'
 import { BgPrefs, ClassificationType } from '../../../models/blood-glucose.model'
 import { Cbg, Smbg, TimePrefs } from 'medical-domain'
+import { useTranslation } from 'react-i18next'
 
 interface BloodGlucoseTooltipProps {
   bgPrefs: BgPrefs
@@ -56,10 +56,9 @@ interface BloodGlucoseTooltipProps {
   isSmbg?: boolean
 }
 
-const t = i18next.t.bind(i18next)
-
 export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = (props) => {
   const { bgPrefs, data, position, side, timePrefs, isSmbg } = props
+  const { t } = useTranslation('main')
 
   const formattedValue = formatBgValue(data.value, bgPrefs)
 

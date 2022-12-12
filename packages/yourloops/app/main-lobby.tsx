@@ -29,8 +29,12 @@ import React from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
+import { CacheProvider } from '@emotion/react'
+import { TssCacheProvider } from 'tss-react'
+import createCache from '@emotion/cache'
+import { makeStyles } from 'tss-react/mui'
+import CssBaseline from '@mui/material/CssBaseline'
 
 import { useAuth, User } from '../lib/auth'
 import { getTheme } from '../components/theme'
@@ -41,7 +45,7 @@ import CompleteSignUpPage from '../pages/signup/complete-signup-page'
 import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
-import ProductLabellingPage from '../pages/intented-use/product-labelling-page'
+import ProductLabellingPage from '../pages/product-labelling/product-labelling-page'
 import LoginPage from '../pages/login/login-page'
 import {
   ALWAYS_ACCESSIBLE_ROUTES,
@@ -52,7 +56,7 @@ import {
   TRAINING_PATH
 } from '../lib/diabeloop-urls.model'
 
-const routeStyle = makeStyles<Theme>(() => {
+const routeStyle = makeStyles()(() => {
   return {
     public: {
       flex: '1 0 auto',
@@ -65,6 +69,16 @@ const routeStyle = makeStyles<Theme>(() => {
     }
   }
 })
+
+const muiCache = createCache({
+  key: 'mui',
+  prepend: true
+})
+
+const tssCache = createCache({
+  key: 'tss'
+})
+tssCache.compat = true
 
 const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route)
 
@@ -100,7 +114,7 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const theme = getTheme()
-  const classes = routeStyle()
+  const { classes } = routeStyle()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
 
   if (!isCurrentRoutePublic && isLoading) {
@@ -115,23 +129,27 @@ export function MainLobby(): JSX.Element {
       {redirectTo
         ? <Redirect to={redirectTo} />
         : (!isLoading && !fetchingUser &&
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <SnackbarContextProvider context={DefaultSnackbarContext}>
-              <div className={style}>
-                <Switch>
-                  <Route exact path="/product-labelling" component={ProductLabellingPage} />
-                  <Route exact path="/login" component={LoginPage} />
-                  <Route exact path="/complete-signup" component={CompleteSignUpPage} />
-                  <Route exact path="/renew-consent" component={ConsentPage} />
-                  <Route exact path="/new-consent" component={PatientConsentPage} />
-                  <Route exact path="/training" component={TrainingPage} />
-                  <Route component={MainLayout} />
-                </Switch>
-              </div>
-            </SnackbarContextProvider>
-            <Footer />
-          </ThemeProvider>
+          <CacheProvider value={muiCache}>
+            <TssCacheProvider value={tssCache}>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <SnackbarContextProvider context={DefaultSnackbarContext}>
+                  <div className={style}>
+                    <Switch>
+                      <Route exact path="/product-labelling" component={ProductLabellingPage} />
+                      <Route exact path="/login" component={LoginPage} />
+                      <Route exact path="/complete-signup" component={CompleteSignUpPage} />
+                      <Route exact path="/renew-consent" component={ConsentPage} />
+                      <Route exact path="/new-consent" component={PatientConsentPage} />
+                      <Route exact path="/training" component={TrainingPage} />
+                      <Route component={MainLayout} />
+                    </Switch>
+                  </div>
+                </SnackbarContextProvider>
+                <Footer />
+              </ThemeProvider>
+            </TssCacheProvider>
+          </CacheProvider>
           )}
     </React.Fragment>
   )

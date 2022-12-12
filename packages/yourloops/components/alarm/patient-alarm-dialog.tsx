@@ -28,20 +28,20 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Typography from '@material-ui/core/Typography'
-import TuneIcon from '@material-ui/icons/Tune'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@mui/material/Typography'
+import TuneIcon from '@mui/icons-material/Tune'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import { makeStyles } from 'tss-react/mui'
 import { Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
 import { commonComponentStyles } from '../common'
 import AlarmsContentConfiguration from './alarms-content-configuration'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import DialogContent from '@material-ui/core/DialogContent'
+import DialogContent from '@mui/material/DialogContent'
 import { Patient } from '../../lib/patient/models/patient.model'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   title: {
     alignSelf: 'center'
   }
@@ -54,8 +54,8 @@ interface PatientAlarmDialogProps {
 
 function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   const { patient, onClose } = props
-  const commonClasses = commonComponentStyles()
-  const classes = useStyles()
+  const { classes: commonClasses } = commonComponentStyles()
+  const { classes } = useStyles()
   const { t } = useTranslation('yourloops')
   const patientHook = usePatientContext()
   const alert = useAlert()
@@ -89,25 +89,25 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
       onClose={onClose}
       data-testid="patient-alarm-dialog"
     >
-          <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
-            <div className={commonClasses.categoryHeader}>
-              <div>
-                <TuneIcon />
-                <Typography className={commonClasses.title}>
-                  {t('events-configuration')}
-                </Typography>
-              </div>
-            </div>
-          </DialogTitle>
+      <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
+        <div className={commonClasses.categoryHeader}>
+          <div>
+            <TuneIcon />
+            <Typography className={commonClasses.title}>
+              {t('events-configuration')}
+            </Typography>
+          </div>
+        </div>
+      </DialogTitle>
 
-          <DialogContent className={'no-padding'}>
-            <AlarmsContentConfiguration
-              monitoring={patient.monitoring}
-              patient={patient}
-              onSave={save}
-              saveInProgress={saveInProgress}
-              onClose={onClose} />
-          </DialogContent>
+      <DialogContent className={'no-padding'}>
+        <AlarmsContentConfiguration
+          monitoring={patient.monitoring}
+          patient={patient}
+          onSave={save}
+          saveInProgress={saveInProgress}
+          onClose={onClose} />
+      </DialogContent>
     </Dialog>
   )
 }

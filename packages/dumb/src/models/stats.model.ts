@@ -30,6 +30,7 @@ export enum CBGStatType {
   Carbs = 'carbs',
   ReadingsInRange = 'readingsInRange',
   StandardDeviation = 'standardDev',
+  TimeInAuto = 'timeInAuto',
   TimeInRange = 'timeInRange',
   TotalInsulin = 'totalInsulin',
 }

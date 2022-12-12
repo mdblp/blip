@@ -28,15 +28,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Checkbox from '@material-ui/core/Checkbox'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../lib/utils'
 
@@ -88,8 +88,8 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
       onClose={handleClickClose}
       fullWidth
     >
-      <DialogTitle id="team-add-member-dialog-title">
-        <strong>{t('team-add-member-dialog-title')}</strong>
+      <DialogTitle>
+        <strong id="team-add-member-dialog-title">{t('team-add-member-dialog-title')}</strong>
         <br />
         <span id="team-add-member-dialog-title-team-name">{teamName}</span>
       </DialogTitle>
@@ -98,7 +98,6 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
         <Box display="flex" flexDirection="column">
           <TextField
             id="team-add-member-dialog-field-email"
-            variant="outlined"
             onChange={handleChangeEMail}
             name="email"
             value={email}
@@ -114,7 +113,6 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
                 checked={role === TeamMemberRole.admin}
                 onChange={handleChangeRole}
                 name="role"
-                color="primary"
               />
             }
             label={t('team-add-member-dialog-checkbox-admin')}

@@ -27,7 +27,7 @@
 import React, { FunctionComponent, memo } from 'react'
 import styles from './total-insulin-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
 
 interface TotalInsulinPropsData {
   id: string

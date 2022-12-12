@@ -27,15 +27,13 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@material-ui/core/styles'
 
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { makeButtonsStyles } from '../theme'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 
 export interface ConfirmDialogProps {
@@ -46,11 +44,8 @@ export interface ConfirmDialogProps {
   onConfirm: () => void
 }
 
-const buttons = makeStyles(makeButtonsStyles)
-
 export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
   const { title, label, inProgress, onClose, onConfirm } = props
-  const { alertActionButton } = buttons()
   const { t } = useTranslation('yourloops')
 
   return (
@@ -83,9 +78,9 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
           <Button
             data-testid="confirm-dialog-confirm-button"
             variant="contained"
+            color="error"
             disableElevation
             disabled={inProgress}
-            className={alertActionButton}
             onClick={onConfirm}
           >
             {t('confirm')}

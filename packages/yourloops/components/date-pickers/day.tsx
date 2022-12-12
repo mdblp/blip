@@ -26,33 +26,32 @@
  */
 
 import React from 'react'
-import clsx from 'clsx'
-import { makeStyles, alpha, Theme } from '@material-ui/core/styles'
-import ButtonBase, { ButtonBaseProps } from '@material-ui/core/ButtonBase'
+import { alpha, Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase'
 
 interface DayProps extends ButtonBaseProps {
   day: string
   selected?: boolean
 }
 
-const dayStyles = makeStyles((theme: Theme) => ({
+const dayStyles = makeStyles<void, 'disabled' | 'selected'>({ name: 'date-pickers-day' })((theme: Theme, _params, classes) => ({
   root: {
-    ...theme.typography.caption,
     padding: 0,
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.primary,
-    '&$disabled': {
+    [`&.${classes.disabled}`]: {
       color: theme.palette.text.secondary,
       backgroundColor: 'transparent'
     },
-    '&$selected': {
+    [`&.${classes.selected}`]: {
       color: theme.palette.primary.contrastText,
       backgroundColor: theme.palette.primary.main,
       '&:hover': {
         willChange: 'background-color',
         backgroundColor: theme.palette.primary.dark
       },
-      '&$disabled': {
+      [`&.${classes.disabled}`]: {
         color: theme.palette.text.secondary,
         backgroundColor: alpha(theme.palette.action.active, theme.palette.action.activatedOpacity)
       }
@@ -67,15 +66,14 @@ const dayStyles = makeStyles((theme: Theme) => ({
     })
   },
   /* Pseudo-class applied to the root element if `disabled={true}`. */
-  disabled: {
-  },
+  disabled: {},
   /* Pseudo-class applied to the root element if `selected={true}`. */
   selected: {}
-}), { name: 'date-pickers-day' })
+}))
 
 function Day(props: DayProps): JSX.Element {
-  const classes = dayStyles(props)
-  const className = clsx(
+  const { classes, cx } = dayStyles()
+  const className = cx(
     classes.root,
     props.className,
     {

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useContext } from 'react'
+import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
 import useProfilePageContextHook from './profil-page-context.hook'
 import { ProfileErrors, ProfileForm } from './models/profile-form.model'
 import { ProfileFormKey } from './models/enums/profile-form-key.enum'
@@ -44,7 +44,7 @@ interface ProfilePageContext {
 
 const ProfilePageStateContext = createContext<ProfilePageContext>({} as ProfilePageContext)
 
-export const ProfilePageContextProvider: FunctionComponent = ({ children }) => {
+export const ProfilePageContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const {
     canSave,
     errors,

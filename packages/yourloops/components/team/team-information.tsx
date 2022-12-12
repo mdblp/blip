@@ -27,16 +27,18 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
-import FolderSharedOutlinedIcon from '@material-ui/icons/FolderSharedOutlined'
-import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined'
-import LocalPhoneOutlinedIcon from '@material-ui/icons/LocalPhoneOutlined'
-import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined'
-import EditIcon from '@material-ui/icons/Edit'
+import { makeStyles } from 'tss-react/mui'
+
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined'
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
+import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined'
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
+import EditIcon from '@mui/icons-material/Edit'
 
 import { Team, useTeam } from '../../lib/team'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
@@ -48,7 +50,7 @@ import LeaveTeamButton from './leave-team-button'
 import TeamUtils from '../../lib/team/team.util'
 import { PhonePrefixCode } from '../../lib/utils'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   body: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -85,12 +87,12 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const { team, refreshParent } = props
   const teamHook = useTeam()
   const alert = useAlert()
-  const classes = useStyles()
+  const { classes } = useStyles()
   const authContext = useAuth()
   const loggedInUserId = authContext.user?.id
   const isUserPatient = authContext.user?.isUserPatient()
   const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId)
-  const commonTeamClasses = commonComponentStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`
   const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null)

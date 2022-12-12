@@ -26,9 +26,9 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import Link from '@material-ui/core/Link'
+import Link from '@mui/material/Link'
 import { Link as RouterLink } from 'react-router-dom'
-import Box from '@material-ui/core/Box'
+import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { User } from '../../lib/auth'
@@ -36,7 +36,7 @@ import { footerStyle } from './footer'
 
 const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
   const { t } = useTranslation('yourloops')
-  const { link, separator } = footerStyle()
+  const { classes: { link, separator } } = footerStyle()
 
   return (
     <React.Fragment>

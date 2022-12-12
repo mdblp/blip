@@ -25,7 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, {
+  createContext,
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import bows from 'bows'
 import _ from 'lodash'
 
@@ -265,7 +274,7 @@ export function useAuth(): AuthContext {
  * Provider component that wraps your app and makes auth object available to any child component that calls useAuth().
  * @param props for auth provider & children
  */
-export const AuthContextProvider: FunctionComponent = ({ children }) => {
+export const AuthContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   return (
     <ReactAuthContext.Provider value={AuthContextImpl()}>
       {children}

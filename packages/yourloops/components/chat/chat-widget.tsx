@@ -29,16 +29,17 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import Picker, { IEmojiData } from 'emoji-picker-react'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import SendIcon from '@material-ui/icons/Send'
-import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfiedOutlined'
-import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
-import Card from '@material-ui/core/Card'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import SendIcon from '@mui/icons-material/Send'
+import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
+import Card from '@mui/material/Card'
 import ChatMessage from './chat-message'
 import ChatApi from '../../lib/chat/chat.api'
 import { useAuth } from '../../lib/auth'
 import { IMessage } from '../../lib/chat/models/i-message.model'
-import { Button, CardHeader, Tab, Tabs, TextField } from '@material-ui/core'
+import { Button, CardHeader, Tab, Tabs, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -47,7 +48,7 @@ import { Patient } from '../../lib/patient/models/patient.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 
-const chatWidgetStyles = makeStyles((theme: Theme) => {
+const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
   return {
     chatWidget: {
       width: '400px',
@@ -117,7 +118,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       margin: theme.spacing(1)
     }
   }
-}, { name: 'ylp-chat-widget' })
+})
 
 export interface Message {
   text: string
@@ -133,7 +134,7 @@ export interface ChatWidgetProps {
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { patient, userId, userRole } = props
-  const classes = chatWidgetStyles()
+  const { classes } = chatWidgetStyles()
   const authHook = useAuth()
   const teamHook = useTeam()
   const patientHook = usePatientContext()
@@ -217,17 +218,23 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         className={classes.chatWidgetHeader}
         title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       />
-      <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent} data-testid="chat-card-messages">
-        {messages.map(
-          (msg): JSX.Element => (
-            <ChatMessage key={msg.id} text={msg.text}
-              privateMsg={msg.private}
-              author={getUserName(msg.user.firstName, msg.user.lastName, msg.user.fullName)}
-              timestamp={msg.timestamp}
-              ack={msg.destAck}
-              isMine={msg.authorId === userId} />
-          ))
-        }
+      <div
+        ref={content}
+        id="chat-widget-messages"
+        className={classes.chatWidgetContent}
+        data-testid="chat-card-messages"
+      >
+        {messages.map((msg): JSX.Element => (
+          <ChatMessage
+            key={msg.id}
+            text={msg.text}
+            privateMsg={msg.private}
+            author={getUserName(msg.user.firstName, msg.user.lastName, msg.user.fullName)}
+            timestamp={msg.timestamp}
+            ack={msg.destAck}
+            isMine={msg.authorId === userId}
+          />
+        ))}
       </div>
       {showPicker &&
         <div id="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
@@ -239,11 +246,11 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           {userRole === UserRoles.hcp &&
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example"
-                onChange={handleChange}>
+                    onChange={handleChange}>
                 <Tab className={classes.chatWidgetTab} label={t('chat-footer-reply')} data-testid="chat-card-reply"
-                  onClick={() => setPrivateMessage(false)} />
+                     onClick={() => setPrivateMessage(false)} />
                 <Tab className={classes.chatWidgetTab} label={t('chat-footer-private')} data-testid="chat-card-private"
-                  onClick={() => setPrivateMessage(true)} />
+                     onClick={() => setPrivateMessage(true)} />
               </Tabs>
             </div>
           }
@@ -260,12 +267,17 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
             maxRows={3}
             value={inputText}
             onChange={inputHandler}
-            variant="outlined"
             InputLabelProps={{ shrink: false }}
             data-testid="chat-card-input"
           />
-          <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton} arial-label={t('send')} data-testid="chat-card-send"
-            onClick={sendMessage}>
+          <Button
+            id="chat-widget-send-button"
+            disabled={inputText.length < 1}
+            className={classes.iconButton}
+            arial-label={t('send')}
+            data-testid="chat-card-send"
+            onClick={sendMessage}
+          >
             <SendIcon />
           </Button>
         </div>

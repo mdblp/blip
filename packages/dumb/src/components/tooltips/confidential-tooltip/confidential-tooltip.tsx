@@ -26,9 +26,8 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import i18next from 'i18next'
-import Grid from '@material-ui/core/Grid'
-import LockIcon from '@material-ui/icons/LockOutlined'
+import Grid from '@mui/material/Grid'
+import LockIcon from '@mui/icons-material/LockOutlined'
 import styles from './confidential-tooltip.css'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
@@ -42,16 +41,16 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
+import { useTranslation } from 'react-i18next'
 
 interface ConfidentialTooltipProps {
   position: Position
   side: Side
 }
 
-const t = i18next.t.bind(i18next)
-
 export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = (props) => {
   const { position, side } = props
+  const { t } = useTranslation('main')
 
   return (
     <Tooltip
