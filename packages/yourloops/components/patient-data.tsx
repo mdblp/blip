@@ -130,7 +130,7 @@ function PatientDataPage(): JSX.Element | null {
     } else {
       setPageTitle()
     }
-  }, [userId, patient, t])
+  }, [getUserName, patient, t, userId])
 
   if (error) {
     return <PatientDataPageError msg={error} />

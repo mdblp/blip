@@ -76,7 +76,7 @@ function PatientList(props: PatientListProps): JSX.Element {
         throttleSearchMetrics('trackSiteSearch', 'patient_name', 'hcp', filteredPatients.length)
       }
       return filteredPatients
-    }, [patientHook])
+    }, [comparePatients, patientHook])
 
   const handleSortList = (orderBy: PatientTableSortFields, order: SortDirection): void => {
     metrics.send('patient_selection', 'sort_patients', orderBy, order === SortDirection.asc ? 1 : -1)
