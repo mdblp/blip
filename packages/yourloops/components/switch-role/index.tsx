@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import bows from 'bows'
 
@@ -46,15 +46,14 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
   const { switchRoleToHCP, user } = useAuth()
   const history = useHistory()
   const alert = useAlert()
-  const [switchRoleStep, setSwitchRoleStep] = useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.none)
+  const [switchRoleStep, setSwitchRoleStep] = useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.consequences)
   const [feedbackConsent, setFeedbackConsent] = useState<boolean>(false)
   const [inProgress, setInProgress] = useState<boolean>(false)
 
   if (!user) {
-    throw new Error('User must be looged-in')
+    throw new Error('User must be logged-in')
   }
 
-  const role = user.role
   const handleSwitchRoleToConditions = (): void => {
     setSwitchRoleStep(SwitchRoleToHcpSteps.consent)
   }
@@ -66,10 +65,9 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
       metrics.send('switch_account', 'accept_terms')
       history.push('/')
     } catch (reason: unknown) {
+      setInProgress(false)
       alert.error(t('modal-switch-hcp-failure'))
       log.error('switchRoleToHCP', reason)
-    } finally {
-      setInProgress(false)
     }
   }
 
@@ -77,14 +75,6 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
     setFeedbackConsent(feedback)
     setSwitchRoleStep(SwitchRoleToHcpSteps.profession)
   }
-
-  useEffect(() => {
-    if (props.open && switchRoleStep === SwitchRoleToHcpSteps.none) {
-      setSwitchRoleStep(SwitchRoleToHcpSteps.consequences)
-    } else if (!props.open && switchRoleStep !== SwitchRoleToHcpSteps.none) {
-      setSwitchRoleStep(SwitchRoleToHcpSteps.none)
-    }
-  }, [props.open, switchRoleStep, role])
 
   return (
     <React.Fragment>

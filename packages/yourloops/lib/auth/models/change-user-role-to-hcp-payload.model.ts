@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
+import { Consent } from './consent.model'
+import { HcpProfession } from './enums/hcp-profession.enum'
 
-interface SwitchRoleDialogProps {
-  open: boolean
-  inProgress?: boolean
-}
-
-export interface SwitchRoleConsequencesDialogProps extends SwitchRoleDialogProps {
-  title: string
-  onAccept: () => void
-  onCancel: () => void
-}
-
-export interface SwitchRoleConsentDialogProps extends SwitchRoleDialogProps {
-  onAccept: (feedback: boolean) => void
-  onCancel: () => void
-}
-
-export interface SwitchRoleProfessionDialogProps extends SwitchRoleDialogProps {
-  onAccept: (profession: HcpProfession) => void
-  onCancel: () => void
-}
-
-export interface SwitchRoleDialogsProps {
-  onCancel: () => void
-}
-
-export enum SwitchRoleToHcpSteps {
-  consequences,
-  consent,
-  profession
+export interface ChangeUserRoleToHcpPayload {
+  termsOfUse: Consent
+  privacyPolicy: Consent
+  contactConsent: Consent
+  hcpProfession: HcpProfession
 }

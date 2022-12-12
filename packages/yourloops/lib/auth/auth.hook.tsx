@@ -54,6 +54,7 @@ import { Settings } from './models/settings.model'
 import { UserRoles } from './models/enums/user-roles.enum'
 import { AuthenticatedUser } from './models/authenticated-user.model'
 import { SignupForm } from './models/signup-form.model'
+import { ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -133,20 +134,17 @@ export function AuthContextImpl(): AuthContext {
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
     const user = getUser()
     const now = new Date().toISOString()
-    const payload: ChangeUserRolePayload = {
-      role: UserRoles.hcp,
-      profile: {
-        termsOfUse: { acceptanceTimestamp: now, isAccepted: true },
-        privacyPolicy: { acceptanceTimestamp: now, isAccepted: true },
-        contactConsent: { acceptanceTimestamp: now, isAccepted: feedbackConsent },
-        hcpProfession
-      }
+    const payload: ChangeUserRoleToHcpPayload = {
+      termsOfUse: { acceptanceTimestamp: now, isAccepted: true },
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: true },
+      contactConsent: { acceptanceTimestamp: now, isAccepted: feedbackConsent },
+      hcpProfession
     }
 
     await UserApi.changeUserRoleToHcp(user.id, payload)
 
     user.role = UserRoles.hcp
-    user.profile = { ...user.profile, ...payload.profile }
+    user.profile = { ...user.profile, ...payload }
     refreshUser()
   }
 
