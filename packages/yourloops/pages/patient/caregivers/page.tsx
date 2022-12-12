@@ -88,7 +88,7 @@ function PatientCaregiversPage(): JSX.Element {
         log.error(reason)
 
         if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
-          alert.error(t('alert-invitation-caregiver-user-is-patient'))
+          alert.error(t('alert-invitation-caregiver-failed-user-is-patient'))
           return
         }
         alert.error(t('alert-invitation-caregiver-failed'))
