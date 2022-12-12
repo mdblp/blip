@@ -54,10 +54,10 @@ export const monitoringParameters = {
 }
 export const monitoringParametersBgUnitMmol = {
   bgUnit: UnitsType.MMOLL,
-  lowBg: 50.5,
-  highBg: 140.5,
+  lowBg: 2.8,
+  highBg: 7.8,
   outOfRangeThreshold: 5,
-  veryLowBg: 40.5,
+  veryLowBg: 2.2,
   hypoThreshold: 10,
   nonDataTxThreshold: 15,
   reportingPeriod: 7

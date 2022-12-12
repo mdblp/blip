@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, BoundFunctions, fireEvent, logDOM, screen, waitFor, within } from '@testing-library/react'
+import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, monitoringParameters } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
@@ -149,21 +149,30 @@ describe('Patient dashboard for HCP', () => {
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
-    logDOM()
+    // logDOM()
     const configureAlarmsButton = await screen.findByRole('button', { name: 'Configure alarms' }, { timeout: 3000 })
     await userEvent.click(configureAlarmsButton)
     const dialog = screen.getByRole('dialog')
     const lowBgInput = within(dialog).getByRole('spinbutton', { name: 'Low blood glucose input' })
     const highBgInput = within(dialog).getByRole('spinbutton', { name: 'High blood glucose input' })
     const veryLowBgInput = within(dialog).getByRole('spinbutton', { name: 'Very low blood glucose input' })
+    const outOfRangeTreshold = within(dialog).getByTestId('basic-dropdown-out-of-range-selector')
+    const hypoTreshold = within(dialog).getByTestId('basic-dropdown-hypo-threshold-selector')
+    const nonDataThreshold = within(dialog).getByTestId('basic-dropdown-non-data-selector')
     const saveButton = within(dialog).getByTestId('alarm-config-save')
-    expect(within(within(dialog).getByTestId('current-trigger-setting-tir')).getByText('Current trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)')).toBeVisible()
+
+    expect(within(dialog).getByText('Current trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)')).toBeVisible()
+    expect(within(dialog).getByText('Current trigger setting: 10% of time below 40 mg/dL threshold')).toBeVisible()
+    expect(within(dialog).getByText('Current trigger setting: 15% of data not transmitted over the period')).toBeVisible()
     expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
     expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
     expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
     expect(lowBgInput).toHaveValue(50)
     expect(highBgInput).toHaveValue(140)
     expect(veryLowBgInput).toHaveValue(40)
+    expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent(`${monitoringParameters.outOfRangeThreshold}%`)
+    expect(within(hypoTreshold).getByRole('button')).toHaveTextContent(`${monitoringParameters.hypoThreshold}%`)
+    expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent(`${monitoringParameters.nonDataTxThreshold}%`)
     expect(saveButton).not.toBeDisabled()
 
     await userEvent.clear(lowBgInput)
@@ -190,9 +199,9 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('Should have units in mmol/L, integer values in the inputs and the button displayed', async () => {
-    logDOM(await act(async () => {
+    await act(async () => {
       renderPage(monitoredPatientDashboardRouteMmoL)
-    }))
+    })
     const configureAlarmsButton = await screen.findByRole('button', { name: 'Configure alarms' }, { timeout: 3000 })
     await userEvent.click(configureAlarmsButton)
     const dialog = screen.getByRole('dialog')
@@ -201,7 +210,7 @@ describe('Patient dashboard for HCP', () => {
     const veryLowBgInput = within(dialog).getByRole('spinbutton', { name: 'Very low blood glucose input' })
     const saveButton = within(dialog).getByTestId('alarm-config-save')
 
-    expect(within(within(dialog).getByTestId('current-trigger-setting-tir')).getByText('Current trigger setting: 40% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)')).toBeVisible()
+    expect(within(dialog).getByText('Current trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)')).toBeVisible()
     expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
     expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
     expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()

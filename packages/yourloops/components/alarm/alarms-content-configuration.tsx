@@ -143,13 +143,13 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             bgUnit
           })}
         </Typography>
-        <Box display="flex">
+        <Box display="flex" >
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>
               A. {t('glycemic-target')}
             </Typography>
             <div className={classes.valueSelection}>
-              <Box display="flex" alignItems="center" marginRight={2}>
+              <Box display="flex" alignItems="center" marginRight={2} data-testid="low-bg-text-field-id">
                 <Typography>{t('minimum')}</Typography>
                 <TextField
                   id="low-bg-text-field-id"
@@ -173,11 +173,11 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     }
                   }}
                   onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
-                  data-testid="low-bg-text-field-id"
+
                 />
-                <Typography data-testid="bgUnits-minimum">{bgUnit}</Typography>
+                <Typography>{bgUnit}</Typography>
               </Box>
-              <Box display="flex" alignItems="center">
+              <Box display="flex" alignItems="center" data-testId='high-bg-text-field-id'>
                 <Typography>{t('maximum')}</Typography>
                 <TextField
                   id="high-bg-text-field-id"
@@ -202,7 +202,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   }}
                   onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
                 />
-                <Typography data-testid="bgUnits-maximum">{bgUnit}</Typography>
+                <Typography>{bgUnit}</Typography>
               </Box>
             </div>
             {!patient &&
@@ -246,7 +246,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               hypoThreshold: hypoThreshold.value,
               veryLowBg: veryLowBg.value
             })}:</Typography>
-            <div className={classes.valueSelection}>
+            <div className={classes.valueSelection} data-testid="very-low-bg-text-field-id">
               <Typography>{t('severe-hypoglycemia-below')}</Typography>
               <TextField
                 id="very-low-bg-text-field-id"
@@ -270,7 +270,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   }
                 }}
                 onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
-                data-testid="very-low-bg-text-field-id"
               />
               <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
             </div>
@@ -292,6 +291,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES}
                   error={hypoThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
+                  data-testId='hypo-threshold'
                 />
               </div>
             </div>
@@ -321,6 +321,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES.slice(0, 10)}
                   error={nonDataTxThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
+                  data-testID='non-data'
                 />
               </div>
             </div>
