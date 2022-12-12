@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
-import Divider from '@material-ui/core/Divider'
+import Divider from '@mui/material/Divider'
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
 import {
   CBGMeanStat,

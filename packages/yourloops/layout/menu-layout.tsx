@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import Menu, { MenuProps } from '@material-ui/core/Menu'
+import Menu, { MenuProps } from '@mui/material/Menu'
 
 interface MenuLayoutProps extends MenuProps {
   open: boolean
@@ -39,7 +39,6 @@ function MenuLayout(props: MenuLayoutProps): JSX.Element {
     <Menu
       open={props.open}
       anchorEl={props.anchorEl}
-      getContentAnchorEl={null}
       anchorOrigin={props.anchorOrigin || { vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={props.transformOrigin || { vertical: -10, horizontal: 'right' }}
       onClose={props.onClose}

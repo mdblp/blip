@@ -28,10 +28,11 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Checkbox from '@material-ui/core/Checkbox'
-import AccessTimeIcon from '@material-ui/icons/AccessTime'
-import IconButton from '@material-ui/core/IconButton'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Checkbox from '@mui/material/Checkbox'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import IconButton from '@mui/material/IconButton'
 
 import { Team, TeamMember, useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
@@ -44,9 +45,9 @@ import TeamUtils from '../../lib/team/team.util'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   checkboxTableCellBody: {
-    padding: `0 ${theme.spacing(2)}px !important`
+    padding: `0 ${theme.spacing(2)} !important`
   },
   deleteCell: {
     color: theme.palette.primary.main
@@ -80,7 +81,7 @@ export interface TeamMembersProps {
 
 function MemberRow(props: TeamMembersProps): JSX.Element {
   const { teamMember, team, refreshParent } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const rowId = teamMember.userId.replace(/@/g, '_')
   const teamHook = useTeam()
   const authContext = useAuth()
@@ -176,7 +177,6 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
             disabled={checkboxAdminDisabled}
             id={`members-row-${rowId}-role-checkbox`}
             data-testid="members-row-checkbox"
-            color="primary"
             checked={currentUserIsAdmin}
             onChange={switchRole}
           />
@@ -193,7 +193,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
               disabled={removeMemberDisabled}
               aria-label="remove-member-button"
               onClick={() => setShowConfirmRemoveDialog(true)}
-            >
+              size="large">
               <PersonRemoveIcon />
             </IconButton>
           </StyledTableCell>

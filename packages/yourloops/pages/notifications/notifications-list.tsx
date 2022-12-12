@@ -28,12 +28,13 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import Typography from '@material-ui/core/Typography'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import Typography from '@mui/material/Typography'
 
 import metrics from '../../lib/metrics'
 import { setPageTitle } from '../../lib/utils'
@@ -44,31 +45,29 @@ import SwitchRoleDialogs from '../../components/switch-role'
 import { Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { Notification } from './notification'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    homeIcon: {
-      marginRight: '0.5em'
-    },
-    breadcrumbLink: {
-      display: 'flex'
-    },
-    toolBar: {
-      display: 'grid',
-      gridTemplateRows: 'auto',
-      gridTemplateColumns: 'auto auto auto',
-      paddingLeft: '6em',
-      paddingRight: '6em'
-    },
-    noNotificationMessage: {
-      textAlign: 'center',
-      margin: theme.spacing(4)
-    }
-  }), { name: 'ylp-page-notifications-list' }
-)
+const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Theme) => ({
+  homeIcon: {
+    marginRight: '0.5em'
+  },
+  breadcrumbLink: {
+    display: 'flex'
+  },
+  toolBar: {
+    display: 'grid',
+    gridTemplateRows: 'auto',
+    gridTemplateColumns: 'auto auto auto',
+    paddingLeft: '6em',
+    paddingRight: '6em'
+  },
+  noNotificationMessage: {
+    textAlign: 'center',
+    margin: theme.spacing(4)
+  }
+}))
 
 const NotificationsPage = (): JSX.Element => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { user } = useAuth()
   const notificationsHook = useNotification()
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)

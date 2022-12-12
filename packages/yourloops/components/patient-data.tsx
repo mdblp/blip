@@ -30,8 +30,8 @@ import bows from 'bows'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
+import { makeStyles } from 'tss-react/mui'
+import Container from '@mui/material/Container'
 
 import Blip from 'blip'
 import appConfig from '../lib/config/config'
@@ -50,7 +50,7 @@ import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { Patient } from '../lib/patient/models/patient.model'
 
-const patientDataStyles = makeStyles(() => {
+const patientDataStyles = makeStyles()(() => {
   return {
     container: {
       padding: 0
@@ -82,7 +82,7 @@ function PatientDataPage(): JSX.Element | null {
   const authHook = useAuth()
   const patientHook = usePatientContext()
   const dataHook = useData()
-  const classes = patientDataStyles()
+  const { classes } = patientDataStyles()
 
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null)
   const [error, setError] = React.useState<string | null>(null)

@@ -29,15 +29,16 @@ import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import proSanteLogo from 'pro-sante-connect.svg'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 interface Props {
   onClick: () => void
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   container: {
     textAlign: 'center',
     [theme.breakpoints.only('xs')]: {
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const ProSanteConnectButton: FunctionComponent<Props> = ({ onClick }) => {
-  const { button, label, container } = useStyles()
+  const { classes: { button, label, container } } = useStyles()
   const { t } = useTranslation('yourloops')
 
   return (

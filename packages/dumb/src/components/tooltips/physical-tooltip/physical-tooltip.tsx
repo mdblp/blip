@@ -39,12 +39,12 @@ import {
 import { Tooltip } from '../../../index'
 import styles from './physical-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
-import i18next from 'i18next'
 import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
 import { DurationUnit, DurationValue, PhysicalActivity, TimePrefs } from 'medical-domain'
+import { useTranslation } from 'react-i18next'
 
 interface PhysicalTooltipProps {
   physicalActivity: PhysicalActivity
@@ -53,10 +53,9 @@ interface PhysicalTooltipProps {
   timePrefs: TimePrefs
 }
 
-const t = i18next.t.bind(i18next)
-
 export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) => {
   const { physicalActivity, position, side, timePrefs } = props
+  const { t } = useTranslation('main')
 
   const getDurationInMinutes = (): DurationValue => {
     const units = props.physicalActivity?.duration?.units

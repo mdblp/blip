@@ -28,14 +28,15 @@
 import React, { FunctionComponent, ReactElement } from 'react'
 import { Link } from 'react-router-dom'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
 import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   countLabel: {
     borderRadius: '50%',
     marginLeft: 'auto',
@@ -72,12 +73,12 @@ interface DrawerLinkItemProps {
 }
 
 const DrawerLinkItem: FunctionComponent<DrawerLinkItemProps> = (props) => {
-  const { selectedColor, listItemRoot, countLabel, monitoringBackgroundColor } = classes()
+  const { classes: { selectedColor, listItemRoot, countLabel, monitoringBackgroundColor } } = classes()
   const selected = props.filter === props.selectedFilter
 
   return (
     <Link to={`/home?filter=${props.filter}`} aria-label={props.filter}>
-      <ListItem button selected={selected} classes={{ root: listItemRoot }}>
+      <ListItemButton selected={selected} classes={{ root: listItemRoot }}>
         <ListItemIcon aria-label={props.ariaLabel} className={selected ? selectedColor : undefined}>
           {props.icon}
         </ListItemIcon>
@@ -91,7 +92,7 @@ const DrawerLinkItem: FunctionComponent<DrawerLinkItemProps> = (props) => {
             }
           </Box>
         </ListItemText>
-      </ListItem>
+      </ListItemButton>
     </Link>
   )
 }

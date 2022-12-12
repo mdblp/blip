@@ -28,8 +28,8 @@
 import React, { FunctionComponent } from 'react'
 import { Link as LinkRedirect } from 'react-router-dom'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 import PersonalInfoForm from './personal-info-form'
 import PreferencesForm from './preferences-form'
@@ -41,7 +41,7 @@ import { profileFormCommonClasses } from './css-classes'
 export const ProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { canSave, saving, saveProfile } = useProfilePageState()
-  const classes = profileFormCommonClasses()
+  const { classes } = profileFormCommonClasses()
 
   return (
     <React.Fragment>
