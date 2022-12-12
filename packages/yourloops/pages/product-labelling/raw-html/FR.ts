@@ -403,8 +403,6 @@ const rawHtmlFR = `
       <span class="c11">&nbsp; </span>
       <span class="c11">YourLoops, version ${appConfig.VERSION}, publi&eacute;e le ${appConfig.LATEST_RELEASE}</span>
     </p>
-    <p class="c0"><span class="c15"></span></p>
-    <p class="c0"><span class="c15"></span></p>
     <p id="udi-version">${appConfig.VERSION}</p><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
     <p class="c18"><span class="c10 c30">Usage pr&eacute;vu</span></p>
     <hr>

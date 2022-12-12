@@ -26,6 +26,7 @@
  */
 
 import { act, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { mockPatientLogin } from '../../mock/auth'
 import { buildPatient } from '../../mock/mockPatientAPI'
 import { renderPage } from '../../utils/render'
@@ -54,28 +55,27 @@ describe('Training page when new training available', () => {
 
   it('should render a button opening the training, then a checkbox and a validate button', async () => {
     let router
-    let spyPush
     await act(async () => {
       router = renderPage('/training')
-      spyPush = jest.spyOn(router.current.history, 'push')
     })
+    const spyPush = jest.spyOn(router.current.history, 'push')
 
     expect(screen.getByText('New training available, please read what\'s new before continuing on yourloops.')).toBeVisible()
     const openButton = screen.getByText('Open training')
     expect(openButton).toBeEnabled()
-    openButton.click()
+    await userEvent.click(openButton)
     const confirmButton = screen.getByText('Confirm')
     expect(confirmButton).toBeDisabled()
     const ackText = screen.getByText('I went through the entire training and I understood it')
     expect(ackText).toBeVisible()
-    ackText.click()
+    await userEvent.click(ackText)
     expect(confirmButton).toBeEnabled()
-    ackText.click()
+    await userEvent.click(ackText)
     expect(confirmButton).toBeDisabled()
-    ackText.click()
+    await userEvent.click(ackText)
     expect(confirmButton).toBeEnabled()
     await act(async () => {
-      confirmButton.click()
+      await userEvent.click(confirmButton)
     })
     expect(spyPush).toHaveBeenCalledWith('/')
   })

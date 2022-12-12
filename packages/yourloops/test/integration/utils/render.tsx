@@ -31,7 +31,7 @@ import { MainLobby } from '../../../app/main-lobby'
 import { render } from '@testing-library/react'
 import React, { RefObject } from 'react'
 
-const memoryRouterRef: {current: never} = React.createRef<never>()
+const memoryRouterRef: { current: never } = React.createRef<never>()
 
 function getMainLobby(initialEntry: string) {
   return (
