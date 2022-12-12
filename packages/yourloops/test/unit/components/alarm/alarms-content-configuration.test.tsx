@@ -30,7 +30,7 @@ import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
-import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
+import { buildTeam, createPatient } from '../../common/utils'
 import AlarmsContentConfiguration, {
   AlarmsContentConfigurationProps
 } from '../../../../components/alarm/alarms-content-configuration'
@@ -147,52 +147,6 @@ describe('AlarmsContentConfiguration', () => {
     expect(screen.getByRole('button', { name: `${monitoring.parameters.hypoThreshold}%` })).not.toBeNull()
     expect(screen.getByRole('button', { name: `${monitoring.parameters.nonDataTxThreshold}%` })).not.toBeNull()
   }
-
-  it('should display correct alarm information and execute save function on click', () => {
-    renderTeamAlarmsContent()
-    expect((document.getElementById('low-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.lowBg.toString())
-    expect((document.getElementById('high-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.highBg.toString())
-    expect((document.getElementById('very-low-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.veryLowBg.toString())
-    expect(document.getElementById('basic-dropdown-out-of-range-selector').innerHTML).toEqual(`${monitoring.parameters.outOfRangeThreshold}%`)
-    expect(document.getElementById('basic-dropdown-hypo-threshold-selector').innerHTML).toEqual(`${monitoring.parameters.hypoThreshold}%`)
-    expect(document.getElementById('basic-dropdown-non-data-selector').innerHTML).toEqual(`${monitoring.parameters.nonDataTxThreshold}%`)
-    const saveButton = document.getElementById('save-button-id')
-    expect((saveButton as HTMLButtonElement).disabled).toBeFalsy()
-    triggerMouseEvent('click', saveButton)
-    expect(onSave).toHaveBeenCalledTimes(1)
-    expect(onSave).toHaveBeenCalledWith(monitoring)
-  })
-
-  // it('should display correct alarm information in mg/dL when given mmol/L', () => {
-  //   const monitoringInMMOLL = {
-  //     enabled: true,
-  //     parameters: {
-  //       bgUnit: UnitsType.MMOLL,
-  //       lowBg: convertBG(MIN_LOW_BG, UnitsType.MGDL),
-  //       // lowBg: 2.775346266076887,
-  //       highBg: convertBG(MIN_HIGH_BG, UnitsType.MGDL),
-  //       outOfRangeThreshold: 5,
-  //       veryLowBg: convertBG(MIN_VERY_LOW_BG, UnitsType.MGDL),
-  //       hypoThreshold: 10,
-  //       nonDataTxThreshold: 15,
-  //       reportingPeriod: 7
-  //     }
-  //   }
-  //   monitoring.parameters.veryLowBg = MIN_VERY_LOW_BG
-  //   renderTeamAlarmsContent({ monitoring: monitoringInMMOLL, onSave, saveInProgress: false })
-  //   expect((document.getElementById('low-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoringInMMOLL.parameters.lowBg.toString())
-  //   expect((document.getElementById('high-bg-text-field-id') as HTMLInputElement).value).toEqual(MIN_HIGH_BG.toString())
-  //   expect(+(document.getElementById('very-low-bg-text-field-id') as HTMLInputElement).value).toBeCloseTo(MIN_VERY_LOW_BG + 1)
-  //   expect(document.getElementById('basic-dropdown-out-of-range-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.outOfRangeThreshold}%`)
-  //   expect(document.getElementById('basic-dropdown-hypo-threshold-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.hypoThreshold}%`)
-  //   expect(document.getElementById('basic-dropdown-non-data-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.nonDataTxThreshold}%`)
-  //   const saveButton = document.getElementById('save-button-id')
-  //   expect((saveButton as HTMLButtonElement).disabled).toBeFalsy()
-  //   triggerMouseEvent('click', saveButton)
-  //   expect(onSave).toHaveBeenCalledTimes(1)
-  //   expect(onSave).toHaveBeenCalledWith(monitoring)
-  // })
-
   it('save button should be disabled when outOfRangeThreshold is not correct', () => {
     const incorrectMonitoring = {
       enabled: true,
@@ -280,96 +234,4 @@ describe('AlarmsContentConfiguration', () => {
     expect(screen.queryByText('default-min-max')).not.toBeNull()
     expect(screen.queryAllByText('default')).toHaveLength(4)
   })
-  // it('should return false if the value is in the low target is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 50.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_LOW_BG, MAX_LOW_BG)).toBeFalsy()
-  // })
-  // it('should return false if the value is in the hight target and is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 140.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_HIGH_BG, MAX_HIGH_BG)).toBeFalsy()
-  // })
-  // it('should return false if the value is in the very low target and is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 40.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG)).toBeFalsy()
-  // })
-  // // if is function return true
-  // it('should return true if the value is not in the low target but is in mg/dL', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MGDL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 40
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_LOW_BG, MAX_LOW_BG)).toBeTruthy()
-  // })
-  // it('should return true if the value is not in the hight target but is in mg/dL', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MGDL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 130
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_HIGH_BG, MAX_HIGH_BG)).toBeTruthy()
-  // })
-  // it('should return true if the value is not in the very low target but is in mg/dL', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MGDL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 30
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG)).toBeTruthy()
-  // })
-  //
-  // it('should return true if the value is in the low target but not is in mg/dL', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MGDL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 50.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_LOW_BG, MAX_LOW_BG)).toBeTruthy()
-  // })
-  // it('should return true if the value is not in the hight target but not is in mg/dL', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MGDL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 140.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_HIGH_BG, MAX_HIGH_BG)).toBeTruthy()
-  // })
-  // it('should return true if the value is not in the very low target but not is in mg/dL', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MGDL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 40.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG)).toBeTruthy()
-  // })
-  // it('should return true if the value not is in the low target but is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 40.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_LOW_BG, MAX_LOW_BG)).toBeTruthy()
-  // })
-  // it('should return false if the value not is in the hight target but is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 130.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_HIGH_BG, MAX_HIGH_BG)).toBeTruthy()
-  // })
-  // it('should return false if the value not is in the very low target but is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 30.5
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG)).toBeTruthy()
-  // })
-  // it('should return true if the value is in the low target but not is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 50
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_LOW_BG, MAX_LOW_BG)).toBeTruthy()
-  // })
-  // it('should return false if the value is in the hight target but not is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 140
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_HIGH_BG, MAX_HIGH_BG)).toBeTruthy()
-  // })
-  // it('should return false if the value is in the very low target but not is in mmol/L', () => {
-  //   monitoring.parameters.bgUnit = UNITS_TYPE.MMOLL
-  //   const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave, patient }))
-  //   const valueMgDL = 40
-  //   expect(result.current.getIsErrorMessage(valueMgDL, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG)).toBeTruthy()
-  // })
 })

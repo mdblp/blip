@@ -136,6 +136,8 @@ const ignoredTransKeyForYourLoops = [
   'alert-invitation-patient-failed-already-in-team',
   'alert-invitation-patient-failed-already-invited',
   'accompanying-documents',
+  'current-trigger-setting-hypoglycemia',
+  'current-trigger-setting-tir',
   'product-labelling',
   'no-new-messages',
   'training',

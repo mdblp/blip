@@ -87,7 +87,6 @@ export const PERCENTAGES = [...new Array(21)]
 
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
   const bgUnit = monitoring?.parameters?.bgUnit ?? UnitsType.MGDL
-  monitoring.parameters.bgUnit = UnitsType.MGDL
   const thresholds = { ...DEFAULT_THRESHOLDS_IN_MGDL }
   const { t } = useTranslation('yourloops')
   const convertThresholdsToMmol = (): void => {
