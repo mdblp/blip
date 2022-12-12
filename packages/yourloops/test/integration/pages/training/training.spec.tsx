@@ -77,7 +77,6 @@ describe('Training page when new training available', () => {
     await act(async () => {
       confirmButton.click()
     })
-    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(spyPush).toHaveBeenCalledWith('/')
   })
 })
