@@ -37,15 +37,15 @@ export const statFormats = {
   bgCount: 'bgCount',
   bgRange: 'bgRange',
   bgValue: 'bgValue',
-  cv: 'cv',//
+  cv: 'cv',
   carbs: 'carbs',
   duration: 'duration',
-  gmi: 'gmi',//
-  percentage: 'percentage',//
+  gmi: 'gmi',
+  percentage: 'percentage',
   standardDevRange: 'standardDevRange',
   standardDevValue: 'standardDevValue',
-  units: 'units',//
-  unitsPerKg: 'unitsPerKg'//
+  units: 'units',
+  unitsPerKg: 'unitsPerKg'
 }
 
 export const commonStats = {
