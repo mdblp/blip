@@ -26,7 +26,7 @@
  */
 
 import { useCallback, useMemo } from 'react'
-import styles from './simple-stat.css'
+import styles from './simple-stat.hook.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { StatFormats } from '../../../models/stats.model'
 import { getPercentagePrecision } from './simple-stat.utils'

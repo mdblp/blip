@@ -6,7 +6,6 @@ import PatientStatistics from './patientStatistics'
 import Header from './header'
 import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
-import { ParameterConfig } from 'medical-domain/dist/src/domains/models/medical/datum/pump-settings.model'
 
 const PatientDashboard = (props) => {
   const {
@@ -82,7 +81,7 @@ const PatientDashboard = (props) => {
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
-          parametersConfig={tidelineData.medicalData.pumpSettings[0]?.payload?.parameters}
+          parametersConfig={tidelineData.medicalData?.pumpSettings[0]?.payload?.parameters}
         />
         <DeviceUsage
           id="dashboard-device-usage"

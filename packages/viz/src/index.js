@@ -25,7 +25,6 @@ import TwoOptionToggle from './components/common/controls/TwoOptionToggle'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import TrendsContainer from './components/trends/common/TrendsContainer'
 import BolusTooltip from './components/daily/bolustooltip/BolusTooltip'
-import Stat from './components/common/stat/Stat'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
 import reducers from './redux/reducers/'
@@ -56,7 +55,6 @@ const components = {
   RangeSelect,
   TwoOptionToggle,
   BolusTooltip,
-  Stat,
   WarmUpTooltip
 }
 
