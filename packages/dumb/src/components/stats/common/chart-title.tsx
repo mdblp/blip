@@ -27,46 +27,47 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './chart-title.css'
-import colors from '../../../styles/colors.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 
 interface ChartTitleProps {
   annotations: string[]
+  className?: string
   emptyDataPlaceholder: string
   title: string
-  titleData: { id?: string, value: number | string, suffix: string }
-  hideToolTips: boolean
+  showToolTip: boolean
+  suffix: string
+  value: string
 }
 
 export const ChartTitle: FunctionComponent<ChartTitleProps> = (props) => {
   const {
     annotations,
+    className,
     emptyDataPlaceholder,
-    hideToolTips,
+    showToolTip,
     title,
-    titleData
+    suffix,
+    value
   } = props
+
+  const valueClass = className ?? styles.value
 
   return (
     <div className={styles.chartTitle}>
       {title}
-      {titleData && titleData.value !== emptyDataPlaceholder && titleData.value !== '' && (
+      {value !== emptyDataPlaceholder && value !== '' && (
         <span className={styles.chartTitleData}>
             (&nbsp;
-          <span
-            style={{
-              color: titleData.id ? (colors[titleData.id] ?? colors.statDefault) : colors.statDefault
-            }}
-          >
-            {titleData.value}
+          <span className={valueClass}>
+            {value}
           </span>
           <span className={styles.chartTitleSuffix}>
-            {titleData.suffix}
+            {suffix}
           </span>
           &nbsp;)
         </span>
       )}
-      {!hideToolTips && annotations && (
+      {showToolTip && annotations && (
         <StatTooltip annotations={annotations} />
       )}
     </div>

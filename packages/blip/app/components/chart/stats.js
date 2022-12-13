@@ -174,7 +174,11 @@ class Stats extends React.Component {
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
           AAAAAAAAAAAAAAAAAAAAAAA
             <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-            <AverageDailyDoseStat parametersConfig={parametersConfig} hideToolTips={hideToolTips} {...stat} />
+            <AverageDailyDoseStat
+              parametersConfig={parametersConfig}
+              showToolTip={!hideToolTips}
+              {...stat}
+            />
           AAAAAAAAAAAAAAAAAAAAAAA
             <Divider variant="fullWidth" />
           </div>
@@ -185,7 +189,15 @@ class Stats extends React.Component {
             <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
             AAAAAAAAAAAAAAAAAAAAAAA
               <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-              <SimpleStat hideToolTips={hideToolTips} {...stat} />
+              <SimpleStat
+                annotations={stat.annotations}
+                data={stat.data}
+                dataFormat={stat.dataFormat}
+                emptyDataPlaceholder={stat.emptyDataPlaceholder}
+                title={stat.title}
+                units={stat.units}
+                showToolTip={!hideToolTips}
+              />
             AAAAAAAAAAAAAAAAAAAAAAA
               <Divider variant="fullWidth" />
             </div>

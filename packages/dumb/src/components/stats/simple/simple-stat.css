@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+@import "../../../styles/colors.css";
+
 .StatWrapper {
   position: relative;
   overflow: visible;
@@ -51,4 +53,20 @@
 
 .Stat.isOpen .chartTitleData {
   display: inline-flex;
+}
+
+.coefficientVariationTarget {
+  color: var(--bg-target);
+}
+
+.coefficientVariationHigh {
+  color: var(--bg-high);
+}
+
+.statDisabled {
+  color: var(--stat-disabled);
+}
+
+.statEnabled {
+  color: var(--text-medium-contrast);
 }

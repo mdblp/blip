@@ -27,37 +27,37 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './chart-summary.css'
-import colors from '../../../styles/colors.css'
 
 interface ChartSummaryProps {
+  className?: string
   isOpened: boolean
   units: string | boolean
   showSummary: boolean
-  summaryData: { id?: string, value: number | string, suffix: string }
+  suffix: string
+  value: string
 }
 
 export const ChartSummary: FunctionComponent<ChartSummaryProps> = (props) => {
   const {
+    className,
     isOpened,
     units,
     showSummary,
-    summaryData
+    suffix,
+    value
   } = props
+
+  const classNames = className ? `${styles.summaryData} ${className}` : styles.summaryData
 
   return (
     <div className={styles.chartSummary}>
-      {summaryData.value && showSummary && (
-        <div
-          className={styles.summaryData}
-          style={{
-            color: summaryData.id ? (colors[summaryData.id] ?? colors.statDefault) : colors.statDefault
-          }}
-        >
+      {value && showSummary && (
+        <div className={classNames}>
           <span className={styles.summaryValue}>
-            {summaryData.value}
+            {value}
           </span>
           <span className={styles.summarySuffix}>
-              {summaryData.suffix}
+            {suffix}
           </span>
         </div>
       )}

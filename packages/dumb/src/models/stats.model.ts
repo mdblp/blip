@@ -58,3 +58,11 @@ export interface BgClasses {
   target: number // Target threshold represents all the values between low and target
   veryLow: number // Very low threshold represents all the values between 0 and veryLow
 }
+
+export enum StatFormats {
+  cv = 'cv',
+  gmi = 'gmi',
+  percentage = 'percentage',
+  units = 'units',
+  unitsPerKg = 'unitsPerKg'
+}

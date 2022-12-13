@@ -27,47 +27,26 @@
 
 import React, { FunctionComponent } from 'react'
 import _ from 'lodash'
-import cx from 'classnames'
 import styles from './simple-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { ChartTitle } from '../common/chart-title'
 import { ChartSummary } from '../common/chart-summary'
+import { StatFormats } from '../../../models/stats.model'
 
-enum StatFormats {
-  cv = 'cv',
-  gmi = 'gmi',
-  percentage = 'percentage',
-  units = 'units',
-  unitsPerKg = 'unitsPerKg'
-}
-
-interface StatProps {
-  alwaysShowTooltips: boolean
-  alwaysShowSummary: boolean
+interface SimpleStatProps {
   annotations: string[]
-  collapsible: boolean
   data: {
     data: Datum[]
     total: Datum
-    dataPaths: {
-      input: string | []
-      output: string | []
-      summary: string
-      title: string
-    }
   }
   dataFormat: {
-    label: StatFormats
     summary: StatFormats
     title: StatFormats
-    tooltip: StatFormats
-    tooltipTitle: StatFormats
   }
   emptyDataPlaceholder: string
-  isOpened: boolean
   title: string
   units: string | boolean
-  hideToolTips: boolean
+  showToolTip: boolean
 }
 
 interface Datum {
@@ -76,11 +55,11 @@ interface Datum {
   title: string
 }
 
-export const SimpleStat: FunctionComponent<StatProps> = (
+export const SimpleStat: FunctionComponent<SimpleStatProps> = (
   {
     emptyDataPlaceholder = '--',
     units = false,
-    hideToolTips = false,
+    showToolTip = true,
     ...props
   }) => {
   const {
@@ -90,75 +69,60 @@ export const SimpleStat: FunctionComponent<StatProps> = (
     title
   } = props
 
-  const statClasses = cx({
-    [styles.Stat]: true,
-    [styles.isOpen]: false
-  })
-
-  /**
-   * classifyCvValue
-   * @param {number} value - integer or float coefficient of variation (CV) value
-   * @return {String} cvClassification - target, high
-   */
-  const classifyCvValue = (value: number): string => {
-    if (value <= 36) {
-      return 'target'
+  const getPercentagePrecision = (percentage: number): number => {
+    // We want to show extra precision on very small percentages so that we avoid showing 0%
+    // when there is some data there.
+    if (percentage > 0 && percentage < 0.5) {
+      return percentage < 0.05 ? 2 : 1
     }
-    return 'high'
+    return 0
   }
 
-  const formatDatum = (datum: Datum, format: string): { id?: string, value: number | string, suffix: string } => {
-    const id = datum.id
-    const value: number | string = datum.value
-    if (format !== StatFormats.cv && format !== StatFormats.gmi && format !== StatFormats.percentage && format !== StatFormats.unitsPerKg && format !== StatFormats.units) {
+  const formatDatum = (datum: Datum, format: string): { className?: string, value: string, suffix: string } => {
+    const value: number = datum.value
+    if (format !== StatFormats.cv && format !== StatFormats.gmi && format !== StatFormats.percentage) {
       return {
-        id,
-        value: datum.value,
+        className: styles.statEnabled,
+        value: datum.value.toString(),
         suffix: ''
       }
     }
     if (format === StatFormats.cv && value >= 0) {
       return {
-        id: classifyCvValue(value),
+        className: value <= 36 ? styles.coefficientVariationTarget : styles.coefficientVariationHigh,
         value: formatDecimalNumber(value),
         suffix: '%'
       }
     }
     if (format === StatFormats.gmi && value >= 0) {
       return {
-        id,
+        className: styles.statEnabled,
         value: formatDecimalNumber(value, 1),
         suffix: '%'
       }
     }
 
-    const total = _.get(data, 'total.value')
+    const total = data.total?.value
     if (format === StatFormats.percentage && total && total >= 0) {
       const val = _.max([value, 0]) ?? 0
       const percentage = (val / total) * 100
-      let precision = 0
-      // We want to show extra precision on very small percentages so that we avoid showing 0%
-      // when there is some data there.
-      if (percentage > 0 && percentage < 0.5) {
-        precision = percentage < 0.05 ? 2 : 1
-      }
       return {
-        id,
-        value: formatDecimalNumber(percentage, precision),
+        className: styles.statEnabled,
+        value: formatDecimalNumber(percentage, getPercentagePrecision(percentage)),
         suffix: '%'
       }
     }
 
     return {
-      id: 'statDisabled',
+      className: styles.statDisabled,
       value: emptyDataPlaceholder,
       suffix: ''
     }
   }
 
-  const getFormattedData = (format: StatFormats): { id?: string, value: number | string, suffix: string } => {
+  const getFormattedData = (format: StatFormats): { className?: string, value: string, suffix: string } => {
     if (!data?.data?.[0]) {
-      return { id: undefined, value: '', suffix: '' }
+      return { value: '', suffix: '' }
     }
     return formatDatum(data.data[0], format)
   }
@@ -167,16 +131,24 @@ export const SimpleStat: FunctionComponent<StatProps> = (
   const summaryData = getFormattedData(dataFormat.summary)
   return (
     <div className={styles.StatWrapper}>
-      <div className={statClasses}>
+      <div className={styles.Stat}>
         <div className={styles.statHeader}>
           <ChartTitle
             annotations={annotations}
             emptyDataPlaceholder={emptyDataPlaceholder}
-            hideToolTips={hideToolTips}
+            showToolTip={showToolTip}
             title={title}
-            titleData={titleData}
+            suffix={titleData.suffix}
+            value={titleData.value}
           />
-          <ChartSummary isOpened={true} units={units} showSummary={true} summaryData={summaryData} />
+          <ChartSummary
+            className={summaryData.className}
+            isOpened={true}
+            units={units}
+            showSummary={true}
+            suffix={summaryData.suffix}
+            value={summaryData.value}
+          />
         </div>
       </div>
     </div>

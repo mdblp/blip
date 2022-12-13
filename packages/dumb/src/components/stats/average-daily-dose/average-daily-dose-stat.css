@@ -126,3 +126,11 @@
   font-weight: 500;
   color: var(--stat--default);
 }
+
+.statDisabled {
+  color: var(--stat-disabled);
+}
+
+.insulinTitle {
+  color: var(--insulin)
+}

@@ -34,14 +34,7 @@ import { useTranslation } from 'react-i18next'
 import { ChartTitle } from '../common/chart-title'
 import { ChartSummary } from '../common/chart-summary'
 import { ParameterConfig } from 'medical-domain'
-
-enum StatFormats {
-  cv = 'cv',
-  gmi = 'gmi',
-  percentage = 'percentage',
-  units = 'units',
-  unitsPerKg = 'unitsPerKg'
-}
+import { StatFormats } from '../../../models/stats.model'
 
 interface StatProps {
   alwaysShowSummary: boolean
@@ -67,7 +60,7 @@ interface StatProps {
   isOpened: boolean
   title: string
   units: string | boolean
-  hideToolTips: boolean
+  showToolTip: boolean
   parametersConfig: ParameterConfig[]
 }
 
@@ -83,7 +76,7 @@ export const AverageDailyDoseStat: FunctionComponent<StatProps> = (
     emptyDataPlaceholder = '--',
     isOpened = true,
     units = false,
-    hideToolTips = false,
+    showToolTip = true,
     ...props
   }) => {
   const {
@@ -104,21 +97,19 @@ export const AverageDailyDoseStat: FunctionComponent<StatProps> = (
     [styles.isOpen]: isOpened
   })
 
-  const formatDatum = (datum: { id?: string, value: number, suffix: string }, format: string): { id?: string, value: number | string, suffix: string } => {
-    const id = datum.id
+  const formatDatum = (datum: { id?: string, value: number, suffix: string }, format: string): { className?: string, value: string, suffix: string } => {
     const value: number | string = datum.value
     const suffix = datum.suffix || ''
 
     if (format === StatFormats.unitsPerKg) {
       if (value > 0 && _.isFinite(value)) {
         return {
-          id,
           value: formatDecimalNumber(value, 2),
           suffix: t('U/kg')
         }
       }
       return {
-        id: 'statDisabled',
+        className: styles.statDisabled,
         value: emptyDataPlaceholder,
         suffix: t('U/kg')
       }
@@ -126,34 +117,38 @@ export const AverageDailyDoseStat: FunctionComponent<StatProps> = (
 
     if (format === StatFormats.units && value >= 0) {
       return {
-        id,
+        className: styles.insulinTitle,
         value: formatDecimalNumber(value, 1),
         suffix: t('U')
       }
     }
     return {
-      id: 'statDisabled',
+      className: styles.statDisabled,
       value: emptyDataPlaceholder,
       suffix
     }
   }
 
-  const getFormattedDataByKey = (key: string, format: StatFormats): { id?: string, value: number | string, suffix: string } => {
+  const getFormattedDataByKey = (key: string, format: StatFormats): { className?: string, value: string, suffix: string } => {
     const path = _.get(data, `dataPaths.${key}`)
     if (!path) {
-      return { id: undefined, value: '', suffix: '' }
+      return { value: '', suffix: '' }
     }
     const datum = _.get(data, path)
     return formatDatum(datum, format)
   }
 
-  const computeCalculatedOutput = (outputPath: string | [], output: { type: string }, format: string): { value: number | string, suffix: string } => {
+  const computeCalculatedOutput = (outputPath: string | [], output: { type: string }, format: string): { value: string, suffix: string } => {
     if (outputPath && output) {
       const datum = {
         value: data.data[0].value / input.value,
         suffix: input.value.label ?? ''
       }
-      return formatDatum(datum, format)
+      const datumFormatted = formatDatum(datum, format)
+      return {
+        suffix: datumFormatted.suffix,
+        value: datumFormatted.value
+      }
     }
     return {
       value: emptyDataPlaceholder,
@@ -201,16 +196,20 @@ export const AverageDailyDoseStat: FunctionComponent<StatProps> = (
         <div className={styles.statHeader}>
           <ChartTitle
             annotations={annotations}
+            className={titleData.className}
             emptyDataPlaceholder={emptyDataPlaceholder}
-            hideToolTips={hideToolTips}
+            showToolTip={showToolTip}
             title={title}
-            titleData={titleData}
+            suffix={titleData.suffix}
+            value={titleData.value}
           />
           <ChartSummary
+            className={summaryData.className}
             isOpened={isOpened}
-            units={units}
+            suffix={summaryData.suffix}
             showSummary={alwaysShowSummary || !isOpened}
-            summaryData={summaryData}
+            units={units}
+            value={summaryData.value}
           />
         </div>
         <div className={styles.inputWrapper}>
