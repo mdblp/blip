@@ -45,9 +45,9 @@ import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
 jest.mock('../../../../lib/team')
 describe('AlarmsContentConfiguration', () => {
   const {
-    MIN_LOW_BG,
-    MIN_VERY_LOW_BG,
-    MIN_HIGH_BG
+    minLowBg,
+    minVeryLowBg,
+    minHighBg
   } = DEFAULT_THRESHOLDS_IN_MGDL
 
   const onSave = jest.fn()
@@ -56,10 +56,10 @@ describe('AlarmsContentConfiguration', () => {
     enabled: true,
     parameters: {
       bgUnit: UnitsType.MMOLL,
-      lowBg: MIN_LOW_BG,
-      highBg: MIN_HIGH_BG,
+      lowBg: minLowBg,
+      highBg: minHighBg,
       outOfRangeThreshold: 5,
-      veryLowBg: MIN_VERY_LOW_BG,
+      veryLowBg: minVeryLowBg,
       hypoThreshold: 10,
       nonDataTxThreshold: 15,
       reportingPeriod: 7
@@ -152,10 +152,10 @@ describe('AlarmsContentConfiguration', () => {
       enabled: true,
       parameters: {
         bgUnit: UnitsType.MGDL,
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
+        lowBg: minLowBg,
+        highBg: minHighBg,
         outOfRangeThreshold: 8,
-        veryLowBg: MIN_VERY_LOW_BG,
+        veryLowBg: minVeryLowBg,
         hypoThreshold: 10,
         nonDataTxThreshold: 15,
         reportingPeriod: 7
@@ -170,10 +170,10 @@ describe('AlarmsContentConfiguration', () => {
       enabled: true,
       parameters: {
         bgUnit: UnitsType.MGDL,
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
+        lowBg: minLowBg,
+        highBg: minHighBg,
         outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
+        veryLowBg: minVeryLowBg,
         hypoThreshold: 11,
         nonDataTxThreshold: 15,
         reportingPeriod: 7
@@ -188,10 +188,10 @@ describe('AlarmsContentConfiguration', () => {
       enabled: true,
       parameters: {
         bgUnit: UnitsType.MGDL,
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
+        lowBg: minLowBg,
+        highBg: minHighBg,
         outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
+        veryLowBg: minVeryLowBg,
         hypoThreshold: 10,
         nonDataTxThreshold: 150,
         reportingPeriod: 7

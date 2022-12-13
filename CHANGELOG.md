@@ -25,7 +25,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
 - YLP-1916 Migrate tooltips from viz to dumb
-- YLP-1919 Detect and verify that in the inputs is integer numbers of the preferences
+- YLP-1919 Use user preferred units on alarm configuration component
 - YLP-1935 CBG thresholds should be used from medical data service
 - YLP-1942 Rename files in yourloops and medical-domain
 - YLP-1945 Migrate NoBar component to dumb

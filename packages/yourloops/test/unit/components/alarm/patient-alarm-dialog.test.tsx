@@ -42,9 +42,9 @@ import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../../components/alarm/alarms-
 
 jest.mock('../../../../lib/patient/patient.provider')
 const {
-  MIN_VERY_LOW_BG,
-  MIN_LOW_BG,
-  MIN_HIGH_BG
+  minVeryLowBg,
+  minLowBg,
+  minHighBg
 } = DEFAULT_THRESHOLDS_IN_MGDL
 describe('PatientAlarmDialog', () => {
   const patient = createPatient('fakePatientId')
@@ -62,10 +62,10 @@ describe('PatientAlarmDialog', () => {
     enabled: true,
     parameters: {
       bgUnit: UnitsType.MGDL,
-      lowBg: MIN_LOW_BG,
-      highBg: MIN_HIGH_BG,
+      lowBg: minLowBg,
+      highBg: minHighBg,
       outOfRangeThreshold: 20,
-      veryLowBg: MIN_VERY_LOW_BG,
+      veryLowBg: minVeryLowBg,
       hypoThreshold: 25,
       nonDataTxThreshold: 30,
       reportingPeriod: 15

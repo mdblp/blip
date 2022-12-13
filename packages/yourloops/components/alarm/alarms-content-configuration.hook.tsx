@@ -60,7 +60,16 @@ interface AlarmsContentConfigurationHookReturn {
   resetToTeamDefaultValues: () => void
   onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
   bgUnit: UnitsType
-  thresholds: Record<string, number>
+  thresholds: Thresholds
+}
+
+interface Thresholds {
+  minHighBg: number
+  maxHighBg: number
+  minVeryLowBg: number
+  maxVeryLowBg: number
+  minLowBg: number
+  maxLowBg: number
 }
 
 interface ValueErrorMessagePair {
@@ -73,34 +82,34 @@ interface ValueErrorPair {
   error?: boolean
 }
 
-export const DEFAULT_THRESHOLDS_IN_MGDL = {
-  MIN_HIGH_BG: 140,
-  MAX_HIGH_BG: 250,
-  MIN_VERY_LOW_BG: 40,
-  MAX_VERY_LOW_BG: 90,
-  MIN_LOW_BG: 50,
-  MAX_LOW_BG: 100
+export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
+  minHighBg: 140,
+  maxHighBg: 250,
+  minVeryLowBg: 40,
+  maxVeryLowBg: 90,
+  minLowBg: 50,
+  maxLowBg: 100
 }
-export const PERCENTAGES = [...new Array(21)]
-  .map((_each, index) => `${index * 5}%`).slice(1, 21)
-
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
   const bgUnit = monitoring?.parameters?.bgUnit ?? UnitsType.MGDL
-  const thresholds = { ...DEFAULT_THRESHOLDS_IN_MGDL }
-  const { t } = useTranslation('yourloops')
-  const convertThresholdsToMmol = (): void => {
-    if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UnitsType.MMOLL) {
-      thresholds.MIN_HIGH_BG = Math.round(convertBG(thresholds.MIN_HIGH_BG, UnitsType.MGDL) * 10) / 10
-      thresholds.MAX_HIGH_BG = Math.round(convertBG(thresholds.MAX_HIGH_BG, UnitsType.MGDL) * 10) / 10
-      thresholds.MIN_VERY_LOW_BG = Math.round(convertBG(thresholds.MIN_VERY_LOW_BG, UnitsType.MGDL) * 10) / 10
-      thresholds.MAX_VERY_LOW_BG = Math.round(convertBG(thresholds.MAX_VERY_LOW_BG, UnitsType.MGDL) * 10) / 10
-      thresholds.MIN_LOW_BG = Math.round(convertBG(thresholds.MIN_LOW_BG, UnitsType.MGDL) * 10) / 10
-      thresholds.MAX_LOW_BG = Math.round(convertBG(thresholds.MAX_LOW_BG, UnitsType.MGDL) * 10) / 10
-    }
-  }
-  convertThresholdsToMmol()
 
-  const getIsErrorMessage = (value: number, lowValue: number, highValue: number): string => {
+  const { t } = useTranslation('yourloops')
+
+  const thresholds = useMemo(() => {
+    if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UnitsType.MMOLL) {
+      return {
+        minHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minHighBg, UnitsType.MGDL) * 10) / 10,
+        maxHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxHighBg, UnitsType.MGDL) * 10) / 10,
+        minVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, UnitsType.MGDL) * 10) / 10,
+        maxVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryLowBg, UnitsType.MGDL) * 10) / 10,
+        minLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, UnitsType.MGDL) * 10) / 10,
+        maxLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxLowBg, UnitsType.MGDL) * 10) / 10
+      }
+    }
+    return { ...DEFAULT_THRESHOLDS_IN_MGDL }
+  }, [monitoring?.parameters])
+
+  const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
     if (bgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
       return t('mandatory-integer')
     }
@@ -112,18 +121,20 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     }
     return null
   }
+
   const teamHook = useTeam()
+
   const [highBg, setHighBg] = useState<ValueErrorMessagePair>({
     value: monitoring?.parameters?.highBg,
-    errorMessage: getIsErrorMessage(monitoring?.parameters?.highBg, thresholds.MIN_HIGH_BG, thresholds.MAX_HIGH_BG)
+    errorMessage: getErrorMessage(monitoring?.parameters?.highBg, thresholds.minHighBg, thresholds.maxHighBg)
   })
   const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>({
     value: monitoring?.parameters?.veryLowBg,
-    errorMessage: getIsErrorMessage(monitoring?.parameters?.veryLowBg, thresholds.MIN_VERY_LOW_BG, thresholds.MAX_VERY_LOW_BG)
+    errorMessage: getErrorMessage(monitoring?.parameters?.veryLowBg, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
   })
   const [lowBg, setLowBg] = useState<ValueErrorMessagePair>({
     value: monitoring?.parameters?.lowBg,
-    errorMessage: getIsErrorMessage(monitoring?.parameters?.lowBg, thresholds.MIN_LOW_BG, thresholds.MAX_LOW_BG)
+    errorMessage: getErrorMessage(monitoring?.parameters?.lowBg, thresholds.minLowBg, thresholds.maxLowBg)
   })
   const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(
     {
@@ -140,6 +151,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       value: monitoring?.parameters?.hypoThreshold,
       error: monitoring?.parameters?.hypoThreshold === undefined || isInvalidPercentage(monitoring.parameters.hypoThreshold)
     })
+
   const saveButtonDisabled = useMemo(() => {
     return !!lowBg.errorMessage ||
       !!highBg.errorMessage ||
@@ -149,6 +161,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       nonDataTxThreshold.error ||
       saveInProgress
   }, [highBg.errorMessage, hypoThreshold.error, lowBg.errorMessage, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.errorMessage])
+
   const onChange = (
     value: number,
     lowValue: number,
@@ -157,7 +170,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
   ): void => {
     setValue({
       value,
-      errorMessage: getIsErrorMessage(value, lowValue, highValue)
+      errorMessage: getErrorMessage(value, lowValue, highValue)
     })
   }
 
@@ -165,11 +178,14 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     if (!patient) {
       throw Error('This action cannot be done if the patient is undefined')
     }
+
     const monitoredTeam = PatientUtils.getRemoteMonitoringTeam(patient)
+
     const team = teamHook.getTeam(monitoredTeam.teamId)
     if (!team) {
       throw Error(`Cannot find team with id ${monitoredTeam.teamId}`)
     }
+
     const defaultMonitoring = team.monitoring
     if (!defaultMonitoring?.parameters) {
       throw Error('The given team has no monitoring values')
@@ -183,34 +199,23 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
   }
 
   const save = (): void => {
-    if (
-      lowBg.value !== undefined &&
-      highBg.value !== undefined &&
-      veryLowBg.value !== undefined &&
-      outOfRangeThreshold.value !== undefined &&
-      nonDataTxThreshold.value !== undefined &&
-      hypoThreshold.value !== undefined
-    ) {
-      const reportingPeriod = (monitoring?.parameters?.reportingPeriod && monitoring?.parameters?.reportingPeriod > 0) ? monitoring?.parameters?.reportingPeriod : 55
-      const monitoringUpdated: Monitoring = {
-        enabled: monitoring?.enabled ?? true,
-        status: monitoring?.status,
-        monitoringEnd: monitoring?.monitoringEnd,
-        parameters: {
-          bgUnit: monitoring?.parameters?.bgUnit ?? UnitsType.MGDL,
-          lowBg: lowBg.value,
-          highBg: highBg.value,
-          outOfRangeThreshold: outOfRangeThreshold.value,
-          veryLowBg: veryLowBg.value,
-          hypoThreshold: hypoThreshold.value,
-          nonDataTxThreshold: nonDataTxThreshold.value,
-          reportingPeriod
-        }
+    const reportingPeriod = (monitoring?.parameters?.reportingPeriod && monitoring?.parameters?.reportingPeriod > 0) ? monitoring?.parameters?.reportingPeriod : 55
+    const monitoringUpdated: Monitoring = {
+      enabled: monitoring?.enabled ?? true,
+      status: monitoring?.status,
+      monitoringEnd: monitoring?.monitoringEnd,
+      parameters: {
+        bgUnit: monitoring?.parameters?.bgUnit ?? UnitsType.MGDL,
+        lowBg: lowBg.value,
+        highBg: highBg.value,
+        outOfRangeThreshold: outOfRangeThreshold.value,
+        veryLowBg: veryLowBg.value,
+        hypoThreshold: hypoThreshold.value,
+        nonDataTxThreshold: nonDataTxThreshold.value,
+        reportingPeriod
       }
-      onSave(monitoringUpdated)
-    } else {
-      throw Error('Cannot update team monitoring as some values are not defined')
     }
+    onSave(monitoringUpdated)
   }
   return {
     lowBg,

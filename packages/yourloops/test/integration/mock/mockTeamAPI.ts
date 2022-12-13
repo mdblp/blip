@@ -38,16 +38,16 @@ import { Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms-content-configuration.hook'
 
 const {
-  MIN_VERY_LOW_BG,
-  MIN_LOW_BG,
-  MIN_HIGH_BG
+  minVeryLowBg,
+  minLowBg,
+  minHighBg
 } = DEFAULT_THRESHOLDS_IN_MGDL
 export const monitoringParameters = {
   bgUnit: UnitsType.MGDL,
-  lowBg: MIN_LOW_BG,
-  highBg: MIN_HIGH_BG,
+  lowBg: minLowBg,
+  highBg: minHighBg,
   outOfRangeThreshold: 5,
-  veryLowBg: MIN_VERY_LOW_BG,
+  veryLowBg: minVeryLowBg,
   hypoThreshold: 10,
   nonDataTxThreshold: 15,
   reportingPeriod: 7

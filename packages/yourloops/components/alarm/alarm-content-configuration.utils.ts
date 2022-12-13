@@ -24,17 +24,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import { PERCENTAGES } from './alarms-content-configuration.hook'
 import React from 'react'
-
+export const PERCENTAGES = [...new Array(21)]
+  .map((_each, index) => `${index * 5}%`).slice(1, 21)
 export const isInvalidPercentage = (value: number): boolean => {
   return !PERCENTAGES.includes(`${value}%`)
 }
 export const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
-  const valueAsNumber = parseFloat(value)
   setValue({
-    value: valueAsNumber,
+    value: parseFloat(value),
     error: false
   })
 }

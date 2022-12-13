@@ -47,25 +47,15 @@ const monitoring = team.monitoring = {
     reportingPeriod: 7
   }
 }
-describe('AlarmsContentConfiguration', () => {
+describe('AlarmsContentConfiguration hook', () => {
   it('should not return message error if the value is within the low target and is in mg/dL', () => {
     monitoring.parameters.bgUnit = UnitsType.MGDL
     monitoring.parameters.lowBg = 50
-    const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
-    expect(result.current.lowBg.errorMessage).not.toBe('mandatory-integer')
-    expect(result.current.lowBg.errorMessage).not.toBe('mandatory-float')
-    expect(result.current.lowBg.errorMessage).not.toBe('mandatory-range')
-  })
-  it('should return message error if the value is within the high target but not is in mg/dL', () => {
-    monitoring.parameters.bgUnit = UnitsType.MGDL
     monitoring.parameters.highBg = 140.5
-    const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
-    expect(result.current.highBg.errorMessage).toBe('mandatory-integer')
-  })
-  it('should return message error if the value not is within the very low target but is in mg/dL', () => {
-    team.monitoring.parameters.bgUnit = UnitsType.MGDL
     team.monitoring.parameters.veryLowBg = 30
     const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+    expect(result.current.lowBg.errorMessage).toBeNull()
+    expect(result.current.highBg.errorMessage).toBe('mandatory-integer')
     expect(result.current.veryLowBg.errorMessage).toBe('mandatory-range')
   })
   it('should return message error if the value is within the very low target and not is in mmol/L', () => {

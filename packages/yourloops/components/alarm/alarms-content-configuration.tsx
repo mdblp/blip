@@ -41,8 +41,8 @@ import { Monitoring } from '../../lib/team/models/monitoring.model'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import useAlarmsContentConfiguration, { PERCENTAGES } from './alarms-content-configuration.hook'
-import { onBasicDropdownSelect } from './alarm-content-configuration.utils'
+import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
+import { onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
 import FormHelperText from '@mui/material/FormHelperText'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -127,7 +127,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     bgUnit,
     thresholds
   } = useAlarmsContentConfiguration(props)
-  const { MIN_LOW_BG, MAX_LOW_BG, MIN_HIGH_BG, MAX_HIGH_BG, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG } = thresholds
+  const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = thresholds
 
   return (
     <React.Fragment>
@@ -143,7 +143,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             bgUnit
           })}
         </Typography>
-        <Box display="flex">
+        <Box display="flex" data-testid='time-target'>
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>
               A. {t('glycemic-target')}
@@ -167,13 +167,13 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   size="small"
                   InputProps={{
                     inputProps: {
-                      min: MIN_LOW_BG,
-                      max: MAX_LOW_BG,
+                      min: minLowBg,
+                      max: maxLowBg,
                       step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
                       'aria-label': t('low-bg-input')
                     }
                   }}
-                  onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
+                  onChange={(event) => onChange(+event.target.value, minLowBg, maxLowBg, setLowBg)}
                 />
                 <Typography>{bgUnit}</Typography>
                 {!!lowBg.errorMessage &&
@@ -199,13 +199,13 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   size="small"
                   InputProps={{
                     inputProps: {
-                      min: MIN_HIGH_BG,
-                      max: MAX_HIGH_BG,
+                      min: minHighBg,
+                      max: maxHighBg,
                       step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
                       'aria-label': t('high-bg-input')
                     }
                   }}
-                  onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
+                  onChange={(event) => onChange(+event.target.value, minHighBg, maxHighBg, setHighBg)}
                 />
                 <Typography>{bgUnit}</Typography>
                 {!!highBg.errorMessage &&
@@ -250,7 +250,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             bgUnit
           })}
         </Typography>
-        <Box display="flex">
+        <Box display="flex" data-testid='severe-hypoglycemia'>
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
               hypoThreshold: hypoThreshold.value,
@@ -272,13 +272,13 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 size="small"
                 InputProps={{
                   inputProps: {
-                    min: MIN_VERY_LOW_BG,
-                    max: MAX_VERY_LOW_BG,
+                    min: minVeryLowBg,
+                    max: maxVeryLowBg,
                     step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
                     'aria-label': t('very-low-bg-input')
                   }
                 }}
-                onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
+                onChange={(event) => onChange(+event.target.value, minVeryLowBg, maxVeryLowBg, setVeryLowBg)}
               />
               <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
               {!!veryLowBg.errorMessage &&
@@ -305,7 +305,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES}
                   error={hypoThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
-                  data-testid="hypo-threshold"
                 />
               </div>
             </div>
@@ -335,7 +334,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES.slice(0, 10)}
                   error={nonDataTxThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
-                  data-testid="non-data"
                 />
               </div>
             </div>
