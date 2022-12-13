@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2020-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MemoryRouter } from 'react-router-dom'
-import { AuthContextProvider } from '../../../lib/auth'
-import { MainLobby } from '../../../app/main-lobby'
-import { render } from '@testing-library/react'
-import React, { RefObject } from 'react'
+import React, { FunctionComponent } from 'react'
+import styles from './loop-mode-stat.css'
+import { useTranslation } from 'react-i18next'
+import { formatDuration } from '../../../utils/datetime/datetime.util'
 
-const memoryRouterRef: { current: never } = React.createRef<never>()
-
-function getMainLobby(initialEntry: string) {
-  return (
-    <MemoryRouter ref={memoryRouterRef} initialEntries={[initialEntry]}>
-      <AuthContextProvider>
-        <MainLobby />
-      </AuthContextProvider>
-    </MemoryRouter>
-  )
+interface LoopModePercentageDetailProps {
+  className: string
+  percentage: number
+  transform: string
+  value: number
 }
 
-export const renderPage = (url: string): RefObject<never> => {
-  render(getMainLobby(url))
-  return memoryRouterRef
+export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetailProps> = (props) => {
+  const { className, percentage, transform, value } = props
+  const { t } = useTranslation('main')
+
+  const isPercentageValid = !Number.isNaN(percentage)
+
+  return (
+    <g className={className} transform={transform}>
+      <text className={styles.labelValueUnits} textAnchor="middle">
+        <tspan className={styles.legendLabelValue}>{isPercentageValid ? percentage : t('N/A') }</tspan>
+        {isPercentageValid && <tspan className={styles.legendLabelUnits} dy="-4">%</tspan>}
+      </text>
+      {isPercentageValid &&
+        <text
+          className={styles.labelRawValue}
+          textAnchor="middle"
+          dy="12"
+        >
+          {formatDuration(value, { condensed: true })}
+        </text>
+      }
+    </g>
+  )
 }

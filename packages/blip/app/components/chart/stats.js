@@ -9,6 +9,7 @@ import {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
+  LoopModeStat,
   TotalCarbsStat,
   TotalInsulinStat
 } from 'dumb'
@@ -95,6 +96,82 @@ class Stats extends React.Component {
       : false
   }
 
+  getStatElementById(stat, hideToolTips, bgClasses, animate) {
+    switch (stat.id) {
+      case CBGStatType.TimeInAuto:
+        return (
+          <LoopModeStat
+            annotations={stat.annotations}
+            automated={stat.data.raw.automated}
+            showTooltipIcon={!hideToolTips}
+            manual={stat.data.raw.manual}
+            title={stat.title}
+            total={stat.data.total.value}
+          />
+        )
+      case CBGStatType.TotalInsulin:
+        return (
+          <TotalInsulinStat
+            annotations={stat.annotations}
+            data={stat.data.data}
+            title={stat.title}
+            total={Math.round(stat.data.total.value * 10) / 10}
+          />
+        )
+      case CBGStatType.Carbs:
+        return (
+          <TotalCarbsStat
+            annotations={stat.annotations}
+            foodCarbs={stat.data.raw.foodCarbs}
+            hideTooltip={hideToolTips}
+            title={stat.title}
+            totalCarbs={stat.data.raw.totalCarbs}
+          />
+        )
+      case CBGStatType.TimeInRange:
+      case CBGStatType.ReadingsInRange:
+        return (
+          <CBGPercentageBarChart
+            annotations={stat.annotations}
+            bgClasses={bgClasses}
+            data={stat.data.data}
+            hideTooltip={hideToolTips}
+            total={stat.data.total.value}
+            titleKey={stat.title}
+            cbgStatType={stat.id}
+            units={stat.units}
+          />
+        )
+      case CBGStatType.AverageGlucose:
+        return (
+          <CBGMeanStat
+            bgClasses={bgClasses}
+            hideTooltip={hideToolTips}
+            title={stat.title}
+            tooltipValue={stat.annotations[0]}
+            units={stat.units}
+            value={Math.round(stat.data.raw.averageGlucose)}
+          />
+        )
+      case CBGStatType.StandardDeviation:
+        return (
+          <CBGStandardDeviation
+            annotations={stat.annotations}
+            averageGlucose={Math.round(stat.data.raw.averageGlucose)}
+            bgClasses={bgClasses}
+            hideTooltip={hideToolTips}
+            standardDeviation={Math.round(stat.data.raw.standardDeviation)}
+            title={stat.title}
+            units={stat.units}
+          />
+        )
+      default:
+        return (
+          <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+        )
+    }
+  }
+
   renderStats(stats, animate, hideToolTips) {
     const { bgPrefs } = this.props
     const bgClasses = {
@@ -104,86 +181,12 @@ class Stats extends React.Component {
       veryLow: bgPrefs.bgClasses['very-low'].boundary
     }
     return stats.map(stat => {
-      switch (stat.id) {
-        case CBGStatType.TotalInsulin:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <TotalInsulinStat
-                annotations={stat.annotations}
-                data={stat.data.data}
-                title={stat.title}
-                total={Math.round(stat.data.total.value * 10) / 10}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.Carbs:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <TotalCarbsStat
-                annotations={stat.annotations}
-                foodCarbs={stat.data.raw.foodCarbs}
-                hideTooltip={hideToolTips}
-                title={stat.title}
-                totalCarbs={stat.data.raw.totalCarbs}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.TimeInRange:
-        case CBGStatType.ReadingsInRange:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <CBGPercentageBarChart
-                annotations={stat.annotations}
-                bgClasses={bgClasses}
-                data={stat.data.data}
-                hideTooltip={hideToolTips}
-                total={stat.data.total.value}
-                titleKey={stat.title}
-                cbgStatType={stat.id}
-                units={stat.units}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.AverageGlucose:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <CBGMeanStat
-                bgClasses={bgClasses}
-                hideTooltip={hideToolTips}
-                title={stat.title}
-                tooltipValue={stat.annotations[0]}
-                units={stat.units}
-                value={Math.round(stat.data.raw.averageGlucose)}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        case CBGStatType.StandardDeviation:
-          return (
-            <div key={stat.id} data-testid={`stat-${stat.id}`}>
-              <CBGStandardDeviation
-                annotations={stat.annotations}
-                averageGlucose={Math.round(stat.data.raw.averageGlucose)}
-                bgClasses={bgClasses}
-                hideTooltip={hideToolTips}
-                standardDeviation={Math.round(stat.data.raw.standardDeviation)}
-                title={stat.title}
-                units={stat.units}
-              />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-        default:
-          return (
-            <div id={`Stat--${stat.id}`} data-testid={`Stat--${stat.id}`} key={stat.id}>
-              <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
-              <Divider variant="fullWidth" />
-            </div>
-          )
-      }
+      return (
+        <div key={stat.id} data-testid={`stat-${stat.id}`}>
+          {this.getStatElementById(stat, hideToolTips, bgClasses, animate)}
+          <Divider variant="fullWidth" />
+        </div>
+      )
     })
   }
 
