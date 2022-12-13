@@ -42,7 +42,6 @@ import User from '../../../../lib/auth/models/user.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import { Profile } from '../../../../lib/auth/models/profile.model'
 import { Notification } from '../../../../lib/notifications/models/notification.model'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/auth')

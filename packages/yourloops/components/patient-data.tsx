@@ -102,14 +102,14 @@ function PatientDataPage(): JSX.Element | null {
   const isSelectedTeamMedical = user.isUserHcp() && getMedicalTeams().some((team: Team) => team.id === selectedTeamId)
 
   useEffect(() => {
-    if (userIsHCP) {
-      const patientTeams = getPatientById(paramPatientId)?.teams
-      const isPatientInSelectedTeam = patientTeams.some((team: PatientTeam) => team.teamId === selectedTeamId)
-      if (!isPatientInSelectedTeam) {
-        const defaultPatientTeamId = patientTeams[0].teamId
-        selectTeam(defaultPatientTeamId)
-      }
+    const patientTeams = getPatientById(paramPatientId)?.teams
+    const isPatientInSelectedTeam = patientTeams.some((team: PatientTeam) => team.teamId === selectedTeamId)
+
+    if (!userIsHCP || isPatientInSelectedTeam) {
+      return
     }
+    const defaultPatientTeamId = patientTeams[0].teamId
+    selectTeam(defaultPatientTeamId)
   }, [getPatientById, paramPatientId, selectTeam, selectedTeamId, userIsHCP])
 
   const initialized = isLoggedIn && blipApi
