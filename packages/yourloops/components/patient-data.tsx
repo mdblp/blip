@@ -103,7 +103,7 @@ function PatientDataPage(): JSX.Element | null {
 
   useEffect(() => {
     const patientTeams = getPatientById(paramPatientId)?.teams
-    const isPatientInSelectedTeam = patientTeams.some((team: PatientTeam) => team.teamId === selectedTeamId)
+    const isPatientInSelectedTeam = patientTeams?.some((team: PatientTeam) => team.teamId === selectedTeamId)
 
     if (!userIsHCP || isPatientInSelectedTeam) {
       return
