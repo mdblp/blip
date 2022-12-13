@@ -41,6 +41,7 @@ export const mockAuth0Hook = (role: UserRoles = UserRoles.hcp, userId = loggedIn
       email_verified: true,
       sub: 'auth0|' + userId,
       [AuthenticatedUserMetadata.Roles]: [role]
-    }
+    },
+    updateProfile: jest.fn()
   })
 }
