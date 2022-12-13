@@ -32,22 +32,22 @@ import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 interface ChartTitleProps {
   annotations: string[]
   className?: string
-  emptyDataPlaceholder: string
   title: string
   showToolTip: boolean
   suffix: string
   value: string
+  showDetail: boolean
 }
 
 export const ChartTitle: FunctionComponent<ChartTitleProps> = (props) => {
   const {
     annotations,
     className,
-    emptyDataPlaceholder,
     showToolTip,
     title,
     suffix,
-    value
+    value,
+    showDetail
   } = props
 
   const valueClass = className ?? styles.value
@@ -55,7 +55,7 @@ export const ChartTitle: FunctionComponent<ChartTitleProps> = (props) => {
   return (
     <div className={styles.chartTitle}>
       {title}
-      {value !== emptyDataPlaceholder && value !== '' && (
+      {showDetail && (
         <span className={styles.chartTitleData}>
             (&nbsp;
           <span className={valueClass}>

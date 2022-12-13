@@ -169,20 +169,25 @@ class Stats extends React.Component {
             units={stat.units}
           />
         )
-      case CBGStatType.AverageDailyDose:
+      case CBGStatType.AverageDailyDose: {
+        const weightParam = parametersConfig?.find(param => param.name === 'WEIGHT')
+        const weight = weightParam ? Number(weightParam?.value) : -1
         return (
           <div key={stat.id} data-testid={`stat-${stat.id}`}>
-          AAAAAAAAAAAAAAAAAAAAAAA
+            AAAAAAAAAAAAAAAAAAAAAAA
             <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
             <AverageDailyDoseStat
-              parametersConfig={parametersConfig}
-              showToolTip={!hideToolTips}
-              {...stat}
+              dailyDose={stat.data.data[0].value}
+              footerLabel={stat.data.data[0].output.label}
+              title={stat.title}
+              weight={weight}
+              weightSuffix={stat.data.data[0].input.suffix}
             />
-          AAAAAAAAAAAAAAAAAAAAAAA
+            AAAAAAAAAAAAAAAAAAAAAAA
             <Divider variant="fullWidth" />
           </div>
         )
+      }
       default: {
         if (stat.type === 'simple') {
           return (
@@ -191,12 +196,11 @@ class Stats extends React.Component {
               <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
               <SimpleStat
                 annotations={stat.annotations}
-                data={stat.data}
-                dataFormat={stat.dataFormat}
-                emptyDataPlaceholder={stat.emptyDataPlaceholder}
-                title={stat.title}
-                units={stat.units}
                 showToolTip={!hideToolTips}
+                summaryFormat={stat.dataFormat.summary}
+                title={stat.title}
+                total={stat.data.total?.value}
+                value={stat.data.data[0].value}
               />
             AAAAAAAAAAAAAAAAAAAAAAA
               <Divider variant="fullWidth" />

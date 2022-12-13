@@ -25,6 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+.chartTitle {
+  composes: largeSize from '../../../styles/typography.css';
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  margin-top: .25em;
+  color: var(--stat--default);
+}
+
 .StatWrapper {
   position: relative;
   overflow: visible;
@@ -82,7 +91,7 @@
   padding: 0.25em 0.625em .375em;
 }
 
-.inputlabel {
+.inputLabel {
   font-weight: 500;
   color: var(--stat--default);
 }

@@ -25,36 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import styles from './chart-summary.css'
-
-interface ChartSummaryProps {
-  className?: string
-  suffix: string
-  value: string
-}
-
-export const ChartSummary: FunctionComponent<ChartSummaryProps> = (props) => {
-  const {
-    className,
-    suffix,
-    value
-  } = props
-
-  const classNames = className ? `${styles.summaryData} ${className}` : styles.summaryData
-
-  return (
-    <div className={styles.chartSummary}>
-      {value && (
-        <div className={classNames}>
-          <span className={styles.summaryValue}>
-            {value}
-          </span>
-          <span className={styles.summarySuffix}>
-            {suffix}
-          </span>
-        </div>
-      )}
-    </div>
-  )
+export const getPercentagePrecision = (percentage: number): number => {
+  // We want to show extra precision on very small percentages so that we avoid showing 0%
+  if (percentage > 0 && percentage < 0.5) {
+    return percentage < 0.05 ? 2 : 1
+  }
+  return 0
 }

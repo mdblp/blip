@@ -25,216 +25,81 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import _ from 'lodash'
-import cx from 'classnames'
+import React, { FunctionComponent, useMemo } from 'react'
 import styles from './average-daily-dose-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { useTranslation } from 'react-i18next'
-import { ChartTitle } from '../common/chart-title'
 import { ChartSummary } from '../common/chart-summary'
-import { ParameterConfig } from 'medical-domain'
-import { StatFormats } from '../../../models/stats.model'
 
-interface StatProps {
-  alwaysShowSummary: boolean
-  annotations: string[]
-  data: {
-    data: Datum[]
-    total: Datum
-    dataPaths: {
-      input: string | []
-      output: string | []
-      summary: string | []
-      title: string | []
-    }
-  }
-  dataFormat: {
-    label: StatFormats
-    summary: StatFormats
-    title: StatFormats
-    tooltip: StatFormats
-    tooltipTitle: StatFormats
-  }
-  emptyDataPlaceholder: string
-  isOpened: boolean
+interface AverageDailyDoseStatProps {
+  dailyDose: number
+  footerLabel: string
   title: string
-  units: string | boolean
-  showToolTip: boolean
-  parametersConfig: ParameterConfig[]
+  weight: number
+  weightSuffix: string
 }
 
-interface Datum {
-  id: string
-  value: number
-  title: string
-}
+const EMPTY_DATA_PLACEHOLDER = '--'
 
-export const AverageDailyDoseStat: FunctionComponent<StatProps> = (
-  {
-    alwaysShowSummary = false,
-    emptyDataPlaceholder = '--',
-    isOpened = true,
-    units = false,
-    showToolTip = true,
-    ...props
-  }) => {
+export const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (props) => {
   const {
-    annotations,
-    data,
-    dataFormat,
+    dailyDose,
+    footerLabel,
     title,
-    parametersConfig
+    weight,
+    weightSuffix
   } = props
 
   const { t } = useTranslation('main')
 
-  const input = _.get(data, data.dataPaths.input, {})
-  input.value = parametersConfig.find(param => param.name === 'WEIGHT')?.value ?? -1
+  const computedOutputValue = useMemo(() => {
+    const value = dailyDose / weight
+    return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
+  }, [dailyDose, weight])
 
-  const statClasses = cx({
-    [styles.Stat]: true,
-    [styles.isOpen]: isOpened
-  })
+  const outputValueClasses = useMemo(() => {
+    return computedOutputValue === EMPTY_DATA_PLACEHOLDER ? `${styles.outputValue} ${styles.outputValueDisabled}` : styles.outputValue
+  }, [computedOutputValue])
 
-  const formatDatum = (datum: { id?: string, value: number, suffix: string }, format: string): { className?: string, value: string, suffix: string } => {
-    const value: number | string = datum.value
-    const suffix = datum.suffix || ''
-
-    if (format === StatFormats.unitsPerKg) {
-      if (value > 0 && _.isFinite(value)) {
-        return {
-          value: formatDecimalNumber(value, 2),
-          suffix: t('U/kg')
-        }
-      }
-      return {
-        className: styles.statDisabled,
-        value: emptyDataPlaceholder,
-        suffix: t('U/kg')
-      }
-    }
-
-    if (format === StatFormats.units && value >= 0) {
-      return {
-        className: styles.insulinTitle,
-        value: formatDecimalNumber(value, 1),
-        suffix: t('U')
-      }
-    }
-    return {
-      className: styles.statDisabled,
-      value: emptyDataPlaceholder,
-      suffix
-    }
-  }
-
-  const getFormattedDataByKey = (key: string, format: StatFormats): { className?: string, value: string, suffix: string } => {
-    const path = _.get(data, `dataPaths.${key}`)
-    if (!path) {
-      return { value: '', suffix: '' }
-    }
-    const datum = _.get(data, path)
-    return formatDatum(datum, format)
-  }
-
-  const computeCalculatedOutput = (outputPath: string | [], output: { type: string }, format: string): { value: string, suffix: string } => {
-    if (outputPath && output) {
-      const datum = {
-        value: data.data[0].value / input.value,
-        suffix: input.value.label ?? ''
-      }
-      const datumFormatted = formatDatum(datum, format)
-      return {
-        suffix: datumFormatted.suffix,
-        value: datumFormatted.value
-      }
-    }
-    return {
-      value: emptyDataPlaceholder,
-      suffix: ''
-    }
-  }
-
-  const renderCalculatedOutput = (): JSX.Element => {
-    const outputPath = _.get(data, 'dataPaths.output')
-    const format = _.get(dataFormat, 'output')
-    if (!format) {
-      throw Error('Format should be defined')
-    }
-
-    const output = _.get(data, outputPath)
-    const calc = computeCalculatedOutput(outputPath, output, format)
-
-    const label = _.get(output, 'label')
-
-    const outputValueClasses = cx({
-      [styles.outputValue]: true,
-      [styles.outputValueDisabled]: calc.value === emptyDataPlaceholder
-    })
-
-    return (
-      <div className={styles.outputWrapper}>
-        {label && <div className={styles.outputLabel}>{label}</div>}
-        <div className={styles.outputValueWrapper}>
-          <span className={outputValueClasses}>
-            {calc.value}
-          </span>
-          <span className={styles.outputSuffix}>
-            {calc.suffix}
-          </span>
-        </div>
-      </div>
-    )
-  }
-
-  const titleData = getFormattedDataByKey('title', dataFormat.title)
-  const summaryData = getFormattedDataByKey('summary', dataFormat.summary)
   return (
     <div className={styles.StatWrapper}>
-      <div className={statClasses}>
+      <div className={`${styles.Stat} ${styles.isOpen}`}>
         <div className={styles.statHeader}>
-          <ChartTitle
-            annotations={annotations}
-            className={titleData.className}
-            emptyDataPlaceholder={emptyDataPlaceholder}
-            showToolTip={showToolTip}
-            title={title}
-            suffix={titleData.suffix}
-            value={titleData.value}
-          />
+          <div className={styles.chartTitle}>
+            {title}
+          </div>
           <ChartSummary
-            className={summaryData.className}
-            isOpened={isOpened}
-            suffix={summaryData.suffix}
-            showSummary={alwaysShowSummary || !isOpened}
-            units={units}
-            value={summaryData.value}
+            className={styles.insulinTitle}
+            suffix={t('U')}
+            value={formatDecimalNumber(dailyDose, 1)}
           />
         </div>
         <div className={styles.inputWrapper}>
-          <div className={styles.inputlabel}>
-            {input.label}
+          <div className={styles.inputLabel}>
+            {t('Weight')}
           </div>
           <div>
             <span className={styles.inputValue}>
-              {input.value}
+              {weight}
             </span>
             <span className={styles.units}>
-              {input.suffix}
+              {weightSuffix}
             </span>
           </div>
         </div>
-        {isOpened &&
-          <div className={styles.statFooter}>
-            {renderCalculatedOutput()}
-            {units &&
-              <div className={styles.units}>
-                {units}
-              </div>
-            }
+        <div className={styles.statFooter}>
+          <div className={styles.outputWrapper}>
+            {footerLabel && <div className={styles.outputLabel}>{footerLabel}</div>}
+            <div className={styles.outputValueWrapper}>
+              <span className={outputValueClasses}>
+                {computedOutputValue}
+              </span>
+              <span className={styles.outputSuffix}>
+              {t('U/kg')}
+              </span>
+            </div>
           </div>
-        }
+        </div>
       </div>
     </div>
   )

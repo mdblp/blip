@@ -25,65 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import _ from 'lodash'
+import React, { FunctionComponent, useCallback, useMemo } from 'react'
 import styles from './simple-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { ChartTitle } from '../common/chart-title'
 import { ChartSummary } from '../common/chart-summary'
 import { StatFormats } from '../../../models/stats.model'
+import { getPercentagePrecision } from './simple-stat.utils'
 
 interface SimpleStatProps {
   annotations: string[]
-  data: {
-    data: Datum[]
-    total: Datum
-  }
-  dataFormat: {
-    summary: StatFormats
-    title: StatFormats
-  }
-  emptyDataPlaceholder: string
-  title: string
-  units: string | boolean
   showToolTip: boolean
+  summaryFormat: StatFormats
+  title: string
+  total: number
+  value: number
 }
 
-interface Datum {
-  id: string
-  value: number
-  title: string
-}
+const EMPTY_DATA_PLACEHOLDER = '--'
 
 export const SimpleStat: FunctionComponent<SimpleStatProps> = (
   {
-    emptyDataPlaceholder = '--',
-    units = false,
     showToolTip = true,
     ...props
   }) => {
   const {
     annotations,
-    data,
-    dataFormat,
-    title
+    summaryFormat,
+    title,
+    total,
+    value
   } = props
 
-  const getPercentagePrecision = (percentage: number): number => {
-    // We want to show extra precision on very small percentages so that we avoid showing 0%
-    // when there is some data there.
-    if (percentage > 0 && percentage < 0.5) {
-      return percentage < 0.05 ? 2 : 1
-    }
-    return 0
-  }
-
-  const formatDatum = (datum: Datum, format: string): { className?: string, value: string, suffix: string } => {
-    const value: number = datum.value
+  const formatDatum = useCallback((format: string): { className?: string, value: string, suffix: string } => {
     if (format !== StatFormats.cv && format !== StatFormats.gmi && format !== StatFormats.percentage) {
       return {
         className: styles.statEnabled,
-        value: datum.value.toString(),
+        value: value.toString(),
         suffix: ''
       }
     }
@@ -102,10 +80,8 @@ export const SimpleStat: FunctionComponent<SimpleStatProps> = (
       }
     }
 
-    const total = data.total?.value
     if (format === StatFormats.percentage && total && total >= 0) {
-      const val = _.max([value, 0]) ?? 0
-      const percentage = (val / total) * 100
+      const percentage = (value / total) * 100
       return {
         className: styles.statEnabled,
         value: formatDecimalNumber(percentage, getPercentagePrecision(percentage)),
@@ -115,37 +91,27 @@ export const SimpleStat: FunctionComponent<SimpleStatProps> = (
 
     return {
       className: styles.statDisabled,
-      value: emptyDataPlaceholder,
+      value: EMPTY_DATA_PLACEHOLDER,
       suffix: ''
     }
-  }
+  }, [total, value])
 
-  const getFormattedData = (format: StatFormats): { className?: string, value: string, suffix: string } => {
-    if (!data?.data?.[0]) {
-      return { value: '', suffix: '' }
-    }
-    return formatDatum(data.data[0], format)
-  }
+  const summaryData = useMemo(() => formatDatum(summaryFormat), [formatDatum, summaryFormat])
 
-  const titleData = getFormattedData(dataFormat.title)
-  const summaryData = getFormattedData(dataFormat.summary)
   return (
     <div className={styles.StatWrapper}>
       <div className={styles.Stat}>
         <div className={styles.statHeader}>
           <ChartTitle
             annotations={annotations}
-            emptyDataPlaceholder={emptyDataPlaceholder}
             showToolTip={showToolTip}
             title={title}
-            suffix={titleData.suffix}
-            value={titleData.value}
+            suffix={''}
+            value={value.toString()}
+            showDetail={value.toString() !== EMPTY_DATA_PLACEHOLDER && value.toString() !== ''}
           />
           <ChartSummary
             className={summaryData.className}
-            isOpened={true}
-            units={units}
-            showSummary={true}
             suffix={summaryData.suffix}
             value={summaryData.value}
           />
