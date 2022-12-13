@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import styles from './chart-summary.css'
 
-interface ChartSummaryProps {
+export interface ChartSummaryProps {
   className?: string
   suffix: string
   value: string

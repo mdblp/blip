@@ -25,13 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useCallback, useMemo } from 'react'
+import React, { FunctionComponent } from 'react'
 import styles from './simple-stat.css'
-import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { ChartTitle } from '../common/chart-title'
 import { ChartSummary } from '../common/chart-summary'
 import { StatFormats } from '../../../models/stats.model'
-import { getPercentagePrecision } from './simple-stat.utils'
+import { EMPTY_DATA_PLACEHOLDER, useSimpleStatHook } from './simple-stat.hook'
 
 interface SimpleStatProps {
   annotations: string[]
@@ -41,8 +40,6 @@ interface SimpleStatProps {
   total: number
   value: number
 }
-
-const EMPTY_DATA_PLACEHOLDER = '--'
 
 export const SimpleStat: FunctionComponent<SimpleStatProps> = (
   {
@@ -57,46 +54,7 @@ export const SimpleStat: FunctionComponent<SimpleStatProps> = (
     value
   } = props
 
-  const formatDatum = useCallback((format: string): { className?: string, value: string, suffix: string } => {
-    if (format !== StatFormats.cv && format !== StatFormats.gmi && format !== StatFormats.percentage) {
-      return {
-        className: styles.statEnabled,
-        value: value.toString(),
-        suffix: ''
-      }
-    }
-    if (format === StatFormats.cv && value >= 0) {
-      return {
-        className: value <= 36 ? styles.coefficientVariationTarget : styles.coefficientVariationHigh,
-        value: formatDecimalNumber(value),
-        suffix: '%'
-      }
-    }
-    if (format === StatFormats.gmi && value >= 0) {
-      return {
-        className: styles.statEnabled,
-        value: formatDecimalNumber(value, 1),
-        suffix: '%'
-      }
-    }
-
-    if (format === StatFormats.percentage && total && total >= 0) {
-      const percentage = (value / total) * 100
-      return {
-        className: styles.statEnabled,
-        value: formatDecimalNumber(percentage, getPercentagePrecision(percentage)),
-        suffix: '%'
-      }
-    }
-
-    return {
-      className: styles.statDisabled,
-      value: EMPTY_DATA_PLACEHOLDER,
-      suffix: ''
-    }
-  }, [total, value])
-
-  const summaryData = useMemo(() => formatDatum(summaryFormat), [formatDatum, summaryFormat])
+  const { chartSummaryProps } = useSimpleStatHook({ summaryFormat, total, value })
 
   return (
     <div className={styles.StatWrapper}>
@@ -110,11 +68,7 @@ export const SimpleStat: FunctionComponent<SimpleStatProps> = (
             value={value.toString()}
             showDetail={value.toString() !== EMPTY_DATA_PLACEHOLDER && value.toString() !== ''}
           />
-          <ChartSummary
-            className={summaryData.className}
-            suffix={summaryData.suffix}
-            value={summaryData.value}
-          />
+          <ChartSummary {...chartSummaryProps} />
         </div>
       </div>
     </div>
