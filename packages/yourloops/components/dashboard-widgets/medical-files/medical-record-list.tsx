@@ -27,34 +27,36 @@
 
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
-import NoteAddIcon from '@material-ui/icons/NoteAdd'
+import { makeStyles } from 'tss-react/mui'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+import NoteAddIcon from '@mui/icons-material/NoteAdd'
 
-import { MedicalRecord } from '../../../lib/medical-files/model'
-import { useAuth, User } from '../../../lib/auth'
-import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+
+import { useAuth } from '../../../lib/auth'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import MedicalRecordEditDialog from '../../dialogs/medical-record-edit-dialog'
 import MedicalRecordDeleteDialog from '../../dialogs/medical-record-delete-dialog'
-import TrashCanOutlined from '../../icons/TrashCanOutlined'
+import TrashCanOutlined from '../../icons/trash-can-outlined'
 import { CategoryProps } from './medical-files-widget'
 import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
+import { MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
 
-const useStyle = makeStyles((theme: Theme) => ({
+const useStyle = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600
   },
@@ -74,12 +76,11 @@ const useStyle = makeStyles((theme: Theme) => ({
 
 const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   const { t } = useTranslation('yourloops')
-  const classes = useStyle()
+  const { classes } = useStyle()
   const { teamId, patientId } = props
-  const authHook = useAuth()
+  const { user } = useAuth()
   const alert = useAlert()
-  const commonStyles = commonComponentStyles()
-  const user = authHook.user as User
+  const { classes: commonStyles } = commonComponentStyles()
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)

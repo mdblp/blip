@@ -27,29 +27,30 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Typography from '@material-ui/core/Typography'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import Divider from '@material-ui/core/Divider'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import Typography from '@mui/material/Typography'
+import DialogContentText from '@mui/material/DialogContentText'
+import Divider from '@mui/material/Divider'
 
-import { WeeklyReport } from '../../lib/medical-files/model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../lib/utils'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
+import { WeeklyReport } from '../../lib/medical-files/models/weekly-report.model'
 
 export interface WeeklyReportDialogProps {
   onClose: () => void
   weeklyReport: WeeklyReport
 }
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   divider: {
     margin: '30px 0 10px 16px'
   },
@@ -68,7 +69,7 @@ const classes = makeStyles((theme: Theme) => ({
 }))
 
 export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.Element {
-  const { title, divider, explanatoryText } = classes()
+  const { classes: { title, divider, explanatoryText } } = classes()
   const { t } = useTranslation('yourloops')
   const { onClose, weeklyReport } = props
   const teamHook = useTeam()

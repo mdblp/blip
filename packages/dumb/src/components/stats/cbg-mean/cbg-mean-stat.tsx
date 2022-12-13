@@ -28,10 +28,10 @@
 import React, { FunctionComponent } from 'react'
 import styles from '../cbg-common.css'
 import stylesCbgMeanStat from './cbg-mean-stat.css'
-import { Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../cbg-utils'
-import { BgClasses } from '../models'
+import { BgClasses } from '../../../models/stats.model'
 
 export interface CBGMeanStatProps {
   bgClasses: BgClasses

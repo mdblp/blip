@@ -62,10 +62,12 @@ const ignoredTransKeysForBlip = [
   'YYYY-MM-DD',
   'carbs',
   'delivered',
-  'level'
+  'level',
+  'wheel-label-off',
+  'wheel-label-on'
 ]
 const ignoredTransKeyInBlipFiles = [
-  '${pa.reportedIntensity}-pa',
+  '${physicalActivity.reportedIntensity}-pa',
   'bolus_${bolusType}',
   'params|${parameter.name}',
   'params|${row.name}'

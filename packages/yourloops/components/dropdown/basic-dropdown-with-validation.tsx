@@ -28,16 +28,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import FormControl from '@material-ui/core/FormControl'
-import FormGroup from '@material-ui/core/FormGroup'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import { makeStyles } from '@material-ui/core/styles'
+import FormControl from '@mui/material/FormControl'
+import FormGroup from '@mui/material/FormGroup'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { makeStyles } from 'tss-react/mui'
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>
-type SelectChangeEvent = React.ChangeEvent<{ name?: string, value: unknown }>
 type HandleChange<E> = (event: E) => void
 
 export interface Errors {
@@ -54,31 +53,38 @@ export interface BasicDropdownWithValidationProps<T> {
   onSelect: (value: T) => void
 }
 
-const dropdownStyles = makeStyles(() => ({
+const dropdownStyles = makeStyles({ name: 'component-basic-dropdown-with-validation' })(() => ({
   formControl: { display: 'flex' }
-}), { name: 'component-basic-dropdown-with-validation' })
+}))
 
 function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<T>): JSX.Element {
   const { onSelect, defaultValue, disabledValues, values, inputTranslationKey, errorTranslationKey, id } = props
-  const classes = dropdownStyles()
+  const { classes } = dropdownStyles()
   const { t } = useTranslation('yourloops')
 
-  const [selectedValue, setSelectedValue] = React.useState(defaultValue)
-  const createHandleSelectChange = <K extends string>(setState: SetState<K>): HandleChange<SelectChangeEvent> => (event) => {
+  const [selectedValue, setSelectedValue] = React.useState<string>(defaultValue)
+
+  const createHandleSelectChange = <K extends string>(setState: SetState<K>): HandleChange<SelectChangeEvent<unknown>> => (event) => {
     setState(event.target.value as K)
     onSelect(event.target.value as T)
   }
 
   return (
-    <FormControl id={`dropdown-form-${id}`} className={classes.formControl}>
+    <FormControl
+      id={`dropdown-form-${id}`}
+      variant="standard"
+      className={classes.formControl}
+    >
       <FormGroup>
         <InputLabel id={`dropdown-${id}-input-label`}>{t(inputTranslationKey)}</InputLabel>
         <Select
           id={`dropdown-${id}-selector`}
+          data-testid={`dropdown-${id}-selector`}
           value={selectedValue}
           error={disabledValues.includes(selectedValue)}
           inputProps={{ id: `dropdown-${id}-selector-input-props`, 'data-testid': `dropdown-${id}-selector-input-props` }}
-          onChange={createHandleSelectChange(setSelectedValue)}>
+          onChange={createHandleSelectChange(setSelectedValue)}
+        >
           {values.map(item => (
             <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
               {t(item)}

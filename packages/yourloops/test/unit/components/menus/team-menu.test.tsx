@@ -36,13 +36,14 @@ import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
 import { User } from '../../../../lib/auth'
-import DirectShareApi from '../../../../lib/share/direct-share-api'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as alertHookMock from '../../../../components/utils/snackbar'
-import { ShareUser } from '../../../../lib/share/models'
-import { UserInvitationStatus } from '../../../../models/generic'
+import { ShareUser } from '../../../../lib/share/models/share-user.model'
 import { AddTeamDialogProps } from '../../../../pages/patient/teams/add-dialog'
 import { TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { IUser } from '../../../../lib/data/models/i-user.model'
 import { TeamMenuMemoized as TeamMenu } from '../../../../components/menus/team-menu'
 
 /* eslint-disable react/display-name */
@@ -67,8 +68,8 @@ describe('Team Menu', () => {
   const teams: Team[] = [buildTeam('team1Id', []), buildTeam('team2Id', [])]
 
   const caregivers: ShareUser[] = [
-    { user: {} as User, status: UserInvitationStatus.accepted },
-    { user: {} as User, status: UserInvitationStatus.accepted }
+    { user: {} as IUser, status: UserInvitationStatus.accepted },
+    { user: {} as IUser, status: UserInvitationStatus.accepted }
   ]
 
   const createTeamMock = jest.fn()

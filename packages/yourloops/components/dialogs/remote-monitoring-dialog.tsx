@@ -29,28 +29,29 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Divider from '@material-ui/core/Divider'
-import Typography from '@material-ui/core/Typography'
-import DesktopMacIcon from '@material-ui/icons/DesktopMac'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogActions from '@material-ui/core/DialogActions'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import Typography from '@mui/material/Typography'
+import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogActions from '@mui/material/DialogActions'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import { commonComponentStyles } from '../common'
-import { Patient } from '../../lib/data/patient'
 import PatientInfo from '../patient/patient-info'
 import PatientMonitoringPrescription, { PrescriptionInfo } from '../patient/patient-monitoring-prescription'
-import { useNotification } from '../../lib/notifications/hook'
-import { MonitoringStatus } from '../../models/monitoring'
-import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
+import { useNotification } from '../../lib/notifications/notification.hook'
+import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
-import { usePatientContext } from '../../lib/patient/provider'
-import PatientUtils from '../../lib/patient/utils'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import PatientUtils from '../../lib/patient/patient.util'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600,
     textTransform: 'uppercase'
@@ -87,9 +88,9 @@ export interface RemoteMonitoringPatientDialogProps {
 }
 
 function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps): JSX.Element {
-  const commonClasses = commonComponentStyles()
+  const { classes: commonClasses } = commonComponentStyles()
   const { patient, action, onClose } = props
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { t } = useTranslation('yourloops')
   const notificationHook = useNotification()
   const patientHook = usePatientContext()
@@ -176,8 +177,8 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
       data-testid="remote-monitoring-dialog"
     >
       <DialogTitle id="remote-monitoring-dialog-title" className={classes.title}>
-        <Box display="flex">
-          <DesktopMacIcon />
+        <Box display="flex" alignItems="center">
+          <DesktopMacOutlinedIcon />
           <Typography className={commonClasses.title}>
             {t('remote-monitoring-patient-dialog-title', { action: t(action) })}
           </Typography>
@@ -207,7 +208,6 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
               <Box marginX={2}>
                 <TextField
                   defaultValue={physician}
-                  variant="outlined"
                   size="small"
                   onChange={(e) => setPhysician(e.target.value)}
                   data-testid="remote-monitoring-dialog-referring-doctor"

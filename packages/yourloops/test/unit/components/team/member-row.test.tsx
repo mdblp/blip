@@ -26,23 +26,23 @@
  */
 
 import React from 'react'
-import ThemeProvider from '@material-ui/styles/ThemeProvider'
+import { ThemeProvider } from '@mui/material/styles'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
 
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { User } from '../../../../lib/auth'
 import MemberRow, { TeamMembersProps } from '../../../../components/team/member-row'
-import { TeamMemberRole } from '../../../../models/team'
-import { UserInvitationStatus } from '../../../../models/generic'
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, buildTeamMember } from '../../common/utils'
-import TeamApi from '../../../../lib/team/team-api'
-import TeamUtils from '../../../../lib/team/utils'
+import TeamApi from '../../../../lib/team/team.api'
+import TeamUtils from '../../../../lib/team/team.util'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
+import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: ConfirmDialogProps) => {
@@ -168,17 +168,19 @@ describe('MemberRow', () => {
   }
 
   function getMemberRowJSX(memberProps: TeamMembersProps = props): JSX.Element {
-    return <ThemeProvider theme={getTheme()}>
-      <Table>
-        <TableBody>
-          <MemberRow
-            team={memberProps.team}
-            teamMember={memberProps.teamMember}
-            refreshParent={memberProps.refreshParent}
-          />
-        </TableBody>
-      </Table>
-    </ThemeProvider>
+    return (
+      <ThemeProvider theme={getTheme()}>
+        <Table>
+          <TableBody>
+            <MemberRow
+              team={memberProps.team}
+              teamMember={memberProps.teamMember}
+              refreshParent={memberProps.refreshParent}
+            />
+          </TableBody>
+        </Table>
+      </ThemeProvider>
+    )
   }
 
   it('should display correct information when user is a pending admin', () => {

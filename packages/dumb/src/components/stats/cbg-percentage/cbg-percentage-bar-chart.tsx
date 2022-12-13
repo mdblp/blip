@@ -30,9 +30,9 @@ import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-b
 import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
-import { BgClasses, CBGPercentageData, CBGStatType } from '../models'
+import { BgClasses, CBGPercentageData, CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
-import { Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
 
 interface CBGPercentageBarChartProps {
   annotations: []

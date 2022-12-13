@@ -27,8 +27,8 @@
 
 import React, { FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
-import { Box } from '@material-ui/core'
-import { BgClasses } from '../models'
+import Box from '@mui/material/Box'
+import { BgClasses } from '../../../models/stats.model'
 import { StatLegendElement } from './stat-legend-element'
 
 interface StatLegendProps {

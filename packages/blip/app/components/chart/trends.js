@@ -21,9 +21,9 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import DateRangeIcon from '@material-ui/icons/DateRange'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import TextField from '@material-ui/core/TextField'
+import DateRangeIcon from '@mui/icons-material/DateRange'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
 
 import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'

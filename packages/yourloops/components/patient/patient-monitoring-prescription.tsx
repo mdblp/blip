@@ -27,13 +27,15 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
+import { makeStyles } from 'tss-react/mui'
+
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
 import BasicDropdown from '../dropdown/basic-dropdown'
 import Dropdown from '../dropdown/dropdown'
@@ -41,7 +43,7 @@ import { Team, TeamMember, useTeam } from '../../lib/team'
 import { commonComponentStyles } from '../common'
 import { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600,
     textTransform: 'uppercase'
@@ -95,8 +97,8 @@ export interface PatientMonitoringPrescriptionProps {
 
 function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps): JSX.Element {
   const { defaultTeamId, action, setPrescriptionInfo } = props
-  const classes = useStyles()
-  const commonClasses = commonComponentStyles()
+  const { classes } = useStyles()
+  const { classes: commonClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
   const month = t('month').toLowerCase()
@@ -205,7 +207,6 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
             <Typography>{t('prescription')}:</Typography>
             <Box display="flex" alignItems="center">
               <TextField
-                variant="outlined"
                 size="small"
                 classes={{ root: classes.fileTextField }}
                 InputProps={{

@@ -30,24 +30,25 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 
-import Box from '@material-ui/core/Box'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Container from '@material-ui/core/Container'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import Container from '@mui/material/Container'
 
-import { UserInvitationStatus } from '../../../models/generic'
-import { UserRoles } from '../../../models/user'
 import { useAuth } from '../../../lib/auth'
 import metrics from '../../../lib/metrics'
 import { setPageTitle } from '../../../lib/utils'
-import { useNotification } from '../../../lib/notifications/hook'
-import { ShareUser } from '../../../lib/share/models'
+import { useNotification } from '../../../lib/notifications/notification.hook'
+import { ShareUser } from '../../../lib/share/models/share-user.model'
 import { useAlert } from '../../../components/utils/snackbar'
-import { AddDialogContentProps } from './types'
 import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-dialog'
 import CaregiverTable from './table'
-import DirectShareApi from '../../../lib/share/direct-share-api'
-import { INotification, NotificationType } from '../../../lib/notifications/models'
+import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
+import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
+import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { Notification } from '../../../lib/notifications/models/notification.model'
+import { AddDialogContentProps } from './models/add-dialog-content-props.model'
 
 const log = bows('PatientCaregiversPage')
 
@@ -83,14 +84,20 @@ function PatientCaregiversPage(): JSX.Element {
         // And refresh the list
         setCaregivers(null)
       } catch (reason) {
+        const error = reason as Error
         log.error(reason)
+
+        if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
+          alert.error(t('alert-invitation-caregiver-failed-user-is-patient'))
+          return
+        }
         alert.error(t('alert-invitation-caregiver-failed'))
       }
     }
   }
 
   const getCaregiversFromPendingInvitations = useCallback((): ShareUser[] => {
-    return sentInvitations.reduce((acc: ShareUser[], invitation: INotification) => {
+    return sentInvitations.reduce((acc: ShareUser[], invitation: Notification) => {
       if (invitation.type !== NotificationType.directInvitation) {
         return acc
       }

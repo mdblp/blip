@@ -9,9 +9,10 @@ It is based on Tidepool Blip 1.27.
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 - YLP-1947 Add team selection dropdown on patient dashboard for HCP
-- YLP-1962 User should be able to uncheck the training check box
+- YLP-1973 User should be able to uncheck the training check box
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
+- YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
 - YLP-1805 Push error to the backend
@@ -25,13 +26,24 @@ It is based on Tidepool Blip 1.27.
 - YLP-1903 Timezone detection should exclude some data types
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
+- YLP-1916 Migrate tooltips from viz to dumb
 - YLP-1935 CBG thresholds should be used from medical data service
+- YLP-1942 Rename files in yourloops and medical-domain
 - YLP-1945 Migrate NoBar component to dumb
+- YLP-1949 Migrate Lines component to dumb
+- YLP-1953 Migrate WheelPercent to dumb
 - YLP-1960 enhance pipeline
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
+- Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
+- YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
+
+## 3.0.2 - 2022-11-28
+### Added
+- YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
+- YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 
 ## 3.0.1 - 2022-10-11
 ### Added

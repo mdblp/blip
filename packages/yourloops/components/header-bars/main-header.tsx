@@ -29,22 +29,23 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 
-import MenuIcon from '@material-ui/icons/Menu'
-import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
+import MenuIcon from '@mui/icons-material/Menu'
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Avatar from '@material-ui/core/Avatar'
-import Badge from '@material-ui/core/Badge'
-import Box from '@material-ui/core/Box'
-import Toolbar from '@material-ui/core/Toolbar'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import AppBar from '@mui/material/AppBar'
+import Avatar from '@mui/material/Avatar'
+import Badge from '@mui/material/Badge'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
 
-import config from '../../lib/config'
-import { useNotification } from '../../lib/notifications/hook'
+import config from '../../lib/config/config'
+import { useNotification } from '../../lib/notifications/notification.hook'
 import { useAuth } from '../../lib/auth'
 import { TeamMenuMemoized as TeamMenu } from '../menus/team-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
-import { Team, useTeam } from '../../lib/team'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import Dropdown from '../dropdown/dropdown'
 import TeamUtils from '../../lib/team/utils'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
@@ -56,7 +57,7 @@ interface MainHeaderProps {
   onClickShrinkIcon?: () => void
 }
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
@@ -74,21 +75,20 @@ const classes = makeStyles((theme: Theme) => ({
     height: 25,
     width: 1,
     backgroundColor: 'var(--text-base-color)',
-    margin: `0 ${theme.spacing(2)}px`
+    margin: `0 ${theme.spacing(2)}`
   },
   teamsDropdown: {
     paddingLeft: theme.spacing(2)
   },
   toolbar: {
-    padding: `0 ${theme.spacing(2)}px`
+    padding: `0 ${theme.spacing(2)}`
   }
 }))
 
 const PATIENT_DASHBOARD_REGEX = /^\/patient\/([0-9a-f]+)\/dashboard/
 
-function MainHeader(props: MainHeaderProps): JSX.Element {
-  const { onClickShrinkIcon, withShrinkIcon } = props
-  const { appBar, desktopLogo, leftIcon, separator, teamsDropdown, toolbar } = classes()
+function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
+  const { classes: { desktopLogo, separator, appBar, leftIcon, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()

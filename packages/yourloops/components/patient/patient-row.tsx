@@ -28,80 +28,78 @@
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import EmailIcon from '@material-ui/icons/Email'
-import Tooltip from '@material-ui/core/Tooltip'
-import AccessTimeIcon from '@material-ui/icons/AccessTime'
-import FlagIcon from '@material-ui/icons/Flag'
-import FlagOutlineIcon from '@material-ui/icons/FlagOutlined'
-import AnnouncementIcon from '@material-ui/icons/Announcement'
-import { Box, Typography } from '@material-ui/core'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import EmailIcon from '@mui/icons-material/Email'
+import Tooltip from '@mui/material/Tooltip'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import FlagIcon from '@mui/icons-material/Flag'
+import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
+import AnnouncementIcon from '@mui/icons-material/Announcement'
+import { Box, Typography } from '@mui/material'
 
 import IconActionButton from '../buttons/icon-action'
-import { FilterType } from '../../models/generic'
-import { MedicalData } from '../../models/device-data'
-import { PatientRowProps } from './models'
 import { getMedicalValues } from './utils'
 import { patientListCommonStyle } from './table'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
-import PatientUtils from '../../lib/patient/utils'
-import PersonRemoveIcon from '../icons/PersonRemoveIcon'
+import PatientUtils from '../../lib/patient/patient.util'
+import PersonRemoveIcon from '../icons/person-remove-icon'
 import { isEllipsisActive } from '../../lib/utils'
 import usePatientRow from './patient-row.hook'
 import { useHistory } from 'react-router-dom'
-import { Patient } from '../../lib/data/patient'
 import RemovePatientDialog from './remove-patient-dialog'
-import EmailOpenIcon from '../icons/EmailOpenIcon'
+import EmailOpenIcon from '../icons/email-open-icon'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
-import { usePatientContext } from '../../lib/patient/provider'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import { PatientRowProps } from './models/patient-table-props.model'
+import { MedicalData } from '../../lib/data/models/medical-data.model'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { FilterType } from '../../lib/patient/models/enums/filter-type.enum'
 
-const patientListStyle = makeStyles(
-  (theme: Theme) => {
-    return {
-      alert: {
-        color: theme.palette.warning.main
-      },
-      alertIcon: {
-        marginLeft: theme.spacing(2),
-        verticalAlign: 'bottom'
-      },
-      coloredIcon: {
-        color: theme.palette.primary.main
-      },
-      icon: {
-        width: '56px',
-        alignItems: 'center',
-        justifyContent: 'center'
-      },
-      iconCell: {
-        width: '56px',
-        padding: 0
-      },
-      lightGrey: {
-        color: theme.palette.grey[500]
-      },
-      remoteMonitoringCell: {
-        whiteSpace: 'pre-line'
-      },
-      tableRow: {
-        cursor: 'pointer',
-        height: '64px'
-      },
-      typography: {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis'
-      }
+const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Theme) => {
+  return {
+    alert: {
+      color: theme.palette.warning.main
+    },
+    alertIcon: {
+      marginLeft: theme.spacing(2),
+      verticalAlign: 'bottom'
+    },
+    coloredIcon: {
+      color: theme.palette.primary.main
+    },
+    icon: {
+      width: '56px',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    iconCell: {
+      width: '56px',
+      padding: 0
+    },
+    lightGrey: {
+      color: theme.palette.grey[500]
+    },
+    remoteMonitoringCell: {
+      whiteSpace: 'pre-line'
+    },
+    tableRow: {
+      cursor: 'pointer',
+      height: '64px'
+    },
+    typography: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     }
-  },
-  { name: 'ylp-hcp-patients-row' }
-)
+  }
+})
 
 const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => {
   const historyHook = useHistory()
   const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
-  const classes = patientListStyle()
-  const patientListCommonClasses = patientListCommonStyle()
+  const { classes } = patientListStyle()
+  const { classes: patientListCommonClasses } = patientListCommonStyle()
   const medicalData: MedicalData | null | undefined = patient.metadata.medicalData
 
   const [tooltipText, setTooltipText] = useState<string>('')

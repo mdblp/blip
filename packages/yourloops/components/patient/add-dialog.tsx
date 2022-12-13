@@ -28,26 +28,26 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import Link from '@material-ui/core/Link'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Link from '@mui/material/Link'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../lib/utils'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { AddPatientDialogContentProps } from '../../pages/hcp/types'
-import { usePatientContext } from '../../lib/patient/provider'
-import { PatientTeam } from '../../lib/data/patient'
-import { UserInvitationStatus } from '../../models/generic'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import { PatientTeam } from '../../lib/patient/models/patient-team.model'
+import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 
 export interface AddDialogProps {
   actions: AddPatientDialogContentProps | null
@@ -95,7 +95,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
 
     checkPatientInTeam(inputEmail, teamId)
   }
-  const handleChangeTeam = (event: React.ChangeEvent<{ name?: string | undefined, value: unknown }>): void => {
+  const handleChangeTeam = (event: SelectChangeEvent<unknown>): void => {
     const inputTeamId = event.target.value as string
     setTeamId(inputTeamId)
 
@@ -181,7 +181,6 @@ function AddDialog(props: AddDialogProps): JSX.Element {
             id="patient-list-dialog-add-email"
             margin="normal"
             label={t('email')}
-            variant="outlined"
             value={email}
             required
             error={errorMessage !== null}
@@ -189,7 +188,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
             onChange={handleChangeEmail}
             helperText={errorMessage}
           />
-          <FormControl>
+          <FormControl variant="standard">
             <InputLabel id="patient-list-dialog-add-team-label" htmlFor="patient-list-dialog-add-team-input">
               {t('team')}
             </InputLabel>

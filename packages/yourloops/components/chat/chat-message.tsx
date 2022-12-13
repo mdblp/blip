@@ -27,11 +27,12 @@
 
 import React from 'react'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Face from '@material-ui/icons/Face'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Face from '@mui/icons-material/Face'
 import { useTranslation } from 'react-i18next'
-import { CheckSharp } from '@material-ui/icons'
-import green from '@material-ui/core/colors/green'
+import CheckSharp from '@mui/icons-material/CheckSharp'
+import { green } from '@mui/material/colors'
 
 export interface ChatMessageProps {
   text: string
@@ -42,7 +43,7 @@ export interface ChatMessageProps {
   ack: boolean
 }
 
-const chatMessageStyles = makeStyles((theme: Theme) => {
+const chatMessageStyles = makeStyles({ name: 'ylp-chat-message' })((theme: Theme) => {
   return {
     chatMessageContainer: {
       fontFamily: 'Roboto',
@@ -59,7 +60,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       borderRadius: '0px 12px 12px 12px',
       backgroundColor: theme.palette.primary.main,
       '&::before': {
-        content: "''",
+        content: '\'\'',
         width: 0,
         height: 0,
         borderTop: `20px solid ${theme.palette.primary.main}`,
@@ -80,7 +81,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       borderRadius: '12px 0px 12px 12px',
       backgroundColor: theme.palette.primary.dark,
       '&::after': {
-        content: "''",
+        content: '\'\'',
         width: 0,
         height: 0,
         borderTop: `20px solid ${theme.palette.primary.dark}`,
@@ -134,12 +135,12 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       }
     }
   }
-}, { name: 'ylp-chat-message' })
+})
 
 function ChatMessage(props: ChatMessageProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { text, author, privateMsg, isMine, timestamp, ack } = props
-  const classes = chatMessageStyles()
+  const { classes } = chatMessageStyles()
   const messageContainerType = isMine ? classes.right : classes.left
   const privateMessage = privateMsg ? 'private' : ''
   const isNew = !isMine && !ack
@@ -162,7 +163,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
   }
 
   return (
-    <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`} >
+    <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`}>
       {!isMine &&
         <div className={classes.chatMessageHeader}>
           <Face />

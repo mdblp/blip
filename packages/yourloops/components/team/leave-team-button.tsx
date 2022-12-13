@@ -27,8 +27,8 @@
 
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Button from '@material-ui/core/Button'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import Button from '@mui/material/Button'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 
 import { Team, useTeam } from '../../lib/team'
 import { commonComponentStyles } from '../common'
@@ -36,8 +36,8 @@ import { useAlert } from '../utils/snackbar'
 import { useHistory } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
-import TeamUtils from '../../lib/team/utils'
-import { usePatientContext } from '../../lib/patient/provider'
+import TeamUtils from '../../lib/team/team.util'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 
 export interface LeaveTeamButtonProps {
   team: Team
@@ -50,7 +50,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const alert = useAlert()
   const { user } = useAuth()
   const historyHook = useHistory()
-  const commonTeamClasses = commonComponentStyles()
+  const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 

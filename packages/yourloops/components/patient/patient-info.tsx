@@ -26,13 +26,14 @@
  */
 
 import React from 'react'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import { Box, Typography } from '@material-ui/core'
-import { Patient } from '../../lib/data/patient'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { genderLabels } from '../../lib/auth/helpers'
+import { genderLabels } from '../../lib/auth/auth.helper'
+import { Patient } from '../../lib/patient/models/patient.model'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   body: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -71,7 +72,7 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
   const { patient } = props
   const { t } = useTranslation('yourloops')
   const trNA = t('N/A')
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   return (
     <>

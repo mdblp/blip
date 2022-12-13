@@ -27,25 +27,26 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import Divider from '@material-ui/core/Divider'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import Divider from '@mui/material/Divider'
+import DialogTitle from '@mui/material/DialogTitle'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
-import { MedicalRecord } from '../../lib/medical-files/model'
 import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import useMedicalRecordEditDialog from './medical-record-edit-dialog.hook'
 import { useAuth } from '../../lib/auth'
+import { MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
 
 export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void
@@ -53,7 +54,7 @@ export interface MedicalRecordEditDialogProps extends CategoryProps {
   medicalRecord?: MedicalRecord
 }
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   divider: {
     margin: '30px 0 10px 16px'
   },
@@ -75,7 +76,7 @@ const classes = makeStyles((theme: Theme) => ({
 }))
 
 export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
-  const { title, textArea, divider } = classes()
+  const { classes: { title, textArea, divider } } = classes()
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { onClose, onSaved, medicalRecord, teamId, patientId } = props
@@ -118,7 +119,6 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           fullWidth
           multiline
           rows={4}
-          variant="outlined"
           disabled={readonly}
           data-testid="diagnosis"
           onChange={(event) => setDiagnosis(event.target.value)}
@@ -135,7 +135,6 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           fullWidth
           multiline
           rows={4}
-          variant="outlined"
           disabled={readonly}
           data-testid="progression-proposal"
           onChange={(event) => setProgressionProposal(event.target.value)}
@@ -152,7 +151,6 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           fullWidth
           multiline
           rows={4}
-          variant="outlined"
           disabled={readonly}
           data-testid="training-subject"
           onChange={(event) => setTrainingSubject(event.target.value)}

@@ -25,119 +25,129 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent, useMemo } from 'react'
 import { tz } from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
-import InputLabel from '@material-ui/core/InputLabel'
-import FormControl from '@material-ui/core/FormControl'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
+import FormHelperText from '@mui/material/FormHelperText'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
-import { User } from '../../lib/auth'
-import { Errors } from './models'
+import { useAuth } from '../../lib/auth'
+import { useProfilePageState } from './profile-page-context'
+import { profileFormCommonClasses } from './css-classes'
+import { CountryCodes } from '../../lib/auth/models/country.model'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
 
-interface PatientProfileFormProps {
-  user: User
-  classes: ClassNameMap<'formInput'>
-  birthDate?: string
-  birthPlace?: string
-  ins?: string
-  sex?: string
-  ssn?: string
-  referringDoctor?: string
-  setBirthDate: React.Dispatch<string>
-  setBirthPlace: React.Dispatch<string>
-  setIns: React.Dispatch<string>
-  setSex: React.Dispatch<string>
-  setSsn: React.Dispatch<string>
-  setReferringDoctor: React.Dispatch<string>
-  errors: Errors
-}
-
-function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
+const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const {
-    user, classes, errors,
-    birthDate, birthPlace, ins, sex, ssn, referringDoctor,
-    setBirthDate, setBirthPlace, setIns, setSex, setSsn, setReferringDoctor
-  } = props
+  const { user } = useAuth()
+  const { errors, profileForm, updateProfileForm } = useProfilePageState()
+  const { classes } = profileFormCommonClasses()
 
-  const browserTimezone = React.useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, [])
+  const browserTimezone = useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, [])
 
   const a1cDate = user.settings?.a1c?.date
   const a1cValue = user.settings?.a1c?.value
-  const country = user.settings?.country ?? ''
+  const country = user.settings?.country ?? CountryCodes.Unknown
+
   return (
     <React.Fragment>
-      <TextField
-        id="profile-textfield-birthdate"
-        label={t('birthdate')}
-        value={birthDate}
-        onChange={event => setBirthDate(event.target.value)}
-        error={errors.birthDate}
-        helperText={errors.birthDate && t('required-field')}
-        className={classes.formInput}
-      />
-      <TextField
-        id="profile-textfield-birthplace"
-        label={t('birthplace')}
-        value={birthPlace}
-        onChange={event => setBirthPlace(event.target.value)}
-        className={classes.formInput}
-        inputProps={{ maxlength: '50' }}
-      />
-      <FormControl className={`${props.classes.formInput}`}>
-        <InputLabel id="profile-select-gender-label" htmlFor="profile-select-gender">{t('gender')}</InputLabel>
-        <Select
-          id="profile-select-gender"
-          labelId="profile-select-gender-label"
-          value={sex}
-          onChange={event => setSex(event.target.value as string)}
-        >
-          <MenuItem value="" aria-label={t('none')}>{t('none')}</MenuItem>
-          <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>
-          <MenuItem value="F" aria-label={t('female')}>{t('female')}</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        id="profile-textfield-referring-doctor"
-        label={t('referring-doctor')}
-        value={referringDoctor}
-        onChange={event => setReferringDoctor(event.target.value)}
-        className={classes.formInput}
-        inputProps={{ maxlength: '50' }}
-      />
-      {country === 'FR' &&
-      <>
+      <Box className={classes.inputContainer}>
         <TextField
-          id="profile-textfield-ins"
-          label={t('ins')}
-          value={ins}
-          onChange={event => setIns(event.target.value)}
+          id="profile-textfield-birthdate"
+          label={t('birthdate')}
+          variant="standard"
+          value={profileForm.birthday}
+          onChange={event => updateProfileForm(ProfileFormKey.birthday, event.target.value)}
+          error={errors.birthday}
+          helperText={errors.birthday && t('required-field')}
           className={classes.formInput}
-          inputProps={{ maxlength: '15' }}
-          error={errors.ins}
-          helperText={errors.ins && t('field-with-exactly-15-characters')}
+          inputProps={{ maxLength: '10' }}
         />
         <TextField
-          id="profile-textfield-ssn"
-          label={t('ssn')}
-          value={ssn}
-          onChange={event => setSsn(event.target.value)}
+          id="profile-textfield-birthplace"
+          label={t('birthplace')}
+          variant="standard"
+          value={profileForm.birthPlace}
+          onChange={event => updateProfileForm(ProfileFormKey.birthPlace, event.target.value)}
           className={classes.formInput}
-          inputProps={{ maxlength: '15' }}
-          error={errors.ssn}
-          helperText={errors.ssn && t('field-with-exactly-15-characters')}
+          inputProps={{ maxLength: '50' }}
         />
-      </>
+      </Box>
+      {country === CountryCodes.France &&
+        <React.Fragment>
+          <Box className={classes.inputContainer}>
+            <TextField
+              id="profile-textfield-ins"
+              label={t('ins')}
+              variant="standard"
+              value={profileForm.ins}
+              onChange={event => updateProfileForm(ProfileFormKey.ins, event.target.value)}
+              className={classes.formInput}
+              inputProps={{ maxLength: '15' }}
+              error={errors.ins}
+              helperText={errors.ins && t('field-with-exactly-15-characters')}
+            />
+            <TextField
+              id="profile-textfield-ssn"
+              label={t('ssn')}
+              variant="standard"
+              value={profileForm.ssn}
+              onChange={event => updateProfileForm(ProfileFormKey.ssn, event.target.value)}
+              className={classes.formInput}
+              error={errors.ssn}
+              helperText={errors.ssn && t('field-with-exactly-15-characters')}
+              inputProps={{ maxLength: '15' }}
+            />
+          </Box>
+        </React.Fragment>
       }
+
+      <Box className={classes.inputContainer}>
+        <FormControl
+          variant="standard"
+          className={classes.formInput}
+          error={errors.sex}
+        >
+          <InputLabel
+            id="profile-select-gender-label"
+            htmlFor="profile-select-gender"
+          >
+            {t('gender')}
+          </InputLabel>
+          <Select
+            id="profile-select-gender"
+            labelId="profile-select-gender-label"
+            value={profileForm.sex}
+            error={errors.sex}
+            onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value)}
+          >
+            <MenuItem value="I" aria-label={t('indeterminate')}>{t('indeterminate')}</MenuItem>
+            <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>
+            <MenuItem value="F" aria-label={t('female')}>{t('female')}</MenuItem>
+          </Select>
+          <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
+        </FormControl>
+        <TextField
+          id="profile-textfield-referring-doctor"
+          label={t('referring-doctor')}
+          value={profileForm.referringDoctor}
+          onChange={event => updateProfileForm(ProfileFormKey.referringDoctor, event.target.value)}
+          className={classes.formInput}
+          inputProps={{ maxLength: '50' }}
+        />
+      </Box>
+
       {a1cValue && a1cDate &&
         <TextField
           id="hbA1c"
           label={t('patient-profile-hba1c', { hba1cMoment: tz(a1cDate, browserTimezone).format('L') })}
+          variant="standard"
           disabled
           value={`${a1cValue}%`}
           className={classes.formInput}
