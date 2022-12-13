@@ -177,21 +177,21 @@ describe('Patient dashboard for HCP', () => {
 
     await userEvent.clear(lowBgInput)
     await userEvent.type(lowBgInput, '50.5')
-    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('enter a integer number')).toBeVisible()
+    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('Enter a integer number')).toBeVisible()
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(lowBgInput)
     await userEvent.type(lowBgInput, '50')
     await userEvent.clear(highBgInput)
     await userEvent.type(highBgInput, '140.5')
-    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('enter a integer number')).toBeVisible()
+    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('Enter a integer number')).toBeVisible()
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(highBgInput)
     await userEvent.type(highBgInput, '140')
     await userEvent.clear(veryLowBgInput)
     await userEvent.type(veryLowBgInput, '40.5')
-    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('enter a integer number')).toBeVisible()
+    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('Enter a integer number')).toBeVisible()
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(veryLowBgInput)
@@ -230,14 +230,14 @@ describe('Patient dashboard for HCP', () => {
 
     await userEvent.clear(lowBgInput)
     await userEvent.type(lowBgInput, '3')
-    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('enter a float number')).toBeInTheDocument()
+    expect(within(within(dialog).getByTestId('low-bg-text-field-id')).getByText('Enter a float number')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(lowBgInput)
     await userEvent.type(lowBgInput, '2.8')
 
     await userEvent.clear(highBgInput)
     await userEvent.type(highBgInput, '8')
-    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('enter a float number')).toBeInTheDocument()
+    expect(within(within(dialog).getByTestId('high-bg-text-field-id')).getByText('Enter a float number')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(highBgInput)
     await userEvent.type(highBgInput, '7.8')
@@ -245,7 +245,7 @@ describe('Patient dashboard for HCP', () => {
     // Value in the field very lowBg false test of the button save disable
     await userEvent.clear(veryLowBgInput)
     await userEvent.type(veryLowBgInput, '3')
-    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('enter a float number')).toBeInTheDocument()
+    expect(within(within(dialog).getByTestId('very-low-bg-text-field-id')).getByText('Enter a float number')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(veryLowBgInput)
     await userEvent.type(veryLowBgInput, '2.2')

@@ -105,7 +105,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       return t('mandatory-integer')
     }
     if (value < lowValue || value > highValue) {
-      return t('mandatory-range', { bgUnit, lowValue, highValue })
+      return t('mandatory-range', { lowValue, highValue })
     }
     if (bgUnit === UnitsType.MMOLL && !(value % 1 !== 0)) {
       return t('mandatory-float')

@@ -43,6 +43,7 @@ import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import useAlarmsContentConfiguration, { PERCENTAGES } from './alarms-content-configuration.hook'
 import { onBasicDropdownSelect } from './alarm-content-configuration.utils'
+import FormHelperText from '@mui/material/FormHelperText'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -70,10 +71,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginRight: theme.spacing(2)
   },
   inputHelperText: {
+    width: '100%',
     position: 'absolute',
-    marginLeft: -2,
-    top: 41,
-    width: 173
+    bottom: '-15px'
   },
   subCategoryContainer: {
     width: '55%'
@@ -86,8 +86,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 95
+    marginRight: theme.spacing(1)
   },
   valueSelection: {
     display: 'flex',
@@ -129,6 +128,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     thresholds
   } = useAlarmsContentConfiguration(props)
   const { MIN_LOW_BG, MAX_LOW_BG, MIN_HIGH_BG, MAX_HIGH_BG, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG } = thresholds
+
   return (
     <React.Fragment>
       <Box paddingX={3}>
@@ -143,19 +143,25 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             bgUnit
           })}
         </Typography>
-        <Box display="flex" >
+        <Box display="flex">
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>
               A. {t('glycemic-target')}
             </Typography>
             <div className={classes.valueSelection}>
-              <Box display="flex" alignItems="center" marginRight={2} data-testid="low-bg-text-field-id">
+              <Box
+                display="flex"
+                alignItems="center"
+                marginRight={2}
+                paddingBottom={1}
+                position="relative"
+                data-testid="low-bg-text-field-id"
+              >
                 <Typography>{t('minimum')}</Typography>
                 <TextField
                   id="low-bg-text-field-id"
                   value={lowBg.value}
                   error={!!lowBg.errorMessage}
-                  helperText={lowBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   size="small"
@@ -167,23 +173,27 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                       'aria-label': t('low-bg-input')
                     }
                   }}
-                  FormHelperTextProps={{
-                    classes: {
-                      root: classes.inputHelperText
-                    }
-                  }}
                   onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
-
                 />
                 <Typography>{bgUnit}</Typography>
+                {!!lowBg.errorMessage &&
+                  <FormHelperText error className={classes.inputHelperText}>
+                    {lowBg.errorMessage}
+                  </FormHelperText>
+                }
               </Box>
-              <Box display="flex" alignItems="center" data-testId='high-bg-text-field-id'>
+              <Box
+                display="flex"
+                alignItems="center"
+                paddingBottom={1}
+                position="relative"
+                data-testid="high-bg-text-field-id"
+              >
                 <Typography>{t('maximum')}</Typography>
                 <TextField
                   id="high-bg-text-field-id"
                   value={highBg.value}
                   error={!!highBg.errorMessage}
-                  helperText={highBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   size="small"
@@ -195,14 +205,14 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                       'aria-label': t('high-bg-input')
                     }
                   }}
-                  FormHelperTextProps={{
-                    classes: {
-                      root: classes.inputHelperText
-                    }
-                  }}
                   onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
                 />
                 <Typography>{bgUnit}</Typography>
+                {!!highBg.errorMessage &&
+                  <FormHelperText error className={classes.inputHelperText}>
+                    {highBg.errorMessage}
+                  </FormHelperText>
+                }
               </Box>
             </div>
             {!patient &&
@@ -246,13 +256,17 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               hypoThreshold: hypoThreshold.value,
               veryLowBg: veryLowBg.value
             })}:</Typography>
-            <div className={classes.valueSelection} data-testid="very-low-bg-text-field-id">
+            <Box
+              className={classes.valueSelection}
+              data-testid="very-low-bg-text-field-id"
+              position="relative"
+              paddingBottom={2}
+            >
               <Typography>{t('severe-hypoglycemia-below')}</Typography>
               <TextField
                 id="very-low-bg-text-field-id"
                 value={veryLowBg.value}
                 error={!!veryLowBg.errorMessage}
-                helperText={veryLowBg.errorMessage}
                 type="number"
                 className={classes.textField}
                 size="small"
@@ -264,15 +278,15 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     'aria-label': t('very-low-bg-input')
                   }
                 }}
-                FormHelperTextProps={{
-                  classes: {
-                    root: classes.inputHelperText
-                  }
-                }}
                 onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
               />
               <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
-            </div>
+              {!!veryLowBg.errorMessage &&
+                <FormHelperText error className={classes.inputHelperText}>
+                  {veryLowBg.errorMessage}
+                </FormHelperText>
+              }
+            </Box>
             {!patient &&
               <Typography className={classes.defaultLabel}>{t('default', { value: `54${bgUnit}` })}</Typography>
             }
@@ -291,7 +305,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES}
                   error={hypoThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
-                  data-testId='hypo-threshold'
+                  data-testid="hypo-threshold"
                 />
               </div>
             </div>
@@ -321,7 +335,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES.slice(0, 10)}
                   error={nonDataTxThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
-                  data-testID='non-data'
+                  data-testid="non-data"
                 />
               </div>
             </div>
