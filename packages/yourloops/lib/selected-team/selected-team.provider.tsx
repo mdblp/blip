@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, useContext } from 'react'
+import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
 import { SelectedTeamContextResult } from './selected-team-context.model'
 import { useSelectedTeamProviderCustomHook } from './selected-team.hook'
 
 const SelectedTeamContext = createContext<SelectedTeamContextResult>({} as SelectedTeamContextResult)
 
-export const SelectedTeamProvider: FunctionComponent = ({ children }) => {
+export const SelectedTeamProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const selectedTeamProviderCustomHook = useSelectedTeamProviderCustomHook()
 
   return <SelectedTeamContext.Provider value={selectedTeamProviderCustomHook}>{children}</SelectedTeamContext.Provider>

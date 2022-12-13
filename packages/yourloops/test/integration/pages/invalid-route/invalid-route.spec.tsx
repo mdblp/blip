@@ -34,7 +34,7 @@ import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { Team } from '../../../../lib/team'
-import { TeamType } from '../../../../models/team'
+import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'

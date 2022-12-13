@@ -45,13 +45,13 @@ import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
 import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
 import ChatWidget from './chat/chat-widget'
-import { Patient, PatientTeam } from '../lib/data/patient'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/patient.provider'
-import { Patient } from '../lib/patient/models/patient.model'
 import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
 import { Team, useTeam } from '../lib/team'
+import { Patient } from '../lib/patient/models/patient.model'
+import { PatientTeam } from '../lib/patient/models/patient-team.model'
 
 const patientDataStyles = makeStyles()(() => {
   return {

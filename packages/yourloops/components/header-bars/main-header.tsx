@@ -45,12 +45,12 @@ import { useNotification } from '../../lib/notifications/notification.hook'
 import { useAuth } from '../../lib/auth'
 import { TeamMenuMemoized as TeamMenu } from '../menus/team-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import Dropdown from '../dropdown/dropdown'
-import TeamUtils from '../../lib/team/utils'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import { usePatientContext } from '../../lib/patient/provider'
-import { PatientTeam } from '../../lib/data/patient'
+import { Team, useTeam } from '../../lib/team'
+import TeamUtils from '../../lib/team/team.util'
+import { usePatientContext } from '../../lib/patient/patient.provider'
+import { PatientTeam } from '../../lib/patient/models/patient-team.model'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -88,7 +88,7 @@ const classes = makeStyles()((theme: Theme) => ({
 const PATIENT_DASHBOARD_REGEX = /^\/patient\/([0-9a-f]+)\/dashboard/
 
 function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
-  const { classes: { desktopLogo, separator, appBar, leftIcon, toolbar } } = classes()
+  const { classes: { desktopLogo, separator, appBar, leftIcon, teamsDropdown, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
