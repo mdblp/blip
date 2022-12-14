@@ -143,7 +143,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             bgUnit
           })}
         </Typography>
-        <Box display="flex" data-testid='time-target'>
+        <Box display="flex" data-testid="time-target">
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>
               A. {t('glycemic-target')}
@@ -223,7 +223,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
             <div className={classes.valueSelection}>
               <Typography>{t('time-spent-off-target')}</Typography>
-              <div className={classes.dropdown}>
+              <div className={classes.dropdown} data-testid="dropDown-out-of-range">
                 <BasicDropdown
                   key={`out-of-range-${outOfRangeThreshold.value}`}
                   id="out-of-range"
@@ -231,6 +231,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES}
                   error={outOfRangeThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setOutOfRangeThreshold)}
+
                 />
               </div>
             </div>
@@ -250,7 +251,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             bgUnit
           })}
         </Typography>
-        <Box display="flex" data-testid='severe-hypoglycemia'>
+        <Box display="flex" data-testid="severe-hypoglycemia">
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
               hypoThreshold: hypoThreshold.value,
@@ -295,7 +296,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.subCategoryTitle}>
               B. {t('event-trigger-threshold')}
             </Typography>
-            <div className={classes.valueSelection}>
+            <div className={classes.valueSelection} data-testid='dropDown-hypo'>
               <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
               <div className={classes.dropdown}>
                 <BasicDropdown
@@ -326,7 +327,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
             <div className={classes.valueSelection}>
               <Typography>{t('time-spent-without-uploaded-data')}</Typography>
-              <div className={classes.dropdown}>
+              <div className={classes.dropdown} data-testid='dropDown-nonData'>
                 <BasicDropdown
                   key={`tir-dropdown-${nonDataTxThreshold.value}`}
                   id="non-data"

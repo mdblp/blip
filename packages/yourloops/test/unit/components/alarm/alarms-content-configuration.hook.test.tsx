@@ -26,14 +26,13 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks'
-import useAlarmsContentConfiguration, {} from '../../../../components/alarm/alarms-content-configuration.hook'
+import useAlarmsContentConfiguration from '../../../../components/alarm/alarms-content-configuration.hook'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { buildTeam, createPatient } from '../../common/utils'
 
 const patient = createPatient()
 const teamId = 'teamId'
 const team = buildTeam(teamId)
-
 const monitoring = team.monitoring = {
   enabled: true,
   parameters: {
@@ -63,5 +62,25 @@ describe('AlarmsContentConfiguration hook', () => {
     team.monitoring.parameters.veryLowBg = 3
     const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
     expect(result.current.veryLowBg.errorMessage).toBe('mandatory-float')
+  })
+  it('should return default thresholds value in mmol/L if the parameters are in mmol/L', () => {
+    team.monitoring.parameters.bgUnit = UnitsType.MMOLL
+    const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+    expect(result.current.thresholds.minHighBg).toBe(7.8)
+    expect(result.current.thresholds.maxHighBg).toBe(13.9)
+    expect(result.current.thresholds.minLowBg).toBe(2.8)
+    expect(result.current.thresholds.maxLowBg).toBe(5.6)
+    expect(result.current.thresholds.minVeryLowBg).toBe(2.2)
+    expect(result.current.thresholds.maxVeryLowBg).toBe(5)
+  })
+  it('should return default thresholds value in mg/dL if the parameters are in mg/dL', () => {
+    team.monitoring.parameters.bgUnit = UnitsType.MGDL
+    const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+    expect(result.current.thresholds.minHighBg).toBe(140)
+    expect(result.current.thresholds.maxHighBg).toBe(250)
+    expect(result.current.thresholds.minLowBg).toBe(50)
+    expect(result.current.thresholds.maxLowBg).toBe(100)
+    expect(result.current.thresholds.minVeryLowBg).toBe(40)
+    expect(result.current.thresholds.maxVeryLowBg).toBe(90)
   })
 })

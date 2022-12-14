@@ -187,6 +187,7 @@ export const pendingPatient: ITeamMember = {
 export const removePatientMock = jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
 export const mockPatientAPI = () => {
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
+  jest.spyOn(PatientAPI, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 
 export const buildPatient = (member: Partial<ITeamMember>): ITeamMember => {

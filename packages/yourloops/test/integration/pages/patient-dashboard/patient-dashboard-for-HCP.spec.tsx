@@ -28,13 +28,14 @@
 import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, monitoringParametersBgUnitMmol, myThirdTeamId } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
   mockPatientAPI,
   monitoredPatientFullName,
   monitoredPatientId,
+  monitoredPatientWithMmol,
   monitoredPatientWithMmolId,
   unmonitoredPatientFullName,
   unmonitoredPatientId
@@ -46,6 +47,7 @@ import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
+import PatientApi from '../../../../lib/patient/patient.api'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -159,7 +161,10 @@ describe('Patient dashboard for HCP', () => {
     const hypoTreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
     const nonDataThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
     const saveButton = dialog.getByRole('button', { name: 'Save' })
+    const defaultButton = dialog.getByRole('button', { name: 'Default values' })
+    const cancelButton = dialog.getByRole('button', { name: 'Cancel' })
 
+    expect(dialog.getByText('Events configuration')).toBeVisible()
     expect(dialog.getByText('1. Time away from target')).toBeVisible()
     expect(dialog.getByText('Current trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)')).toBeVisible()
     expect(dialog.getByText('A. Glycemic target')).toBeVisible()
@@ -190,14 +195,28 @@ describe('Patient dashboard for HCP', () => {
     expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
     expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
     expect(saveButton).toBeEnabled()
+    expect(cancelButton).toBeEnabled()
+    expect(defaultButton).toBeEnabled()
 
     await userEvent.clear(lowBgInput)
+    const dopDownOutRange = within(dialog.getByTestId('dropDown-out-of-range'))
+    fireEvent.mouseDown(dopDownOutRange.getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: '15%' }))
+
+    const dropDownHypo = within(dialog.getByTestId('dropDown-hypo'))
+    fireEvent.mouseDown(dropDownHypo.getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: '20%' }))
+
+    const dropDownNonData = within(dialog.getByTestId('dropDown-nonData'))
+    fireEvent.mouseDown(dropDownNonData.getByRole('button'))
+    fireEvent.click(screen.getByRole('option', { name: '40%' }))
+
     await userEvent.type(lowBgInput, '50.5')
     expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Number must be an integer')).toBeVisible()
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '50')
+    await userEvent.type(lowBgInput, '60')
     expect(saveButton).toBeEnabled()
     await userEvent.clear(highBgInput)
     await userEvent.type(highBgInput, '140.5')
@@ -205,16 +224,29 @@ describe('Patient dashboard for HCP', () => {
     expect(saveButton).toBeDisabled()
 
     await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '140')
+    await userEvent.type(highBgInput, '150')
     expect(saveButton).toBeEnabled()
     await userEvent.clear(veryLowBgInput)
     await userEvent.type(veryLowBgInput, '40.5')
     expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Number must be an integer')).toBeVisible()
     expect(saveButton).toBeDisabled()
-
     await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '40')
-    expect(saveButton).toBeEnabled()
+    await userEvent.type(veryLowBgInput, '50')
+    expect(dialog.getByText('Current trigger setting: 15% of time off target (min at 60 mg/dL max at 150 mg/dL)')).toBeVisible()
+    expect(dialog.getByText('Current trigger setting: 20% of time below 50 mg/dL threshold')).toBeVisible()
+    expect(dialog.getByText('Current trigger setting: 40% of data not transmitted over the period')).toBeVisible()
+
+    await userEvent.click(defaultButton)
+    expect(lowBgInput).toHaveValue(50)
+    expect(highBgInput).toHaveValue(140)
+    expect(veryLowBgInput).toHaveValue(40)
+    expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
+    expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
+    expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
+    expect(saveButton).not.toBeDisabled()
+
+    await userEvent.click(cancelButton)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('Should have units in mmol/L, integer values in the inputs and the button displayed', async () => {
@@ -249,26 +281,43 @@ describe('Patient dashboard for HCP', () => {
 
     await userEvent.clear(lowBgInput)
     await userEvent.type(lowBgInput, '3')
-    expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Enter a float number')).toBeInTheDocument()
+    expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Number must be an float')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '2.8')
+    await userEvent.type(lowBgInput, '4.8')
     expect(saveButton).toBeEnabled()
 
     await userEvent.clear(highBgInput)
     await userEvent.type(highBgInput, '8')
-    expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('Enter a float number')).toBeInTheDocument()
+    expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('Number must be an float')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '7.8')
+    await userEvent.type(highBgInput, '8.8')
     expect(saveButton).toBeEnabled()
 
     await userEvent.clear(veryLowBgInput)
     await userEvent.type(veryLowBgInput, '3')
-    expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Enter a float number')).toBeInTheDocument()
+    expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Number must be an float')).toBeInTheDocument()
     expect(saveButton).toBeDisabled()
     await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '2.2')
+    await userEvent.type(veryLowBgInput, '3.2')
     expect(saveButton).toBeEnabled()
+    expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
+    expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
+    expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
+
+    await userEvent.click(saveButton)
+    const expectedMonitoring = {
+      ...monitoredPatientWithMmol.monitoring,
+      parameters: {
+        ...monitoringParametersBgUnitMmol,
+        lowBg: 4.8,
+        highBg: 8.8,
+        veryLowBg: 3.2
+      }
+    }
+    expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, monitoredPatientWithMmolId, expectedMonitoring)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByText('Patient update succeeded')).toBeVisible()
   })
 })
