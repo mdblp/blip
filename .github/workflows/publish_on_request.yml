@@ -47,6 +47,7 @@ jobs:
         id: command
         uses: xt0rted/slash-command-action@v1
         with:
+          repo-token: ${{ secrets.GIT_TOKEN }}
           command: publish
           reaction: "true"
           reaction-type: "eyes"
@@ -67,10 +68,18 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
 
-      - name: Get yourloops version from package.json
+      - name: Get yourloops version from changelog
         id: package-version
+        uses: addnab/docker-run-action@v3
+        with:
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          registry: ${{ secrets.REGISTRY }}
+          options: -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
+          image: docker.ci.diabeloop.eu/ci-toolbox:latest
         run: |
-          echo "semver=$(cat ./package.json | jq '.version' | tr -d '"')" >> $GITHUB_OUTPUT
+          cd blip
+          echo "semver=$(release-helper get-version)" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -93,10 +102,10 @@ jobs:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
-          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.package-version.outputs.semver }}-PR-${{env.PR_NUMBER}}
+          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.package-version.outputs.semver }}-${{env.PR_NUMBER}}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: v${{ steps.package-version.outputs.semver }}
+          tag: v${{ steps.package-version.outputs.semver }}-${{env.PR_NUMBER}}
           force_push_tag: true
