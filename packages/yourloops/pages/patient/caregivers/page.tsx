@@ -43,7 +43,7 @@ import { useAlert } from '../../../components/utils/snackbar'
 import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-dialog'
 import CaregiverTable from './table'
-import DirectShareApi from '../../../lib/share/direct-share.api'
+import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
@@ -84,7 +84,13 @@ function PatientCaregiversPage(): JSX.Element {
         // And refresh the list
         setCaregivers(null)
       } catch (reason) {
+        const error = reason as Error
         log.error(reason)
+
+        if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
+          alert.error(t('alert-invitation-caregiver-failed-user-is-patient'))
+          return
+        }
         alert.error(t('alert-invitation-caregiver-failed'))
       }
     }

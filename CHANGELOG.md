@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-1444 Handle user name display for Japanese
 - YLP-1624 Fix error messages when inviting a patient already in the team
+- YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
 - YLP-1805 Push error to the backend
