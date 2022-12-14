@@ -274,6 +274,8 @@ jobs:
       - name: Get yourloops version from changelog
         id: changelog-version
         uses: addnab/docker-run-action@v3
+        env:
+          GITHUB_OUTPUT: $GITHUB_OUTPUT
         with:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
