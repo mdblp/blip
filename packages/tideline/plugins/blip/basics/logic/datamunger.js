@@ -231,7 +231,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
           .reduce(function(p, date) {
             return p + (dataObj.dataByDate[date].subtotals[tag] || 0)
           }, 0)}
-        summary[tag].percentage = summary[tag].count/summary.total
+        summary[tag].Percentage = summary[tag].count/summary.total
       }
     },
     _getRowKey: function(row) {

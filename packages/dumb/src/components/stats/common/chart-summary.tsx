@@ -45,7 +45,7 @@ export const ChartSummary: FunctionComponent<ChartSummaryProps> = (props) => {
 
   return (
     <div className={styles.chartSummary}>
-      {value && (
+      {value &&
         <div className={classNames}>
           <span className={styles.summaryValue}>
             {value}
@@ -54,7 +54,7 @@ export const ChartSummary: FunctionComponent<ChartSummaryProps> = (props) => {
             {suffix}
           </span>
         </div>
-      )}
+      }
     </div>
   )
 }

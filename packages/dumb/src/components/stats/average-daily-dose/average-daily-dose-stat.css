@@ -25,47 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.chartTitle {
-  composes: largeSize from '../../../styles/typography.css';
-  font-weight: 500;
-  line-height: 1;
-  white-space: nowrap;
-  margin-top: .25em;
-  color: var(--stat--default);
-}
-
-.StatWrapper {
-  position: relative;
-  overflow: visible;
-}
-
-.Stat {
-  background-color: var(--bkgrnd-white);
-}
-
-.Stat tspan {
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
-  font-weight: 500;
-}
-
-.statHeader {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  height: 1.5em;
-  margin: var(--section-title-margin);
-  overflow: hidden;
-}
-
-.statFooter {
+.commonDisplay {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
+}
+
+.statFooter {
   border-top: 1px solid var(--stat--border);
   padding: 0.25em 0.625em .375em;
   overflow: hidden;
+}
+
+.inputWrapper {
+  width: 100%;
+  color: var(--stat--default);
+  padding: 0.25em 0.625em .375em;
+}
+
+.outputWrapper {
+  width: 100%;
+  color: var(--stat--default);
 }
 
 .units {
@@ -77,19 +58,10 @@
   padding-left: .75em;
 }
 
-.Stat.isOpen .chartTitleData {
+.stat.isOpen .chartTitleData {
   display: inline-flex;
 }
 
-.inputWrapper {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  color: var(--stat--default);
-  padding: 0.25em 0.625em .375em;
-}
 
 .inputLabel {
   font-weight: 500;
@@ -103,15 +75,6 @@
   margin-right: .25em;
   position: relative;
   top: 1px;
-}
-
-.outputWrapper {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  color: var(--stat--default);
 }
 
 .outputValue {

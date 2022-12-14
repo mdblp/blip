@@ -53,6 +53,7 @@ import {
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 
 export {
+  AverageDailyDoseStat,
   BloodGlucoseTooltip,
   CBGMeanStat,
   CBGPercentageBarChart,
@@ -71,6 +72,5 @@ export {
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
-  TotalCarbsStat,
-  AverageDailyDoseStat
+  TotalCarbsStat
 }

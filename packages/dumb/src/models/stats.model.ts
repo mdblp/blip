@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+export const EMPTY_DATA_PLACEHOLDER = '--'
+
 export enum CBGStatType {
   AverageDailyDose = 'averageDailyDose',
   AverageGlucose = 'averageGlucose',
@@ -60,9 +62,8 @@ export interface BgClasses {
 }
 
 export enum StatFormats {
-  cv = 'cv',
-  gmi = 'gmi',
-  percentage = 'percentage',
-  units = 'units',
-  unitsPerKg = 'unitsPerKg'
+  Cv = 'Cv',
+  Gmi = 'Gmi',
+  Percentage = 'Percentage',
+  Units = 'Units',
 }

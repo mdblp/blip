@@ -25,20 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../../styles/colors.css";
+@import "./colors.css";
 
-.coefficientVariationTarget {
-  color: var(--bg-target);
+.chartTitle {
+  composes: largeSize from './typography.css';
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  margin-top: .25em;
+  color: var(--stat--default);
 }
 
-.coefficientVariationHigh {
-  color: var(--bg-high);
+.statWrapper {
+  position: relative;
+  overflow: visible;
 }
 
-.statDisabled {
-  color: var(--stat-disabled);
+.stat {
+  background-color: var(--bkgrnd-white);
 }
 
-.statEnabled {
-  color: var(--text-medium-contrast);
+.stat tspan {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+  font-weight: 500;
+}
+
+.statHeader {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 1.5em;
+  margin: var(--section-title-margin);
+  overflow: hidden;
 }

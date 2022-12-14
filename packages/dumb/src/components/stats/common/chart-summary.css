@@ -51,12 +51,3 @@
   bottom: 1px;
   padding-left: 1px;
 }
-
-.units {
-  composes: smallSize from '../../../styles/typography.css';
-  color: var(--stat--default);
-  font-weight: normal;
-  align-self: center;
-  line-height: 24px;
-  padding-left: .75em;
-}

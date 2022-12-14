@@ -16,6 +16,9 @@ import {
   TotalInsulinStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
+import { statTypes } from 'tidepool-viz/src/utils/stat'
+
+const WEIGHT = 'WEIGHT'
 
 class Stats extends React.Component {
   static propTypes = {
@@ -168,7 +171,7 @@ class Stats extends React.Component {
           />
         )
       case CBGStatType.AverageDailyDose: {
-        const weightParam = parametersConfig?.find(param => param.name === 'WEIGHT')
+        const weightParam = parametersConfig?.find(param => param.name === WEIGHT)
         const weight = weightParam ? Number(weightParam?.value) : -1
         return (
           <AverageDailyDoseStat
@@ -181,21 +184,21 @@ class Stats extends React.Component {
         )
       }
       default: {
-        if (stat.type === 'simple') {
-          return (
-            <SimpleStat
-              annotations={stat.annotations}
-              showToolTip={!hideToolTips}
-              summaryFormat={stat.dataFormat.summary}
-              title={stat.title}
-              total={stat.data.total?.value}
-              value={stat.data.data[0].value}
-            />
-          )
+        if (stat.type !== statTypes.simple) {
+          throw Error(`Unexpected stat id ${stat.id} and type ${stat.type}`)
         }
+        return (
+          <SimpleStat
+            annotations={stat.annotations}
+            showToolTip={!hideToolTips}
+            summaryFormat={stat.dataFormat.summary}
+            title={stat.title}
+            total={stat.data.total?.value}
+            value={stat.data.data[0].value}
+          />
+        )
       }
     }
-    throw Error(`Stat id ${stat.id} and type ${stat.type}`)
   }
 
   renderStats(stats, hideToolTips) {

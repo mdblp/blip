@@ -25,12 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo } from 'react'
+import React, { FunctionComponent, memo, useMemo } from 'react'
 import styles from './simple-stat.css'
+import commonStyles from '../../../styles/stat-common.css'
 import { ChartSummary } from '../common/chart-summary'
 import { StatFormats } from '../../../models/stats.model'
-import { useSimpleStatHook } from './simple-stat.hook'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
+import { buildChartSummaryProps } from './simple-stat.util'
 
 interface SimpleStatProps {
   annotations: string[]
@@ -54,12 +55,15 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (
     value
   } = props
 
-  const { chartSummaryProps } = useSimpleStatHook({ summaryFormat, total, value })
+  const chartSummaryProps = useMemo(() => {
+    return buildChartSummaryProps(summaryFormat, total, value)
+  }, [summaryFormat, total, value])
+
   return (
-    <div className={styles.StatWrapper}>
-      <div className={styles.Stat}>
-        <div className={styles.statHeader}>
-          <div className={styles.chartTitle}>
+    <div className={styles.statWrapper}>
+      <div className={commonStyles.stat}>
+        <div className={commonStyles.statHeader}>
+          <div className={commonStyles.chartTitle}>
             {title}
             <span className={styles.chartTitleData}>
               (&nbsp;
@@ -68,9 +72,9 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (
               </span>
               &nbsp;)
             </span>
-            {showToolTip && annotations && (
+            {showToolTip && annotations &&
               <StatTooltip annotations={annotations} />
-            )}
+            }
           </div>
           <ChartSummary {...chartSummaryProps} />
         </div>

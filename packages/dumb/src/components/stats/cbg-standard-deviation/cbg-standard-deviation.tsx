@@ -77,7 +77,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
             </>
           }
           {!hideTooltip &&
-            <StatTooltip annotations={annotations}/>
+            <StatTooltip annotations={annotations} />
           }
         </Box>
         <Box fontSize="12px">
@@ -91,8 +91,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
             <Box className={stylesCbgCommon['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
               --
             </Box>
-
-       </>
+          </>
         ) : (
           <>
             <div className={stylesCbgCommon.lines}>

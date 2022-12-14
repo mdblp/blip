@@ -27,9 +27,11 @@
 
 import React, { FunctionComponent, memo, useMemo } from 'react'
 import styles from './average-daily-dose-stat.css'
+import commonStyles from '../../../styles/stat-common.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { useTranslation } from 'react-i18next'
 import { ChartSummary } from '../common/chart-summary'
+import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 
 interface AverageDailyDoseStatProps {
   dailyDose: number
@@ -38,8 +40,6 @@ interface AverageDailyDoseStatProps {
   weight: number
   weightSuffix: string
 }
-
-const EMPTY_DATA_PLACEHOLDER = '--'
 
 const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (props) => {
   const {
@@ -58,14 +58,15 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
   }, [dailyDose, weight])
 
   const outputValueClasses = useMemo(() => {
-    return computedOutputValue === EMPTY_DATA_PLACEHOLDER ? `${styles.outputValue} ${styles.outputValueDisabled}` : styles.outputValue
+    const isDisabled = computedOutputValue === EMPTY_DATA_PLACEHOLDER
+    return `${styles.outputValue}${isDisabled ? ` ${styles.outputValueDisabled}` : ''}`
   }, [computedOutputValue])
 
   return (
-    <div className={styles.StatWrapper}>
-      <div className={`${styles.Stat} ${styles.isOpen}`}>
-        <div className={styles.statHeader}>
-          <div className={styles.chartTitle}>
+    <div className={commonStyles.statWrapper}>
+      <div className={`${commonStyles.stat} ${styles.isOpen}`}>
+        <div className={commonStyles.statHeader}>
+          <div className={commonStyles.chartTitle}>
             {title}
           </div>
           <ChartSummary
@@ -74,7 +75,7 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
             value={formatDecimalNumber(dailyDose, 1)}
           />
         </div>
-        <div className={styles.inputWrapper}>
+        <div className={`${styles.commonDisplay} ${styles.inputWrapper}`}>
           <div className={styles.inputLabel}>
             {t('Weight')}
           </div>
@@ -87,10 +88,10 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
             </span>
           </div>
         </div>
-        <div className={styles.statFooter}>
-          <div className={styles.outputWrapper}>
+        <div className={`${styles.commonDisplay} ${styles.statFooter}`}>
+          <div className={`${styles.commonDisplay} ${styles.outputWrapper}`}>
             {footerLabel && <div className={styles.outputLabel}>{footerLabel}</div>}
-            <div className={styles.outputValueWrapper}>
+            <div>
               <span className={outputValueClasses}>
                 {computedOutputValue}
               </span>

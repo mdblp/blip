@@ -25,10 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const getPercentagePrecision = (percentage: number): number => {
-  // We want to show extra precision on very small percentages so that we avoid showing 0%
-  if (percentage > 0 && percentage < 0.5) {
-    return percentage < 0.05 ? 2 : 1
-  }
-  return 0
-}
+import { StatFormats } from '../../../models/stats.model'
+import { buildChartSummaryProps } from './simple-stat.util'
+
+describe('SimpleStat util', () => {
+  describe('buildChartSummaryProps', () => {
+    it('should return correct ChartSummaryProps when format is cv and value > 0', () => {
+      const chartSummaryProps = buildChartSummaryProps(StatFormats.Cv, 10, 5.265)
+      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '%', value: '5' })
+    })
+
+    it('should return correct ChartSummaryProps when format is gmi and value > 0', () => {
+      const chartSummaryProps = buildChartSummaryProps(StatFormats.Cv, 10, 38.63)
+      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '%', value: '39' })
+    })
+
+    it('should return correct ChartSummaryProps when format is percentage and total > 0', () => {
+      const chartSummaryProps = buildChartSummaryProps(StatFormats.Percentage, 10, 4.56)
+      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '%', value: '46' })
+    })
+
+    it('should return correct ChartSummaryProps when format is unknown', () => {
+      const chartSummaryProps = buildChartSummaryProps(StatFormats.Units, 10, 4.56)
+      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '', value: '--' })
+    })
+  })
+})
