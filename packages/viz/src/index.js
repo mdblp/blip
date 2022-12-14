@@ -41,7 +41,7 @@ import {
   getStatDefinition,
   getStatTitle,
   statBgSourceLabels,
-  statFetchMethods
+  statFetchMethods, statTypes
 } from './utils/stat'
 import DataUtil from './utils/data'
 import getParametersChanges from './utils/parametersHistory'
@@ -93,7 +93,8 @@ const utils = {
     getStatDefinition,
     getStatTitle,
     statBgSourceLabels,
-    statFetchMethods
+    statFetchMethods,
+    statTypes
   }
 }
 

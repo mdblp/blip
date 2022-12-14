@@ -315,7 +315,7 @@ export function summarizeTagFn(dataObj, summary) {
         0,
       )
     }
-    summary[tag].Percentage = summary[tag].count / summary.total
+    summary[tag].percentage = summary[tag].count / summary.total
   }
   /* eslint-enable no-param-reassign */
 }

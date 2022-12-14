@@ -16,7 +16,6 @@ import {
   TotalInsulinStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
-import { statTypes } from 'tidepool-viz/src/utils/stat'
 
 const WEIGHT = 'WEIGHT'
 
@@ -184,7 +183,7 @@ class Stats extends React.Component {
         )
       }
       default: {
-        if (stat.type !== statTypes.simple) {
+        if (stat.type !== vizUtils.stat.statTypes.simple) {
           throw Error(`Unexpected stat id ${stat.id} and type ${stat.type}`)
         }
         return (

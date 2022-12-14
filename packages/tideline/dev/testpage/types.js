@@ -138,7 +138,7 @@ var CBG = function(opts) {
 
   this.deviceId = opts.deviceId
   this.deviceTime = opts.deviceTime
-  this.Units = opts.units
+  this.units = opts.units
   this.value = opts.value
 
   this.time = this.makeTime()
@@ -217,7 +217,7 @@ var Settings = function(opts) {
   this.carbRatio = opts.carbRatio
   this.deviceTime = opts.deviceTime
   this.insulinSensitivity = opts.insulinSensitivity
-  this.Units = opts.units
+  this.units = opts.units
   this.source = opts.source
 
   this.time = this.makeTime()
@@ -245,7 +245,7 @@ var SMBG = function(opts) {
   this.type = 'smbg'
 
   this.deviceTime = opts.deviceTime
-  this.Units = opts.units
+  this.units = opts.units
   this.value = opts.value
 
   this.time = this.makeTime()
