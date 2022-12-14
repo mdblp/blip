@@ -27,10 +27,10 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './simple-stat.css'
-import { ChartTitle } from '../common/chart-title'
 import { ChartSummary } from '../common/chart-summary'
 import { StatFormats } from '../../../models/stats.model'
-import { EMPTY_DATA_PLACEHOLDER, useSimpleStatHook } from './simple-stat.hook'
+import { useSimpleStatHook } from './simple-stat.hook'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 
 interface SimpleStatProps {
   annotations: string[]
@@ -55,19 +55,23 @@ export const SimpleStat: FunctionComponent<SimpleStatProps> = (
   } = props
 
   const { chartSummaryProps } = useSimpleStatHook({ summaryFormat, total, value })
-
   return (
     <div className={styles.StatWrapper}>
       <div className={styles.Stat}>
         <div className={styles.statHeader}>
-          <ChartTitle
-            annotations={annotations}
-            showToolTip={showToolTip}
-            title={title}
-            suffix={''}
-            value={value.toString()}
-            showDetail={value.toString() !== EMPTY_DATA_PLACEHOLDER && value.toString() !== ''}
-          />
+          <div className={styles.chartTitle}>
+            {title}
+            <span className={styles.chartTitleData}>
+              (&nbsp;
+              <span>
+                {value.toString()}
+              </span>
+              &nbsp;)
+            </span>
+            {showToolTip && annotations && (
+              <StatTooltip annotations={annotations} />
+            )}
+          </div>
           <ChartSummary {...chartSummaryProps} />
         </div>
       </div>

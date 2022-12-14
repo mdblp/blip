@@ -27,6 +27,29 @@
 
 @import "../../../styles/colors.css";
 
+.chartTitle {
+  composes: largeSize from '../../../styles/typography.css';
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  margin-top: .25em;
+  color: var(--stat--default);
+}
+
+.chartTitleData {
+  composes: smallSize from '../../../styles/typography.css';
+  display: none;
+  padding-left: .25em;
+  align-items: center;
+  position: relative;
+  top: -1px;
+  color: var(--stat--default);
+}
+
+.chartTitleData span {
+  margin-top: 1px;
+}
+
 .StatWrapper {
   position: relative;
   overflow: visible;
