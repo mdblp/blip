@@ -273,7 +273,7 @@ jobs:
         uses: actions/download-artifact@v3
 
       - name: Get yourloops version from changelog
-        id: package-version
+        id: changelog-version
         uses: addnab/docker-run-action@v3
         with:
           username: ${{ secrets.NEXUS_USERNAME }}
@@ -304,13 +304,13 @@ jobs:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
-          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.package-version.outputs.semver }}
+          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: v${{ steps.package-version.outputs.semver }}
+          tag: v${{ steps.changelog-version.outputs.semver }}
           force_push_tag: true
 
   documentation:
