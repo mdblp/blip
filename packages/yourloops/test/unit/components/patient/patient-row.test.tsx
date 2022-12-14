@@ -85,7 +85,7 @@ describe('Patient row', () => {
 
   it('should open modal when clicking on remove patient icon', () => {
     render(getPatientRowJSX())
-    const removeButton = screen.getByRole('button', { name: 'remove-patient-fake@email.com' })
+    const removeButton = screen.getByRole('button', { name: 'remove-patient fake@email.com' })
     expect(screen.queryByTestId(removePatientDialogMockId)).not.toBeInTheDocument()
     fireEvent.click(removeButton)
     expect(screen.queryByTestId(removePatientDialogMockId)).toBeInTheDocument()
