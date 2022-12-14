@@ -261,7 +261,6 @@ jobs:
           path: dist/
 
   publish:
-    # if: github.ref_name == 'dblp'
     needs: build
     runs-on: ubuntu-latest
     outputs:
