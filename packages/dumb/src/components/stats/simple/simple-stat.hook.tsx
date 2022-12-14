@@ -32,7 +32,7 @@ import { StatFormats } from '../../../models/stats.model'
 import { getPercentagePrecision } from './simple-stat.utils'
 import { ChartSummaryProps } from '../common/chart-summary'
 
-interface SimpleStatHookProps {
+export interface SimpleStatHookProps {
   summaryFormat: StatFormats
   total: number
   value: number
@@ -52,13 +52,6 @@ export const useSimpleStatHook = (props: SimpleStatHookProps): SimpleStatHookHoo
   } = props
 
   const buildChartSummaryProps = useCallback((format: string): ChartSummaryProps => {
-    if (format !== StatFormats.cv && format !== StatFormats.gmi && format !== StatFormats.percentage) {
-      return {
-        className: styles.statEnabled,
-        value: value.toString(),
-        suffix: ''
-      }
-    }
     if (format === StatFormats.cv && value >= 0) {
       return {
         className: value <= 36 ? styles.coefficientVariationTarget : styles.coefficientVariationHigh,
