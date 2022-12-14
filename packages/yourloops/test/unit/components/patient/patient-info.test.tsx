@@ -31,6 +31,7 @@ import { render, screen } from '@testing-library/react'
 import PatientInfo, { PatientInfoProps } from '../../../../components/patient/patient-info'
 import { createPatient } from '../../common/utils'
 import { genderLabels } from '../../../../lib/auth/auth.helper'
+import moment from 'moment-timezone'
 
 describe('PatientInfo', () => {
   const patient = createPatient()
@@ -48,7 +49,7 @@ describe('PatientInfo', () => {
     expect(screen.getByText('gender')).not.toBeNull()
     expect(screen.getByText(genderLabels()[patient.profile.sex])).not.toBeNull()
     expect(screen.getByText('birthdate')).not.toBeNull()
-    expect(screen.getByText('12/14/2022')).not.toBeNull()
+    expect(screen.getByText(moment.utc(patient.profile.birthdate).format('L'))).not.toBeNull()
     expect(screen.getByText('initial-hba1c')).not.toBeNull()
     expect(screen.getByText(patient.settings.a1c?.value)).not.toBeNull()
   })

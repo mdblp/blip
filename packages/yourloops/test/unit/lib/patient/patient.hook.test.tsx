@@ -392,7 +392,7 @@ describe('Patient hook', () => {
     it('should update patient unread messages to 0', () => {
       act(() => {
         customHook.markPatientMessagesAsRead(basicPatient)
-        expect(customHook.getPatientById(basicPatient.userid).metadata.unreadMessagesSent).toBe(0)
+        expect(customHook.getPatientById(basicPatient.userid).metadata.hasSentUnreadMessages).toBeFalsy()
       })
     })
   })

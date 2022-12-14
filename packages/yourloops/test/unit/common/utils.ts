@@ -77,7 +77,7 @@ export const createPatient = (
     metadata: {
       flagged: metadata?.flagged,
       medicalData: metadata?.medicalData || null,
-      unreadMessagesSent: metadata?.unreadMessagesSent || 0
+      hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
     monitoring,
     teams,
