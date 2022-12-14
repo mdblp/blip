@@ -297,6 +297,7 @@ jobs:
           images: ${{ secrets.REGISTRY }}/blip
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,enable=true,prefix=${{ steps.package-version.outputs.semver }}-beta-,event=pr
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
@@ -309,12 +310,12 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      # for now disable as we not used the changelog (missing UNRELEASED info)
-  #      - name: Creating new github tag
-  #        uses: rickstaa/action-create-tag@v1
-  #        with:
-  #          tag: ${{ steps.meta.outputs.version }}
-  #          force_push_tag: true
+      - name: Creating new github tag
+        if: github.ref_name != 'dblp'
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v${{ steps.meta.outputs.version }}
+          force_push_tag: true
 
   documentation:
     if: github.ref_name == 'dblp'
