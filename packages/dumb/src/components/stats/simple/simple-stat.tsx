@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, memo } from 'react'
 import styles from './simple-stat.css'
 import { ChartSummary } from '../common/chart-summary'
 import { StatFormats } from '../../../models/stats.model'
@@ -41,7 +41,7 @@ interface SimpleStatProps {
   value: number
 }
 
-export const SimpleStat: FunctionComponent<SimpleStatProps> = (
+const SimpleStat: FunctionComponent<SimpleStatProps> = (
   {
     showToolTip = true,
     ...props
@@ -78,3 +78,5 @@ export const SimpleStat: FunctionComponent<SimpleStatProps> = (
     </div>
   )
 }
+
+export const SimpleStatMemoized = memo(SimpleStat)

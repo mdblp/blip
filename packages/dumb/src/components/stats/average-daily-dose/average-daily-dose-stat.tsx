@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent, memo, useMemo } from 'react'
 import styles from './average-daily-dose-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { useTranslation } from 'react-i18next'
@@ -41,7 +41,7 @@ interface AverageDailyDoseStatProps {
 
 const EMPTY_DATA_PLACEHOLDER = '--'
 
-export const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (props) => {
+const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (props) => {
   const {
     dailyDose,
     footerLabel,
@@ -104,3 +104,5 @@ export const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> 
     </div>
   )
 }
+
+export const AverageDailyDoseStatMemoized = memo(AverageDailyDoseStat)

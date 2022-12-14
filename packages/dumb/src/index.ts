@@ -47,8 +47,10 @@ import Tooltip from './components/tooltips/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
-import { AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
-import { SimpleStat } from './components/stats/simple/simple-stat'
+import {
+  AverageDailyDoseStatMemoized as AverageDailyDoseStat
+} from './components/stats/average-daily-dose/average-daily-dose-stat'
+import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 
 export {
   BloodGlucoseTooltip,
