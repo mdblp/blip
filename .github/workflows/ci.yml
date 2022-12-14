@@ -275,7 +275,8 @@ jobs:
         id: changelog-version
         uses: addnab/docker-run-action@v3
         env:
-          GITHUB_OUTPUT: $GITHUB_OUTPUT
+          GITHUB_OUTPUT: test
+          TEST: toto
         with:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
