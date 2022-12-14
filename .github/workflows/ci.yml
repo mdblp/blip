@@ -281,8 +281,8 @@ jobs:
           options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
           image: docker.ci.diabeloop.eu/ci-toolbox:latest
           run: |
-            ls
             cd blip
+            env
             echo "semver=$(release-helper get-version)" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
