@@ -79,7 +79,6 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
   return (
     <React.Fragment>
       <SwitchRoleConsequencesDialog
-        title="modal-switch-hcp-title"
         open={switchRoleStep === SwitchRoleToHcpSteps.consequences}
         onAccept={handleSwitchRoleToConditions}
         onCancel={props.onCancel}

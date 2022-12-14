@@ -35,59 +35,54 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
-
 import { SwitchRoleConsequencesDialogProps } from './models'
 
 function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps): JSX.Element {
-  const { title, open, onAccept, onCancel } = props
+  const { open, onAccept, onCancel } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
   const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   return (
     <Dialog
-      id="switch-role-consequences-dialog"
+      data-testid="switch-role-consequences-dialog"
       maxWidth="sm"
       open={open}
       onClose={onCancel}
       fullScreen={isXSBreakpoint}
     >
-      <DialogTitle id="switch-role-consequences-dialog-title">
-        <strong>{t(title)}</strong>
+      <DialogTitle>
+        <strong>{t('modal-switch-hcp-title')}</strong>
       </DialogTitle>
 
-      <DialogContent id="switch-role-consequences-dialog-content">
-        <DialogContentText id="modal-switch-hcp-info-1" color="textPrimary">
+      <DialogContent>
+        <DialogContentText>
           {t('modal-switch-hcp-info')}
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-list-3" component={'div'} color="textPrimary">
-          <span id="modal-switch-hcp-info-3">{t('modal-switch-hcp-info-3')}</span>
+        <DialogContentText component="div">
+          <span>{t('modal-switch-hcp-info-3')}</span>
           <ul>
-            <li id="modal-switch-hcp-list-1">{t('modal-switch-hcp-list-1')}</li>
-            <li id="modal-switch-hcp-list-2">{t('modal-switch-hcp-list-2')}</li>
-            <li id="modal-switch-hcp-list-3">{t('modal-switch-hcp-list-3')}</li>
+            <li>{t('modal-switch-hcp-list-1')}</li>
+            <li>{t('modal-switch-hcp-list-2')}</li>
+            <li>{t('modal-switch-hcp-list-3')}</li>
           </ul>
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-4" color="textPrimary">
+        <DialogContentText>
           {t('modal-switch-hcp-info-4')}
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-5" color="textPrimary">
+        <DialogContentText>
           {t('modal-switch-hcp-info-5')}
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-2" color="textPrimary">
+        <DialogContentText>
           <strong>{t('modal-switch-hcp-info-2')}</strong>
         </DialogContentText>
       </DialogContent>
 
-      <DialogActions id="switch-role-consequences-dialog-actions">
-        <Button
-          id="switch-role-consequences-dialog-button-cancel"
-          onClick={onCancel}
-        >
+      <DialogActions>
+        <Button onClick={onCancel}>
           {t('button-cancel')}
         </Button>
         <Button
-          id="switch-role-consequences-dialog-button-ok"
           variant="contained"
           color="primary"
           disableElevation

@@ -33,7 +33,6 @@ interface SwitchRoleDialogProps {
 }
 
 export interface SwitchRoleConsequencesDialogProps extends SwitchRoleDialogProps {
-  title: string
   onAccept: () => void
   onCancel: () => void
 }

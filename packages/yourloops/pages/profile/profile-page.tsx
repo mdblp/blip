@@ -73,7 +73,11 @@ const ProfilePage: FunctionComponent = () => {
           </ProfilePageContextProvider>
 
           {UserRoles.caregiver === user.role &&
-            <Link id="profile-link-switch-role" component="button" onClick={handleSwitchRoleOpen}>
+            <Link
+              data-testid="switch-role-link"
+              component="button"
+              onClick={handleSwitchRoleOpen}
+            >
               {t('modal-switch-hcp-title')}
             </Link>
           }

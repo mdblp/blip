@@ -68,18 +68,19 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
 
   return (
     <Dialog
-      id="switch-role-consent-dialog"
+      data-testid="switch-role-consent-dialog"
       open={open}
       onClose={onClose}
       maxWidth="sm"
       fullScreen={isXSBreakpoint}
     >
-      <DialogTitle id="switch-role-consent-dialog-title">
+      <DialogTitle>
         <strong>{t('modal-switch-hcp-consent-title')}</strong>
       </DialogTitle>
-      <DialogContent id="switch-role-consequences-dialog-content">
+
+      <DialogContent>
         <ConsentForm
-          id="switch-role-consequences-dialog"
+          id="switch-role-consent-dialog"
           userRole={UserRoles.hcp}
           policyAccepted={policyAccepted}
           setPolicyAccepted={setPolicyAccepted}
