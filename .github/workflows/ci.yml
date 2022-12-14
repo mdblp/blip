@@ -261,7 +261,7 @@ jobs:
           path: dist/
 
   publish:
-    if: github.ref_name == 'dblp'
+    # if: github.ref_name == 'dblp'
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -279,9 +279,10 @@ jobs:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
           registry: ${{ secrets.REGISTRY }}
-          options: -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
+          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
           image: docker.ci.diabeloop.eu/ci-toolbox:latest
           run: |
+            ls
             cd blip
             echo "semver=$(release-helper get-version)" >> $GITHUB_OUTPUT
 
