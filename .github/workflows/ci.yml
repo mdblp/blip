@@ -281,7 +281,7 @@ jobs:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
           registry: ${{ secrets.REGISTRY }}
-          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
+          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0 -e GITHUB_OUTPUT=test
           image: docker.ci.diabeloop.eu/ci-toolbox:latest
           run: |
             cd blip
