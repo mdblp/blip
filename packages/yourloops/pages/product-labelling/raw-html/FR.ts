@@ -401,11 +401,9 @@ const rawHtmlFR = `
     <p class="c0"><span class="c2"></span></p>
     <p class="c3">
       <span class="c11">&nbsp; </span>
-      <span class="c11">YourLoops, version ${appConfig.VERSION}, lib&eacute;r&eacute;e le ${appConfig.LATEST_RELEASE}</span>
+      <span class="c11">YourLoops, version ${appConfig.VERSION}, publi&eacute;e le ${appConfig.LATEST_RELEASE}</span>
     </p>
-    <p class="c0"><span class="c15"></span></p>
-    <p class="c0"><span class="c15"></span></p>
-    <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 494.00px; height: 99.00px;"><p id="udi-version">${appConfig.VERSION}</p><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
+    <p id="udi-version">${appConfig.VERSION}</p><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
     <p class="c18"><span class="c10 c30">Usage pr&eacute;vu</span></p>
     <hr>
     <p class="c18"><span class="c1">&nbsp;</span></p>
@@ -423,7 +421,7 @@ const rawHtmlFR = `
     <p class="c18"><span class="c10 c30">Mises en garde et pr&eacute;cautions requises devant &ecirc;tre imm&eacute;diatement port&eacute;es &nbsp;&agrave; l&#39;attention de l&#39;utilisateur du dispositif ou de toute autre personne</span></p>
     <hr>
     <p class="c18 c28"><span class="c1"></span></p>
-    <p class="c22"><span class="c17 c33">AVERTISSEMENT</span><span class="c17">&nbsp;: Ce logiciel ne fournit pas d&rsquo;avis m&eacute;dical et ne doit pas &ecirc;tre utilis&eacute; &agrave;cet effet. Les utilisateurs &agrave; domicile doivent consulter un professionnel de sant&eacute; avant de faire des ajustements th&eacute;rapeutiques dans leur traitement &agrave; partir des informations de ce logiciel.</span></p>
+    <p class="c22"><span class="c17 c33">AVERTISSEMENT</span><span class="c17">&nbsp;: Ce logiciel ne fournit pas d&rsquo;avis m&eacute;dical et ne doit pas &ecirc;tre utilis&eacute; &agrave; cet effet. Les utilisateurs &agrave; domicile doivent consulter un professionnel de sant&eacute; avant de faire des ajustements th&eacute;rapeutiques dans leur traitement &agrave; partir des informations de ce logiciel.</span></p>
     <p class="c19"><span class="c1"></span></p>
     <p class="c22"><span class="c33 c17">AVERTISSEMENT</span><span class="c17">&nbsp;: Les professionnels de sant&eacute; doivent utiliser les informations de ce logiciel conjointement aux autres informations cliniques qui sont &agrave; leur disposition.</span></p>
     <p class="c19"><span class="c4"></span></p>

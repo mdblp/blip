@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2020-2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MemoryRouter } from 'react-router-dom'
-import { AuthContextProvider } from '../../../lib/auth'
-import { MainLobby } from '../../../app/main-lobby'
-import { render } from '@testing-library/react'
-import React, { RefObject } from 'react'
+import React, { FunctionComponent } from 'react'
+import styles from './loop-mode-stat.css'
+import { useTranslation } from 'react-i18next'
 
-const memoryRouterRef: { current: never } = React.createRef<never>()
-
-function getMainLobby(initialEntry: string) {
-  return (
-    <MemoryRouter ref={memoryRouterRef} initialEntries={[initialEntry]}>
-      <AuthContextProvider>
-        <MainLobby />
-      </AuthContextProvider>
-    </MemoryRouter>
-  )
+interface LoopModeLabelProps {
+  className: string
+  transform: string
+  translationKey: string
 }
 
-export const renderPage = (url: string): RefObject<never> => {
-  render(getMainLobby(url))
-  return memoryRouterRef
+export const LoopModeLabel: FunctionComponent<LoopModeLabelProps> = (props) => {
+  const { className, transform, translationKey } = props
+  const { t } = useTranslation('main')
+
+  return (
+    <g className={className} transform={transform}>
+      <rect className={styles.legendBackground} width="40" height="20" rx="8" />
+      <text
+        x="20"
+        y="10"
+        textAnchor="middle"
+        dominantBaseline="central"
+        className={styles.legendLabelText}
+      >
+        {t(translationKey)}
+      </text>
+    </g>
+  )
 }

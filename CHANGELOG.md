@@ -11,6 +11,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1973 User should be able to uncheck the training check box
 ### Engineering use
 - YLP-1624 Fix error messages when inviting a patient already in the team
+- YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
 - YLP-1805 Push error to the backend
@@ -29,6 +30,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1942 Rename files in yourloops and medical-domain
 - YLP-1945 Migrate NoBar component to dumb
 - YLP-1949 Migrate Lines component to dumb
+- YLP-1953 Migrate WheelPercent to dumb
 - YLP-1960 enhance pipeline
 - YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
 - Automate copyright generation on new and updated files
