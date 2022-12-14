@@ -25,70 +25,67 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Tune from '@material-ui/icons/Tune'
+import Tune from '@mui/icons-material/Tune'
 
-import { ClassNameMap } from '@material-ui/styles/withStyles'
-import Box from '@material-ui/core/Box'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 
 import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
-import { UserRoles } from '../../models/user'
-import { Units } from '../../models/generic'
-import { LanguageCodes } from '../../models/locales'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
+import { useProfilePageState } from './profile-page-context'
+import { useAuth } from '../../lib/auth'
+import { profileFormCommonClasses } from './css-classes'
+import { ProfileFormKey } from './models/enums/profile-form-key.enum'
 
-interface PreferencesFormProps {
-  classes: ClassNameMap
-  feedbackAccepted: boolean
-  lang: LanguageCodes
-  role: UserRoles
-  unit: Units
-  setFeedbackAccepted: (feedbackAccepted: boolean) => void
-  setLang: (lang: LanguageCodes) => void
-  setUnit: (unit: Units) => void
-}
-
-function PreferencesForm(props: PreferencesFormProps): JSX.Element {
+const PreferencesForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
+  const { user } = useAuth()
+  const { profileForm, updateProfileForm } = useProfilePageState()
+  const { classes } = profileFormCommonClasses()
 
   return (
     <React.Fragment>
-      <Box className={props.classes.categoryLabel}>
+      <Box className={classes.categoryLabel}>
         <Tune color="primary" />
-        <strong className={props.classes.uppercase}>{t('preferences')}</strong>
+        <strong className={classes.uppercase}>{t('preferences')}</strong>
       </Box>
 
-      <Box className={props.classes.inputContainer}>
-        <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
+      <Box className={classes.inputContainer}>
+        <FormControl variant="standard" className={classes.formInput}>
           <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
-            disabled={props.role === UserRoles.patient}
+            disabled={user.role === UserRoles.patient}
             labelId="unit-selector"
             id="profile-units-selector"
-            value={props.unit}
-            onChange={event => props.setUnit(event.target.value as Units)}
+            data-testid="profile-units-selector"
+            value={profileForm.units}
+            onChange={event => updateProfileForm(ProfileFormKey.units, event.target.value as UnitsType)}
           >
-            <MenuItem id="profile-units-mmoll" value={Units.mole}>
-              {Units.mole}
+            <MenuItem id="profile-units-mmoll" value={UnitsType.MMOLL}>
+              {UnitsType.MMOLL}
             </MenuItem>
-            <MenuItem id="profile-units-mgdl" value={Units.gram}>
-              {Units.gram}
+            <MenuItem id="profile-units-mgdl" value={UnitsType.MGDL}>
+              {UnitsType.MGDL}
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
+        <FormControl variant="standard" className={classes.formInput}>
           <InputLabel id="profile-language-input-label">{t('language')}</InputLabel>
           <Select
             labelId="locale-selector"
             id="profile-locale-selector"
-            value={props.lang}
-            onChange={event => props.setLang(event.target.value as LanguageCodes)}
+            data-testid="profile-local-selector"
+            value={profileForm.lang}
+            onChange={event => updateProfileForm(ProfileFormKey.lang, event.target.value as LanguageCodes)}
           >
             {availableLanguageCodes.map((languageCode) => (
               <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
@@ -99,13 +96,13 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
         </FormControl>
       </Box>
 
-      {props.role === UserRoles.hcp &&
+      {user.role === UserRoles.hcp &&
         <Box marginTop={1}>
           <ConsentFeedback
             id="profile"
-            userRole={props.role}
-            checked={props.feedbackAccepted}
-            onChange={() => props.setFeedbackAccepted(!props.feedbackAccepted)}
+            userRole={user.role}
+            checked={profileForm.feedbackAccepted}
+            onChange={() => updateProfileForm(ProfileFormKey.feedbackAccepted, !profileForm.feedbackAccepted)}
           />
         </Box>
       }

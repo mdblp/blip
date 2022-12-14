@@ -30,11 +30,11 @@ import { render, screen } from '@testing-library/react'
 import * as authHookMock from '../../../lib/auth'
 import { User } from '../../../lib/auth'
 import * as teamHookMock from '../../../lib/team'
-import * as notificationsHookMock from '../../../lib/notifications/hook'
-import { UserRoles } from '../../../models/user'
+import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
 import { MemoryRouter } from 'react-router-dom'
-import * as patientHookMock from '../../../lib/patient/provider'
+import * as patientHookMock from '../../../lib/patient/patient.provider'
 import { PatientLayout } from '../../../layout/patient-layout'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
@@ -48,11 +48,11 @@ const allTestIds = [
 /* eslint-disable react/display-name */
 jest.mock('../../../lib/auth')
 jest.mock('../../../lib/team')
-jest.mock('../../../lib/notifications/hook')
+jest.mock('../../../lib/notifications/notification.hook')
 jest.mock('../../../layout/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })
-jest.mock('../../../pages/profile', () => () => {
+jest.mock('../../../pages/profile/profile-page', () => () => {
   return <div data-testid={profilePageTestId} />
 })
 jest.mock('../../../pages/notifications', () => () => {

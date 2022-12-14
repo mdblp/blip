@@ -28,19 +28,16 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@material-ui/core/styles'
-
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 
 import { Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
-import { makeButtonsStyles } from '../theme'
-import TeamUtils from '../../lib/team/utils'
+import TeamUtils from '../../lib/team/team.util'
 
 export interface LeaveTeamDialogProps {
   team: Readonly<Team>
@@ -56,8 +53,6 @@ interface LeaveTeamDialogElementsProps {
   handleClose: () => void
   handleLeaveTeam: () => void
 }
-
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'YlpLeaveTeamDialogButtons' })
 
 function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element {
   const { teamName, onlyHcpMember, userIsTheOnlyAdministrator } = props
@@ -139,7 +134,6 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
 
 function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Element {
   const { onlyHcpMember, userIsTheOnlyAdministrator, handleClose, handleLeaveTeam } = props
-  const buttonClasses = makeButtonsClasses()
 
   const { t } = useTranslation('yourloops')
 
@@ -166,7 +160,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         : <Button
           id="team-leave-dialog-button-leave"
           onClick={handleLeaveTeam}
-          className={buttonClasses.alertActionButton}
+          color="error"
           variant="contained"
           disableElevation
         >

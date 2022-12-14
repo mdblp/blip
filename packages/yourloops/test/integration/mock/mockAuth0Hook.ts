@@ -26,7 +26,8 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { AuthenticatedUserMetadata, UserRoles } from '../../../models/user'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 
 export const loggedInUserId = '919b1575bad58'
 export const loggedInUserEmail = 'john.doe@example.com'
@@ -40,6 +41,7 @@ export const mockAuth0Hook = (role: UserRoles = UserRoles.hcp, userId = loggedIn
       email_verified: true,
       sub: 'auth0|' + userId,
       [AuthenticatedUserMetadata.Roles]: [role]
-    }
+    },
+    updateProfile: jest.fn()
   })
 }

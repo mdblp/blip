@@ -176,16 +176,6 @@
   color: var(--stat--default);
 }
 
-.tooltipIcon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
-}
-
-.tooltipIcon > img {
-  width: 0.9em;
-}
-
 .StatTooltipWrapper {
   z-index: 1;
   position: relative;

@@ -25,34 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import TableCell from '@material-ui/core/TableCell'
-import { Tooltip, withStyles } from '@material-ui/core'
-import TableRow from '@material-ui/core/TableRow'
-import { styled } from '@material-ui/core/styles'
+import { styled } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
+import TableCell from '@mui/material/TableCell'
+import TableRow from '@mui/material/TableRow'
+import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
+import React from 'react'
 
-export const StyledTableCell = styled(TableCell)((props) => ({
+declare module '@mui/styles/defaultTheme' {
+  interface DefaultTheme extends Theme {}
+}
+
+export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   '&': {
     border: 'unset',
-    borderRight: `0.5px solid ${props.theme.palette.divider}`,
+    borderRight: `0.5px solid ${theme.palette.divider}`,
     fontSize: '15px',
     height: 'inherit'
   }
 }))
 
-export const StyledTooltip = withStyles((theme) => ({
-  tooltip: {
+export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.primary.main,
     boxShadow: theme.shadows[1],
     whiteSpace: 'pre-line'
   },
-  arrow: {
+  [`& .${tooltipClasses.arrow}`]: {
     color: theme.palette.primary.main
   }
-}))(Tooltip)
+}))
 
-export const StyledTableRow = styled(TableRow)((props) => ({
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: props.theme.palette.grey[100]
+    backgroundColor: theme.palette.grey[100]
   },
   '&': {
     whiteSpace: 'nowrap',

@@ -34,10 +34,10 @@ import PatientMonitoringPrescription, {
 import { RemoteMonitoringDialogAction } from '../../../../components/dialogs/remote-monitoring-dialog'
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
-import { TeamMemberRole } from '../../../../models/team'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import userEvent from '@testing-library/user-event'
+import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 
 jest.mock('../../../../lib/team')
 describe('PatientMonitoringPrescription', () => {

@@ -36,9 +36,9 @@ import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
-import { UserRoles } from '../../../../models/user'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
@@ -49,7 +49,7 @@ describe('Trends view for caregiver', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPIForPatients()
     mockChatAPI()
     mockMedicalFilesAPI()

@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createTheme, Theme } from '@material-ui/core/styles'
-import config from '../lib/config'
+import { createTheme, Theme } from '@mui/material/styles'
+import config from '../lib/config/config'
 
 const DEFAULT_PRIMARY_MAIN_COLOR = '#039BE5'
 const DEFAULT_PRIMARY_LIGHT_COLOR = '#4DABF5'
@@ -52,9 +52,9 @@ export function initTheme(): void {
 
 export function getTheme(): Theme {
   return createTheme({
-    overrides: {
+    components: {
       MuiCssBaseline: {
-        '@global': {
+        styleOverrides: {
           a: {
             color: 'inherit',
             textDecoration: 'none'
@@ -65,37 +65,52 @@ export function getTheme(): Theme {
         }
       },
       MuiButton: {
-        root: {
-          fontWeight: 600
+        styleOverrides: {
+          root: {
+            fontWeight: 600
+          }
         }
       },
       MuiDialogActions: {
-        spacing: {
-          padding: 16,
-          '& > :last-child': {
-            marginLeft: 16
+        styleOverrides: {
+          spacing: {
+            padding: 16,
+            '& > :last-child': {
+              marginLeft: 16
+            }
           }
         }
       },
       MuiSvgIcon: {
-        root: {
-          margin: 0
+        styleOverrides: {
+          root: {
+            margin: 0
+          }
+        }
+      },
+      MuiLink: {
+        defaultProps: {
+          underline: 'hover'
         }
       },
       MuiListItemIcon: {
-        root: {
-          minWidth: 40,
-          color: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
+        styleOverrides: {
+          root: {
+            minWidth: 40,
+            color: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
+          }
         }
       },
       MuiPaper: {
-        rounded: {
-          borderRadius: 12
+        styleOverrides: {
+          rounded: {
+            borderRadius: 12
+          }
         }
       }
     },
     palette: {
-      type: 'light',
+      mode: 'light',
       text: {
         primary: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
       },
@@ -112,19 +127,3 @@ export function getTheme(): Theme {
     }
   })
 }
-
-/**
- * For some reason, return makeStyle(...) here don't work with our theme
- * @param theme Main theme
- * @returns The styles for buttons
- */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const makeButtonsStyles = (theme: Theme) => ({
-  alertActionButton: {
-    color: theme.palette.common.white,
-    backgroundColor: theme.palette.error.main,
-    '&:hover': {
-      backgroundColor: theme.palette.error.dark
-    }
-  }
-})

@@ -28,12 +28,14 @@
 import { MemoryRouter } from 'react-router-dom'
 import { AuthContextProvider } from '../../../lib/auth'
 import { MainLobby } from '../../../app/main-lobby'
-import { render, RenderResult } from '@testing-library/react'
-import React from 'react'
+import { render } from '@testing-library/react'
+import React, { RefObject } from 'react'
+
+const memoryRouterRef: { current: never } = React.createRef<never>()
 
 function getMainLobby(initialEntry: string) {
   return (
-    <MemoryRouter initialEntries={[initialEntry]}>
+    <MemoryRouter ref={memoryRouterRef} initialEntries={[initialEntry]}>
       <AuthContextProvider>
         <MainLobby />
       </AuthContextProvider>
@@ -41,6 +43,7 @@ function getMainLobby(initialEntry: string) {
   )
 }
 
-export const renderPage = (url: string): RenderResult => {
-  return render(getMainLobby(url))
+export const renderPage = (url: string): RefObject<never> => {
+  render(getMainLobby(url))
+  return memoryRouterRef
 }

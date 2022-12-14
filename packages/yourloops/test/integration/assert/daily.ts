@@ -34,7 +34,8 @@ import {
   PARAMETER_ID,
   PHYSICAL_ACTIVITY_ID,
   PHYSICAL_ACTIVITY_TIME,
-  RESERVOIR_CHANGE_ID, SMBG_ID
+  RESERVOIR_CHANGE_ID,
+  SMBG_ID
 } from '../mock/mockDataAPI'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats'
@@ -44,7 +45,7 @@ const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Daily average of the numbe
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const TOTAL_INSULIN_TOOLTIP = 'Total Insulin: All basal and bolus insulin delivery (in Units) added togetherHow we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
-const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is 24 hours multiplied by % in loop mode ON or OFF.'
+const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the estimated time ine each mode.'
 const TOTAL_CARBS_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 2 carb entries, including rescue carbs.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the mean.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
@@ -64,9 +65,9 @@ export const checkDailyTidelineContainerTooltips = async () => {
   await checkTidelineContainerElementTooltip('poolBolus_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip('poolBasal_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip(`wizard_group_${CARB_ID1}`, '8:25 pmMealCarbs45gLoop modeBolus TypeStandardDelivered1.3U')
-  await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID2}`, '2:00 pmConfirmed15g')
+  await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID2}`, '2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymediumDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
-  await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmInfusion Site change')
+  await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, '5:30 pmGlucose189')
   await checkTidelineContainerElementTooltip(`smbg_${SMBG_ID}`, '5:15 pmGlucose189Calibration')

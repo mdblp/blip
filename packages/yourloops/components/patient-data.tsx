@@ -30,13 +30,13 @@ import bows from 'bows'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
+import { makeStyles } from 'tss-react/mui'
+import Container from '@mui/material/Container'
 
 import Blip from 'blip'
-import appConfig from '../lib/config'
+import appConfig from '../lib/config/config'
 import { useAuth } from '../lib/auth'
-import { useData } from '../lib/data/hook'
+import { useData } from '../lib/data/data.hook'
 import { setPageTitle } from '../lib/utils'
 
 import ProfileDialog from './dialogs/patient-profile'
@@ -45,12 +45,12 @@ import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
 import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
 import ChatWidget from './chat/chat-widget'
-import { Patient } from '../lib/data/patient'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
-import { usePatientContext } from '../lib/patient/provider'
+import { usePatientContext } from '../lib/patient/patient.provider'
+import { Patient } from '../lib/patient/models/patient.model'
 
-const patientDataStyles = makeStyles(() => {
+const patientDataStyles = makeStyles()(() => {
   return {
     container: {
       padding: 0
@@ -82,7 +82,7 @@ function PatientDataPage(): JSX.Element | null {
   const authHook = useAuth()
   const patientHook = usePatientContext()
   const dataHook = useData()
-  const classes = patientDataStyles()
+  const { classes } = patientDataStyles()
 
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null)
   const [error, setError] = React.useState<string | null>(null)

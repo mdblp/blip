@@ -22,9 +22,9 @@ import moment from 'moment-timezone'
 import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import TextField from '@material-ui/core/TextField'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
 
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
@@ -36,22 +36,23 @@ import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
 import Header from './header'
 import Footer from './footer'
-import { ReservoirTooltip } from 'dumb'
+import {
+  BloodGlucoseTooltip,
+  ConfidentialTooltip,
+  FoodTooltip,
+  ParameterTooltip,
+  PhysicalTooltip,
+  ReservoirTooltip
+} from 'dumb'
 
 /**
- * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
- * @typedef { import("../../index").DatePicker } DatePicker
- * @typedef { import("./index").DailyDatePickerProps } DailyDatePickerProps
+ * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
+ * @typedef { import('../../index').DatePicker } DatePicker
+ * @typedef { import('./index').DailyDatePickerProps } DailyDatePickerProps
  */
 
 const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
-const SMBGTooltip = vizComponents.SMBGTooltip
-const CBGTooltip = vizComponents.CBGTooltip
-const FoodTooltip = vizComponents.FoodTooltip
-const PhysicalTooltip = vizComponents.PhysicalTooltip
-const ParameterTooltip = vizComponents.ParameterTooltip
-const ConfidentialTooltip = vizComponents.ConfidentialTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 /**
@@ -105,6 +106,7 @@ function DailyDatePicker(props) {
     </React.Fragment>
   )
 }
+
 DailyDatePicker.propTypes = {
   dialogDatePicker: PropTypes.func.isRequired,
   date: PropTypes.oneOfType([
@@ -450,7 +452,7 @@ class Daily extends React.Component {
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">
-              {loading && <Loader show overlay={true} /> }
+              {loading && <Loader show overlay={true} />}
               <DailyChart
                 loading={loading}
                 bgClasses={this.props.bgPrefs.bgClasses}
@@ -653,8 +655,9 @@ class Daily extends React.Component {
   handleSMBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <SMBGTooltip
-        smbg={datum.data}
+      <BloodGlucoseTooltip
+        isSmbg={true}
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -669,8 +672,8 @@ class Daily extends React.Component {
   handleCBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <CBGTooltip
-        cbg={datum.data}
+      <BloodGlucoseTooltip
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -692,7 +695,6 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
@@ -739,7 +741,6 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
@@ -765,14 +766,11 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ConfidentialTooltip
-        confidential={datum.data}
         position={{
           top: datum.top,
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
-        timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
   }

@@ -26,12 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalDataService, { Datum } from "medical-domain";
-import { utils as vizUtils } from "tidepool-viz";
-import { IUser } from "../../../../yourloops/models/user";
-import ProfileDialog from "../../../../yourloops/components/dialogs/patient-profile";
-import DialogDatePicker from "../../../../yourloops/components/date-pickers/dialog-date-picker";
-import DialogRangeDatePicker from "../../../../yourloops/components/date-pickers/dialog-range-date-picker";
+import MedicalDataService, { Datum } from 'medical-domain'
+import { utils as vizUtils } from 'tidepool-viz'
+import ProfileDialog from '../../../../yourloops/components/dialogs/patient-profile'
+import DialogDatePicker from '../../../../yourloops/components/date-pickers/dialog-date-picker'
+import DialogRangeDatePicker from '../../../../yourloops/components/date-pickers/dialog-range-date-picker'
+import { IUser } from 'yourloops/lib/data/models/i-user.model'
 
 export type DataUtil = typeof vizUtils.data.DataUtil;
 export type TrackMetrics = (category: string, action: string, name?: string | undefined, value?: number | undefined) => void;

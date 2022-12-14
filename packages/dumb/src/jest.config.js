@@ -29,6 +29,8 @@
  * https://jestjs.io/docs/configuration
  */
 
+const esModulesToExclude = ['d3', 'd3-array'].join('|');
+
 module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -178,7 +180,7 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    '<rootDir>/**/*.test.tsx'
+    '<rootDir>/**/*.test.ts*',
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -208,10 +210,7 @@ module.exports = {
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   "/node_modules/",
-  //   "\\.pnp\\.[^\\/]+$"
-  // ],
+  transformIgnorePatterns: [`/node_modules/(?!${esModulesToExclude})`],
   // transformIgnorePatterns: [
   //   "/!node_modules\\/lodash-es/",
   // ],

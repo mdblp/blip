@@ -25,12 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { createMemoryHistory } from 'history'
-import { Router } from 'react-router-dom'
-import { act, BoundFunctions, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { AuthContextProvider } from '../../../../lib/auth'
-import { MainLobby } from '../../../../app/main-lobby'
+import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
@@ -49,6 +44,7 @@ import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { queries } from '@testing-library/dom'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkHCPLayout } from '../../assert/layout'
+import { renderPage } from '../../utils/render'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -61,22 +57,12 @@ describe('Patient dashboard for HCP', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPIForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
     mockDataAPI()
   })
-
-  function getPatientDashboardForHCP(history) {
-    return (
-      <Router history={history}>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
-    )
-  }
 
   function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string, fullName: string) {
     /* Top bar */
@@ -86,11 +72,11 @@ describe('Patient dashboard for HCP', () => {
     const dashboardLink = dashboard.getByText('Dashboard')
     const dailyLink = dashboard.getByText('Daily')
     const trendsLink = dashboard.getByText('Trends')
-    expect(dashboardLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
+    expect(dashboardLink).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
     expect(dashboardLink).toBeVisible()
-    expect(dailyLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/daily`)
+    expect(dailyLink).toHaveAttribute('href', `/patient/${patientId}/daily`)
     expect(dailyLink).toBeVisible()
-    expect(trendsLink.parentElement).toHaveAttribute('href', `/patient/${patientId}/trends`)
+    expect(trendsLink).toHaveAttribute('href', `/patient/${patientId}/trends`)
     expect(trendsLink).toBeVisible()
     expect(dashboard.getByText('Generate report')).toBeVisible()
 
@@ -107,63 +93,53 @@ describe('Patient dashboard for HCP', () => {
   }
 
   it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
-    const history = createMemoryHistory({ initialEntries: [unMonitoredPatientDashboardRoute] })
-
     act(() => {
-      render(getPatientDashboardForHCP(history))
+      renderPage(unMonitoredPatientDashboardRoute)
     })
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
-    expect(history.location.pathname).toBe(unMonitoredPatientDashboardRoute)
     testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatient.profile.fullName)
     checkHCPLayout(`${firstName} ${lastName}`)
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
-    const history = createMemoryHistory({ initialEntries: [monitoredPatientDashboardRoute] })
-
     await act(async () => {
-      render(getPatientDashboardForHCP(history))
-
-      const dashboard = within(await screen.findByTestId('patient-dashboard'))
-      expect(history.location.pathname).toBe(monitoredPatientDashboardRoute)
-      testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatient.profile.fullName)
-      /* Patient info widget */
-      expect(dashboard.getByText('Renew')).toBeVisible()
-      expect(dashboard.getByText('Remove')).toBeVisible()
-
-      /* Medical files widget */
-      expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
-      expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
-
-      /* Events widget */
-      expect(dashboard.getByText('Events')).toBeVisible()
-
-      /* Chat widget */
-      expect(dashboard.getByText('Messages')).toBeVisible()
-      checkHCPLayout(`${firstName} ${lastName}`)
+      renderPage(monitoredPatientDashboardRoute)
     })
+
+    const dashboard = within(await screen.findByTestId('patient-dashboard'))
+    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatient.profile.fullName)
+    /* Patient info widget */
+    expect(dashboard.getByText('Renew')).toBeVisible()
+    expect(dashboard.getByText('Remove')).toBeVisible()
+
+    /* Medical files widget */
+    expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
+    expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
+
+    /* Events widget */
+    expect(dashboard.getByText('Events')).toBeVisible()
+
+    /* Chat widget */
+    expect(dashboard.getByText('Messages')).toBeVisible()
+    checkHCPLayout(`${firstName} ${lastName}`)
   })
 
   it('should switch between patients by using the dropdown', async () => {
-    const history = createMemoryHistory({ initialEntries: [monitoredPatientDashboardRoute] })
-
     await act(async () => {
-      render(getPatientDashboardForHCP(history))
-      let patientInfoCard
+      renderPage(monitoredPatientDashboardRoute)
+    })
+    const patientInfoCard = within(await screen.findByTestId('patient-info-card'))
+    const secondaryHeader = within(screen.getByTestId('patient-data-subnav-outer'))
 
-      patientInfoCard = within(await screen.findByTestId('patient-info-card'))
-      const secondaryHeader = within(await screen.findByTestId('patient-data-subnav-outer'))
+    expect(patientInfoCard.getByText(monitoredPatient.profile.fullName)).toBeVisible()
+    fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatient.profile.fullName))
+    fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
-      expect(patientInfoCard.getByText(monitoredPatient.profile.fullName)).toBeVisible()
-      fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatient.profile.fullName))
-      fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
-
-      await waitFor(() => {
-        // call this to update the card and catch the new patient
-        patientInfoCard = within(screen.getByTestId('patient-info-card'))
-        expect(patientInfoCard.getByText(pendingPatient.profile.fullName)).toBeVisible()
-      })
+    await waitFor(() => {
+      // call this to update the card and catch the new patient
+      const patientInfoCard = within(screen.getByTestId('patient-info-card'))
+      expect(patientInfoCard.getByText(pendingPatient.profile.fullName)).toBeVisible()
     })
   })
 })

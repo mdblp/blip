@@ -28,33 +28,31 @@
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import FormControl from '@material-ui/core/FormControl'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import InputLabel from '@material-ui/core/InputLabel'
-import Link from '@material-ui/core/Link'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { Theme, useTheme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import FormControl from '@mui/material/FormControl'
+import InputAdornment from '@mui/material/InputAdornment'
+import InputLabel from '@mui/material/InputLabel'
+import Link from '@mui/material/Link'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 import locales from '../../../../locales/languages.json'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { Team } from '../../lib/team'
-import {
-  isZipCodeValid,
-  PhonePrefixCode,
-  REGEX_EMAIL,
-  REGEX_PHONE
-} from '../../lib/utils'
+import { isZipCodeValid, PhonePrefixCode, REGEX_EMAIL, REGEX_PHONE } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import { TeamEditModalContentProps } from './types'
-import Box from '@material-ui/core/Box'
+import { CountryCodes } from '../../lib/auth/models/country.model'
 
 interface LocalesCountries {
   [code: string]: {
@@ -66,7 +64,7 @@ export interface TeamEditModalProps {
   teamToEdit: TeamEditModalContentProps | null
 }
 
-const modalStyles = makeStyles((theme: Theme) => {
+const modalStyles = makeStyles()((theme: Theme) => {
   return {
     dialogContent: {
       maxHeight: '28em'
@@ -96,7 +94,7 @@ const teamFieldsLimits = {
 function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const { teamToEdit } = props
   const { team, onSaveTeam } = teamToEdit ?? ({ team: null, onSaveTeam: _.noop } as TeamEditModalContentProps)
-  const classes = modalStyles()
+  const { classes } = modalStyles()
   const auth = useAuth()
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
@@ -110,7 +108,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const [addrLine2, setAddrLine2] = useState(team?.address?.line2 ?? '')
   const [addrZipCode, setAddrZipCode] = useState(team?.address?.zip ?? '')
   const [addrCity, setAddrCity] = useState(team?.address?.city ?? '')
-  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? 'FR')
+  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? auth.user?.settings?.country ?? CountryCodes.France)
   const isPhoneNumberValid: boolean = REGEX_PHONE.test(teamPhone)
   const isEmailValid: boolean = REGEX_EMAIL.test(teamEmail)
   const countries: LocalesCountries = locales.countries
@@ -208,18 +206,12 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   let ariaModal: string
   let modalTitle: string
   let modalButtonValidate: string
-  let infoLine = null
   let warningLines = null
   if (team === null) {
     // Create a new team
     ariaModal = t('button-create-a-team')
     modalTitle = t('team-modal-add-title')
     modalButtonValidate = t('button-create-team')
-    infoLine = (
-      <Box px={2}>
-        <p id="team-edit-dialog-info-line">{t('team-modal-create-info')}</p>
-      </Box>
-    )
     const termsOfUse = t('terms-of-use')
     const linkTerms = (
       <Link aria-label={termsOfUse} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
@@ -260,18 +252,22 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
       fullWidth
       fullScreen={isXSBreakpoint}
     >
-      <DialogTitle id="team-edit-dialog-title">
+      <DialogTitle>
         <strong>{modalTitle}</strong>
       </DialogTitle>
 
-      {infoLine}
+      {team
+        ? <Box paddingX={2} paddingBottom={2}>
+          <span id="team-edit-dialog-info-line">{t('team-modal-create-info')}</span>
+        </Box>
+        : <Box />
+      }
 
       <DialogContent className={classes.dialogContent}>
         <Box display="flex" flexDirection="column">
           <TextField
             id="team-edit-dialog-field-name"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setTeamName(e.target.value)}
             name="name"
             value={teamName}
@@ -282,7 +278,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-line1"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrLine1(e.target.value)}
             name="addr-line1"
             value={addrLine1}
@@ -293,7 +288,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-line2"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrLine2(e.target.value)}
             name="addr-line2"
             value={addrLine2}
@@ -303,7 +297,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-zip"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrZipCode(e.target.value)}
             error={zipcodeInputOnError}
             helperText={zipcodeInputOnError ? t('invalid-zipcode') : null}
@@ -316,7 +309,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-city"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setAddrCity(e.target.value)}
             name="addr-city"
             value={addrCity}
@@ -324,16 +316,21 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             required
             aria-required="true"
           />
-          <FormControl data-testid="country" className={classes.formChild} required variant="outlined">
-            <InputLabel
-              htmlFor="team-edit-dialog-select-country">{t('team-edit-dialog-placeholder-addr-country')}</InputLabel>
+          <FormControl
+            data-testid="country"
+            className={classes.formChild}
+            required
+          >
+            <InputLabel htmlFor="team-edit-dialog-select-country">
+              {t('team-edit-dialog-placeholder-addr-country')}
+            </InputLabel>
             <Select
               id="team-edit-dialog-select-country"
               data-testid="team-edit-dialog-select-country"
               name="country"
               label={t('team-edit-dialog-placeholder-addr-country')}
               value={addrCountry}
-              onChange={(e) => setAddrCountry(e.target.value as string)}
+              onChange={(e) => setAddrCountry(e.target.value)}
             >
               {optionsCountries}
             </Select>
@@ -341,7 +338,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-phone"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setTeamPhone(e.target.value)}
             error={phoneNumberInputOnError}
             helperText={phoneNumberInputOnError ? t('invalid-phone-number') : null}
@@ -357,7 +353,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-email"
             className={classes.formChild}
-            variant="outlined"
             onChange={(e) => setTeamEmail(e.target.value)}
             error={emailInputOnError}
             helperText={emailInputOnError ? t('invalid-email') : null}

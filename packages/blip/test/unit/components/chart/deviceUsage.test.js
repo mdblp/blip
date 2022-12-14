@@ -32,7 +32,7 @@ import * as sinon from 'sinon'
 import chai from 'chai'
 
 import { BasicsChart } from 'tideline'
-import { MGDL_UNITS  } from 'medical-domain'
+import { MGDL_UNITS } from 'medical-domain'
 import DataUtilStub from '../../../helpers/DataUtil'
 import DeviceUsage from '../../../../app/components/chart/deviceUsage'
 
@@ -96,7 +96,7 @@ describe('DeviceUsage', () => {
       timezoneAware: false,
       timezoneName: 'UTC'
     },
-    patient:{ userid: '1234' },
+    patient: { userid: '1234' },
     tidelineData: {
       data: [],
       grouped: {
@@ -115,26 +115,26 @@ describe('DeviceUsage', () => {
             },
             history: [
               {
-                parameters:[
+                parameters: [
                   {
                     changeType: 'added',
-                    level:1,
+                    level: 1,
                     name: 'test',
                     value: '12',
                     unit: '%',
-                    effectiveDate:'2020-01-01T00:00:00Z'
+                    effectiveDate: '2020-01-01T00:00:00Z'
                   }
                 ]
               },
               {
-                parameters:[
+                parameters: [
                   {
                     changeType: 'updated',
-                    level:1,
+                    level: 1,
                     name: 'test',
                     value: '10',
                     unit: '%',
-                    effectiveDate:'2020-01-02T00:00:00Z'
+                    effectiveDate: '2020-01-02T00:00:00Z'
                   }
                 ]
               }

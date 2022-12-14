@@ -29,36 +29,37 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import CancelIcon from '@material-ui/icons/Cancel'
-import ContactSupportOutlinedIcon from '@material-ui/icons/ContactSupportOutlined'
-import FaceIcon from '@material-ui/icons/Face'
-import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
-import StethoscopeIcon from '../icons/StethoscopeIcon'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import CancelIcon from '@mui/icons-material/Cancel'
+import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined'
+import FaceIcon from '@mui/icons-material/Face'
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
+import StethoscopeIcon from '../icons/stethoscope-icon'
 
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Box from '@material-ui/core/Box'
-import Divider from '@material-ui/core/Divider'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import MenuItem from '@material-ui/core/MenuItem'
-import Typography from '@material-ui/core/Typography'
-import Tooltip from '@material-ui/core/Tooltip'
+import { Theme, useTheme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import Tooltip from '@mui/material/Tooltip'
 
-import { UserRoles } from '../../models/user'
 import { useAuth } from '../../lib/auth'
-import RoundedHospitalIcon from '../icons/RoundedHospitalIcon'
-import config from '../../lib/config'
+import RoundedHospitalIcon from '../icons/rounded-hospital-icon'
+import config from '../../lib/config/config'
 import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 
-const classes = makeStyles((theme: Theme) => ({
+const classes = makeStyles()((theme: Theme) => ({
   clickableMenu: {
     cursor: 'pointer'
   },
   typography: {
-    margin: `0 ${theme.spacing(1)}px`,
+    margin: `0 ${theme.spacing(1)}`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
@@ -68,7 +69,7 @@ const classes = makeStyles((theme: Theme) => ({
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
-  const { clickableMenu, typography } = classes()
+  const { classes: { clickableMenu, typography } } = classes()
   const history = useHistory()
   const theme = useTheme()
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
@@ -134,7 +135,7 @@ function UserMenu(): JSX.Element {
         </Box>
         {!isMobileBreakpoint &&
           <React.Fragment>
-            <Tooltip title={tooltipText}>
+            <Tooltip title={tooltipText} disableInteractive>
               <Typography id="user-menu-full-name" className={typography}>
                 {user?.fullName}
               </Typography>

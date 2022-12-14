@@ -28,14 +28,14 @@
 import React from 'react'
 import dayjs, { Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import clsx from 'clsx'
 
-import { useTheme, makeStyles, Theme } from '@material-ui/core/styles'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
+import { useTheme, Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
 
 import { CalendarOrientation, DateRange, CalendarSelectionRange, MIN_YEAR, MAX_YEAR } from './models'
 import RangeDatePicker from './range-date-picker'
@@ -57,12 +57,12 @@ interface DatePickerProps {
   onSelectedDateChange?: (start?: string, end?: string) => void
 }
 
-const datePickerStyle = makeStyles((theme: Theme) => {
+const datePickerStyle = makeStyles({ name: 'date-picker-days-range' })((theme: Theme) => {
   return {
     dialogPaper: {
       margin: 0,
       maxWidth: 'initial',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         maxHeight: '100%'
       }
     },
@@ -82,7 +82,7 @@ const datePickerStyle = makeStyles((theme: Theme) => {
       cursor: 'pointer'
     }
   }
-}, { name: 'date-picker-days-range' })
+})
 
 const dummyDate = dayjs()
 
@@ -91,7 +91,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
   const orientation: CalendarOrientation = matches ? 'landscape' : 'portrait'
-  const classes = datePickerStyle()
+  const { classes, cx } = datePickerStyle()
   const { maxSelectableDays, isOpen, onSelectedDateChange } = props
 
   const { startDate, endDate, minDate, maxDate } = React.useMemo(() => {
@@ -186,7 +186,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
     }
   }
 
-  const contentClasses = clsx(classes.content, {
+  const contentClasses = cx(classes.content, {
     [classes.contentLandscape]: orientation === 'landscape',
     [classes.contentPortrait]: orientation === 'portrait'
   })

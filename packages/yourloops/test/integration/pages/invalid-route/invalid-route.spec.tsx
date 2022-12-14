@@ -43,7 +43,7 @@ describe('Invalid Route', () => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch(firstName, lastName)
+    mockUserDataFetch({ firstName, lastName })
     mockPatientAPIForHcp()
     mockDirectShareApi()
   })

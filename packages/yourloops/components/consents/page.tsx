@@ -31,31 +31,32 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Card from '@material-ui/core/Card'
-import CardMedia from '@material-ui/core/CardMedia'
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-import CardContent from '@material-ui/core/CardContent'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import CardContent from '@mui/material/CardContent'
 
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 
-import { HistoryState } from '../../models/generic'
-import { Profile } from '../../models/user'
 import { useAuth } from '../../lib/auth'
 import ConsentForm from './form'
-import appConfig from '../../lib/config'
+import appConfig from '../../lib/config/config'
+import { Profile } from '../../lib/auth/models/profile.model'
+import { HistoryState } from '../../models/history-state.model'
 
 interface ConsentProps {
   messageKey: string
 }
 
-const style = makeStyles((theme: Theme) => {
+const style = makeStyles({ name: 'ylp-component-consent' })((theme: Theme) => {
   return {
     mainContainer: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         padding: 0
       }
     },
@@ -66,7 +67,7 @@ const style = makeStyles((theme: Theme) => {
     cardContent: {
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(0),
         marginRight: theme.spacing(0)
       }
@@ -78,12 +79,12 @@ const style = makeStyles((theme: Theme) => {
       display: 'flex',
       justifyContent: 'space-around',
       marginTop: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         justifyContent: 'space-between'
       }
     }
   }
-}, { name: 'ylp-component-consent' })
+})
 
 /**
  * Renew consents page
@@ -92,7 +93,7 @@ function Page(props: ConsentProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const historyHook = useHistory<HistoryState>()
   const auth = useAuth()
-  const classes = style()
+  const { classes } = style()
   const [policyAccepted, setPolicyAccepted] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.profile?.contactConsent?.isAccepted)
@@ -132,7 +133,7 @@ function Page(props: ConsentProps): JSX.Element {
           container
           spacing={0}
           alignItems="center"
-          justify="center"
+          justifyContent="center"
           className={classes.centeredGrid}
         >
           <Grid item xs={12}>

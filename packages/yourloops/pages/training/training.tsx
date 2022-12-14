@@ -25,30 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useAuth } from '../../lib/auth'
-import { Trans, useTranslation } from 'react-i18next'
-import { Profile } from '../../models/user'
+import { useTranslation } from 'react-i18next'
 import bows from 'bows'
 import { useHistory } from 'react-router-dom'
-import { HistoryState } from '../../models/generic'
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-import Card from '@material-ui/core/Card'
-import CardMedia from '@material-ui/core/CardMedia'
-import Box from '@material-ui/core/Box'
-import appConfig from '../../lib/config'
-import CardContent from '@material-ui/core/CardContent'
-import Container from '@material-ui/core/Container'
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import Link from '@material-ui/core/Link'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-url'
+import { HistoryState } from '../../models/history-state.model'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import Box from '@mui/material/Box'
+import appConfig from '../../lib/config/config'
+import CardContent from '@mui/material/CardContent'
+import Container from '@mui/material/Container'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Link from '@mui/material/Link'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { Profile } from '../../lib/auth/models/profile.model'
 
-const style = makeStyles((theme: Theme) => {
+const style = makeStyles({ name: 'ylp-training-page' })((theme: Theme) => {
   return {
     mainContainer: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         padding: 0
       }
     },
@@ -58,7 +61,7 @@ const style = makeStyles((theme: Theme) => {
     cardContent: {
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(0),
         marginRight: theme.spacing(0)
       }
@@ -68,9 +71,16 @@ const style = makeStyles((theme: Theme) => {
     },
     buttons: {
       marginTop: theme.spacing(3)
+    },
+    checkbox: {
+      marginBottom: 'auto'
+    },
+    formControlLabel: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
   }
-}, { name: 'ylp-training-page' })
+})
 
 /**
  * Training Page
@@ -82,7 +92,9 @@ function TrainingPage(): JSX.Element {
   const historyHook = useHistory<HistoryState>()
   const fromPath = historyHook.location.state?.from?.pathname
   const user = auth.user
-  const classes = style()
+  const { classes } = style()
+  const [trainingOpened, setTrainingOpened] = useState(false)
+  const [checked, setChecked] = useState(false)
 
   const ackTraining = (): void => {
     const now = new Date().toISOString()
@@ -95,13 +107,6 @@ function TrainingPage(): JSX.Element {
       historyHook.push(fromPath ?? '/')
     })
   }
-
-  const training = t('training').toLowerCase()
-  const trainingLink = (
-    <Link aria-label={training} href={diabeloopExternalUrls.training(user?.role)} target="_blank" rel="noreferrer">
-      {training}
-    </Link>
-  )
 
   return (
     <Container maxWidth="sm" className={classes.mainContainer} data-testid="training-container">
@@ -124,22 +129,49 @@ function TrainingPage(): JSX.Element {
               </Box>
             </CardMedia>
             <CardContent className={classes.cardContent}>
-              <Trans
-                i18nKey="training-body"
-                t={t}
-                components={{ trainingLink }}
-                values={{ training }}>
-                New {{ training }} available
-              </Trans>
+              {trainingOpened
+                ? <FormControlLabel
+                  control={
+                    <Checkbox
+                      aria-label={t('training-checkbox')}
+                      className={classes.checkbox}
+                      checked={checked}
+                      onChange={() => setChecked(!checked)}
+                      name="training"
+                    />
+                  }
+                  label={t('acknowledge-training')}
+                  className={classes.formControlLabel}
+                />
+                : t('training-body')
+              }
               <div className={classes.buttons}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disableElevation
-                  onClick={ackTraining}
-                >
-                  {t('button-acknowledge')}
-                </Button>
+                {trainingOpened
+                  ? <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    onClick={ackTraining}
+                    disabled={!checked}
+                  >
+                    {t('confirm')}
+                  </Button>
+                  : <Link
+                    underline="none"
+                    href={diabeloopExternalUrls.training(user?.role)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                      onClick={() => setTrainingOpened(true)}
+                    >
+                      {t('open-training')}
+                    </Button>
+                  </Link>
+                }
               </div>
             </CardContent>
           </Card>

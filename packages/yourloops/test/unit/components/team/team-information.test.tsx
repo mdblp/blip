@@ -28,13 +28,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-import ThemeProvider from '@material-ui/styles/ThemeProvider'
+import { ThemeProvider } from '@mui/material/styles'
 import * as authHookMock from '../../../../lib/auth'
 import { getTheme } from '../../../../components/theme'
 import TeamInformation, { TeamInformationProps } from '../../../../components/team/team-information'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
-import User from '../../../../lib/auth/user'
-import TeamUtils from '../../../../lib/team/utils'
+import User from '../../../../lib/auth/models/user.model'
+import TeamUtils from '../../../../lib/team/team.util'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
 import * as alertHookMock from '../../../../components/utils/snackbar'
@@ -105,12 +105,14 @@ describe('TeamInformation', () => {
   }
 
   function getTeamInformationJSX(props: TeamInformationProps = { team, refreshParent: refresh }): JSX.Element {
-    return <ThemeProvider theme={getTheme()}>
-      <TeamInformation
-        team={props.team}
-        refreshParent={props.refreshParent}
-      />
-    </ThemeProvider>
+    return (
+      <ThemeProvider theme={getTheme()}>
+        <TeamInformation
+          team={props.team}
+          refreshParent={props.refreshParent}
+        />
+      </ThemeProvider>
+    )
   }
 
   function renderTeamInformation(props: TeamInformationProps = { team, refreshParent: refresh }) {

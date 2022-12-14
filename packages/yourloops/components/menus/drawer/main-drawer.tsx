@@ -28,29 +28,30 @@
 import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined'
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
-import Drawer from '@material-ui/core/Drawer'
-import Toolbar from '@material-ui/core/Toolbar'
-import List from '@material-ui/core/List'
-import EmailIcon from '@material-ui/icons/Email'
-import ContactMailIcon from '@material-ui/icons/ContactMail'
-import TimelineIcon from '@material-ui/icons/Timeline'
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
-import FeedbackIcon from '@material-ui/icons/Feedback'
-import SignalWifiOffIcon from '@material-ui/icons/SignalWifiOff'
-import DesktopMacIcon from '@material-ui/icons/DesktopMac'
-import HistoryIcon from '@material-ui/icons/History'
-import Divider from '@material-ui/core/Divider'
-import Box from '@material-ui/core/Box'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined'
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle'
+import Drawer from '@mui/material/Drawer'
+import Toolbar from '@mui/material/Toolbar'
+import List from '@mui/material/List'
+import EmailIcon from '@mui/icons-material/Email'
+import ContactMailIcon from '@mui/icons-material/ContactMail'
+import TimelineIcon from '@mui/icons-material/Timeline'
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
+import FeedbackIcon from '@mui/icons-material/Feedback'
+import SignalWifiOffIcon from '@mui/icons-material/SignalWifiOff'
+import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
+import HistoryIcon from '@mui/icons-material/History'
+import Divider from '@mui/material/Divider'
+import Box from '@mui/material/Box'
 
-import MedicalServiceIcon from '../../icons/MedicalServiceIcon'
-import PendingIcon from '../../icons/PendingIcon'
-import { PatientFilterTypes } from '../../../models/generic'
+import MedicalServiceIcon from '../../icons/medical-service-icon'
+import PendingIcon from '../../icons/pending-icon'
 import DrawerLinkItem from './drawer-link-item'
 import useMainDrawer from './main-drawer.hook'
 import DrawerCategoryItem from './drawer-category-item'
+import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 
 export interface MainDrawerProps {
   miniVariant?: boolean
@@ -59,7 +60,7 @@ export interface MainDrawerProps {
 export const mainDrawerDefaultWidth = '300px'
 export const mainDrawerMiniVariantWidth = '57px'
 
-const styles = makeStyles((theme: Theme) => ({
+const styles = makeStyles()((theme: Theme) => ({
   divider: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2)
@@ -100,14 +101,16 @@ const styles = makeStyles((theme: Theme) => ({
 const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
   const { t } = useTranslation('yourloops')
   const {
-    divider,
-    drawer,
-    drawerPaper,
-    miniDrawer,
-    miniDrawerPaper,
-    enterTransition,
-    leaveTransition,
-    drawerBoxShadow
+    classes: {
+      divider,
+      drawer,
+      drawerPaper,
+      miniDrawer,
+      miniDrawerPaper,
+      enterTransition,
+      leaveTransition,
+      drawerBoxShadow
+    }
   } = styles()
 
   const {
@@ -220,7 +223,7 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
         {loggedUserIsHcpInMonitoring &&
           <Box bgcolor="var(--monitoring-filter-bg-color)" marginTop={2}>
             <DrawerCategoryItem
-              icon={<DesktopMacIcon />}
+              icon={<DesktopMacOutlinedIcon />}
               text={t('remote-monitoring')}
             />
             {drawerRemoteMonitoringItems.map((item, index) => (

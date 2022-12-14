@@ -40,12 +40,8 @@ import { statFormats, statTypes } from '../../../utils/stat'
 import styles from './Stat.css'
 import colors from '../../../styles/colors.css'
 import { bgPrefsPropType } from '../../../propTypes'
-import Lines from './Lines'
-import NoBar from './NoBar'
-import WheelPercent from './Wheel'
 import CollapseIconOpen from './assets/expand-more-24-px.svg'
 import CollapseIconClose from './assets/chevron-right-24-px.svg'
-import InfoIcon from './assets/info-outline-24-px.svg'
 import { StatTooltip } from 'dumb'
 
 const t = i18next.t.bind(i18next)
@@ -164,17 +160,7 @@ class Stat extends React.Component {
           </span>
         )}
         {!hideToolTips && annotations && !isDatumHovered && (
-          <StatTooltip annotations={this.props.annotations}>
-            <span
-              className={styles.tooltipIcon}
-            >
-              <img
-                data-testid="info-icon"
-                src={InfoIcon}
-                alt={t('img-alt-hover-for-more-info')}
-              />
-            </span>
-          </StatTooltip>
+          <StatTooltip annotations={this.props.annotations} />
         )}
       </div>
     )
@@ -400,43 +386,11 @@ class Stat extends React.Component {
   }
 
   getChartPropsByType = props => {
-    const { type, data } = props
-
-    let total
-    let value
+    const { type } = props
 
     const chartProps = this.getDefaultChartProps(props)
 
     switch (type) {
-      case 'wheel':
-        total = _.get(data, 'total.value', 0)
-        value = _.get(data, 'data[1].value', 0)
-        chartProps.renderer = WheelPercent
-        chartProps.className = styles.statWheelTimeInAuto
-        chartProps.values = {
-          on: Math.round(100 * value / total),
-          off: 100 - Math.round(100 * value / total)
-        }
-        chartProps.rawValues = {
-          on: this.formatDatum(data.data[1], props.dataFormat.summary).value,
-          off: this.formatDatum(data.data[0], props.dataFormat.summary).value
-        }
-        break
-
-      case 'noBar':
-        chartProps.renderer = NoBar
-        chartProps.data = data.data
-        chartProps.id = props.id
-        chartProps.animate = false
-        break
-
-      case 'lines':
-        chartProps.renderer = Lines
-        chartProps.data = data.data
-        chartProps.id = props.id
-        chartProps.animate = false
-        break
-
       case 'simple':
       case 'input':
         break

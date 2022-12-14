@@ -57,12 +57,10 @@
   background-color: var(--bg-low);
   border-bottom-left-radius: 20px;
   border-top-left-radius: 20px;
-  width: 19px;
 }
 
 .line-target {
   background-color: var(--bg-target);
-  width: 131px;
 }
 
 .line-high {

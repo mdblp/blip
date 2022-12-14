@@ -29,17 +29,18 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { browserName, browserVersion } from 'react-device-detect'
 
-import { makeStyles, useTheme } from '@material-ui/core/styles'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import TextField from '@material-ui/core/TextField'
+import { useTheme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import TextField from '@mui/material/TextField'
 import metrics from '../lib/metrics'
-import ErrorApi from '../lib/error/error-api'
+import ErrorApi from '../lib/error/error.api'
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment-timezone'
 import { useLocation } from 'react-router-dom'
@@ -52,7 +53,7 @@ interface OnErrorProps {
   error?: Error
 }
 
-const classes = makeStyles(() => ({
+const classes = makeStyles()(() => ({
   errorId: {
     display: 'block',
     fontWeight: 'bold'
@@ -64,9 +65,9 @@ function OnError(props: OnErrorProps): JSX.Element {
   const theme = useTheme()
   const location = useLocation()
   const [showMore, setShowMore] = React.useState(false)
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
+  const fullScreen = useMediaQuery(theme.breakpoints.down('lg'))
   const errorId = uuidv4()
-  const style = classes()
+  const { classes: style } = classes()
   const errorMessage = props.error?.message ?? 'n/a'
   const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'n/a'
   const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
@@ -118,6 +119,7 @@ function OnError(props: OnErrorProps): JSX.Element {
             </DialogContentText>
             <TextField
               data-testid="error-stacktrace"
+              variant="standard"
               inputProps={{ color: 'grey' }}
               fullWidth
               multiline

@@ -30,11 +30,10 @@ import React, { FunctionComponent, useMemo } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 
-import Alert from '@material-ui/lab/Alert'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
-import { PatientFilterTypes } from '../models/generic'
 import metrics from '../lib/metrics'
 import { useAlert } from '../components/utils/snackbar'
 import { errorTextFromException, setPageTitle } from '../lib/utils'
@@ -45,8 +44,9 @@ import AddPatientDialog from '../components/patient/add-dialog'
 import TeamCodeDialog from '../components/patient/team-code-dialog'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
-import { usePatientContext } from '../lib/patient/provider'
-import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../lib/patient/patient-api'
+import { usePatientContext } from '../lib/patient/patient.provider'
+import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../lib/patient/patient.api'
+import { PatientFilterTypes } from '../lib/patient/models/enums/patient-filter-type.enum'
 
 const log = bows('PatientListPage')
 

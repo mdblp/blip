@@ -29,23 +29,23 @@ import React, { FunctionComponent, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 
-import Box from '@material-ui/core/Box'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
-import TextField from '@material-ui/core/TextField'
+import Box from '@mui/material/Box'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 
 import metrics from '../../lib/metrics'
 import { useSignUpFormState } from './signup-formstate-context'
 import { availableCountries } from '../../lib/language'
-import { HcpProfessionList } from '../../models/hcp-profession'
+import { HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { useAuth } from '../../lib/auth'
-import { UserRoles } from '../../models/user'
 import { useAlert } from '../../components/utils/snackbar'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { SignUpFormProps } from './signup-stepper'
-import { SignupFormKey } from '../../lib/auth/models'
+import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
 interface Errors {
   firstName: boolean
@@ -127,7 +127,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         aria-label={t('first-name')}
         margin="normal"
         label={t('first-name')}
-        variant="outlined"
         value={signupForm.profileFirstname}
         required
         error={errors.firstName}
@@ -139,7 +138,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         aria-label={t('last-name')}
         margin="normal"
         label={t('last-name')}
-        variant="outlined"
         value={signupForm.profileLastname}
         required
         error={errors.lastName}
@@ -148,7 +146,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         helperText={errors.lastName && t('required-field')}
       />
       <FormControl
-        variant="outlined"
         margin="normal"
         required
         error={errors.country}
@@ -161,7 +158,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
           data-testid="country-selector"
           value={signupForm.profileCountry}
           onBlur={validateCountry}
-          onChange={event => updateForm(SignupFormKey.ProfileCountry, event.target.value as string)}
+          onChange={event => updateForm(SignupFormKey.ProfileCountry, event.target.value)}
         >
           {availableCountries.map((item) => (
             <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
@@ -173,7 +170,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
       {signupForm.accountRole === UserRoles.hcp &&
         <FormControl
-          variant="outlined"
           margin="normal"
           required
           error={errors.hcpProfession}
@@ -186,7 +182,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
             data-testid="hcp-profession-selector"
             value={signupForm.hcpProfession ?? ''}
             onBlur={validateHcpProfession}
-            onChange={event => updateForm(SignupFormKey.HcpProfession, event.target.value as string)}
+            onChange={event => updateForm(SignupFormKey.HcpProfession, event.target.value)}
           >
             {HcpProfessionList.map((item) => (
               <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>

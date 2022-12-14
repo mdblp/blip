@@ -25,13 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientAPI from '../../../lib/patient/patient-api'
-import { ITeamMember, TeamMemberRole } from '../../../models/team'
-import { UserInvitationStatus } from '../../../models/generic'
-import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
+import { Alarm } from '../../../lib/patient/models/alarm.model'
+import { PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
+import { PatientProfile } from '../../../lib/patient/models/patient-profile.model'
+import { PatientSettings } from '../../../lib/patient/models/patient-settings.model'
+import { PatientTeam } from '../../../lib/patient/models/patient-team.model'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
+import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { Monitoring } from '../../../lib/team/models/monitoring.model'
 import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
-import { Patient, PatientMetadata, PatientProfile, PatientSettings, PatientTeam } from '../../../lib/data/patient'
-import { Alarm } from '../../../models/alarm'
+import PatientApi from '../../../lib/patient/patient.api'
+import { Profile } from '../../../lib/auth/models/profile.model'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'
@@ -48,7 +55,7 @@ const defaultSettings: PatientSettings = {
 }
 
 const defaultMetadata: PatientMetadata = {
-  unreadMessagesSent: 0
+  hasSentUnreadMessages: false
 }
 
 const defaultAlarm: Alarm = {
@@ -93,7 +100,7 @@ export const buildPatient = (
     metadata: {
       flagged: metadata?.flagged,
       medicalData: metadata?.medicalData || null,
-      unreadMessagesSent: metadata?.unreadMessagesSent || 0
+      hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
     monitoring,
     teams,
@@ -197,6 +204,7 @@ export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
     teamId: patient.teams[0].teamId,
     role: TeamMemberRole.patient,
     profile: {
+      email: patient.profile.email,
       firstName: patient.profile.firstName,
       fullName: patient.profile.fullName,
       lastName: patient.profile.lastName,
@@ -210,7 +218,7 @@ export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
     invitationStatus: patient.teams[0].status,
     email: patient.profile.email,
     idVerified: false,
-    unreadMessages: patient.metadata.unreadMessagesSent,
+    unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
     alarms: patient.alarms,
     monitoring: patient.monitoring
   }
@@ -222,10 +230,10 @@ const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient)
 
 export const mockPatientAPIForPatients = () => {
-  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember, unmonitoredPatientAsTeamMember, monitoredPatientTwoAsTeamMember, pendingPatientAsTeamMember])
+  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember, unmonitoredPatientAsTeamMember, monitoredPatientTwoAsTeamMember, pendingPatientAsTeamMember])
 }
 export const mockPatientAPIForHcp = () => {
-  jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, pendingPatient])
+  jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, pendingPatient])
 }
 
 export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {
@@ -253,7 +261,7 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
         acceptanceTimestamp: member.profile.trainingAck?.acceptanceTimestamp ?? '2022-10-11',
         isAccepted: member.profile.trainingAck?.isAccepted ?? true
       }
-    },
+    } as Profile,
     settings: member.settings,
     preferences: member.preferences,
     invitationStatus: member.invitationStatus ?? UserInvitationStatus.accepted,

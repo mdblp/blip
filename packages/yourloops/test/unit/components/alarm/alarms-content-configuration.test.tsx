@@ -28,12 +28,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
-
-import ThemeProvider from '@material-ui/styles/ThemeProvider'
-
+import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
-import { convertBG, UNITS_TYPE } from '../../../../lib/units/utils'
+import { convertBG } from '../../../../lib/units/units.util'
 import AlarmsContentConfiguration, {
   AlarmsContentConfigurationProps,
   MIN_HIGH_BG,
@@ -42,9 +40,10 @@ import AlarmsContentConfiguration, {
 } from '../../../../components/alarm/alarms-content-configuration'
 import { fireEvent, render, screen } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
-import { PatientTeam } from '../../../../lib/data/patient'
-import { Monitoring } from '../../../../models/monitoring'
-import PatientUtils from '../../../../lib/patient/utils'
+import { Monitoring } from '../../../../lib/team/models/monitoring.model'
+import PatientUtils from '../../../../lib/patient/patient.util'
+import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
 
 jest.mock('../../../../lib/team')
 describe('AlarmsContentConfiguration', () => {
@@ -53,7 +52,7 @@ describe('AlarmsContentConfiguration', () => {
   const monitoring = {
     enabled: true,
     parameters: {
-      bgUnit: UNITS_TYPE.MGDL,
+      bgUnit: UnitsType.MGDL,
       lowBg: MIN_LOW_BG,
       highBg: MIN_HIGH_BG,
       outOfRangeThreshold: 5,
@@ -69,7 +68,7 @@ describe('AlarmsContentConfiguration', () => {
   team.monitoring = {
     enabled: true,
     parameters: {
-      bgUnit: UNITS_TYPE.MGDL,
+      bgUnit: UnitsType.MGDL,
       lowBg: 1,
       highBg: 2,
       outOfRangeThreshold: 10,
@@ -108,9 +107,11 @@ describe('AlarmsContentConfiguration', () => {
     onSave,
     saveInProgress: false
   }) {
-    return <ThemeProvider theme={getTheme()}>
-      <AlarmsContentConfiguration {...props} />
-    </ThemeProvider>
+    return (
+      <ThemeProvider theme={getTheme()}>
+        <AlarmsContentConfiguration {...props} />
+      </ThemeProvider>
+    )
   }
 
   function renderTeamAlarmsContent(props: AlarmsContentConfigurationProps = {
@@ -164,11 +165,11 @@ describe('AlarmsContentConfiguration', () => {
     const monitoringInMMOLL = {
       enabled: true,
       parameters: {
-        bgUnit: UNITS_TYPE.MMOLL,
-        lowBg: convertBG(MIN_LOW_BG, UNITS_TYPE.MGDL),
-        highBg: convertBG(MIN_HIGH_BG, UNITS_TYPE.MGDL),
+        bgUnit: UnitsType.MMOLL,
+        lowBg: convertBG(MIN_LOW_BG, UnitsType.MGDL),
+        highBg: convertBG(MIN_HIGH_BG, UnitsType.MGDL),
         outOfRangeThreshold: 5,
-        veryLowBg: convertBG(MIN_VERY_LOW_BG + 1, UNITS_TYPE.MGDL),
+        veryLowBg: convertBG(MIN_VERY_LOW_BG + 1, UnitsType.MGDL),
         hypoThreshold: 10,
         nonDataTxThreshold: 15,
         reportingPeriod: 7
@@ -214,7 +215,7 @@ describe('AlarmsContentConfiguration', () => {
     const incorrectMonitoring = {
       enabled: true,
       parameters: {
-        bgUnit: UNITS_TYPE.MGDL,
+        bgUnit: UnitsType.MGDL,
         lowBg: MIN_LOW_BG,
         highBg: MIN_HIGH_BG,
         outOfRangeThreshold: 8,
@@ -232,7 +233,7 @@ describe('AlarmsContentConfiguration', () => {
     const incorrectMonitoring = {
       enabled: true,
       parameters: {
-        bgUnit: UNITS_TYPE.MGDL,
+        bgUnit: UnitsType.MGDL,
         lowBg: MIN_LOW_BG,
         highBg: MIN_HIGH_BG,
         outOfRangeThreshold: 5,
@@ -250,7 +251,7 @@ describe('AlarmsContentConfiguration', () => {
     const incorrectMonitoring = {
       enabled: true,
       parameters: {
-        bgUnit: UNITS_TYPE.MGDL,
+        bgUnit: UnitsType.MGDL,
         lowBg: MIN_LOW_BG,
         highBg: MIN_HIGH_BG,
         outOfRangeThreshold: 5,

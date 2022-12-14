@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
-import Box from '@material-ui/core/Box'
+import Box from '@mui/material/Box'
 import PatientStatistics from './patientStatistics'
 import Header from './header'
 import DeviceUsage from './deviceUsage'
@@ -132,7 +132,8 @@ PatientDashboard.propTypes = {
   onSwitchPatient: PropTypes.func.isRequired,
   onClickNavigationBack: PropTypes.func.isRequired,
   canPrint: PropTypes.bool,
-  onClickPrint: PropTypes.func.isRequired
+  onClickPrint: PropTypes.func.isRequired,
+  tidelineData: PropTypes.object.isRequired
 }
 
 export default PatientDashboard

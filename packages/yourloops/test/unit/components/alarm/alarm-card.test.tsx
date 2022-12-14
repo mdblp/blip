@@ -28,17 +28,15 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, unmountComponentAtNode } from 'react-dom'
-
-import { ThemeProvider } from '@material-ui/core'
-
+import { ThemeProvider } from '@mui/material/styles'
 import { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
 import AlarmCard from '../../../../components/alarm/alarm-card'
-import User from '../../../../lib/auth/user'
-import { Alarm } from '../../../../models/alarm'
-import { Monitoring } from '../../../../models/monitoring'
+import User from '../../../../lib/auth/models/user.model'
+import { Alarm } from '../../../../lib/patient/models/alarm.model'
+import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { getTheme } from '../../../../components/theme'
 
 jest.mock('../../../../lib/auth')

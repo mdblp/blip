@@ -28,10 +28,8 @@
 import React, { FunctionComponent } from 'react'
 import styles from './cbg-percentage-title.css'
 import cbgColorsStyles from '../cbg-colors.css'
-import InfoIcon from '../assets/info-outline-24-px.svg'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { useTranslation } from 'react-i18next'
-import { StatLevel } from '../models'
+import { StatLevel } from '../../../models/stats.model'
 
 interface CBGPercentageTitleProps {
   annotations: []
@@ -43,7 +41,6 @@ interface CBGPercentageTitleProps {
 
 const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
   const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
-  const { t } = useTranslation('main')
 
   return (
     <>
@@ -62,17 +59,7 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
           </span>
         }
         {showTooltipIcon &&
-          <StatTooltip annotations={annotations}>
-            <span
-              className={styles['tooltip-icon']}
-            >
-              <img
-                data-testid="info-icon"
-                src={InfoIcon}
-                alt={t('img-alt-hover-for-more-info')}
-              />
-            </span>
-          </StatTooltip>
+          <StatTooltip annotations={annotations}/>
         }
       </div>
     </>
