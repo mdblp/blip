@@ -77,9 +77,9 @@ jobs:
           registry: ${{ secrets.REGISTRY }}
           options: -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
           image: docker.ci.diabeloop.eu/ci-toolbox:latest
-        run: |
-          cd blip
-          echo "semver=$(release-helper get-version)" >> $GITHUB_OUTPUT
+          run: |
+            cd blip
+            echo "semver=$(release-helper get-version)" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
