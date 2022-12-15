@@ -6,6 +6,7 @@ on:
 
 env:
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+  PR_NUMBER: ${{ github.event.issue.number }}
 
 jobs:
   build:
@@ -103,16 +104,14 @@ jobs:
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
-        env:
-          PR_NUMBER: ${{github.event.issue.number}}
         with:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
-          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{env.PR_NUMBER}}
+          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: v${{ steps.changelog-version.outputs.semver }}-${{env.PR_NUMBER}}
+          tag: v${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
           force_push_tag: true
