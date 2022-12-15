@@ -254,14 +254,14 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: github.ref_name == 'dblp'
+#        if: github.ref_name == 'dblp'
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
-    if: github.ref_name == 'dblp'
+#    if: github.ref_name == 'dblp'
     needs: build
     runs-on: ubuntu-latest
     outputs:
