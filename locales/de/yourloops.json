@@ -402,7 +402,7 @@
   "until": "Bis",
   "upload-prescription": "Rezept hochladen",
   "user-name": "{{firstName}} {{lastName}}",
-  "valid-email-alert": "Kontoüberprüfung ist erforderlich, bevor Sie sich anmelden, bitte überprüfen Sie Ihre E-Mails",
+  "valid-email-alert": "Kontoüberprüfung ist erforderlich, bevor Sie sich anmelden überprüfen Sie bitte Ihre E-Mails",
   "weekly-report-pdf": "Wochenbericht_{{pdfName}}",
   "weekly-reports": "Wochenberichte",
   "weekly-reports-get-failed": "Fail to get weekly reports, please reload the page",
