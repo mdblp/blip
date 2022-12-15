@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 - YLP-1973 User should be able to uncheck the training check box
 ### Engineering use
+- YLP-1976 Fix PDF generation
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
