@@ -291,6 +291,7 @@ jobs:
         with:
           envFile: 'version.env'
           expand: 'false'
+          export: 'false'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
