@@ -152,7 +152,7 @@ const DeviceUsage = (props) => {
   }
 
   return <>
-    <Card id="device-usage" className={classes.card}>
+    <Card id="device-usage" data-testid="device-usage-card" className={classes.card}>
       <CardHeader
         id="device-usage-header"
         avatar={<PhonelinkSetupOutlinedIcon/>}

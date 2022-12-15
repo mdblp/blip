@@ -62,8 +62,8 @@ export interface BgClasses {
 }
 
 export enum StatFormats {
-  Cv = 'Cv',
-  Gmi = 'Gmi',
-  Percentage = 'Percentage',
-  Units = 'Units',
+  Cv = 'cv',
+  Gmi = 'gmi',
+  Percentage = 'percentage',
+  Units = 'units',
 }

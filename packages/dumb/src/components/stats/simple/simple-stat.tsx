@@ -65,13 +65,6 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (
         <div className={commonStyles.statHeader}>
           <div className={commonStyles.chartTitle}>
             {title}
-            <span className={styles.chartTitleData}>
-              (&nbsp;
-              <span>
-                {value.toString()}
-              </span>
-              &nbsp;)
-            </span>
             {showToolTip && annotations &&
               <StatTooltip annotations={annotations} />
             }
