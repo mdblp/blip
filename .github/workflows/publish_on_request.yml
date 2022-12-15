@@ -69,7 +69,6 @@ jobs:
         uses: actions/download-artifact@v3
 
       - name: Get yourloops version from changelog
-        id: changelog-version
         uses: addnab/docker-run-action@v3
         with:
           username: ${{ secrets.NEXUS_USERNAME }}
@@ -79,7 +78,16 @@ jobs:
           image: docker.ci.diabeloop.eu/ci-toolbox:latest
           run: |
             cd blip
-            echo "semver=$(release-helper get-version)" >> $GITHUB_OUTPUT
+            echo "semver=$(release-helper get-version)" > version.env
+
+      - name: Read env file
+        id: changelog-version
+        uses: cardinalby/export-env-action@v1
+        with:
+          envFile: 'version.env'
+          expand: 'false'
+          export: 'false'
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

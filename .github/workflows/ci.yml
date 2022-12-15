@@ -261,6 +261,7 @@ jobs:
           path: dist/
 
   publish:
+    if: github.ref_name == 'dblp'
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -272,7 +273,6 @@ jobs:
         uses: actions/download-artifact@v3
 
       - name: Get yourloops version from changelog
-        #id: changelog-version
         uses: addnab/docker-run-action@v3
         with:
           username: ${{ secrets.NEXUS_USERNAME }}
@@ -282,7 +282,6 @@ jobs:
           image: docker.ci.diabeloop.eu/ci-toolbox:latest
           run: |
             cd blip
-            env
             echo "semver=$(release-helper get-version)" > version.env
 
       - name: Read env file
