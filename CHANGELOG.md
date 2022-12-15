@@ -33,6 +33,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1949 Migrate Lines component to dumb
 - YLP-1953 Migrate WheelPercent to dumb
 - YLP-1960 enhance pipeline
+- YLP-1976 Fix PDF generation
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Refactoring profile page code and adding tests
