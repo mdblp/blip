@@ -42,11 +42,20 @@ import { ProfilePageContextProvider } from './profile-page-context'
 import { ProfileForm } from './profile-form'
 import { profileFormCommonClasses } from './css-classes'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import Button from '@mui/material/Button'
+import { Lock } from '@mui/icons-material'
+import { Divider } from '@mui/material'
+import { AuthApi } from '../../lib/auth/auth.api'
+import { useAlert } from '../../components/utils/snackbar'
+import bows from 'bows'
+
+const log = bows('ProfilePage')
 
 const ProfilePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes } = profileFormCommonClasses()
   const { user } = useAuth()
+  const alert = useAlert()
 
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
   const lang = user.preferences?.displayLanguageCode ?? getCurrentLang()
@@ -59,6 +68,16 @@ const ProfilePage: FunctionComponent = () => {
   const handleSwitchRoleCancel = (): void => setSwitchRoleOpen(false)
 
   useEffect(() => setPageTitle(t('account-preferences')), [lang, t])
+
+  const sendChangePasswordEmail = async (): Promise<void> => {
+    try {
+      await AuthApi.sendResetPasswordEmail(user.email)
+      alert.success(t('alert-change-password-email-success'))
+    } catch (reason: unknown) {
+      log.error(reason)
+      alert.error(t('alert-change-password-email-failed'))
+    }
+  }
 
   return (
     <React.Fragment>
@@ -76,10 +95,40 @@ const ProfilePage: FunctionComponent = () => {
            *    Now it has to be done with Auth0 since role is a part of auth0 user metadata.
            *    see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
            **/}
-          {UserRoles.caregiver === user.role && false &&
-            <Link id="profile-link-switch-role" component="button" onClick={handleSwitchRoleOpen}>
+          {UserRoles.caregiver === user.role &&
+            <Link
+              id="profile-link-switch-role"
+              component="button"
+              sx={{ marginBottom: 2 }}
+              onClick={handleSwitchRoleOpen}>
               {t('modal-switch-hcp-title')}
             </Link>
+          }
+
+          {
+            !user.isUserPatient() &&
+            <>
+              <Divider variant="middle" />
+              <Box className={classes.categoryLabel}>
+                <Lock color="primary" />
+                <strong className={classes.uppercase}>{t('security')}</strong>
+              </Box>
+              <Box marginTop={2}>
+                <div>{t('change-password-info')}</div>
+                <Box display="flex" justifyContent="center" marginTop={2}>
+                  <Button
+                    id="profile-button-change-password"
+                    variant="outlined"
+                    color="primary"
+                    disableElevation
+                    className={classes.button}
+                    onClick={sendChangePasswordEmail}
+                  >
+                    {t('button-change-password')}
+                  </Button>
+                </Box>
+              </Box>
+            </>
           }
         </Box>
       </Container>

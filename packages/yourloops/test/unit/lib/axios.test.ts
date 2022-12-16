@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { onFulfilled } from '../../../lib/axios'
-import HttpService from '../../../services/http.service'
+import { onFulfilled } from '../../../lib/http/axios.service'
+import HttpService from '../../../lib/http/http.service'
 import * as crypto from 'crypto'
 import { HttpHeaderKeys } from '../../../lib/http/models/enums/http-header-keys.enum'
 

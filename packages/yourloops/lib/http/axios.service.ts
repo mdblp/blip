@@ -25,27 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../../../../lib/http/http.service'
-import ErrorApi, { ErrorPayload } from '../../../../lib/error/error.api'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 
-describe('ErrorApi', () => {
-  describe('sendError', () => {
-    it('should send correct payload to correct url', async () => {
-      const payload: ErrorPayload = {
-        browserName: 'fakeBrowserName',
-        browserVersion: 'fakeBrowserVersion',
-        date: 'fakeDate',
-        err: 'fakeErrorMessage',
-        errorId: 'fakeErrorId',
-        path: '/fake/path'
-      }
-      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
+import appConfig from '../config/config'
+import HttpService from './http.service'
+import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
 
-      await ErrorApi.sendError(payload)
-      expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/bff/v1/errors',
-        payload
-      })
+class AxiosService {
+  init(baseUrl: string, hasInterceptors = false): AxiosInstance {
+    const axiosInstance = axios.create({
+      baseURL: baseUrl
     })
-  })
-})
+
+    if (hasInterceptors) {
+      axiosInstance.interceptors.request.use(this.onFulfilled)
+    }
+
+    return axiosInstance
+  }
+
+  private async onFulfilled(config: AxiosRequestConfig): Promise<AxiosRequestConfig> {
+    if (config.params?.noHeader) {
+      delete config.params.noHeader
+      return config
+    }
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        Authorization: `Bearer ${await HttpService.getAccessToken()}`,
+        [HttpHeaderKeys.traceToken]: uuidv4()
+      }
+    }
+  }
+}
+
+const internalAxios = new AxiosService().init(appConfig.API_HOST, true)
+const auth0Axios = new AxiosService().init(`https://${appConfig.AUTH0_DOMAIN}`)
+
+export { internalAxios, auth0Axios }

@@ -26,7 +26,7 @@
  */
 
 import UserApi from '../../../../lib/auth/user.api'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { AxiosResponse } from 'axios'
 import { Profile } from '../../../../lib/auth/models/profile.model'
 import { Settings } from '../../../../lib/auth/models/settings.model'

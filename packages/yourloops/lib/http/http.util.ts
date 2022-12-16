@@ -25,35 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from 'axios'
-import { v4 as uuidv4 } from 'uuid'
+import { AxiosError } from 'axios'
+import httpStatus from './models/enums/http-status.enum'
+import { t } from '../language'
+import { ErrorMessageStatus } from './http.service'
 
-import appConfig from './config/config'
-import HttpService from '../services/http.service'
-import { HttpHeaderKeys } from './http/models/enums/http-header-keys.enum'
+export class HttpUtil {
+  static handleError(error: AxiosError, excludedErrorCodes: number[] = []): Error {
+    if (!error.response || excludedErrorCodes.includes(error.response.status)) {
+      return error
+    }
 
-export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
-  if (config.params?.noHeader) {
-    delete config.params.noHeader
-  } else {
-    config = {
-      ...config,
-      headers: {
-        ...config.headers,
-        Authorization: `Bearer ${await HttpService.getAccessToken()}`,
-        [HttpHeaderKeys.traceToken]: uuidv4()
+    if (error.response.status >= 400 && error.response.status <= 550) {
+      switch (error.response.status) {
+        case httpStatus.StatusNotFound:
+          throw Error(ErrorMessageStatus.NotFound)
+        case httpStatus.StatusInternalServerError:
+          throw Error(t('error-http-500'))
+        default:
+          throw Error(t('error-http-40x'))
       }
     }
   }
-  return config
 }
-
-function initAxios(): void {
-  axios.defaults.baseURL = appConfig.API_HOST
-  /**
-   * We use axios request interceptor to set the access token into headers each request the app send
-   */
-  axios.interceptors.request.use(onFulfilled)
-}
-
-export default initAxios

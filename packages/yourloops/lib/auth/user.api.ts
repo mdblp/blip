@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService, { ErrorMessageStatus } from '../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import bows from 'bows'
 import { UserMetadata } from './models/user-metadata.model'
 import { Profile } from './models/profile.model'

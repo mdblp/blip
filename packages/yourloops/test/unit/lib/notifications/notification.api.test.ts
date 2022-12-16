@@ -26,7 +26,7 @@
  */
 
 import HttpStatus from '../../../../lib/http/models/enums/http-status.enum'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { loggedInUsers } from '../../common'
 import axios, { AxiosResponse } from 'axios'
 import NotificationApi from '../../../../lib/notifications/notification.api'

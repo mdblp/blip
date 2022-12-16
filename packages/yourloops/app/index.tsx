@@ -35,7 +35,6 @@ import config from '../lib/config/config'
 import { init as i18nInit } from '../lib/language'
 import initCookiesConsentListener from '../lib/cookies-manager'
 import initDayJS from '../lib/dayjs'
-import initAxios from '../lib/axios'
 import { initTheme } from '../components/theme'
 
 import Yourloops from './app'
@@ -61,7 +60,6 @@ i18nInit().then(() => {
 
   initDayJS()
   initCookiesConsentListener()
-  initAxios()
   initTheme()
 
   ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, div)

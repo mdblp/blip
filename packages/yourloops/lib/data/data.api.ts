@@ -26,7 +26,7 @@
  */
 
 import { sortBy } from 'lodash'
-import HttpService, { ErrorMessageStatus } from '../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { GetPatientDataOptions } from './models/get-patient-data-options.model'
 import User from '../auth/models/user.model'
 import bows from 'bows'

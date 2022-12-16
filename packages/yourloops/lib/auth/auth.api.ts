@@ -25,27 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../../../../lib/http/http.service'
-import ErrorApi, { ErrorPayload } from '../../../../lib/error/error.api'
+import appConfig from '../config/config'
+import { HttpUtil } from '../http/http.util'
+import { auth0Axios } from '../http/axios.service'
 
-describe('ErrorApi', () => {
-  describe('sendError', () => {
-    it('should send correct payload to correct url', async () => {
-      const payload: ErrorPayload = {
-        browserName: 'fakeBrowserName',
-        browserVersion: 'fakeBrowserVersion',
-        date: 'fakeDate',
-        err: 'fakeErrorMessage',
-        errorId: 'fakeErrorId',
-        path: '/fake/path'
-      }
-      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
+const AUTH0_CONNECTION_TYPE = 'Username-Password-Authentication'
+const AUTH0_CHANGE_PASSWORD_URL = '/dbconnections/change_password'
 
-      await ErrorApi.sendError(payload)
-      expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/bff/v1/errors',
-        payload
+export class AuthApi {
+  static async sendResetPasswordEmail(userEmail: string): Promise<void> {
+    try {
+      return await auth0Axios.post(AUTH0_CHANGE_PASSWORD_URL, {
+        client_id: appConfig.AUTH0_CLIENT_ID,
+        email: userEmail,
+        connection: AUTH0_CONNECTION_TYPE
       })
-    })
-  })
-})
+    } catch (error) {
+      throw HttpUtil.handleError(error)
+    }
+  }
+}

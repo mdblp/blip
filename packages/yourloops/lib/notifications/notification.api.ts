@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import bows from 'bows'
-import HttpService, { ErrorMessageStatus } from '../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { notificationConversion } from './notification.util'
 import { Notification } from './models/notification.model'
 import { NotificationType } from './models/enums/notification-type.enum'
