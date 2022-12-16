@@ -42,7 +42,7 @@ import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
-import { onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
+import { buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
 import FormHelperText from '@mui/material/FormHelperText'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -96,7 +96,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }))
 
 export interface AlarmsContentConfigurationProps {
-  monitoring?: Monitoring
+  monitoring: Monitoring
   saveInProgress: boolean
   patient?: Patient
   onClose?: () => void
@@ -104,7 +104,7 @@ export interface AlarmsContentConfigurationProps {
 }
 
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
-  const { saveInProgress, patient, onClose } = props
+  const { monitoring, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
   const { t } = useTranslation('yourloops')
   const {
@@ -124,10 +124,9 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     setOutOfRangeThreshold,
     setHypoThreshold,
     setNonDataTxThreshold,
-    bgUnit,
-    thresholds
-  } = useAlarmsContentConfiguration(props)
-  const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = thresholds
+    bgUnit
+  } = useAlarmsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
+  const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
 
   return (
     <React.Fragment>
@@ -223,7 +222,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
             <div className={classes.valueSelection}>
               <Typography>{t('time-spent-off-target')}</Typography>
-              <div className={classes.dropdown} data-testid="dropDown-out-of-range">
+              <div className={classes.dropdown} data-testid="dropdown-out-of-range">
                 <BasicDropdown
                   key={`out-of-range-${outOfRangeThreshold.value}`}
                   id="out-of-range"
@@ -296,7 +295,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.subCategoryTitle}>
               B. {t('event-trigger-threshold')}
             </Typography>
-            <div className={classes.valueSelection} data-testid='dropDown-hypo'>
+            <div className={classes.valueSelection} data-testid="dropdown-hypo">
               <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
               <div className={classes.dropdown}>
                 <BasicDropdown
@@ -327,7 +326,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
             <div className={classes.valueSelection}>
               <Typography>{t('time-spent-without-uploaded-data')}</Typography>
-              <div className={classes.dropdown} data-testid='dropDown-nonData'>
+              <div className={classes.dropdown} data-testid="dropdown-nonData">
                 <BasicDropdown
                   key={`tir-dropdown-${nonDataTxThreshold.value}`}
                   id="non-data"

@@ -33,3 +33,12 @@ export interface Alarm {
   nonDataTransmissionRate: number
   nonDataTransmissionActive: boolean
 }
+
+export interface Thresholds {
+  minHighBg: number
+  maxHighBg: number
+  minVeryLowBg: number
+  maxVeryLowBg: number
+  minLowBg: number
+  maxLowBg: number
+}

@@ -32,27 +32,29 @@ import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import PatientUtils from '../../../../lib/patient/patient.util'
-
-const teamId = 'teamId'
-const team = buildTeam(teamId)
-const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
-const getDefaultMonitoring = () => ({
-  enabled: true,
-  parameters: {
-    bgUnit: UnitsType.MGDL,
-    lowBg: 50,
-    highBg: 140,
-    outOfRangeThreshold: 10,
-    veryLowBg: 40,
-    hypoThreshold: 45,
-    nonDataTxThreshold: 50,
-    reportingPeriod: 7
-  }
-})
+import {
+  buildThresholds
+} from '../../../../components/alarm/alarm-content-configuration.utils'
 
 jest.mock('../../../../lib/team')
 
 describe('AlarmsContentConfiguration hook', () => {
+  const teamId = 'teamId'
+  const team = buildTeam(teamId)
+  const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
+  const getDefaultMonitoring = () => ({
+    enabled: true,
+    parameters: {
+      bgUnit: UnitsType.MGDL,
+      lowBg: 50,
+      highBg: 140,
+      outOfRangeThreshold: 10,
+      veryLowBg: 40,
+      hypoThreshold: 45,
+      nonDataTxThreshold: 50,
+      reportingPeriod: 7
+    }
+  })
   const getTeamMock = jest.fn()
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
@@ -76,7 +78,10 @@ describe('AlarmsContentConfiguration hook', () => {
       monitoringOne.parameters.lowBg = 66.6
       monitoringOne.parameters.highBg = 140.5
       monitoringOne.parameters.veryLowBg = 64.1
-      const { result: firstHook } = renderHook(() => useAlarmsContentConfiguration({ monitoring: monitoringOne, patient }))
+      const { result: firstHook } = renderHook(() => useAlarmsContentConfiguration({
+        monitoring: monitoringOne,
+        patient
+      }))
       expect(firstHook.current.veryLowBg.errorMessage).toBe('mandatory-integer')
       expect(firstHook.current.lowBg.errorMessage).toBe('mandatory-integer')
       expect(firstHook.current.highBg.errorMessage).toBe('mandatory-integer')
@@ -86,7 +91,10 @@ describe('AlarmsContentConfiguration hook', () => {
       monitoringTwo.parameters.lowBg = 3.55
       monitoringTwo.parameters.highBg = 8.55
       monitoringTwo.parameters.veryLowBg = 3.55
-      const { result: secondHook } = renderHook(() => useAlarmsContentConfiguration({ monitoring: monitoringTwo, patient }))
+      const { result: secondHook } = renderHook(() => useAlarmsContentConfiguration({
+        monitoring: monitoringTwo,
+        patient
+      }))
       expect(secondHook.current.veryLowBg.errorMessage).toBe('mandatory-float')
       expect(secondHook.current.lowBg.errorMessage).toBe('mandatory-float')
       expect(secondHook.current.highBg.errorMessage).toBe('mandatory-float')
@@ -104,33 +112,39 @@ describe('AlarmsContentConfiguration hook', () => {
     })
   })
 
-  describe('thresholds', () => {
+  describe('Thresholds', () => {
+    const monitoring = getDefaultMonitoring()
     it('should return default thresholds value in mmol/L if the parameters are in mmol/L', () => {
-      const monitoring = getDefaultMonitoring()
       monitoring.parameters.bgUnit = UnitsType.MMOLL
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
-      expect(result.current.thresholds.minHighBg).toBe(7.8)
-      expect(result.current.thresholds.maxHighBg).toBe(13.9)
-      expect(result.current.thresholds.minLowBg).toBe(2.8)
-      expect(result.current.thresholds.maxLowBg).toBe(5.6)
-      expect(result.current.thresholds.minVeryLowBg).toBe(2.2)
-      expect(result.current.thresholds.maxVeryLowBg).toBe(5)
+      const thresholdsInMmol = buildThresholds(monitoring.parameters.bgUnit)
+
+      expect(thresholdsInMmol.minLowBg).toBe(2.8)
+      expect(thresholdsInMmol.maxHighBg).toBe(13.9)
+      expect(thresholdsInMmol.minLowBg).toBe(2.8)
+      expect(thresholdsInMmol.maxLowBg).toBe(5.6)
+      expect(thresholdsInMmol.minVeryLowBg).toBe(2.2)
+      expect(thresholdsInMmol.maxVeryLowBg).toBe(5)
     })
 
     it('should return default thresholds value in mg/dL if the parameters are in mg/dL', () => {
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: getDefaultMonitoring(), patient }))
-      expect(result.current.thresholds.minHighBg).toBe(140)
-      expect(result.current.thresholds.maxHighBg).toBe(250)
-      expect(result.current.thresholds.minLowBg).toBe(50)
-      expect(result.current.thresholds.maxLowBg).toBe(100)
-      expect(result.current.thresholds.minVeryLowBg).toBe(40)
-      expect(result.current.thresholds.maxVeryLowBg).toBe(90)
+      const monitoring = getDefaultMonitoring()
+      monitoring.parameters.bgUnit = UnitsType.MGDL
+      const thresholdsInMgdl = buildThresholds(monitoring.parameters.bgUnit)
+      expect(thresholdsInMgdl.minHighBg).toBe(140)
+      expect(thresholdsInMgdl.maxHighBg).toBe(250)
+      expect(thresholdsInMgdl.minLowBg).toBe(50)
+      expect(thresholdsInMgdl.maxLowBg).toBe(100)
+      expect(thresholdsInMgdl.minVeryLowBg).toBe(40)
+      expect(thresholdsInMgdl.maxVeryLowBg).toBe(90)
     })
   })
 
   describe('saveButtonDisabled', () => {
     it('should be enabled if monitoring is correct', () => {
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: getDefaultMonitoring(), patient }))
+      const { result } = renderHook(() => useAlarmsContentConfiguration({
+        monitoring: getDefaultMonitoring(),
+        patient
+      }))
       expect(result.current.saveButtonDisabled).toBeFalsy()
     })
 
@@ -143,14 +157,21 @@ describe('AlarmsContentConfiguration hook', () => {
   })
 
   describe('resetToTeamDefaultValues', () => {
+    const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
     it('should return an error message if patient is not created', () => {
       const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: getDefaultMonitoring() }))
       expect(() => result.current.resetToTeamDefaultValues()).toThrowError('This action cannot be done if the patient is undefined')
     })
 
     it('should return a error message if patient team is not found', () => {
-      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ status: UserInvitationStatus.accepted, teamId })
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: getDefaultMonitoring(), patient }))
+      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({
+        status: UserInvitationStatus.accepted,
+        teamId
+      })
+      const { result } = renderHook(() => useAlarmsContentConfiguration({
+        monitoring: getDefaultMonitoring(),
+        patient
+      }))
       expect(() => result.current.resetToTeamDefaultValues()).toThrowError(`Cannot find team with id ${teamId}`)
     })
 
@@ -161,13 +182,22 @@ describe('AlarmsContentConfiguration hook', () => {
           getTeam: () => team
         }
       })
-      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ status: UserInvitationStatus.accepted, teamId })
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ patient }))
+      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({
+        status: UserInvitationStatus.accepted,
+        teamId
+      })
+      const { result } = renderHook(() => useAlarmsContentConfiguration({
+        patient,
+        monitoring: getDefaultMonitoring()
+      }))
       expect(() => result.current.resetToTeamDefaultValues()).toThrowError('The given team has no monitoring values')
     })
 
     it('should set default values if there is no error', () => {
-      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ status: UserInvitationStatus.accepted, teamId })
+      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({
+        status: UserInvitationStatus.accepted,
+        teamId
+      })
       const defaultMonitoring = getDefaultMonitoring()
       team.monitoring = getDefaultMonitoring();
       (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {

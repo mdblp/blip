@@ -24,18 +24,43 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { convertBG } from '../../lib/units/units.util'
+import { Thresholds } from '../../lib/patient/models/alarm.model'
 import React from 'react'
 
+export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
+  minHighBg: 140,
+  maxHighBg: 250,
+  minVeryLowBg: 40,
+  maxVeryLowBg: 90,
+  minLowBg: 50,
+  maxLowBg: 100
+}
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
+
 export const isInvalidPercentage = (value: number): boolean => {
   return !PERCENTAGES.includes(`${value}%`)
 }
-export const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
 export const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
   setValue({
     value: parseFloat(value),
     error: false
   })
+}
+
+export const buildThresholds = (bgUnit: UnitsType): Thresholds => {
+  if (bgUnit === UnitsType.MMOLL) {
+    return {
+      minHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minHighBg, UnitsType.MGDL) * 10) / 10,
+      maxHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxHighBg, UnitsType.MGDL) * 10) / 10,
+      minVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, UnitsType.MGDL) * 10) / 10,
+      maxVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryLowBg, UnitsType.MGDL) * 10) / 10,
+      minLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, UnitsType.MGDL) * 10) / 10,
+      maxLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxLowBg, UnitsType.MGDL) * 10) / 10
+    }
+  }
+  return { ...DEFAULT_THRESHOLDS_IN_MGDL }
 }

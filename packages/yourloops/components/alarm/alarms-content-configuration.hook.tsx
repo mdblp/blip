@@ -24,21 +24,19 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { convertBG } from '../../lib/units/units.util'
 import { useTeam } from '../../lib/team'
 import { Monitoring } from '../../lib/team/models/monitoring.model'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
-import { isInvalidPercentage, REGEX_VALUE_BG } from './alarm-content-configuration.utils'
+import { buildThresholds, isInvalidPercentage } from './alarm-content-configuration.utils'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 
 export interface AlarmsContentConfigurationHookProps {
-  monitoring?: Monitoring
+  monitoring: Monitoring
   saveInProgress?: boolean
   patient?: Patient
-  onClose?: () => void
   onSave?: (monitoring: Monitoring) => void
 }
 
@@ -60,16 +58,6 @@ interface AlarmsContentConfigurationHookReturn {
   resetToTeamDefaultValues: () => void
   onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
   bgUnit: UnitsType
-  thresholds: Thresholds
-}
-
-interface Thresholds {
-  minHighBg: number
-  maxHighBg: number
-  minVeryLowBg: number
-  maxVeryLowBg: number
-  minLowBg: number
-  maxLowBg: number
 }
 
 interface ValueErrorMessagePair {
@@ -82,32 +70,32 @@ interface ValueErrorPair {
   error?: boolean
 }
 
-export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
-  minHighBg: 140,
-  maxHighBg: 250,
-  minVeryLowBg: 40,
-  maxVeryLowBg: 90,
-  minLowBg: 50,
-  maxLowBg: 100
-}
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
   const bgUnit = monitoring?.parameters?.bgUnit ?? UnitsType.MGDL
+  const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
+
+  useEffect(() => {
+    if (!monitoring.parameters) {
+      monitoring.parameters = {
+        bgUnit: UnitsType.MGDL,
+        lowBg: 50,
+        highBg: 140,
+        outOfRangeThreshold: 40,
+        veryLowBg: 40,
+        hypoThreshold: 5,
+        nonDataTxThreshold: 10,
+        reportingPeriod: 7
+      }
+    }
+  }, [])
 
   const { t } = useTranslation('yourloops')
 
+  const teamHook = useTeam()
+
   const thresholds = useMemo(() => {
-    if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UnitsType.MMOLL) {
-      return {
-        minHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minHighBg, UnitsType.MGDL) * 10) / 10,
-        maxHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxHighBg, UnitsType.MGDL) * 10) / 10,
-        minVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, UnitsType.MGDL) * 10) / 10,
-        maxVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryLowBg, UnitsType.MGDL) * 10) / 10,
-        minLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, UnitsType.MGDL) * 10) / 10,
-        maxLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxLowBg, UnitsType.MGDL) * 10) / 10
-      }
-    }
-    return { ...DEFAULT_THRESHOLDS_IN_MGDL }
-  }, [monitoring?.parameters])
+    return buildThresholds(bgUnit)
+  }, [bgUnit])
 
   const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
     if (bgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
@@ -122,35 +110,42 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     return null
   }
 
-  const teamHook = useTeam()
-
-  const [highBg, setHighBg] = useState<ValueErrorMessagePair>({
-    value: monitoring?.parameters?.highBg,
-    errorMessage: getErrorMessage(monitoring?.parameters?.highBg, thresholds.minHighBg, thresholds.maxHighBg)
+  const [highBg, setHighBg] = useState<ValueErrorMessagePair>(() => {
+    return {
+      value: monitoring.parameters.highBg,
+      errorMessage: getErrorMessage(monitoring.parameters.highBg, thresholds.minHighBg, thresholds.maxHighBg)
+    }
   })
-  const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>({
-    value: monitoring?.parameters?.veryLowBg,
-    errorMessage: getErrorMessage(monitoring?.parameters?.veryLowBg, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
+  const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>(() => {
+    return {
+      value: monitoring.parameters.veryLowBg,
+      errorMessage: getErrorMessage(monitoring.parameters.veryLowBg, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
+    }
   })
-  const [lowBg, setLowBg] = useState<ValueErrorMessagePair>({
-    value: monitoring?.parameters?.lowBg,
-    errorMessage: getErrorMessage(monitoring?.parameters?.lowBg, thresholds.minLowBg, thresholds.maxLowBg)
+  const [lowBg, setLowBg] = useState<ValueErrorMessagePair>(() => {
+    return {
+      value: monitoring.parameters.lowBg,
+      errorMessage: getErrorMessage(monitoring.parameters.lowBg, thresholds.minLowBg, thresholds.maxLowBg)
+    }
   })
-  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(
-    {
-      value: monitoring?.parameters?.nonDataTxThreshold,
-      error: monitoring?.parameters?.nonDataTxThreshold === undefined || isInvalidPercentage(monitoring.parameters.nonDataTxThreshold)
-    })
-  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(
-    {
-      value: monitoring?.parameters?.outOfRangeThreshold,
-      error: monitoring?.parameters?.outOfRangeThreshold === undefined || isInvalidPercentage(monitoring.parameters.outOfRangeThreshold)
-    })
-  const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(
-    {
-      value: monitoring?.parameters?.hypoThreshold,
-      error: monitoring?.parameters?.hypoThreshold === undefined || isInvalidPercentage(monitoring.parameters.hypoThreshold)
-    })
+  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(() => {
+    return {
+      value: monitoring.parameters.nonDataTxThreshold,
+      error: isInvalidPercentage(monitoring.parameters.nonDataTxThreshold)
+    }
+  })
+  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(() => {
+    return {
+      value: monitoring.parameters.outOfRangeThreshold,
+      error: isInvalidPercentage(monitoring.parameters.outOfRangeThreshold)
+    }
+  })
+  const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(() => {
+    return {
+      value: monitoring.parameters.hypoThreshold,
+      error: isInvalidPercentage(monitoring.parameters.hypoThreshold)
+    }
+  })
 
   const saveButtonDisabled = useMemo(() => {
     return !!lowBg.errorMessage ||
@@ -199,13 +194,13 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
   }
 
   const save = (): void => {
-    const reportingPeriod = (monitoring?.parameters?.reportingPeriod && monitoring?.parameters?.reportingPeriod > 0) ? monitoring?.parameters?.reportingPeriod : 55
+    const reportingPeriod = (monitoring.parameters.reportingPeriod && monitoring.parameters.reportingPeriod > 0) ? monitoring.parameters.reportingPeriod : 55
     const monitoringUpdated: Monitoring = {
-      enabled: monitoring?.enabled ?? true,
-      status: monitoring?.status,
-      monitoringEnd: monitoring?.monitoringEnd,
+      enabled: monitoring.enabled,
+      status: monitoring.status,
+      monitoringEnd: monitoring.monitoringEnd,
       parameters: {
-        bgUnit: monitoring?.parameters?.bgUnit ?? UnitsType.MGDL,
+        bgUnit,
         lowBg: lowBg.value,
         highBg: highBg.value,
         outOfRangeThreshold: outOfRangeThreshold.value,
@@ -234,8 +229,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     setHypoThreshold,
     setVeryLowBg,
     setNonDataTxThreshold,
-    bgUnit,
-    thresholds
+    bgUnit
   }
 }
 export default useAlarmsContentConfiguration
