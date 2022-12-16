@@ -26,7 +26,7 @@
  */
 
 import { renderPage } from '../../utils/render'
-import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { getAccessTokenSilentlyMock, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
@@ -174,6 +174,7 @@ describe('Caregiver page for hcp', () => {
     expect(hcpProfessionSelect).toHaveTextContent('Dietitian')
     await userEvent.click(validateButton)
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
+    expect(getAccessTokenSilentlyMock).toHaveBeenCalledWith({ ignoreCache: true })
   })
 
   it('should close the modals when clicking on cancel or decline buttons', async () => {

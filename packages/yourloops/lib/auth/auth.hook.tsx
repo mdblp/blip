@@ -141,6 +141,7 @@ export function AuthContextImpl(): AuthContext {
     }
 
     await UserApi.changeUserRoleToHcp(user.id, payload)
+    await refreshToken() // Refreshing access token to get the new role in it
 
     user.role = UserRoles.hcp
     user.profile = { ...user.profile, ...payload }
@@ -218,13 +219,16 @@ export function AuthContextImpl(): AuthContext {
       settings
     })
 
-    // Refreshing access token to get the new role in it
-    await getAccessTokenSilently({ ignoreCache: true })
+    await refreshToken() // Refreshing access token to get the new role in it
 
     user.role = signupForm.accountRole
     user.preferences = preferences
     user.profile = profile
     user.settings = settings
+  }
+
+  const refreshToken = async (): Promise<void> => {
+    await getAccessTokenSilently({ ignoreCache: true })
   }
 
   useEffect(() => {
