@@ -26,31 +26,31 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './chart-summary.css'
+import styles from './simple-value.css'
 
-export interface ChartSummaryProps {
+export interface SimpleValueProps {
   className?: string
   suffix: string
   value: string
 }
 
-export const ChartSummary: FunctionComponent<ChartSummaryProps> = (props) => {
+export const SimpleValue: FunctionComponent<SimpleValueProps> = (props) => {
   const {
     className,
     suffix,
     value
   } = props
 
-  const classNames = className ? `${styles.summaryData} ${className}` : styles.summaryData
+  const classNames = className ? `${styles.data} ${className}` : styles.summaryData
 
   return (
-    <div className={styles.chartSummary}>
+    <div className={styles.simpleValue}>
       {value &&
         <div className={classNames}>
-          <span className={styles.summaryValue}>
+          <span className={styles.value}>
             {value}
           </span>
-          <span className={styles.summarySuffix}>
+          <span className={styles.suffix}>
             {suffix}
           </span>
         </div>

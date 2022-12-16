@@ -41,7 +41,8 @@ import {
   getStatDefinition,
   getStatTitle,
   statBgSourceLabels,
-  statFetchMethods, statTypes
+  statFetchMethods,
+  statTypes
 } from './utils/stat'
 import DataUtil from './utils/data'
 import getParametersChanges from './utils/parametersHistory'

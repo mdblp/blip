@@ -28,10 +28,10 @@
 import React, { FunctionComponent, memo, useMemo } from 'react'
 import styles from './simple-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
-import { ChartSummary } from '../common/chart-summary'
+import { SimpleValue } from '../common/simple-value'
 import { StatFormats } from '../../../models/stats.model'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { buildChartSummaryProps } from './simple-stat.util'
+import { buildSimpleValueProps } from './simple-stat.util'
 
 interface SimpleStatProps {
   annotations: string[]
@@ -55,8 +55,8 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (
     value
   } = props
 
-  const chartSummaryProps = useMemo(() => {
-    return buildChartSummaryProps(summaryFormat, total, value)
+  const simpleValueProps = useMemo(() => {
+    return buildSimpleValueProps(summaryFormat, total, value)
   }, [summaryFormat, total, value])
 
   return (
@@ -69,7 +69,7 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (
               <StatTooltip annotations={annotations} />
             }
           </div>
-          <ChartSummary {...chartSummaryProps} />
+          <SimpleValue {...simpleValueProps} />
         </div>
       </div>
     </div>

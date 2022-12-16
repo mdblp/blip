@@ -30,7 +30,7 @@ import styles from './average-daily-dose-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { useTranslation } from 'react-i18next'
-import { ChartSummary } from '../common/chart-summary'
+import { SimpleValue } from '../common/simple-value'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 
 interface AverageDailyDoseStatProps {
@@ -69,7 +69,7 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
           <div className={commonStyles.chartTitle}>
             {title}
           </div>
-          <ChartSummary
+          <SimpleValue
             className={styles.insulinTitle}
             suffix={t('U')}
             value={formatDecimalNumber(dailyDose, 1)}

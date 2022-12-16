@@ -26,28 +26,28 @@
  */
 
 import { StatFormats } from '../../../models/stats.model'
-import { buildChartSummaryProps } from './simple-stat.util'
+import { buildSimpleValueProps } from './simple-stat.util'
 
 describe('SimpleStat util', () => {
-  describe('buildChartSummaryProps', () => {
-    it('should return correct ChartSummaryProps when format is cv and value > 0', () => {
-      const chartSummaryProps = buildChartSummaryProps(StatFormats.Cv, 10, 5.265)
-      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '%', value: '5' })
+  describe('buildbuildSimpleValueProps', () => {
+    it('should return correct buildSimpleValueProps when format is cv and value > 0', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Cv, 10, 5.265)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '%', value: '5' })
     })
 
-    it('should return correct ChartSummaryProps when format is gmi and value > 0', () => {
-      const chartSummaryProps = buildChartSummaryProps(StatFormats.Cv, 10, 38.63)
-      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '%', value: '39' })
+    it('should return correct buildSimpleValueProps when format is gmi and value > 0', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Cv, 10, 38.63)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '%', value: '39' })
     })
 
-    it('should return correct ChartSummaryProps when format is percentage and total > 0', () => {
-      const chartSummaryProps = buildChartSummaryProps(StatFormats.Percentage, 10, 4.56)
-      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '%', value: '46' })
+    it('should return correct buildSimpleValueProps when format is percentage and total > 0', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Percentage, 10, 4.56)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '%', value: '46' })
     })
 
-    it('should return correct ChartSummaryProps when format is unknown', () => {
-      const chartSummaryProps = buildChartSummaryProps(StatFormats.Units, 10, 4.56)
-      expect(chartSummaryProps).toEqual({ className: undefined, suffix: '', value: '--' })
+    it('should return correct buildSimpleValueProps when format is unknown', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Units, 10, 4.56)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '', value: '--' })
     })
   })
 })

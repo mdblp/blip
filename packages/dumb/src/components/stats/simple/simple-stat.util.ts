@@ -28,7 +28,7 @@
 import styles from './simple-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { EMPTY_DATA_PLACEHOLDER, StatFormats } from '../../../models/stats.model'
-import { ChartSummaryProps } from '../common/chart-summary'
+import { SimpleValueProps } from '../common/simple-value'
 import { Unit } from 'medical-domain'
 
 const COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD = 36
@@ -47,19 +47,22 @@ const getPercentagePrecision = (percentage: number): number => {
   return DEFAULT_PRECISION
 }
 
-export const buildChartSummaryProps = (format: string, total: number, value: number): ChartSummaryProps => {
-  if (format === StatFormats.Cv && value >= 0) {
-    return {
-      className: value <= COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD ? styles.coefficientVariationTarget : styles.coefficientVariationHigh,
-      value: formatDecimalNumber(value),
-      suffix: Unit.Percent
+export const buildSimpleValueProps = (format: string, total: number, value: number): SimpleValueProps => {
+  if (value >= 0) {
+    if (format === StatFormats.Cv) {
+      return {
+        className: value <= COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD ? styles.coefficientVariationTarget : styles.coefficientVariationHigh,
+        value: formatDecimalNumber(value),
+        suffix: Unit.Percent
+      }
     }
-  }
-  if (format === StatFormats.Gmi && value >= 0) {
-    return {
-      className: styles.statEnabled,
-      value: formatDecimalNumber(value, 1),
-      suffix: Unit.Percent
+
+    if (format === StatFormats.Gmi) {
+      return {
+        className: styles.statEnabled,
+        value: formatDecimalNumber(value, 1),
+        suffix: Unit.Percent
+      }
     }
   }
 

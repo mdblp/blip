@@ -17,7 +17,8 @@ import {
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
-const WEIGHT = 'WEIGHT'
+const WEIGHT_PARAM = 'WEIGHT'
+const WEIGHT_PARAM_DEFAULT_VALUE = -1
 
 class Stats extends React.Component {
   static propTypes = {
@@ -170,8 +171,8 @@ class Stats extends React.Component {
           />
         )
       case CBGStatType.AverageDailyDose: {
-        const weightParam = parametersConfig?.find(param => param.name === WEIGHT)
-        const weight = weightParam ? Number(weightParam?.value) : -1
+        const weightParam = parametersConfig?.find(param => param.name === WEIGHT_PARAM)
+        const weight = weightParam ? Number(weightParam?.value) : WEIGHT_PARAM_DEFAULT_VALUE
         return (
           <AverageDailyDoseStat
             dailyDose={stat.data.data[0].value}

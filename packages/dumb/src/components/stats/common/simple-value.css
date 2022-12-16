@@ -25,25 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.chartSummary {
+.simpleValue {
   line-height: 1;
   display: flex;
   justify-content: space-between;
 }
 
-.summaryData {
+.data {
   display: inline;
   white-space: nowrap;
 }
 
-.summaryValue {
+.value {
   composes: extraLargeSize from '../../../styles/typography.css';
   opacity: 1;
   display: inline-block;
   font-weight: 500;
 }
 
-.summarySuffix {
+.suffix {
   composes: smallSize from '../../../styles/typography.css';
   color: var(--stat--default);
   font-weight: normal;
