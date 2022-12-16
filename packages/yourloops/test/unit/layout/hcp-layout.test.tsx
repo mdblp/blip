@@ -39,12 +39,10 @@ import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
 const teamDetailsPageTestId = 'mock-team-details-page'
-const certifyAccountPageTestId = 'mock-certify-account-page'
 const allTestIds = [
   profilePageTestId,
   notificationsPageTestId,
-  teamDetailsPageTestId,
-  certifyAccountPageTestId
+  teamDetailsPageTestId
 ]
 
 /* eslint-disable react/display-name */
@@ -62,9 +60,6 @@ jest.mock('../../../pages/notifications', () => () => {
 })
 jest.mock('../../../pages/team/team-details-page', () => () => {
   return <div data-testid={teamDetailsPageTestId} />
-})
-jest.mock('../../../pages/hcp/certify-account-page', () => () => {
-  return <div data-testid={certifyAccountPageTestId} />
 })
 describe('Hcp Layout', () => {
   beforeAll(() => {
@@ -109,11 +104,6 @@ describe('Hcp Layout', () => {
       expect(screen.queryByTestId(id)).not.toBeInTheDocument()
     })
   }
-
-  it('should render certify account page when route is /certify and user is hcp', () => {
-    render(getMainLayoutJSX('/certify'))
-    checkInDocument(certifyAccountPageTestId)
-  })
 
   it('should render profile page when route is /preferences', () => {
     render(getMainLayoutJSX('/preferences'))
