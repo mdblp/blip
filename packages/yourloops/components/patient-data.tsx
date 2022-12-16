@@ -105,11 +105,10 @@ function PatientDataPage(): JSX.Element | null {
     const patientTeams = getPatientById(paramPatientId)?.teams
     const isPatientInSelectedTeam = patientTeams?.some((team: PatientTeam) => team.teamId === selectedTeamId)
 
-    if (!userIsHCP || isPatientInSelectedTeam) {
-      return
+    if (userIsHCP && !isPatientInSelectedTeam) {
+      const defaultPatientTeamId = patientTeams[0].teamId
+      selectTeam(defaultPatientTeamId)
     }
-    const defaultPatientTeamId = patientTeams[0].teamId
-    selectTeam(defaultPatientTeamId)
   }, [getPatientById, paramPatientId, selectTeam, selectedTeamId, userIsHCP])
 
   const initialized = isLoggedIn && blipApi

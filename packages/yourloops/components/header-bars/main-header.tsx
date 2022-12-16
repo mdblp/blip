@@ -50,7 +50,7 @@ import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.pr
 import { Team, useTeam } from '../../lib/team'
 import TeamUtils from '../../lib/team/team.util'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { PatientTeam } from '../../lib/patient/models/patient-team.model'
+import PatientUtils from '../../lib/patient/patient.util'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -111,7 +111,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
 
   const onSelectTeam = (teamId: string): void => {
     const patientId = patientDashboardRegexMatch[1]
-    const isPatientInSelectedTeam = getPatientById(patientId)?.teams.some((team: PatientTeam) => team.teamId === teamId)
+    const isPatientInSelectedTeam = PatientUtils.isInTeam(getPatientById(patientId), teamId)
     if (!isPatientInSelectedTeam) {
       history.push('/')
     }

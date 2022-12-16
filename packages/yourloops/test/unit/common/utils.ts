@@ -112,13 +112,13 @@ export function buildPrivateTeam(): Team {
   }
 }
 
-export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name'): Team {
+export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical): Team {
   return {
     id,
     name,
     code: '123456789',
     email: 'fale@email.com',
-    type: TeamType.medical,
+    type,
     members,
     monitoring: {
       enabled: true,

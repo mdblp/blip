@@ -37,11 +37,13 @@ import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-ro
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { ITeam } from '../../../../lib/team/models/i-team.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
+import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/notifications/notification.hook')
 describe('Team hook', () => {
   let teamHook: TeamContext
+
   const memberHcp1 = buildTeamMember('memberHcp', undefined, TeamMemberRole.member)
   const memberHcp2 = buildTeamMember('memberHcpAdmin', undefined, TeamMemberRole.admin, undefined, undefined, UserInvitationStatus.accepted)
   const team1 = buildTeam('team1Id', [memberHcp1])
@@ -51,7 +53,10 @@ describe('Team hook', () => {
   team4.monitoring.enabled = false
   const unmonitoredTeam = buildTeam('team4Id', [], 'fakeTeamName')
   unmonitoredTeam.monitoring = undefined
-  const teams: Team[] = [team1, team2, team3, team4, unmonitoredTeam]
+  const privateTeam = buildTeam('private', undefined, undefined, TeamType.private)
+  const caregiverTeam = buildTeam('caregiverId', undefined, undefined, TeamType.caregiver)
+  const teams: Team[] = [team1, team2, team3, team4, unmonitoredTeam, privateTeam, caregiverTeam]
+
   const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue(['flaggedPatient'])
   const authHookFlagPatientMock = jest.fn()
@@ -145,17 +150,37 @@ describe('Team hook', () => {
 
   describe('getTeam', () => {
     it('should return a team if exists or null', () => {
-      let team = teamHook.getTeam('team1Id')
-      expect(team).toEqual(team1)
-      team = teamHook.getTeam('unknownId')
-      expect(team).toBeNull()
+      const teamWithKnownId = teamHook.getTeam('team1Id')
+      expect(teamWithKnownId).toEqual(team1)
+      const teamWithUnknownId = teamHook.getTeam('unknownId')
+      expect(teamWithUnknownId).toBeNull()
     })
   })
 
   describe('getMedicalTeams', () => {
     it('should return an array of medical teams', () => {
-      const medicalTeams = teamHook.getMedicalTeams()
-      expect(medicalTeams).toEqual(teams)
+      const teams = teamHook.getMedicalTeams()
+      expect(teams).toEqual([
+        team1,
+        team2,
+        team3,
+        team4,
+        unmonitoredTeam
+      ])
+    })
+  })
+
+  describe('getMedicalAndPrivateTeams', () => {
+    it('should return an array of medical teams along with the private team', () => {
+      const teams = teamHook.getMedicalAndPrivateTeams()
+      expect(teams).toEqual([
+        team1,
+        team2,
+        team3,
+        team4,
+        unmonitoredTeam,
+        privateTeam
+      ])
     })
   })
 
