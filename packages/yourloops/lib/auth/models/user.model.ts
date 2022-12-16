@@ -175,12 +175,4 @@ export default class User {
   hasToDisplayTrainingInfoPage(): boolean {
     return this.newTrainingAvailable()
   }
-
-  getParsedFrProId(): string | null {
-    if (this.frProId) {
-      const parsedId = this.frProId.split(':')
-      return parsedId[2]
-    }
-    return null
-  }
 }

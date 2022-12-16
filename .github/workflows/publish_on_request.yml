@@ -6,12 +6,26 @@ on:
 
 env:
   GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+  PR_NUMBER: ${{ github.event.issue.number }}
 
 jobs:
   build:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check for Command
+        id: command
+        uses: xt0rted/slash-command-action@v1
+        with:
+          repo-token: ${{ secrets.GIT_TOKEN }}
+          command: publish
+          reaction: "true"
+          reaction-type: "eyes"
+          allow-edits: "false"
+          permission-level: admin
+
+      - name: Act on the command
+        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
       - uses: xt0rted/pull-request-comment-branch@v1
         id: comment-branch
 
@@ -43,19 +57,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Check for Command
-        id: command
-        uses: xt0rted/slash-command-action@v1
-        with:
-          command: publish
-          reaction: "true"
-          reaction-type: "eyes"
-          allow-edits: "false"
-          permission-level: admin
-
-      - name: Act on the command
-        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'
-
       - uses: xt0rted/pull-request-comment-branch@v1
         id: comment-branch
 
@@ -67,10 +68,26 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
 
-      - name: Get yourloops version from package.json
-        id: package-version
-        run: |
-          echo "semver=$(cat ./package.json | jq '.version' | tr -d '"')" >> $GITHUB_OUTPUT
+      - name: Get yourloops version from changelog
+        uses: addnab/docker-run-action@v3
+        with:
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          registry: ${{ secrets.REGISTRY }}
+          options: -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
+          image: docker.ci.diabeloop.eu/ci-toolbox:latest
+          run: |
+            cd blip
+            echo "semver=$(release-helper get-version)" > version.env
+
+      - name: Read env file
+        id: changelog-version
+        uses: cardinalby/export-env-action@v1
+        with:
+          envFile: 'version.env'
+          expand: 'false'
+          export: 'false'
+
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -87,16 +104,15 @@ jobs:
 
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
-        env:
-          PR_NUMBER: ${{github.event.issue.number}}
         with:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
-          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.package-version.outputs.semver }}-PR-${{env.PR_NUMBER}}
+          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: v${{ steps.package-version.outputs.semver }}
+          tag: v${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
+          commit_sha: ${{ steps.comment-branch.outputs.head_sha }}
           force_push_tag: true

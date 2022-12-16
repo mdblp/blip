@@ -29,6 +29,7 @@ import config from '../../../../lib/config/config'
 import User from '../../../../lib/auth/models/user.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
+import { Profile } from '../../../../lib/auth/models/profile.model'
 
 describe('User', () => {
   const email = 'text@example.com'
@@ -158,19 +159,5 @@ describe('User', () => {
       const user = createUser(UserRoles.hcp)
       expect(user.birthday).toBeUndefined()
     })
-  })
-
-  it('getParsedFrProId should return null when user frProId is null', () => {
-    const user = createUser(UserRoles.hcp)
-    const res = user.getParsedFrProId()
-    expect(res).toBeNull()
-  })
-
-  it('getParsedFrProId should return correct result when user frProId is not null', () => {
-    const user = createUser(UserRoles.hcp)
-    const expectedRes = 'value'
-    user.frProId = `key:uid:${expectedRes}`
-    const actualRes = user.getParsedFrProId()
-    expect(actualRes).toBe(expectedRes)
   })
 })

@@ -27,7 +27,6 @@
 
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import CertifyAccountPage from '../pages/hcp/certify-account-page'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
 import HomePage from '../pages/home-page'
@@ -50,7 +49,6 @@ export function HcpLayout(): JSX.Element {
             <Route exact path="/home" component={HomePage} />
             <Route path="/patient/:patientId" component={PatientDataPage} />
             <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-            <Route exact path="/certify" component={CertifyAccountPage} />
             <Redirect exact from="/" to="/home" />
             <Redirect to="/not-found" />
           </Switch>

@@ -272,10 +272,25 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
 
-      - name: Get yourloops version from package.json
-        id: package-version
-        run: |
-          echo "semver=$(cat ./package.json | jq '.version' | tr -d '"')" >> $GITHUB_OUTPUT
+      - name: Get yourloops version from changelog
+        uses: addnab/docker-run-action@v3
+        with:
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          registry: ${{ secrets.REGISTRY }}
+          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
+          image: docker.ci.diabeloop.eu/ci-toolbox:latest
+          run: |
+            cd blip
+            echo "semver=$(release-helper get-version)" > version.env
+
+      - name: Read env file
+        id: changelog-version
+        uses: cardinalby/export-env-action@v1
+        with:
+          envFile: 'version.env'
+          expand: 'false'
+          export: 'false'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -290,31 +305,20 @@ jobs:
           username: ${{ secrets.NEXUS_USERNAME }}
           password: ${{ secrets.NEXUS_PASSWORD }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ secrets.REGISTRY }}/blip
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-
       - name: Build and push blip Docker image
         uses: docker/build-push-action@v3
-        env:
-          PR_NUMBER: ${{github.event.issue.number}}
         with:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
-          tags: ${{ steps.meta.outputs.tags }}
+          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      # for now disable as we not used the changelog (missing UNRELEASED info)
-  #      - name: Creating new github tag
-  #        uses: rickstaa/action-create-tag@v1
-  #        with:
-  #          tag: ${{ steps.meta.outputs.version }}
-  #          force_push_tag: true
+      - name: Creating new github tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v${{ steps.changelog-version.outputs.semver }}
+          force_push_tag: true
 
   documentation:
     if: github.ref_name == 'dblp'
