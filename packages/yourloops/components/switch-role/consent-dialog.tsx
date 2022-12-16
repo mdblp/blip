@@ -68,7 +68,6 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
 
   return (
     <Dialog
-      data-testid="switch-role-consent-dialog"
       open={open}
       onClose={onClose}
       maxWidth="sm"

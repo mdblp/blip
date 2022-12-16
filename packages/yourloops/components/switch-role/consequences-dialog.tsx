@@ -45,7 +45,6 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
 
   return (
     <Dialog
-      data-testid="switch-role-consequences-dialog"
       maxWidth="sm"
       open={open}
       onClose={onCancel}

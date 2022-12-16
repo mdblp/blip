@@ -102,11 +102,14 @@ describe('Caregiver page for hcp', () => {
     fireEvent.click(screen.getByRole('option', { name: UnitsType.MGDL }))
 
     await userEvent.clear(fields.firstNameInput)
+    expect(saveButton).toBeDisabled()
     await userEvent.clear(fields.lastNameInput)
+    expect(saveButton).toBeDisabled()
     await userEvent.type(fields.firstNameInput, 'Jean')
+    expect(saveButton).toBeDisabled()
     await userEvent.type(fields.lastNameInput, 'Talue')
+    expect(saveButton).toBeEnabled()
 
-    expect(saveButton).not.toBeDisabled()
     await act(async () => {
       await userEvent.click(saveButton)
     })
@@ -124,7 +127,7 @@ describe('Caregiver page for hcp', () => {
     await userEvent.click(changeRoleButton)
 
     // First dialog (consequences)
-    const consequencesDialog = screen.getByTestId('switch-role-consequences-dialog')
+    const consequencesDialog = screen.getByRole('dialog')
     expect(consequencesDialog).toBeVisible()
     expect(within(consequencesDialog).getByText('Switch to professional account')).toBeVisible()
     expect(within(consequencesDialog).getByText('You are about to convert your caregiver account to a professional account.')).toBeVisible()
@@ -137,33 +140,31 @@ describe('Caregiver page for hcp', () => {
     expect(within(consequencesDialog).getByText('Invite other healthcare professionals')).toBeVisible()
     expect(within(consequencesDialog).getByRole('button', { name: 'Cancel' })).toBeVisible()
     const switchButton = within(consequencesDialog).getByRole('button', { name: 'Switch to Professional' })
-    expect(switchButton).toBeVisible()
     await userEvent.click(switchButton)
 
     // Second dialog (privacy and terms)
-    const consentDialog = screen.getByTestId('switch-role-consent-dialog')
-    expect(consentDialog).toBeVisible()
+    const consentDialog = screen.getByRole('dialog')
+    expect(within(consentDialog).getByTestId('switch-role-consent-dialog-label-privacy-policy')).toHaveTextContent('I have read and accepted YourLoops Privacy Policy. Hereby, I consent to the processing of my personal data by Diabeloop so I can benefit from YourLoops services.')
+    expect(within(consentDialog).getByTestId('switch-role-consent-dialog-label-terms')).toHaveTextContent('I have read and accepted YourLoops Terms of use. I confirm that I am an authorized healthcare practitioner according to local laws and regulation. I undertake to use YourLoops solely in accordance with these Terms of Use and what is allowed by the law.')
+    expect(within(consentDialog).getByTestId('switch-role-consent-dialog-label-feedback')).toHaveTextContent('I agree to receive information and news from Diabeloop. (optional)')
     const privacyCheckbox = within(consentDialog).getByLabelText('Privacy policy checkbox')
     const termsCheckbox = within(consentDialog).getByLabelText('Terms checkbox')
     const feedbackCheckbox = within(consentDialog).getByLabelText('Feedback checkbox')
     const acceptButton = within(consentDialog).getByRole('button', { name: 'Accept' })
-    expect(within(consentDialog).getByTestId('switch-role-consent-dialog-label-privacy-policy')).toBeVisible()
-    expect(within(consentDialog).getByTestId('switch-role-consent-dialog-label-terms')).toBeVisible()
-    expect(within(consentDialog).getByTestId('switch-role-consent-dialog-label-feedback')).toBeVisible()
     expect(privacyCheckbox).toBeVisible()
     expect(termsCheckbox).toBeVisible()
     expect(feedbackCheckbox).toBeVisible()
     expect(acceptButton).toBeDisabled()
     await userEvent.click(privacyCheckbox)
     await userEvent.click(termsCheckbox)
+    expect(acceptButton).toBeEnabled()
     await userEvent.click(feedbackCheckbox)
     await userEvent.click(acceptButton)
 
     // Third dialog (HCP profession)
-    const professionDialog = screen.getByTestId('switch-role-profession-dialog')
+    const professionDialog = screen.getByRole('dialog')
     const hcpProfessionSelect = within(professionDialog).getByTestId('dropdown-profession-selector')
     const validateButton = within(professionDialog).getByRole('button', { name: 'Validate' })
-    expect(professionDialog).toBeVisible()
     expect(hcpProfessionSelect).toBeVisible()
     expect(validateButton).toBeDisabled()
     expect(hcpProfessionSelect.textContent).toEqual('​')
@@ -173,5 +174,36 @@ describe('Caregiver page for hcp', () => {
     expect(hcpProfessionSelect).toHaveTextContent('Dietitian')
     await userEvent.click(validateButton)
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
+  })
+
+  it('should close the modals when clicking on cancel or decline buttons', async () => {
+    await act(async () => {
+      renderPage('/preferences')
+    })
+
+    const changeRoleButton = screen.getByTestId('switch-role-link')
+    await userEvent.click(changeRoleButton)
+
+    // First dialog
+    const consequencesDialog = screen.getByRole('dialog')
+    await userEvent.click(within(consequencesDialog).getByRole('button', { name: 'Cancel' }))
+    expect(consequencesDialog).not.toBeVisible()
+
+    // Second dialog
+    await userEvent.click(changeRoleButton)
+    await userEvent.click(screen.getByRole('button', { name: 'Switch to Professional' }))
+    const consentDialog = screen.getByRole('dialog')
+    await userEvent.click(within(consentDialog).getByRole('button', { name: 'Decline' }))
+    expect(consentDialog).not.toBeVisible()
+
+    // Third dialog
+    await userEvent.click(changeRoleButton)
+    await userEvent.click(screen.getByRole('button', { name: 'Switch to Professional' }))
+    await userEvent.click(screen.getByLabelText('Privacy policy checkbox'))
+    await userEvent.click(screen.getByLabelText('Terms checkbox'))
+    await userEvent.click(screen.getByRole('button', { name: 'Accept' }))
+    const professionDialog = screen.getByRole('dialog')
+    await userEvent.click(within(professionDialog).getByRole('button', { name: 'Decline' }))
+    expect(professionDialog).not.toBeVisible()
   })
 })

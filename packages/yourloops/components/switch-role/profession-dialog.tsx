@@ -58,7 +58,6 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
   return (
     <Dialog
       id="switch-role-profession-dialog"
-      data-testid="switch-role-profession-dialog"
       maxWidth="sm"
       open={open}
       onClose={onClose}
