@@ -191,7 +191,7 @@
   "logout": "Logout",
   "low-bg-input": "Low blood glucose input",
   "male": "Male",
-  "mandatory-float": "Number must be an float",
+  "mandatory-float": "A number with a decimal point",
   "mandatory-integer": "Number must be an integer",
   "mandatory-range": "Enter a number between {{lowValue}} and {{highValue}}",
   "maximum": "Maximum:",

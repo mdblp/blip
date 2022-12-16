@@ -83,9 +83,9 @@ describe('AlarmsContentConfiguration hook', () => {
 
       const monitoringTwo = getDefaultMonitoring()
       monitoringTwo.parameters.bgUnit = UnitsType.MMOLL
-      monitoringTwo.parameters.lowBg = 3
-      monitoringTwo.parameters.highBg = 8
-      monitoringTwo.parameters.veryLowBg = 3
+      monitoringTwo.parameters.lowBg = 3.55
+      monitoringTwo.parameters.highBg = 8.55
+      monitoringTwo.parameters.veryLowBg = 3.55
       const { result: secondHook } = renderHook(() => useAlarmsContentConfiguration({ monitoring: monitoringTwo, patient }))
       expect(secondHook.current.veryLowBg.errorMessage).toBe('mandatory-float')
       expect(secondHook.current.lowBg.errorMessage).toBe('mandatory-float')

@@ -31,7 +31,7 @@ import React, { useMemo, useState } from 'react'
 import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
-import { isInvalidPercentage } from './alarm-content-configuration.utils'
+import { isInvalidPercentage, REGEX_VALUE_BG } from './alarm-content-configuration.utils'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 
 export interface AlarmsContentConfigurationHookProps {
@@ -116,7 +116,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     if (value < lowValue || value > highValue) {
       return t('mandatory-range', { lowValue, highValue })
     }
-    if (bgUnit === UnitsType.MMOLL && !(value % 1 !== 0)) {
+    if (bgUnit === UnitsType.MMOLL && !REGEX_VALUE_BG.test(value.toString())) {
       return t('mandatory-float')
     }
     return null
