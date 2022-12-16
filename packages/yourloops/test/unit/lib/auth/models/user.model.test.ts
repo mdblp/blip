@@ -160,18 +160,4 @@ describe('User', () => {
       expect(user.birthday).toBeUndefined()
     })
   })
-
-  it('getParsedFrProId should return null when user frProId is null', () => {
-    const user = createUser(UserRoles.hcp)
-    const res = user.getParsedFrProId()
-    expect(res).toBeNull()
-  })
-
-  it('getParsedFrProId should return correct result when user frProId is not null', () => {
-    const user = createUser(UserRoles.hcp)
-    const expectedRes = 'value'
-    user.frProId = `key:uid:${expectedRes}`
-    const actualRes = user.getParsedFrProId()
-    expect(actualRes).toBe(expectedRes)
-  })
 })
