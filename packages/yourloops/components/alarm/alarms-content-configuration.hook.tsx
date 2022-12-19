@@ -26,7 +26,7 @@
  */
 import { useTeam } from '../../lib/team'
 import { Monitoring } from '../../lib/team/models/monitoring.model'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
@@ -74,20 +74,18 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
   const bgUnit = monitoring?.parameters?.bgUnit ?? UnitsType.MGDL
   const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
-  useEffect(() => {
-    if (!monitoring.parameters) {
-      monitoring.parameters = {
-        bgUnit: UnitsType.MGDL,
-        lowBg: 50,
-        highBg: 140,
-        outOfRangeThreshold: 40,
-        veryLowBg: 40,
-        hypoThreshold: 5,
-        nonDataTxThreshold: 10,
-        reportingPeriod: 7
-      }
+  if (!monitoring.parameters) {
+    monitoring.parameters = {
+      bgUnit: UnitsType.MGDL,
+      lowBg: 50,
+      highBg: 140,
+      outOfRangeThreshold: 40,
+      veryLowBg: 40,
+      hypoThreshold: 5,
+      nonDataTxThreshold: 10,
+      reportingPeriod: 7
     }
-  }, [])
+  }
 
   const { t } = useTranslation('yourloops')
 

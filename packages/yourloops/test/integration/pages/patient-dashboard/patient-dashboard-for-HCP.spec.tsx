@@ -28,7 +28,7 @@
 import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI, monitoringParametersBgUnitMmol, myThirdTeamId } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, myThirdTeamId } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
@@ -48,6 +48,7 @@ import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import PatientApi from '../../../../lib/patient/patient.api'
+import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -147,177 +148,193 @@ describe('Patient dashboard for HCP', () => {
     })
   })
 
-  it('Should have units in mg/dL, integer values in the inputs and the button displayed', async () => {
-    await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
+  describe('Alarms configuration dialog', () => {
+    it('should have units in mg/dL and cancel/default values buttons working', async () => {
+      await act(async () => {
+        renderPage(monitoredPatientDashboardRoute)
+      })
+      const configureAlarmsButton = await screen.findByLabelText('Configure alarms', {}, { timeout: 3000 })
+      await userEvent.click(configureAlarmsButton)
+      const dialog = within(screen.getByRole('dialog'))
+      const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
+      const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
+      const veryLowBgInput = dialog.getByRole('spinbutton', { name: 'Very low blood glucose input' })
+      const outOfRangeTreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
+      const hypoTreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
+      const nonDataThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
+      const saveButton = dialog.getByRole('button', { name: 'Save' })
+      const defaultButton = dialog.getByRole('button', { name: 'Default values' })
+      const cancelButton = dialog.getByRole('button', { name: 'Cancel' })
+
+      expect(dialog.getByText('Events configuration')).toBeVisible()
+      expect(dialog.getByText('1. Time away from target')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)')).toBeVisible()
+      expect(dialog.getByText('A. Glycemic target')).toBeVisible()
+      expect(dialog.getByText('Minimum:')).toBeVisible()
+      expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
+      expect(dialog.getByText('Maximum:')).toBeVisible()
+      expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
+      expect(within(dialog.getByTestId('time-target')).getByText('B. Event trigger threshold')).toBeVisible()
+      expect(dialog.getByText('Time spent off target')).toBeVisible()
+
+      expect(dialog.getByText('2. Severe hypoglycemia')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 10% of time below 40 mg/dL threshold')).toBeVisible()
+      expect(dialog.getByText('A. Severe hypoglycemia threshold:')).toBeVisible()
+      expect(dialog.getByText('Severe hypoglycemia below:')).toBeVisible()
+      expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
+      expect(within(dialog.getByTestId('severe-hypoglycemia')).getByText('B. Event trigger threshold')).toBeVisible()
+      expect(dialog.getByText('Time spent in severe hypoglycemia')).toBeVisible()
+
+      expect(dialog.getByText('3. Data not transmitted')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 15% of data not transmitted over the period')).toBeVisible()
+      expect(dialog.getByText('A. Event trigger threshold')).toBeVisible()
+      expect(dialog.getByText('Time spent without uploaded data')).toBeVisible()
+
+      expect(lowBgInput).toHaveValue(50)
+      expect(highBgInput).toHaveValue(140)
+      expect(veryLowBgInput).toHaveValue(40)
+      expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
+      expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
+      expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
+      expect(saveButton).toBeEnabled()
+      expect(cancelButton).toBeEnabled()
+      expect(defaultButton).toBeEnabled()
+
+      await userEvent.clear(lowBgInput)
+      const dopDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
+      fireEvent.mouseDown(dopDownOutRange.getByRole('button'))
+      fireEvent.click(screen.getByRole('option', { name: '15%' }))
+
+      const dropDownHypo = within(dialog.getByTestId('dropdown-hypo'))
+      fireEvent.mouseDown(dropDownHypo.getByRole('button'))
+      fireEvent.click(screen.getByRole('option', { name: '20%' }))
+
+      const dropDownNonData = within(dialog.getByTestId('dropdown-nonData'))
+      fireEvent.mouseDown(dropDownNonData.getByRole('button'))
+      fireEvent.click(screen.getByRole('option', { name: '40%' }))
+
+      await userEvent.type(lowBgInput, '50.5')
+      expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
+      expect(saveButton).toBeDisabled()
+
+      await userEvent.clear(lowBgInput)
+      await userEvent.type(lowBgInput, '60')
+      expect(saveButton).toBeEnabled()
+      await userEvent.clear(highBgInput)
+      await userEvent.type(highBgInput, '140.5')
+      expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
+      expect(saveButton).toBeDisabled()
+
+      await userEvent.clear(highBgInput)
+      await userEvent.type(highBgInput, '150')
+      expect(saveButton).toBeEnabled()
+      await userEvent.clear(veryLowBgInput)
+      await userEvent.type(veryLowBgInput, '40.5')
+      expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
+      expect(saveButton).toBeDisabled()
+      await userEvent.clear(veryLowBgInput)
+      await userEvent.type(veryLowBgInput, '50')
+      expect(dialog.getByText('Current trigger setting: 15% of time off target (min at 60 mg/dL max at 150 mg/dL)')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 20% of time below 50 mg/dL threshold')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 40% of data not transmitted over the period')).toBeVisible()
+
+      await userEvent.click(defaultButton)
+      expect(lowBgInput).toHaveValue(50)
+      expect(highBgInput).toHaveValue(140)
+      expect(veryLowBgInput).toHaveValue(40)
+      expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
+      expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
+      expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
+      expect(saveButton).not.toBeDisabled()
+
+      await userEvent.click(cancelButton)
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
-    const configureAlarmsButton = await screen.findByLabelText('Configure alarms', {}, { timeout: 3000 })
-    await userEvent.click(configureAlarmsButton)
-    const dialog = within(screen.getByRole('dialog'))
-    const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
-    const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
-    const veryLowBgInput = dialog.getByRole('spinbutton', { name: 'Very low blood glucose input' })
-    const outOfRangeTreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
-    const hypoTreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
-    const nonDataThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
-    const saveButton = dialog.getByRole('button', { name: 'Save' })
-    const defaultButton = dialog.getByRole('button', { name: 'Default values' })
-    const cancelButton = dialog.getByRole('button', { name: 'Cancel' })
 
-    expect(dialog.getByText('Events configuration')).toBeVisible()
-    expect(dialog.getByText('1. Time away from target')).toBeVisible()
-    expect(dialog.getByText('Current trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)')).toBeVisible()
-    expect(dialog.getByText('A. Glycemic target')).toBeVisible()
-    expect(dialog.getByText('Minimum:')).toBeVisible()
-    expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
-    expect(dialog.getByText('Maximum:')).toBeVisible()
-    expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
-    expect(within(dialog.getByTestId('time-target')).getByText('B. Event trigger threshold')).toBeVisible()
-    expect(dialog.getByText('Time spent off target')).toBeVisible()
+    it('should have units in mmol/L and save button working', async () => {
+      await act(async () => {
+        renderPage(monitoredPatientDashboardRouteMmoL)
+      })
+      const configureAlarmsButton = await screen.findByLabelText('Configure alarms', {}, { timeout: 3000 })
+      await userEvent.click(configureAlarmsButton)
+      const dialog = within(screen.getByRole('dialog'))
+      const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
+      const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
+      const veryLowBgInput = dialog.getByRole('spinbutton', { name: 'Very low blood glucose input' })
+      const outOfRangeThreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
+      const hypoThreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
+      const nonDataTxThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
+      const saveButton = dialog.getByTestId('alarm-config-save')
 
-    expect(dialog.getByText('2. Severe hypoglycemia')).toBeVisible()
-    expect(dialog.getByText('Current trigger setting: 10% of time below 40 mg/dL threshold')).toBeVisible()
-    expect(dialog.getByText('A. Severe hypoglycemia threshold:')).toBeVisible()
-    expect(dialog.getByText('Severe hypoglycemia below:')).toBeVisible()
-    expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('mg/dL')).toBeVisible()
-    expect(within(dialog.getByTestId('severe-hypoglycemia')).getByText('B. Event trigger threshold')).toBeVisible()
-    expect(dialog.getByText('Time spent in severe hypoglycemia')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 10% of time below 2.2 mmol/L threshold')).toBeVisible()
+      expect(dialog.getByText('Current trigger setting: 15% of data not transmitted over the period')).toBeVisible()
+      expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+      expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+      expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+      expect(lowBgInput).toHaveValue(2.8)
+      expect(highBgInput).toHaveValue(7.8)
+      expect(veryLowBgInput).toHaveValue(2.2)
+      expect(within(outOfRangeThreshold).getByRole('button')).toHaveTextContent('5%')
+      expect(within(hypoThreshold).getByRole('button')).toHaveTextContent('10%')
+      expect(within(nonDataTxThreshold).getByRole('button')).toHaveTextContent('15%')
 
-    expect(dialog.getByText('3. Data not transmitted')).toBeVisible()
-    expect(dialog.getByText('Current trigger setting: 15% of data not transmitted over the period')).toBeVisible()
-    expect(dialog.getByText('A. Event trigger threshold')).toBeVisible()
-    expect(dialog.getByText('Time spent without uploaded data')).toBeVisible()
+      expect(saveButton).not.toBeDisabled()
 
-    expect(lowBgInput).toHaveValue(50)
-    expect(highBgInput).toHaveValue(140)
-    expect(veryLowBgInput).toHaveValue(40)
-    expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
-    expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
-    expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
-    expect(saveButton).toBeEnabled()
-    expect(cancelButton).toBeEnabled()
-    expect(defaultButton).toBeEnabled()
+      await userEvent.clear(lowBgInput)
+      await userEvent.type(lowBgInput, '3.55')
+      expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
+      expect(saveButton).toBeDisabled()
+      await userEvent.clear(lowBgInput)
+      await userEvent.type(lowBgInput, '4.8')
+      expect(saveButton).toBeEnabled()
 
-    await userEvent.clear(lowBgInput)
-    const dopDownOutRange = within(dialog.getByTestId('dropDown-out-of-range'))
-    fireEvent.mouseDown(dopDownOutRange.getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: '15%' }))
+      await userEvent.clear(highBgInput)
+      await userEvent.type(highBgInput, '8.55')
+      expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
+      expect(saveButton).toBeDisabled()
+      await userEvent.clear(highBgInput)
+      await userEvent.type(highBgInput, '8.8')
+      expect(saveButton).toBeEnabled()
 
-    const dropDownHypo = within(dialog.getByTestId('dropDown-hypo'))
-    fireEvent.mouseDown(dropDownHypo.getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: '20%' }))
+      await userEvent.clear(veryLowBgInput)
+      await userEvent.type(veryLowBgInput, '3.55')
+      expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
+      expect(saveButton).toBeDisabled()
+      await userEvent.clear(veryLowBgInput)
+      await userEvent.type(veryLowBgInput, '3.2')
+      expect(saveButton).toBeEnabled()
 
-    const dropDownNonData = within(dialog.getByTestId('dropDown-nonData'))
-    fireEvent.mouseDown(dropDownNonData.getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: '40%' }))
+      const dopDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
+      fireEvent.mouseDown(dopDownOutRange.getByRole('button'))
+      fireEvent.click(screen.getByRole('option', { name: '15%' }))
 
-    await userEvent.type(lowBgInput, '50.5')
-    expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Number must be an integer')).toBeVisible()
-    expect(saveButton).toBeDisabled()
+      const dropDownHypo = within(dialog.getByTestId('dropdown-hypo'))
+      fireEvent.mouseDown(dropDownHypo.getByRole('button'))
+      fireEvent.click(screen.getByRole('option', { name: '20%' }))
 
-    await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '60')
-    expect(saveButton).toBeEnabled()
-    await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '140.5')
-    expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('Number must be an integer')).toBeVisible()
-    expect(saveButton).toBeDisabled()
+      const dropDownNonData = within(dialog.getByTestId('dropdown-nonData'))
+      fireEvent.mouseDown(dropDownNonData.getByRole('button'))
+      fireEvent.click(screen.getByRole('option', { name: '40%' }))
 
-    await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '150')
-    expect(saveButton).toBeEnabled()
-    await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '40.5')
-    expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Number must be an integer')).toBeVisible()
-    expect(saveButton).toBeDisabled()
-    await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '50')
-    expect(dialog.getByText('Current trigger setting: 15% of time off target (min at 60 mg/dL max at 150 mg/dL)')).toBeVisible()
-    expect(dialog.getByText('Current trigger setting: 20% of time below 50 mg/dL threshold')).toBeVisible()
-    expect(dialog.getByText('Current trigger setting: 40% of data not transmitted over the period')).toBeVisible()
+      await userEvent.click(saveButton)
 
-    await userEvent.click(defaultButton)
-    expect(lowBgInput).toHaveValue(50)
-    expect(highBgInput).toHaveValue(140)
-    expect(veryLowBgInput).toHaveValue(40)
-    expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
-    expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
-    expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
-    expect(saveButton).not.toBeDisabled()
-
-    await userEvent.click(cancelButton)
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  })
-
-  it('Should have units in mmol/L, integer values in the inputs and the button displayed', async () => {
-    await act(async () => {
-      renderPage(monitoredPatientDashboardRouteMmoL)
-    })
-    const configureAlarmsButton = await screen.findByLabelText('Configure alarms', {}, { timeout: 3000 })
-    await userEvent.click(configureAlarmsButton)
-    const dialog = within(screen.getByRole('dialog'))
-    const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
-    const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
-    const veryLowBgInput = dialog.getByRole('spinbutton', { name: 'Very low blood glucose input' })
-    const outOfRangeTreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
-    const hypoTreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
-    const nonDataThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
-    const saveButton = dialog.getByTestId('alarm-config-save')
-
-    expect(dialog.getByText('Current trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)')).toBeVisible()
-    expect(dialog.getByText('Current trigger setting: 10% of time below 2.2 mmol/L threshold')).toBeVisible()
-    expect(dialog.getByText('Current trigger setting: 15% of data not transmitted over the period')).toBeVisible()
-    expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
-    expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
-    expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
-    expect(lowBgInput).toHaveValue(2.8)
-    expect(highBgInput).toHaveValue(7.8)
-    expect(veryLowBgInput).toHaveValue(2.2)
-    expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
-    expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
-    expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
-
-    expect(saveButton).not.toBeDisabled()
-
-    await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '3.55')
-    expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('A number with a decimal point')).toBeInTheDocument()
-    expect(saveButton).toBeDisabled()
-    await userEvent.clear(lowBgInput)
-    await userEvent.type(lowBgInput, '4.8')
-    expect(saveButton).toBeEnabled()
-
-    await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '8.55')
-    expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('A number with a decimal point')).toBeInTheDocument()
-    expect(saveButton).toBeDisabled()
-    await userEvent.clear(highBgInput)
-    await userEvent.type(highBgInput, '8.8')
-    expect(saveButton).toBeEnabled()
-
-    await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '3.55')
-    expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('A number with a decimal point')).toBeInTheDocument()
-    expect(saveButton).toBeDisabled()
-    await userEvent.clear(veryLowBgInput)
-    await userEvent.type(veryLowBgInput, '3.2')
-    expect(saveButton).toBeEnabled()
-    expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
-    expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
-    expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
-
-    await userEvent.click(saveButton)
-    const expectedMonitoring = {
-      ...monitoredPatientWithMmol.monitoring,
-      parameters: {
-        ...monitoringParametersBgUnitMmol,
-        lowBg: 4.8,
-        highBg: 8.8,
-        veryLowBg: 3.2
+      const expectedMonitoring = {
+        ...monitoredPatientWithMmol.monitoring,
+        parameters: {
+          bgUnit: UnitsType.MMOLL,
+          lowBg: 4.8,
+          highBg: 8.8,
+          veryLowBg: 3.2,
+          outOfRangeThreshold: 15,
+          hypoThreshold: 20,
+          nonDataTxThreshold: 40,
+          reportingPeriod: 7
+        }
       }
-    }
-    expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, monitoredPatientWithMmolId, expectedMonitoring)
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(screen.getByText('Patient update succeeded')).toBeVisible()
+      expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, monitoredPatientWithMmolId, expectedMonitoring)
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      expect(screen.getByText('Patient update succeeded')).toBeVisible()
+    })
   })
 })
