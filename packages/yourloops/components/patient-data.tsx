@@ -52,6 +52,7 @@ import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provi
 import { Team, useTeam } from '../lib/team'
 import { Patient } from '../lib/patient/models/patient.model'
 import { PatientTeam } from '../lib/patient/models/patient-team.model'
+import { useUserName } from '../lib/custom-hooks/user-name.hook'
 
 const patientDataStyles = makeStyles()(() => {
   return {
@@ -96,6 +97,7 @@ function PatientDataPage(): JSX.Element | null {
   const userIsPatient = user?.isUserPatient()
   const userIsHCP = user?.isUserHcp()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
+  const { getUserName } = useUserName()
 
   const { selectedTeamId, selectTeam } = useSelectedTeamContext()
   const { getMedicalTeams } = useTeam()
@@ -138,11 +140,13 @@ function PatientDataPage(): JSX.Element | null {
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
-      setPageTitle(t('user-name', patient.profile.lastName), 'PatientName')
+      const { firstName, fullName, lastName } = patient?.profile
+      const pageTitle = getUserName(firstName, lastName, fullName)
+      setPageTitle(pageTitle, 'PatientName')
     } else {
       setPageTitle()
     }
-  }, [userId, patient, t])
+  }, [getUserName, patient, t, userId])
 
   if (error) {
     return <PatientDataPageError msg={error} />
