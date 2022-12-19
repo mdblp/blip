@@ -112,7 +112,7 @@ export function buildPrivateTeam(): Team {
   }
 }
 
-export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical): Team {
+export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical, monitoringEnabled = true): Team {
   return {
     id,
     name,
@@ -121,7 +121,7 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
     type,
     members,
     monitoring: {
-      enabled: true,
+      enabled: monitoringEnabled,
       parameters: {
         bgUnit: UnitsType.MGDL,
         lowBg: 1,

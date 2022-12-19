@@ -53,8 +53,8 @@ describe('Team hook', () => {
   team4.monitoring.enabled = false
   const unmonitoredTeam = buildTeam('team4Id', [], 'fakeTeamName')
   unmonitoredTeam.monitoring = undefined
-  const privateTeam = buildTeam('private', undefined, undefined, TeamType.private)
-  const caregiverTeam = buildTeam('caregiverId', undefined, undefined, TeamType.caregiver)
+  const privateTeam = buildTeam('private', undefined, undefined, TeamType.private, false)
+  const caregiverTeam = buildTeam('caregiverId', undefined, undefined, TeamType.caregiver, false)
   const teams: Team[] = [team1, team2, team3, team4, unmonitoredTeam, privateTeam, caregiverTeam]
 
   const notificationHookCancelMock = jest.fn()
