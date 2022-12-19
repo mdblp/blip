@@ -63,6 +63,7 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
       setInProgress(true)
       await switchRoleToHCP(feedbackConsent, hcpProfession)
       metrics.send('switch_account', 'accept_terms')
+      alert.success(t('switch-role-success'))
       history.push('/')
     } catch (reason: unknown) {
       setInProgress(false)

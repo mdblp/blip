@@ -130,7 +130,7 @@ function UserMenu(): JSX.Element {
         maxWidth={250}
         onClick={event => setAnchorEl(event.currentTarget)}
       >
-        <Box id="user-role-icon" display="flex">
+        <Box data-testid={`${user.role}-icon`} display="flex">
           {getRoleIcon()}
         </Box>
         {!isMobileBreakpoint &&

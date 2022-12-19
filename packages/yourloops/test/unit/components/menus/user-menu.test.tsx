@@ -73,7 +73,7 @@ describe('User Menu', () => {
 
   it('should display the hcp icon', () => {
     mountComponent()
-    const roleIcon = document.querySelector('#user-role-icon')
+    const roleIcon = document.querySelector(`div[data-testid="${UserRoles.hcp}-icon"]`)
     expect(roleIcon.innerHTML).toEqual(renderToString(<StethoscopeIcon />))
   })
 
@@ -82,7 +82,7 @@ describe('User Menu', () => {
       return { user: { role: UserRoles.caregiver } as User }
     })
     mountComponent()
-    const roleIcon = document.querySelector('#user-role-icon')
+    const roleIcon = document.querySelector(`div[data-testid="${UserRoles.caregiver}-icon"]`)
     expect(roleIcon.innerHTML).toEqual(renderToString(<RoundedHospitalIcon />))
   })
 
@@ -91,7 +91,7 @@ describe('User Menu', () => {
       return { user: { role: UserRoles.patient } as User }
     })
     mountComponent()
-    const roleIcon = document.querySelector('#user-role-icon')
+    const roleIcon = document.querySelector(`div[data-testid="${UserRoles.patient}-icon"]`)
     expect(roleIcon.innerHTML).toEqual(renderToString(<FaceIcon />))
   })
 
