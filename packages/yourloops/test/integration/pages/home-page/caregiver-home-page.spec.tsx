@@ -141,7 +141,7 @@ describe('Caregiver home page', () => {
     expect(patientData).toBeVisible()
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
-    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
+    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient ylp.ui.test.patient28@diabeloop.fr' })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -192,7 +192,7 @@ describe('Caregiver home page', () => {
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
 
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatient.email}` })
 
     await userEvent.click(removeButton)
 
