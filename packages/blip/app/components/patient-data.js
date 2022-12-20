@@ -337,6 +337,7 @@ class PatientDataPage extends React.Component {
       setPatient,
       patients,
       userIsHCP,
+      isSelectedTeamMedical,
       profileDialog,
       prefixURL,
       dialogDatePicker,
@@ -371,6 +372,7 @@ class PatientDataPage extends React.Component {
             patients={patients}
             userIsHCP={userIsHCP}
             user={user}
+            isSelectedTeamMedical={isSelectedTeamMedical}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
             epochLocation={epochLocation}
@@ -1010,6 +1012,7 @@ PatientDataPage.propTypes = {
   setPatient: PropTypes.func.isRequired,
   patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
+  isSelectedTeamMedical: PropTypes.bool.isRequired,
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
