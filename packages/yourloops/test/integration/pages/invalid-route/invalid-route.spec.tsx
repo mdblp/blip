@@ -33,6 +33,8 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { Team } from '../../../../lib/team'
+import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'
@@ -45,7 +47,7 @@ describe('Invalid Route', () => {
   })
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {
-    jest.spyOn(TeamApi, 'getTeams').mockResolvedValue([])
+    jest.spyOn(TeamApi, 'getTeams').mockResolvedValue([{ id: 'team-id', name: 'Team', type: TeamType.medical } as Team])
     jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([])
     await act(async () => {
       renderPage('/unknown-route')

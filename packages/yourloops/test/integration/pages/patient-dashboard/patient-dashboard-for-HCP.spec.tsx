@@ -27,7 +27,7 @@
 
 import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
+import { mockTeamAPI, myTeamId } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import {
@@ -92,6 +92,8 @@ describe('Patient dashboard for HCP', () => {
   }
 
   it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
+    localStorage.setItem('selectedTeamId', '')
+
     act(() => {
       renderPage(unMonitoredPatientDashboardRoute)
     })
@@ -99,12 +101,28 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
     checkHCPLayout(`${firstName} ${lastName}`)
+
+    /**
+     * TODO YLP-1987 Uncomment this test once the January release is done
+     */
+    // const header = within(screen.getByTestId('app-main-header'))
+    // const teamsDropdown = header.getByText(myThirdTeamName)
+    // expect(teamsDropdown).toBeVisible()
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
+    localStorage.setItem('selectedTeamId', myTeamId)
+
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
+
+    /**
+     * TODO YLP-1987 Uncomment this test once the January release is done
+     */
+    // const header = within(screen.getByTestId('app-main-header'))
+    // const teamsDropdown = header.getByText(mySecondTeamName)
+    // expect(teamsDropdown).toBeVisible()
 
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatientFullName)

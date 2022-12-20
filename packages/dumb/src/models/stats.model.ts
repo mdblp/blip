@@ -25,7 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+export const EMPTY_DATA_PLACEHOLDER = '--'
+
 export enum CBGStatType {
+  AverageDailyDose = 'averageDailyDose',
   AverageGlucose = 'averageGlucose',
   Carbs = 'carbs',
   ReadingsInRange = 'readingsInRange',
@@ -56,4 +59,11 @@ export interface BgClasses {
   low: number // Low threshold represents all the values between veryLow and target
   target: number // Target threshold represents all the values between low and target
   veryLow: number // Very low threshold represents all the values between 0 and veryLow
+}
+
+export enum StatFormats {
+  Cv = 'cv',
+  Gmi = 'gmi',
+  Percentage = 'percentage',
+  Units = 'units',
 }

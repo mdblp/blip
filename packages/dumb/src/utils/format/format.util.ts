@@ -117,3 +117,17 @@ const getDecimalsCount = (unit: Unit): number => {
       return 2
   }
 }
+/**
+ * formatDecimalNumber
+ * @param {Number} val - numeric value to format
+ * @param {Number} [places] - optional number of decimal places to display;
+ *                            if not provided, will display as integer (0 decimal places)
+ *
+ * @return {String} numeric value rounded to the desired number of decimal places
+ */
+export const formatDecimalNumber = (val: number, places = 0): string => {
+  if (!places) {
+    return format('d')(val)
+  }
+  return format(`.${places}f`)(val)
+}

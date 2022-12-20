@@ -25,57 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../styles/colors.css";
+import { renderHook } from '@testing-library/react-hooks'
+import { useUserName } from '../../../../lib/custom-hooks/user-name.hook'
 
-.disabled-label {
-  color: var(--muted);
-}
+describe('User name hook', () => {
+  describe('getUserName', () => {
+    it('should return the translated value if first and last name are present, else the fullname', () => {
+      const firstName = 'Ali'
+      const lastName = 'Gator'
+      const fullName = 'Ali Gator'
 
-.disabled-line {
-  background-color: var(--muted);
-  border-radius: 20px;
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  width: 234px;
-}
+      const { result } = renderHook(() => useUserName())
+      const onlyFullNameCaseName = result.current.getUserName('', '', fullName)
+      const firstNameCaseName = result.current.getUserName(firstName, '', fullName)
+      const lastNameCaseName = result.current.getUserName('', lastName, fullName)
+      const bothNamesCaseName = result.current.getUserName(firstName, lastName, fullName)
 
-.line {
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  opacity: 0.5;
-}
-
-.lines {
-  display: flex;
-  position: relative;
-  width: 234px;
-}
-
-.line-low {
-  background-color: var(--bg-low);
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
-}
-
-.line-target {
-  background-color: var(--bg-target);
-}
-
-.line-high {
-  background-color: var(--bg-high);
-  border-bottom-right-radius: 20px;
-  border-top-right-radius: 20px;
-  flex-grow: 1;
-}
-
-.tooltip-icon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
-}
-
-.tooltip-icon > img {
-  width: 0.9em;
-}
+      expect(onlyFullNameCaseName).toEqual(fullName)
+      expect(firstNameCaseName).toEqual(fullName)
+      expect(lastNameCaseName).toEqual(fullName)
+      expect(bothNamesCaseName).toEqual('user-name')
+    })
+  })
+})

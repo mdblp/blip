@@ -26,8 +26,11 @@ const PatientDashboard = (props) => {
     canPrint,
     onClickPrint,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, isSelectedTeamMedical, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
   } = props
+  const isMonitoringEnabled = patient.monitoring?.enabled
+  const shouldDisplayChatWidget = isMonitoringEnabled && (!userIsHCP || isSelectedTeamMedical)
+
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString()
     const end = moment.utc(epochLocation).toISOString()
@@ -81,6 +84,7 @@ const PatientDashboard = (props) => {
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
+          parametersConfig={tidelineData.medicalData?.pumpSettings[0]?.payload?.parameters}
         />
         <DeviceUsage
           id="dashboard-device-usage"
@@ -96,10 +100,10 @@ const PatientDashboard = (props) => {
           loading={loading}
           onSwitchToDaily={onSwitchToDaily}
         />
-        {patient.monitoring?.enabled &&
+        {isMonitoringEnabled &&
           <AlarmCard patient={patient} />
         }
-        {patient.monitoring?.enabled &&
+        {shouldDisplayChatWidget &&
           <ChatWidget
             id="dashboard-chat-widget"
             patient={patient}

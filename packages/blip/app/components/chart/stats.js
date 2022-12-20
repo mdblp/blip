@@ -3,19 +3,22 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
 import Divider from '@mui/material/Divider'
-import { components as vizComponents, utils as vizUtils } from 'tidepool-viz'
+import { utils as vizUtils } from 'tidepool-viz'
 import {
+  AverageDailyDoseStat,
   CBGMeanStat,
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
   LoopModeStat,
+  SimpleStat,
   TotalCarbsStat,
   TotalInsulinStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 
-const { Stat } = vizComponents
+const WEIGHT_PARAM = 'WEIGHT'
+const WEIGHT_PARAM_DEFAULT_VALUE = -1
 
 class Stats extends React.Component {
   static propTypes = {
@@ -26,7 +29,8 @@ class Stats extends React.Component {
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
-    hideToolTips: PropTypes.bool.isRequired
+    hideToolTips: PropTypes.bool.isRequired,
+    parametersConfig: PropTypes.array
   }
   static defaultProps = {
     hideToolTips: false
@@ -96,7 +100,8 @@ class Stats extends React.Component {
       : false
   }
 
-  getStatElementById(stat, hideToolTips, bgClasses, animate) {
+  getStatElementById(stat, hideToolTips, bgClasses) {
+    const { parametersConfig } = this.props
     switch (stat.id) {
       case CBGStatType.TimeInAuto:
         return (
@@ -165,14 +170,38 @@ class Stats extends React.Component {
             units={stat.units}
           />
         )
-      default:
+      case CBGStatType.AverageDailyDose: {
+        const weightParam = parametersConfig?.find(param => param.name === WEIGHT_PARAM)
+        const weight = weightParam ? Number(weightParam?.value) : WEIGHT_PARAM_DEFAULT_VALUE
         return (
-          <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+          <AverageDailyDoseStat
+            dailyDose={stat.data.data[0].value}
+            footerLabel={stat.data.data[0].output.label}
+            title={stat.title}
+            weight={weight}
+            weightSuffix={stat.data.data[0].input.suffix}
+          />
         )
+      }
+      default: {
+        if (stat.type !== vizUtils.stat.statTypes.simple) {
+          throw Error(`Unexpected stat id ${stat.id} and type ${stat.type}`)
+        }
+        return (
+          <SimpleStat
+            annotations={stat.annotations}
+            showToolTip={!hideToolTips}
+            summaryFormat={stat.dataFormat.summary}
+            title={stat.title}
+            total={stat.data.total?.value}
+            value={stat.data.data[0].value}
+          />
+        )
+      }
     }
   }
 
-  renderStats(stats, animate, hideToolTips) {
+  renderStats(stats, hideToolTips) {
     const { bgPrefs } = this.props
     const bgClasses = {
       high: bgPrefs.bgClasses.high.boundary,
@@ -183,7 +212,7 @@ class Stats extends React.Component {
     return stats.map(stat => {
       return (
         <div key={stat.id} data-testid={`stat-${stat.id}`}>
-          {this.getStatElementById(stat, hideToolTips, bgClasses, animate)}
+          {this.getStatElementById(stat, hideToolTips, bgClasses)}
           <Divider variant="fullWidth" />
         </div>
       )
@@ -191,11 +220,11 @@ class Stats extends React.Component {
   }
 
   render() {
-    const { chartPrefs: { animateStats }, hideToolTips } = this.props
+    const { hideToolTips } = this.props
 
     return (
       <div className="Stats" data-testid="stats-widgets">
-        {this.renderStats(this.state.stats, animateStats, hideToolTips)}
+        {this.renderStats(this.state.stats, hideToolTips)}
       </div>
     )
   }

@@ -131,7 +131,7 @@ describe('PatientInfoWidget', () => {
     const birthDate = moment.utc(patient.profile.birthdate).format('L')
     const a1cDate = moment.utc(patient.settings.a1c.date).format('L')
     const gender = patient.profile.sex ?? ''
-    expect(document.getElementById('patient-info-patient-value').innerHTML).toEqual(patient.profile.fullName)
+    expect(document.getElementById('patient-info-patient-value').innerHTML).toEqual('user-name')
     expect(document.getElementById('patient-info-gender-value').innerHTML).toEqual(genderLabels()[gender])
     expect(document.getElementById('patient-info-birthdate-value').innerHTML).toEqual(birthDate)
     expect(document.getElementById('patient-info-email-value').innerHTML).toEqual(patient.profile.email)

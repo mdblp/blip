@@ -22,6 +22,7 @@ import { MS_IN_MIN } from './constants'
 import { formatBgValue } from './format.js'
 
 import i18next from 'i18next'
+
 const t = i18next.t.bind(i18next)
 
 /**
@@ -34,8 +35,8 @@ const t = i18next.t.bind(i18next)
  */
 export function classifyBgValue(bgBounds, bgValue, classificationType = 'threeWay') {
   if (_.isEmpty(bgBounds) ||
-  !_.isNumber(_.get(bgBounds, 'targetLowerBound')) ||
-  !_.isNumber(_.get(bgBounds, 'targetUpperBound'))) {
+    !_.isNumber(_.get(bgBounds, 'targetLowerBound')) ||
+    !_.isNumber(_.get(bgBounds, 'targetUpperBound'))) {
     throw new Error(
       'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
     )
@@ -62,18 +63,6 @@ export function classifyBgValue(bgBounds, bgValue, classificationType = 'threeWa
     return 'high'
   }
   return 'target'
-}
-
-/**
- * classifyCvValue
- * @param {number} value - integer or float coefficient of variation (CV) value
- * @return {String} cvClassification - target, high
- */
-export function classifyCvValue(value) {
-  if (value <= 36) {
-    return 'target'
-  }
-  return 'high'
 }
 
 /**
@@ -117,9 +106,21 @@ export function generateBgRangeLabels(bgPrefs, opts = {}) {
 
   return {
     veryLow: t('below {{value}} {{- units}}', { value: thresholds.veryLowThreshold, units: bgUnits }),
-    low: t('between {{low}} - {{high}} {{- units}}', { low: thresholds.veryLowThreshold, high: thresholds.targetLowerBound, units: bgUnits }),
-    target: t('between {{low}} - {{high}} {{- units}}', { low: thresholds.targetLowerBound, high: thresholds.targetUpperBound, units: bgUnits }),
-    high: t('between {{low}} - {{high}} {{- units}}', { low: thresholds.targetUpperBound, high: thresholds.veryHighThreshold, units: bgUnits }),
+    low: t('between {{low}} - {{high}} {{- units}}', {
+      low: thresholds.veryLowThreshold,
+      high: thresholds.targetLowerBound,
+      units: bgUnits
+    }),
+    target: t('between {{low}} - {{high}} {{- units}}', {
+      low: thresholds.targetLowerBound,
+      high: thresholds.targetUpperBound,
+      units: bgUnits
+    }),
+    high: t('between {{low}} - {{high}} {{- units}}', {
+      low: thresholds.targetUpperBound,
+      high: thresholds.veryHighThreshold,
+      units: bgUnits
+    }),
     veryHigh: t('above {{value}} {{- units}}', { value: thresholds.veryHighThreshold, units: bgUnits })
   }
 }
