@@ -258,7 +258,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             })}:</Typography>
             <Box
               className={classes.valueSelection}
-              data-testid="very-low-bg-text-field-id"
+              // data-testid="very-low-bg-text-field-id"
               position="relative"
               paddingBottom={2}
             >

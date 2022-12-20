@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { UnitsType } from '../../units/models/enums/units-type.enum'
+
 export interface Alarm {
   timeSpentAwayFromTargetRate: number
   timeSpentAwayFromTargetActive: boolean
@@ -41,4 +43,34 @@ export interface Thresholds {
   maxVeryLowBg: number
   minLowBg: number
   maxLowBg: number
+}
+
+export interface BgValues {
+  bgUnitDefault: UnitsType
+  outOfRangeThresholdDefault: number
+  nonDataTxThresholdDefault: number
+  hypoThresholdDefault: number
+  veryLowBgDefault: number
+  lowBgDefault: number
+  highBgDefault: number
+  reportingPeriodDefault: number
+}
+
+export const DEFAULT_BG_VALUES: BgValues = {
+  bgUnitDefault: UnitsType.MGDL,
+  outOfRangeThresholdDefault: 50,
+  nonDataTxThresholdDefault: 50,
+  hypoThresholdDefault: 5,
+  veryLowBgDefault: 54,
+  lowBgDefault: 70,
+  highBgDefault: 180,
+  reportingPeriodDefault: 7 * 24
+}
+export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
+  minHighBg: 140,
+  maxHighBg: 250,
+  minVeryLowBg: 40,
+  maxVeryLowBg: 90,
+  minLowBg: 50,
+  maxLowBg: 100
 }

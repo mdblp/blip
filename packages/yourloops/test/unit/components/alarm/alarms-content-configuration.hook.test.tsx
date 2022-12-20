@@ -32,9 +32,6 @@ import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import PatientUtils from '../../../../lib/patient/patient.util'
-import {
-  buildThresholds
-} from '../../../../components/alarm/alarm-content-configuration.utils'
 
 jest.mock('../../../../lib/team')
 
@@ -109,33 +106,6 @@ describe('AlarmsContentConfiguration hook', () => {
       expect(result.current.veryLowBg.errorMessage).toBe('mandatory-range')
       expect(result.current.lowBg.errorMessage).toBe('mandatory-range')
       expect(result.current.highBg.errorMessage).toBe('mandatory-range')
-    })
-  })
-
-  describe('Thresholds', () => {
-    const monitoring = getDefaultMonitoring()
-    it('should return default thresholds value in mmol/L if the parameters are in mmol/L', () => {
-      monitoring.parameters.bgUnit = UnitsType.MMOLL
-      const thresholdsInMmol = buildThresholds(monitoring.parameters.bgUnit)
-
-      expect(thresholdsInMmol.minLowBg).toBe(2.8)
-      expect(thresholdsInMmol.maxHighBg).toBe(13.9)
-      expect(thresholdsInMmol.minLowBg).toBe(2.8)
-      expect(thresholdsInMmol.maxLowBg).toBe(5.6)
-      expect(thresholdsInMmol.minVeryLowBg).toBe(2.2)
-      expect(thresholdsInMmol.maxVeryLowBg).toBe(5)
-    })
-
-    it('should return default thresholds value in mg/dL if the parameters are in mg/dL', () => {
-      const monitoring = getDefaultMonitoring()
-      monitoring.parameters.bgUnit = UnitsType.MGDL
-      const thresholdsInMgdl = buildThresholds(monitoring.parameters.bgUnit)
-      expect(thresholdsInMgdl.minHighBg).toBe(140)
-      expect(thresholdsInMgdl.maxHighBg).toBe(250)
-      expect(thresholdsInMgdl.minLowBg).toBe(50)
-      expect(thresholdsInMgdl.maxLowBg).toBe(100)
-      expect(thresholdsInMgdl.minVeryLowBg).toBe(40)
-      expect(thresholdsInMgdl.maxVeryLowBg).toBe(90)
     })
   })
 

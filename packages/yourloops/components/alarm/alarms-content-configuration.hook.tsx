@@ -32,6 +32,7 @@ import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import { buildThresholds, isInvalidPercentage } from './alarm-content-configuration.utils'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { DEFAULT_BG_VALUES } from '../../lib/patient/models/alarm.model'
 
 export interface AlarmsContentConfigurationHookProps {
   monitoring: Monitoring
@@ -70,20 +71,30 @@ interface ValueErrorPair {
   error?: boolean
 }
 
+const {
+  highBgDefault,
+  hypoThresholdDefault,
+  nonDataTxThresholdDefault,
+  outOfRangeThresholdDefault,
+  lowBgDefault,
+  veryLowBgDefault,
+  reportingPeriodDefault,
+  bgUnitDefault
+} = DEFAULT_BG_VALUES
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
   const bgUnit = monitoring?.parameters?.bgUnit ?? UnitsType.MGDL
   const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
   if (!monitoring.parameters) {
     monitoring.parameters = {
-      bgUnit: UnitsType.MGDL,
-      lowBg: 50,
-      highBg: 140,
-      outOfRangeThreshold: 40,
-      veryLowBg: 40,
-      hypoThreshold: 5,
-      nonDataTxThreshold: 10,
-      reportingPeriod: 7
+      bgUnit: bgUnitDefault,
+      lowBg: lowBgDefault,
+      highBg: highBgDefault,
+      outOfRangeThreshold: outOfRangeThresholdDefault,
+      veryLowBg: veryLowBgDefault,
+      hypoThreshold: hypoThresholdDefault,
+      nonDataTxThreshold: nonDataTxThresholdDefault,
+      reportingPeriod: reportingPeriodDefault
     }
   }
 
