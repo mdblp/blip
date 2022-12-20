@@ -34,9 +34,10 @@ import { Notification } from '../../../../lib/notifications/models/notification.
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import { INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
+import { internalAxios } from '../../../../lib/http/axios.service'
 
-jest.mock('axios')
-const mockedAxios = axios as jest.Mocked<typeof axios>
+jest.mock('../../../../lib/http/axios.service')
+const mockedAxios = internalAxios as jest.Mocked<typeof axios>
 
 describe('Notification API', () => {
   const userId = 'fakeUserId'

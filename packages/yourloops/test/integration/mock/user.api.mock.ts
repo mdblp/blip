@@ -26,6 +26,17 @@
  */
 
 import UserApi from '../../../lib/auth/user.api'
+import { Profile } from '../../../lib/auth/models/profile.model'
+import { Preferences } from '../../../lib/auth/models/preferences.model'
+import { Settings } from '../../../lib/auth/models/settings.model'
+
+interface MockUserDataFetchParams {
+  firstName?: string
+  lastName?: string
+  profile?: Profile
+  preferences?: Preferences
+  settings?: Settings
+}
 
 export const mockUserApi = () => {
   const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
@@ -33,10 +44,28 @@ export const mockUserApi = () => {
   const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
   const updateAuth0UserMetadataMock = jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValue(undefined)
 
+  const mockUserDataFetch = ({ firstName, lastName, profile, settings, preferences }: MockUserDataFetchParams) => {
+    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
+      profile: {
+        firstName,
+        lastName,
+        fullName: `${firstName} ${lastName}`,
+        email: 'fake@email.com',
+        termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+        privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+        trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
+        ...profile
+      } as Profile,
+      settings: settings ?? {},
+      preferences: preferences ?? {}
+    })
+  }
+
   return {
     updateAuth0UserMetadataMock,
     updateProfileMock,
     updatePreferencesMock,
-    updateSettingsMock
+    updateSettingsMock,
+    mockUserDataFetch
   }
 }

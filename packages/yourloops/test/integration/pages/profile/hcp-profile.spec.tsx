@@ -26,14 +26,13 @@
  */
 
 import { renderPage } from '../../utils/render'
-import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockTeamAPI } from '../../mock/team.api.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkHCPLayout } from '../../assert/layout'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { mockPatientAPI } from '../../mock/mockPatientAPI'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
+import { mockPatientAPI } from '../../mock/patient.api.mock'
 import { checkHcpProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
@@ -44,6 +43,7 @@ import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.
 import UserApi from '../../../../lib/auth/user.api'
 import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {
@@ -68,23 +68,25 @@ describe('Profile page for hcp', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
-    mockUserDataFetch({ profile, preferences, settings })
+    mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockPatientAPI()
   })
 
-  it('should render profile page for a french hcp and be able to edit his profile', async () => {
+  it('should render profile page for a French HCP and be able to edit his profile and change his password', async () => {
     const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue', hcpProfession: HcpProfession.nurse }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
+
     await act(async () => {
       renderPage('/preferences')
     })
+
     checkHCPLayout(`${profile.firstName} ${profile.lastName}`)
     const fields = checkHcpProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
@@ -120,5 +122,12 @@ describe('Profile page for hcp', () => {
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
+
+    const changePasswordButton = screen.getByText('Change password')
+    expect(changePasswordButton).toBeVisible()
+
+    await act(async () => {
+      await userEvent.click(changePasswordButton)
+    })
   })
 })

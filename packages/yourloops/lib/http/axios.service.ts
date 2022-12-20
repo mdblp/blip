@@ -32,7 +32,7 @@ import appConfig from '../config/config'
 import HttpService from './http.service'
 import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
 
-class AxiosService {
+export class AxiosService {
   init(baseUrl: string, hasInterceptors = false): AxiosInstance {
     const axiosInstance = axios.create({
       baseURL: baseUrl
@@ -45,7 +45,7 @@ class AxiosService {
     return axiosInstance
   }
 
-  private async onFulfilled(config: AxiosRequestConfig): Promise<AxiosRequestConfig> {
+  async onFulfilled(config: AxiosRequestConfig): Promise<AxiosRequestConfig> {
     if (config.params?.noHeader) {
       delete config.params.noHeader
       return config

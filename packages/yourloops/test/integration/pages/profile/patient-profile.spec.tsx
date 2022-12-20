@@ -26,14 +26,13 @@
  */
 
 import { renderPage } from '../../utils/render'
-import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockTeamAPI } from '../../mock/team.api.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkPatientLayout } from '../../assert/layout'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { mockPatientAPI } from '../../mock/mockPatientAPI'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
+import { mockPatientAPI } from '../../mock/patient.api.mock'
 import { checkPatientProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
@@ -44,6 +43,7 @@ import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
 import UserApi from '../../../../lib/auth/user.api'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
@@ -77,7 +77,7 @@ describe('Profile page for patient', () => {
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.patient)
-    mockUserDataFetch({ profile, preferences, settings })
+    mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
@@ -130,7 +130,7 @@ describe('Profile page for patient', () => {
 
   it('should render profile page without specific INS fields when patient is not french', async () => {
     settings.country = CountryCodes.UnitedKingdom
-    mockUserDataFetch({ profile, preferences, settings })
+    mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     await act(async () => {
       renderPage('/preferences')
     })

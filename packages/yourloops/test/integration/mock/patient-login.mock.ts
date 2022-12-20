@@ -25,52 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import UserApi from '../../../lib/auth/user.api'
-import { mockAuth0Hook } from './mockAuth0Hook'
-import { mockNotificationAPI } from './mockNotificationAPI'
-import { mockDirectShareApi } from './mockDirectShareAPI'
-import { mockTeamAPI } from './mockTeamAPI'
+import { mockAuth0Hook } from './auth0.hook.mock'
+import { mockNotificationAPI } from './notification.api.mock'
+import { mockDirectShareApi } from './direct-share.api.mock'
+import { mockTeamAPI } from './team.api.mock'
 import PatientAPI from '../../../lib/patient/patient.api'
-import { mockChatAPI } from './mockChatAPI'
-import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
-import { unmonitoredPatientId } from './mockPatientAPI'
-import { Profile } from '../../../lib/auth/models/profile.model'
-import { Preferences } from '../../../lib/auth/models/preferences.model'
-import { Settings } from '../../../lib/auth/models/settings.model'
+import { mockChatAPI } from './chat.api.mock'
+import { mockMedicalFilesAPI } from './medical-files.api.mock'
+import { unmonitoredPatientId } from './patient.api.mock'
 import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
-
-interface MockUserDataFetchParams {
-  firstName?: string
-  lastName?: string
-  profile?: Profile
-  preferences?: Preferences
-  settings?: Settings
-}
-
-export const mockUserDataFetch = ({ firstName, lastName, profile, settings, preferences }: MockUserDataFetchParams) => {
-  jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
-    profile: {
-      firstName,
-      lastName,
-      fullName: `${firstName} ${lastName}`,
-      email: 'fake@email.com',
-      termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-      privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-      trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
-      ...profile
-    } as Profile,
-    settings: settings ?? {},
-    preferences: preferences ?? {}
-  })
-}
+import { mockUserApi } from './user.api.mock'
 
 export const mockPatientLogin = (patient: ITeamMember) => {
   mockAuth0Hook(UserRoles.patient, unmonitoredPatientId)
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()
-  mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
+  mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
   jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
   mockChatAPI()
   mockMedicalFilesAPI()

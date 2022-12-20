@@ -27,11 +27,11 @@
 
 import { act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockPatientLogin } from '../../mock/auth'
-import { buildPatient } from '../../mock/mockPatientAPI'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { buildPatient } from '../../mock/patient.api.mock'
 import { renderPage } from '../../utils/render'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockUserApi } from '../../mock/mockUserApi'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Training page when new training available', () => {
   beforeAll(() => {

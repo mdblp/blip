@@ -28,23 +28,23 @@
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import PatientAPI from '../../../../lib/patient/patient.api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import {
   mockPatientAPI,
   monitoredPatient,
   pendingPatient,
   removePatientMock,
   unmonitoredPatient
-} from '../../mock/mockPatientAPI'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/mockTeamAPI'
+} from '../../mock/patient.api.mock'
+import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/team.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
 import { renderPage } from '../../utils/render'
 import TeamAPI from '../../../../lib/team/team.api'
+import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -54,7 +54,7 @@ describe('HCP home page', () => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientAPI()
     mockDirectShareApi()
   })

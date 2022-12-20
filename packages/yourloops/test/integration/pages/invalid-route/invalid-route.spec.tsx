@@ -26,13 +26,13 @@
  */
 
 import { act, screen } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockUserDataFetch } from '../../mock/auth'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import TeamApi from '../../../../lib/team/team.api'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
+import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'
@@ -40,7 +40,7 @@ describe('Invalid Route', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
-    mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockNotificationAPI()
   })
 

@@ -26,7 +26,7 @@
  */
 
 import PatientAPI from '../../../lib/patient/patient.api'
-import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
+import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './team.api.mock'
 import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'

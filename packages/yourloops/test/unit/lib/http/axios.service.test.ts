@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { onFulfilled } from '../../../lib/http/axios.service'
-import HttpService from '../../../lib/http/http.service'
+import HttpService from '../../../../lib/http/http.service'
 import * as crypto from 'crypto'
-import { HttpHeaderKeys } from '../../../lib/http/models/enums/http-header-keys.enum'
+import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
+import { AxiosService } from '../../../../lib/http/axios.service'
 
 Object.defineProperty(global, 'crypto', {
   value: {
@@ -38,7 +38,41 @@ Object.defineProperty(global, 'crypto', {
 })
 
 describe('Axios service', () => {
+  let service: AxiosService
+
+  beforeEach(() => {
+    service = new AxiosService()
+  })
+
   jest.spyOn(HttpService, 'getAccessToken').mockResolvedValue('token')
+
+  describe('init', () => {
+    it('should create the Axios instance with the appropriate configuration', () => {
+      const baseUrl = 'https://my-url.com'
+
+      const instance = service.init(baseUrl)
+
+      expect(instance.defaults.baseURL).toEqual(baseUrl)
+      expect(instance.interceptors.request).toEqual({ handlers: [] })
+    })
+
+    it('should create the Axios instance with the appropriate configuration and interceptors', () => {
+      const baseUrl = 'https://my-url2.com'
+
+      const instance = service.init(baseUrl, true)
+
+      expect(instance.defaults.baseURL).toEqual(baseUrl)
+      expect(instance.interceptors.request).toEqual({
+        handlers: [{
+          fulfilled: expect.anything(),
+          rejected: undefined,
+          runWhen: null,
+          synchronous: false
+        }]
+      })
+    })
+  })
+
   describe('onFulfilled', () => {
     it('should return config without added headers', async () => {
       // given
@@ -46,7 +80,7 @@ describe('Axios service', () => {
       const config = { params: { noHeader: true } }
 
       // when
-      const actual = await onFulfilled(config)
+      const actual = await service.onFulfilled(config)
 
       // then
       expect(actual).toStrictEqual(expected)
@@ -55,7 +89,7 @@ describe('Axios service', () => {
     it('should return config with header when no param is given', async () => {
       // given
       // when
-      const actual = await onFulfilled({})
+      const actual = await service.onFulfilled({})
 
       // then
       expect(actual.headers).toHaveProperty('Authorization')
@@ -67,7 +101,7 @@ describe('Axios service', () => {
       const config = { params: { fakeParam: true } }
 
       // when
-      const actual = await onFulfilled(config)
+      const actual = await service.onFulfilled(config)
 
       // then
       expect(actual).toMatchObject(config)

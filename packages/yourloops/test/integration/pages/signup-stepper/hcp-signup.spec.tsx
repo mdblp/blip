@@ -26,9 +26,9 @@
  */
 
 import { act, fireEvent, screen, within } from '@testing-library/react'
-import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
-import { mockUserApi } from '../../mock/mockUserApi'
+import { mockUserApi } from '../../mock/user.api.mock'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
