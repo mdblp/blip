@@ -26,7 +26,7 @@
  */
 
 import { mockPatientLogin } from '../../mock/auth'
-import { unmonitoredPatient, unmonitoredPatientId } from '../../mock/mockPatientAPI'
+import { unmonitoredPatientAsTeamMember } from '../../mock/mockPatientAPI'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
@@ -51,7 +51,7 @@ import { User } from '../../../../lib/auth'
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {
-    mockPatientLogin(unmonitoredPatient)
+    mockPatientLogin(unmonitoredPatientAsTeamMember)
   })
 
   describe('with all kind of data', () => {
@@ -126,7 +126,7 @@ describe('Daily view for anyone', () => {
 
       await userEvent.click(generateReportDialogFirstCsv.getByText('Generate'))
       // This checks for CSV generation
-      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), unmonitoredPatientId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
+      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), unmonitoredPatientAsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
     })
   })
 

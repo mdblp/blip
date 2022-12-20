@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Alarm {
+export interface Alarms {
   timeSpentAwayFromTargetRate: number
   timeSpentAwayFromTargetActive: boolean
   frequencyOfSevereHypoglycemiaRate: number

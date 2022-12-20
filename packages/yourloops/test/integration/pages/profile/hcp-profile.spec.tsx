@@ -33,7 +33,7 @@ import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkHCPLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { mockPatientAPI } from '../../mock/mockPatientAPI'
+import { mockPatientApiForHcp } from '../../mock/mockPatientAPI'
 import { checkHcpProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
@@ -72,11 +72,17 @@ describe('Profile page for hcp', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockPatientAPI()
+    mockPatientApiForHcp()
   })
 
   it('should render profile page for a french hcp and be able to edit his profile', async () => {
-    const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue', hcpProfession: HcpProfession.nurse }
+    const expectedProfile = {
+      ...profile,
+      firstName: 'Jean',
+      lastName: 'Talue',
+      fullName: 'Jean Talue',
+      hcpProfession: HcpProfession.nurse
+    }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)

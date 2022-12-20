@@ -28,13 +28,12 @@
 import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockUserDataFetch } from '../../mock/auth'
-import PatientApi from '../../../../lib/patient/patient.api'
-import TeamApi from '../../../../lib/team/team.api'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
-import { Team } from '../../../../lib/team'
-import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
+import { mockTeamAPI } from '../../mock/mockTeamAPI'
+import { mockPatientApiForHcp } from '../../mock/mockPatientAPI'
+import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'
@@ -42,18 +41,19 @@ describe('Invalid Route', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
-    mockUserDataFetch({ firstName, lastName })
     mockNotificationAPI()
+    mockTeamAPI()
+    mockUserDataFetch({ firstName, lastName })
+    mockPatientApiForHcp()
+    mockDirectShareApi()
   })
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {
-    jest.spyOn(TeamApi, 'getTeams').mockResolvedValue([{ id: 'team-id', name: 'Team', type: TeamType.medical } as Team])
-    jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([])
     await act(async () => {
-      renderPage('/unknown-route')
+      renderPage('/wrongRoute')
     })
 
-    expect(screen.getByText('Page not found')).toBeVisible()
+    expect(await screen.findByText('Page not found')).toBeVisible()
     const homeLink = screen.getByText('Home')
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')

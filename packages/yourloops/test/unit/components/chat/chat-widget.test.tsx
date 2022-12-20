@@ -46,9 +46,12 @@ describe('Chat widget', () => {
   const teamId = '777'
   const patientTeam = { teamId } as PatientTeam
   const patient: Patient = {
+    alarms: {},
+    profile: {},
+    settings: {},
     userid: '132',
     teams: [patientTeam],
-    metadata: { unreadMessagesSent: 0 }
+    metadata: { hasSentUnreadMessages: false }
   } as Patient
 
   let container: HTMLElement | null = null

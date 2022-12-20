@@ -112,7 +112,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
   const patientFullName = getUserName(firstName, lastName, fullName)
   const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
   const isAlreadyInATeam = PatientUtils.isInAtLeastATeam(patient)
-  const hasUnreadMessages = patient.metadata.unreadMessagesSent > 0
+  const hasUnreadMessages = patient.metadata.hasSentUnreadMessages
 
   const userToRemove = {
     id: userId,
@@ -235,19 +235,19 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         }
 
         <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
-          {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
           {isUserHcp && timeSpentAwayFromTargetActive &&
             <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={frequencyOfSevereHypoglycemiaRateClasses}>
-          {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
             <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={dataNotTransferredRateClasses}>
-          {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}
           {isUserHcp && nonDataTransmissionActive &&
             <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
