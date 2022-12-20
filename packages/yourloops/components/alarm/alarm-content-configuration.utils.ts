@@ -27,7 +27,6 @@
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import { convertBG } from '../../lib/units/units.util'
 import { Thresholds } from '../../lib/patient/models/alarm.model'
-import React from 'react'
 
 export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
   minHighBg: 140,
