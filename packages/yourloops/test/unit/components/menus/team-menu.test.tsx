@@ -32,7 +32,6 @@ import { Router } from 'react-router-dom'
 
 import * as teamHookMock from '../../../../lib/team'
 import { Team } from '../../../../lib/team'
-import TeamMenu from '../../../../components/menus/team-menu'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
@@ -45,6 +44,7 @@ import { AddTeamDialogProps } from '../../../../pages/patient/teams/add-dialog'
 import { TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { IUser } from '../../../../lib/data/models/i-user.model'
+import { TeamMenuMemoized as TeamMenu } from '../../../../components/menus/team-menu'
 
 /* eslint-disable react/display-name */
 jest.mock('../../../../pages/patient/teams/add-dialog', () => (props: AddTeamDialogProps) => {

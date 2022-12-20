@@ -25,6 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import { AppConfig } from 'yourloops/lib/config/models/app-config.model'
 import { Patient } from 'yourloops/lib/patient/models/patient.model'
 import ChatWidget from 'yourloops/components/chat/chat-widget'
@@ -49,6 +50,7 @@ interface BlipProperties {
   setPatient: Function;
   patients: Patient[];
   userIsHCP: boolean;
+  isSelectedTeamMedical: boolean;
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
   dialogDatePicker: typeof DialogDatePicker;
