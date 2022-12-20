@@ -28,13 +28,11 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
-import { mockPatientAPI } from '../../mock/patient.api.mock'
 import { addDirectShareMock, mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { act, screen, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
-import { mockPatientApiForPatients } from '../../mock/mockPatientAPI'
 import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
 } from '../../../../lib/share/direct-share.api'
@@ -43,6 +41,7 @@ import { IUser } from '../../../../lib/data/models/i-user.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { Notification } from '../../../../lib/notifications/models/notification.model'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 
 describe('Patient caregivers page', () => {
   const firstName = 'Théo'
