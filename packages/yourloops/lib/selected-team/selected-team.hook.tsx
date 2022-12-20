@@ -26,7 +26,7 @@
  */
 
 import { SelectedTeamContextResult } from './selected-team-context.model'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { Team, useTeam } from '../team'
 import TeamUtils from '../team/team.util'
 
@@ -35,10 +35,10 @@ const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 export function useSelectedTeamProviderCustomHook(): SelectedTeamContextResult {
   const { getMedicalAndPrivateTeams } = useTeam()
 
-  const getSortedTeams = useCallback((): Team[] => {
+  const getSortedTeams = (): Team[] => {
     const teams = getMedicalAndPrivateTeams()
     return TeamUtils.sortTeams(teams)
-  }, [getMedicalAndPrivateTeams])
+  }
 
   const getDefaultTeamId = (): string => {
     const sortedTeams = getSortedTeams()
