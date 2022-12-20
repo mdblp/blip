@@ -44,6 +44,8 @@ import UserApi from '../../../../lib/auth/user.api'
 import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockAuthApi } from '../../mock/auth.api.mock'
+import { AuthApi } from '../../../../lib/auth/auth.api'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {
@@ -68,6 +70,7 @@ describe('Profile page for hcp', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
+    mockAuthApi()
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
@@ -123,11 +126,39 @@ describe('Profile page for hcp', () => {
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
+    const profileUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+    expect(profileUpdateSuccessfulSnackbar).toHaveTextContent('Profile updated')
+
+    const profileUpdateSuccessfulSnackbarCloseButton = within(profileUpdateSuccessfulSnackbar).getByTitle('Close')
+
+    await userEvent.click(profileUpdateSuccessfulSnackbarCloseButton)
+
+    const changePasswordCategoryTitle = screen.getByText('Security')
+    expect(changePasswordCategoryTitle).toBeVisible()
+
+    const changePasswordInfoLabel = screen.getByText('By clicking this button, you will receive an e-mail allowing you to change your password.')
+    expect(changePasswordInfoLabel).toBeVisible()
+
     const changePasswordButton = screen.getByText('Change password')
     expect(changePasswordButton).toBeVisible()
 
     await act(async () => {
       await userEvent.click(changePasswordButton)
     })
+
+    const changePasswordEmailSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+    expect(changePasswordEmailSuccessfulSnackbar).toHaveTextContent('E-mail sent successfully')
+
+    const changePasswordEmailSuccessfulSnackbarCloseButton = within(changePasswordEmailSuccessfulSnackbar).getByTitle('Close')
+
+    await userEvent.click(changePasswordEmailSuccessfulSnackbarCloseButton)
+
+    jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockRejectedValueOnce('Error')
+    await act(async () => {
+      await userEvent.click(changePasswordButton)
+    })
+
+    const changePasswordEmailFailedSnackbar = screen.getByTestId('alert-snackbar')
+    expect(changePasswordEmailFailedSnackbar).toHaveTextContent('Impossible to send the change password e-mail. Please try again later.')
   })
 })
