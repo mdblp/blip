@@ -42,11 +42,14 @@ import User from '../../../../lib/auth/models/user.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import { Profile } from '../../../../lib/auth/models/profile.model'
 import { Notification } from '../../../../lib/notifications/models/notification.model'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom')),
+  useLocation: () => ({ pathname: '' })
+}))
 describe('Main Header', () => {
   let container: HTMLElement | null = null
   const history = createMemoryHistory({ initialEntries: ['/preferences'] })
@@ -91,7 +94,7 @@ describe('Main Header', () => {
     document.body.appendChild(container);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.hcp, isUserHcp: () => true, isUserPatient: () => false } as User
+        user: { isUserHcp: () => true, isUserPatient: () => false, isUserCaregiver: () => false } as User
       }
     })
   })
@@ -127,7 +130,7 @@ describe('Main Header', () => {
   it('Team Menu should not be rendered for Caregivers', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.caregiver } as User
+        user: { isUserCaregiver: () => true, isUserHcp: () => false } as User
       }
     })
     mountComponent()
@@ -144,7 +147,7 @@ describe('Main Header', () => {
   it('Team Menu should be rendered for Patient', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.patient, isUserHcp: () => false, isUserPatient: () => true } as User
+        user: { isUserHcp: () => false, isUserPatient: () => true, isUserCaregiver: () => false } as User
       }
     })
     mountComponent()

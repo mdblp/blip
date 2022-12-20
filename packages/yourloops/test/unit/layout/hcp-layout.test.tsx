@@ -33,6 +33,7 @@ import * as teamHookMock from '../../../lib/team'
 import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
 import { MemoryRouter } from 'react-router-dom'
 import * as patientHookMock from '../../../lib/patient/patient.provider'
+import * as selectedTeamHookMock from '../../../lib/selected-team/selected-team.provider'
 import { HcpLayout } from '../../../layout/hcp-layout'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 
@@ -67,6 +68,9 @@ describe('Hcp Layout', () => {
       return children
     });
     (patientHookMock.PatientProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children
+    });
+    (selectedTeamHookMock.SelectedTeamProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
     });
     (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
