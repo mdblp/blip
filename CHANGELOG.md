@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.3-beta - 2022-11-29
 ### Added
+- YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP

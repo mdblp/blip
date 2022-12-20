@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import bows from 'bows'
 
@@ -41,29 +41,32 @@ import { useHistory } from 'react-router-dom'
 
 const log = bows('SwitchRoleDialogs')
 
-function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
+const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { switchRoleToHCP, user } = useAuth()
   const history = useHistory()
   const alert = useAlert()
-  const [switchRoleStep, setSwitchRoleStep] = React.useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.none)
-  const [feedbackConsent, setFeedbackConsent] = React.useState<boolean>(false)
+  const [switchRoleStep, setSwitchRoleStep] = useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.consequences)
+  const [feedbackConsent, setFeedbackConsent] = useState<boolean>(false)
+  const [inProgress, setInProgress] = useState<boolean>(false)
 
   if (!user) {
-    throw new Error('User must be looged-in')
+    throw new Error('User must be logged-in')
   }
 
-  const role = user.role
   const handleSwitchRoleToConditions = (): void => {
     setSwitchRoleStep(SwitchRoleToHcpSteps.consent)
   }
 
   const handleSwitchRoleToUpdate = async (hcpProfession: HcpProfession): Promise<void> => {
     try {
+      setInProgress(true)
       await switchRoleToHCP(feedbackConsent, hcpProfession)
       metrics.send('switch_account', 'accept_terms')
+      alert.success(t('switch-role-success'))
       history.push('/')
     } catch (reason: unknown) {
+      setInProgress(false)
       alert.error(t('modal-switch-hcp-failure'))
       log.error('switchRoleToHCP', reason)
     }
@@ -74,18 +77,9 @@ function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
     setSwitchRoleStep(SwitchRoleToHcpSteps.profession)
   }
 
-  React.useEffect(() => {
-    if (props.open && switchRoleStep === SwitchRoleToHcpSteps.none) {
-      setSwitchRoleStep(SwitchRoleToHcpSteps.consequences)
-    } else if (!props.open && switchRoleStep !== SwitchRoleToHcpSteps.none) {
-      setSwitchRoleStep(SwitchRoleToHcpSteps.none)
-    }
-  }, [props.open, switchRoleStep, role])
-
   return (
     <React.Fragment>
       <SwitchRoleConsequencesDialog
-        title="modal-switch-hcp-title"
         open={switchRoleStep === SwitchRoleToHcpSteps.consequences}
         onAccept={handleSwitchRoleToConditions}
         onCancel={props.onCancel}
@@ -97,6 +91,7 @@ function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
       />
       <SwitchRoleProfessionDialog
         open={switchRoleStep === SwitchRoleToHcpSteps.profession}
+        inProgress={inProgress}
         onAccept={handleSwitchRoleToUpdate}
         onCancel={props.onCancel}
       />
