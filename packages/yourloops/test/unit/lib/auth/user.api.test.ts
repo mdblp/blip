@@ -36,7 +36,7 @@ import { CompleteSignupPayload } from '../../../../lib/auth/models/complete-sign
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 
-describe('Auth API', () => {
+describe('User API', () => {
   const userId = 'userId'
   const profile: Profile = {
     firstName: 'Bernard',

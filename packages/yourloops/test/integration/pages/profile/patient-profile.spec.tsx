@@ -126,6 +126,13 @@ describe('Profile page for patient', () => {
     expect(screen.getByRole('alert')).toBeVisible()
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
+
+    const changePasswordCategoryTitle = screen.queryByText('Security')
+    expect(changePasswordCategoryTitle).not.toBeInTheDocument()
+    const changePasswordInfoLabel = screen.queryByText('By clicking this button, you will receive an e-mail allowing you to change your password.')
+    expect(changePasswordInfoLabel).not.toBeInTheDocument()
+    const changePasswordButton = screen.queryByText('Change password')
+    expect(changePasswordButton).not.toBeInTheDocument()
   })
 
   it('should render profile page without specific INS fields when patient is not french', async () => {
