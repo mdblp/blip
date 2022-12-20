@@ -175,7 +175,7 @@ describe('Caregiver page for hcp', () => {
     await userEvent.click(validateButton)
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
     expect(getAccessTokenSilentlyMock).toHaveBeenCalledWith({ ignoreCache: true })
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You\'re account have been successfully switched to HCP')
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Your account has been successfully switched to HCP')
   })
 
   it('should close the modals when clicking on cancel or decline buttons', async () => {
