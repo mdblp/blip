@@ -34,6 +34,7 @@ import { act, screen, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
+import { mockPatientApiForPatients } from '../../mock/mockPatientAPI'
 import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
 } from '../../../../lib/share/direct-share.api'
@@ -59,7 +60,7 @@ describe('Patient caregivers page', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientAPI()
+    mockPatientApiForPatients()
     mockDirectShareApi()
   })
 

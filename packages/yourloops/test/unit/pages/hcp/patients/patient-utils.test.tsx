@@ -62,11 +62,11 @@ describe('Patient utils', () => {
       }
       teamMember.unreadMessages = 4
       const patient: Patient = {
+        alarms: teamMember.alarms,
         metadata: {
-          alarm: teamMember.alarms,
           flagged: undefined,
           medicalData: null,
-          unreadMessagesSent: teamMember.unreadMessages
+          hasSentUnreadMessages: teamMember.unreadMessages > 0
         },
         monitoring: undefined,
         profile: {

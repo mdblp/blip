@@ -32,7 +32,7 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkPatientLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { mockPatientAPI } from '../../mock/patient.api.mock'
+import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { checkPatientProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
@@ -81,7 +81,7 @@ describe('Profile page for patient', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockPatientAPI()
+    mockPatientApiForPatients()
   })
 
   it('should render profile page for a french patient and be able to edit his profile', async () => {

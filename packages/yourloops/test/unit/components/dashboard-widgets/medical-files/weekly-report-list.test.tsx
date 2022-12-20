@@ -28,12 +28,12 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
-import { WeeklyReport } from '../../../../../lib/medical-files/model'
 import * as authHookMock from '../../../../../lib/auth'
 import User from '../../../../../lib/auth/models/user.model'
-import { Alarm } from '../../../../../lib/patient/models/alarm.model'
+import { Alarms } from '../../../../../lib/patient/models/alarms.model'
 import WeeklyReportList from '../../../../../components/dashboard-widgets/medical-files/weekly-report-list'
 import { WeeklyReportDialogProps } from '../../../../../components/dialogs/weekly-report-dialog'
+import { WeeklyReport } from '../../../../../lib/medical-files/models/weekly-report.model'
 
 jest.mock('../../../../../lib/auth')
 // eslint-disable-next-line react/display-name
@@ -50,7 +50,7 @@ describe('Weekly report list', () => {
     patientId: 'patientId',
     teamId: 'teamId',
     parameters: {},
-    alarms: {} as Alarm,
+    alarms: {} as Alarms,
     creationDate: '2022-02-02'
   } as WeeklyReport
 

@@ -54,7 +54,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const fetchPatients = useCallback(() => {
-    PatientUtils.computePatients().then(computedPatients => {
+    PatientUtils.computePatients(user).then(computedPatients => {
       setPatients(computedPatients)
       setErrorMessage(null)
     }).catch((reason: unknown) => {
@@ -66,7 +66,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       setInitialized(true)
       setRefreshInProgress(false)
     })
-  }, [errorMessage])
+  }, [errorMessage, user])
 
   const refresh = useCallback(() => {
     setRefreshInProgress(true)
@@ -84,10 +84,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       all: patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
       pending: patients.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
       directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
-      unread: patients.filter(patient => patient.metadata.unreadMessagesSent > 0).length,
-      outOfRange: patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive).length,
-      severeHypoglycemia: patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive).length,
-      dataNotTransferred: patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive).length,
+      unread: patients.filter(patient => patient.metadata.hasSentUnreadMessages).length,
+      outOfRange: patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
+      severeHypoglycemia: patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
+      dataNotTransferred: patients.filter(patient => patient.alarms.nonDataTransmissionActive).length,
       remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
       renew: patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
     }
@@ -134,7 +134,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [getPatientById, updatePatient])
 
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
-    patient.metadata.unreadMessagesSent = 0
+    patient.metadata.hasSentUnreadMessages = false
     updatePatient(patient)
   }, [updatePatient])
 

@@ -30,7 +30,7 @@ import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockPatientAPI, unmonitoredPatientId } from '../../mock/patient.api.mock'
+import { mockPatientApiForHcp, unmonitoredPatientId } from '../../mock/patient.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -49,7 +49,7 @@ describe('Trends view for HCP', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientAPI()
+    mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
   })

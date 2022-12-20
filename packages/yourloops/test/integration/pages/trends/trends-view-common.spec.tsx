@@ -26,7 +26,7 @@
  */
 
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatient } from '../../mock/patient.api.mock'
+import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
@@ -45,7 +45,7 @@ import {
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
-    mockPatientLogin(unmonitoredPatient)
+    mockPatientLogin(unmonitoredPatientAsTeamMember)
   })
 
   describe('with all kind of data', () => {

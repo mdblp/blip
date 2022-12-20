@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarm } from './alarm.model'
 import { MedicalData } from '../../data/models/medical-data.model'
 
-export interface PatientMetadata {
-  alarm: Alarm
+interface PatientMetadata {
   flagged?: boolean
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null
-  unreadMessagesSent: number
+  hasSentUnreadMessages: boolean
 }
+
+export { PatientMetadata }

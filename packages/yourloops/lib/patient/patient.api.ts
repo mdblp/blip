@@ -33,6 +33,7 @@ import { UserRoles } from '../auth/models/enums/user-roles.enum'
 import { ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
+import { Patient } from './models/patient.model'
 
 const log = bows('Patient API')
 
@@ -61,6 +62,11 @@ export default class PatientApi {
       }
       throw err
     }
+  }
+
+  static async getPatientsForHcp(userId: string): Promise<Patient[]> {
+    const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/patients` })
+    return data
   }
 
   static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotification> {
