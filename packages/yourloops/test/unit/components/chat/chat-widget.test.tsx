@@ -30,20 +30,24 @@ import { act, Simulate } from 'react-dom/test-utils'
 
 import ChatWidget from '../../../../components/chat/chat-widget'
 import { render, unmountComponentAtNode } from 'react-dom'
-import { Patient, PatientTeam } from '../../../../lib/data/models/patient.model'
 import { IMessage } from '../../../../lib/chat/models/i-message.model'
 import User from '../../../../lib/auth/models/user.model'
 import ChatApi from '../../../../lib/chat/chat.api'
 import PatientUtils from '../../../../lib/patient/patient.util'
+import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { Patient } from '../../../../lib/patient/models/patient.model'
 
 jest.mock('../../../../lib/team')
 describe('Chat widget', () => {
   const teamId = '777'
   const patientTeam = { teamId } as PatientTeam
   const patient: Patient = {
+    alarms: {},
+    profile: {},
+    settings: {},
     userid: '132',
     teams: [patientTeam],
-    metadata: { unreadMessagesSent: 0 }
+    metadata: { hasSentUnreadMessages: false }
   } as Patient
 
   let container: HTMLElement | null = null

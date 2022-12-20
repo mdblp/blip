@@ -31,7 +31,6 @@ import { MedicalData } from '../../lib/data/models/medical-data.model'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { MedicalTableValues } from './models/medical-table-values.model'
 import { ITeamMember } from '../../lib/team/models/i-team-member.model'
-import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
   let tir = '-'
@@ -89,7 +88,7 @@ export const compareDate = (a: Date, b: Date): number => {
   return a.getTime() - b.getTime()
 }
 
-function compareValues(
+export function compareValues(
   a: string | number | Date | boolean | null | undefined,
   b: string | number | boolean | Date | null | undefined
 ): number {
@@ -109,53 +108,6 @@ function compareValues(
     return -1
   }
   return 0
-}
-
-/**
- * Compare two patient for sorting the patient table
- * @param a A patient
- * @param b A patient
- * @param orderBy Sort field
- */
-export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSortFields): number => {
-  let aValue: string | number | Date | boolean | undefined
-  let bValue: string | number | Date | boolean | undefined
-
-  switch (orderBy) {
-    case PatientTableSortFields.alertTimeTarget:
-      aValue = a.alarms.timeSpentAwayFromTargetRate
-      bValue = b.alarms.timeSpentAwayFromTargetRate
-      break
-    case PatientTableSortFields.alertHypoglycemic:
-      aValue = a.alarms.frequencyOfSevereHypoglycemiaRate
-      bValue = b.alarms.frequencyOfSevereHypoglycemiaRate
-      break
-    case PatientTableSortFields.dataNotTransferred:
-      aValue = a.alarms.nonDataTransmissionRate
-      bValue = b.alarms.nonDataTransmissionRate
-      break
-    case PatientTableSortFields.flag:
-      aValue = a.metadata.flagged
-      bValue = b.metadata.flagged
-      break
-    case PatientTableSortFields.ldu:
-      aValue = getMedicalValues(a.metadata.medicalData).lastUploadEpoch
-      bValue = getMedicalValues(b.metadata.medicalData).lastUploadEpoch
-      break
-    case PatientTableSortFields.patientFullName:
-      aValue = a.profile.fullName
-      bValue = b.profile.fullName
-      break
-    case PatientTableSortFields.remoteMonitoring:
-      aValue = a.monitoring?.monitoringEnd
-      bValue = b.monitoring?.monitoringEnd
-      break
-    case PatientTableSortFields.system:
-      aValue = a.settings.system
-      bValue = b.settings.system
-      break
-  }
-  return compareValues(aValue, bValue)
 }
 
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {

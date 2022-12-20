@@ -145,8 +145,9 @@ describe('Caregiver home page', () => {
     const patientData = patientTableBody.getByText(patientFullName)
     expect(patientData).toBeVisible()
 
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
-    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient-unmonitored-patient@diabeloop.fr' })
+    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient unmonitored-patient@diabeloop.fr' })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -197,7 +198,7 @@ describe('Caregiver home page', () => {
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
 
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatientAsTeamMember.email}` })
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
 
     await userEvent.click(removeButton)
 
