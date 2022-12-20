@@ -86,9 +86,9 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
     const largeCellWithAlertClasses = `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}`
     const largeCellClasses = `${classes.typography} ${patientListCommonClasses.largeCell}`
 
-    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.metadata.alarm?.timeSpentAwayFromTargetActive ? patient.metadata.alarm?.timeSpentAwayFromTargetActive : false
-    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive ? patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive : false
-    const nonDataTransmissionActive = patientIsMonitored && patient.metadata.alarm?.nonDataTransmissionActive ? patient.metadata.alarm?.nonDataTransmissionActive : false
+    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.alarms?.timeSpentAwayFromTargetActive ? patient.alarms?.timeSpentAwayFromTargetActive : false
+    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.alarms?.frequencyOfSevereHypoglycemiaActive ? patient.alarms?.frequencyOfSevereHypoglycemiaActive : false
+    const nonDataTransmissionActive = patientIsMonitored && patient.alarms?.nonDataTransmissionActive ? patient.alarms?.nonDataTransmissionActive : false
     const patientRemoteMonitoring = getMonitoringLabel(patient.monitoring)
     const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive
 

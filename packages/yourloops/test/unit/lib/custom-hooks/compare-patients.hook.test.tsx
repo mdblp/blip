@@ -46,8 +46,8 @@ describe('Compare patients hook', () => {
       const biggerAlarm = createAlarm(11, 0)
 
       it('should return negative number when first patient has a smaller alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
@@ -56,8 +56,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return positive number when second patient has a smaller alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
@@ -66,8 +66,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return 0 when patients have same alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
@@ -76,8 +76,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return positive number when first patient has smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
@@ -86,8 +86,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return negative number when second patient has bigger alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget)
@@ -111,8 +111,8 @@ describe('Compare patients hook', () => {
       const biggerAlarm = createAlarm(0, 11)
 
       it('should return negative number when first patient has a smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
@@ -121,8 +121,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return positive number when second patient has a smaller alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
@@ -131,8 +131,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return 0 when patients have same alarm value', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
@@ -141,8 +141,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return positive number when first patient has smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
@@ -151,8 +151,8 @@ describe('Compare patients hook', () => {
       })
 
       it('should return positive number when second patient has smaller alarm', () => {
-        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, { alarm: biggerAlarm })
-        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, { alarm: smallerAlarm })
+        const patient1 = createPatient('fakePatient1Id', [], undefined, undefined, undefined, undefined, biggerAlarm)
+        const patient2 = createPatient('fakePatient2Id', [], undefined, undefined, undefined, undefined, smallerAlarm)
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)

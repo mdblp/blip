@@ -32,7 +32,7 @@ import { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import { render, unmountComponentAtNode } from 'react-dom'
 import * as patientHook from '../../../../lib/patient/patient.provider'
-import { Alarm } from '../../../../lib/patient/models/alarm.model'
+import { Alarms } from '../../../../lib/patient/models/alarms.model'
 import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
@@ -45,7 +45,7 @@ describe('PatientAlarmDialog', () => {
   const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
   const onClose = jest.fn()
-  const alarm: Alarm = {
+  const alarm: Alarms = {
     timeSpentAwayFromTargetRate: 10,
     timeSpentAwayFromTargetActive: false,
     frequencyOfSevereHypoglycemiaRate: 20,

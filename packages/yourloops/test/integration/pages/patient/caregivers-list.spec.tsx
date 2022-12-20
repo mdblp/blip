@@ -29,12 +29,12 @@ import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockUserDataFetch } from '../../mock/auth'
-import { mockPatientAPI } from '../../mock/mockPatientAPI'
 import { addDirectShareMock, mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { act, screen, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
+import { mockPatientApiForPatients } from '../../mock/mockPatientAPI'
 import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
 } from '../../../../lib/share/direct-share.api'
@@ -59,7 +59,7 @@ describe('Patient caregivers page', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPI()
+    mockPatientApiForPatients()
     mockDirectShareApi()
   })
 

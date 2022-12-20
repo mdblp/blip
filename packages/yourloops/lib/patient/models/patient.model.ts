@@ -30,8 +30,10 @@ import { PatientProfile } from './patient-profile.model'
 import { PatientSettings } from './patient-settings.model'
 import { PatientMetadata } from './patient-metadata.model'
 import { PatientTeam } from './patient-team.model'
+import { Alarms } from './alarms.model'
 
 export interface Patient {
+  alarms: Alarms
   profile: PatientProfile
   settings: PatientSettings
   metadata: PatientMetadata
