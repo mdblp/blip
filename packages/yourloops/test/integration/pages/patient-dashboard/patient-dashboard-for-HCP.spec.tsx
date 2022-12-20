@@ -28,7 +28,7 @@
 import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI, mySecondTeamName, myTeamId, myThirdTeamName } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, myTeamId } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
@@ -102,9 +102,12 @@ describe('Patient dashboard for HCP', () => {
     testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
     checkHCPLayout(`${firstName} ${lastName}`)
 
-    const header = within(screen.getByTestId('app-main-header'))
-    const teamsDropdown = header.getByText(myThirdTeamName)
-    expect(teamsDropdown).toBeVisible()
+    /**
+     * TODO YLP-1987 Uncomment this test once the January release is done
+     */
+    // const header = within(screen.getByTestId('app-main-header'))
+    // const teamsDropdown = header.getByText(myThirdTeamName)
+    // expect(teamsDropdown).toBeVisible()
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
@@ -114,9 +117,12 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    const header = within(screen.getByTestId('app-main-header'))
-    const teamsDropdown = header.getByText(mySecondTeamName)
-    expect(teamsDropdown).toBeVisible()
+    /**
+     * TODO YLP-1987 Uncomment this test once the January release is done
+     */
+    // const header = within(screen.getByTestId('app-main-header'))
+    // const teamsDropdown = header.getByText(mySecondTeamName)
+    // expect(teamsDropdown).toBeVisible()
 
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatientFullName)

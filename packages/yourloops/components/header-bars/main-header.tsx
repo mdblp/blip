@@ -99,7 +99,10 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
   const history = useHistory()
   const patientDashboardRegexMatch = pathname.match(PATIENT_DASHBOARD_REGEX)
   const isPatientDashboard = !!patientDashboardRegexMatch
-  const shouldDisplayTeamsDropdown = user.isUserHcp() && isPatientDashboard
+  /**
+   * TODO YLP-1987 Fix the condition once the January release is done
+   */
+  const shouldDisplayTeamsDropdown = false && user.isUserHcp() && isPatientDashboard
 
   const getDropdownTeams = (): Map<string, string> => {
     const teams = getMedicalAndPrivateTeams()
