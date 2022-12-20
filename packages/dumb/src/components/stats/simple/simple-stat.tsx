@@ -25,45 +25,55 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const EMPTY_DATA_PLACEHOLDER = '--'
+import React, { FunctionComponent, memo, useMemo } from 'react'
+import styles from './simple-stat.css'
+import commonStyles from '../../../styles/stat-common.css'
+import { SimpleValue } from '../common/simple-value'
+import { StatFormats } from '../../../models/stats.model'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
+import { buildSimpleValueProps } from './simple-stat.util'
 
-export enum CBGStatType {
-  AverageDailyDose = 'averageDailyDose',
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
-}
-
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
+interface SimpleStatProps {
+  annotations: string[]
+  showToolTip: boolean
+  summaryFormat: StatFormats
   title: string
+  total: number
   value: number
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
+const SimpleStat: FunctionComponent<SimpleStatProps> = (
+  {
+    showToolTip = true,
+    ...props
+  }) => {
+  const {
+    annotations,
+    summaryFormat,
+    title,
+    total,
+    value
+  } = props
+
+  const simpleValueProps = useMemo(() => {
+    return buildSimpleValueProps(summaryFormat, total, value)
+  }, [summaryFormat, total, value])
+
+  return (
+    <div className={styles.statWrapper}>
+      <div className={commonStyles.stat}>
+        <div className={commonStyles.statHeader}>
+          <div className={commonStyles.chartTitle}>
+            {title}
+            {showToolTip && annotations &&
+              <StatTooltip annotations={annotations} />
+            }
+          </div>
+          <SimpleValue {...simpleValueProps} />
+        </div>
+      </div>
+    </div>
+  )
 }
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
-}
-
-export enum StatFormats {
-  Cv = 'cv',
-  Gmi = 'gmi',
-  Percentage = 'percentage',
-  Units = 'units',
-}
+export const SimpleStatMemoized = memo(SimpleStat)

@@ -27,7 +27,7 @@
 
 import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-percentage-bar.css'
-import stylesColors from '../cbg-colors.css'
+import stylesColors from '../common/cbg-colors.css'
 import { formatDuration } from '../../../utils/datetime/datetime.util'
 import { CBGStatType } from '../../../models/stats.model'
 
@@ -63,7 +63,7 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
       case CBGStatType.TimeInRange:
         return formatDuration(value, { condensed: true })
       case CBGStatType.ReadingsInRange:
-        return value.toString()
+        return (Math.round(value * 10) / 10).toString()
       default:
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw Error(`Unknown stat type ${type}`)

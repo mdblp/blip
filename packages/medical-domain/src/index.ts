@@ -39,7 +39,7 @@ import Message from './domains/models/medical/datum/message.model'
 import PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
 import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
 import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
-import PumpSettings, { CgmConfig, DeviceConfig, PumpConfig } from './domains/models/medical/datum/pump-settings.model'
+import PumpSettings, { CgmConfig, DeviceConfig, ParameterConfig, PumpConfig } from './domains/models/medical/datum/pump-settings.model'
 import ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
 import Smbg from './domains/models/medical/datum/smbg.model'
 import Source from './domains/models/medical/datum/enums/source.enum'
@@ -54,7 +54,7 @@ import * as TimeService from './domains/repositories/time/time.service'
 
 export {
   Basal, BaseDatum, BgClasses, BgUnit, Bolus, Cbg, CgmConfig, ConfidentialMode, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
-  Parameter, PhysicalActivity, Prescriptor, PumpManufacturer, PumpConfig, PumpSettings, ReservoirChange, Smbg, Source, TimePrefs, Unit, Upload, Wizard, ZenMode,
+  Parameter, ParameterConfig, PhysicalActivity, Prescriptor, PumpManufacturer, PumpConfig, PumpSettings, ReservoirChange, Smbg, Source, TimePrefs, Unit, Upload, Wizard, ZenMode,
   defaultMedicalDataOptions, TimeService, MGDL_UNITS, MMOLL_UNITS, convertBG
 }
 

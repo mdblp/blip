@@ -25,45 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const EMPTY_DATA_PLACEHOLDER = '--'
+@import "../../../styles/colors.css";
 
-export enum CBGStatType {
-  AverageDailyDose = 'averageDailyDose',
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
+.disabled-label {
+  color: var(--muted);
 }
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
+.disabled-line {
+  background-color: var(--muted);
+  border-radius: 20px;
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  width: 234px;
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
+.line {
+  height: 4px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  opacity: 0.5;
 }
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
+.lines {
+  display: flex;
+  position: relative;
+  width: 234px;
 }
 
-export enum StatFormats {
-  Cv = 'cv',
-  Gmi = 'gmi',
-  Percentage = 'percentage',
-  Units = 'units',
+.line-low {
+  background-color: var(--bg-low);
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
+}
+
+.line-target {
+  background-color: var(--bg-target);
+}
+
+.line-high {
+  background-color: var(--bg-high);
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  flex-grow: 1;
+}
+
+.tooltip-icon {
+  position: relative;
+  top: -0.3em;
+  margin-left: 0.1em;
+}
+
+.tooltip-icon > img {
+  width: 0.9em;
 }

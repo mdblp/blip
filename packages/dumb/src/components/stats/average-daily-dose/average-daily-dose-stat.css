@@ -25,45 +25,84 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const EMPTY_DATA_PLACEHOLDER = '--'
-
-export enum CBGStatType {
-  AverageDailyDose = 'averageDailyDose',
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
+.commonDisplay {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
+.statFooter {
+  border-top: 1px solid var(--stat--border);
+  padding: 0.25em 0.625em .375em;
+  overflow: hidden;
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
+.inputWrapper {
+  width: 100%;
+  color: var(--stat--default);
+  padding: 0.25em 0.625em .375em;
 }
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
+.outputWrapper {
+  width: 100%;
+  color: var(--stat--default);
 }
 
-export enum StatFormats {
-  Cv = 'cv',
-  Gmi = 'gmi',
-  Percentage = 'percentage',
-  Units = 'units',
+.units {
+  composes: smallSize from '../../../styles/typography.css';
+  color: var(--stat--default);
+  font-weight: normal;
+  align-self: center;
+  line-height: 24px;
+  padding-left: .75em;
+}
+
+.stat.isOpen .chartTitleData {
+  display: inline-flex;
+}
+
+
+.inputLabel {
+  font-weight: 500;
+  color: var(--stat--default);
+}
+
+.inputValue {
+  width: 45px;
+  font-weight: 500;
+  color: var(--stat--default);
+  margin-right: .25em;
+  position: relative;
+  top: 1px;
+}
+
+.outputValue {
+  font-weight: 500;
+  color: var(--stat--default);
+  margin-right: .25em;
+  position: relative;
+  top: 1px;
+}
+
+.outputSuffix {
+  composes: smallSize from '../../../styles/typography.css';
+  color: var(--stat--default);
+}
+
+.outputValueDisabled {
+  color: var(--stat--default);
+}
+
+.outputLabel {
+  font-weight: 500;
+  color: var(--stat--default);
+}
+
+.statDisabled {
+  color: var(--stat-disabled);
+}
+
+.insulinTitle {
+  color: var(--insulin)
 }

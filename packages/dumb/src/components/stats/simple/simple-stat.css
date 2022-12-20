@@ -25,45 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const EMPTY_DATA_PLACEHOLDER = '--'
+@import "../../../styles/colors.css";
 
-export enum CBGStatType {
-  AverageDailyDose = 'averageDailyDose',
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
+.chartTitleData {
+  composes: smallSize from '../../../styles/typography.css';
+  display: none;
+  padding-left: .25em;
+  align-items: center;
+  position: relative;
+  top: -1px;
+  color: var(--stat--default);
 }
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
+.chartTitleData span {
+  margin-top: 1px;
 }
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
+.statWrapper {
+  position: relative;
+  overflow: visible;
 }
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
+.coefficientVariationTarget {
+  color: var(--bg-target);
 }
 
-export enum StatFormats {
-  Cv = 'cv',
-  Gmi = 'gmi',
-  Percentage = 'percentage',
-  Units = 'units',
+.coefficientVariationHigh {
+  color: var(--bg-high);
+}
+
+.statDisabled {
+  color: var(--stat-disabled);
+}
+
+.statEnabled {
+  color: var(--text-medium-contrast);
 }
