@@ -342,6 +342,7 @@
   "signup-steppers-ending-message-2": "Si no recibe ningún correo electrónico de nuestra parte, póngase en contacto con nuestro soporte en <a href=\"mailto:technical.support@diabeloop.com\">technical.support@diabeloop.com</a>",
   "signup-unknown-step": "Unknown step",
   "ssn": "SSN",
+  "switch-role-success": "Your account has been successfully switched to HCP",
   "system": "System",
   "team": "Equipo",
   "team-add-member-dialog-checkbox-admin": "Definir como administrador",
