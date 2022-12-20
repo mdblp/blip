@@ -26,7 +26,7 @@
  */
 
 import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
-import { Alarm } from '../../lib/patient/models/alarm.model'
+import { Alarms } from '../../lib/patient/models/alarms.model'
 import { MedicalData } from '../../lib/data/models/medical-data.model'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { MedicalTableValues } from './models/medical-table-values.model'
@@ -113,7 +113,7 @@ export function compareValues(
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
-    alarms: iTeamMember.alarms ?? {} as Alarm,
+    alarms: iTeamMember.alarms ?? {} as Alarms,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
@@ -130,7 +130,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
     metadata: {
       flagged: undefined,
       medicalData: null,
-      hasSentUnreadMessages: iTeamMember.unreadMessages ? iTeamMember.unreadMessages > 0 : false
+      hasSentUnreadMessages: iTeamMember.unreadMessages > 0
     },
     monitoring: iTeamMember.monitoring,
     teams: iTeamMember.teamId === ''

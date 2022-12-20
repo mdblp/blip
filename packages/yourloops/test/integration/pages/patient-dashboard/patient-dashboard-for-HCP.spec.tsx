@@ -32,7 +32,7 @@ import { mockTeamAPI, myTeamId } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
-  mockPatientAPIForHcp,
+  mockPatientApiForHcp,
   monitoredPatient,
   monitoredPatientId,
   pendingPatient,
@@ -58,7 +58,7 @@ describe('Patient dashboard for HCP', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPIForHcp()
+    mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
     mockDataAPI()

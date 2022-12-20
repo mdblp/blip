@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarm } from '../../../lib/patient/models/alarm.model'
+import { Alarms } from '../../../lib/patient/models/alarms.model'
 import { Team, TeamMember } from '../../../lib/team'
 import { PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { PatientSettings } from '../../../lib/patient/models/patient-settings.model'
@@ -51,7 +51,7 @@ export const createPatient = (
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
-  alarms: Partial<Alarm> = undefined
+  alarms: Partial<Alarms> = undefined
 ): Patient => {
   return {
     alarms: {
@@ -96,11 +96,11 @@ export const createPatientTeam = (
     monitoringStatus
   } as PatientTeam
 }
-export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
+export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarms => {
   return {
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate
-  } as Alarm
+  } as Alarms
 }
 
 export function buildPrivateTeam(): Team {

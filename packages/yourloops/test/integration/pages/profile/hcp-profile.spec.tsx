@@ -33,7 +33,7 @@ import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkHCPLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { mockPatientAPIForHcp } from '../../mock/mockPatientAPI'
+import { mockPatientApiForHcp } from '../../mock/mockPatientAPI'
 import { checkHcpProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
@@ -72,7 +72,7 @@ describe('Profile page for hcp', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockPatientAPIForHcp()
+    mockPatientApiForHcp()
   })
 
   it('should render profile page for a french hcp and be able to edit his profile', async () => {

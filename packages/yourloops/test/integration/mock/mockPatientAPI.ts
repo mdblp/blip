@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarm } from '../../../lib/patient/models/alarm.model'
+import { Alarms } from '../../../lib/patient/models/alarms.model'
 import { PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { PatientSettings } from '../../../lib/patient/models/patient-settings.model'
@@ -58,7 +58,7 @@ const defaultMetadata: PatientMetadata = {
   hasSentUnreadMessages: false
 }
 
-const defaultAlarm: Alarm = {
+const defaultAlarm: Alarms = {
   timeSpentAwayFromTargetRate: 0,
   timeSpentAwayFromTargetActive: false,
   frequencyOfSevereHypoglycemiaRate: 0,
@@ -74,7 +74,7 @@ export const buildPatient = (
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
-  alarms: Partial<Alarm> = undefined
+  alarms: Partial<Alarms> = undefined
 ): Patient => {
   return {
     alarms: {
@@ -229,10 +229,10 @@ export const unmonitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPa
 const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatientTwo)
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient)
 
-export const mockPatientAPIForPatients = () => {
+export const mockPatientApiForPatients = () => {
   jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember, unmonitoredPatientAsTeamMember, monitoredPatientTwoAsTeamMember, pendingPatientAsTeamMember])
 }
-export const mockPatientAPIForHcp = () => {
+export const mockPatientApiForHcp = () => {
   jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, pendingPatient])
 }
 

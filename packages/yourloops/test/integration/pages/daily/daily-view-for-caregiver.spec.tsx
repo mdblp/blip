@@ -31,7 +31,7 @@ import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockPatientAPIForPatients, unmonitoredPatientId } from '../../mock/mockPatientAPI'
+import { mockPatientApiForPatients, unmonitoredPatientId } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
 import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
@@ -50,7 +50,7 @@ describe('Daily view for caregiver', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPIForPatients()
+    mockPatientApiForPatients()
     mockChatAPI()
     mockMedicalFilesAPI()
   })

@@ -32,8 +32,8 @@ import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import {
-  mockPatientAPIForHcp,
-  mockPatientAPIForPatients,
+  mockPatientApiForHcp,
+  mockPatientApiForPatients,
   monitoredPatient,
   pendingPatient,
   unmonitoredPatient
@@ -55,7 +55,7 @@ describe('HCP home page', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPIForHcp()
+    mockPatientApiForHcp()
     mockDirectShareApi()
   })
 
@@ -117,7 +117,7 @@ describe('HCP home page', () => {
   })
 
   it('should display an error message if patient removal failed', async () => {
-    mockPatientAPIForPatients()
+    mockPatientApiForPatients()
     jest.spyOn(PatientAPI, 'removePatient').mockRejectedValueOnce(Error('error'))
     await act(async () => {
       renderPage('/')

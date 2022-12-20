@@ -32,7 +32,7 @@ import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockPatientAPIForHcp } from '../../mock/mockPatientAPI'
+import { mockPatientApiForHcp } from '../../mock/mockPatientAPI'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 
 describe('Invalid Route', () => {
@@ -44,7 +44,7 @@ describe('Invalid Route', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPIForHcp()
+    mockPatientApiForHcp()
     mockDirectShareApi()
   })
 

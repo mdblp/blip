@@ -43,7 +43,7 @@ import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
 import UserApi from '../../../../lib/auth/user.api'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
-import { mockPatientAPIForPatients } from '../../mock/mockPatientAPI'
+import { mockPatientApiForPatients } from '../../mock/mockPatientAPI'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
@@ -81,7 +81,7 @@ describe('Profile page for patient', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockPatientAPIForPatients()
+    mockPatientApiForPatients()
   })
 
   it('should render profile page for a french patient and be able to edit his profile', async () => {

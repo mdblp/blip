@@ -32,7 +32,7 @@ import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/mockDirectShareAPI'
 import {
   buildPatientAsTeamMember,
-  mockPatientAPIForPatients,
+  mockPatientApiForPatients,
   monitoredPatientAsTeamMember,
   unmonitoredPatientAsTeamMember
 } from '../../mock/mockPatientAPI'
@@ -54,7 +54,7 @@ describe('Caregiver home page', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPIForPatients()
+    mockPatientApiForPatients()
     mockDirectShareApi()
   })
 
@@ -145,7 +145,6 @@ describe('Caregiver home page', () => {
     const patientData = patientTableBody.getByText(patientFullName)
     expect(patientData).toBeVisible()
 
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
     const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient unmonitored-patient@diabeloop.fr' })
     expect(removePatientButton).toBeVisible()
