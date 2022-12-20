@@ -84,6 +84,7 @@ const PatientDashboard = (props) => {
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
+          parametersConfig={tidelineData.medicalData?.pumpSettings[0]?.payload?.parameters}
         />
         <DeviceUsage
           id="dashboard-device-usage"

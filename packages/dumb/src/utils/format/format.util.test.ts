@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatBgValue, formatParameterValue } from './format.util'
+import { formatBgValue, formatDecimalNumber, formatParameterValue } from './format.util'
 import { BgPrefs } from '../../models/blood-glucose.model'
 import { Unit } from 'medical-domain'
 
@@ -126,6 +126,16 @@ describe('FormatUtil', () => {
           expect(formatBgValue(3.36, { bgUnits: Unit.MmolPerLiter } as BgPrefs, { low: 40 })).toEqual('3.4')
         })
       })
+    })
+  })
+
+  describe('formatDecimalNumber', () => {
+    it('should return correct result when places is not defined', () => {
+      expect(formatDecimalNumber(120.5, undefined)).toEqual('121')
+    })
+
+    it('should return correct result when places is defined', () => {
+      expect(formatDecimalNumber(120.5, 3)).toEqual('120.500')
     })
   })
 })

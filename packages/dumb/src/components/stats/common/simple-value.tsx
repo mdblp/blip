@@ -25,45 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const EMPTY_DATA_PLACEHOLDER = '--'
+import React, { FunctionComponent } from 'react'
+import styles from './simple-value.css'
 
-export enum CBGStatType {
-  AverageDailyDose = 'averageDailyDose',
-  AverageGlucose = 'averageGlucose',
-  Carbs = 'carbs',
-  ReadingsInRange = 'readingsInRange',
-  StandardDeviation = 'standardDev',
-  TimeInAuto = 'timeInAuto',
-  TimeInRange = 'timeInRange',
-  TotalInsulin = 'totalInsulin',
+export interface SimpleValueProps {
+  className?: string
+  suffix: string
+  value: string
 }
 
-export interface CBGPercentageData {
-  id: StatLevel
-  legendTitle: string
-  title: string
-  value: number
-}
+export const SimpleValue: FunctionComponent<SimpleValueProps> = (props) => {
+  const {
+    className,
+    suffix,
+    value
+  } = props
 
-export enum StatLevel {
-  VeryHigh = 'veryHigh',
-  High = 'high',
-  Target = 'target',
-  Low = 'low',
-  VeryLow = 'veryLow'
-}
+  const classNames = className ? `${styles.data} ${className}` : styles.summaryData
 
-export interface BgClasses {
-  // veryHigh threshold is not define here as it is not needed. It is represented by all the values that are greater than high.
-  high: number // High threshold represents all the values between target and high.
-  low: number // Low threshold represents all the values between veryLow and target
-  target: number // Target threshold represents all the values between low and target
-  veryLow: number // Very low threshold represents all the values between 0 and veryLow
-}
-
-export enum StatFormats {
-  Cv = 'cv',
-  Gmi = 'gmi',
-  Percentage = 'percentage',
-  Units = 'units',
+  return (
+    <div className={styles.simpleValue}>
+      {value &&
+        <div className={classNames}>
+          <span className={styles.value}>
+            {value}
+          </span>
+          <span className={styles.suffix}>
+            {suffix}
+          </span>
+        </div>
+      }
+    </div>
+  )
 }

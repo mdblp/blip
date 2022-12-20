@@ -38,6 +38,7 @@ const reFuncTranslate3 = /[^a-zA-Z0-9]t\(`([^`]+)`\s*(,[^)]+)?\)/
 /** Keys to ignore (used in <Trans /> or composed keys or others mechanism) */
 const ignoredTransKeysForBlip = [
   'html.setting-no-uploaded-data',
+  'between {{low}} - {{high}} {{- units}}',
   // Bolus types:
   'bolus_biphasic',
   'bolus_normal',

@@ -25,57 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../styles/colors.css";
+@import "../../../styles/colors.css";
 
-.disabled-label {
-  color: var(--muted);
+.title {
+  margin-left: 4px;
 }
 
-.disabled-line {
-  background-color: var(--muted);
-  border-radius: 20px;
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  width: 234px;
+.veryHigh-background {
+  background-color: var(--bg-very-high);
 }
 
-.line {
-  height: 4px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  opacity: 0.5;
+.high-background {
+  background-color: var(--bg-high);
 }
 
-.lines {
-  display: flex;
-  position: relative;
-  width: 234px;
-}
-
-.line-low {
-  background-color: var(--bg-low);
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
-}
-
-.line-target {
+.target-background {
   background-color: var(--bg-target);
 }
 
-.line-high {
-  background-color: var(--bg-high);
-  border-bottom-right-radius: 20px;
-  border-top-right-radius: 20px;
-  flex-grow: 1;
+.low-background {
+  background-color: var(--bg-low);
 }
 
-.tooltip-icon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
+.veryLow-background {
+  background-color: var(--bg-very-low);
 }
 
-.tooltip-icon > img {
-  width: 0.9em;
+.veryHigh-color {
+  color: var(--bg-very-high);
+}
+
+.high-color {
+  color: var(--bg-high);
+}
+
+.target-color {
+  color: var(--bg-target);
+}
+
+.low-color {
+  color: var(--bg-low);
+}
+
+.veryLow-color {
+  color: var(--bg-very-low);
 }

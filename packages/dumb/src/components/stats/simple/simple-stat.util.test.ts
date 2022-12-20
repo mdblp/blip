@@ -25,48 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../styles/colors.css";
+import { StatFormats } from '../../../models/stats.model'
+import { buildSimpleValueProps } from './simple-stat.util'
 
-.title {
-  margin-left: 4px;
-}
+describe('SimpleStat util', () => {
+  describe('buildbuildSimpleValueProps', () => {
+    it('should return correct buildSimpleValueProps when format is cv and value > 0', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Cv, 10, 5.265)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '%', value: '5' })
+    })
 
-.veryHigh-background {
-  background-color: var(--bg-very-high);
-}
+    it('should return correct buildSimpleValueProps when format is gmi and value > 0', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Cv, 10, 38.63)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '%', value: '39' })
+    })
 
-.high-background {
-  background-color: var(--bg-high);
-}
+    it('should return correct buildSimpleValueProps when format is percentage and total > 0', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Percentage, 10, 4.56)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '%', value: '46' })
+    })
 
-.target-background {
-  background-color: var(--bg-target);
-}
-
-.low-background {
-  background-color: var(--bg-low);
-}
-
-.veryLow-background {
-  background-color: var(--bg-very-low);
-}
-
-.veryHigh-color {
-  color: var(--bg-very-high);
-}
-
-.high-color {
-  color: var(--bg-high);
-}
-
-.target-color {
-  color: var(--bg-target);
-}
-
-.low-color {
-  color: var(--bg-low);
-}
-
-.veryLow-color {
-  color: var(--bg-very-low);
-}
+    it('should return correct buildSimpleValueProps when format is unknown', () => {
+      const simpleValueProps = buildSimpleValueProps(StatFormats.Units, 10, 4.56)
+      expect(simpleValueProps).toEqual({ className: undefined, suffix: '', value: '--' })
+    })
+  })
+})
