@@ -133,7 +133,7 @@ describe('HCP home page', () => {
       await userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
-    expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeInTheDocument()
+    expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })
 
