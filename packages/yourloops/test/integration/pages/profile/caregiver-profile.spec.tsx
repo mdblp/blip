@@ -33,7 +33,7 @@ import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
-import { mockPatientAPI } from '../../mock/mockPatientAPI'
+import { mockPatientApiForHcp, mockPatientApiForPatients } from '../../mock/mockPatientAPI'
 import { checkCaregiverProfilePage } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
@@ -72,7 +72,8 @@ describe('Caregiver page for hcp', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockPatientAPI()
+    mockPatientApiForPatients()
+    mockPatientApiForHcp()
   })
 
   it('should render profile page for a caregiver and be able to change his role to HCP', async () => {
