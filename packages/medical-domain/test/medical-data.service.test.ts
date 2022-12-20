@@ -37,6 +37,8 @@ import PhysicalActivityService from '../src/domains/repositories/medical/datum/p
 import DatumService from '../src/domains/repositories/medical/datum.service'
 import MedicalDataService from '../src/domains/repositories/medical/medical-data.service'
 import createRandomDatum from './models/data-generator'
+import BasicData, * as BasiscsDataService from '../src/domains/repositories/medical/basics-data.service'
+import * as TimeService from '../src/domains/repositories/time/time.service'
 import crypto from 'crypto'
 
 // window.crypto is not defined in jest...
@@ -349,6 +351,115 @@ describe('MedicalDataService', () => {
       testEndPoints(medicalData)
       // Fill Data checks
       testFillData(medicalData)
+    })
+  })
+  describe('Basics Data', () => {
+    const medicalDataService = new MedicalDataService()
+    const medicalDataOpts = {
+      dateRange: {
+        start: new Date().valueOf(),
+        end: new Date().valueOf() + 1
+      },
+      timePrefs: {
+        timezoneAware: true,
+        timezoneName: 'Europe/Paris',
+        timezoneOffset: 60
+      }
+    }
+    medicalDataService.opts = medicalDataOpts
+    const mockedData = (endTimezone: string): BasicData => ({
+      timezone: endTimezone,
+      dateRange: [],
+      days: [],
+      nData: 0,
+      data: {
+        reservoirChange: {
+          data: []
+        },
+        deviceParameter: {
+          data: []
+        },
+        upload: {
+          data: []
+        },
+        cbg: {
+          data: []
+        },
+        smbg: {
+          data: []
+        },
+        basal: {
+          data: []
+        },
+        bolus: {
+          data: []
+        },
+        wizard: {
+          data: []
+        }
+      }
+    })
+
+    const generateBasicDataMock = jest.fn(
+      (_medicalData: MedicalData, _startEpoch: number, _startTimezone: string, _endEpoch: number, endTimezone: string): BasicData | null => {
+        return mockedData(endTimezone)
+      })
+
+    beforeAll(() => {
+      BasalService.deduplicate = basalDeduplicateMock
+      BolusService.deduplicate = bolusDeduplicateMock
+      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
+      // eslint-disable-next-line no-import-assign
+      BasiscsDataService.generateBasicData = generateBasicDataMock
+      medicalDataService.add([])
+    })
+
+    afterEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('should not generate basicsData when startDate is after endDate', () => {
+      const basicsData = medicalDataService.generateBasicsData(
+        '2022-12-01T08:00:00Z', '2022-12-01T07:00:00Z'
+      )
+      expect(basicsData).toBe(null)
+      expect(medicalDataService.basicsData).toBe(null)
+      expect(generateBasicDataMock).toHaveBeenCalledTimes(0)
+    })
+
+    it('should generate basicsData when startDate is before endDate', () => {
+      const start = '2022-12-01T07:00:00Z'
+      const end = '2022-12-01T08:00:00Z'
+      const tz = medicalDataOpts.timePrefs.timezoneName
+      const basicsData = medicalDataService.generateBasicsData(start, end)
+
+      expect(basicsData).toStrictEqual(mockedData(tz))
+      expect(medicalDataService.basicsData).toStrictEqual(mockedData(tz))
+      expect(generateBasicDataMock).toHaveBeenCalledWith(
+        medicalDataService.medicalData, new Date(start).valueOf() + 1, tz,
+        new Date(end).valueOf() - 1, tz
+      )
+    })
+
+    it('should generate basicsData with medicalData endpoints when startDate and endDate are undefined', () => {
+      const tz = medicalDataOpts.timePrefs.timezoneName
+      const mockedStartEpoch = 150
+      const twoWeeksAgoMock = jest.fn(
+        (_time: string | number, _timezone: string): number => mockedStartEpoch
+      )
+      // eslint-disable-next-line no-import-assign
+      TimeService.twoWeeksAgo = twoWeeksAgoMock
+      const basicsData = medicalDataService.generateBasicsData()
+      expect(basicsData).toStrictEqual(mockedData(tz))
+      expect(medicalDataService.basicsData).toStrictEqual(mockedData(tz))
+      expect(generateBasicDataMock).toHaveBeenCalledTimes(1)
+
+      const end = new Date(medicalDataService.endpoints[1]).valueOf()
+      expect(generateBasicDataMock).toHaveBeenCalledWith(
+        medicalDataService.medicalData, mockedStartEpoch + 1, tz,
+        end - 2, tz
+      )
+      expect(twoWeeksAgoMock).toHaveBeenCalledWith(end - 1, tz)
     })
   })
 })

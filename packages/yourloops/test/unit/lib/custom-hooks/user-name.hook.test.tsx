@@ -25,44 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
-import { act, Simulate } from 'react-dom/test-utils'
-import ProSanteConnectButton from '../../../../components/buttons/pro-sante-connect-button'
+import { renderHook } from '@testing-library/react-hooks'
+import { useUserName } from '../../../../lib/custom-hooks/user-name.hook'
 
-describe('Pro sante connect button', () => {
-  let container: HTMLElement | null = null
+describe('User name hook', () => {
+  describe('getUserName', () => {
+    it('should return the translated value if first and last name are present, else the fullname', () => {
+      const firstName = 'Ali'
+      const lastName = 'Gator'
+      const fullName = 'Ali Gator'
 
-  const redirect = jest.fn()
+      const { result } = renderHook(() => useUserName())
+      const onlyFullNameCaseName = result.current.getUserName('', '', fullName)
+      const firstNameCaseName = result.current.getUserName(firstName, '', fullName)
+      const lastNameCaseName = result.current.getUserName('', lastName, fullName)
+      const bothNamesCaseName = result.current.getUserName(firstName, lastName, fullName)
 
-  async function mountComponent(): Promise<void> {
-    await act(() => {
-      return new Promise((resolve) => {
-        render(<ProSanteConnectButton onClick={redirect} />, container, resolve)
-      })
+      expect(onlyFullNameCaseName).toEqual(fullName)
+      expect(firstNameCaseName).toEqual(fullName)
+      expect(lastNameCaseName).toEqual(fullName)
+      expect(bothNamesCaseName).toEqual('user-name')
     })
-  }
-
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
   })
-
-  afterEach(() => {
-    if (container) {
-      unmountComponentAtNode(container)
-      container.remove()
-      container = null
-    }
-  })
-
-  it(
-    'should redirect to eCPS login when a HCP click on Pro sante connect button',
-    async () => {
-      await mountComponent()
-      const cpsButton = container.querySelector('#pro-sante-connect-button')
-      Simulate.click(cpsButton)
-      expect(redirect).toHaveBeenCalledTimes(1)
-    }
-  )
 })

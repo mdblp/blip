@@ -31,23 +31,20 @@ import { useTranslation } from 'react-i18next'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 
 import Box from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
 
 import { useAuth } from '../../lib/auth'
 import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
 import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
-import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-button'
 import PatientProfileForm from './patient-form'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
 import { ProfileFormKey } from './models/enums/profile-form-key.enum'
-import { CountryCodes } from '../../lib/auth/models/country.model'
 
 const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const { redirectToProfessionalAccountLogin, user } = useAuth()
+  const { user } = useAuth()
   const { profileForm, updateProfileForm, errors } = useProfilePageState()
   const { classes } = profileFormCommonClasses()
 
@@ -95,24 +92,6 @@ const PersonalInfoForm: FunctionComponent = () => {
               errorTranslationKey="profession-dialog-title"
             />
           </Box>
-
-          {user.settings?.country === CountryCodes.France &&
-            <React.Fragment>
-              {user.frProId
-                ? <TextField
-                  id="professional-account-number-text-field"
-                  value={user.getParsedFrProId()}
-                  label={t('professional-account-number')}
-                  variant="standard"
-                  disabled
-                  className={classes.formInput}
-                />
-                : <FormControl className={classes.formInput}>
-                  <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
-                </FormControl>
-              }
-            </React.Fragment>
-          }
         </Box>
       }
 

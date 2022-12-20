@@ -71,7 +71,7 @@ describe('HCP home page', () => {
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(2)
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
-    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
+    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient ylp.ui.test.patient28@diabeloop.fr' })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -95,7 +95,7 @@ describe('HCP home page', () => {
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userId}`)
-    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
+    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient ylp.ui.test.patient28@diabeloop.fr' })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -124,7 +124,7 @@ describe('HCP home page', () => {
     })
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatient.email}` })
     await userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })

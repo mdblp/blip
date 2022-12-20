@@ -441,7 +441,7 @@ class MedicalDataService {
 
   // Basics data are needed to display the cartridge changes in dashboard and in print actions
   // We may only need to generate these for the current day displayed in dashboard view and on print...
-  generateBasicsData(startDate: string | null = null, endDate: string | null = null): void {
+  generateBasicsData(startDate: string | null = null, endDate: string | null = null): BasicData | null {
     const start = startDate ?? this.endpoints[0]
     const end = endDate ?? this.endpoints[1]
     let startEpoch = new Date(start).valueOf()
@@ -458,12 +458,14 @@ class MedicalDataService {
     if (startEpoch > endEpoch) {
       console.warn('Invalid date range', { start: toISOString(startEpoch), mEnd: toISOString(endEpoch) })
       this.basicsData = null
-      return
+      return null
     }
     startEpoch += 1
     endEpoch -= 1
 
     this.basicsData = generateBasicData(this.medicalData, startEpoch, startTimezone, endEpoch, endTimezone)
+
+    return this.basicsData
   }
 
   editMessage(message: Record<string, unknown>): Message | null {
