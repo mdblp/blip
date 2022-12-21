@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-<<<<<<< HEAD:packages/yourloops/lib/auth/models/change-user-role-to-hcp-payload.model.ts
 import { Consent } from './consent.model'
 import { HcpProfession } from './enums/hcp-profession.enum'
 
@@ -34,7 +33,7 @@ export interface ChangeUserRoleToHcpPayload {
   privacyPolicy: Consent
   contactConsent: Consent
   hcpProfession: HcpProfession
-=======
+}
 export interface Alarms {
   timeSpentAwayFromTargetRate: number
   timeSpentAwayFromTargetActive: boolean
@@ -42,5 +41,4 @@ export interface Alarms {
   frequencyOfSevereHypoglycemiaActive: boolean
   nonDataTransmissionRate: number
   nonDataTransmissionActive: boolean
->>>>>>> dblp:packages/yourloops/lib/patient/models/alarms.model.ts
 }
