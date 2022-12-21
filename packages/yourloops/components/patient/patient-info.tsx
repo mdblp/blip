@@ -32,6 +32,7 @@ import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { genderLabels } from '../../lib/auth/auth.helper'
 import { Patient } from '../../lib/patient/models/patient.model'
+import moment from 'moment-timezone'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   body: {
@@ -110,7 +111,7 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
               {t('birthdate')}
             </Typography>
             <Typography id={`patient-${patient.userid}-birthdate`} className={classes.value}>
-              {patient.profile.birthdate?.toDateString()}
+              {moment.utc(patient.profile.birthdate).format('L')}
             </Typography>
           </Box>
           <Box className={classes.patientInfo}>

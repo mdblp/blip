@@ -88,14 +88,15 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
       t={t}
       components={{ linkPrivacyPolicy }}
       values={{ privacyPolicy }}
-      parent={React.Fragment}>
+      parent={React.Fragment}
+    >
       I have read and accepted YourLoops {privacyPolicy}.
     </Trans>
   )
 
   return (
     <FormControlLabel
-      id={`${id}-label-privacy-policy`}
+      data-testid={`${id}-label-privacy-policy`}
       control={checkboxPolicy}
       label={labelPrivacyPolicy}
       className={classes.formControlLabel}
@@ -129,14 +130,15 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
       t={t}
       components={{ linkTerms }}
       values={{ terms }}
-      parent={React.Fragment}>
+      parent={React.Fragment}
+    >
       I have read and accepted YourLoops {terms}.
     </Trans>
   )
 
   return (
     <FormControlLabel
-      id={`${id}-label-terms`}
+      data-testid={`${id}-label-terms`}
       control={checkboxTerms}
       label={labelTerms}
       className={classes.formControlLabel}
@@ -177,7 +179,7 @@ export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id
 
   return (
     <FormControlLabel
-      id={`${id}-label-terms`}
+      data-testid={`${id}-label-terms`}
       control={checkboxTerms}
       label={labelTerms}
       className={classes.formControlLabel}
@@ -208,7 +210,7 @@ export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole,
 
   return (
     <FormControlLabel
-      id={`${id}-label-feedback`}
+      data-testid={`${id}-label-feedback`}
       control={checkboxFeedback}
       label={labelFeedback}
       className={classes.formControlLabel}

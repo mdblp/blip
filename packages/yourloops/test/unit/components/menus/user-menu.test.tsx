@@ -27,15 +27,10 @@
 
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { renderToString } from 'react-dom/server'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-import FaceIcon from '@mui/icons-material/Face'
-import RoundedHospitalIcon from '../../../../components/icons/rounded-hospital-icon'
-import StethoscopeIcon from '../../../../components/icons/stethoscope-icon'
-
-import UserMenu from '../../../../components/menus/user-menu'
+import { UserMenuMemoized as UserMenu } from '../../../../components/menus/user-menu'
 import { triggerMouseEvent } from '../../common/utils'
 import User from '../../../../lib/auth/models/user.model'
 import * as authHookMock from '../../../../lib/auth/auth.hook'
@@ -69,30 +64,6 @@ describe('User Menu', () => {
         logout
       }
     })
-  })
-
-  it('should display the hcp icon', () => {
-    mountComponent()
-    const roleIcon = document.querySelector('#user-role-icon')
-    expect(roleIcon.innerHTML).toEqual(renderToString(<StethoscopeIcon />))
-  })
-
-  it('should display the caregiver icon', () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.caregiver } as User }
-    })
-    mountComponent()
-    const roleIcon = document.querySelector('#user-role-icon')
-    expect(roleIcon.innerHTML).toEqual(renderToString(<RoundedHospitalIcon />))
-  })
-
-  it('should display the patient icon', () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.patient } as User }
-    })
-    mountComponent()
-    const roleIcon = document.querySelector('#user-role-icon')
-    expect(roleIcon.innerHTML).toEqual(renderToString(<FaceIcon />))
   })
 
   it('should redirect to \'/preferences\' route when clicking on profile link', () => {

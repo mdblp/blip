@@ -25,52 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from '../../units/models/enums/units-type.enum'
+import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
+import { SelectedTeamContextResult } from './selected-team-context.model'
+import { useSelectedTeamProviderCustomHook } from './selected-team.hook'
 
-export interface Alarm {
-  timeSpentAwayFromTargetRate: number
-  timeSpentAwayFromTargetActive: boolean
-  frequencyOfSevereHypoglycemiaRate: number
-  frequencyOfSevereHypoglycemiaActive: boolean
-  nonDataTransmissionRate: number
-  nonDataTransmissionActive: boolean
+const SelectedTeamContext = createContext<SelectedTeamContextResult>({} as SelectedTeamContextResult)
+
+export const SelectedTeamProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const selectedTeamProviderCustomHook = useSelectedTeamProviderCustomHook()
+
+  return <SelectedTeamContext.Provider value={selectedTeamProviderCustomHook}>{children}</SelectedTeamContext.Provider>
 }
 
-export interface Thresholds {
-  minHighBg: number
-  maxHighBg: number
-  minVeryLowBg: number
-  maxVeryLowBg: number
-  minLowBg: number
-  maxLowBg: number
-}
-
-export interface BgValues {
-  bgUnitDefault: UnitsType
-  outOfRangeThresholdDefault: number
-  nonDataTxThresholdDefault: number
-  hypoThresholdDefault: number
-  veryLowBgDefault: number
-  lowBgDefault: number
-  highBgDefault: number
-  reportingPeriodDefault: number
-}
-
-export const DEFAULT_BG_VALUES: BgValues = {
-  bgUnitDefault: UnitsType.MGDL,
-  outOfRangeThresholdDefault: 50,
-  nonDataTxThresholdDefault: 50,
-  hypoThresholdDefault: 5,
-  veryLowBgDefault: 54,
-  lowBgDefault: 70,
-  highBgDefault: 180,
-  reportingPeriodDefault: 7 * 24
-}
-export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
-  minHighBg: 140,
-  maxHighBg: 250,
-  minVeryLowBg: 40,
-  maxVeryLowBg: 90,
-  minLowBg: 50,
-  maxLowBg: 100
+export function useSelectedTeamContext(): SelectedTeamContextResult {
+  return useContext(SelectedTeamContext)
 }

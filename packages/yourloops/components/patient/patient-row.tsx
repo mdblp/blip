@@ -55,6 +55,7 @@ import { PatientRowProps } from './models/patient-table-props.model'
 import { MedicalData } from '../../lib/data/models/medical-data.model'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { FilterType } from '../../lib/patient/models/enums/filter-type.enum'
+import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 
 const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Theme) => {
   return {
@@ -106,16 +107,17 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
   const [patientToRemove, setPatientToRemove] = useState<Patient | null>(null)
 
   const userId = patient.userid
-  const email = patient.profile.email
-  const patientFullName = patient.profile.fullName
+  const { email, firstName, fullName, lastName } = patient.profile
+  const { getUserName } = useUserName()
+  const patientFullName = getUserName(firstName, lastName, fullName)
   const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
   const isAlreadyInATeam = PatientUtils.isInAtLeastATeam(patient)
-  const hasUnreadMessages = patient.metadata.unreadMessagesSent > 0
+  const hasUnreadMessages = patient.metadata.hasSentUnreadMessages
 
   const userToRemove = {
     id: userId,
-    fullName: patient.profile.fullName,
-    email: patient.profile.email
+    fullName: patientFullName,
+    email
   }
 
   const {
@@ -233,19 +235,19 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         }
 
         <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
-          {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
           {isUserHcp && timeSpentAwayFromTargetActive &&
             <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={frequencyOfSevereHypoglycemiaRateClasses}>
-          {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
             <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={dataNotTransferredRateClasses}>
-          {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
+          {`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}
           {isUserHcp && nonDataTransmissionActive &&
             <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
@@ -277,7 +279,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
           >
             <Box>
               <IconActionButton
-                ariaLabel={`${t('remove-patient')}-${patient.profile.email}`}
+                ariaLabel={`${t('remove-patient')} ${email}`}
                 icon={<PersonRemoveIcon />}
                 onClick={onClickRemovePatient}
               />

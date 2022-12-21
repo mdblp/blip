@@ -53,6 +53,7 @@ import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 
 const classes = makeStyles()((theme: Theme) => ({
   clickableMenu: {
@@ -76,15 +77,18 @@ function UserMenu(): JSX.Element {
   const [tooltipText, setTooltipText] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const opened = !!anchorEl
+  const { firstName, fullName, lastName } = user
+  const { getUserName } = useUserName()
+  const userName = getUserName(firstName, lastName, fullName)
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
       case UserRoles.hcp:
-        return <StethoscopeIcon />
+        return <StethoscopeIcon data-testid="hcp-icon" />
       case UserRoles.caregiver:
-        return <RoundedHospitalIcon />
+        return <RoundedHospitalIcon data-testid="caregiver-icon" />
       case UserRoles.patient:
-        return <FaceIcon />
+        return <FaceIcon data-testid="patient-icon" />
       default:
         console.error('Unknown role')
         return null
@@ -117,8 +121,8 @@ function UserMenu(): JSX.Element {
    */
   useEffect(() => {
     const userFullNameHtmlElement = document.getElementById('user-menu-full-name')
-    setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? user?.fullName : '')
-  }, [user?.fullName])
+    setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? userName : '')
+  }, [userName])
 
   return (
     <React.Fragment>
@@ -130,14 +134,14 @@ function UserMenu(): JSX.Element {
         maxWidth={250}
         onClick={event => setAnchorEl(event.currentTarget)}
       >
-        <Box id="user-role-icon" display="flex">
+        <Box display="flex">
           {getRoleIcon()}
         </Box>
         {!isMobileBreakpoint &&
           <React.Fragment>
             <Tooltip title={tooltipText} disableInteractive>
               <Typography id="user-menu-full-name" className={typography}>
-                {user?.fullName}
+                {userName}
               </Typography>
             </Tooltip>
             <ArrowDropDownIcon />
@@ -184,4 +188,4 @@ function UserMenu(): JSX.Element {
   )
 }
 
-export default UserMenu
+export const UserMenuMemoized = React.memo(UserMenu)

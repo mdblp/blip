@@ -113,14 +113,6 @@ export function getUserLastName(user: IUser): string {
 }
 
 /**
- * @param user The user to have firstName / lastName
- * @returns The object for "user-name" translation string
- */
-export function getUserFirstLastName(user: IUser): { firstName: string, lastName: string } {
-  return { firstName: getUserFirstName(user), lastName: getUserLastName(user) }
-}
-
-/**
  * YLP-878 Wrong settings for glucose units uploaded by the handset
  * @param settings Settings received
  * @returns Fixed settings

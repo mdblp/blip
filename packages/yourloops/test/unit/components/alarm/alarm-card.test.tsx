@@ -35,7 +35,7 @@ import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
 import AlarmCard from '../../../../components/alarm/alarm-card'
 import User from '../../../../lib/auth/models/user.model'
-import { Alarm } from '../../../../lib/patient/models/alarm.model'
+import { Alarms } from '../../../../lib/patient/models/alarms.model'
 import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { getTheme } from '../../../../components/theme'
 
@@ -94,7 +94,7 @@ describe('AlarmCard', () => {
   })
 
   it('should display correct title patient has 2 alarms', () => {
-    const alarm: Alarm = {
+    const alarm: Alarms = {
       timeSpentAwayFromTargetRate: 0,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 5,
@@ -102,13 +102,13 @@ describe('AlarmCard', () => {
       nonDataTransmissionRate: 10,
       nonDataTransmissionActive: true
     }
-    const patientWithAlarms = createPatient('fakePatientId', [], undefined, undefined, undefined, { alarm })
+    const patientWithAlarms = createPatient('fakePatientId', [], undefined, undefined, undefined, undefined, alarm)
     mountComponent({ patient: patientWithAlarms })
     expect(document.getElementById('alarm-card-header-id').querySelector('.MuiCardHeader-title').innerHTML).toEqual('events (+2)')
   })
 
   it('should open dialog when clicking on configure button and close it when clicking on cancel', () => {
-    const alarm: Alarm = {
+    const alarm: Alarms = {
       timeSpentAwayFromTargetRate: 10,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 20,
@@ -119,7 +119,7 @@ describe('AlarmCard', () => {
     const monitoring: Monitoring = {
       enabled: true
     }
-    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, { alarm })
+    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, undefined, alarm)
     mountComponent({ patient: patientWithMonitoring })
     const configureButton = document.getElementById('configure-icon-button-id')
     triggerMouseEvent('click', configureButton)

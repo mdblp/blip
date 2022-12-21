@@ -35,7 +35,7 @@ import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invita
 import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { Team } from '../../../lib/team'
 import { Profile } from '../../../lib/auth/models/profile.model'
-import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../lib/patient/models/alarm.model'
+import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../lib/patient/models/alarms.model'
 
 const {
   minVeryLowBg,
@@ -63,12 +63,15 @@ export const monitoringParametersBgUnitMmol = {
   reportingPeriod: 7
 }
 
+export const myTeamId = '62fe00defc9374b2fed32bcc'
 export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
 export const myThirdTeamId = '62fe00defc9374b2fed32bce'
+export const mySecondTeamName = 'MySecondTeam'
+export const myThirdTeamName = 'MyThirdTeam - to be deleted'
 
 export const teamOne: Team = {
   name: 'MyTeam',
-  id: '62fe00defc9374b2fed32bcc',
+  id: myTeamId,
   code: '036038775',
   type: TeamType.medical,
   phone: '0476000000',
@@ -92,7 +95,7 @@ export const teamOne: Team = {
 }
 
 export const teamTwo: Team = {
-  name: 'MySecondTeam',
+  name: mySecondTeamName,
   id: mySecondTeamId,
   code: '241548778',
   type: TeamType.medical,
@@ -123,7 +126,7 @@ export const teamTwo: Team = {
 }
 
 export const teamThree: Team = {
-  name: 'MyThirdTeam - to be deleted',
+  name: myThirdTeamName,
   id: myThirdTeamId,
   code: '263381988',
   type: TeamType.medical,

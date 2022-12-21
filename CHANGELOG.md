@@ -4,12 +4,15 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.3-beta - 2022-11-29
 ### Added
+- YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
+- YLP-1947 Add team selection dropdown on patient dashboard for HCP
 - YLP-1973 User should be able to uncheck the training check box
 ### Engineering use
+- YLP-1444 Handle user name display for Japanese
 - YLP-1624 Fix error messages when inviting a patient already in the team
 - YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
@@ -25,6 +28,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1903 Timezone detection should exclude some data types
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
+- YLP-1910 Retrieve patients from bff v1 route
 - YLP-1916 Migrate tooltips from viz to dumb
 - YLP-1919 Use user preferred units on alarm configuration component
 - YLP-1935 CBG thresholds should be used from medical data service
@@ -33,8 +37,11 @@ It is based on Tidepool Blip 1.27.
 - YLP-1949 Migrate Lines component to dumb
 - YLP-1953 Migrate WheelPercent to dumb
 - YLP-1960 enhance pipeline
+- YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
+- YLP-1976 Fix PDF generation
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
+- Migrate MUI 4 to MUI 5
 - Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages

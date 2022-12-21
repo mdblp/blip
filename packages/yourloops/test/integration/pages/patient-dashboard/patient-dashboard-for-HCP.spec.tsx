@@ -28,16 +28,17 @@
 import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI, myThirdTeamId } from '../../mock/mockTeamAPI'
+import { mockTeamAPI, myTeamId, myThirdTeamId } from '../../mock/mockTeamAPI'
 import { mockDataAPI } from '../../mock/mockDataAPI'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import {
-  mockPatientAPI,
-  monitoredPatientFullName,
+  mockPatientApiForHcp,
+  monitoredPatient,
   monitoredPatientId,
+  pendingPatient,
+  unmonitoredPatient,
   monitoredPatientWithMmol,
   monitoredPatientWithMmolId,
-  unmonitoredPatientFullName,
   unmonitoredPatientId
 } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
@@ -63,7 +64,7 @@ describe('Patient dashboard for HCP', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPI()
+    mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
     mockDataAPI()
@@ -98,22 +99,40 @@ describe('Patient dashboard for HCP', () => {
   }
 
   it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
+    localStorage.setItem('selectedTeamId', '')
+
     act(() => {
       renderPage(unMonitoredPatientDashboardRoute)
     })
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
-    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatientFullName)
+    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatient.profile.fullName)
     checkHCPLayout(`${firstName} ${lastName}`)
+
+    /**
+     * TODO YLP-1987 Uncomment this test once the January release is done
+     */
+    // const header = within(screen.getByTestId('app-main-header'))
+    // const teamsDropdown = header.getByText(myThirdTeamName)
+    // expect(teamsDropdown).toBeVisible()
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
+    localStorage.setItem('selectedTeamId', myTeamId)
+
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
+    /**
+     * TODO YLP-1987 Uncomment this test once the January release is done
+     */
+    // const header = within(screen.getByTestId('app-main-header'))
+    // const teamsDropdown = header.getByText(mySecondTeamName)
+    // expect(teamsDropdown).toBeVisible()
+
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatientFullName)
+    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatient.profile.fullName)
     /* Patient info widget */
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()
@@ -137,14 +156,14 @@ describe('Patient dashboard for HCP', () => {
     const patientInfoCard = within(await screen.findByTestId('patient-info-card'))
     const secondaryHeader = within(screen.getByTestId('patient-data-subnav-outer'))
 
-    expect(patientInfoCard.getByText(monitoredPatientFullName)).toBeVisible()
-    fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatientFullName))
-    fireEvent.click(screen.getByText(unmonitoredPatientFullName))
+    expect(patientInfoCard.getByText(monitoredPatient.profile.fullName)).toBeVisible()
+    fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatient.profile.fullName))
+    fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
     await waitFor(() => {
       // call this to update the card and catch the new patient
-      const patientInfoCardUpdated = within(screen.getByTestId('patient-info-card'))
-      expect(patientInfoCardUpdated.getByText(unmonitoredPatientFullName)).toBeVisible()
+      const patientInfoCard = within(screen.getByTestId('patient-info-card'))
+      expect(patientInfoCard.getByText(pendingPatient.profile.fullName)).toBeVisible()
     })
   })
 

@@ -30,7 +30,12 @@ import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/mockDirectShareAPI'
-import { buildPatient, mockPatientAPI, monitoredPatient, unmonitoredPatient } from '../../mock/mockPatientAPI'
+import {
+  buildPatientAsTeamMember,
+  mockPatientApiForPatients,
+  monitoredPatientAsTeamMember,
+  unmonitoredPatientAsTeamMember
+} from '../../mock/mockPatientAPI'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockTeamAPI } from '../../mock/mockTeamAPI'
 import { checkCaregiverLayout } from '../../assert/layout'
@@ -49,7 +54,7 @@ describe('Caregiver home page', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserDataFetch({ firstName, lastName })
-    mockPatientAPI()
+    mockPatientApiForPatients()
     mockDirectShareApi()
   })
 
@@ -61,7 +66,7 @@ describe('Caregiver home page', () => {
   })
 
   it('should filter patients correctly depending on the search value', async () => {
-    const patient1 = buildPatient({
+    const patient1 = buildPatientAsTeamMember({
       userId: 'patientId1',
       profile: {
         email: 'Akim@embett.com',
@@ -71,7 +76,7 @@ describe('Caregiver home page', () => {
         patient: { birthday: '2010-01-20' }
       }
     })
-    const patient2 = buildPatient({
+    const patient2 = buildPatientAsTeamMember({
       userId: 'patientId2',
       profile: {
         email: 'alain@provist.com',
@@ -81,7 +86,7 @@ describe('Caregiver home page', () => {
         patient: { birthday: '2010-01-20' }
       }
     })
-    const patient3 = buildPatient({
+    const patient3 = buildPatientAsTeamMember({
       userId: 'patientId3',
       profile: {
         email: 'annie@versaire.com',
@@ -140,8 +145,8 @@ describe('Caregiver home page', () => {
     const patientData = patientTableBody.getByText(patientFullName)
     expect(patientData).toBeVisible()
 
-    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
-    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient-ylp.ui.test.patient28@diabeloop.fr' })
+    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
+    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient unmonitored-patient@diabeloop.fr' })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -172,12 +177,12 @@ describe('Caregiver home page', () => {
 
     const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
 
-    jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatient])
+    jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatientAsTeamMember])
     await act(async () => {
       await userEvent.click(removePatientDialog2ConfirmButton)
     })
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatient.userId, loggedInUserId)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
     expect(patientData).not.toBeInTheDocument()
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
@@ -190,9 +195,9 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userId}`)
+    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
 
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient-${unmonitoredPatient.email}` })
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
 
     await userEvent.click(removeButton)
 
@@ -204,7 +209,7 @@ describe('Caregiver home page', () => {
       await userEvent.click(confirmRemoveButton)
     })
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatient.userId, loggedInUserId)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })

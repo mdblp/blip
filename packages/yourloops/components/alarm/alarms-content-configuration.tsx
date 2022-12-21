@@ -158,7 +158,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               >
                 <Typography>{t('minimum')}</Typography>
                 <TextField
-                  id="low-bg-text-field-id"
                   value={lowBg.value}
                   error={!!lowBg.errorMessage}
                   type="number"
@@ -190,7 +189,6 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               >
                 <Typography>{t('maximum')}</Typography>
                 <TextField
-                  id="high-bg-text-field-id"
                   value={highBg.value}
                   error={!!highBg.errorMessage}
                   type="number"
@@ -258,13 +256,12 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             })}:</Typography>
             <Box
               className={classes.valueSelection}
-              // data-testid="very-low-bg-text-field-id"
+              data-testid="very-low-bg-text-field-id"
               position="relative"
               paddingBottom={2}
             >
               <Typography>{t('severe-hypoglycemia-below')}</Typography>
               <TextField
-                id="very-low-bg-text-field-id"
                 value={veryLowBg.value}
                 error={!!veryLowBg.errorMessage}
                 type="number"

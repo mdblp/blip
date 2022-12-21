@@ -28,7 +28,6 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import _ from 'lodash'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
 
@@ -160,97 +159,30 @@ describe('Auth hook', () => {
       expect(UserApi.updateSettings).toHaveBeenCalledWith(auth.user.id, updatedSettings)
       expect(auth.user.settings).toEqual(updatedSettings)
     })
+  })
 
-    /** TODO role changing was performed with a call to shoreline.
-     *   Now it has to be done with Auth0 since role is a part of auth0 user metadata.
-     *   see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
-     **/
+  describe('Change role from Caregiver to Hcp', () => {
+    it('should change the user role', async () => {
+      jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
+      jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
+        profile: { ...profile, hcpProfession: undefined },
+        preferences,
+        settings
+      })
 
-    it.skip('switchRoleToHCP should not call updateProfile if updateUser failed', async () => {
-      jest.spyOn(UserApi, 'updateProfile').mockRejectedValue(_.noop)
-      await initAuthContext()
-      let error: Error | null = null
-      try {
-        await auth.switchRoleToHCP(false, HcpProfession.diabeto)
-      } catch (reason) {
-        error = reason
-      }
-      expect(error).toBeInstanceOf(Function)
-      expect(UserApi.updateProfile).toHaveBeenCalledTimes(1)
-    })
-
-    it.skip('switchRoleToHCP should call updateProfile after updateUser', async () => {
-      jest.spyOn(UserApi, 'updateProfile').mockResolvedValue({} as Profile)
       const now = Date.now()
       await initAuthContext()
-
-      const user = { ...auth.user } as User
-      user.role = UserRoles.hcp
       await act(async () => await auth.switchRoleToHCP(false, HcpProfession.diabeto))
       const updatedUser: User = auth.user
 
-      expect(UserApi.updateProfile).toHaveBeenCalledTimes(1)
+      expect(UserApi.changeUserRoleToHcp).toHaveBeenCalledTimes(1)
       expect(updatedUser.profile.termsOfUse.isAccepted).toBe(true)
       expect(updatedUser.profile.privacyPolicy.isAccepted).toBe(true)
       expect(Date.parse(updatedUser.profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
       expect(Date.parse(updatedUser.profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
       expect(updatedUser.role).toBe(UserRoles.hcp)
-    })
-
-    it.skip('switchRoleToHCP should succeed (accept feedback)', async () => {
-      const now = new Date()
-      await initAuthContext()
-      const updateProfileSpy = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(Promise.resolve(updatedProfile))
-
-      await auth.switchRoleToHCP(true, HcpProfession.diabeto)
-
-      expect(UserApi.updateProfile).toHaveBeenCalledTimes(1)
-      const profile = updateProfileSpy.mock.calls[0][1]
-      expect(typeof profile).toBe('object')
-      expect(profile.termsOfUse).toBeDefined()
-      expect(profile.privacyPolicy).toBeDefined()
-      expect(profile.contactConsent).toBeDefined()
-      expect(profile.termsOfUse.isAccepted).toBe(true)
-      expect(profile.privacyPolicy.isAccepted).toBe(true)
-      expect(profile.contactConsent.isAccepted).toBe(true)
-      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf())
-      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf())
-      expect(Date.parse(profile.contactConsent.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf())
-      expect(typeof auth.user.profile).toBe('object')
-      expect(auth.user.profile.termsOfUse).toBeDefined()
-      expect(auth.user.profile.privacyPolicy).toBeDefined()
-      expect(auth.user.profile.contactConsent).toBeDefined()
-      expect(auth.user.role).toBe(UserRoles.hcp)
-    })
-
-    it.skip('switchRoleToHCP should succeed (decline feedback)', async () => {
-      const now = new Date()
-      // const accepts = {
-      //   acceptanceTimestamp: now.toISOString(),
-      //   isAccepted: true
-      // }
-      // const decline = {
-      //   acceptanceTimestamp: accepts.acceptanceTimestamp,
-      //   isAccepted: false
-      // }
-      // authApiCaregiverStubs.updateProfile.mockResolvedValue({
-      //   ...authCaregiver.profile,
-      //   termsOfUse: accepts,
-      //   privacyPolicy: accepts,
-      //   contactConsent: decline
-      // })
-      await initAuthContext()
-
-      await act(async () => await auth.switchRoleToHCP(false, HcpProfession.diabeto))
-
-      expect(UserApi.updateProfile).toHaveBeenCalledTimes(1)
-      expect(Date.parse(auth.user.profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf())
-      expect(Date.parse(auth.user.profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf())
-      expect(Date.parse(auth.user.profile.contactConsent.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf())
-      expect(auth.user.profile.termsOfUse.isAccepted).toBe(true)
-      expect(auth.user.profile.privacyPolicy.isAccepted).toBe(true)
-      expect(auth.user.profile.contactConsent.isAccepted).toBe(false)
-      expect(auth.user.role).toBe(UserRoles.hcp)
+      expect(updatedUser.profile.hcpProfession).toEqual(HcpProfession.diabeto)
+      expect(updatedUser.profile.contactConsent.isAccepted).toBeFalsy()
     })
   })
 
@@ -342,7 +274,7 @@ describe('Auth hook', () => {
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
         preferencesLanguage: 'fr',
-        profileCountry: 'fr',
+        profileCountry: CountryCodes.France,
         terms: true,
         privacyPolicy: true,
         feedback: true
@@ -366,7 +298,7 @@ describe('Auth hook', () => {
       expect(auth.user.profile.privacyPolicy.isAccepted).toBeTruthy()
       expect(auth.user.profile.contactConsent.isAccepted).toBeTruthy()
       expect(auth.user.preferences.displayLanguageCode).toEqual('fr')
-      expect(auth.user.settings.country).toEqual('fr')
+      expect(auth.user.settings.country).toEqual(CountryCodes.France)
     })
   })
 })

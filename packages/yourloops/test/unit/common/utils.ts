@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarm } from '../../../lib/patient/models/alarm.model'
+import { Alarms } from '../../../lib/patient/models/alarms.model'
 import { Team, TeamMember } from '../../../lib/team'
 import { PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { PatientSettings } from '../../../lib/patient/models/patient-settings.model'
@@ -50,9 +50,18 @@ export const createPatient = (
   monitoring: Monitoring | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
-  metadata: Partial<PatientMetadata> = undefined
+  metadata: Partial<PatientMetadata> = undefined,
+  alarms: Partial<Alarms> = undefined
 ): Patient => {
   return {
+    alarms: {
+      timeSpentAwayFromTargetRate: alarms?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetActive: alarms?.timeSpentAwayFromTargetActive || false,
+      frequencyOfSevereHypoglycemiaRate: alarms?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaActive: alarms?.frequencyOfSevereHypoglycemiaActive || false,
+      nonDataTransmissionRate: alarms?.nonDataTransmissionRate || 30,
+      nonDataTransmissionActive: alarms?.nonDataTransmissionActive || false
+    },
     profile: {
       birthdate: profile?.birthdate || new Date(),
       firstName: profile?.firstName || 'fakeFirstname',
@@ -66,17 +75,9 @@ export const createPatient = (
       system: settings?.system
     },
     metadata: {
-      alarm: metadata?.alarm || {
-        timeSpentAwayFromTargetRate: 10,
-        timeSpentAwayFromTargetActive: false,
-        frequencyOfSevereHypoglycemiaRate: 20,
-        frequencyOfSevereHypoglycemiaActive: false,
-        nonDataTransmissionRate: 30,
-        nonDataTransmissionActive: false
-      },
       flagged: metadata?.flagged,
       medicalData: metadata?.medicalData || null,
-      unreadMessagesSent: metadata?.unreadMessagesSent || 0
+      hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
     monitoring,
     teams,
@@ -95,11 +96,11 @@ export const createPatientTeam = (
     monitoringStatus
   } as PatientTeam
 }
-export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
+export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarms => {
   return {
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate
-  } as Alarm
+  } as Alarms
 }
 
 export function buildPrivateTeam(): Team {
@@ -112,16 +113,16 @@ export function buildPrivateTeam(): Team {
   }
 }
 
-export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name'): Team {
+export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical, monitoringEnabled = true): Team {
   return {
     id,
     name,
     code: '123456789',
     email: 'fale@email.com',
-    type: TeamType.medical,
+    type,
     members,
     monitoring: {
-      enabled: true,
+      enabled: monitoringEnabled,
       parameters: {
         bgUnit: UnitsType.MGDL,
         lowBg: 1,

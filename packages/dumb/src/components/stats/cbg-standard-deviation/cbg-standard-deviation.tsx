@@ -27,10 +27,10 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './cbg-standard-deviation.css'
-import stylesCbgCommon from '../cbg-common.css'
+import stylesCbgCommon from '../common/cbg-common.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { computeBgClassesBarStyle, computeCBGStyle } from '../cbg-utils'
+import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
 import { BgClasses } from '../../../models/stats.model'
 
 export interface CBGStandardDeviationProps {
@@ -77,7 +77,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
             </>
           }
           {!hideTooltip &&
-            <StatTooltip annotations={annotations}/>
+            <StatTooltip annotations={annotations} />
           }
         </Box>
         <Box fontSize="12px">

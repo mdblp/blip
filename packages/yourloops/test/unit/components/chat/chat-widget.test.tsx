@@ -30,20 +30,28 @@ import { act, Simulate } from 'react-dom/test-utils'
 
 import ChatWidget from '../../../../components/chat/chat-widget'
 import { render, unmountComponentAtNode } from 'react-dom'
-import { Patient, PatientTeam } from '../../../../lib/data/models/patient.model'
 import { IMessage } from '../../../../lib/chat/models/i-message.model'
 import User from '../../../../lib/auth/models/user.model'
 import ChatApi from '../../../../lib/chat/chat.api'
 import PatientUtils from '../../../../lib/patient/patient.util'
+import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
+import * as authHookMock from '../../../../lib/auth/auth.hook'
+import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { Patient } from '../../../../lib/patient/models/patient.model'
 
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/selected-team/selected-team.provider')
+jest.mock('../../../../lib/auth/auth.hook')
 describe('Chat widget', () => {
   const teamId = '777'
   const patientTeam = { teamId } as PatientTeam
   const patient: Patient = {
+    alarms: {},
+    profile: {},
+    settings: {},
     userid: '132',
     teams: [patientTeam],
-    metadata: { unreadMessagesSent: 0 }
+    metadata: { hasSentUnreadMessages: false }
   } as Patient
 
   let container: HTMLElement | null = null
@@ -58,7 +66,14 @@ describe('Chat widget', () => {
 
   beforeAll(() => {
     Element.prototype.scroll = jest.fn()
-    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue(patientTeam)
+    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue(patientTeam);
+
+    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
+      return { selectedTeamId: teamId }
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { isUserHcp: () => true } }
+    })
   })
 
   beforeEach(() => {

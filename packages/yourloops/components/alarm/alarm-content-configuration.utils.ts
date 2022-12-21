@@ -26,7 +26,7 @@
  */
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import { convertBG } from '../../lib/units/units.util'
-import { DEFAULT_THRESHOLDS_IN_MGDL, Thresholds } from '../../lib/patient/models/alarm.model'
+import { DEFAULT_THRESHOLDS_IN_MGDL, Thresholds } from '../../lib/patient/models/alarms.model'
 
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)

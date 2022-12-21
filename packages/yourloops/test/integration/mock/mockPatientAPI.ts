@@ -25,172 +25,235 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientAPI from '../../../lib/patient/patient.api'
-import { monitoringParameters, monitoringParametersBgUnitMmol, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
-import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { Alarms } from '../../../lib/patient/models/alarms.model'
+import { PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
+import { PatientProfile } from '../../../lib/patient/models/patient-profile.model'
+import { PatientSettings } from '../../../lib/patient/models/patient-settings.model'
+import { PatientTeam } from '../../../lib/patient/models/patient-team.model'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
-import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
+import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { Monitoring } from '../../../lib/team/models/monitoring.model'
+import { monitoringParameters, mySecondTeamId, myThirdTeamId, monitoringParametersBgUnitMmol } from './mockTeamAPI'
+import PatientApi from '../../../lib/patient/patient.api'
 import { Profile } from '../../../lib/auth/models/profile.model'
 
-export const unmonitoredPatientId = '1db524f3b65f2'
+export const unmonitoredPatientId = 'unmonitoredPatientId'
+export const monitoredPatientId = 'monitoredPatientId'
 export const unmonitoredPatientFirstName = 'Unmonitored'
 export const unmonitoredPatientLastName = 'Patient'
-export const unmonitoredPatientFullName = `${unmonitoredPatientFirstName} ${unmonitoredPatientLastName}`
-export const monitoredPatientId = '2db524f3b65f2'
 export const monitoredPatientFirstName = 'Monitored'
 export const monitoredPatientLastName = 'Patient'
 export const monitoredPatientFullName = `${monitoredPatientFirstName} ${monitoredPatientLastName}`
 export const monitoredPatientWithMmolId = '3db654'
 
-export const monitoredPatient: ITeamMember = {
-  userId: monitoredPatientId,
-  teamId: mySecondTeamId,
-  role: TeamMemberRole.patient,
-  profile: {
-    email: 'ylp.ui.test.patient28@diabeloop.fr',
-    firstName: monitoredPatientFirstName,
-    fullName: monitoredPatientFullName,
-    lastName: monitoredPatientLastName,
-    patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
-    privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  } as Profile,
-  settings: null,
-  preferences: { displayLanguageCode: 'en' },
-  invitationStatus: UserInvitationStatus.accepted,
-  email: 'ylp.ui.test.patient28@diabeloop.fr',
-  idVerified: false,
-  unreadMessages: 0,
-  alarms: {
-    timeSpentAwayFromTargetRate: 0,
-    timeSpentAwayFromTargetActive: false,
-    frequencyOfSevereHypoglycemiaRate: 0,
-    frequencyOfSevereHypoglycemiaActive: false,
-    nonDataTransmissionRate: 0,
-    nonDataTransmissionActive: false
-  },
-  monitoring: {
-    enabled: true,
-    monitoringEnd: new Date(Date.now() - 10000),
-    status: MonitoringStatus.accepted,
-    parameters: monitoringParameters
+const defaultMonitoring: Monitoring = {
+  enabled: true,
+  monitoringEnd: new Date(Date.now() - 10000),
+  status: MonitoringStatus.accepted,
+  parameters: monitoringParameters
+}
+
+const defaultSettings: PatientSettings = {
+  system: 'DBLG1'
+}
+
+const defaultMetadata: PatientMetadata = {
+  hasSentUnreadMessages: false
+}
+
+const defaultAlarm: Alarms = {
+  timeSpentAwayFromTargetRate: 0,
+  timeSpentAwayFromTargetActive: false,
+  frequencyOfSevereHypoglycemiaRate: 0,
+  frequencyOfSevereHypoglycemiaActive: false,
+  nonDataTransmissionRate: 0,
+  nonDataTransmissionActive: false
+}
+
+export const buildPatient = (
+  userid = 'fakePatientId',
+  teams: PatientTeam[] = [],
+  monitoring: Monitoring | undefined = undefined,
+  profile: Partial<PatientProfile> = undefined,
+  settings: Partial<PatientSettings> = undefined,
+  metadata: Partial<PatientMetadata> = undefined,
+  alarms: Partial<Alarms> = undefined
+): Patient => {
+  return {
+    alarms: {
+      timeSpentAwayFromTargetRate: alarms?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetActive: alarms?.timeSpentAwayFromTargetActive || false,
+      frequencyOfSevereHypoglycemiaRate: alarms?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaActive: alarms?.frequencyOfSevereHypoglycemiaActive || false,
+      nonDataTransmissionRate: alarms?.nonDataTransmissionRate || 30,
+      nonDataTransmissionActive: alarms?.nonDataTransmissionActive || false
+    },
+    profile: {
+      birthdate: profile?.birthdate || new Date(),
+      firstName: profile?.firstName || 'fakeFirstname',
+      fullName: profile?.fullName || 'fakePatientFullName',
+      lastName: profile?.lastName || 'fakeLastname',
+      email: profile?.email || 'fake@email.com',
+      sex: profile?.sex || 'M'
+    },
+    settings: {
+      a1c: settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },
+      system: settings?.system
+    },
+    metadata: {
+      flagged: metadata?.flagged,
+      medicalData: metadata?.medicalData || null,
+      hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
+    },
+    monitoring,
+    teams,
+    userid
   }
 }
 
-export const unmonitoredPatient: ITeamMember = {
-  userId: unmonitoredPatientId,
-  teamId: myThirdTeamId,
-  role: TeamMemberRole.patient,
-  profile: {
-    email: 'ylp.ui.test.patient28@diabeloop.fr',
-    firstName: unmonitoredPatientFirstName,
-    fullName: unmonitoredPatientFullName,
-    lastName: unmonitoredPatientLastName,
-    patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
-    privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  } as Profile,
-  settings: null,
-  preferences: { displayLanguageCode: 'en' },
-  invitationStatus: UserInvitationStatus.accepted,
-  email: 'ylp.ui.test.patient28@diabeloop.fr',
-  idVerified: false,
-  unreadMessages: 0,
-  alarms: {
-    timeSpentAwayFromTargetRate: 0,
-    timeSpentAwayFromTargetActive: false,
-    frequencyOfSevereHypoglycemiaRate: 0,
-    frequencyOfSevereHypoglycemiaActive: false,
-    nonDataTransmissionRate: 0,
-    nonDataTransmissionActive: false
+export const monitoredPatient: Patient = buildPatient(
+  monitoredPatientId,
+  [
+    {
+      teamId: mySecondTeamId,
+      status: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    }
+  ],
+  defaultMonitoring,
+  {
+    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    email: 'monitored-patient@diabeloop.fr',
+    firstName: 'Monitored',
+    fullName: 'Monitored Patient',
+    lastName: 'Patient',
+    sex: 'M'
   },
-  monitoring: null
-}
-const monitoredPatientTwo: ITeamMember = {
-  userId: monitoredPatientId,
-  teamId: myThirdTeamId,
-  role: TeamMemberRole.patient,
-  profile: {
-    email: 'ylp.ui.test.patient28@diabeloop.fr',
-    firstName: monitoredPatientFirstName,
-    fullName: monitoredPatientFullName,
-    lastName: monitoredPatientLastName,
-    patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
-    privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  } as Profile,
-  settings: null,
-  preferences: { displayLanguageCode: 'en' },
-  invitationStatus: UserInvitationStatus.accepted,
-  email: 'ylp.ui.test.patient28@diabeloop.fr',
-  idVerified: false,
-  unreadMessages: 0,
-  alarms: {
-    timeSpentAwayFromTargetRate: 0,
-    timeSpentAwayFromTargetActive: false,
-    frequencyOfSevereHypoglycemiaRate: 0,
-    frequencyOfSevereHypoglycemiaActive: false,
-    nonDataTransmissionRate: 0,
-    nonDataTransmissionActive: false
+  defaultSettings,
+  defaultMetadata,
+  defaultAlarm
+)
+
+export const unmonitoredPatient: Patient = buildPatient(
+  unmonitoredPatientId,
+  [
+    {
+      teamId: myThirdTeamId,
+      status: UserInvitationStatus.accepted
+    }
+  ],
+  undefined,
+  {
+    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    email: 'unmonitored-patient@diabeloop.fr',
+    firstName: 'Unmonitored',
+    fullName: 'Unmonitored Patient',
+    lastName: 'Patient',
+    sex: 'M'
   },
-  monitoring: {
-    enabled: true,
-    monitoringEnd: new Date(Date.now() - 10000),
-    status: MonitoringStatus.accepted,
-    parameters: monitoringParameters
-  }
-}
-export const monitoredPatientWithMmol: ITeamMember = {
+  defaultSettings,
+  defaultMetadata,
+  defaultAlarm
+)
+
+export const monitoredPatientTwo: Patient = buildPatient(
+  'monitored-patient-two',
+  [
+    {
+      teamId: myThirdTeamId,
+      status: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    }
+  ],
+  defaultMonitoring,
+  {
+    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    email: 'monitored-patient2@diabeloop.fr',
+    firstName: 'Monitored',
+    fullName: 'Patient 2',
+    lastName: 'Monitored Patient 2',
+    sex: 'M'
+  },
+  defaultSettings,
+  defaultMetadata,
+  defaultAlarm
+)
+
+export const monitoredPatientWithMmol: Patient = {
   ...monitoredPatientTwo,
-  userId: monitoredPatientWithMmolId,
+  userid: monitoredPatientWithMmolId,
   monitoring: {
     ...monitoredPatientTwo.monitoring,
     parameters: monitoringParametersBgUnitMmol
   }
 }
 
-export const pendingPatient: ITeamMember = {
-  userId: '1db524f3b65g4',
-  teamId: myThirdTeamId,
-  role: TeamMemberRole.patient,
-  profile: {
-    email: 'ylp.ui.test.patient29@diabeloop.fr',
+export const pendingPatient: Patient = buildPatient(
+  'pending-patient',
+  [
+    {
+      teamId: myThirdTeamId,
+      status: UserInvitationStatus.pending
+    }
+  ],
+  undefined,
+  {
+    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    email: 'pending-patient@diabeloop.fr',
     firstName: 'Pending',
     fullName: 'Pending Patient',
     lastName: 'Patient',
-    patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
-    privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-    trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-  } as Profile,
-  settings: null,
-  preferences: { displayLanguageCode: 'en' },
-  invitationStatus: UserInvitationStatus.pending,
-  email: 'ylp.ui.test.patient29@diabeloop.fr',
-  idVerified: false,
-  unreadMessages: 0,
-  alarms: {
-    timeSpentAwayFromTargetRate: 0,
-    timeSpentAwayFromTargetActive: false,
-    frequencyOfSevereHypoglycemiaRate: 0,
-    frequencyOfSevereHypoglycemiaActive: false,
-    nonDataTransmissionRate: 0,
-    nonDataTransmissionActive: false
+    sex: 'M'
   },
-  monitoring: null
+  defaultSettings,
+  defaultMetadata,
+  defaultAlarm
+)
+
+export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
+  return {
+    userId: patient.userid,
+    teamId: patient.teams[0].teamId,
+    role: TeamMemberRole.patient,
+    profile: {
+      email: patient.profile.email,
+      firstName: patient.profile.firstName,
+      fullName: patient.profile.fullName,
+      lastName: patient.profile.lastName,
+      patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
+      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+      trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
+    },
+    settings: null,
+    preferences: { displayLanguageCode: 'en' },
+    invitationStatus: patient.teams[0].status,
+    email: patient.profile.email,
+    idVerified: false,
+    unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
+    alarms: patient.alarms,
+    monitoring: patient.monitoring
+  }
 }
 
-export const removePatientMock = jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
-export const mockPatientAPI = () => {
-  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
-  jest.spyOn(PatientAPI, 'updatePatientAlerts').mockResolvedValue(undefined)
+export const monitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatient)
+export const unmonitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(unmonitoredPatient)
+const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatientTwo)
+export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient)
+
+export const mockPatientApiForPatients = () => {
+  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember, unmonitoredPatientAsTeamMember, monitoredPatientTwoAsTeamMember, pendingPatientAsTeamMember])
+  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+}
+export const mockPatientApiForHcp = () => {
+  jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
+  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 
-export const buildPatient = (member: Partial<ITeamMember>): ITeamMember => {
+export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {
   return {
     userId: member.userId ?? 'fakeUserId',
     teamId: member.teamId ?? 'fakeUserTeamId',

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarm } from '../../patient/models/alarm.model'
+import { Alarms } from '../../patient/models/alarms.model'
 import { UnitsType } from '../../units/models/enums/units-type.enum'
 
 export interface WeeklyReport {
@@ -42,6 +42,6 @@ export interface WeeklyReport {
     nonDataTxThreshold: number
     reportingPeriod: number
   }
-  alarms: Alarm
+  alarms: Alarms
   creationDate: string
 }

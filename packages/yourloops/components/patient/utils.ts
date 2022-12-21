@@ -26,12 +26,11 @@
  */
 
 import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
-import { Alarm } from '../../lib/patient/models/alarm.model'
+import { Alarms } from '../../lib/patient/models/alarms.model'
 import { MedicalData } from '../../lib/data/models/medical-data.model'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { MedicalTableValues } from './models/medical-table-values.model'
 import { ITeamMember } from '../../lib/team/models/i-team-member.model'
-import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
   let tir = '-'
@@ -89,7 +88,7 @@ export const compareDate = (a: Date, b: Date): number => {
   return a.getTime() - b.getTime()
 }
 
-function compareValues(
+export function compareValues(
   a: string | number | Date | boolean | null | undefined,
   b: string | number | boolean | Date | null | undefined
 ): number {
@@ -111,56 +110,10 @@ function compareValues(
   return 0
 }
 
-/**
- * Compare two patient for sorting the patient table
- * @param a A patient
- * @param b A patient
- * @param orderBy Sort field
- */
-export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSortFields): number => {
-  let aValue: string | number | Date | boolean | undefined
-  let bValue: string | number | Date | boolean | undefined
-
-  switch (orderBy) {
-    case PatientTableSortFields.alertTimeTarget:
-      aValue = a.metadata.alarm.timeSpentAwayFromTargetRate
-      bValue = b.metadata.alarm.timeSpentAwayFromTargetRate
-      break
-    case PatientTableSortFields.alertHypoglycemic:
-      aValue = a.metadata.alarm.frequencyOfSevereHypoglycemiaRate
-      bValue = b.metadata.alarm.frequencyOfSevereHypoglycemiaRate
-      break
-    case PatientTableSortFields.dataNotTransferred:
-      aValue = a.metadata.alarm.nonDataTransmissionRate
-      bValue = b.metadata.alarm.nonDataTransmissionRate
-      break
-    case PatientTableSortFields.flag:
-      aValue = a.metadata.flagged
-      bValue = b.metadata.flagged
-      break
-    case PatientTableSortFields.ldu:
-      aValue = getMedicalValues(a.metadata.medicalData).lastUploadEpoch
-      bValue = getMedicalValues(b.metadata.medicalData).lastUploadEpoch
-      break
-    case PatientTableSortFields.patientFullName:
-      aValue = a.profile.fullName
-      bValue = b.profile.fullName
-      break
-    case PatientTableSortFields.remoteMonitoring:
-      aValue = a.monitoring?.monitoringEnd
-      bValue = b.monitoring?.monitoringEnd
-      break
-    case PatientTableSortFields.system:
-      aValue = a.settings.system
-      bValue = b.settings.system
-      break
-  }
-  return compareValues(aValue, bValue)
-}
-
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
+    alarms: iTeamMember.alarms ?? {} as Alarms,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
@@ -175,10 +128,9 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       system: 'DBLG1'
     },
     metadata: {
-      alarm: iTeamMember.alarms ?? {} as Alarm,
       flagged: undefined,
       medicalData: null,
-      unreadMessagesSent: iTeamMember.unreadMessages ?? 0
+      hasSentUnreadMessages: iTeamMember.unreadMessages > 0
     },
     monitoring: iTeamMember.monitoring,
     teams: iTeamMember.teamId === ''

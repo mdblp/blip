@@ -32,7 +32,7 @@ import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import { buildThresholds, isInvalidPercentage } from './alarm-content-configuration.utils'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import { DEFAULT_BG_VALUES } from '../../lib/patient/models/alarm.model'
+import { DEFAULT_BG_VALUES } from '../../lib/patient/models/alarms.model'
 
 export interface AlarmsContentConfigurationHookProps {
   monitoring: Monitoring
@@ -82,7 +82,7 @@ const {
   bgUnitDefault
 } = DEFAULT_BG_VALUES
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
-  const bgUnit = monitoring.parameters.bgUnit ?? UnitsType.MGDL
+  const bgUnit = monitoring.parameters?.bgUnit ?? UnitsType.MGDL
   const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
   if (!monitoring.parameters) {
