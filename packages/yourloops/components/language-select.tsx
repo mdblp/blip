@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -34,36 +34,28 @@ import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 
-const languageSelectStyle = makeStyles()((theme: Theme) => {
-  return {
-    select: {
-      fontSize: '12px',
-      color: theme.palette.grey[700]
-    }
-  }
-})
+interface LanguageSelectProps {
+  className?: string
+}
 
-function LanguageSelect(): JSX.Element {
+const styles = makeStyles()((theme: Theme) => ({
+  select: {
+    fontSize: '12px',
+    color: theme.palette.grey[700],
+    paddingBlock: 0
+  }
+}))
+
+const LanguageSelect: FunctionComponent<LanguageSelectProps> = ({ className }) => {
   const { i18n } = useTranslation()
-  const [val, setVal] = React.useState(i18n.language)
-  const { classes } = languageSelectStyle()
+  const [val, setVal] = useState(i18n.language)
+  const { classes, cx } = styles()
+  const languages = Object.entries(i18n.options.resources)
 
   const handleChange = async (event: SelectChangeEvent<unknown>): Promise<void> => {
     const lang = event.target.value as string
     await i18n.changeLanguage(lang)
     setVal(lang)
-  }
-
-  const langs = []
-  for (const lang in i18n.options.resources) {
-    if (Object.prototype.hasOwnProperty.call(i18n.options.resources, lang)) {
-      const language = i18n.options.resources[lang].name as string
-      langs.push(
-        <MenuItem id={`language-selector-${lang}`} key={lang} value={lang}>
-          {language}
-        </MenuItem>
-      )
-    }
   }
 
   return (
@@ -74,14 +66,22 @@ function LanguageSelect(): JSX.Element {
         disableUnderline
         inputProps={{
           classes: {
-            select: classes.select
+            select: cx(classes.select, className)
           }
         }}
         IconComponent={ArrowDropDownIcon}
         value={val}
         onChange={handleChange}
       >
-        {langs}
+        {languages.map(lang => (
+          <MenuItem
+            id={`language-selector-${lang[0]}`}
+            key={lang[0]}
+            value={lang[0]}
+          >
+            {lang[1].name as string}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   )

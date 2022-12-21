@@ -6,9 +6,10 @@
 }
 
 :root .diabeloop-blue {
-  --color-primary-main: #039be5;
-  --color-primary-light: #4dabf5;
-  --color-primary-dark: #1769aa;
+  --color-primary-main: #009bd6;
+  --color-primary-light: #5fccff;
+  --color-primary-dark: #006da4;
+  --color-primary-contrast-text: #fff;
 
   --color-secondary-main: #EDFAFF;
   --color-secondary-light: #F5F9F9;

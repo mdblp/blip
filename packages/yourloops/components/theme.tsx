@@ -28,14 +28,15 @@
 import { createTheme, Theme } from '@mui/material/styles'
 import config from '../lib/config/config'
 
-const DEFAULT_PRIMARY_MAIN_COLOR = '#039BE5'
-const DEFAULT_PRIMARY_LIGHT_COLOR = '#4DABF5'
-const DEFAULT_PRIMARY_DARK_COLOR = '#1769AA'
+const DEFAULT_PRIMARY_MAIN_COLOR = '#009bd6'
+const DEFAULT_PRIMARY_LIGHT_COLOR = '#5fccff'
+const DEFAULT_PRIMARY_DARK_COLOR = '#006da4'
 const DEFAULT_SECONDARY_MAIN_COLOR = '#EDFAFF'
 const DEFAULT_SECONDARY_LIGHT_COLOR = '#F5F9F9'
 const DEFAULT_SECONDARY_DARK_COLOR = '#BBC7CC'
 const DEFAULT_TEXT_BASE_COLOR = '#444444'
 const DEFAULT_BACKGROUND_COLOR = '#FAFAFA'
+const DEFAULT_PRIMARY_CONTRAST_TEXT = '#FFF'
 
 const appElement = document.getElementById('app')
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
@@ -117,7 +118,8 @@ export function getTheme(): Theme {
       primary: {
         main: appElement ? cssVar('--color-primary-main') : DEFAULT_PRIMARY_MAIN_COLOR,
         light: appElement ? cssVar('--color-primary-light') : DEFAULT_PRIMARY_LIGHT_COLOR,
-        dark: appElement ? cssVar('--color-primary-dark') : DEFAULT_PRIMARY_DARK_COLOR
+        dark: appElement ? cssVar('--color-primary-dark') : DEFAULT_PRIMARY_DARK_COLOR,
+        contrastText: appElement ? cssVar('--color-primary-contrast-text') : DEFAULT_PRIMARY_CONTRAST_TEXT
       },
       secondary: {
         main: appElement ? cssVar('--color-secondary-main') : DEFAULT_SECONDARY_MAIN_COLOR,
