@@ -33,7 +33,7 @@ import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp, mockPatientApiForPatients } from '../../mock/patient.api.mock'
-import { checkCaregiverProfilePage } from '../../assert/profile'
+import { checkCaregiverProfilePage, checkPasswordChangeRequest } from '../../assert/profile'
 import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
 import { Settings } from '../../../../lib/auth/models/settings.model'
@@ -44,6 +44,7 @@ import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockAuthApi } from '../../mock/auth.api.mock'
 
 describe('Caregiver page for hcp', () => {
   const profile: Profile = {
@@ -68,6 +69,7 @@ describe('Caregiver page for hcp', () => {
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.caregiver)
+    mockAuthApi()
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
@@ -76,7 +78,7 @@ describe('Caregiver page for hcp', () => {
     mockPatientApiForHcp()
   })
 
-  it('should render profile page for a caregiver and be able to change his role to HCP', async () => {
+  it('should render profile page for a caregiver and be able to change his password and change his role to HCP', async () => {
     const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
@@ -120,6 +122,15 @@ describe('Caregiver page for hcp', () => {
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
+
+    const profileUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+    expect(profileUpdateSuccessfulSnackbar).toHaveTextContent('Profile updated')
+
+    const profileUpdateSuccessfulSnackbarCloseButton = within(profileUpdateSuccessfulSnackbar).getByTitle('Close')
+
+    await userEvent.click(profileUpdateSuccessfulSnackbarCloseButton)
+
+    await checkPasswordChangeRequest()
 
     /*******************/
     /** Changing role **/
