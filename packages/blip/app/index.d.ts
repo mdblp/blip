@@ -80,7 +80,7 @@ export {
   GetPatientDataOptions,
   GetPatientDataOptionsV0,
   cleanStore
-};
+}
 
 declare function Blip(props: BlipProperties): JSX.Element;
-export default Blip;
+export default Blip

@@ -53,6 +53,7 @@ import { Team, useTeam } from '../lib/team'
 import { Patient } from '../lib/patient/models/patient.model'
 import { PatientTeam } from '../lib/patient/models/patient-team.model'
 import { useUserName } from '../lib/custom-hooks/user-name.hook'
+import { PatientNavBar } from './header-bars/patient-nav-bar'
 
 const patientDataStyles = makeStyles()(() => {
   return {

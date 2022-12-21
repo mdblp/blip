@@ -28,10 +28,16 @@ import TextField from '@mui/material/TextField'
 import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
-import Header from './header'
 import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
+import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
+import cx from 'classnames'
+import IconButton from '@mui/material/IconButton'
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import SkipNextIcon from '@mui/icons-material/SkipNext'
+import Box from '@mui/material/Box'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -433,6 +439,7 @@ class Trends extends React.Component {
 
   getTitle() {
     const { loading, tidelineData, dialogRangeDatePicker } = this.props
+    const { atMostRecent } = this.state
 
     const [startDate, endDate] = this.getMomentEndpoints()
     const mFormat = t('MMM D, YYYY')
@@ -461,17 +468,65 @@ class Trends extends React.Component {
     // End date is exclusive, substract 1s to display the last day, inclusive
     // it's what the user expect
     const displayEndDate = endDate.clone().subtract(1, 'day')
+
+
+    const backDisabled = loading
+    const mostRecentDisabled = atMostRecent || loading
+    const mostRecentClass = cx({
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': this.chartType === 'no-data'
+    })
+    const backClass = cx({
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
+    })
+
+    const nextDisabled = mostRecentDisabled
+    const nextClass = cx({
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
+    })
+
     return (
-      <TrendsDatePicker
-        dialogRangeDatePicker={dialogRangeDatePicker}
-        displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
-        start={startDate.format(ISO_DAY_FORMAT)}
-        end={displayEndDate.format(ISO_DAY_FORMAT)}
-        minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
-        maxDate={getDayAt(endMaxDate.valueOf(), tidelineData)}
-        disabled={loading}
-        onResult={onResult}
-      />
+      <>
+        <IconButton
+          id="button-nav-back"
+          type="button"
+          className={backClass}
+          onClick={this.handleClickBack}
+          disabled={backDisabled}
+          size="large">
+          <NavigateBeforeIcon />
+        </IconButton>
+        <TrendsDatePicker
+          dialogRangeDatePicker={dialogRangeDatePicker}
+          displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
+          start={startDate.format(ISO_DAY_FORMAT)}
+          end={displayEndDate.format(ISO_DAY_FORMAT)}
+          minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
+          maxDate={getDayAt(endMaxDate.valueOf(), tidelineData)}
+          disabled={loading}
+          onResult={onResult}
+        />
+        <IconButton
+          id="button-nav-next"
+          type="button"
+          className={nextClass}
+          onClick={this.handleClickForward}
+          disabled={nextDisabled}
+          size="large">
+          <NavigateNextIcon />
+        </IconButton>
+        <IconButton
+          id="button-nav-mostrecent"
+          type="button"
+          className={mostRecentClass}
+          onClick={this.handleClickMostRecent}
+          disabled={mostRecentDisabled}
+          size="large">
+          <SkipNextIcon />
+        </IconButton>
+      </>
     )
   }
 
@@ -656,33 +711,38 @@ class Trends extends React.Component {
     return (
       <div id="tidelineMain" className="trends grid">
         {this.renderHeader()}
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            {this.renderSubNav()}
-            <div className="patient-data-content">
-              {loading && <Loader show overlay={true} />}
-              <div id="tidelineContainer" className="patient-data-chart-trends">
-                {this.renderChart()}
+        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+          <div>
+            {this.getTitle()}
+          </div>
+          <Box display="flex">
+            <div className="container-box-inner patient-data-content-inner">
+              {this.renderSubNav()}
+              <div className="patient-data-content">
+                {loading && <Loader show overlay={true} />}
+                <div id="tidelineContainer" className="patient-data-chart-trends">
+                  {this.renderChart()}
+                </div>
+                {this.renderFocusedCbgDateTraceLabel()}
+                {this.renderFocusedRangeLabels()}
               </div>
-              {this.renderFocusedCbgDateTraceLabel()}
-              {this.renderFocusedRangeLabels()}
             </div>
-          </div>
-          <div className="container-box-inner patient-data-sidebar">
-            <div className="patient-data-sidebar-inner">
-              <div id="toggle-bg-replacement" style={{ height: 36 }} />
-              <Stats
-                bgPrefs={this.props.bgPrefs}
-                bgSource={this.props.dataUtil.bgSource}
-                chartPrefs={chartPrefs}
-                chartType={this.chartType}
-                dataUtil={this.props.dataUtil}
-                endpoints={endpoints}
-                loading={loading}
-              />
+            <div className="container-box-inner patient-data-sidebar">
+              <div className="patient-data-sidebar-inner">
+                <div id="toggle-bg-replacement" style={{ height: 36 }} />
+                <Stats
+                  bgPrefs={this.props.bgPrefs}
+                  bgSource={this.props.dataUtil.bgSource}
+                  chartPrefs={chartPrefs}
+                  chartType={this.chartType}
+                  dataUtil={this.props.dataUtil}
+                  endpoints={endpoints}
+                  loading={loading}
+                />
+              </div>
             </div>
-          </div>
-        </div>
+          </Box>
+        </Box>
         <Footer onClickRefresh={this.props.onClickRefresh}>
           {rightFooter}
         </Footer>
@@ -691,9 +751,8 @@ class Trends extends React.Component {
   }
 
   renderHeader() {
-    const title = this.getTitle()
     return (
-      <Header
+      <PatientNavBar
         profileDialog={this.props.profileDialog}
         chartType={this.chartType}
         patient={this.props.patient}
@@ -715,9 +774,7 @@ class Trends extends React.Component {
         onClickOneDay={this.handleClickDaily}
         onSwitchPatient={this.props.onSwitchPatient}
         onClickNavigationBack={this.props.onClickNavigationBack}
-      >
-        {title}
-      </Header>
+      />
     )
   }
 

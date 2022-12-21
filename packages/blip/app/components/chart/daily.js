@@ -34,7 +34,6 @@ import { components as vizComponents } from 'tidepool-viz'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
-import Header from './header'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
@@ -44,6 +43,14 @@ import {
   PhysicalTooltip,
   ReservoirTooltip
 } from 'dumb'
+import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
+import { GenerateReportButton } from 'yourloops/components/buttons/generate-report'
+import Box from '@mui/material/Box'
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import SkipNextIcon from '@mui/icons-material/SkipNext'
+import IconButton from '@mui/material/IconButton'
+import cx from 'classnames'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -403,6 +410,29 @@ class Daily extends React.Component {
     const { inTransition, atMostRecent, tooltip, title } = this.state
     const endpoints = this.getEndpoints()
 
+    const nullAction = (e) => {
+      if (e) {
+        e.preventDefault()
+      }
+    }
+
+    const backDisabled = inTransition || loading
+    const mostRecentDisabled = atMostRecent || inTransition || loading
+    const mostRecentClass = cx({
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': this.chartType === 'no-data'
+    })
+    const backClass = cx({
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
+    })
+
+    const nextDisabled = mostRecentDisabled
+    const nextClass = cx({
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
+    })
+
     const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
       if (typeof date === 'string' && this.chartRef.current !== null) {
         const timezone = tidelineData.getTimezoneAt(Date.parse(date).valueOf())
@@ -414,7 +444,7 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Header
+        <PatientNavBar
           profileDialog={this.props.profileDialog}
           chartType={this.chartType}
           patient={this.props.patient}
@@ -437,72 +467,105 @@ class Daily extends React.Component {
           onClickPrint={this.props.onClickPrint}
           onSwitchPatient={this.props.onSwitchPatient}
           onClickNavigationBack={this.props.onClickNavigationBack}
-        >
-          <DailyDatePicker
-            dialogDatePicker={dialogDatePicker}
-            displayedDate={title}
-            date={epochLocation}
-            startDate={this.startDate}
-            endDate={this.endDate}
-            inTransition={inTransition}
-            loading={loading}
-            onSelectedDateChange={onSelectedDateChange}
-          />
-        </Header>
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            <div className="patient-data-content">
-              {loading && <Loader show overlay={true} />}
-              <DailyChart
+        />
+        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+          <Box display="flex">
+            <div>
+              <IconButton
+                id="button-nav-back"
+                type="button"
+                className={backClass}
+                onClick={inTransition ? nullAction : this.handlePanBack}
+                disabled={backDisabled}
+                size="large">
+                <NavigateBeforeIcon />
+              </IconButton>
+              <DailyDatePicker
+                dialogDatePicker={dialogDatePicker}
+                displayedDate={title}
+                date={epochLocation}
+                startDate={this.startDate}
+                endDate={this.endDate}
+                inTransition={inTransition}
                 loading={loading}
-                bgClasses={this.props.bgPrefs.bgClasses}
-                bgUnits={this.props.bgPrefs.bgUnits}
-                epochLocation={epochLocation}
-                msRange={msRange}
-                tidelineData={tidelineData}
-                timePrefs={timePrefs}
-                // message handlers
-                onCreateMessage={this.props.onCreateMessage}
-                onShowMessageThread={this.props.onShowMessageThread}
-                // other handlers
-                onDatetimeLocationChange={this.handleDatetimeLocationChange}
-                onTransition={this.handleInTransition}
-                onBolusHover={this.handleBolusHover}
-                onSMBGHover={this.handleSMBGHover}
-                onCBGHover={this.handleCBGHover}
-                onCarbHover={this.handleCarbHover}
-                onReservoirHover={this.handleReservoirHover}
-                onPhysicalHover={this.handlePhysicalHover}
-                onParameterHover={this.handleParameterHover}
-                onWarmUpHover={this.handleWarmUpHover}
-                onConfidentialHover={this.handleConfidentialHover}
-                onTooltipOut={this.handleTooltipOut}
-                trackMetric={trackMetric}
-                ref={this.chartRef}
+                onSelectedDateChange={onSelectedDateChange}
               />
+              <IconButton
+                id="button-nav-next"
+                type="button"
+                className={nextClass}
+                onClick={inTransition ? nullAction : this.handlePanForward}
+                disabled={nextDisabled}
+                size="large">
+                <NavigateNextIcon />
+              </IconButton>
+              <IconButton
+                id="button-nav-mostrecent"
+                type="button"
+                className={mostRecentClass}
+                onClick={inTransition ? nullAction : this.handleClickMostRecent}
+                disabled={mostRecentDisabled}
+                size="large">
+                <SkipNextIcon />
+              </IconButton>
             </div>
-          </div>
-          <div className="container-box-inner patient-data-sidebar">
-            <div className="patient-data-sidebar-inner">
-              <BgSourceToggle
-                bgSource={this.props.dataUtil.bgSource}
-                bgSources={this.props.dataUtil.bgSources}
-                chartPrefs={this.props.chartPrefs}
-                chartType={this.chartType}
-                onClickBgSourceToggle={this.toggleBgDataSource}
-              />
-              <Stats
-                bgPrefs={this.props.bgPrefs}
-                bgSource={this.props.dataUtil.bgSource}
-                chartPrefs={this.props.chartPrefs}
-                chartType={this.chartType}
-                dataUtil={this.props.dataUtil}
-                endpoints={endpoints}
-                loading={loading}
-              />
+            <GenerateReportButton onClickPrint={this.props.onClickPrint} />
+          </Box>
+          <Box display="flex">
+            <div className="container-box-inner patient-data-content-inner">
+              <div className="patient-data-content">
+                {loading && <Loader show overlay={true} />}
+                <DailyChart
+                  loading={loading}
+                  bgClasses={this.props.bgPrefs.bgClasses}
+                  bgUnits={this.props.bgPrefs.bgUnits}
+                  epochLocation={epochLocation}
+                  msRange={msRange}
+                  tidelineData={tidelineData}
+                  timePrefs={timePrefs}
+                  // message handlers
+                  onCreateMessage={this.props.onCreateMessage}
+                  onShowMessageThread={this.props.onShowMessageThread}
+                  // other handlers
+                  onDatetimeLocationChange={this.handleDatetimeLocationChange}
+                  onTransition={this.handleInTransition}
+                  onBolusHover={this.handleBolusHover}
+                  onSMBGHover={this.handleSMBGHover}
+                  onCBGHover={this.handleCBGHover}
+                  onCarbHover={this.handleCarbHover}
+                  onReservoirHover={this.handleReservoirHover}
+                  onPhysicalHover={this.handlePhysicalHover}
+                  onParameterHover={this.handleParameterHover}
+                  onWarmUpHover={this.handleWarmUpHover}
+                  onConfidentialHover={this.handleConfidentialHover}
+                  onTooltipOut={this.handleTooltipOut}
+                  trackMetric={trackMetric}
+                  ref={this.chartRef}
+                />
+              </div>
             </div>
-          </div>
-        </div>
+            <div className="container-box-inner patient-data-sidebar">
+              <div className="patient-data-sidebar-inner">
+                <BgSourceToggle
+                  bgSource={this.props.dataUtil.bgSource}
+                  bgSources={this.props.dataUtil.bgSources}
+                  chartPrefs={this.props.chartPrefs}
+                  chartType={this.chartType}
+                  onClickBgSourceToggle={this.toggleBgDataSource}
+                />
+                <Stats
+                  bgPrefs={this.props.bgPrefs}
+                  bgSource={this.props.dataUtil.bgSource}
+                  chartPrefs={this.props.chartPrefs}
+                  chartType={this.chartType}
+                  dataUtil={this.props.dataUtil}
+                  endpoints={endpoints}
+                  loading={loading}
+                />
+              </div>
+            </div>
+          </Box>
+        </Box>
         <Footer
           chartType={this.chartType}
           onClickRefresh={this.props.onClickRefresh} />

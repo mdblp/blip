@@ -1,11 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
+import i18next from 'i18next'
 import Box from '@mui/material/Box'
 import PatientStatistics from './patientStatistics'
-import Header from './header'
 import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
+import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
+import { GenerateReportButton } from 'yourloops/components/buttons/generate-report'
+import AccessTime from '@mui/icons-material/AccessTime'
+
+const t = i18next.t.bind(i18next)
 
 const PatientDashboard = (props) => {
   const {
@@ -49,7 +54,7 @@ const PatientDashboard = (props) => {
   const endpoints = getEndpoints()
   return (
     <div id="patient-dashboard" className="patient-dashboard" data-testid="patient-dashboard">
-      <Header
+      <PatientNavBar
         id="dashboard-header"
         profileDialog={profileDialog}
         chartType={'dashboard'}
@@ -57,7 +62,6 @@ const PatientDashboard = (props) => {
         patients={patients}
         userIsHCP={userIsHCP}
         prefixURL={prefixURL}
-        canPrint={canPrint}
         onClickPrint={onClickPrint}
         onClickTrends={onSwitchToTrends}
         onClickOneDay={handleClickDaily}
@@ -66,6 +70,11 @@ const PatientDashboard = (props) => {
         onClickNavigationBack={onClickNavigationBack}
         trackMetric={trackMetric}
       />
+      <Box display="flex" marginLeft="20px" alignItems="center">
+        <AccessTime fontSize="small" className="subnav-icon" />
+        <span id="subnav-period-label">{t('dashboard-header-period-text')}</span>
+        <GenerateReportButton onClickPrint={onClickPrint}/>
+      </Box>
       <Box id="patient-dashboard-content">
         <PatientInfoWidget patient={patient} />
         {patient.monitoring?.enabled &&
