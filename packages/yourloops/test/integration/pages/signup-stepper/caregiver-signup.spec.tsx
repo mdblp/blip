@@ -26,7 +26,7 @@
  */
 
 import { act, screen } from '@testing-library/react'
-import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { getAccessTokenSilentlyMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
@@ -84,5 +84,6 @@ describe('Signup stepper as caregiver', () => {
         settings: { country: CountryCodes.France }
       })
     )
+    expect(getAccessTokenSilentlyMock).toHaveBeenCalledWith({ ignoreCache: true })
   })
 })

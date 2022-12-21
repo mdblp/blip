@@ -32,10 +32,27 @@ import { Profile } from './models/profile.model'
 import { Preferences } from './models/preferences.model'
 import { Settings } from './models/settings.model'
 import { CompleteSignupPayload } from './models/complete-signup-payload.model'
+import { UserRoles } from './models/enums/user-roles.enum'
+import { ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 
 const log = bows('User API')
 
 export default class UserApi {
+  static async changeUserRoleToHcp(userId: string, payload: ChangeUserRoleToHcpPayload): Promise<void> {
+    await HttpService.post({
+      url: `/bff/v1/accounts/${userId}`,
+      payload: { ...payload, role: UserRoles.hcp }
+    })
+  }
+
+  static async completeUserSignup(userId: string, payload: CompleteSignupPayload): Promise<CompleteSignupPayload> {
+    const { data } = await HttpService.post<CompleteSignupPayload, CompleteSignupPayload>({
+      url: `/bff/v1/accounts/${userId}`,
+      payload
+    })
+    return data
+  }
+
   static async getUserMetadata(userId: string): Promise<UserMetadata | undefined> {
     try {
       const { data } = await HttpService.get<UserMetadata>({ url: `/metadata/${userId}` })
@@ -70,14 +87,6 @@ export default class UserApi {
     const { data } = await HttpService.put<Settings, Settings>({
       url: `/metadata/${userId}/settings`,
       payload: settings
-    })
-    return data
-  }
-
-  static async completeUserSignup(userId: string, payload: CompleteSignupPayload): Promise<CompleteSignupPayload> {
-    const { data } = await HttpService.post<CompleteSignupPayload, CompleteSignupPayload>({
-      url: `/bff/v1/accounts/${userId}`,
-      payload
     })
     return data
   }

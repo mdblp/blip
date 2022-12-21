@@ -91,16 +91,13 @@ const ProfilePage: FunctionComponent = () => {
             <ProfileForm />
           </ProfilePageContextProvider>
 
-          {/** TODO role changing was performed with a call to shoreline.
-           *    Now it has to be done with Auth0 since role is a part of auth0 user metadata.
-           *    see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
-           **/}
           {UserRoles.caregiver === user.role &&
             <Link
-              id="profile-link-switch-role"
+              data-testid="switch-role-link"
               component="button"
               sx={{ marginBottom: 2 }}
-              onClick={handleSwitchRoleOpen}>
+              onClick={handleSwitchRoleOpen}
+            >
               {t('modal-switch-hcp-title')}
             </Link>
           }
@@ -132,7 +129,7 @@ const ProfilePage: FunctionComponent = () => {
           }
         </Box>
       </Container>
-      <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />
+      {switchRoleOpen && <SwitchRoleDialogs onCancel={handleSwitchRoleCancel} />}
     </React.Fragment>
   )
 }

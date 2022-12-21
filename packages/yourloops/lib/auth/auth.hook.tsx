@@ -53,6 +53,7 @@ import { Settings } from './models/settings.model'
 import { UserRoles } from './models/enums/user-roles.enum'
 import { AuthenticatedUser } from './models/authenticated-user.model'
 import { SignupForm } from './models/signup-form.model'
+import { ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -131,26 +132,19 @@ export function AuthContextImpl(): AuthContext {
 
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
     const user = getUser()
-
-    if (user.role !== UserRoles.caregiver) {
-      throw new Error('invalid-user-role')
+    const now = new Date().toISOString()
+    const payload: ChangeUserRoleToHcpPayload = {
+      termsOfUse: { acceptanceTimestamp: now, isAccepted: true },
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: true },
+      contactConsent: { acceptanceTimestamp: now, isAccepted: feedbackConsent },
+      hcpProfession
     }
 
-    /** TODO role changing was performed with a call to shoreline.
-     *   Now it has to be done with Auth0 since role is a part of auth0 user metadata.
-     *   see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
-     **/
+    await UserApi.changeUserRoleToHcp(user.id, payload)
+    await refreshToken() // Refreshing access token to get the new role in it
 
-    const now = new Date().toISOString()
-    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile
-    updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: true }
-    updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: true }
-    updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackConsent }
-    updatedProfile.hcpProfession = hcpProfession
-    await updateProfile(updatedProfile)
-    // Refresh our data:
     user.role = UserRoles.hcp
-    user.profile = updatedProfile
+    user.profile = { ...user.profile, ...payload }
     refreshUser()
   }
 
@@ -225,13 +219,16 @@ export function AuthContextImpl(): AuthContext {
       settings
     })
 
-    // Refreshing access token to get the new role in it
-    await getAccessTokenSilently({ ignoreCache: true })
+    await refreshToken() // Refreshing access token to get the new role in it
 
     user.role = signupForm.accountRole
     user.preferences = preferences
     user.profile = profile
     user.settings = settings
+  }
+
+  const refreshToken = async (): Promise<void> => {
+    await getAccessTokenSilently({ ignoreCache: true })
   }
 
   useEffect(() => {
