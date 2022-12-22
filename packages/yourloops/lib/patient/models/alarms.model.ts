@@ -45,14 +45,14 @@ export interface Thresholds {
 }
 
 export interface BgValues {
-  bgUnitDefault: UnitsType
-  outOfRangeThresholdDefault: number
-  nonDataTxThresholdDefault: number
-  hypoThresholdDefault: number
+  bgUnitDefault?: UnitsType
+  outOfRangeThresholdDefault?: number
+  nonDataTxThresholdDefault?: number
+  hypoThresholdDefault?: number
   veryLowBgDefault: number
   lowBgDefault: number
   highBgDefault: number
-  reportingPeriodDefault: number
+  reportingPeriodDefault?: number
 }
 
 export const DEFAULT_BG_VALUES: BgValues = {

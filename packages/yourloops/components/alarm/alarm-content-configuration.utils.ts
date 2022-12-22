@@ -26,7 +26,12 @@
  */
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import { convertBG } from '../../lib/units/units.util'
-import { DEFAULT_THRESHOLDS_IN_MGDL, Thresholds } from '../../lib/patient/models/alarms.model'
+import {
+  BgValues,
+  DEFAULT_BG_VALUES,
+  DEFAULT_THRESHOLDS_IN_MGDL,
+  Thresholds
+} from '../../lib/patient/models/alarms.model'
 
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
@@ -54,4 +59,14 @@ export const buildThresholds = (bgUnit: UnitsType): Thresholds => {
     }
   }
   return { ...DEFAULT_THRESHOLDS_IN_MGDL }
+}
+export const buildBgValues = (bgUnit: UnitsType): BgValues => {
+  if (bgUnit === UnitsType.MMOLL) {
+    return {
+      highBgDefault: Math.round(convertBG(DEFAULT_BG_VALUES.highBgDefault, UnitsType.MGDL) * 10) / 10,
+      veryLowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, UnitsType.MGDL) * 10) / 10,
+      lowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, UnitsType.MGDL) * 10) / 10
+    }
+  }
+  return { ...DEFAULT_BG_VALUES }
 }

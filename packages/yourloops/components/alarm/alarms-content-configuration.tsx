@@ -42,7 +42,7 @@ import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
-import { buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
+import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
 import FormHelperText from '@mui/material/FormHelperText'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -127,6 +127,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     bgUnit
   } = useAlarmsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
+  const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
 
   return (
     <React.Fragment>
@@ -213,7 +214,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               </Box>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default-min-max')}</Typography>
+              <Typography
+                className={classes.defaultLabel}>{t('default-min-max', { min: `${lowBgDefault} ${bgUnit}`, max: `${highBgDefault} ${bgUnit}` })}</Typography>
             }
           </div>
           <div>
@@ -285,7 +287,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               }
             </Box>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: `54${bgUnit}` })}</Typography>
+              <Typography
+                className={classes.defaultLabel}>{t('default', { value: `${veryLowBgDefault} ${bgUnit}` })}</Typography>
             }
           </div>
           <div>
