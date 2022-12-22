@@ -27,6 +27,7 @@
 
 import { createTheme, Theme } from '@mui/material/styles'
 import config from '../lib/config/config'
+import MuseoSlab900 from 'Museo_Slab_900.otf'
 
 const DEFAULT_PRIMARY_MAIN_COLOR = '#009bd6'
 const DEFAULT_PRIMARY_LIGHT_COLOR = '#5fccff'
@@ -62,7 +63,14 @@ export function getTheme(): Theme {
           },
           body: {
             backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
-          }
+          },
+          '@font-face': [
+            {
+              fontFamily: 'MuseoSlab',
+              fontWeight: 900,
+              src: `url(${MuseoSlab900}) format(opentype)`
+            }
+          ]
         }
       },
       MuiButton: {

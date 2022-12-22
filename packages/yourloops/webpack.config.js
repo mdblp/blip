@@ -63,13 +63,14 @@ if (!brandings.includes(buildConfig.BRANDING)) {
 const alias = {
   'branding/theme.css': path.resolve(__dirname, '../../branding/theme.css'),
   'classes.css': path.resolve(__dirname, 'css/classes.css'),
-  'pro-sante-connect.svg': path.resolve(__dirname, 'images/pro-sante-connect-gris.svg'),
   'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
   'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
   'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),
   'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg'),
   'diabeloop-logo.svg': path.resolve(__dirname, '../../branding/diabeloop/diabeloop-logo.svg'),
   'diabeloop-label.svg': path.resolve(__dirname, '../../branding/diabeloop/diabeloop-label.svg'),
+  'login-page-background.png': path.resolve(__dirname, 'images/login-page-background.png'),
+  'Museo_Slab_900.otf': path.resolve(__dirname, '../../branding/fonts/museo-slab/Museo_Slab_900.otf'),
   ...blipWebpack.resolve.alias
 }
 

@@ -35,7 +35,6 @@ import loginPageBackground from 'login-page-background.png'
 
 import Toolbar from '@mui/material/Toolbar'
 import AppBar from '@mui/material/AppBar'
-import Avatar from '@mui/material/Avatar'
 import config from '../../lib/config/config'
 import { Link as RouterLink } from 'react-router-dom'
 import Box from '@mui/material/Box'
@@ -46,6 +45,7 @@ import LanguageIcon from '@mui/icons-material/Language'
 import Typography from '@mui/material/Typography'
 import { GlobalStyles } from 'tss-react'
 
+const LOGO_COLOR_LIGHT = '#40BAE9'
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -62,37 +62,49 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     zIndex: -1
   },
   heading: {
+    fontFamily: 'MuseoSlab',
     fontSize: '1.5rem',
     fontWeight: 'bold',
     marginBottom: theme.spacing(2)
   },
   info: {
-    lineHeight: theme.spacing(4),
-    fontSize: '1.1rem'
+    fontSize: '1.1rem',
+    lineHeight: theme.spacing(4)
   },
   infoContainer: {
-    width: '45%',
-    height: '100%',
-    paddingInline: theme.spacing(10),
+    color: 'var(--text-base-color-light)',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    height: '100%',
+    justifyContent: 'center',
+    paddingInline: theme.spacing(10),
+    width: '45%'
   },
   hoverable: {
     fontWeight: 'bold',
-    color: theme.palette.primary.main,
+    color: 'var(--logo-color)',
     fontSize: '1rem',
     '&:hover': {
-      color: theme.palette.primary.dark
+      color: LOGO_COLOR_LIGHT
     }
   },
   link: {
+    color: 'var(--logo-color)',
     fontSize: '1.5rem',
     fontWeight: 'bold',
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    '&:hover': {
+      color: LOGO_COLOR_LIGHT
+    }
+  },
+  loginButton: {
+    backgroundColor: 'var(--logo-color)',
+    '&:hover': {
+      backgroundColor: LOGO_COLOR_LIGHT
+    }
   },
   registerButton: {
-    backgroundColor: '#575756',
+    backgroundColor: 'var(--text-base-color-light)',
     '&:hover': {
       backgroundColor: '#2e2e2d'
     }
@@ -128,14 +140,13 @@ const LoginPage: FunctionComponent = () => {
             alignItems="center"
             width="100%"
           >
-            <RouterLink to="/">
-              <Avatar
+            <RouterLink className="flex" to="/">
+              <img
                 id="header-main-logo"
                 aria-label={t('alt-img-logo')}
-                variant="square"
                 src={`/branding_${config.BRANDING}_logo.svg`}
                 alt={t('alt-img-logo')}
-                sx={{ width: 140 }}
+                width="180"
               />
             </RouterLink>
             <Box display="flex">
@@ -147,6 +158,7 @@ const LoginPage: FunctionComponent = () => {
               />
               <LoginActionButton
                 caption={t('already-registered')}
+                className={classes.loginButton}
                 onClick={loginWithRedirect}
                 title={t('connect')}
               />
@@ -164,7 +176,7 @@ const LoginPage: FunctionComponent = () => {
                   </Typography>
                 </Link>
                 <Box marginX={1} color={theme.palette.primary.main}>|</Box>
-                <LanguageIcon sx={{ color: theme.palette.primary.main, marginRight: theme.spacing(1) }} />
+                <LanguageIcon sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1) }} />
                 <LanguageSelect className={classes.hoverable} />
               </Box>
             </Box>
@@ -180,7 +192,7 @@ const LoginPage: FunctionComponent = () => {
         <img src={loginPageBackground} alt="login-page-background" className={classes.backgroundImage} />
         <Box className={classes.infoContainer}>
           <Box className={classes.heading}>
-            <Box color={theme.palette.primary.main} component="span">YourLoops</Box> {t('login-page-title')}
+            <Box color="var(--logo-color)" component="span">YourLoops</Box> {t('login-page-title')}
           </Box>
           <p className={classes.info}>{t('login-page-info-1')}</p>
           <p className={classes.info}>{t('login-page-info-2')}</p>

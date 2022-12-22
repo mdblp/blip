@@ -1,5 +1,6 @@
 :root {
   --text-base-color: #444444;
+  --text-base-color-light: #575756;
   --footer-background-color: #EEEEEE;
   --monitoring-filter-bg-color: #FFF9F3;
   --body-background-color: #F7F7F7;
@@ -10,6 +11,7 @@
   --color-primary-light: #5fccff;
   --color-primary-dark: #006da4;
   --color-primary-contrast-text: #fff;
+  --logo-color: #00a3e2;
 
   --color-secondary-main: #EDFAFF;
   --color-secondary-light: #F5F9F9;

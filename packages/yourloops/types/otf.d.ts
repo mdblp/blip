@@ -25,60 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-:global(.centered-spinning-loader) {
-  position: absolute;
-  top: calc(50vh - 20px);
-  left: calc(50vw - 20px);
-}
-
-:global(.flex) {
-  display: flex;
-}
-
-:global(.visibility-hidden) {
-  visibility: hidden;
-}
-
-:global(.display-none) {
-  display: none;
-}
-
-:global(.no-margin) {
-  margin: 0 !important;
-}
-
-:global(.no-margin-top) {
-  margin-top: 0 !important;
-}
-
-:global(.no-margin-right) {
-  margin-right: 0 !important;
-}
-
-:global(.no-margin-bottom) {
-  margin-bottom: 0 !important;
-}
-
-:global(.no-margin-left) {
-  margin-left: 0 !important;
-}
-
-:global(.no-padding) {
-  padding: 0 !important;
-}
-
-:global(.no-padding-top) {
-  padding-top: 0 !important;
-}
-
-:global(.no-padding-right) {
-  padding-right: 0 !important;
-}
-
-:global(.no-padding-bottom) {
-  padding-bottom: 0 !important;
-}
-
-:global(.no-padding-left) {
-  padding-left: 0 !important;
+declare module '*.otf' {
+  const value: string
+  export default value
 }
