@@ -29,7 +29,7 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { ThemeProvider } from '@mui/material/styles'
-import { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
+import { RemoteMonitoringWidgetProps } from '../../../../components/dashboard-widgets/remote-monitoring-widget'
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
@@ -64,7 +64,7 @@ describe('AlarmCard', () => {
     }
   })
 
-  function mountComponent(props: PatientInfoWidgetProps = { patient }) {
+  function mountComponent(props: RemoteMonitoringWidgetProps = { patient }) {
     act(() => {
       render(
         <ThemeProvider theme={getTheme()}>

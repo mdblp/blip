@@ -71,11 +71,11 @@ const patientInfoWidgetStyles = makeStyles({ name: 'patient-info-widget' })((the
   }
 }))
 
-export interface PatientInfoWidgetProps {
+export interface RemoteMonitoringWidgetProps {
   patient: Patient
 }
 
-function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
+function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element {
   const { classes } = patientInfoWidgetStyles()
   const { classes: commonStyles } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
@@ -179,7 +179,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Typography
                 variant="body2"
-                data-testid={'patient-info-remote-monitoring-value'}
+                id="patient-info-remote-monitoring-value"
               >
                 {patient.monitoring?.enabled ? t('yes') : t('no')}
               </Typography>
@@ -283,4 +283,4 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   )
 }
 
-export default PatientInfoWidget
+export default RemoteMonitoringWidget

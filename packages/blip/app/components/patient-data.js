@@ -61,7 +61,7 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
  * @typedef { import('../index').MessageNote } MessageNote
  * @typedef { import('../index').DialogDatePicker } DialogDatePicker
  * @typedef { import('../index').DialogRangeDatePicker } DialogRangeDatePicker
- * @typedef { import('../index').PatientInfoWidget } PatientInfoWidget
+ * @typedef { import('../index').RemoteMonitoringWidget } PatientInfoWidget
  * @typedef { import('../core/lib/partial-data-load').DateRange } DateRange
  *
  * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker, patientInfoWidget: PatientInfoWidget }} PatientDataProps

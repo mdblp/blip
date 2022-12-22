@@ -35,7 +35,7 @@ import BlipApi from 'yourloops/lib/data/blip.api'
 import DialogDatePicker from 'yourloops/components/date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from 'yourloops/components/date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from 'yourloops/components/dialogs/pdf-print-options'
-import PatientInfoWidget from 'yourloops/components/dashboard-widgets/patient-info-widget'
+import RemoteMonitoringWidget from 'yourloops/components/dashboard-widgets/remote-monitoring-widget'
 import { IUser } from 'yourloops/lib/data/models/i-user.model'
 import { PatientData, PatientDatum } from 'yourloops/lib/data/models/patient-datum.model'
 import { MessageNote } from 'yourloops/lib/data/models/message-note.model'
@@ -57,7 +57,7 @@ interface BlipProperties {
   dialogDatePicker: typeof DialogDatePicker;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   dialogPDFOptions: typeof DialogPDFOptions;
-  patientInfoWidget: typeof PatientInfoWidget;
+  patientInfoWidget: typeof RemoteMonitoringWidget;
   chatWidget: typeof ChatWidget;
   medicalFilesWidget: typeof MedicalFilesWidget;
   alarmCard: typeof AlarmCard;
@@ -73,7 +73,7 @@ export {
   DialogDatePicker,
   DialogRangeDatePicker,
   DialogPDFOptions,
-  PatientInfoWidget,
+  RemoteMonitoringWidget,
   IUser,
   PatientDatum,
   PatientData,

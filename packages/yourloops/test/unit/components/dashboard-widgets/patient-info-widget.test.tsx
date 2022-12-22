@@ -29,7 +29,7 @@ import React from 'react'
 import moment from 'moment-timezone'
 import { act } from 'react-dom/test-utils'
 
-import PatientInfoWidget, { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
+import RemoteMonitoringWidget, { RemoteMonitoringWidgetProps } from '../../../../components/dashboard-widgets/remote-monitoring-widget'
 import { buildTeam, buildTeamMember, createPatient } from '../../common/utils'
 import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import i18n from '../../../../lib/language'
@@ -109,11 +109,11 @@ describe('PatientInfoWidget', () => {
     }
   })
 
-  function getPatientInfoWidgetJSX(props: PatientInfoWidgetProps = { patient }): JSX.Element {
-    return <PatientInfoWidget patient={props.patient} />
+  function getPatientInfoWidgetJSX(props: RemoteMonitoringWidgetProps = { patient }): JSX.Element {
+    return <RemoteMonitoringWidget patient={props.patient} />
   }
 
-  function mountComponent(props: PatientInfoWidgetProps = { patient }) {
+  function mountComponent(props: RemoteMonitoringWidgetProps = { patient }) {
     act(() => {
       ReactDOM.render(getPatientInfoWidgetJSX(props), container)
     })
@@ -128,15 +128,7 @@ describe('PatientInfoWidget', () => {
 
   it('should display correct patient information', () => {
     mountComponent()
-    const birthDate = moment.utc(patient.profile.birthdate).format('L')
-    const a1cDate = moment.utc(patient.settings.a1c.date).format('L')
-    const gender = patient.profile.sex ?? ''
-    expect(document.getElementById('patient-info-patient-value').innerHTML).toEqual('user-name')
-    expect(document.getElementById('patient-info-gender-value').innerHTML).toEqual(genderLabels()[gender])
-    expect(document.getElementById('patient-info-birthdate-value').innerHTML).toEqual(birthDate)
-    expect(document.getElementById('patient-info-email-value').innerHTML).toEqual(patient.profile.email)
-    expect(document.getElementById('patient-info-hba1c-value').innerHTML).toEqual(`${patient.settings?.a1c?.value} (${a1cDate})`)
-    expect(document.getElementById('patient-info-remote-monitoring-value')).toBeNull()
+    expect(document.getElementById('patient-info-remote-monitoring-value').innerHTML).toEqual('no')
     expect(document.getElementById('invite-button-id')).toBeNull()
     expect(document.getElementById('cancel-invite-button-id')).toBeNull()
     expect(document.getElementById('renew-button-id')).toBeNull()

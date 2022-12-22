@@ -42,7 +42,7 @@ import { setPageTitle } from '../lib/utils'
 import DialogDatePicker from './date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
-import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
+import RemoteMonitoringWidget from './dashboard-widgets/remote-monitoring-widget'
 import ChatWidget from './chat/chat-widget'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
@@ -169,7 +169,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
-        patientInfoWidget={PatientInfoWidget}
+        patientInfoWidget={RemoteMonitoringWidget}
         chatWidget={ChatWidget}
         alarmCard={AlarmCard}
         medicalFilesWidget={MedicalFilesWidget}
