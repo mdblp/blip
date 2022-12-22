@@ -6,8 +6,7 @@ import Box from '@mui/material/Box'
 import PatientStatistics from './patientStatistics'
 import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
-import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
-import { GenerateReportButton } from 'yourloops/components/buttons/generate-report'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import AccessTime from '@mui/icons-material/AccessTime'
 
 const t = i18next.t.bind(i18next)
@@ -28,7 +27,6 @@ const PatientDashboard = (props) => {
     chatWidget: ChatWidget,
     alarmCard: AlarmCard,
     medicalFilesWidget: MedicalFilesWidget,
-    canPrint,
     onClickPrint,
     //eslint-disable-next-line
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, isSelectedTeamMedical, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
@@ -54,26 +52,20 @@ const PatientDashboard = (props) => {
   const endpoints = getEndpoints()
   return (
     <div id="patient-dashboard" className="patient-dashboard" data-testid="patient-dashboard">
-      <PatientNavBar
-        id="dashboard-header"
-        profileDialog={profileDialog}
-        chartType={'dashboard'}
-        patient={patient}
-        patients={patients}
-        userIsHCP={userIsHCP}
-        prefixURL={prefixURL}
+      <PatientNavBarMemoized
+        chartType="dashboard"
+        onClickDashboard={handleClickDashboard}
+        onClickDaily={handleClickDaily}
         onClickPrint={onClickPrint}
         onClickTrends={onSwitchToTrends}
-        onClickOneDay={handleClickDaily}
-        onClickDashboard={handleClickDashboard}
         onSwitchPatient={onSwitchPatient}
-        onClickNavigationBack={onClickNavigationBack}
-        trackMetric={trackMetric}
+        patient={patient}
+        patients={patients}
+        prefixURL={prefixURL}
       />
       <Box display="flex" marginLeft="20px" alignItems="center">
         <AccessTime fontSize="small" className="subnav-icon" />
         <span id="subnav-period-label">{t('dashboard-header-period-text')}</span>
-        <GenerateReportButton onClickPrint={onClickPrint}/>
       </Box>
       <Box id="patient-dashboard-content">
         <PatientInfoWidget patient={patient} />

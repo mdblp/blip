@@ -39,13 +39,14 @@ interface PatientNavBarInfosProps {
   infoWidth: string
   patient: Patient
 }
+const LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID = 'showMoreInfoPatientNavBarId'
 
 export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (props) => {
   const { infoWidth, patient } = props
 
   const { t } = useTranslation('yourloops')
-
-  const [showMoreInfo, setShowMoreInfo] = useState(false)
+  const localStorageShowMoreInfo = localStorage.getItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID) === 'true' ?? false
+  const [showMoreInfo, setShowMoreInfo] = useState(localStorageShowMoreInfo)
 
   const gender = useMemo(() => {
     if (patient.profile.sex === '') {
@@ -62,6 +63,11 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
     const doctor = patient.profile.referringDoctor
     return !doctor || doctor === '' ? t('N/A') : doctor
   }, [patient, t])
+
+  const onShowMoreInfoClick = (): void => {
+    localStorage.setItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID, String(!showMoreInfo))
+    setShowMoreInfo(!showMoreInfo)
+  }
 
   return (
     <Box display="flex" flexDirection="column" flexGrow="1" paddingTop={1}>
@@ -113,7 +119,7 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
           marginLeft="auto"
           marginRight={5}
           sx={{ cursor: 'pointer' }}
-          onClick={() => setShowMoreInfo(!showMoreInfo)}
+          onClick={onShowMoreInfoClick}
         >
           <Typography fontSize="13px" marginRight={1} sx={{ textDecoration: 'underline' }}>Show more</Typography>
           {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}

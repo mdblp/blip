@@ -35,13 +35,15 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
+import { GenerateReportButton } from '../buttons/generate-report'
 
 interface PatientNavBarTabsProps {
   chartType: string
   prefixURL: string
   onClickDashboard: MouseEventHandler<HTMLAnchorElement>
   onClickTrends: MouseEventHandler<HTMLAnchorElement>
-  onClickOneDay: MouseEventHandler<HTMLAnchorElement>
+  onClickDaily: MouseEventHandler<HTMLAnchorElement>
+  onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
 const styles = makeStyles()((theme: Theme) => {
@@ -78,7 +80,8 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
     chartType,
     onClickDashboard,
     onClickTrends,
-    onClickOneDay
+    onClickDaily,
+    onClickPrint
   } = props
 
   const { t } = useTranslation('yourloops')
@@ -98,46 +101,49 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
 
   return (
     <Box className={classes.tabs} width="100%" paddingLeft={7}>
-      <Tabs value={selectedTab()} classes={{
-        root: classes.tabsRoot
-      }}>
-        <Tab
-          className={classes.tab}
-          data-testid="dashboard-tab"
-          href={`${prefixURL}/dashboard`}
-          iconPosition="start"
-          label={t('dashboard')}
-          icon={<DashboardOutlinedIcon />}
-          onClick={onClickDashboard}
-          classes={{
-            root: classes.tabRoot
-          }}
-        />
-        <Tab
-          className={classes.tab}
-          data-testid="daily-tab"
-          href={`${prefixURL}/daily`}
-          iconPosition="start"
-          label={t('Daily')}
-          icon={<Today />}
-          onClick={onClickOneDay}
-          classes={{
-            root: classes.tabRoot
-          }}
-        />
-        <Tab
-          className={classes.tab}
-          data-testid="trends-tab"
-          href={`${prefixURL}/trends`}
-          iconPosition="start"
-          label={t('Trends')}
-          icon={<TrendingUp />}
-          onClick={onClickTrends}
-          classes={{
-            root: classes.tabRoot
-          }}
-        />
-      </Tabs>
+      <Box display="flex">
+        <Tabs value={selectedTab()} classes={{
+          root: classes.tabsRoot
+        }}>
+          <Tab
+            className={classes.tab}
+            data-testid="dashboard-tab"
+            href={`${prefixURL}/dashboard`}
+            iconPosition="start"
+            label={t('dashboard')}
+            icon={<DashboardOutlinedIcon />}
+            onClick={onClickDashboard}
+            classes={{
+              root: classes.tabRoot
+            }}
+          />
+          <Tab
+            className={classes.tab}
+            data-testid="daily-tab"
+            href={`${prefixURL}/daily`}
+            iconPosition="start"
+            label={t('Daily')}
+            icon={<Today />}
+            onClick={onClickDaily}
+            classes={{
+              root: classes.tabRoot
+            }}
+          />
+          <Tab
+            className={classes.tab}
+            data-testid="trends-tab"
+            href={`${prefixURL}/trends`}
+            iconPosition="start"
+            label={t('Trends')}
+            icon={<TrendingUp />}
+            onClick={onClickTrends}
+            classes={{
+              root: classes.tabRoot
+            }}
+          />
+        </Tabs>
+        <GenerateReportButton onClickPrint={onClickPrint} />
+      </Box>
     </Box>
   )
 }

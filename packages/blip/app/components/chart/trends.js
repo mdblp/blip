@@ -27,7 +27,7 @@ import { TimeService } from 'medical-domain'
 import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
-import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 
@@ -636,28 +636,17 @@ class Trends extends React.Component {
 
   renderHeader() {
     return (
-      <PatientNavBar
-        profileDialog={this.props.profileDialog}
+      <PatientNavBarMemoized
         chartType={this.chartType}
+        onClickPrint={this.props.onClickPrint}
+        onClickDashboard={this.props.onSwitchToDashboard}
+        onClickNext={this.handleClickForward}
+        onClickDaily={this.handleClickDaily}
+        onClickTrends={this.handleClickTrends}
+        onSwitchPatient={this.props.onSwitchPatient}
         patient={this.props.patient}
         patients={this.props.patients}
-        userIsHCP={this.props.userIsHCP}
-        atMostRecent={this.state.atMostRecent}
         prefixURL={this.props.prefixURL}
-        canPrint={this.props.canPrint}
-        onClickPrint={this.props.onClickPrint}
-        loading={this.props.loading}
-        iconBack
-        iconNext
-        iconMostRecent
-        onClickBack={this.handleClickBack}
-        onClickDashboard={this.props.onSwitchToDashboard}
-        onClickTrends={this.handleClickTrends}
-        onClickMostRecent={this.handleClickMostRecent}
-        onClickNext={this.handleClickForward}
-        onClickOneDay={this.handleClickDaily}
-        onSwitchPatient={this.props.onSwitchPatient}
-        onClickNavigationBack={this.props.onClickNavigationBack}
       />
     )
   }

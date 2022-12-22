@@ -41,7 +41,7 @@ export const GenerateReportButton: FunctionComponent<GenerateReportButtonProps> 
   const { t } = useTranslation('yourloops')
 
   return (
-    <Box marginLeft="auto" marginRight={3}>
+    <Box marginLeft="auto" marginRight={3} display="flex" justifyContent="center" alignItems="center">
       <Button onClick={onClickPrint}>
         <GetAppIcon />
         {t('pdf-generate-report')}

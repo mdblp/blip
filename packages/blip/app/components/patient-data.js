@@ -35,7 +35,7 @@ import ApiUtils from '../core/api-utils'
 import { Daily, PatientDashboard, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
-import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -281,7 +281,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderEmptyHeader() {
-    return <PatientNavBar
+    return <PatientNavBarMemoized
       patient={this.props.patient}
       patients={this.props.patients}
       chartType="no-data"

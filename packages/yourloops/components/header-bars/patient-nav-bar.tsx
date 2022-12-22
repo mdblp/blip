@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, MouseEventHandler } from 'react'
+import React, { FunctionComponent, memo, MouseEventHandler } from 'react'
 import { Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
 import { useAuth } from '../../lib/auth'
@@ -36,14 +36,15 @@ import { PatientNavBarInfos } from './patient-nav-bar-infos'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
 
 interface PatientNavBarProps {
-  patient?: Patient
-  patients: Patient[]
   chartType: string
-  prefixURL: string
   onClickDashboard: MouseEventHandler<HTMLAnchorElement>
-  onClickTrends: MouseEventHandler<HTMLAnchorElement>
-  onClickOneDay: MouseEventHandler<HTMLAnchorElement>
+  onClickDaily: MouseEventHandler<HTMLAnchorElement>
   onSwitchPatient: Function
+  onClickPrint: MouseEventHandler<HTMLButtonElement>
+  onClickTrends: MouseEventHandler<HTMLAnchorElement>
+  patient: Patient
+  patients: Patient[]
+  prefixURL: string
 }
 
 const styles = makeStyles()((theme: Theme) => {
@@ -54,7 +55,7 @@ const styles = makeStyles()((theme: Theme) => {
   }
 })
 
-export const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
+const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
   {
     prefixURL = '',
     ...props
@@ -65,7 +66,8 @@ export const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
     chartType,
     onClickDashboard,
     onClickTrends,
-    onClickOneDay,
+    onClickDaily,
+    onClickPrint,
     onSwitchPatient
   } = props
 
@@ -76,7 +78,7 @@ export const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
   return (
     <Box display="flex" flexDirection="column" marginBottom={3}>
       <Box className={classes.topContainer} borderBottom={`1px solid ${theme.palette.divider}`} width="100%">
-        {patient && user.isUserPatient()
+        {user.isUserPatient()
           ? (
             <Box data-testid="patient-dropdown" paddingTop={3} paddingLeft={7} marginBottom={3}>
               <PatientNavBarInfos patient={patient} infoWidth="15%" />
@@ -94,8 +96,11 @@ export const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
         prefixURL={prefixURL}
         onClickDashboard={onClickDashboard}
         onClickTrends={onClickTrends}
-        onClickOneDay={onClickOneDay}
+        onClickDaily={onClickDaily}
+        onClickPrint={onClickPrint}
       />
     </Box>
   )
 }
+
+export const PatientNavBarMemoized = memo(PatientNavBar)

@@ -39,8 +39,7 @@ import {
   PhysicalTooltip,
   ReservoirTooltip
 } from 'dumb'
-import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
-import { GenerateReportButton } from 'yourloops/components/buttons/generate-report'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 
@@ -337,29 +336,17 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <PatientNavBar
-          profileDialog={this.props.profileDialog}
+        <PatientNavBarMemoized
           chartType={this.chartType}
-          patient={this.props.patient}
-          patients={this.props.patients}
-          userIsHCP={this.props.userIsHCP}
-          inTransition={inTransition}
-          atMostRecent={atMostRecent}
-          loading={loading}
-          prefixURL={this.props.prefixURL}
-          iconBack
-          iconNext
-          iconMostRecent
-          canPrint={this.props.canPrint}
           onClickBack={this.handlePanBack}
           onClickDashboard={this.props.onSwitchToDashboard}
-          onClickTrends={this.props.onSwitchToTrends}
-          onClickMostRecent={this.handleClickMostRecent}
-          onClickNext={this.handlePanForward}
-          onClickOneDay={this.handleClickOneDay}
-          onClickPrint={this.props.onClickPrint}
+          onClickDaily={this.handleClickOneDay}
           onSwitchPatient={this.props.onSwitchPatient}
-          onClickNavigationBack={this.props.onClickNavigationBack}
+          onClickPrint={this.props.onClickPrint}
+          onClickTrends={this.props.onSwitchToTrends}
+          patient={this.props.patient}
+          patients={this.props.patients}
+          prefixURL={this.props.prefixURL}
         />
         <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
@@ -376,7 +363,6 @@ class Daily extends React.Component {
               onSelectedDateChange={onSelectedDateChange}
               startDate={this.startDate}
             />
-            <GenerateReportButton onClickPrint={this.props.onClickPrint} />
           </Box>
           <Box display="flex">
             <div className="container-box-inner patient-data-content-inner">

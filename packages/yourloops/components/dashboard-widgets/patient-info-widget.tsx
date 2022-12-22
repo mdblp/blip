@@ -39,6 +39,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined'
 
 import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 import { useAuth } from '../../lib/auth'
@@ -164,7 +165,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     <Card id="patient-info" className={classes.card} data-testid="patient-info-card">
       <CardHeader
         id="patient-info-header"
-        avatar={<LocalHospitalOutlinedIcon />}
+        avatar={<MonitorHeartOutlinedIcon />}
         className={classes.cardHeader}
         title={t('remote-monitoring-program')}
       />
