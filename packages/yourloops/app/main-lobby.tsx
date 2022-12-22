@@ -33,9 +33,9 @@ import { ThemeProvider } from '@mui/material/styles'
 import { CacheProvider } from '@emotion/react'
 import { TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
-import { makeStyles } from 'tss-react/mui'
 import CssBaseline from '@mui/material/CssBaseline'
 
+import Box from '@mui/material/Box'
 import { useAuth, User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
@@ -55,20 +55,6 @@ import {
   RENEW_CONSENT_PATH,
   TRAINING_PATH
 } from '../lib/diabeloop-urls.model'
-
-const routeStyle = makeStyles()(() => {
-  return {
-    public: {
-      flex: '1 0 auto',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    private: {
-      flex: '1 0 auto'
-    }
-  }
-})
 
 const muiCache = createCache({
   key: 'mui',
@@ -114,14 +100,12 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const theme = getTheme()
-  const { classes } = routeStyle()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
 
   if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />
   }
 
-  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
 
   return (
@@ -134,7 +118,7 @@ export function MainLobby(): JSX.Element {
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
-                  <div className={style}>
+                  <Box>
                     <Switch>
                       <Route exact path="/product-labelling" component={ProductLabellingPage} />
                       <Route exact path="/login" component={LoginPage} />
@@ -144,7 +128,7 @@ export function MainLobby(): JSX.Element {
                       <Route exact path="/training" component={TrainingPage} />
                       <Route component={MainLayout} />
                     </Switch>
-                  </div>
+                  </Box>
                 </SnackbarContextProvider>
                 <Footer />
               </ThemeProvider>

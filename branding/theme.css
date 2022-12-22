@@ -1,7 +1,11 @@
-:global(#app) {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+html {
+  height: 100%;
+}
+
+body, :global(#app) {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
 }
 
 :global(p.loading) {

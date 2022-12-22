@@ -83,7 +83,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       display: 'flex',
       flexShrink: 0,
       fontSize: '12px',
-      marginTop: theme.spacing(3),
       padding: '11px',
       paddingBottom: '11px',
       paddingTop: '11px',

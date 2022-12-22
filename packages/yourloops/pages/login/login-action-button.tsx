@@ -26,7 +26,6 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
@@ -42,15 +41,12 @@ interface LoginActionButtonProps {
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   button: {
     paddingInline: theme.spacing(3),
-    textTransform: 'capitalize'
-  },
-  caption: {
-    position: 'absolute',
-    top: -20
+    textTransform: 'capitalize',
+    width: 136
   }
 }))
 
-const LoginActionButton: FunctionComponent<LoginActionButtonProps> = ({ onClick, className, title, caption }) => {
+const LoginActionButton: FunctionComponent<LoginActionButtonProps> = ({ onClick, className, title }) => {
   const { classes, cx } = styles()
 
   return (
@@ -61,15 +57,8 @@ const LoginActionButton: FunctionComponent<LoginActionButtonProps> = ({ onClick,
       position="relative"
       marginRight={2}
     >
-      <Typography
-        variant="caption"
-        className={classes.caption}
-      >
-        {caption} ?
-      </Typography>
       <Button
         variant="contained"
-        size="small"
         disableElevation
         onClick={onClick}
         className={cx(classes.button, className)}

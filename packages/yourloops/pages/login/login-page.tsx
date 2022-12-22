@@ -31,6 +31,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
+import loginPageBackground from 'login-page-background.png'
 
 import Toolbar from '@mui/material/Toolbar'
 import AppBar from '@mui/material/AppBar'
@@ -43,37 +44,64 @@ import Link from '@mui/material/Link'
 import LanguageSelect from '../../components/language-select'
 import LanguageIcon from '@mui/icons-material/Language'
 import Typography from '@mui/material/Typography'
+import { GlobalStyles } from 'tss-react'
 
-const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => {
-  return {
-    appBar: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      zIndex: theme.zIndex.drawer + 1,
-      backgroundColor: theme.palette.common.white,
-      color: 'var(--text-base-color)',
-      paddingBlock: theme.spacing(2),
-      paddingInline: theme.spacing(10)
-    },
-    link: {
-      fontWeight: 'bold',
-      color: theme.palette.primary.main,
-      fontSize: 14,
-      '&:hover': {
-        color: theme.palette.primary.dark
-      }
-    },
-    registerButton: {
-      backgroundColor: '#575756',
-      '&:hover': {
-        backgroundColor: '#2e2e2d'
-      }
+const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
+  appBar: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    zIndex: theme.zIndex.drawer + 1,
+    backgroundColor: theme.palette.common.white,
+    color: 'var(--text-base-color)',
+    paddingBlock: theme.spacing(2),
+    paddingInline: theme.spacing(7)
+  },
+  backgroundImage: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    zIndex: -1
+  },
+  heading: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(2)
+  },
+  info: {
+    lineHeight: theme.spacing(4),
+    fontSize: '1.1rem'
+  },
+  infoContainer: {
+    width: '45%',
+    height: '100%',
+    paddingInline: theme.spacing(10),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  hoverable: {
+    fontWeight: 'bold',
+    color: theme.palette.primary.main,
+    fontSize: '1rem',
+    '&:hover': {
+      color: theme.palette.primary.dark
+    }
+  },
+  link: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    marginTop: theme.spacing(2)
+  },
+  registerButton: {
+    backgroundColor: '#575756',
+    '&:hover': {
+      backgroundColor: '#2e2e2d'
     }
   }
-})
+}))
 
 const LoginPage: FunctionComponent = () => {
   const { loginWithRedirect, error } = useAuth0()
-  const { t } = useTranslation('yourloops')
+  const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
 
   // TODO redirect to a new page confirm-email
@@ -85,6 +113,7 @@ const LoginPage: FunctionComponent = () => {
 
   return (
     <React.Fragment>
+      <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       <AppBar
         id="app-main-header"
         data-testid="app-main-header"
@@ -121,23 +150,53 @@ const LoginPage: FunctionComponent = () => {
                 onClick={loginWithRedirect}
                 title={t('connect')}
               />
-              <Box display="flex" alignItems="center">
+              <Box
+                display="flex"
+                alignItems="center"
+                marginLeft={1}
+              >
                 <Link href="mailto:yourloops@diabeloop.com">
                   <Typography
                     variant="subtitle2"
-                    className={classes.link}
+                    className={classes.hoverable}
                   >
                     {t('contact')}
                   </Typography>
                 </Link>
                 <Box marginX={1} color={theme.palette.primary.main}>|</Box>
                 <LanguageIcon sx={{ color: theme.palette.primary.main, marginRight: theme.spacing(1) }} />
-                <LanguageSelect className={classes.link} />
+                <LanguageSelect className={classes.hoverable} />
               </Box>
             </Box>
           </Box>
         </Toolbar>
       </AppBar>
+      <Toolbar sx={{ marginBlock: theme.spacing(2) }} />
+      <Box
+        width="100%"
+        height="calc(100% - 97px)"
+        position="relative"
+      >
+        <img src={loginPageBackground} alt="login-page-background" className={classes.backgroundImage} />
+        <Box className={classes.infoContainer}>
+          <Box className={classes.heading}>
+            <Box color={theme.palette.primary.main} component="span">YourLoops</Box> {t('login-page-title')}
+          </Box>
+          <p className={classes.info}>{t('login-page-info-1')}</p>
+          <p className={classes.info}>{t('login-page-info-2')}</p>
+          <p className={classes.info}>{t('login-page-info-3')}</p>
+          {i18n.language !== 'fr' &&
+            <Link
+              className={classes.link}
+              href="https://www.dbl-diabetes.com"
+              target="_blank"
+              rel="nofollow"
+            >
+              {t('learn-more')}
+            </Link>
+          }
+        </Box>
+      </Box>
     </React.Fragment>
   )
 }
