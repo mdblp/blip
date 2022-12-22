@@ -84,11 +84,11 @@ function UserMenu(): JSX.Element {
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
       case UserRoles.hcp:
-        return <StethoscopeIcon />
+        return <StethoscopeIcon data-testid="hcp-icon" />
       case UserRoles.caregiver:
-        return <RoundedHospitalIcon />
+        return <RoundedHospitalIcon data-testid="caregiver-icon" />
       case UserRoles.patient:
-        return <FaceIcon />
+        return <FaceIcon data-testid="patient-icon" />
       default:
         console.error('Unknown role')
         return null
@@ -134,7 +134,7 @@ function UserMenu(): JSX.Element {
         maxWidth={250}
         onClick={event => setAnchorEl(event.currentTarget)}
       >
-        <Box id="user-role-icon" display="flex">
+        <Box display="flex">
           {getRoleIcon()}
         </Box>
         {!isMobileBreakpoint &&

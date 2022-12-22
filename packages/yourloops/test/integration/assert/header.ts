@@ -37,6 +37,7 @@ export const checkHCPHeader = (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
   expect(header.getByLabelText('Open team menu')).toBeVisible()
+  expect(header.getByTestId('hcp-icon')).toBeVisible()
   checkHeader(header, fullName)
 }
 
@@ -44,6 +45,7 @@ export const checkCaregiverHeader = (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
+  expect(header.getByTestId('caregiver-icon')).toBeVisible()
   checkHeader(header, fullName)
 }
 
@@ -51,5 +53,6 @@ export const checkPatientHeader = (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
   expect(header.getByLabelText('Open team menu')).toBeVisible()
+  expect(header.getByTestId('patient-icon')).toBeVisible()
   checkHeader(header, fullName)
 }

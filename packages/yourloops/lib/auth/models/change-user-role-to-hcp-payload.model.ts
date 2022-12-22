@@ -25,31 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarms } from '../../patient/models/alarms.model'
-import { Monitoring } from '../../team/models/monitoring.model'
-import { MedicalData } from './medical-data.model'
-import { UserRoles } from '../../auth/models/enums/user-roles.enum'
-import { Profile } from '../../auth/models/profile.model'
-import { Settings } from '../../auth/models/settings.model'
-import { Preferences } from '../../auth/models/preferences.model'
+import { Consent } from './consent.model'
+import { HcpProfession } from './enums/hcp-profession.enum'
 
-export interface IUser {
-  emails?: string[]
-  readonly emailVerified?: boolean
-  frProId?: string
-  /** A boolean that indicates if the user has certified another account, like eCPS */
-  readonly idVerified?: boolean
-  /** Main role of the user */
-  readonly role: UserRoles
-  roles?: UserRoles[]
-  readonly userid: string
-  readonly username: string
-  profile?: Profile | null
-  settings?: Settings | null
-  preferences?: Preferences | null
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null
-  alarms?: Alarms | null
-  monitoring?: Monitoring
-  unreadMessages?: number
+export interface ChangeUserRoleToHcpPayload {
+  termsOfUse: Consent
+  privacyPolicy: Consent
+  contactConsent: Consent
+  hcpProfession: HcpProfession
 }

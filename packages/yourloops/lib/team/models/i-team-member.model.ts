@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarm } from '../../patient/models/alarm.model'
+import { Alarms } from '../../patient/models/alarms.model'
 import { Monitoring } from './monitoring.model'
 import { TeamMemberRole } from './enums/team-member-role.enum'
 import { UserInvitationStatus } from './enums/user-invitation-status.enum'
@@ -46,7 +46,7 @@ export interface ITeamMember {
   settings?: Settings | null
   preferences?: Preferences | null
   idVerified: boolean
-  alarms?: Alarm
+  alarms?: Alarms
   monitoring?: Monitoring
   unreadMessages?: number
 }

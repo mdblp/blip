@@ -31,7 +31,7 @@ import WeeklyReportDialog from '../../../../../components/dialogs/weekly-report-
 import * as patientHookMock from '../../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../../lib/team'
 import { buildTeam, createPatient, createPatientTeam } from '../../../common/utils'
-import { Alarm } from '../../../../../lib/patient/models/alarm.model'
+import { Alarms } from '../../../../../lib/patient/models/alarms.model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../../../../lib/utils'
 import { WeeklyReport } from '../../../../../lib/medical-files/models/weekly-report.model'
 import { UnitsType } from '../../../../../lib/units/models/enums/units-type.enum'
@@ -58,7 +58,7 @@ describe('Weekly report dialog', () => {
       nonDataTxThreshold: 6,
       reportingPeriod: 7
     },
-    alarms: {} as Alarm,
+    alarms: {} as Alarms,
     creationDate: '2022-02-02'
   }
   const teams = [buildTeam(weeklyReport.teamId)]

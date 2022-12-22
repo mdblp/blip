@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.3-beta - 2022-11-29
 ### Added
+- YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
@@ -27,6 +28,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1903 Timezone detection should exclude some data types
 - YLP-1904 CSV generation outputs a pdf
 - YLP-1906-Fix-training-modal-CSS
+- YLP-1910 Retrieve patients from bff v1 route
 - YLP-1916 Migrate tooltips from viz to dumb
 - YLP-1935 CBG thresholds should be used from medical data service
 - YLP-1942 Rename files in yourloops and medical-domain

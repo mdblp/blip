@@ -164,7 +164,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   useEffect(() => {
     async function fetchMessages(): Promise<void> {
       const messages = await ChatApi.getChatMessages(teamId, patient.userid)
-      if (patient.metadata.unreadMessagesSent > 0) {
+      if (patient.metadata.hasSentUnreadMessages) {
         patientHook.markPatientMessagesAsRead(patient)
       }
       setMessages(messages)
