@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { act, BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
 import { mockUserDataFetch } from '../../mock/auth'
 import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
 import { mockTeamAPI, myTeamId } from '../../mock/mockTeamAPI'
@@ -36,7 +36,6 @@ import {
   monitoredPatient,
   monitoredPatientId,
   pendingPatient,
-  unmonitoredPatient,
   unmonitoredPatientId
 } from '../../mock/mockPatientAPI'
 import { mockChatAPI } from '../../mock/mockChatAPI'
@@ -64,7 +63,7 @@ describe('Patient dashboard for HCP', () => {
     mockDataAPI()
   })
 
-  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string, fullName: string) {
+  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string) {
     /* Top bar */
     expect(dashboard.getByTestId('subnav-patient-list')).toBeVisible()
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
@@ -98,7 +97,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
-    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatient.profile.fullName)
+    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId)
     checkHCPLayout(`${firstName} ${lastName}`)
 
     /**
@@ -124,7 +123,7 @@ describe('Patient dashboard for HCP', () => {
     // expect(teamsDropdown).toBeVisible()
 
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatient.profile.fullName)
+    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId)
     /* Patient info widget */
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()

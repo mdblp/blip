@@ -35,7 +35,8 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
-import { GenerateReportButton } from '../buttons/generate-report'
+import Button from '@mui/material/Button'
+import GetAppIcon from '@mui/icons-material/GetApp'
 
 interface PatientNavBarTabsProps {
   chartType: string
@@ -143,7 +144,12 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
             }}
           />
         </Tabs>
-        <GenerateReportButton onClickPrint={onClickPrint} />
+        <Box marginLeft="auto" marginRight={3} display="flex" justifyContent="center" alignItems="center">
+          <Button onClick={onClickPrint}>
+            <GetAppIcon />
+            {t('pdf-generate-report')}
+          </Button>
+        </Box>
       </Box>
     </Box>
   )

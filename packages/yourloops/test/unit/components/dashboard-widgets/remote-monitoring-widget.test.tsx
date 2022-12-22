@@ -26,10 +26,11 @@
  */
 
 import React from 'react'
-import moment from 'moment-timezone'
 import { act } from 'react-dom/test-utils'
 
-import RemoteMonitoringWidget, { RemoteMonitoringWidgetProps } from '../../../../components/dashboard-widgets/remote-monitoring-widget'
+import RemoteMonitoringWidget, {
+  RemoteMonitoringWidgetProps
+} from '../../../../components/dashboard-widgets/remote-monitoring-widget'
 import { buildTeam, buildTeamMember, createPatient } from '../../common/utils'
 import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import i18n from '../../../../lib/language'
@@ -38,7 +39,6 @@ import * as teamHookMock from '../../../../lib/team'
 import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as notificationsHookMock from '../../../../lib/notifications/notification.hook'
 import User from '../../../../lib/auth/models/user.model'
-import { genderLabels } from '../../../../lib/auth/auth.helper'
 import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as RemoteMonitoringPatientDialogMock from '../../../../components/dialogs/remote-monitoring-dialog'
 import { RemoteMonitoringPatientDialogProps } from '../../../../components/dialogs/remote-monitoring-dialog'

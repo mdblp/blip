@@ -121,7 +121,7 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
           sx={{ cursor: 'pointer' }}
           onClick={onShowMoreInfoClick}
         >
-          <Typography fontSize="13px" marginRight={1} sx={{ textDecoration: 'underline' }}>Show more</Typography>
+          <Typography fontSize="13px" marginRight={1} sx={{ textDecoration: 'underline' }}>{t('show-more')}</Typography>
           {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
         </Box>
       </Box>
