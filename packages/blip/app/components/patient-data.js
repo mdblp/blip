@@ -32,9 +32,10 @@ import config from '../config'
 import personUtils from '../core/personutils'
 import utils from '../core/utils'
 import ApiUtils from '../core/api-utils'
-import { Daily, Header, PatientDashboard, Trends } from './chart'
+import { Daily, PatientDashboard, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
+import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -280,25 +281,11 @@ class PatientDataPage extends React.Component {
   }
 
   renderEmptyHeader() {
-    return <Header
+    return <PatientNavBar
+      patient={this.props.patient}
+      patients={this.props.patients}
       chartType="no-data"
-      title={t('Data')}
-      canPrint={false}
-      trackMetric={this.trackMetric} />
-  }
-
-  renderInitialLoading() {
-    const header = this.renderEmptyHeader()
-    return (
-      <div>
-        {header}
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            <div className="patient-data-content"></div>
-          </div>
-        </div>
-      </div>
-    )
+    />
   }
 
   renderNoData() {
@@ -794,7 +781,7 @@ class PatientDataPage extends React.Component {
 
   onLoadingFailure(err) {
     // TODO A cleaner message
-    const errorMessage = _.isError(err) ? err.message : (new String(err)).toString()
+    const errorMessage = _.isError(err) ? err.message : (String(err)).toString()
     this.log.error(errorMessage, err)
     this.setState({ loadingState: LOADING_STATE_ERROR, errorMessage })
   }

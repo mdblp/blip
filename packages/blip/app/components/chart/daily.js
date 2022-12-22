@@ -22,10 +22,6 @@ import moment from 'moment-timezone'
 import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
-
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
 
@@ -46,11 +42,7 @@ import {
 import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
 import { GenerateReportButton } from 'yourloops/components/buttons/generate-report'
 import Box from '@mui/material/Box'
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import SkipNextIcon from '@mui/icons-material/SkipNext'
-import IconButton from '@mui/material/IconButton'
-import cx from 'classnames'
+import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -61,81 +53,6 @@ import cx from 'classnames'
 const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
-
-/**
- * @param {DailyDatePickerProps} props
- */
-function DailyDatePicker(props) {
-  const {
-    dialogDatePicker: DialogDatePicker,
-    date,
-    displayedDate,
-    inTransition,
-    loading,
-    startDate,
-    endDate,
-    onSelectedDateChange
-  } = props
-
-  const [isOpen, setIsOpen] = React.useState(false)
-
-  const handleResult = (date) => {
-    setIsOpen(false)
-    onSelectedDateChange(date)
-  }
-
-  return (
-    <React.Fragment>
-      <TextField
-        id="daily-chart-title-date"
-        onClick={() => setIsOpen(true)}
-        onKeyPress={() => setIsOpen(true)}
-        variant="standard"
-        value={displayedDate}
-        disabled={inTransition || loading || isOpen}
-        InputProps={loading ? undefined : {
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <CalendarTodayIcon className="calendar-nav-icon" />
-            </InputAdornment>
-          )
-        }}
-      />
-      <DialogDatePicker
-        date={date}
-        minDate={startDate}
-        maxDate={endDate}
-        onResult={handleResult}
-        showToolbar
-        isOpen={isOpen}
-      />
-    </React.Fragment>
-  )
-}
-
-DailyDatePicker.propTypes = {
-  dialogDatePicker: PropTypes.func.isRequired,
-  date: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]).isRequired,
-  displayedDate: PropTypes.string.isRequired,
-  startDate: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]).isRequired,
-  endDate: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]).isRequired,
-  inTransition: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
-  onSelectedDateChange: PropTypes.func.isRequired
-}
 
 class DailyChart extends React.Component {
   static propTypes = {
@@ -359,7 +276,6 @@ class Daily extends React.Component {
     updateChartPrefs: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     profileDialog: PropTypes.func,
-    dialogDatePicker: PropTypes.func.isRequired,
     prefixURL: PropTypes.string,
     onClickNavigationBack: PropTypes.func.isRequired
   }
@@ -406,32 +322,9 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading, dialogDatePicker, timePrefs } = this.props
+    const { tidelineData, epochLocation, msRange, trackMetric, loading, timePrefs } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
     const endpoints = this.getEndpoints()
-
-    const nullAction = (e) => {
-      if (e) {
-        e.preventDefault()
-      }
-    }
-
-    const backDisabled = inTransition || loading
-    const mostRecentDisabled = atMostRecent || inTransition || loading
-    const mostRecentClass = cx({
-      'mui-nav-button': true,
-      'patient-data-subnav-hidden': this.chartType === 'no-data'
-    })
-    const backClass = cx({
-      'mui-nav-button': true,
-      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
-    })
-
-    const nextDisabled = mostRecentDisabled
-    const nextClass = cx({
-      'mui-nav-button': true,
-      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
-    })
 
     const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
       if (typeof date === 'string' && this.chartRef.current !== null) {
@@ -470,45 +363,19 @@ class Daily extends React.Component {
         />
         <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
-            <div>
-              <IconButton
-                id="button-nav-back"
-                type="button"
-                className={backClass}
-                onClick={inTransition ? nullAction : this.handlePanBack}
-                disabled={backDisabled}
-                size="large">
-                <NavigateBeforeIcon />
-              </IconButton>
-              <DailyDatePicker
-                dialogDatePicker={dialogDatePicker}
-                displayedDate={title}
-                date={epochLocation}
-                startDate={this.startDate}
-                endDate={this.endDate}
-                inTransition={inTransition}
-                loading={loading}
-                onSelectedDateChange={onSelectedDateChange}
-              />
-              <IconButton
-                id="button-nav-next"
-                type="button"
-                className={nextClass}
-                onClick={inTransition ? nullAction : this.handlePanForward}
-                disabled={nextDisabled}
-                size="large">
-                <NavigateNextIcon />
-              </IconButton>
-              <IconButton
-                id="button-nav-mostrecent"
-                type="button"
-                className={mostRecentClass}
-                onClick={inTransition ? nullAction : this.handleClickMostRecent}
-                disabled={mostRecentDisabled}
-                size="large">
-                <SkipNextIcon />
-              </IconButton>
-            </div>
+            <DailyDatePicker
+              atMostRecent={atMostRecent}
+              displayedDate={title}
+              date={epochLocation}
+              endDate={this.endDate}
+              inTransition={inTransition}
+              loading={loading}
+              onBackButtonClick={this.handlePanBack}
+              onMostRecentButtonClick={this.handleClickMostRecent}
+              onNextButtonClick={this.handlePanForward}
+              onSelectedDateChange={onSelectedDateChange}
+              startDate={this.startDate}
+            />
             <GenerateReportButton onClickPrint={this.props.onClickPrint} />
           </Box>
           <Box display="flex">

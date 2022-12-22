@@ -21,10 +21,6 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import DateRangeIcon from '@mui/icons-material/DateRange'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
-
 import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
@@ -32,12 +28,8 @@ import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
 import { PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
-import cx from 'classnames'
-import IconButton from '@mui/material/IconButton'
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import SkipNextIcon from '@mui/icons-material/SkipNext'
 import Box from '@mui/material/Box'
+import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -93,73 +85,6 @@ function getMomentDayAt(date, tidelineData) {
   const timezone = tidelineData.getTimezoneAt(date)
   const mDate = moment.tz(date, timezone)
   return moment.tz(mDate.format(ISO_DAY_FORMAT), timezone)
-}
-
-/**
- *
- * @param {TrendsDatePickerProps} props
- * @returns {JSX.Element}
- */
-function TrendsDatePicker(props) {
-  const {
-    dialogRangeDatePicker: DialogRangeDatePicker,
-    displayedDate,
-    start,
-    end,
-    minDate,
-    maxDate,
-    disabled,
-    onResult
-  } = props
-
-  const [isOpen, setIsOpen] = React.useState(false)
-
-  const handleResult = (startDate, endDate) => {
-    setIsOpen(false)
-    onResult(startDate, endDate)
-  }
-
-  return (
-    <React.Fragment>
-      <TextField
-        id="trends-chart-title-dates"
-        onClick={() => setIsOpen(true)}
-        onKeyPress={() => setIsOpen(true)}
-        variant="standard"
-        value={displayedDate}
-        disabled={disabled || isOpen}
-        InputProps={disabled ? undefined : {
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <DateRangeIcon className="calendar-nav-icon" />
-            </InputAdornment>
-          )
-        }}
-      />
-      <DialogRangeDatePicker
-        start={start}
-        end={end}
-        minDate={minDate}
-        maxDate={maxDate}
-        maxSelectableDays={90}
-        onResult={handleResult}
-        isOpen={isOpen}
-        showToolbar
-      />
-    </React.Fragment>
-  )
-}
-
-TrendsDatePicker.propTypes = {
-  dialogRangeDatePicker: PropTypes.func.isRequired,
-  displayedDate: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
-  minDate: PropTypes.string.isRequired,
-  maxDate: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-  onResult: PropTypes.func.isRequired
 }
 
 /**
@@ -469,63 +394,22 @@ class Trends extends React.Component {
     // it's what the user expect
     const displayEndDate = endDate.clone().subtract(1, 'day')
 
-
-    const backDisabled = loading
-    const mostRecentDisabled = atMostRecent || loading
-    const mostRecentClass = cx({
-      'mui-nav-button': true,
-      'patient-data-subnav-hidden': this.chartType === 'no-data'
-    })
-    const backClass = cx({
-      'mui-nav-button': true,
-      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
-    })
-
-    const nextDisabled = mostRecentDisabled
-    const nextClass = cx({
-      'mui-nav-button': true,
-      'patient-data-subnav-hidden': this.chartType === 'settings' || this.chartType === 'no-data'
-    })
-
     return (
       <>
-        <IconButton
-          id="button-nav-back"
-          type="button"
-          className={backClass}
-          onClick={this.handleClickBack}
-          disabled={backDisabled}
-          size="large">
-          <NavigateBeforeIcon />
-        </IconButton>
         <TrendsDatePicker
+          atMostRecent={atMostRecent}
+          disabled={loading}
           dialogRangeDatePicker={dialogRangeDatePicker}
           displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
-          start={startDate.format(ISO_DAY_FORMAT)}
           end={displayEndDate.format(ISO_DAY_FORMAT)}
           minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
           maxDate={getDayAt(endMaxDate.valueOf(), tidelineData)}
-          disabled={loading}
+          onBackButtonClick={this.handleClickBack}
+          onMostRecentButtonClick={this.mostRecentDisabled}
+          onNextButtonClick={this.handleClickForward}
           onResult={onResult}
+          start={startDate.format(ISO_DAY_FORMAT)}
         />
-        <IconButton
-          id="button-nav-next"
-          type="button"
-          className={nextClass}
-          onClick={this.handleClickForward}
-          disabled={nextDisabled}
-          size="large">
-          <NavigateNextIcon />
-        </IconButton>
-        <IconButton
-          id="button-nav-mostrecent"
-          type="button"
-          className={mostRecentClass}
-          onClick={this.handleClickMostRecent}
-          disabled={mostRecentDisabled}
-          size="large">
-          <SkipNextIcon />
-        </IconButton>
       </>
     )
   }

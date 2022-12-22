@@ -25,16 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, MouseEventHandler, useMemo } from 'react'
+import React, { FunctionComponent, MouseEventHandler } from 'react'
 
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import Tabs from '@mui/material/Tabs'
-import Tab from '@mui/material/Tab'
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
-import Today from '@mui/icons-material/Today'
-import TrendingUp from '@mui/icons-material/TrendingUp'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
@@ -42,13 +37,14 @@ import { useAuth } from '../../lib/auth'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
-import moment from 'moment-timezone'
-import { PatientNavBarInfo } from './patient-nav-bar-info'
 import Typography from '@mui/material/Typography'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import { PatientNavBarTabs } from './patient-nav-bar-tabs'
+import { PatientNavBarInfos } from './patient-nav-bar-infos'
+import PatientUtils from '../../lib/patient/patient.util'
 
 interface PatientNavBarProps {
-  patient: Patient
+  patient?: Patient
   patients: Patient[]
   chartType: string
   prefixURL: string
@@ -67,26 +63,6 @@ const styles = makeStyles()((theme: Theme) => {
     iconStandard: { color: theme.palette.primary.main },
     topContainer: {
       backgroundColor: theme.palette.common.white
-    },
-    tabs: {
-      boxShadow: theme.shadows[3],
-      backgroundColor: theme.palette.common.white
-    },
-    tab: {
-      fontWeight: 'bold',
-      marginRight: theme.spacing(5),
-      textTransform: 'capitalize',
-      fontSize: '16px',
-      color: 'var(--text-base-color)'
-    },
-    tabsRoot: {
-      minHeight: '48px',
-      height: '48px'
-    },
-    tabRoot: {
-      minHeight: '48px',
-      height: '48px'
-
     }
   }
 })
@@ -112,28 +88,10 @@ export const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
 
   const { classes, theme } = styles()
 
-  const selectedTab = (): number => {
-    switch (chartType) {
-      case 'dashboard':
-        return 0
-      case 'daily':
-        return 1
-      case 'trends':
-        return 2
-    }
-  }
-
-  const gender = useMemo(() => {
-    if (patient.profile.sex === '') {
-      return t('N/A')
-    }
-    return t(patient.profile.sex)
-  }, [patient, t])
-
   return (
     <Box display="flex" flexDirection="column" marginBottom={3}>
       <Box className={classes.topContainer} borderBottom={`1px solid ${theme.palette.divider}`} width="100%">
-        {user.isUserPatient()
+        {patient && user.isUserPatient()
           ? (
             <div data-testid="patient-dropdown">
               {getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName)}
@@ -164,93 +122,29 @@ export const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
                     >
                       {
                         patients.map((patient, i) => {
-                          return (<MenuItem key={i} value={patient.userid}>{patient.profile.fullName}</MenuItem>)
+                          return (
+                            <MenuItem
+                              key={i}
+                              value={patient.userid}>{getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName)}
+                            </MenuItem>)
                         })
                       }
                     </Select>
                   </FormControl>
                 </Box>
-                <Box display="flex" flexDirection="column" flexGrow="1" paddingTop={1}>
-                  <Box display="flex">
-                    <PatientNavBarInfo
-                      fieldName={t('double-dot', { label: t('last-name') })}
-                      fieldValue={patient.profile.lastName}
-                    />
-                    <PatientNavBarInfo
-                      fieldName={t('double-dot', { label: t('birthdate') })}
-                      fieldValue={moment(patient.profile.birthdate).format('L')}
-                    />
-                    <PatientNavBarInfo
-                      fieldName={t('double-dot', { label: t('diabete-type') })}
-                      fieldValue={'Type 1'}
-                    />
-                    <PatientNavBarInfo
-                      fieldName={t('double-dot', { label: t('referring-doctor') })}
-                      fieldValue={patient.profile.referringDoctor ?? t('N/A')}
-                    />
-                  </Box>
-                  <Box display="flex" marginTop={1}>
-                    <PatientNavBarInfo
-                      fieldName={t('double-dot', { label: t('first-name') })}
-                      fieldValue={patient.profile.firstName}
-                    />
-                    <PatientNavBarInfo
-                      fieldName={t('double-dot', { label: t('gender') })}
-                      fieldValue={gender}
-                    />
-                    <PatientNavBarInfo
-                      fieldName={t('double-dot', { label: t('remote-monitoring') })}
-                      fieldValue={patient.monitoring?.enabled ? 'Oui' : 'Non'}
-                    />
-                  </Box>
-                </Box>
+                <PatientNavBarInfos patient={patient} />
               </Box>
             </div>
             )
         }
       </Box>
-      <Box className={classes.tabs} width="100%" paddingLeft={7}>
-        <Tabs value={selectedTab()} classes={{
-          root: classes.tabsRoot
-        }}>
-          <Tab
-            className={classes.tab}
-            data-testid="dashboard-tab"
-            href={`${prefixURL}/dashboard`}
-            iconPosition="start"
-            label={t('dashboard')}
-            icon={<DashboardOutlinedIcon />}
-            onClick={onClickDashboard}
-            classes={{
-              root: classes.tabRoot
-            }}
-          />
-          <Tab
-            className={classes.tab}
-            data-testid="daily-tab"
-            href={`${prefixURL}/daily`}
-            iconPosition="start"
-            label={t('Daily')}
-            icon={<Today />}
-            onClick={onClickOneDay}
-            classes={{
-              root: classes.tabRoot
-            }}
-          />
-          <Tab
-            className={classes.tab}
-            data-testid="trends-tab"
-            href={`${prefixURL}/trends`}
-            iconPosition="start"
-            label={t('Trends')}
-            icon={<TrendingUp />}
-            onClick={onClickTrends}
-            classes={{
-              root: classes.tabRoot
-            }}
-          />
-        </Tabs>
-      </Box>
+      <PatientNavBarTabs
+        chartType={chartType}
+        prefixURL={prefixURL}
+        onClickDashboard={onClickDashboard}
+        onClickTrends={onClickTrends}
+        onClickOneDay={onClickOneDay}
+      />
     </Box>
   )
 }
