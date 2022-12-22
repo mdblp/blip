@@ -76,7 +76,7 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
   const { classes, theme } = styles()
 
   return (
-    <Box display="flex" flexDirection="column" marginBottom={3}>
+    <Box data-testid="patient-nav-bar" display="flex" flexDirection="column" marginBottom={3}>
       <Box className={classes.topContainer} borderBottom={`1px solid ${theme.palette.divider}`} width="100%">
         {user.isUserPatient()
           ? (

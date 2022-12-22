@@ -58,8 +58,8 @@ describe('Trends view for HCP', () => {
     mockDataAPI(minimalTrendViewData)
     renderPage(`/patient/${unmonitoredPatientId}/trends`)
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP(false)
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsHCP()
     checkHCPLayout(`${firstName} ${lastName}`)
   })
 })

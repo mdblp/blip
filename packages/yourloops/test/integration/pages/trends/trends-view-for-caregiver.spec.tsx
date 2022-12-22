@@ -58,9 +58,8 @@ describe('Trends view for caregiver', () => {
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
     renderPage(`/patient/${unmonitoredPatientId}/trends`)
-
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsCaregiver(false)
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsCaregiver()
     checkCaregiverLayout(`${firstName} ${lastName}`)
   })
 })

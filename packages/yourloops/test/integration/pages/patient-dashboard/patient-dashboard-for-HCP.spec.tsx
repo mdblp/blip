@@ -66,7 +66,6 @@ describe('Patient dashboard for HCP', () => {
 
   function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string, fullName: string) {
     /* Top bar */
-    expect(dashboard.getByTestId('subnav-arrow-back')).toBeVisible()
     expect(dashboard.getByTestId('subnav-patient-list')).toBeVisible()
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
     const dashboardLink = dashboard.getByText('Dashboard')
@@ -82,8 +81,7 @@ describe('Patient dashboard for HCP', () => {
 
     /* Patient info widget */
     const patientInfoCard = within(dashboard.getByTestId('patient-info-card'))
-    expect(patientInfoCard.getByText('Patient Information')).toBeVisible()
-    expect(patientInfoCard.getByText(fullName)).toBeVisible()
+    expect(patientInfoCard.getByText('Remote monitoring program')).toBeVisible()
 
     /* Patient stats widget */
     expect(dashboard.getByText('Patient statistics')).toBeVisible()
@@ -147,17 +145,13 @@ describe('Patient dashboard for HCP', () => {
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
-    const patientInfoCard = within(await screen.findByTestId('patient-info-card'))
-    const secondaryHeader = within(screen.getByTestId('patient-data-subnav-outer'))
+    const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+    expect(secondaryHeader).toHaveTextContent('PatientMonitored PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:MonitoredGender:MaleRemote monitoring:YesEmail:monitored-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
 
-    expect(patientInfoCard.getByText(monitoredPatient.profile.fullName)).toBeVisible()
-    fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatient.profile.fullName))
+    fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))
     fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
-    await waitFor(() => {
-      // call this to update the card and catch the new patient
-      const patientInfoCard = within(screen.getByTestId('patient-info-card'))
-      expect(patientInfoCard.getByText(pendingPatient.profile.fullName)).toBeVisible()
-    })
+    const secondarHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
+    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:MaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
   })
 })

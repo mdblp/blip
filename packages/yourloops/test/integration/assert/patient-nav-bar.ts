@@ -28,7 +28,7 @@
 import { BoundFunctions, queries, screen, within } from '@testing-library/react'
 import { unmonitoredPatientId } from '../mock/mockPatientAPI'
 
-const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>, canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
+const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
   const dashboardLink = patientNavBar.getByText('Dashboard')
   const dailyLink = patientNavBar.getByText('Daily')
   const trendsLink = patientNavBar.getByText('Trends')
@@ -38,33 +38,29 @@ const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>, canGe
   expect(dailyLink).toBeVisible()
   expect(trendsLink).toHaveAttribute('href', trendsUrl)
   expect(trendsLink).toBeVisible()
-  if (canGenerateReport) {
-    expect(patientNavBar.getByText('Generate report')).toBeVisible()
-  } else {
-    expect(patientNavBar.queryByText('Generate report')).not.toBeInTheDocument()
-  }
+  expect(patientNavBar.getByText('Generate report')).toBeVisible()
 }
 
-export const checkPatientNavBarAsHCP = (canGenerateReport = true, patientId = unmonitoredPatientId) => {
+export const checkPatientNavBarAsHCP = (patientId = unmonitoredPatientId) => {
   const dashboardURL = `/patient/${patientId}/dashboard`
   const dailyURL = `/patient/${patientId}/daily`
   const trendsURL = `/patient/${patientId}/trends`
-  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
+  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
   expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  checkPatientNavBar(patientNavBar, canGenerateReport, dashboardURL, dailyURL, trendsURL)
+  checkPatientNavBar(patientNavBar, dashboardURL, dailyURL, trendsURL)
 }
 
-export const checkPatientNavBarAsCaregiver = (canGenerateReport = true, patientId = unmonitoredPatientId) => {
+export const checkPatientNavBarAsCaregiver = (patientId = unmonitoredPatientId) => {
   const dashboardURL = `/patient/${patientId}/dashboard`
   const dailyURL = `/patient/${patientId}/daily`
   const trendsURL = `/patient/${patientId}/trends`
-  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
-  expect(patientNavBar.queryByTestId('patient-dropdown')).not.toBeInTheDocument()
-  checkPatientNavBar(patientNavBar, canGenerateReport, dashboardURL, dailyURL, trendsURL)
+  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
+  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
+  checkPatientNavBar(patientNavBar, dashboardURL, dailyURL, trendsURL)
 }
 
-export const checkPatientNavBarAsPatient = (canGenerateReport = true) => {
-  const patientNavBar = within(screen.getByTestId('patient-data-subnav-outer'))
-  expect(patientNavBar.queryByTestId('patient-dropdown')).not.toBeInTheDocument()
-  checkPatientNavBar(patientNavBar, canGenerateReport, '/dashboard', '/daily', '/trends')
+export const checkPatientNavBarAsPatient = () => {
+  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
+  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
+  checkPatientNavBar(patientNavBar, '/dashboard', '/daily', '/trends')
 }
