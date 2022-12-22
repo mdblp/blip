@@ -34,16 +34,17 @@ interface PatientNavBarInfoProps {
   fieldName: string
   fieldValue: string
   fieldWidth: string
+  id?: string
 }
 
 export const PatientNavBarInfo: FunctionComponent<PatientNavBarInfoProps> = (props) => {
-  const { fieldName, fieldValue, fieldWidth } = props
+  const { fieldName, fieldValue, fieldWidth, id } = props
   const theme = useTheme()
 
   return (
     <Box display="flex" width={fieldWidth}>
       <Typography fontSize="13px">{fieldName}</Typography>
-      <Typography marginLeft="4px" fontSize="13px" color={theme.palette.common.black}>{fieldValue}</Typography>
+      <Typography data-testid={id} marginLeft="4px" fontSize="13px" color={theme.palette.common.black}>{fieldValue}</Typography>
     </Box>
   )
 }

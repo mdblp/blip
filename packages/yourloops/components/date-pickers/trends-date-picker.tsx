@@ -69,9 +69,9 @@ export const TrendsDatePicker: FunctionComponent<TrendsDatePickerProps> = (props
 
   const [isOpen, setIsOpen] = React.useState(false)
 
-  const handleResult = (date): void => {
+  const handleResult = (date, end): void => {
+    onResult(date, end)
     setIsOpen(false)
-    onResult(date)
   }
 
   const backButtonDisabled = loading

@@ -81,7 +81,7 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
         {user.isUserPatient()
           ? (
             <Box data-testid="patient-dropdown" paddingTop={3} paddingLeft={7} marginBottom={3}>
-              <PatientNavBarInfos patient={patient} infoWidth="15%" />
+              <PatientNavBarInfos patient={patient} infoWidth="18%" />
             </Box>
             ) : (
             <Box display="flex" paddingTop={2}>

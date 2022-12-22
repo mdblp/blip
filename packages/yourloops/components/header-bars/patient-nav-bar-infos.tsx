@@ -76,6 +76,7 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
           fieldName={t('double-dot', { label: t('last-name') })}
           fieldValue={patient.profile.lastName}
           fieldWidth={infoWidth}
+          id="patient-nav-bar-last-name"
         />
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('birthdate') })}
@@ -98,6 +99,7 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
           fieldName={t('double-dot', { label: t('first-name') })}
           fieldValue={patient.profile.firstName}
           fieldWidth={infoWidth}
+          id="patient-nav-bar-first-name"
         />
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('gender') })}

@@ -391,22 +391,20 @@ class Trends extends React.Component {
     const displayEndDate = endDate.clone().subtract(1, 'day')
 
     return (
-      <>
-        <TrendsDatePicker
-          atMostRecent={atMostRecent}
-          disabled={loading}
-          dialogRangeDatePicker={dialogRangeDatePicker}
-          displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
-          end={displayEndDate.format(ISO_DAY_FORMAT)}
-          minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
-          maxDate={getDayAt(endMaxDate.valueOf(), tidelineData)}
-          onBackButtonClick={this.handleClickBack}
-          onMostRecentButtonClick={this.mostRecentDisabled}
-          onNextButtonClick={this.handleClickForward}
-          onResult={onResult}
-          start={startDate.format(ISO_DAY_FORMAT)}
-        />
-      </>
+      <TrendsDatePicker
+        atMostRecent={atMostRecent}
+        disabled={loading}
+        dialogRangeDatePicker={dialogRangeDatePicker}
+        displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
+        end={displayEndDate.format(ISO_DAY_FORMAT)}
+        minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
+        maxDate={getDayAt(endMaxDate.valueOf(), tidelineData)}
+        onBackButtonClick={this.handleClickBack}
+        onMostRecentButtonClick={this.handleClickMostRecent}
+        onNextButtonClick={this.handleClickForward}
+        onResult={onResult}
+        start={startDate.format(ISO_DAY_FORMAT)}
+      />
     )
   }
 
