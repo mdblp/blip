@@ -46,6 +46,8 @@ interface PatientNavBarTabsProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
+const TAB_HEIGHT = '48px'
+
 const styles = makeStyles()((theme: Theme) => {
   return {
     tabs: {
@@ -60,13 +62,12 @@ const styles = makeStyles()((theme: Theme) => {
       color: 'var(--text-base-color)'
     },
     tabsRoot: {
-      minHeight: '48px',
-      height: '48px'
+      minHeight: TAB_HEIGHT,
+      height: TAB_HEIGHT
     },
     tabRoot: {
-      minHeight: '48px',
-      height: '48px'
-
+      minHeight: TAB_HEIGHT,
+      height: TAB_HEIGHT
     }
   }
 })

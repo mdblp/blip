@@ -63,7 +63,6 @@ function ReduxProvider(props) {
         patients={props.patients}
         userIsHCP={props.userIsHCP}
         isSelectedTeamMedical={props.isSelectedTeamMedical}
-        profileDialog={props.profileDialog}
         prefixURL={props.prefixURL}
         history={historyHook}
         dialogDatePicker={props.dialogDatePicker}
@@ -85,7 +84,6 @@ ReduxProvider.propTypes = {
   patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   isSelectedTeamMedical: PropTypes.bool.isRequired,
-  profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
@@ -102,7 +100,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === 'object') {
     try {
-      const { config, api, patient, setPatient, patients, userIsHCP, isSelectedTeamMedical, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget, medicalFilesWidget } = props
+      const { config, api, patient, setPatient, patients, userIsHCP, isSelectedTeamMedical, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget, medicalFilesWidget } = props
       updateConfig(config)
 
       return (
@@ -113,7 +111,6 @@ function Blip(props) {
           setPatient={setPatient}
           userIsHCP={userIsHCP}
           isSelectedTeamMedical={isSelectedTeamMedical}
-          profileDialog={profileDialog}
           prefixURL={prefixURL}
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
@@ -141,7 +138,6 @@ Blip.propTypes = {
   patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   isSelectedTeamMedical: PropTypes.bool.isRequired,
-  profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,

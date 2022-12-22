@@ -33,7 +33,6 @@ import { commonComponentStyles } from '../common'
 
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import LocalHospitalOutlinedIcon from '@mui/icons-material/LocalHospitalOutlined'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'

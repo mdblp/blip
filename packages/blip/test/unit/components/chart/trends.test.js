@@ -119,8 +119,7 @@ describe('Trends', () => {
     },
     permsOfLoggedInUser: {
       root: true
-    },
-    profileDialog: function ProfileDialogStub() { return <div id="profile-dialog" /> }
+    }
   }
 
   before(() => {

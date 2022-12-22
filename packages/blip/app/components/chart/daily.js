@@ -274,12 +274,8 @@ class Daily extends React.Component {
     onDatetimeLocationChange: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
-    profileDialog: PropTypes.func,
     prefixURL: PropTypes.string,
     onClickNavigationBack: PropTypes.func.isRequired
-  }
-  static defaultProps = {
-    profileDialog: null
   }
 
   constructor(props) {

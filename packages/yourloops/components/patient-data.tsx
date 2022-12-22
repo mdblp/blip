@@ -39,7 +39,6 @@ import { useAuth } from '../lib/auth'
 import { useData } from '../lib/data/data.hook'
 import { setPageTitle } from '../lib/utils'
 
-import ProfileDialog from './dialogs/patient-profile'
 import DialogDatePicker from './date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
@@ -166,7 +165,6 @@ function PatientDataPage(): JSX.Element | null {
         patients={patients}
         setPatient={setPatient}
         isSelectedTeamMedical={isSelectedTeamMedical}
-        profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}

@@ -46,7 +46,6 @@ describe('Header', function () {
       onClickNext: sinon.stub(),
       onClickOneDay: sinon.stub(),
       onClickSettings: sinon.stub(),
-      ProfileDialog: sinon.stub().returns(null),
       trackMetric: sinon.stub(),
       userIsHCP: false,
       onSwitchPatient: sinon.stub()

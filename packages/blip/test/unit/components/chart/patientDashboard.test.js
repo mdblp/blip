@@ -118,7 +118,6 @@ describe('PatientDashboard', () => {
     medicalFilesWidget: MedicalFilesWidget,
     patientInfoWidget: PatientInfoWidget,
     dataUtil: new DataUtilStub(),
-    profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc('2014-03-13T12:00:00.000Z').valueOf(),
     msRange: TimeService.MS_IN_DAY, // ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
     loading: false,
