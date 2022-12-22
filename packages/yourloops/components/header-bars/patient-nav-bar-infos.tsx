@@ -25,26 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent, useMemo, useState } from 'react'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import moment from 'moment-timezone'
 import { PatientNavBarInfo } from './patient-nav-bar-info'
+import Typography from '@mui/material/Typography'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
 interface PatientNavBarInfosProps {
+  infoWidth: string
   patient: Patient
 }
 
 export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (props) => {
-  const { patient } = props
+  const { infoWidth, patient } = props
 
   const { t } = useTranslation('yourloops')
+
+  const [showMoreInfo, setShowMoreInfo] = useState(false)
+
   const gender = useMemo(() => {
     if (patient.profile.sex === '') {
       return t('N/A')
     }
-    return t(patient.profile.sex)
+    return t(`gender-${patient.profile.sex.toLocaleLowerCase()}`)
+  }, [patient, t])
+
+  const hbA1c = useMemo(() => {
+    return patient.settings.a1c ? `${patient.settings.a1c.value} (${patient.settings.a1c?.date})` : t('N/A')
+  }, [patient, t])
+
+  const referringDoctor = useMemo(() => {
+    const doctor = patient.profile.referringDoctor
+    return !doctor || doctor === '' ? t('N/A') : doctor
   }, [patient, t])
 
   return (
@@ -53,34 +69,64 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('last-name') })}
           fieldValue={patient.profile.lastName}
+          fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('birthdate') })}
           fieldValue={moment(patient.profile.birthdate).format('L')}
+          fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('diabete-type') })}
           fieldValue={'Type 1'}
+          fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('referring-doctor') })}
-          fieldValue={patient.profile.referringDoctor ?? t('N/A')}
+          fieldValue={referringDoctor}
+          fieldWidth={infoWidth}
         />
       </Box>
       <Box display="flex" marginTop={1}>
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('first-name') })}
           fieldValue={patient.profile.firstName}
+          fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('gender') })}
           fieldValue={gender}
+          fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
           fieldName={t('double-dot', { label: t('remote-monitoring') })}
-          fieldValue={patient.monitoring?.enabled ? 'Oui' : 'Non'}
+          fieldValue={patient.monitoring?.enabled ? t('yes') : t('no')}
+          fieldWidth={infoWidth}
         />
+        <PatientNavBarInfo
+          fieldName={t('double-dot', { label: t('email') })}
+          fieldValue={patient.profile.email}
+          fieldWidth={infoWidth}
+        />
+        <Box
+          display="flex"
+          marginLeft="auto"
+          marginRight={5}
+          sx={{ cursor: 'pointer' }}
+          onClick={() => setShowMoreInfo(!showMoreInfo)}
+        >
+          <Typography fontSize="13px" marginRight={1} sx={{ textDecoration: 'underline' }}>Show more</Typography>
+          {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
+        </Box>
       </Box>
+      {showMoreInfo &&
+        <Box display="flex" marginTop={1} marginBottom={2}>
+          <PatientNavBarInfo
+            fieldName={t('double-dot', { label: t('hba1c') })}
+            fieldValue={hbA1c}
+            fieldWidth={infoWidth}
+          />
+        </Box>}
     </Box>
   )
 }

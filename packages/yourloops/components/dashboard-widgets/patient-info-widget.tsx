@@ -26,7 +26,6 @@
  */
 
 import React, { useState } from 'react'
-import moment from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -43,14 +42,12 @@ import Typography from '@mui/material/Typography'
 
 import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 import { useAuth } from '../../lib/auth'
-import { genderLabels } from '../../lib/auth/auth.helper'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import { useTeam } from '../../lib/team'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
-import { Settings } from '../../lib/auth/models/settings.model'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
@@ -82,7 +79,6 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const { classes } = patientInfoWidgetStyles()
   const { classes: commonStyles } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
-  const trNA = t('N/A')
   const authHook = useAuth()
   const notificationHook = useNotification()
   const teamHook = useTeam()
@@ -94,10 +90,6 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false)
   const [confirmCancelDialogActionInProgress, setConfirmCancelDialogActionInProgress] = useState(false)
   const [confirmDeleteDialogActionInProgress, setConfirmDeleteDialogActionInProgress] = useState(false)
-  const hbA1c: Settings['a1c'] = patient.settings.a1c
-    ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format('L') }
-    : undefined
-  const birthdate = moment.utc(patient.profile.birthdate).format('L')
   const { getUserName } = useUserName()
   const { firstName, fullName, lastName } = patient.profile
   const patientName = getUserName(firstName, lastName, fullName)
@@ -118,19 +110,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     renewAndRemove: false
   }
 
-  const patientInfo: Record<string, string> = {
-    patient: patientName,
-    gender: patient.profile.sex,
-    birthdate,
-    email: patient.profile.email,
-    hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA
-  }
-
-  patientInfo.gender = genderLabels()[patient.profile.sex ?? '']
-
   const computePatientInformation = (): void => {
-    patientInfo['remote-monitoring'] = patient.monitoring?.enabled ? t('yes') : t('no')
-
     const displayInviteButton = !patient.monitoring?.enabled &&
       patient.monitoring.status !== MonitoringStatus.pending &&
       patient.monitoring.status !== MonitoringStatus.accepted
@@ -186,86 +166,85 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
         id="patient-info-header"
         avatar={<LocalHospitalOutlinedIcon />}
         className={classes.cardHeader}
-        title={t('patient-info')}
+        title={t('remote-monitoring-program')}
       />
       <CardContent id="patient-info-content">
         <Grid container spacing={1}>
-          {Object.keys(patientInfo).map((key) =>
-            <React.Fragment key={key}>
-              <Grid item xs={4} className={`${classes.deviceLabels} device-label`}>
-                <Typography variant="caption">
-                  {t(key)}:
-                </Typography>
-              </Grid>
-              <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Typography variant="body2" id={`patient-info-${key}-value`} data-testid={`patient-info-${key}-value`}>
-                    {patientInfo[key]}
-                  </Typography>
-                  {key === 'remote-monitoring' && showMonitoringButtonAction &&
-                    <React.Fragment>
-                      {buttonsVisible.invite &&
-                        <Button
-                          id="invite-button-id"
-                          className={commonStyles.button}
-                          variant="contained"
-                          color="primary"
-                          disableElevation
-                          size="small"
-                          onClick={() => setShowInviteRemoteMonitoringDialog(true)}
-                          data-testid="patient-info-card-invite-button"
-                        >
-                          {t('invite')}
-                        </Button>
-                      }
-                      {buttonsVisible.cancel &&
-                        <Button
-                          id="cancel-invite-button-id"
-                          className={commonStyles.button}
-                          variant="contained"
-                          color="primary"
-                          disableElevation
-                          size="small"
-                          onClick={() => setShowConfirmCancelDialog(true)}
-                          data-testid="patient-info-card-cancel-invite-button"
-                        >
-                          {t('cancel-invite')}
-                        </Button>
-                      }
-                      {buttonsVisible.renewAndRemove &&
-                        <Box>
-                          <Button
-                            id="renew-button-id"
-                            className={commonStyles.button}
-                            variant="contained"
-                            color="primary"
-                            disableElevation
-                            size="small"
-                            onClick={() => setShowRenewRemoteMonitoringDialog(true)}
-                            data-testid="patient-info-card-renew-button"
-                          >
-                            {t('renew')}
-                          </Button>
-                          <Button
-                            id="remove-button-id"
-                            className={`${commonStyles.button} ${classes.marginLeft}`}
-                            variant="contained"
-                            color="primary"
-                            disableElevation
-                            size="small"
-                            onClick={() => setShowConfirmDeleteDialog(true)}
-                            data-testid="patient-info-card-remove-button"
-                          >
-                            {t('button-remove')}
-                          </Button>
-                        </Box>
-                      }
-                    </React.Fragment>
+          <Grid item xs={4} className={`${classes.deviceLabels} device-label`}>
+            <Typography variant="caption">
+              {t('remote-monitoring')}:
+            </Typography>
+          </Grid>
+          <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Typography
+                variant="body2"
+                data-testid={'patient-info-remote-monitoring-value'}
+              >
+                {patient.monitoring?.enabled ? t('yes') : t('no')}
+              </Typography>
+              {showMonitoringButtonAction &&
+                <React.Fragment>
+                  {buttonsVisible.invite &&
+                    <Button
+                      id="invite-button-id"
+                      className={commonStyles.button}
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                      size="small"
+                      onClick={() => setShowInviteRemoteMonitoringDialog(true)}
+                      data-testid="patient-info-card-invite-button"
+                    >
+                      {t('invite')}
+                    </Button>
                   }
-                </Box>
-              </Grid>
-            </React.Fragment>
-          )}
+                  {buttonsVisible.cancel &&
+                    <Button
+                      id="cancel-invite-button-id"
+                      className={commonStyles.button}
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                      size="small"
+                      onClick={() => setShowConfirmCancelDialog(true)}
+                      data-testid="patient-info-card-cancel-invite-button"
+                    >
+                      {t('cancel-invite')}
+                    </Button>
+                  }
+                  {buttonsVisible.renewAndRemove &&
+                    <Box>
+                      <Button
+                        id="renew-button-id"
+                        className={commonStyles.button}
+                        variant="contained"
+                        color="primary"
+                        disableElevation
+                        size="small"
+                        onClick={() => setShowRenewRemoteMonitoringDialog(true)}
+                        data-testid="patient-info-card-renew-button"
+                      >
+                        {t('renew')}
+                      </Button>
+                      <Button
+                        id="remove-button-id"
+                        className={`${commonStyles.button} ${classes.marginLeft}`}
+                        variant="contained"
+                        color="primary"
+                        disableElevation
+                        size="small"
+                        onClick={() => setShowConfirmDeleteDialog(true)}
+                        data-testid="patient-info-card-remove-button"
+                      >
+                        {t('button-remove')}
+                      </Button>
+                    </Box>
+                  }
+                </React.Fragment>
+              }
+            </Box>
+          </Grid>
         </Grid>
       </CardContent>
       {showInviteRemoteMonitoringDialog &&

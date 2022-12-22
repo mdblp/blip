@@ -25,77 +25,77 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, MouseEventHandler } from 'react'
+import React, { FunctionComponent } from 'react'
+
+import FormControl from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import { Patient } from '../../lib/patient/models/patient.model'
+import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import { useAuth } from '../../lib/auth'
+import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
-import { PatientNavBarTabs } from './patient-nav-bar-tabs'
-import { PatientNavBarInfos } from './patient-nav-bar-infos'
-import { PatientNavBarSelect } from './patient-nav-bar-select'
+import Typography from '@mui/material/Typography'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
-interface PatientNavBarProps {
+interface PatientNavBarSelectProps {
   patient?: Patient
   patients: Patient[]
-  chartType: string
-  prefixURL: string
-  onClickDashboard: MouseEventHandler<HTMLAnchorElement>
-  onClickTrends: MouseEventHandler<HTMLAnchorElement>
-  onClickOneDay: MouseEventHandler<HTMLAnchorElement>
   onSwitchPatient: Function
 }
 
 const styles = makeStyles()((theme: Theme) => {
   return {
-    topContainer: {
-      backgroundColor: theme.palette.common.white
-    }
+    iconStandard: { color: theme.palette.primary.main }
   }
 })
 
-export const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
-  {
-    prefixURL = '',
-    ...props
-  }) => {
+export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = (props) => {
   const {
     patient,
     patients,
-    chartType,
-    onClickDashboard,
-    onClickTrends,
-    onClickOneDay,
     onSwitchPatient
   } = props
 
-  const { user } = useAuth()
+  const { t } = useTranslation('yourloops')
+  const { getUserName } = useUserName()
 
   const { classes, theme } = styles()
 
   return (
-    <Box display="flex" flexDirection="column" marginBottom={3}>
-      <Box className={classes.topContainer} borderBottom={`1px solid ${theme.palette.divider}`} width="100%">
-        {patient && user.isUserPatient()
-          ? (
-            <Box data-testid="patient-dropdown" paddingTop={3} paddingLeft={7} marginBottom={3}>
-              <PatientNavBarInfos patient={patient} infoWidth="15%" />
-            </Box>
-            ) : (
-            <Box display="flex" paddingTop={2}>
-              <PatientNavBarSelect patient={patient} patients={patients} onSwitchPatient={onSwitchPatient} />
-              <PatientNavBarInfos patient={patient} infoWidth="20%" />
-            </Box>
-            )
-        }
-      </Box>
-      <PatientNavBarTabs
-        chartType={chartType}
-        prefixURL={prefixURL}
-        onClickDashboard={onClickDashboard}
-        onClickTrends={onClickTrends}
-        onClickOneDay={onClickOneDay}
-      />
+    <Box
+      data-testid="patient-dropdown"
+      display="flex"
+      flexDirection="column"
+      paddingLeft={7}
+      marginRight={5}
+      marginBottom={3}
+      width="20%"
+    >
+      <Typography fontSize="13px">{t('patient')}</Typography>
+      <FormControl data-testid="subnav-patient-list">
+        <Select
+          data-testid="drop-down-patient"
+          defaultValue={patient.userid}
+          IconComponent={KeyboardArrowDownIcon}
+          onChange={event => onSwitchPatient(patients.find(patient => patient.userid === event.target.value))}
+          variant="standard"
+          disableUnderline
+          sx={{ fontSize: '22px', color: theme.palette.primary.main }}
+          classes={{ iconStandard: classes.iconStandard }}
+        >
+          {
+            patients.map((patient, i) => {
+              return (
+                <MenuItem
+                  key={i}
+                  value={patient.userid}>{getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName)}
+                </MenuItem>)
+            })
+          }
+        </Select>
+      </FormControl>
     </Box>
   )
 }
