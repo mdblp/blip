@@ -83,9 +83,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       display: 'flex',
       flexShrink: 0,
       fontSize: '12px',
-      padding: '11px',
-      paddingBottom: '11px',
-      paddingTop: '11px',
+      paddingBlock: '11px',
       zIndex: theme.zIndex.drawer + 1,
       [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap'

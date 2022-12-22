@@ -32,6 +32,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import loginPageBackground from 'login-page-background.png'
+import loginPageLaptop from 'login-page-laptop.png'
 
 import Toolbar from '@mui/material/Toolbar'
 import AppBar from '@mui/material/AppBar'
@@ -58,7 +59,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   backgroundImage: {
     position: 'absolute',
     right: 0,
-    bottom: 0,
+    bottom: -1,
     zIndex: -1
   },
   heading: {
@@ -87,6 +88,12 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     '&:hover': {
       color: LOGO_COLOR_LIGHT
     }
+  },
+  laptopImage: {
+    position: 'absolute',
+    width: 800,
+    right: 'calc(30% - 400px)',
+    top: 'calc(50% - 250px)'
   },
   link: {
     color: 'var(--logo-color)',
@@ -190,6 +197,7 @@ const LoginPage: FunctionComponent = () => {
         position="relative"
       >
         <img src={loginPageBackground} alt="login-page-background" className={classes.backgroundImage} />
+        <img src={loginPageLaptop} alt="login-page-laptop" className={classes.laptopImage} />
         <Box className={classes.infoContainer}>
           <Box className={classes.heading}>
             <Box color="var(--logo-color)" component="span">YourLoops</Box> {t('login-page-title')}
