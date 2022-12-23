@@ -29,10 +29,10 @@ import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 
 interface SwitchRoleDialogProps {
   open: boolean
+  inProgress?: boolean
 }
 
 export interface SwitchRoleConsequencesDialogProps extends SwitchRoleDialogProps {
-  title: string
   onAccept: () => void
   onCancel: () => void
 }
@@ -48,14 +48,11 @@ export interface SwitchRoleProfessionDialogProps extends SwitchRoleDialogProps {
 }
 
 export interface SwitchRoleDialogsProps {
-  open: boolean
   onCancel: () => void
 }
 
 export enum SwitchRoleToHcpSteps {
-  none,
   consequences,
   consent,
-  profession,
-  update, // Update in progress => backend API call
+  profession
 }

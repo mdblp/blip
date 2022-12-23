@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FunctionComponent, PropsWithChildren, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
@@ -65,7 +65,7 @@ const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Th
   }
 }))
 
-const NotificationsPage = (): JSX.Element => {
+const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
   const { t } = useTranslation('yourloops')
   const { classes } = useStyles()
   const { user } = useAuth()
@@ -101,37 +101,35 @@ const NotificationsPage = (): JSX.Element => {
   }
 
   return (
-    <React.Fragment>
-      <Container maxWidth="lg">
-        <List>
-          {notifications.length > 0 ? (
-            notifications.map((notification: NotificationModel, index: number) => (
-              <ListItem
-                key={notification.id}
-                disableGutters
-                divider={index !== notifications.length - 1}
-              >
-                <Notification
-                  notification={notification}
-                  userRole={user.role}
-                  onHelp={handleSwitchRoleOpen}
-                />
-              </ListItem>
-            ))
-          ) : (
-            <Typography
-              className={classes.noNotificationMessage}
-              id="typography-no-pending-invitation-message"
-              variant="body2"
-              gutterBottom
+    <Container maxWidth="lg">
+      <List>
+        {notifications.length > 0 ? (
+          notifications.map((notification: NotificationModel, index: number) => (
+            <ListItem
+              key={notification.id}
+              disableGutters
+              divider={index !== notifications.length - 1}
             >
-              {t('notification-no-pending-invitation')}
-            </Typography>
-          )}
-        </List>
-        <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />
-      </Container>
-    </React.Fragment>
+              <Notification
+                notification={notification}
+                userRole={user.role}
+                onHelp={handleSwitchRoleOpen}
+              />
+            </ListItem>
+          ))
+        ) : (
+          <Typography
+            className={classes.noNotificationMessage}
+            id="typography-no-pending-invitation-message"
+            variant="body2"
+            gutterBottom
+          >
+            {t('notification-no-pending-invitation')}
+          </Typography>
+        )}
+      </List>
+      {switchRoleOpen && <SwitchRoleDialogs onCancel={handleSwitchRoleCancel} />}
+    </Container>
   )
 }
 

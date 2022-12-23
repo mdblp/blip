@@ -76,6 +76,10 @@ export const checkHcpProfilePage = (): HcpFieldsHtmlElements => {
   }
 }
 
+export const checkCaregiverProfilePage = (): CommonFieldsHtmlElements => {
+  return checkCommonFields()
+}
+
 export const checkPatientProfilePage = (country: CountryCodes): PatientFieldsHtmlElements => {
   const birthdayInput = screen.getByLabelText('Date of birth')
   const birthPlaceInput = screen.getByLabelText('Birth place')
