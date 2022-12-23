@@ -161,7 +161,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   }
 
   return (
-    <Card id="patient-info" className={classes.card} data-testid="patient-info-card">
+    <Card id="patient-info" className={classes.card} data-testid="remote-monitoring-card">
       <CardHeader
         id="patient-info-header"
         avatar={<MonitorHeartOutlinedIcon />}
@@ -194,7 +194,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                       disableElevation
                       size="small"
                       onClick={() => setShowInviteRemoteMonitoringDialog(true)}
-                      data-testid="patient-info-card-invite-button"
+                      data-testid="remote-monitoring-card-invite-button"
                     >
                       {t('invite')}
                     </Button>
@@ -208,7 +208,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                       disableElevation
                       size="small"
                       onClick={() => setShowConfirmCancelDialog(true)}
-                      data-testid="patient-info-card-cancel-invite-button"
+                      data-testid="remote-monitoring-card-cancel-invite-button"
                     >
                       {t('cancel-invite')}
                     </Button>
@@ -223,7 +223,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                         disableElevation
                         size="small"
                         onClick={() => setShowRenewRemoteMonitoringDialog(true)}
-                        data-testid="patient-info-card-renew-button"
+                        data-testid="remote-monitoring-card-renew-button"
                       >
                         {t('renew')}
                       </Button>
@@ -235,7 +235,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                         disableElevation
                         size="small"
                         onClick={() => setShowConfirmDeleteDialog(true)}
-                        data-testid="patient-info-card-remove-button"
+                        data-testid="remote-monitoring-card-remove-button"
                       >
                         {t('button-remove')}
                       </Button>

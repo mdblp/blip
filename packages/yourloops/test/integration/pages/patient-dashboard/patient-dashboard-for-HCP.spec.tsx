@@ -44,6 +44,7 @@ import { queries } from '@testing-library/dom'
 import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
+import userEvent from '@testing-library/user-event'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -79,7 +80,7 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Generate report')).toBeVisible()
 
     /* Patient info widget */
-    const patientInfoCard = within(dashboard.getByTestId('patient-info-card'))
+    const patientInfoCard = within(dashboard.getByTestId('remote-monitoring-card'))
     expect(patientInfoCard.getByText('Remote monitoring program')).toBeVisible()
 
     /* Patient stats widget */
@@ -151,6 +152,12 @@ describe('Patient dashboard for HCP', () => {
     fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
     const secondarHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:MaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
+    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:FemaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
+
+    await userEvent.click(within(secondarHeaderRefreshed).getByText('Show more'))
+    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:FemaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow morehba1c:8.3 (12/16/2022)DashboardDailyTrendsGenerate report')
+
+    await userEvent.click(within(secondarHeaderRefreshed).getByText('Show more'))
+    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:FemaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
   })
 })
