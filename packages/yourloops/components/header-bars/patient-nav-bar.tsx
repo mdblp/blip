@@ -34,6 +34,8 @@ import { Theme } from '@mui/material/styles'
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
 import { PatientNavBarInfos } from './patient-nav-bar-infos'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { useHistory } from 'react-router-dom'
 
 interface PatientNavBarProps {
   chartType: string
@@ -51,6 +53,12 @@ const styles = makeStyles()((theme: Theme) => {
   return {
     topContainer: {
       backgroundColor: theme.palette.common.white
+    },
+    backIcon: {
+      cursor: 'pointer',
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginTop: theme.spacing(2)
     }
   }
 })
@@ -72,8 +80,13 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
   } = props
 
   const { user } = useAuth()
+  const history = useHistory()
 
   const { classes, theme } = styles()
+
+  const goBackHome = (): void => {
+    history.push('/')
+  }
 
   return (
     <Box data-testid="patient-nav-bar" display="flex" flexDirection="column" marginBottom={3}>
@@ -85,6 +98,7 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
             </Box>
             ) : (
             <Box display="flex" paddingTop={2}>
+              <ArrowBackIcon data-testid="subnav-arrow-back" className={classes.backIcon} onClick={goBackHome} />
               <PatientNavBarSelect patient={patient} patients={patients} onSwitchPatient={onSwitchPatient} />
               <PatientNavBarInfos patient={patient} infoWidth="20%" />
             </Box>

@@ -43,7 +43,7 @@ export const PatientNavBarInfo: FunctionComponent<PatientNavBarInfoProps> = (pro
 
   return (
     <Box display="flex" width={fieldWidth}>
-      <Typography fontSize="13px">{fieldName}</Typography>
+      <Typography data-testid={`${id}-label`} fontSize="13px">{fieldName}</Typography>
       <Typography data-testid={id} marginLeft="4px" fontSize="13px" color={theme.palette.common.black}>{fieldValue}</Typography>
     </Box>
   )

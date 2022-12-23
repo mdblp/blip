@@ -68,7 +68,6 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
       data-testid="patient-dropdown"
       display="flex"
       flexDirection="column"
-      paddingLeft={7}
       marginRight={5}
       marginBottom={3}
       width="20%"

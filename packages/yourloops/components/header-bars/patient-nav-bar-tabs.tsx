@@ -145,7 +145,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
           />
         </Tabs>
         <Box marginLeft="auto" marginRight={3} display="flex" justifyContent="center" alignItems="center">
-          <Button onClick={onClickPrint}>
+          <Button data-testid="generate-report" onClick={onClickPrint}>
             <GetAppIcon />
             {t('pdf-generate-report')}
           </Button>
