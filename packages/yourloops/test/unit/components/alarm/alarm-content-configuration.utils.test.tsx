@@ -26,7 +26,7 @@
  */
 
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
-import { buildThresholds } from '../../../../components/alarm/alarm-content-configuration.utils'
+import { buildBgValues, buildThresholds } from '../../../../components/alarm/alarm-content-configuration.utils'
 
 describe('Thresholds', () => {
   const getDefaultMonitoring = () => ({
@@ -65,5 +65,36 @@ describe('Thresholds', () => {
     expect(thresholdsInMgdl.maxLowBg).toBe(100)
     expect(thresholdsInMgdl.minVeryLowBg).toBe(40)
     expect(thresholdsInMgdl.maxVeryLowBg).toBe(90)
+  })
+})
+describe('Bg values', function () {
+  const defaultMonitoringBgValue = () => ({
+    enabled: true,
+    parameters: {
+      bgUnitDefault: UnitsType.MGDL,
+      outOfRangeThresholdDefault: 50,
+      nonDataTxThresholdDefault: 50,
+      hypoThresholdDefault: 5,
+      veryLowBgDefault: 54,
+      lowBgDefault: 70,
+      highBgDefault: 180,
+      reportingPeriodDefault: 7 * 24
+    }
+  })
+  it('should return default bg values in mmol/L if the parameters are in mmol/L', function () {
+    const monitoring = defaultMonitoringBgValue()
+    monitoring.parameters.bgUnitDefault = UnitsType.MGDL
+    const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
+    expect(bgValuesInMmol.highBgDefault).toBe(180)
+    expect(bgValuesInMmol.lowBgDefault).toBe(70)
+    expect(bgValuesInMmol.veryLowBgDefault).toBe(54)
+  })
+  it('should return default bg values in mg/dL if the parameters are in mg/dL ', function () {
+    const monitoring = defaultMonitoringBgValue()
+    monitoring.parameters.bgUnitDefault = UnitsType.MMOLL
+    const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
+    expect(bgValuesInMmol.highBgDefault).toBe(10)
+    expect(bgValuesInMmol.lowBgDefault).toBe(2.8)
+    expect(bgValuesInMmol.veryLowBgDefault).toBe(2.2)
   })
 })

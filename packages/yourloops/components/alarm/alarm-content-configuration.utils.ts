@@ -63,6 +63,8 @@ export const buildThresholds = (bgUnit: UnitsType): Thresholds => {
 export const buildBgValues = (bgUnit: UnitsType): BgValues => {
   if (bgUnit === UnitsType.MMOLL) {
     return {
+      ...DEFAULT_BG_VALUES,
+      bgUnitDefault: UnitsType.MMOLL,
       highBgDefault: Math.round(convertBG(DEFAULT_BG_VALUES.highBgDefault, UnitsType.MGDL) * 10) / 10,
       veryLowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, UnitsType.MGDL) * 10) / 10,
       lowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, UnitsType.MGDL) * 10) / 10
