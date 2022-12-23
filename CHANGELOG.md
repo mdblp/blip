@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 - YLP-1947 Add team selection dropdown on patient dashboard for HCP
 - YLP-1973 User should be able to uncheck the training check box
+- YLP-1989 New friendly login page
 ### Engineering use
 - YLP-1444 Handle user name display for Japanese
 - YLP-1624 Fix error messages when inviting a patient already in the team
