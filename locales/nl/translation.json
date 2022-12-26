@@ -186,7 +186,7 @@
   "Showing BGM data (not enough CGM)": "BGM-gegevens worden weergegeven (niet genoeg CGM)",
   "Showing CGM data": "CGM-gegevens worden weergegeven",
   "Software version": "Softwareversie",
-  "Spring forward! You may see your data overlap. Make sure you update the time on all your devices.": "Spring forward! You may see your data overlap. Make sure you update the time on all your devices.",
+  "Spring forward! You may see your data overlap. Make sure you update the time on all your devices.": "Zomertijd! Je gegevens kunnen elkaar overlappen. Zorg ervoor dat je al je apparaten op de juiste tijd instelt.",
   "Start time": "Starttijd",
   "Std. Deviation ({{bgSourceLabel}})": "Std. afwijking ({{bgSourceLabel}})",
   "Su_Sunday": "Zo",
