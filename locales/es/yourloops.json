@@ -49,14 +49,14 @@
   "aria-team-add-member-dialog-title": "Nuevo miembro de {{teamName}}",
   "aria-team-leave-dialog-question": "¿Seguro que desea abandonar el equipo de atención médica {{teamName}}?",
   "aria-team-leave-dialog-title": "Abandonar el equipo de atención médica",
-  "attending-physician": "Attending physician",
+  "attending-physician": "Médico",
   "back": "atrás",
   "birthdate": "Fecha de nacimiento",
   "birthplace": "Lugar de nacimiento",
   "brand-name": "YourLoops",
   "breadcrumb-home": "Inicio",
   "breadcrumb-notifications": "Notificaciones",
-  "browse": "Browse",
+  "browse": "Navegar",
   "button-accept": "Aceptar",
   "button-add-caregiver": "Añadir cuidador",
   "button-add-medical-team": "Añadir equipo de atención médica",
@@ -410,5 +410,5 @@
   "write-medical-record": "Escribir un registro médico",
   "yes": "Sí",
   "yesterday": "Ayer",
-  "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes."
+  "yourloops-explanatory-text": "YourLoops es un dispositivo médico de la clase CE IIa, fabricado legalmente por Diabeloop SA, destinado a ser utilizado por pacientes y equipos de salud para monitorear los datos de personas con diabetes."
 }
