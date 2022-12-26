@@ -25,7 +25,7 @@
   "80% of Readings": "80 % de las lecturas",
   "A basal rate segment may be missing here because it wasn't reported to the Tidepool API in sequence. We can't be 100% certain of your basal rate here.": "A basal rate segment may be missing here because it wasn't reported to YourLoops in sequence. We can't be 100% certain of your basal rate here.",
   "A_Label": "ON",
-  "Activate Pod": "Activate Pod",
+  "Activate Pod": "Activar Pod",
   "Active at upload": "Activar en la carga",
   "Advanced": "Avanzado",
   "An unknown error occurred": "Se ha producido un error desconocido",
