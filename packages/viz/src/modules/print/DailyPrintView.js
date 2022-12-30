@@ -972,39 +972,29 @@ class DailyPrintView extends PrintView {
 
         // Render group markers
         if (index > 0) {
-          const xPos = xScale(firstDatum.utc)
-          const yPos = basalScale.range()[1] + this.markerRadius + 1
-          const zeroBasal = basalScale.range()[0]
-          const flushWithBottomOfScale = zeroBasal
+          // const xPos = xScale(firstDatum.utc)
+          // const yPos = basalScale.range()[1] + this.markerRadius * 2 - 1
+          // const zeroBasal = basalScale.range()[0]
+          // const flushWithBottomOfScale = zeroBasal
 
-          const label = isAutomated
-            ? this.basalGroupLabels.automated.charAt(0)
-            : this.basalGroupLabels.manual.charAt(0)
+          // this.doc
+          //   .circle(xPos, yPos, this.markerRadius)
+          //   .fillColor(color)
+          //   .fillOpacity(1)
+          //   .fill()
 
-          const labelColor = isAutomated ? this.colors.darkGrey : 'white'
+          // this.doc
+          //   .moveTo(xPos, yPos)
+          //   .lineWidth(0.75)
+          //   .lineTo(xPos, flushWithBottomOfScale)
+          //   .stroke(color)
 
-          const labelWidth = this.doc
-            .fontSize(5)
-            .widthOfString(label)
-
-          this.doc
-            .circle(xPos, yPos, this.markerRadius)
-            .fillColor(color)
-            .fillOpacity(1)
-            .fill()
-
-          this.doc
-            .moveTo(xPos, yPos)
-            .lineWidth(0.75)
-            .lineTo(xPos, flushWithBottomOfScale)
-            .stroke(color)
-
-          this.doc
-            .fillColor(labelColor)
-            .text(label, xPos - (labelWidth / 2), yPos - 2, {
-              width: labelWidth,
-              align: 'center'
-            })
+          // this.doc
+          //   .fillColor(labelColor)
+          //   .text(label, xPos - (labelWidth / 2), yPos - 2, {
+          //     width: labelWidth,
+          //     align: 'center'
+          //   })
         }
       })
     }
@@ -1215,12 +1205,6 @@ class DailyPrintView extends PrintView {
       this.renderEventPath(path)
     })
     cursor += this.bolusWidth / 2 + 10 + legendItemLabelOffset
-    this.doc
-      .fillColor('black')
-      .text(t('Combo /'), cursor, legendTextMiddle - this.doc.currentLineHeight() / 2)
-      .text(t('Extended'))
-
-    cursor += this.doc.widthOfString(t('Extended')) + legendItemLeftOffset * 2
 
     // carbohydrates
     this.doc.circle(cursor, legendVerticalMiddle, this.carbRadius)
