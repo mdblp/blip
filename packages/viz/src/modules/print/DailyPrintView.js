@@ -950,7 +950,7 @@ class DailyPrintView extends PrintView {
       const basalPathGroups = getBasalPathGroups(basal)
 
       // Split delivered path into individual segments based on subType
-      _.forEach(basalPathGroups, (group, index) => {
+      _.forEach(basalPathGroups, (group) => {
         const firstDatum = group[0]
         const isAutomated = getBasalPathGroupType(firstDatum) === 'automated'
         const color = isAutomated
