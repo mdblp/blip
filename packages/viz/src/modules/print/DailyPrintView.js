@@ -969,33 +969,6 @@ class DailyPrintView extends PrintView {
           .lineWidth(0.5)
           .undash()
           .stroke(color)
-
-        // Render group markers
-        if (index > 0) {
-          // const xPos = xScale(firstDatum.utc)
-          // const yPos = basalScale.range()[1] + this.markerRadius * 2 - 1
-          // const zeroBasal = basalScale.range()[0]
-          // const flushWithBottomOfScale = zeroBasal
-
-          // this.doc
-          //   .circle(xPos, yPos, this.markerRadius)
-          //   .fillColor(color)
-          //   .fillOpacity(1)
-          //   .fill()
-
-          // this.doc
-          //   .moveTo(xPos, yPos)
-          //   .lineWidth(0.75)
-          //   .lineTo(xPos, flushWithBottomOfScale)
-          //   .stroke(color)
-
-          // this.doc
-          //   .fillColor(labelColor)
-          //   .text(label, xPos - (labelWidth / 2), yPos - 2, {
-          //     width: labelWidth,
-          //     align: 'center'
-          //   })
-        }
       })
     }
 
