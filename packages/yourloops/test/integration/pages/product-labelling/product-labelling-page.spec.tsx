@@ -43,8 +43,7 @@ describe('Product labelling page', () => {
 
   it('should render product labelling with the right selected language and version', async () => {
     renderPage('/')
-    expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
-    checkFooter({ needFooterLanguageSelector: true })
+    checkFooter({ needFooterLanguageSelector: false })
 
     await userEvent.click(screen.getByText('Product Labelling'))
 

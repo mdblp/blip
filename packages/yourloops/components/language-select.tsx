@@ -62,6 +62,7 @@ const LanguageSelect: FunctionComponent<LanguageSelectProps> = ({ className }) =
     <FormControl variant="standard">
       <Select
         id="language-selector"
+        data-testid="language-selector"
         name="language-select"
         disableUnderline
         inputProps={{

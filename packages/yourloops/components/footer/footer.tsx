@@ -232,10 +232,7 @@ const Footer: FunctionComponent = () => {
       <Box className={classes.centerBox}>
         {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname)
           ? <Box className={classes.firstLine}>
-            <Box
-              data-testid="language-selector"
-              className={classes.firstLineElement}
-            >
+            <Box className={classes.firstLineElement}>
               <LanguageIcon className={classes.icon} />
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>

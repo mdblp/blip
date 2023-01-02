@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -92,7 +92,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   laptopImage: {
     position: 'absolute',
     width: 800,
-    right: 'calc(30% - 400px)',
+    right: '6%',
     top: 'calc(50% - 250px)'
   },
   link: {
@@ -134,8 +134,7 @@ const LoginPage: FunctionComponent = () => {
     <React.Fragment>
       <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       <AppBar
-        id="app-main-header"
-        data-testid="app-main-header"
+        data-testid="login-page-header"
         elevation={0}
         className={classes.appBar}
         position="fixed"
@@ -149,7 +148,7 @@ const LoginPage: FunctionComponent = () => {
           >
             <RouterLink className="flex" to="/">
               <img
-                id="header-main-logo"
+                data-testid="header-main-logo"
                 aria-label={t('alt-img-logo')}
                 src={`/branding_${config.BRANDING}_logo.svg`}
                 alt={t('alt-img-logo')}
@@ -183,7 +182,10 @@ const LoginPage: FunctionComponent = () => {
                   </Typography>
                 </Link>
                 <Box marginX={1} color={theme.palette.primary.main}>|</Box>
-                <LanguageIcon sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1) }} />
+                <LanguageIcon
+                  data-testid="language-icon"
+                  sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1) }}
+                />
                 <LanguageSelect className={classes.hoverable} />
               </Box>
             </Box>
@@ -196,9 +198,9 @@ const LoginPage: FunctionComponent = () => {
         height="calc(100% - 97px)"
         position="relative"
       >
-        <img src={loginPageBackground} alt="login-page-background" className={classes.backgroundImage} />
-        <img src={loginPageLaptop} alt="login-page-laptop" className={classes.laptopImage} />
-        <Box className={classes.infoContainer}>
+        <img src={loginPageBackground} alt={t('alt-img-login-page-background')} className={classes.backgroundImage} />
+        <img src={loginPageLaptop} alt={t('alt-img-login-page-laptop')} className={classes.laptopImage} />
+        <Box className={classes.infoContainer} data-testid="info-container">
           <Box className={classes.heading}>
             <Box color="var(--logo-color)" component="span">YourLoops</Box> {t('login-page-title')}
           </Box>
