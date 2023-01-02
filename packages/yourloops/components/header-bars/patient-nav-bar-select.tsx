@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React, { FunctionComponent } from 'react'
 
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
@@ -40,20 +40,18 @@ import Typography from '@mui/material/Typography'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 interface PatientNavBarSelectProps {
-  patient?: Patient
+  currentPatient?: Patient
   patients: Patient[]
   onSwitchPatient: Function
 }
 
-const styles = makeStyles()((theme: Theme) => {
-  return {
-    iconStandard: { color: theme.palette.primary.main }
-  }
-})
+const styles = makeStyles()((theme: Theme) => ({
+  iconStandard: { color: theme.palette.primary.main }
+}))
 
 export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = (props) => {
   const {
-    patient,
+    currentPatient,
     patients,
     onSwitchPatient
   } = props
@@ -62,6 +60,10 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
   const { getUserName } = useUserName()
 
   const { classes, theme } = styles()
+
+  const onPatientSelected = (event: SelectChangeEvent<string>): void => {
+    onSwitchPatient(patients.find(patient => patient.userid === event.target.value))
+  }
 
   return (
     <Box
@@ -76,19 +78,19 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
       <FormControl data-testid="subnav-patient-list">
         <Select
           data-testid="drop-down-patient"
-          defaultValue={patient.userid}
+          defaultValue={currentPatient.userid}
           IconComponent={KeyboardArrowDownIcon}
-          onChange={event => onSwitchPatient(patients.find(patient => patient.userid === event.target.value))}
+          onChange={onPatientSelected}
           variant="standard"
           disableUnderline
           sx={{ fontSize: '22px', color: theme.palette.primary.main }}
           classes={{ iconStandard: classes.iconStandard }}
         >
           {
-            patients.map((patient, i) => {
+            patients.map((patient, index) => {
               return (
                 <MenuItem
-                  key={i}
+                  key={index}
                   value={patient.userid}>{getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName)}
                 </MenuItem>)
             })

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2022, Diabeloop
+ * Copyright (c) 2014-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -66,13 +66,14 @@ export const DailyDatePicker: FunctionComponent<DailyDatePickerProps> = (props) 
 
   const [isOpen, setIsOpen] = React.useState(false)
 
-  const handleResult = (date): void => {
+  const handleResult = (date: string): void => {
     setIsOpen(false)
     onSelectedDateChange(date)
   }
 
-  const backButtonDisabled = inTransition || loading
-  const nextButtonDisabled = atMostRecent || inTransition || loading
+  const isComponentReady = !inTransition && !loading
+  const backButtonDisabled = !isComponentReady
+  const nextButtonDisabled = !isComponentReady || atMostRecent
 
   return (
     <React.Fragment>
@@ -89,7 +90,7 @@ export const DailyDatePicker: FunctionComponent<DailyDatePickerProps> = (props) 
         onClick={() => setIsOpen(true)}
         variant="standard"
         value={displayedDate}
-        disabled={inTransition || loading || isOpen}
+        disabled={!isComponentReady || isOpen}
         InputProps={loading ? undefined : {
           readOnly: true,
           startAdornment: (

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,27 +41,29 @@ interface PatientNavBarInfosProps {
 }
 const LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID = 'showMoreInfoPatientNavBarId'
 
-export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (props) => {
+export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> = (props) => {
   const { infoWidth, patient } = props
 
   const { t } = useTranslation('yourloops')
-  const localStorageShowMoreInfo = localStorage.getItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID) === 'true' ?? false
+  const localStorageShowMoreInfo = localStorage.getItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID) === 'true'
   const [showMoreInfo, setShowMoreInfo] = useState(localStorageShowMoreInfo)
+
+  const trNaLabel = t('N/A')
 
   const gender = useMemo(() => {
     if (patient.profile.sex === '') {
-      return t('N/A')
+      return trNaLabel
     }
     return t(`gender-${patient.profile.sex.toLocaleLowerCase()}`)
   }, [patient, t])
 
   const hbA1c = useMemo(() => {
-    return patient.settings.a1c ? `${patient.settings.a1c.value} (${moment(patient.settings.a1c?.date).format('L')})` : t('N/A')
+    return patient.settings.a1c ? `${patient.settings.a1c.value} (${moment(patient.settings.a1c?.date).format('L')})` : trNaLabel
   }, [patient, t])
 
   const referringDoctor = useMemo(() => {
     const doctor = patient.profile.referringDoctor
-    return !doctor || doctor === '' ? t('N/A') : doctor
+    return !doctor || doctor === '' ? trNaLabel : doctor
   }, [patient, t])
 
   const onShowMoreInfoClick = (): void => {
@@ -73,46 +75,46 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
     <Box display="flex" flexDirection="column" flexGrow="1" paddingTop={1}>
       <Box display="flex">
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('last-name') })}
+          fieldName={t('colon', { label: t('last-name') })}
           fieldValue={patient.profile.lastName}
           fieldWidth={infoWidth}
           id="patient-nav-bar-last-name"
         />
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('birthdate') })}
+          fieldName={t('colon', { label: t('birthdate') })}
           fieldValue={moment(patient.profile.birthdate).format('L')}
           fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('diabete-type') })}
+          fieldName={t('colon', { label: t('diabete-type') })}
           fieldValue={'Type 1'}
           fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('referring-doctor') })}
+          fieldName={t('colon', { label: t('referring-doctor') })}
           fieldValue={referringDoctor}
           fieldWidth={infoWidth}
         />
       </Box>
       <Box display="flex" marginTop={1}>
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('first-name') })}
+          fieldName={t('colon', { label: t('first-name') })}
           fieldValue={patient.profile.firstName}
           fieldWidth={infoWidth}
           id="patient-nav-bar-first-name"
         />
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('gender') })}
+          fieldName={t('colon', { label: t('gender') })}
           fieldValue={gender}
           fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('remote-monitoring') })}
+          fieldName={t('colon', { label: t('remote-monitoring') })}
           fieldValue={patient.monitoring?.enabled ? t('yes') : t('no')}
           fieldWidth={infoWidth}
         />
         <PatientNavBarInfo
-          fieldName={t('double-dot', { label: t('email') })}
+          fieldName={t('colon', { label: t('email') })}
           fieldValue={patient.profile.email}
           fieldWidth={infoWidth}
         />
@@ -130,7 +132,7 @@ export const PatientNavBarInfos: FunctionComponent<PatientNavBarInfosProps> = (p
       {showMoreInfo &&
         <Box display="flex" marginTop={1} marginBottom={2}>
           <PatientNavBarInfo
-            fieldName={t('double-dot', { label: t('hba1c') })}
+            fieldName={t('colon', { label: t('hba1c') })}
             fieldValue={hbA1c}
             fieldWidth={infoWidth}
           />

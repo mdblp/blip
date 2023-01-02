@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,7 @@ import { useAuth } from '../../lib/auth'
 import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
-import { PatientNavBarInfos } from './patient-nav-bar-infos'
+import { PatientNavBarInfoList } from './patient-nav-bar-info-list'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useHistory } from 'react-router-dom'
@@ -44,7 +44,7 @@ interface PatientNavBarProps {
   onSwitchPatient: Function
   onClickPrint: MouseEventHandler<HTMLButtonElement>
   onClickTrends: MouseEventHandler<HTMLAnchorElement>
-  patient: Patient
+  currentPatient: Patient
   patients: Patient[]
   prefixURL: string
 }
@@ -69,7 +69,7 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
     ...props
   }) => {
   const {
-    patient,
+    currentPatient,
     patients,
     chartType,
     onClickDashboard,
@@ -94,13 +94,13 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
         {user.isUserPatient()
           ? (
             <Box data-testid="patient-dropdown" paddingTop={3} paddingLeft={7} marginBottom={3}>
-              <PatientNavBarInfos patient={patient} infoWidth="18%" />
+              <PatientNavBarInfoList patient={currentPatient} infoWidth="18%" />
             </Box>
             ) : (
             <Box display="flex" paddingTop={2}>
               <ArrowBackIcon data-testid="subnav-arrow-back" className={classes.backIcon} onClick={goBackHome} />
-              <PatientNavBarSelect patient={patient} patients={patients} onSwitchPatient={onSwitchPatient} />
-              <PatientNavBarInfos patient={patient} infoWidth="20%" />
+              <PatientNavBarSelect currentPatient={currentPatient} patients={patients} onSwitchPatient={onSwitchPatient} />
+              <PatientNavBarInfoList patient={currentPatient} infoWidth="20%" />
             </Box>
             )
         }

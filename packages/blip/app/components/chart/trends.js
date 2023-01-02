@@ -30,6 +30,7 @@ import Footer from './footer'
 import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
+import ChartType from 'yourloops/enum/chart-type.enum'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -122,7 +123,7 @@ class Trends extends React.Component {
     super(props)
 
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs)
-    this.chartType = 'trends'
+    this.chartType = ChartType.Trends
 
     this.log = bows('Trends')
 
@@ -638,7 +639,7 @@ class Trends extends React.Component {
         onClickDaily={this.handleClickDaily}
         onClickTrends={this.handleClickTrends}
         onSwitchPatient={this.props.onSwitchPatient}
-        patient={this.props.patient}
+        currentPatient={this.props.patient}
         patients={this.props.patients}
         prefixURL={this.props.prefixURL}
       />

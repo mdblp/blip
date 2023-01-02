@@ -42,6 +42,7 @@ import {
 import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
+import ChartType from 'yourloops/enum/chart-type.enum'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -283,7 +284,7 @@ class Daily extends React.Component {
 
     /** @type {React.RefObject<DailyChart>} */
     this.chartRef = React.createRef()
-    this.chartType = 'daily'
+    this.chartType = ChartType.Daily
     this.log = bows('DailyView')
     this.state = {
       atMostRecent: this.isAtMostRecent(),
@@ -340,7 +341,7 @@ class Daily extends React.Component {
           onSwitchPatient={this.props.onSwitchPatient}
           onClickPrint={this.props.onClickPrint}
           onClickTrends={this.props.onSwitchToTrends}
-          patient={this.props.patient}
+          currentPatient={this.props.patient}
           patients={this.props.patients}
           prefixURL={this.props.prefixURL}
         />

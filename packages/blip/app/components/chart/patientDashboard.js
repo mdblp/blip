@@ -58,7 +58,7 @@ const PatientDashboard = (props) => {
         onClickPrint={onClickPrint}
         onClickTrends={onSwitchToTrends}
         onSwitchPatient={onSwitchPatient}
-        patient={patient}
+        currentPatient={patient}
         patients={patients}
         prefixURL={prefixURL}
       />

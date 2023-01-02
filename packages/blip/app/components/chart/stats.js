@@ -16,6 +16,7 @@ import {
   TotalInsulinStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
+import ChartType from 'yourloops/enum/chart-type.enum'
 
 const WEIGHT_PARAM = 'WEIGHT'
 const WEIGHT_PARAM_DEFAULT_VALUE = -1
@@ -25,7 +26,7 @@ class Stats extends React.Component {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object,
-    chartType: PropTypes.oneOf(['daily', 'bgLog', 'trends', 'deviceUsage', 'patientStatistics']).isRequired,
+    chartType: PropTypes.oneOf([ChartType.Daily, 'bgLog', ChartType.Trends, 'deviceUsage', 'patientStatistics']).isRequired,
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
@@ -264,7 +265,7 @@ class Stats extends React.Component {
     const smbgSelected = bgSource === 'smbg'
 
     switch (chartType) {
-      case 'daily':
+      case ChartType.Daily:
         cbgSelected && addStat(commonStats.timeInRange)
         smbgSelected && addStat(commonStats.readingsInRange)
         addStat(commonStats.averageGlucose)
@@ -275,7 +276,7 @@ class Stats extends React.Component {
         cbgSelected && addStat(commonStats.coefficientOfVariation)
         break
 
-      case 'trends':
+      case ChartType.Trends:
         cbgSelected && addStat(commonStats.timeInRange)
         smbgSelected && addStat(commonStats.readingsInRange)
         addStat(commonStats.averageGlucose)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,7 +69,7 @@ export const TrendsDatePicker: FunctionComponent<TrendsDatePickerProps> = (props
 
   const [isOpen, setIsOpen] = React.useState(false)
 
-  const handleResult = (date, end): void => {
+  const handleResult = (date: string, end: string): void => {
     onResult(date, end)
     setIsOpen(false)
   }

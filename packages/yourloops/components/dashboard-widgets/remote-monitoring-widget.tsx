@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -161,14 +161,13 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   }
 
   return (
-    <Card id="patient-info" className={classes.card} data-testid="remote-monitoring-card">
+    <Card className={classes.card} data-testid="remote-monitoring-card">
       <CardHeader
-        id="patient-info-header"
         avatar={<MonitorHeartOutlinedIcon />}
         className={classes.cardHeader}
         title={t('remote-monitoring-program')}
       />
-      <CardContent id="patient-info-content">
+      <CardContent>
         <Grid container spacing={1}>
           <Grid item xs={4} className={`${classes.deviceLabels} device-label`}>
             <Typography variant="caption">

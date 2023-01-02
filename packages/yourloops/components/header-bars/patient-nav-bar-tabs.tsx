@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
+import ChartType from '../../enum/chart-type.enum'
 
 interface PatientNavBarTabsProps {
   chartType: string
@@ -51,6 +52,10 @@ const TAB_HEIGHT = '48px'
 
 const styles = makeStyles()((theme: Theme) => {
   return {
+    root: {
+      minHeight: TAB_HEIGHT,
+      height: TAB_HEIGHT
+    },
     tabs: {
       boxShadow: theme.shadows[3],
       backgroundColor: theme.palette.common.white
@@ -61,14 +66,6 @@ const styles = makeStyles()((theme: Theme) => {
       textTransform: 'capitalize',
       fontSize: '16px',
       color: 'var(--text-base-color)'
-    },
-    tabsRoot: {
-      minHeight: TAB_HEIGHT,
-      height: TAB_HEIGHT
-    },
-    tabRoot: {
-      minHeight: TAB_HEIGHT,
-      height: TAB_HEIGHT
     }
   }
 })
@@ -92,11 +89,11 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
 
   const selectedTab = (): number => {
     switch (chartType) {
-      case 'dashboard':
+      case ChartType.Dashboard:
         return 0
-      case 'daily':
+      case ChartType.Daily:
         return 1
-      case 'trends':
+      case ChartType.Trends:
         return 2
     }
   }
@@ -105,7 +102,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
     <Box className={classes.tabs} width="100%" paddingLeft={7}>
       <Box display="flex">
         <Tabs value={selectedTab()} classes={{
-          root: classes.tabsRoot
+          root: classes.root
         }}>
           <Tab
             className={classes.tab}
@@ -116,7 +113,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
             icon={<DashboardOutlinedIcon />}
             onClick={onClickDashboard}
             classes={{
-              root: classes.tabRoot
+              root: classes.root
             }}
           />
           <Tab
@@ -128,7 +125,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
             icon={<Today />}
             onClick={onClickDaily}
             classes={{
-              root: classes.tabRoot
+              root: classes.root
             }}
           />
           <Tab
@@ -140,7 +137,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
             icon={<TrendingUp />}
             onClick={onClickTrends}
             classes={{
-              root: classes.tabRoot
+              root: classes.root
             }}
           />
         </Tabs>
