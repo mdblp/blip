@@ -251,7 +251,7 @@ export function getMaxValue(insulinEvent) {
   let bolus = insulinEvent
   if (_.get(insulinEvent, 'type') === 'wizard') {
     bolus = getBolusFromInsulinEvent(insulinEvent)
-    return (bolus.expectedNormal) ? bolus.expectedNormal : 0
+    return bolus.expectedNormal || 0
   }
   const programmed = getProgrammed(bolus)
   const recommended = getRecommended(insulinEvent) || 0
