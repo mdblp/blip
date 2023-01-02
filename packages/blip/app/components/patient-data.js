@@ -36,7 +36,6 @@ import { Daily, PatientDashboard, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
 import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
-import ChartType from 'yourloops/enum/chart-type.enum'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -174,13 +173,13 @@ class PatientDataPage extends React.Component {
     this.handleRefresh().then(() => {
       const locationChart = this.getChartType()
       switch (locationChart) {
-        case ChartType.Daily:
+        case 'daily':
           this.handleSwitchToDaily()
           break
-        case ChartType.Trends:
+        case 'trends':
           this.handleSwitchToTrends()
           break
-        case ChartType.Dashboard:
+        case 'dashboard':
           this.handleSwitchToDashboard()
           break
         default:
@@ -212,7 +211,7 @@ class PatientDataPage extends React.Component {
       case LOADING_STATE_EARLIER_FETCH:
       case LOADING_STATE_EARLIER_PROCESS:
       case LOADING_STATE_DONE:
-        if (chartType === ChartType.Daily) {
+        if (chartType === 'daily') {
           messages = this.renderMessagesContainer()
         }
         patientData = this.renderPatientData()
@@ -240,7 +239,7 @@ class PatientDataPage extends React.Component {
       start = startDate
       end = endDate
       //hack to display the current date selected in print calendar
-      if (chartType === ChartType.Dashboard) {
+      if (chartType === 'dashboard') {
         const timezone = medicalData.getTimezoneAt(this.state.epochLocation)
         end = TimeService.format(this.state.epochLocation, timezone)
       }
@@ -481,11 +480,11 @@ class PatientDataPage extends React.Component {
 
     switch (history.location.pathname) {
       case `${prefixURL}/daily`:
-        return ChartType.Daily
+        return 'daily'
       case `${prefixURL}/trends`:
-        return ChartType.Trends
+        return 'trends'
       case `${prefixURL}/dashboard`:
-        return ChartType.Dashboard
+        return 'dashboard'
     }
     return null
   }
@@ -617,7 +616,7 @@ class PatientDataPage extends React.Component {
   handleSwitchToDaily(datetime = null) {
     const { prefixURL, history } = this.props
     const fromChart = this.getChartType()
-    const toChart = ChartType.Daily
+    const toChart = 'daily'
 
     let { epochLocation } = this.state
 
@@ -651,7 +650,7 @@ class PatientDataPage extends React.Component {
   handleSwitchToTrends(e) {
     const { prefixURL, history } = this.props
     const fromChart = this.getChartType()
-    const toChart = ChartType.Trends
+    const toChart = 'trends'
     if (e) {
       e.preventDefault()
     }
@@ -666,7 +665,7 @@ class PatientDataPage extends React.Component {
   handleSwitchToDashboard(e) {
     const { prefixURL, history } = this.props
     const fromChart = this.getChartType()
-    const toChart = ChartType.Dashboard
+    const toChart = 'dashboard'
     if (e) {
       e.preventDefault()
     }
@@ -804,11 +803,11 @@ class PatientDataPage extends React.Component {
       throw new Error('handleDatetimeLocationChange: invalid parameters')
     }
 
-    const msDiff = chartType === ChartType.Daily ? msRange : Math.round(msRange / 2)
+    const msDiff = chartType === 'daily' ? msRange : Math.round(msRange / 2)
     let start = moment.utc(epochLocation - msDiff).startOf('day')
     let end = moment.utc(epochLocation + msDiff).startOf('day').add(1, 'day')
 
-    if (chartType === ChartType.Daily) {
+    if (chartType === 'daily') {
       const rangeToLoad = this.apiUtils.partialDataLoad.getMissingRanges({ start, end }, true)
       if (rangeToLoad.length > 0) {
         // For daily we will load 4 days to avoid too many loading
