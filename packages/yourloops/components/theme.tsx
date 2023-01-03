@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,16 +29,7 @@ import { createTheme, Theme } from '@mui/material/styles'
 import config from '../lib/config/config'
 import MuseoSlab900 from 'Museo_Slab_900.otf'
 
-const DEFAULT_PRIMARY_MAIN_COLOR = '#009bd6'
-const DEFAULT_PRIMARY_LIGHT_COLOR = '#5fccff'
-const DEFAULT_PRIMARY_DARK_COLOR = '#006da4'
-const DEFAULT_SECONDARY_MAIN_COLOR = '#EDFAFF'
-const DEFAULT_SECONDARY_LIGHT_COLOR = '#F5F9F9'
-const DEFAULT_SECONDARY_DARK_COLOR = '#BBC7CC'
-const DEFAULT_TEXT_BASE_COLOR = '#444444'
-const DEFAULT_BACKGROUND_COLOR = '#FAFAFA'
-const DEFAULT_PRIMARY_CONTRAST_TEXT = '#FFF'
-
+const DEFAULT_COLOR = '#000'
 const appElement = document.getElementById('app')
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
 
@@ -62,7 +53,7 @@ export function getTheme(): Theme {
             textDecoration: 'none'
           },
           body: {
-            backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_BACKGROUND_COLOR
+            backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_COLOR
           },
           '@font-face': [
             {
@@ -106,7 +97,7 @@ export function getTheme(): Theme {
         styleOverrides: {
           root: {
             minWidth: 40,
-            color: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
+            color: appElement ? cssVar('--text-base-color') : DEFAULT_COLOR
           }
         }
       },
@@ -121,18 +112,23 @@ export function getTheme(): Theme {
     palette: {
       mode: 'light',
       text: {
-        primary: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
+        primary: appElement ? cssVar('--text-base-color') : DEFAULT_COLOR
       },
       primary: {
-        main: appElement ? cssVar('--color-primary-main') : DEFAULT_PRIMARY_MAIN_COLOR,
-        light: appElement ? cssVar('--color-primary-light') : DEFAULT_PRIMARY_LIGHT_COLOR,
-        dark: appElement ? cssVar('--color-primary-dark') : DEFAULT_PRIMARY_DARK_COLOR,
-        contrastText: appElement ? cssVar('--color-primary-contrast-text') : DEFAULT_PRIMARY_CONTRAST_TEXT
+        main: appElement ? cssVar('--color-primary-main') : DEFAULT_COLOR,
+        light: appElement ? cssVar('--color-primary-light') : DEFAULT_COLOR,
+        dark: appElement ? cssVar('--color-primary-dark') : DEFAULT_COLOR,
+        contrastText: appElement ? cssVar('--color-primary-contrast-text') : DEFAULT_COLOR
       },
       secondary: {
-        main: appElement ? cssVar('--color-secondary-main') : DEFAULT_SECONDARY_MAIN_COLOR,
-        light: appElement ? cssVar('--color-secondary-light') : DEFAULT_SECONDARY_LIGHT_COLOR,
-        dark: appElement ? cssVar('--color-secondary-dark') : DEFAULT_SECONDARY_DARK_COLOR
+        main: appElement ? cssVar('--color-secondary-main') : DEFAULT_COLOR,
+        light: appElement ? cssVar('--color-secondary-light') : DEFAULT_COLOR,
+        dark: appElement ? cssVar('--color-secondary-dark') : DEFAULT_COLOR
+      },
+      info: {
+        main: appElement ? cssVar('--color-info-main') : DEFAULT_COLOR,
+        light: appElement ? cssVar('--color-info-light') : DEFAULT_COLOR,
+        dark: appElement ? cssVar('--color-info-dark') : DEFAULT_COLOR
       }
     }
   })

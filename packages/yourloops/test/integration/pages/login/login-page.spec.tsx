@@ -88,4 +88,25 @@ describe('Login page', () => {
     await userEvent.click(loginButton)
     expect(loginWithRedirectMock).toHaveBeenCalled()
   })
+
+  it('should redirect to verify-email page if the user has not yet confirmed his email', async () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      error: Error('Please verify your email before logging in.')
+    })
+    let router
+    await act(async () => {
+      router = await renderPage('/')
+    })
+    expect(router.current.history.location.pathname).toEqual('/verify-email')
+  })
+
+  it('should show a snacknbar alert if auth0 returns an error', async () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      error: Error('Hi there, i\'m an error !!')
+    })
+    await act(async () => {
+      await renderPage('/')
+    })
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Hi there, i\'m an error !!')
+  })
 })

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -37,7 +37,7 @@ import loginPageLaptop from 'login-page-laptop.png'
 import Toolbar from '@mui/material/Toolbar'
 import AppBar from '@mui/material/AppBar'
 import config from '../../lib/config/config'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useHistory } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import LoginActionButton from './login-action-button'
 import Link from '@mui/material/Link'
@@ -45,6 +45,7 @@ import LanguageSelect from '../../components/language-select'
 import LanguageIcon from '@mui/icons-material/Language'
 import Typography from '@mui/material/Typography'
 import { GlobalStyles } from 'tss-react'
+import { useAlert } from '../../components/utils/snackbar'
 
 const LOGO_COLOR_LIGHT = '#40BAE9'
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
@@ -121,14 +122,23 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
 const LoginPage: FunctionComponent = () => {
   const { loginWithRedirect, error } = useAuth0()
   const { t, i18n } = useTranslation()
+  const history = useHistory()
+  const alert = useAlert()
   const { classes, theme } = styles()
-
-  // TODO redirect to a new page confirm-email
-  if (error) {
-    console.log(error)
-  }
+  const auth0EmailVerifyErrorMessage = 'Please verify your email before logging in.'
 
   const redirectToSignup = async (): Promise<void> => await loginWithRedirect({ screen_hint: 'signup' })
+
+  useEffect(() => {
+    if (error) {
+      if (error.message === auth0EmailVerifyErrorMessage) {
+        history.replace('/verify-email')
+        return
+      }
+      alert.error(error.message)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error])
 
   return (
     <React.Fragment>

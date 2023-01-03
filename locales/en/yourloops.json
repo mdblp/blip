@@ -409,6 +409,8 @@
   "until": "Until",
   "upload-prescription": "Upload prescription",
   "user-name": "{{firstName}} {{lastName}}",
+  "verify-email-details": "In order to start using Yourloops, you need to confirm your email address by clicking the link you just received.",
+  "verify-email-title": "Verify your email address",
   "weekly-report-pdf": "Weekly_report_{{pdfName}}",
   "weekly-reports": "Weekly reports",
   "weekly-reports-get-failed": "Fail to get weekly reports, please reload the page",
