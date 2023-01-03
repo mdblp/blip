@@ -39,6 +39,7 @@ interface PatientNavBarInfosProps {
   infoWidth: string
   patient: Patient
 }
+
 const LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID = 'showMoreInfoPatientNavBarId'
 
 export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> = (props) => {
@@ -72,71 +73,63 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
   }
 
   return (
-    <Box display="flex" flexDirection="column" flexGrow="1" paddingTop={1}>
-      <Box display="flex">
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('last-name') })}
-          fieldValue={patient.profile.lastName}
-          fieldWidth={infoWidth}
-          id="patient-nav-bar-last-name"
-        />
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('birthdate') })}
-          fieldValue={moment(patient.profile.birthdate).format('L')}
-          fieldWidth={infoWidth}
-        />
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('diabete-type') })}
-          fieldValue={'Type 1'}
-          fieldWidth={infoWidth}
-        />
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('referring-doctor') })}
-          fieldValue={referringDoctor}
-          fieldWidth={infoWidth}
-        />
-      </Box>
-      <Box display="flex" marginTop={1}>
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('first-name') })}
-          fieldValue={patient.profile.firstName}
-          fieldWidth={infoWidth}
-          id="patient-nav-bar-first-name"
-        />
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('gender') })}
-          fieldValue={gender}
-          fieldWidth={infoWidth}
-        />
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('remote-monitoring') })}
-          fieldValue={patient.monitoring?.enabled ? t('yes') : t('no')}
-          fieldWidth={infoWidth}
-        />
-        <PatientNavBarInfo
-          fieldName={t('colon', { label: t('email') })}
-          fieldValue={patient.profile.email}
-          fieldWidth={infoWidth}
-        />
-        <Box
-          display="flex"
-          marginLeft="auto"
-          marginRight={5}
-          sx={{ cursor: 'pointer' }}
-          onClick={onShowMoreInfoClick}
-        >
-          <Typography variant="caption" marginRight={1} sx={{ textDecoration: 'underline' }}>{t('show-more')}</Typography>
-          {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
-        </Box>
-      </Box>
-      {showMoreInfo &&
-        <Box display="flex" marginTop={1} marginBottom={2}>
+    <Box display="flex" flexGrow="1">
+      <Box display="flex" flexDirection="column" flexGrow="1" paddingTop={1}>
+        <Box display="flex">
           <PatientNavBarInfo
-            fieldName={t('colon', { label: t('hba1c') })}
-            fieldValue={hbA1c}
+            fieldName={t('colon', { label: t('birthdate') })}
+            fieldValue={moment(patient.profile.birthdate).format('L')}
             fieldWidth={infoWidth}
           />
-        </Box>}
+          <PatientNavBarInfo
+            fieldName={t('colon', { label: t('diabete-type') })}
+            fieldValue={'Type 1'}
+            fieldWidth={infoWidth}
+          />
+        </Box>
+        <Box display="flex" marginTop={1}>
+          <PatientNavBarInfo
+            fieldName={t('colon', { label: t('gender') })}
+            fieldValue={gender}
+            fieldWidth={infoWidth}
+          />
+          <PatientNavBarInfo
+            fieldName={t('colon', { label: t('remote-monitoring') })}
+            fieldValue={patient.monitoring?.enabled ? t('yes') : t('no')}
+            fieldWidth={infoWidth}
+          />
+        </Box>
+        {showMoreInfo &&
+          <Box display="flex" marginY={1}>
+            <PatientNavBarInfo
+              fieldName={t('colon', { label: t('referring-doctor') })}
+              fieldValue={referringDoctor}
+              fieldWidth={infoWidth}
+            />
+            <PatientNavBarInfo
+              fieldName={t('colon', { label: t('hba1c') })}
+              fieldValue={hbA1c}
+              fieldWidth={infoWidth}
+            />
+            <PatientNavBarInfo
+              fieldName={t('colon', { label: t('email') })}
+              fieldValue={patient.profile.email}
+              fieldWidth={infoWidth}
+            />
+          </Box>
+        }
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignSelf="end"
+        paddingBottom={1}
+        sx={{ cursor: 'pointer' }}
+        onClick={onShowMoreInfoClick}
+      >
+        <Typography variant="caption" marginRight={1} sx={{ textDecoration: 'underline' }}>{t('show-more')}</Typography>
+        {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
+      </Box>
     </Box>
   )
 }

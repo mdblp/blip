@@ -94,13 +94,13 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
         {user.isUserPatient()
           ? (
             <Box data-testid="patient-dropdown" paddingTop={3} paddingLeft={7} marginBottom={3}>
-              <PatientNavBarInfoList patient={currentPatient} infoWidth="18%" />
+              <PatientNavBarInfoList patient={currentPatient} infoWidth="calc(33.33% - 8px)" />
             </Box>
             ) : (
             <Box display="flex" paddingTop={2}>
               <ArrowBackIcon data-testid="subnav-arrow-back" className={classes.backIcon} onClick={goBackHome} />
               <PatientNavBarSelect currentPatient={currentPatient} patients={patients} onSwitchPatient={onSwitchPatient} />
-              <PatientNavBarInfoList patient={currentPatient} infoWidth="20%" />
+              <PatientNavBarInfoList patient={currentPatient} infoWidth="calc(33.33% - 8px)" />
             </Box>
             )
         }
