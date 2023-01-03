@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.3-beta - 2022-11-29
 ### Fixed
+- YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers

@@ -740,8 +740,6 @@ describe('DailyPrintView', () => {
       sinon.assert.calledWith(Renderer.doc.text, 'Bolus')
       sinon.assert.calledWith(Renderer.doc.text, 'Override up & down')
       sinon.assert.calledWith(Renderer.doc.text, 'Interrupted')
-      sinon.assert.calledWith(Renderer.doc.text, 'Combo /')
-      sinon.assert.calledWith(Renderer.doc.text, 'Extended')
       sinon.assert.calledWith(Renderer.doc.text, 'Carbs')
       sinon.assert.calledWith(Renderer.doc.text, 'Basals')
 
