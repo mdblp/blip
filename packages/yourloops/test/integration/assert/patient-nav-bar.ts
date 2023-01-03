@@ -26,7 +26,7 @@
  */
 
 import { BoundFunctions, queries, screen, within } from '@testing-library/react'
-import { unmonitoredPatientId } from '../mock/mockPatientAPI'
+import { unmonitoredPatientId } from '../mock/patient.api.mock'
 
 const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>, canGenerateReport = true, dashboardUrl: string, dailyUrl: string, trendsUrl: string) => {
   const dashboardLink = patientNavBar.getByText('Dashboard')

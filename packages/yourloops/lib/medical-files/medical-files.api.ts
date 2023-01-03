@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import HttpService from '../../services/http.service'
+import HttpService from '../http/http.service'
 import { Prescription } from './models/prescription.model'
 import { WeeklyReport } from './models/weekly-report.model'
 import { MedicalRecord, NewMedicalRecord } from './models/medical-record.model'

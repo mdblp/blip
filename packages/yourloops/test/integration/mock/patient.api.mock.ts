@@ -36,9 +36,9 @@ import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { Monitoring } from '../../../lib/team/models/monitoring.model'
-import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './mockTeamAPI'
 import PatientApi from '../../../lib/patient/patient.api'
 import { Profile } from '../../../lib/auth/models/profile.model'
+import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './team.api.mock'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'

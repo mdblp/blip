@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import HttpService from '../../services/http.service'
+import HttpService from '../http/http.service'
 import { fixYLP878Settings } from '../utils'
 import { getCurrentLang } from '../language'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'

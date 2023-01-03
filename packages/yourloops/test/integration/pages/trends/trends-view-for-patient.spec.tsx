@@ -26,10 +26,10 @@
  */
 
 import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/auth'
-import { unmonitoredPatientAsTeamMember } from '../../mock/mockPatientAPI'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 

@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockPatientLogin } from '../../mock/auth'
-import { unmonitoredPatientAsTeamMember } from '../../mock/mockPatientAPI'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
   checkDailyTimeInRangeStatsWidgets,
   checkSMBGDailyStatsWidgetsTooltips
 } from '../../assert/daily'
-import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../mock/mockDataAPI'
+import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,

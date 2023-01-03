@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../../../../services/http.service'
+import HttpService from '../../../../lib/http/http.service'
 import { AxiosResponse } from 'axios'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 import { Prescription } from '../../../../lib/medical-files/models/prescription.model'

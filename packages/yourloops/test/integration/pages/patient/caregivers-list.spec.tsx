@@ -25,16 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockUserDataFetch } from '../../mock/auth'
-import { addDirectShareMock, mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
+import { mockTeamAPI } from '../../mock/team.api.mock'
+import { addDirectShareMock, mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { act, screen, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
-import { mockPatientApiForPatients } from '../../mock/mockPatientAPI'
 import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
 } from '../../../../lib/share/direct-share.api'
@@ -42,6 +40,8 @@ import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { IUser } from '../../../../lib/data/models/i-user.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { mockUserApi } from '../../mock/user.api.mock'
+import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 
 describe('Patient caregivers page', () => {
   const firstName = 'Théo'
@@ -58,7 +58,7 @@ describe('Patient caregivers page', () => {
     mockAuth0Hook(UserRoles.patient)
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForPatients()
     mockDirectShareApi()
   })
