@@ -55,16 +55,16 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
       return trNaLabel
     }
     return t(`gender-${patient.profile.sex.toLocaleLowerCase()}`)
-  }, [patient, t])
+  }, [patient.profile.sex, t, trNaLabel])
 
   const hbA1c = useMemo(() => {
     return patient.settings.a1c ? `${patient.settings.a1c.value} (${moment(patient.settings.a1c?.date).format('L')})` : trNaLabel
-  }, [patient, t])
+  }, [patient.settings.a1c, trNaLabel])
 
   const referringDoctor = useMemo(() => {
     const doctor = patient.profile.referringDoctor
     return !doctor || doctor === '' ? trNaLabel : doctor
-  }, [patient, t])
+  }, [patient.profile.referringDoctor, trNaLabel])
 
   const onShowMoreInfoClick = (): void => {
     localStorage.setItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID, String(!showMoreInfo))
@@ -125,7 +125,7 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
           sx={{ cursor: 'pointer' }}
           onClick={onShowMoreInfoClick}
         >
-          <Typography fontSize="13px" marginRight={1} sx={{ textDecoration: 'underline' }}>{t('show-more')}</Typography>
+          <Typography variant="caption" marginRight={1} sx={{ textDecoration: 'underline' }}>{t('show-more')}</Typography>
           {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
         </Box>
       </Box>

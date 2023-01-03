@@ -74,7 +74,7 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
       marginBottom={3}
       width="20%"
     >
-      <Typography fontSize="13px">{t('patient')}</Typography>
+      <Typography variant="caption">{t('patient')}</Typography>
       <FormControl data-testid="subnav-patient-list">
         <Select
           data-testid="drop-down-patient"
@@ -83,7 +83,7 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
           onChange={onPatientSelected}
           variant="standard"
           disableUnderline
-          sx={{ fontSize: '22px', color: theme.palette.primary.main }}
+          sx={{ fontSize: theme.typography.h6.fontSize, color: theme.palette.primary.main }}
           classes={{ iconStandard: classes.iconStandard }}
         >
           {
