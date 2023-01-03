@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { renderPage } from '../../utils/render'
-import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, within } from '@testing-library/react'
@@ -138,6 +138,6 @@ describe('Profile page for hcp', () => {
 
     await userEvent.click(profileUpdateSuccessfulSnackbarCloseButton)
 
-    await checkPasswordChangeRequest()
+    await checkPasswordChangeRequest(loggedInUserEmail)
   })
 })

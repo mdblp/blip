@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -119,7 +119,7 @@ export const checkPatientProfilePage = (country: CountryCodes): PatientFieldsHtm
   return inputs
 }
 
-export const checkPasswordChangeRequest = async (): Promise<void> => {
+export const checkPasswordChangeRequest = async (email: string): Promise<void> => {
   const changePasswordCategoryTitle = screen.getByText('Security')
   expect(changePasswordCategoryTitle).toBeVisible()
 
@@ -127,11 +127,13 @@ export const checkPasswordChangeRequest = async (): Promise<void> => {
   expect(changePasswordInfoLabel).toBeVisible()
 
   const changePasswordButton = screen.getByRole('button', { name: 'Change password' })
-  expect(changePasswordButton).toBeVisible()
+  expect(changePasswordButton).toBeEnabled()
 
   await act(async () => {
     await userEvent.click(changePasswordButton)
   })
+
+  expect(AuthApi.sendResetPasswordEmail).toHaveBeenCalledWith(email)
 
   const changePasswordEmailSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
   expect(changePasswordEmailSuccessfulSnackbar).toHaveTextContent('E-mail sent successfully')

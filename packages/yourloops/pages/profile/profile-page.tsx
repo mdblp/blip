@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,8 +67,6 @@ const ProfilePage: FunctionComponent = () => {
 
   const handleSwitchRoleCancel = (): void => setSwitchRoleOpen(false)
 
-  useEffect(() => setPageTitle(t('account-preferences')), [lang, t])
-
   const sendChangePasswordEmail = async (): Promise<void> => {
     try {
       await AuthApi.sendResetPasswordEmail(user.email)
@@ -78,6 +76,8 @@ const ProfilePage: FunctionComponent = () => {
       alert.error(t('alert-change-password-email-failed'))
     }
   }
+
+  useEffect(() => setPageTitle(t('account-preferences')), [lang, t])
 
   return (
     <React.Fragment>
@@ -114,14 +114,13 @@ const ProfilePage: FunctionComponent = () => {
                 <div>{t('change-password-info')}</div>
                 <Box display="flex" justifyContent="center" marginTop={2}>
                   <Button
-                    id="profile-button-change-password"
                     variant="outlined"
                     color="primary"
                     disableElevation
                     className={classes.button}
                     onClick={sendChangePasswordEmail}
                   >
-                    {t('button-change-password')}
+                    {t('change-password')}
                   </Button>
                 </Box>
               </Box>

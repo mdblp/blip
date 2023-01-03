@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,11 +26,10 @@
  */
 
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { internalAxios } from '../../../../lib/http/axios.service'
 import HttpService from '../../../../lib/http/http.service'
 
-jest.mock('../../../../lib/http/axios.service')
-const mockedAxios = internalAxios as jest.Mocked<typeof axios>
+jest.mock('axios')
+const mockedAxios = axios as jest.Mocked<typeof axios>
 
 describe('HttpService', () => {
   const url = 'myFakeUrl'

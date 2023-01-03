@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,12 @@
  */
 
 import { renderPage } from '../../utils/render'
-import { getAccessTokenSilentlyMock, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import {
+  getAccessTokenSilentlyMock,
+  loggedInUserEmail,
+  loggedInUserId,
+  mockAuth0Hook
+} from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, within } from '@testing-library/react'
@@ -130,7 +135,7 @@ describe('Caregiver page for hcp', () => {
 
     await userEvent.click(profileUpdateSuccessfulSnackbarCloseButton)
 
-    await checkPasswordChangeRequest()
+    await checkPasswordChangeRequest(loggedInUserEmail)
 
     /*******************/
     /** Changing role **/

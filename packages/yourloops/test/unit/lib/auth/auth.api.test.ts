@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,41 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { auth0Axios } from '../../../../lib/http/axios.service'
 import axios from 'axios'
 import { AuthApi } from '../../../../lib/auth/auth.api'
 
 jest.mock('../../../../lib/http/axios.service')
-const mockedAxios = auth0Axios as jest.Mocked<typeof axios>
 
 describe('Auth API', () => {
   const userEmail = 'test@email.com'
 
   describe('sendResetPasswordEmail', () => {
     it('should post a request to Auth0', async () => {
-      jest.spyOn(mockedAxios, 'post').mockResolvedValueOnce(Promise.resolve({}))
+      jest.spyOn(axios, 'post').mockResolvedValueOnce(Promise.resolve({}))
 
       await AuthApi.sendResetPasswordEmail(userEmail)
 
-      expect(mockedAxios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
+      expect(axios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
         client_id: '',
         connection: 'Username-Password-Authentication',
         email: userEmail
-      })
+      }, { baseURL: 'https://', params: { noHeader: true } })
     })
 
     it('should throw an error when the request fails', async () => {
       const errorMessage = 'Error'
-      jest.spyOn(mockedAxios, 'post').mockRejectedValueOnce(new Error(errorMessage))
+      jest.spyOn(axios, 'post').mockRejectedValueOnce(new Error(errorMessage))
 
       try {
         await AuthApi.sendResetPasswordEmail(userEmail)
       } catch (error) {
-        expect(mockedAxios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
+        expect(axios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
           client_id: '',
           connection: 'Username-Password-Authentication',
           email: userEmail
-        })
+        }, { baseURL: 'https://', params: { noHeader: true } })
         expect(error.message).toEqual(errorMessage)
       }
     })

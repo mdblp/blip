@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-
-import appConfig from '../config/config'
 import HttpService from './http.service'
 import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
+import appConfig from '../config/config'
 
-export class AxiosService {
-  init(baseUrl: string, hasInterceptors = false): AxiosInstance {
-    const axiosInstance = axios.create({
-      baseURL: baseUrl
-    })
-
-    if (hasInterceptors) {
-      axiosInstance.interceptors.request.use(this.onFulfilled)
-    }
-
-    return axiosInstance
+export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
+  if (config.params?.noHeader) {
+    delete config.params.noHeader
+    return config
   }
 
-  async onFulfilled(config: AxiosRequestConfig): Promise<AxiosRequestConfig> {
-    if (config.params?.noHeader) {
-      delete config.params.noHeader
-      return config
-    }
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        Authorization: `Bearer ${await HttpService.getAccessToken()}`,
-        [HttpHeaderKeys.traceToken]: uuidv4()
-      }
+  const accessToken: string = await HttpService.getAccessToken()
+  return {
+    ...config,
+    headers: {
+      ...config.headers,
+      Authorization: `Bearer ${accessToken}`,
+      [HttpHeaderKeys.traceToken]: uuidv4()
     }
   }
 }
 
-const internalAxios = new AxiosService().init(appConfig.API_HOST, true)
-const auth0Axios = new AxiosService().init(`https://${appConfig.AUTH0_DOMAIN}`)
+function initAxios(): void {
+  axios.defaults.baseURL = appConfig.API_HOST
+  /**
+   * We use axios request interceptor to set the access token into headers each request the app send
+   */
+  axios.interceptors.request.use(onFulfilled)
+}
 
-export { internalAxios, auth0Axios }
+export default initAxios

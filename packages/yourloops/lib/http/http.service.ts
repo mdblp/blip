@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { HttpUtil } from './http.util'
-import { internalAxios } from './axios.service'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import HttpStatus from './models/enums/http-status.enum'
+import { t } from '../language'
 
 interface Args {
   url: string
@@ -44,7 +44,6 @@ export enum ErrorMessageStatus {
 
 export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>
-  private static readonly axios = internalAxios
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>): void {
     HttpService.retrieveAccessToken = accessTokenMethod
@@ -57,36 +56,53 @@ export default class HttpService {
   static async get<T>(args: Args): Promise<AxiosResponse<T>> {
     const { url, config } = args
     try {
-      return await this.axios.get<T>(url, { ...config })
+      return await axios.get<T>(url, { ...config })
     } catch (error) {
-      throw HttpUtil.handleError(error as AxiosError)
+      throw HttpService.handleError(error as AxiosError)
     }
   }
 
   static async post<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>, excludedErrorCodes?: number[]): Promise<AxiosResponse<R>> {
     const { url, payload, config } = argsWithPayload
     try {
-      return await this.axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config })
+      return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
-      throw HttpUtil.handleError(error as AxiosError, excludedErrorCodes)
+      throw HttpService.handleError(error as AxiosError, excludedErrorCodes)
     }
   }
 
   static async put<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
     const { url, payload, config } = argsWithPayload
     try {
-      return await this.axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config })
+      return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
-      throw HttpUtil.handleError(error as AxiosError)
+      throw HttpService.handleError(error as AxiosError)
     }
   }
 
   static async delete(args: Args): Promise<AxiosResponse> {
     const { url, config } = args
     try {
-      return await this.axios.delete(url, { ...config })
+      return await axios.delete(url, { ...config })
     } catch (error) {
-      throw HttpUtil.handleError(error as AxiosError)
+      throw HttpService.handleError(error as AxiosError)
+    }
+  }
+
+  private static handleError(error: AxiosError, excludedErrorCodes: number[] = []): Error {
+    if (!error.response || excludedErrorCodes.includes(error.response.status)) {
+      return error
+    }
+
+    if (error.response.status >= 400 && error.response.status <= 550) {
+      switch (error.response.status) {
+        case HttpStatus.StatusNotFound:
+          throw Error(ErrorMessageStatus.NotFound)
+        case HttpStatus.StatusInternalServerError:
+          throw Error(t('error-http-500'))
+        default:
+          throw Error(t('error-http-40x'))
+      }
     }
   }
 }

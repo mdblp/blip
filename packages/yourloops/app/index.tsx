@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@ import { initTheme } from '../components/theme'
 import Yourloops from './app'
 import OnError from './error'
 import { BrowserRouter } from 'react-router-dom'
+import initAxios from '../lib/http/axios.service'
 
 i18nInit().then(() => {
   window.onerror = (event, source, lineno, colno, error) => {
@@ -60,6 +61,7 @@ i18nInit().then(() => {
 
   initDayJS()
   initCookiesConsentListener()
+  initAxios()
   initTheme()
 
   ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, div)

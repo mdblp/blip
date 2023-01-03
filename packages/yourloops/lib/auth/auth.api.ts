@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,22 +26,22 @@
  */
 
 import appConfig from '../config/config'
-import { HttpUtil } from '../http/http.util'
-import { auth0Axios } from '../http/axios.service'
+import { AxiosResponse } from 'axios'
+import HttpService from '../http/http.service'
 
 const AUTH0_CONNECTION_TYPE = 'Username-Password-Authentication'
 const AUTH0_CHANGE_PASSWORD_URL = '/dbconnections/change_password'
 
 export class AuthApi {
-  static async sendResetPasswordEmail(userEmail: string): Promise<void> {
-    try {
-      return await auth0Axios.post(AUTH0_CHANGE_PASSWORD_URL, {
+  static async sendResetPasswordEmail(userEmail: string): Promise<AxiosResponse> {
+    return await HttpService.post({
+      url: AUTH0_CHANGE_PASSWORD_URL,
+      payload: {
         client_id: appConfig.AUTH0_CLIENT_ID,
         email: userEmail,
         connection: AUTH0_CONNECTION_TYPE
-      })
-    } catch (error) {
-      throw HttpUtil.handleError(error)
-    }
+      },
+      config: { baseURL: `https://${appConfig.AUTH0_DOMAIN}`, params: { noHeader: true } }
+    })
   }
 }
