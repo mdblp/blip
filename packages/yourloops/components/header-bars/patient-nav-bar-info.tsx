@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,8 +43,8 @@ export const PatientNavBarInfo: FunctionComponent<PatientNavBarInfoProps> = (pro
 
   return (
     <Box display="flex" width={fieldWidth}>
-      <Typography data-testid={`${id}-label`} fontSize="13px">{fieldName}</Typography>
-      <Typography data-testid={id} marginLeft="4px" fontSize="13px" color={theme.palette.common.black}>{fieldValue}</Typography>
+      <Typography data-testid={`${id}-label`} variant="caption">{fieldName}</Typography>
+      <Typography data-testid={id} marginLeft="4px" variant="caption" color={theme.palette.common.black}>{fieldValue}</Typography>
     </Box>
   )
 }
