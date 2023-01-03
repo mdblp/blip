@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -146,18 +146,18 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    expect(secondaryHeader).toHaveTextContent('PatientMonitored PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:MonitoredGender:MaleRemote monitoring:YesEmail:monitored-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
+    expect(secondaryHeader).toHaveTextContent('PatientMonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsGenerate report')
 
     fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))
     fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
     const secondarHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:FemaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
+    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
 
     await userEvent.click(within(secondarHeaderRefreshed).getByText('Show more'))
-    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:FemaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow morehba1c:8.3 (12/16/2022)DashboardDailyTrendsGenerate report')
+    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
 
     await userEvent.click(within(secondarHeaderRefreshed).getByText('Show more'))
-    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientLast Name:PatientDate of birth:01/01/1980Diabete type:Type 1Referring doctor:N/AFirst Name:PendingGender:FemaleRemote monitoring:NoEmail:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
+    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
   })
 })
