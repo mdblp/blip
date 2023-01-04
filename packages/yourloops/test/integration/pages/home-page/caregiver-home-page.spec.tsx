@@ -27,23 +27,23 @@
 
 import PatientAPI from '../../../../lib/patient/patient.api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
-import { loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockDirectShareApi, removeDirectShareMock } from '../../mock/mockDirectShareAPI'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
+import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
 import {
   buildPatientAsTeamMember,
   mockPatientApiForPatients,
   monitoredPatientAsTeamMember,
   unmonitoredPatientAsTeamMember
-} from '../../mock/mockPatientAPI'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
+} from '../../mock/patient.api.mock'
+import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -53,7 +53,7 @@ describe('Caregiver home page', () => {
     mockAuth0Hook(UserRoles.caregiver)
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForPatients()
     mockDirectShareApi()
   })

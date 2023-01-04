@@ -4,8 +4,10 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.3-beta - 2022-11-29
 ### Fixed
+- YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
 ### Added
+- YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard

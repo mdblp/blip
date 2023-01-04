@@ -26,24 +26,24 @@
  */
 
 import { act, BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI, myTeamId } from '../../mock/mockTeamAPI'
-import { mockDataAPI } from '../../mock/mockDataAPI'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockTeamAPI, myTeamId } from '../../mock/team.api.mock'
+import { mockDataAPI } from '../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import {
   mockPatientApiForHcp,
   monitoredPatient,
   monitoredPatientId,
   pendingPatient,
   unmonitoredPatientId
-} from '../../mock/mockPatientAPI'
-import { mockChatAPI } from '../../mock/mockChatAPI'
-import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
+} from '../../mock/patient.api.mock'
+import { mockChatAPI } from '../../mock/chat.api.mock'
+import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { queries } from '@testing-library/dom'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
+import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
 
 describe('Patient dashboard for HCP', () => {
@@ -57,7 +57,7 @@ describe('Patient dashboard for HCP', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()

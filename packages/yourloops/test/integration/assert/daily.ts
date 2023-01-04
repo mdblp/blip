@@ -36,7 +36,7 @@ import {
   PHYSICAL_ACTIVITY_TIME,
   RESERVOIR_CHANGE_ID,
   SMBG_ID
-} from '../mock/mockDataAPI'
+} from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats'
 

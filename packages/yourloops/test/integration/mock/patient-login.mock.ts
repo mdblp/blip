@@ -25,35 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from 'axios'
-import { v4 as uuidv4 } from 'uuid'
+import { mockAuth0Hook } from './auth0.hook.mock'
+import { mockNotificationAPI } from './notification.api.mock'
+import { mockDirectShareApi } from './direct-share.api.mock'
+import { mockTeamAPI } from './team.api.mock'
+import PatientAPI from '../../../lib/patient/patient.api'
+import { mockChatAPI } from './chat.api.mock'
+import { mockMedicalFilesAPI } from './medical-files.api.mock'
+import { unmonitoredPatientId } from './patient.api.mock'
+import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { mockUserApi } from './user.api.mock'
 
-import appConfig from './config/config'
-import HttpService from '../services/http.service'
-import { HttpHeaderKeys } from './http/models/enums/http-header-keys.enum'
-
-export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
-  if (config.params?.noHeader) {
-    delete config.params.noHeader
-  } else {
-    config = {
-      ...config,
-      headers: {
-        ...config.headers,
-        Authorization: `Bearer ${await HttpService.getAccessToken()}`,
-        [HttpHeaderKeys.traceToken]: uuidv4()
-      }
-    }
-  }
-  return config
+export const mockPatientLogin = (patient: ITeamMember) => {
+  mockAuth0Hook(UserRoles.patient, unmonitoredPatientId)
+  mockNotificationAPI()
+  mockDirectShareApi()
+  mockTeamAPI()
+  mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
+  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
+  mockChatAPI()
+  mockMedicalFilesAPI()
 }
-
-function initAxios(): void {
-  axios.defaults.baseURL = appConfig.API_HOST
-  /**
-   * We use axios request interceptor to set the access token into headers each request the app send
-   */
-  axios.interceptors.request.use(onFulfilled)
-}
-
-export default initAxios

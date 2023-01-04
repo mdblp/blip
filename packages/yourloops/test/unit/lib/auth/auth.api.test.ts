@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,27 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../../../../lib/http/http.service'
-import ErrorApi, { ErrorPayload } from '../../../../lib/error/error.api'
+import axios from 'axios'
+import { AuthApi } from '../../../../lib/auth/auth.api'
 
-describe('ErrorApi', () => {
-  describe('sendError', () => {
-    it('should send correct payload to correct url', async () => {
-      const payload: ErrorPayload = {
-        browserName: 'fakeBrowserName',
-        browserVersion: 'fakeBrowserVersion',
-        date: 'fakeDate',
-        err: 'fakeErrorMessage',
-        errorId: 'fakeErrorId',
-        path: '/fake/path'
+jest.mock('../../../../lib/http/axios.service')
+
+describe('Auth API', () => {
+  const userEmail = 'test@email.com'
+
+  describe('sendResetPasswordEmail', () => {
+    it('should post a request to Auth0', async () => {
+      jest.spyOn(axios, 'post').mockResolvedValueOnce(Promise.resolve({}))
+
+      await AuthApi.sendResetPasswordEmail(userEmail)
+
+      expect(axios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
+        client_id: '',
+        connection: 'Username-Password-Authentication',
+        email: userEmail
+      }, { baseURL: 'https://', params: { noHeader: true } })
+    })
+
+    it('should throw an error when the request fails', async () => {
+      const errorMessage = 'Error'
+      jest.spyOn(axios, 'post').mockRejectedValueOnce(new Error(errorMessage))
+
+      try {
+        await AuthApi.sendResetPasswordEmail(userEmail)
+      } catch (error) {
+        expect(axios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
+          client_id: '',
+          connection: 'Username-Password-Authentication',
+          email: userEmail
+        }, { baseURL: 'https://', params: { noHeader: true } })
+        expect(error.message).toEqual(errorMessage)
       }
-      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
-
-      await ErrorApi.sendError(payload)
-      expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/bff/v1/errors',
-        payload
-      })
     })
   })
 })

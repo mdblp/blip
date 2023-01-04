@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import UserApi from '../../../lib/auth/user.api'
+import axios, { AxiosRequestConfig } from 'axios'
+import { v4 as uuidv4 } from 'uuid'
+import HttpService from './http.service'
+import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
+import appConfig from '../config/config'
 
-export const mockUserApi = () => {
-  const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
-  const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
-  const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
-  const updateAuth0UserMetadataMock = jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValue(undefined)
+export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
+  if (config.params?.noHeader) {
+    delete config.params.noHeader
+    return config
+  }
 
+  const accessToken: string = await HttpService.getAccessToken()
   return {
-    updateAuth0UserMetadataMock,
-    updateProfileMock,
-    updatePreferencesMock,
-    updateSettingsMock
+    ...config,
+    headers: {
+      ...config.headers,
+      Authorization: `Bearer ${accessToken}`,
+      [HttpHeaderKeys.traceToken]: uuidv4()
+    }
   }
 }
+
+function initAxios(): void {
+  axios.defaults.baseURL = appConfig.API_HOST
+  /**
+   * We use axios request interceptor to set the access token into headers each request the app send
+   */
+  axios.interceptors.request.use(onFulfilled)
+}
+
+export default initAxios

@@ -26,10 +26,10 @@
  */
 
 import { act, screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/auth'
-import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/mockPatientAPI'
 import { renderPage } from '../../utils/render'
-import { mockDataAPI } from '../../mock/mockDataAPI'
+import { mockDataAPI } from '../../mock/data.api.mock'
+import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = '/dashboard'

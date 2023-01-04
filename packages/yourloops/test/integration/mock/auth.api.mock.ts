@@ -25,27 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../../../../lib/http/http.service'
-import ErrorApi, { ErrorPayload } from '../../../../lib/error/error.api'
+import { AuthApi } from '../../../lib/auth/auth.api'
 
-describe('ErrorApi', () => {
-  describe('sendError', () => {
-    it('should send correct payload to correct url', async () => {
-      const payload: ErrorPayload = {
-        browserName: 'fakeBrowserName',
-        browserVersion: 'fakeBrowserVersion',
-        date: 'fakeDate',
-        err: 'fakeErrorMessage',
-        errorId: 'fakeErrorId',
-        path: '/fake/path'
-      }
-      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
-
-      await ErrorApi.sendError(payload)
-      expect(HttpService.post).toHaveBeenCalledWith({
-        url: '/bff/v1/errors',
-        payload
-      })
-    })
-  })
-})
+export const mockAuthApi = () => {
+  jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockResolvedValue()
+}

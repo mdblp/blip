@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { AxiosResponse } from 'axios'
 import { INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { getCurrentLang } from '../../../../lib/language'

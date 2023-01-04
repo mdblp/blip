@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,10 +26,12 @@
  */
 
 import axios, { AxiosError, AxiosResponse } from 'axios'
+import HttpService from '../../../../lib/http/http.service'
 
-import HttpService from '../../../services/http.service'
+jest.mock('axios')
+const mockedAxios = axios as jest.Mocked<typeof axios>
 
-describe('HTTP', () => {
+describe('HttpService', () => {
   const url = 'myFakeUrl'
   const payload = 'myFakePayload'
   const config = { withCredentials: true }
@@ -43,7 +45,7 @@ describe('HTTP', () => {
     it('should get make correct request', async () => {
       // given
       const expectedResponse = {} as AxiosResponse
-      axiosStub = jest.spyOn(axios, 'get').mockResolvedValue(Promise.resolve(expectedResponse))
+      axiosStub = jest.spyOn(mockedAxios, 'get').mockResolvedValue(Promise.resolve(expectedResponse))
 
       // when
       const response = await HttpService.get({ url, config })
@@ -56,7 +58,7 @@ describe('HTTP', () => {
     it('should throw error when failing', async () => {
       // given
       const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(axios, 'get')
+      axiosStub = jest.spyOn(mockedAxios, 'get')
       axiosStub.mockImplementation(() => {
         throw expectedError
       })
@@ -77,7 +79,7 @@ describe('HTTP', () => {
     it('should make correct request', async () => {
       // given
       const expectedResponse = {} as AxiosResponse
-      axiosStub = jest.spyOn(axios, 'post').mockResolvedValue(Promise.resolve(expectedResponse))
+      axiosStub = jest.spyOn(mockedAxios, 'post').mockResolvedValue(Promise.resolve(expectedResponse))
 
       // when
       const response = await HttpService.post({ url, payload, config })
@@ -90,7 +92,7 @@ describe('HTTP', () => {
     it('should throw error when failing', async () => {
       // given
       const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(axios, 'post')
+      axiosStub = jest.spyOn(mockedAxios, 'post')
       axiosStub.mockImplementation(() => {
         throw expectedError
       })
@@ -110,7 +112,7 @@ describe('HTTP', () => {
     it('should make correct request', async () => {
       // given
       const expectedResponse = {} as AxiosResponse
-      axiosStub = jest.spyOn(axios, 'put').mockResolvedValue(Promise.resolve(expectedResponse))
+      axiosStub = jest.spyOn(mockedAxios, 'put').mockResolvedValue(Promise.resolve(expectedResponse))
 
       // when
       const response = await HttpService.put({ url, payload, config })
@@ -123,7 +125,7 @@ describe('HTTP', () => {
     it('should throw error when failing', async () => {
       // given
       const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(axios, 'put')
+      axiosStub = jest.spyOn(mockedAxios, 'put')
       axiosStub.mockImplementation(() => {
         throw expectedError
       })
@@ -144,7 +146,7 @@ describe('HTTP', () => {
     it('should make correct request', async () => {
       // given
       const expectedResponse = {} as AxiosResponse
-      axiosStub = jest.spyOn(axios, 'delete').mockResolvedValue(Promise.resolve(expectedResponse))
+      axiosStub = jest.spyOn(mockedAxios, 'delete').mockResolvedValue(Promise.resolve(expectedResponse))
 
       // when
       const response = await HttpService.delete({ url, config })
@@ -157,7 +159,7 @@ describe('HTTP', () => {
     it('should throw error when failing', async () => {
       // given
       const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(axios, 'delete')
+      axiosStub = jest.spyOn(mockedAxios, 'delete')
       axiosStub.mockImplementation(() => {
         throw expectedError
       })
