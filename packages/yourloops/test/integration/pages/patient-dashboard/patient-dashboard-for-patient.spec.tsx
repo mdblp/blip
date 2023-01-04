@@ -45,6 +45,6 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    expect(secondaryHeader).toHaveTextContent('Diabete type:Type 1hba1c:N/ARemote monitoring:NoDashboardDailyTrendsGenerate report')
+    expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
   })
 })
