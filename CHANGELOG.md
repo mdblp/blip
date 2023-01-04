@@ -42,6 +42,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1960 enhance pipeline
 - YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
 - YLP-1976 Fix PDF generation
+- YLP-2012 Migrate LabeledCheckbox to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5

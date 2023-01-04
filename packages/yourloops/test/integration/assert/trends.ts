@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -75,4 +75,12 @@ export const checkSMBGTrendsStatsWidgetsTooltips = async () => {
   await checkStatTooltip(statsWidgets, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
   await checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   await checkStatTooltip(statsWidgets, 'CV (BGM)', CV_TOOLTIP)
+}
+
+export const checkRangeSelection = () => {
+  const rangeSelection = within(screen.getByTestId('range-selection'))
+  expect(rangeSelection.getByLabelText('100% of readings')).toBeChecked()
+  expect(rangeSelection.getByLabelText('80% of readings')).toBeChecked()
+  expect(rangeSelection.getByLabelText('50% of readings')).toBeChecked()
+  expect(rangeSelection.getByLabelText('Median')).toBeChecked()
 }
