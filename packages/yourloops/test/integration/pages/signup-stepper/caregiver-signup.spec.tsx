@@ -26,9 +26,9 @@
  */
 
 import { act, screen } from '@testing-library/react'
-import { getAccessTokenSilentlyMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/mockAuth0Hook'
+import { getAccessTokenSilentlyMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
-import { mockUserApi } from '../../mock/mockUserApi'
+import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'

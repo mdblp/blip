@@ -26,7 +26,7 @@
  */
 
 import UserApi from '../../../../lib/auth/user.api'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { AxiosResponse } from 'axios'
 import { Profile } from '../../../../lib/auth/models/profile.model'
 import { Settings } from '../../../../lib/auth/models/settings.model'
@@ -38,7 +38,7 @@ import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import { ChangeUserRoleToHcpPayload } from '../../../../lib/auth/models/change-user-role-to-hcp-payload.model'
 
-describe('Auth API', () => {
+describe('User API', () => {
   const userId = 'userId'
   const profile: Profile = {
     firstName: 'Bernard',

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { onFulfilled } from '../../../lib/axios'
-import HttpService from '../../../services/http.service'
 import * as crypto from 'crypto'
-import { HttpHeaderKeys } from '../../../lib/http/models/enums/http-header-keys.enum'
+import HttpService from '../../../../lib/http/http.service'
+import { onFulfilled } from '../../../../lib/http/axios.service'
+import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 
 Object.defineProperty(global, 'crypto', {
   value: {

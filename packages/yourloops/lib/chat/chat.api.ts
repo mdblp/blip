@@ -26,7 +26,7 @@
  */
 
 import { IMessage } from './models/i-message.model'
-import HttpService from '../../services/http.service'
+import HttpService from '../http/http.service'
 
 export default class ChatApi {
   static async getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {

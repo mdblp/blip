@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { completeDashboardData, mockDataAPI } from '../../mock/mockDataAPI'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
-import { mockPatientApiForHcp, unmonitoredPatientId } from '../../mock/mockPatientAPI'
-import { mockChatAPI } from '../../mock/mockChatAPI'
-import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockTeamAPI } from '../../mock/team.api.mock'
+import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
+import { mockPatientApiForHcp, unmonitoredPatientId } from '../../mock/patient.api.mock'
+import { mockChatAPI } from '../../mock/chat.api.mock'
+import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
 import { screen, within } from '@testing-library/react'
 import { checkNoTooltip } from '../../assert/stats'
+import { mockUserApi } from '../../mock/user.api.mock'
 import crypto from 'crypto'
 
 // window.crypto is not defined in jest...
@@ -56,7 +56,7 @@ describe('Patient dashboard for anyone', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
