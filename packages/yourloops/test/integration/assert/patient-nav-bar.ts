@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,6 +61,5 @@ export const checkPatientNavBarAsCaregiver = (patientId = unmonitoredPatientId) 
 
 export const checkPatientNavBarAsPatient = () => {
   const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
-  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
   checkPatientNavBar(patientNavBar, '/dashboard', '/daily', '/trends')
 }

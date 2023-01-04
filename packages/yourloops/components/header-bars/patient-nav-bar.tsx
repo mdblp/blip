@@ -36,6 +36,7 @@ import { PatientNavBarInfoList } from './patient-nav-bar-info-list'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useHistory } from 'react-router-dom'
+import { PatientNavBarInfoListForPatient } from './patient-nav-bar-info-list-for-patient'
 
 interface PatientNavBarProps {
   chartType: string
@@ -93,8 +94,8 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
       <Box className={classes.topContainer} borderBottom={`1px solid ${theme.palette.divider}`} width="100%">
         {user.isUserPatient()
           ? (
-            <Box data-testid="patient-dropdown" paddingTop={3} paddingLeft={7} marginBottom={3}>
-              <PatientNavBarInfoList patient={currentPatient} infoWidth="calc(33.33% - 8px)" />
+            <Box paddingTop={3} paddingLeft={7} marginBottom={3}>
+              <PatientNavBarInfoListForPatient patient={currentPatient} infoWidth="calc(33.33% - 8px)" />
             </Box>
             ) : (
             <Box display="flex" paddingTop={2}>
