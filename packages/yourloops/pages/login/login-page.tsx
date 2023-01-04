@@ -39,13 +39,13 @@ import AppBar from '@mui/material/AppBar'
 import config from '../../lib/config/config'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import LoginActionButton from './login-action-button'
 import Link from '@mui/material/Link'
 import LanguageSelect from '../../components/language-select'
 import LanguageIcon from '@mui/icons-material/Language'
 import Typography from '@mui/material/Typography'
 import { GlobalStyles } from 'tss-react'
 import { useAlert } from '../../components/utils/snackbar'
+import Button from '@mui/material/Button'
 
 const LOGO_COLOR_LIGHT = '#40BAE9'
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
@@ -62,6 +62,12 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     right: 0,
     bottom: -1,
     zIndex: -1
+  },
+  button: {
+    marginRight: theme.spacing(2),
+    paddingInline: theme.spacing(3),
+    textTransform: 'capitalize',
+    width: 136
   },
   heading: {
     fontFamily: 'MuseoSlab',
@@ -124,7 +130,7 @@ const LoginPage: FunctionComponent = () => {
   const { t, i18n } = useTranslation()
   const history = useHistory()
   const alert = useAlert()
-  const { classes, theme } = styles()
+  const { classes, theme, cx } = styles()
   const auth0EmailVerifyErrorMessage = 'Please verify your email before logging in.'
 
   const redirectToSignup = async (): Promise<void> => await loginWithRedirect({ screen_hint: 'signup' })
@@ -166,18 +172,24 @@ const LoginPage: FunctionComponent = () => {
               />
             </RouterLink>
             <Box display="flex">
-              <LoginActionButton
-                caption={t('first-visit')}
-                className={classes.registerButton}
+              <Button
+                data-testid="register-button"
+                variant="contained"
+                disableElevation
                 onClick={redirectToSignup}
-                title={t('register')}
-              />
-              <LoginActionButton
-                caption={t('already-registered')}
-                className={classes.loginButton}
+                className={cx(classes.button, classes.registerButton)}
+              >
+                {t('register')}
+              </Button>
+              <Button
+                data-testid="login-button"
+                variant="contained"
+                disableElevation
                 onClick={loginWithRedirect}
-                title={t('connect')}
-              />
+                className={cx(classes.button, classes.loginButton)}
+              >
+                {t('connect')}
+              </Button>
               <Box
                 display="flex"
                 alignItems="center"
@@ -211,7 +223,7 @@ const LoginPage: FunctionComponent = () => {
         <img src={loginPageBackground} alt={t('alt-img-login-page-background')} className={classes.backgroundImage} />
         <img src={loginPageLaptop} alt={t('alt-img-login-page-laptop')} className={classes.laptopImage} />
         <Box className={classes.infoContainer} data-testid="info-container">
-          <Box className={classes.heading}>
+          <Box className={classes.heading} data-testid="login-page-title">
             <Box color="var(--logo-color)" component="span">YourLoops</Box> {t('login-page-title')}
           </Box>
           <p className={classes.info}>{t('login-page-info-1')}</p>
