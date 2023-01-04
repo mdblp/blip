@@ -794,7 +794,7 @@ class PatientDataPage extends React.Component {
 
   onLoadingFailure(err) {
     // TODO A cleaner message
-    const errorMessage = _.isError(err) ? err.message : (new String(err)).toString()
+    const errorMessage = _.isError(err) ? err.message : (String(err)).toString()
     this.log.error(errorMessage, err)
     this.setState({ loadingState: LOADING_STATE_ERROR, errorMessage })
   }
@@ -954,7 +954,7 @@ class PatientDataPage extends React.Component {
         defaultPumpManufacturer: 'default'
       }
     }
-    medicalData.add(data)
+    medicalData.add(data, bgPrefs.bgUnits)
 
     if (medicalData.data.length === 0) {
       this.props.api.metrics.endTimer('process_data')

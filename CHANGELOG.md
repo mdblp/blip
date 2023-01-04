@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.3-beta - 2022-11-29
 ### Fixed
 - YLP-1704 PDF Report Generation failed
+- YLP-1963 Glucose unit not coherent between curves and DBL settings
 ### Added
 - YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
