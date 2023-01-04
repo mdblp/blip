@@ -23,8 +23,7 @@ import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
+import { CircularProgress, InputAdornment, TextField } from '@mui/material'
 
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
@@ -51,7 +50,6 @@ import {
  * @typedef { import('./index').DailyDatePickerProps } DailyDatePickerProps
  */
 
-const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
@@ -451,8 +449,8 @@ class Daily extends React.Component {
         </Header>
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
+            {loading && <CircularProgress className="centered-spinning-loader" />}
             <div className="patient-data-content">
-              {loading && <Loader show overlay={true} />}
               <DailyChart
                 loading={loading}
                 bgClasses={this.props.bgPrefs.bgClasses}

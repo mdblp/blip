@@ -24,9 +24,10 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import clsx from 'clsx'
 import { Route, Switch } from 'react-router-dom'
+import { CircularProgress } from '@mui/material'
 
 import MedicalDataService, { MGDL_UNITS, TimeService } from 'medical-domain'
-import { components as vizComponents, createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
+import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
 
 import config from '../config'
 import personUtils from '../core/personutils'
@@ -38,7 +39,6 @@ import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
-const { Loader } = vizComponents
 
 /** @type {(s: string, p?: object) => string} */
 const t = i18next.t.bind(i18next)
@@ -223,7 +223,7 @@ class PatientDataPage extends React.Component {
         break
       case LOADING_STATE_INITIAL_FETCH:
       case LOADING_STATE_INITIAL_PROCESS:
-        loader = <Loader />
+        loader = <CircularProgress className="centered-spinning-loader" />
         break
       default:
         if (errorMessage === 'no-data') {
@@ -254,21 +254,23 @@ class PatientDataPage extends React.Component {
     )
 
     return (
-      <div className={classes}>
-        {messages}
-        {patientData}
+      <>
         {loader}
-        {errorDisplay}
-        {canPrint &&
-          <DialogPDFOptions
-            open={showPDFPrintOptions}
-            minDate={start}
-            maxDate={end}
-            onResult={this.handlePrint}
-            defaultPreset={'1week'}
-          />
-        }
-      </div>
+        <div className={classes}>
+          {messages}
+          {patientData}
+          {errorDisplay}
+          {canPrint &&
+            <DialogPDFOptions
+              open={showPDFPrintOptions}
+              minDate={start}
+              maxDate={end}
+              onResult={this.handlePrint}
+              defaultPreset={'1week'}
+            />
+          }
+        </div>
+      </>
     )
   }
 
