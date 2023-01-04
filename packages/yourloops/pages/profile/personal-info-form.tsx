@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -59,6 +59,7 @@ const PersonalInfoForm: FunctionComponent = () => {
       <Box className={classes.inputContainer}>
         <TextField
           id="profile-textfield-firstname"
+          data-testid="profile-first-name"
           label={t('first-name')}
           variant="standard"
           value={profileForm.firstName}
@@ -69,6 +70,7 @@ const PersonalInfoForm: FunctionComponent = () => {
         />
         <TextField
           id="profile-textfield-lastname"
+          data-testid="profile-last-name"
           label={t('last-name')}
           variant="standard"
           value={profileForm.lastName}
