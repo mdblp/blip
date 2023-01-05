@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -136,6 +136,7 @@ const PatientProfileForm: FunctionComponent = () => {
         <TextField
           id="profile-textfield-referring-doctor"
           label={t('referring-doctor')}
+          variant="standard"
           value={profileForm.referringDoctor}
           onChange={event => updateProfileForm(ProfileFormKey.referringDoctor, event.target.value)}
           className={classes.formInput}
