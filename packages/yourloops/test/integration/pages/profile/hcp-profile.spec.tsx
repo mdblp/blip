@@ -65,7 +65,7 @@ describe('Profile page for hcp', () => {
     country: CountryCodes.France,
     units: { bg: UnitsType.MMOLL }
   }
-  const preferences: Preferences = { displayLanguageCode: 'fr' }
+  const preferences: Preferences = { displayLanguageCode: LanguageCodes.fr }
 
   beforeAll(() => {
     mockAuth0Hook()

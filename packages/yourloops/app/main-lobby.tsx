@@ -35,7 +35,6 @@ import { TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
 
-import Box from '@mui/material/Box'
 import { useAuth, User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
@@ -119,18 +118,16 @@ export function MainLobby(): JSX.Element {
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
-                  <Box>
-                    <Switch>
-                      <Route exact path="/product-labelling" component={ProductLabellingPage} />
-                      <Route exact path="/login" component={LoginPage} />
-                      <Route exact path="/complete-signup" component={CompleteSignUpPage} />
-                      <Route exact path="/renew-consent" component={ConsentPage} />
-                      <Route exact path="/new-consent" component={PatientConsentPage} />
-                      <Route exact path="/training" component={TrainingPage} />
-                      <Route exact path="/verify-email" component={VerifyEmailPage} />
-                      <Route component={MainLayout} />
-                    </Switch>
-                  </Box>
+                  <Switch>
+                    <Route exact path="/product-labelling" component={ProductLabellingPage} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/complete-signup" component={CompleteSignUpPage} />
+                    <Route exact path="/renew-consent" component={ConsentPage} />
+                    <Route exact path="/new-consent" component={PatientConsentPage} />
+                    <Route exact path="/training" component={TrainingPage} />
+                    <Route exact path="/verify-email" component={VerifyEmailPage} />
+                    <Route component={MainLayout} />
+                  </Switch>
                 </SnackbarContextProvider>
                 <Footer />
               </ThemeProvider>

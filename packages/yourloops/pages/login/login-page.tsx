@@ -37,7 +37,7 @@ import loginPageLaptop from 'login-page-laptop.png'
 import Toolbar from '@mui/material/Toolbar'
 import AppBar from '@mui/material/AppBar'
 import config from '../../lib/config/config'
-import { Link as RouterLink, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
 import LanguageSelect from '../../components/language-select'
@@ -46,8 +46,11 @@ import Typography from '@mui/material/Typography'
 import { GlobalStyles } from 'tss-react'
 import { useAlert } from '../../components/utils/snackbar'
 import Button from '@mui/material/Button'
+import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
+import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
 
 const LOGO_COLOR_LIGHT = '#40BAE9'
+
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -76,7 +79,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     marginBottom: theme.spacing(2)
   },
   info: {
-    fontSize: '1.1rem',
+    fontSize: '1.125rem',
     lineHeight: theme.spacing(4)
   },
   infoContainer: {
@@ -131,13 +134,12 @@ const LoginPage: FunctionComponent = () => {
   const history = useHistory()
   const alert = useAlert()
   const { classes, theme, cx } = styles()
-  const auth0EmailVerifyErrorMessage = 'Please verify your email before logging in.'
 
   const redirectToSignup = async (): Promise<void> => await loginWithRedirect({ screen_hint: 'signup' })
 
   useEffect(() => {
     if (error) {
-      if (error.message === auth0EmailVerifyErrorMessage) {
+      if (error.message === 'Please verify your email before logging in.') {
         history.replace('/verify-email')
         return
       }
@@ -147,7 +149,7 @@ const LoginPage: FunctionComponent = () => {
   }, [error])
 
   return (
-    <React.Fragment>
+    <Box>
       <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       <AppBar
         data-testid="login-page-header"
@@ -162,15 +164,13 @@ const LoginPage: FunctionComponent = () => {
             alignItems="center"
             width="100%"
           >
-            <RouterLink className="flex" to="/">
-              <img
-                data-testid="header-main-logo"
-                aria-label={t('alt-img-logo')}
-                src={`/branding_${config.BRANDING}_logo.svg`}
-                alt={t('alt-img-logo')}
-                width="180"
-              />
-            </RouterLink>
+            <img
+              data-testid="header-main-logo"
+              aria-label={t('alt-img-logo')}
+              src={`/branding_${config.BRANDING}_logo.svg`}
+              alt={t('alt-img-logo')}
+              width="180"
+            />
             <Box display="flex">
               <Button
                 data-testid="register-button"
@@ -195,7 +195,7 @@ const LoginPage: FunctionComponent = () => {
                 alignItems="center"
                 marginLeft={1}
               >
-                <Link href="mailto:yourloops@diabeloop.com">
+                <Link href={`mailto:${diabeloopExternalUrls.contactEmail}`}>
                   <Typography
                     variant="subtitle2"
                     className={classes.hoverable}
@@ -229,10 +229,10 @@ const LoginPage: FunctionComponent = () => {
           <p className={classes.info}>{t('login-page-info-1')}</p>
           <p className={classes.info}>{t('login-page-info-2')}</p>
           <p className={classes.info}>{t('login-page-info-3')}</p>
-          {i18n.language !== 'fr' &&
+          {i18n.language !== LanguageCodes.fr &&
             <Link
               className={classes.link}
-              href="https://www.dbl-diabetes.com"
+              href={diabeloopExternalUrls.dblDiabetes}
               target="_blank"
               rel="nofollow"
             >
@@ -241,7 +241,7 @@ const LoginPage: FunctionComponent = () => {
           }
         </Box>
       </Box>
-    </React.Fragment>
+    </Box>
   )
 }
 

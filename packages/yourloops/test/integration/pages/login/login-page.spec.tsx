@@ -26,9 +26,8 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { act, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
-import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 
@@ -50,6 +49,7 @@ describe('Login page', () => {
     const registerButton = within(header).getByRole('button', { name: 'Register' })
     const loginButton = within(header).getByRole('button', { name: 'Connection' })
     const contactLink = within(header).getByRole('link', { name: 'Contact' })
+    const languageSelector = within(header).queryByTestId('language-selector')
     const infoContainer = screen.getByTestId('info-container')
     const moreInfoLink = within(infoContainer).getByRole('link')
 
@@ -65,7 +65,7 @@ describe('Login page', () => {
     expect(contactLink).toBeVisible()
     expect(contactLink).toHaveAttribute('href', 'mailto:yourloops@diabeloop.com')
     expect(within(header).getByTestId('language-icon')).toBeVisible()
-    expect(within(header).getByTestId('language-selector')).toBeVisible()
+    expect(languageSelector).toBeVisible()
 
     // main content
     expect(within(infoContainer).getByText('is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.')).toBeVisible()
@@ -77,9 +77,8 @@ describe('Login page', () => {
     checkFooter({ needFooterLanguageSelector: false })
 
     // More info link should disappear if language is french
-    await act(async () => {
-      await i18n.changeLanguage('fr')
-    })
+    fireEvent.mouseDown(within(languageSelector).getByRole('button', { hidden: true }))
+    await userEvent.click(screen.getByText('Français'))
     expect(moreInfoLink).not.toBeVisible()
 
     await userEvent.click(registerButton)
@@ -100,7 +99,7 @@ describe('Login page', () => {
     expect(router.current.history.location.pathname).toEqual('/verify-email')
   })
 
-  it('should show a snacknbar alert if auth0 returns an error', async () => {
+  it('should show a snackbar alert if auth0 returns an error', async () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       error: Error('Hi there, i\'m an error !!')
     })

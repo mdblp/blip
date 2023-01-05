@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -288,7 +288,7 @@ const Footer: FunctionComponent = () => {
         <Box className={classes.separator}>|</Box>
         <Link
           id="footer-link-contact-mailto"
-          href="mailto:yourloops@diabeloop.com"
+          href={`mailto:${diabeloopExternalUrls.contactEmail}`}
           onClick={metricsPdfDocument('yourloops-mailto-contact')}
           className={classes.link}
         >

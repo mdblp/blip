@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
+import { ResourceLanguage } from 'i18next'
 
 interface LanguageSelectProps {
   className?: string
@@ -40,7 +41,7 @@ interface LanguageSelectProps {
 
 const styles = makeStyles()((theme: Theme) => ({
   select: {
-    fontSize: '12px',
+    fontSize: theme.typography.caption.fontSize,
     color: theme.palette.grey[700],
     paddingBlock: 0
   }
@@ -50,7 +51,9 @@ const LanguageSelect: FunctionComponent<LanguageSelectProps> = ({ className }) =
   const { i18n } = useTranslation()
   const [val, setVal] = useState(i18n.language)
   const { classes, cx } = styles()
-  const languages = Object.entries(i18n.options.resources)
+  const languages = Object.entries(i18n.options.resources).map((languageEntry: [string, ResourceLanguage]) => {
+    return { key: languageEntry[0], name: languageEntry[1].name }
+  })
 
   const handleChange = async (event: SelectChangeEvent<unknown>): Promise<void> => {
     const lang = event.target.value as string
@@ -74,13 +77,13 @@ const LanguageSelect: FunctionComponent<LanguageSelectProps> = ({ className }) =
         value={val}
         onChange={handleChange}
       >
-        {languages.map(lang => (
+        {languages.map(language => (
           <MenuItem
-            id={`language-selector-${lang[0]}`}
-            key={lang[0]}
-            value={lang[0]}
+            id={`language-selector-${language.key}`}
+            key={language.key}
+            value={language.key}
           >
-            {lang[1].name as string}
+            {language.name as string}
           </MenuItem>
         ))}
       </Select>

@@ -32,14 +32,18 @@ import { UserRoles } from './auth/models/enums/user-roles.enum'
  * Class containing all external URLs related to Diabeloop
  */
 class DiabeloopExternalUrls {
+  readonly dblDiabetes: string
+  readonly contactEmail: string
+  readonly releaseNotes: string
   private readonly rootPathName: string
   readonly support: string
-  readonly releaseNotes: string
 
   constructor() {
+    this.dblDiabetes = 'https://www.dbl-diabetes.com'
+    this.contactEmail = 'yourloops@diabeloop.com'
+    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
     this.rootPathName = `${config.ASSETS_URL}`
     this.support = 'https://www.diabeloop.com'
-    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
   }
 
   get cookiesPolicy(): string {

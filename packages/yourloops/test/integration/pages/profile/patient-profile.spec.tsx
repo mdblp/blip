@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -73,7 +73,7 @@ describe('Profile page for patient', () => {
     country: CountryCodes.France,
     units: { bg: UnitsType.MMOLL }
   }
-  const preferences: Preferences = { displayLanguageCode: 'fr' }
+  const preferences: Preferences = { displayLanguageCode: LanguageCodes.fr }
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.patient)

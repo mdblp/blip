@@ -69,7 +69,7 @@ describe('Caregiver page for hcp', () => {
     country: CountryCodes.France,
     units: { bg: UnitsType.MMOLL }
   }
-  const preferences: Preferences = { displayLanguageCode: 'fr' }
+  const preferences: Preferences = { displayLanguageCode: LanguageCodes.fr }
   const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
 
   beforeAll(() => {
