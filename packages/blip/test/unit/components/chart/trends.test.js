@@ -27,8 +27,7 @@ import { components as vizComponents } from 'tidepool-viz'
 import Utils from '../../../../app/core/utils'
 import Trends from '../../../../app/components/chart/trends'
 import DataUtilStub from '../../../helpers/DataUtil'
-
-const { Loader } = vizComponents
+import { CircularProgress } from '@mui/material'
 
 /** @typedef {import('enzyme').ReactWrapper<Trends>} TrendsWrapper */
 
@@ -152,12 +151,12 @@ describe('Trends', () => {
       wrapper = mount(<Trends {...baseProps} />)
     })
     it('should show a loader when loading prop is true', () => {
-      const loader = () => wrapper.find(Loader)
+      const loader = () => wrapper.find(CircularProgress)
 
       expect(loader().length).to.equal(0)
 
       wrapper.setProps({ loading: true })
-      expect(loader().props().show).to.be.true
+      expect(loader().length).to.equal(1)
     })
 
     it('should render the stats', () => {

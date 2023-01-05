@@ -1,4 +1,3 @@
-
 /**
  * @typedef {import("enzyme").ShallowWrapper} ShallowWrapper
  * @typedef {import("enzyme").ReactWrapper} ReactWrapper
@@ -14,9 +13,7 @@ import { MGDL_UNITS, TimeService } from 'medical-domain'
 
 import DataUtilStub from '../../../helpers/DataUtil'
 import Daily, { DailyChart } from '../../../../app/components/chart/daily'
-import { components as vizComponents } from 'tidepool-viz'
-
-const { Loader } = vizComponents
+import { CircularProgress } from '@mui/material'
 
 require('tideline/css/tideline.less')
 require('../../../../app/core/less/fonts.less')
@@ -189,12 +186,12 @@ describe('Daily', () => {
     })
 
     it('should show a loader when loading prop is true', () => {
-      const loader = () => wrapper.find(Loader).last()
+      const loader = () => wrapper.find(CircularProgress).last()
 
       expect(loader().length).to.equal(0)
 
       wrapper.setProps({ loading: true })
-      expect(loader().props().show).to.be.true
+      expect(loader().length).to.equal(1)
     })
 
     it('should render the bg toggle', () => {
