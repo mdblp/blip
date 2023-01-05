@@ -73,9 +73,11 @@ import {
   toISOString,
   twoWeeksAgo
 } from '../time/time.service'
-import PumpSettings, { Parameter, ParameterConfig } from '../../models/medical/datum/pump-settings.model'
+import PumpSettings, { Parameter as PumpSettingsParameter, ParameterConfig } from '../../models/medical/datum/pump-settings.model'
 import Unit from '../../models/medical/datum/enums/unit.enum'
 import { convertBG } from './datum/cbg.service'
+
+interface UnitValuePair { unit: Unit | string, value: string}
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -278,7 +280,7 @@ class MedicalDataService {
     return normalizedMessage
   }
 
-  getConvertedParamUnitAndValue(paramUnit: Unit | string, paramValue: string, bgUnitExpected: Unit): { unit: Unit | string, value: string} {
+  getConvertedParamUnitAndValue(paramUnit: Unit | string, paramValue: string, bgUnitExpected: Unit): UnitValuePair {
     if ((paramUnit === Unit.MilligramPerDeciliter || paramUnit === Unit.MmolPerLiter) && paramUnit !== bgUnitExpected) {
       const valueAsNumber = Number(paramValue)
       if (!isNaN(valueAsNumber)) {
@@ -288,7 +290,7 @@ class MedicalDataService {
     return { unit: paramUnit, value: paramValue }
   }
 
-  getParamWithCorrectBgUnit(param: ParameterConfig | Parameter, bgUnit: Unit): ParameterConfig | Parameter {
+  getParamWithCorrectBgUnit(param: ParameterConfig | PumpSettingsParameter, bgUnit: Unit): ParameterConfig | PumpSettingsParameter {
     const { unit, value } = this.getConvertedParamUnitAndValue(param.unit, param.value, bgUnit)
     return { ...param, unit, value }
   }
@@ -353,7 +355,7 @@ class MedicalDataService {
             datum.payload.history = datum.payload.history.map(parameterChange => {
               parameterChange.parameters = parameterChange.parameters.map(param => {
                 return this.getParamWithCorrectBgUnit(param, bgUnit)
-              }) as Parameter[]
+              }) as PumpSettingsParameter[]
               return parameterChange
             })
             this.medicalData.pumpSettings.push(datum)
