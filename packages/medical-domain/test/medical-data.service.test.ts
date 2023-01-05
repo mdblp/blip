@@ -463,91 +463,56 @@ describe('MedicalDataService', () => {
       expect(twoWeeksAgoMock).toHaveBeenCalledWith(end - 1, tz)
     })
   })
-  describe('getParamWithCorrectBgUnit', () => {
+  describe('getConvertedParamUnitAndValue', () => {
     const medicalDataService = new MedicalDataService()
 
     it('should return given param when unit is neither mg/dL nor mmol/L', () => {
-      const givenParam: ParameterConfig = {
-        effectiveDate: '',
-        level: 10,
-        name: '',
-        unit: Unit.Percent,
-        value: '90'
-      }
+      const value = '90'
+      const unit = Unit.Percent
 
-      const receivedParam = medicalDataService.getParamWithCorrectBgUnit(givenParam, Unit.MmolPerLiter)
+      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MmolPerLiter)
 
-      expect(receivedParam).toBe(givenParam)
+      expect(receivedParam).toEqual({ unit, value })
     })
 
     it('should return given param when unit is not mg/dL and expected unit is mg/dL', () => {
-      const givenParam: ParameterConfig = {
-        effectiveDate: '',
-        level: 10,
-        name: '',
-        unit: Unit.MilligramPerDeciliter,
-        value: '90'
-      }
+      const value = '90'
+      const unit = Unit.MilligramPerDeciliter
 
-      const receivedParam = medicalDataService.getParamWithCorrectBgUnit(givenParam, Unit.MilligramPerDeciliter)
+      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MilligramPerDeciliter)
 
-      expect(receivedParam).toBe(givenParam)
+      expect(receivedParam).toEqual({ unit, value })
     })
 
     it('should return given param when value is not a number', () => {
-      const givenParam: ParameterConfig = {
-        effectiveDate: '',
-        level: 10,
-        name: '',
-        unit: Unit.MilligramPerDeciliter,
-        value: 'this is not a number'
-      }
+      const value = 'this is not a number'
+      const unit = Unit.MilligramPerDeciliter
 
-      const receivedParam = medicalDataService.getParamWithCorrectBgUnit(givenParam, Unit.MmolPerLiter)
+      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MmolPerLiter)
 
-      expect(receivedParam).toBe(givenParam)
+      expect(receivedParam).toEqual({ unit, value })
     })
 
     it('should convert given param to mmol/L when given mg/dL', () => {
-      const givenParam: ParameterConfig = {
-        effectiveDate: '',
-        level: 10,
-        name: '',
-        unit: Unit.MilligramPerDeciliter,
-        value: '120'
-      }
-      const expectedParam: ParameterConfig = {
-        effectiveDate: '',
-        level: 10,
-        name: '',
-        unit: Unit.MmolPerLiter,
-        value: '6.7'
-      }
+      const value = '120'
+      const unit = Unit.MilligramPerDeciliter
+      const expectedValue = '6.7'
+      const expectedUnit = Unit.MmolPerLiter
 
-      const receivedParam = medicalDataService.getParamWithCorrectBgUnit(givenParam, Unit.MmolPerLiter)
+      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MmolPerLiter)
 
-      expect(receivedParam).toEqual(expectedParam)
+      expect(receivedParam).toEqual({ unit: expectedUnit, value: expectedValue })
     })
 
     it('should convert given param to mg/dL when given mmol/L', () => {
-      const givenParam: ParameterConfig = {
-        effectiveDate: '',
-        level: 10,
-        name: '',
-        unit: Unit.MmolPerLiter,
-        value: '6.7'
-      }
-      const expectedParam: ParameterConfig = {
-        effectiveDate: '',
-        level: 10,
-        name: '',
-        unit: Unit.MilligramPerDeciliter,
-        value: '121'
-      }
+      const value = '6.7'
+      const unit = Unit.MmolPerLiter
+      const expectedValue = '121'
+      const expectedUnit = Unit.MilligramPerDeciliter
 
-      const receivedParam = medicalDataService.getParamWithCorrectBgUnit(givenParam, Unit.MilligramPerDeciliter)
+      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MilligramPerDeciliter)
 
-      expect(receivedParam).toEqual(expectedParam)
+      expect(receivedParam).toEqual({ unit: expectedUnit, value: expectedValue })
     })
   })
 })

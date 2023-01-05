@@ -27,7 +27,9 @@
 
 import { MGDL_UNITS } from '../../models/medical/datum/cbg.model'
 import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
-import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
+import DeviceParameterChange, {
+  Parameter as DeviceParameterChangeParameter
+} from '../../models/medical/datum/device-parameter-change.model'
 import Fill from '../../models/medical/datum/fill.model'
 import MedicalData from '../../models/medical/medical-data.model'
 import Message from '../../models/medical/datum/message.model'
@@ -276,16 +278,24 @@ class MedicalDataService {
     return normalizedMessage
   }
 
+  getConvertedParamUnitAndValue(paramUnit: Unit | string, paramValue: string, bgUnitExpected: Unit): { unit: Unit | string, value: string} {
+    if ((paramUnit === Unit.MilligramPerDeciliter || paramUnit === Unit.MmolPerLiter) && paramUnit !== bgUnitExpected) {
+      const valueAsNumber = Number(paramValue)
+      if (!isNaN(valueAsNumber)) {
+        return { unit: bgUnitExpected, value: convertBG(valueAsNumber, paramUnit).toString() }
+      }
+    }
+    return { unit: paramUnit, value: paramValue }
+  }
+
   getParamWithCorrectBgUnit(param: ParameterConfig | Parameter, bgUnit: Unit): ParameterConfig | Parameter {
-    if ((param.unit !== Unit.MilligramPerDeciliter && param.unit !== Unit.MmolPerLiter) || param.unit === bgUnit) {
-      return param
-    }
-    const valueAsNumber = Number(param.value)
-    if (!isNaN(valueAsNumber)) {
-      param.value = convertBG(valueAsNumber, param.unit).toString()
-      param.unit = bgUnit
-    }
-    return param
+    const { unit, value } = this.getConvertedParamUnitAndValue(param.unit, param.value, bgUnit)
+    return { ...param, unit, value }
+  }
+
+  getDeviceParamWithCorrectBgUnit(param: DeviceParameterChangeParameter, bgUnit: Unit): DeviceParameterChangeParameter {
+    const { unit, value } = this.getConvertedParamUnitAndValue(param.units, param.value, bgUnit)
+    return { ...param, units: unit as Unit, value }
   }
 
   private normalize(rawData: Array<Record<string, unknown>>, bgUnit: Unit): void {
@@ -308,6 +318,9 @@ class MedicalDataService {
                 this.medicalData.confidentialModes.push(datum as ConfidentialMode)
                 break
               case 'deviceParameter':
+                (datum as DeviceParameterChange).params = (datum as DeviceParameterChange).params.map(param => {
+                  return this.getDeviceParamWithCorrectBgUnit(param, bgUnit)
+                })
                 this.medicalData.deviceParametersChanges.push(datum as DeviceParameterChange)
                 break
               case 'reservoirChange':
