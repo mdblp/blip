@@ -129,7 +129,6 @@ PatientDashboard.propTypes = {
   dataUtil: PropTypes.object,
   epochLocation: PropTypes.number.isRequired,
   msRange: PropTypes.number.isRequired,
-  patientInfoWidget: PropTypes.func.isRequired,
   onSwitchToTrends: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired,
   onSwitchPatient: PropTypes.func.isRequired,

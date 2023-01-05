@@ -52,7 +52,7 @@ import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enu
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 
-const patientInfoWidgetStyles = makeStyles({ name: 'patient-info-widget' })((theme: Theme) => ({
+const remoteMonitoringWidgetStyles = makeStyles({ name: 'patient-info-widget' })((theme: Theme) => ({
   card: {
     width: 430
   },
@@ -76,7 +76,7 @@ export interface RemoteMonitoringWidgetProps {
 }
 
 function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element {
-  const { classes } = patientInfoWidgetStyles()
+  const { classes } = remoteMonitoringWidgetStyles()
   const { classes: commonStyles } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()

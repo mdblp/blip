@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,7 +60,7 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../lib/notifications/notification.hook')
-describe('PatientInfoWidget', () => {
+describe('RemoteMonitoringWidget', () => {
   const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
   const adminMember = buildTeamMember()
@@ -109,18 +109,18 @@ describe('PatientInfoWidget', () => {
     }
   })
 
-  function getPatientInfoWidgetJSX(props: RemoteMonitoringWidgetProps = { patient }): JSX.Element {
+  function getRemoteMonitoringWidgetJSX(props: RemoteMonitoringWidgetProps = { patient }): JSX.Element {
     return <RemoteMonitoringWidget patient={props.patient} />
   }
 
   function mountComponent(props: RemoteMonitoringWidgetProps = { patient }) {
     act(() => {
-      ReactDOM.render(getPatientInfoWidgetJSX(props), container)
+      ReactDOM.render(getRemoteMonitoringWidgetJSX(props), container)
     })
   }
 
   async function clickOnActionButtonAndSave(buttonName: string) {
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: buttonName }))
     fireEvent.click(screen.getByRole('button', { name: 'save-mock' }))
     await waitFor(() => expect(screen.queryByRole('button', { name: 'save-mock' })).toBeNull())
@@ -187,7 +187,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on cancel invite button and cancel the invite when clicking on confirm', async () => {
     patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'cancel-invite' }))
     fireEvent.click(screen.getByRole('button', { name: 'confirm-mock' }))
     expect(cancelRemoteMonitoringInviteMock).toHaveBeenCalled()
@@ -197,7 +197,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on cancel invite button and not cancel the invite when clicking on close', async () => {
     patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'cancel-invite' }))
     fireEvent.click(screen.getByRole('button', { name: 'close-mock' }))
     expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled()
@@ -206,7 +206,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on delete button and edit the patient remote monitoring when clicking on confirm', async () => {
     patient.monitoring = { enabled: true, status: undefined } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'button-remove' }))
     fireEvent.click(screen.getByRole('button', { name: 'confirm-mock' }))
     expect(updatePatientMonitoringMock).toHaveBeenCalled()
@@ -215,7 +215,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on delete button and not edit the patient remote monitoring when clicking on close', async () => {
     patient.monitoring = { enabled: true, status: undefined } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'button-remove' }))
     fireEvent.click(screen.getByRole('button', { name: 'close-mock' }))
     expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled()
