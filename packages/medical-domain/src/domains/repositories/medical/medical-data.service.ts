@@ -295,7 +295,8 @@ class MedicalDataService {
 
   getDeviceParamWithCorrectBgUnit(param: DeviceParameterChangeParameter, bgUnit: Unit): DeviceParameterChangeParameter {
     const { unit, value } = this.getConvertedParamUnitAndValue(param.units, param.value, bgUnit)
-    return { ...param, units: unit as Unit, value }
+    const { value: previousValue } = this.getConvertedParamUnitAndValue(param.units, param.previousValue, bgUnit)
+    return { ...param, units: unit as Unit, value, previousValue }
   }
 
   private normalize(rawData: Array<Record<string, unknown>>, bgUnit: Unit): void {

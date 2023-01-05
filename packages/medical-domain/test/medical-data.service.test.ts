@@ -40,7 +40,7 @@ import createRandomDatum from './models/data-generator'
 import BasicData, * as BasiscsDataService from '../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../src/domains/repositories/time/time.service'
 import crypto from 'crypto'
-import { ParameterConfig, Unit } from '../src'
+import { Unit } from '../src'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {
