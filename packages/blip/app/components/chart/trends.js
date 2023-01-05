@@ -101,7 +101,6 @@ class Trends extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
-    patients: PropTypes.array.isRequired,
     userIsHCP: PropTypes.bool.isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
@@ -640,7 +639,6 @@ class Trends extends React.Component {
         onClickTrends={this.handleClickTrends}
         onSwitchPatient={this.props.onSwitchPatient}
         currentPatient={this.props.patient}
-        patients={this.props.patients}
         prefixURL={this.props.prefixURL}
       />
     )

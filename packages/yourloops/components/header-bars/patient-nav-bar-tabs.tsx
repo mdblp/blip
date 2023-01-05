@@ -99,7 +99,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
   }
 
   return (
-    <Box className={classes.tabs} width="100%" paddingLeft={7}>
+    <Box className={classes.tabs} paddingLeft={7}>
       <Box display="flex">
         <Tabs value={selectedTab()} classes={{
           root: classes.root
@@ -141,7 +141,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
             }}
           />
         </Tabs>
-        <Box marginLeft="auto" marginRight={3} display="flex" justifyContent="center" alignItems="center">
+        <Box marginLeft="auto" paddingRight={3} display="flex" justifyContent="center" alignItems="center">
           <Button data-testid="generate-report" onClick={onClickPrint}>
             <GetAppIcon />
             {t('pdf-generate-report')}

@@ -36,18 +36,17 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
 interface PatientNavBarInfosProps {
-  infoWidth: string
   patient: Patient
 }
 
 const LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID = 'showMoreInfoPatientNavBarId'
 
 export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> = (props) => {
-  const { infoWidth, patient } = props
+  const { patient } = props
 
   const { t } = useTranslation('yourloops')
   const localStorageShowMoreInfo = localStorage.getItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID) === 'true'
-  const [showMoreInfo, setShowMoreInfo] = useState(localStorageShowMoreInfo)
+  const [showMoreInfo, setShowMoreInfo] = useState<boolean>(localStorageShowMoreInfo)
 
   const trNaLabel = t('N/A')
 
@@ -79,24 +78,20 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
           <PatientNavBarInfo
             fieldName={t('colon', { label: t('birthdate') })}
             fieldValue={moment(patient.profile.birthdate).format('L')}
-            fieldWidth={infoWidth}
           />
           <PatientNavBarInfo
             fieldName={t('colon', { label: t('diabete-type') })}
-            fieldValue={'Type 1'}
-            fieldWidth={infoWidth}
+            fieldValue="Type 1"
           />
         </Box>
         <Box display="flex" marginTop={1}>
           <PatientNavBarInfo
             fieldName={t('colon', { label: t('gender') })}
             fieldValue={gender}
-            fieldWidth={infoWidth}
           />
           <PatientNavBarInfo
             fieldName={t('colon', { label: t('remote-monitoring') })}
             fieldValue={patient.monitoring?.enabled ? t('yes') : t('no')}
-            fieldWidth={infoWidth}
           />
         </Box>
         {showMoreInfo &&
@@ -104,17 +99,14 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
             <PatientNavBarInfo
               fieldName={t('colon', { label: t('referring-doctor') })}
               fieldValue={referringDoctor}
-              fieldWidth={infoWidth}
             />
             <PatientNavBarInfo
               fieldName={t('colon', { label: t('hba1c') })}
               fieldValue={hbA1c}
-              fieldWidth={infoWidth}
             />
             <PatientNavBarInfo
               fieldName={t('colon', { label: t('email') })}
               fieldValue={patient.profile.email}
-              fieldWidth={infoWidth}
             />
           </Box>
         }

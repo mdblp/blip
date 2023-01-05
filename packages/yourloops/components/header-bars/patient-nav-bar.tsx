@@ -39,14 +39,13 @@ import { useHistory } from 'react-router-dom'
 
 interface PatientNavBarProps {
   chartType: string
-  onClickDashboard: MouseEventHandler<HTMLAnchorElement>
-  onClickDaily: MouseEventHandler<HTMLAnchorElement>
-  onSwitchPatient: Function
-  onClickPrint: MouseEventHandler<HTMLButtonElement>
-  onClickTrends: MouseEventHandler<HTMLAnchorElement>
+  onClickDashboard?: MouseEventHandler<HTMLAnchorElement>
+  onClickDaily?: MouseEventHandler<HTMLAnchorElement>
+  onSwitchPatient?: Function
+  onClickPrint?: MouseEventHandler<HTMLButtonElement>
+  onClickTrends?: MouseEventHandler<HTMLAnchorElement>
   currentPatient: Patient
-  patients: Patient[]
-  prefixURL: string
+  prefixURL?: string
 }
 
 const styles = makeStyles()((theme: Theme) => {
@@ -70,7 +69,6 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
   }) => {
   const {
     currentPatient,
-    patients,
     chartType,
     onClickDashboard,
     onClickTrends,
@@ -94,8 +92,8 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
         {!user.isUserPatient() && (
           <Box display="flex" paddingTop={2}>
             <ArrowBackIcon data-testid="subnav-arrow-back" className={classes.backIcon} onClick={goBackHome} />
-            <PatientNavBarSelect currentPatient={currentPatient} patients={patients} onSwitchPatient={onSwitchPatient} />
-            <PatientNavBarInfoList patient={currentPatient} infoWidth="calc(33.33% - 8px)" />
+            <PatientNavBarSelect currentPatient={currentPatient} onSwitchPatient={onSwitchPatient} />
+            <PatientNavBarInfoList patient={currentPatient} />
           </Box>
         )
         }

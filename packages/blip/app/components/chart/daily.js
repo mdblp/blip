@@ -249,7 +249,6 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
-    patients: PropTypes.array.isRequired,
     userIsHCP: PropTypes.bool.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
@@ -342,7 +341,6 @@ class Daily extends React.Component {
           onClickPrint={this.props.onClickPrint}
           onClickTrends={this.props.onSwitchToTrends}
           currentPatient={this.props.patient}
-          patients={this.props.patients}
           prefixURL={this.props.prefixURL}
         />
         <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">

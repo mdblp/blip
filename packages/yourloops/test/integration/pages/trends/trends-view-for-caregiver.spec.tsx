@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -58,7 +58,7 @@ describe('Trends view for caregiver', () => {
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
     renderPage(`/patient/${unmonitoredPatientId}/trends`)
-    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiver()
     checkCaregiverLayout(`${firstName} ${lastName}`)
   })

@@ -60,7 +60,6 @@ function ReduxProvider(props) {
         store={store}
         patient={props.patient}
         setPatient={props.setPatient}
-        patients={props.patients}
         userIsHCP={props.userIsHCP}
         isSelectedTeamMedical={props.isSelectedTeamMedical}
         prefixURL={props.prefixURL}
@@ -68,7 +67,6 @@ function ReduxProvider(props) {
         dialogDatePicker={props.dialogDatePicker}
         dialogRangeDatePicker={props.dialogRangeDatePicker}
         dialogPDFOptions={props.dialogPDFOptions}
-        patientInfoWidget={props.patientInfoWidget}
         chatWidget={props.chatWidget}
         alarmCard={props.alarmCard}
         medicalFilesWidget={props.medicalFilesWidget}
@@ -81,14 +79,12 @@ ReduxProvider.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   isSelectedTeamMedical: PropTypes.bool.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
-  patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
   alarmCard: PropTypes.func.isRequired,
   medicalFilesWidget: PropTypes.func.isRequired
@@ -100,14 +96,13 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === 'object') {
     try {
-      const { config, api, patient, setPatient, patients, userIsHCP, isSelectedTeamMedical, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget, medicalFilesWidget } = props
+      const { config, api, patient, setPatient, userIsHCP, isSelectedTeamMedical, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, medicalFilesWidget } = props
       updateConfig(config)
 
       return (
         <ReduxProvider
           api={api}
           patient={patient}
-          patients={patients}
           setPatient={setPatient}
           userIsHCP={userIsHCP}
           isSelectedTeamMedical={isSelectedTeamMedical}
@@ -115,7 +110,6 @@ function Blip(props) {
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
-          patientInfoWidget={patientInfoWidget}
           chatWidget={chatWidget}
           alarmCard={alarmCard}
           medicalFilesWidget={medicalFilesWidget}
@@ -135,14 +129,12 @@ Blip.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   isSelectedTeamMedical: PropTypes.bool.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
-  patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
   alarmCard: PropTypes.func.isRequired,
   medicalFilesWidget: PropTypes.func.isRequired

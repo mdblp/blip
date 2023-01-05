@@ -61,10 +61,9 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
  * @typedef { import('../index').MessageNote } MessageNote
  * @typedef { import('../index').DialogDatePicker } DialogDatePicker
  * @typedef { import('../index').DialogRangeDatePicker } DialogRangeDatePicker
- * @typedef { import('../index').RemoteMonitoringWidget } PatientInfoWidget
  * @typedef { import('../core/lib/partial-data-load').DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker, patientInfoWidget: PatientInfoWidget }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker }} PatientDataProps
  * @typedef {{loadingState: number; medicalData: MedicalDataService | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -280,7 +279,6 @@ class PatientDataPage extends React.Component {
   renderEmptyHeader() {
     return <PatientNavBarMemoized
       currentPatient={this.props.patient}
-      patients={this.props.patients}
       chartType="no-data"
     />
   }
@@ -319,13 +317,11 @@ class PatientDataPage extends React.Component {
     const {
       patient,
       setPatient,
-      patients,
       userIsHCP,
       isSelectedTeamMedical,
       prefixURL,
       dialogDatePicker,
       dialogRangeDatePicker,
-      patientInfoWidget,
       chatWidget,
       alarmCard,
       api,
@@ -351,7 +347,6 @@ class PatientDataPage extends React.Component {
             chartPrefs={chartPrefs}
             patient={patient}
             setPatient={setPatient}
-            patients={patients}
             userIsHCP={userIsHCP}
             user={user}
             isSelectedTeamMedical={isSelectedTeamMedical}
@@ -364,7 +359,6 @@ class PatientDataPage extends React.Component {
             tidelineData={medicalData}
             permsOfLoggedInUser={permsOfLoggedInUser}
             trackMetric={this.trackMetric}
-            patientInfoWidget={patientInfoWidget}
             chatWidget={chatWidget}
             alarmCard={alarmCard}
             medicalFilesWidget={medicalFilesWidget}
@@ -385,7 +379,6 @@ class PatientDataPage extends React.Component {
             timePrefs={this.state.timePrefs}
             patient={patient}
             setPatient={setPatient}
-            patients={patients}
             userIsHCP={userIsHCP}
             tidelineData={medicalData}
             epochLocation={epochLocation}
@@ -419,7 +412,6 @@ class PatientDataPage extends React.Component {
             msRange={msRange}
             patient={patient}
             setPatient={setPatient}
-            patients={patients}
             userIsHCP={userIsHCP}
             tidelineData={medicalData}
             loading={loadingState !== LOADING_STATE_DONE}
@@ -988,7 +980,6 @@ PatientDataPage.propTypes = {
   medicalFilesWidget: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   isSelectedTeamMedical: PropTypes.bool.isRequired,
   store: PropTypes.object.isRequired,
@@ -996,8 +987,7 @@ PatientDataPage.propTypes = {
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired,
-  patientInfoWidget: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 }
 
 export default PatientDataPage

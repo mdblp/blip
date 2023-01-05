@@ -151,13 +151,13 @@ describe('Patient dashboard for HCP', () => {
     fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))
     fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
-    const secondarHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
+    const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
 
-    await userEvent.click(within(secondarHeaderRefreshed).getByText('Show more'))
-    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
+    await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
 
-    await userEvent.click(within(secondarHeaderRefreshed).getByText('Show more'))
-    expect(secondarHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
+    await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
   })
 })

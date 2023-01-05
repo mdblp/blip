@@ -8,6 +8,7 @@ import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
 import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import AccessTime from '@mui/icons-material/AccessTime'
+import RemoteMonitoringWidget from 'yourloops/components/dashboard-widgets/remote-monitoring-widget'
 
 const t = i18next.t.bind(i18next)
 
@@ -28,7 +29,7 @@ const PatientDashboard = (props) => {
     medicalFilesWidget: MedicalFilesWidget,
     onClickPrint,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, isSelectedTeamMedical, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, userIsHCP, isSelectedTeamMedical, onSwitchPatient
   } = props
   const isMonitoringEnabled = patient.monitoring?.enabled
   const shouldDisplayChatWidget = isMonitoringEnabled && (!userIsHCP || isSelectedTeamMedical)
@@ -59,7 +60,6 @@ const PatientDashboard = (props) => {
         onClickTrends={onSwitchToTrends}
         onSwitchPatient={onSwitchPatient}
         currentPatient={patient}
-        patients={patients}
         prefixURL={prefixURL}
       />
       <Box display="flex" marginLeft="20px" alignItems="center">
@@ -67,7 +67,7 @@ const PatientDashboard = (props) => {
         <span id="subnav-period-label">{t('dashboard-header-period-text')}</span>
       </Box>
       <Box id="patient-dashboard-content">
-        <PatientInfoWidget patient={patient} />
+        <RemoteMonitoringWidget patient={patient} />
         {patient.monitoring?.enabled &&
           <MedicalFilesWidget
             id="dashboard-medical-files-widget"

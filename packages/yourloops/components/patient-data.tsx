@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,6 @@ import { setPageTitle } from '../lib/utils'
 import DialogDatePicker from './date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
-import RemoteMonitoringWidget from './dashboard-widgets/remote-monitoring-widget'
 import ChatWidget from './chat/chat-widget'
 import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
@@ -83,7 +82,7 @@ function PatientDataPage(): JSX.Element | null {
   const { t } = useTranslation('yourloops')
   const paramHook = useParams()
   const { user, isLoggedIn } = useAuth()
-  const { getPatientById, patients } = usePatientContext()
+  const { getPatientById } = usePatientContext()
   const dataHook = useData()
   const { classes } = patientDataStyles()
 
@@ -162,14 +161,12 @@ function PatientDataPage(): JSX.Element | null {
         api={blipApi}
         patient={patient}
         userIsHCP={!!userIsHCP}
-        patients={patients}
         setPatient={setPatient}
         isSelectedTeamMedical={isSelectedTeamMedical}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
-        patientInfoWidget={RemoteMonitoringWidget}
         chatWidget={ChatWidget}
         alarmCard={AlarmCard}
         medicalFilesWidget={MedicalFilesWidget}

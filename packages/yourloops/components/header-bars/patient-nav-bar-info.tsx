@@ -33,16 +33,15 @@ import { useTheme } from '@mui/styles'
 interface PatientNavBarInfoProps {
   fieldName: string
   fieldValue: string
-  fieldWidth: string
   id?: string
 }
 
 export const PatientNavBarInfo: FunctionComponent<PatientNavBarInfoProps> = (props) => {
-  const { fieldName, fieldValue, fieldWidth, id } = props
+  const { fieldName, fieldValue, id } = props
   const theme = useTheme()
 
   return (
-    <Box display="flex" width={fieldWidth}>
+    <Box display="flex" width="calc(33.33% - 8px)">
       <Typography data-testid={`${id}-label`} variant="caption">{fieldName}</Typography>
       <Typography data-testid={id} marginLeft="4px" variant="caption" color={theme.palette.common.black}>{fieldValue}</Typography>
     </Box>
