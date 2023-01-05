@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ import Datum from './domains/models/medical/datum.model'
 import Basal from './domains/models/medical/datum/basal.model'
 import BaseDatum from './domains/models/medical/datum/basics/base-datum.model'
 import Bolus from './domains/models/medical/datum/bolus.model'
+import { BolusSubtype } from './domains/models/medical/datum/enums/bolus-subtype.enum'
 import Cbg, { BgUnit, MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/cbg.model'
 import ConfidentialMode from './domains/models/medical/datum/confidential-mode.model'
 import DeviceParameterChange, { Parameter } from './domains/models/medical/datum/device-parameter-change.model'
@@ -39,7 +40,12 @@ import Message from './domains/models/medical/datum/message.model'
 import PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
 import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
 import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
-import PumpSettings, { CgmConfig, DeviceConfig, ParameterConfig, PumpConfig } from './domains/models/medical/datum/pump-settings.model'
+import PumpSettings, {
+  CgmConfig,
+  DeviceConfig,
+  ParameterConfig,
+  PumpConfig
+} from './domains/models/medical/datum/pump-settings.model'
 import ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
 import Smbg from './domains/models/medical/datum/smbg.model'
 import Source from './domains/models/medical/datum/enums/source.enum'
@@ -53,7 +59,7 @@ import { BgClasses, defaultMedicalDataOptions, TimePrefs } from './domains/model
 import * as TimeService from './domains/repositories/time/time.service'
 
 export {
-  Basal, BaseDatum, BgClasses, BgUnit, Bolus, Cbg, CgmConfig, ConfidentialMode, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
+  Basal, BaseDatum, BgClasses, BgUnit, Bolus, BolusSubtype, Cbg, CgmConfig, ConfidentialMode, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
   Parameter, ParameterConfig, PhysicalActivity, Prescriptor, PumpManufacturer, PumpConfig, PumpSettings, ReservoirChange, Smbg, Source, TimePrefs, Unit, Upload, Wizard, ZenMode,
   defaultMedicalDataOptions, TimeService, MGDL_UNITS, MMOLL_UNITS, convertBG
 }

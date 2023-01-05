@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ import Bolus, { isBolusSubType } from '../../../models/medical/datum/bolus.model
 import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { BolusSubtype } from '../../../models/medical/datum/enums/bolus-subtype.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Bolus => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -38,7 +39,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const bolus: Bolus = {
     ...base,
     type: 'bolus',
-    subType: rawData.subType,
+    subType: rawData.subType as BolusSubtype,
     uploadId: rawData.uploadId as string,
     normal: rawData.normal as number,
     prescriptor: rawData.prescriptor as string,

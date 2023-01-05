@@ -25,34 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import Wizard from './wizard.model'
-import { BolusSubtype } from './enums/bolus-subtype.enum'
-
-// const bolusSubTypes = ['normal', 'biphasic', 'pen', 'dual/square', 'square'] as const
-// type BolusSubType = typeof bolusSubTypes[number]
-
-function isBolusSubType(value: unknown): boolean {
-  return Object.values(BolusSubtype).includes(value as BolusSubtype)
-  // if (typeof value === 'string') {
-  //   return Object.values(BolusSubtype).includes(value as BolusSubtype)
-  // return bolusSubTypes.includes(value as BolusSubType)
-  // }
-  // return false
+export enum BolusSubtype {
+  DualSquare = 'dual/square',
+  Biphasic = 'biphasic',
+  Normal = 'normal',
+  Pen = 'pen',
+  Square = 'square'
 }
-
-type Bolus = BaseDatum & {
-  type: 'bolus'
-  subType: BolusSubtype
-  uploadId: string
-  normal: number
-  prescriptor: string
-  wizard: Wizard | null
-  expectedNormal?: number
-  insulinOnBoard?: number
-  part?: string
-  biphasicId?: string
-}
-
-export default Bolus
-export { isBolusSubType }

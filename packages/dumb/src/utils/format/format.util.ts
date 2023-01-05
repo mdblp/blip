@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import { convertBG, TimePrefs, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
 import { BgClass, BgPrefs } from '../../models/blood-glucose.model'
+import { min } from 'lodash'
 
 const t = i18next.t.bind(i18next)
 
@@ -39,6 +40,9 @@ const BG_LOW_LABEL_KEY = 'Low'
 
 const EXPONENTIAL_LOW_VALUE = 1e-2
 const EXPONENTIAL_HIGH_VALUE = 9999
+
+const NO_DECIMAL_LENGTH = 1
+const DEFAULT_DECIMAL_LENGTH = 2
 
 export const formatInputTime = (utcTime: string, timePrefs: TimePrefs): string => {
   return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat())
@@ -130,4 +134,19 @@ export const formatDecimalNumber = (val: number, places = 0): string => {
     return format('d')(val)
   }
   return format(`.${places}f`)(val)
+}
+
+export const formatInsulin = (value: number): string => {
+  const decimalLength = getDecimalLength(value)
+  return formatDecimalNumber(value, decimalLength)
+}
+
+const getDecimalLength = (value: number): number => {
+  const valueString = value.toString()
+
+  if (!valueString.includes('.')) {
+    return NO_DECIMAL_LENGTH
+  }
+  const length = valueString.split('.')[1].length
+  return min([length, DEFAULT_DECIMAL_LENGTH]) as number
 }
