@@ -72,6 +72,12 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     textTransform: 'capitalize',
     width: 136
   },
+  link: {
+    textTransform: 'capitalize',
+    fontFamily: 'MuseoSlab',
+    paddingTop: theme.spacing(1),
+    fontSize: '1.125rem'
+  },
   heading: {
     fontFamily: 'MuseoSlab',
     fontSize: '1.5rem',
@@ -88,8 +94,12 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     flexDirection: 'column',
     height: '100%',
     justifyContent: 'center',
-    paddingInline: theme.spacing(10),
-    width: '45%'
+    paddingLeft: theme.spacing(10),
+    paddingRight: theme.spacing(8),
+    width: '45%',
+    [theme.breakpoints.down('lg')]: {
+      width: '55%'
+    }
   },
   hoverable: {
     fontWeight: 'bold',
@@ -100,30 +110,9 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     }
   },
   laptopImage: {
-    position: 'absolute',
-    width: 800,
-    right: '6%',
-    top: 'calc(50% - 250px)'
-  },
-  link: {
-    color: 'var(--logo-color)',
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    marginTop: theme.spacing(2),
-    '&:hover': {
-      color: LOGO_COLOR_LIGHT
-    }
-  },
-  loginButton: {
-    backgroundColor: 'var(--logo-color)',
-    '&:hover': {
-      backgroundColor: LOGO_COLOR_LIGHT
-    }
-  },
-  registerButton: {
-    backgroundColor: 'var(--text-base-color-light)',
-    '&:hover': {
-      backgroundColor: '#2e2e2d'
+    width: '720px',
+    [theme.breakpoints.down('lg')]: {
+      width: '550px'
     }
   }
 }))
@@ -133,7 +122,7 @@ const LoginPage: FunctionComponent = () => {
   const { t, i18n } = useTranslation()
   const history = useHistory()
   const alert = useAlert()
-  const { classes, theme, cx } = styles()
+  const { classes, theme } = styles()
 
   const redirectToSignup = async (): Promise<void> => await loginWithRedirect({ screen_hint: 'signup' })
 
@@ -174,10 +163,10 @@ const LoginPage: FunctionComponent = () => {
             <Box display="flex">
               <Button
                 data-testid="register-button"
-                variant="contained"
+                variant="outlined"
                 disableElevation
                 onClick={redirectToSignup}
-                className={cx(classes.button, classes.registerButton)}
+                className={classes.button}
               >
                 {t('register')}
               </Button>
@@ -186,7 +175,7 @@ const LoginPage: FunctionComponent = () => {
                 variant="contained"
                 disableElevation
                 onClick={loginWithRedirect}
-                className={cx(classes.button, classes.loginButton)}
+                className={classes.button}
               >
                 {t('connect')}
               </Button>
@@ -221,24 +210,29 @@ const LoginPage: FunctionComponent = () => {
         position="relative"
       >
         <img src={loginPageBackground} alt={t('alt-img-login-page-background')} className={classes.backgroundImage} />
-        <img src={loginPageLaptop} alt={t('alt-img-login-page-laptop')} className={classes.laptopImage} />
-        <Box className={classes.infoContainer} data-testid="info-container">
-          <Box className={classes.heading} data-testid="login-page-title">
-            <Box color="var(--logo-color)" component="span">YourLoops</Box> {t('login-page-title')}
+
+        <Box display="flex" height="100%">
+          <Box className={classes.infoContainer} data-testid="info-container">
+            <Box className={classes.heading} data-testid="login-page-title">
+              <Box color="var(--logo-color)" component="span">YourLoops</Box> {t('login-page-title')}
+            </Box>
+            <p className={classes.info}>{t('login-page-info-1')}</p>
+            <p className={classes.info}>{t('login-page-info-2')}</p>
+            <p className={classes.info}>{t('login-page-info-3')}</p>
+            {i18n.language !== LanguageCodes.fr &&
+              <Link
+                underline="none"
+                href={diabeloopExternalUrls.dblDiabetes}
+                target="_blank"
+                rel="nofollow"
+              >
+               <Typography className={classes.link}>{t('learn-more')}</Typography>
+              </Link>
+            }
           </Box>
-          <p className={classes.info}>{t('login-page-info-1')}</p>
-          <p className={classes.info}>{t('login-page-info-2')}</p>
-          <p className={classes.info}>{t('login-page-info-3')}</p>
-          {i18n.language !== LanguageCodes.fr &&
-            <Link
-              className={classes.link}
-              href={diabeloopExternalUrls.dblDiabetes}
-              target="_blank"
-              rel="nofollow"
-            >
-              {t('learn-more')}
-            </Link>
-          }
+          <Box display="flex" justifyContent="center" alignItems="center" flexGrow={1}>
+            <img src={loginPageLaptop} alt={t('alt-img-login-page-laptop')} className={classes.laptopImage} />
+          </Box>
         </Box>
       </Box>
     </Box>
