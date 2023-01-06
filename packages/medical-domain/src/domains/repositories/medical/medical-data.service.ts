@@ -27,9 +27,7 @@
 
 import { MGDL_UNITS } from '../../models/medical/datum/cbg.model'
 import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
-import DeviceParameterChange, {
-  Parameter as DeviceParameterChangeParameter
-} from '../../models/medical/datum/device-parameter-change.model'
+import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
 import Fill from '../../models/medical/datum/fill.model'
 import MedicalData from '../../models/medical/medical-data.model'
 import Message from '../../models/medical/datum/message.model'
@@ -73,11 +71,7 @@ import {
   toISOString,
   twoWeeksAgo
 } from '../time/time.service'
-import PumpSettings, { Parameter as PumpSettingsParameter, ParameterConfig } from '../../models/medical/datum/pump-settings.model'
-import Unit from '../../models/medical/datum/enums/unit.enum'
-import { convertBG } from './datum/cbg.service'
-
-interface UnitValuePair { unit: Unit | string, value: string}
+import PumpSettings from '../../models/medical/datum/pump-settings.model'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -210,8 +204,8 @@ class MedicalDataService {
     return this._datumOpts.timezoneName
   }
 
-  add(rawData: Array<Record<string, unknown>>, bgUnit: Unit): void {
-    this.normalize(rawData, bgUnit)
+  add(rawData: Array<Record<string, unknown>>): void {
+    this.normalize(rawData)
     this.deduplicate()
     this.join()
     this.setTimeZones()
@@ -280,28 +274,7 @@ class MedicalDataService {
     return normalizedMessage
   }
 
-  getConvertedParamUnitAndValue(paramUnit: Unit | string, paramValue: string, bgUnitExpected: Unit): UnitValuePair {
-    if ((paramUnit === Unit.MilligramPerDeciliter || paramUnit === Unit.MmolPerLiter) && paramUnit !== bgUnitExpected) {
-      const valueAsNumber = Number(paramValue)
-      if (!isNaN(valueAsNumber)) {
-        return { unit: bgUnitExpected, value: convertBG(valueAsNumber, paramUnit).toString() }
-      }
-    }
-    return { unit: paramUnit, value: paramValue }
-  }
-
-  getParamWithCorrectBgUnit(param: ParameterConfig | PumpSettingsParameter, bgUnit: Unit): ParameterConfig | PumpSettingsParameter {
-    const { unit, value } = this.getConvertedParamUnitAndValue(param.unit, param.value, bgUnit)
-    return { ...param, unit, value }
-  }
-
-  getDeviceParamWithCorrectBgUnit(param: DeviceParameterChangeParameter, bgUnit: Unit): DeviceParameterChangeParameter {
-    const { unit, value } = this.getConvertedParamUnitAndValue(param.units, param.value, bgUnit)
-    const { value: previousValue } = this.getConvertedParamUnitAndValue(param.units, param.previousValue, bgUnit)
-    return { ...param, units: unit as Unit, value, previousValue }
-  }
-
-  private normalize(rawData: Array<Record<string, unknown>>, bgUnit: Unit): void {
+  private normalize(rawData: Array<Record<string, unknown>>): void {
     rawData.forEach(raw => {
       try {
         const datum = DatumService.normalize(raw, this._datumOpts)
@@ -321,9 +294,6 @@ class MedicalDataService {
                 this.medicalData.confidentialModes.push(datum as ConfidentialMode)
                 break
               case 'deviceParameter':
-                (datum as DeviceParameterChange).params = (datum as DeviceParameterChange).params.map(param => {
-                  return this.getDeviceParamWithCorrectBgUnit(param, bgUnit)
-                })
                 this.medicalData.deviceParametersChanges.push(datum as DeviceParameterChange)
                 break
               case 'reservoirChange':
@@ -349,15 +319,6 @@ class MedicalDataService {
             this.medicalData.physicalActivities.push(datum)
             break
           case 'pumpSettings':
-            datum.payload.parameters = datum.payload.parameters.map(param => {
-              return this.getParamWithCorrectBgUnit(param, bgUnit)
-            })
-            datum.payload.history = datum.payload.history.map(parameterChange => {
-              parameterChange.parameters = parameterChange.parameters.map(param => {
-                return this.getParamWithCorrectBgUnit(param, bgUnit)
-              }) as PumpSettingsParameter[]
-              return parameterChange
-            })
             this.medicalData.pumpSettings.push(datum)
             break
           case 'smbg':

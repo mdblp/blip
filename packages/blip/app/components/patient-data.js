@@ -954,7 +954,7 @@ class PatientDataPage extends React.Component {
         defaultPumpManufacturer: 'default'
       }
     }
-    medicalData.add(data, bgPrefs.bgUnits)
+    medicalData.add(data)
 
     if (medicalData.data.length === 0) {
       this.props.api.metrics.endTimer('process_data')

@@ -40,7 +40,6 @@ import createRandomDatum from './models/data-generator'
 import BasicData, * as BasiscsDataService from '../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../src/domains/repositories/time/time.service'
 import crypto from 'crypto'
-import { Unit } from '../src'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {
@@ -461,58 +460,6 @@ describe('MedicalDataService', () => {
         end - 2, tz
       )
       expect(twoWeeksAgoMock).toHaveBeenCalledWith(end - 1, tz)
-    })
-  })
-  describe('getConvertedParamUnitAndValue', () => {
-    const medicalDataService = new MedicalDataService()
-
-    it('should return given param when unit is neither mg/dL nor mmol/L', () => {
-      const value = '90'
-      const unit = Unit.Percent
-
-      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MmolPerLiter)
-
-      expect(receivedParam).toEqual({ unit, value })
-    })
-
-    it('should return given param when unit is not mg/dL and expected unit is mg/dL', () => {
-      const value = '90'
-      const unit = Unit.MilligramPerDeciliter
-
-      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MilligramPerDeciliter)
-
-      expect(receivedParam).toEqual({ unit, value })
-    })
-
-    it('should return given param when value is not a number', () => {
-      const value = 'this is not a number'
-      const unit = Unit.MilligramPerDeciliter
-
-      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MmolPerLiter)
-
-      expect(receivedParam).toEqual({ unit, value })
-    })
-
-    it('should convert given param to mmol/L when given mg/dL', () => {
-      const value = '120'
-      const unit = Unit.MilligramPerDeciliter
-      const expectedValue = '6.7'
-      const expectedUnit = Unit.MmolPerLiter
-
-      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MmolPerLiter)
-
-      expect(receivedParam).toEqual({ unit: expectedUnit, value: expectedValue })
-    })
-
-    it('should convert given param to mg/dL when given mmol/L', () => {
-      const value = '6.7'
-      const unit = Unit.MmolPerLiter
-      const expectedValue = '121'
-      const expectedUnit = Unit.MilligramPerDeciliter
-
-      const receivedParam = medicalDataService.getConvertedParamUnitAndValue(unit, value, Unit.MilligramPerDeciliter)
-
-      expect(receivedParam).toEqual({ unit: expectedUnit, value: expectedValue })
     })
   })
 })
