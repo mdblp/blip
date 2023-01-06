@@ -43,7 +43,7 @@ import userEvent from '@testing-library/user-event'
 import { Profile } from '../../../../lib/auth/models/profile.model'
 import { Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
-import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
+import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
@@ -69,7 +69,7 @@ describe('Caregiver page for hcp', () => {
     country: CountryCodes.France,
     units: { bg: UnitsType.MMOLL }
   }
-  const preferences: Preferences = { displayLanguageCode: LanguageCodes.fr }
+  const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
   const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
 
   beforeAll(() => {

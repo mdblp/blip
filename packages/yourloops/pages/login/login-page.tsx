@@ -47,7 +47,7 @@ import { GlobalStyles } from 'tss-react'
 import { useAlert } from '../../components/utils/snackbar'
 import Button from '@mui/material/Button'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
+import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 
 const LOGO_COLOR_LIGHT = '#40BAE9'
 
@@ -219,7 +219,7 @@ const LoginPage: FunctionComponent = () => {
             <p className={classes.info}>{t('login-page-info-1')}</p>
             <p className={classes.info}>{t('login-page-info-2')}</p>
             <p className={classes.info}>{t('login-page-info-3')}</p>
-            {i18n.language !== LanguageCodes.fr &&
+            {i18n.language !== LanguageCodes.Fr &&
               <Link
                 underline="none"
                 href={diabeloopExternalUrls.dblDiabetes}

@@ -42,7 +42,7 @@ import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
-import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
+import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 
 jest.mock('@auth0/auth0-react')
 
@@ -116,7 +116,7 @@ describe('Auth hook', () => {
   })
 
   describe('Updates', () => {
-    const updatedPreferences: Preferences = { displayLanguageCode: LanguageCodes.fr }
+    const updatedPreferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
     const updatedProfile: Profile = {
       ...profile,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
@@ -243,7 +243,7 @@ describe('Auth hook', () => {
     it('setFlagPatients should replace the currently flagged patient', async () => {
       const userId = '0123456789'
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({
-        displayLanguageCode: LanguageCodes.fr,
+        displayLanguageCode: LanguageCodes.Fr,
         patientsStarred: [userId]
       })
       jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce(Promise.resolve({
@@ -274,7 +274,7 @@ describe('Auth hook', () => {
         profileFirstname: 'Tim',
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
-        preferencesLanguage: LanguageCodes.fr,
+        preferencesLanguage: LanguageCodes.Fr,
         profileCountry: CountryCodes.France,
         terms: true,
         privacyPolicy: true,
@@ -298,7 +298,7 @@ describe('Auth hook', () => {
       expect(auth.user.profile.termsOfUse.isAccepted).toBeTruthy()
       expect(auth.user.profile.privacyPolicy.isAccepted).toBeTruthy()
       expect(auth.user.profile.contactConsent.isAccepted).toBeTruthy()
-      expect(auth.user.preferences.displayLanguageCode).toEqual(LanguageCodes.fr)
+      expect(auth.user.preferences.displayLanguageCode).toEqual(LanguageCodes.Fr)
       expect(auth.user.settings.country).toEqual(CountryCodes.France)
     })
   })

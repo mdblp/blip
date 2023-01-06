@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { LanguageCodes } from '../../../lib/auth/models/language-codes.model'
+import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 
 export interface ProfileForm {

@@ -38,7 +38,7 @@ import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { ProfileFormKey } from '../../../../pages/profile/models/enums/profile-form-key.enum'
-import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
+import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/patient/patient.provider')
@@ -72,7 +72,7 @@ describe('Profile page context hook', () => {
     country: CountryCodes.France,
     units: { bg: UnitsType.MMOLL }
   }
-  const preferences: Preferences = { displayLanguageCode: LanguageCodes.fr }
+  const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
   const onSuccessAlertMock = jest.fn()
   const onErrorAlertMock = jest.fn()
   const updateProfileMock = jest.fn()

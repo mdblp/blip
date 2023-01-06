@@ -26,11 +26,11 @@
  */
 
 export enum LanguageCodes {
-  en = 'en',
-  de = 'de',
-  es = 'es',
-  fr = 'fr',
-  it = 'it',
-  nl = 'nl',
-  jp = 'jp'
+  De = 'de',
+  En = 'en',
+  Es = 'es',
+  Fr = 'fr',
+  It = 'it',
+  Nl = 'nl',
+  Jp = 'jp'
 }
