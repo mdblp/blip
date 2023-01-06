@@ -55,6 +55,7 @@ import {
   TRAINING_PATH
 } from '../lib/diabeloop-urls.model'
 import VerifyEmailPage from '../pages/login/verify-email-page'
+import Box from '@mui/material/Box'
 
 const muiCache = createCache({
   key: 'mui',
@@ -118,16 +119,18 @@ export function MainLobby(): JSX.Element {
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
-                  <Switch>
-                    <Route exact path="/product-labelling" component={ProductLabellingPage} />
-                    <Route exact path="/login" component={LoginPage} />
-                    <Route exact path="/complete-signup" component={CompleteSignUpPage} />
-                    <Route exact path="/renew-consent" component={ConsentPage} />
-                    <Route exact path="/new-consent" component={PatientConsentPage} />
-                    <Route exact path="/training" component={TrainingPage} />
-                    <Route exact path="/verify-email" component={VerifyEmailPage} />
-                    <Route component={MainLayout} />
-                  </Switch>
+                  <Box>
+                    <Switch>
+                      <Route exact path="/product-labelling" component={ProductLabellingPage} />
+                      <Route exact path="/login" component={LoginPage} />
+                      <Route exact path="/complete-signup" component={CompleteSignUpPage} />
+                      <Route exact path="/renew-consent" component={ConsentPage} />
+                      <Route exact path="/new-consent" component={PatientConsentPage} />
+                      <Route exact path="/training" component={TrainingPage} />
+                      <Route exact path="/verify-email" component={VerifyEmailPage} />
+                      <Route component={MainLayout} />
+                    </Switch>
+                  </Box>
                 </SnackbarContextProvider>
                 <Footer />
               </ThemeProvider>

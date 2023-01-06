@@ -138,7 +138,7 @@ const LoginPage: FunctionComponent = () => {
   }, [error])
 
   return (
-    <Box>
+    <React.Fragment>
       <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       <AppBar
         data-testid="login-page-header"
@@ -235,7 +235,7 @@ const LoginPage: FunctionComponent = () => {
           </Box>
         </Box>
       </Box>
-    </Box>
+    </React.Fragment>
   )
 }
 
