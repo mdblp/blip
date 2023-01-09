@@ -35,7 +35,8 @@ import {
   PHYSICAL_ACTIVITY_ID,
   PHYSICAL_ACTIVITY_TIME,
   RESERVOIR_CHANGE_ID,
-  SMBG_ID
+  SMBG_ID,
+  WIZARD_INPUT_TIME
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats'
@@ -64,7 +65,7 @@ export const checkDailyTidelineContainerTooltips = async () => {
   await checkTidelineContainerElementTooltip('poolBG_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip('poolBolus_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip('poolBasal_confidential_group', 'Confidential mode')
-  await checkTidelineContainerElementTooltip(`wizard_group_${CARB_ID1}`, '8:25 pmMealCarbs45gHigh fat mealEntered at 4:00 amLoop modeBolus TypeStandardDelivered1.3U')
+  await checkTidelineContainerElementTooltip(`wizard_group_${CARB_ID1}`, `8:25 pmMealCarbs45gHigh fat mealEntered at ${moment(WIZARD_INPUT_TIME).format('h')}:00 amLoop modeBolus TypeStandardDelivered1.3U`)
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID2}`, '2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymediumDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmCartridge change')
