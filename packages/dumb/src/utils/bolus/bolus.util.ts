@@ -82,8 +82,8 @@ export const getRecommended = (wizard: Wizard): number => {
     return netRecommendation
   }
 
-  const carbValue = wizard.recommended.carb || 0
-  const correctionValue = wizard.recommended.correction || 0
+  const carbValue: number = wizard.recommended.carb || 0
+  const correctionValue: number = wizard.recommended.correction || 0
   const recommendation = carbValue + correctionValue
 
   return fixFloatingPoint(recommendation)
