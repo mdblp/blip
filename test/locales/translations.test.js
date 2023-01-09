@@ -70,6 +70,7 @@ const ignoredTransKeysForBlip = [
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',
   'bolus_${bolusType}',
+  'bolus_${bolusSubType}',
   'params|${parameter.name}',
   'params|${row.name}'
 ]
@@ -146,7 +147,7 @@ const ignoredTransKeyForYourLoops = [
   'optional',
   'training-body',
   'login',
-  'refresh'
+  'refresh',
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
