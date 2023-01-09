@@ -38,6 +38,7 @@ import Header from './header'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
+  BolusTooltip,
   ConfidentialTooltip,
   FoodTooltip,
   ParameterTooltip,
@@ -52,7 +53,6 @@ import {
  */
 
 const Loader = vizComponents.Loader
-const BolusTooltip = vizComponents.BolusTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 /**

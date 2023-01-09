@@ -30,6 +30,7 @@ import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { BolusSubtype } from '../../../models/medical/datum/enums/bolus-subtype.enum'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Bolus => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -38,7 +39,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   }
   const bolus: Bolus = {
     ...base,
-    type: 'bolus',
+    type: DatumType.Bolus,
     subType: rawData.subType as BolusSubtype,
     uploadId: rawData.uploadId as string,
     normal: rawData.normal as number,

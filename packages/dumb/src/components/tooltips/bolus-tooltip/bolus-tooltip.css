@@ -25,8 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum BolusSubtype {
-  Biphasic = 'biphasic',
-  Normal = 'normal',
-  Pen = 'pen',
+.container {
+  composes: containerFlex from '../../../styles/tooltip-common.css';
+  min-width: 160px;
+}
+
+.units {
+  composes: units from '../../../styles/tooltip-common.css';
+  margin-left: 10px;
+}
+
+.colorUndelivered {
+  color: var(--bolus-undelivered);
+}
+
+.dividerSmall {
+  background-color: var(--bolus);
+  height: 2px;
+  margin: 5px -10px;
 }

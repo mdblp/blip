@@ -25,8 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum BolusSubtype {
-  Biphasic = 'biphasic',
-  Normal = 'normal',
-  Pen = 'pen',
+export enum DatumType {
+  Basal = 'basal',
+  Bolus = 'bolus',
+  Cbg = 'cbg',
+  DeviceEvent = 'deviceEvent',
+  Fill = 'fill',
+  Food = 'food',
+  Message = 'message',
+  PhysicalActivity = 'physicalActivity',
+  PumpSettings = 'pumpSettings',
+  Smbg = 'smbg',
+  Upload = 'upload',
+  Wizard = 'wizard'
 }

@@ -25,112 +25,74 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Bolus, BolusSubtype, Prescriptor, Wizard } from 'medical-domain'
+import { Bolus, BolusSubtype, DatumType, Prescriptor, Wizard } from 'medical-domain'
 import { BolusType } from '../../models/enums/bolus-type.enum'
-import _, { inRange } from 'lodash'
+import { inRange } from 'lodash'
+import { formatDecimalNumber } from '../format/format.util'
 
 const DEFAULT_PROGRAMMED_VALUE = 0
 
-export const getBolusType = (bolus: Bolus | Wizard): BolusType => {
-  if (bolus.type === 'wizard') {
+export const getBolusType = (insulinEvent: Bolus | Wizard): BolusType => {
+  if (insulinEvent.type === DatumType.Wizard) {
     return BolusType.Meal
   }
-  // FIXME this case should never happen? (wizard data would go in 1st return case)
-  const bolusFromInsulinEvent = getBolusFromInsulinEvent(bolus)
-  if (bolusFromInsulinEvent?.subType === BolusSubtype.Pen || bolusFromInsulinEvent?.prescriptor === Prescriptor.Manual) {
+  const bolus = getBolusFromInsulinEvent(insulinEvent)
+  if (bolus?.subType === BolusSubtype.Pen || bolus?.prescriptor === Prescriptor.Manual) {
     return BolusType.Manual
   }
-  if (bolusFromInsulinEvent?.subType === BolusSubtype.Biphasic) {
+  if (bolus?.subType === BolusSubtype.Biphasic) {
     return BolusType.Meal
   }
   return BolusType.Micro
 }
 
-export const getDelivered = (insulinEvent: Bolus | Wizard): number => {
-  if (insulinEvent.type === 'wizard') {
-    const bolus = getBolusFromInsulinEvent(insulinEvent)
-    // FIXME no "bolus.extended" case because not present in Bolus model
-    if (!bolus?.normal || !inRange(bolus?.normal, Infinity)) {
-      return Number.NaN
-    }
-    return bolus.normal
+export const getDelivered = (bolus: Bolus): number => {
+  if (!bolus?.normal || !inRange(bolus?.normal, Infinity)) {
+    return Number.NaN
   }
-  // if (Number.isFinite(bolus.extended)) {
-  //
-  // }
-  return insulinEvent.normal
+  return bolus.normal
 }
 
-export const isInterruptedBolus = (insulinEvent: Bolus | Wizard): boolean => {
-  const bolus = getBolusFromInsulinEvent(insulinEvent)
-
+export const isInterruptedBolus = (bolus: Bolus): boolean => {
   const cancelledDuringNormal = Number.isFinite(bolus?.normal) &&
     Number.isFinite(bolus?.expectedNormal) &&
     bolus?.normal !== bolus?.expectedNormal
 
-  // FIXME no "bolus.expectedExtended" in Bolus model
-  // const cancelledDuringExtended = Boolean(
-  //   Number.isFinite(bolus?.extended) &&
-  //   Number.isFinite(bolus?.expectedExtended) &&
-  //   bolus?.extended !== bolus?.expectedExtended
-  // )
-
-  if (bolus?.normal && _.inRange(bolus?.normal, Infinity)) {
-    // if (!bolus?.extended) {
-    //   return cancelledDuringNormal
-    // }
-    // return cancelledDuringNormal || cancelledDuringExtended
+  if (inRange(bolus?.normal, Infinity)) {
     return cancelledDuringNormal
   }
-  // FIXME set default value
   return false
-  // return cancelledDuringExtended
 }
 
 export const getProgrammed = (bolus?: Bolus): number | undefined => {
   if (!bolus) {
     return DEFAULT_PROGRAMMED_VALUE
   }
-  // if (insulinEvent.type === 'wizard') {
-  //   const bolus = getBolusFromInsulinEvent(insulinEvent)
-  //   // if (!(Number.isFinite(bolus?.normal) || Number.isFinite(bolus.extended))) {
-  //   if (!(Number.isFinite(bolus?.normal))) {
-  //     return Number.NaN
-  //   }
-  // }
-  // if (Number.isFinite(insulinEvent.extended) && Number.isFinite(insulinEvent.expectedExtended)) {
-  //   if (Number.isFinite(insulinEvent.normal)) {
-  //     if (Number.isFinite(insulinEvent.expectedNormal)) {
-  //       return fixFloatingPoint(insulinEvent.expectedNormal + insulinEvent.expectedExtended)
-  //     }
-  //     return fixFloatingPoint(insulinEvent.normal + insulinEvent.expectedExtended)
-  //   }
-  //   return insulinEvent.expectedExtended
-  // } else if (Number.isFinite(insulinEvent.extended)) {
-  // if (Number.isFinite(insulinEvent.extended)) {
-  //   if (Number.isFinite(insulinEvent.normal)) {
-  //     if (Number.isFinite(insulinEvent.expectedNormal)) {
-  //       // this situation should not exist!
-  //       throw new Error(
-  //         'Combo bolus found with a cancelled `normal` portion and non-cancelled `extended`!'
-  //       )
-  //     }
-  //     return fixFloatingPoint(insulinEvent.normal + insulinEvent.extended)
-  //   }
-  //   return insulinEvent.extended
-  // }
+
   return Number.isFinite(bolus.expectedNormal) ? bolus.expectedNormal : bolus.normal
 }
 
-// FIXME no recommended field in Bolus/Wizard, feature removed?
-// export const getRecommended = (insulinEvent: Bolus | Wizard): number => {
-//   if (!insulinEvent.recommended) {
-//     return Number.NaN
-//   }
-//   const netRecommendation =
-// }
+export const getRecommended = (wizard: Wizard): number => {
+  if (!wizard.recommended) {
+    return Number.NaN
+  }
 
-const getBolusFromInsulinEvent = (insulinEvent: Bolus | Wizard): Bolus | null => {
-  return insulinEvent.type === 'wizard' ? insulinEvent.bolus : insulinEvent
-  // return insulinEvent.bolus || insulinEvent
+  const netRecommendation = wizard.recommended?.net || null
+  if (netRecommendation !== null) {
+    return netRecommendation
+  }
+
+  const carbValue = wizard.recommended.carb || 0
+  const correctionValue = wizard.recommended.correction || 0
+  const recommendation = carbValue + correctionValue
+
+  return fixFloatingPoint(recommendation)
+}
+
+export const getBolusFromInsulinEvent = (insulinEvent: Bolus | Wizard): Bolus | null => {
+  return insulinEvent.type === DatumType.Wizard ? (insulinEvent as Wizard).bolus : (insulinEvent as Bolus)
+}
+
+const fixFloatingPoint = (value: number): number => {
+  return Number.parseFloat(formatDecimalNumber(value, 3))
 }

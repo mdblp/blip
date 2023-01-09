@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,13 +27,7 @@
 
 import Source from '../enums/source.enum'
 import BaseTime from './base-time.model'
-
-const datumTypes = [
-  'upload', 'cbg', 'pumpSettings', 'basal', 'bolus', 'deviceEvent',
-  'fill', 'food', 'message', 'smbg', 'physicalActivity', 'wizard'
-] as const
-
-type DatumType = typeof datumTypes[number]
+import { DatumType } from '../enums/datum-type.enum'
 
 type BaseDatum = BaseTime & {
   id: string
@@ -42,4 +36,3 @@ type BaseDatum = BaseTime & {
 }
 
 export default BaseDatum
-export { DatumType, datumTypes }

@@ -32,6 +32,7 @@ import Bolus from './domains/models/medical/datum/bolus.model'
 import { BolusSubtype } from './domains/models/medical/datum/enums/bolus-subtype.enum'
 import Cbg, { BgUnit, MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/cbg.model'
 import ConfidentialMode from './domains/models/medical/datum/confidential-mode.model'
+import { DatumType } from './domains/models/medical/datum/enums/datum-type.enum'
 import DeviceParameterChange, { Parameter } from './domains/models/medical/datum/device-parameter-change.model'
 import { DurationValue } from './domains/models/medical/datum/basics/duration.model'
 import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
@@ -52,6 +53,7 @@ import Source from './domains/models/medical/datum/enums/source.enum'
 import Unit from './domains/models/medical/datum/enums/unit.enum'
 import Upload from './domains/models/medical/datum/upload.model'
 import Wizard from './domains/models/medical/datum/wizard.model'
+import { WizardInputMealFat } from './domains/models/medical/datum/enums/wizard-input-meal-fat.enum'
 import ZenMode from './domains/models/medical/datum/zen-mode.model'
 import MedicalDataService from './domains/repositories/medical/medical-data.service'
 import { convertBG } from './domains/repositories/medical/datum/cbg.service'
@@ -59,8 +61,8 @@ import { BgClasses, defaultMedicalDataOptions, TimePrefs } from './domains/model
 import * as TimeService from './domains/repositories/time/time.service'
 
 export {
-  Basal, BaseDatum, BgClasses, BgUnit, Bolus, BolusSubtype, Cbg, CgmConfig, ConfidentialMode, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
-  Parameter, ParameterConfig, PhysicalActivity, Prescriptor, PumpManufacturer, PumpConfig, PumpSettings, ReservoirChange, Smbg, Source, TimePrefs, Unit, Upload, Wizard, ZenMode,
+  Basal, BaseDatum, BgClasses, BgUnit, Bolus, BolusSubtype, Cbg, CgmConfig, ConfidentialMode, DatumType, Datum, DeviceConfig, DeviceParameterChange, DurationValue, DurationUnit, Meal, Message,
+  Parameter, ParameterConfig, PhysicalActivity, Prescriptor, PumpManufacturer, PumpConfig, PumpSettings, ReservoirChange, Smbg, Source, TimePrefs, Unit, Upload, Wizard, WizardInputMealFat, ZenMode,
   defaultMedicalDataOptions, TimeService, MGDL_UNITS, MMOLL_UNITS, convertBG
 }
 

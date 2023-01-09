@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum BolusSubtype {
-  Biphasic = 'biphasic',
-  Normal = 'normal',
-  Pen = 'pen',
+export enum WizardInputMealFat {
+  No = 'no',
+  Yes = 'yes'
 }

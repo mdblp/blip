@@ -26,10 +26,17 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { Bolus, Prescriptor, TimePrefs, Wizard } from 'medical-domain'
+import { Bolus, DatumType, Prescriptor, TimePrefs, Wizard, WizardInputMealFat } from 'medical-domain'
 import { Tooltip } from '../../../index'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
-import { getBolusType, getDelivered, getProgrammed, isInterruptedBolus } from '../../../utils/bolus/bolus.util'
+import {
+  getBolusFromInsulinEvent,
+  getBolusType,
+  getDelivered,
+  getProgrammed,
+  getRecommended,
+  isInterruptedBolus
+} from '../../../utils/bolus/bolus.util'
 import { BolusType } from '../../../models/enums/bolus-type.enum'
 import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
@@ -43,7 +50,9 @@ import {
   Position,
   Side
 } from '../tooltip/tooltip'
-import { formatInsulin } from '../../../utils/format/format.util'
+import { formatInputTime, formatInsulin } from '../../../utils/format/format.util'
+import styles from './bolus-tooltip.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 
 interface BolusTooltipProps {
   bolus: Bolus | Wizard
@@ -55,6 +64,32 @@ interface BolusTooltipProps {
 export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const { bolus, position, side, timePrefs } = props
   const { t } = useTranslation('main')
+
+  const isWizard = bolus.type === DatumType.Wizard
+
+  const bolusData = getBolusFromInsulinEvent(bolus)
+
+  // Common properties
+  const prescriptor = bolusData?.prescriptor
+  const shouldDisplayPrescriptor = prescriptor && prescriptor !== Prescriptor.Manual
+  const bolusSubType = bolusData?.subType
+  const iob = bolusData?.insulinOnBoard
+  const delivered = getDelivered(bolusData as Bolus)
+  const isInterrupted = isInterruptedBolus(bolusData as Bolus)
+  const programmed = getProgrammed(bolusData as Bolus) ?? 0
+  const undeliveredValue = programmed - delivered
+
+  // Wizard-specific properties
+  const carbs = (bolus as Wizard).carbInput
+  const fatMeal = (bolus as Wizard).inputMeal?.fat
+  const isFatMeal = fatMeal === WizardInputMealFat.Yes
+  const inputTime = (bolus as Wizard).inputTime
+  const recommended = getRecommended(bolus as Wizard)
+  const suggested = Number.isFinite(recommended) ? recommended : null
+  const override = programmed - recommended
+  const overrideValue = programmed > recommended ? `+${override}` : `-${override}`
+  const shouldDisplayOverride = Number.isFinite(programmed) && Number.isFinite(recommended) && programmed !== recommended
+  const shouldDisplayRecommended = (isInterrupted || shouldDisplayOverride) && suggested !== null
 
   const getTitleByBolusType = (bolusType: BolusType): string => {
     switch (bolusType) {
@@ -78,104 +113,6 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
     }
   }
 
-  const renderNormal = (bolus: Bolus): JSX.Element => {
-    const prescriptor = bolus.prescriptor
-    const bolusType = bolus.subType
-    const iob = bolus.insulinOnBoard
-    const delivered = getDelivered(bolus)
-    const isInterrupted = isInterruptedBolus(bolus)
-    const programmed = getProgrammed(bolus) ?? 0
-    const undeliveredValue = programmed - delivered
-
-    return (
-      <div className={styles.container} id="bolus-tooltip-content">
-        {iob &&
-          <div className={styles.iob} id="bolus-tooltip-line-iob">
-            <div className={styles.label} id="bolus-tooltip-line-iob-label">{t('IOB')}</div>
-            <div className={styles.value} id="bolus-tooltip-line-iob-value">{formatInsulin(iob)}</div>
-            <div className={styles.units} id="bolus-tooltip-line-iob-units">{t('U')}</div>
-          </div>
-        }
-        {prescriptor && prescriptor !== Prescriptor.Manual &&
-          <div className={styles.prescriptor} id="bolus-tooltip-line-prescriptor">
-            <div className={styles.label} id="bolus-tooltip-line-prescriptor-label">{t('Prescribed by Loop Mode')}</div>
-          </div>
-        }
-        {bolusType &&
-          <div className={styles.bolus} id="bolus-tooltip-line-type">
-            <div className={styles.label} id="bolus-tooltip-line-type-label">{t('bolus_type')}</div>
-            <div className={styles.value} id="bolus-tooltip-line-type-value">{t(`bolus_${bolusType}`)}</div>
-          </div>
-        }
-        {isInterrupted &&
-          <div className={styles.undelivered} id="bolus-tooltip-line-undelivered">
-            <div className={styles.label} id="bolus-tooltip-line-undelivered-label">{t('Undelivered')}</div>
-            <div className={styles.value} id="bolus-tooltip-line-undelivered-value">{undeliveredValue}</div>
-            <div className={styles.units} id="bolus-tooltip-line-undelivered-units">{t('U')}</div>
-          </div>
-        }
-        {Number.isFinite(delivered) &&
-          <div className={styles.delivered} id="bolus-tooltip-line-delivered">
-            <div className={styles.label} id="bolus-tooltip-line-delivered-label">{t('Delivered')}</div>
-            <div className={styles.value} id="bolus-tooltip-line-delivered-value">{`${formatInsulin(delivered)}`}</div>
-            <div className={styles.units} id="bolus-tooltip-line-delivered-units">{t('U')}</div>
-          </div>
-        }
-      </div>
-    )
-  }
-
-  const renderWizard = (wizard: Wizard): JSX.Element => {
-    // const recommended = bolusUtils.getRecommended(wizard)
-    // const suggested = _.isFinite(recommended) ? recommended : null
-    const prescriptor = wizard.bolus?.prescriptor
-    const inputTime = null
-    const bolusType = wizard.bolus?.subType
-    // FIXME no inputMeal on Wizard type
-    // const fatMeal = wizard.inputMeal.fat
-    // const fatMeal = _.get(wizard, 'inputMeal.fat', 'no')
-    const iob = wizard.bolus?.insulinOnBoard
-    const carbs = wizard.carbInput
-    const delivered = getDelivered(wizard)
-    const isInterrupted = isInterruptedBolus(wizard)
-    const programmed = getProgrammed(wizard.bolus)
-
-    const overrideLine = this.getOverrideLine(programmed, recommended)
-    const deliveredLine = this.getDeliveredLine(delivered)
-    const undeliveredLine = isInterrupted ? this.getUndeliveredLine(programmed - delivered) : null
-    // const recommendedLine = (isInterrupted || overrideLine !== null) && suggested !== null ? this.getRecommendedLine(suggested) : null
-    const carbsLine = this.getCarbsLine(carbs)
-
-    const iobLine = this.getIobLine(iob)
-    const bolusTypeLine = this.getBolusTypeLine(bolusType)
-    const prescriptorLine = this.getPrescriptorLine(prescriptor)
-
-    // const mealLine = this.getMealLine(fatMeal)
-    const inputLine = this.getInputTimeLine(inputTime, timePrefs)
-
-    return (
-      <div className={styles.container}>
-        {carbsLine}
-        {/*{mealLine}*/}
-        {inputLine}
-        {iobLine}
-        {(prescriptorLine || bolusTypeLine) && <div className={styles.dividerSmall} />}
-        {prescriptorLine}
-        {bolusTypeLine}
-        {/*{(overrideLine || recommendedLine) && <div className={styles.dividerSmall} />}*/}
-        {overrideLine && <div className={styles.dividerSmall} />}
-        {/*{recommendedLine}*/}
-        {overrideLine}
-        {undeliveredLine}
-        {deliveredLine}
-      </div>
-    )
-  }
-
-  const renderBolus = (): JSX.Element => {
-    return bolus.type === 'wizard' ? renderWizard() : renderNormal()
-  }
-
   const bolusType = getBolusType(bolus)
   const bolusTypeTitle = getTitleByBolusType(bolusType)
   const color = getColorByBolusType(bolusType)
@@ -192,7 +129,80 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       tail={DEFAULT_TOOLTIP_TAIL}
       offset={DEFAULT_TOOLTIP_OFFSET}
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
-      content={this.renderBolus()}
+      content={
+        <div className={styles.container} id="bolus-tooltip-content">
+          {isWizard && carbs &&
+            <div className={commonStyles.row} id="bolus-tooltip-line-carbs">
+              <div className={commonStyles.label} id="bolus-tooltip-line-carbs-label">{t('Carbs')}</div>
+              <div className={commonStyles.value} id="bolus-tooltip-line-carbs-value">{carbs}</div>
+              <div className={styles.units} id="bolus-tooltip-line-carbs-units">{t('g')}</div>
+            </div>
+          }
+          {isWizard && isFatMeal &&
+            <div className={commonStyles.row} id="bolus-tooltip-line-fat">
+              <div className={commonStyles.label} id="bolus-tooltip-line-fat-label">{t('High fat meal')}</div>
+            </div>
+          }
+          {isWizard && inputTime &&
+            <div className={commonStyles.row} id="bolus-tooltip-line-input">
+              <div className={commonStyles.label} id="bolus-tooltip-line-input-label">
+                {t('Entered at')} {formatInputTime(inputTime, timePrefs)}
+              </div>
+            </div>
+          }
+          {iob &&
+            <div className={commonStyles.row} id="bolus-tooltip-line-iob">
+              <div className={commonStyles.label} id="bolus-tooltip-line-iob-label">{t('IOB')}</div>
+              <div className={commonStyles.value} id="bolus-tooltip-line-iob-value">{formatInsulin(iob)}</div>
+              <div className={styles.units} id="bolus-tooltip-line-iob-units">{t('U')}</div>
+            </div>
+          }
+          {isWizard && (shouldDisplayPrescriptor ?? bolusSubType) && <div className={styles.dividerSmall} />}
+          {shouldDisplayPrescriptor &&
+            <div className={commonStyles.row} id="bolus-tooltip-line-prescriptor">
+              <div className={commonStyles.label}
+                   id="bolus-tooltip-line-prescriptor-label">{t('Prescribed by Loop Mode')}</div>
+            </div>
+          }
+          {bolusSubType &&
+            <div className={commonStyles.row} id="bolus-tooltip-line-type">
+              <div className={commonStyles.label} id="bolus-tooltip-line-type-label">{t('bolus_type')}</div>
+              <div className={commonStyles.value} id="bolus-tooltip-line-type-value">{t(`bolus_${bolusSubType}`)}</div>
+            </div>
+          }
+          {isWizard && (shouldDisplayOverride || shouldDisplayRecommended) && <div className={styles.dividerSmall} />}
+          {isWizard && shouldDisplayRecommended &&
+            <div className={commonStyles.rowBold} id="bolus-tooltip-line-recommended">
+              <div className={commonStyles.label} id="bolus-tooltip-line-recommended-label">{t('Recommended')}</div>
+              <div className={commonStyles.value}
+                   id="bolus-tooltip-line-recommended-value">{formatInsulin(recommended)}</div>
+              <div className={styles.units} id="bolus-tooltip-line-recommended-units">{t('U')}</div>
+            </div>
+          }
+          {isWizard && shouldDisplayOverride &&
+            <div className={`${commonStyles.rowBold} ${styles.colorUndelivered}`} id="bolus-tooltip-line-override">
+              <div className={commonStyles.label} id="bolus-tooltip-line-override-label">{t('Override')}</div>
+              <div className={commonStyles.value} id="bolus-tooltip-line-override-value">{overrideValue}</div>
+              <div className={styles.units} id="bolus-tooltip-line-override-units">{t('U')}</div>
+            </div>
+          }
+          {isInterrupted &&
+            <div className={`${commonStyles.rowBold} ${styles.colorUndelivered}`} id="bolus-tooltip-line-undelivered">
+              <div className={commonStyles.label} id="bolus-tooltip-line-undelivered-label">{t('Undelivered')}</div>
+              <div className={commonStyles.value} id="bolus-tooltip-line-undelivered-value">{undeliveredValue}</div>
+              <div className={styles.units} id="bolus-tooltip-line-undelivered-units">{t('U')}</div>
+            </div>
+          }
+          {Number.isFinite(delivered) &&
+            <div className={commonStyles.rowBold} id="bolus-tooltip-line-delivered">
+              <div className={commonStyles.label} id="bolus-tooltip-line-delivered-label">{t('Delivered')}</div>
+              <div className={commonStyles.value}
+                   id="bolus-tooltip-line-delivered-value">{`${formatInsulin(delivered)}`}</div>
+              <div className={styles.units} id="bolus-tooltip-line-delivered-units">{t('U')}</div>
+            </div>
+          }
+        </div>
+      }
     />
   )
 }

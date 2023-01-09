@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>): ParametersChange[] => {
   return rawHistory.map(h => {
@@ -111,7 +112,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
 
   const pumpSettings: PumpSettings = {
     ...base,
-    type: 'pumpSettings',
+    type: DatumType.PumpSettings,
     uploadId: rawData.uploadId as string,
     activeSchedule: rawData.activeSchedule as string,
     deviceId: rawData.deviceId as string,

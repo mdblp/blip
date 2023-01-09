@@ -28,21 +28,14 @@
 import BaseDatum from './basics/base-datum.model'
 import Wizard from './wizard.model'
 import { BolusSubtype } from './enums/bolus-subtype.enum'
-
-// const bolusSubTypes = ['normal', 'biphasic', 'pen', 'dual/square', 'square'] as const
-// type BolusSubType = typeof bolusSubTypes[number]
+import { DatumType } from './enums/datum-type.enum'
 
 function isBolusSubType(value: unknown): boolean {
   return Object.values(BolusSubtype).includes(value as BolusSubtype)
-  // if (typeof value === 'string') {
-  //   return Object.values(BolusSubtype).includes(value as BolusSubtype)
-  // return bolusSubTypes.includes(value as BolusSubType)
-  // }
-  // return false
 }
 
 type Bolus = BaseDatum & {
-  type: 'bolus'
+  type: DatumType
   subType: BolusSubtype
   uploadId: string
   normal: number

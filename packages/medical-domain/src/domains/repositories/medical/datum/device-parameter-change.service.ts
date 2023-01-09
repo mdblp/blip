@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import Unit from '../../../models/medical/datum/enums/unit.enum'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -42,7 +43,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const base = BaseDatumService.normalize(rawData, opts)
   const deviceParameterChange: DeviceParameterChange = {
     ...base,
-    type: 'deviceEvent',
+    type: DatumType.DeviceEvent,
     subType: 'deviceParameter',
     params: [
       {

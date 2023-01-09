@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,7 @@
  */
 
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
+import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
@@ -55,6 +56,7 @@ import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simp
 export {
   AverageDailyDoseStat,
   BloodGlucoseTooltip,
+  BolusTooltip,
   CBGMeanStat,
   CBGPercentageBarChart,
   CBGStandardDeviation,
