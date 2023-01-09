@@ -9,6 +9,7 @@ import './patientDashboardVars.css'
 import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import AccessTime from '@mui/icons-material/AccessTime'
 import RemoteMonitoringWidget from 'yourloops/components/dashboard-widgets/remote-monitoring-widget'
+import { useTeam } from 'yourloops/lib/team'
 
 const t = i18next.t.bind(i18next)
 
@@ -33,6 +34,10 @@ const PatientDashboard = (props) => {
   } = props
   const isMonitoringEnabled = patient.monitoring?.enabled
   const shouldDisplayChatWidget = isMonitoringEnabled && (!userIsHCP || isSelectedTeamMedical)
+
+  const { getMedicalTeams } = useTeam()
+
+  const showRemoteMonitoringWidget = getMedicalTeams().some(team => team.monitoring?.enabled)
 
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString()
@@ -67,7 +72,7 @@ const PatientDashboard = (props) => {
         <span id="subnav-period-label">{t('dashboard-header-period-text')}</span>
       </Box>
       <Box id="patient-dashboard-content">
-        <RemoteMonitoringWidget patient={patient} />
+        {showRemoteMonitoringWidget && <RemoteMonitoringWidget patient={patient} /> }
         {patient.monitoring?.enabled &&
           <MedicalFilesWidget
             id="dashboard-medical-files-widget"
