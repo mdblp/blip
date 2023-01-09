@@ -268,7 +268,7 @@
   "days": "日数",
   "dbl": "DBL",
   "ddd": "ddd",
-  "ddd, MMM D, Y": "ddd, MMM D, Y",
+  "ddd, MMM D, Y": "Y/MMM/D ddd",
   "ddd, MMM D, YYYY": "ddd, MMM D, YYYY",
   "dddd, MMMM D": "ddd, MMMM D",
   "dddd, h:mm a": "ddd, h:mm a",
