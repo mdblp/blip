@@ -47,7 +47,7 @@ describe('Login page', () => {
 
     const header = screen.getByTestId('login-page-header')
     const registerButton = within(header).getByRole('button', { name: 'Register' })
-    const loginButton = within(header).getByRole('button', { name: 'Connection' })
+    const loginButton = within(header).getByRole('button', { name: 'Connect' })
     const contactLink = within(header).getByRole('link', { name: 'Contact' })
     const languageSelector = within(header).queryByTestId('language-selector')
     const infoContainer = screen.getByTestId('info-container')
