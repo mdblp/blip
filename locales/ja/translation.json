@@ -127,7 +127,7 @@
   "MMM": "MMM",
   "MMM D": "MMM D",
   "MMM D, YYYY": "YYYY/MMM/D",
-  "MMM D, YYYY h:mm a": "YYYY/MMM/D h:mm:a",
+  "MMM D, YYYY h:mm a": "YYYY/MMM/D ah:mm",
   "MMM D, h:mm a": "MMM/D h:mm:a",
   "MMMM D": "MMMM/D",
   "MMMM D [at] h:mm a": "MMMM/D [at] h:mm:a",
