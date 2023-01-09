@@ -35,6 +35,7 @@ import Divider from '@mui/material/Divider'
 import Container from '@mui/material/Container'
 import config from '../../lib/config/config'
 import { useTheme } from '@mui/styles'
+import { GlobalStyles } from 'tss-react'
 
 const VerifyEmailPage: FunctionComponent = () => {
   const { loginWithRedirect, logout } = useAuth0()
@@ -53,6 +54,7 @@ const VerifyEmailPage: FunctionComponent = () => {
       height="90vh"
       textAlign="center"
     >
+      <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       <Container maxWidth="sm">
         <Box display="flex" justifyContent="center" marginBottom={4}>
           <img

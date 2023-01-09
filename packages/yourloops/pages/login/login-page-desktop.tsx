@@ -25,26 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect } from 'react'
+import React, { FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import loginPageBackground from 'login-page-background.png'
-import loginPageLaptop from 'login-page-laptop.png'
+import loginPageBackground from 'images/login-page-background-desktop.png'
+import loginPageLaptop from 'images/login-page-laptop.png'
 
 import Toolbar from '@mui/material/Toolbar'
 import AppBar from '@mui/material/AppBar'
 import config from '../../lib/config/config'
-import { useHistory } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
 import LanguageSelect from '../../components/language-select'
 import LanguageIcon from '@mui/icons-material/Language'
 import Typography from '@mui/material/Typography'
-import { GlobalStyles } from 'tss-react'
-import { useAlert } from '../../components/utils/snackbar'
 import Button from '@mui/material/Button'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
@@ -75,6 +72,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   link: {
     textTransform: 'capitalize',
     fontFamily: 'MuseoSlab',
+    fontWeight: 'bold',
     paddingTop: theme.spacing(1),
     fontSize: '1.125rem'
   },
@@ -117,29 +115,15 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   }
 }))
 
-const LoginPage: FunctionComponent = () => {
-  const { loginWithRedirect, error } = useAuth0()
+const LoginPageDesktop: FunctionComponent = () => {
+  const { loginWithRedirect } = useAuth0()
   const { t, i18n } = useTranslation()
-  const history = useHistory()
-  const alert = useAlert()
   const { classes, theme } = styles()
 
   const redirectToSignup = async (): Promise<void> => await loginWithRedirect({ screen_hint: 'signup' })
 
-  useEffect(() => {
-    if (error) {
-      if (error.message === 'Please verify your email before logging in.') {
-        history.replace('/verify-email')
-        return
-      }
-      alert.error(error.message)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error])
-
   return (
     <React.Fragment>
-      <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       <AppBar
         data-testid="login-page-header"
         elevation={0}
@@ -239,4 +223,4 @@ const LoginPage: FunctionComponent = () => {
   )
 }
 
-export default LoginPage
+export default LoginPageDesktop

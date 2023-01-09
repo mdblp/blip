@@ -31,7 +31,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import { ThemeProvider } from '@mui/material/styles'
 import { CacheProvider } from '@emotion/react'
-import { TssCacheProvider } from 'tss-react'
+import { TssCacheProvider, GlobalStyles } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
 
@@ -45,7 +45,7 @@ import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import ProductLabellingPage from '../pages/product-labelling/product-labelling-page'
-import LoginPage from '../pages/login/login-page'
+import LoginPage from '../pages/login/login-page-landing'
 import {
   ALWAYS_ACCESSIBLE_ROUTES,
   COMPLETE_SIGNUP_PATH,
@@ -118,6 +118,7 @@ export function MainLobby(): JSX.Element {
             <TssCacheProvider value={tssCache}>
               <ThemeProvider theme={theme}>
                 <CssBaseline />
+                <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
                   <Box>
                     <Switch>

@@ -8,13 +8,13 @@ body, :global(#app) {
   grid-template-rows: 1fr auto;
 }
 
-:global(p.loading) {
-  text-align: center;
-  font-family: "Basis";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+img {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 :global(div.api-error-message) {

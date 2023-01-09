@@ -27,7 +27,8 @@
 
 import { createTheme, Theme } from '@mui/material/styles'
 import config from '../lib/config/config'
-import MuseoSlab900 from 'Museo_Slab_900.otf'
+import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
+import MuseoSlabBold from 'Museo_Slab/Museo_Slab_Bold.otf'
 
 const DEFAULT_COLOR = '#000'
 const appElement = document.getElementById('app')
@@ -47,22 +48,19 @@ export function getTheme(): Theme {
   return createTheme({
     components: {
       MuiCssBaseline: {
-        styleOverrides: {
-          a: {
-            color: 'inherit',
-            textDecoration: 'none'
-          },
-          body: {
-            backgroundColor: appElement ? cssVar('--body-background-color') : DEFAULT_COLOR
-          },
-          '@font-face': [
-            {
-              fontFamily: 'MuseoSlab',
-              fontWeight: 900,
-              src: `url(${MuseoSlab900}) format(opentype)`
-            }
-          ]
+        styleOverrides: `
+        @font-face {
+          font-family: 'MuseoSlab';
+          src: url('${MuseoSlabRegular}') format('opentype');
+          font-weight: 300;
         }
+
+        @font-face {
+          font-family: 'MuseoSlab';
+          src: url('${MuseoSlabBold}') format('opentype');
+          font-weight: 900;
+        }
+      `
       },
       MuiButton: {
         styleOverrides: {
