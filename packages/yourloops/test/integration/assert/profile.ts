@@ -44,6 +44,7 @@ interface PatientFieldsHtmlElements extends CommonFieldsHtmlElements {
   referringDoctorInput: HTMLElement
   insInput?: HTMLElement
   ssnInput?: HTMLElement
+  hba1cInput?: HTMLElement
 }
 
 interface HcpFieldsHtmlElements extends CommonFieldsHtmlElements {
@@ -89,12 +90,14 @@ export const checkPatientProfilePage = (country: CountryCodes): PatientFieldsHtm
   const referringDoctorInput = screen.getByLabelText('Referring doctor')
   const insInput = screen.queryByLabelText('INS')
   const ssnInput = screen.queryByLabelText('SSN')
+  const hba1cInput = screen.queryByLabelText('Initial HbA1c')
   const inputs = {
     ...checkCommonFields(),
     birthdayInput,
     birthPlaceInput,
     genderSelect,
-    referringDoctorInput
+    referringDoctorInput,
+    hba1cInput
   }
 
   expect(within(inputs.unitsSelect).getByRole('button')).toHaveAttribute('aria-disabled', 'true')

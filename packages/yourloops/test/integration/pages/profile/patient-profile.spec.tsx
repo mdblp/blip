@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,7 +67,8 @@ describe('Profile page for patient', () => {
   }
   const settings: Settings = {
     a1c: {
-      date: '2020-01-01',
+      rawdate: '2020-01-01',
+      date: 'date should not be used in this scenario',
       value: '7.5'
     },
     country: CountryCodes.France,
@@ -107,6 +108,7 @@ describe('Profile page for patient', () => {
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(fields.genderSelect).toHaveTextContent('Male')
     expect(fields.referringDoctorInput).toHaveValue(profile.patient.referringDoctor)
+    expect(fields.hba1cInput).toHaveValue('7.5%')
     expect(saveButton).toBeDisabled()
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))

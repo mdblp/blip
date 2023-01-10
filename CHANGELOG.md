@@ -44,6 +44,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1976 Fix PDF generation
 - YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
 - YLP-1991 Update patient header design and add currently available patients fields
+- YLP-2022 HBA1C is not displayed in profile when logged in as a patient
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5

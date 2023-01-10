@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,7 +51,7 @@ const PatientProfileForm: FunctionComponent = () => {
 
   const browserTimezone = useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, [])
 
-  const a1cDate = user.settings?.a1c?.date
+  const a1cDate = user.settings?.a1c?.rawdate
   const a1cValue = user.settings?.a1c?.value
   const country = user.settings?.country ?? CountryCodes.Unknown
 
@@ -144,14 +144,16 @@ const PatientProfileForm: FunctionComponent = () => {
       </Box>
 
       {a1cValue && a1cDate &&
-        <TextField
-          id="hbA1c"
-          label={t('patient-profile-hba1c', { hba1cMoment: tz(a1cDate, browserTimezone).format('L') })}
-          variant="standard"
-          disabled
-          value={`${a1cValue}%`}
-          className={classes.formInput}
-        />
+        <Box className={classes.inputContainer}>
+          <TextField
+            id="hbA1c"
+            label={t('patient-profile-hba1c', { hba1cMoment: tz(a1cDate, browserTimezone).format('L') })}
+            variant="standard"
+            disabled
+            value={`${a1cValue}%`}
+            className={classes.formInput}
+          />
+        </Box>
       }
     </React.Fragment>
   )
