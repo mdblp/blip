@@ -22,10 +22,7 @@ import moment from 'moment-timezone'
 import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import CircularProgress from '@mui/material/CircularProgress'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
 
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
@@ -35,7 +32,6 @@ import { components as vizComponents } from 'tidepool-viz'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Stats from './stats'
 import BgSourceToggle from './bgSourceToggle'
-import Header from './header'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
@@ -45,6 +41,10 @@ import {
   PhysicalTooltip,
   ReservoirTooltip
 } from 'dumb'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
+import Box from '@mui/material/Box'
+import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
+import ChartType from 'yourloops/enum/chart-type.enum'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -54,81 +54,6 @@ import {
 
 const BolusTooltip = vizComponents.BolusTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
-
-/**
- * @param {DailyDatePickerProps} props
- */
-function DailyDatePicker(props) {
-  const {
-    dialogDatePicker: DialogDatePicker,
-    date,
-    displayedDate,
-    inTransition,
-    loading,
-    startDate,
-    endDate,
-    onSelectedDateChange
-  } = props
-
-  const [isOpen, setIsOpen] = React.useState(false)
-
-  const handleResult = (date) => {
-    setIsOpen(false)
-    onSelectedDateChange(date)
-  }
-
-  return (
-    <React.Fragment>
-      <TextField
-        id="daily-chart-title-date"
-        onClick={() => setIsOpen(true)}
-        onKeyPress={() => setIsOpen(true)}
-        variant="standard"
-        value={displayedDate}
-        disabled={inTransition || loading || isOpen}
-        InputProps={loading ? undefined : {
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <CalendarTodayIcon className="calendar-nav-icon" />
-            </InputAdornment>
-          )
-        }}
-      />
-      <DialogDatePicker
-        date={date}
-        minDate={startDate}
-        maxDate={endDate}
-        onResult={handleResult}
-        showToolbar
-        isOpen={isOpen}
-      />
-    </React.Fragment>
-  )
-}
-
-DailyDatePicker.propTypes = {
-  dialogDatePicker: PropTypes.func.isRequired,
-  date: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]).isRequired,
-  displayedDate: PropTypes.string.isRequired,
-  startDate: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]).isRequired,
-  endDate: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.instanceOf(Date)
-  ]).isRequired,
-  inTransition: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
-  onSelectedDateChange: PropTypes.func.isRequired
-}
 
 class DailyChart extends React.Component {
   static propTypes = {
@@ -325,7 +250,6 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
-    patients: PropTypes.array.isRequired,
     userIsHCP: PropTypes.bool.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
@@ -351,13 +275,8 @@ class Daily extends React.Component {
     onDatetimeLocationChange: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
-    profileDialog: PropTypes.func,
-    dialogDatePicker: PropTypes.func.isRequired,
     prefixURL: PropTypes.string,
     onClickNavigationBack: PropTypes.func.isRequired
-  }
-  static defaultProps = {
-    profileDialog: null
   }
 
   constructor(props) {
@@ -365,7 +284,7 @@ class Daily extends React.Component {
 
     /** @type {React.RefObject<DailyChart>} */
     this.chartRef = React.createRef()
-    this.chartType = 'daily'
+    this.chartType = ChartType.Daily
     this.log = bows('DailyView')
     this.state = {
       atMostRecent: this.isAtMostRecent(),
@@ -399,7 +318,7 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading, dialogDatePicker, timePrefs } = this.props
+    const { tidelineData, epochLocation, msRange, trackMetric, loading, timePrefs } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
     const endpoints = this.getEndpoints()
 
@@ -414,95 +333,88 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Header
-          profileDialog={this.props.profileDialog}
+        <PatientNavBarMemoized
           chartType={this.chartType}
-          patient={this.props.patient}
-          patients={this.props.patients}
-          userIsHCP={this.props.userIsHCP}
-          inTransition={inTransition}
-          atMostRecent={atMostRecent}
-          loading={loading}
-          prefixURL={this.props.prefixURL}
-          iconBack
-          iconNext
-          iconMostRecent
-          canPrint={this.props.canPrint}
           onClickBack={this.handlePanBack}
           onClickDashboard={this.props.onSwitchToDashboard}
-          onClickTrends={this.props.onSwitchToTrends}
-          onClickMostRecent={this.handleClickMostRecent}
-          onClickNext={this.handlePanForward}
-          onClickOneDay={this.handleClickOneDay}
-          onClickPrint={this.props.onClickPrint}
+          onClickDaily={this.handleClickOneDay}
           onSwitchPatient={this.props.onSwitchPatient}
-          onClickNavigationBack={this.props.onClickNavigationBack}
-        >
-          <DailyDatePicker
-            dialogDatePicker={dialogDatePicker}
-            displayedDate={title}
-            date={epochLocation}
-            startDate={this.startDate}
-            endDate={this.endDate}
-            inTransition={inTransition}
-            loading={loading}
-            onSelectedDateChange={onSelectedDateChange}
-          />
-        </Header>
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            {loading && <CircularProgress className="centered-spinning-loader" />}
-            <div className="patient-data-content">
-              <DailyChart
-                loading={loading}
-                bgClasses={this.props.bgPrefs.bgClasses}
-                bgUnits={this.props.bgPrefs.bgUnits}
-                epochLocation={epochLocation}
-                msRange={msRange}
-                tidelineData={tidelineData}
-                timePrefs={timePrefs}
-                // message handlers
-                onCreateMessage={this.props.onCreateMessage}
-                onShowMessageThread={this.props.onShowMessageThread}
-                // other handlers
-                onDatetimeLocationChange={this.handleDatetimeLocationChange}
-                onTransition={this.handleInTransition}
-                onBolusHover={this.handleBolusHover}
-                onSMBGHover={this.handleSMBGHover}
-                onCBGHover={this.handleCBGHover}
-                onCarbHover={this.handleCarbHover}
-                onReservoirHover={this.handleReservoirHover}
-                onPhysicalHover={this.handlePhysicalHover}
-                onParameterHover={this.handleParameterHover}
-                onWarmUpHover={this.handleWarmUpHover}
-                onConfidentialHover={this.handleConfidentialHover}
-                onTooltipOut={this.handleTooltipOut}
-                trackMetric={trackMetric}
-                ref={this.chartRef}
-              />
+          onClickPrint={this.props.onClickPrint}
+          onClickTrends={this.props.onSwitchToTrends}
+          currentPatient={this.props.patient}
+          prefixURL={this.props.prefixURL}
+        />
+        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+          <Box display="flex">
+            <DailyDatePicker
+              atMostRecent={atMostRecent}
+              displayedDate={title}
+              date={epochLocation}
+              endDate={this.endDate}
+              inTransition={inTransition}
+              loading={loading}
+              onBackButtonClick={this.handlePanBack}
+              onMostRecentButtonClick={this.handleClickMostRecent}
+              onNextButtonClick={this.handlePanForward}
+              onSelectedDateChange={onSelectedDateChange}
+              startDate={this.startDate}
+            />
+          </Box>
+          <Box display="flex">
+            <div className="container-box-inner patient-data-content-inner">
+              <div className="patient-data-content">
+                {loading && <CircularProgress className="centered-spinning-loader" />}
+                <DailyChart
+                  loading={loading}
+                  bgClasses={this.props.bgPrefs.bgClasses}
+                  bgUnits={this.props.bgPrefs.bgUnits}
+                  epochLocation={epochLocation}
+                  msRange={msRange}
+                  tidelineData={tidelineData}
+                  timePrefs={timePrefs}
+                  // message handlers
+                  onCreateMessage={this.props.onCreateMessage}
+                  onShowMessageThread={this.props.onShowMessageThread}
+                  // other handlers
+                  onDatetimeLocationChange={this.handleDatetimeLocationChange}
+                  onTransition={this.handleInTransition}
+                  onBolusHover={this.handleBolusHover}
+                  onSMBGHover={this.handleSMBGHover}
+                  onCBGHover={this.handleCBGHover}
+                  onCarbHover={this.handleCarbHover}
+                  onReservoirHover={this.handleReservoirHover}
+                  onPhysicalHover={this.handlePhysicalHover}
+                  onParameterHover={this.handleParameterHover}
+                  onWarmUpHover={this.handleWarmUpHover}
+                  onConfidentialHover={this.handleConfidentialHover}
+                  onTooltipOut={this.handleTooltipOut}
+                  trackMetric={trackMetric}
+                  ref={this.chartRef}
+                />
+              </div>
             </div>
-          </div>
-          <div className="container-box-inner patient-data-sidebar">
-            <div className="patient-data-sidebar-inner">
-              <BgSourceToggle
-                bgSource={this.props.dataUtil.bgSource}
-                bgSources={this.props.dataUtil.bgSources}
-                chartPrefs={this.props.chartPrefs}
-                chartType={this.chartType}
-                onClickBgSourceToggle={this.toggleBgDataSource}
-              />
-              <Stats
-                bgPrefs={this.props.bgPrefs}
-                bgSource={this.props.dataUtil.bgSource}
-                chartPrefs={this.props.chartPrefs}
-                chartType={this.chartType}
-                dataUtil={this.props.dataUtil}
-                endpoints={endpoints}
-                loading={loading}
-              />
+            <div className="container-box-inner patient-data-sidebar">
+              <div className="patient-data-sidebar-inner">
+                <BgSourceToggle
+                  bgSource={this.props.dataUtil.bgSource}
+                  bgSources={this.props.dataUtil.bgSources}
+                  chartPrefs={this.props.chartPrefs}
+                  chartType={this.chartType}
+                  onClickBgSourceToggle={this.toggleBgDataSource}
+                />
+                <Stats
+                  bgPrefs={this.props.bgPrefs}
+                  bgSource={this.props.dataUtil.bgSource}
+                  chartPrefs={this.props.chartPrefs}
+                  chartType={this.chartType}
+                  dataUtil={this.props.dataUtil}
+                  endpoints={endpoints}
+                  loading={loading}
+                />
+              </div>
             </div>
-          </div>
-        </div>
+          </Box>
+        </Box>
         <Footer
           chartType={this.chartType}
           onClickRefresh={this.props.onClickRefresh} />

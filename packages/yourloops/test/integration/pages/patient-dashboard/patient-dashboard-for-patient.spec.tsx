@@ -25,25 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
+import { act, screen } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+import { mockDataAPI } from '../../mock/data.api.mock'
+import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
 
-describe('Trends view for patient', () => {
+describe('Patient dashboard for HCP', () => {
+  const monitoredPatientDashboardRoute = '/dashboard'
+
   beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
+    mockPatientLogin(monitoredPatientAsTeamMember)
+    mockPatientApiForPatients()
+    mockDataAPI()
   })
 
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
-
-    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
-    checkPatientNavBarAsPatient()
-    checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
+  it('should display proper header', async () => {
+    await act(async () => {
+      renderPage(monitoredPatientDashboardRoute)
+    })
+    const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+    expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
   })
 })

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,6 +51,7 @@ import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
+import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 
 export {
   AverageDailyDoseStat,
@@ -62,6 +63,7 @@ export {
   CgmTable,
   ConfidentialTooltip,
   FoodTooltip,
+  LabeledCheckbox,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,

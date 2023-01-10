@@ -42,6 +42,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-1960 enhance pipeline
 - YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
 - YLP-1976 Fix PDF generation
+- YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
+- YLP-1991 Update patient header design and add currently available patients fields
+- YLP-2012 Migrate LabeledCheckbox to dumb
 - YLP-2015 Replace loaders by MUI CircularProgress
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
@@ -49,7 +52,6 @@ It is based on Tidepool Blip 1.27.
 - Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
-- YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
 
 ## 3.0.2 - 2022-11-28
 ### Added

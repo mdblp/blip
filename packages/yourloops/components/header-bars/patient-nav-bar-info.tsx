@@ -25,25 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+import React, { FunctionComponent } from 'react'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/styles'
 
-describe('Trends view for patient', () => {
-  beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
-  })
+interface PatientNavBarInfoProps {
+  fieldName: string
+  fieldValue: string
+  id?: string
+}
 
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
+export const PatientNavBarInfo: FunctionComponent<PatientNavBarInfoProps> = (props) => {
+  const { fieldName, fieldValue, id } = props
+  const theme = useTheme()
 
-    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
-    checkPatientNavBarAsPatient()
-    checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
-  })
-})
+  return (
+    <Box display="flex" width="calc(33.33% - 8px)">
+      <Typography data-testid={`${id}-label`} variant="caption">{fieldName}</Typography>
+      <Typography data-testid={id} marginLeft="4px" variant="caption" color={theme.palette.common.black}>{fieldValue}</Typography>
+    </Box>
+  )
+}
