@@ -27,16 +27,9 @@
 
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
-import { makeStyles } from 'tss-react/mui'
-import { commonComponentStyles } from '../common'
 
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
-import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined'
 
@@ -51,34 +44,17 @@ import { Patient } from '../../lib/patient/models/patient.model'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
-
-const remoteMonitoringWidgetStyles = makeStyles({ name: 'patient-info-widget' })((theme: Theme) => ({
-  card: {
-    width: 430
-  },
-  cardHeader: {
-    textTransform: 'uppercase',
-    backgroundColor: 'var(--card-header-background-color)'
-  },
-  deviceLabels: {
-    alignSelf: 'center'
-  },
-  deviceValues: {
-    overflowWrap: 'break-word'
-  },
-  marginLeft: {
-    marginLeft: theme.spacing(2)
-  }
-}))
+import GenericDashboardCard from './generic-dashboard-card'
+import CardContent from '@mui/material/CardContent'
+import CardActions from '@mui/material/CardActions'
+import moment from 'moment-timezone'
 
 export interface RemoteMonitoringWidgetProps {
   patient: Patient
 }
 
 function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element {
-  const { classes } = remoteMonitoringWidgetStyles()
-  const { classes: commonStyles } = commonComponentStyles()
-  const { t } = useTranslation('yourloops')
+  const { t } = useTranslation()
   const authHook = useAuth()
   const notificationHook = useNotification()
   const teamHook = useTeam()
@@ -109,6 +85,15 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
     cancel: false,
     renewAndRemove: false
   }
+
+  const monitoredPatientTeam = patient.teams.find(team => team.monitoringStatus === 'accepted')
+  const requestingTeam = monitoredPatientTeam ? teamHook.getTeam(monitoredPatientTeam.teamId) : undefined
+  const endDate = patient?.monitoring?.monitoringEnd
+    ? moment.utc(patient.monitoring.monitoringEnd).format(moment.localeData().longDateFormat('ll')).toString()
+    : '-'
+  const remainingTime = patient?.monitoring?.monitoringEnd
+    ? moment(patient.monitoring.monitoringEnd).fromNow(true)
+    : '-'
 
   const computePatientInformation = (): void => {
     const displayInviteButton = !patient.monitoring?.enabled &&
@@ -161,91 +146,101 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   }
 
   return (
-    <Card className={classes.card} data-testid="remote-monitoring-card">
-      <CardHeader
+    <React.Fragment>
+      <GenericDashboardCard
         avatar={<MonitorHeartOutlinedIcon />}
-        className={classes.cardHeader}
         title={t('remote-monitoring-program')}
-      />
-      <CardContent>
-        <Grid container spacing={1}>
-          <Grid item xs={4} className={`${classes.deviceLabels} device-label`}>
-            <Typography variant="caption">
-              {t('remote-monitoring')}:
+        data-testid="remote-monitoring-card"
+      >
+        <CardContent>
+          <Box display="flex" gap={2} marginBottom={2}>
+            <Typography className="bold">{t('remote-monitoring')}:</Typography>
+            <Typography id="patient-info-remote-monitoring-value">
+              {patient.monitoring?.enabled ? t('yes') : t('no')}
             </Typography>
-          </Grid>
-          <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Typography
-                variant="body2"
-                id="patient-info-remote-monitoring-value"
-              >
-                {patient.monitoring?.enabled ? t('yes') : t('no')}
-              </Typography>
-              {showMonitoringButtonAction &&
+          </Box>
+          <Box display="flex" gap={2} marginY={2}>
+            <Typography className="bold">{t('requesting-team')}:</Typography>
+            <Typography>{requestingTeam?.name || '-'}</Typography>
+          </Box>
+          <Box display="flex" gap={2} marginY={2}>
+            <Typography className="bold">{t('end-date')}:</Typography>
+            <Typography>{endDate}</Typography>
+          </Box>
+          <Box display="flex" gap={2} marginY={2}>
+            <Typography className="bold">{t('remaining-time')}:</Typography>
+            <Typography>{remainingTime}</Typography>
+          </Box>
+        </CardContent>
+        <CardActions>
+          {showMonitoringButtonAction &&
+            <Box
+              display="flex"
+              justifyContent="end"
+              gap={2}
+              width="100%"
+            >
+              {buttonsVisible.invite &&
+                <Button
+                  id="invite-button-id"
+                  className="capitalize"
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  size="small"
+                  onClick={() => setShowInviteRemoteMonitoringDialog(true)}
+                  data-testid="remote-monitoring-card-invite-button"
+                >
+                  {t('invite')}
+                </Button>
+              }
+              {buttonsVisible.cancel &&
+                <Button
+                  id="cancel-invite-button-id"
+                  className="capitalize"
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  size="small"
+                  onClick={() => setShowConfirmCancelDialog(true)}
+                  data-testid="remote-monitoring-card-cancel-invite-button"
+                >
+                  {t('cancel-invite')}
+                </Button>
+              }
+              {buttonsVisible.renewAndRemove &&
                 <React.Fragment>
-                  {buttonsVisible.invite &&
-                    <Button
-                      id="invite-button-id"
-                      className={commonStyles.button}
-                      variant="contained"
-                      color="primary"
-                      disableElevation
-                      size="small"
-                      onClick={() => setShowInviteRemoteMonitoringDialog(true)}
-                      data-testid="remote-monitoring-card-invite-button"
-                    >
-                      {t('invite')}
-                    </Button>
-                  }
-                  {buttonsVisible.cancel &&
-                    <Button
-                      id="cancel-invite-button-id"
-                      className={commonStyles.button}
-                      variant="contained"
-                      color="primary"
-                      disableElevation
-                      size="small"
-                      onClick={() => setShowConfirmCancelDialog(true)}
-                      data-testid="remote-monitoring-card-cancel-invite-button"
-                    >
-                      {t('cancel-invite')}
-                    </Button>
-                  }
-                  {buttonsVisible.renewAndRemove &&
-                    <Box>
-                      <Button
-                        id="renew-button-id"
-                        className={commonStyles.button}
-                        variant="contained"
-                        color="primary"
-                        disableElevation
-                        size="small"
-                        onClick={() => setShowRenewRemoteMonitoringDialog(true)}
-                        data-testid="remote-monitoring-card-renew-button"
-                      >
-                        {t('renew')}
-                      </Button>
-                      <Button
-                        id="remove-button-id"
-                        className={`${commonStyles.button} ${classes.marginLeft}`}
-                        variant="contained"
-                        color="primary"
-                        disableElevation
-                        size="small"
-                        onClick={() => setShowConfirmDeleteDialog(true)}
-                        data-testid="remote-monitoring-card-remove-button"
-                      >
-                        {t('button-remove')}
-                      </Button>
-                    </Box>
-                  }
+                  <Button
+                    id="renew-button-id"
+                    className="capitalize"
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    size="small"
+                    onClick={() => setShowRenewRemoteMonitoringDialog(true)}
+                    data-testid="remote-monitoring-card-renew-button"
+                  >
+                    {t('renew')}
+                  </Button>
+                  <Button
+                    id="remove-button-id"
+                    className="capitalize"
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    size="small"
+                    onClick={() => setShowConfirmDeleteDialog(true)}
+                    data-testid="remote-monitoring-card-remove-button"
+                  >
+                    {t('button-remove')}
+                  </Button>
                 </React.Fragment>
               }
             </Box>
-          </Grid>
-        </Grid>
-      </CardContent>
+          }
+        </CardActions>
+      </GenericDashboardCard>
+
       {showInviteRemoteMonitoringDialog &&
         <RemoteMonitoringPatientDialog
           patient={patient}
@@ -278,7 +273,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
           onConfirm={onConfirmDeleteDialog}
         />
       }
-    </Card>
+    </React.Fragment>
   )
 }
 

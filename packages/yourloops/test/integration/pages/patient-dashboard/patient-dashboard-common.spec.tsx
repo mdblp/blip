@@ -99,7 +99,7 @@ describe('Patient dashboard for anyone', () => {
 
     const remoteMonitoringCard = screen.getByTestId('remote-monitoring-card')
     expect(remoteMonitoringCard).toBeVisible()
-    expect(remoteMonitoringCard).toHaveTextContent('Remote monitoring programRemote monitoring:YesRenewRemove')
+    expect(remoteMonitoringCard).toHaveTextContent('Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:Jan 10, 2023Remaining time:a few secondsRenewRemove')
 
     const medicalFilesCard = screen.getByTestId('medical-files-card')
     expect(medicalFilesCard).toBeVisible()

@@ -99,6 +99,7 @@ describe('Patient dashboard for HCP', () => {
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId)
+    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent('Remote monitoring programRemote monitoring:NoRequesting team:-End date:-Remaining time:-')
     checkHCPLayout(`${firstName} ${lastName}`)
 
     /**
@@ -138,6 +139,9 @@ describe('Patient dashboard for HCP', () => {
 
     /* Chat widget */
     expect(dashboard.getByText('Messages')).toBeVisible()
+
+    /* Remote Monitoring widget */
+    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent('Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:Jan 10, 2023Remaining time:a few secondsRenewRemove')
     checkHCPLayout(`${firstName} ${lastName}`)
   })
 
