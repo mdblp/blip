@@ -21,17 +21,16 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import DateRangeIcon from '@mui/icons-material/DateRange'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
-
 import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
-import Header from './header'
 import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
+import Box from '@mui/material/Box'
+import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
+import ChartType from 'yourloops/enum/chart-type.enum'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -90,73 +89,6 @@ function getMomentDayAt(date, tidelineData) {
 }
 
 /**
- *
- * @param {TrendsDatePickerProps} props
- * @returns {JSX.Element}
- */
-function TrendsDatePicker(props) {
-  const {
-    dialogRangeDatePicker: DialogRangeDatePicker,
-    displayedDate,
-    start,
-    end,
-    minDate,
-    maxDate,
-    disabled,
-    onResult
-  } = props
-
-  const [isOpen, setIsOpen] = React.useState(false)
-
-  const handleResult = (startDate, endDate) => {
-    setIsOpen(false)
-    onResult(startDate, endDate)
-  }
-
-  return (
-    <React.Fragment>
-      <TextField
-        id="trends-chart-title-dates"
-        onClick={() => setIsOpen(true)}
-        onKeyPress={() => setIsOpen(true)}
-        variant="standard"
-        value={displayedDate}
-        disabled={disabled || isOpen}
-        InputProps={disabled ? undefined : {
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <DateRangeIcon className="calendar-nav-icon" />
-            </InputAdornment>
-          )
-        }}
-      />
-      <DialogRangeDatePicker
-        start={start}
-        end={end}
-        minDate={minDate}
-        maxDate={maxDate}
-        maxSelectableDays={90}
-        onResult={handleResult}
-        isOpen={isOpen}
-        showToolbar
-      />
-    </React.Fragment>
-  )
-}
-
-TrendsDatePicker.propTypes = {
-  dialogRangeDatePicker: PropTypes.func.isRequired,
-  displayedDate: PropTypes.string.isRequired,
-  start: PropTypes.string.isRequired,
-  end: PropTypes.string.isRequired,
-  minDate: PropTypes.string.isRequired,
-  maxDate: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-  onResult: PropTypes.func.isRequired
-}
-
-/**
  * @augments {React.Component<TrendsProps,TrendsState>}
  */
 class Trends extends React.Component {
@@ -169,7 +101,6 @@ class Trends extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
-    patients: PropTypes.array.isRequired,
     userIsHCP: PropTypes.bool.isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
@@ -182,20 +113,16 @@ class Trends extends React.Component {
     trackMetric: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     prefixURL: PropTypes.string,
-    profileDialog: PropTypes.func,
     dialogRangeDatePicker: PropTypes.func.isRequired,
     onClickNavigationBack: PropTypes.func.isRequired,
     onClickPrint: PropTypes.func.isRequired
-  }
-  static defaultProps = {
-    profileDialog: null
   }
 
   constructor(props) {
     super(props)
 
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs)
-    this.chartType = 'trends'
+    this.chartType = ChartType.Trends
 
     this.log = bows('Trends')
 
@@ -433,6 +360,7 @@ class Trends extends React.Component {
 
   getTitle() {
     const { loading, tidelineData, dialogRangeDatePicker } = this.props
+    const { atMostRecent } = this.state
 
     const [startDate, endDate] = this.getMomentEndpoints()
     const mFormat = t('MMM D, YYYY')
@@ -461,16 +389,21 @@ class Trends extends React.Component {
     // End date is exclusive, substract 1s to display the last day, inclusive
     // it's what the user expect
     const displayEndDate = endDate.clone().subtract(1, 'day')
+
     return (
       <TrendsDatePicker
+        atMostRecent={atMostRecent}
+        disabled={loading}
         dialogRangeDatePicker={dialogRangeDatePicker}
         displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
-        start={startDate.format(ISO_DAY_FORMAT)}
         end={displayEndDate.format(ISO_DAY_FORMAT)}
         minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
         maxDate={getDayAt(endMaxDate.valueOf(), tidelineData)}
-        disabled={loading}
+        onBackButtonClick={this.handleClickBack}
+        onMostRecentButtonClick={this.handleClickMostRecent}
+        onNextButtonClick={this.handleClickForward}
         onResult={onResult}
+        start={startDate.format(ISO_DAY_FORMAT)}
       />
     )
   }
@@ -656,33 +589,38 @@ class Trends extends React.Component {
     return (
       <div id="tidelineMain" className="trends grid">
         {this.renderHeader()}
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            {this.renderSubNav()}
-            <div className="patient-data-content">
-              {loading && <Loader show overlay={true} />}
-              <div id="tidelineContainer" className="patient-data-chart-trends">
-                {this.renderChart()}
+        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+          <div>
+            {this.getTitle()}
+          </div>
+          <Box display="flex">
+            <div className="container-box-inner patient-data-content-inner">
+              {this.renderSubNav()}
+              <div className="patient-data-content">
+                {loading && <Loader show overlay={true} />}
+                <div id="tidelineContainer" className="patient-data-chart-trends">
+                  {this.renderChart()}
+                </div>
+                {this.renderFocusedCbgDateTraceLabel()}
+                {this.renderFocusedRangeLabels()}
               </div>
-              {this.renderFocusedCbgDateTraceLabel()}
-              {this.renderFocusedRangeLabels()}
             </div>
-          </div>
-          <div className="container-box-inner patient-data-sidebar">
-            <div className="patient-data-sidebar-inner">
-              <div id="toggle-bg-replacement" style={{ height: 36 }} />
-              <Stats
-                bgPrefs={this.props.bgPrefs}
-                bgSource={this.props.dataUtil.bgSource}
-                chartPrefs={chartPrefs}
-                chartType={this.chartType}
-                dataUtil={this.props.dataUtil}
-                endpoints={endpoints}
-                loading={loading}
-              />
+            <div className="container-box-inner patient-data-sidebar">
+              <div className="patient-data-sidebar-inner">
+                <div id="toggle-bg-replacement" style={{ height: 36 }} />
+                <Stats
+                  bgPrefs={this.props.bgPrefs}
+                  bgSource={this.props.dataUtil.bgSource}
+                  chartPrefs={chartPrefs}
+                  chartType={this.chartType}
+                  dataUtil={this.props.dataUtil}
+                  endpoints={endpoints}
+                  loading={loading}
+                />
+              </div>
             </div>
-          </div>
-        </div>
+          </Box>
+        </Box>
         <Footer onClickRefresh={this.props.onClickRefresh}>
           {rightFooter}
         </Footer>
@@ -691,33 +629,18 @@ class Trends extends React.Component {
   }
 
   renderHeader() {
-    const title = this.getTitle()
     return (
-      <Header
-        profileDialog={this.props.profileDialog}
+      <PatientNavBarMemoized
         chartType={this.chartType}
-        patient={this.props.patient}
-        patients={this.props.patients}
-        userIsHCP={this.props.userIsHCP}
-        atMostRecent={this.state.atMostRecent}
-        prefixURL={this.props.prefixURL}
-        canPrint={this.props.canPrint}
         onClickPrint={this.props.onClickPrint}
-        loading={this.props.loading}
-        iconBack
-        iconNext
-        iconMostRecent
-        onClickBack={this.handleClickBack}
         onClickDashboard={this.props.onSwitchToDashboard}
-        onClickTrends={this.handleClickTrends}
-        onClickMostRecent={this.handleClickMostRecent}
         onClickNext={this.handleClickForward}
-        onClickOneDay={this.handleClickDaily}
+        onClickDaily={this.handleClickDaily}
+        onClickTrends={this.handleClickTrends}
         onSwitchPatient={this.props.onSwitchPatient}
-        onClickNavigationBack={this.props.onClickNavigationBack}
-      >
-        {title}
-      </Header>
+        currentPatient={this.props.patient}
+        prefixURL={this.props.prefixURL}
+      />
     )
   }
 

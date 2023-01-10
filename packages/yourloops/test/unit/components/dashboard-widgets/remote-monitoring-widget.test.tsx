@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,10 +26,11 @@
  */
 
 import React from 'react'
-import moment from 'moment-timezone'
 import { act } from 'react-dom/test-utils'
 
-import PatientInfoWidget, { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
+import RemoteMonitoringWidget, {
+  RemoteMonitoringWidgetProps
+} from '../../../../components/dashboard-widgets/remote-monitoring-widget'
 import { buildTeam, buildTeamMember, createPatient } from '../../common/utils'
 import ReactDOM, { unmountComponentAtNode } from 'react-dom'
 import i18n from '../../../../lib/language'
@@ -38,7 +39,6 @@ import * as teamHookMock from '../../../../lib/team'
 import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as notificationsHookMock from '../../../../lib/notifications/notification.hook'
 import User from '../../../../lib/auth/models/user.model'
-import { genderLabels } from '../../../../lib/auth/auth.helper'
 import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as RemoteMonitoringPatientDialogMock from '../../../../components/dialogs/remote-monitoring-dialog'
 import { RemoteMonitoringPatientDialogProps } from '../../../../components/dialogs/remote-monitoring-dialog'
@@ -60,7 +60,7 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../lib/notifications/notification.hook')
-describe('PatientInfoWidget', () => {
+describe('RemoteMonitoringWidget', () => {
   const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
   const adminMember = buildTeamMember()
@@ -109,18 +109,18 @@ describe('PatientInfoWidget', () => {
     }
   })
 
-  function getPatientInfoWidgetJSX(props: PatientInfoWidgetProps = { patient }): JSX.Element {
-    return <PatientInfoWidget patient={props.patient} />
+  function getRemoteMonitoringWidgetJSX(props: RemoteMonitoringWidgetProps = { patient }): JSX.Element {
+    return <RemoteMonitoringWidget patient={props.patient} />
   }
 
-  function mountComponent(props: PatientInfoWidgetProps = { patient }) {
+  function mountComponent(props: RemoteMonitoringWidgetProps = { patient }) {
     act(() => {
-      ReactDOM.render(getPatientInfoWidgetJSX(props), container)
+      ReactDOM.render(getRemoteMonitoringWidgetJSX(props), container)
     })
   }
 
   async function clickOnActionButtonAndSave(buttonName: string) {
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: buttonName }))
     fireEvent.click(screen.getByRole('button', { name: 'save-mock' }))
     await waitFor(() => expect(screen.queryByRole('button', { name: 'save-mock' })).toBeNull())
@@ -128,15 +128,7 @@ describe('PatientInfoWidget', () => {
 
   it('should display correct patient information', () => {
     mountComponent()
-    const birthDate = moment.utc(patient.profile.birthdate).format('L')
-    const a1cDate = moment.utc(patient.settings.a1c.date).format('L')
-    const gender = patient.profile.sex ?? ''
-    expect(document.getElementById('patient-info-patient-value').innerHTML).toEqual('user-name')
-    expect(document.getElementById('patient-info-gender-value').innerHTML).toEqual(genderLabels()[gender])
-    expect(document.getElementById('patient-info-birthdate-value').innerHTML).toEqual(birthDate)
-    expect(document.getElementById('patient-info-email-value').innerHTML).toEqual(patient.profile.email)
-    expect(document.getElementById('patient-info-hba1c-value').innerHTML).toEqual(`${patient.settings?.a1c?.value} (${a1cDate})`)
-    expect(document.getElementById('patient-info-remote-monitoring-value')).toBeNull()
+    expect(document.getElementById('patient-info-remote-monitoring-value').innerHTML).toEqual('no')
     expect(document.getElementById('invite-button-id')).toBeNull()
     expect(document.getElementById('cancel-invite-button-id')).toBeNull()
     expect(document.getElementById('renew-button-id')).toBeNull()
@@ -195,7 +187,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on cancel invite button and cancel the invite when clicking on confirm', async () => {
     patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'cancel-invite' }))
     fireEvent.click(screen.getByRole('button', { name: 'confirm-mock' }))
     expect(cancelRemoteMonitoringInviteMock).toHaveBeenCalled()
@@ -205,7 +197,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on cancel invite button and not cancel the invite when clicking on close', async () => {
     patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'cancel-invite' }))
     fireEvent.click(screen.getByRole('button', { name: 'close-mock' }))
     expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled()
@@ -214,7 +206,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on delete button and edit the patient remote monitoring when clicking on confirm', async () => {
     patient.monitoring = { enabled: true, status: undefined } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'button-remove' }))
     fireEvent.click(screen.getByRole('button', { name: 'confirm-mock' }))
     expect(updatePatientMonitoringMock).toHaveBeenCalled()
@@ -223,7 +215,7 @@ describe('PatientInfoWidget', () => {
 
   it('should open dialog to confirm when clicking on delete button and not edit the patient remote monitoring when clicking on close', async () => {
     patient.monitoring = { enabled: true, status: undefined } as Monitoring
-    render(getPatientInfoWidgetJSX())
+    render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: 'button-remove' }))
     fireEvent.click(screen.getByRole('button', { name: 'close-mock' }))
     expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled()

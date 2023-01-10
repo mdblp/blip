@@ -42,8 +42,8 @@ describe('Daily view for patient', () => {
     mockDataAPI()
     renderPage('/daily')
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient(true)
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsPatient()
     checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
   })
 })

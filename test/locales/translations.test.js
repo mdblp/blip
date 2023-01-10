@@ -115,6 +115,7 @@ const ignoredTransKeyForYourLoops = [
   'consent-patient-privacy-policy',
   'consent-patient-terms-of-use',
   'consent-monitoring-terms-of-use',
+  'diabete-type',
   'not-logged-in',
   'modal-add-medical-team-code-no-invite',
   'modal-caregiver-remove-patient-failure',
@@ -151,6 +152,7 @@ const ignoredTransKeyForYourLoops = [
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
+  'gender-${patient.profile.sex.toLocaleLowerCase()}',
   // Documentation!
   'translate-me',
   'translate-{{someone}}'
