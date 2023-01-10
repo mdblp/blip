@@ -58,7 +58,7 @@ describe('Daily view for HCP', () => {
     mockDataAPI()
     renderPage(`/patient/${unmonitoredPatientId}/daily`)
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP()
     checkHCPLayout(`${firstName} ${lastName}`)
   })
