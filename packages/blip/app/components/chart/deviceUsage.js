@@ -190,7 +190,7 @@ const DeviceUsage = (props) => {
         <Divider variant="fullWidth" className={classes.divider}/>
         <Box id="device-usage-updates" className={classes.parameterChanges}>
           <Typography className={classes.sectionTitles}>{t('last-updates')}</Typography>
-          <TableContainer className={classes.parameterChangesTable}>
+          <TableContainer data-testid="device-usage-updates-list" className={classes.parameterChangesTable}>
             <Table>
               <TableBody className={classes.sectionContent}>
                 {paramChanges.map((row) =>
@@ -198,6 +198,7 @@ const DeviceUsage = (props) => {
                     <TableRow
                       key={row.key}
                       data-param={row.name}
+                      data-testid={row.name}
                       data-changetype={row.changeType}
                       data-isodate={row.effectiveDate}
                       className={`${classes.tableRows} parameter-update`}
