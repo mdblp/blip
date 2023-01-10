@@ -24,7 +24,7 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import clsx from 'clsx'
 import { Route, Switch } from 'react-router-dom'
-import { CircularProgress } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import MedicalDataService, { MGDL_UNITS, TimeService } from 'medical-domain'
 import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'

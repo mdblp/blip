@@ -23,7 +23,9 @@ import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import { CircularProgress, InputAdornment, TextField } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
 
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
