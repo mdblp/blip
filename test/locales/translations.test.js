@@ -148,7 +148,7 @@ const ignoredTransKeyForYourLoops = [
   'optional',
   'training-body',
   'login',
-  'refresh',
+  'refresh'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
