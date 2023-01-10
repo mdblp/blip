@@ -45,14 +45,13 @@ const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: Medi
     const params = (h?.parameters ?? []) as Array<Record<string, string | number>>
     return {
       changeDate: (h?.changeDate ?? '') as string,
-      parameters: params.map(p => {
-        console.log(p)
-        const { unit, value } = getConvertedParamUnitAndValue(p.unit as Unit, p.value as string, opts.bgUnits)
+      parameters: params.map(param => {
+        const { unit, value } = getConvertedParamUnitAndValue(param.unit as Unit, param.value as string, opts.bgUnits)
         return {
-          changeType: p.changeType as string,
-          effectiveDate: p.effectiveDate as string,
-          level: p.level as number,
-          name: p.name as string,
+          changeType: param.changeType as string,
+          effectiveDate: param.effectiveDate as string,
+          level: param.level as number,
+          name: param.name as string,
           unit,
           value
         }
@@ -96,7 +95,6 @@ const normalizePump = (rawPump: Record<string, unknown>): PumpConfig => {
 
 const normalizeParameters = (rawParams: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParameterConfig[] => {
   return rawParams.map(rawParam => {
-    console.log(rawParam)
     const {
       unit,
       value
