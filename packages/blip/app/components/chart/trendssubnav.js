@@ -1,4 +1,3 @@
-
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
@@ -19,6 +18,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
 import i18next from 'i18next'
+import { Checkbox } from '@mui/material'
 
 const t = i18next.t.bind(i18next)
 const domains = ['1 week', '2 weeks', '4 weeks', '3 months']
@@ -33,16 +33,13 @@ class DaysGroup extends React.Component {
   }
 
   render() {
-    var groupClass = cx({
-      daysGroup: true,
-      active: this.props.active
-    }) + ' ' + this.props.category
-
     return (
       <div>
-        <input type="checkbox" className={groupClass}
+        <Checkbox
+          size="small"
+          checked={this.props.active}
           onChange={this.handleDaysGroupClick}
-          checked={this.props.active} />
+        />
         {this.props.days}
       </div>
     )
