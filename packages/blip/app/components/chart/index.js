@@ -16,7 +16,6 @@
 import Daily from './daily'
 import Trends from './trends'
 import SettingsDialog from './settingsDialog'
-import Header from './header'
 import Footer from './footer'
 import PatientDashboard from './patientDashboard'
 
@@ -24,7 +23,6 @@ export {
   Daily,
   Trends,
   SettingsDialog,
-  Header,
   Footer,
   PatientDashboard
 }

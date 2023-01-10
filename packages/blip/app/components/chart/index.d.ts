@@ -28,7 +28,6 @@
 
 import MedicalDataService, { Datum } from 'medical-domain'
 import { utils as vizUtils } from 'tidepool-viz'
-import ProfileDialog from '../../../../yourloops/components/dialogs/patient-profile'
 import DialogDatePicker from '../../../../yourloops/components/date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from '../../../../yourloops/components/date-pickers/dialog-range-date-picker'
 import { IUser } from 'yourloops/lib/data/models/i-user.model'
@@ -56,7 +55,7 @@ export interface ChartPrefs {
 
 export type OnUpdateChartPrefs = (charPrefs: ChartPrefs, cb?: () => void) => void;
 
-export type BgUnits = "mg/dL" | "mmol/L";
+export type BgUnits = 'mg/dL' | 'mmol/L';
 export interface BgBounds {
   veryHighThreshold: number;
   targetUpperBound: number;
@@ -121,7 +120,6 @@ export interface TrendsProps {
   };
   dataUtil: DataUtil;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
-  profileDialog?: typeof ProfileDialog | null;
   trackMetric: TrackMetrics;
   onDatetimeLocationChange: OnLocationChange;
   updateChartPrefs: OnUpdateChartPrefs;

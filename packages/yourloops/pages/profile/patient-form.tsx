@@ -127,9 +127,9 @@ const PatientProfileForm: FunctionComponent = () => {
             error={errors.sex}
             onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value)}
           >
-            <MenuItem value="I" aria-label={t('indeterminate')}>{t('indeterminate')}</MenuItem>
-            <MenuItem value="M" aria-label={t('male')}>{t('male')}</MenuItem>
-            <MenuItem value="F" aria-label={t('female')}>{t('female')}</MenuItem>
+            <MenuItem value="I" aria-label={t('gender-i')}>{t('gender-i')}</MenuItem>
+            <MenuItem value="M" aria-label={t('gender-m')}>{t('gender-m')}</MenuItem>
+            <MenuItem value="F" aria-label={t('gender-f')}>{t('gender-f')}</MenuItem>
           </Select>
           <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
         </FormControl>
