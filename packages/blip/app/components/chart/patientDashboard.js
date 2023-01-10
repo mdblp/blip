@@ -37,7 +37,7 @@ const PatientDashboard = (props) => {
 
   const { getMedicalTeams } = useTeam()
 
-  const showRemoteMonitoringWidget = getMedicalTeams().some(team => team.monitoring?.enabled)
+  const showRemoteMonitoringWidget = !user.isUserCaregiver() && getMedicalTeams().some(team => team.monitoring?.enabled)
 
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString()
