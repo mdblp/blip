@@ -21,10 +21,7 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import DateRangeIcon from '@mui/icons-material/DateRange'
 import CircularProgress from '@mui/material/CircularProgress'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
 
 import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
