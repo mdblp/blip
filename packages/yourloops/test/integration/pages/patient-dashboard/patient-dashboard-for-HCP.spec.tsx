@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockTeamAPI, myTeamId } from '../../mock/mockTeamAPI'
-import { mockDataAPI } from '../../mock/mockDataAPI'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { act, BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockTeamAPI, myTeamId } from '../../mock/team.api.mock'
+import { mockDataAPI } from '../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import {
   mockPatientApiForHcp,
   monitoredPatient,
   monitoredPatientId,
   pendingPatient,
-  unmonitoredPatient,
   unmonitoredPatientId
-} from '../../mock/mockPatientAPI'
-import { mockChatAPI } from '../../mock/mockChatAPI'
-import { mockMedicalFilesAPI } from '../../mock/mockMedicalFilesAPI'
+} from '../../mock/patient.api.mock'
+import { mockChatAPI } from '../../mock/chat.api.mock'
+import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { queries } from '@testing-library/dom'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
+import { mockUserApi } from '../../mock/user.api.mock'
+import userEvent from '@testing-library/user-event'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -57,16 +57,15 @@ describe('Patient dashboard for HCP', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
     mockDataAPI()
   })
 
-  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string, fullName: string) {
+  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string) {
     /* Top bar */
-    expect(dashboard.getByTestId('subnav-arrow-back')).toBeVisible()
     expect(dashboard.getByTestId('subnav-patient-list')).toBeVisible()
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
     const dashboardLink = dashboard.getByText('Dashboard')
@@ -81,9 +80,8 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Generate report')).toBeVisible()
 
     /* Patient info widget */
-    const patientInfoCard = within(dashboard.getByTestId('patient-info-card'))
-    expect(patientInfoCard.getByText('Patient Information')).toBeVisible()
-    expect(patientInfoCard.getByText(fullName)).toBeVisible()
+    const patientInfoCard = within(dashboard.getByTestId('remote-monitoring-card'))
+    expect(patientInfoCard.getByText('Remote monitoring program')).toBeVisible()
 
     /* Patient stats widget */
     expect(dashboard.getByText('Patient statistics')).toBeVisible()
@@ -100,7 +98,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
-    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId, unmonitoredPatient.profile.fullName)
+    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId)
     checkHCPLayout(`${firstName} ${lastName}`)
 
     /**
@@ -126,7 +124,7 @@ describe('Patient dashboard for HCP', () => {
     // expect(teamsDropdown).toBeVisible()
 
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId, monitoredPatient.profile.fullName)
+    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId)
     /* Patient info widget */
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()
@@ -147,17 +145,19 @@ describe('Patient dashboard for HCP', () => {
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
-    const patientInfoCard = within(await screen.findByTestId('patient-info-card'))
-    const secondaryHeader = within(screen.getByTestId('patient-data-subnav-outer'))
+    const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+    expect(secondaryHeader).toHaveTextContent('PatientMonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsGenerate report')
 
-    expect(patientInfoCard.getByText(monitoredPatient.profile.fullName)).toBeVisible()
-    fireEvent.mouseDown(secondaryHeader.getByText(monitoredPatient.profile.fullName))
+    fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))
     fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
-    await waitFor(() => {
-      // call this to update the card and catch the new patient
-      const patientInfoCard = within(screen.getByTestId('patient-info-card'))
-      expect(patientInfoCard.getByText(pendingPatient.profile.fullName)).toBeVisible()
-    })
+    const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
+
+    await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
+
+    await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
   })
 })

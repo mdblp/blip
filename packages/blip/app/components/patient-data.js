@@ -32,9 +32,10 @@ import config from '../config'
 import personUtils from '../core/personutils'
 import utils from '../core/utils'
 import ApiUtils from '../core/api-utils'
-import { Daily, Header, PatientDashboard, Trends } from './chart'
+import { Daily, PatientDashboard, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -60,11 +61,9 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
  * @typedef { import('../index').MessageNote } MessageNote
  * @typedef { import('../index').DialogDatePicker } DialogDatePicker
  * @typedef { import('../index').DialogRangeDatePicker } DialogRangeDatePicker
- * @typedef { import('../index').ProfileDialog } ProfileDialog
- * @typedef { import('../index').PatientInfoWidget } PatientInfoWidget
  * @typedef { import('../core/lib/partial-data-load').DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog, patientInfoWidget: PatientInfoWidget }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker }} PatientDataProps
  * @typedef {{loadingState: number; medicalData: MedicalDataService | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -86,8 +85,6 @@ class PatientDataPage extends React.Component {
 
     const currentUser = api.whoami
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-
-    this.showProfileDialog = currentUser.id !== patient.userid
 
     this.state = {
       loadingState: LOADING_STATE_NONE,
@@ -280,25 +277,10 @@ class PatientDataPage extends React.Component {
   }
 
   renderEmptyHeader() {
-    return <Header
+    return <PatientNavBarMemoized
+      currentPatient={this.props.patient}
       chartType="no-data"
-      title={t('Data')}
-      canPrint={false}
-      trackMetric={this.trackMetric} />
-  }
-
-  renderInitialLoading() {
-    const header = this.renderEmptyHeader()
-    return (
-      <div>
-        {header}
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            <div className="patient-data-content"></div>
-          </div>
-        </div>
-      </div>
-    )
+    />
   }
 
   renderNoData() {
@@ -335,14 +317,11 @@ class PatientDataPage extends React.Component {
     const {
       patient,
       setPatient,
-      patients,
       userIsHCP,
       isSelectedTeamMedical,
-      profileDialog,
       prefixURL,
       dialogDatePicker,
       dialogRangeDatePicker,
-      patientInfoWidget,
       chatWidget,
       alarmCard,
       api,
@@ -364,12 +343,10 @@ class PatientDataPage extends React.Component {
       <Switch>
         <Route path={`${prefixURL}/dashboard`}>
           <PatientDashboard
-            profileDialog={this.showProfileDialog ? profileDialog : null}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             patient={patient}
             setPatient={setPatient}
-            patients={patients}
             userIsHCP={userIsHCP}
             user={user}
             isSelectedTeamMedical={isSelectedTeamMedical}
@@ -382,7 +359,6 @@ class PatientDataPage extends React.Component {
             tidelineData={medicalData}
             permsOfLoggedInUser={permsOfLoggedInUser}
             trackMetric={this.trackMetric}
-            patientInfoWidget={patientInfoWidget}
             chatWidget={chatWidget}
             alarmCard={alarmCard}
             medicalFilesWidget={medicalFilesWidget}
@@ -396,7 +372,6 @@ class PatientDataPage extends React.Component {
         </Route>
         <Route path={`${prefixURL}/daily`}>
           <Daily
-            profileDialog={this.showProfileDialog ? profileDialog : null}
             dialogDatePicker={dialogDatePicker}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
@@ -404,7 +379,6 @@ class PatientDataPage extends React.Component {
             timePrefs={this.state.timePrefs}
             patient={patient}
             setPatient={setPatient}
-            patients={patients}
             userIsHCP={userIsHCP}
             tidelineData={medicalData}
             epochLocation={epochLocation}
@@ -429,7 +403,6 @@ class PatientDataPage extends React.Component {
         </Route>
         <Route path={`${prefixURL}/trends`}>
           <Trends
-            profileDialog={this.showProfileDialog ? profileDialog : null}
             dialogRangeDatePicker={dialogRangeDatePicker}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
@@ -439,7 +412,6 @@ class PatientDataPage extends React.Component {
             msRange={msRange}
             patient={patient}
             setPatient={setPatient}
-            patients={patients}
             userIsHCP={userIsHCP}
             tidelineData={medicalData}
             loading={loadingState !== LOADING_STATE_DONE}
@@ -499,8 +471,6 @@ class PatientDataPage extends React.Component {
     const { history, prefixURL } = this.props
 
     switch (history.location.pathname) {
-      case `${prefixURL}/overview`:
-        return 'overview'
       case `${prefixURL}/daily`:
         return 'daily'
       case `${prefixURL}/trends`:
@@ -1010,17 +980,14 @@ PatientDataPage.propTypes = {
   medicalFilesWidget: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   isSelectedTeamMedical: PropTypes.bool.isRequired,
   store: PropTypes.object.isRequired,
-  profileDialog: PropTypes.func.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired,
-  patientInfoWidget: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 }
 
 export default PatientDataPage

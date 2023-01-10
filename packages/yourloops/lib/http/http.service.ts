@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,8 +26,8 @@
  */
 
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import httpStatus from '../lib/http/models/enums/http-status.enum'
-import { t } from '../lib/language'
+import HttpStatus from './models/enums/http-status.enum'
+import { t } from '../language'
 
 interface Args {
   url: string
@@ -96,9 +96,9 @@ export default class HttpService {
 
     if (error.response.status >= 400 && error.response.status <= 550) {
       switch (error.response.status) {
-        case httpStatus.StatusNotFound:
+        case HttpStatus.StatusNotFound:
           throw Error(ErrorMessageStatus.NotFound)
-        case httpStatus.StatusInternalServerError:
+        case HttpStatus.StatusInternalServerError:
           throw Error(t('error-http-500'))
         default:
           throw Error(t('error-http-40x'))

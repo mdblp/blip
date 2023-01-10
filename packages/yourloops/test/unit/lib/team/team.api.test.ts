@@ -27,7 +27,7 @@
 
 import TeamApi from '../../../../lib/team/team.api'
 import { Monitoring } from '../../../../lib/team/models/monitoring.model'
-import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { AxiosResponse } from 'axios'
 import { INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { getCurrentLang } from '../../../../lib/language'

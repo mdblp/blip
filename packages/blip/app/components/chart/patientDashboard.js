@@ -1,11 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
+import i18next from 'i18next'
 import Box from '@mui/material/Box'
 import PatientStatistics from './patientStatistics'
-import Header from './header'
 import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
+import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
+import AccessTime from '@mui/icons-material/AccessTime'
+import RemoteMonitoringWidget from 'yourloops/components/dashboard-widgets/remote-monitoring-widget'
+import { useTeam } from 'yourloops/lib/team'
+
+const t = i18next.t.bind(i18next)
 
 const PatientDashboard = (props) => {
   const {
@@ -13,7 +19,6 @@ const PatientDashboard = (props) => {
     patient,
     user,
     prefixURL,
-    profileDialog,
     bgPrefs,
     loading,
     chartPrefs,
@@ -23,13 +28,16 @@ const PatientDashboard = (props) => {
     chatWidget: ChatWidget,
     alarmCard: AlarmCard,
     medicalFilesWidget: MedicalFilesWidget,
-    canPrint,
     onClickPrint,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, isSelectedTeamMedical, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, userIsHCP, isSelectedTeamMedical, onSwitchPatient
   } = props
   const isMonitoringEnabled = patient.monitoring?.enabled
   const shouldDisplayChatWidget = isMonitoringEnabled && (!userIsHCP || isSelectedTeamMedical)
+
+  const { getMedicalTeams } = useTeam()
+
+  const showRemoteMonitoringWidget = !user.isUserCaregiver() && getMedicalTeams().some(team => team.monitoring?.enabled)
 
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString()
@@ -49,25 +57,22 @@ const PatientDashboard = (props) => {
   const endpoints = getEndpoints()
   return (
     <div id="patient-dashboard" className="patient-dashboard" data-testid="patient-dashboard">
-      <Header
-        id="dashboard-header"
-        profileDialog={profileDialog}
-        chartType={'dashboard'}
-        patient={patient}
-        patients={patients}
-        userIsHCP={userIsHCP}
-        prefixURL={prefixURL}
-        canPrint={canPrint}
+      <PatientNavBarMemoized
+        chartType="dashboard"
+        onClickDashboard={handleClickDashboard}
+        onClickDaily={handleClickDaily}
         onClickPrint={onClickPrint}
         onClickTrends={onSwitchToTrends}
-        onClickOneDay={handleClickDaily}
-        onClickDashboard={handleClickDashboard}
         onSwitchPatient={onSwitchPatient}
-        onClickNavigationBack={onClickNavigationBack}
-        trackMetric={trackMetric}
+        currentPatient={patient}
+        prefixURL={prefixURL}
       />
+      <Box display="flex" marginLeft="20px" alignItems="center">
+        <AccessTime fontSize="small" className="subnav-icon" />
+        <span id="subnav-period-label">{t('dashboard-header-period-text')}</span>
+      </Box>
       <Box id="patient-dashboard-content">
-        <PatientInfoWidget patient={patient} />
+        {showRemoteMonitoringWidget && <RemoteMonitoringWidget patient={patient} /> }
         {patient.monitoring?.enabled &&
           <MedicalFilesWidget
             id="dashboard-medical-files-widget"
@@ -124,13 +129,11 @@ PatientDashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   prefixURL: PropTypes.string,
-  profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,
   chartPrefs: PropTypes.object.isRequired,
   dataUtil: PropTypes.object,
   epochLocation: PropTypes.number.isRequired,
   msRange: PropTypes.number.isRequired,
-  patientInfoWidget: PropTypes.func.isRequired,
   onSwitchToTrends: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired,
   onSwitchPatient: PropTypes.func.isRequired,

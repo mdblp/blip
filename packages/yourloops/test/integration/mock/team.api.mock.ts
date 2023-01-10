@@ -27,7 +27,7 @@
 
 import TeamAPI from '../../../lib/team/team.api'
 import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
-import { loggedInUserId } from './mockAuth0Hook'
+import { loggedInUserId } from './auth0.hook.mock'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'

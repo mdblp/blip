@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,12 +35,12 @@ import config from '../lib/config/config'
 import { init as i18nInit } from '../lib/language'
 import initCookiesConsentListener from '../lib/cookies-manager'
 import initDayJS from '../lib/dayjs'
-import initAxios from '../lib/axios'
 import { initTheme } from '../components/theme'
 
 import Yourloops from './app'
 import OnError from './error'
 import { BrowserRouter } from 'react-router-dom'
+import initAxios from '../lib/http/axios.service'
 
 i18nInit().then(() => {
   window.onerror = (event, source, lineno, colno, error) => {
