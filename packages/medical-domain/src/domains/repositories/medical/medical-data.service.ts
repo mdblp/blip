@@ -133,7 +133,7 @@ class MedicalDataService {
   // for compatibility with tidelineData interface only...
   public get grouped(): Record<DatumType, Datum[]> {
     const initalValue: Record<string, Datum[]> = {}
-    for (const type of datumTypes) {
+    for (const type of Object.values(DatumType)) {
       initalValue[type] = []
     }
 
