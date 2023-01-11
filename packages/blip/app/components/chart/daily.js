@@ -22,6 +22,8 @@ import moment from 'moment-timezone'
 import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
+import CircularProgress from '@mui/material/CircularProgress'
+
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
 
@@ -50,7 +52,6 @@ import ChartType from 'yourloops/enum/chart-type.enum'
  * @typedef { import('./index').DailyDatePickerProps } DailyDatePickerProps
  */
 
-const Loader = vizComponents.Loader
 const BolusTooltip = vizComponents.BolusTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
@@ -362,7 +363,7 @@ class Daily extends React.Component {
           <Box display="flex">
             <div className="container-box-inner patient-data-content-inner">
               <div className="patient-data-content">
-                {loading && <Loader show overlay={true} />}
+                {loading && <CircularProgress className="centered-spinning-loader" />}
                 <DailyChart
                   loading={loading}
                   bgClasses={this.props.bgPrefs.bgClasses}
