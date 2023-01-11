@@ -135,36 +135,36 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       content={
         <div className={styles.container} id="bolus-tooltip-content">
           {isWizard && carbs &&
-            <TooltipLine label={t('Carbs')} value={carbs} units={t('g')}></TooltipLine>
+            <TooltipLine label={t('Carbs')} value={carbs} units={t('g')} />
           }
           {isWizard && isFatMeal &&
             <TooltipLine label={t('High fat meal')}></TooltipLine>
           }
           {isWizard && inputTime &&
-            <TooltipLine label={`${t('Entered at')} ${formatInputTime(inputTime, timePrefs)}`}></TooltipLine>
+            <TooltipLine label={`${t('Entered at')} ${formatInputTime(inputTime, timePrefs)}`} />
           }
           {iob &&
-            <TooltipLine label={t('IOB')} value={formatInsulin(iob)} units={insulinUnitLabel}></TooltipLine>
+            <TooltipLine label={t('IOB')} value={formatInsulin(iob)} units={insulinUnitLabel} />
           }
           {isWizard && (shouldDisplayPrescriptor ?? bolusSubType) && <div className={styles.dividerSmall} />}
           {shouldDisplayPrescriptor &&
-            <TooltipLine label={t('Prescribed by Loop Mode')}></TooltipLine>
+            <TooltipLine label={t('Prescribed by Loop Mode')} />
           }
           {bolusSubType &&
-            <TooltipLine label={t('bolus_type')} value={t(`bolus_${bolusSubType}`)}></TooltipLine>
+            <TooltipLine label={t('bolus_type')} value={t(`bolus_${bolusSubType}`)} />
           }
           {isWizard && (shouldDisplayOverride || shouldDisplayRecommended) && <div className={styles.dividerSmall} />}
           {isWizard && shouldDisplayRecommended &&
-            <TooltipLine label={t('Recommended')} value={formatInsulin(recommended)} units={insulinUnitLabel} isBold={true}></TooltipLine>
+            <TooltipLine label={t('Recommended')} value={formatInsulin(recommended)} units={insulinUnitLabel} isBold />
           }
           {isWizard && shouldDisplayOverride &&
-            <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold={true} customColor={TooltipColor.Undelivered}></TooltipLine>
+            <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold customColor={TooltipColor.Undelivered} />
           }
           {isInterrupted &&
-            <TooltipLine label={t('Undelivered')} value={undeliveredValue} units={insulinUnitLabel} isBold={true} customColor={TooltipColor.Undelivered}></TooltipLine>
+            <TooltipLine label={t('Undelivered')} value={undeliveredValue} units={insulinUnitLabel} isBold customColor={TooltipColor.Undelivered} />
           }
           {Number.isFinite(delivered) &&
-            <TooltipLine label={t('Delivered')} value={formatInsulin(delivered)} units={insulinUnitLabel} isBold={true}></TooltipLine>
+            <TooltipLine label={t('Delivered')} value={formatInsulin(delivered)} units={insulinUnitLabel} isBold />
           }
         </div>
       }

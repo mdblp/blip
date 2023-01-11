@@ -78,9 +78,9 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
         <div className={commonStyles.containerFlex}>
           {
             hasPrescriptor &&
-            <TooltipLine label={t('Recommended')} value={recommendedValue} units={gramLabel}></TooltipLine>
+            <TooltipLine label={t('Recommended')} value={recommendedValue} units={gramLabel} />
           }
-          <TooltipLine label={t('Confirmed')} value={actualCarbs} units={gramLabel} isBold={true}></TooltipLine>
+          <TooltipLine label={t('Confirmed')} value={actualCarbs} units={gramLabel} isBold />
         </div>
       }
     />

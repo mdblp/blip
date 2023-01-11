@@ -83,12 +83,12 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('Physical Activity')} isBold={true}></TooltipLine>
-          <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)}></TooltipLine>
-          <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`}></TooltipLine>
+          <TooltipLine label={t('Physical Activity')} isBold />
+          <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)} />
+          <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
           {
             physicalActivity.inputTime &&
-            <TooltipLine label={t('Entered at')} value={formatInputTime(physicalActivity.inputTime, timePrefs)}></TooltipLine>
+            <TooltipLine label={t('Entered at')} value={formatInputTime(physicalActivity.inputTime, timePrefs)} />
           }
         </div>
       }

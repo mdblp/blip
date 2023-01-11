@@ -82,10 +82,10 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('BG')} value={formattedValue} isBold={true}></TooltipLine>
+          <TooltipLine label={t('BG')} value={formattedValue} isBold />
           {
             isSmbg &&
-            <TooltipLine label={t('Calibration')} customColor={TooltipColor.DarkGray}></TooltipLine>
+            <TooltipLine label={t('Calibration')} customColor={TooltipColor.DarkGray} />
           }
         </div>
       }

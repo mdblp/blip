@@ -91,7 +91,7 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={label} isBold={true}></TooltipLine>
+          <TooltipLine label={label} isBold />
         </div>
       }
     />
