@@ -26,39 +26,52 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import userEvent from '@testing-library/user-event'
-import { act, screen } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
-import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import userEvent from '@testing-library/user-event'
 
-describe('Product labelling page', () => {
+jest.mock('@mui/material/useMediaQuery', () => {
+  return () => true
+})
+
+describe('Login page mobile view', () => {
+  const loginWithRedirectMock = jest.fn()
   beforeAll(() => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
-      user: undefined
+      user: undefined,
+      loginWithRedirect: loginWithRedirectMock
     })
   })
 
-  it('should render product labelling with the right selected language and version', async () => {
+  it('should render entire page with correct elements', async () => {
     renderPage('/')
+
+    const languageSelector = screen.queryByTestId('language-selector')
+    const moreInfoLink = screen.getByRole('link', { name: 'Learn more' })
+    const registerButton = screen.getByRole('button', { name: 'Register' })
+    const loginButton = screen.getByRole('button', { name: 'Connect' })
+
+    expect(screen.getByAltText('Yourloops brand colors')).toBeVisible()
+    expect(screen.getByTestId('page-title')).toHaveTextContent('All you need for efficient data sharing and visualisation')
+    expect(screen.getByTestId('header-main-logo')).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Register' })).toBeVisible()
+    expect(screen.getByRole('button', { name: 'Connect' })).toBeVisible()
+    expect(screen.queryByTestId('language-selector')).toBeVisible()
+
     checkFooter({ needFooterLanguageSelector: false })
 
-    await userEvent.click(screen.getByText('Product Labelling'))
+    // More info link should disappear if language is french
+    fireEvent.mouseDown(within(languageSelector).getByRole('button', { hidden: true }))
+    await userEvent.click(screen.getByText('Français'))
+    expect(moreInfoLink).not.toBeVisible()
 
-    expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, released on 2000-01-01`)).toBeInTheDocument()
-    expect(screen.getByText(`YLPZ-RA-LAD-001-en-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_EN_REV as string}`)).toBeInTheDocument()
-    expect(screen.getByText('Intended Purpose and regulatory information')).toBeInTheDocument()
-    expect(screen.getByText('Legal Manufacturer')).toBeInTheDocument()
+    await userEvent.click(registerButton)
+    expect(loginWithRedirectMock).toHaveBeenCalledWith(expect.objectContaining({ screen_hint: 'signup' }))
 
-    act(() => {
-      i18n.changeLanguage(LanguageCodes.Fr)
-    })
-    expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, publiée le 2000-01-01`)).toBeInTheDocument()
-    expect(screen.getByText(`YLPZ-RA-LAD-001-fr-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_FR_REV as string}`)).toBeInTheDocument()
-    expect(screen.getByText('Usage prévu et informations réglementaires')).toBeInTheDocument()
-    expect(screen.getByText('Fabricant')).toBeInTheDocument()
+    await userEvent.click(loginButton)
+    expect(loginWithRedirectMock).toHaveBeenCalled()
   })
 })

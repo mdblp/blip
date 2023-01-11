@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import { Country } from './auth/models/country.model'
 import getLocale from './browser-locale'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
-import { LanguageCodes } from './auth/models/language-codes.model'
+import { LanguageCodes } from './auth/models/enums/language-codes.enum'
 
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {

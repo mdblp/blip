@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -83,10 +83,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       display: 'flex',
       flexShrink: 0,
       fontSize: '12px',
-      marginTop: theme.spacing(3),
-      padding: '11px',
-      paddingBottom: '11px',
-      paddingTop: '11px',
+      paddingBlock: '11px',
       zIndex: theme.zIndex.drawer + 1,
       [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap'
@@ -235,10 +232,7 @@ const Footer: FunctionComponent = () => {
       <Box className={classes.centerBox}>
         {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname)
           ? <Box className={classes.firstLine}>
-            <Box
-              data-testid="language-selector"
-              className={classes.firstLineElement}
-            >
+            <Box className={classes.firstLineElement}>
               <LanguageIcon className={classes.icon} />
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
@@ -294,7 +288,7 @@ const Footer: FunctionComponent = () => {
         <Box className={classes.separator}>|</Box>
         <Link
           id="footer-link-contact-mailto"
-          href="mailto:yourloops@diabeloop.com"
+          href={`mailto:${diabeloopExternalUrls.contactEmail}`}
           onClick={metricsPdfDocument('yourloops-mailto-contact')}
           className={classes.link}
         >

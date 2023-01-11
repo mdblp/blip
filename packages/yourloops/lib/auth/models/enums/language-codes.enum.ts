@@ -25,23 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
-
-export interface ProfileForm {
-  birthday: string | undefined
-  birthPlace: string
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  ins: string | undefined
-  lang: LanguageCodes
-  lastName: string
-  referringDoctor: string | undefined
-  sex: string | undefined
-  ssn: string | undefined
-  units: UnitsType
+export enum LanguageCodes {
+  De = 'de',
+  En = 'en',
+  Es = 'es',
+  Fr = 'fr',
+  It = 'it',
+  Nl = 'nl',
+  Jp = 'jp'
 }
-
-export type ProfileErrors = Record<string, boolean>

@@ -31,6 +31,7 @@ import i18n from 'i18next'
 import rawHtmlEN from './raw-html/EN'
 import { getCurrentLang } from '../../lib/language'
 import rawHtmlFR from './raw-html/FR'
+import Box from '@mui/material/Box'
 
 const ProductLabellingPage: FunctionComponent = () => {
   const getHtml = (): string => {
@@ -49,9 +50,9 @@ const ProductLabellingPage: FunctionComponent = () => {
   })
 
   return (
-    <React.Fragment>
+    <Box marginBottom={2}>
       {parse(html)}
-    </React.Fragment>
+    </Box>
   )
 }
 

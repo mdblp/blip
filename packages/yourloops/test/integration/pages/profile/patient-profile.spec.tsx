@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ import { Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
-import { LanguageCodes } from '../../../../lib/auth/models/language-codes.model'
+import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
@@ -73,7 +73,7 @@ describe('Profile page for patient', () => {
     country: CountryCodes.France,
     units: { bg: UnitsType.MMOLL }
   }
-  const preferences: Preferences = { displayLanguageCode: 'fr' }
+  const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
 
   beforeAll(() => {
     mockAuth0Hook(UserRoles.patient)

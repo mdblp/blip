@@ -120,7 +120,7 @@ const imageLoaderConfiguration = {
 }
 
 const fontLoaderConfiguration = {
-  test: /\.(eot|woff2?|ttf)$/,
+  test: /\.(eot|woff2?|ttf|otf)$/,
   type: isTest ? 'asset/inline' : 'asset/resource'
 }
 

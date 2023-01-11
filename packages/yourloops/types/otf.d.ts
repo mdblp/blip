@@ -25,4 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export type LanguageCodes = 'en' | 'de' | 'es' | 'fr' | 'it' | 'nl' | 'jp'
+declare module '*.otf' {
+  const value: string
+  export default value
+}
