@@ -25,73 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import PumpManufacturer from './enums/pump-manufacturer.enum'
+import { act, screen } from '@testing-library/react'
+import { renderPage } from '../../utils/render'
+import { mockDataAPI } from '../../mock/data.api.mock'
+import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
 
-interface CgmConfig {
-  apiVersion: string
-  endOfLifeTransmitterDate: string
-  expirationDate: string
-  manufacturer: string
-  name: string
-  swVersionTransmitter: string
-  transmitterId: string
-}
+describe('Patient dashboard for HCP', () => {
+  const monitoredPatientDashboardRoute = '/dashboard'
 
-interface DeviceConfig {
-  deviceId: string
-  imei: string
-  manufacturer: string
-  name: string
-  swVersion: string
-}
+  beforeAll(() => {
+    mockPatientLogin(monitoredPatientAsTeamMember)
+    mockPatientApiForPatients()
+    mockDataAPI()
+  })
 
-export interface Parameter {
-  changeType: string
-  effectiveDate: string
-  level: number
-  name: string
-  unit: string
-  value: string
-}
-
-interface ParametersChange {
-  changeDate: string
-  parameters: Parameter[]
-}
-
-interface PumpConfig {
-  expirationDate: string
-  manufacturer: PumpManufacturer
-  name: string
-  serialNumber: string
-  swVersion: string
-}
-
-interface ParameterConfig {
-  effectiveDate: string
-  level: number
-  name: string
-  unit: string
-  value: string
-}
-
-type PumpSettings = BaseDatum & {
-  type: 'pumpSettings'
-  uploadId: string
-  basalSchedules: object[]
-  activeSchedule: string
-  deviceId: string
-  deviceTime: string
-  payload: {
-    basalsecurityprofile: object
-    cgm: CgmConfig
-    device: DeviceConfig
-    parameters: ParameterConfig[]
-    history: ParametersChange[]
-    pump: PumpConfig
-  }
-}
-
-export default PumpSettings
-export { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig }
+  it('should display proper header', async () => {
+    await act(async () => {
+      renderPage(monitoredPatientDashboardRoute)
+    })
+    const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+    expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
+  })
+})

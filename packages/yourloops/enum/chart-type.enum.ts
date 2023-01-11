@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+enum ChartType {
+  Dashboard = 'dashboard',
+  Daily = 'daily',
+  Trends = 'trends'
+}
 
-describe('Trends view for patient', () => {
-  beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
-  })
-
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
-
-    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
-    checkPatientNavBarAsPatient()
-    checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
-  })
-})
+export default ChartType

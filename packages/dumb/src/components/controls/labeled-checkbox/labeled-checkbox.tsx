@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+import React, { FunctionComponent } from 'react'
+import { Checkbox, FormControlLabel } from '@mui/material'
 
-describe('Trends view for patient', () => {
-  beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
-  })
+interface LabeledCheckboxProps {
+  checked: boolean
+  onFn: () => void
+  offFn: () => void
+  label: string
+}
 
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
+export const LabeledCheckbox: FunctionComponent<LabeledCheckboxProps> = (props) => {
+  const { checked, onFn, offFn, label } = props
 
-    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
-    checkPatientNavBarAsPatient()
-    checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
-  })
-})
+  const handleChange = (): void => {
+    checked ? offFn() : onFn()
+  }
+
+  return (
+    <FormControlLabel
+      label={label}
+      control={
+        <Checkbox
+          size="small"
+          checked={checked}
+          onChange={handleChange}
+        />
+      }
+    />
+  )
+}

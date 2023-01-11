@@ -25,73 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import PumpManufacturer from './enums/pump-manufacturer.enum'
+import React, { FunctionComponent } from 'react'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/styles'
 
-interface CgmConfig {
-  apiVersion: string
-  endOfLifeTransmitterDate: string
-  expirationDate: string
-  manufacturer: string
-  name: string
-  swVersionTransmitter: string
-  transmitterId: string
+interface PatientNavBarInfoProps {
+  fieldName: string
+  fieldValue: string
+  id?: string
 }
 
-interface DeviceConfig {
-  deviceId: string
-  imei: string
-  manufacturer: string
-  name: string
-  swVersion: string
-}
+export const PatientNavBarInfo: FunctionComponent<PatientNavBarInfoProps> = (props) => {
+  const { fieldName, fieldValue, id } = props
+  const theme = useTheme()
 
-export interface Parameter {
-  changeType: string
-  effectiveDate: string
-  level: number
-  name: string
-  unit: string
-  value: string
+  return (
+    <Box display="flex" width="calc(33.33% - 8px)">
+      <Typography data-testid={`${id}-label`} variant="caption">{fieldName}</Typography>
+      <Typography data-testid={id} marginLeft="4px" variant="caption" color={theme.palette.common.black}>{fieldValue}</Typography>
+    </Box>
+  )
 }
-
-interface ParametersChange {
-  changeDate: string
-  parameters: Parameter[]
-}
-
-interface PumpConfig {
-  expirationDate: string
-  manufacturer: PumpManufacturer
-  name: string
-  serialNumber: string
-  swVersion: string
-}
-
-interface ParameterConfig {
-  effectiveDate: string
-  level: number
-  name: string
-  unit: string
-  value: string
-}
-
-type PumpSettings = BaseDatum & {
-  type: 'pumpSettings'
-  uploadId: string
-  basalSchedules: object[]
-  activeSchedule: string
-  deviceId: string
-  deviceTime: string
-  payload: {
-    basalsecurityprofile: object
-    cgm: CgmConfig
-    device: DeviceConfig
-    parameters: ParameterConfig[]
-    history: ParametersChange[]
-    pump: PumpConfig
-  }
-}
-
-export default PumpSettings
-export { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig }

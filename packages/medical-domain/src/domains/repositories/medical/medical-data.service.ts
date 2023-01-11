@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -102,6 +102,177 @@ class MedicalDataService {
   // for compatibility with tidelineData interface only... see generateBasicsData
   basicsData: BasicData | null = null
   private _datumOpts: MedicalDataOptions = defaultMedicalDataOptions
+
+  // for compatibility with tidelineData interface only...
+  public get data(): Datum[] {
+    return this.getAllData()
+  }
+
+  public get latestPumpManufacturer(): string {
+    const capitalize = (s: string): string => {
+      const lower = s.toLowerCase()
+      return lower[0].toUpperCase() + lower.slice(1)
+    }
+    const pumpSettings = this.medicalData.pumpSettings
+    if (pumpSettings.length > 0) {
+      pumpSettings.sort((a, b) => this.sortDatum(a, b))
+      const latestPumpSettings = pumpSettings[pumpSettings.length - 1]
+      const manufacturer = latestPumpSettings.payload.pump.manufacturer.toLowerCase()
+      return capitalize(manufacturer)
+    } else {
+      return capitalize(this._datumOpts.defaultPumpManufacturer)
+    }
+  }
+
+  // for compatibility with tidelineData interface only...
+  public get grouped(): Record<DatumType, Datum[]> {
+    const initalValue: Record<string, Datum[]> = {}
+    for (const type of datumTypes) {
+      initalValue[type] = []
+    }
+
+    return this.data.reduce<Record<DatumType, Datum[]>>(
+      (accum, d) => {
+        if (accum[d.type] === undefined) {
+          accum[d.type] = []
+        }
+        accum[d.type].push(d)
+        return accum
+      },
+      initalValue
+    )
+  }
+
+  public get opts(): MedicalDataOptions {
+    return this._datumOpts
+  }
+
+  public set opts(options: Partial<MedicalDataOptions>) {
+    const opts = { ...defaultMedicalDataOptions, ...options }
+    const { bgUnits } = opts
+    if (bgUnits !== defaultMedicalDataOptions.bgUnits) {
+      opts.bgClasses = {
+        'very-low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
+        low: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
+        target: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
+        high: { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh },
+        'very-high': { boundary: BG_CLAMP_THRESHOLD[bgUnits] }
+      }
+    }
+
+    // mg/dL values are converted to mmol/L and rounded to 5 decimal places on platform.
+    // This can cause some discrepancies when converting back to mg/dL, and throw off the
+    // categorization.
+    // i.e. A 'target' value 180 gets stored as 9.99135, which gets converted back to 180.0000651465
+    // which causes it to be classified as 'high'
+    // Thus, we need to allow for our thresholds accordingly.
+    if (bgUnits === MGDL_UNITS) {
+      const roundingAllowance = 0.0001
+      opts.bgClasses['very-low'].boundary -= roundingAllowance
+      opts.bgClasses.low.boundary -= roundingAllowance
+      opts.bgClasses.target.boundary += roundingAllowance
+      opts.bgClasses.high.boundary += roundingAllowance
+    }
+
+    this._datumOpts = opts
+  }
+
+  getLocaleTimeEndpoints(endInclusive = true, dateFormat = 'YYYY-MM-DD'): { startDate: string, endDate: string } {
+    const startEpoch = getEpoch(this.endpoints[0])
+    const startTimezone = this.getTimezoneAt(startEpoch)
+
+    let endEpoch = getEpoch(this.endpoints[1])
+    if (endInclusive) {
+      // endpoints end date is exclusive, but the DatePicker is inclusive
+      // remove 1ms to the endDate
+      endEpoch = getEpoch(addMilliseconds(this.endpoints[1], -1))
+    }
+    const endTimezone = this.getTimezoneAt(endEpoch)
+
+    return {
+      startDate: format(startEpoch, startTimezone, dateFormat),
+      endDate: format(endEpoch, endTimezone, dateFormat)
+    }
+  }
+
+  getLastTimezone(defaultTimezone = null): string {
+    if (this.timezoneList.length > 0) {
+      return this.timezoneList[this.timezoneList.length - 1].timezone
+    } else if (defaultTimezone !== null) {
+      return defaultTimezone
+    }
+    return this._datumOpts.timezoneName
+  }
+
+  add(rawData: Array<Record<string, unknown>>): void {
+    this.normalize(rawData)
+    this.deduplicate()
+    this.join()
+    this.setTimeZones()
+    this.group()
+    this.setEndPoints()
+    this.generateFillData()
+    this.generateBasicsData()
+  }
+
+  hasDiabetesData(): boolean {
+    return (
+      this.medicalData.basal.length > 0 ||
+      this.medicalData.bolus.length > 0 ||
+      this.medicalData.cbg.length > 0 ||
+      this.medicalData.smbg.length > 0 ||
+      this.medicalData.wizards.length > 0
+    )
+  }
+
+  filterByDate(epochStart: number, epochEnd: number): Datum[] {
+    return this.data.filter((d) => {
+      const datumEpoch = this.getDatumEpoch(d)
+      return datumEpoch > epochStart && datumEpoch < epochEnd
+    })
+  }
+
+  // Basics data are needed to display the cartridge changes in dashboard and in print actions
+  // We may only need to generate these for the current day displayed in dashboard view and on print...
+  generateBasicsData(startDate: string | null = null, endDate: string | null = null): BasicData | null {
+    const start = startDate ?? this.endpoints[0]
+    const end = endDate ?? this.endpoints[1]
+    let startEpoch = new Date(start).valueOf()
+    let endEpoch = new Date(end).valueOf()
+    if (!endDate) {
+      endEpoch = endEpoch - 1
+    }
+    const endTimezone = this.getTimezoneAt(endEpoch)
+    if (!startDate) {
+      startEpoch = twoWeeksAgo(endEpoch, endTimezone)
+    }
+    const startTimezone = this.getTimezoneAt(startEpoch)
+
+    if (startEpoch > endEpoch) {
+      console.warn('Invalid date range', { start: toISOString(startEpoch), mEnd: toISOString(endEpoch) })
+      this.basicsData = null
+      return null
+    }
+    startEpoch += 1
+    endEpoch -= 1
+
+    this.basicsData = generateBasicData(this.medicalData, startEpoch, startTimezone, endEpoch, endTimezone)
+
+    return this.basicsData
+  }
+
+  editMessage(message: Record<string, unknown>): Message | null {
+    const normalizedMessage = MessageService.normalize(message, this._datumOpts)
+    normalizedMessage.timezone = this.getTimezoneAt(normalizedMessage.epoch)
+    normalizedMessage.displayOffset = getOffset(normalizedMessage.epoch, normalizedMessage.timezone)
+    const currentMessageIdx = this.medicalData.messages.findIndex(msg => msg.id === normalizedMessage.id)
+    if (currentMessageIdx === -1) {
+      return null
+    }
+    this.medicalData.messages[currentMessageIdx] = normalizedMessage
+    this.medicalData.messages.sort((a, b) => this.sortDatum(a, b))
+    return normalizedMessage
+  }
 
   private normalize(rawData: Array<Record<string, unknown>>): void {
     rawData.forEach(raw => {
@@ -382,177 +553,6 @@ class MedicalDataService {
     }
 
     this.fills = fillData
-  }
-
-  getLocaleTimeEndpoints(endInclusive = true, dateFormat = 'YYYY-MM-DD'): { startDate: string, endDate: string } {
-    const startEpoch = getEpoch(this.endpoints[0])
-    const startTimezone = this.getTimezoneAt(startEpoch)
-
-    let endEpoch = getEpoch(this.endpoints[1])
-    if (endInclusive) {
-      // endpoints end date is exclusive, but the DatePicker is inclusive
-      // remove 1ms to the endDate
-      endEpoch = getEpoch(addMilliseconds(this.endpoints[1], -1))
-    }
-    const endTimezone = this.getTimezoneAt(endEpoch)
-
-    return {
-      startDate: format(startEpoch, startTimezone, dateFormat),
-      endDate: format(endEpoch, endTimezone, dateFormat)
-    }
-  }
-
-  getLastTimezone(defaultTimezone = null): string {
-    if (this.timezoneList.length > 0) {
-      return this.timezoneList[this.timezoneList.length - 1].timezone
-    } else if (defaultTimezone !== null) {
-      return defaultTimezone
-    }
-    return this._datumOpts.timezoneName
-  }
-
-  add(rawData: Array<Record<string, unknown>>): void {
-    this.normalize(rawData)
-    this.deduplicate()
-    this.join()
-    this.setTimeZones()
-    this.group()
-    this.setEndPoints()
-    this.generateFillData()
-    this.generateBasicsData()
-  }
-
-  hasDiabetesData(): boolean {
-    return (
-      this.medicalData.basal.length > 0 ||
-      this.medicalData.bolus.length > 0 ||
-      this.medicalData.cbg.length > 0 ||
-      this.medicalData.smbg.length > 0 ||
-      this.medicalData.wizards.length > 0
-    )
-  }
-
-  filterByDate(epochStart: number, epochEnd: number): Datum[] {
-    return this.data.filter((d) => {
-      const datumEpoch = this.getDatumEpoch(d)
-      return datumEpoch > epochStart && datumEpoch < epochEnd
-    })
-  }
-
-  // Basics data are needed to display the cartridge changes in dashboard and in print actions
-  // We may only need to generate these for the current day displayed in dashboard view and on print...
-  generateBasicsData(startDate: string | null = null, endDate: string | null = null): BasicData | null {
-    const start = startDate ?? this.endpoints[0]
-    const end = endDate ?? this.endpoints[1]
-    let startEpoch = new Date(start).valueOf()
-    let endEpoch = new Date(end).valueOf()
-    if (!endDate) {
-      endEpoch = endEpoch - 1
-    }
-    const endTimezone = this.getTimezoneAt(endEpoch)
-    if (!startDate) {
-      startEpoch = twoWeeksAgo(endEpoch, endTimezone)
-    }
-    const startTimezone = this.getTimezoneAt(startEpoch)
-
-    if (startEpoch > endEpoch) {
-      console.warn('Invalid date range', { start: toISOString(startEpoch), mEnd: toISOString(endEpoch) })
-      this.basicsData = null
-      return null
-    }
-    startEpoch += 1
-    endEpoch -= 1
-
-    this.basicsData = generateBasicData(this.medicalData, startEpoch, startTimezone, endEpoch, endTimezone)
-
-    return this.basicsData
-  }
-
-  editMessage(message: Record<string, unknown>): Message | null {
-    const normalizedMessage = MessageService.normalize(message, this._datumOpts)
-    normalizedMessage.timezone = this.getTimezoneAt(normalizedMessage.epoch)
-    normalizedMessage.displayOffset = getOffset(normalizedMessage.epoch, normalizedMessage.timezone)
-    const currentMessageIdx = this.medicalData.messages.findIndex(msg => msg.id === normalizedMessage.id)
-    if (currentMessageIdx === -1) {
-      return null
-    }
-    this.medicalData.messages[currentMessageIdx] = normalizedMessage
-    this.medicalData.messages.sort((a, b) => this.sortDatum(a, b))
-    return normalizedMessage
-  }
-
-  // for compatibility with tidelineData interface only...
-  public get data(): Datum[] {
-    return this.getAllData()
-  }
-
-  public get latestPumpManufacturer(): string {
-    const capitalize = (s: string): string => {
-      const lower = s.toLowerCase()
-      return lower[0].toUpperCase() + lower.slice(1)
-    }
-    const pumpSettings = this.medicalData.pumpSettings
-    if (pumpSettings.length > 0) {
-      pumpSettings.sort((a, b) => this.sortDatum(a, b))
-      const latestPumpSettings = pumpSettings[pumpSettings.length - 1]
-      const manufacturer = latestPumpSettings.payload.pump.manufacturer.toLowerCase()
-      return capitalize(manufacturer)
-    } else {
-      return capitalize(this._datumOpts.defaultPumpManufacturer)
-    }
-  }
-
-  // for compatibility with tidelineData interface only...
-  public get grouped(): Record<DatumType, Datum[]> {
-    const initalValue: Record<string, Datum[]> = {}
-    for (const type of datumTypes) {
-      initalValue[type] = []
-    }
-
-    return this.data.reduce<Record<DatumType, Datum[]>>(
-      (accum, d) => {
-        if (accum[d.type] === undefined) {
-          accum[d.type] = []
-        }
-        accum[d.type].push(d)
-        return accum
-      },
-      initalValue
-    )
-  }
-
-  public get opts(): MedicalDataOptions {
-    return this._datumOpts
-  }
-
-  public set opts(options: Partial<MedicalDataOptions>) {
-    const opts = { ...defaultMedicalDataOptions, ...options }
-    const { bgUnits } = opts
-    if (bgUnits !== defaultMedicalDataOptions.bgUnits) {
-      opts.bgClasses = {
-        'very-low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
-        low: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
-        target: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
-        high: { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh },
-        'very-high': { boundary: BG_CLAMP_THRESHOLD[bgUnits] }
-      }
-    }
-
-    // mg/dL values are converted to mmol/L and rounded to 5 decimal places on platform.
-    // This can cause some discrepancies when converting back to mg/dL, and throw off the
-    // categorization.
-    // i.e. A 'target' value 180 gets stored as 9.99135, which gets converted back to 180.0000651465
-    // which causes it to be classified as 'high'
-    // Thus, we need to allow for our thresholds accordingly.
-    if (bgUnits === MGDL_UNITS) {
-      const roundingAllowance = 0.0001
-      opts.bgClasses['very-low'].boundary -= roundingAllowance
-      opts.bgClasses.low.boundary -= roundingAllowance
-      opts.bgClasses.target.boundary += roundingAllowance
-      opts.bgClasses.high.boundary += roundingAllowance
-    }
-
-    this._datumOpts = opts
   }
 }
 

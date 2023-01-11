@@ -23,38 +23,33 @@ import { bindActionCreators } from 'redux'
 import i18next from 'i18next'
 
 import * as actions from '../../../redux/actions/'
-import LabeledCheckbox from '../../common/controls/LabeledCheckbox'
-
 import styles from './RangeSelect.css'
+import { LabeledCheckbox } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 
 export const RangeSelect = (props) => (
-  <div className={styles.container}>
+  <div className={styles.container} data-testid="range-selection">
     <LabeledCheckbox
       checked={props.displayFlags.cbg100Enabled}
-      name="hundred"
       label={t('100% of Readings')}
       onFn={_.partial(props.turnOnCbgRange, '100')}
       offFn={_.partial(props.turnOffCbgRange, '100')}
     />
     <LabeledCheckbox
       checked={props.displayFlags.cbg80Enabled}
-      name="eighty"
       label={t('80% of Readings')}
       onFn={_.partial(props.turnOnCbgRange, '80')}
       offFn={_.partial(props.turnOffCbgRange, '80')}
     />
     <LabeledCheckbox
       checked={props.displayFlags.cbg50Enabled}
-      name="fifty"
       label={t('50% of Readings')}
       onFn={_.partial(props.turnOnCbgRange, '50')}
       offFn={_.partial(props.turnOffCbgRange, '50')}
     />
     <LabeledCheckbox
       checked={props.displayFlags.cbgMedianEnabled}
-      name="median"
       label={t('Median')}
       onFn={_.partial(props.turnOnCbgRange, 'median')}
       offFn={_.partial(props.turnOffCbgRange, 'median')}
