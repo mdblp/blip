@@ -42,11 +42,6 @@ import { Profile } from '../../../lib/auth/models/profile.model'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'
-export const unmonitoredPatientFirstName = 'Unmonitored'
-export const unmonitoredPatientLastName = 'Patient'
-export const monitoredPatientFirstName = 'Monitored'
-export const monitoredPatientLastName = 'Patient'
-export const monitoredPatientFullName = `${monitoredPatientFirstName} ${monitoredPatientLastName}`
 export const monitoredPatientWithMmolId = '3db654'
 
 const defaultMonitoring: Monitoring = {

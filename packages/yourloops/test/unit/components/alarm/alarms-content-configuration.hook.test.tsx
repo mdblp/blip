@@ -92,9 +92,9 @@ describe('AlarmsContentConfiguration hook', () => {
         monitoring: monitoringTwo,
         patient
       }))
-      expect(secondHook.current.veryLowBg.errorMessage).toBe('mandatory-float')
-      expect(secondHook.current.lowBg.errorMessage).toBe('mandatory-float')
-      expect(secondHook.current.highBg.errorMessage).toBe('mandatory-float')
+      expect(secondHook.current.veryLowBg.errorMessage).toBe('mandatory-float-number')
+      expect(secondHook.current.lowBg.errorMessage).toBe('mandatory-float-number')
+      expect(secondHook.current.highBg.errorMessage).toBe('mandatory-float-number')
     })
 
     it('should return an error if values are out of range', () => {

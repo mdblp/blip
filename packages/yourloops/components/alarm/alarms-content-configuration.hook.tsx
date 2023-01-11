@@ -30,9 +30,10 @@ import React, { useMemo, useState } from 'react'
 import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
-import { buildThresholds, isInvalidPercentage } from './alarm-content-configuration.utils'
+import { buildThresholds, isInvalidPercentage, REGEX_VALUE_BG } from './alarm-content-configuration.utils'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import { DEFAULT_BG_VALUES } from '../../lib/patient/models/alarms.model'
+import { Thresholds } from '../../lib/patient/models/alarms.model'
+import { DEFAULT_BG_VALUES } from '../alarm/alarms.default'
 
 export interface AlarmsContentConfigurationHookProps {
   monitoring: Monitoring
@@ -71,19 +72,19 @@ interface ValueErrorPair {
   error?: boolean
 }
 
-const {
-  highBgDefault,
-  hypoThresholdDefault,
-  nonDataTxThresholdDefault,
-  outOfRangeThresholdDefault,
-  lowBgDefault,
-  veryLowBgDefault,
-  reportingPeriodDefault,
-  bgUnitDefault
-} = DEFAULT_BG_VALUES
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
   const bgUnit = monitoring.parameters?.bgUnit ?? UnitsType.MGDL
-  const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
+
+  const {
+    highBgDefault,
+    hypoThresholdDefault,
+    nonDataTxThresholdDefault,
+    outOfRangeThresholdDefault,
+    lowBgDefault,
+    veryLowBgDefault,
+    reportingPeriodDefault,
+    bgUnitDefault
+  } = DEFAULT_BG_VALUES
 
   if (!monitoring.parameters) {
     monitoring.parameters = {
@@ -102,9 +103,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
 
   const teamHook = useTeam()
 
-  const thresholds = useMemo(() => {
-    return buildThresholds(bgUnit)
-  }, [bgUnit])
+  const thresholds = useMemo<Thresholds>(() => buildThresholds(bgUnit), [bgUnit])
 
   const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
     if (bgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
@@ -114,7 +113,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       return t('mandatory-range', { lowValue, highValue })
     }
     if (bgUnit === UnitsType.MMOLL && !REGEX_VALUE_BG.test(value.toString())) {
-      return t('mandatory-float')
+      return t('mandatory-float-number')
     }
     return null
   }

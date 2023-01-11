@@ -126,7 +126,7 @@ describe('Patient dashboard for HCP', () => {
 
     /**
      * TODO YLP-1987 Uncomment this test once the January release is done
-     */
+    */
     // const header = within(screen.getByTestId('app-main-header'))
     // const teamsDropdown = header.getByText(mySecondTeamName)
     // expect(teamsDropdown).toBeVisible()
@@ -172,14 +172,14 @@ describe('Patient dashboard for HCP', () => {
       await act(async () => {
         renderPage(monitoredPatientDashboardRoute)
       })
-      const configureAlarmsButton = await screen.findByLabelText('Configure alarms', {}, { timeout: 3000 })
+      const configureAlarmsButton = await screen.findByLabelText('Configure alarms')
       await userEvent.click(configureAlarmsButton)
       const dialog = within(screen.getByRole('dialog'))
       const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
       const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
       const veryLowBgInput = dialog.getByRole('spinbutton', { name: 'Very low blood glucose input' })
-      const outOfRangeTreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
-      const hypoTreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
+      const outOfRangeThreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
+      const hypoThreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
       const nonDataThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
       const saveButton = dialog.getByRole('button', { name: 'Save' })
       const defaultButton = dialog.getByRole('button', { name: 'Default values' })
@@ -212,16 +212,16 @@ describe('Patient dashboard for HCP', () => {
       expect(lowBgInput).toHaveValue(50)
       expect(highBgInput).toHaveValue(140)
       expect(veryLowBgInput).toHaveValue(40)
-      expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
-      expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
+      expect(within(outOfRangeThreshold).getByRole('button')).toHaveTextContent('5%')
+      expect(within(hypoThreshold).getByRole('button')).toHaveTextContent('10%')
       expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
       expect(saveButton).toBeEnabled()
       expect(cancelButton).toBeEnabled()
       expect(defaultButton).toBeEnabled()
 
       await userEvent.clear(lowBgInput)
-      const dopDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
-      fireEvent.mouseDown(dopDownOutRange.getByRole('button'))
+      const dropDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
+      fireEvent.mouseDown(dropDownOutRange.getByRole('button'))
       fireEvent.click(screen.getByRole('option', { name: '15%' }))
 
       const dropDownHypo = within(dialog.getByTestId('dropdown-hypo'))
@@ -261,8 +261,8 @@ describe('Patient dashboard for HCP', () => {
       expect(lowBgInput).toHaveValue(50)
       expect(highBgInput).toHaveValue(140)
       expect(veryLowBgInput).toHaveValue(40)
-      expect(within(outOfRangeTreshold).getByRole('button')).toHaveTextContent('5%')
-      expect(within(hypoTreshold).getByRole('button')).toHaveTextContent('10%')
+      expect(within(outOfRangeThreshold).getByRole('button')).toHaveTextContent('5%')
+      expect(within(hypoThreshold).getByRole('button')).toHaveTextContent('10%')
       expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
       expect(saveButton).not.toBeDisabled()
 
@@ -274,7 +274,7 @@ describe('Patient dashboard for HCP', () => {
       await act(async () => {
         renderPage(monitoredPatientDashboardRouteMmoL)
       })
-      const configureAlarmsButton = await screen.findByLabelText('Configure alarms', {}, { timeout: 3000 })
+      const configureAlarmsButton = await screen.findByLabelText('Configure alarms')
       await userEvent.click(configureAlarmsButton)
       const dialog = within(screen.getByRole('dialog'))
       const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })

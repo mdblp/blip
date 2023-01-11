@@ -27,11 +27,10 @@
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import { convertBG } from '../../lib/units/units.util'
 import {
-  BgValues,
   DEFAULT_BG_VALUES,
-  DEFAULT_THRESHOLDS_IN_MGDL,
-  Thresholds
-} from '../../lib/patient/models/alarms.model'
+  DEFAULT_THRESHOLDS_IN_MGDL
+} from '../alarm/alarms.default'
+import { Thresholds, BgValues } from '../../lib/patient/models/alarms.model'
 
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
@@ -72,3 +71,4 @@ export const buildBgValues = (bgUnit: UnitsType): BgValues => {
   }
   return { ...DEFAULT_BG_VALUES }
 }
+export const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/

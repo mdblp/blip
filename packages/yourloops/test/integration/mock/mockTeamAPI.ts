@@ -35,7 +35,7 @@ import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invita
 import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { Team } from '../../../lib/team'
 import { Profile } from '../../../lib/auth/models/profile.model'
-import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../lib/patient/models/alarms.model'
+import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms.default'
 
 const {
   minVeryLowBg,

@@ -42,8 +42,9 @@ describe('Thresholds', () => {
       reportingPeriod: 7
     }
   })
-  const monitoring = getDefaultMonitoring()
+
   it('should return default thresholds value in mmol/L if the parameters are in mmol/L', () => {
+    const monitoring = getDefaultMonitoring()
     monitoring.parameters.bgUnit = UnitsType.MMOLL
     const thresholdsInMmol = buildThresholds(monitoring.parameters.bgUnit)
 
@@ -57,7 +58,6 @@ describe('Thresholds', () => {
 
   it('should return default thresholds value in mg/dL if the parameters are in mg/dL', () => {
     const monitoring = getDefaultMonitoring()
-    monitoring.parameters.bgUnit = UnitsType.MGDL
     const thresholdsInMgdl = buildThresholds(monitoring.parameters.bgUnit)
     expect(thresholdsInMgdl.minHighBg).toBe(140)
     expect(thresholdsInMgdl.maxHighBg).toBe(250)
@@ -67,6 +67,7 @@ describe('Thresholds', () => {
     expect(thresholdsInMgdl.maxVeryLowBg).toBe(90)
   })
 })
+
 describe('Bg values', function () {
   const defaultMonitoringBgValue = () => ({
     enabled: true,
@@ -81,15 +82,16 @@ describe('Bg values', function () {
       reportingPeriodDefault: 7 * 24
     }
   })
-  it('should return default bg values in mmol/L if the parameters are in mmol/L', function () {
+
+  it('should return default bg values in mmol/L if the parameters are in mmol/L', () => {
     const monitoring = defaultMonitoringBgValue()
-    monitoring.parameters.bgUnitDefault = UnitsType.MGDL
     const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
     expect(bgValuesInMmol.highBgDefault).toBe(180)
     expect(bgValuesInMmol.lowBgDefault).toBe(70)
     expect(bgValuesInMmol.veryLowBgDefault).toBe(54)
   })
-  it('should return default bg values in mg/dL if the parameters are in mg/dL ', function () {
+
+  it('should return default bg values in mg/dL if the parameters are in mg/dL ', () => {
     const monitoring = defaultMonitoringBgValue()
     monitoring.parameters.bgUnitDefault = UnitsType.MMOLL
     const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)

@@ -106,7 +106,7 @@ export interface AlarmsContentConfigurationProps {
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { monitoring, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
-  const { t } = useTranslation('yourloops')
+  const { t } = useTranslation()
   const {
     lowBg,
     veryLowBg,
@@ -173,6 +173,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     }
                   }}
                   onChange={(event) => onChange(+event.target.value, minLowBg, maxLowBg, setLowBg)}
+                  data-testid='test'
                 />
                 <Typography>{bgUnit}</Typography>
                 {!!lowBg.errorMessage &&
