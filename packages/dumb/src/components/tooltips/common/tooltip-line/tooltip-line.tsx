@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, RefObject } from 'react'
-import _ from 'lodash'
-import styles from '../tooltip/tooltip.css'
+import React, { FunctionComponent } from 'react'
+import commonStyles from '../../../../styles/tooltip-common.css'
+import styles from './tooltip-line.css'
 
-interface TooltipTailProps {
-  borderColor: string
-  borderSide: string
-  marginOuterValue: string
-  tailHeight: number
-  tailElementRef: RefObject<HTMLDivElement>
-  tailWidth: number
+interface TooltipLineProps {
+  label: string
+  value?: number | string
+  units?: string
+  isBold?: boolean
+  customColor?: boolean
 }
 
-const TooltipTail: FunctionComponent<TooltipTailProps> = (props) => {
-  const {
-    borderColor,
-    borderSide,
-    marginOuterValue,
-    tailHeight,
-    tailElementRef,
-    tailWidth
-  } = props
+export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
+  const { customColor, isBold, label, value, units } = props
+
+  const getGlobalClasses = (): string => {
+    const textClass = isBold ? commonStyles.rowBold : commonStyles.row
+    const colorClass = customColor ? styles.colorUndelivered : undefined
+
+    return colorClass ? `${textClass} ${colorClass}` : textClass
+  }
 
   return (
-    <div>
-      <div
-        ref={tailElementRef}
-        className={styles.tail}
-        style={{
-          marginTop: `-${tailHeight}px`,
-          marginLeft: marginOuterValue,
-          borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
-          [`border${_.upperFirst(borderSide)}Color`]: borderColor
-        }}
-      />
+    <div className={getGlobalClasses()}>
+      <div className={commonStyles.label}>{label}</div>
+      {value && <div className={commonStyles.value}>{value}</div>}
+      {units && <div className={styles.units}>{units}</div>}
     </div>
   )
 }
-
-export default TooltipTail

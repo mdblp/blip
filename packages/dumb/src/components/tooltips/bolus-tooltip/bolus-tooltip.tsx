@@ -49,10 +49,10 @@ import {
   DEFAULT_TOOLTIP_TAIL,
   Position,
   Side
-} from '../tooltip/tooltip'
+} from '../common/tooltip/tooltip'
 import { formatInputTime, formatInsulin } from '../../../utils/format/format.util'
 import styles from './bolus-tooltip.css'
-import commonStyles from '../../../styles/tooltip-common.css'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
 interface BolusTooltipProps {
   bolus: Bolus | Wizard
@@ -117,6 +117,8 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const bolusTypeTitle = getTitleByBolusType(bolusType)
   const color = getColorByBolusType(bolusType)
 
+  const insulinUnitLabel = t('U')
+
   return (
     <Tooltip
       dateTitle={getDateTitle(bolus, timePrefs)}
@@ -132,74 +134,36 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       content={
         <div className={styles.container} id="bolus-tooltip-content">
           {isWizard && carbs &&
-            <div className={commonStyles.row} id="bolus-tooltip-line-carbs">
-              <div className={commonStyles.label} id="bolus-tooltip-line-carbs-label">{t('Carbs')}</div>
-              <div className={commonStyles.value} id="bolus-tooltip-line-carbs-value">{carbs}</div>
-              <div className={styles.units} id="bolus-tooltip-line-carbs-units">{t('g')}</div>
-            </div>
+            <TooltipLine label={t('Carbs')} value={carbs} units={t('g')}></TooltipLine>
           }
           {isWizard && isFatMeal &&
-            <div className={commonStyles.row} id="bolus-tooltip-line-fat">
-              <div className={commonStyles.label} id="bolus-tooltip-line-fat-label">{t('High fat meal')}</div>
-            </div>
+            <TooltipLine label={t('High fat meal')}></TooltipLine>
           }
           {isWizard && inputTime &&
-            <div className={commonStyles.row} id="bolus-tooltip-line-input">
-              <div className={commonStyles.label} id="bolus-tooltip-line-input-label">
-                {t('Entered at')} {formatInputTime(inputTime, timePrefs)}
-              </div>
-            </div>
+            <TooltipLine label={`${t('Entered at')} ${formatInputTime(inputTime, timePrefs)}`}></TooltipLine>
           }
           {iob &&
-            <div className={commonStyles.row} id="bolus-tooltip-line-iob">
-              <div className={commonStyles.label} id="bolus-tooltip-line-iob-label">{t('IOB')}</div>
-              <div className={commonStyles.value} id="bolus-tooltip-line-iob-value">{formatInsulin(iob)}</div>
-              <div className={styles.units} id="bolus-tooltip-line-iob-units">{t('U')}</div>
-            </div>
+            <TooltipLine label={t('IOB')} value={formatInsulin(iob)} units={insulinUnitLabel}></TooltipLine>
           }
           {isWizard && (shouldDisplayPrescriptor ?? bolusSubType) && <div className={styles.dividerSmall} />}
           {shouldDisplayPrescriptor &&
-            <div className={commonStyles.row} id="bolus-tooltip-line-prescriptor">
-              <div className={commonStyles.label}
-                   id="bolus-tooltip-line-prescriptor-label">{t('Prescribed by Loop Mode')}</div>
-            </div>
+            <TooltipLine label={t('Prescribed by Loop Mode')}></TooltipLine>
           }
           {bolusSubType &&
-            <div className={commonStyles.row} id="bolus-tooltip-line-type">
-              <div className={commonStyles.label} id="bolus-tooltip-line-type-label">{t('bolus_type')}</div>
-              <div className={commonStyles.value} id="bolus-tooltip-line-type-value">{t(`bolus_${bolusSubType}`)}</div>
-            </div>
+            <TooltipLine label={t('bolus_type')} value={t(`bolus_${bolusSubType}`)}></TooltipLine>
           }
           {isWizard && (shouldDisplayOverride || shouldDisplayRecommended) && <div className={styles.dividerSmall} />}
           {isWizard && shouldDisplayRecommended &&
-            <div className={commonStyles.rowBold} id="bolus-tooltip-line-recommended">
-              <div className={commonStyles.label} id="bolus-tooltip-line-recommended-label">{t('Recommended')}</div>
-              <div className={commonStyles.value}
-                   id="bolus-tooltip-line-recommended-value">{formatInsulin(recommended)}</div>
-              <div className={styles.units} id="bolus-tooltip-line-recommended-units">{t('U')}</div>
-            </div>
+            <TooltipLine label={t('Recommended')} value={formatInsulin(recommended)} units={insulinUnitLabel} isBold={true}></TooltipLine>
           }
           {isWizard && shouldDisplayOverride &&
-            <div className={`${commonStyles.rowBold} ${styles.colorUndelivered}`} id="bolus-tooltip-line-override">
-              <div className={commonStyles.label} id="bolus-tooltip-line-override-label">{t('Override')}</div>
-              <div className={commonStyles.value} id="bolus-tooltip-line-override-value">{overrideValue}</div>
-              <div className={styles.units} id="bolus-tooltip-line-override-units">{t('U')}</div>
-            </div>
+            <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold={true} customColor={true}></TooltipLine>
           }
           {isInterrupted &&
-            <div className={`${commonStyles.rowBold} ${styles.colorUndelivered}`} id="bolus-tooltip-line-undelivered">
-              <div className={commonStyles.label} id="bolus-tooltip-line-undelivered-label">{t('Undelivered')}</div>
-              <div className={commonStyles.value} id="bolus-tooltip-line-undelivered-value">{undeliveredValue}</div>
-              <div className={styles.units} id="bolus-tooltip-line-undelivered-units">{t('U')}</div>
-            </div>
+            <TooltipLine label={t('Undelivered')} value={undeliveredValue} units={insulinUnitLabel} isBold={true} customColor={true}></TooltipLine>
           }
           {Number.isFinite(delivered) &&
-            <div className={commonStyles.rowBold} id="bolus-tooltip-line-delivered">
-              <div className={commonStyles.label} id="bolus-tooltip-line-delivered-label">{t('Delivered')}</div>
-              <div className={commonStyles.value}
-                   id="bolus-tooltip-line-delivered-value">{`${formatInsulin(delivered)}`}</div>
-              <div className={styles.units} id="bolus-tooltip-line-delivered-units">{t('U')}</div>
-            </div>
+            <TooltipLine label={t('Delivered')} value={formatInsulin(delivered)} units={insulinUnitLabel} isBold={true}></TooltipLine>
           }
         </div>
       }

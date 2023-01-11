@@ -25,16 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DateTitle } from '../../components/tooltips/common/tooltip/tooltip'
-import { BaseDatum, Source, TimePrefs } from 'medical-domain'
+.tooltip {
+  display: block;
+  composes: defaultSize from '../../../../styles/typography.css';
+  background-color: #FFFFFF;
+  border: solid;
+  pointer-events: none;
+  position: absolute;
+  border-radius: 4px;
+}
 
-export const TIMEZONE_UTC = 'UTC'
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 10px;
+  box-sizing: border-box;
+}
 
-export const getDateTitle = (data: BaseDatum, timePrefs: TimePrefs): DateTitle => {
-  return {
-    source: data.source ?? Source.Diabeloop,
-    normalTime: data.normalTime,
-    timezone: data.timezone ?? TIMEZONE_UTC,
-    timePrefs
-  }
+.title {
+  composes: mediumContrastText from '../../../../styles/typography.css';
+  composes: content;
+  background-color: var(--tooltip-title-bg);
+}
+
+.titleContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.titleDate {
+  margin-right: auto;
+}
+
+.tail {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  position: absolute;
 }

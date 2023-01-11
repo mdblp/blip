@@ -45,7 +45,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     bolus: null,
     inputTime: rawData.inputTime as string
   }
-  if (rawData.recommended) {
+  if (rawData?.recommended) {
     const recommended = rawData?.recommended as Record<string, unknown>
     wizard.recommended = {
       carb: recommended.carb as number,
@@ -53,10 +53,10 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       net: recommended.net as number
     }
   }
-  if (rawData.inputMeal) {
-    const inputMeal = rawData?.inputMeal as Record<string, unknown>
+  if (rawData?.inputMeal) {
+    const inputMeal = rawData.inputMeal as Record<string, unknown>
     wizard.inputMeal = {
-      fat: inputMeal.fat as WizardInputMealFat
+      fat: inputMeal?.fat as WizardInputMealFat
     }
   }
   return wizard

@@ -44,7 +44,7 @@ import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/tot
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
-import Tooltip from './components/tooltips/tooltip/tooltip'
+import Tooltip from './components/tooltips/common/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'

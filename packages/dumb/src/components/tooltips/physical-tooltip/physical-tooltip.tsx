@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,7 @@ import {
   DEFAULT_TOOLTIP_TAIL,
   Position,
   Side
-} from '../tooltip/tooltip'
+} from '../common/tooltip/tooltip'
 import { Tooltip } from '../../../index'
 import styles from './physical-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
