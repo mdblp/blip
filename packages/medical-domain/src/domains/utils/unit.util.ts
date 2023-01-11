@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,27 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Theme } from '@mui/material/styles'
-import { makeStyles } from 'tss-react/mui'
-import Backdrop from '@mui/material/Backdrop'
-import CircularProgress from '@mui/material/CircularProgress'
+import Unit from '../models/medical/datum/enums/unit.enum'
+import { convertBG } from '../repositories/medical/datum/cbg.service'
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: theme.palette.common.white
+interface UnitValuePair { unit: Unit | string, value: string}
+
+export const getConvertedParamUnitAndValue = (paramUnit: Unit | string, paramValue: string, expectedUnit: Unit): UnitValuePair => {
+  if ((paramUnit === Unit.MilligramPerDeciliter || paramUnit === Unit.MmolPerLiter) && paramUnit !== expectedUnit) {
+    const valueAsNumber = Number(paramValue)
+    if (!isNaN(valueAsNumber)) {
+      return { unit: expectedUnit, value: convertBG(valueAsNumber, paramUnit).toString() }
+    }
   }
-}))
-
-function LoadingBackdrop({ open }: { open: boolean }): JSX.Element {
-  const { classes: { backdrop } } = useStyles()
-
-  return (
-    <Backdrop className={backdrop} open={open}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  )
+  return { unit: paramUnit, value: paramValue }
 }
-
-export default LoadingBackdrop
