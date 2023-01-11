@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,9 +31,8 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import { ThemeProvider } from '@mui/material/styles'
 import { CacheProvider } from '@emotion/react'
-import { TssCacheProvider } from 'tss-react'
+import { TssCacheProvider, GlobalStyles } from 'tss-react'
 import createCache from '@emotion/cache'
-import { makeStyles } from 'tss-react/mui'
 import CssBaseline from '@mui/material/CssBaseline'
 
 import { useAuth, User } from '../lib/auth'
@@ -46,7 +45,7 @@ import { ConsentPage } from '../pages/login'
 import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import ProductLabellingPage from '../pages/product-labelling/product-labelling-page'
-import LoginPage from '../pages/login/login-page'
+import LoginPage from '../pages/login/login-page-landing'
 import {
   ALWAYS_ACCESSIBLE_ROUTES,
   COMPLETE_SIGNUP_PATH,
@@ -55,20 +54,8 @@ import {
   RENEW_CONSENT_PATH,
   TRAINING_PATH
 } from '../lib/diabeloop-urls.model'
-
-const routeStyle = makeStyles()(() => {
-  return {
-    public: {
-      flex: '1 0 auto',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    private: {
-      flex: '1 0 auto'
-    }
-  }
-})
+import VerifyEmailPage from '../pages/login/verify-email-page'
+import Box from '@mui/material/Box'
 
 const muiCache = createCache({
   key: 'mui',
@@ -114,14 +101,12 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const theme = getTheme()
-  const { classes } = routeStyle()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
 
   if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />
   }
 
-  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
 
   return (
@@ -133,8 +118,9 @@ export function MainLobby(): JSX.Element {
             <TssCacheProvider value={tssCache}>
               <ThemeProvider theme={theme}>
                 <CssBaseline />
+                <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
-                  <div className={style}>
+                  <Box>
                     <Switch>
                       <Route exact path="/product-labelling" component={ProductLabellingPage} />
                       <Route exact path="/login" component={LoginPage} />
@@ -142,9 +128,10 @@ export function MainLobby(): JSX.Element {
                       <Route exact path="/renew-consent" component={ConsentPage} />
                       <Route exact path="/new-consent" component={PatientConsentPage} />
                       <Route exact path="/training" component={TrainingPage} />
+                      <Route exact path="/verify-email" component={VerifyEmailPage} />
                       <Route component={MainLayout} />
                     </Switch>
-                  </div>
+                  </Box>
                 </SnackbarContextProvider>
                 <Footer />
               </ThemeProvider>

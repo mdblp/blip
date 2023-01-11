@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -63,13 +63,14 @@ if (!brandings.includes(buildConfig.BRANDING)) {
 const alias = {
   'branding/theme.css': path.resolve(__dirname, '../../branding/theme.css'),
   'classes.css': path.resolve(__dirname, 'css/classes.css'),
-  'pro-sante-connect.svg': path.resolve(__dirname, 'images/pro-sante-connect-gris.svg'),
   'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
   'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
   'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),
   'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg'),
   'diabeloop-logo.svg': path.resolve(__dirname, '../../branding/diabeloop/diabeloop-logo.svg'),
   'diabeloop-label.svg': path.resolve(__dirname, '../../branding/diabeloop/diabeloop-label.svg'),
+  images: path.resolve(__dirname, 'images/'),
+  Museo_Slab: path.resolve(__dirname, '../../branding/fonts/museo-slab/'),
   ...blipWebpack.resolve.alias
 }
 

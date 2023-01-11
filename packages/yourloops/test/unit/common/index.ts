@@ -31,6 +31,7 @@ import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authen
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 import { CountryCodes } from '../../../lib/auth/models/country.model'
+import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 
 const getHcp = (): User => {
   const email = 'john.doe@example.com'
@@ -86,7 +87,7 @@ const getPatient = (): User => {
       ssn: '012345678901234'
     }
   }
-  patient.preferences = { displayLanguageCode: 'fr' }
+  patient.preferences = { displayLanguageCode: LanguageCodes.Fr }
   return patient
 }
 

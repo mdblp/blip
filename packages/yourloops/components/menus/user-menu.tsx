@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -180,7 +180,7 @@ function UserMenu(): JSX.Element {
             <CancelIcon />
           </ListItemIcon>
           <Typography>
-            {t('menu-logout')}
+            {t('logout')}
           </Typography>
         </MenuItem>
       </MenuLayout>
