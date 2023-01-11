@@ -103,7 +103,7 @@ const LoginPageMobile: FunctionComponent = () => {
           width="180"
         />
 
-        <Typography className={classes.infoText}>
+        <Typography data-testid="page-title" className={classes.infoText}>
           {t('login-page-mobile-title-1')} <span className="bold">{t('login-page-mobile-title-2')}</span> {t('login-page-mobile-title-3')} <span className="bold">{t('login-page-mobile-title-4')}</span>
         </Typography>
 

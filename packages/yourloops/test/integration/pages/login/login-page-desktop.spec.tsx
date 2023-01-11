@@ -31,7 +31,7 @@ import { checkFooter } from '../../assert/footer'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 
-describe('Login page', () => {
+describe('Login page desktop view', () => {
   const loginWithRedirectMock = jest.fn()
   beforeAll(() => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
