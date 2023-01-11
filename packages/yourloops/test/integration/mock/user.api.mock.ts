@@ -26,19 +26,9 @@
  */
 
 import UserApi from '../../../lib/auth/user.api'
-import { mockAuth0Hook } from './mockAuth0Hook'
-import { mockNotificationAPI } from './mockNotificationAPI'
-import { mockDirectShareApi } from './mockDirectShareAPI'
-import { mockTeamAPI } from './mockTeamAPI'
-import PatientAPI from '../../../lib/patient/patient.api'
-import { mockChatAPI } from './mockChatAPI'
-import { mockMedicalFilesAPI } from './mockMedicalFilesAPI'
-import { unmonitoredPatientId } from './mockPatientAPI'
 import { Profile } from '../../../lib/auth/models/profile.model'
 import { Preferences } from '../../../lib/auth/models/preferences.model'
 import { Settings } from '../../../lib/auth/models/settings.model'
-import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 
 interface MockUserDataFetchParams {
   firstName?: string
@@ -48,30 +38,34 @@ interface MockUserDataFetchParams {
   settings?: Settings
 }
 
-export const mockUserDataFetch = ({ firstName, lastName, profile, settings, preferences }: MockUserDataFetchParams) => {
-  jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
-    profile: {
-      firstName,
-      lastName,
-      fullName: `${firstName} ${lastName}`,
-      email: 'fake@email.com',
-      termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-      privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
-      trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
-      ...profile
-    } as Profile,
-    settings: settings ?? {},
-    preferences: preferences ?? {}
-  })
-}
+export const mockUserApi = () => {
+  const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
+  const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
+  const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
+  const updateAuth0UserMetadataMock = jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValue(undefined)
 
-export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRoles.patient, unmonitoredPatientId)
-  mockNotificationAPI()
-  mockDirectShareApi()
-  mockTeamAPI()
-  mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
-  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
-  mockChatAPI()
-  mockMedicalFilesAPI()
+  const mockUserDataFetch = ({ firstName, lastName, profile, settings, preferences }: MockUserDataFetchParams) => {
+    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
+      profile: {
+        firstName,
+        lastName,
+        fullName: `${firstName} ${lastName}`,
+        email: 'fake@email.com',
+        termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+        privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+        trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
+        ...profile
+      } as Profile,
+      settings: settings ?? {},
+      preferences: preferences ?? {}
+    })
+  }
+
+  return {
+    updateAuth0UserMetadataMock,
+    updateProfileMock,
+    updatePreferencesMock,
+    updateSettingsMock,
+    mockUserDataFetch
+  }
 }

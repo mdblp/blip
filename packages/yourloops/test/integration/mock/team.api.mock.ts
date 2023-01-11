@@ -26,9 +26,9 @@
  */
 
 import TeamAPI from '../../../lib/team/team.api'
+import { loggedInUserId } from './auth0.hook.mock'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
-import { loggedInUserId } from './mockAuth0Hook'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'

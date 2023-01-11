@@ -27,29 +27,34 @@
 
 import { act, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockPatientLogin } from '../../mock/auth'
-import { buildPatient } from '../../mock/mockPatientAPI'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { buildPatient, buildTeamMemberFromPatient } from '../../mock/patient.api.mock'
 import { renderPage } from '../../utils/render'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockUserApi } from '../../mock/mockUserApi'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockUserApi } from '../../mock/user.api.mock'
+import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 describe('Training page when new training available', () => {
   beforeAll(() => {
-    const notAckTrainingPatient = buildPatient({
-      profile: {
-        email: 'test@it.com',
-        firstName: 'Alain',
-        lastName: 'Provist',
-        fullName: 'Alain Provist',
-        patient: { birthday: '2010-01-20' },
-        trainingAck: {
-          acceptanceTimestamp: null,
-          isAccepted: null
-        }
+    const profile = {
+      email: 'test@it.com',
+      firstName: 'Alain',
+      lastName: 'Provist',
+      fullName: 'Alain Provist',
+      patient: { birthday: '2010-01-20' },
+      trainingAck: {
+        acceptanceTimestamp: null,
+        isAccepted: null
       }
-    })
-    mockPatientLogin(notAckTrainingPatient)
-    mockAuth0Hook()
+    }
+    const notAckTrainingPatient = buildPatient('id', [{
+      status: UserInvitationStatus.accepted,
+      teamId: 'team-id'
+    }], undefined, profile)
+    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient)
+    mockPatientLogin(patientAsTeamMember)
+    mockAuth0Hook(UserRoles.patient)
     mockUserApi()
   })
 

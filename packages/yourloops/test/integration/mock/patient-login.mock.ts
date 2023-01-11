@@ -25,27 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Theme } from '@mui/material/styles'
-import { makeStyles } from 'tss-react/mui'
-import Backdrop from '@mui/material/Backdrop'
-import CircularProgress from '@mui/material/CircularProgress'
+import { mockAuth0Hook } from './auth0.hook.mock'
+import { mockNotificationAPI } from './notification.api.mock'
+import { mockDirectShareApi } from './direct-share.api.mock'
+import { mockTeamAPI } from './team.api.mock'
+import PatientAPI from '../../../lib/patient/patient.api'
+import { mockChatAPI } from './chat.api.mock'
+import { mockMedicalFilesAPI } from './medical-files.api.mock'
+import { unmonitoredPatientId } from './patient.api.mock'
+import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { mockUserApi } from './user.api.mock'
 
-const useStyles = makeStyles()((theme: Theme) => ({
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: theme.palette.common.white
-  }
-}))
-
-function LoadingBackdrop({ open }: { open: boolean }): JSX.Element {
-  const { classes: { backdrop } } = useStyles()
-
-  return (
-    <Backdrop className={backdrop} open={open}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  )
+export const mockPatientLogin = (patient: ITeamMember) => {
+  mockAuth0Hook(UserRoles.patient, unmonitoredPatientId)
+  mockNotificationAPI()
+  mockDirectShareApi()
+  mockTeamAPI()
+  mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
+  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
+  mockChatAPI()
+  mockMedicalFilesAPI()
 }
-
-export default LoadingBackdrop

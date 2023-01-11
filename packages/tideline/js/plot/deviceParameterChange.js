@@ -76,7 +76,8 @@ function plotDeviceParameterChange(pool, opts) {
           'y': 0,
           width,
           'height': offset,
-          'xlink:href': picto
+          'xlink:href': picto,
+          'data-testid': `param_group_img`
         })
 
       allParameters.exit().remove()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,10 +26,10 @@
  */
 
 import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/auth'
-import { unmonitoredPatientAsTeamMember } from '../../mock/mockPatientAPI'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 
@@ -42,8 +42,8 @@ describe('Trends view for patient', () => {
     mockDataAPI(minimalTrendViewData)
     renderPage('/trends')
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient(false)
+    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
+    checkPatientNavBarAsPatient()
     checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
   })
 })

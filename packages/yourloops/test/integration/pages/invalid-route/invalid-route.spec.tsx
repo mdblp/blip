@@ -26,14 +26,14 @@
  */
 
 import { act, screen } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/mockAuth0Hook'
-import { mockUserDataFetch } from '../../mock/auth'
-import { mockNotificationAPI } from '../../mock/mockNotificationAPI'
+import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
-import { mockTeamAPI } from '../../mock/mockTeamAPI'
-import { mockPatientApiForHcp } from '../../mock/mockPatientAPI'
-import { mockDirectShareApi } from '../../mock/mockDirectShareAPI'
+import { mockUserApi } from '../../mock/user.api.mock'
+import { mockTeamAPI } from '../../mock/team.api.mock'
+import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
+import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'
@@ -41,9 +41,9 @@ describe('Invalid Route', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockNotificationAPI()
     mockTeamAPI()
-    mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockDirectShareApi()
   })

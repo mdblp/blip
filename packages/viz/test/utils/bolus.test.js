@@ -581,8 +581,8 @@ describe('bolus utilities', () => {
       assert.isFunction(bolusUtils.getMaxValue)
     })
 
-    it('should return NaN if type `wizard` and no bolus attached', () => {
-      expect(Number.isNaN(bolusUtils.getMaxValue({ type: 'wizard' }))).to.be.true
+    it('should return 0 if type `wizard` and no bolus attached', () => {
+      expect(bolusUtils.getMaxValue({ type: 'wizard' })).to.equal(0)
     })
 
     it('should return the value of a no-frills `normal` bolus', () => {

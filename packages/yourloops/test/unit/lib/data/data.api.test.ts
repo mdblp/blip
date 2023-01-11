@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService, { ErrorMessageStatus } from '../../../../services/http.service'
+import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { AxiosResponse } from 'axios'
 import DataApi from '../../../../lib/data/data.api'
 import { GetPatientDataOptions } from '../../../../lib/data/models/get-patient-data-options.model'

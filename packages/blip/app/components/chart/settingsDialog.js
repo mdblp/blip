@@ -99,7 +99,7 @@ const SettingsDialog = (props) => {
       id="device-usage-details-dialog"
       open={open}
       onClose={()=>setOpen(false)}
-      maxWidth="lg"
+      maxWidth="xl"
       scroll="body"
     >
       <DialogTitle>

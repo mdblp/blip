@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from 'axios'
-import { v4 as uuidv4 } from 'uuid'
+import Unit from '../models/medical/datum/enums/unit.enum'
+import { convertBG } from '../repositories/medical/datum/cbg.service'
 
-import appConfig from './config/config'
-import HttpService from '../services/http.service'
-import { HttpHeaderKeys } from './http/models/enums/http-header-keys.enum'
+interface UnitValuePair { unit: Unit | string, value: string}
 
-export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
-  if (config.params?.noHeader) {
-    delete config.params.noHeader
-  } else {
-    config = {
-      ...config,
-      headers: {
-        ...config.headers,
-        Authorization: `Bearer ${await HttpService.getAccessToken()}`,
-        [HttpHeaderKeys.traceToken]: uuidv4()
-      }
+export const getConvertedParamUnitAndValue = (paramUnit: Unit | string, paramValue: string, expectedUnit: Unit): UnitValuePair => {
+  if ((paramUnit === Unit.MilligramPerDeciliter || paramUnit === Unit.MmolPerLiter) && paramUnit !== expectedUnit) {
+    const valueAsNumber = Number(paramValue)
+    if (!isNaN(valueAsNumber)) {
+      return { unit: expectedUnit, value: convertBG(valueAsNumber, paramUnit).toString() }
     }
   }
-  return config
+  return { unit: paramUnit, value: paramValue }
 }
-
-function initAxios(): void {
-  axios.defaults.baseURL = appConfig.API_HOST
-  /**
-   * We use axios request interceptor to set the access token into headers each request the app send
-   */
-  axios.interceptors.request.use(onFulfilled)
-}
-
-export default initAxios

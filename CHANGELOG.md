@@ -3,7 +3,12 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.3-beta - 2022-11-29
+### Fixed
+- YLP-1682 Labels in PDF reports are not clear
+- YLP-1704 PDF Report Generation failed
+- YLP-1963 Glucose unit not coherent between curves and DBL settings
 ### Added
+- YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
@@ -39,13 +44,16 @@ It is based on Tidepool Blip 1.27.
 - YLP-1960 enhance pipeline
 - YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
 - YLP-1976 Fix PDF generation
+- YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
+- YLP-1991 Update patient header design and add currently available patients fields
+- YLP-2012 Migrate LabeledCheckbox to dumb
+- YLP-2015 Replace loaders by MUI CircularProgress
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5
 - Refactoring profile page code and adding tests
 - Remove react-test-renderer dependency
 - Update copyright on all files in `dumb` and `yourloops` packages
-- YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
 
 ## 3.0.2 - 2022-11-28
 ### Added

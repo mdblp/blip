@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockPatientLogin } from '../../mock/auth'
-import { unmonitoredPatientAsTeamMember } from '../../mock/mockPatientAPI'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
+  checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
 } from '../../assert/trends'
-import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/mockDataAPI'
+import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
@@ -60,6 +61,8 @@ describe('Trends view for anyone', () => {
       checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL179')
 
       checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
+
+      checkRangeSelection()
     })
   })
 
@@ -70,6 +73,8 @@ describe('Trends view for anyone', () => {
 
       await checkTrendsTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
+
+      checkRangeSelection()
     })
   })
 
@@ -86,6 +91,8 @@ describe('Trends view for anyone', () => {
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
 
       checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+
+      checkRangeSelection()
     })
   })
 })

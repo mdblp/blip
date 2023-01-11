@@ -36,9 +36,9 @@ import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { Monitoring } from '../../../lib/team/models/monitoring.model'
-import { monitoringParameters, mySecondTeamId, myThirdTeamId, monitoringParametersBgUnitMmol } from './mockTeamAPI'
 import PatientApi from '../../../lib/patient/patient.api'
 import { Profile } from '../../../lib/auth/models/profile.model'
+import { monitoringParameters, mySecondTeamId, myThirdTeamId, monitoringParametersBgUnitMmol } from './team.api.mock'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'
@@ -201,9 +201,10 @@ export const pendingPatient: Patient = buildPatient(
     firstName: 'Pending',
     fullName: 'Pending Patient',
     lastName: 'Patient',
-    sex: 'M'
+    sex: 'F',
+    referringDoctor: 'Doc Eur'
   },
-  defaultSettings,
+  { ...defaultSettings, a1c: { value: '8.3', date: '2022-12-16T08:18:38.473Z' } },
   defaultMetadata,
   defaultAlarm
 )
