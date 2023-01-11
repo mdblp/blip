@@ -146,8 +146,7 @@ const PatientProfileForm: FunctionComponent = () => {
       {a1cValue && a1cDate &&
         <Box className={classes.inputContainer}>
           <TextField
-            id="hbA1c"
-            label={t('patient-profile-hba1c', { hba1cMoment: tz(a1cDate, browserTimezone).format('L') })}
+            label={t('patient-profile-hba1c', { hba1cDate: tz(a1cDate, browserTimezone).format('L') })}
             variant="standard"
             disabled
             value={`${a1cValue}%`}

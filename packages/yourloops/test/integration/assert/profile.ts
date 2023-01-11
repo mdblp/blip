@@ -90,14 +90,14 @@ export const checkPatientProfilePage = (country: CountryCodes): PatientFieldsHtm
   const referringDoctorInput = screen.getByLabelText('Referring doctor')
   const insInput = screen.queryByLabelText('INS')
   const ssnInput = screen.queryByLabelText('SSN')
-  const hba1cInput = screen.queryByLabelText('Initial HbA1c')
+  const hba1cInput = screen.getByLabelText('Initial HbA1c 01/01/2020')
   const inputs = {
     ...checkCommonFields(),
     birthdayInput,
     birthPlaceInput,
     genderSelect,
-    referringDoctorInput,
-    hba1cInput
+    hba1cInput,
+    referringDoctorInput
   }
 
   expect(within(inputs.unitsSelect).getByRole('button')).toHaveAttribute('aria-disabled', 'true')
