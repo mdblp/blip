@@ -42,6 +42,7 @@ import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { PumpManufacturer, ReservoirChange, TimePrefs } from 'medical-domain'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
 interface ReservoirTooltipProps {
   reservoir: ReservoirChange
@@ -90,9 +91,7 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <div className={commonStyles.rowBold}>
-            <div className={commonStyles.label}>{label}</div>
-          </div>
+          <TooltipLine label={label} isBold={true}></TooltipLine>
         </div>
       }
     />

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.units {
-  composes: units from '../../../styles/tooltip-common.css';
-  margin-left: 10px;
+export enum TooltipColor {
+  DarkGray = 'DarkGray',
+  Undelivered = 'Undelivered'
 }

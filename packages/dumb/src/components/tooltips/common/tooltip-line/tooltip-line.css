@@ -33,3 +33,7 @@
 .colorUndelivered {
   color: var(--bolus-undelivered);
 }
+
+.colorDarkGray {
+  color: var(--gray-dark);
+}

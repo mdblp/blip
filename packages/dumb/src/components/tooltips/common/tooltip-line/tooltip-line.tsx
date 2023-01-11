@@ -28,21 +28,31 @@
 import React, { FunctionComponent } from 'react'
 import commonStyles from '../../../../styles/tooltip-common.css'
 import styles from './tooltip-line.css'
+import { TooltipColor } from '../../../../models/enums/tooltip-color.enum'
 
 interface TooltipLineProps {
   label: string
   value?: number | string
   units?: string
   isBold?: boolean
-  customColor?: boolean
+  customColor?: TooltipColor
 }
 
 export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
   const { customColor, isBold, label, value, units } = props
 
+  const getClassByTooltipColor = (tooltipColor: TooltipColor): string => {
+    switch (tooltipColor) {
+      case TooltipColor.DarkGray:
+        return styles.colorDarkGray
+      case TooltipColor.Undelivered:
+        return styles.colorUndelivered
+    }
+  }
+
   const getGlobalClasses = (): string => {
     const textClass = isBold ? commonStyles.rowBold : commonStyles.row
-    const colorClass = customColor ? styles.colorUndelivered : undefined
+    const colorClass = customColor ? getClassByTooltipColor(customColor) : undefined
 
     return colorClass ? `${textClass} ${colorClass}` : textClass
   }

@@ -53,6 +53,7 @@ import {
 import { formatInputTime, formatInsulin } from '../../../utils/format/format.util'
 import styles from './bolus-tooltip.css'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
 
 interface BolusTooltipProps {
   bolus: Bolus | Wizard
@@ -157,10 +158,10 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
             <TooltipLine label={t('Recommended')} value={formatInsulin(recommended)} units={insulinUnitLabel} isBold={true}></TooltipLine>
           }
           {isWizard && shouldDisplayOverride &&
-            <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold={true} customColor={true}></TooltipLine>
+            <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold={true} customColor={TooltipColor.Undelivered}></TooltipLine>
           }
           {isInterrupted &&
-            <TooltipLine label={t('Undelivered')} value={undeliveredValue} units={insulinUnitLabel} isBold={true} customColor={true}></TooltipLine>
+            <TooltipLine label={t('Undelivered')} value={undeliveredValue} units={insulinUnitLabel} isBold={true} customColor={TooltipColor.Undelivered}></TooltipLine>
           }
           {Number.isFinite(delivered) &&
             <TooltipLine label={t('Delivered')} value={formatInsulin(delivered)} units={insulinUnitLabel} isBold={true}></TooltipLine>

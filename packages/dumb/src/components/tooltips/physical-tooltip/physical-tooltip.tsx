@@ -37,7 +37,6 @@ import {
   Side
 } from '../common/tooltip/tooltip'
 import { Tooltip } from '../../../index'
-import styles from './physical-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
@@ -45,6 +44,7 @@ import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
 import { DurationUnit, DurationValue, PhysicalActivity, TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
 interface PhysicalTooltipProps {
   physicalActivity: PhysicalActivity
@@ -83,29 +83,12 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <div className={commonStyles.row}>
-            <div id="tooltip-physical-activity-title" className={styles.title}>{t('Physical Activity')}</div>
-          </div>
-          <div className={commonStyles.row}>
-            <div className={commonStyles.label}>{t('Intensity')}</div>
-            <div className={styles.value}>
-              {t(`${physicalActivity.reportedIntensity}-pa`)}
-            </div>
-          </div>
-          <div className={commonStyles.row}>
-            <div className={commonStyles.label}>{t('Duration')}</div>
-            <div className={styles.value}>{`${duration.value} ${t(duration.units)}`}</div>
-          </div>
+          <TooltipLine label={t('Physical Activity')} isBold={true}></TooltipLine>
+          <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)}></TooltipLine>
+          <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`}></TooltipLine>
           {
             physicalActivity.inputTime &&
-            <div className={commonStyles.row}>
-              <div className={commonStyles.label}>
-                {t('Entered at')}
-              </div>
-              <div className={styles.value}>
-                {formatInputTime(physicalActivity.inputTime, timePrefs)}
-              </div>
-            </div>
+            <TooltipLine label={t('Entered at')} value={formatInputTime(physicalActivity.inputTime, timePrefs)}></TooltipLine>
           }
         </div>
       }
