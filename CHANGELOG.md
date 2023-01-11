@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
+- YLP-1963 Glucose unit not coherent between curves and DBL settings
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
@@ -45,6 +46,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
 - YLP-1991 Update patient header design and add currently available patients fields
 - YLP-2012 Migrate LabeledCheckbox to dumb
+- YLP-2015 Replace loaders by MUI CircularProgress
 - YLP-2016 Migrate BolusTooltip to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions

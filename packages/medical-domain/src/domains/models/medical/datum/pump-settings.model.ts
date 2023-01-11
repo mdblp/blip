@@ -47,16 +47,18 @@ interface DeviceConfig {
   swVersion: string
 }
 
+export interface Parameter {
+  changeType: string
+  effectiveDate: string
+  level: number
+  name: string
+  unit: string
+  value: string
+}
+
 interface ParametersChange {
   changeDate: string
-  parameters: Array<{
-    changeType: string
-    effectiveDate: string
-    level: number
-    name: string
-    unit: string
-    value: string
-  }>
+  parameters: Parameter[]
 }
 
 interface PumpConfig {

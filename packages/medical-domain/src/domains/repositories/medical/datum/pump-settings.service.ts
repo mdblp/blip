@@ -37,21 +37,26 @@ import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
+import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
+import Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
-const normalizeHistory = (rawHistory: Array<Record<string, unknown>>): ParametersChange[] => {
+const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {
     const params = (h?.parameters ?? []) as Array<Record<string, string | number>>
     return {
       changeDate: (h?.changeDate ?? '') as string,
-      parameters: params.map(p => ({
-        changeType: p.changeType as string,
-        effectiveDate: p.effectiveDate as string,
-        level: p.level as number,
-        name: p.name as string,
-        unit: p.unit as string,
-        value: p.value as string
-      }))
+      parameters: params.map(param => {
+        const { unit, value } = getConvertedParamUnitAndValue(param.unit as Unit, param.value as string, opts.bgUnits)
+        return {
+          changeType: param.changeType as string,
+          effectiveDate: param.effectiveDate as string,
+          level: param.level as number,
+          name: param.name as string,
+          unit,
+          value
+        }
+      })
     }
   })
 }
@@ -89,14 +94,18 @@ const normalizePump = (rawPump: Record<string, unknown>): PumpConfig => {
   }
 }
 
-const normalizeParameters = (rawParams: Array<Record<string, unknown>>): ParameterConfig[] => {
+const normalizeParameters = (rawParams: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParameterConfig[] => {
   return rawParams.map(rawParam => {
+    const {
+      unit,
+      value
+    } = getConvertedParamUnitAndValue(rawParam.unit as Unit, rawParam.value as string, opts.bgUnits)
     return {
       effectiveDate: (rawParam?.effectiveDate ?? '') as string,
       level: (rawParam?.level ?? 1) as number,
       name: (rawParam?.name ?? '') as string,
-      unit: (rawParam?.unit ?? '') as string,
-      value: (rawParam?.value ?? '') as string
+      unit,
+      value
     }
   })
 }
@@ -123,8 +132,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       cgm: normalizeCgm(rawCgm),
       device: normalizeDevice(rawDevice),
       pump: normalizePump(rawPump),
-      history: normalizeHistory(rawHistory),
-      parameters: normalizeParameters(rawParams)
+      history: normalizeHistory(rawHistory, opts),
+      parameters: normalizeParameters(rawParams, opts)
     }
   }
   return pumpSettings

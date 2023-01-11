@@ -21,6 +21,8 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import CircularProgress from '@mui/material/CircularProgress'
+
 import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
@@ -44,7 +46,6 @@ import ChartType from 'yourloops/enum/chart-type.enum'
 const t = i18next.t.bind(i18next)
 const CBGDateTraceLabel = vizComponents.CBGDateTraceLabel
 const FocusedRangeLabels = vizComponents.FocusedRangeLabels
-const Loader = vizComponents.Loader
 
 const TrendsContainer = vizContainers.TrendsContainer
 const reshapeBgClassesToBgBounds = vizUtils.bg.reshapeBgClassesToBgBounds
@@ -573,7 +574,7 @@ class Trends extends React.Component {
     const currentPatientInViewId = patient.userid
 
     if (_.isEmpty(_.get(trendsState, currentPatientInViewId))) {
-      return <Loader />
+      return <CircularProgress className="centered-spinning-loader"/>
     }
 
     const endpoints = this.getEndpoints()
@@ -597,7 +598,7 @@ class Trends extends React.Component {
             <div className="container-box-inner patient-data-content-inner">
               {this.renderSubNav()}
               <div className="patient-data-content">
-                {loading && <Loader show overlay={true} />}
+                {loading && <CircularProgress className="centered-spinning-loader" />}
                 <div id="tidelineContainer" className="patient-data-chart-trends">
                   {this.renderChart()}
                 </div>
