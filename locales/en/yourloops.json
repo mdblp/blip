@@ -201,6 +201,7 @@
   "male": "Male",
   "mandatory-float-number": "Value must be a number",
   "mandatory-integer": "Value must be an integer",
+  "mandatory-range": "Enter a number between {{lowValue}} and {{highValue}}",
   "maximum": "Maximum:",
   "medical-files": "Medical files",
   "medical-record-delete-failed": "Medical record delete failed",
