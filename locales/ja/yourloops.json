@@ -19,7 +19,6 @@
   "add-patient": "患者を追加",
   "address": "住所",
   "admin": "管理者",
-  "alert-hypoglycemic": "Severe hypoglycemia",
   "alert-change-password-email-failed": "Impossible to send the change password e-mail. Please try again later.",
   "alert-change-password-email-success": "E-mail sent successfully",
   "alert-invitation-caregiver-failed": "介護者を追加できません。しばらくしてから再度お試しください。",

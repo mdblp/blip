@@ -21,7 +21,6 @@
   "admin": "Administrador",
   "alert-change-password-email-failed": "Impossible to send the change password e-mail. Please try again later.",
   "alert-change-password-email-success": "E-mail sent successfully",
-  "alert-hypoglycemic": "Severe hypoglycemia",
   "alert-invitation-caregiver-failed": "Imposible añadir cuidador. Vuelva a intentarlo más tarde.",
   "alert-invitation-caregiver-failed-user-is-patient": "No puede compartir sus datos con este usuario ya que no es un profesional de la salud.",
   "alert-invitation-patient-failed": "Imposible añadir paciente. Vuelva a intentarlo más tarde.",
