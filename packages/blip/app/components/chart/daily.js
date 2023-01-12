@@ -35,6 +35,7 @@ import BgSourceToggle from './bgSourceToggle'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
+  BolusTooltip,
   ConfidentialTooltip,
   FoodTooltip,
   ParameterTooltip,
@@ -52,7 +53,6 @@ import ChartType from 'yourloops/enum/chart-type.enum'
  * @typedef { import('./index').DailyDatePickerProps } DailyDatePickerProps
  */
 
-const BolusTooltip = vizComponents.BolusTooltip
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 class DailyChart extends React.Component {

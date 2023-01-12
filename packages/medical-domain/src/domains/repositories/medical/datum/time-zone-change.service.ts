@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import BaseDatumService from './basics/base-datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import TimeZoneChange from '../../../models/medical/datum/time-zone-change.model'
 import { getDstChange, toISOString } from '../../time/time.service'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): TimeZoneChange => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -37,7 +38,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const rawTo = (rawData?.to ?? {}) as Record<string, unknown>
   const tzChange: TimeZoneChange = {
     ...base,
-    type: 'deviceEvent',
+    type: DatumType.DeviceEvent,
     subType: 'timeChange',
     from: {
       time: rawFrom.time as string,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,9 +29,10 @@ import BaseDatum from './basics/base-datum.model'
 import Duration from './basics/duration.model'
 import Intensity from './enums/intensity.enum'
 import DurationUnit from './enums/duration-unit.enum'
+import { DatumType } from './enums/datum-type.enum'
 
 type PhysicalActivity = BaseDatum & Duration & {
-  type: 'physicalActivity'
+  type: DatumType
   uploadId: string
   guid: string
   reportedIntensity: Intensity

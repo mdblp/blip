@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,12 +30,13 @@ import BaseDatumService from './basics/base-datum.service'
 import Fill from '../../../models/medical/datum/fill.model'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Fill => {
   const base = BaseDatumService.normalize(rawData, opts)
   const fill: Fill = {
     ...base,
-    type: 'fill',
+    type: DatumType.Fill,
     epochEnd: base.epoch,
     normalEnd: base.normalTime,
     fillColor: rawData.fillColor as string,
