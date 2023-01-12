@@ -29,7 +29,6 @@ import { TimeService } from 'medical-domain'
 import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
-import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
@@ -94,7 +93,6 @@ function getMomentDayAt(date, tidelineData) {
  */
 class Trends extends React.Component {
   static propTypes = {
-    canPrint: PropTypes.bool.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     chartPrefs: PropTypes.object.isRequired,
     dataUtil: PropTypes.object,
@@ -102,21 +100,15 @@ class Trends extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
-    userIsHCP: PropTypes.bool.isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     trendsState: PropTypes.object.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
-    onSwitchToDashboard: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
-    onSwitchPatient: PropTypes.func.isRequired,
     onDatetimeLocationChange: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
-    prefixURL: PropTypes.string,
-    dialogRangeDatePicker: PropTypes.func.isRequired,
-    onClickNavigationBack: PropTypes.func.isRequired,
-    onClickPrint: PropTypes.func.isRequired
+    dialogRangeDatePicker: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -589,7 +581,6 @@ class Trends extends React.Component {
 
     return (
       <div id="tidelineMain" className="trends grid">
-        {this.renderHeader()}
         <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <div>
             {this.getTitle()}
@@ -626,22 +617,6 @@ class Trends extends React.Component {
           {rightFooter}
         </Footer>
       </div>
-    )
-  }
-
-  renderHeader() {
-    return (
-      <PatientNavBarMemoized
-        chartType={this.chartType}
-        onClickPrint={this.props.onClickPrint}
-        onClickDashboard={this.props.onSwitchToDashboard}
-        onClickNext={this.handleClickForward}
-        onClickDaily={this.handleClickDaily}
-        onClickTrends={this.handleClickTrends}
-        onSwitchPatient={this.props.onSwitchPatient}
-        currentPatient={this.props.patient}
-        prefixURL={this.props.prefixURL}
-      />
     )
   }
 

@@ -51,6 +51,7 @@ import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { getTomorrowDate } from '../../utils/helpers'
+import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -71,20 +72,8 @@ describe('Patient dashboard for HCP', () => {
     mockDataAPI()
   })
 
-  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>, patientId: string) {
-    /* Top bar */
-    expect(dashboard.getByTestId('subnav-patient-list')).toBeVisible()
+  function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>) {
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
-    const dashboardLink = dashboard.getByText('Dashboard')
-    const dailyLink = dashboard.getByText('Daily')
-    const trendsLink = dashboard.getByText('Trends')
-    expect(dashboardLink).toHaveAttribute('href', `/patient/${patientId}/dashboard`)
-    expect(dashboardLink).toBeVisible()
-    expect(dailyLink).toHaveAttribute('href', `/patient/${patientId}/daily`)
-    expect(dailyLink).toBeVisible()
-    expect(trendsLink).toHaveAttribute('href', `/patient/${patientId}/trends`)
-    expect(trendsLink).toBeVisible()
-    expect(dashboard.getByText('Generate report')).toBeVisible()
 
     /* Patient info widget */
     const patientInfoCard = within(dashboard.getByTestId('remote-monitoring-card'))
@@ -105,7 +94,8 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId)
+    checkPatientNavBarAsHCP()
+    testPatientDashboardCommonDisplay(dashboard)
     expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent('Remote monitoring programRemote monitoring:NoRequesting team:-End date:-Remaining time:-')
     checkHCPLayout(`${firstName} ${lastName}`)
 
@@ -132,7 +122,8 @@ describe('Patient dashboard for HCP', () => {
     // expect(teamsDropdown).toBeVisible()
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    testPatientDashboardCommonDisplay(dashboard, monitoredPatientId)
+    checkPatientNavBarAsHCP()
+    testPatientDashboardCommonDisplay(dashboard)
     /* Patient info widget */
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()

@@ -37,6 +37,7 @@ import { Daily, PatientDashboard, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
 import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
+import ChartType from 'yourloops/enum/chart-type.enum'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -152,7 +153,6 @@ class PatientDataPage extends React.Component {
     this.handleLoadDataRange = this.handleLoadDataRange.bind(this)
     this.updateChartPrefs = this.updateChartPrefs.bind(this)
     this.handleSwitchPatient = this.handleSwitchPatient.bind(this)
-    this.handleBackToListButton = this.handleBackToListButton.bind(this)
 
     this.unsubscribeStore = null
   }
@@ -278,22 +278,17 @@ class PatientDataPage extends React.Component {
     return this.renderChart()
   }
 
-  renderEmptyHeader() {
-    return <PatientNavBarMemoized
-      currentPatient={this.props.patient}
-      chartType="no-data"
-    />
-  }
-
   renderNoData() {
-    const header = this.renderEmptyHeader()
     const patientName = personUtils.fullName(this.props.patient)
     const noDataText = t('{{patientName}} does not have any data yet.', { patientName })
     const reloadBtnText = t('Click to reload.')
 
     return (
       <div>
-        {header}
+        <PatientNavBarMemoized
+          currentPatient={this.props.patient}
+          chartType="no-data"
+        />
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">
@@ -342,96 +337,86 @@ class PatientDataPage extends React.Component {
     const user = api.whoami
 
     return (
-      <Switch>
-        <Route path={`${prefixURL}/dashboard`}>
-          <PatientDashboard
-            bgPrefs={this.state.bgPrefs}
-            chartPrefs={chartPrefs}
-            patient={patient}
-            setPatient={setPatient}
-            userIsHCP={userIsHCP}
-            user={user}
-            isSelectedTeamMedical={isSelectedTeamMedical}
-            dataUtil={this.dataUtil}
-            timePrefs={this.state.timePrefs}
-            epochLocation={epochLocation}
-            msRange={msRange}
-            prefixURL={prefixURL}
-            loading={loadingState !== LOADING_STATE_DONE}
-            tidelineData={medicalData}
-            permsOfLoggedInUser={permsOfLoggedInUser}
-            trackMetric={this.trackMetric}
-            chatWidget={chatWidget}
-            alarmCard={alarmCard}
-            medicalFilesWidget={medicalFilesWidget}
-            onSwitchToTrends={this.handleSwitchToTrends}
-            onSwitchToDaily={this.handleSwitchToDaily}
-            onSwitchPatient={this.handleSwitchPatient}
-            onClickNavigationBack={this.handleBackToListButton}
-            canPrint={canPrint}
-            onClickPrint={this.handleClickPrint}
-          />
-        </Route>
-        <Route path={`${prefixURL}/daily`}>
-          <Daily
-            dialogDatePicker={dialogDatePicker}
-            bgPrefs={this.state.bgPrefs}
-            chartPrefs={chartPrefs}
-            dataUtil={this.dataUtil}
-            timePrefs={this.state.timePrefs}
-            patient={patient}
-            setPatient={setPatient}
-            userIsHCP={userIsHCP}
-            tidelineData={medicalData}
-            epochLocation={epochLocation}
-            msRange={msRange}
-            loading={loadingState !== LOADING_STATE_DONE}
-            canPrint={canPrint}
-            onClickPrint={this.handleClickPrint}
-            prefixURL={prefixURL}
-            onClickRefresh={this.handleClickRefresh}
-            onCreateMessage={this.handleShowMessageCreation}
-            onShowMessageThread={this.handleShowMessageThread.bind(this)}
-            onSwitchToDashboard={this.handleSwitchToDashboard}
-            onSwitchToDaily={this.handleSwitchToDaily}
-            onSwitchToTrends={this.handleSwitchToTrends}
-            onDatetimeLocationChange={this.handleDatetimeLocationChange}
-            trackMetric={this.trackMetric}
-            updateChartPrefs={this.updateChartPrefs}
-            ref={this.chartRef}
-            onSwitchPatient={this.handleSwitchPatient}
-            onClickNavigationBack={this.handleBackToListButton}
-          />
-        </Route>
-        <Route path={`${prefixURL}/trends`}>
-          <Trends
-            dialogRangeDatePicker={dialogRangeDatePicker}
-            bgPrefs={this.state.bgPrefs}
-            chartPrefs={chartPrefs}
-            dataUtil={this.dataUtil}
-            timePrefs={this.state.timePrefs}
-            epochLocation={epochLocation}
-            msRange={msRange}
-            patient={patient}
-            setPatient={setPatient}
-            userIsHCP={userIsHCP}
-            tidelineData={medicalData}
-            loading={loadingState !== LOADING_STATE_DONE}
-            canPrint={canPrint}
-            onClickPrint={this.handleClickPrint}
-            prefixURL={prefixURL}
-            onClickRefresh={this.handleClickRefresh}
-            onSwitchToDashboard={this.handleSwitchToDashboard}
-            onSwitchToDaily={this.handleSwitchToDaily}
-            onDatetimeLocationChange={this.handleDatetimeLocationChange}
-            trackMetric={this.trackMetric}
-            updateChartPrefs={this.updateChartPrefs}
-            trendsState={chartStates.trends}
-            onSwitchPatient={this.handleSwitchPatient}
-            onClickNavigationBack={this.handleBackToListButton}
-          />
-        </Route>
-      </Switch>
+      <React.Fragment>
+        <PatientNavBarMemoized
+          chartType={this.getChartType()}
+          currentPatient={patient}
+          onClickDashboard={() => this.navigateToChart(ChartType.Dashboard)}
+          onClickDaily={() => this.navigateToChart(ChartType.Daily)}
+          onClickTrends={() => this.navigateToChart(ChartType.Trends)}
+          onClickPrint={this.handleClickPrint}
+          onSwitchPatient={this.handleSwitchPatient}
+        />
+        <Switch>
+          <Route path={`${prefixURL}/dashboard`}>
+            <PatientDashboard
+              bgPrefs={this.state.bgPrefs}
+              chartPrefs={chartPrefs}
+              patient={patient}
+              setPatient={setPatient}
+              userIsHCP={userIsHCP}
+              user={user}
+              isSelectedTeamMedical={isSelectedTeamMedical}
+              dataUtil={this.dataUtil}
+              timePrefs={this.state.timePrefs}
+              epochLocation={epochLocation}
+              msRange={msRange}
+              loading={loadingState !== LOADING_STATE_DONE}
+              tidelineData={medicalData}
+              permsOfLoggedInUser={permsOfLoggedInUser}
+              trackMetric={this.trackMetric}
+              chatWidget={chatWidget}
+              alarmCard={alarmCard}
+              medicalFilesWidget={medicalFilesWidget}
+              onSwitchToDaily={this.handleSwitchToDaily}
+              canPrint={canPrint}
+            />
+          </Route>
+          <Route path={`${prefixURL}/daily`}>
+            <Daily
+              dialogDatePicker={dialogDatePicker}
+              bgPrefs={this.state.bgPrefs}
+              chartPrefs={chartPrefs}
+              dataUtil={this.dataUtil}
+              timePrefs={this.state.timePrefs}
+              patient={patient}
+              setPatient={setPatient}
+              tidelineData={medicalData}
+              epochLocation={epochLocation}
+              msRange={msRange}
+              loading={loadingState !== LOADING_STATE_DONE}
+              onClickRefresh={this.handleClickRefresh}
+              onCreateMessage={this.handleShowMessageCreation}
+              onShowMessageThread={this.handleShowMessageThread.bind(this)}
+              onDatetimeLocationChange={this.handleDatetimeLocationChange}
+              trackMetric={this.trackMetric}
+              updateChartPrefs={this.updateChartPrefs}
+              ref={this.chartRef}
+            />
+          </Route>
+          <Route path={`${prefixURL}/trends`}>
+            <Trends
+              dialogRangeDatePicker={dialogRangeDatePicker}
+              bgPrefs={this.state.bgPrefs}
+              chartPrefs={chartPrefs}
+              dataUtil={this.dataUtil}
+              timePrefs={this.state.timePrefs}
+              epochLocation={epochLocation}
+              msRange={msRange}
+              patient={patient}
+              setPatient={setPatient}
+              tidelineData={medicalData}
+              loading={loadingState !== LOADING_STATE_DONE}
+              onClickRefresh={this.handleClickRefresh}
+              onSwitchToDaily={this.handleSwitchToDaily}
+              onDatetimeLocationChange={this.handleDatetimeLocationChange}
+              trackMetric={this.trackMetric}
+              updateChartPrefs={this.updateChartPrefs}
+              trendsState={chartStates.trends}
+            />
+          </Route>
+        </Switch>
+      </React.Fragment>
     )
   }
 
@@ -474,11 +459,11 @@ class PatientDataPage extends React.Component {
 
     switch (history.location.pathname) {
       case `${prefixURL}/daily`:
-        return 'daily'
+        return ChartType.Daily
       case `${prefixURL}/trends`:
-        return 'trends'
+        return ChartType.Trends
       case `${prefixURL}/dashboard`:
-        return 'dashboard'
+        return ChartType.Dashboard
     }
     return null
   }
@@ -604,6 +589,30 @@ class PatientDataPage extends React.Component {
   }
 
   /**
+   * Handles navigation between patient navbar tabs
+   * @param chart {ChartType} the chart we are going to
+   * @Returns {void}
+   */
+  navigateToChart(chart) {
+    // event.preventDefault()
+    const currentChart = this.getChartType()
+    if (currentChart === chart) {
+      return
+    }
+    switch (chart) {
+      case ChartType.Dashboard:
+        this.handleSwitchToDashboard()
+        break
+      case ChartType.Daily:
+        this.handleSwitchToDaily(this.state.epochLocation)
+        break
+      case ChartType.Trends:
+        this.handleSwitchToTrends()
+        break
+    }
+  }
+
+  /**
    *
    * @param {moment.Moment | Date | number | null} datetime The day to display
    */
@@ -634,11 +643,6 @@ class PatientDataPage extends React.Component {
 
   handleSwitchPatient(newPatient) {
     this.props.setPatient(newPatient)
-  }
-
-  handleBackToListButton() {
-    const { history } = this.props
-    history.push('/home')
   }
 
   handleSwitchToTrends(e) {
