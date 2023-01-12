@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.units {
-  composes: units from '../../../styles/tooltip-common.css';
-  margin-left: 10px;
+import React, { FunctionComponent } from 'react'
+import commonStyles from '../../../../styles/tooltip-common.css'
+import styles from './tooltip-line.css'
+import { TooltipColor } from '../../../../models/enums/tooltip-color.enum'
+
+interface TooltipLineProps {
+  label: string
+  value?: number | string
+  units?: string
+  isBold?: boolean
+  customColor?: TooltipColor
+}
+
+export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
+  const { customColor, isBold, label, value, units } = props
+
+  const getClassByTooltipColor = (tooltipColor: TooltipColor): string => {
+    switch (tooltipColor) {
+      case TooltipColor.DarkGray:
+        return styles.colorDarkGray
+      case TooltipColor.Undelivered:
+        return styles.colorUndelivered
+    }
+  }
+
+  const getGlobalClasses = (): string => {
+    const textClass = isBold ? commonStyles.rowBold : commonStyles.row
+    const colorClass = customColor ? getClassByTooltipColor(customColor) : undefined
+
+    return colorClass ? `${textClass} ${colorClass}` : textClass
+  }
+
+  return (
+    <div className={getGlobalClasses()}>
+      <div className={commonStyles.label}>{label}</div>
+      {value && <div className={commonStyles.value}>{value}</div>}
+      {units && <div className={styles.units}>{units}</div>}
+    </div>
+  )
 }

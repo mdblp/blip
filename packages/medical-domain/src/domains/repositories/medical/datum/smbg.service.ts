@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,9 +30,10 @@ import Smbg from '../../../models/medical/datum/smbg.model'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { normalizeBg } from './cbg.service'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Smbg => {
-  return normalizeBg(rawData, opts, 'smbg') as Smbg
+  return normalizeBg(rawData, opts, DatumType.Smbg) as Smbg
 }
 
 const deduplicate = (data: Smbg[], opts: MedicalDataOptions): Smbg[] => {

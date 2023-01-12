@@ -25,18 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import { DatumType } from './enums/datum-type.enum'
-
-type Message = BaseDatum & {
-  type: DatumType
-  userid: string
-  groupid: string
-  messageText: string
-  parentMessage: string | null
-  user: {
-    fullName: string
-  }
+.container {
+  composes: containerFlex from '../../../styles/tooltip-common.css';
+  min-width: 160px;
 }
 
-export default Message
+.dividerSmall {
+  background-color: var(--bolus);
+  height: 2px;
+  margin: 5px -10px;
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,14 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.title {
-  flex-grow: 0;
-  font-weight: bold;
-  composes: smallSize from '../../../styles/typography.css';
-  text-align: right;
-}
-
-.value {
-  composes: value from '../../../styles/tooltip-common.css';
-  text-align: right;
+export enum DatumType {
+  Basal = 'basal',
+  Bolus = 'bolus',
+  Cbg = 'cbg',
+  DeviceEvent = 'deviceEvent',
+  Fill = 'fill',
+  Food = 'food',
+  Message = 'message',
+  PhysicalActivity = 'physicalActivity',
+  PumpSettings = 'pumpSettings',
+  Smbg = 'smbg',
+  Upload = 'upload',
+  Wizard = 'wizard'
 }

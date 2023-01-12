@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,12 +32,13 @@ import BaseDatumService from './basics/base-datum.service'
 import { PumpConfig } from '../../../models/medical/datum/pump-settings.model'
 import DatumService from '../datum.service'
 import { DatumProcessor } from '../../../models/medical/datum.model'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ReservoirChange => {
   const base = BaseDatumService.normalize(rawData, opts)
   const reservoirChange: ReservoirChange = {
     ...base,
-    type: 'deviceEvent',
+    type: DatumType.DeviceEvent,
     subType: 'reservoirChange',
     uploadId: rawData.uploadId as string,
     pump: { manufacturer: PumpManufacturer.Default } as PumpConfig

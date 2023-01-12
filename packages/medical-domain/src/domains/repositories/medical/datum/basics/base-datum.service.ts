@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,8 +28,9 @@
 import Source from '../../../../models/medical/datum/enums/source.enum'
 import MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 import BaseTimeService from './base-time.service'
-import BaseDatum, { DatumType } from '../../../../models/medical/datum/basics/base-datum.model'
+import BaseDatum from '../../../../models/medical/datum/basics/base-datum.model'
 import { DatumProcessor } from '../../../../models/medical/datum.model'
+import { DatumType } from '../../../../models/medical/datum/enums/datum-type.enum'
 
 /**
  * extracted from packages/tideline/js/tidelinedata.js

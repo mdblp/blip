@@ -25,18 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import { DatumType } from './enums/datum-type.enum'
-
-type Message = BaseDatum & {
-  type: DatumType
-  userid: string
-  groupid: string
-  messageText: string
-  parentMessage: string | null
-  user: {
-    fullName: string
-  }
+export enum WizardInputMealFat {
+  No = 'no',
+  Yes = 'yes'
 }
-
-export default Message

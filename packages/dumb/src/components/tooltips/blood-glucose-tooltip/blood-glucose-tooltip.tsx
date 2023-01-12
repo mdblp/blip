@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,6 @@ import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
-import styles from './blood-glucose-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatBgValue } from '../../../utils/format/format.util'
 import {
@@ -42,10 +41,12 @@ import {
   DEFAULT_TOOLTIP_TAIL,
   Position,
   Side
-} from '../tooltip/tooltip'
+} from '../common/tooltip/tooltip'
 import { BgPrefs, ClassificationType } from '../../../models/blood-glucose.model'
 import { Cbg, Smbg, TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
 
 interface BloodGlucoseTooltipProps {
   bgPrefs: BgPrefs
@@ -81,17 +82,10 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <div className={commonStyles.rowBold}>
-            <div className={commonStyles.label}>{t('BG')}</div>
-            <div className={commonStyles.value}>
-              {formattedValue}
-            </div>
-          </div>
+          <TooltipLine label={t('BG')} value={formattedValue} isBold />
           {
             isSmbg &&
-            <div className={styles.rowColorDarkGray}>
-              <div className={commonStyles.label}>{t('Calibration')}</div>
-            </div>
+            <TooltipLine label={t('Calibration')} customColor={TooltipColor.DarkGray} />
           }
         </div>
       }

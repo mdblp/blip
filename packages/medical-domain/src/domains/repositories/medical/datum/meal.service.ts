@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,6 +32,7 @@ import Meal from '../../../models/medical/datum/meal.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import { DatumProcessor } from '../../../models/medical/datum.model'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Meal => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -61,7 +62,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
 
   const meal: Meal = {
     ...base,
-    type: 'food',
+    type: DatumType.Food,
     meal: 'rescuecarbs',
     uploadId: rawData.uploadId as string,
     nutrition,

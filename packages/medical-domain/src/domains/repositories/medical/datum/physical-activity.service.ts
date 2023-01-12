@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import BaseDatumService from './basics/base-datum.service'
 import DurationService from './basics/duration.service'
 import PhysicalActivity from '../../../models/medical/datum/physical-activity.model'
 import { DatumProcessor } from '../../../models/medical/datum.model'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PhysicalActivity => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -42,7 +43,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const physicalActivity: PhysicalActivity = {
     ...base,
     ...duration,
-    type: 'physicalActivity',
+    type: DatumType.PhysicalActivity,
     uploadId: rawData.uploadId as string,
     guid: rawData.guid as string,
     reportedIntensity: rawData.reportedIntensity as Intensity,

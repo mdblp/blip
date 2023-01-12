@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import ConfidentialMode from '../../../models/medical/datum/confidential-mode.mo
 import DurationService from './basics/duration.service'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ConfidentialMode => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -38,7 +39,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const confidentialMode: ConfidentialMode = {
     ...base,
     ...duration,
-    type: 'deviceEvent',
+    type: DatumType.DeviceEvent,
     subType: 'confidential',
     uploadId: rawData.uploadId as string,
     guid: rawData.guid as string,
