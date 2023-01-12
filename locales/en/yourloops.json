@@ -426,7 +426,6 @@
   "until": "Until",
   "upload-prescription": "Upload prescription",
   "user-name": "{{firstName}} {{lastName}}",
-  "valid-email-alert": "Account verification is needed before login, please check your emails",
   "verify-email-details": "In order to start using Yourloops, you need to confirm your email address by clicking the link you just received.",
   "verify-email-title": "Verify your email address",
   "very-low-bg-input": "Very low blood glucose input",
