@@ -28,7 +28,7 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 
-import { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
+import { RemoteMonitoringWidgetProps } from '../../../../components/dashboard-widgets/remote-monitoring-widget'
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import { render, unmountComponentAtNode } from 'react-dom'
 import * as patientHook from '../../../../lib/patient/patient.provider'
@@ -80,7 +80,7 @@ describe('PatientAlarmDialog', () => {
     }
   })
 
-  function mountComponent(props: PatientInfoWidgetProps = { patient }) {
+  function mountComponent(props: RemoteMonitoringWidgetProps = { patient }) {
     act(() => {
       render(
           <ThemeProvider theme={getTheme()}>

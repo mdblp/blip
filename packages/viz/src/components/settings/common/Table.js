@@ -72,11 +72,11 @@ class Table extends React.Component {
       (column) => {
         const classname = (column.className) ? `${styles.secondaryLabelWithMain} ${column.className}` : styles.secondaryLabelWithMain
 
-        return <td key={column.key} className={classname}>{column.cell(rowData, column.key)}</td>
+        return <td key={column.key} data-testid={`${rowData.rawData.toLowerCase()}-${column.key}`} className={classname}>{column.cell(rowData, column.key)}</td>
       }
     )
 
-    return (<tr key={rowKey} className={trClassName} data-raw={rowData.rawData}>{cells}</tr>)
+    return (<tr key={rowKey} data-testid={`${rowData.rawData.toLowerCase()}-row`} className={trClassName} data-raw={rowData.rawData}>{cells}</tr>)
   }
 
   renderRows(normalizedColumns) {

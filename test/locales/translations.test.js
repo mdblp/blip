@@ -70,6 +70,7 @@ const ignoredTransKeysForBlip = [
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',
   'bolus_${bolusType}',
+  'bolus_${bolusSubType}',
   'params|${parameter.name}',
   'params|${row.name}'
 ]
@@ -114,6 +115,7 @@ const ignoredTransKeyForYourLoops = [
   'consent-patient-privacy-policy',
   'consent-patient-terms-of-use',
   'consent-monitoring-terms-of-use',
+  'diabete-type',
   'not-logged-in',
   'modal-add-medical-team-code-no-invite',
   'modal-caregiver-remove-patient-failure',
@@ -146,10 +148,16 @@ const ignoredTransKeyForYourLoops = [
   'optional',
   'training-body',
   'login',
-  'refresh'
+  'refresh',
+  'login-page-desktop-info-1',
+  'login-page-desktop-info-2',
+  'login-page-desktop-info-3',
+  'login-page-desktop-title',
+  'login-page-mobile-title'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
+  'gender-${patient.profile.sex.toLocaleLowerCase()}',
   // Documentation!
   'translate-me',
   'translate-{{someone}}'

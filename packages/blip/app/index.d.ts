@@ -32,15 +32,16 @@ import ChatWidget from 'yourloops/components/chat/chat-widget'
 import MedicalFilesWidget from 'yourloops/components/dashboard-widgets/medical-files/medical-files-widget'
 import AlarmCard from 'yourloops/components/alarm/alarm-card'
 import BlipApi from 'yourloops/lib/data/blip.api'
-import ProfileDialog from 'yourloops/components/dialogs/patient-profile'
 import DialogDatePicker from 'yourloops/components/date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from 'yourloops/components/date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from 'yourloops/components/dialogs/pdf-print-options'
-import PatientInfoWidget from 'yourloops/components/dashboard-widgets/patient-info-widget'
 import { IUser } from 'yourloops/lib/data/models/i-user.model'
 import { PatientData, PatientDatum } from 'yourloops/lib/data/models/patient-datum.model'
 import { MessageNote } from 'yourloops/lib/data/models/message-note.model'
-import { GetPatientDataOptions, GetPatientDataOptionsV0 } from 'yourloops/lib/data/models/get-patient-data-options.model'
+import {
+  GetPatientDataOptions,
+  GetPatientDataOptionsV0
+} from 'yourloops/lib/data/models/get-patient-data-options.model'
 
 interface BlipProperties {
   config: AppConfig;
@@ -48,15 +49,12 @@ interface BlipProperties {
   patient: Patient;
   // eslint-disable-next-line @typescript-eslint/ban-types
   setPatient: Function;
-  patients: Patient[];
   userIsHCP: boolean;
   isSelectedTeamMedical: boolean;
   prefixURL: string;
-  profileDialog: typeof ProfileDialog;
   dialogDatePicker: typeof DialogDatePicker;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   dialogPDFOptions: typeof DialogPDFOptions;
-  patientInfoWidget: typeof PatientInfoWidget;
   chatWidget: typeof ChatWidget;
   medicalFilesWidget: typeof MedicalFilesWidget;
   alarmCard: typeof AlarmCard;
@@ -65,22 +63,22 @@ interface BlipProperties {
 // FIXME: For some reason, the yourloops auth hook
 // don't like this export.
 declare function cleanStore(): void;
+
 export {
   BlipProperties,
   BlipApi,
   DialogDatePicker,
   DialogRangeDatePicker,
   DialogPDFOptions,
-  PatientInfoWidget,
   IUser,
   PatientDatum,
   PatientData,
-  ProfileDialog,
   MessageNote,
   GetPatientDataOptions,
   GetPatientDataOptionsV0,
   cleanStore
-};
+}
 
 declare function Blip(props: BlipProperties): JSX.Element;
-export default Blip;
+
+export default Blip

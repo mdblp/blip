@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import moment from 'moment-timezone'
 
 import config from '../../../lib/config/config'
 import { getCurrentLang, getLangName } from '../../../lib/language'
+import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 
 describe('Language', () => {
   const zeSpy = jest.fn()
@@ -41,7 +42,7 @@ describe('Language', () => {
 
   afterAll(async () => {
     delete window.zE
-    await i18n.changeLanguage('en')
+    await i18n.changeLanguage(LanguageCodes.En)
     delete window._paq
     config.METRICS_SERVICE = 'disabled'
   })
@@ -52,20 +53,20 @@ describe('Language', () => {
   })
 
   it('should update zendesk & moment locale on change', async () => {
-    await i18n.changeLanguage('fr')
+    await i18n.changeLanguage(LanguageCodes.Fr)
     expect(zeSpy).toHaveBeenCalledTimes(1)
-    expect(moment.locale()).toBe('fr')
-    expect(localStorage.getItem('lang')).toBe('fr')
-    expect(getCurrentLang()).toBe('fr')
-    expect(window._paq).toEqual([['setCustomVariable', 1, 'UserLang', 'fr', 'visit']])
+    expect(moment.locale()).toBe(LanguageCodes.Fr)
+    expect(localStorage.getItem('lang')).toBe(LanguageCodes.Fr)
+    expect(getCurrentLang()).toBe(LanguageCodes.Fr)
+    expect(window._paq).toEqual([['setCustomVariable', 1, 'UserLang', LanguageCodes.Fr, 'visit']])
   })
 
   it('getLangName should return the language name', () => {
-    expect(getLangName('en')).toBe('English')
-    expect(getLangName('fr')).toBe('Français')
-    expect(getLangName('de')).toBe('Deutsch')
-    expect(getLangName('es')).toBe('Español')
-    expect(getLangName('it')).toBe('Italiano')
-    expect(getLangName('nl')).toBe('Nederlands')
+    expect(getLangName(LanguageCodes.En)).toBe('English')
+    expect(getLangName(LanguageCodes.Fr)).toBe('Français')
+    expect(getLangName(LanguageCodes.De)).toBe('Deutsch')
+    expect(getLangName(LanguageCodes.Es)).toBe('Español')
+    expect(getLangName(LanguageCodes.It)).toBe('Italiano')
+    expect(getLangName(LanguageCodes.Nl)).toBe('Nederlands')
   })
 })

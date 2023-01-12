@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,20 @@
 
 :global(.centered-spinning-loader) {
   position: absolute;
-  top: calc(50vh - 20px);
-  left: calc(50vw - 20px);
+  top: calc(50% - 20px);
+  left: calc(50% - 20px);
+}
+
+:global(.primary-color-main) {
+  color: var(--color-primary-main)
+}
+
+:global(.bold) {
+  font-weight: bold;
+}
+
+:global(.flex) {
+  display: flex;
 }
 
 :global(.visibility-hidden) {

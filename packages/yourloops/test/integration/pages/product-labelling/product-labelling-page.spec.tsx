@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import { act, screen } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
+import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 
 describe('Product labelling page', () => {
   beforeAll(() => {
@@ -43,8 +44,7 @@ describe('Product labelling page', () => {
 
   it('should render product labelling with the right selected language and version', async () => {
     renderPage('/')
-    expect(screen.getByText('Welcome to Yourloops. Please login or register')).toBeInTheDocument()
-    checkFooter({ needFooterLanguageSelector: true })
+    checkFooter({ needFooterLanguageSelector: false })
 
     await userEvent.click(screen.getByText('Product Labelling'))
 
@@ -54,7 +54,7 @@ describe('Product labelling page', () => {
     expect(screen.getByText('Legal Manufacturer')).toBeInTheDocument()
 
     act(() => {
-      i18n.changeLanguage('fr')
+      i18n.changeLanguage(LanguageCodes.Fr)
     })
     expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, publiée le 2000-01-01`)).toBeInTheDocument()
     expect(screen.getByText(`YLPZ-RA-LAD-001-fr-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_FR_REV as string}`)).toBeInTheDocument()

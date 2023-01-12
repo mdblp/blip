@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 import BaseDatum from './basics/base-datum.model'
 import PumpManufacturer from './enums/pump-manufacturer.enum'
+import { DatumType } from './enums/datum-type.enum'
 
 interface CgmConfig {
   apiVersion: string
@@ -46,16 +47,18 @@ interface DeviceConfig {
   swVersion: string
 }
 
+export interface Parameter {
+  changeType: string
+  effectiveDate: string
+  level: number
+  name: string
+  unit: string
+  value: string
+}
+
 interface ParametersChange {
   changeDate: string
-  parameters: Array<{
-    changeType: string
-    effectiveDate: string
-    level: number
-    name: string
-    unit: string
-    value: string
-  }>
+  parameters: Parameter[]
 }
 
 interface PumpConfig {
@@ -75,7 +78,7 @@ interface ParameterConfig {
 }
 
 type PumpSettings = BaseDatum & {
-  type: 'pumpSettings'
+  type: DatumType
   uploadId: string
   basalSchedules: object[]
   activeSchedule: string

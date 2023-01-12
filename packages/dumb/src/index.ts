@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,7 @@
  */
 
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
+import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
@@ -43,7 +44,7 @@ import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/tot
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
-import Tooltip from './components/tooltips/tooltip/tooltip'
+import Tooltip from './components/tooltips/common/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
@@ -51,10 +52,12 @@ import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
+import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 
 export {
   AverageDailyDoseStat,
   BloodGlucoseTooltip,
+  BolusTooltip,
   CBGMeanStat,
   CBGPercentageBarChart,
   CBGStandardDeviation,
@@ -62,6 +65,7 @@ export {
   CgmTable,
   ConfidentialTooltip,
   FoodTooltip,
+  LabeledCheckbox,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,

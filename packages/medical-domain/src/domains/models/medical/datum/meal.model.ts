@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,9 +28,10 @@
 import BaseDatum from './basics/base-datum.model'
 import Prescriptor from './enums/prescriptor.enum'
 import Unit from './enums/unit.enum'
+import { DatumType } from './enums/datum-type.enum'
 
 type Meal = BaseDatum & {
-  type: 'food'
+  type: DatumType
   uploadId: string
   meal: 'rescuecarbs'
   nutrition: Nutrition

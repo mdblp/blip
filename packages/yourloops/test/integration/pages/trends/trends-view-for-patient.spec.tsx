@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,8 +42,8 @@ describe('Trends view for patient', () => {
     mockDataAPI(minimalTrendViewData)
     renderPage('/trends')
 
-    expect(await screen.findByTestId('patient-data-subnav-outer', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient(false)
+    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
+    checkPatientNavBarAsPatient()
     checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
   })
 })

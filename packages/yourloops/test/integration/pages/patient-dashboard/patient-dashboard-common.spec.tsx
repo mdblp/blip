@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockPatientApiForHcp, unmonitoredPatientId } from '../../mock/patient.api.mock'
+import { mockPatientApiForHcp, monitoredPatientId, unmonitoredPatientId } from '../../mock/patient.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -81,5 +81,36 @@ describe('Patient dashboard for anyone', () => {
     expect(statsWidgets.getByTestId('loop-mode-stat')).toHaveTextContent('Avg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11m')
     expect(statsWidgets.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs10g')
     expect(deviceUsageWidget.getByTestId('stat-sensorUsage')).toHaveTextContent('Sensor Usage1%')
+
+    const remoteMonitoringCard = screen.getByTestId('remote-monitoring-card')
+    expect(remoteMonitoringCard).toBeVisible()
+    expect(remoteMonitoringCard).toHaveTextContent('Remote monitoring programRemote monitoring:No')
+  })
+
+  it('monitored patient should have correct cards', async () => {
+    renderPage(`/patient/${monitoredPatientId}/dashboard`)
+    const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
+    expect(statsWidgets).toBeVisible()
+    expect(statsWidgets).toHaveTextContent('Patient statisticsTime In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLAvg. Glucose (CGM)mg/dL135Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10g')
+
+    const deviceUsageWidget = screen.getByTestId('device-usage-card')
+    expect(deviceUsageWidget).toBeVisible()
+    expect(deviceUsageWidget).toHaveTextContent('Device UsageDevicesDBL:DiabeloopPump:VICENTRACGM:Dexcom G6Last updatesSensor Usage1%')
+
+    const remoteMonitoringCard = screen.getByTestId('remote-monitoring-card')
+    expect(remoteMonitoringCard).toBeVisible()
+    expect(remoteMonitoringCard).toHaveTextContent('Remote monitoring programRemote monitoring:YesRenewRemove')
+
+    const medicalFilesCard = screen.getByTestId('medical-files-card')
+    expect(medicalFilesCard).toBeVisible()
+    expect(medicalFilesCard).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Weekly reportsWeekly_report_2022-01-02Medical recordsMedical_record_2022-01-02New')
+
+    const alarmCard = screen.getByTestId('alarm-card')
+    expect(alarmCard).toBeVisible()
+    expect(alarmCard).toHaveTextContent('EventsCurrent eventsTime spent out of range from target10%Severe hypoglycemia20%Data not transferred30%')
+
+    const chartCard = screen.getByTestId('chat-card')
+    expect(chartCard).toBeVisible()
+    expect(chartCard).toHaveTextContent('Messages ReplyPrivate')
   })
 })

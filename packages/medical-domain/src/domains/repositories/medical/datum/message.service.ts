@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Message => {
   rawData.time = rawData.timestamp
@@ -38,7 +39,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const rawUser = (rawData?.user ?? {}) as Record<string, unknown>
   const message: Message = {
     ...base,
-    type: 'message',
+    type: DatumType.Message,
     userid: rawData.userid as string,
     groupid: rawData.groupid as string,
     messageText: rawData.messagetext as string,

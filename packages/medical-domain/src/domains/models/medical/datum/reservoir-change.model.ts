@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,9 +27,10 @@
 
 import BaseDatum from './basics/base-datum.model'
 import { PumpConfig } from './pump-settings.model'
+import { DatumType } from './enums/datum-type.enum'
 
 type ReservoirChange = BaseDatum & {
-  type: 'deviceEvent'
+  type: DatumType
   subType: 'reservoirChange'
   uploadId: string
   pump: PumpConfig

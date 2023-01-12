@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,8 @@ import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import Unit from '../../../models/medical/datum/enums/unit.enum'
+import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -40,9 +42,11 @@ const DEVICE_PARAMS_OFFSET = 30 * 60 * 1000
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): DeviceParameterChange => {
   const base = BaseDatumService.normalize(rawData, opts)
+  const { unit, value } = getConvertedParamUnitAndValue(rawData.units as Unit, rawData.value as string, opts.bgUnits)
+  const { value: previousValue } = getConvertedParamUnitAndValue(rawData.units as Unit, rawData.previousValue as string, opts.bgUnits)
   const deviceParameterChange: DeviceParameterChange = {
     ...base,
-    type: 'deviceEvent',
+    type: DatumType.DeviceEvent,
     subType: 'deviceParameter',
     params: [
       {
@@ -52,9 +56,9 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
         uploadId: rawData.uploadId as string,
         name: rawData.name as string,
         level: rawData.level as string,
-        units: rawData.units as Unit,
-        value: rawData.value as string,
-        previousValue: rawData.previousValue as string,
+        units: unit as Unit,
+        value,
+        previousValue,
         lastUpdateDate: rawData.lastUpdateDate as string
       }
     ]
