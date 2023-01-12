@@ -68,10 +68,7 @@ describe('Login page desktop view', () => {
     expect(languageSelector).toBeVisible()
 
     // main content
-    expect(within(infoContainer).getByText('is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.')).toBeVisible()
-    expect(within(infoContainer).getByText('It provides access to visual representations of data that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.')).toBeVisible()
-    expect(within(infoContainer).getByText('YourLoops also enables patients to securely share their data with their medical team or caregivers.')).toBeVisible()
-    expect(within(infoContainer).getByText('For health professionals, YourLoops is the platform for monitoring their patients. Through these features, it saves time and facilitates therapeutic decision-making.')).toBeVisible()
+    expect(infoContainer).toHaveTextContent('Yourloops is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.It provides access to visual representations of data that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.YourLoops also enables patients to securely share their data with their medical team or caregivers.For health professionals, YourLoops is the platform for monitoring their patients. Through these features, it saves time and facilitates therapeutic decision-making.Learn more')
     expect(moreInfoLink).toBeVisible()
     expect(moreInfoLink).toHaveAttribute('href', 'https://www.dbl-diabetes.com')
     checkFooter({ needFooterLanguageSelector: false })
