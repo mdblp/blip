@@ -233,6 +233,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
         teamHook.refresh()
       }
       patientHook.refresh()
+      teamHook.refresh()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))
