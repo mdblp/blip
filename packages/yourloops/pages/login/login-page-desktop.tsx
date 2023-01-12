@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { Theme } from '@mui/material/styles'
@@ -67,7 +67,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     marginRight: theme.spacing(2),
     paddingInline: theme.spacing(3),
     textTransform: 'capitalize',
-    width: 136
+    width: 150
   },
   link: {
     textTransform: 'capitalize',
@@ -197,12 +197,32 @@ const LoginPageDesktop: FunctionComponent = () => {
 
         <Box display="flex" height="100%">
           <Box className={classes.infoContainer} data-testid="info-container">
-            <Box className={classes.heading} data-testid="login-page-title">
-              <Box color="var(--logo-color)" component="span">YourLoops</Box> {t('login-page-title')}
+            <Box className={classes.heading} data-testid="login-page-desktop-title">
+              <Trans
+                i18nKey="login-page-desktop-title"
+                components={{ strong: <strong /> }}
+              />
             </Box>
-            <p className={classes.info}>{t('login-page-info-1')}</p>
-            <p className={classes.info}>{t('login-page-info-2')}</p>
-            <p className={classes.info}>{t('login-page-info-3')}</p>
+            <Box className={classes.info}>
+              <p>
+                <Trans
+                  i18nKey="login-page-desktop-info-1"
+                  components={{ strong: <strong /> }}
+                />
+              </p>
+              <p>
+                <Trans
+                  i18nKey="login-page-desktop-info-2"
+                  components={{ strong: <strong /> }}
+                />
+              </p>
+              <p>
+                <Trans
+                  i18nKey="login-page-desktop-info-3"
+                  components={{ strong: <strong /> }}
+                />
+              </p>
+            </Box>
             {i18n.language !== LanguageCodes.Fr &&
               <Link
                 underline="none"
@@ -210,7 +230,7 @@ const LoginPageDesktop: FunctionComponent = () => {
                 target="_blank"
                 rel="nofollow"
               >
-               <Typography className={classes.link}>{t('learn-more')}</Typography>
+                <Typography className={classes.link}>{t('learn-more')}</Typography>
               </Link>
             }
           </Box>
