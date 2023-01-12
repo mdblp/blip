@@ -45,6 +45,7 @@ import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   button: {
     textTransform: 'capitalize',
+    fontSize: '1.1rem',
     width: '100%',
     paddingBlock: theme.spacing(1)
   },
@@ -126,7 +127,7 @@ const LoginPageMobile: FunctionComponent = () => {
           <Box>
             <LanguageIcon
               data-testid="language-icon"
-              sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1) }}
+              sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1), fontSize: '1.4rem' }}
             />
             <LanguageSelect className={classes.languageSelect} />
           </Box>
