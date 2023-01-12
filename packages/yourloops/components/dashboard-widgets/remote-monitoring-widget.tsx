@@ -154,21 +154,21 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
       >
         <CardContent>
           <Box display="flex" gap={2} marginBottom={2}>
-            <Typography className="bold">{t('remote-monitoring')}</Typography>
+            <Typography className="bold">{t('colon', { label: t('remote-monitoring') })}</Typography>
             <Typography id="patient-info-remote-monitoring-value">
               {patient.monitoring?.enabled ? t('yes') : t('no')}
             </Typography>
           </Box>
           <Box display="flex" gap={2} marginY={2}>
-            <Typography className="bold">{t('requesting-team')}</Typography>
+            <Typography className="bold">{t('colon', { label: t('requesting-team') })}</Typography>
             <Typography>{requestingTeam?.name || '-'}</Typography>
           </Box>
           <Box display="flex" gap={2} marginY={2}>
-            <Typography className="bold">{t('end-date')}</Typography>
+            <Typography className="bold">{t('colon', { label: t('end-date') })}</Typography>
             <Typography>{endDate}</Typography>
           </Box>
           <Box display="flex" gap={2} marginY={2}>
-            <Typography className="bold">{t('remaining-time')}</Typography>
+            <Typography className="bold">{t('colon', { label: t('remaining-time') })}</Typography>
             <Typography>{remainingTime}</Typography>
           </Box>
         </CardContent>
