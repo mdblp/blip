@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-.rowColorDarkGray {
-  composes: row from '../../../styles/tooltip-common.css';
-  color: var(--gray-dark);
+export enum BolusType {
+  Manual = 'Manual',
+  Meal = 'Meal',
+  Micro = 'Micro'
 }

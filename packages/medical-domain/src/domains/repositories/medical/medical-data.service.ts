@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MGDL_UNITS } from '../../models/medical/datum/cbg.model'
+import Cbg, { MGDL_UNITS } from '../../models/medical/datum/cbg.model'
 import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
 import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
 import Fill from '../../models/medical/datum/fill.model'
@@ -53,7 +53,6 @@ import MedicalDataOptions, {
   defaultMedicalDataOptions
 } from '../../models/medical/medical-data-options.model'
 import Datum from '../../models/medical/datum.model'
-import { DatumType, datumTypes } from '../../models/medical/datum/basics/base-datum.model'
 import TimeZoneItem from '../../models/time/time-zone-item.model'
 import {
   addAtTimezone,
@@ -72,6 +71,13 @@ import {
   twoWeeksAgo
 } from '../time/time.service'
 import PumpSettings from '../../models/medical/datum/pump-settings.model'
+import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
+import Bolus from '../../models/medical/datum/bolus.model'
+import Basal from '../../models/medical/datum/basal.model'
+import Meal from '../../models/medical/datum/meal.model'
+import PhysicalActivity from '../../models/medical/datum/physical-activity.model'
+import Smbg from '../../models/medical/datum/smbg.model'
+import Upload from '../../models/medical/datum/upload.model'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -127,7 +133,7 @@ class MedicalDataService {
   // for compatibility with tidelineData interface only...
   public get grouped(): Record<DatumType, Datum[]> {
     const initalValue: Record<string, Datum[]> = {}
-    for (const type of datumTypes) {
+    for (const type of Object.values(DatumType)) {
       initalValue[type] = []
     }
 
@@ -278,57 +284,59 @@ class MedicalDataService {
     rawData.forEach(raw => {
       try {
         const datum = DatumService.normalize(raw, this._datumOpts)
+        const deviceEventDatum = datum as ConfidentialMode | DeviceParameterChange | ReservoirChange | WarmUp | ZenMode
+
         switch (datum.type) {
-          case 'bolus':
-            this.medicalData.bolus.push(datum)
+          case DatumType.Bolus:
+            this.medicalData.bolus.push(datum as Bolus)
             break
-          case 'basal':
-            this.medicalData.basal.push(datum)
+          case DatumType.Basal:
+            this.medicalData.basal.push(datum as Basal)
             break
-          case 'cbg':
-            this.medicalData.cbg.push(datum)
+          case DatumType.Cbg:
+            this.medicalData.cbg.push(datum as Cbg)
             break
-          case 'deviceEvent':
-            switch (datum.subType as string) {
+          case DatumType.DeviceEvent:
+            switch (deviceEventDatum.subType as string) {
               case 'confidential':
-                this.medicalData.confidentialModes.push(datum as ConfidentialMode)
+                this.medicalData.confidentialModes.push(deviceEventDatum as ConfidentialMode)
                 break
               case 'deviceParameter':
-                this.medicalData.deviceParametersChanges.push(datum as DeviceParameterChange)
+                this.medicalData.deviceParametersChanges.push(deviceEventDatum as DeviceParameterChange)
                 break
               case 'reservoirChange':
-                this.medicalData.reservoirChanges.push(datum as ReservoirChange)
+                this.medicalData.reservoirChanges.push(deviceEventDatum as ReservoirChange)
                 break
               case 'warmup':
-                this.medicalData.warmUps.push(datum as WarmUp)
+                this.medicalData.warmUps.push(deviceEventDatum as WarmUp)
                 break
               case 'zen':
-                this.medicalData.zenModes.push(datum as ZenMode)
+                this.medicalData.zenModes.push(deviceEventDatum as ZenMode)
                 break
               default:
                 break
             }
             break
-          case 'food':
-            this.medicalData.meals.push(datum)
+          case DatumType.Food:
+            this.medicalData.meals.push(datum as Meal)
             break
-          case 'message':
-            this.medicalData.messages.push(datum)
+          case DatumType.Message:
+            this.medicalData.messages.push(datum as Message)
             break
-          case 'physicalActivity':
-            this.medicalData.physicalActivities.push(datum)
+          case DatumType.PhysicalActivity:
+            this.medicalData.physicalActivities.push(datum as PhysicalActivity)
             break
-          case 'pumpSettings':
-            this.medicalData.pumpSettings.push(datum)
+          case DatumType.PumpSettings:
+            this.medicalData.pumpSettings.push(datum as PumpSettings)
             break
-          case 'smbg':
-            this.medicalData.smbg.push(datum)
+          case DatumType.Smbg:
+            this.medicalData.smbg.push(datum as Smbg)
             break
-          case 'upload':
-            this.medicalData.uploads.push(datum)
+          case DatumType.Upload:
+            this.medicalData.uploads.push(datum as Upload)
             break
-          case 'wizard':
-            this.medicalData.wizards.push(datum)
+          case DatumType.Wizard:
+            this.medicalData.wizards.push(datum as Wizard)
             break
           default:
             break

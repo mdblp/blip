@@ -48,6 +48,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1991 Update patient header design and add currently available patients fields
 - YLP-2012 Migrate LabeledCheckbox to dumb
 - YLP-2015 Replace loaders by MUI CircularProgress
+- YLP-2016 Migrate BolusTooltip to dumb
 - YLP-2021 Implement remote monitoring card new design
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions

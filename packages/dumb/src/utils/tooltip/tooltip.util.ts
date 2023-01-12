@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DateTitle } from '../../components/tooltips/tooltip/tooltip'
+import { DateTitle } from '../../components/tooltips/common/tooltip/tooltip'
 import { BaseDatum, Source, TimePrefs } from 'medical-domain'
 
 export const TIMEZONE_UTC = 'UTC'

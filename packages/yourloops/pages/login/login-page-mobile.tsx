@@ -26,7 +26,7 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { Theme } from '@mui/material/styles'
@@ -45,6 +45,7 @@ import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   button: {
     textTransform: 'capitalize',
+    fontSize: '1.1rem',
     width: '100%',
     paddingBlock: theme.spacing(1)
   },
@@ -104,7 +105,10 @@ const LoginPageMobile: FunctionComponent = () => {
         />
 
         <Typography data-testid="page-title" className={classes.infoText}>
-          {t('login-page-mobile-title-1')} <span className="bold">{t('login-page-mobile-title-2')}</span> {t('login-page-mobile-title-3')} <span className="bold">{t('login-page-mobile-title-4')}</span>
+          <Trans
+            i18nKey="login-page-mobile-title"
+            components={{ strong: <strong /> }}
+          />
         </Typography>
 
         {i18n.language !== LanguageCodes.Fr &&
@@ -126,7 +130,7 @@ const LoginPageMobile: FunctionComponent = () => {
           <Box>
             <LanguageIcon
               data-testid="language-icon"
-              sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1) }}
+              sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1), fontSize: '1.4rem' }}
             />
             <LanguageSelect className={classes.languageSelect} />
           </Box>

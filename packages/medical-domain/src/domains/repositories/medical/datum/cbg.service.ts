@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import Cbg, { Bg, BgUnit, isBgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../mod
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { getTrendsTime } from '../../time/time.service'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const MGDL_PER_MMOLL = 18.01577
 
@@ -56,7 +57,7 @@ const convertBG = (value: number, unit: BgUnit): number => {
   }
 }
 
-const normalizeBg = (rawData: Record<string, unknown>, opts: MedicalDataOptions, bgType: 'cbg' | 'smbg'): Bg => {
+const normalizeBg = (rawData: Record<string, unknown>, opts: MedicalDataOptions, bgType: DatumType.Cbg | DatumType.Smbg): Bg => {
   const base = BaseDatumService.normalize(rawData, opts)
   let bgValue = rawData.value as number
   if (bgValue < 0) {
@@ -83,7 +84,7 @@ const normalizeBg = (rawData: Record<string, unknown>, opts: MedicalDataOptions,
 }
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Cbg => {
-  return normalizeBg(rawData, opts, 'cbg') as Cbg
+  return normalizeBg(rawData, opts, DatumType.Cbg) as Cbg
 }
 
 const deduplicate = (data: Cbg[], opts: MedicalDataOptions): Cbg[] => {

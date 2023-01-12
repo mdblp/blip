@@ -23,7 +23,6 @@ import RangeSelect from './components/trends/cbg/RangeSelect'
 import TwoOptionToggle from './components/common/controls/TwoOptionToggle'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import TrendsContainer from './components/trends/common/TrendsContainer'
-import BolusTooltip from './components/daily/bolustooltip/BolusTooltip'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
 import reducers from './redux/reducers/'
@@ -53,7 +52,6 @@ const components = {
   FocusedRangeLabels,
   RangeSelect,
   TwoOptionToggle,
-  BolusTooltip,
   WarmUpTooltip
 }
 
