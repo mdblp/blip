@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { LanguageCodes } from './language-codes.model'
+import { LanguageCodes } from './enums/language-codes.enum'
 
 export interface Preferences {
   displayLanguageCode?: LanguageCodes

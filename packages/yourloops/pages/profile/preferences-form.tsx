@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import { LanguageCodes } from '../../lib/auth/models/language-codes.model'
+import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { useProfilePageState } from './profile-page-context'
 import { useAuth } from '../../lib/auth'
 import { profileFormCommonClasses } from './css-classes'

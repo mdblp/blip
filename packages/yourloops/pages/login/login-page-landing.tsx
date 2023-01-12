@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
+import React, { FunctionComponent, useEffect } from 'react'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/styles'
+import { useAuth0 } from '@auth0/auth0-react'
+import { useHistory } from 'react-router-dom'
+import { useAlert } from '../../components/utils/snackbar'
+import LoginPageMobile from './login-page-mobile'
+import LoginPageDesktop from './login-page-desktop'
+import { GlobalStyles } from 'tss-react'
 
-export interface ProfileForm {
-  birthday: string | undefined
-  birthPlace: string
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  ins: string | undefined
-  lang: LanguageCodes
-  lastName: string
-  referringDoctor: string | undefined
-  sex: string | undefined
-  ssn: string | undefined
-  units: UnitsType
+const LoginPageLanding: FunctionComponent = () => {
+  const { error } = useAuth0()
+  const history = useHistory()
+  const alert = useAlert()
+  const theme = useTheme()
+  const isMobileView: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+
+  useEffect(() => {
+    if (error) {
+      if (error.message === 'Please verify your email before logging in.') {
+        history.replace('/verify-email')
+        return
+      }
+      alert.error(error.message)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error])
+
+  return (
+    <React.Fragment>
+      <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
+      {isMobileView
+        ? <LoginPageMobile />
+        : <LoginPageDesktop />
+      }
+    </React.Fragment>
+  )
 }
 
-export type ProfileErrors = Record<string, boolean>
+export default LoginPageLanding

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,14 +32,18 @@ import { UserRoles } from './auth/models/enums/user-roles.enum'
  * Class containing all external URLs related to Diabeloop
  */
 class DiabeloopExternalUrls {
+  readonly dblDiabetes: string
+  readonly contactEmail: string
+  readonly releaseNotes: string
   private readonly rootPathName: string
   readonly support: string
-  readonly releaseNotes: string
 
   constructor() {
+    this.dblDiabetes = 'https://www.dbl-diabetes.com'
+    this.contactEmail = 'yourloops@diabeloop.com'
+    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
     this.rootPathName = `${config.ASSETS_URL}`
     this.support = 'https://www.diabeloop.com'
-    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
   }
 
   get cookiesPolicy(): string {
@@ -72,7 +76,8 @@ export const TRAINING_PATH = '/training'
 export const NEW_CONSENT_PATH = '/new-consent'
 export const COMPLETE_SIGNUP_PATH = '/complete-signup'
 export const LOGIN_PATH = '/login'
+export const VERIFY_EMAIL_PATH = '/verify-email'
 export const PRODUCT_LABELLING_PATH = '/product-labelling'
-export const PUBLIC_ROUTES = [LOGIN_PATH]
+export const PUBLIC_ROUTES = [LOGIN_PATH, VERIFY_EMAIL_PATH]
 export const ALWAYS_ACCESSIBLE_ROUTES = [PRODUCT_LABELLING_PATH]
-export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [RENEW_CONSENT_PATH, NEW_CONSENT_PATH, TRAINING_PATH, COMPLETE_SIGNUP_PATH, PRODUCT_LABELLING_PATH, LOGIN_PATH]
+export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [RENEW_CONSENT_PATH, NEW_CONSENT_PATH, TRAINING_PATH, COMPLETE_SIGNUP_PATH, PRODUCT_LABELLING_PATH, VERIFY_EMAIL_PATH]

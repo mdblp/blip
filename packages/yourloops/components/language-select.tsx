@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -33,20 +33,27 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
+import { ResourceLanguage } from 'i18next'
 
-const languageSelectStyle = makeStyles()((theme: Theme) => {
-  return {
-    select: {
-      fontSize: '12px',
-      color: theme.palette.grey[700]
-    }
+interface LanguageSelectProps {
+  className?: string
+}
+
+const styles = makeStyles()((theme: Theme) => ({
+  select: {
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.grey[700],
+    paddingBlock: 0
   }
-})
+}))
 
-function LanguageSelect(): JSX.Element {
+const LanguageSelect: FunctionComponent<LanguageSelectProps> = ({ className }) => {
   const { i18n } = useTranslation()
-  const [val, setVal] = React.useState(i18n.language)
-  const { classes } = languageSelectStyle()
+  const [val, setVal] = useState(i18n.language)
+  const { classes, cx } = styles()
+  const languages = Object.entries(i18n.options.resources).map((languageEntry: [string, ResourceLanguage]) => {
+    return { key: languageEntry[0], name: languageEntry[1].name }
+  })
 
   const handleChange = async (event: SelectChangeEvent<unknown>): Promise<void> => {
     const lang = event.target.value as string
@@ -54,34 +61,31 @@ function LanguageSelect(): JSX.Element {
     setVal(lang)
   }
 
-  const langs = []
-  for (const lang in i18n.options.resources) {
-    if (Object.prototype.hasOwnProperty.call(i18n.options.resources, lang)) {
-      const language = i18n.options.resources[lang].name as string
-      langs.push(
-        <MenuItem id={`language-selector-${lang}`} key={lang} value={lang}>
-          {language}
-        </MenuItem>
-      )
-    }
-  }
-
   return (
     <FormControl variant="standard">
       <Select
         id="language-selector"
+        data-testid="language-selector"
         name="language-select"
         disableUnderline
         inputProps={{
           classes: {
-            select: classes.select
+            select: cx(classes.select, className)
           }
         }}
         IconComponent={ArrowDropDownIcon}
         value={val}
         onChange={handleChange}
       >
-        {langs}
+        {languages.map(language => (
+          <MenuItem
+            id={`language-selector-${language.key}`}
+            key={language.key}
+            value={language.key}
+          >
+            {language.name as string}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   )

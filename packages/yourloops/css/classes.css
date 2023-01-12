@@ -31,6 +31,14 @@
   left: calc(50% - 20px);
 }
 
+:global(.bold) {
+  font-weight: bold;
+}
+
+:global(.flex) {
+  display: flex;
+}
+
 :global(.visibility-hidden) {
   visibility: hidden;
 }
