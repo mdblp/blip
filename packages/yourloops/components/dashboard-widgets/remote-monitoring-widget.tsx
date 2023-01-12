@@ -86,7 +86,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
     renewAndRemove: false
   }
 
-  const monitoredPatientTeam = patient.teams.find(team => team.monitoringStatus === 'accepted')
+  const monitoredPatientTeam = patient.teams.find(team => team.monitoringStatus === MonitoringStatus.accepted)
   const requestingTeam = monitoredPatientTeam ? teamHook.getTeam(monitoredPatientTeam.teamId) : undefined
   const endDate = patient?.monitoring?.monitoringEnd
     ? moment.utc(patient.monitoring.monitoringEnd).format(moment.localeData().longDateFormat('ll')).toString()
@@ -154,21 +154,21 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
       >
         <CardContent>
           <Box display="flex" gap={2} marginBottom={2}>
-            <Typography className="bold">{t('remote-monitoring')}:</Typography>
+            <Typography className="bold">{t('remote-monitoring')}</Typography>
             <Typography id="patient-info-remote-monitoring-value">
               {patient.monitoring?.enabled ? t('yes') : t('no')}
             </Typography>
           </Box>
           <Box display="flex" gap={2} marginY={2}>
-            <Typography className="bold">{t('requesting-team')}:</Typography>
+            <Typography className="bold">{t('requesting-team')}</Typography>
             <Typography>{requestingTeam?.name || '-'}</Typography>
           </Box>
           <Box display="flex" gap={2} marginY={2}>
-            <Typography className="bold">{t('end-date')}:</Typography>
+            <Typography className="bold">{t('end-date')}</Typography>
             <Typography>{endDate}</Typography>
           </Box>
           <Box display="flex" gap={2} marginY={2}>
-            <Typography className="bold">{t('remaining-time')}:</Typography>
+            <Typography className="bold">{t('remaining-time')}</Typography>
             <Typography>{remainingTime}</Typography>
           </Box>
         </CardContent>
