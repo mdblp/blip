@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ import {
   DEFAULT_TOOLTIP_TAIL,
   Position,
   Side
-} from '../tooltip/tooltip'
+} from '../common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
 
 interface ConfidentialTooltipProps {

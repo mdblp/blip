@@ -31,12 +31,24 @@
   left: calc(50% - 20px);
 }
 
+:global(.primary-color-main) {
+  color: var(--color-primary-main)
+}
+
 :global(.bold) {
   font-weight: bold;
 }
 
 :global(.flex) {
   display: flex;
+}
+
+:global(.capitalize) {
+  text-transform: capitalize;
+}
+
+:global(.bold) {
+  font-weight: bold;
 }
 
 :global(.visibility-hidden) {

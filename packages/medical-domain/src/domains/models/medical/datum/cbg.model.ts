@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 import Unit from './enums/unit.enum'
 import BaseDatum from './basics/base-datum.model'
+import { DatumType } from './enums/datum-type.enum'
 
 const MGDL_UNITS = Unit.MilligramPerDeciliter
 const MMOLL_UNITS = Unit.MmolPerLiter
@@ -42,7 +43,7 @@ function isBgUnit(value: unknown): value is BgUnit {
 }
 
 type Bg = BaseDatum & {
-  type: 'cbg' | 'smbg'
+  type: DatumType
   units: BgUnit
   value: number
   // Used for trends view

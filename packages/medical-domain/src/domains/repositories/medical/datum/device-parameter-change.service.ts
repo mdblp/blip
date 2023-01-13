@@ -31,6 +31,7 @@ import BaseDatumService from './basics/base-datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import Unit from '../../../models/medical/datum/enums/unit.enum'
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -45,7 +46,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const { value: previousValue } = getConvertedParamUnitAndValue(rawData.units as Unit, rawData.previousValue as string, opts.bgUnits)
   const deviceParameterChange: DeviceParameterChange = {
     ...base,
-    type: 'deviceEvent',
+    type: DatumType.DeviceEvent,
     subType: 'deviceParameter',
     params: [
       {

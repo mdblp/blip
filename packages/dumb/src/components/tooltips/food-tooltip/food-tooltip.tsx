@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,14 +35,14 @@ import {
   DEFAULT_TOOLTIP_TAIL,
   Position,
   Side
-} from '../tooltip/tooltip'
-import styles from './food-tooltip.css'
+} from '../common/tooltip/tooltip'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { Meal, Prescriptor, TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
 interface FoodTooltipProps {
   food: Meal
@@ -61,6 +61,8 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
   const recommendedValue = (prescriptor === Prescriptor.Hybrid) ? prescribedCarbs : actualCarbs
   const hasPrescriptor = prescriptor && (prescriptor !== Prescriptor.Manual)
 
+  const gramLabel = t('g')
+
   return (
     <Tooltip
       position={position}
@@ -76,21 +78,9 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
         <div className={commonStyles.containerFlex}>
           {
             hasPrescriptor &&
-            <div className={commonStyles.row}>
-              <div className={commonStyles.label}>{t('Recommended')}</div>
-              <div className={commonStyles.value}>
-                {recommendedValue}
-              </div>
-              <div className={styles.units}>g</div>
-            </div>
+            <TooltipLine label={t('Recommended')} value={recommendedValue} units={gramLabel} />
           }
-          <div className={commonStyles.rowBold}>
-            <div className={commonStyles.label}>{t('Confirmed')}</div>
-            <div className={commonStyles.value}>
-              {actualCarbs}
-            </div>
-            <div className={styles.units}>g</div>
-          </div>
+          <TooltipLine label={t('Confirmed')} value={actualCarbs} units={gramLabel} isBold />
         </div>
       }
     />

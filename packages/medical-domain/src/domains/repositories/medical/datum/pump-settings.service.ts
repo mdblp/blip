@@ -39,6 +39,7 @@ import MedicalDataOptions from '../../../models/medical/medical-data-options.mod
 import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import Unit from '../../../models/medical/datum/enums/unit.enum'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {
@@ -120,7 +121,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
 
   const pumpSettings: PumpSettings = {
     ...base,
-    type: 'pumpSettings',
+    type: DatumType.PumpSettings,
     uploadId: rawData.uploadId as string,
     activeSchedule: rawData.activeSchedule as string,
     deviceId: rawData.deviceId as string,

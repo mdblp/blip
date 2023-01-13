@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,24 +30,33 @@ import { DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { WizardInputMealFat } from '../../../models/medical/datum/enums/wizard-input-meal-fat.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Wizard => {
   const base = BaseDatumService.normalize(rawData, opts)
   const wizard: Wizard = {
     ...base,
-    type: 'wizard',
+    type: DatumType.Wizard,
     uploadId: rawData.uploadId as string,
     bolusId: (rawData?.bolus ?? '') as string,
     carbInput: rawData.carbInput as number,
     units: rawData.units as string,
-    bolus: null
+    bolus: null,
+    inputTime: rawData.inputTime as string
   }
-  if (rawData.recommended) {
+  if (rawData?.recommended) {
     const recommended = rawData?.recommended as Record<string, unknown>
     wizard.recommended = {
       carb: recommended.carb as number,
       correction: recommended.correction as number,
       net: recommended.net as number
+    }
+  }
+  if (rawData?.inputMeal) {
+    const inputMeal = rawData.inputMeal as Record<string, unknown>
+    wizard.inputMeal = {
+      fat: inputMeal?.fat as WizardInputMealFat
     }
   }
   return wizard

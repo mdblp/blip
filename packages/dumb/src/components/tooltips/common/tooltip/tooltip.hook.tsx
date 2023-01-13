@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,10 @@
 
 import { useCallback, useMemo } from 'react'
 import { DateTitle, Offset, Position } from './tooltip'
-import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
+import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../../../utils/datetime/datetime.util'
 import moment from 'moment-timezone'
 import { Source } from 'medical-domain'
-import { TIMEZONE_UTC } from '../../../utils/tooltip/tooltip.util'
+import { TIMEZONE_UTC } from '../../../../utils/tooltip/tooltip.util'
 
 export interface TooltipHookProps {
   borderWidth: number
