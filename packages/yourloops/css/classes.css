@@ -31,6 +31,10 @@
   left: calc(50% - 20px);
 }
 
+:global(.primary-color-main) {
+  color: var(--color-primary-main)
+}
+
 :global(.bold) {
   font-weight: bold;
 }
