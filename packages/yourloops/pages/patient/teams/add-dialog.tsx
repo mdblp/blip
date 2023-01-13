@@ -156,7 +156,8 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
     <React.Fragment>
       <Box textAlign="center" p={3}>
         <DialogTitle>
-          <strong id="team-add-dialog-title">{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
+          <strong
+            id="team-add-dialog-title">{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
         </DialogTitle>
 
         <DialogContent id="team-add-dialog-content">
@@ -320,17 +321,8 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
   const [idCode, setIdCode] = React.useState('')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [team, setTeam] = React.useState<Team | null>(null)
-
   const { actions, teamName, error } = props
-  const dialogIsOpen = actions !== null
 
-  const resetDialog = (): void => {
-    setTimeout(() => {
-      setIdCode('')
-      setTeam(null)
-      setErrorMessage(null)
-    }, 100)
-  }
   const handleSetTeamId = (id: string): void => {
     if (id !== '') {
       const team = teamHook.teams.find((team) => team.code === id)
@@ -343,12 +335,10 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
 
   const handleClose = (): void => {
     actions?.onDialogResult(undefined)
-    resetDialog()
   }
 
   const handleAccept = (): void => {
     actions?.onDialogResult(team?.id ?? undefined)
-    resetDialog()
   }
 
   let content: JSX.Element
@@ -381,7 +371,7 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
   }
 
   return (
-    <Dialog id="team-add-dialog" open={dialogIsOpen} aria-labelledby={t('modal-add-medical-team')}
+    <Dialog id="team-add-dialog" open aria-labelledby={t('modal-add-medical-team')}
             onClose={handleClose}>
       {content}
     </Dialog>
