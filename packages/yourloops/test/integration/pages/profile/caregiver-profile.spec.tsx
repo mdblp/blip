@@ -62,10 +62,6 @@ describe('Caregiver page for hcp', () => {
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   }
   const settings: Settings = {
-    a1c: {
-      date: '2020-01-01',
-      value: '7.5'
-    },
     country: CountryCodes.France,
     units: { bg: UnitsType.MMOLL }
   }
