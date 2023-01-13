@@ -48,17 +48,19 @@ interface PatientNavBarTabsProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
-const TAB_HEIGHT = '48px'
-
 const styles = makeStyles()((theme: Theme) => {
+  const TAB_HEIGHT = theme.spacing(6)
   return {
     root: {
       minHeight: TAB_HEIGHT,
       height: TAB_HEIGHT
     },
-    tabs: {
+    tabsContainer: {
       boxShadow: theme.shadows[3],
-      backgroundColor: theme.palette.common.white
+      backgroundColor: theme.palette.common.white,
+      display: 'flex',
+      justifyContent: 'space-between',
+      paddingInline: theme.spacing(3)
     },
     tab: {
       fontWeight: 'bold',
@@ -99,55 +101,49 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
   }
 
   return (
-    <Box className={classes.tabs} paddingLeft={7}>
-      <Box display="flex">
-        <Tabs value={selectedTab()} classes={{
-          root: classes.root
-        }}>
-          <Tab
-            className={classes.tab}
-            data-testid="dashboard-tab"
-            href={`${prefixURL}/dashboard`}
-            iconPosition="start"
-            label={t('dashboard')}
-            icon={<DashboardOutlinedIcon />}
-            onClick={onClickDashboard}
-            classes={{
-              root: classes.root
-            }}
-          />
-          <Tab
-            className={classes.tab}
-            data-testid="daily-tab"
-            href={`${prefixURL}/daily`}
-            iconPosition="start"
-            label={t('daily')}
-            icon={<Today />}
-            onClick={onClickDaily}
-            classes={{
-              root: classes.root
-            }}
-          />
-          <Tab
-            className={classes.tab}
-            data-testid="trends-tab"
-            href={`${prefixURL}/trends`}
-            iconPosition="start"
-            label={t('trends')}
-            icon={<TrendingUp />}
-            onClick={onClickTrends}
-            classes={{
-              root: classes.root
-            }}
-          />
-        </Tabs>
-        <Box marginLeft="auto" paddingRight={3} display="flex" justifyContent="center" alignItems="center">
-          <Button data-testid="generate-report" onClick={onClickPrint}>
-            <GetAppIcon />
-            {t('pdf-generate-report')}
-          </Button>
-        </Box>
-      </Box>
+    <Box className={classes.tabsContainer}>
+      <Tabs value={selectedTab()} classes={{ root: classes.root }}>
+        <Tab
+          className={classes.tab}
+          data-testid="dashboard-tab"
+          href={`${prefixURL}/dashboard`}
+          iconPosition="start"
+          label={t('dashboard')}
+          icon={<DashboardOutlinedIcon />}
+          onClick={onClickDashboard}
+          classes={{
+            root: classes.root
+          }}
+        />
+        <Tab
+          className={classes.tab}
+          data-testid="daily-tab"
+          href={`${prefixURL}/daily`}
+          iconPosition="start"
+          label={t('daily')}
+          icon={<Today />}
+          onClick={onClickDaily}
+          classes={{
+            root: classes.root
+          }}
+        />
+        <Tab
+          className={classes.tab}
+          data-testid="trends-tab"
+          href={`${prefixURL}/trends`}
+          iconPosition="start"
+          label={t('trends')}
+          icon={<TrendingUp />}
+          onClick={onClickTrends}
+          classes={{
+            root: classes.root
+          }}
+        />
+      </Tabs>
+      <Button data-testid="generate-report" onClick={onClickPrint}>
+        <GetAppIcon />
+        {t('pdf-generate-report')}
+      </Button>
     </Box>
   )
 }

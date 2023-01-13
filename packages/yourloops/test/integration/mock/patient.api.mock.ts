@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,6 +39,7 @@ import { Monitoring } from '../../../lib/team/models/monitoring.model'
 import PatientApi from '../../../lib/patient/patient.api'
 import { Profile } from '../../../lib/auth/models/profile.model'
 import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './team.api.mock'
+import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'
@@ -215,7 +216,7 @@ export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
       trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
     },
     settings: null,
-    preferences: { displayLanguageCode: 'en' },
+    preferences: { displayLanguageCode: LanguageCodes.En },
     invitationStatus: patient.teams[0].status,
     email: patient.profile.email,
     idVerified: false,
