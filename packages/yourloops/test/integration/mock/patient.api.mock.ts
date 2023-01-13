@@ -40,6 +40,7 @@ import PatientApi from '../../../lib/patient/patient.api'
 import { Profile } from '../../../lib/auth/models/profile.model'
 import { monitoringParameters, mySecondTeamId, myThirdTeamId, monitoringParametersBgUnitMmol } from './team.api.mock'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import { getTomorrowDate } from '../utils/helpers'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'
@@ -47,7 +48,7 @@ export const monitoredPatientWithMmolId = '3db654'
 
 const defaultMonitoring: Monitoring = {
   enabled: true,
-  monitoringEnd: new Date(Date.now() - 10000),
+  monitoringEnd: getTomorrowDate(),
   status: MonitoringStatus.accepted,
   parameters: monitoringParameters
 }

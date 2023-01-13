@@ -50,6 +50,7 @@ import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { getTomorrowDate } from '../../utils/helpers'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -129,7 +130,7 @@ describe('Patient dashboard for HCP', () => {
     // const header = within(screen.getByTestId('app-main-header'))
     // const teamsDropdown = header.getByText(mySecondTeamName)
     // expect(teamsDropdown).toBeVisible()
-    const expectedMonitoringEndDate = moment.utc(Date.now()).format(moment.localeData().longDateFormat('ll')).toString()
+    const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard, monitoredPatientId)
     /* Patient info widget */
@@ -147,7 +148,7 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Messages')).toBeVisible()
 
     /* Remote Monitoring widget */
-    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:2 minutesRenewRemove`)
+    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a dayRenewRemove`)
     checkHCPLayout(`${firstName} ${lastName}`)
   })
 
