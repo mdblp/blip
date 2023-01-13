@@ -147,7 +147,7 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Messages')).toBeVisible()
 
     /* Remote Monitoring widget */
-    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a few secondsRenewRemove`)
+    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:2 minutesRenewRemove`)
     checkHCPLayout(`${firstName} ${lastName}`)
   })
 
