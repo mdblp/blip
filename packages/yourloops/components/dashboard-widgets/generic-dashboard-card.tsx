@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from '../../units/models/enums/units-type.enum'
-import { CountryCodes } from './country.model'
+import React, { FunctionComponent, PropsWithChildren } from 'react'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import { makeStyles } from 'tss-react/mui'
 
-export interface Settings {
-  units?: {
-    bg?: UnitsType
-  }
-  country?: CountryCodes
-  a1c?: {
-    date: string
-    rawdate: string
-    value: string
-  }
+interface GenericDashboardCardProps {
+  avatar: JSX.Element
+  title: string
+  width?: string
+  ['data-testid']?: string
 }
+
+const useStyles = makeStyles()(() => ({
+  header: {
+    textTransform: 'uppercase',
+    backgroundColor: 'var(--card-header-background-color)'
+  },
+  headerTitle: {
+    fontWeight: 600
+  }
+}))
+
+const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboardCardProps>> = (props) => {
+  const { classes } = useStyles()
+  return (
+    <Card
+      sx={{ width: props.width || '25%' }}
+      data-testid={props['data-testid']}
+    >
+      <CardHeader
+        className={classes.header}
+        classes={{ title: classes.headerTitle }}
+        avatar={props.avatar}
+        title={props.title}
+      />
+      {props.children}
+    </Card>
+  )
+}
+
+export default GenericDashboardCard

@@ -44,6 +44,7 @@ interface PatientFieldsHtmlElements extends CommonFieldsHtmlElements {
   referringDoctorInput: HTMLElement
   insInput?: HTMLElement
   ssnInput?: HTMLElement
+  hba1cInput?: HTMLElement
 }
 
 interface HcpFieldsHtmlElements extends CommonFieldsHtmlElements {
@@ -89,11 +90,13 @@ export const checkPatientProfilePage = (country: CountryCodes): PatientFieldsHtm
   const referringDoctorInput = screen.getByLabelText('Referring doctor')
   const insInput = screen.queryByLabelText('INS')
   const ssnInput = screen.queryByLabelText('SSN')
+  const hba1cInput = screen.getByLabelText('Initial HbA1c 01/01/2020')
   const inputs = {
     ...checkCommonFields(),
     birthdayInput,
     birthPlaceInput,
     genderSelect,
+    hba1cInput,
     referringDoctorInput
   }
 

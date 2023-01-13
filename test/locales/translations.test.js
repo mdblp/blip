@@ -149,10 +149,13 @@ const ignoredTransKeyForYourLoops = [
   'training-body',
   'login',
   'refresh',
-  'login-page-mobile-title-1',
-  'login-page-mobile-title-2',
-  'login-page-mobile-title-3',
-  'login-page-mobile-title-4'
+  'login-page-desktop-info-1',
+  'login-page-desktop-info-2',
+  'login-page-desktop-info-3',
+  'login-page-desktop-title',
+  'login-page-mobile-title',
+  'end-date',
+  'remaining-time'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

@@ -45,6 +45,7 @@ import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
+import moment from 'moment-timezone'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -97,8 +98,9 @@ describe('Patient dashboard for HCP', () => {
       renderPage(unMonitoredPatientDashboardRoute)
     })
 
-    const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
+    const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard, unmonitoredPatientId)
+    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent('Remote monitoring programRemote monitoring:NoRequesting team:-End date:-Remaining time:-')
     checkHCPLayout(`${firstName} ${lastName}`)
 
     /**
@@ -122,7 +124,7 @@ describe('Patient dashboard for HCP', () => {
     // const header = within(screen.getByTestId('app-main-header'))
     // const teamsDropdown = header.getByText(mySecondTeamName)
     // expect(teamsDropdown).toBeVisible()
-
+    const expectedMonitoringEndDate = moment.utc(Date.now()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard, monitoredPatientId)
     /* Patient info widget */
@@ -138,6 +140,9 @@ describe('Patient dashboard for HCP', () => {
 
     /* Chat widget */
     expect(dashboard.getByText('Messages')).toBeVisible()
+
+    /* Remote Monitoring widget */
+    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a few secondsRenewRemove`)
     checkHCPLayout(`${firstName} ${lastName}`)
   })
 

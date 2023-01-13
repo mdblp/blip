@@ -66,7 +66,7 @@ describe('Profile page context hook', () => {
   }
   const settings: Settings = {
     a1c: {
-      date: '2020-01-01',
+      rawdate: '2020-01-01',
       value: '7.5'
     },
     country: CountryCodes.France,
