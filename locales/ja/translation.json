@@ -19,7 +19,6 @@
   "**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.": "**TIR**{{cbgLabel}}測定を基に範囲内に収まっていた時間。",
   "**Total Carbs**: All carb entries from bolus wizard events or Apple Health records added together.": "**合計糖質量**入力された全ての食事またはレスキューカーボの合計。",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together": "**合計インスリン**基礎レートおよびボーラス投与（U）の合計。",
-  "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**合計インスリン**全ての基礎レートおよびボーラス（U）の合計。",
   "100% of Readings": "100% の測定値",
   "50% of Readings": "測定の50%",
   "80% of Readings": "80% の測定値",
@@ -95,7 +94,7 @@
   "Duration": "Duration",
   "Edit": "変更",
   "Entered at": "入力日",
-  "Events": "Events",
+  "Events": "データ",
   "Extended": "Extended",
   "F_Friday": "(金)",
   "Fill Cannula": "カニューレの充てん",
@@ -201,7 +200,7 @@
   "Time Above Range": "目標血糖値を超えた時間",
   "Time Below Range": "目標血糖値を下回った時間",
   "Time Change": "時刻変更",
-  "Time In Loop Mode": "loopモードの時間",
+  "Time In Loop Mode": "loopモード時間",
   "Time In Loop Mode OFF": "loopモードOFFの時間",
   "Time In Loop Mode ON": "loopモードONの時間",
   "Time In Range": "TIR",
@@ -212,7 +211,7 @@
   "To get one number that gives you a rough idea of your glucose level we add together all of the CGM glucose readings you have and then divide them by the number of glucose readings. We will only show a number if there is enough data - readings for at least 75% of the day in the one day view, and readings for at least 75% of the day for at least half of the days shown in the two week view.": "これはCGMより測定された血糖値の合計から測定数を割ったものです。こちらは十分なデータ（日次表示の場合は一日に75％以上の測定、2週間表示の場合は、期間の半数以上に75％以上の測定）が得られた際にのみ表示されます。",
   "Total Carbs": "合計糖質量",
   "Total Insulin": "総インスリン量",
-  "Total basal events": "Total basal events",
+  "Total basal events": "基礎レート統計推移",
   "Tu_Tuesday": "(火)",
   "Tube Primes": "Tube Primes",
   "Type a comment here ...": "コメントを入力",
@@ -237,7 +236,7 @@
   "Within this basal segment, we are omitting a suspend event that didn't end. This may have resulted from changing the date & time settings on the device or switching to a new device. As a result, this basal segment may be inaccurate.": "Within this basal segment, we are omitting a suspend event that didn't end. This may have resulted from changing the date and time settings on the system or switching to a new system. As a result, this basal segment may be inaccurate.",
   "YYYY-MM-DD": "YYYY-MM-DD",
   "abbrev_duration_day": "日",
-  "abbrev_duration_hour": "時",
+  "abbrev_duration_hour": "時間",
   "abbrev_duration_minute": "分",
   "abbrev_duration_minute_m": "分",
   "abbrev_duration_second": "秒",
@@ -315,5 +314,8 @@
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "表示日数：{{numVisibleDays}}",
   "{{patientName}} does not have any data yet.": "{{patientName}} にはまだデータがありません。",
-  "{{title}} (cont.)": "{{title}} (cont.)"
+  "{{title}} (cont.)": "{{title}} (cont.)",
+  "**Avg": {
+    " Daily Insulin** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**合計インスリン**全ての基礎レートおよびボーラス（U）の合計。"
+  }
 }
