@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,76 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-:global(.centered-spinning-loader) {
-  position: absolute;
-  top: calc(50% - 20px);
-  left: calc(50% - 20px);
+import React, { FunctionComponent, PropsWithChildren } from 'react'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import { makeStyles } from 'tss-react/mui'
+
+interface GenericDashboardCardProps {
+  avatar: JSX.Element
+  title: string
+  width?: string
+  ['data-testid']?: string
 }
 
-:global(.primary-color-main) {
-  color: var(--color-primary-main)
+const useStyles = makeStyles()(() => ({
+  header: {
+    textTransform: 'uppercase',
+    backgroundColor: 'var(--card-header-background-color)'
+  },
+  headerTitle: {
+    fontWeight: 600
+  }
+}))
+
+const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboardCardProps>> = (props) => {
+  const { classes } = useStyles()
+  return (
+    <Card
+      sx={{ width: props.width || '25%' }}
+      data-testid={props['data-testid']}
+    >
+      <CardHeader
+        className={classes.header}
+        classes={{ title: classes.headerTitle }}
+        avatar={props.avatar}
+        title={props.title}
+      />
+      {props.children}
+    </Card>
+  )
 }
 
-:global(.bold) {
-  font-weight: bold;
-}
-
-:global(.flex) {
-  display: flex;
-}
-
-:global(.capitalize) {
-  text-transform: capitalize;
-}
-
-:global(.bold) {
-  font-weight: bold;
-}
-
-:global(.visibility-hidden) {
-  visibility: hidden;
-}
-
-:global(.display-none) {
-  display: none;
-}
-
-:global(.no-margin) {
-  margin: 0 !important;
-}
-
-:global(.no-margin-top) {
-  margin-top: 0 !important;
-}
-
-:global(.no-margin-right) {
-  margin-right: 0 !important;
-}
-
-:global(.no-margin-bottom) {
-  margin-bottom: 0 !important;
-}
-
-:global(.no-margin-left) {
-  margin-left: 0 !important;
-}
-
-:global(.no-padding) {
-  padding: 0 !important;
-}
-
-:global(.no-padding-top) {
-  padding-top: 0 !important;
-}
-
-:global(.no-padding-right) {
-  padding-right: 0 !important;
-}
-
-:global(.no-padding-bottom) {
-  padding-bottom: 0 !important;
-}
-
-:global(.no-padding-left) {
-  padding-left: 0 !important;
-}
+export default GenericDashboardCard
