@@ -200,7 +200,7 @@
   "login-page-desktop-info-1": "Elle permet d'accéder à des <strong>représentations visuelles des données</strong> qui remontent automatiquement depuis les dispositifs DBL : glycémies, insuline, glucides et activités physiques.",
   "login-page-desktop-info-2": "<strong className=\"primary-color-main\">YourLoops</strong> offre aussi aux patients et patientes la possibilité de <strong>partager leurs données</strong> de manière sécurisée avec leur équipe médicale ou leurs proches.",
   "login-page-desktop-info-3": "Pour les professionnels de santé, <strong className=\"primary-color-main\">YourLoops</strong> est la plateforme de suivi de leurs patients et patientes. A travers ces fonctionnalités, elle <strong>une économie de temps</strong> et <strong>facilite la prise de décisions thérapeutiques</strong>.",
-  "login-page-desktop-title": "<strong className=\"primary-color-main\">YourLoops</strong> est une application web proposée par Diabeloop dans le but de faciliter le suivi des patients avec un diabète équipés des dispositifs médicaux compatibles.",
+  "login-page-desktop-title": "<strong className=\"primary-color-main\">YourLoops</strong> est une application web proposée par Diabeloop pour faciliter le suivi des patients avec un diabète et équipés des dispositifs médicaux compatibles.",
   "login-page-mobile-title": "Tout ce dont vous avez besoin pour un <strong>partage</strong> et une <strong>visualisation efficaces des données</strong>",
   "logout": "Déconnexion",
   "maximum": "Maximum",
