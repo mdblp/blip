@@ -200,7 +200,7 @@
   "login-page-desktop-info-1": "It provides access to <strong>visual representations of data</strong> that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.",
   "login-page-desktop-info-2": "<strong className=\"primary-color-main\">YourLoops</strong>をご利用頂くことにより、患者は医療チームや介護者と<strong>安全にデータを共有</strong>することができます。",
   "login-page-desktop-info-3": "医療従事者にとって、<strong className=\"primary-color-main\">YourLoops</strong>は患者をモニタリングするプラットフォームであり、様々な機能を通して、<strong>治療判断の時間短縮</strong>及び<strong>円滑化</strong>を可能にします。",
-  "login-page-desktop-title": "<strong className=\"primary-color-main\">Yourloops</strong> is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.",
+  "login-page-desktop-title": "<strong className=\"primary-color-main\">Yourloops</strong> is a web application offered by Diabeloop to facilitate the monitoring of patients with diabetes using compatible medical devices.",
   "login-page-mobile-title": "All you need for <strong>efficient data sharing</strong> and <strong>visualisation</strong>",
   "logout": "ログアウト",
   "maximum": "Maximum:",
