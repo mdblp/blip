@@ -38,15 +38,17 @@ import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { Monitoring } from '../../../lib/team/models/monitoring.model'
 import PatientApi from '../../../lib/patient/patient.api'
 import { Profile } from '../../../lib/auth/models/profile.model'
-import { monitoringParameters, mySecondTeamId, myThirdTeamId } from './team.api.mock'
+import { monitoringParameters, mySecondTeamId, myThirdTeamId, monitoringParametersBgUnitMmol } from './team.api.mock'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import { getTomorrowDate } from '../utils/helpers'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'
+export const monitoredPatientWithMmolId = '3db654'
 
 const defaultMonitoring: Monitoring = {
   enabled: true,
-  monitoringEnd: new Date(Date.now() - 10000),
+  monitoringEnd: getTomorrowDate(),
   status: MonitoringStatus.accepted,
   parameters: monitoringParameters
 }
@@ -177,6 +179,15 @@ export const monitoredPatientTwo: Patient = buildPatient(
   defaultAlarm
 )
 
+export const monitoredPatientWithMmol: Patient = {
+  ...monitoredPatientTwo,
+  userid: monitoredPatientWithMmolId,
+  monitoring: {
+    ...monitoredPatientTwo.monitoring,
+    parameters: monitoringParametersBgUnitMmol
+  }
+}
+
 export const pendingPatient: Patient = buildPatient(
   'pending-patient',
   [
@@ -233,9 +244,11 @@ export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatien
 
 export const mockPatientApiForPatients = () => {
   jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember, unmonitoredPatientAsTeamMember, monitoredPatientTwoAsTeamMember, pendingPatientAsTeamMember])
+  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 export const mockPatientApiForHcp = () => {
-  jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, pendingPatient])
+  jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
+  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 
 export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {
@@ -244,6 +257,7 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     teamId: member.teamId ?? 'fakeUserTeamId',
     role: TeamMemberRole.patient,
     profile: {
+      email: member.profile.email,
       firstName: member.profile.firstName ?? 'fakeFirstName',
       fullName: member.profile.fullName ?? 'fakeFullName',
       lastName: member.profile.lastName ?? 'fakeLastName',

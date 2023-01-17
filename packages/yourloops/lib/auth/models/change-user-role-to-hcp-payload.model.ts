@@ -34,3 +34,11 @@ export interface ChangeUserRoleToHcpPayload {
   contactConsent: Consent
   hcpProfession: HcpProfession
 }
+export interface Alarms {
+  timeSpentAwayFromTargetRate: number
+  timeSpentAwayFromTargetActive: boolean
+  frequencyOfSevereHypoglycemiaRate: number
+  frequencyOfSevereHypoglycemiaActive: boolean
+  nonDataTransmissionRate: number
+  nonDataTransmissionActive: boolean
+}

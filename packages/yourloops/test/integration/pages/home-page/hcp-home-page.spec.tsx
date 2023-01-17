@@ -68,7 +68,7 @@ describe('HCP home page', () => {
     checkSecondaryBar(false, true)
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(3)
+    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(4)
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
     const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient unmonitored-patient@diabeloop.fr' })
