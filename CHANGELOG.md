@@ -53,6 +53,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2021 Implement remote monitoring card new design
 - YLP-2022 HBA1C is not displayed in profile when logged in as a patient
 - YLP-2030 Remove TwoOptionToggle and BgSourceToggle
+- YLP-2031 Migrate viz tests to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5

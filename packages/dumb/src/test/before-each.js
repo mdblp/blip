@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,39 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import styles from './loop-mode-stat.css'
-import { useTranslation } from 'react-i18next'
-import { formatDuration } from '../../../utils/datetime/datetime.util'
+import yourloopsEn from '../../../../locales/en/yourloops.json'
+import translationEn from '../../../../locales/en/translation.json'
+import parameterEn from '../../../../locales/en/parameter.json'
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import locales from '../../../../locales/languages.json'
 
-interface LoopModePercentageDetailProps {
-  className: string
-  percentage: number
-  transform: string
-  value: number
+export const i18nOptions = {
+  lng: 'en',
+  keySeparator: false,
+  nsSeparator: '|',
+  returnEmptyString: false,
+  react: {
+    useSuspense: true,
+    transSupportBasicHtmlNodes: true // allow <br/> and simple html elements in translations
+  },
+  ns: locales.namespaces,
+  defaultNS: locales.defaultNS,
+  fallbackNS: locales.fallbackNS,
+  resources: {
+    en: { yourloops: yourloopsEn, main: translationEn, params: parameterEn }
+  }
 }
 
-export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetailProps> = (props) => {
-  const { className, percentage, transform, value } = props
-  const { t } = useTranslation('main')
-
-  const isPercentageValid = !Number.isNaN(percentage)
-
-  return (
-    <g className={className} transform={transform}>
-      <text className={styles.labelValueUnits} textAnchor="middle">
-        <tspan className={styles.legendLabelValue}>{isPercentageValid ? percentage : t('N/A') }</tspan>
-        {isPercentageValid && <tspan className={styles.legendLabelUnits} dy="-4">%</tspan>}
-      </text>
-      {isPercentageValid &&
-        <text
-          className={styles.labelRawValue}
-          textAnchor="middle"
-          dy="12"
-        >
-          {formatDuration(value, true)}
-        </text>
-      }
-    </g>
-  )
-}
+i18n.use(initReactI18next)
+i18n.init(i18nOptions).then(() => {
+  // nothing to do
+}).catch((reason) => {
+  console.error(reason)
+})

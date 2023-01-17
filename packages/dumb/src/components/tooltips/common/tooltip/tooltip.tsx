@@ -29,6 +29,7 @@ import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from '
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
 import TooltipTail from '../tooltip-tail/tooltip-tail'
+import { TimePrefs } from 'medical-domain'
 
 export interface Offset {
   top: number
@@ -45,10 +46,7 @@ export interface DateTitle {
   normalTime: string
   timezone: string
   source: string
-  timePrefs: {
-    timezoneAware: boolean
-    timezoneName: string
-  }
+  timePrefs: TimePrefs
 }
 
 export type Side = 'top' | 'right' | 'bottom' | 'left'
