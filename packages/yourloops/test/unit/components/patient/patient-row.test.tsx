@@ -154,32 +154,6 @@ describe('Patient row', () => {
     expect(within(cells[6]).queryByText('N/A')).not.toBeNull()
   })
 
-  it('should display remote monitoring to yes when logged in user is HCP and user is remote monitored', () => {
-    const remoteMonitoredPatient = createPatient('fakePatient', teams)
-    remoteMonitoredPatient.monitoring = { enabled: true }
-    const componentProps: PatientRowProps = {
-      loggedUserIsHcpInMonitoring: true,
-      patient: remoteMonitoredPatient,
-      filter: FilterType.pending
-    }
-    render(getPatientRowJSX(componentProps))
-    const cells = screen.getAllByRole('cell')
-    expect(within(cells[3]).queryByText('yes')).not.toBeNull()
-  })
-
-  it('should display correct remote monitoring label when logged in user is HCP and user is remote monitored and has a monitoring end date', () => {
-    const remoteMonitoredPatient = createPatient('fakePatient', teams)
-    remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
-    const componentProps: PatientRowProps = {
-      loggedUserIsHcpInMonitoring: true,
-      patient: remoteMonitoredPatient,
-      filter: FilterType.pending
-    }
-    render(getPatientRowJSX(componentProps))
-    const cells = screen.getAllByRole('cell')
-    expect(within(cells[3]).queryByText(/yes \(until/)).not.toBeNull()
-  })
-
   it('should display time away alert icon when logged in user is HCP and user has a time away alert', () => {
     const remoteMonitoredPatient = createPatient('fakePatient', teams)
     remoteMonitoredPatient.monitoring = { enabled: true, monitoringEnd: new Date() }
@@ -239,6 +213,6 @@ describe('Patient row', () => {
     }
     render(getPatientRowJSX(componentProps))
     const cells = screen.getAllByRole('cell')
-    expect(within(cells[8]).queryByTitle('unread-messages-icon')).not.toBeNull()
+    expect(within(cells[7]).queryByTitle('unread-messages-icon')).not.toBeNull()
   })
 })

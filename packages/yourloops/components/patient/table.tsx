@@ -188,20 +188,6 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t('system')}
                 </TableSortLabel>
               </StyledTableCell>
-              {loggedUserIsHcpInMonitoring &&
-                <StyledTableCell
-                  id="patients-list-header-remote-monitoring"
-                  className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
-                >
-                  <TableSortLabel
-                    id={`patients-list-header-remote-monitoring-label${orderBy === PatientTableSortFields.remoteMonitoring ? `-${order}` : ''}`}
-                    active={orderBy === PatientTableSortFields.remoteMonitoring}
-                    direction={order}
-                    onClick={createSortHandler(PatientTableSortFields.remoteMonitoring)}>
-                    {t('remote-monitoring')}
-                  </TableSortLabel>
-                </StyledTableCell>
-              }
               <StyledTableCell
                 id="patients-list-header-alert-time-target"
                 className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader} ${patientListCommonClasses.mediumCell}`}

@@ -40,7 +40,6 @@ import { Box, Typography } from '@mui/material'
 
 import IconActionButton from '../buttons/icon-action'
 import { getMedicalValues } from './utils'
-import { patientListCommonStyle } from './table'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
 import PatientUtils from '../../lib/patient/patient.util'
 import PersonRemoveIcon from '../icons/person-remove-icon'
@@ -100,7 +99,6 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
   const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
   const { classes } = patientListStyle()
-  const { classes: patientListCommonClasses } = patientListCommonStyle()
   const medicalData: MedicalData | null | undefined = patient.metadata.medicalData
 
   const [tooltipText, setTooltipText] = useState<string>('')
@@ -131,7 +129,6 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
 
   const {
     patientSystem,
-    patientRemoteMonitoring,
     timeSpentAwayFromTargetActive,
     frequencyOfSevereHypoglycemiaActive,
     nonDataTransmissionActive,
@@ -227,12 +224,6 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
         </StyledTableCell>
 
         <StyledTableCell className={classes.typography}>{patientSystem}</StyledTableCell>
-        {loggedUserIsHcpInMonitoring &&
-          <StyledTableCell
-            className={`${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.remoteMonitoringCell}`}>
-            {patientRemoteMonitoring}
-          </StyledTableCell>
-        }
 
         <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
           {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
