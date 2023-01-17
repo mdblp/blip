@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Theme } from '@mui/material/styles'
@@ -39,11 +39,11 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { Monitoring } from '../../lib/team/models/monitoring.model'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { convertBG } from '../../lib/units/units.util'
-import { useTeam } from '../../lib/team'
-import PatientUtils from '../../lib/patient/patient.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
+import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
+import FormHelperText from '@mui/material/FormHelperText'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -70,6 +70,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2)
   },
+  inputHelperText: {
+    width: '100%',
+    position: 'absolute',
+    bottom: '-15px'
+  },
   subCategoryContainer: {
     width: '55%'
   },
@@ -81,8 +86,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 95
+    marginRight: theme.spacing(1)
   },
   valueSelection: {
     display: 'flex',
@@ -92,167 +96,38 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }))
 
 export interface AlarmsContentConfigurationProps {
-  monitoring?: Monitoring
+  monitoring: Monitoring
   saveInProgress: boolean
   patient?: Patient
   onClose?: () => void
   onSave: (monitoring: Monitoring) => void
 }
 
-interface ValueErrorPair {
-  value?: number
-  error: boolean
-}
-
-export const MIN_HIGH_BG = 140
-export const MAX_HIGH_BG = 250
-export const MIN_VERY_LOW_BG = 40
-export const MAX_VERY_LOW_BG = 90
-export const MIN_LOW_BG = 50
-export const MAX_LOW_BG = 100
-export const PERCENTAGES = [...new Array(21)]
-  .map((_each, index) => `${index * 5}%`).slice(1, 21)
-
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
-  const { monitoring, saveInProgress, patient, onSave, onClose } = props
+  const { monitoring, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
-  const teamHook = useTeam()
-  const { t } = useTranslation('yourloops')
-
-  const convertMonitoring = (): void => {
-    if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UnitsType.MMOLL) {
-      monitoring.parameters = {
-        bgUnit: UnitsType.MGDL,
-        lowBg: convertBG(monitoring.parameters.lowBg, UnitsType.MMOLL),
-        highBg: convertBG(monitoring.parameters.highBg, UnitsType.MMOLL),
-        outOfRangeThreshold: monitoring.parameters.outOfRangeThreshold,
-        veryLowBg: convertBG(monitoring.parameters.veryLowBg, UnitsType.MMOLL),
-        hypoThreshold: monitoring.parameters?.hypoThreshold,
-        nonDataTxThreshold: monitoring.parameters?.nonDataTxThreshold,
-        reportingPeriod: monitoring.parameters.reportingPeriod
-      }
-    }
-  }
-
-  convertMonitoring()
-
-  const isError = (value: number, lowValue: number, highValue: number): boolean => {
-    return !(value >= lowValue && value <= highValue)
-  }
-
-  const isInvalidPercentage = (value: number): boolean => {
-    return !PERCENTAGES.includes(`${value}%`)
-  }
-
-  const [highBg, setHighBg] = useState<ValueErrorPair>({
-    value: monitoring?.parameters?.highBg,
-    error: !monitoring?.parameters?.highBg || isError(monitoring?.parameters?.highBg, MIN_HIGH_BG, MAX_HIGH_BG)
-  })
-  const [veryLowBg, setVeryLowBg] = useState<ValueErrorPair>({
-    value: monitoring?.parameters?.veryLowBg,
-    error: !monitoring?.parameters?.veryLowBg || isError(monitoring?.parameters?.veryLowBg, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG)
-  })
-  const [lowBg, setLowBg] = useState<ValueErrorPair>({
-    value: monitoring?.parameters?.lowBg,
-    error: !monitoring?.parameters?.lowBg || isError(monitoring?.parameters?.lowBg, MIN_LOW_BG, MAX_LOW_BG)
-  })
-  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(
-    {
-      value: monitoring?.parameters?.nonDataTxThreshold,
-      error: monitoring?.parameters?.nonDataTxThreshold === undefined || isInvalidPercentage(monitoring.parameters.nonDataTxThreshold)
-    })
-  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(
-    {
-      value: monitoring?.parameters?.outOfRangeThreshold,
-      error: monitoring?.parameters?.outOfRangeThreshold === undefined || isInvalidPercentage(monitoring.parameters.outOfRangeThreshold)
-    })
-  const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(
-    {
-      value: monitoring?.parameters?.hypoThreshold,
-      error: monitoring?.parameters?.hypoThreshold === undefined || isInvalidPercentage(monitoring.parameters.hypoThreshold)
-    })
-
-  const saveButtonDisabled = useMemo(() => {
-    return lowBg.error ||
-      highBg.error ||
-      veryLowBg.error ||
-      outOfRangeThreshold.error ||
-      hypoThreshold.error ||
-      nonDataTxThreshold.error ||
-      saveInProgress
-  }, [highBg.error, hypoThreshold.error, lowBg.error, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.error])
-
-  const onChange = (
-    value: number,
-    lowValue: number,
-    highValue: number,
-    setValue: React.Dispatch<ValueErrorPair>
-  ): void => {
-    setValue({
-      value,
-      error: isError(value, lowValue, highValue)
-    })
-  }
-
-  const resetToTeamDefaultValues = (): void => {
-    if (!patient) {
-      throw Error('This action cannot be done if the patient is undefined')
-    }
-    const monitoredTeam = PatientUtils.getRemoteMonitoringTeam(patient)
-    const team = teamHook.getTeam(monitoredTeam.teamId)
-    if (!team) {
-      throw Error(`Cannot find team with id ${monitoredTeam.teamId}`)
-    }
-    const defaultMonitoring = team.monitoring
-    if (!defaultMonitoring?.parameters) {
-      throw Error('The given team has no monitoring values')
-    }
-    setHighBg({ ...highBg, value: defaultMonitoring.parameters.highBg })
-    setVeryLowBg({ ...veryLowBg, value: defaultMonitoring.parameters.veryLowBg })
-    setLowBg({ ...lowBg, value: defaultMonitoring.parameters.lowBg })
-    setNonDataTxThreshold({ ...nonDataTxThreshold, value: defaultMonitoring.parameters.nonDataTxThreshold })
-    setOutOfRangeThreshold({ ...outOfRangeThreshold, value: defaultMonitoring.parameters.outOfRangeThreshold })
-    setHypoThreshold({ ...hypoThreshold, value: defaultMonitoring.parameters.hypoThreshold })
-  }
-
-  const save = (): void => {
-    if (
-      lowBg.value !== undefined &&
-      highBg.value !== undefined &&
-      veryLowBg.value !== undefined &&
-      outOfRangeThreshold.value !== undefined &&
-      nonDataTxThreshold.value !== undefined &&
-      hypoThreshold.value !== undefined
-    ) {
-      const reportingPeriod = (monitoring?.parameters?.reportingPeriod && monitoring?.parameters?.reportingPeriod > 0) ? monitoring?.parameters?.reportingPeriod : 55
-      const monitoringUpdated: Monitoring = {
-        enabled: monitoring?.enabled ?? true,
-        status: monitoring?.status,
-        monitoringEnd: monitoring?.monitoringEnd,
-        parameters: {
-          bgUnit: monitoring?.parameters?.bgUnit ?? UnitsType.MGDL,
-          lowBg: lowBg.value,
-          highBg: highBg.value,
-          outOfRangeThreshold: outOfRangeThreshold.value,
-          veryLowBg: veryLowBg.value,
-          hypoThreshold: hypoThreshold.value,
-          nonDataTxThreshold: nonDataTxThreshold.value,
-          reportingPeriod
-        }
-      }
-      onSave(monitoringUpdated)
-    } else {
-      throw Error('Cannot update team monitoring as some values are not defined')
-    }
-  }
-
-  const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
-    const valueAsNumber = +value.slice(0, -1)
-    setValue({
-      value: valueAsNumber,
-      error: false
-    })
-  }
+  const { t } = useTranslation()
+  const {
+    lowBg,
+    veryLowBg,
+    highBg,
+    nonDataTxThreshold,
+    hypoThreshold,
+    outOfRangeThreshold,
+    resetToTeamDefaultValues,
+    onChange,
+    saveButtonDisabled,
+    save,
+    setHighBg,
+    setLowBg,
+    setVeryLowBg,
+    setOutOfRangeThreshold,
+    setHypoThreshold,
+    setNonDataTxThreshold,
+    bgUnit
+  } = useAlarmsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
+  const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
+  const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
 
   return (
     <React.Fragment>
@@ -261,64 +136,93 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
           1. {t('time-away-from-target')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-tir', { tir: outOfRangeThreshold.value, lowBg: lowBg.value, highBg: highBg.value })}
+          {t('current-trigger-setting-tir', {
+            tir: outOfRangeThreshold.value,
+            lowBg: lowBg.value,
+            highBg: highBg.value,
+            bgUnit
+          })}
         </Typography>
-        <Box display="flex">
+        <Box display="flex" data-testid="time-target">
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>
               A. {t('glycemic-target')}
             </Typography>
             <div className={classes.valueSelection}>
-              <Box display="flex" alignItems="center" marginRight={2}>
+              <Box
+                display="flex"
+                alignItems="center"
+                marginRight={2}
+                paddingBottom={1}
+                position="relative"
+                data-testid="low-bg-text-field-id"
+              >
                 <Typography>{t('minimum')}</Typography>
                 <TextField
-                  id="low-bg-text-field-id"
                   value={lowBg.value}
-                  error={lowBg.error}
+                  error={!!lowBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   size="small"
                   InputProps={{
                     inputProps: {
-                      min: MIN_LOW_BG,
-                      max: MAX_LOW_BG
+                      min: minLowBg,
+                      max: maxLowBg,
+                      step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
+                      'aria-label': t('low-bg-input')
                     }
                   }}
-                  onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
-                  data-testid="low-bg-text-field-id"
+                  onChange={(event) => onChange(+event.target.value, minLowBg, maxLowBg, setLowBg)}
                 />
-                <Typography>{t('mg/dL')}</Typography>
+                <Typography>{bgUnit}</Typography>
+                {!!lowBg.errorMessage &&
+                  <FormHelperText error className={classes.inputHelperText}>
+                    {lowBg.errorMessage}
+                  </FormHelperText>
+                }
               </Box>
-              <Box display="flex" alignItems="center">
+              <Box
+                display="flex"
+                alignItems="center"
+                paddingBottom={1}
+                position="relative"
+                data-testid="high-bg-text-field-id"
+              >
                 <Typography>{t('maximum')}</Typography>
                 <TextField
-                  id="high-bg-text-field-id"
                   value={highBg.value}
-                  error={highBg.error}
+                  error={!!highBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   size="small"
                   InputProps={{
                     inputProps: {
-                      min: MIN_HIGH_BG,
-                      max: MAX_HIGH_BG
+                      min: minHighBg,
+                      max: maxHighBg,
+                      step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
+                      'aria-label': t('high-bg-input')
                     }
                   }}
-                  onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
-                  data-testid="high-bg-text-field-id"
+                  onChange={(event) => onChange(+event.target.value, minHighBg, maxHighBg, setHighBg)}
                 />
-                <Typography>{t('mg/dL')}</Typography>
+                <Typography>{bgUnit}</Typography>
+                {!!highBg.errorMessage &&
+                  <FormHelperText error className={classes.inputHelperText}>
+                    {highBg.errorMessage}
+                  </FormHelperText>
+                }
               </Box>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default-min-max')}</Typography>
+              <Typography
+                className={classes.defaultLabel}>{t('default-min-max', { min: `${lowBgDefault} ${bgUnit}`, max: `${highBgDefault} ${bgUnit}` })}</Typography>
             }
           </div>
           <div>
             <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
             <div className={classes.valueSelection}>
               <Typography>{t('time-spent-off-target')}</Typography>
-              <div className={classes.dropdown}>
+              <div className={classes.dropdown} data-testid="dropdown-out-of-range">
                 <BasicDropdown
                   key={`out-of-range-${outOfRangeThreshold.value}`}
                   id="out-of-range"
@@ -326,6 +230,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   values={PERCENTAGES}
                   error={outOfRangeThreshold.error}
                   onSelect={(value) => onBasicDropdownSelect(value, setOutOfRangeThreshold)}
+
                 />
               </div>
             </div>
@@ -339,43 +244,58 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
           2. {t('severe-hypoglycemia')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-hypoglycemia', { hypoThreshold: hypoThreshold.value, veryLowBg: veryLowBg.value })}
+          {t('current-trigger-setting-hypoglycemia', {
+            hypoThreshold: hypoThreshold.value,
+            veryLowBg: veryLowBg.value,
+            bgUnit
+          })}
         </Typography>
-        <Box display="flex">
+        <Box display="flex" data-testid="severe-hypoglycemia">
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
               hypoThreshold: hypoThreshold.value,
               veryLowBg: veryLowBg.value
             })}:</Typography>
-            <div className={classes.valueSelection}>
+            <Box
+              className={classes.valueSelection}
+              data-testid="very-low-bg-text-field-id"
+              position="relative"
+              paddingBottom={2}
+            >
               <Typography>{t('severe-hypoglycemia-below')}</Typography>
               <TextField
-                id="very-low-bg-text-field-id"
                 value={veryLowBg.value}
-                error={veryLowBg.error}
+                error={!!veryLowBg.errorMessage}
                 type="number"
                 className={classes.textField}
                 size="small"
                 InputProps={{
                   inputProps: {
-                    min: MIN_VERY_LOW_BG,
-                    max: MAX_VERY_LOW_BG
+                    min: minVeryLowBg,
+                    max: maxVeryLowBg,
+                    step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
+                    'aria-label': t('very-low-bg-input')
                   }
                 }}
-                onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
-                data-testid="very-low-bg-text-field-id"
+                onChange={(event) => onChange(+event.target.value, minVeryLowBg, maxVeryLowBg, setVeryLowBg)}
               />
-              <Typography>{t('mg/dL')}</Typography>
-            </div>
+              <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
+              {!!veryLowBg.errorMessage &&
+                <FormHelperText error className={classes.inputHelperText}>
+                  {veryLowBg.errorMessage}
+                </FormHelperText>
+              }
+            </Box>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: '54mg/dL' })}</Typography>
+              <Typography
+                className={classes.defaultLabel}>{t('default', { value: `${veryLowBgDefault} ${bgUnit}` })}</Typography>
             }
           </div>
           <div>
             <Typography className={classes.subCategoryTitle}>
               B. {t('event-trigger-threshold')}
             </Typography>
-            <div className={classes.valueSelection}>
+            <div className={classes.valueSelection} data-testid="dropdown-hypo">
               <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
               <div className={classes.dropdown}>
                 <BasicDropdown
@@ -406,7 +326,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
             <div className={classes.valueSelection}>
               <Typography>{t('time-spent-without-uploaded-data')}</Typography>
-              <div className={classes.dropdown}>
+              <div className={classes.dropdown} data-testid="dropdown-nonData">
                 <BasicDropdown
                   key={`tir-dropdown-${nonDataTxThreshold.value}`}
                   id="non-data"

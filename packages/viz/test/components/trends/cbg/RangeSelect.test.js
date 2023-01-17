@@ -20,8 +20,8 @@ import { expect } from 'chai'
 import * as sinon from 'sinon'
 import { mount } from 'enzyme'
 
-import LabeledCheckbox from '../../../../src/components/common/controls/LabeledCheckbox'
-import { RangeSelect, mapDispatchToProps } from '../../../../src/components/trends/cbg/RangeSelect'
+import { mapDispatchToProps, RangeSelect } from '../../../../src/components/trends/cbg/RangeSelect'
+import { LabeledCheckbox } from 'dumb'
 
 describe('RangeSelect', () => {
   describe('RangeSelect (w/o redux connect()ion)', () => {

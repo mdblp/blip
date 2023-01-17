@@ -79,7 +79,6 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
       setSaveInProgress(false)
     }
   }
-
   return (
     <Dialog
       id="patient-alarm-dialog-id"

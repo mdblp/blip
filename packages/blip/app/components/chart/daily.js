@@ -31,7 +31,6 @@ import { components as vizComponents } from 'tidepool-viz'
 
 import { BG_DATA_TYPES } from '../../core/constants'
 import Stats from './stats'
-import BgSourceToggle from './bgSourceToggle'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
@@ -395,13 +394,6 @@ class Daily extends React.Component {
             </div>
             <div className="container-box-inner patient-data-sidebar">
               <div className="patient-data-sidebar-inner">
-                <BgSourceToggle
-                  bgSource={this.props.dataUtil.bgSource}
-                  bgSources={this.props.dataUtil.bgSources}
-                  chartPrefs={this.props.chartPrefs}
-                  chartType={this.chartType}
-                  onClickBgSourceToggle={this.toggleBgDataSource}
-                />
                 <Stats
                   bgPrefs={this.props.bgPrefs}
                   bgSource={this.props.dataUtil.bgSource}
@@ -454,17 +446,6 @@ class Daily extends React.Component {
     /** @type {{tidelineData: MedicalDataService}} */
     const { tidelineData } = this.props
     return moment.tz(datetime, tidelineData.getTimezoneAt(datetime)).format(i18next.t('ddd, MMM D, YYYY'))
-  }
-
-  // handlers
-  toggleBgDataSource = (e, bgSource) => {
-    if (e) {
-      e.preventDefault()
-    }
-
-    const prefs = _.cloneDeep(this.props.chartPrefs)
-    prefs.daily.bgSource = bgSource
-    this.props.updateChartPrefs(prefs)
   }
 
   handleClickOneDay = (e) => {
