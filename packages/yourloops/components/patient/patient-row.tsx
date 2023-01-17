@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -95,7 +95,7 @@ const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Th
   }
 })
 
-const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => {
+const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonitoring, filter, patient }) => {
   const historyHook = useHistory()
   const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
@@ -227,7 +227,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         </StyledTableCell>
 
         <StyledTableCell className={classes.typography}>{patientSystem}</StyledTableCell>
-        {isUserHcp &&
+        {loggedUserIsHcpInMonitoring &&
           <StyledTableCell
             className={`${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.remoteMonitoringCell}`}>
             {patientRemoteMonitoring}
@@ -256,7 +256,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
           {lastUpload}
         </StyledTableCell>
 
-        {isUserHcp &&
+        {loggedUserIsHcpInMonitoring &&
           <StyledTableCell className={classes.iconCell}>
             <Tooltip
               title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}

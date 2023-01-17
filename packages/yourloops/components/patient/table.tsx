@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,6 +47,7 @@ import { PatientTableProps } from './models/patient-table-props.model'
 import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { SortDirection } from './models/enums/sort-direction.enum'
+import { useTeam } from '../../lib/team'
 
 const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-table' })((theme: Theme) => {
   return {
@@ -113,7 +114,9 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   const { classes } = patientListStyle()
   const { classes: patientListCommonClasses } = patientListCommonStyle()
   const authHook = useAuth()
+  const { getRemoteMonitoringTeams } = useTeam()
   const isUserHcp = authHook.user?.isUserHcp()
+  const loggedUserIsHcpInMonitoring = !!(isUserHcp && getRemoteMonitoringTeams().find(team => team.members.find(member => member.userId === authHook.user?.id)))
   const [page, setPage] = React.useState<number>(0)
   const [rowPerPage, setRowPerPage] = React.useState<number>(10)
   const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage)
@@ -185,7 +188,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t('system')}
                 </TableSortLabel>
               </StyledTableCell>
-              {isUserHcp &&
+              {loggedUserIsHcpInMonitoring &&
                 <StyledTableCell
                   id="patients-list-header-remote-monitoring"
                   className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
@@ -271,18 +274,18 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t('last-data-update')}
                 </TableSortLabel>
               </StyledTableCell>
-              {isUserHcp &&
-                <React.Fragment>
+              <React.Fragment>
+                {loggedUserIsHcpInMonitoring &&
                   <StyledTableCell
                     id="patients-list-message-icon"
                     className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
                   />
-                  <StyledTableCell
-                    id="patients-list-remove-icon"
-                    className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
-                  />
-                </React.Fragment>
-              }
+                }
+                <StyledTableCell
+                  id="patients-list-remove-icon"
+                  className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
+                />
+              </React.Fragment>
             </TableRow>
           </TableHead>
           <TableBody id="patient-table-body-id" data-testid="patient-table-body">
@@ -290,8 +293,9 @@ function PatientTable(props: PatientTableProps): JSX.Element {
               (patient: Patient): JSX.Element => (
                 <PatientRow
                   key={patient.userid}
-                  patient={patient}
+                  loggedUserIsHcpInMonitoring={loggedUserIsHcpInMonitoring}
                   filter={filter}
+                  patient={patient}
                 />
               )
             )}
