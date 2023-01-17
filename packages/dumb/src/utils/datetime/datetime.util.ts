@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
-import { DurationUnit } from 'medical-domain'
+import { DurationUnit, TimePrefs } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
@@ -36,6 +36,7 @@ export const THIRTY_MINS = 1800000
 export const ONE_HR = 3600000
 export const THREE_HRS = 10800000
 export const TWENTY_FOUR_HRS = 86400000
+export const TIMEZONE_UTC = 'UTC'
 
 /**
  * getHourMinuteFormat
@@ -79,17 +80,17 @@ export const getBrowserTimezone = (): string => {
  *
  * @return {String} timezoneName from timePrefs, browser, or fallback to 'UTC'
  */
-export const getTimezoneFromTimePrefs = (timePrefs: { timezoneAware: boolean, timezoneName: string }): string => {
+export const getTimezoneFromTimePrefs = (timePrefs: TimePrefs): string => {
   if (typeof timePrefs === 'object' && !_.isEmpty(timePrefs)) {
-    return timePrefs.timezoneName ?? getBrowserTimezone() ?? 'UTC'
+    return timePrefs.timezoneName ?? getBrowserTimezone() ?? TIMEZONE_UTC
   }
-  return 'UTC'
+  return TIMEZONE_UTC
 }
 
 /**
  * Format a duration
  * @param {number} duration - positive integer duration in milliseconds
- * @param {{condensed?: boolean}} opts - options
+ * @param {boolean} condensed - whether the return string should be condensed (e.g: '1min' or '1m')
  * @return {string} formatted duration, e.g., '1¼ h'
  */
 export const formatDuration = (duration: number, condensed: boolean = false): string => {
@@ -172,7 +173,7 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
  *
  * @return {String} formatted datetime, e.g., 'Sunday, January 1'
  */
-export const formatLocalizedFromUTC = (utc: string | number | Date | moment.Moment, timePrefs: { timezoneAware: boolean, timezoneName: string }, format = getDayFormat()): string => {
+export const formatLocalizedFromUTC = (utc: string | number | Date | moment.Moment, timePrefs: TimePrefs, format = getDayFormat()): string => {
   const timezone = getTimezoneFromTimePrefs(timePrefs)
   return moment.utc(utc).tz(timezone).format(format)
 }

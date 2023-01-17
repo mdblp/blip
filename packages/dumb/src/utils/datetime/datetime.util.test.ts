@@ -25,13 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  addDuration,
-  formatDuration,
-  formatLocalizedFromUTC,
-  getTimezoneFromTimePrefs,
-  ONE_HR
-} from './datetime.util'
+import { addDuration, formatDuration, formatLocalizedFromUTC, getTimezoneFromTimePrefs, ONE_HR } from './datetime.util'
+import { TimePrefs } from 'medical-domain'
 
 describe('datetime util', () => {
   describe('addDuration', () => {
@@ -51,14 +46,22 @@ describe('datetime util', () => {
       const timePrefs = {
         timezoneAware: true,
         timezoneName: tz
-      }
+      } as TimePrefs
       const timezoneReceived = getTimezoneFromTimePrefs(timePrefs)
       expect(timezoneReceived).toEqual(tz)
     })
 
     it('should return `UTC` if timezoneAware is true but no timezoneName given', () => {
+      const timePrefs = {
+        timezoneAware: true
+      } as TimePrefs
       const expectedTimezone = 'UTC'
-      const receivedTimezone = getTimezoneFromTimePrefs(undefined)
+
+      jest.spyOn(Intl, 'DateTimeFormat').mockReturnValue({
+        resolvedOptions: () => ({ timeZone: undefined })
+      } as unknown as Intl.DateTimeFormat)
+
+      const receivedTimezone = getTimezoneFromTimePrefs(timePrefs)
       expect(receivedTimezone).toEqual(expectedTimezone)
     })
   })
@@ -179,15 +182,14 @@ describe('datetime util', () => {
     const tzAwareLA = {
       timezoneAware: true,
       timezoneName: 'America/Los_Angeles'
-    }
+    } as TimePrefs
     const tzAwareNY = {
       timezoneAware: true,
       timezoneName: 'America/New_York'
-    }
+    } as TimePrefs
     const tzUnaware = {
-      timezoneAware: false,
-      timezoneName: undefined
-    }
+      timezoneAware: false
+    } as TimePrefs
     const utcString = '2016-09-05T04:00:00Z'
     const utcAsNumber = Date.parse(utcString)
 
@@ -242,17 +244,17 @@ describe('datetime util', () => {
     })
 
     it('should return "Sep 5" for utcAsNumber tzUnaware "MMM D"', () => {
-      expect(formatLocalizedFromUTC(utcAsNumber, undefined, 'MMM D'))
+      expect(formatLocalizedFromUTC(utcAsNumber, tzUnaware, 'MMM D'))
         .toEqual('Sep 5')
     })
 
     it('should return "Sep 5" for utcString tzUnaware "MMM D"', () => {
-      expect(formatLocalizedFromUTC(utcString, undefined, 'MMM D'))
+      expect(formatLocalizedFromUTC(utcString, tzUnaware, 'MMM D'))
         .toEqual('Sep 5')
     })
 
     it('should error if passed a JavaScript Date for the `utc` param', () => {
-      expect(formatLocalizedFromUTC(new Date(utcString), undefined, 'MMM D'))
+      expect(formatLocalizedFromUTC(new Date(utcString), tzUnaware, 'MMM D'))
         .toEqual('Sep 5')
     })
   })

@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import yourloopsEn from '../../../locales/en/yourloops.json'
-import translationEn from '../../../locales/en/translation.json'
-import parameterEn from '../../../locales/en/parameter.json'
+import yourloopsEn from '../../../../locales/en/yourloops.json'
+import translationEn from '../../../../locales/en/translation.json'
+import parameterEn from '../../../../locales/en/parameter.json'
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import locales from '../../../locales/languages.json'
+import locales from '../../../../locales/languages.json'
 
 export const i18nOptions = {
   lng: 'en',
