@@ -33,11 +33,12 @@ import config from '../config'
 import personUtils from '../core/personutils'
 import utils from '../core/utils'
 import ApiUtils from '../core/api-utils'
-import { Daily, PatientDashboard, Trends } from './chart'
+import { Daily, PatientDashboard as BlipOldDashboard, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
 import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import ChartType from 'yourloops/enum/chart-type.enum'
+import PatientDashboard from 'yourloops/components/dashboard-widgets/patient-dashboard'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -332,7 +333,9 @@ class PatientDataPage extends React.Component {
       chartStates,
       epochLocation,
       msRange,
-      medicalData
+      medicalData,
+      bgPrefs,
+      timePrefs
     } = this.state
     const user = api.whoami
 
@@ -349,28 +352,44 @@ class PatientDataPage extends React.Component {
         />
         <Switch>
           <Route path={`${prefixURL}/dashboard`}>
-            <PatientDashboard
-              bgPrefs={this.state.bgPrefs}
-              chartPrefs={chartPrefs}
-              patient={patient}
-              setPatient={setPatient}
-              userIsHCP={userIsHCP}
-              user={user}
-              isSelectedTeamMedical={isSelectedTeamMedical}
-              dataUtil={this.dataUtil}
-              timePrefs={this.state.timePrefs}
-              epochLocation={epochLocation}
-              msRange={msRange}
-              loading={loadingState !== LOADING_STATE_DONE}
-              tidelineData={medicalData}
-              permsOfLoggedInUser={permsOfLoggedInUser}
-              trackMetric={this.trackMetric}
-              chatWidget={chatWidget}
-              alarmCard={alarmCard}
-              medicalFilesWidget={medicalFilesWidget}
-              onSwitchToDaily={this.handleSwitchToDaily}
-              canPrint={canPrint}
-            />
+            {patient.monitoring?.enabled
+              ? <BlipOldDashboard
+                bgPrefs={this.state.bgPrefs}
+                chartPrefs={chartPrefs}
+                patient={patient}
+                setPatient={setPatient}
+                userIsHCP={userIsHCP}
+                user={user}
+                isSelectedTeamMedical={isSelectedTeamMedical}
+                dataUtil={this.dataUtil}
+                timePrefs={this.state.timePrefs}
+                epochLocation={epochLocation}
+                msRange={msRange}
+                loading={loadingState !== LOADING_STATE_DONE}
+                tidelineData={medicalData}
+                permsOfLoggedInUser={permsOfLoggedInUser}
+                trackMetric={this.trackMetric}
+                chatWidget={chatWidget}
+                alarmCard={alarmCard}
+                medicalFilesWidget={medicalFilesWidget}
+                onSwitchToDaily={this.handleSwitchToDaily}
+                canPrint={canPrint}
+              />
+              : <PatientDashboard
+                bgPrefs={bgPrefs}
+                chartPrefs={chartPrefs}
+                dataUtil={this.dataUtil}
+                epochDate={epochLocation}
+                loading={loadingState !== LOADING_STATE_DONE}
+                medicalDataService={medicalData}
+                msRange={msRange}
+                patient={patient}
+                permsOfLoggedInUser={permsOfLoggedInUser}
+                timePrefs={timePrefs}
+                trackMetric={this.trackMetric}
+                onSwitchToDaily={this.handleSwitchToDaily}
+              />
+            }
           </Route>
           <Route path={`${prefixURL}/daily`}>
             <Daily

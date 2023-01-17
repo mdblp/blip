@@ -48,7 +48,6 @@ import ChartType from 'yourloops/enum/chart-type.enum'
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
  * @typedef { import('../../index').DatePicker } DatePicker
- * @typedef { import('./index').DailyDatePickerProps } DailyDatePickerProps
  */
 
 const WarmUpTooltip = vizComponents.WarmUpTooltip

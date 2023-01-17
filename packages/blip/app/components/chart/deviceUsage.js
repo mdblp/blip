@@ -33,9 +33,7 @@ import _ from 'lodash'
 
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
@@ -53,19 +51,9 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 import { BasicsChart } from 'tideline'
 import Stats from './stats'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
+import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 
 const useStyles = makeStyles()((theme) => ({
-  card: {
-    width: 430
-  },
-  cardHeader: {
-    textTransform: 'uppercase',
-    backgroundColor: 'var(--card-header-background-color)'
-  },
-  cardContent: {
-    overflowY: 'auto',
-    maxHeight: 800
-  },
   sectionTitles: {
     fontSize: 'var(--section-title-font-size)',
     fontWeight: 'var(--section-title-font-weight)',
@@ -91,11 +79,7 @@ const useStyles = makeStyles()((theme) => ({
     padding: theme.spacing(0.2, 0.5)
   },
   divider: {
-    margin: theme.spacing(1, 0),
-    width: '99%'
-  },
-  parameterChanges: {
-    width: '100%'
+    margin: theme.spacing(1, 0)
   },
   parameterChangesTable: {
     maxHeight: 200
@@ -119,15 +103,12 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, permsOfLoggedInUser, trackMetric,
-    //eslint-disable-next-line
-    dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily
-  } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, permsOfLoggedInUser, trackMetric, dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
   //eslint-disable-next-line
-  const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0];
+  const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
 
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
@@ -152,23 +133,22 @@ const DeviceUsage = (props) => {
   }
 
   return <>
-    <Card id="device-usage" data-testid="device-usage-card" className={classes.card}>
-      <CardHeader
-        id="device-usage-header"
-        avatar={<PhonelinkSetupOutlinedIcon/>}
-        className={classes.cardHeader}
-        title={t('device-usage')}
-        action={
-          <IconButton
-            data-testid="settings-button"
-            aria-label="settings"
-            onClick={()=>setDialogOpened(true)}
-            size="large">
-            <MoreHorizOutlinedIcon />
-          </IconButton>
-        }
-      />
-      <CardContent id="device-usage-content" className={classes.cardContent}>
+    <GenericDashboardCard
+      avatar={<PhonelinkSetupOutlinedIcon />}
+      title={t('device-usage')}
+      data-testid="device-usage-card"
+      action={
+        <IconButton
+          data-testid="settings-button"
+          aria-label="settings"
+          onClick={() => setDialogOpened(true)}
+          size="small"
+        >
+          <MoreHorizOutlinedIcon />
+        </IconButton>
+      }
+    >
+      <CardContent id="device-usage-content">
         <Box id="device-usage-device">
           <Typography className={classes.sectionTitles}>{t('devices')}</Typography>
           <Grid className={classes.sectionContent} container spacing={1}>
@@ -187,8 +167,8 @@ const DeviceUsage = (props) => {
             )}
           </Grid>
         </Box>
-        <Divider variant="fullWidth" className={classes.divider}/>
-        <Box id="device-usage-updates" className={classes.parameterChanges}>
+        <Divider variant="fullWidth" className={classes.divider} />
+        <Box id="device-usage-updates">
           <Typography className={classes.sectionTitles}>{t('last-updates')}</Typography>
           <TableContainer data-testid="device-usage-updates-list" className={classes.parameterChangesTable}>
             <Table>
@@ -217,7 +197,7 @@ const DeviceUsage = (props) => {
             </Table>
           </TableContainer>
         </Box>
-        <Divider variant="fullWidth" className={classes.divider}/>
+        <Divider variant="fullWidth" className={classes.divider} />
         <Stats
           bgPrefs={bgPrefs}
           //eslint-disable-next-line
@@ -227,30 +207,32 @@ const DeviceUsage = (props) => {
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
-          hideToolTips={true}
+          hideToolTips
         />
         <BasicsChart
           //eslint-disable-next-line
           bgClasses={bgPrefs.bgClasses}
           //eslint-disable-next-line
           bgUnits={bgPrefs.bgUnits}
-          onSelectDay={()=>null}
+          onSelectDay={() => null}
           patient={patient}
           tidelineData={tidelineData}
           permsOfLoggedInUser={permsOfLoggedInUser}
           timePrefs={timePrefs}
           trackMetric={trackMetric} />
       </CardContent>
-    </Card>
-    <SettingsDialog
-      bgPrefs={bgPrefs}
-      timePrefs={timePrefs}
-      patientData={tidelineData}
-      onSwitchToDaily={onSwitchToDaily}
-      trackMetric={trackMetric}
-      open={dialogOpened}
-      setOpen={setDialogOpened}
-    />
+    </GenericDashboardCard>
+    {dialogOpened &&
+      <SettingsDialog
+        bgPrefs={bgPrefs}
+        timePrefs={timePrefs}
+        patientData={tidelineData}
+        onSwitchToDaily={onSwitchToDaily}
+        trackMetric={trackMetric}
+        open={dialogOpened}
+        setOpen={setDialogOpened}
+      />
+    }
   </>
 }
 
@@ -261,7 +243,7 @@ DeviceUsage.propType = {
   tidelineData: PropTypes.object.isRequired,
   permsOfLoggedInUser: PropTypes.object.isRequired,
   trackMetric: PropTypes.func.isRequired,
-  onSwitchToDaily:  PropTypes.func.isRequired
+  onSwitchToDaily: PropTypes.func.isRequired
 }
 
 export default DeviceUsage

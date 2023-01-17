@@ -37,7 +37,6 @@ import ChartType from 'yourloops/enum/chart-type.enum'
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
  * @typedef { import('../../index').DialogRangeDatePicker } DialogRangeDatePicker
  *
- * @typedef { import('./index').TrendsDatePickerProps } TrendsDatePickerProps
  * @typedef { import('./index').TrendsProps } TrendsProps
  * @typedef { import('./index').TrendsState } TrendsState
  */
