@@ -51,7 +51,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2016 Migrate BolusTooltip to dumb
 - YLP-2021 Implement remote monitoring card new design
 - YLP-2022 HBA1C is not displayed in profile when logged in as a patient
-- YLP-2031 migrate viz tests to dumb
+- YLP-2031 Migrate viz tests to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5
