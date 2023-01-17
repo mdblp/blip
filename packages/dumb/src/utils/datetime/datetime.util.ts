@@ -79,7 +79,7 @@ export const getBrowserTimezone = (): string => {
  *
  * @return {String} timezoneName from timePrefs, browser, or fallback to 'UTC'
  */
-export const getTimezoneFromTimePrefs = (timePrefs?: { timezoneAware?: boolean, timezoneName?: string }): string => {
+export const getTimezoneFromTimePrefs = (timePrefs: { timezoneAware: boolean, timezoneName: string }): string => {
   if (typeof timePrefs === 'object' && !_.isEmpty(timePrefs)) {
     return timePrefs.timezoneName ?? getBrowserTimezone() ?? 'UTC'
   }
@@ -172,7 +172,7 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
  *
  * @return {String} formatted datetime, e.g., 'Sunday, January 1'
  */
-export const formatLocalizedFromUTC = (utc: string | number | Date | moment.Moment, timePrefs?: { timezoneAware?: boolean, timezoneName?: string }, format = getDayFormat()): string => {
+export const formatLocalizedFromUTC = (utc: string | number | Date | moment.Moment, timePrefs: { timezoneAware: boolean, timezoneName: string }, format = getDayFormat()): string => {
   const timezone = getTimezoneFromTimePrefs(timePrefs)
   return moment.utc(utc).tz(timezone).format(format)
 }
