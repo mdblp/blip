@@ -388,6 +388,10 @@ class MedicalDataService {
     const sortedDescPumpSettings = this.medicalData.pumpSettings.sort((pumpSettings1: PumpSettings, pumpSettings2: PumpSettings) => this.sortDatum(pumpSettings2, pumpSettings1))
     const lastPumpSettings: PumpSettings = sortedDescPumpSettings[0]
 
+    if (!lastPumpSettings) {
+      return
+    }
+
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
       reservoirChange.pump = lastPumpSettings.payload.pump
       return reservoirChange
