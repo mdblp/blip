@@ -132,7 +132,7 @@ describe('Patient row', () => {
     expect(within(cells[5]).queryByText(`${patient.alarms.nonDataTransmissionRate}%`)).not.toBeNull()
     expect(within(cells[3]).queryByTitle('no-data-alert-icon')).toBeNull()
     expect(within(cells[6]).queryByText('N/A')).not.toBeNull()
-    expect(within(cells[7]).queryByTitle('unread-messages-icon')).toBeNull()
+    expect(within(cells[7]).queryByLabelText('remove-patient fake@email.com')).not.toBeNull()
   })
 
   it('should display correct fields when logged in user is caregiver', () => {
