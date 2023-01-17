@@ -260,18 +260,16 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t('last-data-update')}
                 </TableSortLabel>
               </StyledTableCell>
-              <React.Fragment>
-                {loggedUserIsHcpInMonitoring &&
-                  <StyledTableCell
-                    id="patients-list-message-icon"
-                    className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
-                  />
-                }
+              {loggedUserIsHcpInMonitoring &&
                 <StyledTableCell
-                  id="patients-list-remove-icon"
+                  id="patients-list-message-icon"
                   className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
                 />
-              </React.Fragment>
+              }
+              <StyledTableCell
+                id="patients-list-remove-icon"
+                className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
+              />
             </TableRow>
           </TableHead>
           <TableBody id="patient-table-body-id" data-testid="patient-table-body">
