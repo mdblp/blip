@@ -33,23 +33,10 @@ import { initReactI18next } from 'react-i18next'
 import locales from '../../../locales/languages.json'
 
 export const i18nOptions = {
-  fallbackLng: locales.fallback,
   lng: 'en',
-
-  // To allow . in keys
   keySeparator: false,
-  // To allow : in keys
   nsSeparator: '|',
-
-  debug: false,
-
-  interpolation: {
-    escapeValue: false // not needed for react!!
-  },
-
-  // If the translation is empty, return the key instead
   returnEmptyString: false,
-
   react: {
     useSuspense: true,
     transSupportBasicHtmlNodes: true // allow <br/> and simple html elements in translations
@@ -57,21 +44,13 @@ export const i18nOptions = {
   ns: locales.namespaces,
   defaultNS: locales.defaultNS,
   fallbackNS: locales.fallbackNS,
-
-  resources: locales.resources
+  resources: {
+    en: { yourloops: yourloopsEn, main: translationEn, params: parameterEn }
+  }
 }
 
-async function init(options = i18nOptions): Promise<void> {
-  i18n.use(initReactI18next)
-  await i18n.init(options)
-}
-
-const options = i18nOptions
-options.resources.en.yourloops = yourloopsEn
-options.resources.en.main = translationEn
-options.resources.en.params = parameterEn
-
-init(options).then(() => {
+i18n.use(initReactI18next)
+i18n.init(i18nOptions).then(() => {
   // nothing to do
 }).catch((reason) => {
   console.error(reason)
