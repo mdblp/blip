@@ -35,9 +35,13 @@ import {
 
 describe('datetime util', () => {
   describe('addDuration', () => {
-    it('add a duration to a date string', () => {
+    const ONE_MINUTE_IN_MS = 60000
+
+    it('should add a specified duration to a date string fdsfsd', () => {
       const start = '2017-11-10T00:00:00.000Z'
-      expect(addDuration(start, 60000)).toEqual('2017-11-10T00:01:00.000Z')
+      const expectedDate = '2017-11-10T00:01:00.000Z'
+      const receivedDate = addDuration(start, ONE_MINUTE_IN_MS)
+      expect(receivedDate).toEqual(expectedDate)
     })
   })
 
@@ -48,18 +52,19 @@ describe('datetime util', () => {
         timezoneAware: true,
         timezoneName: tz
       }
-      expect(getTimezoneFromTimePrefs(timePrefs)).toEqual(tz)
+      const timezoneReceived = getTimezoneFromTimePrefs(timePrefs)
+      expect(timezoneReceived).toEqual(tz)
     })
 
-    describe('timezone can be determined by browser', () => {
-      it('should return `UTC` if timezoneAware is true but no timezoneName given', () => {
-        expect(getTimezoneFromTimePrefs(undefined)).toEqual('UTC')
-      })
+    it('should return `UTC` if timezoneAware is true but no timezoneName given', () => {
+      const expectedTimezone = 'UTC'
+      const receivedTimezone = getTimezoneFromTimePrefs(undefined)
+      expect(receivedTimezone).toEqual(expectedTimezone)
     })
   })
 
   describe('formatDuration', () => {
-    const condensed = { condensed: true }
+    const condensed = true
 
     it('should properly format a 30 minute duration', () => {
       expect(formatDuration(36e5 / 2)).toEqual('30 min')
@@ -184,10 +189,10 @@ describe('datetime util', () => {
       timezoneName: undefined
     }
     const utcString = '2016-09-05T04:00:00Z'
-    const hammertime = Date.parse(utcString)
+    const utcAsNumber = Date.parse(utcString)
 
-    it('should return "Sunday, September 4" for hammertime tzAware LA', () => {
-      expect(formatLocalizedFromUTC(hammertime, tzAwareLA))
+    it('should return "Sunday, September 4" for utcAsNumber tzAware LA', () => {
+      expect(formatLocalizedFromUTC(utcAsNumber, tzAwareLA))
         .toEqual('Sunday, September 4')
     })
 
@@ -196,8 +201,8 @@ describe('datetime util', () => {
         .toEqual('Sunday, September 4')
     })
 
-    it('should return "Monday, September 5" for hammertime tzAware NY', () => {
-      expect(formatLocalizedFromUTC(hammertime, tzAwareNY))
+    it('should return "Monday, September 5" for utcAsNumber tzAware NY', () => {
+      expect(formatLocalizedFromUTC(utcAsNumber, tzAwareNY))
         .toEqual('Monday, September 5')
     })
 
@@ -206,8 +211,8 @@ describe('datetime util', () => {
         .toEqual('Monday, September 5')
     })
 
-    it('should return "Monday, September 5" for hammertime tzUnaware', () => {
-      expect(formatLocalizedFromUTC(hammertime, tzUnaware))
+    it('should return "Monday, September 5" for utcAsNumber tzUnaware', () => {
+      expect(formatLocalizedFromUTC(utcAsNumber, tzUnaware))
         .toEqual('Monday, September 5')
     })
 
@@ -216,8 +221,8 @@ describe('datetime util', () => {
         .toEqual('Monday, September 5')
     })
 
-    it('should return "Sep 4" for hammertime tzAware LA "MMM D"', () => {
-      expect(formatLocalizedFromUTC(hammertime, tzAwareLA, 'MMM D'))
+    it('should return "Sep 4" for utcAsNumber tzAware LA "MMM D"', () => {
+      expect(formatLocalizedFromUTC(utcAsNumber, tzAwareLA, 'MMM D'))
         .toEqual('Sep 4')
     })
 
@@ -226,8 +231,8 @@ describe('datetime util', () => {
         .toEqual('Sep 4')
     })
 
-    it('should return "Sep 5" for hammertime tzAware NY "MMM D"', () => {
-      expect(formatLocalizedFromUTC(hammertime, tzAwareNY, 'MMM D'))
+    it('should return "Sep 5" for utcAsNumber tzAware NY "MMM D"', () => {
+      expect(formatLocalizedFromUTC(utcAsNumber, tzAwareNY, 'MMM D'))
         .toEqual('Sep 5')
     })
 
@@ -236,8 +241,8 @@ describe('datetime util', () => {
         .toEqual('Sep 5')
     })
 
-    it('should return "Sep 5" for hammertime tzUnaware "MMM D"', () => {
-      expect(formatLocalizedFromUTC(hammertime, undefined, 'MMM D'))
+    it('should return "Sep 5" for utcAsNumber tzUnaware "MMM D"', () => {
+      expect(formatLocalizedFromUTC(utcAsNumber, undefined, 'MMM D'))
         .toEqual('Sep 5')
     })
 

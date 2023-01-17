@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022, Diabeloop
+ * Copyright (c) 2020-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,7 +55,7 @@ export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetai
           textAnchor="middle"
           dy="12"
         >
-          {formatDuration(value, { condensed: true })}
+          {formatDuration(value, true)}
         </text>
       }
     </g>

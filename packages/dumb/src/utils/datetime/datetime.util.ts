@@ -92,7 +92,7 @@ export const getTimezoneFromTimePrefs = (timePrefs?: { timezoneAware?: boolean, 
  * @param {{condensed?: boolean}} opts - options
  * @return {string} formatted duration, e.g., '1¼ h'
  */
-export const formatDuration = (duration: number, opts?: { condensed: boolean }): string => {
+export const formatDuration = (duration: number, condensed: boolean = false): string => {
   const momentDuration = moment.duration(duration)
   const days = momentDuration.days()
   const hours = momentDuration.hours()
@@ -105,7 +105,7 @@ export const formatDuration = (duration: number, opts?: { condensed: boolean }):
   const TWO_THIRDS = '⅔'
   const THREE_QUARTERS = '¾'
 
-  if (opts?.condensed) {
+  if (condensed) {
     const formatted = {
       days: '',
       hours: '',
