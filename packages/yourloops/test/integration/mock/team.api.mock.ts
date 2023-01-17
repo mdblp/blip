@@ -26,23 +26,38 @@
  */
 
 import TeamAPI from '../../../lib/team/team.api'
-import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
 import { loggedInUserId } from './auth0.hook.mock'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
+import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
-import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
-import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { Team } from '../../../lib/team'
 import { Profile } from '../../../lib/auth/models/profile.model'
+import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms.default'
 
+const {
+  minVeryLowBg,
+  minLowBg,
+  minHighBg
+} = DEFAULT_THRESHOLDS_IN_MGDL
 export const monitoringParameters = {
   bgUnit: UnitsType.MGDL,
-  lowBg: MIN_LOW_BG,
-  highBg: MIN_HIGH_BG,
+  lowBg: minLowBg,
+  highBg: minHighBg,
   outOfRangeThreshold: 5,
-  veryLowBg: MIN_VERY_LOW_BG,
+  veryLowBg: minVeryLowBg,
+  hypoThreshold: 10,
+  nonDataTxThreshold: 15,
+  reportingPeriod: 7
+}
+export const monitoringParametersBgUnitMmol = {
+  bgUnit: UnitsType.MMOLL,
+  lowBg: 2.8,
+  highBg: 7.8,
+  outOfRangeThreshold: 5,
+  veryLowBg: 2.2,
   hypoThreshold: 10,
   nonDataTxThreshold: 15,
   reportingPeriod: 7
@@ -66,6 +81,7 @@ export const teamOne: Team = {
     userId: loggedInUserId,
     role: TeamMemberRole.admin,
     profile: {
+      email: 'hey@hey.hey',
       firstName: 'Yourloops UI 28.0',
       fullName: 'Yourloops UI 28.0 HCP 0',
       hcpProfession: HcpProfession.other,
@@ -90,6 +106,7 @@ export const teamTwo: Team = {
     userId: loggedInUserId,
     role: TeamMemberRole.admin,
     profile: {
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
       firstName: 'Yourloops UI 28.0',
       fullName: 'Yourloops UI 28.0 HCP 0',
       hcpProfession: HcpProfession.other,
@@ -120,6 +137,7 @@ export const teamThree: Team = {
     userId: loggedInUserId,
     role: TeamMemberRole.admin,
     profile: {
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
       firstName: 'Yourloops UI 28.0',
       fullName: 'Yourloops UI 28.0 HCP 0',
       hcpProfession: HcpProfession.other,
@@ -133,6 +151,7 @@ export const teamThree: Team = {
     userId: '4d9afc649ae4',
     role: TeamMemberRole.admin,
     profile: {
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
       firstName: 'Yourloops UI 28.1',
       fullName: 'Yourloops UI 28.1 HCP 1',
       hcpProfession: HcpProfession.other,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,33 +24,34 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { UnitsType } from '../../units/models/enums/units-type.enum'
 
-export interface Alarms {
-  timeSpentAwayFromTargetRate: number
-  timeSpentAwayFromTargetActive: boolean
-  frequencyOfSevereHypoglycemiaRate: number
-  frequencyOfSevereHypoglycemiaActive: boolean
-  nonDataTransmissionRate: number
-  nonDataTransmissionActive: boolean
+import yourloopsEn from '../../../../locales/en/yourloops.json'
+import translationEn from '../../../../locales/en/translation.json'
+import parameterEn from '../../../../locales/en/parameter.json'
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import locales from '../../../../locales/languages.json'
+
+export const i18nOptions = {
+  lng: 'en',
+  keySeparator: false,
+  nsSeparator: '|',
+  returnEmptyString: false,
+  react: {
+    useSuspense: true,
+    transSupportBasicHtmlNodes: true // allow <br/> and simple html elements in translations
+  },
+  ns: locales.namespaces,
+  defaultNS: locales.defaultNS,
+  fallbackNS: locales.fallbackNS,
+  resources: {
+    en: { yourloops: yourloopsEn, main: translationEn, params: parameterEn }
+  }
 }
 
-export interface Thresholds {
-  minHighBg: number
-  maxHighBg: number
-  minVeryLowBg: number
-  maxVeryLowBg: number
-  minLowBg: number
-  maxLowBg: number
-}
-
-export interface BgValues {
-  bgUnitDefault: UnitsType
-  outOfRangeThresholdDefault: number
-  nonDataTxThresholdDefault: number
-  hypoThresholdDefault: number
-  veryLowBgDefault: number
-  lowBgDefault: number
-  highBgDefault: number
-  reportingPeriodDefault: number
-}
+i18n.use(initReactI18next)
+i18n.init(i18nOptions).then(() => {
+  // nothing to do
+}).catch((reason) => {
+  console.error(reason)
+})

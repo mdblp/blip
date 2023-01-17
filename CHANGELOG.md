@@ -36,6 +36,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1906-Fix-training-modal-CSS
 - YLP-1910 Retrieve patients from bff v1 route
 - YLP-1916 Migrate tooltips from viz to dumb
+- YLP-1919 Use user preferred units on alarm configuration component
 - YLP-1935 CBG thresholds should be used from medical data service
 - YLP-1942 Rename files in yourloops and medical-domain
 - YLP-1945 Migrate NoBar component to dumb
@@ -52,6 +53,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2021 Implement remote monitoring card new design
 - YLP-2022 HBA1C is not displayed in profile when logged in as a patient
 - YLP-2030 Remove TwoOptionToggle and BgSourceToggle
+- YLP-2031 Migrate viz tests to dumb
 - YLP-2037 Hide the column in the patient list related to remote monitoring option
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions

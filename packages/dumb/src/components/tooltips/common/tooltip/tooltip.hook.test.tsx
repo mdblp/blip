@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -132,7 +132,7 @@ describe('Tooltip hook', () => {
       const props = { ...defaultProps, dateTitle }
       const { result } = renderHook(() => useTooltip(props))
       const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBe(`${date}23:00:00+01:00`)
+      expect(dateValue).toBe('11:00 pm')
     })
 
     it('should return correct value when source is "Diabeloop"', () => {
@@ -141,7 +141,7 @@ describe('Tooltip hook', () => {
       const props = { ...defaultProps, dateTitle }
       const { result } = renderHook(() => useTooltip(props))
       const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBe(`${date}23:00:00+01:00`)
+      expect(dateValue).toBe('11:00 pm')
     })
   })
 

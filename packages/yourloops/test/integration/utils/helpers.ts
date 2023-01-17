@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,33 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { UnitsType } from '../../units/models/enums/units-type.enum'
 
-export interface Alarms {
-  timeSpentAwayFromTargetRate: number
-  timeSpentAwayFromTargetActive: boolean
-  frequencyOfSevereHypoglycemiaRate: number
-  frequencyOfSevereHypoglycemiaActive: boolean
-  nonDataTransmissionRate: number
-  nonDataTransmissionActive: boolean
-}
-
-export interface Thresholds {
-  minHighBg: number
-  maxHighBg: number
-  minVeryLowBg: number
-  maxVeryLowBg: number
-  minLowBg: number
-  maxLowBg: number
-}
-
-export interface BgValues {
-  bgUnitDefault: UnitsType
-  outOfRangeThresholdDefault: number
-  nonDataTxThresholdDefault: number
-  hypoThresholdDefault: number
-  veryLowBgDefault: number
-  lowBgDefault: number
-  highBgDefault: number
-  reportingPeriodDefault: number
+export const getTomorrowDate = (): Date => {
+  return new Date(Date.now() + 86400000)
 }
