@@ -43,22 +43,6 @@ const log = bows('DblSettings')
 function renderDiabeloopParameters(parametersByLevel) {
   const tables = []
 
-  const columns = [
-    {
-      key: 'name',
-      label: t('Parameter'),
-      className: 'table-diabeloop-parameters-name'
-    }, {
-      key: 'value',
-      label: t('Value'),
-      className: 'table-diabeloop-parameters-value'
-    }, {
-      key: 'unit',
-      label: t('Unit'),
-      className: 'table-diabeloop-parameters-unit'
-    }
-  ]
-
   parametersByLevel.forEach((parameters, level) => {
     const title = level === 1 ? '' : t('Advanced')
     tables.push(
