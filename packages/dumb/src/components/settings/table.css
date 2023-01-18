@@ -25,11 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.secondaryLabelWithMain {
-  composes: lightText from '../../styles/typography.css';
-  composes: secondaryLeftPadding from './settings.css';
-}
-
 @media print {
   .secondaryLabelWithMain {
     composes: lightText largeSize from '../../styles/typography.css';
@@ -40,6 +35,11 @@
 
 .bdlgSettingsHeader {
   composes: bolusHeaderBackground settingsHeader from './settings.css';
+}
+
+.secondaryLabelWithMain {
+  composes: lightText from '../../styles/typography.css';
+  composes: secondaryLeftPadding from './settings.css';
 }
 
 .settingsTable {
