@@ -57,17 +57,17 @@ export const Table: FunctionComponent<TableProps> = (props) => {
         {title}
       </caption>
       <thead>
-      <tr>
-        <th className={parameterColumnClassName}>
-          {t('Parameter')}
-        </th>
-        <th className={valueColumnClassName}>
-          {t('Value')}
-        </th>
-        <th className={unitColumnClassName}>
-          {t('Unit')}
-        </th>
-      </tr>
+        <tr>
+          <th className={parameterColumnClassName}>
+            {t('Parameter')}
+          </th>
+          <th className={valueColumnClassName}>
+            {t('Value')}
+          </th>
+          <th className={unitColumnClassName}>
+            {t('Unit')}
+          </th>
+        </tr>
       </thead>
       <tbody>
       {rows.map((row, index) =>
