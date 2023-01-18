@@ -49,7 +49,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
 
   return (
     <table className={styles.settingsTable}>
-      <caption className={styles.bdlgSettingsHeader}>
+      <caption className={styles.bdglSettingsHeader}>
         {title}
       </caption>
       <thead>

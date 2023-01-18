@@ -33,7 +33,7 @@
   }
 }
 
-.bdlgSettingsHeader {
+.bdglSettingsHeader {
   composes: bolusHeaderBackground settingsHeader from './settings.css';
 }
 
@@ -44,12 +44,4 @@
 
 .settingsTable {
   composes: settingsTable from './settings.css';
-}
-
-.settingsTable .spannedRow td {
-  text-align: center;
-  padding: 0.4em 0;
-  background-color: var(--brand-purple);
-  background-image: linear-gradient(to right, var(--brand-purple-dark) 0, var(--brand-purple-dark) 14px,var(--brand-purple) 14px, var(--white) 100%);
-  color: var(--gray-dark);
 }
