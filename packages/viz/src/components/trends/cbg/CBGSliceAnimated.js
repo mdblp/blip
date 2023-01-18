@@ -19,12 +19,12 @@ import _ from 'lodash'
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React, { PureComponent } from 'react'
-import { TransitionMotion, spring } from '@serprex/react-motion'
+import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import { springConfig } from '../../../utils/constants'
 import withDefaultYPosition from '../common/withDefaultYPosition'
 
-import CBGSliceSegment from './CBGSliceSegment'
+import { CbgSliceSegment } from 'dumb'
 
 import styles from './CBGSliceAnimated.css'
 
@@ -212,7 +212,7 @@ export class CBGSliceAnimated extends PureComponent {
                   [styles[`${segment.classKey}Faded`]]: showingCbgDateTraces
                 })
                 return (
-                  <CBGSliceSegment
+                  <CbgSliceSegment
                     classes={classes}
                     datum={datum}
                     interpolated={interpolated}
