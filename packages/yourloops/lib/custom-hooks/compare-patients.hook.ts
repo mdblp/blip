@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -70,11 +70,6 @@ export const useComparePatients = (): ComparePatientsHookReturn => {
         return {
           a: getUserName(a.profile.firstName, a.profile.lastName, a.profile.fullName),
           b: getUserName(b.profile.firstName, b.profile.lastName, b.profile.fullName)
-        }
-      case PatientTableSortFields.remoteMonitoring:
-        return {
-          a: a.monitoring?.monitoringEnd,
-          b: b.monitoring?.monitoringEnd
         }
       case PatientTableSortFields.system:
         return {

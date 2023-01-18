@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,6 @@ import { Box, Typography } from '@mui/material'
 
 import IconActionButton from '../buttons/icon-action'
 import { getMedicalValues } from './utils'
-import { patientListCommonStyle } from './table'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
 import PatientUtils from '../../lib/patient/patient.util'
 import PersonRemoveIcon from '../icons/person-remove-icon'
@@ -95,12 +94,11 @@ const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Th
   }
 })
 
-const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => {
+const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonitoring, filter, patient }) => {
   const historyHook = useHistory()
   const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
   const { classes } = patientListStyle()
-  const { classes: patientListCommonClasses } = patientListCommonStyle()
   const medicalData: MedicalData | null | undefined = patient.metadata.medicalData
 
   const [tooltipText, setTooltipText] = useState<string>('')
@@ -131,7 +129,6 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
 
   const {
     patientSystem,
-    patientRemoteMonitoring,
     timeSpentAwayFromTargetActive,
     frequencyOfSevereHypoglycemiaActive,
     nonDataTransmissionActive,
@@ -227,12 +224,6 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
         </StyledTableCell>
 
         <StyledTableCell className={classes.typography}>{patientSystem}</StyledTableCell>
-        {isUserHcp &&
-          <StyledTableCell
-            className={`${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.remoteMonitoringCell}`}>
-            {patientRemoteMonitoring}
-          </StyledTableCell>
-        }
 
         <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
           {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
@@ -256,7 +247,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ patient, filter }) => 
           {lastUpload}
         </StyledTableCell>
 
-        {isUserHcp &&
+        {loggedUserIsHcpInMonitoring &&
           <StyledTableCell className={classes.iconCell}>
             <Tooltip
               title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}

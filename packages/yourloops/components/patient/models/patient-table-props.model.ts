@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,6 +45,7 @@ export interface PatientListProps {
 }
 
 export interface PatientRowProps {
-  patient: Patient
   filter?: FilterType | string
+  loggedUserIsHcpInMonitoring: boolean
+  patient: Patient
 }
