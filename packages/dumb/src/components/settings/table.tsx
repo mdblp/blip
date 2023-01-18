@@ -38,13 +38,12 @@ interface Row {
 }
 
 interface TableProps {
-  id: string
   rows: Row[]
   title: string
 }
 
 export const Table: FunctionComponent<TableProps> = (props) => {
-  const { id, rows, title } = props
+  const { rows, title } = props
 
   const { t } = useTranslation()
 
@@ -53,7 +52,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
   const unitColumnClassName = 'table-diabeloop-parameters-unit'
 
   return (
-    <table id={id} className={styles.settingsTable}>
+    <table className={styles.settingsTable}>
       <caption className={styles.bdlgSettingsHeader}>
         {title}
       </caption>
