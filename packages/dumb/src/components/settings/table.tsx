@@ -47,10 +47,6 @@ export const Table: FunctionComponent<TableProps> = (props) => {
 
   const { t } = useTranslation()
 
-  const parameterColumnClassName = 'table-diabeloop-parameters-name'
-  const valueColumnClassName = 'table-diabeloop-parameters-value'
-  const unitColumnClassName = 'table-diabeloop-parameters-unit'
-
   return (
     <table className={styles.settingsTable}>
       <caption className={styles.bdlgSettingsHeader}>
@@ -58,13 +54,13 @@ export const Table: FunctionComponent<TableProps> = (props) => {
       </caption>
       <thead>
         <tr>
-          <th className={parameterColumnClassName}>
+          <th>
             {t('Parameter')}
           </th>
-          <th className={valueColumnClassName}>
+          <th >
             {t('Value')}
           </th>
-          <th className={unitColumnClassName}>
+          <th>
             {t('Unit')}
           </th>
         </tr>
@@ -72,13 +68,13 @@ export const Table: FunctionComponent<TableProps> = (props) => {
       <tbody>
       {rows.map((row, index) =>
         <tr key={index} data-testid={`${row.rawData.toLowerCase()}-row`}>
-          <td className={`${styles.secondaryLabelWithMain} ${parameterColumnClassName}`}>
+          <td className={styles.secondaryLabelWithMain}>
             {row.name}
           </td>
-          <td className={`${styles.secondaryLabelWithMain} ${valueColumnClassName}`}>
+          <td className={styles.secondaryLabelWithMain}>
             {row.value}
           </td>
-          <td className={`${styles.secondaryLabelWithMain} ${unitColumnClassName}`}>
+          <td className={styles.secondaryLabelWithMain}>
             {row.unit}
           </td>
         </tr>

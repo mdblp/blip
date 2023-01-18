@@ -47,6 +47,7 @@ function renderDiabeloopParameters(parametersByLevel) {
     const title = level === 1 ? '' : t('Advanced')
     tables.push(
       <Table
+        key={title}
         title={title}
         rows={parameters}
       />
