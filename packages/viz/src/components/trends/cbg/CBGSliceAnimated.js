@@ -215,14 +215,14 @@ export class CBGSliceAnimated extends PureComponent {
                   <CbgSliceSegment
                     classes={classes}
                     datum={datum}
-                    interpolated={interpolated}
-                    key={interpolated.key}
+                    id={interpolated.key}
                     positionData={{
                       left: xScale(datum.msX),
                       tooltipLeft: datum.msX > tooltipLeftThreshold,
                       yPositions
                     }}
                     segment={segment}
+                    style={interpolated.style}
                     width={width}
                     x={binLeftX}
                   />
