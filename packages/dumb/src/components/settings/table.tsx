@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023, Diabeloop
+ * Copyright (c) 2016-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,38 +26,60 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './loop-mode-stat.css'
-import { useTranslation } from 'react-i18next'
-import { formatDuration } from '../../../utils/datetime/datetime.util'
 
-interface LoopModePercentageDetailProps {
-  className: string
-  percentage: number
-  transform: string
-  value: number
+import styles from './table.css'
+import { useTranslation } from 'react-i18next'
+
+interface Row {
+  rawData: string
+  name: string
+  value: string
+  unit: string
 }
 
-export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetailProps> = (props) => {
-  const { className, percentage, transform, value } = props
-  const { t } = useTranslation('main')
+interface TableProps {
+  rows: Row[]
+  title: string
+}
 
-  const isPercentageValid = !Number.isNaN(percentage)
+export const Table: FunctionComponent<TableProps> = (props) => {
+  const { rows, title } = props
+
+  const { t } = useTranslation()
 
   return (
-    <g className={className} transform={transform}>
-      <text className={styles.labelValueUnits} textAnchor="middle">
-        <tspan className={styles.legendLabelValue}>{isPercentageValid ? percentage : t('N/A') }</tspan>
-        {isPercentageValid && <tspan className={styles.legendLabelUnits} dy="-4">%</tspan>}
-      </text>
-      {isPercentageValid &&
-        <text
-          className={styles.labelRawValue}
-          textAnchor="middle"
-          dy="12"
-        >
-          {formatDuration(value, true)}
-        </text>
-      }
-    </g>
+    <table className={styles.settingsTable}>
+      <caption className={styles.bdglSettingsHeader}>
+        {title}
+      </caption>
+      <thead>
+        <tr>
+          <th>
+            {t('Parameter')}
+          </th>
+          <th >
+            {t('Value')}
+          </th>
+          <th>
+            {t('Unit')}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      {rows.map((row, index) =>
+        <tr key={index} data-testid={`${row.rawData.toLowerCase()}-row`}>
+          <td className={styles.secondaryLabelWithMain}>
+            {row.name}
+          </td>
+          <td className={styles.secondaryLabelWithMain}>
+            {row.value}
+          </td>
+          <td className={styles.secondaryLabelWithMain}>
+            {row.unit}
+          </td>
+        </tr>
+      )}
+      </tbody>
+    </table>
   )
 }

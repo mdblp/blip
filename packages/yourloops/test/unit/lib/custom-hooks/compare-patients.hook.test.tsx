@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import { createAlarm, createPatient } from '../../common/utils'
 import { PatientTableSortFields } from '../../../../components/patient/models/enums/patient-table-sort-fields.enum'
-import { Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { renderHook } from '@testing-library/react-hooks'
 import { useComparePatients } from '../../../../lib/custom-hooks/compare-patients.hook'
 import { useUserName as useUserNameMock } from '../../../../lib/custom-hooks/user-name.hook'
@@ -166,73 +165,6 @@ describe('Compare patients hook', () => {
 
         const { result } = renderHook(() => useComparePatients())
         const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic)
-
-        expect(res).toBe(0)
-      })
-    })
-
-    describe('remoteMonitoring', () => {
-      const smallerDate = new Date()
-      const biggerDate = new Date(smallerDate.getUTCFullYear(), smallerDate.getMonth() + 1)
-      const firstRemoteMonitoringEnding = { monitoringEnd: smallerDate } as Monitoring
-      const lastRemoteMonitoringEnding = { monitoringEnd: biggerDate } as Monitoring
-
-      it('should return negative number when first patient has a more recent date', () => {
-        const patient1 = createPatient('fakePatient1Id', [], firstRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id', [], lastRemoteMonitoringEnding)
-
-        const { result } = renderHook(() => useComparePatients())
-        const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
-
-        expect(res).toBeLessThan(0)
-      })
-
-      it('should return positive number when second patient has a more recent date', () => {
-        const patient1 = createPatient('fakePatient1Id', [], lastRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id', [], firstRemoteMonitoringEnding)
-
-        const { result } = renderHook(() => useComparePatients())
-        const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
-
-        expect(res).toBeGreaterThan(0)
-      })
-
-      it('should return 0 when patients have same date', () => {
-        const patient1 = createPatient('fakePatient1Id', [], firstRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id', [], firstRemoteMonitoringEnding)
-
-        const { result } = renderHook(() => useComparePatients())
-        const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
-
-        expect(res).toBe(0)
-      })
-
-      it('should return positive number when first patient has no remote monitoring', () => {
-        const patient1 = createPatient('fakePatient1Id')
-        const patient2 = createPatient('fakePatient2Id', [], firstRemoteMonitoringEnding)
-
-        const { result } = renderHook(() => useComparePatients())
-        const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
-
-        expect(res).toBeGreaterThan(0)
-      })
-
-      it('should return negative number when second patient has no remote monitoring', () => {
-        const patient1 = createPatient('fakePatient1Id', [], firstRemoteMonitoringEnding)
-        const patient2 = createPatient('fakePatient2Id')
-
-        const { result } = renderHook(() => useComparePatients())
-        const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
-
-        expect(res).toBeLessThan(0)
-      })
-
-      it('should return 0 when both patient have no remote monitoring', () => {
-        const patient1 = createPatient('fakePatient1Id')
-        const patient2 = createPatient('fakePatient2Id')
-
-        const { result } = renderHook(() => useComparePatients())
-        const res = result.current.comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring)
 
         expect(res).toBe(0)
       })

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import moment from 'moment'
 import { useTranslation } from 'react-i18next'
 import { patientListCommonStyle } from './table'
 import { useAuth } from '../../lib/auth'
 import { ClassNameMap } from '@mui/material'
-import { Monitoring } from '../../lib/team/models/monitoring.model'
 import { Patient } from '../../lib/patient/models/patient.model'
 
 interface PatientRowHookProps {
@@ -49,7 +47,6 @@ interface PatientRowHookReturn {
 
 interface ComputedRow {
   patientSystem: string
-  patientRemoteMonitoring: string
   timeSpentAwayFromTargetActive: boolean
   frequencyOfSevereHypoglycemiaActive: boolean
   nonDataTransmissionActive: boolean
@@ -69,17 +66,6 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
   const { classes: patientListCommonClasses } = patientListCommonStyle()
   const isFlagged = getFlagPatients().includes(patient.userid)
 
-  const getMonitoringLabel = (monitoring: Monitoring): string => {
-    if (!monitoring?.enabled) {
-      return t('no')
-    }
-    if (monitoring.monitoringEnd) {
-      const enDate = moment.utc(patient.monitoring.monitoringEnd).format(moment.localeData().longDateFormat('ll')).toString()
-      return `${t('yes')}\n(${t('until')} ${enDate})`
-    }
-    return t('yes')
-  }
-
   const computeRowInformation = (): ComputedRow => {
     const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`
     const mediumCellClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`
@@ -89,7 +75,6 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
     const timeSpentAwayFromTargetActive = patientIsMonitored && patient.alarms?.timeSpentAwayFromTargetActive ? patient.alarms?.timeSpentAwayFromTargetActive : false
     const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.alarms?.frequencyOfSevereHypoglycemiaActive ? patient.alarms?.frequencyOfSevereHypoglycemiaActive : false
     const nonDataTransmissionActive = patientIsMonitored && patient.alarms?.nonDataTransmissionActive ? patient.alarms?.nonDataTransmissionActive : false
-    const patientRemoteMonitoring = getMonitoringLabel(patient.monitoring)
     const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive
 
     const patientFullNameClasses = isUserHcp && hasAlert ? largeCellWithAlertClasses : largeCellClasses
@@ -99,7 +84,6 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
 
     return {
       patientSystem: patient.settings.system ?? trNA,
-      patientRemoteMonitoring,
       timeSpentAwayFromTargetActive,
       frequencyOfSevereHypoglycemiaActive,
       nonDataTransmissionActive,
