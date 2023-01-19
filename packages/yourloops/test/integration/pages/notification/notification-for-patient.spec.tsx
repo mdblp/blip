@@ -115,7 +115,7 @@ describe('Add patient in the team with a notification', () => {
     expect(dialog).toHaveTextContent('Share your data with a care team')
     expect(textAccepteShareData).toHaveTextContent('By accepting this invitation, I recognize this team as my care team and consent to share my personal data with all its members, who are authorized healthcare professionals registered on YourLoops. I acknowledge that I can revoke this access at any time.')
     expect(dialog).toHaveTextContent('Please verify that the above details match the information provided by your healthcare professional before accepting the invitation.')
-    expect(textPrivatePolicy)
+    expect(textPrivatePolicy).toHaveTextContent('Read our Privacy Policy for more information')
     expect(addCareTeamButton).toBeDisabled()
     await userEvent.click(checkPolicy)
     expect(addCareTeamButton).toBeEnabled()

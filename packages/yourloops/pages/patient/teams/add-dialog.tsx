@@ -258,30 +258,31 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary">
+        <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary" data-testid='patient-share-data'>
           {t('modal-patient-add-team-info')}
         </DialogContentText>
-        <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary">
+        <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary" data-testid="patient-team-info">
           {props.team.name}
           <br />
           {teamAddress}
           {props.team.code}
         </DialogContentText>
 
-        <DialogContentText id="team-add-dialog-confirm-team-warning" color="textPrimary">
+        <DialogContentText id="team-add-dialog-confirm-team-warning" color="textPrimary" >
           <strong>{t('modal-patient-team-warning')}</strong>
         </DialogContentText>
 
         <FormControl className={classes.formControl}>
           <FormControlLabel
             id="team-add-dialog-confirm-team-privacy"
+            data-testid="check-policy"
             control={checkboxPrivacy}
             label={t('modal-patient-share-team-privacy')}
             color="textPrimary"
           />
         </FormControl>
 
-        <DialogContentText id="team-add-dialog-config-team-privacy-read-link" color="textPrimary">
+        <DialogContentText id="team-add-dialog-config-team-privacy-read-link" color="textPrimary" data-testid="text-privacy-policy">
           <Trans
             i18nKey="modal-patient-team-privacy-2"
             t={t}
