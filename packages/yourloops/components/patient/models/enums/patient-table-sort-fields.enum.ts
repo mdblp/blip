@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,5 @@ export enum PatientTableSortFields {
   /** Last data update */
   ldu = 'ldu',
   patientFullName = 'patientFullName',
-  remoteMonitoring = 'remoteMonitoring',
   system = 'system',
 }

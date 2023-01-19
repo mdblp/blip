@@ -27,8 +27,7 @@
 
 import { DateTitle } from '../../components/tooltips/common/tooltip/tooltip'
 import { BaseDatum, Source, TimePrefs } from 'medical-domain'
-
-export const TIMEZONE_UTC = 'UTC'
+import { TIMEZONE_UTC } from '../datetime/datetime.util'
 
 export const getDateTitle = (data: BaseDatum, timePrefs: TimePrefs): DateTitle => {
   return {

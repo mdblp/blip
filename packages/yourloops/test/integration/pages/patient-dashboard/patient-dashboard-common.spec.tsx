@@ -38,6 +38,8 @@ import { screen, within } from '@testing-library/react'
 import { checkNoTooltip } from '../../assert/stats'
 import { mockUserApi } from '../../mock/user.api.mock'
 import crypto from 'crypto'
+import moment from 'moment-timezone'
+import { getTomorrowDate } from '../../utils/helpers'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {
@@ -89,6 +91,7 @@ describe('Patient dashboard for anyone', () => {
 
   it('monitored patient should have correct cards', async () => {
     renderPage(`/patient/${monitoredPatientId}/dashboard`)
+    const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
     expect(statsWidgets).toBeVisible()
     expect(statsWidgets).toHaveTextContent('Patient statisticsTime In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLAvg. Glucose (CGM)mg/dL135Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10g')
@@ -99,7 +102,7 @@ describe('Patient dashboard for anyone', () => {
 
     const remoteMonitoringCard = screen.getByTestId('remote-monitoring-card')
     expect(remoteMonitoringCard).toBeVisible()
-    expect(remoteMonitoringCard).toHaveTextContent('Remote monitoring programRemote monitoring:YesRenewRemove')
+    expect(remoteMonitoringCard).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a dayRenewRemove`)
 
     const medicalFilesCard = screen.getByTestId('medical-files-card')
     expect(medicalFilesCard).toBeVisible()

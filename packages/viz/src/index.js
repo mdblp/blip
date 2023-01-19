@@ -20,7 +20,6 @@ import './styles/colors.css'
 import CBGDateTraceLabel from './components/trends/cbg/CBGDateTraceLabel'
 import FocusedRangeLabels from './components/trends/common/FocusedRangeLabels'
 import RangeSelect from './components/trends/cbg/RangeSelect'
-import TwoOptionToggle from './components/common/controls/TwoOptionToggle'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import TrendsContainer from './components/trends/common/TrendsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
@@ -51,7 +50,6 @@ const components = {
   CBGDateTraceLabel,
   FocusedRangeLabels,
   RangeSelect,
-  TwoOptionToggle,
   WarmUpTooltip
 }
 

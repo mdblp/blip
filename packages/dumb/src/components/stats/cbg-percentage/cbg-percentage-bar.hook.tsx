@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,7 +61,7 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
   const barValue = useMemo(() => {
     switch (type) {
       case CBGStatType.TimeInRange:
-        return formatDuration(value, { condensed: true })
+        return formatDuration(value, true)
       case CBGStatType.ReadingsInRange:
         return (Math.round(value * 10) / 10).toString()
       default:

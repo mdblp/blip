@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,7 @@ export interface Settings {
   country?: CountryCodes
   a1c?: {
     date: string
+    rawdate: string
     value: string
   }
 }

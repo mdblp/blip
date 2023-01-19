@@ -43,6 +43,14 @@
   display: flex;
 }
 
+:global(.capitalize) {
+  text-transform: capitalize;
+}
+
+:global(.bold) {
+  font-weight: bold;
+}
+
 :global(.visibility-hidden) {
   visibility: hidden;
 }

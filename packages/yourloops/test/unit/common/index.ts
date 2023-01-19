@@ -33,15 +33,6 @@ import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 import { CountryCodes } from '../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 
-const getNewHcp = (): User => {
-  return new User({
-    email: 'john.doe@example.com',
-    email_verified: true,
-    sub: 'auth0|123456789',
-    [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
-  })
-}
-
 const getHcp = (): User => {
   const email = 'john.doe@example.com'
   const hcp = new User({
@@ -79,7 +70,7 @@ const getPatient = (): User => {
     sub: 'auth0|a0a0a0b0',
     [AuthenticatedUserMetadata.Roles]: [UserRoles.patient]
   })
-  patient.settings = { a1c: { date: '2020-01-01', value: '7.5' }, country: CountryCodes.France }
+  patient.settings = { a1c: { rawdate: '2020-01-01', date: '2020-01-01', value: '7.5' }, country: CountryCodes.France }
   patient.profile = {
     email,
     firstName: 'Josephine',
@@ -103,4 +94,4 @@ const getPatient = (): User => {
 /**
  * Logged-in users for test, choose one suitable
  */
-export const loggedInUsers = { getHcp, getPatient, getCaregiver, getNewHcp }
+export const loggedInUsers = { getHcp, getPatient, getCaregiver }

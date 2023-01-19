@@ -141,6 +141,8 @@ const ignoredTransKeyForYourLoops = [
   'alert-invitation-patient-failed-already-in-team',
   'alert-invitation-patient-failed-already-invited',
   'accompanying-documents',
+  'current-trigger-setting-hypoglycemia',
+  'current-trigger-setting-tir',
   'product-labelling',
   'no-new-messages',
   'training',
@@ -153,7 +155,9 @@ const ignoredTransKeyForYourLoops = [
   'login-page-desktop-info-2',
   'login-page-desktop-info-3',
   'login-page-desktop-title',
-  'login-page-mobile-title'
+  'login-page-mobile-title',
+  'end-date',
+  'remaining-time'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
