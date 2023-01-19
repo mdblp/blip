@@ -148,8 +148,8 @@ const DeviceUsage = (props) => {
         </IconButton>
       }
     >
-      <CardContent id="device-usage-content">
-        <Box id="device-usage-device">
+      <CardContent>
+        <Box data-testid="device-usage-device-list">
           <Typography className={classes.sectionTitles}>{t('devices')}</Typography>
           <Grid className={classes.sectionContent} container spacing={1}>
             {Object.keys(deviceData).map(
@@ -168,15 +168,15 @@ const DeviceUsage = (props) => {
           </Grid>
         </Box>
         <Divider variant="fullWidth" className={classes.divider} />
-        <Box id="device-usage-updates">
+        <Box data-testid="device-usage-updates">
           <Typography className={classes.sectionTitles}>{t('last-updates')}</Typography>
           <TableContainer data-testid="device-usage-updates-list" className={classes.parameterChangesTable}>
             <Table>
               <TableBody className={classes.sectionContent}>
-                {paramChanges.map((row) =>
+                {paramChanges.map((row, index) =>
                   (
                     <TableRow
-                      key={row.key}
+                      key={row.key + index}
                       data-param={row.name}
                       data-testid={row.name}
                       data-changetype={row.changeType}
@@ -185,7 +185,10 @@ const DeviceUsage = (props) => {
                     >
                       {['date', 'value'].map((column) => {
                         return (
-                          <TableCell className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`} key={`${column}-${row.key}`}>
+                          <TableCell
+                            className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`}
+                            key={`${column}-${row.key}-${index}`}
+                          >
                             {column === 'date' ? row.parameterDate : getLabel(row, t)}
                           </TableCell>
                         )

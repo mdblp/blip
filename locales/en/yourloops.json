@@ -126,6 +126,7 @@
   "current-trigger-setting-tir": "Current trigger setting: {{tir}}% of time off target (min at {{lowBg}} {{bgUnit}} max at {{highBg}} {{bgUnit}})",
   "daily": "Daily",
   "dashboard": "Dashboard",
+  "dashboard-header-period-text": "Data calculated on the last 7 days",
   "data-not-transferred": "Data not transferred",
   "data-not-transferred-tooltip": "By default, this alert threshold is set to:\n>50% of non transmission data over the given period.\n\nThis value can be modified either at the level of all remotely monitored patients, or patient by patient.",
   "data-not-transmitted": "Data not transmitted",

@@ -114,7 +114,7 @@ class BasicsChartNoSize extends React.Component {
 
   render() {
     const { basicsData } = this.state
-    return <div id="chart-basics-factory">{basicsData && this.renderColumn('right')}</div>
+    return <div data-testid="chart-basics-factory">{basicsData && this.renderColumn('right')}</div>
   }
 
   renderColumn(columnSide) {
