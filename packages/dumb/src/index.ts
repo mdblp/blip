@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
@@ -57,6 +58,7 @@ import { Table } from './components/settings/table'
 
 export {
   AverageDailyDoseStat,
+  Background,
   BloodGlucoseTooltip,
   BolusTooltip,
   CBGMeanStat,

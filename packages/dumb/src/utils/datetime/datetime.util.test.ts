@@ -25,17 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { addDuration, formatDuration, formatLocalizedFromUTC, getTimezoneFromTimePrefs, ONE_HR } from './datetime.util'
+import {
+  addDuration,
+  formatDuration,
+  formatLocalizedFromUTC,
+  getTimezoneFromTimePrefs,
+  ONE_HOUR_MS
+} from './datetime.util'
 import { TimePrefs } from 'medical-domain'
+
+const ONE_MIN_MS = 6e4
 
 describe('datetime util', () => {
   describe('addDuration', () => {
-    const ONE_MINUTE_IN_MS = 60000
-
     it('should add a specified duration to a date string fdsfsd', () => {
       const start = '2017-11-10T00:00:00.000Z'
       const expectedDate = '2017-11-10T00:01:00.000Z'
-      const receivedDate = addDuration(start, ONE_MINUTE_IN_MS)
+      const receivedDate = addDuration(start, ONE_MIN_MS)
       expect(receivedDate).toEqual(expectedDate)
     })
   })
@@ -149,20 +155,17 @@ describe('datetime util', () => {
     })
 
     it('should properly round minute durations with condensed formatting', () => {
-      const ONE_MIN = 6e4
-
-      expect(formatDuration(ONE_MIN * 1.49, condensed)).toEqual('1m')
-      expect(formatDuration(ONE_MIN * 1.5, condensed)).toEqual('2m')
-      expect(formatDuration(ONE_MIN * 59.4, condensed)).toEqual('59m')
-      expect(formatDuration(ONE_MIN * 59.5, condensed)).toEqual('1h')
+      expect(formatDuration(ONE_MIN_MS * 1.49, condensed)).toEqual('1m')
+      expect(formatDuration(ONE_MIN_MS * 1.5, condensed)).toEqual('2m')
+      expect(formatDuration(ONE_MIN_MS * 59.4, condensed)).toEqual('59m')
+      expect(formatDuration(ONE_MIN_MS * 59.5, condensed)).toEqual('1h')
     })
 
     it('should properly round 23+ hour durations to the next day when within 30 seconds of the next day with condensed formatting', () => {
-      const ONE_SEC = 1e3
-      const ONE_MIN = 6e4
+      const ONE_SEC_MS = 1e3
 
-      expect(formatDuration(ONE_HR * 23 + ONE_MIN * 59 + ONE_SEC * 29, condensed)).toEqual('23h 59m')
-      expect(formatDuration(ONE_HR * 23 + ONE_MIN * 59 + ONE_SEC * 30, condensed)).toEqual('1d')
+      expect(formatDuration(ONE_HOUR_MS * 23 + ONE_MIN_MS * 59 + ONE_SEC_MS * 29, condensed)).toEqual('23h 59m')
+      expect(formatDuration(ONE_HOUR_MS * 23 + ONE_MIN_MS * 59 + ONE_SEC_MS * 30, condensed)).toEqual('1d')
     })
 
     it('should properly format a 2.55 day duration with condensed formatting', () => {
