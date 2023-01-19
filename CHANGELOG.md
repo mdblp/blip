@@ -23,6 +23,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
+- YLP-1770 Team list not refreshed after patient accept invitation from notification
 - YLP-1805 Push error to the backend
 - YLP-1868 Add route to invite team member
 - YLP-1873 Fix patient profile update not visible in dashboard

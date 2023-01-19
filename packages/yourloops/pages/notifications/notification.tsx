@@ -263,10 +263,10 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     }
   }
 
-  const closeTeamAcceptDialog = (teamId?: string): void => {
+  const closeTeamAcceptDialog = async (teamId?: string): Promise<void> => {
     setAddTeamDialogVisible(false)
     if (notification.target && teamId && notification.target.id === teamId) {
-      acceptInvitation()
+      await acceptInvitation()
     }
   }
 
@@ -282,8 +282,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             error={t('notification-patient-invitation-wrong-code', { careteam: notification.target.name })}
             teamName={notification.target.name}
             actions={{
-              onDialogResult: (teamId) => {
-                closeTeamAcceptDialog(teamId)
+              onDialogResult: async (teamId) => {
+                await closeTeamAcceptDialog(teamId)
               }
             }}
           />}

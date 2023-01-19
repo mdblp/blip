@@ -36,6 +36,7 @@ import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-stat
 import { Team } from '../../../lib/team'
 import { Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms.default'
+import { ITeam } from '../../../lib/team/models/i-team.model'
 
 const {
   minVeryLowBg,
@@ -164,6 +165,26 @@ export const teamThree: Team = {
   }]
 }
 
+export const invitationHcpForPatient: ITeam = {
+  name: 'sysReq-67-team2',
+  id: '63c7b7989cacc878ecce2c40',
+  code: '67951738',
+  type: TeamType.medical,
+  monitoring: {
+    ...monitoringParameters,
+    enabled: true
+  },
+  phone: '0478780000',
+  email: 'ylp.ui.test.67-team2@hey.hey',
+  address: {
+    line1: '6 rue des champs',
+    line2: '',
+    zip: '75000',
+    city: 'Paris',
+    country: 'FR'
+  },
+  members: null
+}
 export const mockTeamAPI = () => {
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne, teamTwo, teamThree])
 }

@@ -29,7 +29,6 @@ import React from 'react'
 import moment from 'moment-timezone'
 import _ from 'lodash'
 import { getByText, render, screen } from '@testing-library/react'
-
 import { Notification } from '../../../../pages/notifications/notification'
 import { Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
