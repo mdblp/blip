@@ -45,6 +45,7 @@ import DataUtil from './utils/data'
 import getParametersChanges from './utils/parametersHistory'
 import createPrintPDFPackage from './modules/print'
 import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './utils/print/data'
+import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from './redux/actions/index'
 
 const components = {
   CBGDateTraceLabel,
@@ -101,5 +102,7 @@ export {
   createPrintPDFPackage,
   getParametersChanges,
   getLongDayHourFormat,
-  formatParameterValue
+  formatParameterValue,
+  delayShowCbgTracesOnFocus,
+  unfocusTrendsCbgSlice
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module '*.css';
-declare module '*.svg';
-
-declare module 'tidepool-viz' {
-  export const delayShowCbgTracesOnFocus: (userId: string, sliceData: { id: string }, slicePosition: Object, focusedKeys: string[]) => void
-  export const unfocusTrendsCbgSlice: (userId: string) => void
+export interface CbgPositionData {
+  left: number
+  tooltipLeft: boolean
+  yPositions: {
+    firstQuartile: number
+    max: number
+    median: number
+    min: number
+    ninetiethQuantile: number
+    tenthQuantile: number
+    thirdQuartile: number
+    topMargin: number
+  }
 }
