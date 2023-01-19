@@ -216,6 +216,7 @@ export class CBGSliceAnimated extends PureComponent {
                   <CbgSliceSegment
                     classes={classes}
                     datum={datum}
+                    id={key}
                     key={key}
                     positionData={{
                       left: xScale(datum.msX),

@@ -34,7 +34,7 @@ import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from 'tidepool-viz'
 interface CbgSliceSegmentProps {
   classes: string
   datum: { id: string }
-  key: string
+  id: string
   positionData: CbgPositionData
   segment: {
     height: string
@@ -53,7 +53,7 @@ interface CbgSliceSegmentProps {
 const CBG_CIRCLE_PREFIX_ID = 'cbgCircle'
 
 const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
-  const { classes, datum, focusSlice, key, positionData, segment, style, unfocusSlice, x, width, userId } = props
+  const { classes, datum, focusSlice, id, positionData, segment, style, unfocusSlice, x, width, userId } = props
 
   const handleMouseOut = (event: { relatedTarget: EventTarget | null | { id: string } }): void => {
     const relatedTarget = event.relatedTarget as { id: string }
@@ -76,7 +76,7 @@ const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
   return (
     <rect
       className={classes}
-      data-testid={`cbg-slice-rectangle-${key}`}
+      data-testid={`cbg-slice-rectangle-${id}`}
       width={width}
       height={style[segment.height]}
       x={x}
