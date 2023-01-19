@@ -54,6 +54,7 @@ import {
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 import { CBGMedianAnimated } from './components/trends/cbg/cbg-median-animated'
+import { Table } from './components/settings/table'
 
 export {
   AverageDailyDoseStat,
@@ -75,6 +76,7 @@ export {
   ReservoirTooltip,
   SimpleStat,
   StatTooltip,
+  Table,
   TerminalTable,
   Tooltip,
   TotalInsulinStat,

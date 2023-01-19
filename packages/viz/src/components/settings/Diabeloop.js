@@ -23,7 +23,6 @@ import i18next from 'i18next'
 import bows from 'bows'
 
 import Header from './common/Header'
-import Table from './common/Table'
 import HistoryTable from './DiabeloopHistoryParameters'
 
 import * as datetime from '../../utils/datetime'
@@ -32,7 +31,7 @@ import * as dblData from '../../utils/settings/diabeloopData'
 import { deviceName, getDeviceMeta } from '../../utils/settings/data'
 
 import styles from './Diabeloop.css'
-import { CgmTable, PumpTable, TerminalTable } from 'dumb'
+import { CgmTable, PumpTable, Table, TerminalTable } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 const log = bows('DblSettings')
@@ -44,38 +43,13 @@ const log = bows('DblSettings')
 function renderDiabeloopParameters(parametersByLevel) {
   const tables = []
 
-  const tableStyle = styles.settingsTable
-  const columns = [
-    {
-      key: 'name',
-      label: t('Parameter'),
-      className: 'table-diabeloop-parameters-name'
-    }, {
-      key: 'value',
-      label: t('Value'),
-      className: 'table-diabeloop-parameters-value'
-    }, {
-      key: 'unit',
-      label: t('Unit'),
-      className: 'table-diabeloop-parameters-unit'
-    }
-  ]
-
   parametersByLevel.forEach((parameters, level) => {
-    const title = {
-      label: {
-        main: level === 1 ? '' : t('Advanced')
-      },
-      className: styles.bdlgSettingsHeader
-    }
+    const title = level === 1 ? '' : t('Advanced')
     tables.push(
       <Table
-        id={`diabeloop-settings-table-level-${level}`}
-        key={title.label.main}
+        key={title}
         title={title}
         rows={parameters}
-        columns={columns}
-        tableStyle={tableStyle}
       />
     )
   })
