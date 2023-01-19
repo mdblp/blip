@@ -40,6 +40,9 @@ import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
+import { useAuth } from '../../lib/auth'
+import { useTeam } from '../../lib/team'
+import RemoteMonitoringWidget from './remote-monitoring-widget'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -71,12 +74,16 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
     trackMetric,
     onSwitchToDaily
   } = props
+  const { user } = useAuth()
+  const { getMedicalTeams } = useTeam()
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
   const endpoints = [
     moment.utc(epochDate - msRange).toISOString(), // start
     moment.utc(epochDate).toISOString() // end
   ]
+  const showRemoteMonitoringWidget = user.isUserHcp() && getMedicalTeams().some(team => team.monitoring?.enabled)
+  const gridWidgetSize = showRemoteMonitoringWidget ? 4 : 6
 
   return (
     <Grid
@@ -96,7 +103,7 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
         <AccessTime fontSize="small" className="subnav-icon" />
         <Typography id="subnav-period-label" variant="body1">{t('dashboard-header-period-text')}</Typography>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={gridWidgetSize}>
         <PatientStatistics
           id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
@@ -109,7 +116,7 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={gridWidgetSize}>
         <DeviceUsage
           id="dashboard-device-usage"
           bgPrefs={bgPrefs}
@@ -125,6 +132,11 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           onSwitchToDaily={onSwitchToDaily}
         />
       </Grid>
+      {showRemoteMonitoringWidget &&
+        <Grid item xs={gridWidgetSize}>
+          <RemoteMonitoringWidget patient={patient} />
+        </Grid>
+      }
     </Grid>
   )
 }

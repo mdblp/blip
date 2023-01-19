@@ -75,6 +75,10 @@ describe('Patient dashboard for HCP', () => {
   function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>) {
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
 
+    /* Patient info widget */
+    const patientInfoCard = within(dashboard.getByTestId('remote-monitoring-card'))
+    expect(patientInfoCard.getByText('Remote monitoring program')).toBeVisible()
+
     /* Patient stats widget */
     expect(dashboard.getByText('Patient statistics')).toBeVisible()
 
@@ -117,8 +121,10 @@ describe('Patient dashboard for HCP', () => {
     // expect(teamsDropdown).toBeVisible()
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    checkPatientNavBarAsHCP()
     testPatientDashboardCommonDisplay(dashboard)
+    /* Patient info widget */
+    expect(dashboard.getByText('Renew')).toBeVisible()
+    expect(dashboard.getByText('Remove')).toBeVisible()
     /* Medical files widget */
     expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
     expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
