@@ -54,6 +54,7 @@ import {
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 import { Table } from './components/settings/table'
+import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
 
 export {
   AverageDailyDoseStat,
@@ -61,6 +62,7 @@ export {
   BolusTooltip,
   CBGMeanStat,
   CBGPercentageBarChart,
+  CbgSliceSegment,
   CBGStandardDeviation,
   CBGStatType,
   CgmTable,
