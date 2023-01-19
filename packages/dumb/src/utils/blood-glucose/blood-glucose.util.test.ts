@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getBgClass } from './blood-glucose.util'
+import { classifyBgValue, getBgClass } from './blood-glucose.util'
 import { BgBounds, ClassificationType } from '../../models/blood-glucose.model'
 
 const bgBounds = {
@@ -146,6 +146,84 @@ describe('BloodGlucoseUtil', () => {
 
       it('should return `veryHigh` for a value > the `veryHighThreshold`', () => {
         expect(getBgClass(bgBounds, 301, ClassificationType.FiveWay)).toEqual('veryHigh')
+      })
+    })
+  })
+
+  describe('classifyBgValue', () => {
+    const bgBounds: BgBounds = {
+      veryHighThreshold: 300,
+      targetUpperBound: 180,
+      targetLowerBound: 70,
+      veryLowThreshold: 55
+    }
+
+    it('should throw error if bgValue is non-numerical', () => {
+      const negativeBgValue = () => { classifyBgValue(bgBounds, -100) }
+      expect(negativeBgValue).toThrow('You must provide a positive, numerical blood glucose value to categorize!')
+      const floatBgValue = () => { classifyBgValue(bgBounds, 4.4) }
+      expect(floatBgValue).not.toThrow()
+      const correctBgValue = () => { classifyBgValue(bgBounds, 100) }
+      expect(correctBgValue).not.toThrow()
+    })
+
+    describe('three-way classification (low, target, high)', () => {
+      it('should return `low` for a value < the `targetLowerBound`', () => {
+        expect(classifyBgValue(bgBounds, 69)).toEqual('low')
+      })
+
+      it('should return `target` for a value equal to the `targetLowerBound`', () => {
+        expect(classifyBgValue(bgBounds, 70)).toEqual('target')
+      })
+
+      it('should return `target` for a value > `targetLowerBound` and < `targetUpperBound`', () => {
+        expect(classifyBgValue(bgBounds, 100)).toEqual('target')
+      })
+
+      it('should return `target` for a value equal to the `targetUpperBound`', () => {
+        expect(classifyBgValue(bgBounds, 180)).toEqual('target')
+      })
+
+      it('should return `high` for a value > the `targetUpperBound`', () => {
+        expect(classifyBgValue(bgBounds, 181)).toEqual('high')
+      })
+    })
+
+    describe('five-way classification (veryLow, low, target, high, veryHigh)', () => {
+      it('should return `veryLow` for a value < the `veryLowThreshold`', () => {
+        expect(classifyBgValue(bgBounds, 54, 'fiveWay')).toEqual('veryLow')
+      })
+
+      it('should return `low` for a value equal to the `veryLowThreshold`', () => {
+        expect(classifyBgValue(bgBounds, 55, 'fiveWay')).toEqual('low')
+      })
+
+      it('should return `low` for a value < the `targetLowerBound`', () => {
+        expect(classifyBgValue(bgBounds, 69, 'fiveWay')).toEqual('low')
+      })
+
+      it('should return `target` for a value equal to the `targetLowerBound`', () => {
+        expect(classifyBgValue(bgBounds, 70, 'fiveWay')).toEqual('target')
+      })
+
+      it('should return `target` for a value > `targetLowerBound` and < `targetUpperBound`', () => {
+        expect(classifyBgValue(bgBounds, 100, 'fiveWay')).toEqual('target')
+      })
+
+      it('should return `target` for a value equal to the `targetUpperBound`', () => {
+        expect(classifyBgValue(bgBounds, 180, 'fiveWay')).toEqual('target')
+      })
+
+      it('should return `high` for a value > the `targetUpperBound`', () => {
+        expect(classifyBgValue(bgBounds, 181, 'fiveWay')).toEqual('high')
+      })
+
+      it('should return `high` for a value equal to the `veryHighThreshold`', () => {
+        expect(classifyBgValue(bgBounds, 300, 'fiveWay')).toEqual('high')
+      })
+
+      it('should return `veryHigh` for a value > the `veryHighThreshold`', () => {
+        expect(classifyBgValue(bgBounds, 301, 'fiveWay')).toEqual('veryHigh')
       })
     })
   })
