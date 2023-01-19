@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module '*.css';
-declare module '*.svg';
-declare module '@serprex/react-motion';
+const STIFFNESS = 180
+const DAMPING = 40
+const PRECISION = 0.1
+
+export const springConfig = { stiffness: STIFFNESS, damping: DAMPING, precision: PRECISION }

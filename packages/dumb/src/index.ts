@@ -53,12 +53,14 @@ import {
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
+import { CBGMedianAnimated } from './components/trends/cbg/cbg-median-animated'
 
 export {
   AverageDailyDoseStat,
   BloodGlucoseTooltip,
   BolusTooltip,
   CBGMeanStat,
+  CBGMedianAnimated,
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
