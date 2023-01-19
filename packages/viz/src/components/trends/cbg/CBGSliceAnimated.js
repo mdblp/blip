@@ -205,7 +205,8 @@ export class CBGSliceAnimated extends PureComponent {
           return (
             <g id={`cbgSlice-${datum.id}`}>
               {_.map(interpolateds, (interpolated) => {
-                const segment = renderPieces[interpolated.key]
+                const key = interpolated.key
+                const segment = renderPieces[key]
                 const classes = cx({
                   [styles.segment]: true,
                   [styles[segment.classKey]]: !showingCbgDateTraces,
@@ -215,7 +216,7 @@ export class CBGSliceAnimated extends PureComponent {
                   <CbgSliceSegment
                     classes={classes}
                     datum={datum}
-                    id={interpolated.key}
+                    key={key}
                     positionData={{
                       left: xScale(datum.msX),
                       tooltipLeft: datum.msX > tooltipLeftThreshold,
