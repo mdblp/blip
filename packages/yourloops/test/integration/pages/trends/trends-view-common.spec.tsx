@@ -28,6 +28,7 @@
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
+  checkMedian,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
@@ -43,6 +44,8 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
+import { act, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -63,6 +66,8 @@ describe('Trends view for anyone', () => {
       checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
 
       checkRangeSelection()
+
+      await checkMedian()
     })
   })
 

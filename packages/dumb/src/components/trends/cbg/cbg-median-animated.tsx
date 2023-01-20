@@ -29,8 +29,8 @@ import React, { FunctionComponent } from 'react'
 import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import styles from './cbg-median-animated.css'
-import { classifyBgValue } from '../../../utils/blood-glucose/blood-glucose.util'
-import { BgBounds } from '../../../models/blood-glucose.model'
+import { getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
+import { BgBounds, ClassificationType } from '../../../models/blood-glucose.model'
 import { springConfig } from '../../../models/constants/animation.constants'
 
 interface TransitionMotionStyle {
@@ -98,8 +98,8 @@ export const CBGMedianAnimated: FunctionComponent<CBGMedianAnimatedProps> = (pro
 
   const medianClasses = cx({
     [styles.median]: true,
-    [styles[`${classifyBgValue(bgBounds, datum.median, 'fiveWay')}FadeIn`]]: !showingCbgDateTraces,
-    [styles[`${classifyBgValue(bgBounds, datum.median, 'fiveWay')}FadeOut`]]: showingCbgDateTraces
+    [styles[`${getBgClass(bgBounds, datum.median, ClassificationType.FiveWay)}FadeIn`]]: !showingCbgDateTraces,
+    [styles[`${getBgClass(bgBounds, datum.median, ClassificationType.FiveWay)}FadeOut`]]: showingCbgDateTraces
   })
 
   return (
@@ -113,6 +113,7 @@ export const CBGMedianAnimated: FunctionComponent<CBGMedianAnimatedProps> = (pro
         <rect
           className={medianClasses}
           id={`cbgMedian-${interpolatedStyles[0].key}`}
+          data-testid={`cbgMedian-${interpolatedStyles[0].key}`}
           width={width}
           height={interpolatedStyles[0].style.height}
           x={x}

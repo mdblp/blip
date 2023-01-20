@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { classifyBgValue, getBgClass } from './blood-glucose.util'
+import { getBgClass } from './blood-glucose.util'
 import { BgBounds, ClassificationType } from '../../models/blood-glucose.model'
 
 const bgBounds = {
@@ -38,19 +38,27 @@ const bgBounds = {
 describe('BloodGlucoseUtil', () => {
   describe('getBgClasses', () => {
     it('should throw an error if no `bgBounds` with numerical lower & upper bounds provided', () => {
-      const functionWithNull = () => { getBgClass(null as unknown as BgBounds, 100) }
+      const functionWithNull = () => {
+        getBgClass(null as unknown as BgBounds, 100)
+      }
       expect(functionWithNull).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
-      const functionWithUndefined = () => { getBgClass(undefined as unknown as BgBounds, 100) }
+      const functionWithUndefined = () => {
+        getBgClass(undefined as unknown as BgBounds, 100)
+      }
       expect(functionWithUndefined).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
-      const functionWithEmptyObject = () => { getBgClass({} as BgBounds, 100) }
+      const functionWithEmptyObject = () => {
+        getBgClass({} as BgBounds, 100)
+      }
       expect(functionWithEmptyObject).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
-      const functionWithInvalidBgBounds = () => { getBgClass({ foo: 'bar' } as unknown as BgBounds, 100) }
+      const functionWithInvalidBgBounds = () => {
+        getBgClass({ foo: 'bar' } as unknown as BgBounds, 100)
+      }
       expect(functionWithInvalidBgBounds).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
@@ -63,29 +71,43 @@ describe('BloodGlucoseUtil', () => {
     })
 
     it('should throw an error if no `bgValue` or non-numerical `bgValue`', () => {
-      const functionWithNoBgValue = () => { getBgClass(bgBounds) }
+      const functionWithNoBgValue = () => {
+        getBgClass(bgBounds)
+      }
       expect(functionWithNoBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithNullBgValue = () => { getBgClass(bgBounds, null as unknown as number) }
+      const functionWithNullBgValue = () => {
+        getBgClass(bgBounds, null as unknown as number)
+      }
       expect(functionWithNullBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithUndefinedBgValue = () => { getBgClass(bgBounds, undefined as unknown as number) }
+      const functionWithUndefinedBgValue = () => {
+        getBgClass(bgBounds, undefined as unknown as number)
+      }
       expect(functionWithUndefinedBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithEmptyObjectBgValue = () => { getBgClass(bgBounds, {} as number) }
+      const functionWithEmptyObjectBgValue = () => {
+        getBgClass(bgBounds, {} as number)
+      }
       expect(functionWithEmptyObjectBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithNegativeBgValue = () => { getBgClass(bgBounds, -100) }
+      const functionWithNegativeBgValue = () => {
+        getBgClass(bgBounds, -100)
+      }
       expect(functionWithNegativeBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithDecimalBgValue = () => { getBgClass(bgBounds, 4.4) }
+      const functionWithDecimalBgValue = () => {
+        getBgClass(bgBounds, 4.4)
+      }
       expect(functionWithDecimalBgValue).not.toThrow()
-      const functionWithIntegerBgValue = () => { getBgClass(bgBounds, 100) }
+      const functionWithIntegerBgValue = () => {
+        getBgClass(bgBounds, 100)
+      }
       expect(functionWithIntegerBgValue).not.toThrow()
     })
 
@@ -146,84 +168,6 @@ describe('BloodGlucoseUtil', () => {
 
       it('should return `veryHigh` for a value > the `veryHighThreshold`', () => {
         expect(getBgClass(bgBounds, 301, ClassificationType.FiveWay)).toEqual('veryHigh')
-      })
-    })
-  })
-
-  describe('classifyBgValue', () => {
-    const bgBounds: BgBounds = {
-      veryHighThreshold: 300,
-      targetUpperBound: 180,
-      targetLowerBound: 70,
-      veryLowThreshold: 55
-    }
-
-    it('should throw error if bgValue is non-numerical', () => {
-      const negativeBgValue = () => { classifyBgValue(bgBounds, -100) }
-      expect(negativeBgValue).toThrow('You must provide a positive, numerical blood glucose value to categorize!')
-      const floatBgValue = () => { classifyBgValue(bgBounds, 4.4) }
-      expect(floatBgValue).not.toThrow()
-      const correctBgValue = () => { classifyBgValue(bgBounds, 100) }
-      expect(correctBgValue).not.toThrow()
-    })
-
-    describe('three-way classification (low, target, high)', () => {
-      it('should return `low` for a value < the `targetLowerBound`', () => {
-        expect(classifyBgValue(bgBounds, 69)).toEqual('low')
-      })
-
-      it('should return `target` for a value equal to the `targetLowerBound`', () => {
-        expect(classifyBgValue(bgBounds, 70)).toEqual('target')
-      })
-
-      it('should return `target` for a value > `targetLowerBound` and < `targetUpperBound`', () => {
-        expect(classifyBgValue(bgBounds, 100)).toEqual('target')
-      })
-
-      it('should return `target` for a value equal to the `targetUpperBound`', () => {
-        expect(classifyBgValue(bgBounds, 180)).toEqual('target')
-      })
-
-      it('should return `high` for a value > the `targetUpperBound`', () => {
-        expect(classifyBgValue(bgBounds, 181)).toEqual('high')
-      })
-    })
-
-    describe('five-way classification (veryLow, low, target, high, veryHigh)', () => {
-      it('should return `veryLow` for a value < the `veryLowThreshold`', () => {
-        expect(classifyBgValue(bgBounds, 54, 'fiveWay')).toEqual('veryLow')
-      })
-
-      it('should return `low` for a value equal to the `veryLowThreshold`', () => {
-        expect(classifyBgValue(bgBounds, 55, 'fiveWay')).toEqual('low')
-      })
-
-      it('should return `low` for a value < the `targetLowerBound`', () => {
-        expect(classifyBgValue(bgBounds, 69, 'fiveWay')).toEqual('low')
-      })
-
-      it('should return `target` for a value equal to the `targetLowerBound`', () => {
-        expect(classifyBgValue(bgBounds, 70, 'fiveWay')).toEqual('target')
-      })
-
-      it('should return `target` for a value > `targetLowerBound` and < `targetUpperBound`', () => {
-        expect(classifyBgValue(bgBounds, 100, 'fiveWay')).toEqual('target')
-      })
-
-      it('should return `target` for a value equal to the `targetUpperBound`', () => {
-        expect(classifyBgValue(bgBounds, 180, 'fiveWay')).toEqual('target')
-      })
-
-      it('should return `high` for a value > the `targetUpperBound`', () => {
-        expect(classifyBgValue(bgBounds, 181, 'fiveWay')).toEqual('high')
-      })
-
-      it('should return `high` for a value equal to the `veryHighThreshold`', () => {
-        expect(classifyBgValue(bgBounds, 300, 'fiveWay')).toEqual('high')
-      })
-
-      it('should return `veryHigh` for a value > the `veryHighThreshold`', () => {
-        expect(classifyBgValue(bgBounds, 301, 'fiveWay')).toEqual('veryHigh')
       })
     })
   })
