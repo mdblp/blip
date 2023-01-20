@@ -26,7 +26,7 @@ import {
 } from '../../../utils/trends/data'
 
 import CBGSliceAnimated from './CBGSliceAnimated'
-import { CBGMedianAnimated } from 'dumb'
+import { CbgMedianAnimated } from 'dumb'
 
 export default class CBGSlicesContainer extends PureComponent {
   static propTypes = {
@@ -117,7 +117,7 @@ export default class CBGSlicesContainer extends PureComponent {
               sliceWidth={sliceWidth}
             />
             {this.props.displayFlags.cbgMedianEnabled && bin.median &&
-              <CBGMedianAnimated
+              <CbgMedianAnimated
                 bgBounds={this.props.bgBounds}
                 datum={bin}
                 showingCbgDateTraces={this.props.showingCbgDateTraces}

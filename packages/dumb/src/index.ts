@@ -53,7 +53,7 @@ import {
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
-import { CBGMedianAnimated } from './components/trends/cbg/cbg-median-animated'
+import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated'
 import { Table } from './components/settings/table'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
 
@@ -62,7 +62,7 @@ export {
   BloodGlucoseTooltip,
   BolusTooltip,
   CBGMeanStat,
-  CBGMedianAnimated,
+  CbgMedianAnimated,
   CBGPercentageBarChart,
   CbgSliceSegment,
   CBGStandardDeviation,

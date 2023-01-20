@@ -44,7 +44,7 @@ interface TransitionMotionInterpolate {
   style: TransitionMotionStyle
 }
 
-interface CBGMedianAnimatedProps {
+interface CbgMedianAnimatedProps {
   bgBounds: BgBounds
   datum: {
     median: number
@@ -58,8 +58,9 @@ interface CBGMedianAnimatedProps {
 }
 
 const DEFAULT_MEDIAN = 16
+const TRANSITION_STYLES_KEY = 'median'
 
-export const CBGMedianAnimated: FunctionComponent<CBGMedianAnimatedProps> = (props) => {
+export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (props) => {
   const {
     bgBounds,
     datum,
@@ -77,9 +78,10 @@ export const CBGMedianAnimated: FunctionComponent<CBGMedianAnimatedProps> = (pro
   const medianHeight = medianWidth * 0.75
   const x = xScale(datum.msX) - medianWidth / 2 + strokeWidth / 2
   const defaultY = yScale(bgBounds.targetUpperBound - (bgBounds.targetUpperBound - bgBounds.targetLowerBound) / 2)
+  const bgClass = getBgClass(bgBounds, datum.median, ClassificationType.FiveWay)
 
   const defaultStyles = [{
-    key: 'median',
+    key: TRANSITION_STYLES_KEY,
     style: {
       height: 0,
       median: DEFAULT_MEDIAN,
@@ -88,7 +90,7 @@ export const CBGMedianAnimated: FunctionComponent<CBGMedianAnimatedProps> = (pro
   }]
 
   const transitionMotionStyles = [{
-    key: 'median',
+    key: TRANSITION_STYLES_KEY,
     style: {
       height: spring(medianHeight, springConfig),
       median: spring(yScale(datum.median) - medianHeight / 2, springConfig),
@@ -98,8 +100,8 @@ export const CBGMedianAnimated: FunctionComponent<CBGMedianAnimatedProps> = (pro
 
   const medianClasses = cx({
     [styles.median]: true,
-    [styles[`${getBgClass(bgBounds, datum.median, ClassificationType.FiveWay)}FadeIn`]]: !showingCbgDateTraces,
-    [styles[`${getBgClass(bgBounds, datum.median, ClassificationType.FiveWay)}FadeOut`]]: showingCbgDateTraces
+    [styles[`${bgClass}FadeIn`]]: !showingCbgDateTraces,
+    [styles[`${bgClass}FadeOut`]]: showingCbgDateTraces
   })
 
   return (
@@ -108,19 +110,21 @@ export const CBGMedianAnimated: FunctionComponent<CBGMedianAnimatedProps> = (pro
       defaultStyles={defaultStyles}
       styles={transitionMotionStyles}
     >
-      {(interpolatedStyles: TransitionMotionInterpolate[]) =>
-        interpolatedStyles.length !== 0 &&
-        <rect
+      {(interpolatedStyles: TransitionMotionInterpolate[]) => {
+        if (interpolatedStyles.length === 0) {
+          return null
+        }
+        const interpolatedStyle = interpolatedStyles[0]
+        return <rect
           className={medianClasses}
-          id={`cbgMedian-${interpolatedStyles[0].key}`}
-          data-testid={`cbgMedian-${interpolatedStyles[0].key}`}
+          data-testid={`cbgMedian-${interpolatedStyle.key}`}
           width={width}
-          height={interpolatedStyles[0].style.height}
+          height={interpolatedStyle.style.height}
           x={x}
-          y={interpolatedStyles[0].style.median}
-          opacity={interpolatedStyles[0].style.opacity}
+          y={interpolatedStyle.style.median}
+          opacity={interpolatedStyle.style.opacity}
         />
-      }
+      }}
     </TransitionMotion>
   )
 }
