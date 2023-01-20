@@ -132,6 +132,10 @@ export class TrendsSVGContainer extends React.Component {
       const messagePosition = { x: xPos, y: yPos }
       const unselectedAll = _.every(activeDays, (flag) => (!flag))
       return (
+        // <NoDataLabel
+        //   position={messagePosition}
+        //   isNoDataSelected={unselectedAll}
+        // />
         <NoData
           dataType={dataType}
           position={messagePosition}

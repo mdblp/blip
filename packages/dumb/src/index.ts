@@ -54,7 +54,8 @@ import {
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 import { Table } from './components/settings/table'
-import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
+import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment/cbg-slice-segment'
+import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
 
 export {
   AverageDailyDoseStat,
@@ -70,6 +71,7 @@ export {
   FoodTooltip,
   LabeledCheckbox,
   LoopModeStat,
+  NoDataLabel,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,
