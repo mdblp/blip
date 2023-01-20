@@ -55,6 +55,7 @@ import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simp
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 import { CBGMedianAnimated } from './components/trends/cbg/cbg-median-animated'
 import { Table } from './components/settings/table'
+import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
 
 export {
   AverageDailyDoseStat,
@@ -63,6 +64,7 @@ export {
   CBGMeanStat,
   CBGMedianAnimated,
   CBGPercentageBarChart,
+  CbgSliceSegment,
   CBGStandardDeviation,
   CBGStatType,
   CgmTable,
