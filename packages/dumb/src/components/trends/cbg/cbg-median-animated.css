@@ -25,17 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-:export {
-  stroke: 2;
-}
-
-.thickStroke {
-  stroke-width: 2;
-}
-
 .median {
   stroke: white;
-  composes: thickStroke;
+  stroke-width: 2;
   pointer-events: none;
 }
 
