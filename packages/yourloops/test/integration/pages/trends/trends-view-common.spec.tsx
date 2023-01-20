@@ -44,8 +44,6 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
-import { act, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
