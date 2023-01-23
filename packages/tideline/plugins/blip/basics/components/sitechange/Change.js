@@ -65,7 +65,7 @@ class Change extends React.Component {
           <span className="Change-daysSince-count">{daysSinceNum}</span>
           {daysText}
         </div>
-        <div className="Change-line-stop"></div>
+        <div className="Change-line-stop" data-testid="reservoir-change"></div>
         {countElement}
       </div>
     )

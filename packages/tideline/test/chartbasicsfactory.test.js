@@ -78,7 +78,7 @@ describe('BasicsChart', function() {
     }
     wrapper = mount(<BasicsChart {...props} />)
     wrapper.update()
-    expect(wrapper.exists('#chart-basics-factory')).to.be.true
+    expect(wrapper.exists('[data-testid="chart-basics-factory"]')).to.be.true
     expect(console.error.callCount, JSON.stringify(console.error.getCalls(), null, 2)).to.equal(0)
   })
 

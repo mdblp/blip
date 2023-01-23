@@ -57,6 +57,7 @@ import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-
 import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated'
 import { Table } from './components/settings/table'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
+import { BgPrefs } from './models/blood-glucose.model'
 
 export {
   AverageDailyDoseStat,
@@ -84,5 +85,6 @@ export {
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
-  TotalCarbsStat
+  TotalCarbsStat,
+  BgPrefs
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { render } from '@testing-library/react'
-
-import PatientsSecondaryBar, { PatientListBarProps } from '../../../../components/patient/secondary-bar'
-
-describe('Patient secondary bar', () => {
-  const defaultProps: PatientListBarProps = {
-    filter: '',
-    onFilter: jest.fn(),
-    onInvitePatient: jest.fn()
+export interface ChartPrefs {
+  trends: {
+    extentSize: number
+    activeDays: {
+      monday: boolean
+      tuesday: boolean
+      wednesday: boolean
+      thursday: boolean
+      friday: boolean
+      saturday: boolean
+      sunday: boolean
+    }
   }
-
-  it('should be able to render', () => {
-    const { container } = render(
-      <PatientsSecondaryBar {...defaultProps} />
-    )
-    expect(container.querySelector('#patients-list-toolbar-item-left')).not.toBeNull()
-  })
-})
+}
