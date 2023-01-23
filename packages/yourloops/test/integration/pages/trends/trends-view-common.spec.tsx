@@ -28,6 +28,7 @@
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
+  checkDaysSelection,
   checkMedian,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
@@ -64,6 +65,7 @@ describe('Trends view for anyone', () => {
       checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
 
       checkRangeSelection()
+      await checkDaysSelection()
 
       await checkMedian()
     })

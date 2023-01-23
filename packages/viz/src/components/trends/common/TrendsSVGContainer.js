@@ -170,7 +170,7 @@ export class TrendsSVGContainer extends React.Component {
     }
 
     return (
-      <g id="cbgTrends">
+      <g id="cbgTrends" data-testid="trends-container">
         <CBGSlicesContainer
           bgBounds={this.props.bgPrefs.bgBounds}
           sliceWidth={sliceWidth}

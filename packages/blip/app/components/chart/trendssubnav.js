@@ -29,12 +29,13 @@ class DaysGroup extends React.Component {
     active: PropTypes.bool.isRequired,
     category: PropTypes.string.isRequired,
     days: PropTypes.array.isRequired,
-    onClickGroup: PropTypes.func.isRequired
+    onClickGroup: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired
   }
 
   render() {
     return (
-      <div>
+      <div data-testid={this.props.id}>
         <Checkbox
           size="small"
           checked={this.props.active}
@@ -179,12 +180,16 @@ class TrendsSubNav extends React.Component {
           active={this.areWeekdaysActive()}
           category={'weekday'}
           days={dayLinks.slice(0, 5)}
-          onClickGroup={this.handleSelectDaysGroup} />
+          onClickGroup={this.handleSelectDaysGroup}
+          id="weekdays-selection"
+        />
         <DaysGroup
           active={this.areWeekendsActive()}
           category={'weekend'}
           days={dayLinks.slice(5, 7)}
-          onClickGroup={this.handleSelectDaysGroup} />
+          onClickGroup={this.handleSelectDaysGroup}
+          id="weekend-selection"
+        />
       </div>
     )
   }
