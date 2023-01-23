@@ -19,6 +19,7 @@
   "**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.": "**TIR**{{cbgLabel}}測定を基に範囲内に収まっていた時間。",
   "**Total Carbs**: All carb entries from bolus wizard events or Apple Health records added together.": "**合計糖質量**入力された全ての食事またはレスキューカーボの合計。",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together": "**合計インスリン**基礎レートおよびボーラス投与（U）の合計。",
+  "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**合計インスリン**全ての基礎レートおよびボーラス（U）の合計。",
   "100% of Readings": "全測定",
   "50% of Readings": "測定の50%",
   "80% of Readings": "測定の80%",
@@ -258,7 +259,6 @@
   "compute-oneday-time-in-range": "**計算方法:**\n\n**(%)**は、範囲内に収まっている測定の数から同期間の全測定数を割ったものです。\n\n**(時間)**は、範囲内に収まっている比率に24時間をかけたものです。",
   "compute-total-insulin": "**計算方法:**\n\n**(%)**は、投与された基礎レートまたはボーラスの合計からこの期間に投与されたインスリン量の合計を割ったものです。",
   "custom": "変更する",
-  "dashboard-header-period-text": "過去7日間を基に算出されたデータ",
   "day": "日",
   "days": "日",
   "dbl": "DBL",
@@ -314,8 +314,5 @@
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "表示日数：{{numVisibleDays}}",
   "{{patientName}} does not have any data yet.": "{{patientName}} にはまだデータがありません。",
-  "{{title}} (cont.)": "{{title}} (cont.)",
-  "**Avg": {
-    " Daily Insulin** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**合計インスリン**全ての基礎レートおよびボーラス（U）の合計。"
-  }
+  "{{title}} (cont.)": "{{title}} (cont.)"
 }
