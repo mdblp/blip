@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats'
 
@@ -83,4 +83,19 @@ export const checkRangeSelection = () => {
   expect(rangeSelection.getByLabelText('80% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('50% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('Median')).toBeChecked()
+}
+
+export const checkMedian = async () => {
+  const medianCheckBox = screen.getByRole('checkbox', { name: 'Median' })
+  expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)
+
+  await act(async () => {
+    await userEvent.click(medianCheckBox)
+  })
+  expect(screen.queryAllByTestId('cbgMedian-median')).toHaveLength(0)
+
+  await act(async () => {
+    await userEvent.click(medianCheckBox)
+  })
+  expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)
 }
