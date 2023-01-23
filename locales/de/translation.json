@@ -19,6 +19,7 @@
   "**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.": "**Zeit im Zielbereich:** Zeit im Zielbereich, basierend auf {{cbgLabel}} Messwerten.",
   "**Total Carbs**: All carb entries from bolus wizard events or Apple Health records added together.": "**Gesamt Kohlenhydrate**: Alle Kohlenhydrateinträge von Mahlzeiten oder Notfall-Kohlenhydraten addiert.",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together": "**Gesamtinsulin:** Alle basalen- und Bolusmengen (in IE) addiert",
+  "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**Gesamtinsulin:**Alle Basal- und Bolusinjektionen (in IE) addiert, dividiert durch die Anzahl der Tage in dieser Ansicht",
   "100% of Readings": "100% der Messwerte",
   "50% of Readings": "50% der Messwerte",
   "80% of Readings": "80% der Messwerte",
@@ -258,7 +259,6 @@
   "compute-oneday-time-in-range": "**Wie wir das berechnen:**\n\n**(%)** ist die Anzahl der Messwerte im Bereich dividiert durch alle Messwerte für diesen Zeitraum.\n\n**(Zeitraum)** ist 24 Stunden multipliziert mit % im Bereich.",
   "compute-total-insulin": "**Wie wir das berechnen:**\n\n**(%)** ist Summe der Basal- oder Bolusabgabe dividiert durch das für diesen Zeitraum insgesamt abgegebene Insulin.",
   "custom": "benutzerdefiniert",
-  "dashboard-header-period-text": "Daten berechnet für die letzten 7 Tage",
   "day": "Tag",
   "days": "Tage",
   "dbl": "DBL",
@@ -314,8 +314,5 @@
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} Tage im Überblick",
   "{{patientName}} does not have any data yet.": "{{patientName}} sind noch keine Daten vorhanden.",
-  "{{title}} (cont.)": "{{title}} (kont.)",
-  "**Avg": {
-    " Daily Insulin** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**Gesamtinsulin:**Alle Basal- und Bolusinjektionen (in IE) addiert, dividiert durch die Anzahl der Tage in dieser Ansicht"
-  }
+  "{{title}} (cont.)": "{{title}} (kont.)"
 }
