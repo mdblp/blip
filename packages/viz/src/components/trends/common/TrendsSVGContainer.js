@@ -31,7 +31,6 @@ import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 
 import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
-import Background from './Background'
 import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
 import CBGSlicesContainer from '../cbg/CBGSlicesContainer'
 import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
@@ -39,6 +38,7 @@ import TargetRangeLines from './TargetRangeLines'
 import XAxisLabels from './XAxisLabels'
 import XAxisTicks from './XAxisTicks'
 import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
+import { Background } from 'dumb'
 import { NoDataLabel } from 'dumb'
 
 const BUMPERS = {
@@ -200,7 +200,6 @@ export class TrendsSVGContainer extends React.Component {
       <div id="trends-svg-container">
         <svg id="trends-svg" height={height} width="100%">
           <Background
-            linesAtThreeHrs
             margins={this.props.margins}
             svgDimensions={{ height, width }}
             xScale={xScale}
