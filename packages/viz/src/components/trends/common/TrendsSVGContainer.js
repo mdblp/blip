@@ -38,8 +38,7 @@ import TargetRangeLines from './TargetRangeLines'
 import XAxisLabels from './XAxisLabels'
 import XAxisTicks from './XAxisTicks'
 import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
-import { Background } from 'dumb'
-import { NoDataLabel } from 'dumb'
+import { Background, NoDataLabel } from 'dumb'
 
 const BUMPERS = {
   top: 50,
