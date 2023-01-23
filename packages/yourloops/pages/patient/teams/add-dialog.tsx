@@ -43,7 +43,6 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import InputLabel from '@mui/material/InputLabel'
 import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import metrics from '../../../lib/metrics'
@@ -163,13 +162,9 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 
         <DialogContent id="team-add-dialog-content">
           <Box display="flex" flexDirection="column" alignItems="center">
-            <InputLabel
-              color="primary"
-              id="team-add-dialog-label-code"
-              htmlFor="team-add-dialog-field-code"
-            >
+            <DialogContentText>
               {teamName ? (t('modal-add-medical-team-code')) : (t('modal-add-medical-team-code-no-invite'))}
-            </InputLabel>
+            </DialogContentText>
             <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
               <TextField
                 id="team-add-dialog-field-code"
