@@ -28,9 +28,6 @@
 import React, { FunctionComponent } from 'react'
 import styles from '../../../../styles/typography.css'
 import { useTranslation } from 'react-i18next'
-import { DatumType } from 'medical-domain'
-
-type NoDataLabelDataType = DatumType.Cbg | DatumType.Smbg
 
 interface NoDataLabelProps {
   position: {
