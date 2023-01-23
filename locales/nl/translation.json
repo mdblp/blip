@@ -19,6 +19,7 @@
   "**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.": "**Tijd binnen bereik:** Tijd die binnen bereik is doorgebracht, op basis van {{cbgLabel}}-metingen.",
   "**Total Carbs**: All carb entries from bolus wizard events or Apple Health records added together.": "**Totaal koolhydraten:** Alle ingevoerde koolhydraten uit maaltijden of reddingskoolhydraten opgeteld.",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together": "**Totale insuline:** Alle basale en bolusinsulinetoediening (in Eenheden) bij elkaar opgeteld",
+  "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**Totale insuline:** Alle basale en bolus insulinetoediening (in Eenheden) bij elkaar opgeteld, gedeeld door het aantal dagen in deze weergave",
   "100% of Readings": "100 % van de metingen",
   "50% of Readings": "50 % van de metingen",
   "80% of Readings": "80 % van de metingen",
@@ -258,7 +259,6 @@
   "compute-oneday-time-in-range": "**Hoe we dit berekenen:**\n\n**(%)** is het aantal metingen binnen het bereik, gedeeld door alle metingen voor deze tijdsperiode.\n\n**(tijd)** is 24 uur vermenigvuldigd met % in bereik.",
   "compute-total-insulin": "**Hoe we dit berekenen:**\n\n**(%)** is het respectieve totaal van de basale of bolustoediening gedeeld door de totale toegediende insuline voor deze tijdsperiode.",
   "custom": "custom",
-  "dashboard-header-period-text": "Gegevens berekend over de laatste 7 dagen",
   "day": "dag",
   "days": "dagen",
   "dbl": "DBL",
@@ -314,8 +314,5 @@
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} dagen in weergave",
   "{{patientName}} does not have any data yet.": "{{patientName}} heeft nog geen gegevens.",
-  "{{title}} (cont.)": "{{title}} (vervolg)",
-  "**Avg": {
-    " Daily Insulin** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**Totale insuline:** Alle basale en bolus insulinetoediening (in Eenheden) bij elkaar opgeteld, gedeeld door het aantal dagen in deze weergave"
-  }
+  "{{title}} (cont.)": "{{title}} (vervolg)"
 }
