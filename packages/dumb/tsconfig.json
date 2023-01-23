@@ -13,7 +13,7 @@
     "node_modules",
     "src/coverage",
     "dist",
-    "src/**/*.test.tsx"
+    "src/**/*.test.ts*"
   ],
   "include": [
     "src/**/*"

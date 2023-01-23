@@ -56,7 +56,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2030 Remove TwoOptionToggle and BgSourceToggle
 - YLP-2031 Migrate viz tests to dumb
 - YLP-2037 Hide the column in the patient list related to remote monitoring option
+- YLP-2045 Migrate CbgSliceSegment to dumb
 - YLP-2046 Migrate table settings from viz to dumb
+- YLP-2048 Migrate CBGMedianAnimated from viz to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5

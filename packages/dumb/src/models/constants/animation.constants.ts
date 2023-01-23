@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module '*.css';
-declare module '*.svg';
-declare module '@serprex/react-motion';
+const STIFFNESS = 180
+const DAMPING = 40
+const PRECISION = 0.1
 
-declare module 'tidepool-viz' {
-  export const delayShowCbgTracesOnFocus: (userId: string, sliceData: { id: string }, slicePosition: Object, focusedKeys: string[]) => void
-  export const unfocusTrendsCbgSlice: (userId: string) => void
-}
+export const springConfig = { stiffness: STIFFNESS, damping: DAMPING, precision: PRECISION }

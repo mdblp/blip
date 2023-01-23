@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,19 +38,27 @@ const bgBounds = {
 describe('BloodGlucoseUtil', () => {
   describe('getBgClasses', () => {
     it('should throw an error if no `bgBounds` with numerical lower & upper bounds provided', () => {
-      const functionWithNull = () => { getBgClass(null as unknown as BgBounds, 100) }
+      const functionWithNull = () => {
+        getBgClass(null as unknown as BgBounds, 100)
+      }
       expect(functionWithNull).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
-      const functionWithUndefined = () => { getBgClass(undefined as unknown as BgBounds, 100) }
+      const functionWithUndefined = () => {
+        getBgClass(undefined as unknown as BgBounds, 100)
+      }
       expect(functionWithUndefined).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
-      const functionWithEmptyObject = () => { getBgClass({} as BgBounds, 100) }
+      const functionWithEmptyObject = () => {
+        getBgClass({} as BgBounds, 100)
+      }
       expect(functionWithEmptyObject).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
-      const functionWithInvalidBgBounds = () => { getBgClass({ foo: 'bar' } as unknown as BgBounds, 100) }
+      const functionWithInvalidBgBounds = () => {
+        getBgClass({ foo: 'bar' } as unknown as BgBounds, 100)
+      }
       expect(functionWithInvalidBgBounds).toThrow(
         'You must provide a `bgBounds` object with a `targetLowerBound` and a `targetUpperBound`!'
       )
@@ -63,29 +71,43 @@ describe('BloodGlucoseUtil', () => {
     })
 
     it('should throw an error if no `bgValue` or non-numerical `bgValue`', () => {
-      const functionWithNoBgValue = () => { getBgClass(bgBounds) }
+      const functionWithNoBgValue = () => {
+        getBgClass(bgBounds)
+      }
       expect(functionWithNoBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithNullBgValue = () => { getBgClass(bgBounds, null as unknown as number) }
+      const functionWithNullBgValue = () => {
+        getBgClass(bgBounds, null as unknown as number)
+      }
       expect(functionWithNullBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithUndefinedBgValue = () => { getBgClass(bgBounds, undefined as unknown as number) }
+      const functionWithUndefinedBgValue = () => {
+        getBgClass(bgBounds, undefined as unknown as number)
+      }
       expect(functionWithUndefinedBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithEmptyObjectBgValue = () => { getBgClass(bgBounds, {} as number) }
+      const functionWithEmptyObjectBgValue = () => {
+        getBgClass(bgBounds, {} as number)
+      }
       expect(functionWithEmptyObjectBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithNegativeBgValue = () => { getBgClass(bgBounds, -100) }
+      const functionWithNegativeBgValue = () => {
+        getBgClass(bgBounds, -100)
+      }
       expect(functionWithNegativeBgValue).toThrow(
         'You must provide a positive, numerical blood glucose value to categorize!'
       )
-      const functionWithDecimalBgValue = () => { getBgClass(bgBounds, 4.4) }
+      const functionWithDecimalBgValue = () => {
+        getBgClass(bgBounds, 4.4)
+      }
       expect(functionWithDecimalBgValue).not.toThrow()
-      const functionWithIntegerBgValue = () => { getBgClass(bgBounds, 100) }
+      const functionWithIntegerBgValue = () => {
+        getBgClass(bgBounds, 100)
+      }
       expect(functionWithIntegerBgValue).not.toThrow()
     })
 
