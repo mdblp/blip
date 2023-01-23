@@ -305,7 +305,7 @@
   "placeholder-search": "Search for a patient by first name, last name or birthdate (dd/mm/yyyy)",
   "preferences": "設定",
   "prescription": "処方箋",
-  "prescription-duration": "Prescription duration",
+  "prescription-duration": "処方期間",
   "prescription-pdf": "処方箋_{{pdfName}}",
   "prescriptions": "処方箋",
   "prescriptions-get-failed": "Fail to get prescriptions, please reload the page",
