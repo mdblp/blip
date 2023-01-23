@@ -103,13 +103,12 @@ jobs:
           password: ${{ secrets.NEXUS_PASSWORD }}
 
       - name: Build and push blip Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v3.2.0
         with:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
           tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
-          provenance: false
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
