@@ -154,10 +154,11 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 
   return (
     <React.Fragment>
-      <Box textAlign="center" p={3}>
+      <Box textAlign="center" padding={3}>
         <DialogTitle>
-          <strong
-            id="team-add-dialog-title">{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
+          <strong id="team-add-dialog-title">
+            {teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}
+          </strong>
         </DialogTitle>
 
         <DialogContent id="team-add-dialog-content">
@@ -258,10 +259,10 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary" data-testid='patient-share-data'>
+        <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary">
           {t('modal-patient-add-team-info')}
         </DialogContentText>
-        <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary" data-testid="patient-team-info">
+        <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary" >
           {props.team.name}
           <br />
           {teamAddress}

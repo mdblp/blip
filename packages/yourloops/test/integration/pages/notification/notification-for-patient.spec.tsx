@@ -34,10 +34,10 @@ import NotificationApi from '../../../../lib/notifications/notification.api'
 import { Notification } from '../../../../lib/notifications/models/notification.model'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
-import { invitationHcpForPatient, teamOne, teamTwo } from '../../mock/team.api.mock'
+import { PatientNotification, teamOne, teamTwo } from '../../mock/team.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 
-describe('Add patient in the team with a notification', () => {
+describe('Notification page for patient', () => {
   const invitationTeam: Notification = {
     id: '26a11710e98e4',
     type: NotificationType.careTeamPatientInvitation,
@@ -64,57 +64,52 @@ describe('Add patient in the team with a notification', () => {
     mockPatientLogin(monitoredPatientAsTeamMember)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne, teamTwo])
     jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationTeam])
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(invitationHcpForPatient)
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(PatientNotification)
     jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
   })
 
-  it('Should cancel add team', async () => {
+  it('should be able to accept a team invite', async () => {
     await act(async () => {
       renderPage('/notifications')
     })
 
+    const badgeNotification = screen.getByLabelText('Go to notifications list')
+    expect(badgeNotification).toHaveTextContent('1')
+    const badgeTeam = screen.getByLabelText('Open team menu')
+    expect(badgeTeam).toHaveTextContent('2')
+    const acceptButtonForCancelDialog = screen.getByRole('button', { name: 'Accept' })
     expect(screen.getByTestId('notification-line')).toHaveTextContent("You're invited to share your diabetes data with sysReq-67-team2.")
-    const acceptButton = screen.getByRole('button', { name: 'Accept' })
-    await userEvent.click(acceptButton)
-    const dialog = screen.getByRole('dialog')
-    expect(within(dialog).getByText('Add the care team sysReq-67-team2')).toBeVisible()
-    expect(within(dialog).getByText('Please enter the team code (9 digits, provided by the care team who sent this invite)')).toBeVisible()
-    const addTeamButton = within(dialog).getByRole('button', { name: 'Add team' })
-    const cancelTeamButton = within(dialog).getByRole('button', { name: 'Cancel' })
-    expect(addTeamButton).toBeDisabled()
+    await userEvent.click(acceptButtonForCancelDialog)
+
+    const dialogForCancel = screen.getByRole('dialog')
+    const addTeamButtonForCancelDialog = within(dialogForCancel).getByRole('button', { name: 'Add team' })
+    const cancelTeamButton = within(dialogForCancel).getByRole('button', { name: 'Cancel' })
+
+    expect(within(dialogForCancel).getByText('Add the care team sysReq-67-team2')).toBeVisible()
+    expect(within(dialogForCancel).getByText('Please enter the team code (9 digits, provided by the care team who sent this invite)')).toBeVisible()
+    expect(addTeamButtonForCancelDialog).toBeDisabled()
     await userEvent.click(cancelTeamButton)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  })
 
-  it('Should after validation of the team code, the patient must be in a new team', async () => {
-    await act(async () => {
-      renderPage('/notifications')
-    })
-    const badgetNotification = screen.getByLabelText('Go to notifications list')
-    expect(badgetNotification).toHaveTextContent('1')
-    const badgetTeam = screen.getByLabelText('Open team menu')
-    expect(badgetTeam).toHaveTextContent('2')
     const acceptButton = screen.getByRole('button', { name: 'Accept' })
     await userEvent.click(acceptButton)
-    const dialog = screen.getByRole('dialog')
-    const inputCode = within(dialog).getByRole('textbox')
-    const addTeamButton = within(dialog).getByRole('button', { name: 'Add team' })
+    const dialogInputCodeTeam = screen.getByRole('dialog')
+    const inputCode = within(dialogInputCodeTeam).getByRole('textbox')
+    const addTeamButton = within(dialogInputCodeTeam).getByRole('button', { name: 'Add team' })
     expect(addTeamButton).toBeDisabled()
     await userEvent.type(inputCode, '263381988')
     expect(addTeamButton).toBeEnabled()
     await userEvent.click(addTeamButton)
     const dialogPrivacy = screen.getByRole('dialog')
-    const textAccepteShareData = within(dialog).getByTestId('check-policy')
-    const patientTeamInfo = within(dialog).getByTestId('patient-team-info')
-    const patientShareData = within(dialog).getByTestId('patient-share-data')
     const addCareTeamButton = within(dialogPrivacy).getByRole('button', { name: 'Add Care team' })
     const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
     const textPrivatePolicy = within(dialogPrivacy).getByTestId('text-privacy-policy')
-    expect(patientShareData).toHaveTextContent('You are about to share you data with')
-    expect(patientTeamInfo).toHaveTextContent('sysReq-67-team26 rue des champs75000 Paris67951738')
-    expect(dialog).toHaveTextContent('Share your data with a care team')
-    expect(textAccepteShareData).toHaveTextContent('By accepting this invitation, I recognize this team as my care team and consent to share my personal data with all its members, who are authorized healthcare professionals registered on YourLoops. I acknowledge that I can revoke this access at any time.')
-    expect(dialog).toHaveTextContent('Please verify that the above details match the information provided by your healthcare professional before accepting the invitation.')
+
+    expect(within(dialogPrivacy).getByText('You are about to share you data with')).toBeVisible()
+    expect(within(dialogPrivacy).getByText('PatientNotification6 rue des champs75000 Paris67951738')).toBeVisible()
+    expect(within(dialogPrivacy).getByText('By accepting this invitation, I recognize this team as my care team and consent to share my personal data with all its members, who are authorized healthcare professionals registered on YourLoops. I acknowledge that I can revoke this access at any time.')).toBeVisible()
+    expect(dialogPrivacy).toHaveTextContent('Share your data with a care team')
+    expect(dialogPrivacy).toHaveTextContent('Please verify that the above details match the information provided by your healthcare professional before accepting the invitation.')
     expect(textPrivatePolicy).toHaveTextContent('Read our Privacy Policy for more information')
     expect(addCareTeamButton).toBeDisabled()
     await userEvent.click(checkPolicy)

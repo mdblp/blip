@@ -165,8 +165,8 @@ export const teamThree: Team = {
   }]
 }
 
-export const invitationHcpForPatient: ITeam = {
-  name: 'sysReq-67-team2',
+export const PatientNotification: ITeam = {
+  name: 'PatientNotification',
   id: '63c7b7989cacc878ecce2c40',
   code: '67951738',
   type: TeamType.medical,
@@ -175,7 +175,7 @@ export const invitationHcpForPatient: ITeam = {
     enabled: true
   },
   phone: '0478780000',
-  email: 'ylp.ui.test.67-team2@hey.hey',
+  email: 'patientNotification@hey.hey',
   address: {
     line1: '6 rue des champs',
     line2: '',

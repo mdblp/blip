@@ -204,20 +204,6 @@ describe('Notification', () => {
       document.body.appendChild(container)
     })
 
-    it('should be able to render', () => {
-      render(<NotificationComponent notif={notif} />)
-      const component = document.getElementById(`notification-line-${notif.id}`)
-      expect(component).not.toBeNull()
-    })
-
-    it('should show team code dialog when accepting team invitation', () => {
-      render(<NotificationComponent notif={teamNotif} />)
-      const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${teamNotif.id}`) as HTMLButtonElement
-      acceptButton.click()
-      const dialog = document.getElementById('team-add-dialog-title')
-      expect(dialog).not.toBeNull()
-    })
-
     it('should not show team code dialog when accepting non team invitation', () => {
       (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
         return children
