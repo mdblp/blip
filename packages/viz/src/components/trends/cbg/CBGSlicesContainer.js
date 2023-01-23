@@ -25,8 +25,8 @@ import {
   findBinForTimeOfDay, findOutOfRangeAnnotations, calculateCbgStatsForBin
 } from '../../../utils/trends/data'
 
-import CBGMedianAnimated from './CBGMedianAnimated'
 import CBGSliceAnimated from './CBGSliceAnimated'
+import { CbgMedianAnimated } from 'dumb'
 
 export default class CBGSlicesContainer extends PureComponent {
   static propTypes = {
@@ -116,15 +116,16 @@ export default class CBGSlicesContainer extends PureComponent {
               yScale={yScale}
               sliceWidth={sliceWidth}
             />
-            <CBGMedianAnimated
-              bgBounds={this.props.bgBounds}
-              datum={bin}
-              displayingMedian={this.props.displayFlags.cbgMedianEnabled}
-              showingCbgDateTraces={this.props.showingCbgDateTraces}
-              xScale={xScale}
-              yScale={yScale}
-              sliceWidth={sliceWidth}
-            />
+            {this.props.displayFlags.cbgMedianEnabled && bin.median &&
+              <CbgMedianAnimated
+                bgBounds={this.props.bgBounds}
+                datum={bin}
+                showingCbgDateTraces={this.props.showingCbgDateTraces}
+                xScale={xScale}
+                yScale={yScale}
+                sliceWidth={sliceWidth}
+              />
+            }
           </g>
         ))}
       </g>
