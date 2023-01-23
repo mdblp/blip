@@ -297,7 +297,7 @@
   "months": "月数",
   "note": "note",
   "patient-statistics": "患者統計",
-  "pdf-date-range": "日付範囲: {{range}}",
+  "pdf-date-range": "日付：{{range}}",
   "pdf-footer-center-text": "Diabeloop - {{appURL}}",
   "scheduled": "scheduled",
   "seconds": "秒数",
