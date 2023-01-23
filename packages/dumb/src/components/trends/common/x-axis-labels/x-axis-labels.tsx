@@ -26,58 +26,38 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './background.css'
+import { formatClocktimeFromMsPer24, getSimpleHourFormatSpace } from '../../../../utils/datetime/datetime.util'
 import { getTrendsIntervalsArray } from '../../../../utils/trends/trends.util'
+import styles from '../../../../styles/typography.css'
 import { XScale } from '../../../../models/x-scale.model'
 
-interface BackgroundProps {
-  margins: {
-    bottom?: number
-    left?: number
-    right?: number
-    top?: number
-  }
-  svgDimensions: {
-    width: number
-    height: number
-  }
+interface XAxisLabelsProps {
+  topMargin: number
   xScale: XScale
 }
 
-const DEFAULT_MARGIN = 0
+const DEFAULT_OFFSET = 5
 
-export const Background: FunctionComponent<BackgroundProps> = (props) => {
-  const { margins, svgDimensions, xScale } = props
+export const XAxisLabels: FunctionComponent<XAxisLabelsProps> = (props) => {
+  const { topMargin, xScale } = props
 
-  const getMarginValue = (margin?: number): number => {
-    return margin ?? DEFAULT_MARGIN
-  }
-
-  const horizontalMargins = getMarginValue(margins.left) + getMarginValue(margins.right)
-  const verticalMargins = getMarginValue(margins.top) + getMarginValue(margins.bottom)
-
-  const width = svgDimensions.width - horizontalMargins
-  const height = svgDimensions.height - verticalMargins
+  const yPosition = topMargin - DEFAULT_OFFSET
 
   return (
     <g>
-      <rect
-        className={styles.background}
-        x={margins.left}
-        y={margins.top}
-        width={width}
-        height={height}
-      />
-      {getTrendsIntervalsArray().map((value: number, index: number) => (
-        <line
-          className={styles.line}
-          key={`line-${index}`}
-          x1={xScale(value)}
-          x2={xScale(value)}
-          y1={margins.top}
-          y2={svgDimensions.height - getMarginValue(margins.bottom)}
-        />
-      ))}
+      {getTrendsIntervalsArray(true).map((timeInMs: number) => {
+        const displayTime = formatClocktimeFromMsPer24(timeInMs, getSimpleHourFormatSpace())
+        return (
+          <text
+            className={`${styles.axisSize} ${styles.mediumContrastText} ${styles.svgStartAnchored}`}
+            key={timeInMs}
+            x={xScale(timeInMs) + DEFAULT_OFFSET}
+            y={yPosition}
+          >
+            {displayTime}
+          </text>
+        )
+      })}
     </g>
   )
 }

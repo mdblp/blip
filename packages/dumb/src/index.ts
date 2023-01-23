@@ -58,6 +58,7 @@ import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated'
 import { Table } from './components/settings/table'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
 import { BgPrefs } from './models/blood-glucose.model'
+import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 
 export {
   AverageDailyDoseStat,
@@ -86,5 +87,6 @@ export {
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,
+  XAxisLabels,
   BgPrefs
 }

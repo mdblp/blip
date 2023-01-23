@@ -36,10 +36,9 @@ import CBGSlicesContainer from '../cbg/CBGSlicesContainer'
 import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
 import NoData from './NoData'
 import TargetRangeLines from './TargetRangeLines'
-import XAxisLabels from './XAxisLabels'
 import XAxisTicks from './XAxisTicks'
 import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
-import { Background } from 'dumb'
+import { Background, XAxisLabels } from 'dumb'
 
 const BUMPERS = {
   top: 50,
@@ -206,7 +205,7 @@ export class TrendsSVGContainer extends React.Component {
             xScale={xScale}
           />
           <XAxisLabels
-            margins={this.props.margins}
+            topMargin={this.props.margins.top}
             xScale={xScale}
           />
           <XAxisTicks
