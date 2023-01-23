@@ -58,6 +58,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2045 Migrate CbgSliceSegment to dumb
 - YLP-2046 Migrate table settings from viz to dumb
 - YLP-2048 Migrate CBGMedianAnimated from viz to dumb
+- YLP-2054 Migrate trends "no data" text to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5
