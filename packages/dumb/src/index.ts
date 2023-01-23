@@ -54,6 +54,7 @@ import {
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 import { Table } from './components/settings/table'
+import { BgPrefs } from './models/blood-glucose.model'
 
 export {
   AverageDailyDoseStat,
@@ -78,5 +79,6 @@ export {
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
-  TotalCarbsStat
+  TotalCarbsStat,
+  BgPrefs
 }

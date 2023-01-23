@@ -36,7 +36,7 @@ import ApiUtils from '../core/api-utils'
 import { Daily, PatientDashboard as BlipOldDashboard, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
-import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
+import { PatientNavBarMemoized as PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
 import ChartType from 'yourloops/enum/chart-type.enum'
 import PatientDashboard from 'yourloops/components/dashboard-widgets/patient-dashboard'
 
@@ -286,7 +286,7 @@ class PatientDataPage extends React.Component {
 
     return (
       <div>
-        <PatientNavBarMemoized
+        <PatientNavBar
           currentPatient={this.props.patient}
           chartType="no-data"
         />
@@ -341,7 +341,7 @@ class PatientDataPage extends React.Component {
 
     return (
       <React.Fragment>
-        <PatientNavBarMemoized
+        <PatientNavBar
           chartType={this.getChartType()}
           currentPatient={patient}
           onClickDashboard={() => this.navigateToChart(ChartType.Dashboard)}
@@ -613,7 +613,6 @@ class PatientDataPage extends React.Component {
    * @Returns {void}
    */
   navigateToChart(chart) {
-    // event.preventDefault()
     const currentChart = this.getChartType()
     if (currentChart === chart) {
       return

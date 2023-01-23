@@ -39,6 +39,8 @@ interface BgClassesBarStyle {
   targetWidth: string
 }
 
+const CBG_BAR_WIDTH_IN_PERCENTAGE = 100
+
 export const computeCBGStyle = (value: number, bgClasses: BgClasses): CBGStyle => {
   const veryLowValue = bgClasses.veryLow
   const lowValue = bgClasses.low
@@ -51,7 +53,7 @@ export const computeCBGStyle = (value: number, bgClasses: BgClasses): CBGStyle =
     return { color: styles['high-color'], backgroundColor: styles['high-background'], left: '100%' }
   }
   const cbgBarRange = highValue - veryLowValue // Number of value included in the cbg bar range (default is from 54 to 250)
-  const left = `${Math.round(((value - veryLowValue) * 100) / cbgBarRange)}%`
+  const left = `${Math.round(((value - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange)}%`
   if (value > targetValue) {
     return { color: styles['high-color'], backgroundColor: styles['high-background'], left }
   }
@@ -67,8 +69,8 @@ export const computeBgClassesBarStyle = (bgClasses: BgClasses): BgClassesBarStyl
   const targetValue = bgClasses.target
   const highValue = bgClasses.high
   const cbgBarRange = highValue - veryLowValue
-  const lowWidth = Math.round(((lowValue - veryLowValue) * 100) / cbgBarRange)
-  const targetWidth = Math.round(((targetValue - veryLowValue) * 100) / cbgBarRange) - lowWidth
+  const lowWidth = Math.round(((lowValue - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange)
+  const targetWidth = Math.round(((targetValue - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange) - lowWidth
   return {
     lowWidth: `${lowWidth}%`,
     targetWidth: `${targetWidth}%`

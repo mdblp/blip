@@ -44,7 +44,7 @@ const PatientDashboard = (props) => {
 
   const endpoints = getEndpoints()
   return (
-    <div id="patient-dashboard" className="patient-dashboard" data-testid="patient-dashboard">
+    <div className="patient-dashboard" data-testid="patient-dashboard">
       <Box display="flex" marginLeft="20px" alignItems="center">
         <AccessTime fontSize="small" className="subnav-icon" />
         <span id="subnav-period-label">{t('dashboard-header-period-text')}</span>
@@ -59,7 +59,6 @@ const PatientDashboard = (props) => {
           />
         }
         <PatientStatistics
-          id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
@@ -70,7 +69,6 @@ const PatientDashboard = (props) => {
           parametersConfig={tidelineData.medicalData?.pumpSettings[0]?.payload?.parameters}
         />
         <DeviceUsage
-          id="dashboard-device-usage"
           bgPrefs={bgPrefs}
           timePrefs={timePrefs}
           patient={patient}

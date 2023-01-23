@@ -25,9 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
+export const RESPONSIVE_GRID_FULL_WIDTH = 12
+export const RESPONSIVE_GRID_HALF_WIDTH = 6
+export const RESPONSIVE_GRID_FOUR_COLUMNS = 4
+export const RESPONSIVE_GRID_THREE_COLUMNS = 3

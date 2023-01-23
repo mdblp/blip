@@ -232,7 +232,6 @@ const DeviceUsage = (props) => {
         patientData={tidelineData}
         onSwitchToDaily={onSwitchToDaily}
         trackMetric={trackMetric}
-        open={dialogOpened}
         setOpen={setDialogOpened}
       />
     }

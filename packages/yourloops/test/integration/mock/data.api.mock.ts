@@ -28,7 +28,7 @@
 import DataAPI from '../../../lib/data/data.api'
 import moment, { Moment } from 'moment-timezone'
 import { PatientData } from '../../../lib/data/models/patient-datum.model'
-import { history } from './raw-data.mock'
+import { history } from '../data/data-api.data'
 
 const CARB_BOLUS_ID = 'carbBolusId'
 export const CBG_ID = 'cbgId'

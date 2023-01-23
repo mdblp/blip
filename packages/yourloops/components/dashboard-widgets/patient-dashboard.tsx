@@ -31,7 +31,7 @@ import PatientStatistics from 'blip/app/components/chart/patientStatistics.js'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import MedicalDataService, { TimePrefs } from 'medical-domain'
 import { ChartPrefs } from './models/chart-prefs.model'
-import { BgPrefs } from './models/bg-prefs.model'
+import { BgPrefs } from 'dumb'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import moment, { Moment } from 'moment-timezone'
 import { PermsOfLoggedInUser } from './models/perms-of-loggedin-user.model'
@@ -43,6 +43,13 @@ import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 import { useTeam } from '../../lib/team'
 import RemoteMonitoringWidget from './remote-monitoring-widget'
+import { useTheme } from '@mui/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import {
+  RESPONSIVE_GRID_FOUR_COLUMNS,
+  RESPONSIVE_GRID_FULL_WIDTH,
+  RESPONSIVE_GRID_HALF_WIDTH
+} from '../../css/css-utils'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -78,16 +85,17 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const { getMedicalTeams } = useTeam()
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
+  const theme = useTheme()
+  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const endpoints = [
     moment.utc(epochDate - msRange).toISOString(), // start
     moment.utc(epochDate).toISOString() // end
   ]
   const showRemoteMonitoringWidget = user.isUserHcp() && getMedicalTeams().some(team => team.monitoring?.enabled)
-  const gridWidgetSize = showRemoteMonitoringWidget ? 4 : 6
+  const gridWidgetSize = isMobileBreakpoint ? RESPONSIVE_GRID_FULL_WIDTH : showRemoteMonitoringWidget ? RESPONSIVE_GRID_FOUR_COLUMNS : RESPONSIVE_GRID_HALF_WIDTH
 
   return (
     <Grid
-      id="patient-dashboard"
       data-testid="patient-dashboard"
       container
       spacing={5}
@@ -100,12 +108,16 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
         display="flex"
         alignItems="center"
       >
-        <AccessTime fontSize="small" className="subnav-icon" />
-        <Typography id="subnav-period-label" variant="body1">{t('dashboard-header-period-text')}</Typography>
+        <AccessTime fontSize="small" />
+        <Typography
+          variant="subtitle2"
+          sx={{ marginLeft: theme.spacing(1), fontStyle: 'italic' }}
+        >
+          {t('dashboard-header-period-text')}
+        </Typography>
       </Grid>
       <Grid item xs={gridWidgetSize}>
         <PatientStatistics
-          id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
@@ -118,7 +130,6 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
       </Grid>
       <Grid item xs={gridWidgetSize}>
         <DeviceUsage
-          id="dashboard-device-usage"
           bgPrefs={bgPrefs}
           timePrefs={timePrefs}
           patient={patient}
