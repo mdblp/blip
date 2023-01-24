@@ -59,6 +59,8 @@ import { Table } from './components/settings/table'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment/cbg-slice-segment'
 import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
 import { BgPrefs } from './models/blood-glucose.model'
+import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
+import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
 
 export {
   AverageDailyDoseStat,
@@ -88,5 +90,7 @@ export {
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
-  TotalCarbsStat
+  TotalCarbsStat,
+  XAxisLabels,
+  XAxisTicks
 }

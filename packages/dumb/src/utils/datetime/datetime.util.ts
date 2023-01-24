@@ -33,6 +33,7 @@ import { DurationUnit, TimePrefs } from 'medical-domain'
 const t = i18next.t.bind(i18next)
 
 export const ONE_HOUR_MS = 3600000
+export const HOURS_IN_DAY = 24
 export const TIMEZONE_UTC = 'UTC'
 
 /**
@@ -49,6 +50,14 @@ export const getHourMinuteFormat = (): string => {
  */
 export const getDayFormat = (): string => {
   return t('dddd, MMMM D')
+}
+
+/**
+ * getSimpleHourFormatSpace
+ * @returns string according to translation
+ */
+export const getSimpleHourFormatSpace = (): string => {
+  return t('h a')
 }
 
 /**
@@ -184,4 +193,21 @@ export const convertValueToMinutes = (durationValue: number, durationUnit: Durat
     default:
       return durationValue
   }
+}
+
+/**
+ * formatClocktimeFromMsPer24
+ * @param {number} milliseconds - positive integer representing a time of day
+ *                            in milliseconds within a 24-hr day
+ * @param {string} format - optional moment display format string; default is 'h:mm a'
+ *
+ * @return {string} formatted clocktime, e.g., '12:05 pm'
+ */
+export const formatClocktimeFromMsPer24 = (milliseconds: number, format?: string): string => {
+  if (!Number.isFinite(milliseconds) || milliseconds < 0 || milliseconds > ONE_HOUR_MS * HOURS_IN_DAY) {
+    throw new Error('First argument must be a value in milliseconds per twenty-four hour day')
+  }
+
+  const defaultFormat = getHourMinuteFormat()
+  return moment.utc(milliseconds).format(format ?? defaultFormat)
 }
