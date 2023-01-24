@@ -264,7 +264,7 @@
   "dbl": "DBL",
   "ddd": "ddd",
   "ddd, MMM D, Y": "ddd D MMM YYYY",
-  "ddd, MMM D, YYYY": "ddd, MMM D, YYYY",
+  "ddd, MMM D, YYYY": "ddd D MMM YYYY",
   "dddd, MMMM D": "dddd D MMMM",
   "dddd, h:mm a": "dddd, H:mm",
   "deleted": "eliminado",
