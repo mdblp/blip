@@ -259,7 +259,6 @@
   "compute-oneday-time-in-range": "**Metodo di calcolo**\n\n**: (%)** è il numero di letture comprese nell’intervallo diviso per tutte le letture di questo periodo.\n\n**(tempo)** è 24 ore moltiplicato per % nell’intervallo.",
   "compute-total-insulin": "**Metodo di calcolo:**\n\n**(%)** è il rispettivo totale di erogazione basale o in bolo diviso per l’insulina totale erogata per questo periodo.",
   "custom": "personalizzato",
-  "dashboard-header-period-text": "Dati calcolati sugli ultimi 7 giorni",
   "day": "giorno",
   "days": "giorni",
   "dbl": "DBL",

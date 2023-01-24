@@ -138,6 +138,14 @@ export const checkMedian = async () => {
   expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)
 }
 
+export const checkTrendsLayout = () => {
+  const background = screen.getByTestId('trends-background')
+  expect(background).toBeVisible()
+
+  const xAxisLabels = screen.getByTestId('trends-x-axis-labels')
+  expect(xAxisLabels).toHaveTextContent('12 am3 am6 am9 am12 pm3 pm6 pm9 pm')
+}
+
 export const checkReadings100 = async () => {
   const reading100 = screen.getByRole('checkbox', { name: '100% of readings' })
   expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)

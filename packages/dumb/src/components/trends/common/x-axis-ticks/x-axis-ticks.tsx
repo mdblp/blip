@@ -26,58 +26,35 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './background.css'
 import { XScale } from '../../../../models/x-scale.model'
-import { TRENDS_INTERVALS_ARRAY_MS } from '../../../../utils/trends/trends.util'
+import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS } from '../../../../utils/trends/trends.util'
+import styles from './x-axis-ticks.css'
 
-interface BackgroundProps {
-  margins: {
-    bottom?: number
-    left?: number
-    right?: number
-    top?: number
-  }
-  svgDimensions: {
-    width: number
-    height: number
-  }
+interface XAxisTicksProps {
+  topMargin: number
   xScale: XScale
 }
 
-const DEFAULT_MARGIN = 0
+const DEFAULT_TICK_LENGTH = 15
 
-export const Background: FunctionComponent<BackgroundProps> = (props) => {
-  const { margins, svgDimensions, xScale } = props
-
-  const getMarginValue = (margin?: number): number => {
-    return margin ?? DEFAULT_MARGIN
-  }
-
-  const horizontalMargins = getMarginValue(margins.left) + getMarginValue(margins.right)
-  const verticalMargins = getMarginValue(margins.top) + getMarginValue(margins.bottom)
-
-  const width = svgDimensions.width - horizontalMargins
-  const height = svgDimensions.height - verticalMargins
+export const XAxisTicks: FunctionComponent<XAxisTicksProps> = (props) => {
+  const { topMargin, xScale } = props
 
   return (
-    <g data-testid="trends-background">
-      <rect
-        className={styles.background}
-        x={margins.left}
-        y={margins.top}
-        width={width}
-        height={height}
-      />
-      {TRENDS_INTERVALS_ARRAY_MS.map((value: number, index: number) => (
-        <line
-          className={styles.line}
-          key={`line-${index}`}
-          x1={xScale(value)}
-          x2={xScale(value)}
-          y1={margins.top}
-          y2={svgDimensions.height - getMarginValue(margins.bottom)}
-        />
-      ))}
+    <g>
+      {TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS.map((timeInMs: number) => {
+        const xPosition = xScale(timeInMs)
+        return (
+          <line
+            className={styles.tick}
+            key={timeInMs}
+            x1={xPosition}
+            x2={xPosition}
+            y1={topMargin}
+            y2={topMargin - DEFAULT_TICK_LENGTH}
+          />
+        )
+      })}
     </g>
   )
 }
