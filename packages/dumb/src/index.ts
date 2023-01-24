@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
@@ -53,13 +54,17 @@ import {
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
-import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated'
+import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated/cbg-median-animated'
 import { Table } from './components/settings/table'
-import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
+import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment/cbg-slice-segment'
+import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
 import { CbgSliceAnimated } from './components/trends/cbg/cbg-slice-animated'
+import { BgPrefs } from './models/blood-glucose.model'
 
 export {
   AverageDailyDoseStat,
+  Background,
+  BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
   CBGMeanStat,
@@ -74,6 +79,7 @@ export {
   FoodTooltip,
   LabeledCheckbox,
   LoopModeStat,
+  NoDataLabel,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,

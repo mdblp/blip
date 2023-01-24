@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import { bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { CbgPositionData } from '../../../models/cbg-position-data.model'
+import { CbgPositionData } from '../../../../models/cbg-position-data.model'
 import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from 'tidepool-viz'
 import { CbgSliceTransitionMotionStyle } from '../../../models/animation.model'
 import { CbgRangeSegment } from '../../../models/cbg-range-segment.model'

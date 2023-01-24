@@ -43,7 +43,13 @@ class HoverDay extends React.Component {
     }
 
     return (
-      <div id={`calendar-day-${type}-${date}-hover`} className={containerClass} onClick={this.handleClickDay} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+      <div
+        data-testid="calendar-day-hover"
+        className={containerClass}
+        onClick={this.handleClickDay}
+        onMouseEnter={this.mouseEnter}
+        onMouseLeave={this.mouseLeave}
+      >
         <p className="Calendar-weekday">{moment.utc(this.props.date).format(t(this.props.dayAbbrevMask))}</p>
         {display}
       </div>

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo, MouseEventHandler } from 'react'
+import React, { FunctionComponent, memo } from 'react'
 import { Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
 import { useAuth } from '../../lib/auth'
@@ -39,13 +39,12 @@ import { useHistory } from 'react-router-dom'
 
 interface PatientNavBarProps {
   chartType: string
-  onClickDashboard?: MouseEventHandler<HTMLAnchorElement>
-  onClickDaily?: MouseEventHandler<HTMLAnchorElement>
-  onSwitchPatient?: Function
-  onClickPrint?: MouseEventHandler<HTMLButtonElement>
-  onClickTrends?: MouseEventHandler<HTMLAnchorElement>
+  onClickDashboard?: () => void
+  onClickDaily?: () => void
+  onSwitchPatient?: () => void
+  onClickPrint?: () => void
+  onClickTrends?: () => void
   currentPatient: Patient
-  prefixURL?: string
 }
 
 const styles = makeStyles()((theme: Theme) => {
@@ -62,11 +61,7 @@ const styles = makeStyles()((theme: Theme) => {
   }
 })
 
-const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
-  {
-    prefixURL = '',
-    ...props
-  }) => {
+const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
     currentPatient,
     chartType,
@@ -100,7 +95,6 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (
       </Box>
       <PatientNavBarTabs
         chartType={chartType}
-        prefixURL={prefixURL}
         onClickDashboard={onClickDashboard}
         onClickTrends={onClickTrends}
         onClickDaily={onClickDaily}

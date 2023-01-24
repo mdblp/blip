@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,66 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../../styles/colors.css";
+import React, { FunctionComponent } from 'react'
+import styles from '../../../../styles/typography.css'
+import { useTranslation } from 'react-i18next'
 
-.bar {
-  display: flex;
-  align-items: center;
-  width: calc(100% - 60px);
-  position: relative;
+interface NoDataLabelProps {
+  position: {
+    x: number
+    y: number
+  }
+  isNoDataSelected: boolean
 }
 
-.bar-value {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
-}
+const DEFAULT_CBG_DISPLAY_TYPE = 'CGM'
 
-.disabled-label {
-  color: var(--muted);
-}
+export const NoDataLabel: FunctionComponent<NoDataLabelProps> = (props) => {
+  const { position, isNoDataSelected } = props
+  const { t } = useTranslation('main')
 
-.disabled-rectangle {
-  background-color: var(--muted);
-}
+  const noDataSelectedMessage = t('Hang on there, skippy! You unselected all of the data!')
+  const noDataFoundMessage = t('There is no {{displayType}} data for this time period :(', { displayType: DEFAULT_CBG_DISPLAY_TYPE })
+  const message = isNoDataSelected ? noDataSelectedMessage : noDataFoundMessage
 
-.line {
-  height: 5px;
-  background-color: var(--stat-disabled);
-  flex-grow: 1;
-}
-
-.percentage-symbol {
-  color: #727375;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 24px;
-  margin-left: auto;
-  margin-right: 2px;
-}
-
-.rectangle {
-  height: 32px;
-  border-radius: 2px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
-}
-
-.title {
-  margin-left: 4px;
+  return (
+    <text
+      className={`${styles.mediumContrastText} ${styles.svgMiddleAnchored}`}
+      x={position.x}
+      y={position.y}
+      data-testid="no-data-label"
+    >
+      {message}
+    </text>
+  )
 }

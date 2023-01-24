@@ -41,10 +41,9 @@ import ChartType from '../../enum/chart-type.enum'
 
 interface PatientNavBarTabsProps {
   chartType: string
-  prefixURL: string
-  onClickDashboard: MouseEventHandler<HTMLAnchorElement>
-  onClickTrends: MouseEventHandler<HTMLAnchorElement>
-  onClickDaily: MouseEventHandler<HTMLAnchorElement>
+  onClickDashboard: () => void
+  onClickTrends: () => void
+  onClickDaily: () => void
   onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
@@ -72,11 +71,7 @@ const styles = makeStyles()((theme: Theme) => {
   }
 })
 
-export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
-  {
-    prefixURL = '',
-    ...props
-  }) => {
+export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (props) => {
   const {
     chartType,
     onClickDashboard,
@@ -106,7 +101,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
         <Tab
           className={classes.tab}
           data-testid="dashboard-tab"
-          href={`${prefixURL}/dashboard`}
           iconPosition="start"
           label={t('dashboard')}
           icon={<DashboardOutlinedIcon />}
@@ -118,7 +112,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
         <Tab
           className={classes.tab}
           data-testid="daily-tab"
-          href={`${prefixURL}/daily`}
           iconPosition="start"
           label={t('daily')}
           icon={<Today />}
@@ -130,7 +123,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (
         <Tab
           className={classes.tab}
           data-testid="trends-tab"
-          href={`${prefixURL}/trends`}
           iconPosition="start"
           label={t('trends')}
           icon={<TrendingUp />}

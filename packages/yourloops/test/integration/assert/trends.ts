@@ -85,6 +85,39 @@ export const checkRangeSelection = () => {
   expect(rangeSelection.getByLabelText('Median')).toBeChecked()
 }
 
+export const checkDaysSelection = async () => {
+  const weekdaysSelection = within(screen.getByTestId('weekdays-selection'))
+
+  expect(weekdaysSelection.getByText('M')).toBeEnabled()
+  expect(weekdaysSelection.getByText('Tu')).toBeEnabled()
+  expect(weekdaysSelection.getByText('W')).toBeEnabled()
+  expect(weekdaysSelection.getByText('Th')).toBeEnabled()
+  expect(weekdaysSelection.getByText('F')).toBeEnabled()
+
+  const weekdaysCheckbox = weekdaysSelection.getByRole('checkbox')
+  expect(weekdaysCheckbox).toBeChecked()
+
+  const weekendSelection = within(screen.getByTestId('weekend-selection'))
+
+  expect(weekendSelection.getByText('Sa')).toBeEnabled()
+  expect(weekendSelection.getByText('Su')).toBeEnabled()
+
+  const weekendCheckbox = weekendSelection.getByRole('checkbox')
+  expect(weekendCheckbox).toBeChecked()
+
+  await userEvent.click(weekdaysCheckbox)
+  await userEvent.click(weekendCheckbox)
+
+  const dataUnselectedText = screen.getByText('Hang on there! You unselected all of the data!')
+
+  expect(dataUnselectedText).toBeVisible()
+
+  await userEvent.click(weekdaysCheckbox)
+  await userEvent.click(weekendCheckbox)
+
+  expect(dataUnselectedText).not.toBeVisible()
+}
+
 export const checkMedian = async () => {
   const medianCheckBox = screen.getByRole('checkbox', { name: 'Median' })
   expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)

@@ -259,7 +259,6 @@
   "compute-oneday-time-in-range": "**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.",
   "compute-total-insulin": "**How we calculate this:**\n\n**(%)** is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.",
   "custom": "custom",
-  "dashboard-header-period-text": "Data calculated on the last 7 days",
   "day": "day",
   "days": "days",
   "dbl": "DBL",
