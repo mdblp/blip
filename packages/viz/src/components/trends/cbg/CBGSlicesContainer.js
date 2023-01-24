@@ -103,7 +103,6 @@ export default class CBGSlicesContainer extends PureComponent {
           <g id={`cbgBin-${bin.id}`} key={bin.id}>
             {bin.min &&
               <CbgSliceAnimated
-                bgBounds={this.props.bgBounds}
                 datum={bin}
                 displayFlags={this.props.displayFlags}
                 showingCbgDateTraces={this.props.showingCbgDateTraces}

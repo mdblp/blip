@@ -29,17 +29,15 @@ import cx from 'classnames'
 import React, { FunctionComponent } from 'react'
 import { spring, TransitionMotion } from '@serprex/react-motion'
 
-import { springConfig } from '../../../models/constants/animation.constants'
+import { springConfig } from '../../../../models/constants/animation.constants'
 
 import styles from './cbg-slice-animated.css'
-import { CbgSliceTransitionMotionInterpolate } from '../../../models/animation.model'
+import { CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
 import CbgSliceSegment from './cbg-slice-segment'
-import { TrendsDisplayFlags } from '../../../models/trends-display-flags.model'
+import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getCbgRangeSegment, getRangeSegments } from './cbg-slice-animated.util'
-import { BgBounds } from '../../../models/blood-glucose.model'
 
 interface CbgSliceAnimatedProps {
-  bgBounds: BgBounds
   datum: {
     firstQuartile?: number
     id: string

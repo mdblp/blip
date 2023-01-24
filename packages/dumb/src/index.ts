@@ -56,9 +56,9 @@ import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simp
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated/cbg-median-animated'
 import { Table } from './components/settings/table'
-import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment/cbg-slice-segment'
+import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
 import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
-import { CbgSliceAnimated } from './components/trends/cbg/cbg-slice-animated'
+import { CbgSliceAnimated } from './components/trends/cbg/cbg-slice/cbg-slice-animated'
 import { BgPrefs } from './models/blood-glucose.model'
 
 export {

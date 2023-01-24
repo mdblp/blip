@@ -31,9 +31,9 @@ import {
   RANGE_SEGMENT_NINETIETH,
   RANGE_SEGMENT_TENTH,
   RANGE_SEGMENT_THIRD
-} from '../../../models/constants/cbg.constants'
-import { TrendsDisplayFlags } from '../../../models/trends-display-flags.model'
-import { CbgRangeSegment } from '../../../models/cbg-range-segment.model'
+} from '../../../../models/constants/cbg.constants'
+import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
+import { CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
 
 export const getRangeSegments = (displayFlags: TrendsDisplayFlags): CbgRangeSegment[] => {
   const segments = []
