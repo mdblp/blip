@@ -25,15 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { range } from 'lodash'
-import { HOURS_IN_DAY, ONE_HOUR_MS } from '../datetime/datetime.util'
+import { getTrendsIntervalsArray } from './trends.util'
 
-const SECTION_INTERVAL_HOURS = 3
-const SECTION_INTERVAL_MS = ONE_HOUR_MS * SECTION_INTERVAL_HOURS
+describe('TrendsUtil', () => {
+  describe('getTrendsIntervalsArray', () => {
+    it('should return an array of values in milliseconds for every 3 hours in a day', () => {
+      const defaultArray = [
+        10800000,
+        21600000,
+        32400000,
+        43200000,
+        54000000,
+        64800000,
+        75600000
+      ]
 
-export const getTrendsIntervalsArray = (withInitialValue: boolean = false): number[] => {
-  const sectionsCount = HOURS_IN_DAY / SECTION_INTERVAL_HOURS
-  const rangeStart = withInitialValue ? 0 : 1
-
-  return range(rangeStart, sectionsCount).map((value: number) => value * SECTION_INTERVAL_MS)
-}
+      expect(getTrendsIntervalsArray()).toEqual(defaultArray)
+      expect(getTrendsIntervalsArray(true)).toEqual([0, ...defaultArray])
+    })
+  })
+})

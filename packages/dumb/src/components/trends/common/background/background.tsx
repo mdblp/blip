@@ -60,7 +60,7 @@ export const Background: FunctionComponent<BackgroundProps> = (props) => {
   const height = svgDimensions.height - verticalMargins
 
   return (
-    <g>
+    <g data-testid="trends-background">
       <rect
         className={styles.background}
         x={margins.left}

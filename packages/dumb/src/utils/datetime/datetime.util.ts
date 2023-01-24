@@ -33,9 +33,8 @@ import { DurationUnit, TimePrefs } from 'medical-domain'
 const t = i18next.t.bind(i18next)
 
 export const ONE_HOUR_MS = 3600000
+export const HOURS_IN_DAY = 24
 export const TIMEZONE_UTC = 'UTC'
-
-const HOURS_IN_DAY = 24
 
 /**
  * getHourMinuteFormat

@@ -99,3 +99,11 @@ export const checkMedian = async () => {
   })
   expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)
 }
+
+export const checkTrendsLayout = () => {
+  const background = screen.getByTestId('trends-background')
+  expect(background).toBeVisible()
+
+  const xAxisLabels = screen.getByTestId('trends-x-axis-labels')
+  expect(xAxisLabels).toHaveTextContent('12 am3 am6 am9 am12 pm3 pm6 pm9 pm')
+}

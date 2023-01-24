@@ -31,6 +31,7 @@ import {
   checkMedian,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
+  checkTrendsLayout,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
@@ -66,6 +67,8 @@ describe('Trends view for anyone', () => {
       checkRangeSelection()
 
       await checkMedian()
+
+      checkTrendsLayout()
     })
   })
 

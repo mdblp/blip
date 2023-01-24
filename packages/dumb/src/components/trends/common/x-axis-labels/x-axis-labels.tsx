@@ -44,7 +44,7 @@ export const XAxisLabels: FunctionComponent<XAxisLabelsProps> = (props) => {
   const yPosition = topMargin - DEFAULT_OFFSET
 
   return (
-    <g>
+    <g data-testid="trends-x-axis-labels">
       {getTrendsIntervalsArray(true).map((timeInMs: number) => {
         const displayTime = formatClocktimeFromMsPer24(timeInMs, getSimpleHourFormatSpace())
         return (
