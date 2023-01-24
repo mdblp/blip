@@ -19,7 +19,7 @@
   "add-patient": "Añadir paciente",
   "address": "Dirección",
   "admin": "Administrador",
-  "alert-change-password-email-failed": "Imposible de enviar el e-mail de cambio de contraseña. Por favor, inténtelo más tarde.",
+  "alert-change-password-email-failed": "Imposible enviar el e-mail de cambio de contraseña. Por favor, inténtelo más tarde.",
   "alert-change-password-email-success": "E-mail enviado correctamente",
   "alert-hypoglycemic": "Hipoglucemia grave",
   "alert-invitation-caregiver-failed": "Imposible añadir cuidador. Vuelva a intentarlo más tarde.",
