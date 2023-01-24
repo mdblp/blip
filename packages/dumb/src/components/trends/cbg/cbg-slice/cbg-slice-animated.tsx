@@ -35,7 +35,7 @@ import styles from './cbg-slice-animated.css'
 import { CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
 import CbgSliceSegment from './cbg-slice-segment'
 import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
-import { getCbgRangeSegment, getRangeSegments } from './cbg-slice-animated.util'
+import { getRangeSegments } from './cbg-slice-animated.util'
 
 interface CbgSliceAnimatedProps {
   datum: {
