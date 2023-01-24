@@ -29,9 +29,9 @@ import React, { FunctionComponent } from 'react'
 import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import styles from './cbg-median-animated.css'
-import { getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
-import { BgBounds, ClassificationType } from '../../../models/blood-glucose.model'
-import { springConfig } from '../../../models/constants/animation.constants'
+import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
+import { BgBounds, ClassificationType } from '../../../../models/blood-glucose.model'
+import { springConfig } from '../../../../models/constants/animation.constants'
 
 interface TransitionMotionStyle {
   height: number

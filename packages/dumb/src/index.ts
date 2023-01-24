@@ -54,14 +54,16 @@ import {
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
-import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated'
+import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated/cbg-median-animated'
 import { Table } from './components/settings/table'
-import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
+import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment/cbg-slice-segment'
+import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
 import { BgPrefs } from './models/blood-glucose.model'
 
 export {
   AverageDailyDoseStat,
   Background,
+  BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
   CBGMeanStat,
@@ -75,6 +77,7 @@ export {
   FoodTooltip,
   LabeledCheckbox,
   LoopModeStat,
+  NoDataLabel,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,
@@ -85,6 +88,5 @@ export {
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
-  TotalCarbsStat,
-  BgPrefs
+  TotalCarbsStat
 }
