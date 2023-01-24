@@ -268,20 +268,20 @@ describe('DatetimeUtil', () => {
     const errorMessage = 'First argument must be a value in milliseconds per twenty-four hour day'
 
     it('should throw an error if no `milliseconds` provided', () => {
-      const fn = () => { formatClocktimeFromMsPer24(undefined as unknown as number) }
-      expect(fn).toThrow(errorMessage)
+      const undefinedValueCase = () => { formatClocktimeFromMsPer24(undefined as unknown as number) }
+      expect(undefinedValueCase).toThrow(errorMessage)
     })
 
     it('should throw an error if milliseconds < 0 or >= 864e5', () => {
-      const fn0 = () => { formatClocktimeFromMsPer24(-1) }
-      expect(fn0).toThrow(errorMessage)
-      const fn1 = () => { formatClocktimeFromMsPer24(864e5 + 1) }
-      expect(fn1).toThrow(errorMessage)
+      const belowRangeValueCase = () => { formatClocktimeFromMsPer24(-1) }
+      expect(belowRangeValueCase).toThrow(errorMessage)
+      const aboveRangeValueCase = () => { formatClocktimeFromMsPer24(864e5 + 1) }
+      expect(aboveRangeValueCase).toThrow(errorMessage)
     })
 
     it('should throw an error if JavaScript Date provided', () => {
-      const fn = () => { formatClocktimeFromMsPer24(new Date() as unknown as number) }
-      expect(fn).toThrow(errorMessage)
+      const jsDateValueCase = () => { formatClocktimeFromMsPer24(new Date() as unknown as number) }
+      expect(jsDateValueCase).toThrow(errorMessage)
     })
 
     it('should translate durations of 0 and 864e5 to `12:00 am`', () => {

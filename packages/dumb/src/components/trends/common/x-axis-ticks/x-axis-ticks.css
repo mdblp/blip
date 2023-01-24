@@ -25,24 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getTrendsIntervalsArray } from './trends.util'
-
-describe('TrendsUtil', () => {
-  describe('getTrendsIntervalsArray', () => {
-    it('should return an array of values in milliseconds for every 3 hours in a day', () => {
-      const defaultArray = [
-        10800000,
-        21600000,
-        32400000,
-        43200000,
-        54000000,
-        64800000,
-        75600000
-      ]
-
-      expect(getTrendsIntervalsArray()).toEqual(defaultArray)
-      expect(getTrendsIntervalsArray(true)).toEqual([0, ...defaultArray])
-      expect(getTrendsIntervalsArray(true, true)).toEqual([0, ...defaultArray, 86400000])
-    })
-  })
-})
+.tick {
+  stroke: var(--axis-tick);
+}

@@ -25,24 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getTrendsIntervalsArray } from './trends.util'
+import React, { FunctionComponent } from 'react'
+import { XScale } from '../../../../models/x-scale.model'
+import { getTrendsIntervalsArray } from '../../../../utils/trends/trends.util'
+import styles from './x-axis-ticks.css'
 
-describe('TrendsUtil', () => {
-  describe('getTrendsIntervalsArray', () => {
-    it('should return an array of values in milliseconds for every 3 hours in a day', () => {
-      const defaultArray = [
-        10800000,
-        21600000,
-        32400000,
-        43200000,
-        54000000,
-        64800000,
-        75600000
-      ]
+interface XAxisTicksProps {
+  topMargin: number
+  xScale: XScale
+}
 
-      expect(getTrendsIntervalsArray()).toEqual(defaultArray)
-      expect(getTrendsIntervalsArray(true)).toEqual([0, ...defaultArray])
-      expect(getTrendsIntervalsArray(true, true)).toEqual([0, ...defaultArray, 86400000])
-    })
-  })
-})
+const DEFAULT_TICK_LENGTH = 15
+
+export const XAxisTicks: FunctionComponent<XAxisTicksProps> = (props) => {
+  const { topMargin, xScale } = props
+
+  return (
+    <g>
+      {getTrendsIntervalsArray(true, true).map((timeInMs: number) => {
+        const xPosition = xScale(timeInMs)
+        return (
+          <line
+            className={styles.tick}
+            key={timeInMs}
+            x1={xPosition}
+            x2={xPosition}
+            y1={topMargin}
+            y2={topMargin - DEFAULT_TICK_LENGTH}
+          />
+        )
+      })}
+    </g>
+  )
+}

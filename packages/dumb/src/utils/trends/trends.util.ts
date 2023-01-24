@@ -31,9 +31,10 @@ import { HOURS_IN_DAY, ONE_HOUR_MS } from '../datetime/datetime.util'
 const SECTION_INTERVAL_HOURS = 3
 const SECTION_INTERVAL_MS = ONE_HOUR_MS * SECTION_INTERVAL_HOURS
 
-export const getTrendsIntervalsArray = (withInitialValue: boolean = false): number[] => {
+export const getTrendsIntervalsArray = (withInitialValue: boolean = false, withFinalValue: boolean = false): number[] => {
   const sectionsCount = HOURS_IN_DAY / SECTION_INTERVAL_HOURS
   const rangeStart = withInitialValue ? 0 : 1
+  const rangeEnd = withFinalValue ? sectionsCount + 1 : sectionsCount
 
-  return range(rangeStart, sectionsCount).map((value: number) => value * SECTION_INTERVAL_MS)
+  return range(rangeStart, rangeEnd).map((value: number) => value * SECTION_INTERVAL_MS)
 }
