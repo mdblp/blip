@@ -28,41 +28,24 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { makeStyles } from 'tss-react/mui'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import { useTranslation } from 'react-i18next'
 import Stats from './stats'
-
-const useStyles = makeStyles()(() => ({
-  card: {
-    maxWidth: 345
-  },
-  cardHeader: {
-    textTransform: 'uppercase',
-    backgroundColor: 'var(--card-header-background-color)'
-  },
-  cardContent: {
-    overflowY: 'auto'
-  }
-}))
+import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 
 const PatientStatistics = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, loading, chartPrefs, dataUtil, endpoints, parametersConfig } = props;
+  const { bgPrefs, loading, chartPrefs, dataUtil, endpoints, parametersConfig } = props
   const { t } = useTranslation()
-  const { classes } = useStyles()
+
   return (
-    <Card id="patient-statistics" data-testid="patient-statistics" className={classes.card}>
-      <CardHeader
-        id="patient-statistics-header"
-        avatar={<InsertChartOutlinedIcon/>}
-        className={classes.cardHeader}
-        title={t('patient-statistics')}
-      />
-      <CardContent id="patient-statistics-content" className={classes.cardContent}>
+    <GenericDashboardCard
+      avatar={<InsertChartOutlinedIcon />}
+      title={t('patient-statistics')}
+      data-testid="patient-statistics"
+    >
+      <CardContent id="patient-statistics-content">
         <Stats
           bgPrefs={bgPrefs}
           //eslint-disable-next-line
@@ -72,11 +55,11 @@ const PatientStatistics = (props) => {
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
-          hideToolTips={true}
+          hideToolTips
           parametersConfig={parametersConfig}
         />
       </CardContent>
-    </Card>
+    </GenericDashboardCard>
   )
 }
 

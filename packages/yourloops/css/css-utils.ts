@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,66 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../../styles/colors.css";
-
-.bar {
-  display: flex;
-  align-items: center;
-  width: calc(100% - 60px);
-  position: relative;
-}
-
-.bar-value {
-  background-color: white;
-  border-radius: 20px;
-  border-style: solid;
-  border-color: var(--stat-disabled);
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
-}
-
-.disabled-label {
-  color: var(--muted);
-}
-
-.disabled-rectangle {
-  background-color: var(--muted);
-}
-
-.line {
-  height: 5px;
-  background-color: var(--stat-disabled);
-  flex-grow: 1;
-}
-
-.percentage-symbol {
-  color: #727375;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 24px;
-  margin-left: auto;
-  margin-right: 2px;
-}
-
-.rectangle {
-  height: 32px;
-  border-radius: 2px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
-}
-
-.title {
-  margin-left: 4px;
-}
+export const RESPONSIVE_GRID_FULL_WIDTH = 12
+export const RESPONSIVE_GRID_HALF_WIDTH = 6
+export const RESPONSIVE_GRID_FOUR_COLUMNS = 4
+export const RESPONSIVE_GRID_THREE_COLUMNS = 3

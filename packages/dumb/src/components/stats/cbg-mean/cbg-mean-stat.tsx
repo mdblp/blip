@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -57,7 +57,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         <div>
           {title}
           {!hideTooltip &&
-            <StatTooltip annotations={[tooltipValue]}/>
+            <StatTooltip annotations={[tooltipValue]} />
           }
         </div>
         <Box fontSize="12px">
@@ -65,15 +65,14 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         </Box>
       </Box>
       <Box display="flex" marginLeft="6px" marginTop="4px">
-        {Number.isNaN(value) ? (
-          <>
+        {Number.isNaN(value)
+          ? <>
             <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
               --
             </Box>
           </>
-        ) : (
-          <>
+          : <>
             <div className={styles.lines}>
               <div
                 className={`${styles.line} ${styles['line-low']}`}
@@ -95,7 +94,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
               {value}
             </Box>
           </>
-        )}
+        }
       </Box>
     </Box>
   )

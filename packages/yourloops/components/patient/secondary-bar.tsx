@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -80,7 +80,7 @@ const pageBarStyles = makeStyles()((theme: Theme) => {
 function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const { filter, onFilter, onInvitePatient } = props
   const { t } = useTranslation('yourloops')
-  const { classes } = pageBarStyles()
+  const { classes, theme } = pageBarStyles()
   const authHook = useAuth()
 
   const handleOpenModalAddPatient = (): void => {
@@ -89,9 +89,9 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
 
   return (
     <Box className={classes.topBar} data-testid="patients-secondary-bar">
-      <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
-        <AccessTime className="subnav-icon" />
-        <span aria-label={t('secondary-bar-period-text')}>{t('secondary-bar-period-text')}</span>
+      <div className={classes.toolBarLeft}>
+        <AccessTime className="subnav-icon" sx={{ marginRight: theme.spacing(1) }} />
+        <span aria-label={t('dashboard-header-period-text')}>{t('dashboard-header-period-text')}</span>
       </div>
       <Box className={classes.toolBarMiddle}>
         <PatientFilters

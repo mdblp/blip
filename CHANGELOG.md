@@ -47,6 +47,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1976 Fix PDF generation
 - YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
 - YLP-1991 Update patient header design and add currently available patients fields
+- YLP-2004 Refine dashboard look and feel (part one)
 - YLP-2012 Migrate LabeledCheckbox to dumb
 - YLP-2015 Replace loaders by MUI CircularProgress
 - YLP-2016 Migrate BolusTooltip to dumb

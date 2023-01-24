@@ -58,10 +58,12 @@ import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated/c
 import { Table } from './components/settings/table'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment/cbg-slice-segment'
 import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
+import { BgPrefs } from './models/blood-glucose.model'
 
 export {
   AverageDailyDoseStat,
   Background,
+  BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
   CBGMeanStat,
