@@ -27,8 +27,8 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from './background.css'
-import { getTrendsIntervalsArray } from '../../../../utils/trends/trends.util'
 import { XScale } from '../../../../models/x-scale.model'
+import { TRENDS_INTERVALS_ARRAY_MS } from '../../../../utils/trends/trends.util'
 
 interface BackgroundProps {
   margins: {
@@ -68,7 +68,7 @@ export const Background: FunctionComponent<BackgroundProps> = (props) => {
         width={width}
         height={height}
       />
-      {getTrendsIntervalsArray().map((value: number, index: number) => (
+      {TRENDS_INTERVALS_ARRAY_MS.map((value: number, index: number) => (
         <line
           className={styles.line}
           key={`line-${index}`}

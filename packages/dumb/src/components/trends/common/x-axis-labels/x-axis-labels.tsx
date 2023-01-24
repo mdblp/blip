@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import { formatClocktimeFromMsPer24, getSimpleHourFormatSpace } from '../../../../utils/datetime/datetime.util'
-import { getTrendsIntervalsArray } from '../../../../utils/trends/trends.util'
+import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_VALUE_MS } from '../../../../utils/trends/trends.util'
 import styles from '../../../../styles/typography.css'
 import { XScale } from '../../../../models/x-scale.model'
 
@@ -45,7 +45,7 @@ export const XAxisLabels: FunctionComponent<XAxisLabelsProps> = (props) => {
 
   return (
     <g data-testid="trends-x-axis-labels">
-      {getTrendsIntervalsArray(true).map((timeInMs: number) => {
+      {TRENDS_INTERVAL_ARRAY_WITH_INITIAL_VALUE_MS.map((timeInMs: number) => {
         const displayTime = formatClocktimeFromMsPer24(timeInMs, getSimpleHourFormatSpace())
         return (
           <text

@@ -27,7 +27,7 @@
 
 import React, { FunctionComponent } from 'react'
 import { XScale } from '../../../../models/x-scale.model'
-import { getTrendsIntervalsArray } from '../../../../utils/trends/trends.util'
+import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS } from '../../../../utils/trends/trends.util'
 import styles from './x-axis-ticks.css'
 
 interface XAxisTicksProps {
@@ -42,7 +42,7 @@ export const XAxisTicks: FunctionComponent<XAxisTicksProps> = (props) => {
 
   return (
     <g>
-      {getTrendsIntervalsArray(true, true).map((timeInMs: number) => {
+      {TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS.map((timeInMs: number) => {
         const xPosition = xScale(timeInMs)
         return (
           <line

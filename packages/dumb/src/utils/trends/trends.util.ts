@@ -25,16 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { range } from 'lodash'
-import { HOURS_IN_DAY, ONE_HOUR_MS } from '../datetime/datetime.util'
+import { ONE_HOUR_MS } from '../datetime/datetime.util'
 
 const SECTION_INTERVAL_HOURS = 3
 const SECTION_INTERVAL_MS = ONE_HOUR_MS * SECTION_INTERVAL_HOURS
 
-export const getTrendsIntervalsArray = (withInitialValue: boolean = false, withFinalValue: boolean = false): number[] => {
-  const sectionsCount = HOURS_IN_DAY / SECTION_INTERVAL_HOURS
-  const rangeStart = withInitialValue ? 0 : 1
-  const rangeEnd = withFinalValue ? sectionsCount + 1 : sectionsCount
+export const TRENDS_INTERVALS_ARRAY_MS = [
+  SECTION_INTERVAL_MS * 1,
+  SECTION_INTERVAL_MS * 2,
+  SECTION_INTERVAL_MS * 3,
+  SECTION_INTERVAL_MS * 4,
+  SECTION_INTERVAL_MS * 5,
+  SECTION_INTERVAL_MS * 6,
+  SECTION_INTERVAL_MS * 7
+]
 
-  return range(rangeStart, rangeEnd).map((value: number) => value * SECTION_INTERVAL_MS)
-}
+export const TRENDS_INTERVAL_ARRAY_WITH_INITIAL_VALUE_MS = [
+  SECTION_INTERVAL_MS * 0,
+  ...TRENDS_INTERVALS_ARRAY_MS
+]
+
+export const TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS = [
+  ...TRENDS_INTERVAL_ARRAY_WITH_INITIAL_VALUE_MS,
+  SECTION_INTERVAL_MS * 8
+]
