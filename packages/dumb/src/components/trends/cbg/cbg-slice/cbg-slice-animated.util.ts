@@ -50,7 +50,3 @@ export const getRangeSegments = (displayFlags: TrendsDisplayFlags): CbgRangeSegm
   }
   return segments
 }
-
-export const getCbgRangeSegment = (segments: CbgRangeSegment[], key: string): CbgRangeSegment | undefined => {
-  return segments.find(segment => segment.key === key)
-}
