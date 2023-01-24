@@ -25,33 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum RangeSegmentQuantile {
-  ThirdQuartile = 'thirdQuartile',
-  FirstQuartile = 'firstQuartile',
-  TenthQuantile = 'tenthQuantile',
-  NinetiethQuantile = 'ninetiethQuantile',
-  Max = 'max',
-  Min = 'min'
-}
-
-export enum RangeSegmentHeightKeys {
-  Top10Height = 'top10Height',
-  Bottom10Height = 'bottom10Height',
-  Upper15Height = 'upper15Height',
-  Lower15Height = 'lower15Height',
-  InnerQuartilesHeight = 'innerQuartilesHeight'
-}
-
-export enum RangeSegmentKey {
-  Top10 = 'top10',
-  Bottom10 = 'bottom10',
-  Upper15 = 'upper15',
-  Lower15 = 'lower15',
-  InnerQuartiles = 'innerQuartiles'
-}
-
-export enum RangeSegmentClassKey {
-  RangeSegment = 'rangeSegment',
-  OuterSegment = 'outerSegment',
-  InnerQuartilesSegment = 'innerQuartilesSegment'
+export enum DisplayFlag {
+  Cbg100Enabled = 'cbg100Enabled',
+  Cbg80Enabled = 'cbg80Enabled',
+  Cbg50Enabled = 'cbg50Enabled'
 }

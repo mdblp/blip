@@ -25,13 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { RangeSegmentHeightKeys, RangeSegmentQuantile } from './enums/range-segment.enum'
+import {
+  RangeSegmentClassKey,
+  RangeSegmentHeightKeys,
+  RangeSegmentKey,
+  RangeSegmentQuantile
+} from './enums/range-segment.enum'
+import { DisplayFlag } from './enums/display-flag.enum'
 
 export interface CbgRangeSegment {
-  classKey: string
-  displayFlag: string
+  classKey: RangeSegmentClassKey
+  displayFlag: DisplayFlag
   height: RangeSegmentHeightKeys
   heightKeys: RangeSegmentQuantile[]
-  key: string
+  key: RangeSegmentKey
   y: RangeSegmentQuantile
 }

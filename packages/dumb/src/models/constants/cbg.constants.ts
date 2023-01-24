@@ -26,49 +26,55 @@
  */
 
 import { CbgRangeSegment } from '../cbg-range-segment.model'
-import { RangeSegmentHeightKeys, RangeSegmentQuantile } from '../enums/range-segment.enum'
+import {
+  RangeSegmentClassKey,
+  RangeSegmentHeightKeys,
+  RangeSegmentKey,
+  RangeSegmentQuantile
+} from '../enums/range-segment.enum'
+import { DisplayFlag } from '../enums/display-flag.enum'
 
 export const RANGE_SEGMENT_MAX: CbgRangeSegment = {
-  classKey: 'rangeSegment',
-  displayFlag: 'cbg100Enabled',
+  classKey: RangeSegmentClassKey.RangeSegment,
+  displayFlag: DisplayFlag.Cbg100Enabled,
   height: RangeSegmentHeightKeys.Top10Height,
   heightKeys: [RangeSegmentQuantile.NinetiethQuantile, RangeSegmentQuantile.Max],
-  key: 'top10',
+  key: RangeSegmentKey.Top10,
   y: RangeSegmentQuantile.Max
 }
 
 export const RANGE_SEGMENT_TENTH: CbgRangeSegment = {
-  classKey: 'rangeSegment',
-  displayFlag: 'cbg100Enabled',
+  classKey: RangeSegmentClassKey.RangeSegment,
+  displayFlag: DisplayFlag.Cbg100Enabled,
   height: RangeSegmentHeightKeys.Bottom10Height,
   heightKeys: [RangeSegmentQuantile.Min, RangeSegmentQuantile.TenthQuantile],
-  key: 'bottom10',
+  key: RangeSegmentKey.Bottom10,
   y: RangeSegmentQuantile.TenthQuantile
 }
 
 export const RANGE_SEGMENT_NINETIETH: CbgRangeSegment = {
-  classKey: 'outerSegment',
-  displayFlag: 'cbg80Enabled',
+  classKey: RangeSegmentClassKey.OuterSegment,
+  displayFlag: DisplayFlag.Cbg80Enabled,
   height: RangeSegmentHeightKeys.Upper15Height,
   heightKeys: [RangeSegmentQuantile.ThirdQuartile, RangeSegmentQuantile.NinetiethQuantile],
-  key: 'upper15',
+  key: RangeSegmentKey.Upper15,
   y: RangeSegmentQuantile.NinetiethQuantile
 }
 
 export const RANGE_SEGMENT_FIRST: CbgRangeSegment = {
-  classKey: 'outerSegment',
-  displayFlag: 'cbg80Enabled',
+  classKey: RangeSegmentClassKey.OuterSegment,
+  displayFlag: DisplayFlag.Cbg80Enabled,
   height: RangeSegmentHeightKeys.Lower15Height,
   heightKeys: [RangeSegmentQuantile.TenthQuantile, RangeSegmentQuantile.FirstQuartile],
-  key: 'lower15',
+  key: RangeSegmentKey.Lower15,
   y: RangeSegmentQuantile.FirstQuartile
 }
 
 export const RANGE_SEGMENT_THIRD: CbgRangeSegment = {
-  classKey: 'innerQuartilesSegment',
-  displayFlag: 'cbg50Enabled',
+  classKey: RangeSegmentClassKey.InnerQuartilesSegment,
+  displayFlag: DisplayFlag.Cbg50Enabled,
   height: RangeSegmentHeightKeys.InnerQuartilesHeight,
   heightKeys: [RangeSegmentQuantile.FirstQuartile, RangeSegmentQuantile.ThirdQuartile],
-  key: 'innerQuartiles',
+  key: RangeSegmentKey.InnerQuartiles,
   y: RangeSegmentQuantile.ThirdQuartile
 }
