@@ -51,10 +51,6 @@ export const getRangeSegments = (displayFlags: TrendsDisplayFlags): CbgRangeSegm
   return segments
 }
 
-export const getCbgRangeSegment = (segments: CbgRangeSegment[], key: string): CbgRangeSegment => {
-  const segment = segments.find(segment => segment.key === key)
-  if (!segment) {
-    throw Error(`Could not find segment with key ${key}`)
-  }
-  return segment
+export const getCbgRangeSegment = (segments: CbgRangeSegment[], key: string): CbgRangeSegment | undefined => {
+  return segments.find(segment => segment.key === key)
 }

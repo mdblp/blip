@@ -31,6 +31,9 @@ import {
   checkDaysSelection,
   checkMedian,
   checkRangeSelection,
+  checkReadings100,
+  checkReadings50,
+  checkReadings80,
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
@@ -70,6 +73,9 @@ describe('Trends view for anyone', () => {
       await checkDaysSelection()
 
       await checkMedian()
+      await checkReadings100()
+      await checkReadings80()
+      await checkReadings50()
 
       await userEvent.click(screen.getByTestId('button-nav-back'))
       expect(screen.getByText('There is no CGM data for this time period :(')).toBeVisible()

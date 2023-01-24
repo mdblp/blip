@@ -123,7 +123,10 @@ export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props
           <g id={`cbgSlice-${datum.id}`}>
             {interpolatedStyles.map(interpolated => {
               const key = interpolated.key
-              const segment = getCbgRangeSegment(rangeSegments, key)
+              const segment = rangeSegments.find(segment => segment.key === key)
+              if (!segment) {
+                return null
+              }
               const classes = cx({
                 [styles.segment]: true,
                 [styles[segment.classKey]]: !showingCbgDateTraces,

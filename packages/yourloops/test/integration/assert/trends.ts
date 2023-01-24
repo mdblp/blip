@@ -132,3 +132,54 @@ export const checkMedian = async () => {
   })
   expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)
 }
+
+export const checkReadings100 = async () => {
+  const reading100 = screen.getByRole('checkbox', { name: '100% of readings' })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(1)
+
+  await act(async () => {
+    await userEvent.click(reading100)
+  })
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(0)
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(0)
+
+  await act(async () => {
+    await userEvent.click(reading100)
+  })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(1)
+}
+
+export const checkReadings80 = async () => {
+  const reading80 = screen.getByRole('checkbox', { name: '80% of readings' })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(1)
+
+  await act(async () => {
+    await userEvent.click(reading80)
+  })
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(0)
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(0)
+
+  await act(async () => {
+    await userEvent.click(reading80)
+  })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(1)
+}
+
+export const checkReadings50 = async () => {
+  const reading50 = screen.getByRole('checkbox', { name: '50% of readings' })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
+
+  await act(async () => {
+    await userEvent.click(reading50)
+  })
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(0)
+
+  await act(async () => {
+    await userEvent.click(reading50)
+  })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
+}
