@@ -29,11 +29,7 @@ import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
   checkDaysSelection,
-  checkMedian,
   checkRangeSelection,
-  checkReadings100,
-  checkReadings50,
-  checkReadings80,
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
