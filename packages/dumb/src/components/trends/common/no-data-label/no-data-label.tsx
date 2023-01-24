@@ -52,6 +52,7 @@ export const NoDataLabel: FunctionComponent<NoDataLabelProps> = (props) => {
       className={`${styles.mediumContrastText} ${styles.svgMiddleAnchored}`}
       x={position.x}
       y={position.y}
+      data-testid="no-data-label"
     >
       {message}
     </text>
