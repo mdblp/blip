@@ -259,7 +259,6 @@
   "compute-oneday-time-in-range": "**Hoe we dit berekenen:**\n\n**(%)** is het aantal metingen binnen het bereik, gedeeld door alle metingen voor deze tijdsperiode.\n\n**(tijd)** is 24 uur vermenigvuldigd met % in bereik.",
   "compute-total-insulin": "**Hoe we dit berekenen:**\n\n**(%)** is het respectieve totaal van de basale of bolustoediening gedeeld door de totale toegediende insuline voor deze tijdsperiode.",
   "custom": "custom",
-  "dashboard-header-period-text": "Gegevens berekend over de laatste 7 dagen",
   "day": "dag",
   "days": "dagen",
   "dbl": "DBL",
