@@ -77,12 +77,17 @@ export const checkSMBGTrendsStatsWidgetsTooltips = async () => {
   await checkStatTooltip(statsWidgets, 'CV (BGM)', CV_TOOLTIP)
 }
 
-export const checkRangeSelection = () => {
+export const checkRangeSelection = async () => {
   const rangeSelection = within(screen.getByTestId('range-selection'))
   expect(rangeSelection.getByLabelText('100% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('80% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('50% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('Median')).toBeChecked()
+
+  await checkMedian()
+  await checkReadings100()
+  await checkReadings80()
+  await checkReadings50()
 }
 
 export const checkDaysSelection = async () => {

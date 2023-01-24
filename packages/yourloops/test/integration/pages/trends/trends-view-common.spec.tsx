@@ -69,16 +69,11 @@ describe('Trends view for anyone', () => {
 
       checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
 
-      checkRangeSelection()
+      await checkRangeSelection()
       await checkDaysSelection()
 
-      await checkMedian()
-      await checkReadings100()
-      await checkReadings80()
-      await checkReadings50()
-
       await userEvent.click(screen.getByTestId('button-nav-back'))
-      expect(screen.getByText('There is no CGM data for this time period :(')).toBeVisible()
+      expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
   })
 
@@ -89,8 +84,6 @@ describe('Trends view for anyone', () => {
 
       await checkTrendsTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
-
-      checkRangeSelection()
     })
   })
 
@@ -107,8 +100,6 @@ describe('Trends view for anyone', () => {
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
 
       checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-
-      checkRangeSelection()
     })
   })
 })

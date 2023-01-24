@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { RangeSegmentHeightKeys, RangeSegmentQuantile } from './cbg-range-segment.model'
+import { RangeSegmentHeightKeys, RangeSegmentQuantile } from './enums/range-segment.enum'
 
 export interface CbgMedianTransitionMotionStyle {
   height: number

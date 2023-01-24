@@ -26,48 +26,49 @@
  */
 
 import { CbgRangeSegment } from '../cbg-range-segment.model'
+import { RangeSegmentHeightKeys, RangeSegmentQuantile } from '../enums/range-segment.enum'
 
 export const RANGE_SEGMENT_MAX: CbgRangeSegment = {
   classKey: 'rangeSegment',
   displayFlag: 'cbg100Enabled',
-  height: 'top10Height',
-  heightKeys: ['ninetiethQuantile', 'max'],
+  height: RangeSegmentHeightKeys.Top10Height,
+  heightKeys: [RangeSegmentQuantile.NinetiethQuantile, RangeSegmentQuantile.Max],
   key: 'top10',
-  y: 'max'
+  y: RangeSegmentQuantile.Max
 }
 
 export const RANGE_SEGMENT_TENTH: CbgRangeSegment = {
   classKey: 'rangeSegment',
   displayFlag: 'cbg100Enabled',
-  height: 'bottom10Height',
-  heightKeys: ['min', 'tenthQuantile'],
+  height: RangeSegmentHeightKeys.Bottom10Height,
+  heightKeys: [RangeSegmentQuantile.Min, RangeSegmentQuantile.TenthQuantile],
   key: 'bottom10',
-  y: 'tenthQuantile'
+  y: RangeSegmentQuantile.TenthQuantile
 }
 
 export const RANGE_SEGMENT_NINETIETH: CbgRangeSegment = {
   classKey: 'outerSegment',
   displayFlag: 'cbg80Enabled',
-  height: 'upper15Height',
-  heightKeys: ['thirdQuartile', 'ninetiethQuantile'],
+  height: RangeSegmentHeightKeys.Upper15Height,
+  heightKeys: [RangeSegmentQuantile.ThirdQuartile, RangeSegmentQuantile.NinetiethQuantile],
   key: 'upper15',
-  y: 'ninetiethQuantile'
+  y: RangeSegmentQuantile.NinetiethQuantile
 }
 
 export const RANGE_SEGMENT_FIRST: CbgRangeSegment = {
   classKey: 'outerSegment',
   displayFlag: 'cbg80Enabled',
-  height: 'lower15Height',
-  heightKeys: ['tenthQuantile', 'firstQuartile'],
+  height: RangeSegmentHeightKeys.Lower15Height,
+  heightKeys: [RangeSegmentQuantile.TenthQuantile, RangeSegmentQuantile.FirstQuartile],
   key: 'lower15',
-  y: 'firstQuartile'
+  y: RangeSegmentQuantile.FirstQuartile
 }
 
 export const RANGE_SEGMENT_THIRD: CbgRangeSegment = {
   classKey: 'innerQuartilesSegment',
   displayFlag: 'cbg50Enabled',
-  height: 'innerQuartilesHeight',
-  heightKeys: ['firstQuartile', 'thirdQuartile'],
+  height: RangeSegmentHeightKeys.InnerQuartilesHeight,
+  heightKeys: [RangeSegmentQuantile.FirstQuartile, RangeSegmentQuantile.ThirdQuartile],
   key: 'innerQuartiles',
-  y: 'thirdQuartile'
+  y: RangeSegmentQuantile.ThirdQuartile
 }

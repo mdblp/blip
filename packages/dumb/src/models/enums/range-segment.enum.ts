@@ -25,13 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { RangeSegmentHeightKeys, RangeSegmentQuantile } from './enums/range-segment.enum'
+export enum RangeSegmentQuantile {
+  ThirdQuartile = 'thirdQuartile',
+  FirstQuartile = 'firstQuartile',
+  TenthQuantile = 'tenthQuantile',
+  NinetiethQuantile = 'ninetiethQuantile',
+  Max = 'max',
+  Min = 'min'
+}
 
-export interface CbgRangeSegment {
-  classKey: string
-  displayFlag: string
-  height: RangeSegmentHeightKeys
-  heightKeys: RangeSegmentQuantile[]
-  key: string
-  y: RangeSegmentQuantile
+export enum RangeSegmentHeightKeys {
+  Top10Height = 'top10Height',
+  Bottom10Height = 'bottom10Height',
+  Upper15Height = 'upper15Height',
+  Lower15Height = 'lower15Height',
+  InnerQuartilesHeight = 'innerQuartilesHeight'
 }
