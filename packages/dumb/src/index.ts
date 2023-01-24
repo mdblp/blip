@@ -56,6 +56,7 @@ import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-
 import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated'
 import { Table } from './components/settings/table'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice-segment'
+import { CbgSliceAnimated } from './components/trends/cbg/cbg-slice-animated'
 
 export {
   AverageDailyDoseStat,
@@ -64,6 +65,7 @@ export {
   CBGMeanStat,
   CbgMedianAnimated,
   CBGPercentageBarChart,
+  CbgSliceAnimated,
   CbgSliceSegment,
   CBGStandardDeviation,
   CBGStatType,

@@ -32,17 +32,7 @@ import styles from './cbg-median-animated.css'
 import { getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { BgBounds, ClassificationType } from '../../../models/blood-glucose.model'
 import { springConfig } from '../../../models/constants/animation.constants'
-
-interface TransitionMotionStyle {
-  height: number
-  median: number
-  opacity: number
-}
-
-interface TransitionMotionInterpolate {
-  key: string
-  style: TransitionMotionStyle
-}
+import { CbgMedianTransitionMotionInterpolate } from '../../../models/animation.model'
 
 interface CbgMedianAnimatedProps {
   bgBounds: BgBounds
@@ -110,7 +100,7 @@ export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (pro
       defaultStyles={defaultStyles}
       styles={transitionMotionStyles}
     >
-      {(interpolatedStyles: TransitionMotionInterpolate[]) => {
+      {(interpolatedStyles: CbgMedianTransitionMotionInterpolate[]) => {
         if (interpolatedStyles.length === 0) {
           return null
         }
