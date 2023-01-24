@@ -28,6 +28,7 @@
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
+  checkDaysSelection,
   checkMedian,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
@@ -45,6 +46,8 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
+import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -65,10 +68,14 @@ describe('Trends view for anyone', () => {
       checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
 
       checkRangeSelection()
+      await checkDaysSelection()
 
       await checkMedian()
 
       checkTrendsLayout()
+
+      await userEvent.click(screen.getByTestId('button-nav-back'))
+      expect(screen.getByText('There is no CGM data for this time period :(')).toBeVisible()
     })
   })
 

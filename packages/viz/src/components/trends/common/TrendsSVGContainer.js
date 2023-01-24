@@ -34,11 +34,10 @@ import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/
 import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
 import CBGSlicesContainer from '../cbg/CBGSlicesContainer'
 import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
-import NoData from './NoData'
 import TargetRangeLines from './TargetRangeLines'
 import XAxisTicks from './XAxisTicks'
 import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
-import { Background, XAxisLabels } from 'dumb'
+import { Background, NoDataLabel, XAxisLabels } from 'dumb'
 
 const BUMPERS = {
   top: 50,
@@ -121,7 +120,7 @@ export class TrendsSVGContainer extends React.Component {
     this.setState({ xScale, yScale })
   }
 
-  renderNoDataMessage(dataType) {
+  renderNoDataMessage() {
     if (_.isEmpty(this.props.cbgData)) {
       const { activeDays, margins } = this.props
       const { width, height } = this.props.size
@@ -131,10 +130,9 @@ export class TrendsSVGContainer extends React.Component {
       const messagePosition = { x: xPos, y: yPos }
       const unselectedAll = _.every(activeDays, (flag) => (!flag))
       return (
-        <NoData
-          dataType={dataType}
+        <NoDataLabel
           position={messagePosition}
-          unselectedAllData={unselectedAll}
+          isNoDataSelected={unselectedAll}
         />
       )
     }
@@ -224,7 +222,7 @@ export class TrendsSVGContainer extends React.Component {
             xScale={xScale}
             yScale={yScale}
           />
-          {this.renderNoDataMessage('cbg')}
+          {this.renderNoDataMessage()}
         </svg>
       </div>
     )
