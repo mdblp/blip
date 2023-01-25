@@ -34,7 +34,7 @@
     "@fontsource/roboto": "^4.1.0",
     "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.117",
-    "@mui/material": "^5.10.16",
+    "@mui/material": "^5.11.6",
     "@mui/styles": "^5.10.16",
     "axios": "^0.25.0",
     "bows": "^1.7.2",
