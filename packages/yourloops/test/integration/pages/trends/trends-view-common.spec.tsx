@@ -29,7 +29,6 @@ import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
   checkDaysSelection,
-  checkMedian,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsLayout,
@@ -67,10 +66,8 @@ describe('Trends view for anyone', () => {
 
       checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
 
-      checkRangeSelection()
+      await checkRangeSelection()
       await checkDaysSelection()
-
-      await checkMedian()
 
       checkTrendsLayout()
 
@@ -88,8 +85,6 @@ describe('Trends view for anyone', () => {
 
       await checkTrendsTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
-
-      checkRangeSelection()
     })
   })
 
@@ -106,8 +101,6 @@ describe('Trends view for anyone', () => {
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
 
       checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-
-      checkRangeSelection()
     })
   })
 })

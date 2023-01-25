@@ -77,12 +77,17 @@ export const checkSMBGTrendsStatsWidgetsTooltips = async () => {
   await checkStatTooltip(statsWidgets, 'CV (BGM)', CV_TOOLTIP)
 }
 
-export const checkRangeSelection = () => {
+export const checkRangeSelection = async () => {
   const rangeSelection = within(screen.getByTestId('range-selection'))
   expect(rangeSelection.getByLabelText('100% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('80% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('50% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('Median')).toBeChecked()
+
+  await checkMedian()
+  await checkReadings100()
+  await checkReadings80()
+  await checkReadings50()
 }
 
 export const checkDaysSelection = async () => {
@@ -139,4 +144,55 @@ export const checkTrendsLayout = () => {
 
   const xAxisLabels = screen.getByTestId('trends-x-axis-labels')
   expect(xAxisLabels).toHaveTextContent('12 am3 am6 am9 am12 pm3 pm6 pm9 pm')
+}
+
+export const checkReadings100 = async () => {
+  const reading100 = screen.getByRole('checkbox', { name: '100% of readings' })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(1)
+
+  await act(async () => {
+    await userEvent.click(reading100)
+  })
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(0)
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(0)
+
+  await act(async () => {
+    await userEvent.click(reading100)
+  })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(1)
+}
+
+export const checkReadings80 = async () => {
+  const reading80 = screen.getByRole('checkbox', { name: '80% of readings' })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(1)
+
+  await act(async () => {
+    await userEvent.click(reading80)
+  })
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(0)
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(0)
+
+  await act(async () => {
+    await userEvent.click(reading80)
+  })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(1)
+}
+
+export const checkReadings50 = async () => {
+  const reading50 = screen.getByRole('checkbox', { name: '50% of readings' })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
+
+  await act(async () => {
+    await userEvent.click(reading50)
+  })
+  expect(screen.queryAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(0)
+
+  await act(async () => {
+    await userEvent.click(reading50)
+  })
+  expect(screen.getAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
 }

@@ -30,18 +30,16 @@ import { bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { CbgPositionData } from '../../../../models/cbg-position-data.model'
 import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from 'tidepool-viz'
+import { CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
+import { CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
 
 interface CbgSliceSegmentProps {
   classes: string
   datum: { id: string }
   id: string
   positionData: CbgPositionData
-  segment: {
-    height: string
-    heightKeys: string[]
-    y: string
-  }
-  style: { [key: string]: string }
+  segment: CbgRangeSegment
+  style: CbgSliceTransitionMotionStyle
   width: number
   x: number
   // Properties added via Redux

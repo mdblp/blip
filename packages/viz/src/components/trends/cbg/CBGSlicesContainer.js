@@ -21,12 +21,8 @@ import React, { PureComponent } from 'react'
 import { range } from 'd3-array'
 
 import { THIRTY_MINS, TWENTY_FOUR_HRS } from '../../../utils/datetime'
-import {
-  findBinForTimeOfDay, findOutOfRangeAnnotations, calculateCbgStatsForBin
-} from '../../../utils/trends/data'
-
-import CBGSliceAnimated from './CBGSliceAnimated'
-import { CbgMedianAnimated } from 'dumb'
+import { calculateCbgStatsForBin, findBinForTimeOfDay, findOutOfRangeAnnotations } from '../../../utils/trends/data'
+import { CbgMedianAnimated, CbgSliceAnimated } from 'dumb'
 
 export default class CBGSlicesContainer extends PureComponent {
   static propTypes = {
@@ -105,17 +101,18 @@ export default class CBGSlicesContainer extends PureComponent {
       <g id="cbgSlices">
         {_.map(mungedData, (bin) => (
           <g id={`cbgBin-${bin.id}`} key={bin.id}>
-            <CBGSliceAnimated
-              bgBounds={this.props.bgBounds}
-              datum={bin}
-              displayFlags={this.props.displayFlags}
-              showingCbgDateTraces={this.props.showingCbgDateTraces}
-              tooltipLeftThreshold={this.props.tooltipLeftThreshold}
-              topMargin={this.props.topMargin}
-              xScale={xScale}
-              yScale={yScale}
-              sliceWidth={sliceWidth}
-            />
+            {bin.min &&
+              <CbgSliceAnimated
+                datum={bin}
+                displayFlags={this.props.displayFlags}
+                showingCbgDateTraces={this.props.showingCbgDateTraces}
+                sliceWidth={sliceWidth}
+                tooltipLeftThreshold={this.props.tooltipLeftThreshold}
+                topMargin={this.props.topMargin}
+                xScale={xScale}
+                yScale={yScale}
+              />
+            }
             {this.props.displayFlags.cbgMedianEnabled && bin.median &&
               <CbgMedianAnimated
                 bgBounds={this.props.bgBounds}
