@@ -31,7 +31,7 @@ import moment from 'moment-timezone'
 import styles from './cbg-date-trace-label.css'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
-import { FocusedDateTrace } from '../../../../models/focuse-date-trace.model'
+import { FocusedDateTrace } from '../../../../models/focused-date-trace.model'
 
 interface CbgDateTraceLabelProps {
   focusedDateTrace: FocusedDateTrace
