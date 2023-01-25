@@ -32,6 +32,7 @@ import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
+import { CbgDateTraceLabel } from 'dumb/dist/src/components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -664,7 +665,7 @@ class Trends extends React.Component {
     const { patient, trendsState } = this.props
     const focusedCbgDateTrace = _.get(trendsState, `${patient.userid}.focusedCbgDateTrace`)
     if (focusedCbgDateTrace) {
-      return <CBGDateTraceLabel focusedDateTrace={focusedCbgDateTrace} />
+      return <CbgDateTraceLabel focusedDateTrace={focusedCbgDateTrace} />
     }
     return null
   }

@@ -101,6 +101,7 @@ export class CBGDateTraceAnimated extends React.PureComponent {
             cx={xScale(d.msPer24)}
             cy={yScale(d.value)}
             id={`cbgCircle-${d.id}`}
+            data-testid="trends-cbg-circle"
             key={d.id}
             onClick={() => this.handleClick(d)}
             onMouseOver={() => {

@@ -62,9 +62,9 @@ describe('Trends view for anyone', () => {
       await checkTrendsTidelineContainerTooltips()
       await checkTrendsStatsWidgetsTooltips()
 
-      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL179')
+      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
 
-      checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
+      checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
 
       await checkRangeSelection()
       await checkDaysSelection()

@@ -31,7 +31,7 @@ const CBGDateTraceLabel = (props) => {
   const { focusedDateTrace: { data: { localDate: date }, position } } = props
   const formattedDate = moment.utc(date).format(i18next.t('dddd, MMMM D'))
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid="tim">
       <Tooltip
         title={<span className={styles.dateLabel}>{formattedDate}</span>}
         borderWidth={0}
