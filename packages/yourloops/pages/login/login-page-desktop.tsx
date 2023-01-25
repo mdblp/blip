@@ -61,7 +61,8 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     position: 'absolute',
     right: 0,
     bottom: -1,
-    zIndex: -1
+    zIndex: -1,
+    height: '100%'
   },
   button: {
     marginRight: theme.spacing(2),
@@ -108,10 +109,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     }
   },
   laptopImage: {
-    width: '720px',
-    [theme.breakpoints.down('lg')]: {
-      width: '550px'
-    }
+    width: '75%'
   }
 }))
 
