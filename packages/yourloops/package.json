@@ -39,7 +39,7 @@
     "axios": "^0.25.0",
     "bows": "^1.7.2",
     "clsx": "^1.1.1",
-    "core-js": "^3.9.1",
+    "core-js": "^3.27.2",
     "dayjs": "^1.10.7",
     "emoji-picker-react": "^3.5.1",
     "html-react-parser": "^3.0.4",
