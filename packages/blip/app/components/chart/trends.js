@@ -32,7 +32,7 @@ import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
-import { CbgDateTraceLabel } from 'dumb/dist/src/components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
+import { CbgDateTraceLabel } from 'dumb'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -43,7 +43,6 @@ import { CbgDateTraceLabel } from 'dumb/dist/src/components/trends/cbg/cbg-date-
  */
 
 const t = i18next.t.bind(i18next)
-const CBGDateTraceLabel = vizComponents.CBGDateTraceLabel
 const FocusedRangeLabels = vizComponents.FocusedRangeLabels
 
 const TrendsContainer = vizContainers.TrendsContainer
