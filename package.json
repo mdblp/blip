@@ -132,7 +132,7 @@
     "mocha": "^10.2.0",
     "morgan": "^1.10.0",
     "object-invariant-test-helper": "^0.1.1",
-    "postcss": "^8.3.9",
+    "postcss": "^8.4.21",
     "postcss-calc": "^8.0.0",
     "postcss-custom-properties": "^12.0.0",
     "postcss-loader": "^6.1.1",
