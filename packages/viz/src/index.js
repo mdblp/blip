@@ -17,7 +17,6 @@
 
 import './styles/colors.css'
 
-import CBGDateTraceLabel from './components/trends/cbg/CBGDateTraceLabel'
 import FocusedRangeLabels from './components/trends/common/FocusedRangeLabels'
 import RangeSelect from './components/trends/cbg/RangeSelect'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
@@ -48,7 +47,6 @@ import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './u
 import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from './redux/actions/index'
 
 const components = {
-  CBGDateTraceLabel,
   FocusedRangeLabels,
   RangeSelect,
   WarmUpTooltip

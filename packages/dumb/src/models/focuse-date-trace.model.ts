@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import moment from 'moment-timezone'
-
-import styles from './cbg-date-trace-label.css'
-import Tooltip from '../../../tooltips/common/tooltip/tooltip'
-import { useTranslation } from 'react-i18next'
-import { FocuseDateTrace } from '../../../../models/focuse-date-trace.model'
-
-interface CbgDateTraceLabelProps {
-  focusedDateTrace: FocuseDateTrace
-}
-
-export const CbgDateTraceLabel: FunctionComponent<CbgDateTraceLabelProps> = (props) => {
-  const { focusedDateTrace } = props
-
-  const { t } = useTranslation()
-
-  const formattedDate = moment.utc(focusedDateTrace.data.localDate).format(t('dddd, MMMM D'))
-  const tooltipPosition = { left: focusedDateTrace.position.left, top: 2.25 * focusedDateTrace.position.yPositions.topMargin }
-
-  return (
-    <div className={styles.container} data-testid="cbg-date-trace-tooltip">
-      <Tooltip
-        title={<span className={styles.dateLabel}>{formattedDate}</span>}
-        borderWidth={0}
-        position={tooltipPosition}
-        side="bottom"
-        tail={false}
-      />
-    </div>
-  )
+export interface FocuseDateTrace {
+  data: {
+    localDate: string
+  }
+  position: {
+    left: number
+    yPositions: {
+      top: number
+      topMargin: number
+    }
+  }
 }
