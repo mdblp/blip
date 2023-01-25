@@ -13,7 +13,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
- .patient-data {
+.patient-data {
   margin-bottom: @spacing-large;
   position: relative;
 }
@@ -41,9 +41,9 @@
   font-size: 16px;
   padding: 0;
   margin-bottom: @spacing-medium;
-  box-shadow: 0px 1px 2px #00000029;
-  -moz-box-shadow: 0px 1px 2px #00000029;
-  -webkit-box-shadow: 0px 1px 2px #00000029;
+  box-shadow: 0 1px 2px #00000029;
+  -moz-box-shadow: 0 1px 2px #00000029;
+  -webkit-box-shadow: 0 1px 2px #00000029;
 }
 
 .patient-data-subnav {
@@ -104,7 +104,7 @@
 .patient-data-footer-left,
 .patient-data-subnav-left,
 .patient-data-subnav-right {
- a.patient-data-subnav-active, button.patient-data-subnav-active {
+  a.patient-data-subnav-active, button.patient-data-subnav-active {
     color: var(--activeValue, @black-color) !important;
   }
 }
@@ -123,11 +123,13 @@ a.js-home {
   max-width: 15rem;
   align-self: center;
 }
+
 .patient-data-subnav svg.calendar-nav-icon {
   font-size: 1rem;
   margin-bottom: 2px; /* For better icon alignment with the text */
   margin-right: 0.2rem;
 }
+
 /* Alter MUI button apparence to be closer to other second toolbar's elements */
 .patient-data-subnav button.mui-nav-button {
   padding: 0;
@@ -140,6 +142,7 @@ a.js-home {
     color: @gray;
   }
 }
+
 .patient-data-subnav button.patient-data-subnav-button {
   border-style: none;
   border-width: 0;
@@ -164,10 +167,12 @@ a.js-home {
     color: var(--blip-color-primary-light);
     text-decoration: none;
   }
+
   &:active, &:disabled {
     color: @gray;
     cursor: default;
   }
+
   svg {
     margin-right: 5px;
   }
@@ -276,9 +281,11 @@ a.js-home {
     display: none;
   }
 }
+
 #daily-chart-title-date {
   width: 10rem;
 }
+
 #trends-chart-title-dates {
   width: 14rem;
 }
@@ -364,8 +371,7 @@ a.js-home {
 .patient-data-footer a {
   color: var(--blip-color-primary-light);
   display: inline-block;
-  padding: @patient-data-footer-vertical-padding
-    @patient-data-footer-horizontal-padding;
+  padding: @patient-data-footer-vertical-padding @patient-data-footer-horizontal-padding;
 
   text-decoration: none;
 
@@ -433,7 +439,7 @@ a.js-home {
   align-items: center;
   padding-left: @spacing-small;
 
-  .subnav-left-container{
+  .subnav-left-container {
     display: flex;
     align-items: center;
     width: 750px;
@@ -457,8 +463,7 @@ a.js-home {
     color: @grey-card;
     background-color: transparent;
 
-    padding: @patient-data-subnav-vertical-padding
-      @patient-data-subnav-horizontal-padding;
+    padding: @patient-data-subnav-vertical-padding @patient-data-subnav-horizontal-padding;
   }
 
   .patient-data-subnav > div:last-child {
@@ -467,8 +472,13 @@ a.js-home {
 
   .patient-data-footer-outer {
     display: none;
+
     a {
       display: none;
     }
   }
+}
+
+#tidelineMain {
+  position: relative;
 }
