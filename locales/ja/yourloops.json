@@ -416,7 +416,7 @@
   "today": "今日",
   "tooltip-release-notes": "リリースノート",
   "training": "トレーニング",
-  "training-body": "New <trainingLink>{{training}}</trainingLink> available, please read what's new before continuing on yourloops. You can also read it later, by clicking in the {{training}} footer link.",
+  "training-body": "New <trainingLink>{{training}}</trainingLink> available, please read what's new before continuing on YourLoops. You can also read it later, by clicking in the {{training}} footer link.",
   "training-checkbox": "トレーニングチェックボックス",
   "training-subject": "トレーニング項目",
   "trends": "Trends",
