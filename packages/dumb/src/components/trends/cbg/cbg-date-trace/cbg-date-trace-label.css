@@ -27,7 +27,7 @@
 
 .container {
   composes: absolute smallHorizontalPadding from '../../../../styles/layout.css';
-  top: 0px;
+  top: 0;
   z-index: 1;
 }
 
