@@ -128,7 +128,7 @@
     "karma-webpack": "^5.0.0",
     "less": "^4.1.2",
     "less-loader": "^10.0.1",
-    "mini-css-extract-plugin": "^2.4.2",
+    "mini-css-extract-plugin": "^2.7.2",
     "mocha": "^10.2.0",
     "morgan": "^1.10.0",
     "object-invariant-test-helper": "^0.1.1",
