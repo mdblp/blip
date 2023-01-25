@@ -91,7 +91,7 @@
     "@types/sinon": "^10.0.0",
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
-    "@typescript-eslint/parser": "^5.29.0",
+    "@typescript-eslint/parser": "^5.49.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "autoprefixer": "^10.3.7",
     "babel-jest": "^28.1.3",
