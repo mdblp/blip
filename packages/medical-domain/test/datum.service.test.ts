@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -172,15 +172,15 @@ describe('DatumService', () => {
   })
   it('should deduplicate based on id', () => {
     const testData: Datum[] = [
-      { id: '1', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as unknown as ReservoirChange,
-      { id: '1', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '2' } as unknown as ReservoirChange,
-      { id: '2', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as unknown as ReservoirChange
+      { id: '1', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as ReservoirChange,
+      { id: '1', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '2' } as ReservoirChange,
+      { id: '2', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as ReservoirChange
     ]
     const dedup = DatumService.deduplicate(testData, defaultMedicalDataOptions)
     expect(dedup.length).toEqual(2)
     expect(dedup).toEqual([
-      { id: '1', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as unknown as ReservoirChange,
-      { id: '2', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as unknown as ReservoirChange
+      { id: '1', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as ReservoirChange,
+      { id: '2', type: 'deviceEvent', source: '', subType: 'reservoirChange', uploadId: '1' } as ReservoirChange
     ])
   })
 })

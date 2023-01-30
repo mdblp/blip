@@ -173,7 +173,7 @@ const testEndPoints = (medicalData: MedicalDataService) => {
   const outOfRangeData = allData.filter(
     (dat) => {
       const epoch = 'epochEnd' in dat ? dat.epochEnd : dat.epoch
-      return epoch < rangeStart.valueOf() ?? epoch > rangeEnd.valueOf()
+      return epoch < rangeStart.valueOf() || epoch > rangeEnd.valueOf()
     }
   )
   expect(outOfRangeData.length).toBe(0)
