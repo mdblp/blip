@@ -277,10 +277,10 @@ describe('DataUtil', () => {
 
   const bgPrefs = {
     bgClasses: {
-      'very-low': { boundary: 54 },
-      'low': { boundary: 70 },
-      'target': { boundary: 180 },
-      'high': { boundary: 250 }
+      'very-low': 54,
+      'low': 70,
+      'target': 180,
+      'high': 250
     },
     bgUnits: MGDL_UNITS
   }
@@ -409,10 +409,10 @@ describe('DataUtil', () => {
 
       dataUtil.bgPrefs = {
         bgClasses: {
-          'very-low': { boundary: 54 },
-          'low': { boundary: 70 },
-          'target': { boundary: 180 },
-          'high': { boundary: 250 }
+          'very-low': 54,
+          'low': 70,
+          'target': 180,
+          'high': 250
         },
         bgUnits: MMOLL_UNITS
       }
@@ -430,10 +430,10 @@ describe('DataUtil', () => {
 
       dataUtil.bgPrefs = {
         bgClasses: {
-          'very-low': { boundary: 50 },
-          'low': { boundary: 60 },
-          'target': { boundary: 70 },
-          'high': { boundary: 80 }
+          'very-low': 50,
+          'low': 60,
+          'target': 70,
+          'high': 80
         },
         bgUnits: MGDL_UNITS
       }

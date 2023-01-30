@@ -158,11 +158,11 @@ class MedicalDataService {
     const { bgUnits } = opts
     if (bgUnits !== defaultMedicalDataOptions.bgUnits) {
       opts.bgClasses = {
-        'very-low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
-        low: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
-        target: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
-        high: { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh },
-        'very-high': { boundary: BG_CLAMP_THRESHOLD[bgUnits] }
+        'very-low': DEFAULT_BG_BOUNDS[bgUnits].veryLow,
+        low: DEFAULT_BG_BOUNDS[bgUnits].targetLower,
+        target: DEFAULT_BG_BOUNDS[bgUnits].targetUpper,
+        high: DEFAULT_BG_BOUNDS[bgUnits].veryHigh,
+        'very-high': BG_CLAMP_THRESHOLD[bgUnits]
       }
     }
 
@@ -174,10 +174,10 @@ class MedicalDataService {
     // Thus, we need to allow for our thresholds accordingly.
     if (bgUnits === MGDL_UNITS) {
       const roundingAllowance = 0.0001
-      opts.bgClasses['very-low'].boundary -= roundingAllowance
-      opts.bgClasses.low.boundary -= roundingAllowance
-      opts.bgClasses.target.boundary += roundingAllowance
-      opts.bgClasses.high.boundary += roundingAllowance
+      opts.bgClasses['very-low'] -= roundingAllowance
+      opts.bgClasses.low -= roundingAllowance
+      opts.bgClasses.target += roundingAllowance
+      opts.bgClasses.high += roundingAllowance
     }
 
     this._datumOpts = opts

@@ -204,10 +204,10 @@ class Stats extends React.Component {
   renderStats(stats, hideToolTips) {
     const { bgPrefs } = this.props
     const bgClasses = {
-      high: bgPrefs.bgClasses.high.boundary,
-      low: bgPrefs.bgClasses.low.boundary,
-      target: bgPrefs.bgClasses.target.boundary,
-      veryLow: bgPrefs.bgClasses['very-low'].boundary
+      high: bgPrefs.bgClasses.high,
+      low: bgPrefs.bgClasses.low,
+      target: bgPrefs.bgClasses.target,
+      veryLow: bgPrefs.bgClasses['very-low']
     }
     return stats.map(stat => {
       return (

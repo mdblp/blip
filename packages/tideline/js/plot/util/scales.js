@@ -37,7 +37,7 @@ import format from '../../data/util/format'
  */
 function getTargetBoundary(tidelineData, bgUnits = MGDL_UNITS) {
   const defaultTarget = DEFAULT_BG_BOUNDS[bgUnits].targetUpper
-  return _.get(tidelineData, 'opts.bgClasses.target.boundary', defaultTarget)
+  return _.get(tidelineData, 'opts.bgClasses.target', defaultTarget)
 }
 
 /**

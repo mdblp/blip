@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,11 +47,11 @@ interface MedicalDataOptions {
 }
 
 interface BgClasses {
-  'very-low': {boundary: number}
-  'low': {boundary: number}
-  'target': {boundary: number}
-  'high': {boundary: number}
-  'very-high': {boundary: number}
+  'very-low': number
+  'low': number
+  'target': number
+  'high': number
+  'very-high': number
 }
 
 interface TimePrefs {
@@ -88,11 +88,11 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
   dateRange: { start: 0, end: 0 },
   defaultPumpManufacturer: 'default',
   bgClasses: {
-    'very-low': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow },
-    low: { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower },
-    target: { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper },
-    high: { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh },
-    'very-high': { boundary: BG_CLAMP_THRESHOLD[MGDL_UNITS] }
+    'very-low': DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+    low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh,
+    'very-high': BG_CLAMP_THRESHOLD[MGDL_UNITS]
   },
   fillOpts: {
     classes: {

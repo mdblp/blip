@@ -21,24 +21,24 @@ import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from './constants'
 function categorizer(bgClasses = {}, bgUnits = MGDL_UNITS) {
   var classes = _.cloneDeep(bgClasses)
   var defaults = {
-    'very-low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
-    'low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
-    'target': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
-    'high': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh }
+    'very-low': DEFAULT_BG_BOUNDS[bgUnits].veryLow,
+    'low': DEFAULT_BG_BOUNDS[bgUnits].targetLower,
+    'target': DEFAULT_BG_BOUNDS[bgUnits].targetUpper,
+    'high': DEFAULT_BG_BOUNDS[bgUnits].veryHigh
   }
 
   _.defaults(classes, defaults)
 
   return function (d) {
-    if (d.value < classes['very-low'].boundary) {
+    if (d.value < classes['very-low']) {
       return 'verylow'
-    } else if (d.value >= classes['very-low'].boundary && d.value < classes.low.boundary) {
+    } else if (d.value >= classes['very-low'] && d.value < classes.low) {
       return 'low'
-    } else if (d.value >= classes.low.boundary && d.value <= classes.target.boundary) {
+    } else if (d.value >= classes.low && d.value <= classes.target) {
       return 'target'
-    } else if (d.value > classes.target.boundary && d.value <= classes.high.boundary) {
+    } else if (d.value > classes.target && d.value <= classes.high) {
       return 'high'
-    } else if (d.value > classes.high.boundary) {
+    } else if (d.value > classes.high) {
       return 'veryhigh'
     }
   }
