@@ -67,7 +67,7 @@ const CbgSliceContainer: FunctionComponent<CbgSliceContainerProps> = (props) => 
   return (
     <>
       {cbgs.map(cbg => (
-        <g key={cbg.id}>
+        <g key={cbg.id} data-testid="cbg-slice-segments">
           <CbgSliceAnimated
             datum={cbg}
             displayFlags={displayFlags}
