@@ -28,7 +28,7 @@
 import React, { FunctionComponent } from 'react'
 import { XScale } from '../../../../models/x-scale.model'
 import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS } from '../../../../utils/trends/trends.util'
-import styles from './x-axis-ticks.css'
+import styles from '../../../../styles/trends-common.css'
 
 interface XAxisTicksProps {
   topMargin: number

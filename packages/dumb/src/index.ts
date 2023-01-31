@@ -62,6 +62,7 @@ import { CbgSliceAnimated } from './components/trends/cbg/cbg-slice/cbg-slice-an
 import { BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
+import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
 
 export {
   AverageDailyDoseStat,
@@ -94,5 +95,6 @@ export {
   TotalInsulinStat,
   TotalCarbsStat,
   XAxisLabels,
-  XAxisTicks
+  XAxisTicks,
+  YAxisLabelsAndTicks
 }
