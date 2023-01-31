@@ -60,6 +60,7 @@ import { NoDataLabel } from './components/trends/common/no-data-label/no-data-la
 import { BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
+import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CbgSlicesContainerMemoized as CbgSlicesContainer } from './components/trends/cbg/cbg-slice/cbg-slices-container'
 
 export {
@@ -68,6 +69,7 @@ export {
   BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
+  CbgDateTraceLabel,
   CBGMeanStat,
   CBGPercentageBarChart,
   CbgSlicesContainer,

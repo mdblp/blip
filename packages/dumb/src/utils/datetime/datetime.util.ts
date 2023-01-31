@@ -186,6 +186,10 @@ export const formatLocalizedFromUTC = (utc: string | number | Date | moment.Mome
   return moment.utc(utc).tz(timezone).format(format)
 }
 
+export const formatDateToUtc = (date: string, format: string): string => {
+  return moment.utc(date).format(format)
+}
+
 export const convertValueToMinutes = (durationValue: number, durationUnit: DurationUnit): number => {
   switch (durationUnit) {
     case DurationUnit.Seconds:
