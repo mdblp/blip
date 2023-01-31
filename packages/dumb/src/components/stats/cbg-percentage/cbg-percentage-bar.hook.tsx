@@ -65,7 +65,6 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
       case CBGStatType.ReadingsInRange:
         return (Math.round(value * 10) / 10).toString()
       default:
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw Error(`Unknown stat type ${type}`)
     }
   }, [type, value])
