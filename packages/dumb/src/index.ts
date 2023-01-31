@@ -49,6 +49,7 @@ import Tooltip from './components/tooltips/common/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
+import { HistoryParameterTable } from './components/settings/history/history-table'
 import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
@@ -77,6 +78,7 @@ export {
   CgmTable,
   ConfidentialTooltip,
   FoodTooltip,
+  HistoryParameterTable,
   LabeledCheckbox,
   LoopModeStat,
   NoDataLabel,

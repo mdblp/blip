@@ -61,6 +61,16 @@ export const getSimpleHourFormatSpace = (): string => {
 }
 
 /**
+ * Moment format for:
+ * - English: 'MMM D, YYYY h:mm a'
+ * - French: 'D MMM YYYY, H:mm'
+ * @returns {string} Format according to translation
+ */
+export const getLongDayHourFormat = (): string => {
+  return t('MMM D, YYYY h:mm a')
+}
+
+/**
  * addDuration
  * @param {String} startTime - an ISO date string
  * @param {Number} duration - milliseconds to add to date
