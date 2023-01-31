@@ -289,6 +289,7 @@ class PatientDataPage extends React.Component {
         <PatientNavBar
           currentPatient={this.props.patient}
           chartType="no-data"
+          onSwitchPatient={this.handleSwitchPatient}
         />
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
