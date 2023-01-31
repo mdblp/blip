@@ -425,7 +425,7 @@
   "until": "Hasta",
   "upload-prescription": "Cargar prescripción",
   "user-name": "{{firstName}} {{lastName}}",
-  "verify-email-details": "Para empezar a usar Yourloops, necesita confirmar su dirección de correo electrónico haciendo clic en el enlace que acaba de recibir.",
+  "verify-email-details": "Para empezar a usar YourLoops, necesita confirmar su dirección de correo electrónico haciendo clic en el enlace que acaba de recibir.",
   "verify-email-title": "Verifique su dirección de correo electrónico",
   "very-low-bg-input": "Entrada muy baja de glucosa en la sangre",
   "weekly-report-pdf": "Informe_semanal_{{pdfName}}",
