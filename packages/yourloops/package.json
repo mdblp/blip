@@ -52,6 +52,6 @@
     "react-i18next": "^11.7.2",
     "react-router-dom": "^5.2.0",
     "tss-react": "^4.5.2",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   }
 }
