@@ -135,7 +135,7 @@
     "postcss": "^8.4.21",
     "postcss-calc": "^8.0.0",
     "postcss-custom-properties": "^12.1.11",
-    "postcss-loader": "^6.1.1",
+    "postcss-loader": "^7.0.2",
     "redux-mock-store": "^1.5.4",
     "sinon": "^11.1.2",
     "source-map-loader": "^3.0.0",
