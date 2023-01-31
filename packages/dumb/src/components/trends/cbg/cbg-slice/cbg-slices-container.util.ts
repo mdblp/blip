@@ -26,7 +26,7 @@
  */
 
 import _ from 'lodash'
-import { CbgSliceContainerDataModel } from '../../../../models/cbg-slice-container-data.model'
+import { CbgSliceContainerData } from '../../../../models/cbg-slice-container.data'
 import { TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 import { THIRTY_MINS, TWENTY_FOUR_HRS } from '../../../../utils/datetime/datetime.util'
 
@@ -60,7 +60,7 @@ const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): T
   }
 }
 
-export const formatCbgs = (cbgData: CbgSliceContainerDataModel[]): TrendsCalculatedCbgStats[] => {
+export const formatCbgs = (cbgData: CbgSliceContainerData[]): TrendsCalculatedCbgStats[] => {
   const cbgDataSorted = _.groupBy(cbgData, (cbgSliceContainerData) => {
     return computeMsThresholdForTimeOfDay(cbgSliceContainerData.msPer24)
   })
