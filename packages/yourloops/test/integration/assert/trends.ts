@@ -105,6 +105,8 @@ export const checkRangeSelection = async () => {
   expect(rangeSelection.getByLabelText('50% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('Median')).toBeChecked()
 
+  expect(screen.getAllByTestId('cbg-slice-segments')).toHaveLength(1)
+
   await checkMedian()
   await checkReadings100()
   await checkReadings80()
