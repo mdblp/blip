@@ -26,13 +26,13 @@
  */
 
 import _ from 'lodash'
-import { CbgSliceContainerData } from '../../../../models/cbg-slice-container-data'
+import { CbgSliceContainerDataModel } from '../../../../models/cbg-slice-container-data.model'
 import { TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 import { THIRTY_MINS, TWENTY_FOUR_HRS } from '../../../../utils/datetime/datetime.util'
 
 export const computeMsThresholdForTimeOfDay = (numberOfMs: number): number => {
   if (numberOfMs < 0 || numberOfMs >= TWENTY_FOUR_HRS) {
-    throw new Error('numberOfMs < 0 or >= 86400000 is invalid!')
+    throw new Error('numberOfMs < 0 or >= 86400000 is invalid')
   }
   return Math.floor(numberOfMs / THIRTY_MINS) * THIRTY_MINS + (THIRTY_MINS / 2)
 }
@@ -60,7 +60,7 @@ const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): T
   }
 }
 
-export const formatCbgs = (cbgData: CbgSliceContainerData[]): TrendsCalculatedCbgStats[] => {
+export const formatCbgs = (cbgData: CbgSliceContainerDataModel[]): TrendsCalculatedCbgStats[] => {
   const cbgDataSorted = _.groupBy(cbgData, (cbgSliceContainerData) => {
     return computeMsThresholdForTimeOfDay(cbgSliceContainerData.msPer24)
   })
