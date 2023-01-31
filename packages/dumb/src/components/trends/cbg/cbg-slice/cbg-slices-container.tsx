@@ -35,7 +35,7 @@ import { CbgSliceAnimated } from './cbg-slice-animated'
 import { CbgMedianAnimated } from '../cbg-median-animated/cbg-median-animated'
 import { formatCbgs } from './cbg-slices-container.util'
 
-interface CbgSliceContainerProps {
+interface CbgSlicesContainerProps {
   bgBounds: BgBounds
   sliceWidth: number
   data: CbgSliceContainerData[]
@@ -47,7 +47,7 @@ interface CbgSliceContainerProps {
   yScale: Function
 }
 
-const CbgSliceContainer: FunctionComponent<CbgSliceContainerProps> = (props) => {
+const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) => {
   const {
     bgBounds,
     data,
@@ -93,4 +93,4 @@ const CbgSliceContainer: FunctionComponent<CbgSliceContainerProps> = (props) => 
   )
 }
 
-export const CbgSliceContainerMemoized = memo(CbgSliceContainer)
+export const CbgSlicesContainerMemoized = memo(CbgSlicesContainer)

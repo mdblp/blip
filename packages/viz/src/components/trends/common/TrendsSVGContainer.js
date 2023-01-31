@@ -35,7 +35,7 @@ import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContai
 import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
 import TargetRangeLines from './TargetRangeLines'
 import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
-import { Background, CbgSliceContainer, NoDataLabel, XAxisLabels, XAxisTicks } from 'dumb'
+import { Background, CbgSlicesContainer, NoDataLabel, XAxisLabels, XAxisTicks } from 'dumb'
 
 const BUMPERS = {
   top: 50,
@@ -167,7 +167,7 @@ export class TrendsSVGContainer extends React.Component {
 
     return (
       <g id="cbgTrends">
-        <CbgSliceContainer
+        <CbgSlicesContainer
           bgBounds={this.props.bgPrefs.bgBounds}
           sliceWidth={sliceWidth}
           data={this.props.cbgData}
