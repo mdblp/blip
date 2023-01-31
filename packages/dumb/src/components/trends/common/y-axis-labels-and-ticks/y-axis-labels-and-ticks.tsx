@@ -50,24 +50,23 @@ export const YAxisLabelsAndTicks: FunctionComponent<YAxisLabelsAndTicksProps> = 
         Object
           .entries(bgPrefs.bgBounds)
           .map(([boundKey, boundValue]: [boundKey: string, boundValue: number]) => (
-              <g key={boundKey}>
-                <text
-                  className={`${typographyStyles.axisSize} ${typographyStyles.mediumContrastText} ${typographyStyles.svgRightAnchored} ${typographyStyles.svgVerticalCentered}`}
-                  x={leftMargin - DEFAULT_TICK_WIDTH - DEFAULT_TEXT_TO_TICK_GAP}
-                  y={yScale(boundValue)}
-                >
-                  {formatBgValue(boundValue, bgPrefs)}
-                </text>
-                <line
-                  className={trendsStyles.tick}
-                  x1={leftMargin - DEFAULT_TICK_WIDTH}
-                  x2={leftMargin}
-                  y1={yScale(boundValue)}
-                  y2={yScale(boundValue)}
-                />
-              </g>
-            )
-          )
+            <g key={boundKey}>
+              <text
+                className={`${typographyStyles.axisSize} ${typographyStyles.mediumContrastText} ${typographyStyles.svgRightAnchored} ${typographyStyles.svgVerticalCentered}`}
+                x={leftMargin - DEFAULT_TICK_WIDTH - DEFAULT_TEXT_TO_TICK_GAP}
+                y={yScale(boundValue)}
+              >
+                {formatBgValue(boundValue, bgPrefs)}
+              </text>
+              <line
+                className={trendsStyles.tick}
+                x1={leftMargin - DEFAULT_TICK_WIDTH}
+                x2={leftMargin}
+                y1={yScale(boundValue)}
+                y2={yScale(boundValue)}
+              />
+            </g>
+          ))
       }
     </g>
   )
