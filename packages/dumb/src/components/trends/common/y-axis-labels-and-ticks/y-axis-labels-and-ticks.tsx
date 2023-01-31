@@ -43,13 +43,12 @@ const DEFAULT_TICK_WIDTH = 8
 
 export const YAxisLabelsAndTicks: FunctionComponent<YAxisLabelsAndTicksProps> = (props) => {
   const { bgPrefs, leftMargin, yScale } = props
-  const bgBounds = bgPrefs.bgBounds
 
   return (
-    <g>
+    <g data-testid="trends-y-axis-labels">
       {
         Object
-          .entries(bgBounds)
+          .entries(bgPrefs.bgBounds)
           .map(([boundKey, boundValue]: [boundKey: string, boundValue: number]) => (
               <g key={boundKey}>
                 <text
