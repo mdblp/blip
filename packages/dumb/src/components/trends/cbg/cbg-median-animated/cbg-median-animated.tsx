@@ -37,11 +37,8 @@ import { ScaleFunction } from '../../../../models/scale-function.model'
 
 interface CbgMedianAnimatedProps {
   bgBounds: BgBounds
-  datum: {
-    median: number
-    msX: number
-  }
-  defaultY: number
+  median: number
+  msX: number
   showingCbgDateTraces: boolean
   sliceWidth: number
   xScale: ScaleFunction
@@ -54,7 +51,8 @@ const TRANSITION_STYLES_KEY = 'median'
 export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (props) => {
   const {
     bgBounds,
-    datum,
+    median,
+    msX,
     showingCbgDateTraces,
     sliceWidth,
     xScale,
@@ -67,9 +65,9 @@ export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (pro
   const medianWidth = sliceWidth - strokeWidth
   const width = medianWidth - strokeWidth
   const medianHeight = medianWidth * 0.75
-  const x = xScale(datum.msX) - medianWidth / 2 + strokeWidth / 2
+  const x = xScale(msX) - medianWidth / 2 + strokeWidth / 2
   const defaultY = yScale(bgBounds.targetUpperBound - (bgBounds.targetUpperBound - bgBounds.targetLowerBound) / 2)
-  const bgClass = getBgClass(bgBounds, datum.median, ClassificationType.FiveWay)
+  const bgClass = getBgClass(bgBounds, median, ClassificationType.FiveWay)
 
   const defaultStyles = [{
     key: TRANSITION_STYLES_KEY,
@@ -84,7 +82,7 @@ export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (pro
     key: TRANSITION_STYLES_KEY,
     style: {
       height: spring(medianHeight, springConfig),
-      median: spring(yScale(datum.median) - medianHeight / 2, springConfig),
+      median: spring(yScale(median) - medianHeight / 2, springConfig),
       opacity: spring(1.0, springConfig)
     }
   }]

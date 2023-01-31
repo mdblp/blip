@@ -63,6 +63,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-2054 Migrate trends "no data" text to dumb
 - YLP-2055 Migrate CBGSliceAnimated from viz to dumb
 - YLP-2061 Migrate trends X axis labels and ticks to dumb
+- YLP-2068 Update minor dependencies
+- YLP-2069 Migrate CBGSlicesContainer from viz to dumb
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5

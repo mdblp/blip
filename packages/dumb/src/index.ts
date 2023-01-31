@@ -32,6 +32,7 @@ import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
 } from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
+import { CbgSlicesContainerMemoized as CbgSlicesContainer } from './components/trends/cbg/cbg-slice/cbg-slices-container'
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
@@ -54,11 +55,9 @@ import {
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
-import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated/cbg-median-animated'
 import { Table } from './components/settings/table'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
 import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
-import { CbgSliceAnimated } from './components/trends/cbg/cbg-slice/cbg-slice-animated'
 import { BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
@@ -71,9 +70,8 @@ export {
   BloodGlucoseTooltip,
   BolusTooltip,
   CBGMeanStat,
-  CbgMedianAnimated,
   CBGPercentageBarChart,
-  CbgSliceAnimated,
+  CbgSlicesContainer,
   CbgSliceSegment,
   CBGStandardDeviation,
   CBGStatType,
