@@ -45,26 +45,26 @@ export const checkTrendsTidelineContainerTooltips = async () => {
   const tooltipsOnCbgSlice = await screen.findAllByTestId('tooltip')
   expect(tooltipsOnCbgSlice).toHaveLength(3)
   const trendsTooltips = screen.getByTestId('trends-tooltips')
-  expect(trendsTooltips).toHaveTextContent('11:00 am - 11:30 am186174')
+  expect(trendsTooltips).toHaveTextContent('11:00 am - 11:30 am196177')
 
   // Test tooltips when hovering a cbg circle (cbg slice must still be hovered)
   const cbgCircles = await screen.findAllByTestId('trends-cbg-circle')
-  expect(cbgCircles).toHaveLength(2)
+  expect(cbgCircles).toHaveLength(4)
   await userEvent.hover(cbgCircles[0])
   const tooltipsOnCbgCircle = await screen.findAllByTestId('tooltip')
   expect(tooltipsOnCbgCircle).toHaveLength(4)
   expect(tooltipsOnCbgCircle[0]).toHaveTextContent('Saturday, January 18')
   expect(tooltipsOnCbgCircle[1]).toHaveTextContent('11:00 am - 11:30 am')
-  expect(tooltipsOnCbgCircle[2]).toHaveTextContent('186')
-  expect(tooltipsOnCbgCircle[3]).toHaveTextContent('174')
+  expect(tooltipsOnCbgCircle[2]).toHaveTextContent('196')
+  expect(tooltipsOnCbgCircle[3]).toHaveTextContent('177')
 
   // Test tooltips when unhovering cbg circle
   await userEvent.unhover(cbgCircles[0])
   const tooltipsOnCbgCircle2 = await screen.findAllByTestId('tooltip')
   expect(tooltipsOnCbgCircle2).toHaveLength(3)
   expect(tooltipsOnCbgCircle2[0]).toHaveTextContent('11:00 am - 11:30 am')
-  expect(tooltipsOnCbgCircle2[1]).toHaveTextContent('186')
-  expect(tooltipsOnCbgCircle2[2]).toHaveTextContent('174')
+  expect(tooltipsOnCbgCircle2[1]).toHaveTextContent('196')
+  expect(tooltipsOnCbgCircle2[2]).toHaveTextContent('177')
 
   // Test tooltips when unhovering cbg slice
   await userEvent.unhover(cbgSlice)
