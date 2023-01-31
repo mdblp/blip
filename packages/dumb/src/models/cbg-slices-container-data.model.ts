@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface CbgSliceContainerData {
+export interface CbgSlicesContainerData {
   msPer24: number
   value: number
 }

@@ -26,12 +26,12 @@
  */
 
 import { computeMsThresholdForTimeOfDay, formatCbgs } from './cbg-slices-container.util'
-import { CbgSliceContainerData } from '../../../../models/cbg-slice-container.data'
+import { CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
 
 describe('CbgSliceContainerUtil', () => {
   describe('formatCbgs', () => {
     it('should return correct stats', () => {
-      const data: CbgSliceContainerData[] = [
+      const data: CbgSlicesContainerData[] = [
         { msPer24: 10, value: 1 },
         { msPer24: 10, value: 2 },
         { msPer24: 10, value: 3 },
