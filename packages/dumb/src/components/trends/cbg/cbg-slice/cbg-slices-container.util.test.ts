@@ -91,11 +91,11 @@ describe('CbgSliceContainerUtil', () => {
 
   describe('computeMsThresholdForTimeOfDay', () => {
     it('should throw exception when given number is negative', () => {
-      expect(() => computeMsThresholdForTimeOfDay(-1)).toThrow('numberOfMs < 0 or >= 86400000 is invalid!')
+      expect(() => computeMsThresholdForTimeOfDay(-1)).toThrow('numberOfMs < 0 or >= 86400000 is invalid')
     })
 
     it('should throw exception when given number is superior to 86400000 (a full day in milliseconds)', () => {
-      expect(() => computeMsThresholdForTimeOfDay(86400001)).toThrow('numberOfMs < 0 or >= 86400000 is invalid!')
+      expect(() => computeMsThresholdForTimeOfDay(86400001)).toThrow('numberOfMs < 0 or >= 86400000 is invalid')
     })
   })
 })
