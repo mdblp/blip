@@ -32,18 +32,18 @@ import { useTranslation } from 'react-i18next'
 export const HistoryTableHeader: FunctionComponent = () => {
   const { t } = useTranslation('main')
   return (
-    <thead key={'thead_4'}>
+    <thead>
       <tr>
-        <th key="level" className={styles.secondaryLabelAlone}>
+        <th className={styles.secondaryLabelAlone}>
           {t('Level')}
         </th>
-        <th key="parameterChange" className={styles.secondaryLabelAlone}>
+        <th className={styles.secondaryLabelAlone}>
           {t('Parameter')}
         </th>
-        <th key="valueChange" className={styles.secondaryLabelAlone}>
+        <th className={styles.secondaryLabelAlone}>
           {t('Value')}
         </th>
-        <th key="parameterDate" className={styles.secondaryLabelAlone}>
+        <th className={styles.secondaryLabelAlone}>
           {t('Date')}
         </th>
       </tr>
