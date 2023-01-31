@@ -29,11 +29,11 @@ import React, { FunctionComponent } from 'react'
 import { formatClocktimeFromMsPer24, getSimpleHourFormatSpace } from '../../../../utils/datetime/datetime.util'
 import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_VALUE_MS } from '../../../../utils/trends/trends.util'
 import styles from '../../../../styles/typography.css'
-import { XScale } from '../../../../models/x-scale.model'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 
 interface XAxisLabelsProps {
   topMargin: number
-  xScale: XScale
+  xScale: ScaleFunction
 }
 
 const DEFAULT_OFFSET = 5

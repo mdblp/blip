@@ -36,27 +36,27 @@ import { CbgSliceTransitionMotionInterpolate } from '../../../../models/animatio
 import CbgSliceSegment from './cbg-slice-segment'
 import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getRangeSegments } from './cbg-slice-animated.util'
-import { XScale } from '../../../../models/x-scale.model'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 
 interface CbgSliceAnimatedProps {
   datum: {
-    firstQuartile?: number
+    firstQuartile: number
     id: string
-    max?: number
-    median?: number
-    min?: number
+    max: number
+    median: number
+    min: number
     msX: number
-    ninetiethQuantile?: number
-    tenthQuantile?: number
-    thirdQuartile?: number
+    ninetiethQuantile: number
+    tenthQuantile: number
+    thirdQuartile: number
   }
   displayFlags: TrendsDisplayFlags
   showingCbgDateTraces: boolean
   sliceWidth: number
   tooltipLeftThreshold: number
   topMargin: number
-  xScale: XScale
-  yScale: Function
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
 const DEFAULT_SEGMENT_Y = 16

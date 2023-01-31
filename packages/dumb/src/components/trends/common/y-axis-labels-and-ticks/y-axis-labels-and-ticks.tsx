@@ -28,14 +28,14 @@
 import React, { FunctionComponent } from 'react'
 import { formatBgValue } from '../../../../utils/format/format.util'
 import { BgPrefs } from '../../../../models/blood-glucose.model'
-import { XScale } from '../../../../models/x-scale.model'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 import trendsStyles from '../../../../styles/trends-common.css'
 import typographyStyles from '../../../../styles/typography.css'
 
 interface YAxisLabelsAndTicksProps {
   bgPrefs: BgPrefs
   leftMargin: number
-  yScale: XScale
+  yScale: ScaleFunction
 }
 
 const DEFAULT_TEXT_TO_TICK_GAP = 2
@@ -70,26 +70,6 @@ export const YAxisLabelsAndTicks: FunctionComponent<YAxisLabelsAndTicksProps> = 
             )
           )
       }
-      {/*{_.map(['targetLowerBound', 'targetUpperBound', 'veryHighThreshold', 'veryLowThreshold'],*/}
-      {/*  (boundKey) => (*/}
-      {/*    <g key={boundKey}>*/}
-      {/*      <text*/}
-      {/*        className={styles.text}*/}
-      {/*        x={leftMargin - DEFAULT_TICK_WIDTH - DEFAULT_TEXT_TO_TICK_GAP}*/}
-      {/*        y={yScale(bgBounds[boundKey])}*/}
-      {/*      >*/}
-      {/*        {formatBgValue(bgBounds[boundKey], bgPrefs)}*/}
-      {/*      </text>*/}
-      {/*      <line*/}
-      {/*        className={styles.tick}*/}
-      {/*        x1={leftMargin - DEFAULT_TICK_WIDTH}*/}
-      {/*        x2={leftMargin}*/}
-      {/*        y1={yScale(bgBounds[boundKey])}*/}
-      {/*        y2={yScale(bgBounds[boundKey])}*/}
-      {/*      />*/}
-      {/*    </g>*/}
-      {/*  ))*/}
-      {/*}*/}
     </g>
   )
 }
