@@ -255,7 +255,7 @@
   "carbs": "carbs",
   "compute-ndays-time-in-auto": "**How we calculate this:**\n\n**(%)** is the duration in loop mode ON or OFF divided by the total duration of basals for this time period.\n\n**(time)** is total duration of time in loop mode ON or OFF.",
   "compute-ndays-time-in-range": "**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the {{cbgLabel}} sample frequency.",
-  "compute-oneday-time-in-auto": "**How we calculate this:**\n\n**(%)** is the duration in loop mode ON or OFF divided by the total duration of basals for this time period.\n\n**(time)** is 24 hours multiplied by % in loop mode ON or OFF.",
+  "compute-oneday-time-in-auto": "**How we calculate this:**\n\n**(%)** is the duration in loop mode ON or OFF divided by the total duration of basals for this time period.\n\n**(time)** is the estimated time in each mode.",
   "compute-oneday-time-in-range": "**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.",
   "compute-total-insulin": "**How we calculate this:**\n\n**(%)** is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.",
   "custom": "custom",
