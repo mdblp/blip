@@ -37,19 +37,10 @@ import CbgSliceSegment from './cbg-slice-segment'
 import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getRangeSegments } from './cbg-slice-animated.util'
 import { XScale } from '../../../../models/x-scale.model'
+import { TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 
 interface CbgSliceAnimatedProps {
-  datum: {
-    firstQuartile?: number
-    id: string
-    max?: number
-    median?: number
-    min?: number
-    msX: number
-    ninetiethQuantile?: number
-    tenthQuantile?: number
-    thirdQuartile?: number
-  }
+  datum: TrendsCalculatedCbgStats
   displayFlags: TrendsDisplayFlags
   showingCbgDateTraces: boolean
   sliceWidth: number
