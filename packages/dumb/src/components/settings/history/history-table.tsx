@@ -35,27 +35,14 @@ import { getLongDayHourFormat } from '../../../utils/datetime/datetime.util'
 import { formatParameterValue } from '../../../utils/format/format.util'
 import _ from 'lodash'
 import { HistoryTableHeader } from './history-table-header'
+import { HistorySpannedRow } from './history-table-spanned-row'
 
 interface Parameter {
   changeType: string
+  effectiveDate: string
   name: string
-  value: string
   unit: Unit
   level: number
-  effectiveDate: string
-  parameterDate: string
-  previousUnit: Unit
-  previousValue: string
-  parameterChange: JSX.Element
-  valueChange: JSX.Element
-}
-
-interface IncomeParameter {
-  changeType: string
-  effectiveDate: string
-  level: number
-  name: string
-  unit: string
   value: string
 }
 
@@ -64,8 +51,13 @@ interface IncomingRow {
   parameters: Parameter[]
 }
 
-interface HistorizedRow extends Parameter {
+export interface HistorizedParameter extends Parameter {
   rawData: string
+  parameterDate: string
+  previousUnit: Unit
+  previousValue: string
+  parameterChange: JSX.Element
+  valueChange: JSX.Element
   isSpanned: boolean
   spannedContent: string
   mLatestDate: moment.Moment
@@ -77,7 +69,7 @@ interface LabeledColumn {
 }
 
 interface NormalizedColumn extends LabeledColumn{
-  cell: (item: HistorizedRow, field: string) => string
+  cell: (item: HistorizedParameter, field: string) => string
   className: string
   key: string
 }
@@ -126,7 +118,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     ]
   }
 
-  const getItemField = (item: HistorizedRow, field: string): string => {
+  const getItemField = (item: HistorizedParameter, field: string): string => {
     // @ts-expect-error
     return item[field]
   }
@@ -140,34 +132,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     }))
   }
 
-  const renderSpannedRow = (normalizedColumns: NormalizedColumn[], rowKey: number, rowData: HistorizedRow): JSX.Element => {
-    const { onSwitchToDaily } = props
-    let content = rowData.spannedContent
-    if (!content) {
-      content = '&nbsp;'
-    }
-    const handleSwitchToDaily = (): void => {
-      onSwitchToDaily(rowData.mLatestDate, 'Diabeloop parameters history')
-    }
-    const dateString = rowData.mLatestDate.toISOString()
-    return (
-      <tr id={`parameters-history-${dateString}`} key={rowKey} className={styles.spannedRow}>
-        <td colSpan={normalizedColumns.length}>
-          {content}
-          <i
-            id={`parameters-history-${dateString}-link-daily`}
-            role="button"
-            tabIndex={0}
-            data-date={dateString}
-            className={`icon-chart-line ${styles.clickableIcon} parameters-history-link-daily`}
-            onClick={handleSwitchToDaily}
-            onKeyPress={handleSwitchToDaily}
-          />
-        </td>
-      </tr>)
-  }
-
-  const renderRow = (normalizedColumns: NormalizedColumn[], rowKey: number, rowData: HistorizedRow, /** @type {string} */ trClassName = undefined): JSX.Element => {
+  const renderRow = (normalizedColumns: NormalizedColumn[], rowKey: number, rowData: HistorizedParameter, /** @type {string} */ trClassName = undefined): JSX.Element => {
     const cells = _.map(normalizedColumns,
       (column) => {
         const classname = (column.className) ? `${styles.secondaryLabelWithMain} ${column.className}` : styles.secondaryLabelWithMain
@@ -184,7 +149,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     )
   }
 
-  const getParameterChange = (parameter: HistorizedRow): JSX.Element => {
+  const getParameterChange = (parameter: HistorizedParameter): JSX.Element => {
     let icon = <i className="icon-unsure-data" />
     switch (parameter.changeType) {
       case 'added':
@@ -214,7 +179,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     )
   }
 
-  const getValueChange = (parameter: HistorizedRow): JSX.Element => {
+  const getValueChange = (parameter: HistorizedParameter): JSX.Element => {
     const fCurrentValue = formatParameterValue(parameter.value, parameter.unit)
     const value = <span key="value">{`${fCurrentValue} ${parameter.unit}`}</span>
     let spanClass = `parameters-history-table-value ${styles.historyValue}`
@@ -249,8 +214,8 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     )
   }
   //
-  const getAllRows = (history: IncomingRow[]): HistorizedRow[] => {
-    const rows: HistorizedRow[] = []
+  const getAllRows = (history: IncomingRow[]): HistorizedParameter[] => {
+    const rows: HistorizedParameter[] = []
     const { timePrefs } = props
     const dateFormat = getLongDayHourFormat()
 
@@ -274,7 +239,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
 
           for (let j = 0; j < nParameters; j++) {
             const parameter = parameters[j]
-            const row: Partial<HistorizedRow> = { ...parameter }
+            const row: Partial<HistorizedParameter> = { ...parameter }
             row.rawData = parameter.name
             const changeDate = new Date(parameter.effectiveDate)
 
@@ -327,10 +292,10 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
                 break
             }
 
-            row.parameterChange = getParameterChange(row as HistorizedRow)
-            row.valueChange = getValueChange(row as HistorizedRow)
+            row.parameterChange = getParameterChange(row as HistorizedParameter)
+            row.valueChange = getValueChange(row as HistorizedParameter)
             row.isSpanned = false
-            rows.push(row as HistorizedRow)
+            rows.push(row as HistorizedParameter)
           }
 
           // TODO: remove dependencies on moment
@@ -366,10 +331,11 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
   }
 
   const renderRows = (normalizedColumns: NormalizedColumn[]): JSX.Element => {
+    const { onSwitchToDaily } = props
     const rs = getAllRows(rows)
     const rowData = _.map(rs, (row, key) => {
       if (row.isSpanned) {
-        return renderSpannedRow(normalizedColumns, key, row)
+        return <HistorySpannedRow data={row} length={normalizedColumns.length} onSwitchToDaily={onSwitchToDaily} />
       }
       return renderRow(normalizedColumns, key, row)
     })
