@@ -34,6 +34,7 @@ import moment from 'moment-timezone'
 import { getLongDayHourFormat } from '../../../utils/datetime/datetime.util'
 import { formatParameterValue } from '../../../utils/format/format.util'
 import _ from 'lodash'
+import { HistoryTableHeader } from './history-table-header'
 
 interface Parameter {
   changeType: string
@@ -364,20 +365,6 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     return rows.reverse()
   }
 
-  const renderHeader = (normalizedColumns: NormalizedColumn[]): JSX.Element => {
-    const cells = _.map(normalizedColumns,
-      (column, key) => {
-        const { label } = column
-        return (
-          <th key={key} className={styles.secondaryLabelAlone}>
-            {label}
-          </th>
-        )
-      }
-    )
-    return (<thead key={`thead_${cells.length}`}><tr>{cells}</tr></thead>)
-  }
-
   const renderRows = (normalizedColumns: NormalizedColumn[]): JSX.Element => {
     const rs = getAllRows(rows)
     const rowData = _.map(rs, (row, key) => {
@@ -393,7 +380,6 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
   const normalizedColumns = normalizeColumns()
   const { className, label: { main } } = Title()
   tableContents = [
-    renderHeader(normalizedColumns),
     renderRows(normalizedColumns)
   ]
 
@@ -405,6 +391,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
       >
         {main}<span className={styles.secondaryLabelWithMain}/>
       </caption>
+      <HistoryTableHeader />
       {tableContents}
 
     </table>
