@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-2068 Update minor dependencies
 - YLP-2069 Migrate CBGSlicesContainer from viz to dumb
+- YLP-2084 Migrate trends Y axis labels and ticks to dumb
 
 ## 3.1.0 - 2023-01-31
 ### Fixed
