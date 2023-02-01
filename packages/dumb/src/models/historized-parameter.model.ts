@@ -35,7 +35,7 @@ export enum ChangeType {
 }
 
 interface Parameter {
-  changeType: string
+  changeType: ChangeType
   effectiveDate: string
   name: string
   unit: Unit

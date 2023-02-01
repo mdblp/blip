@@ -56,7 +56,6 @@ export const HistoryTableParameterChange: FunctionComponent<HistoryTableParamete
     <span>
         {icon}
       <span
-        id={`parameters-history-${parameter.name}-${parameter.changeType}-${parameter.effectiveDate}`}
         className={`parameters-history-table-name ${styles.parameterHistory}`}
         data-param={parameter.name}
         data-changetype={parameter.changeType}

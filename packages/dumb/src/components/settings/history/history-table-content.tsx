@@ -125,7 +125,7 @@ export const HistoryTableContent: FunctionComponent<HistoryTableContentProps> = 
           }
 
           rows.push({
-            changeType: '',
+            changeType: ChangeType.Added,
             effectiveDate: '',
             level: 0,
             name: '',
