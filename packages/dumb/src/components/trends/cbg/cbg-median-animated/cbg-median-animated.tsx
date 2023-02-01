@@ -33,7 +33,7 @@ import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
 import { BgBounds, ClassificationType } from '../../../../models/blood-glucose.model'
 import { springConfig } from '../../../../models/constants/animation.constants'
 import { CbgMedianTransitionMotionInterpolate } from '../../../../models/animation.model'
-import { XScale } from '../../../../models/x-scale.model'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 
 interface CbgMedianAnimatedProps {
   bgBounds: BgBounds
@@ -41,8 +41,8 @@ interface CbgMedianAnimatedProps {
   msX: number
   showingCbgDateTraces: boolean
   sliceWidth: number
-  xScale: XScale
-  yScale: Function
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
 const DEFAULT_MEDIAN = 16

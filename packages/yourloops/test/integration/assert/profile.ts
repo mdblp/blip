@@ -52,8 +52,8 @@ interface HcpFieldsHtmlElements extends CommonFieldsHtmlElements {
 }
 
 const checkCommonFields = (): CommonFieldsHtmlElements => {
-  const firstNameInput = screen.getByLabelText('First Name')
-  const lastNameInput = screen.getByLabelText('Last Name')
+  const firstNameInput = screen.getByLabelText('First name')
+  const lastNameInput = screen.getByLabelText('Last name')
   const unitsSelect = screen.getByTestId('profile-units-selector')
   const languageSelect = screen.getByTestId('profile-local-selector')
 

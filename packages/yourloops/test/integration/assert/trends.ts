@@ -167,6 +167,13 @@ export const checkTrendsLayout = () => {
 
   const xAxisLabels = screen.getByTestId('trends-x-axis-labels')
   expect(xAxisLabels).toHaveTextContent('12 am3 am6 am9 am12 pm3 pm6 pm9 pm')
+
+  const yAxisLabels = screen.getByTestId('trends-y-axis-labels')
+  const veryHighThresholdValue = '250'
+  const targetUpperBoundValue = '180'
+  const targetLowerBoundValue = '70'
+  const veryLowThresholdValue = '54'
+  expect(yAxisLabels).toHaveTextContent(`${veryHighThresholdValue}${targetUpperBoundValue}${targetLowerBoundValue}${veryLowThresholdValue}`)
 }
 
 export const checkReadings100 = async () => {
