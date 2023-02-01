@@ -137,7 +137,7 @@
   "date-picker-toolbar-from": "de",
   "date-picker-toolbar-to": "à",
   "default": "Valeur par défaut: {{value}}",
-  "default-min-max": "Par défaut : min à 70mg/dL et max à 180mg/dL",
+  "default-min-max": "Par défaut : min à {{min}} et max à {{max}}",
   "default-values": "Valeurs par défaut",
   "delete": "Supprimer",
   "delete-medical-report": "Supprimer le compte rendu",
