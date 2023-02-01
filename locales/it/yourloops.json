@@ -137,7 +137,7 @@
   "date-picker-toolbar-from": "da",
   "date-picker-toolbar-to": "a",
   "default": "Predefinito: {{value}}",
-  "default-min-max": "Predefinito: min a 70mg/dL e max a 180mg/dL",
+  "default-min-max": "Predefinito: min a {{min}} e max a {{max}}",
   "default-values": "Valori predefiniti",
   "delete": "Elimina",
   "delete-medical-report": "Eliminare il report medico",
