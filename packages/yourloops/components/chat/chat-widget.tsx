@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 
-import Picker, { IEmojiData } from 'emoji-picker-react'
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 
 import { Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -174,9 +174,9 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     fetchMessages()
   }, [userId, authHook, patient.userid, teamId, patient, teamHook, patientHook])
 
-  const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData): void => {
+  const onEmojiClick = (emoji: EmojiClickData): void => {
     setShowPicker(false)
-    setInputText(inputText + emojiObject.emoji)
+    setInputText(inputText + emoji.emoji)
   }
 
   const resetInputSize = (): void => {
@@ -241,7 +241,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       </div>
       {showPicker &&
         <div id="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
-          <Picker pickerStyle={{ width: '100%' }} onEmojiClick={onEmojiClick} />
+          <EmojiPicker width="100%" onEmojiClick={onEmojiClick} />
         </div>
       }
       <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
