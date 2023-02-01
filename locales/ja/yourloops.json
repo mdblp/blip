@@ -137,7 +137,7 @@
   "date-picker-toolbar-from": "開始日",
   "date-picker-toolbar-to": "終了日",
   "default": "Default: {{value}}",
-  "default-min-max": "初期設定値： 最小値：70mg/dL 、最大値：180mg/dL",
+  "default-min-max": "初期設定値： 最小値： {{min}} 、最大値：{{max}}",
   "default-values": "初期設定値",
   "delete": "削除",
   "delete-medical-report": "医療レポートを削除",
