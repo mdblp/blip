@@ -26,58 +26,48 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './background.css'
+import { formatBgValue } from '../../../../utils/format/format.util'
+import { BgPrefs } from '../../../../models/blood-glucose.model'
 import { ScaleFunction } from '../../../../models/scale-function.model'
-import { TRENDS_INTERVALS_ARRAY_MS } from '../../../../utils/trends/trends.util'
+import trendsStyles from '../../../../styles/trends-common.css'
+import typographyStyles from '../../../../styles/typography.css'
 
-interface BackgroundProps {
-  margins: {
-    bottom?: number
-    left?: number
-    right?: number
-    top?: number
-  }
-  svgDimensions: {
-    width: number
-    height: number
-  }
-  xScale: ScaleFunction
+interface YAxisLabelsAndTicksProps {
+  bgPrefs: BgPrefs
+  leftMargin: number
+  yScale: ScaleFunction
 }
 
-const DEFAULT_MARGIN = 0
+const DEFAULT_TEXT_TO_TICK_GAP = 2
+const DEFAULT_TICK_WIDTH = 8
 
-export const Background: FunctionComponent<BackgroundProps> = (props) => {
-  const { margins, svgDimensions, xScale } = props
-
-  const getMarginValue = (margin?: number): number => {
-    return margin ?? DEFAULT_MARGIN
-  }
-
-  const horizontalMargins = getMarginValue(margins.left) + getMarginValue(margins.right)
-  const verticalMargins = getMarginValue(margins.top) + getMarginValue(margins.bottom)
-
-  const width = svgDimensions.width - horizontalMargins
-  const height = svgDimensions.height - verticalMargins
+export const YAxisLabelsAndTicks: FunctionComponent<YAxisLabelsAndTicksProps> = (props) => {
+  const { bgPrefs, leftMargin, yScale } = props
 
   return (
-    <g data-testid="trends-background">
-      <rect
-        className={styles.background}
-        x={margins.left}
-        y={margins.top}
-        width={width}
-        height={height}
-      />
-      {TRENDS_INTERVALS_ARRAY_MS.map((value: number, index: number) => (
-        <line
-          className={styles.line}
-          key={`line-${index}`}
-          x1={xScale(value)}
-          x2={xScale(value)}
-          y1={margins.top}
-          y2={svgDimensions.height - getMarginValue(margins.bottom)}
-        />
-      ))}
+    <g data-testid="trends-y-axis-labels">
+      {
+        Object
+          .entries(bgPrefs.bgBounds)
+          .map(([boundKey, boundValue]: [boundKey: string, boundValue: number]) => (
+            <g key={boundKey}>
+              <text
+                className={`${typographyStyles.axisSize} ${typographyStyles.mediumContrastText} ${typographyStyles.svgRightAnchored} ${typographyStyles.svgVerticalCentered}`}
+                x={leftMargin - DEFAULT_TICK_WIDTH - DEFAULT_TEXT_TO_TICK_GAP}
+                y={yScale(boundValue)}
+              >
+                {formatBgValue(boundValue, bgPrefs)}
+              </text>
+              <line
+                className={trendsStyles.tick}
+                x1={leftMargin - DEFAULT_TICK_WIDTH}
+                x2={leftMargin}
+                y1={yScale(boundValue)}
+                y2={yScale(boundValue)}
+              />
+            </g>
+          ))
+      }
     </g>
   )
 }

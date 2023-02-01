@@ -25,4 +25,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export type XScale = (value: number) => number
+export type ScaleFunction = (value: number) => number

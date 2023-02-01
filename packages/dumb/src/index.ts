@@ -28,10 +28,12 @@
 import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
+import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
 } from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
+import { CbgSlicesContainerMemoized as CbgSlicesContainer } from './components/trends/cbg/cbg-slice/cbg-slices-container'
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
@@ -60,8 +62,7 @@ import { NoDataLabel } from './components/trends/common/no-data-label/no-data-la
 import { BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
-import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
-import { CbgSlicesContainerMemoized as CbgSlicesContainer } from './components/trends/cbg/cbg-slice/cbg-slices-container'
+import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
 
 export {
   AverageDailyDoseStat,
@@ -94,5 +95,6 @@ export {
   TotalInsulinStat,
   TotalCarbsStat,
   XAxisLabels,
-  XAxisTicks
+  XAxisTicks,
+  YAxisLabelsAndTicks
 }

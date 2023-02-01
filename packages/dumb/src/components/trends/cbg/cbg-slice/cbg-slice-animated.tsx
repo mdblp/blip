@@ -36,7 +36,7 @@ import { CbgSliceTransitionMotionInterpolate } from '../../../../models/animatio
 import CbgSliceSegment from './cbg-slice-segment'
 import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getRangeSegments } from './cbg-slice-animated.util'
-import { XScale } from '../../../../models/x-scale.model'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 import { TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 
 interface CbgSliceAnimatedProps {
@@ -46,8 +46,8 @@ interface CbgSliceAnimatedProps {
   sliceWidth: number
   tooltipLeftThreshold: number
   topMargin: number
-  xScale: XScale
-  yScale: Function
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
 const DEFAULT_SEGMENT_Y = 16

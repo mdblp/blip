@@ -28,12 +28,12 @@
 import React, { FunctionComponent, memo, useMemo } from 'react'
 
 import { BgBounds } from '../../../../models/blood-glucose.model'
-import { XScale } from '../../../../models/x-scale.model'
 import { CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
 import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { CbgSliceAnimated } from './cbg-slice-animated'
 import { CbgMedianAnimated } from '../cbg-median-animated/cbg-median-animated'
 import { formatCbgs } from './cbg-slices-container.util'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 
 interface CbgSlicesContainerProps {
   bgBounds: BgBounds
@@ -43,8 +43,8 @@ interface CbgSlicesContainerProps {
   showingCbgDateTraces: boolean
   tooltipLeftThreshold: number
   topMargin: number
-  xScale: XScale
-  yScale: Function
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
 const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) => {

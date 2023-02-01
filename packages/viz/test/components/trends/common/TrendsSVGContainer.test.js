@@ -25,15 +25,9 @@ import { MGDL_UNITS } from 'medical-domain'
 
 import bgBounds from '../../../helpers/bgBounds'
 import { TrendsSVGContainer } from '../../../../src/components/trends/common/TrendsSVGContainer'
-import Background
-  from '../../../../src/components/trends/common/Background'
-import CBGSlicesContainer
-  from '../../../../src/components/trends/cbg/CBGSlicesContainer'
-import NoData from '../../../../src/components/trends/common/NoData'
+import CBGSlicesContainer from '../../../../src/components/trends/cbg/CBGSlicesContainer'
 import TargetRangeLines from '../../../../src/components/trends/common/TargetRangeLines'
-import XAxisLabels from '../../../../src/components/trends/common/XAxisLabels'
-import XAxisTicks from '../../../../src/components/trends/common/XAxisTicks'
-import YAxisLabelsAndTicks from '../../../../src/components/trends/common/YAxisLabelsAndTicks'
+import { Background, NoDataLabel, XAxisLabels, XAxisTicks, YAxisLabelsAndTicks } from 'dumb'
 
 /**
  * @typedef {import("enzyme").ShallowWrapper } ShallowWrapper
@@ -332,15 +326,15 @@ describe('TrendsSVGContainer', () => {
         }
         const unselectedProps = _.assign({}, props, { cbgData: [], activeDays })
         const unselectedWrapper = shallow(<TrendsSVGContainer {...unselectedProps} />, { disableLifecycleMethods: false })
-        expect(unselectedWrapper.find(NoData)).to.have.length(1)
-        expect(unselectedWrapper.find(NoData).prop('unselectedAllData')).to.be.true
+        expect(unselectedWrapper.find(NoDataLabel)).to.have.length(1)
+        expect(unselectedWrapper.find(NoDataLabel).prop('unselectedAllData')).to.be.true
       })
 
       it('should render a no data message when there are no cbg values', () => {
         const noCBGDataProps = _.assign({}, props, { cbgData: [] })
         const noDataWrapper = shallow(<TrendsSVGContainer {...noCBGDataProps} />, { disableLifecycleMethods: false })
-        expect(noDataWrapper.find(NoData)).to.have.length(1)
-        expect(noDataWrapper.find(NoData).prop('dataType')).to.equal('cbg')
+        expect(noDataWrapper.find(NoDataLabel)).to.have.length(1)
+        expect(noDataWrapper.find(NoDataLabel).prop('dataType')).to.equal('cbg')
       })
     })
   })

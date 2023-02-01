@@ -34,8 +34,7 @@ import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/
 import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
 import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
 import TargetRangeLines from './TargetRangeLines'
-import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
-import { Background, CbgSlicesContainer, NoDataLabel, XAxisLabels, XAxisTicks } from 'dumb'
+import { Background, CbgSlicesContainer, NoDataLabel, XAxisLabels, XAxisTicks, YAxisLabelsAndTicks } from 'dumb'
 
 const BUMPERS = {
   top: 50,
@@ -210,7 +209,7 @@ export class TrendsSVGContainer extends React.Component {
           />
           <YAxisLabelsAndTicks
             bgPrefs={this.props.bgPrefs}
-            margins={this.props.margins}
+            leftMargin={this.props.margins.left}
             yScale={yScale}
           />
           {this.renderCbg()}
