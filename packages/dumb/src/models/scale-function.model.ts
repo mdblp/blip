@@ -25,4 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export type ScaleFunction = (value: number) => number
+import { ScaleLinear } from 'd3-scale'
+
+export type ScaleFunction = ScaleLinear<number, number>

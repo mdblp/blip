@@ -26,32 +26,29 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { BgBounds } from '../../../../models/blood-glucose.model'
-import { XScale } from '../../../../models/x-scale.model'
+import styles from './target-range-lines.css'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 
 interface TargetRangeLinesProps {
-  bgBounds: BgBounds
-  smbgOpts: {
-    maxR: number
-    r: number
-  }
-  xScale: XScale
-  yScale: XScale
+  upperBound: number
+  lowerBound: number
+  horizontalOffset: number
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
 export const TargetRangeLines: FunctionComponent<TargetRangeLinesProps> = (props) => {
-  const { bgBounds, smbgOpts, xScale, yScale } = props
+  const { upperBound, lowerBound, horizontalOffset, xScale, yScale } = props
 
-  const x1 = xScale.range()[0] - smbgOpts.maxR
-  const x2 = xScale.range()[1] + smbgOpts.maxR
+  const x1 = xScale.range()[0] - horizontalOffset
+  const x2 = xScale.range()[1] + horizontalOffset
 
-  const highThresholdYPosition = yScale(bgBounds.targetUpperBound)
-  const lowThresholdYPosition = yScale(bgBounds.targetLowerBound)
+  const highThresholdYPosition = yScale(upperBound)
+  const lowThresholdYPosition = yScale(lowerBound)
 
   return (
     <g>
       <line
-        id="highThreshold"
         className={styles.targetRangeLine}
         x1={x1}
         x2={x2}
@@ -59,7 +56,6 @@ export const TargetRangeLines: FunctionComponent<TargetRangeLinesProps> = (props
         y2={highThresholdYPosition}
       />
       <line
-        id="lowThreshold"
         className={styles.targetRangeLine}
         x1={x1}
         x2={x2}

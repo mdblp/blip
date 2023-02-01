@@ -33,8 +33,15 @@ import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
 import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
 import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
-import TargetRangeLines from './TargetRangeLines'
-import { Background, CbgSlicesContainer, NoDataLabel, XAxisLabels, XAxisTicks, YAxisLabelsAndTicks } from 'dumb'
+import {
+  Background,
+  CbgSlicesContainer,
+  NoDataLabel,
+  TargetRangeLines,
+  XAxisLabels,
+  XAxisTicks,
+  YAxisLabelsAndTicks
+} from 'dumb'
 
 const BUMPERS = {
   top: 50,
@@ -214,8 +221,9 @@ export class TrendsSVGContainer extends React.Component {
           />
           {this.renderCbg()}
           <TargetRangeLines
-            bgBounds={this.props.bgPrefs.bgBounds}
-            smbgOpts={this.props.smbgOpts}
+            upperBound={this.props.bgPrefs.bgBounds.targetUpperBound}
+            lowerBound={this.props.bgPrefs.bgBounds.targetLowerBound}
+            horizontalOffset={this.props.smbgOpts.maxR}
             xScale={xScale}
             yScale={yScale}
           />
