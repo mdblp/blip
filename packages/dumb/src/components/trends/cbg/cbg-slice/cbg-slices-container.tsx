@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo, useMemo } from 'react'
+import React, { type FunctionComponent, memo, useMemo } from 'react'
 
-import { BgBounds } from '../../../../models/blood-glucose.model'
-import { CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
-import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
+import { type BgBounds } from '../../../../models/blood-glucose.model'
+import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
+import { type TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { CbgSliceAnimated } from './cbg-slice-animated'
 import { CbgMedianAnimated } from '../cbg-median-animated/cbg-median-animated'
 import { formatCbgs } from './cbg-slices-container.util'
-import { ScaleFunction } from '../../../../models/scale-function.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 
 interface CbgSlicesContainerProps {
   bgBounds: BgBounds

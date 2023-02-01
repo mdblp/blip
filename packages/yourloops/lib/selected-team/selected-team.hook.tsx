@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { SelectedTeamContextResult } from './selected-team-context.model'
+import { type SelectedTeamContextResult } from './selected-team-context.model'
 import { useState } from 'react'
-import { Team, useTeam } from '../team'
+import { type Team, useTeam } from '../team'
 import TeamUtils from '../team/team.util'
 
 const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'

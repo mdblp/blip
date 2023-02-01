@@ -38,8 +38,8 @@ import { buildTeam, buildTeamMember, triggerMouseEvent } from '../../common/util
 import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
-import { PatientFilterStats } from '../../../../lib/patient/models/patient-filter-stats.model'
-import User from '../../../../lib/auth/models/user.model'
+import { type PatientFilterStats } from '../../../../lib/patient/models/patient-filter-stats.model'
+import type User from '../../../../lib/auth/models/user.model'
 import { MemoryRouter } from 'react-router-dom'
 import { PatientFilterTypes } from '../../../../lib/patient/models/enums/patient-filter-type.enum'
 

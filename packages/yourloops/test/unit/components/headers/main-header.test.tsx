@@ -34,14 +34,14 @@ import { createMemoryHistory } from 'history'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
-import { Team } from '../../../../lib/team'
+import { type Team } from '../../../../lib/team'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import MainHeader from '../../../../components/header-bars/main-header'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
-import User from '../../../../lib/auth/models/user.model'
+import type User from '../../../../lib/auth/models/user.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
-import { Profile } from '../../../../lib/auth/models/profile.model'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
 
 jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/auth')

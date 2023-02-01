@@ -40,7 +40,7 @@ import { useTeam } from '../../lib/team'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
@@ -188,7 +188,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                   color="primary"
                   disableElevation
                   size="small"
-                  onClick={() => setShowInviteRemoteMonitoringDialog(true)}
+                  onClick={() => { setShowInviteRemoteMonitoringDialog(true) }}
                   data-testid="remote-monitoring-card-invite-button"
                 >
                   {t('invite')}
@@ -202,7 +202,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                   color="primary"
                   disableElevation
                   size="small"
-                  onClick={() => setShowConfirmCancelDialog(true)}
+                  onClick={() => { setShowConfirmCancelDialog(true) }}
                   data-testid="remote-monitoring-card-cancel-invite-button"
                 >
                   {t('cancel-invite')}
@@ -217,7 +217,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                     color="primary"
                     disableElevation
                     size="small"
-                    onClick={() => setShowRenewRemoteMonitoringDialog(true)}
+                    onClick={() => { setShowRenewRemoteMonitoringDialog(true) }}
                     data-testid="remote-monitoring-card-renew-button"
                   >
                     {t('renew')}
@@ -229,7 +229,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                     color="primary"
                     disableElevation
                     size="small"
-                    onClick={() => setShowConfirmDeleteDialog(true)}
+                    onClick={() => { setShowConfirmDeleteDialog(true) }}
                     data-testid="remote-monitoring-card-remove-button"
                   >
                     {t('button-remove')}
@@ -245,14 +245,14 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
         <RemoteMonitoringPatientDialog
           patient={patient}
           action={RemoteMonitoringDialogAction.invite}
-          onClose={() => setShowInviteRemoteMonitoringDialog(false)}
+          onClose={() => { setShowInviteRemoteMonitoringDialog(false) }}
         />
       }
       {showRenewRemoteMonitoringDialog &&
         <RemoteMonitoringPatientDialog
           patient={patient}
           action={RemoteMonitoringDialogAction.renew}
-          onClose={() => setShowRenewRemoteMonitoringDialog(false)}
+          onClose={() => { setShowRenewRemoteMonitoringDialog(false) }}
         />
       }
       {showConfirmCancelDialog &&
@@ -260,7 +260,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
           title={t('cancel-remote-monitoring-invite')}
           label={t('cancel-remote-monitoring-invite-confirm', { fullName: patientName })}
           inProgress={confirmCancelDialogActionInProgress}
-          onClose={() => setShowConfirmCancelDialog(false)}
+          onClose={() => { setShowConfirmCancelDialog(false) }}
           onConfirm={onConfirmCancelInviteDialog}
         />
       }
@@ -269,7 +269,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
           title={t('remove-remote-monitoring')}
           label={t('remove-remote-monitoring-confirm', { fullName: patientName })}
           inProgress={confirmDeleteDialogActionInProgress}
-          onClose={() => setShowConfirmDeleteDialog(false)}
+          onClose={() => { setShowConfirmDeleteDialog(false) }}
           onConfirm={onConfirmDeleteDialog}
         />
       }

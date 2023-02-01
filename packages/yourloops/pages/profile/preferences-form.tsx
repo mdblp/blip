@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Tune from '@mui/icons-material/Tune'
@@ -40,7 +40,7 @@ import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { useProfilePageState } from './profile-page-context'
 import { useAuth } from '../../lib/auth'
 import { profileFormCommonClasses } from './css-classes'
@@ -68,7 +68,7 @@ const PreferencesForm: FunctionComponent = () => {
             id="profile-units-selector"
             data-testid="profile-units-selector"
             value={profileForm.units}
-            onChange={event => updateProfileForm(ProfileFormKey.units, event.target.value as UnitsType)}
+            onChange={event => { updateProfileForm(ProfileFormKey.units, event.target.value as UnitsType) }}
           >
             <MenuItem id="profile-units-mmoll" value={UnitsType.MMOLL}>
               {UnitsType.MMOLL}
@@ -85,7 +85,7 @@ const PreferencesForm: FunctionComponent = () => {
             id="profile-locale-selector"
             data-testid="profile-local-selector"
             value={profileForm.lang}
-            onChange={event => updateProfileForm(ProfileFormKey.lang, event.target.value as LanguageCodes)}
+            onChange={event => { updateProfileForm(ProfileFormKey.lang, event.target.value as LanguageCodes) }}
           >
             {availableLanguageCodes.map((languageCode) => (
               <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
@@ -102,7 +102,7 @@ const PreferencesForm: FunctionComponent = () => {
             id="profile"
             userRole={user.role}
             checked={profileForm.feedbackAccepted}
-            onChange={() => updateProfileForm(ProfileFormKey.feedbackAccepted, !profileForm.feedbackAccepted)}
+            onChange={() => { updateProfileForm(ProfileFormKey.feedbackAccepted, !profileForm.feedbackAccepted) }}
           />
         </Box>
       }

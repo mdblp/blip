@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,11 +30,11 @@ import useRemovePatientDialog from '../../../../components/patient/remove-patien
 import PatientAPI from '../../../../lib/patient/patient.api'
 import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../lib/team'
-import { Team } from '../../../../lib/team'
+import { type Team } from '../../../../lib/team'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { buildPrivateTeam, buildTeam } from '../../common/utils'
-import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
-import { Patient } from '../../../../lib/patient/models/patient.model'
+import { type PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 jest.mock('../../../../lib/patient/patient.provider')
@@ -92,7 +92,7 @@ describe('Remove patient dialog hook', () => {
   it('should show success alert when removing a private practice patient', async () => {
     createDataMock(UserInvitationStatus.accepted, 'private')
     const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
-    await result.current.setSelectedTeamId('private')
+    result.current.setSelectedTeamId('private')
     await result.current.handleOnClickRemove()
     expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
     expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-private-practice-success')

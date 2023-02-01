@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import { DatumType } from './enums/datum-type.enum'
+import type BaseDatum from './basics/base-datum.model'
+import { type DatumType } from './enums/datum-type.enum'
 
 type Basal = BaseDatum & {
   type: DatumType

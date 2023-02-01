@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -39,10 +39,10 @@ import Typography from '@mui/material/Typography'
 
 import FileChartOutlinedIcon from '../../icons/file-chart-outlined-icon'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { CategoryProps } from './medical-files-widget'
+import { type CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
-import { Prescription } from '../../../lib/medical-files/models/prescription.model'
+import { type Prescription } from '../../../lib/medical-files/models/prescription.model'
 
 const useStyle = makeStyles()((theme: Theme) => ({
   categoryTitle: {
@@ -75,7 +75,7 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
   useEffect(() => {
     if (!prescriptions) {
       MedicalFilesApi.getPrescriptions(patientId, teamId)
-        .then(prescriptions => setPrescriptions(prescriptions))
+        .then(prescriptions => { setPrescriptions(prescriptions) })
         .catch(() => {
           setPrescriptions([])
           alert.error(t('prescriptions-get-failed'))
@@ -113,9 +113,9 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
               key={index}
               aria-label={`prescription-${prescription.id}`}
               className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? 'selected' : ''}`}
-              onMouseOver={() => setHoveredItem(prescription.id)}
-              onMouseOut={() => setHoveredItem(undefined)}
-              onClick={() => downloadPrescription(patientId, teamId, prescription)}
+              onMouseOver={() => { setHoveredItem(prescription.id) }}
+              onMouseOut={() => { setHoveredItem(undefined) }}
+              onClick={() => { downloadPrescription(patientId, teamId, prescription) }}
             >
               <ListItemIcon>
                 <FileChartOutlinedIcon />

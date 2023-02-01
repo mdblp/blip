@@ -28,7 +28,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'

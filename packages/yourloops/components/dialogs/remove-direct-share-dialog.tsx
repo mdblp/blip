@@ -32,7 +32,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import useRemoveDirectShareDialog from './remove-direct-share-dialog.hook'
 import { useAuth } from '../../lib/auth'
 

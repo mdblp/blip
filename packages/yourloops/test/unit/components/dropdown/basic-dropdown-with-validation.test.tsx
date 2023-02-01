@@ -29,7 +29,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import React from 'react'
 
 import BasicDropdownWithValidation, {
-  BasicDropdownWithValidationProps
+  type BasicDropdownWithValidationProps
 } from '../../../../components/dropdown/basic-dropdown-with-validation'
 
 describe('BasicDropdownWithValidation', () => {

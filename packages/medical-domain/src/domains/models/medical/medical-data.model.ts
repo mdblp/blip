@@ -25,22 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Basal from './datum/basal.model'
-import Bolus from './datum/bolus.model'
-import Cbg from './datum/cbg.model'
-import ConfidentialMode from './datum/confidential-mode.model'
-import DeviceParameterChange from './datum/device-parameter-change.model'
-import Meal from './datum/meal.model'
-import Message from './datum/message.model'
-import PhysicalActivity from './datum/physical-activity.model'
-import PumpSettings from './datum/pump-settings.model'
-import ReservoirChange from './datum/reservoir-change.model'
-import Smbg from './datum/smbg.model'
-import TimeZoneChange from './datum/time-zone-change.model'
-import Upload from './datum/upload.model'
-import WarmUp from './datum/warm-up.model'
-import Wizard from './datum/wizard.model'
-import ZenMode from './datum/zen-mode.model'
+import type Basal from './datum/basal.model'
+import type Bolus from './datum/bolus.model'
+import type Cbg from './datum/cbg.model'
+import type ConfidentialMode from './datum/confidential-mode.model'
+import type DeviceParameterChange from './datum/device-parameter-change.model'
+import type Meal from './datum/meal.model'
+import type Message from './datum/message.model'
+import type PhysicalActivity from './datum/physical-activity.model'
+import type PumpSettings from './datum/pump-settings.model'
+import type ReservoirChange from './datum/reservoir-change.model'
+import type Smbg from './datum/smbg.model'
+import type TimeZoneChange from './datum/time-zone-change.model'
+import type Upload from './datum/upload.model'
+import type WarmUp from './datum/warm-up.model'
+import type Wizard from './datum/wizard.model'
+import type ZenMode from './datum/zen-mode.model'
 
 interface MedicalData {
   basal: Basal[]

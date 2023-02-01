@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import bows from 'bows'
 
-import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from './models'
+import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
+import { type SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from './models'
 import metrics from '../../lib/metrics'
 import { useAuth } from '../../lib/auth'
 import { useAlert } from '../utils/snackbar'

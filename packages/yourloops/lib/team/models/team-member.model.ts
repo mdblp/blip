@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TeamMemberRole } from './enums/team-member-role.enum'
-import { Profile } from '../../auth/models/profile.model'
-import { UserInvitationStatus } from './enums/user-invitation-status.enum'
+import { type TeamMemberRole } from './enums/team-member-role.enum'
+import { type Profile } from '../../auth/models/profile.model'
+import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
 
 export interface TeamMember {
   userId: string

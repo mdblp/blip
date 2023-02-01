@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Theme, useTheme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 import Box from '@mui/material/Box'
@@ -48,17 +48,15 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import locales from '../../../../locales/languages.json'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { Team } from '../../lib/team'
+import { type Team } from '../../lib/team'
 import { isZipCodeValid, PhonePrefixCode, REGEX_EMAIL, REGEX_PHONE } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
-import { TeamEditModalContentProps } from './types'
+import { type TeamEditModalContentProps } from './types'
 import { CountryCodes } from '../../lib/auth/models/country.model'
 
-interface LocalesCountries {
-  [code: string]: {
-    name: string
-  }
-}
+type LocalesCountries = Record<string, {
+  name: string
+}>
 
 export interface TeamEditModalProps {
   teamToEdit: TeamEditModalContentProps | null
@@ -268,7 +266,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-name"
             className={classes.formChild}
-            onChange={(e) => setTeamName(e.target.value)}
+            onChange={(e) => { setTeamName(e.target.value) }}
             name="name"
             value={teamName}
             label={t('team-edit-dialog-placeholder-name')}
@@ -278,7 +276,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-line1"
             className={classes.formChild}
-            onChange={(e) => setAddrLine1(e.target.value)}
+            onChange={(e) => { setAddrLine1(e.target.value) }}
             name="addr-line1"
             value={addrLine1}
             label={t('team-edit-dialog-placeholder-addr-line1')}
@@ -288,7 +286,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-line2"
             className={classes.formChild}
-            onChange={(e) => setAddrLine2(e.target.value)}
+            onChange={(e) => { setAddrLine2(e.target.value) }}
             name="addr-line2"
             value={addrLine2}
             label={t('team-edit-dialog-placeholder-addr-line2')}
@@ -297,7 +295,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-zip"
             className={classes.formChild}
-            onChange={(e) => setAddrZipCode(e.target.value)}
+            onChange={(e) => { setAddrZipCode(e.target.value) }}
             error={zipcodeInputOnError}
             helperText={zipcodeInputOnError ? t('invalid-zipcode') : null}
             name="addr-zip"
@@ -309,7 +307,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-city"
             className={classes.formChild}
-            onChange={(e) => setAddrCity(e.target.value)}
+            onChange={(e) => { setAddrCity(e.target.value) }}
             name="addr-city"
             value={addrCity}
             label={t('team-edit-dialog-placeholder-addr-city')}
@@ -330,7 +328,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               name="country"
               label={t('team-edit-dialog-placeholder-addr-country')}
               value={addrCountry}
-              onChange={(e) => setAddrCountry(e.target.value)}
+              onChange={(e) => { setAddrCountry(e.target.value) }}
             >
               {optionsCountries}
             </Select>
@@ -338,7 +336,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-phone"
             className={classes.formChild}
-            onChange={(e) => setTeamPhone(e.target.value)}
+            onChange={(e) => { setTeamPhone(e.target.value) }}
             error={phoneNumberInputOnError}
             helperText={phoneNumberInputOnError ? t('invalid-phone-number') : null}
             InputProps={{
@@ -353,7 +351,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
           <TextField
             id="team-edit-dialog-field-email"
             className={classes.formChild}
-            onChange={(e) => setTeamEmail(e.target.value)}
+            onChange={(e) => { setTeamEmail(e.target.value) }}
             error={emailInputOnError}
             helperText={emailInputOnError ? t('invalid-email') : null}
             name="email"

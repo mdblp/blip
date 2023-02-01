@@ -28,7 +28,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -37,9 +37,9 @@ import Typography from '@mui/material/Typography'
 import BasicDropdown from '../dropdown/basic-dropdown'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import { Monitoring } from '../../lib/team/models/monitoring.model'
+import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
 import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
 import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
@@ -172,7 +172,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                       'aria-label': t('low-bg-input')
                     }
                   }}
-                  onChange={(event) => onChange(+event.target.value, minLowBg, maxLowBg, setLowBg)}
+                  onChange={(event) => { onChange(+event.target.value, minLowBg, maxLowBg, setLowBg) }}
                 />
                 <Typography>{bgUnit}</Typography>
                 {!!lowBg.errorMessage &&
@@ -203,7 +203,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                       'aria-label': t('high-bg-input')
                     }
                   }}
-                  onChange={(event) => onChange(+event.target.value, minHighBg, maxHighBg, setHighBg)}
+                  onChange={(event) => { onChange(+event.target.value, minHighBg, maxHighBg, setHighBg) }}
                 />
                 <Typography>{bgUnit}</Typography>
                 {!!highBg.errorMessage &&
@@ -229,7 +229,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   defaultValue={`${outOfRangeThreshold.value}%` ?? ''}
                   values={PERCENTAGES}
                   error={outOfRangeThreshold.error}
-                  onSelect={(value) => onBasicDropdownSelect(value, setOutOfRangeThreshold)}
+                  onSelect={(value) => { onBasicDropdownSelect(value, setOutOfRangeThreshold) }}
 
                 />
               </div>
@@ -277,7 +277,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     'aria-label': t('very-low-bg-input')
                   }
                 }}
-                onChange={(event) => onChange(+event.target.value, minVeryLowBg, maxVeryLowBg, setVeryLowBg)}
+                onChange={(event) => { onChange(+event.target.value, minVeryLowBg, maxVeryLowBg, setVeryLowBg) }}
               />
               <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
               {!!veryLowBg.errorMessage &&
@@ -304,7 +304,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   defaultValue={`${hypoThreshold.value}%` ?? ''}
                   values={PERCENTAGES}
                   error={hypoThreshold.error}
-                  onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
+                  onSelect={(value) => { onBasicDropdownSelect(value, setHypoThreshold) }}
                 />
               </div>
             </div>
@@ -333,7 +333,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   defaultValue={`${nonDataTxThreshold.value}%` ?? ''}
                   values={PERCENTAGES.slice(0, 10)}
                   error={nonDataTxThreshold.error}
-                  onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
+                  onSelect={(value) => { onBasicDropdownSelect(value, setNonDataTxThreshold) }}
                 />
               </div>
             </div>

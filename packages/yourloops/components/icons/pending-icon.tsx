@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
+import SvgIcon, { type SvgIconProps } from '@mui/material/SvgIcon'
 
 const PendingIcon = (props: SvgIconProps): JSX.Element => {
   return (

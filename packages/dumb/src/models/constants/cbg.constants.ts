@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CbgRangeSegment } from '../cbg-range-segment.model'
+import { type CbgRangeSegment } from '../cbg-range-segment.model'
 import {
   RangeSegmentClassKey,
   RangeSegmentHeightKeys,

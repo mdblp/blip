@@ -26,12 +26,12 @@
  */
 
 import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
-import ReservoirChange from '../../../models/medical/datum/reservoir-change.model'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type ReservoirChange from '../../../models/medical/datum/reservoir-change.model'
 import BaseDatumService from './basics/base-datum.service'
-import { PumpConfig } from '../../../models/medical/datum/pump-settings.model'
+import { type PumpConfig } from '../../../models/medical/datum/pump-settings.model'
 import DatumService from '../datum.service'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ReservoirChange => {

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 
 import Box from '@mui/material/Box'

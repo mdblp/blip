@@ -27,16 +27,16 @@
 
 import bows from 'bows'
 
-import { AuthContext, User } from '../auth'
+import { type AuthContext, type User } from '../auth'
 import { t as translate } from '../language'
 import metrics from '../metrics'
 
-import { GetPatientDataOptions } from './models/get-patient-data-options.model'
+import { type GetPatientDataOptions } from './models/get-patient-data-options.model'
 import DataApi from './data.api'
-import { IUser } from './models/i-user.model'
-import { PatientData } from './models/patient-datum.model'
-import { MessageNote } from './models/message-note.model'
-import { Patient } from '../patient/models/patient.model'
+import { type IUser } from './models/i-user.model'
+import { type PatientData } from './models/patient-datum.model'
+import { type MessageNote } from './models/message-note.model'
+import { type Patient } from '../patient/models/patient.model'
 
 /**
  * Wrapper for blip v1 to be able to call the API
@@ -126,9 +126,9 @@ class BlipApi {
     this.log.debug('editMessage', { userId: message.userid })
     const user = this.authHook.user
     if (user) {
-      return await DataApi.editMessage(message)
+      await DataApi.editMessage(message); return
     }
-    return await Promise.reject(new Error(translate('not-logged-in')))
+    await Promise.reject(new Error(translate('not-logged-in')))
   }
 
   public async exportData(patient: IUser, startDate: string, endDate: string): Promise<string> {

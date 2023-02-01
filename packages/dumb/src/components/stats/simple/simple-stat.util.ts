@@ -28,7 +28,7 @@
 import styles from './simple-stat.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { EMPTY_DATA_PLACEHOLDER, StatFormats } from '../../../models/stats.model'
-import { SimpleValueProps } from '../common/simple-value'
+import { type SimpleValueProps } from '../common/simple-value'
 import { Unit } from 'medical-domain'
 
 const COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD = 36

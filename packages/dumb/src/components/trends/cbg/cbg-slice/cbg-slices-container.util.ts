@@ -26,8 +26,8 @@
  */
 
 import _ from 'lodash'
-import { CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
-import { TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
+import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
+import { type TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 import { THIRTY_MINS, TWENTY_FOUR_HRS } from '../../../../utils/datetime/datetime.util'
 
 export const computeMsThresholdForTimeOfDay = (numberOfMs: number): number => {

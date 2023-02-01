@@ -28,11 +28,11 @@
 import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import moment from 'moment-timezone'
-import { Patient } from './models/patient.model'
-import { PatientTeam } from './models/patient-team.model'
+import { type Patient } from './models/patient.model'
+import { type PatientTeam } from './models/patient-team.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { PatientFilterTypes } from './models/enums/patient-filter-type.enum'
-import { User } from '../auth'
+import { type User } from '../auth'
 
 export default class PatientUtils {
   static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {

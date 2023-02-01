@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
+import { type TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getRangeSegments } from './cbg-slice-animated.util'
 import {
   RANGE_SEGMENT_FIRST,

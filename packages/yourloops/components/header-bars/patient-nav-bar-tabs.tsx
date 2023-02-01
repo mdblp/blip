@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, MouseEventHandler } from 'react'
+import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
@@ -34,7 +34,7 @@ import TrendingUp from '@mui/icons-material/TrendingUp'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import ChartType from '../../enum/chart-type.enum'

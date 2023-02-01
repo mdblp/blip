@@ -39,14 +39,14 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Link from '@mui/material/Link'
 import MenuItem from '@mui/material/MenuItem'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../lib/utils'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { AddPatientDialogContentProps } from '../../pages/hcp/types'
+import { type AddPatientDialogContentProps } from '../../pages/hcp/types'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { PatientTeam } from '../../lib/patient/models/patient-team.model'
+import { type PatientTeam } from '../../lib/patient/models/patient-team.model'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 
 export interface AddDialogProps {

@@ -29,7 +29,7 @@ import usePatientProviderCustomHook from '../../../../lib/patient/patient.hook'
 import { renderHook } from '@testing-library/react-hooks/dom'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
-import { Monitoring } from '../../../../lib/team/models/monitoring.model'
+import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
@@ -37,12 +37,12 @@ import { act, waitFor } from '@testing-library/react'
 import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { Patient } from '../../../../lib/patient/models/patient.model'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { PatientFilterTypes } from '../../../../lib/patient/models/enums/patient-filter-type.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
@@ -87,7 +87,7 @@ describe('Patient hook', () => {
     jest.spyOn(PatientUtils, 'computePatients').mockResolvedValue(patients)
     await act(async () => {
       hook = renderHook(() => usePatientProviderCustomHook())
-      await waitFor(() => expect(hook.result.current.patients).toEqual(patients))
+      await waitFor(() => { expect(hook.result.current.patients).toEqual(patients) })
     })
     return hook
   }
@@ -363,7 +363,7 @@ describe('Patient hook', () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemove, basicTeam)
-        await waitFor(() => expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined())
+        await waitFor(() => { expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined() })
         expect(authHookGetFlagPatientMock).toHaveBeenCalled()
         expect(authHookFlagPatientMock).toHaveBeenCalled()
       })

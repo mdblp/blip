@@ -26,10 +26,10 @@
  */
 
 import DurationUnit from '../../../../models/medical/datum/enums/duration-unit.enum'
-import Duration from '../../../../models/medical/datum/basics/duration.model'
-import MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
+import type Duration from '../../../../models/medical/datum/basics/duration.model'
+import type MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 import { getNormalizedEnd } from '../../../time/time.service'
-import { DatumProcessor } from '../../../../models/medical/datum.model'
+import { type DatumProcessor } from '../../../../models/medical/datum.model'
 
 const normalize = (rawData: Record<string, unknown>, _opts: MedicalDataOptions): Duration => {
   if (typeof rawData.time !== 'string') {

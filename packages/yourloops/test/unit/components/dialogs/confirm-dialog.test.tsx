@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import ConfirmDialog, { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
+import ConfirmDialog, { type ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
 
 describe('ConfirmDialog', () => {
   const onClose = jest.fn()

@@ -26,9 +26,9 @@
  */
 
 import React from 'react'
-import { alpha, Theme } from '@mui/material/styles'
+import { alpha, type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase'
+import ButtonBase, { type ButtonBaseProps } from '@mui/material/ButtonBase'
 
 interface DayProps extends ButtonBaseProps {
   day: string

@@ -26,7 +26,7 @@
  */
 
 import { getDateTitle } from './tooltip.util'
-import { BaseDatum, Source, TimePrefs } from 'medical-domain'
+import { type BaseDatum, type Source, type TimePrefs } from 'medical-domain'
 
 describe('TooltipUtil', () => {
   const timePrefs = {

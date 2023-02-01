@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DurationUnit from '../enums/duration-unit.enum'
+import type DurationUnit from '../enums/duration-unit.enum'
 
 interface Duration {
   duration: DurationValue
@@ -39,4 +39,4 @@ interface DurationValue {
 }
 
 export default Duration
-export { DurationValue }
+export type { DurationValue }

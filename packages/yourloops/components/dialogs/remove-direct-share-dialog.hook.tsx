@@ -28,10 +28,10 @@
 import { useTranslation } from 'react-i18next'
 import { useAlert } from '../utils/snackbar'
 import DirectShareApi from '../../lib/share/direct-share.api'
-import { User } from '../../lib/auth'
+import { type User } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/notification.hook'
-import { OnCloseRemoveDirectShareDialog, UserToRemove } from './remove-direct-share-dialog'
-import { Notification } from '../../lib/notifications/models/notification.model'
+import { type OnCloseRemoveDirectShareDialog, type UserToRemove } from './remove-direct-share-dialog'
+import { type Notification } from '../../lib/notifications/models/notification.model'
 
 interface RemoveDirectShareDialogHookReturn {
   removeDirectShare: (userToRemove: UserToRemove, currentUser: User) => Promise<void>

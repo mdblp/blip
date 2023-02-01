@@ -27,9 +27,9 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react'
+import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
@@ -38,13 +38,13 @@ import Card from '@mui/material/Card'
 import ChatMessage from './chat-message'
 import ChatApi from '../../lib/chat/chat.api'
 import { useAuth } from '../../lib/auth'
-import { IMessage } from '../../lib/chat/models/i-message.model'
+import { type IMessage } from '../../lib/chat/models/i-message.model'
 import { Button, CardHeader, Tab, Tabs, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
@@ -240,7 +240,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         ))}
       </div>
       {showPicker &&
-        <div id="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
+        <div id="chat-widget-emoji-picker" data-testid="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
           <EmojiPicker width="100%" onEmojiClick={onEmojiClick} />
         </div>
       }
@@ -251,15 +251,15 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example"
                     onChange={handleChange}>
                 <Tab className={classes.chatWidgetTab} label={t('chat-footer-reply')} data-testid="chat-card-reply"
-                     onClick={() => setPrivateMessage(false)} />
+                     onClick={() => { setPrivateMessage(false) }} />
                 <Tab className={classes.chatWidgetTab} label={t('chat-footer-private')} data-testid="chat-card-private"
-                     onClick={() => setPrivateMessage(true)} />
+                     onClick={() => { setPrivateMessage(true) }} />
               </Tabs>
             </div>
           }
         </div>
         <div ref={inputRow} className={classes.chatWidgetInputRow}>
-          <Button id="chat-widget-emoji-button" className={classes.iconButton} onClick={() => setShowPicker(true)}>
+          <Button id="chat-widget-emoji-button" data-testid="chat-widget-emoji-button" className={classes.iconButton} onClick={() => { setShowPicker(true) }}>
             <SentimentSatisfiedOutlinedIcon />
           </Button>
           <TextField

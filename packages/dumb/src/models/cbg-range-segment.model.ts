@@ -26,12 +26,12 @@
  */
 
 import {
-  RangeSegmentClassKey,
-  RangeSegmentHeightKeys,
-  RangeSegmentKey,
-  RangeSegmentQuantile
+  type RangeSegmentClassKey,
+  type RangeSegmentHeightKeys,
+  type RangeSegmentKey,
+  type RangeSegmentQuantile
 } from './enums/range-segment.enum'
-import { DisplayFlag } from './enums/display-flag.enum'
+import { type DisplayFlag } from './enums/display-flag.enum'
 
 export interface CbgRangeSegment {
   classKey: RangeSegmentClassKey

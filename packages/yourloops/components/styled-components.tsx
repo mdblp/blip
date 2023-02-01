@@ -26,10 +26,10 @@
  */
 
 import { styled } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
-import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
+import Tooltip, { tooltipClasses, type TooltipProps } from '@mui/material/Tooltip'
 import React from 'react'
 
 declare module '@mui/styles/defaultTheme' {

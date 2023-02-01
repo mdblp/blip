@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
-import { SelectedTeamContextResult } from './selected-team-context.model'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import { type SelectedTeamContextResult } from './selected-team-context.model'
 import { useSelectedTeamProviderCustomHook } from './selected-team.hook'
 
 const SelectedTeamContext = createContext<SelectedTeamContextResult>({} as SelectedTeamContextResult)

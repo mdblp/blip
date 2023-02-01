@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import User from './user.model'
-import { HcpProfession } from './enums/hcp-profession.enum'
-import { SignupForm } from './signup-form.model'
-import { Preferences } from './preferences.model'
-import { Profile } from './profile.model'
-import { Settings } from './settings.model'
+import type User from './user.model'
+import { type HcpProfession } from './enums/hcp-profession.enum'
+import { type SignupForm } from './signup-form.model'
+import { type Preferences } from './preferences.model'
+import { type Profile } from './profile.model'
+import { type Settings } from './settings.model'
 
 /**
  * The auth provider hook return values.

@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
 import TooltipTail from '../tooltip-tail/tooltip-tail'
-import { TimePrefs } from 'medical-domain'
+import { type TimePrefs } from 'medical-domain'
 
 export interface Offset {
   top: number

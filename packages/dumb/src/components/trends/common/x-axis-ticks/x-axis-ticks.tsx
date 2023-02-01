@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { ScaleFunction } from '../../../../models/scale-function.model'
+import React, { type FunctionComponent } from 'react'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS } from '../../../../utils/trends/trends.util'
 import styles from '../../../../styles/trends-common.css'
 

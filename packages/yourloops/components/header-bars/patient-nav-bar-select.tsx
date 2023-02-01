@@ -25,24 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { Patient } from '../../lib/patient/models/patient.model'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { makeStyles } from 'tss-react/mui'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 
 interface PatientNavBarSelectProps {
   currentPatient?: Patient
-  onSwitchPatient: Function
+  onSwitchPatient: (patient: Patient) => void
 }
 
 const styles = makeStyles()((theme: Theme) => ({

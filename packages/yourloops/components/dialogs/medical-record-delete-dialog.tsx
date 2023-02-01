@@ -38,7 +38,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
+import { type MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
 
 export interface MedicalRecordDeleteDialogProps {
   onClose: () => void

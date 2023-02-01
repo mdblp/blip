@@ -26,7 +26,7 @@
  */
 
 import styles from './cbg-colors.css'
-import { BgClasses } from '../../../models/stats.model'
+import { type BgClasses } from '../../../models/stats.model'
 
 interface CBGStyle {
   backgroundColor: string

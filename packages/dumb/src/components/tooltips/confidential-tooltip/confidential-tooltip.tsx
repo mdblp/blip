@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Grid from '@mui/material/Grid'
 import LockIcon from '@mui/icons-material/LockOutlined'
 import styles from './confidential-tooltip.css'
@@ -38,8 +38,8 @@ import {
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
+  type Position,
+  type Side
 } from '../common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
 

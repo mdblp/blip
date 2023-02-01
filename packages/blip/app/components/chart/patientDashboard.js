@@ -27,7 +27,7 @@ const PatientDashboard = (props) => {
     alarmCard: AlarmCard,
     medicalFilesWidget: MedicalFilesWidget,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToDaily, userIsHCP, isSelectedTeamMedical
+    timePrefs, tidelineData, trackMetric, onSwitchToDaily, userIsHCP, isSelectedTeamMedical
   } = props
   const isMonitoringEnabled = patient.monitoring?.enabled
   const shouldDisplayChatWidget = isMonitoringEnabled && (!userIsHCP || isSelectedTeamMedical)
@@ -73,7 +73,6 @@ const PatientDashboard = (props) => {
           timePrefs={timePrefs}
           patient={patient}
           tidelineData={tidelineData}
-          permsOfLoggedInUser={permsOfLoggedInUser}
           trackMetric={trackMetric}
           dataUtil={dataUtil}
           chartPrefs={chartPrefs}

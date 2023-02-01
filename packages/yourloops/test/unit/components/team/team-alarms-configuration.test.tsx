@@ -32,14 +32,14 @@ import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import TeamAlarmsConfiguration, {
-  TeamAlarmsConfigurationProps
+  type TeamAlarmsConfigurationProps
 } from '../../../../components/team/team-alarms-configuration'
-import { AlarmsContentConfigurationProps } from '../../../../components/alarm/alarms-content-configuration'
-import { Monitoring } from '../../../../lib/team/models/monitoring.model'
+import { type AlarmsContentConfigurationProps } from '../../../../components/alarm/alarms-content-configuration'
+import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../components/alarm/alarms-content-configuration', () => (props: AlarmsContentConfigurationProps) => {
-  return <button onClick={() => props.onSave({ enabled: true } as Monitoring)}>save-mock</button>
+  return <button onClick={() => { props.onSave({ enabled: true } as Monitoring) }}>save-mock</button>
 })
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
@@ -89,12 +89,12 @@ describe('TeamMembers', () => {
 
   it('should update team alerts when saving', async () => {
     clickOnSaveButton()
-    await waitFor(() => expect(successMock).toHaveBeenCalledWith('team-update-success'))
+    await waitFor(() => { expect(successMock).toHaveBeenCalledWith('team-update-success') })
   })
 
   it('should not update team alerts when an error happen when saving', async () => {
     updateTeamAlertsMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
     clickOnSaveButton()
-    await waitFor(() => expect(errorMock).toHaveBeenCalledWith('team-update-error'))
+    await waitFor(() => { expect(errorMock).toHaveBeenCalledWith('team-update-error') })
   })
 })

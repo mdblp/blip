@@ -26,11 +26,11 @@
  */
 
 import { mapITeamMemberToPatient } from '../../../../../components/patient/utils'
-import { Patient } from '../../../../../lib/patient/models/patient.model'
+import { type Patient } from '../../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../../lib/team/models/enums/user-invitation-status.enum'
 import { TeamMemberRole } from '../../../../../lib/team/models/enums/team-member-role.enum'
-import { ITeamMember } from '../../../../../lib/team/models/i-team-member.model'
-import { Profile } from '../../../../../lib/auth/models/profile.model'
+import { type ITeamMember } from '../../../../../lib/team/models/i-team-member.model'
+import { type Profile } from '../../../../../lib/auth/models/profile.model'
 
 describe('Patient utils', () => {
   describe('mapTeamUserToPatient', () => {

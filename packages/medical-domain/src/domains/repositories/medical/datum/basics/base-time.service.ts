@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from '../../../../models/medical/datum/basics/base-time.model'
-import { DatumProcessor } from '../../../../models/medical/datum.model'
+import type BaseDatum from '../../../../models/medical/datum/basics/base-time.model'
+import { type DatumProcessor } from '../../../../models/medical/datum.model'
 import { getNormalizedTime } from '../../../time/time.service'
-import MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
+import type MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 
 const normalize = (rawData: Record<string, unknown>, _opts: MedicalDataOptions): BaseDatum => {
   if (typeof rawData.time !== 'string') {

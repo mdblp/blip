@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from '../../units/models/enums/units-type.enum'
-import { CountryCodes } from './country.model'
+import { type UnitsType } from '../../units/models/enums/units-type.enum'
+import { type CountryCodes } from './country.model'
 
 export interface Settings {
   units?: {

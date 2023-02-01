@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 import { useTeam } from '../../../lib/team'
 import { useAuth } from '../../../lib/auth'
 import { useLocation } from 'react-router-dom'
 import { useQueryParams } from '../../../lib/custom-hooks/query-params.hook'
-import { MainDrawerProps } from './main-drawer'
-import { PatientFilterStats } from '../../../lib/patient/models/patient-filter-stats.model'
+import { type MainDrawerProps } from './main-drawer'
+import { type PatientFilterStats } from '../../../lib/patient/models/patient-filter-stats.model'
 import { usePatientContext } from '../../../lib/patient/patient.provider'
 import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 
 interface MainDrawerHookReturn {
   fullDrawer: boolean
   onHover: boolean
-  setOnHover: Function
+  setOnHover: Dispatch<SetStateAction<boolean>>
   patientFiltersStats: PatientFilterStats
   numberOfFlaggedPatients: number
   loggedUserIsHcpInMonitoring: boolean
@@ -60,7 +60,7 @@ const useMainDrawer = ({ miniVariant }: MainDrawerProps): MainDrawerHookReturn =
   const queryParam: string | null = queryParams.get('filter')
   const selectedFilter: string | null = queryParam ?? (pathname === '/home' ? PatientFilterTypes.all : null)
 
-  useEffect(() => setFullDrawer(!miniVariant), [miniVariant])
+  useEffect(() => { setFullDrawer(!miniVariant) }, [miniVariant])
 
   return {
     fullDrawer,

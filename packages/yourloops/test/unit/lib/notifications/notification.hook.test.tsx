@@ -33,8 +33,8 @@ import { NotificationContextProvider, useNotification } from '../../../../lib/no
 import { loggedInUsers } from '../../common'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { render, waitFor } from '@testing-library/react'
-import { NotificationContext } from '../../../../lib/notifications/models/notification-context.model'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { type NotificationContext } from '../../../../lib/notifications/models/notification-context.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 jest.mock('../../../../lib/auth/auth.hook')
@@ -60,7 +60,7 @@ describe('Notification hook', () => {
           </NotificationContextProvider>
         </BrowserRouter>
       )
-      await waitFor(() => expect(notifications.initialized).toBeTruthy())
+      await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
     })
@@ -80,7 +80,7 @@ describe('Notification hook', () => {
       act(() => {
         notifications.update()
       })
-      await waitFor(() => expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2))
+      await waitFor(() => { expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2) })
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2)
     })
   })
