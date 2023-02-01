@@ -137,7 +137,7 @@
   "date-picker-toolbar-from": "von",
   "date-picker-toolbar-to": "bis",
   "default": "Standard: {{value}}",
-  "default-min-max": "Standard: min. bei 70mg/dL und max. bei 180mg/dL",
+  "default-min-max": "Standard: min. bei {{min}} und max. bei {{max}}",
   "default-values": "Standardwerte",
   "delete": "Löschen",
   "delete-medical-report": "Medizinbericht löschen",
