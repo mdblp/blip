@@ -174,6 +174,9 @@ export const checkTrendsLayout = () => {
   const targetLowerBoundValue = '70'
   const veryLowThresholdValue = '54'
   expect(yAxisLabels).toHaveTextContent(`${veryHighThresholdValue}${targetUpperBoundValue}${targetLowerBoundValue}${veryLowThresholdValue}`)
+
+  const targetRangeLines = screen.getByTestId('trends-target-range-lines')
+  expect(targetRangeLines).toBeVisible()
 }
 
 export const checkReadings100 = async () => {
@@ -190,7 +193,7 @@ export const checkReadings100 = async () => {
   await act(async () => {
     await userEvent.click(reading100)
   })
-  expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
+  expect(await screen.findAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
   expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(1)
 }
 
@@ -208,7 +211,7 @@ export const checkReadings80 = async () => {
   await act(async () => {
     await userEvent.click(reading80)
   })
-  expect(screen.getAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
+  expect(await screen.findAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
   expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(1)
 }
 
@@ -224,5 +227,5 @@ export const checkReadings50 = async () => {
   await act(async () => {
     await userEvent.click(reading50)
   })
-  expect(screen.getAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
+  expect(await screen.findAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
 }

@@ -47,7 +47,7 @@ export const TargetRangeLines: FunctionComponent<TargetRangeLinesProps> = (props
   const lowThresholdYPosition = yScale(lowerBound)
 
   return (
-    <g>
+    <g data-testid="trends-target-range-lines">
       <line
         className={styles.targetRangeLine}
         x1={x1}
