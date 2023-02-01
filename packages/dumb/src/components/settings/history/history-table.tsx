@@ -132,23 +132,6 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     }))
   }
 
-  const renderRow = (normalizedColumns: NormalizedColumn[], rowKey: number, rowData: HistorizedParameter, trClassName: string | undefined = undefined): JSX.Element => {
-    const cells = _.map(normalizedColumns,
-      (column) => {
-        const classname = (column.className) ? `${styles.secondaryLabelWithMain} ${column.className}` : styles.secondaryLabelWithMain
-
-        return <td key={column.key} data-testid={`${rowData.rawData.toLowerCase()}-${column.key}`}
-                   className={classname}>{column.cell(rowData, column.key)}</td>
-      }
-    )
-
-    return (
-      <tr key={rowKey} data-testid={`${rowData.rawData.toLowerCase()}-row`} className={trClassName} data-raw={rowData.rawData}>
-        {cells}
-      </tr>
-    )
-  }
-
   const getParameterChange = (parameter: HistorizedParameter): JSX.Element => {
     let icon = <i className="icon-unsure-data" />
     switch (parameter.changeType) {
@@ -330,12 +313,29 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     return rows.reverse()
   }
 
+  const renderRow = (normalizedColumns: NormalizedColumn[], rowKey: number, rowData: HistorizedParameter, trClassName: string | undefined = undefined): JSX.Element => {
+    const cells = _.map(normalizedColumns,
+      (column) => {
+        const classname = (column.className) ? `${styles.secondaryLabelWithMain} ${column.className}` : styles.secondaryLabelWithMain
+
+        return <td key={column.key} data-testid={`${rowData.rawData.toLowerCase()}-${column.key}`}
+                   className={classname}>{column.cell(rowData, column.key)}</td>
+      }
+    )
+
+    return (
+      <tr key={rowKey} data-testid={`${rowData.rawData.toLowerCase()}-row`} className={trClassName} data-raw={rowData.rawData}>
+        {cells}
+      </tr>
+    )
+  }
+
   const renderRows = (normalizedColumns: NormalizedColumn[]): JSX.Element => {
     const { onSwitchToDaily } = props
     const rs = getAllRows(rows)
     const rowData = _.map(rs, (row, key) => {
       if (row.isSpanned) {
-        return <HistorySpannedRow data={row} length={normalizedColumns.length} rowKey={key} onSwitchToDaily={onSwitchToDaily} />
+        return <HistorySpannedRow key={key} data={row} length={normalizedColumns.length} onSwitchToDaily={onSwitchToDaily} />
       }
       return renderRow(normalizedColumns, key, row)
     })

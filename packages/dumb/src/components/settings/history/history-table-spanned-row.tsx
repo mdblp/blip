@@ -31,7 +31,6 @@ import { HistorizedParameter } from './history-table'
 
 interface HistorySpannedRowProps {
   data: HistorizedParameter
-  rowKey: number
   length: number
   onSwitchToDaily: Function
 }
@@ -39,16 +38,15 @@ interface HistorySpannedRowProps {
 const ONE_SPACE_STRING = '&nbsp;'
 
 export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data, rowKey, length } = props
+  const { onSwitchToDaily, data, length } = props
   const content = data.spannedContent ?? ONE_SPACE_STRING
 
   const handleSwitchToDaily = (): void => {
     onSwitchToDaily(data.mLatestDate)
   }
   const dateString = data.mLatestDate.toISOString()
-  console.log('key:', rowKey)
   return (
-    <tr key={rowKey} className={styles.spannedRow} >
+    <tr className={styles.spannedRow} >
       <td colSpan={length}>
         {content}
         <i
