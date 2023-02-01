@@ -25,38 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import styles from '../diabeloop.css'
-import React, { FunctionComponent } from 'react'
-import { HistorizedParameter } from '../../../models/historized-parameter.model'
+import { Unit } from 'medical-domain'
+import moment from 'moment-timezone'
 
-interface HistorySpannedRowProps {
-  data: HistorizedParameter
-  length: number
-  onSwitchToDaily: Function
+export enum ChangeType {
+  Added = 'added',
+  Deleted = 'deleted',
+  Updated = 'updated'
 }
 
-const ONE_SPACE_STRING = '&nbsp;'
+interface Parameter {
+  changeType: string
+  effectiveDate: string
+  name: string
+  unit: Unit
+  level: number
+  value: string
+}
 
-export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data, length } = props
-  const content = data.spannedContent ?? ONE_SPACE_STRING
+export interface IncomingRow {
+  changeDate: string
+  parameters: Parameter[]
+}
 
-  const handleSwitchToDaily = (): void => {
-    onSwitchToDaily(data.mLatestDate)
-  }
-  const dateString = data.mLatestDate.toISOString()
-  return (
-    <tr className={styles.spannedRow} >
-      <td colSpan={length}>
-        {content}
-        <i
-          role="button"
-          tabIndex={0}
-          data-date={dateString}
-          className={`icon-chart-line ${styles.clickableIcon}`}
-          onClick={handleSwitchToDaily}
-        />
-      </td>
-    </tr>
-  )
+export interface HistorizedParameter extends Parameter {
+  rawData: string
+  parameterDate: string
+  previousUnit: Unit
+  previousValue: string
+  isSpanned: boolean
+  spannedContent: string
+  mLatestDate: moment.Moment
 }

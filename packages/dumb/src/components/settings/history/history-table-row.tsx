@@ -25,37 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import styles from '../diabeloop.css'
 import React, { FunctionComponent } from 'react'
+import styles from '../diabeloop.css'
 import { HistorizedParameter } from '../../../models/historized-parameter.model'
+import { HistoryTableParameterChange } from './history-table-parameter-change'
+import { HistoryTableParameterValueChange } from './history-table-parameter-value-change'
 
-interface HistorySpannedRowProps {
+interface HistoryTableRowsProps {
   data: HistorizedParameter
-  length: number
-  onSwitchToDaily: Function
 }
 
-const ONE_SPACE_STRING = '&nbsp;'
+export const HistoryTableRow: FunctionComponent<HistoryTableRowsProps> = (props) => {
+  const { data } = props
 
-export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data, length } = props
-  const content = data.spannedContent ?? ONE_SPACE_STRING
-
-  const handleSwitchToDaily = (): void => {
-    onSwitchToDaily(data.mLatestDate)
-  }
-  const dateString = data.mLatestDate.toISOString()
   return (
-    <tr className={styles.spannedRow} >
-      <td colSpan={length}>
-        {content}
-        <i
-          role="button"
-          tabIndex={0}
-          data-date={dateString}
-          className={`icon-chart-line ${styles.clickableIcon}`}
-          onClick={handleSwitchToDaily}
-        />
+    <tr data-testid={`${data.rawData.toLowerCase()}-row`} data-raw={data.rawData}>
+      <td data-testid={`${data.rawData.toLowerCase()}-level`} className={styles.secondaryLabelWithMain}>
+        {data.level}
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-valueChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterValueChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterDate`} className={styles.secondaryLabelWithMain}>
+        {data.parameterDate}
       </td>
     </tr>
   )

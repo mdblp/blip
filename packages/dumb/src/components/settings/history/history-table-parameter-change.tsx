@@ -27,36 +27,42 @@
 
 import styles from '../diabeloop.css'
 import React, { FunctionComponent } from 'react'
-import { HistorizedParameter } from '../../../models/historized-parameter.model'
+import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
+import { useTranslation } from 'react-i18next'
 
-interface HistorySpannedRowProps {
-  data: HistorizedParameter
-  length: number
-  onSwitchToDaily: Function
+interface HistoryTableParameterChangeProps {
+  parameter: HistorizedParameter
 }
 
-const ONE_SPACE_STRING = '&nbsp;'
+export const HistoryTableParameterChange: FunctionComponent<HistoryTableParameterChangeProps> = (props): JSX.Element => {
+  const { t } = useTranslation('main')
+  const { parameter } = props
 
-export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data, length } = props
-  const content = data.spannedContent ?? ONE_SPACE_STRING
-
-  const handleSwitchToDaily = (): void => {
-    onSwitchToDaily(data.mLatestDate)
+  let icon = <i className="icon-unsure-data" />
+  switch (parameter.changeType) {
+    case ChangeType.Added:
+      icon = <i className="icon-add" />
+      break
+    case ChangeType.Deleted:
+      icon = <i className="icon-remove" />
+      break
+    case ChangeType.Updated:
+      icon = <i className="icon-refresh" />
+      break
+    default:
+      break
   }
-  const dateString = data.mLatestDate.toISOString()
   return (
-    <tr className={styles.spannedRow} >
-      <td colSpan={length}>
-        {content}
-        <i
-          role="button"
-          tabIndex={0}
-          data-date={dateString}
-          className={`icon-chart-line ${styles.clickableIcon}`}
-          onClick={handleSwitchToDaily}
-        />
-      </td>
-    </tr>
+    <span>
+        {icon}
+      <span
+        id={`parameters-history-${parameter.name}-${parameter.changeType}-${parameter.effectiveDate}`}
+        className={`parameters-history-table-name ${styles.parameterHistory}`}
+        data-param={parameter.name}
+        data-changetype={parameter.changeType}
+        data-isodate={parameter.effectiveDate}>
+          {t(`params|${parameter.name}`)}
+        </span>
+      </span>
   )
 }
