@@ -133,7 +133,7 @@
   "date-picker-days-range": "{{numDays}} Tage ausgewählt",
   "date-picker-header-date-format": "MMMM YYYY",
   "date-picker-max-range": "({{numDays}} Tage maximal)",
-  "date-picker-toolbar-date-format": "dddd, D. MMMM",
+  "date-picker-toolbar-date-format": "ddd, D. MMMM",
   "date-picker-toolbar-from": "von",
   "date-picker-toolbar-to": "bis",
   "default": "Standard: {{value}}",
