@@ -31,32 +31,32 @@ import { HistorizedParameter } from './history-table'
 
 interface HistorySpannedRowProps {
   data: HistorizedParameter
+  rowKey: number
   length: number
   onSwitchToDaily: Function
 }
 
+const ONE_SPACE_STRING = '&nbsp;'
+
 export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data, length } = props
-  let content = data.spannedContent
-  if (!content) {
-    content = '&nbsp;'
-  }
+  const { onSwitchToDaily, data, rowKey, length } = props
+  const content = data.spannedContent ?? ONE_SPACE_STRING
+
   const handleSwitchToDaily = (): void => {
-    onSwitchToDaily(data.mLatestDate, 'Diabeloop parameters history')
+    onSwitchToDaily(data.mLatestDate)
   }
   const dateString = data.mLatestDate.toISOString()
+  console.log('key:', rowKey)
   return (
-    <tr id={`parameters-history-${dateString}`} className={styles.spannedRow}>
+    <tr key={rowKey} className={styles.spannedRow} >
       <td colSpan={length}>
         {content}
         <i
-          id={`parameters-history-${dateString}-link-daily`}
           role="button"
           tabIndex={0}
           data-date={dateString}
-          className={`icon-chart-line ${styles.clickableIcon} parameters-history-link-daily`}
+          className={`icon-chart-line ${styles.clickableIcon}`}
           onClick={handleSwitchToDaily}
-          onKeyPress={handleSwitchToDaily}
         />
       </td>
     </tr>

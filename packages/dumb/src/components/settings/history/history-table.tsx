@@ -132,7 +132,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     }))
   }
 
-  const renderRow = (normalizedColumns: NormalizedColumn[], rowKey: number, rowData: HistorizedParameter, /** @type {string} */ trClassName = undefined): JSX.Element => {
+  const renderRow = (normalizedColumns: NormalizedColumn[], rowKey: number, rowData: HistorizedParameter, trClassName: string | undefined = undefined): JSX.Element => {
     const cells = _.map(normalizedColumns,
       (column) => {
         const classname = (column.className) ? `${styles.secondaryLabelWithMain} ${column.className}` : styles.secondaryLabelWithMain
@@ -335,7 +335,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
     const rs = getAllRows(rows)
     const rowData = _.map(rs, (row, key) => {
       if (row.isSpanned) {
-        return <HistorySpannedRow data={row} length={normalizedColumns.length} onSwitchToDaily={onSwitchToDaily} />
+        return <HistorySpannedRow data={row} length={normalizedColumns.length} rowKey={key} onSwitchToDaily={onSwitchToDaily} />
       }
       return renderRow(normalizedColumns, key, row)
     })
