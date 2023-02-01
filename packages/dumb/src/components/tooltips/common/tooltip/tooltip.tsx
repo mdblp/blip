@@ -60,17 +60,17 @@ export const DEFAULT_TOOLTIP_OFFSET = { top: 0, left: 0 }
 export const DEFAULT_TOOLTIP_BORDER_WIDTH = 2
 
 interface TooltipProps {
-  title?: string
+  title?: string | JSX.Element
   dateTitle?: DateTitle
   content?: string | JSX.Element
   position: Position
-  offset: Offset
+  offset?: Offset
   tail?: boolean
   side: Side
-  tailWidth: number
-  tailHeight: number
+  tailWidth?: number
+  tailHeight?: number
   backgroundColor?: string
-  borderColor: string
+  borderColor?: string
   borderWidth: number
 }
 

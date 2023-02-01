@@ -39,15 +39,36 @@ const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are 
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 
 export const checkTrendsTidelineContainerTooltips = async () => {
+  // Test tooltips when hovering a cbg slice
   const cbgSlice = await screen.findByTestId('cbg-slice-rectangle-innerQuartiles')
   await userEvent.hover(cbgSlice)
-  const tooltips = await screen.findAllByTestId('tooltip')
-  expect(tooltips).toHaveLength(3)
-  expect(tooltips[0]).toHaveTextContent('11:00 am - 11:30 am')
+  const tooltipsOnCbgSlice = await screen.findAllByTestId('tooltip')
+  expect(tooltipsOnCbgSlice).toHaveLength(3)
   const trendsTooltips = screen.getByTestId('trends-tooltips')
-  expect(within(trendsTooltips).getByText('189')).toBeVisible()
-  expect(within(trendsTooltips).getByText('169')).toBeVisible()
+  expect(trendsTooltips).toHaveTextContent('11:00 am - 11:30 am196177')
+
+  // Test tooltips when hovering a cbg circle (cbg slice must still be hovered)
+  const cbgCircles = await screen.findAllByTestId('trends-cbg-circle')
+  expect(cbgCircles).toHaveLength(4)
+  await userEvent.hover(cbgCircles[0])
+  const tooltipsOnCbgCircle = await screen.findAllByTestId('tooltip')
+  expect(tooltipsOnCbgCircle).toHaveLength(4)
+  expect(tooltipsOnCbgCircle[0]).toHaveTextContent('Saturday, January 18')
+  expect(tooltipsOnCbgCircle[1]).toHaveTextContent('11:00 am - 11:30 am')
+  expect(tooltipsOnCbgCircle[2]).toHaveTextContent('196')
+  expect(tooltipsOnCbgCircle[3]).toHaveTextContent('177')
+
+  // Test tooltips when unhovering cbg circle
+  await userEvent.unhover(cbgCircles[0])
+  const tooltipsOnCbgCircle2 = await screen.findAllByTestId('tooltip')
+  expect(tooltipsOnCbgCircle2).toHaveLength(3)
+  expect(tooltipsOnCbgCircle2[0]).toHaveTextContent('11:00 am - 11:30 am')
+  expect(tooltipsOnCbgCircle2[1]).toHaveTextContent('196')
+  expect(tooltipsOnCbgCircle2[2]).toHaveTextContent('177')
+
+  // Test tooltips when unhovering cbg slice
   await userEvent.unhover(cbgSlice)
+  expect(screen.queryAllByTestId('tooltip')).toHaveLength(0)
 }
 
 export const checkTrendsStatsWidgetsTooltips = async () => {
@@ -83,6 +104,8 @@ export const checkRangeSelection = async () => {
   expect(rangeSelection.getByLabelText('80% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('50% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('Median')).toBeChecked()
+
+  expect(screen.getAllByTestId('cbg-slice-segments')).toHaveLength(1)
 
   await checkMedian()
   await checkReadings100()
@@ -144,6 +167,13 @@ export const checkTrendsLayout = () => {
 
   const xAxisLabels = screen.getByTestId('trends-x-axis-labels')
   expect(xAxisLabels).toHaveTextContent('12 am3 am6 am9 am12 pm3 pm6 pm9 pm')
+
+  const yAxisLabels = screen.getByTestId('trends-y-axis-labels')
+  const veryHighThresholdValue = '250'
+  const targetUpperBoundValue = '180'
+  const targetLowerBoundValue = '70'
+  const veryLowThresholdValue = '54'
+  expect(yAxisLabels).toHaveTextContent(`${veryHighThresholdValue}${targetUpperBoundValue}${targetLowerBoundValue}${veryLowThresholdValue}`)
 }
 
 export const checkReadings100 = async () => {

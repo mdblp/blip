@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2017-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,4 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export type XScale = (value: number) => number
+.container {
+  composes: absolute smallHorizontalPadding from '../../../../styles/layout.css';
+  top: 0;
+  z-index: 1;
+}
+
+.dateLabel {
+  composes: highContrastText noWrap defaultSize from '../../../../styles/typography.css';
+}

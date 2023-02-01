@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2017-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,35 +26,37 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import { ScaleFunction } from '../../../../models/scale-function.model'
-import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS } from '../../../../utils/trends/trends.util'
-import styles from '../../../../styles/trends-common.css'
 
-interface XAxisTicksProps {
-  topMargin: number
-  xScale: ScaleFunction
+import styles from './cbg-date-trace-label.css'
+import Tooltip from '../../../tooltips/common/tooltip/tooltip'
+import { useTranslation } from 'react-i18next'
+import { FocusedDateTrace } from '../../../../models/focused-date-trace.model'
+import { formatDateToUtc } from '../../../../utils/datetime/datetime.util'
+
+interface CbgDateTraceLabelProps {
+  focusedDateTrace: FocusedDateTrace
 }
 
-const DEFAULT_TICK_LENGTH = 15
+export const CbgDateTraceLabel: FunctionComponent<CbgDateTraceLabelProps> = (props) => {
+  const { focusedDateTrace } = props
 
-export const XAxisTicks: FunctionComponent<XAxisTicksProps> = (props) => {
-  const { topMargin, xScale } = props
+  const { t } = useTranslation()
+
+  const formattedDate = formatDateToUtc(focusedDateTrace.data.localDate, t('dddd, MMMM D'))
+  const tooltipPosition = {
+    left: focusedDateTrace.position.left,
+    top: 2.25 * focusedDateTrace.position.yPositions.topMargin
+  }
 
   return (
-    <g>
-      {TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS.map((timeInMs: number) => {
-        const xPosition = xScale(timeInMs)
-        return (
-          <line
-            className={styles.tick}
-            key={timeInMs}
-            x1={xPosition}
-            x2={xPosition}
-            y1={topMargin}
-            y2={topMargin - DEFAULT_TICK_LENGTH}
-          />
-        )
-      })}
-    </g>
+    <div className={styles.container} data-testid="cbg-date-trace-tooltip">
+      <Tooltip
+        title={<span className={styles.dateLabel}>{formattedDate}</span>}
+        borderWidth={0}
+        position={tooltipPosition}
+        side="bottom"
+        tail={false}
+      />
+    </div>
   )
 }

@@ -25,36 +25,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { ScaleFunction } from '../../../../models/scale-function.model'
-import { TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS } from '../../../../utils/trends/trends.util'
-import styles from '../../../../styles/trends-common.css'
-
-interface XAxisTicksProps {
-  topMargin: number
-  xScale: ScaleFunction
-}
-
-const DEFAULT_TICK_LENGTH = 15
-
-export const XAxisTicks: FunctionComponent<XAxisTicksProps> = (props) => {
-  const { topMargin, xScale } = props
-
-  return (
-    <g>
-      {TRENDS_INTERVAL_ARRAY_WITH_INITIAL_AND_FINAL_VALUES_MS.map((timeInMs: number) => {
-        const xPosition = xScale(timeInMs)
-        return (
-          <line
-            className={styles.tick}
-            key={timeInMs}
-            x1={xPosition}
-            x2={xPosition}
-            y1={topMargin}
-            y2={topMargin - DEFAULT_TICK_LENGTH}
-          />
-        )
-      })}
-    </g>
-  )
-}
+export type ScaleFunction = (value: number) => number

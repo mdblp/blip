@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.0.3",
+  "version": "3.1.1",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D).",
   "repository": {
@@ -32,26 +32,26 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/roboto": "^4.1.0",
-    "@mui/icons-material": "^5.10.16",
+    "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.110",
-    "@mui/material": "^5.10.16",
+    "@mui/material": "^5.11.6",
     "@mui/styles": "^5.10.16",
     "axios": "^0.25.0",
     "bows": "^1.7.2",
     "clsx": "^1.1.1",
-    "core-js": "^3.9.1",
-    "dayjs": "^1.10.7",
+    "core-js": "^3.27.2",
+    "dayjs": "^1.11.7",
     "emoji-picker-react": "^3.5.1",
-    "html-react-parser": "^3.0.4",
+    "html-react-parser": "^3.0.8",
     "i18next": "^19.8.4",
     "lodash": "^4.17.21",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.40",
     "react": "17.0.2",
     "react-device-detect": "^2.2.2",
     "react-dom": "17.0.2",
     "react-i18next": "^11.7.2",
     "react-router-dom": "^5.2.0",
-    "tss-react": "^4.4.5",
-    "uuid": "^8.3.2"
+    "tss-react": "^4.5.2",
+    "uuid": "^9.0.0"
   }
 }

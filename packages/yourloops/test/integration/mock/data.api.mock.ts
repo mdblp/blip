@@ -127,10 +127,10 @@ export const smbgData = {
 export const minimalTrendViewData = {
   dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T00:00:00Z'],
   data: [
-    { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.4, uploadId: 'osef', _userId: 'osef' }
+    { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.1, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.1, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.8, uploadId: 'osef', _userId: 'osef' }
   ]
 }
 
