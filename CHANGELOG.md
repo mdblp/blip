@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2069 Migrate CBGSlicesContainer from viz to dumb
 - YLP-2084 Migrate trends Y axis labels and ticks to dumb
 - YLP-2085 Update major dependencies with no API break
+- YLP-2091 Remove withDefaultYPosition method wrapper from viz
 - YLP-2094 Update some dependencies with major changes
 
 ## 3.1.0 - 2023-01-31
