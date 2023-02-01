@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.1.1-beta - 2023-01-31
+## 3.2.0-beta - 2023-02-01
 ### Engineering use
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
 - YLP-2068 Update minor dependencies
