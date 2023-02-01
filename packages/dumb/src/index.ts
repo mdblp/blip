@@ -28,6 +28,7 @@
 import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
+import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
@@ -69,6 +70,7 @@ export {
   BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
+  CbgDateTraceLabel,
   CBGMeanStat,
   CBGPercentageBarChart,
   CbgSlicesContainer,
