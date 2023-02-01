@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,9 +42,9 @@ import { type Patient } from '../patient/models/patient.model'
  * Wrapper for blip v1 to be able to call the API
  */
 class BlipApi {
+  public metrics: typeof metrics
   private readonly log: Console
   private authHook: AuthContext
-  public metrics: typeof metrics
 
   constructor(authHook: AuthContext) {
     this.authHook = authHook
@@ -126,7 +126,8 @@ class BlipApi {
     this.log.debug('editMessage', { userId: message.userid })
     const user = this.authHook.user
     if (user) {
-      await DataApi.editMessage(message); return
+      await DataApi.editMessage(message)
+      return
     }
     await Promise.reject(new Error(translate('not-logged-in')))
   }
