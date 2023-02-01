@@ -137,7 +137,7 @@
   "date-picker-toolbar-from": "van",
   "date-picker-toolbar-to": "tot",
   "default": "Standaard: {{value}}",
-  "default-min-max": "Standaard: min op 70mg/dL en max op 180mg/dL",
+  "default-min-max": "Standaard: min op {{min}} en max op {{max}}",
   "default-values": "Standaard waarden",
   "delete": "Verwijderd",
   "delete-medical-report": "Verwijder medische gegevens",
