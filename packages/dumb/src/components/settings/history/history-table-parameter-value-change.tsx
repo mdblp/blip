@@ -26,9 +26,9 @@
  */
 
 import { formatParameterValue } from '../../../utils/format/format.util'
-import styles from '../diabeloop.css'
 import React, { FunctionComponent } from 'react'
 import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
+import { selectSpanClass } from './history-table.util'
 
 interface HistoryTableParameterValueChangeProps {
   parameter: HistorizedParameter
@@ -36,36 +36,18 @@ interface HistoryTableParameterValueChangeProps {
 
 export const HistoryTableParameterValueChange: FunctionComponent<HistoryTableParameterValueChangeProps> = (props): JSX.Element => {
   const { parameter } = props
-  const fCurrentValue = formatParameterValue(parameter.value, parameter.unit)
-  const value = <span key="value">{`${fCurrentValue} ${parameter.unit}`}</span>
-  let spanClass = `parameters-history-table-value ${styles.historyValue}`
-
-  const elements = []
-  switch (parameter.changeType) {
-    case ChangeType.Added:
-      spanClass = `${spanClass} ${styles.valueAdded}`
-      break
-    case ChangeType.Deleted:
-      spanClass = `${spanClass} ${styles.valueDeleted}`
-      break
-    case ChangeType.Updated: {
-      const changeValueArrowIcon = <i className="icon-next" key="icon-next" />
-      const fPreviousValue = formatParameterValue(parameter.previousValue, parameter.previousUnit)
-      spanClass = `${spanClass} ${styles.valueUpdated}`
-      const previousValue = <span key="previousValue">{`${fPreviousValue} ${parameter.previousUnit}`}</span>
-      elements.push(previousValue)
-      elements.push(changeValueArrowIcon)
-      break
-    }
-    default:
-      break
-  }
-
-  elements.push(value)
+  const spanClass = selectSpanClass(parameter.changeType)
+  const currentValue = formatParameterValue(parameter.value, parameter.unit)
 
   return (
     <span className={spanClass} data-changetype={parameter.changeType}>
-        {elements}
-      </span>
+      {parameter.changeType === ChangeType.Updated &&
+        <>
+          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
+          <i className="icon-next" key="icon-next" />
+        </>
+      }
+        <span>{`${currentValue} ${parameter.unit}`}</span>
+    </span>
   )
 }

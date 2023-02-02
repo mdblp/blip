@@ -27,8 +27,9 @@
 
 import styles from '../diabeloop.css'
 import React, { FunctionComponent } from 'react'
-import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
+import { HistorizedParameter } from '../../../models/historized-parameter.model'
 import { useTranslation } from 'react-i18next'
+import { selectIcon } from './history-table.util'
 
 interface HistoryTableParameterChangeProps {
   parameter: HistorizedParameter
@@ -38,30 +39,14 @@ export const HistoryTableParameterChange: FunctionComponent<HistoryTableParamete
   const { t } = useTranslation('main')
   const { parameter } = props
 
-  let icon = <i className="icon-unsure-data" />
-  switch (parameter.changeType) {
-    case ChangeType.Added:
-      icon = <i className="icon-add" />
-      break
-    case ChangeType.Deleted:
-      icon = <i className="icon-remove" />
-      break
-    case ChangeType.Updated:
-      icon = <i className="icon-refresh" />
-      break
-    default:
-      break
-  }
+  const icon = selectIcon(parameter.changeType)
   return (
     <span>
-        {icon}
+      {icon}
       <span
-        className={`parameters-history-table-name ${styles.parameterHistory}`}
-        data-param={parameter.name}
-        data-changetype={parameter.changeType}
-        data-isodate={parameter.effectiveDate}>
+        className={`${styles.parameterHistory}`}>
           {t(`params|${parameter.name}`)}
-        </span>
       </span>
+    </span>
   )
 }

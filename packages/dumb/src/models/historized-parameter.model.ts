@@ -26,7 +26,6 @@
  */
 
 import { Unit } from 'medical-domain'
-import moment from 'moment-timezone'
 
 export enum ChangeType {
   Added = 'added',
@@ -53,7 +52,7 @@ export interface HistorizedParameter extends Parameter {
   parameterDate: string
   previousUnit: Unit
   previousValue: string
-  isSpanned: boolean
-  spannedContent: string
-  mLatestDate: moment.Moment
+  isGroupedParameterHeader: boolean
+  groupedParameterHeaderContent: string
+  latestDate: Date
 }

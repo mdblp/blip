@@ -39,7 +39,7 @@ export const HistoryTableRow: FunctionComponent<HistoryTableRowsProps> = (props)
   const { data } = props
 
   return (
-    <tr data-testid={`${data.rawData.toLowerCase()}-row`} data-raw={data.rawData}>
+    <tr data-testid={`${data.rawData.toLowerCase()}-row`} >
       <td data-testid={`${data.rawData.toLowerCase()}-level`} className={styles.secondaryLabelWithMain}>
         {data.level}
       </td>

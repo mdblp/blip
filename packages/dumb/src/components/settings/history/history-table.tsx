@@ -46,10 +46,11 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
   return (
     <table className={styles.settingsTable}>
       <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}<span className={styles.secondaryLabelWithMain} />
+        {t('Parameters History')}
+        <span className={styles.secondaryLabelWithMain} />
       </caption>
       <HistoryTableHeader />
-      <HistoryTableContent data={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
+      <HistoryTableContent rows={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
     </table>
   )
 }

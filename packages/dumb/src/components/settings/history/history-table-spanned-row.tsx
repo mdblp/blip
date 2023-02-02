@@ -39,12 +39,12 @@ const ONE_SPACE_STRING = '&nbsp;'
 
 export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
   const { onSwitchToDaily, data, length } = props
-  const content = data.spannedContent ?? ONE_SPACE_STRING
+  const content = data.groupedParameterHeaderContent ?? ONE_SPACE_STRING
 
   const handleSwitchToDaily = (): void => {
-    onSwitchToDaily(data.mLatestDate)
+    onSwitchToDaily(data.latestDate)
   }
-  const dateString = data.mLatestDate.toISOString()
+  const dateString = data.latestDate.toString()
   return (
     <tr className={styles.spannedRow} >
       <td colSpan={length}>
