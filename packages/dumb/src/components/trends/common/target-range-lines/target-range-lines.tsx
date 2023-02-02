@@ -25,6 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ScaleLinear } from 'd3-scale'
+import React, { FunctionComponent } from 'react'
+import styles from './target-range-lines.css'
+import { ScaleFunction } from '../../../../models/scale-function.model'
 
-export type ScaleFunction = ScaleLinear<number, number>
+interface TargetRangeLinesProps {
+  upperBound: number
+  lowerBound: number
+  horizontalOffset: number
+  xScale: ScaleFunction
+  yScale: ScaleFunction
+}
+
+export const TargetRangeLines: FunctionComponent<TargetRangeLinesProps> = (props) => {
+  const { upperBound, lowerBound, horizontalOffset, xScale, yScale } = props
+
+  const x1 = xScale.range()[0] - horizontalOffset
+  const x2 = xScale.range()[1] + horizontalOffset
+
+  const highThresholdYPosition = yScale(upperBound)
+  const lowThresholdYPosition = yScale(lowerBound)
+
+  return (
+    <g data-testid="trends-target-range-lines">
+      <line
+        className={styles.targetRangeLine}
+        x1={x1}
+        x2={x2}
+        y1={highThresholdYPosition}
+        y2={highThresholdYPosition}
+      />
+      <line
+        className={styles.targetRangeLine}
+        x1={x1}
+        x2={x2}
+        y1={lowThresholdYPosition}
+        y2={lowThresholdYPosition}
+      />
+    </g>
+  )
+}
