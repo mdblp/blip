@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2017-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,46 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum SegmentQuantile {
-  TenthQuantile = 'tenthQuantile',
-  NinetiethQuantile = 'ninetiethQuantile'
+import React, { type FunctionComponent } from 'react'
+
+import styles from './focused-cbg-slice-segment.css'
+import { type FocusedSliceKeys } from '../../../../models/enums/range-segment.enum'
+
+interface FocusedCBGSliceSegmentProps {
+  position: {
+    left: number
+    yPositions: Record<FocusedSliceKeys, number>
+  }
+  focusedSliceKeys: FocusedSliceKeys[]
+  sliceWidth: number
 }
 
-export enum SegmentQuartile {
-  ThirdQuartile = 'thirdQuartile',
-  FirstQuartile = 'firstQuartile'
-}
+const STROKE_WIDTH = 2 // When changing this value, make sure to update the value of stroke-width in the css file
 
-export enum SegmentMinMax {
-  Max = 'max',
-  Min = 'min'
-}
+export const FocusedCbgSliceSegment: FunctionComponent<FocusedCBGSliceSegmentProps> = (props) => {
+  const { position, focusedSliceKeys, sliceWidth } = props
 
-export enum SegmentMedian {
-  Median = 'median'
-}
+  const height = position.yPositions[focusedSliceKeys[0]] - position.yPositions[focusedSliceKeys[1]]
+  const width = sliceWidth - STROKE_WIDTH
+  const xPosition = position.left - sliceWidth / 2 + STROKE_WIDTH / 2
+  const yPosition = position.yPositions[focusedSliceKeys[1]]
 
-export type RangeSegmentSlice = SegmentMinMax | SegmentQuartile | SegmentQuantile
-export type FocusedSliceKeys = SegmentMinMax | SegmentQuartile | SegmentQuantile | SegmentMedian
-
-export enum RangeSegmentHeightKeys {
-  Top10Height = 'top10Height',
-  Bottom10Height = 'bottom10Height',
-  Upper15Height = 'upper15Height',
-  Lower15Height = 'lower15Height',
-  InnerQuartilesHeight = 'innerQuartilesHeight'
-}
-
-export enum RangeSegmentKey {
-  Top10 = 'top10',
-  Bottom10 = 'bottom10',
-  Upper15 = 'upper15',
-  Lower15 = 'lower15',
-  InnerQuartiles = 'innerQuartiles'
-}
-
-export enum RangeSegmentClassKey {
-  RangeSegment = 'rangeSegment',
-  OuterSegment = 'outerSegment',
-  InnerQuartilesSegment = 'innerQuartilesSegment'
+  return (
+    <rect
+      data-testid="cbg-slice-animated"
+      className={styles.segment}
+      x={xPosition}
+      y={yPosition}
+      width={width}
+      height={height}
+    />
+  )
 }

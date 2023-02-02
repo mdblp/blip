@@ -64,6 +64,7 @@ import { type BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
 import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
+import { FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
 
 export {
   AverageDailyDoseStat,
@@ -80,6 +81,7 @@ export {
   CBGStatType,
   CgmTable,
   ConfidentialTooltip,
+  FocusedCbgSliceSegment,
   FoodTooltip,
   LabeledCheckbox,
   LoopModeStat,

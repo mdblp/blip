@@ -46,6 +46,7 @@ export const checkTrendsTidelineContainerTooltips = async () => {
   expect(tooltipsOnCbgSlice).toHaveLength(3)
   const trendsTooltips = screen.getByTestId('trends-tooltips')
   expect(trendsTooltips).toHaveTextContent('11:00 am - 11:30 am196177')
+  expect(screen.getByTestId('cbg-slice-animated')).toBeVisible()
 
   // Test tooltips when hovering a cbg circle (cbg slice must still be hovered)
   const cbgCircles = await screen.findAllByTestId('trends-cbg-circle')
@@ -69,6 +70,7 @@ export const checkTrendsTidelineContainerTooltips = async () => {
   // Test tooltips when unhovering cbg slice
   await userEvent.unhover(cbgSlice)
   expect(screen.queryAllByTestId('tooltip')).toHaveLength(0)
+  expect(screen.queryByTestId('cbg-slice-animated')).not.toBeInTheDocument()
 }
 
 export const checkTrendsStatsWidgetsTooltips = async () => {

@@ -32,10 +32,10 @@ import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
 import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
-import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
 import {
   Background,
   CbgSlicesContainer,
+  FocusedCbgSliceSegment,
   NoDataLabel,
   TargetRangeLines,
   XAxisLabels,
@@ -162,13 +162,15 @@ export class TrendsSVGContainer extends React.Component {
           yScale={yScale}
         />
       )
-      focused = (
-        <FocusedCBGSliceSegment
-          focusedSlice={focusedSlice}
-          focusedSliceKeys={focusedSliceKeys}
-          sliceWidth={sliceWidth}
-        />
-      )
+      if (focusedSliceKeys) {
+        focused = (
+          <FocusedCbgSliceSegment
+            position={focusedSlice.position}
+            focusedSliceKeys={focusedSliceKeys}
+            sliceWidth={sliceWidth}
+          />
+        )
+      }
     }
 
     return (
