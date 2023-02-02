@@ -33,7 +33,9 @@ import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
 } from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
-import { CbgSlicesContainerMemoized as CbgSlicesContainer } from './components/trends/cbg/cbg-slice/cbg-slices-container'
+import {
+  CbgSlicesContainerMemoized as CbgSlicesContainer
+} from './components/trends/cbg/cbg-slice/cbg-slices-container'
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
@@ -64,6 +66,7 @@ import { type BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
 import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
+import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
 
 export {
   AverageDailyDoseStat,
@@ -80,6 +83,7 @@ export {
   CBGStatType,
   CgmTable,
   ConfidentialTooltip,
+  FocusedCbgSliceSegment,
   FoodTooltip,
   LabeledCheckbox,
   LoopModeStat,
