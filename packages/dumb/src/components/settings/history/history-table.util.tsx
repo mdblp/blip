@@ -31,7 +31,7 @@ import styles from '../diabeloop.css'
 import { formatLocalizedFromUTC, getLongDayHourFormat } from '../../../utils/datetime/datetime.util'
 import { TimePrefs, Unit } from 'medical-domain'
 
-export const selectIcon = (change: ChangeType): JSX.Element => {
+export const buildIcon = (change: ChangeType): JSX.Element => {
   switch (change) {
     case ChangeType.Added:
       return <i className="icon-add" />

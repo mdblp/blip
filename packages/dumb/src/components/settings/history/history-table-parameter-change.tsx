@@ -29,7 +29,7 @@ import styles from '../diabeloop.css'
 import React, { FunctionComponent } from 'react'
 import { HistorizedParameter } from '../../../models/historized-parameter.model'
 import { useTranslation } from 'react-i18next'
-import { selectIcon } from './history-table.util'
+import { buildIcon } from './history-table.util'
 
 interface HistoryTableParameterChangeProps {
   parameter: HistorizedParameter
@@ -39,12 +39,12 @@ export const HistoryTableParameterChange: FunctionComponent<HistoryTableParamete
   const { t } = useTranslation('main')
   const { parameter } = props
 
-  const icon = selectIcon(parameter.changeType)
+  const icon = buildIcon(parameter.changeType)
   return (
     <span>
       {icon}
       <span
-        className={`${styles.parameterHistory}`}>
+        className={styles.parameterHistory}>
           {t(`params|${parameter.name}`)}
       </span>
     </span>
