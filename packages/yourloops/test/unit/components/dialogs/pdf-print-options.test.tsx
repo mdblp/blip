@@ -29,7 +29,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
 
-import DialogPDFOptions, { Presets } from '../../../../components/dialogs/pdf-print-options'
+import DialogPDFOptions, { type Presets } from '../../../../components/dialogs/pdf-print-options'
 import i18n from '../../../../lib/language'
 import initDayJS from '../../../../lib/dayjs'
 

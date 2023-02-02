@@ -25,20 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PumpSettings, {
-  CgmConfig,
-  DeviceConfig,
-  ParameterConfig,
-  ParametersChange,
-  PumpConfig
-} from '../../../models/medical/datum/pump-settings.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import { type CgmConfig, type DeviceConfig, type ParameterConfig, type ParametersChange, type PumpConfig } from '../../../models/medical/datum/pump-settings.model'
+import type PumpSettings from '../../../models/medical/datum/pump-settings.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
-import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
-import Unit from '../../../models/medical/datum/enums/unit.enum'
+import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {

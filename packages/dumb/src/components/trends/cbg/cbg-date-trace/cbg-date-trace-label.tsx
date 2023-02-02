@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 
 import styles from './cbg-date-trace-label.css'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
-import { FocusedDateTrace } from '../../../../models/focused-date-trace.model'
+import { type FocusedDateTrace } from '../../../../models/focused-date-trace.model'
 import { formatDateToUtc } from '../../../../utils/datetime/datetime.util'
 
 interface CbgDateTraceLabelProps {

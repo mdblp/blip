@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import PumpManufacturer from './enums/pump-manufacturer.enum'
-import { DatumType } from './enums/datum-type.enum'
+import type BaseDatum from './basics/base-datum.model'
+import type PumpManufacturer from './enums/pump-manufacturer.enum'
+import { type DatumType } from './enums/datum-type.enum'
 
 interface CgmConfig {
   apiVersion: string
@@ -95,4 +95,4 @@ type PumpSettings = BaseDatum & {
 }
 
 export default PumpSettings
-export { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig }
+export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig }

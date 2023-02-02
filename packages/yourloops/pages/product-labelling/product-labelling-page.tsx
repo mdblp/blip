@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import parse from 'html-react-parser'
 import i18n from 'i18next'
 import rawHtmlEN from './raw-html/EN'

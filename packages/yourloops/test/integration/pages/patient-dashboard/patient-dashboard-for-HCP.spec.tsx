@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
+import { act, type BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI, myTeamId, myThirdTeamId } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
@@ -34,14 +34,14 @@ import {
   mockPatientApiForHcp,
   monitoredPatient,
   monitoredPatientId,
-  pendingPatient,
-  unmonitoredPatientId,
   monitoredPatientWithMmol,
-  monitoredPatientWithMmolId
+  monitoredPatientWithMmolId,
+  pendingPatient,
+  unmonitoredPatientId
 } from '../../mock/patient.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
-import { queries } from '@testing-library/dom'
+import { type queries } from '@testing-library/dom'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
@@ -115,7 +115,7 @@ describe('Patient dashboard for HCP', () => {
 
     /**
      * TODO YLP-1987 Uncomment this test once the January release is done
-    */
+     */
     // const header = within(screen.getByTestId('app-main-header'))
     // const teamsDropdown = header.getByText(mySecondTeamName)
     // expect(teamsDropdown).toBeVisible()
@@ -134,6 +134,8 @@ describe('Patient dashboard for HCP', () => {
 
     /* Chat widget */
     expect(dashboard.getByText('Messages')).toBeVisible()
+    const emojiButton = dashboard.getByTestId('chat-widget-emoji-button')
+    expect(emojiButton).toBeEnabled()
 
     /* Remote Monitoring widget */
     expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a dayRenewRemove`)

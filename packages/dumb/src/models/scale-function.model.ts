@@ -25,6 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ScaleLinear } from 'd3-scale'
+import { type ScaleLinear } from 'd3-scale'
 
 export type ScaleFunction = ScaleLinear<number, number>

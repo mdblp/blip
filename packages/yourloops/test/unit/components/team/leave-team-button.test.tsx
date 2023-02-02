@@ -33,7 +33,7 @@ import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as authHookMock from '../../../../lib/auth'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { buildTeam, buildTeamMember } from '../../common/utils'
-import LeaveTeamButton, { LeaveTeamButtonProps } from '../../../../components/team/leave-team-button'
+import LeaveTeamButton, { type LeaveTeamButtonProps } from '../../../../components/team/leave-team-button'
 import TeamUtils from '../../../../lib/team/team.util'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
@@ -83,7 +83,7 @@ describe('TeamMembers', () => {
     const leaveButton = screen.getByRole('button')
     await act(async () => {
       fireEvent.click(leaveButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
+      await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })
       const leaveDialog = within(screen.getByRole('dialog'))
       const confirmButton = leaveDialog.getByRole('button', { name: 'team-leave-dialog-button-leave' })
       fireEvent.click(confirmButton)
@@ -135,7 +135,7 @@ describe('TeamMembers', () => {
     const leaveButton = screen.getByRole('button')
     await act(async () => {
       fireEvent.click(leaveButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
+      await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })
       const leaveDialog = within(screen.getByRole('dialog'))
       const cancelButton = leaveDialog.getByRole('button', { name: 'button-cancel' })
       fireEvent.click(cancelButton)

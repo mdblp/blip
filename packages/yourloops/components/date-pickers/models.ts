@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
 import { makeStyles } from 'tss-react/mui'
 
 export type CalendarOrientation = 'landscape' | 'portrait'

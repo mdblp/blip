@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import Wizard from './wizard.model'
+import type BaseDatum from './basics/base-datum.model'
+import type Wizard from './wizard.model'
 import { BolusSubtype } from './enums/bolus-subtype.enum'
-import { DatumType } from './enums/datum-type.enum'
+import { type DatumType } from './enums/datum-type.enum'
 
 function isBolusSubType(value: unknown): boolean {
   return Object.values(BolusSubtype).includes(value as BolusSubtype)

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo, useState } from 'react'
+import React, { type FunctionComponent, useMemo, useState } from 'react'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 
@@ -43,7 +43,7 @@ import { HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.en
 import { useAuth } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
-import { SignUpFormProps } from './signup-stepper'
+import { type SignUpFormProps } from './signup-stepper'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
@@ -131,7 +131,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         required
         error={errors.firstName}
         onBlur={validateFirstname}
-        onChange={event => updateForm(SignupFormKey.ProfileFirstname, event.target.value)}
+        onChange={event => { updateForm(SignupFormKey.ProfileFirstname, event.target.value) }}
         helperText={errors.firstName && t('required-field')}
       />
       <TextField
@@ -142,7 +142,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         required
         error={errors.lastName}
         onBlur={validateLastname}
-        onChange={event => updateForm(SignupFormKey.ProfileLastname, event.target.value)}
+        onChange={event => { updateForm(SignupFormKey.ProfileLastname, event.target.value) }}
         helperText={errors.lastName && t('required-field')}
       />
       <FormControl
@@ -158,7 +158,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
           data-testid="country-selector"
           value={signupForm.profileCountry}
           onBlur={validateCountry}
-          onChange={event => updateForm(SignupFormKey.ProfileCountry, event.target.value)}
+          onChange={event => { updateForm(SignupFormKey.ProfileCountry, event.target.value) }}
         >
           {availableCountries.map((item) => (
             <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
@@ -182,7 +182,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
             data-testid="hcp-profession-selector"
             value={signupForm.hcpProfession ?? ''}
             onBlur={validateHcpProfession}
-            onChange={event => updateForm(SignupFormKey.HcpProfession, event.target.value)}
+            onChange={event => { updateForm(SignupFormKey.HcpProfession, event.target.value) }}
           >
             {HcpProfessionList.map((item) => (
               <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>

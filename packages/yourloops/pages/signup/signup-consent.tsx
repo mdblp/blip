@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -33,7 +33,7 @@ import Box from '@mui/material/Box'
 import metrics from '../../lib/metrics'
 import { ConsentForm } from '../../components/consents'
 import { useSignUpFormState } from './signup-formstate-context'
-import { SignUpFormProps } from './signup-stepper'
+import { type SignUpFormProps } from './signup-stepper'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 

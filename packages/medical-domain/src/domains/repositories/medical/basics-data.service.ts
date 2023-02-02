@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalData from '../../models/medical/medical-data.model'
-import Datum from '../../models/medical/datum.model'
-import Upload from '../../models/medical/datum/upload.model'
+import type MedicalData from '../../models/medical/medical-data.model'
+import type Datum from '../../models/medical/datum.model'
+import type Upload from '../../models/medical/datum/upload.model'
 import { findBasicsDays, toISOString } from '../time/time.service'
 
 interface BasicData {

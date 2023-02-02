@@ -31,9 +31,9 @@ import WeeklyReportDialog from '../../../../../components/dialogs/weekly-report-
 import * as patientHookMock from '../../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../../lib/team'
 import { buildTeam, createPatient, createPatientTeam } from '../../../common/utils'
-import { Alarms } from '../../../../../lib/patient/models/alarms.model'
+import { type Alarms } from '../../../../../lib/patient/models/alarms.model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../../../../lib/utils'
-import { WeeklyReport } from '../../../../../lib/medical-files/models/weekly-report.model'
+import { type WeeklyReport } from '../../../../../lib/medical-files/models/weekly-report.model'
 import { UnitsType } from '../../../../../lib/units/models/enums/units-type.enum'
 import { UserInvitationStatus } from '../../../../../lib/team/models/enums/user-invitation-status.enum'
 

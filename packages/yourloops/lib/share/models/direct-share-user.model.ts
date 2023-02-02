@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Preferences } from '../../auth/models/preferences.model'
-import { Profile } from '../../auth/models/profile.model'
-import { Settings } from '../../auth/models/settings.model'
+import { type Preferences } from '../../auth/models/preferences.model'
+import { type Profile } from '../../auth/models/profile.model'
+import { type Settings } from '../../auth/models/settings.model'
 
 export interface DirectShareUser {
   userId: string

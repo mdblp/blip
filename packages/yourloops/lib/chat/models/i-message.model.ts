@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import User from '../../auth/models/user.model'
+import type User from '../../auth/models/user.model'
 
 /**
  * Message interface

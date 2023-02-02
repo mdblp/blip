@@ -40,8 +40,8 @@ import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../lib/utils'
 
-import { AddMemberDialogContentProps } from './types'
-import { TeamMemberRole, TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
+import { type AddMemberDialogContentProps } from './types'
+import { TeamMemberRole, type TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
 export interface AddMemberDialogProps {
   addMember: null | AddMemberDialogContentProps

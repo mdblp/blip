@@ -33,7 +33,7 @@ import {
   getTimezoneFromTimePrefs,
   ONE_HOUR_MS
 } from './datetime.util'
-import { TimePrefs } from 'medical-domain'
+import { type TimePrefs } from 'medical-domain'
 
 const ONE_MIN_MS = 6e4
 

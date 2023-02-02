@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from './target-range-lines.css'
-import { ScaleFunction } from '../../../../models/scale-function.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 
 interface TargetRangeLinesProps {
   upperBound: number

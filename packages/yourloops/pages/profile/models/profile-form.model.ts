@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
+import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
+import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import { type UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 
 export interface ProfileForm {
   birthday: string | undefined

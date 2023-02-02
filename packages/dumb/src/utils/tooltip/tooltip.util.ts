@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DateTitle } from '../../components/tooltips/common/tooltip/tooltip'
-import { BaseDatum, Source, TimePrefs } from 'medical-domain'
+import { type DateTitle } from '../../components/tooltips/common/tooltip/tooltip'
+import { type BaseDatum, Source, type TimePrefs } from 'medical-domain'
 import { TIMEZONE_UTC } from '../datetime/datetime.util'
 
 export const getDateTitle = (data: BaseDatum, timePrefs: TimePrefs): DateTitle => {

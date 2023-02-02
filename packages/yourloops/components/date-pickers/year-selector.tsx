@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 
@@ -123,7 +123,7 @@ function YearSelector(props: YearSelectorProps): JSX.Element {
         variant={isSelectedYear ? 'h6' : 'subtitle1'}
         component="div"
         className={cx(classes.year, { [classes.selectedYear]: isSelectedYear })}
-        onClick={() => props.onSelectYear(i)}
+        onClick={() => { props.onSelectYear(i) }}
         role="option"
         aria-selected={isSelectedYear}
         ref={isSelectedYear ? refSelected : null}

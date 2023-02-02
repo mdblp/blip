@@ -31,7 +31,7 @@ import { useAuth } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import bows from 'bows'
 import { useHistory } from 'react-router-dom'
-import { HistoryState } from '../../models/history-state.model'
+import { type HistoryState } from '../../models/history-state.model'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
@@ -40,13 +40,13 @@ import Box from '@mui/material/Box'
 import appConfig from '../../lib/config/config'
 import CardContent from '@mui/material/CardContent'
 import Container from '@mui/material/Container'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Link from '@mui/material/Link'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { Profile } from '../../lib/auth/models/profile.model'
+import { type Profile } from '../../lib/auth/models/profile.model'
 
 const style = makeStyles({ name: 'ylp-training-page' })((theme: Theme) => {
   return {
@@ -136,7 +136,7 @@ function TrainingPage(): JSX.Element {
                       aria-label={t('training-checkbox')}
                       className={classes.checkbox}
                       checked={checked}
-                      onChange={() => setChecked(!checked)}
+                      onChange={() => { setChecked(!checked) }}
                       name="training"
                     />
                   }
@@ -166,7 +166,7 @@ function TrainingPage(): JSX.Element {
                       variant="contained"
                       color="primary"
                       disableElevation
-                      onClick={() => setTrainingOpened(true)}
+                      onClick={() => { setTrainingOpened(true) }}
                     >
                       {t('open-training')}
                     </Button>

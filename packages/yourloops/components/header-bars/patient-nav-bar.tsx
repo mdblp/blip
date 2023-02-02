@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo } from 'react'
-import { Patient } from '../../lib/patient/models/patient.model'
+import React, { type FunctionComponent, memo } from 'react'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
 import { useAuth } from '../../lib/auth'
 import { makeStyles } from 'tss-react/mui'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
 import { PatientNavBarInfoList } from './patient-nav-bar-info-list'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
@@ -41,7 +41,7 @@ interface PatientNavBarProps {
   chartType: string
   onClickDashboard?: () => void
   onClickDaily?: () => void
-  onSwitchPatient?: () => void
+  onSwitchPatient: (patient: Patient) => void
   onClickPrint?: () => void
   onClickTrends?: () => void
   currentPatient: Patient

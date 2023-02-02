@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { formatBgValue } from '../../../../utils/format/format.util'
-import { BgPrefs } from '../../../../models/blood-glucose.model'
-import { ScaleFunction } from '../../../../models/scale-function.model'
+import { type BgPrefs } from '../../../../models/blood-glucose.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 import trendsStyles from '../../../../styles/trends-common.css'
 import typographyStyles from '../../../../styles/typography.css'
 

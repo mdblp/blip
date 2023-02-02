@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,14 +30,14 @@ import { act, Simulate } from 'react-dom/test-utils'
 
 import ChatWidget from '../../../../components/chat/chat-widget'
 import { render, unmountComponentAtNode } from 'react-dom'
-import { IMessage } from '../../../../lib/chat/models/i-message.model'
-import User from '../../../../lib/auth/models/user.model'
+import { type IMessage } from '../../../../lib/chat/models/i-message.model'
+import type User from '../../../../lib/auth/models/user.model'
 import ChatApi from '../../../../lib/chat/chat.api'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import * as authHookMock from '../../../../lib/auth/auth.hook'
-import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
-import { Patient } from '../../../../lib/patient/models/patient.model'
+import { type PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/selected-team/selected-team.provider')
@@ -132,29 +132,6 @@ describe('Chat widget', () => {
     expect(apiStub).toHaveBeenCalled()
     const messages = container.querySelectorAll('.message')
     expect(messages.length).toEqual(mockedMessages.length)
-  })
-
-  it('should render an emoji picker when clicking on the emoji button and add the clicked emoji in the text input before disappearing', async () => {
-    const apiStub = jest.spyOn(ChatApi, 'getChatMessages').mockResolvedValue(Promise.resolve([]))
-    await mountComponent()
-    expect(apiStub).toHaveBeenCalled()
-
-    // when clicking on the emoji button
-    const emojiButton = container.querySelector('#chat-widget-emoji-button')
-    expect(emojiButton).toBeDefined()
-    Simulate.click(emojiButton)
-    let emojiPicker = container.querySelector('#chat-widget-emoji-picker')
-    expect(emojiPicker).toBeDefined()
-
-    // when clicking on an emoji
-    const emojiItem = emojiPicker.querySelector('.emoji')
-    expect(emojiItem).toBeDefined()
-    Simulate.click(emojiItem.querySelector('button'))
-    emojiPicker = container.querySelector('#chat-widget-emoji-picker')
-    expect(emojiPicker).toBeNull()
-
-    const textInput = container.querySelector('#standard-multiline-flexible')
-    expect(textInput.innerHTML.length).toBeGreaterThanOrEqual(1)
   })
 
   it('should send the message when clicking on send button', async () => {

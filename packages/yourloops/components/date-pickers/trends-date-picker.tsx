@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, MouseEventHandler } from 'react'
+import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 
 import DateRangeIcon from '@mui/icons-material/DateRange'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -47,7 +47,7 @@ interface TrendsDatePickerProps {
   onBackButtonClick: MouseEventHandler<HTMLButtonElement>
   onMostRecentButtonClick: MouseEventHandler<HTMLButtonElement>
   onNextButtonClick: MouseEventHandler<HTMLButtonElement>
-  onResult: Function
+  onResult: (start: string, end: string) => void
   start: string
 }
 
@@ -89,7 +89,7 @@ export const TrendsDatePicker: FunctionComponent<TrendsDatePickerProps> = (props
       </IconButton>
       <TextField
         id="trends-chart-title-dates"
-        onClick={() => setIsOpen(true)}
+        onClick={() => { setIsOpen(true) }}
         variant="standard"
         value={displayedDate}
         disabled={disabled || isOpen}

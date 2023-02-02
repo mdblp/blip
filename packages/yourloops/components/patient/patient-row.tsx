@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useMemo, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import EmailIcon from '@mui/icons-material/Email'
 import Tooltip from '@mui/material/Tooltip'
@@ -50,9 +50,9 @@ import RemovePatientDialog from './remove-patient-dialog'
 import EmailOpenIcon from '../icons/email-open-icon'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { PatientRowProps } from './models/patient-table-props.model'
-import { MedicalData } from '../../lib/data/models/medical-data.model'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type PatientRowProps } from './models/patient-table-props.model'
+import { type MedicalData } from '../../lib/data/models/medical-data.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { FilterType } from '../../lib/patient/models/enums/filter-type.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 

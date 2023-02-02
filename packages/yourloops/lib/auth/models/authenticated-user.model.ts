@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AuthenticatedUserMetadata } from './enums/authenticated-user-metadata.enum'
+import { type AuthenticatedUserMetadata } from './enums/authenticated-user-metadata.enum'
 
 export interface AuthenticatedUser {
   [AuthenticatedUserMetadata.Roles]: string[]

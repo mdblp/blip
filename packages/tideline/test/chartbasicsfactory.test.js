@@ -66,9 +66,6 @@ describe('BasicsChart', function() {
         }
       },
       tidelineData: td,
-      permsOfLoggedInUser: {
-        view: {}
-      },
       timePrefs: {
         timezoneAware: true,
         timezoneName: 'UTC'
@@ -89,7 +86,7 @@ describe('BasicsChart', function() {
     } catch (e) {
       console.warn(e)
     }
-    expect(console.error.callCount).to.be.equals(9)
+    expect(console.error.callCount).to.be.equals(8)
   })
 
   it('should not mutate basics state', async () => {
@@ -155,7 +152,6 @@ describe('BasicsChart', function() {
             fullName: 'John Doe'
           }
         },
-        permsOfLoggedInUser: { root: true },
         tidelineData: _.assign({}, td, {
           grouped: {
             upload: [new types.Upload({ deviceTags: ['insulin-pump'], source: 'Diabeloop' })]
@@ -200,7 +196,6 @@ describe('BasicsChart', function() {
             fullName: 'John Doe'
           }
         },
-        permsOfLoggedInUser: { root: true },
         tidelineData: _.assign({}, td, {
           grouped: {
             upload: [new types.Upload({ deviceTags: ['insulin-pump'], source: 'Diabeloop' })]

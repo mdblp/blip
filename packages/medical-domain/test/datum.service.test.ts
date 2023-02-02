@@ -44,11 +44,12 @@ import WarmUpService from '../src/domains/repositories/medical/datum/warm-up.ser
 import WizardService from '../src/domains/repositories/medical/datum/wizard.service'
 import UploadService from '../src/domains/repositories/medical/datum/upload.service'
 import ZenModeService from '../src/domains/repositories/medical/datum/zen-mode.service'
-import Datum, { DatumProcessor } from '../src/domains/models/medical/datum.model'
-import ReservoirChange from '../src/domains/models/medical/datum/reservoir-change.model'
+import { type DatumProcessor } from '../src/domains/models/medical/datum.model'
+import type Datum from '../src/domains/models/medical/datum.model'
+import type ReservoirChange from '../src/domains/models/medical/datum/reservoir-change.model'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const knownTypes: Array<{data: Record<string, unknown>, service: DatumProcessor<any>}> = [
+const knownTypes: Array<{ data: Record<string, unknown>, service: DatumProcessor<any> }> = [
   {
     data: { type: 'basal' },
     service: BasalService

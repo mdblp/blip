@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
@@ -37,10 +37,10 @@ import FormGroup from '@mui/material/FormGroup'
 import Link from '@mui/material/Link'
 
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { BaseConsentCheck, ConsentCheck } from './models/consent-check.model'
-import { ConsentFormProps } from './models/consent-form-props.model'
+import { type BaseConsentCheck, type ConsentCheck } from './models/consent-check.model'
+import { type ConsentFormProps } from './models/consent-form-props.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
-import { MonitoringConsentFormProps } from './models/monitoring-consent-form-props.model'
+import { type MonitoringConsentFormProps } from './models/monitoring-consent-form-props.model'
 
 const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
   return {

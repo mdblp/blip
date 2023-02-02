@@ -26,7 +26,7 @@
  */
 
 import Source from './datum/enums/source.enum'
-import { BgUnit, MGDL_UNITS, MMOLL_UNITS } from './datum/cbg.model'
+import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from './datum/cbg.model'
 
 interface MedicalDataOptions {
   defaultSource: Source
@@ -47,11 +47,11 @@ interface MedicalDataOptions {
 }
 
 interface BgClasses {
-  'very-low': {boundary: number}
-  'low': {boundary: number}
-  'target': {boundary: number}
-  'high': {boundary: number}
-  'very-high': {boundary: number}
+  'very-low': { boundary: number }
+  'low': { boundary: number }
+  'target': { boundary: number }
+  'high': { boundary: number }
+  'very-high': { boundary: number }
 }
 
 interface TimePrefs {
@@ -115,4 +115,4 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
 }
 
 export default MedicalDataOptions
-export { BgClasses, TimePrefs, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }
+export { type BgClasses, type TimePrefs, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }

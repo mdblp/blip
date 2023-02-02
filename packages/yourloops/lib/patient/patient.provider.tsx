@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
 import CircularProgress from '@mui/material/CircularProgress'
 import usePatientProviderCustomHook from './patient.hook'
-import { PatientContextResult } from './models/patient-context-result.model'
+import { type PatientContextResult } from './models/patient-context-result.model'
 
 const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
 

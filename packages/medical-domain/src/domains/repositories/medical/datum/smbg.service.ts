@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DatumProcessor } from '../../../models/medical/datum.model'
-import Smbg from '../../../models/medical/datum/smbg.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
+import type Smbg from '../../../models/medical/datum/smbg.model'
 import DatumService from '../datum.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { normalizeBg } from './cbg.service'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 

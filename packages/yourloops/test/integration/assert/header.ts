@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoundFunctions, queries, screen, within } from '@testing-library/react'
+import { type BoundFunctions, type queries, screen, within } from '@testing-library/react'
 
 const checkHeader = (header: BoundFunctions<typeof queries>, fullName: string) => {
   expect(header.getByLabelText('YourLoops Logo')).toBeVisible()

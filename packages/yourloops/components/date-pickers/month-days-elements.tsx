@@ -26,10 +26,10 @@
  */
 
 import React from 'react'
-import { Dayjs, isDayjs } from 'dayjs'
-import { Theme } from '@mui/material/styles'
+import { type Dayjs, isDayjs } from 'dayjs'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import { CalendarSelection, CalendarSelectionRange } from './models'
+import { type CalendarSelection, type CalendarSelectionRange } from './models'
 import Day from './day'
 
 interface MonthDayElementsProps {
@@ -122,7 +122,7 @@ function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
         aria-selected={selected}
         aria-hidden={disabled}
         className={cx(dayClasses)}
-        onClick={() => onChange(day)}
+        onClick={() => { onChange(day) }}
         onMouseEnter={() => { if (onHoverDay) onHoverDay(day) }}
       />
     )

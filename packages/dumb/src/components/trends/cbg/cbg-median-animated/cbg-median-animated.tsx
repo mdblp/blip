@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import cx from 'classnames'
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import styles from './cbg-median-animated.css'
 import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
-import { BgBounds, ClassificationType } from '../../../../models/blood-glucose.model'
+import { type BgBounds, ClassificationType } from '../../../../models/blood-glucose.model'
 import { springConfig } from '../../../../models/constants/animation.constants'
-import { CbgMedianTransitionMotionInterpolate } from '../../../../models/animation.model'
-import { ScaleFunction } from '../../../../models/scale-function.model'
+import { type CbgMedianTransitionMotionInterpolate } from '../../../../models/animation.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 
 interface CbgMedianAnimatedProps {
   bgBounds: BgBounds

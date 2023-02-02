@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import { INotification } from '../notifications/models/i-notification.model'
+import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
-import { Monitoring } from './models/monitoring.model'
+import { type Monitoring } from './models/monitoring.model'
 import bows from 'bows'
-import { User } from '../auth'
-import { TeamMemberRole } from './models/enums/team-member-role.enum'
-import { Team } from './models/team.model'
+import { type User } from '../auth'
+import { type TeamMemberRole } from './models/enums/team-member-role.enum'
+import { type Team } from './models/team.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
-import { ITeam } from './models/i-team.model'
+import { type ITeam } from './models/i-team.model'
 import { TeamType } from './models/enums/team-type.enum'
 
 const log = bows('Team API')

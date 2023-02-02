@@ -60,7 +60,7 @@ import { Table } from './components/settings/table'
 import { TargetRangeLines } from './components/trends/common/target-range-lines/target-range-lines'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
 import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
-import { BgPrefs } from './models/blood-glucose.model'
+import { type BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
 import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
@@ -68,7 +68,7 @@ import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-an
 export {
   AverageDailyDoseStat,
   Background,
-  BgPrefs,
+  type BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
   CbgDateTraceLabel,

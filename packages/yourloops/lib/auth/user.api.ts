@@ -27,13 +27,13 @@
 
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import bows from 'bows'
-import { UserMetadata } from './models/user-metadata.model'
-import { Profile } from './models/profile.model'
-import { Preferences } from './models/preferences.model'
-import { Settings } from './models/settings.model'
-import { CompleteSignupPayload } from './models/complete-signup-payload.model'
+import { type UserMetadata } from './models/user-metadata.model'
+import { type Profile } from './models/profile.model'
+import { type Preferences } from './models/preferences.model'
+import { type Settings } from './models/settings.model'
+import { type CompleteSignupPayload } from './models/complete-signup-payload.model'
 import { UserRoles } from './models/enums/user-roles.enum'
-import { ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
+import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 
 const log = bows('User API')
 

@@ -103,10 +103,6 @@ class PatientDataPage extends React.Component {
         bgUnits: currentUser.settings?.units?.bg ?? MGDL_UNITS,
         bgClasses: {}
       },
-      permsOfLoggedInUser: {
-        view: {},
-        notes: {}
-      },
       canPrint: false,
       showPDFPrintOptions: false,
 
@@ -328,7 +324,6 @@ class PatientDataPage extends React.Component {
     } = this.props
     const {
       canPrint,
-      permsOfLoggedInUser,
       loadingState,
       chartPrefs,
       chartStates,
@@ -368,7 +363,6 @@ class PatientDataPage extends React.Component {
                 msRange={msRange}
                 loading={loadingState !== LOADING_STATE_DONE}
                 tidelineData={medicalData}
-                permsOfLoggedInUser={permsOfLoggedInUser}
                 trackMetric={this.trackMetric}
                 chatWidget={chatWidget}
                 alarmCard={alarmCard}
@@ -385,7 +379,6 @@ class PatientDataPage extends React.Component {
                 medicalDataService={medicalData}
                 msRange={msRange}
                 patient={patient}
-                permsOfLoggedInUser={permsOfLoggedInUser}
                 timePrefs={timePrefs}
                 trackMetric={this.trackMetric}
                 onSwitchToDaily={this.handleSwitchToDaily}

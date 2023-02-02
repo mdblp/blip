@@ -30,9 +30,9 @@ import { render, screen } from '@testing-library/react'
 import { createPatient } from '../../../common/utils'
 import MedicalFilesWidget from '../../../../../components/dashboard-widgets/medical-files/medical-files-widget'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/models/user.model'
+import type User from '../../../../../lib/auth/models/user.model'
 import PatientUtils from '../../../../../lib/patient/patient.util'
-import { PatientTeam } from '../../../../../lib/data/models/patient.model'
+import { type PatientTeam } from '../../../../../lib/data/models/patient.model'
 
 /* eslint-disable react/display-name */
 jest.mock('../../../../../components/dashboard-widgets/medical-files/medical-record-list', () => () => {

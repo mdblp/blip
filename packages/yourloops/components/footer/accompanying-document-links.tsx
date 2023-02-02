@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Link from '@mui/material/Link'
 import { Link as RouterLink } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { User } from '../../lib/auth'
+import { type User } from '../../lib/auth'
 import { footerStyle } from './footer'
 
 const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {

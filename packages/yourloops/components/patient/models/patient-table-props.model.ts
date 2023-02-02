@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { FilterType } from '../../../lib/patient/models/enums/filter-type.enum'
-import { Patient } from '../../../lib/patient/models/patient.model'
-import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
-import { SortDirection } from './enums/sort-direction.enum'
-import { PatientTableSortFields } from './enums/patient-table-sort-fields.enum'
+import { type FilterType } from '../../../lib/patient/models/enums/filter-type.enum'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { type PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
+import { type SortDirection } from './enums/sort-direction.enum'
+import { type PatientTableSortFields } from './enums/patient-table-sort-fields.enum'
 
 export interface PatientTableProps {
   filter?: FilterType | string

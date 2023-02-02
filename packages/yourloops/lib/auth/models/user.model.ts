@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Consent } from './consent.model'
+import { type Consent } from './consent.model'
 import config from '../../config/config'
 import { UserRoles } from './enums/user-roles.enum'
-import { MedicalData } from '../../data/models/medical-data.model'
-import { Preferences } from './preferences.model'
-import { Profile } from './profile.model'
-import { Settings } from './settings.model'
-import { AuthenticatedUser } from './authenticated-user.model'
+import { type MedicalData } from '../../data/models/medical-data.model'
+import { type Preferences } from './preferences.model'
+import { type Profile } from './profile.model'
+import { type Settings } from './settings.model'
+import { type AuthenticatedUser } from './authenticated-user.model'
 import { AuthenticatedUserMetadata } from './enums/authenticated-user-metadata.enum'
 import { REGEX_BIRTHDATE } from '../../utils'
 

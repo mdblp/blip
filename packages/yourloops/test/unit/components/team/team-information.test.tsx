@@ -31,9 +31,9 @@ import { act } from 'react-dom/test-utils'
 import { ThemeProvider } from '@mui/material/styles'
 import * as authHookMock from '../../../../lib/auth'
 import { getTheme } from '../../../../components/theme'
-import TeamInformation, { TeamInformationProps } from '../../../../components/team/team-information'
+import TeamInformation, { type TeamInformationProps } from '../../../../components/team/team-information'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
-import User from '../../../../lib/auth/models/user.model'
+import type User from '../../../../lib/auth/models/user.model'
 import TeamUtils from '../../../../lib/team/team.util'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
@@ -96,11 +96,11 @@ describe('TeamInformation', () => {
     const editInfoButton = screen.getByRole('button', { name: 'edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
+      await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })
       const editTeamDialog = within(screen.getByRole('dialog'))
       const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-save' })
       fireEvent.click(editTeamButton)
-      await waitFor(() => expect(editTeamMock).toHaveBeenCalledWith(team))
+      await waitFor(() => { expect(editTeamMock).toHaveBeenCalledWith(team) })
     })
   }
 
@@ -176,11 +176,11 @@ describe('TeamInformation', () => {
     const editInfoButton = screen.getByRole('button', { name: 'edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
+      await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })
       const editTeamDialog = within(screen.getByRole('dialog'))
       const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-cancel' })
       fireEvent.click(editTeamButton)
-      await waitFor(() => expect(editTeamMock).toHaveBeenCalledTimes(0))
+      await waitFor(() => { expect(editTeamMock).toHaveBeenCalledTimes(0) })
     })
     expect(refresh).toHaveBeenCalledTimes(0)
   })

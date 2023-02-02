@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
-import { DurationUnit, TimePrefs } from 'medical-domain'
+import { DurationUnit, type TimePrefs } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 

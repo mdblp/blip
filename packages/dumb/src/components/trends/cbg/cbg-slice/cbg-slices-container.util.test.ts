@@ -26,7 +26,7 @@
  */
 
 import { computeMsThresholdForTimeOfDay, formatCbgs } from './cbg-slices-container.util'
-import { CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
+import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
 
 describe('CbgSlicesContainerUtil', () => {
   describe('formatCbgs', () => {

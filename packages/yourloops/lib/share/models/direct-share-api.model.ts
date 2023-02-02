@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DirectShareUser } from './direct-share-user.model'
+import { type DirectShareUser } from './direct-share-user.model'
 
 export interface DirectShareAPI {
   viewer?: DirectShareUser

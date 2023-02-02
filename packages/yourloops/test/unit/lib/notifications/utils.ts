@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Notification } from '../../../../lib/notifications/models/notification.model'
-import { NotificationContext } from '../../../../lib/notifications/models/notification-context.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
+import { type NotificationContext } from '../../../../lib/notifications/models/notification-context.model'
 
 export interface NotificationAPIStub {
   getReceivedInvitations: jest.Mock<Promise<Notification[]>, []>

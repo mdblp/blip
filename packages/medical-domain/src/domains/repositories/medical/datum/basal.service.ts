@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Basal from '../../../models/medical/datum/basal.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import type Basal from '../../../models/medical/datum/basal.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import { addMilliseconds } from '../../time/time.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Basal => {

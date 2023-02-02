@@ -28,7 +28,7 @@
 import React from 'react'
 
 import * as authHookMock from '../../../../lib/auth'
-import { User } from '../../../../lib/auth'
+import { type User } from '../../../../lib/auth'
 import { createPatient, createPatientTeam } from '../../common/utils'
 import PatientRow from '../../../../components/patient/patient-row'
 import { fireEvent, render, screen, within } from '@testing-library/react'
@@ -39,7 +39,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { getTheme } from '../../../../components/theme'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { PatientRowProps } from '../../../../components/patient/models/patient-table-props.model'
+import { type PatientRowProps } from '../../../../components/patient/models/patient-table-props.model'
 import { FilterType } from '../../../../lib/patient/models/enums/filter-type.enum'
 
 const removePatientDialogMockId = 'remove-patient-dialog-id'

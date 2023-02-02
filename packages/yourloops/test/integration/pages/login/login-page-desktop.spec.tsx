@@ -91,7 +91,7 @@ describe('Login page desktop view', () => {
     })
     let router
     await act(async () => {
-      router = await renderPage('/')
+      router = renderPage('/')
     })
     expect(router.current.history.location.pathname).toEqual('/verify-email')
   })
@@ -100,9 +100,7 @@ describe('Login page desktop view', () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       error: Error('Hi there, i\'m an error !!')
     })
-    await act(async () => {
-      await renderPage('/')
-    })
+    renderPage('/')
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Hi there, i\'m an error !!')
   })
 })

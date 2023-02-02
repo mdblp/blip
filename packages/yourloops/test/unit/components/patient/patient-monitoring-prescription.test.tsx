@@ -29,7 +29,7 @@ import React from 'react'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 
 import PatientMonitoringPrescription, {
-  PatientMonitoringPrescriptionProps
+  type PatientMonitoringPrescriptionProps
 } from '../../../../components/patient/patient-monitoring-prescription'
 import { RemoteMonitoringDialogAction } from '../../../../components/dialogs/remote-monitoring-dialog'
 import * as teamHookMock from '../../../../lib/team'
@@ -98,20 +98,24 @@ describe('PatientMonitoringPrescription', () => {
 
     // Upload a prescription file
     await userEvent.upload(screen.getByTestId('upload-file-input'), file)
-    await waitFor(() => expect(setPrescriptionInfoMock).toHaveBeenCalledWith({
-      file,
-      memberId: member1Id,
-      numberOfMonth: 3,
-      teamId: teamId1
-    }))
+    await waitFor(() => {
+      expect(setPrescriptionInfoMock).toHaveBeenCalledWith({
+        file,
+        memberId: member1Id,
+        numberOfMonth: 3,
+        teamId: teamId1
+      })
+    })
 
     // Select a number of month
     selectItem(allButtons[3], '6 month')
-    await waitFor(() => expect(setPrescriptionInfoMock).toHaveBeenCalledWith({
-      file,
-      memberId: member1Id,
-      numberOfMonth: 6,
-      teamId: teamId1
-    }))
+    await waitFor(() => {
+      expect(setPrescriptionInfoMock).toHaveBeenCalledWith({
+        file,
+        memberId: member1Id,
+        numberOfMonth: 6,
+        teamId: teamId1
+      })
+    })
   })
 })

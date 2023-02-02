@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { Bolus, DatumType, Prescriptor, TimePrefs, Wizard, WizardInputMealFat } from 'medical-domain'
+import React, { type FunctionComponent } from 'react'
+import { type Bolus, DatumType, Prescriptor, type TimePrefs, type Wizard, WizardInputMealFat } from 'medical-domain'
 import { Tooltip } from '../../../index'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import {
@@ -47,8 +47,8 @@ import {
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
+  type Position,
+  type Side
 } from '../common/tooltip/tooltip'
 import { formatInputTime, formatInsulin } from '../../../utils/format/format.util'
 import styles from './bolus-tooltip.css'

@@ -38,7 +38,7 @@ import { useAuth } from '../../../lib/auth'
 import metrics from '../../../lib/metrics'
 import { setPageTitle } from '../../../lib/utils'
 import { useNotification } from '../../../lib/notifications/notification.hook'
-import { ShareUser } from '../../../lib/share/models/share-user.model'
+import { type ShareUser } from '../../../lib/share/models/share-user.model'
 import { useAlert } from '../../../components/utils/snackbar'
 import SecondaryBar from './secondary-bar'
 import AddCaregiverDialog from './add-dialog'
@@ -47,8 +47,8 @@ import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } fr
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
-import { Notification } from '../../../lib/notifications/models/notification.model'
-import { AddDialogContentProps } from './models/add-dialog-content-props.model'
+import { type Notification } from '../../../lib/notifications/models/notification.model'
+import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
 
 const log = bows('PatientCaregiversPage')
 
@@ -118,7 +118,7 @@ function PatientCaregiversPage(): JSX.Element {
   }, [sentInvitations])
 
   const fetchCaregivers = useCallback(async (): Promise<void> => {
-    return await DirectShareApi.getDirectShares()
+    await DirectShareApi.getDirectShares()
       .catch((reason: unknown) => {
         log.error(reason)
 

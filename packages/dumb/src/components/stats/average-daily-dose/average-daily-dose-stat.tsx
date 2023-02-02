@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo, useMemo } from 'react'
+import React, { type FunctionComponent, memo, useMemo } from 'react'
 import styles from './average-daily-dose-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
 import { formatDecimalNumber } from '../../../utils/format/format.util'

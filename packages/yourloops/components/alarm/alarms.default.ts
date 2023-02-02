@@ -26,7 +26,7 @@
  */
 
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import { BgValues, Thresholds } from '../../lib/patient/models/alarms.model'
+import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
 
 export const DEFAULT_BG_VALUES: BgValues = {
   bgUnitDefault: UnitsType.MGDL,

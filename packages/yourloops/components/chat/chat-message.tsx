@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Face from '@mui/icons-material/Face'
 import { useTranslation } from 'react-i18next'

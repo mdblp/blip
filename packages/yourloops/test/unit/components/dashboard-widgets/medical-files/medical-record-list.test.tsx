@@ -28,39 +28,41 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { buildTeam, buildTeamMember, createPatient } from '../../../common/utils'
-import { CategoryProps } from '../../../../../components/dashboard-widgets/medical-files/medical-files-widget'
+import { type CategoryProps } from '../../../../../components/dashboard-widgets/medical-files/medical-files-widget'
 import MedicalRecordList from '../../../../../components/dashboard-widgets/medical-files/medical-record-list'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/models/user.model'
+import type User from '../../../../../lib/auth/models/user.model'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
-import { MedicalRecord } from '../../../../../lib/medical-files/model'
-import { MedicalRecordEditDialogProps } from '../../../../../components/dialogs/medical-record-edit-dialog'
-import { MedicalRecordDeleteDialogProps } from '../../../../../components/dialogs/medical-record-delete-dialog'
+import { type MedicalRecord } from '../../../../../lib/medical-files/model'
+import { type MedicalRecordEditDialogProps } from '../../../../../components/dialogs/medical-record-edit-dialog'
+import { type MedicalRecordDeleteDialogProps } from '../../../../../components/dialogs/medical-record-delete-dialog'
 
 /* eslint-disable react/display-name */
 jest.mock('../../../../../lib/auth')
 jest.mock('../../../../../components/dialogs/medical-record-edit-dialog', () => (props: MedicalRecordEditDialogProps) => {
   return (
     <div aria-label="mock-edit-dialog">
-      <button onClick={() => props.onSaved({
-        id: 'whateverId',
-        authorId: 'whateverAuthorId',
-        creationDate: new Date().toISOString(),
-        patientId: 'patientId',
-        teamId: 'teamId',
-        diagnosis: 'diagnosis',
-        progressionProposal: 'proposal',
-        trainingSubject: 'trainingSubject'
-      })}>mock-save-button</button>
-      <button onClick={() => props.onClose()}>mock-cancel-button</button>
+      <button onClick={() => {
+        props.onSaved({
+          id: 'whateverId',
+          authorId: 'whateverAuthorId',
+          creationDate: new Date().toISOString(),
+          patientId: 'patientId',
+          teamId: 'teamId',
+          diagnosis: 'diagnosis',
+          progressionProposal: 'proposal',
+          trainingSubject: 'trainingSubject'
+        })
+      }}>mock-save-button</button>
+      <button onClick={() => { props.onClose() }}>mock-cancel-button</button>
     </div>
   )
 })
 jest.mock('../../../../../components/dialogs/medical-record-delete-dialog', () => (props: MedicalRecordDeleteDialogProps) => {
   return (
     <div aria-label="mock-delete-dialog">
-      <button onClick={() => props.onDelete('fakeId')}>mock-delete-button</button>
-      <button onClick={() => props.onClose()}>mock-cancel-button</button>
+      <button onClick={() => { props.onDelete('fakeId') }}>mock-delete-button</button>
+      <button onClick={() => { props.onClose() }}>mock-cancel-button</button>
     </div>
   )
 })
@@ -106,7 +108,7 @@ describe('Medical Record list', () => {
 
   async function renderComponent() {
     render(getMedicalRecordListJSX())
-    await waitFor(() => expect(getMedicalRecordsSpy()).toHaveBeenCalled())
+    await waitFor(() => { expect(getMedicalRecordsSpy()).toHaveBeenCalled() })
   }
 
   function checkListLength(length: number) {
@@ -148,7 +150,7 @@ describe('Medical Record list', () => {
     expect(newButton).toBeDefined()
     fireEvent.click(newButton)
     fireEvent.click(screen.getByRole('button', { name: 'mock-save-button' }))
-    await waitFor(() => checkListLength(3))
+    await waitFor(() => { checkListLength(3) })
   })
 
   it('should close the edit dialog when clicking on cancel button', async () => {
@@ -167,7 +169,7 @@ describe('Medical Record list', () => {
     fireEvent.click(screen.getByRole('button', { name: 'delete' }))
     expect(screen.queryByLabelText('mock-delete-dialog')).not.toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'mock-delete-button' }))
-    await waitFor(() => checkListLength(1))
+    await waitFor(() => { checkListLength(1) })
   })
 
   it('should close the delete dialog when clicking on cancel button', async () => {
