@@ -25,9 +25,15 @@ import { MGDL_UNITS } from 'medical-domain'
 
 import bgBounds from '../../../helpers/bgBounds'
 import { TrendsSVGContainer } from '../../../../src/components/trends/common/TrendsSVGContainer'
-import CBGSlicesContainer from '../../../../src/components/trends/cbg/CBGSlicesContainer'
-import TargetRangeLines from '../../../../src/components/trends/common/TargetRangeLines'
-import { Background, NoDataLabel, XAxisLabels, XAxisTicks, YAxisLabelsAndTicks } from 'dumb'
+import {
+  Background,
+  CbgSlicesContainer,
+  NoDataLabel,
+  TargetRangeLines,
+  XAxisLabels,
+  XAxisTicks,
+  YAxisLabelsAndTicks
+} from 'dumb'
 
 /**
  * @typedef {import("enzyme").ShallowWrapper } ShallowWrapper
@@ -303,7 +309,7 @@ describe('TrendsSVGContainer', () => {
     })
 
     it('should render a CBGSlicesContainer', () => {
-      expect(wrapper.find(CBGSlicesContainer)).to.have.length(1)
+      expect(wrapper.find(CbgSlicesContainer)).to.have.length(1)
     })
 
     it('should render a TargetRangeLines', () => {
@@ -316,7 +322,7 @@ describe('TrendsSVGContainer', () => {
 
     describe('showing CGM data', () => {
       it('should render a CBGSlicesContainer', () => {
-        expect(wrapper.find(CBGSlicesContainer)).to.have.length(1)
+        expect(wrapper.find(CbgSlicesContainer)).to.have.length(1)
       })
 
       it('should render a unselected all data message when all days unselected', () => {
@@ -325,7 +331,8 @@ describe('TrendsSVGContainer', () => {
           activeDays[k] = false
         }
         const unselectedProps = _.assign({}, props, { cbgData: [], activeDays })
-        const unselectedWrapper = shallow(<TrendsSVGContainer {...unselectedProps} />, { disableLifecycleMethods: false })
+        const unselectedWrapper = shallow(
+          <TrendsSVGContainer {...unselectedProps} />, { disableLifecycleMethods: false })
         expect(unselectedWrapper.find(NoDataLabel)).to.have.length(1)
         expect(unselectedWrapper.find(NoDataLabel).prop('unselectedAllData')).to.be.true
       })

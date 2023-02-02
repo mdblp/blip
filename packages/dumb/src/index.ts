@@ -57,6 +57,7 @@ import {
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
 import { Table } from './components/settings/table'
+import { TargetRangeLines } from './components/trends/common/target-range-lines/target-range-lines'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
 import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
 import { type BgPrefs } from './models/blood-glucose.model'
@@ -90,6 +91,7 @@ export {
   SimpleStat,
   StatTooltip,
   Table,
+  TargetRangeLines,
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
