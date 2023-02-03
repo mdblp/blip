@@ -25,11 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Bolus, { isBolusSubType } from '../../../models/medical/datum/bolus.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import type Bolus from '../../../models/medical/datum/bolus.model'
+import { isBolusSubType } from '../../../models/medical/datum/bolus.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
-import { BolusSubtype } from '../../../models/medical/datum/enums/bolus-subtype.enum'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import { type BolusSubtype } from '../../../models/medical/datum/enums/bolus-subtype.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Bolus => {

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { type AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import HttpService from './http.service'
 import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'

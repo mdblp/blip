@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo, useState } from 'react'
-import { Patient } from '../../lib/patient/models/patient.model'
+import React, { type FunctionComponent, useMemo, useState } from 'react'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import moment from 'moment-timezone'

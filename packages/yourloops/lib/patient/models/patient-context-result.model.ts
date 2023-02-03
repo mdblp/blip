@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PatientFilterStats } from './patient-filter-stats.model'
-import { Team } from '../../team'
-import { MedicalData } from '../../data/models/medical-data.model'
-import { Patient } from './patient.model'
-import { PatientFilterTypes } from './enums/patient-filter-type.enum'
-import { PatientTeam } from './patient-team.model'
+import { type PatientFilterStats } from './patient-filter-stats.model'
+import { type Team } from '../../team'
+import { type MedicalData } from '../../data/models/medical-data.model'
+import { type Patient } from './patient.model'
+import { type PatientFilterTypes } from './enums/patient-filter-type.enum'
+import { type PatientTeam } from './patient-team.model'
 
 export interface PatientContextResult {
   patients: Patient[]

@@ -31,7 +31,7 @@ import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -46,8 +46,8 @@ import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 import ConsentForm from './form'
 import appConfig from '../../lib/config/config'
-import { Profile } from '../../lib/auth/models/profile.model'
-import { HistoryState } from '../../models/history-state.model'
+import { type Profile } from '../../lib/auth/models/profile.model'
+import { type HistoryState } from '../../models/history-state.model'
 
 interface ConsentProps {
   messageKey: string
@@ -109,7 +109,7 @@ function Page(props: ConsentProps): JSX.Element {
     const showFeedback = user.isUserHcp() && !user.profile?.contactConsent
 
     const onDecline = (): void => {
-      auth.logout().catch((reason) => console.error('logout', reason))
+      auth.logout().catch((reason) => { console.error('logout', reason) })
     }
 
     const onConfirm = (): void => {

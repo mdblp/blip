@@ -38,7 +38,6 @@ class BasicsChartNoSize extends React.Component {
     onSelectDay: PropTypes.func.isRequired,
     patient: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
-    permsOfLoggedInUser: PropTypes.object.isRequired,
     size: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
     trackMetric: PropTypes.func.isRequired
@@ -54,7 +53,7 @@ class BasicsChartNoSize extends React.Component {
   }
 
   componentDidMount() {
-    const { tidelineData, bgClasses, bgUnits, patient, permsOfLoggedInUser } = this.props
+    const { tidelineData, bgClasses, bgUnits, patient } = this.props
 
     if (!tidelineData.basicsData) {
       return
@@ -67,7 +66,7 @@ class BasicsChartNoSize extends React.Component {
 
     dataMunger.reduceByDay(basicsData)
 
-    dataMunger.processInfusionSiteHistory(basicsData, latestPump, patient, permsOfLoggedInUser)
+    dataMunger.processInfusionSiteHistory(basicsData, latestPump, patient)
 
     this.adjustSectionsBasedOnAvailableData(basicsData)
     basicsActions.bindApp(this)

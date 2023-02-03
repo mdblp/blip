@@ -26,7 +26,7 @@
  */
 
 import { formatBgValue, formatDecimalNumber, formatParameterValue } from './format.util'
-import { BgPrefs } from '../../models/blood-glucose.model'
+import { type BgPrefs } from '../../models/blood-glucose.model'
 import { Unit } from 'medical-domain'
 import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 

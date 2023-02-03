@@ -27,16 +27,16 @@
 
 import UserApi from '../../../../lib/auth/user.api'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
-import { AxiosResponse } from 'axios'
-import { Profile } from '../../../../lib/auth/models/profile.model'
-import { Settings } from '../../../../lib/auth/models/settings.model'
-import { Preferences } from '../../../../lib/auth/models/preferences.model'
-import { UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
-import { CompleteSignupPayload } from '../../../../lib/auth/models/complete-signup-payload.model'
+import { type AxiosResponse } from 'axios'
+import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type Settings } from '../../../../lib/auth/models/settings.model'
+import { type Preferences } from '../../../../lib/auth/models/preferences.model'
+import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
+import { type CompleteSignupPayload } from '../../../../lib/auth/models/complete-signup-payload.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
-import { ChangeUserRoleToHcpPayload } from '../../../../lib/auth/models/change-user-role-to-hcp-payload.model'
+import { type ChangeUserRoleToHcpPayload } from '../../../../lib/auth/models/change-user-role-to-hcp-payload.model'
 
 describe('User API', () => {
   const userId = 'userId'

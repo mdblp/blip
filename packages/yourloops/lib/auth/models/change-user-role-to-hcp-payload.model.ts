@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Consent } from './consent.model'
-import { HcpProfession } from './enums/hcp-profession.enum'
+import { type Consent } from './consent.model'
+import { type HcpProfession } from './enums/hcp-profession.enum'
 
 export interface ChangeUserRoleToHcpPayload {
   termsOfUse: Consent

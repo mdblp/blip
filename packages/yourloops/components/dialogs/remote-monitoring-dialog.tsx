@@ -29,7 +29,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -42,13 +42,13 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { commonComponentStyles } from '../common'
 import PatientInfo from '../patient/patient-info'
-import PatientMonitoringPrescription, { PrescriptionInfo } from '../patient/patient-monitoring-prescription'
+import PatientMonitoringPrescription, { type PrescriptionInfo } from '../patient/patient-monitoring-prescription'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -209,7 +209,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
                 <TextField
                   defaultValue={physician}
                   size="small"
-                  onChange={(e) => setPhysician(e.target.value)}
+                  onChange={(e) => { setPhysician(e.target.value) }}
                   data-testid="remote-monitoring-dialog-referring-doctor"
                 />
               </Box>

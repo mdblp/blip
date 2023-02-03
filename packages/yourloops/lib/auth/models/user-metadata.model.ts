@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Preferences } from './preferences.model'
-import { Settings } from './settings.model'
-import { Profile } from './profile.model'
+import { type Preferences } from './preferences.model'
+import { type Settings } from './settings.model'
+import { type Profile } from './profile.model'
 
 export interface UserMetadata {
   preferences: Preferences

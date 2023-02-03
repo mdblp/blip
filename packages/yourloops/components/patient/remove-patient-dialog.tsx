@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -42,7 +42,7 @@ import Select from '@mui/material/Select'
 import MedicalServiceIcon from '../icons/medical-service-icon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 
 interface RemovePatientDialogProps {
   patient: Patient | null
@@ -87,7 +87,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
             data-testid="patient-team-selector"
             label={t('select-team')}
             value={selectedTeamId}
-            onChange={(e) => setSelectedTeamId(e.target.value)}
+            onChange={(e) => { setSelectedTeamId(e.target.value) }}
           >
             {sortedTeams.map((team, index) => (
               <MenuItem

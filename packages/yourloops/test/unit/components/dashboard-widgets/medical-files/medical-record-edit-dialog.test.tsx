@@ -30,12 +30,12 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
 import MedicalRecordEditDialog, {
-  MedicalRecordEditDialogProps
+  type MedicalRecordEditDialogProps
 } from '../../../../../components/dialogs/medical-record-edit-dialog'
 import userEvent from '@testing-library/user-event'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/models/user.model'
-import { MedicalRecord } from '../../../../../lib/medical-files/models/medical-record.model'
+import type User from '../../../../../lib/auth/models/user.model'
+import { type MedicalRecord } from '../../../../../lib/medical-files/models/medical-record.model'
 import { UserRoles } from '../../../../../lib/auth/models/enums/user-roles.enum'
 
 jest.mock('../../../../../lib/auth')
@@ -106,7 +106,7 @@ describe('Medical record edit dialog', () => {
 
     await userEvent.type(diagnosisTextArea, 'abcd')
     userEvent.click(saveButton)
-    await waitFor(() => expect(createMedicalRecordSpy).toHaveBeenCalled())
+    await waitFor(() => { expect(createMedicalRecordSpy).toHaveBeenCalled() })
     expect(successAlertMock).toHaveBeenCalledWith('medical-record-save-success')
     expect(onSaved).toHaveBeenCalled()
   })
@@ -118,7 +118,7 @@ describe('Medical record edit dialog', () => {
     await userEvent.type(progressionProposalTextArea, 'abcd')
     await userEvent.type(trainingSubjectTextArea, 'efgh')
     fireEvent.click(saveButton)
-    await waitFor(() => expect(createMedicalRecordSpy).toHaveBeenCalled())
+    await waitFor(() => { expect(createMedicalRecordSpy).toHaveBeenCalled() })
     expect(errorAlertMock).toHaveBeenCalledWith('medical-record-save-failed')
   })
 
@@ -131,7 +131,7 @@ describe('Medical record edit dialog', () => {
 
     await userEvent.type(diagnosisTextArea, 'diag2')
     fireEvent.click(saveButton)
-    await waitFor(() => expect(updateMedicalRecordSpy).toHaveBeenCalled())
+    await waitFor(() => { expect(updateMedicalRecordSpy).toHaveBeenCalled() })
     expect(successAlertMock).toHaveBeenCalledWith('medical-record-save-success')
     expect(onSaved).toHaveBeenCalled()
   })

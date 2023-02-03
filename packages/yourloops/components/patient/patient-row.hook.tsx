@@ -28,8 +28,8 @@
 import { useTranslation } from 'react-i18next'
 import { patientListCommonStyle } from './table'
 import { useAuth } from '../../lib/auth'
-import { ClassNameMap } from '@mui/material'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type ClassNameMap } from '@mui/material'
+import { type Patient } from '../../lib/patient/models/patient.model'
 
 interface PatientRowHookProps {
   classes: ClassNameMap

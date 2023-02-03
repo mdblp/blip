@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo, useMemo } from 'react'
+import React, { type FunctionComponent, memo, useMemo } from 'react'
 import styles from './simple-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
 import { SimpleValue } from '../common/simple-value'
-import { StatFormats } from '../../../models/stats.model'
+import { type StatFormats } from '../../../models/stats.model'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { buildSimpleValueProps } from './simple-stat.util'
 

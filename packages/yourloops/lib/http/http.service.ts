@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { type AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import HttpStatus from './models/enums/http-status.enum'
 import { t } from '../language'
 

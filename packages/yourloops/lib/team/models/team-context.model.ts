@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Team } from './team.model'
-import { TeamMember } from './team-member.model'
-import { TypeTeamMemberRole } from './enums/team-member-role.enum'
+import { type Team } from './team.model'
+import { type TeamMember } from './team-member.model'
+import { type TypeTeamMemberRole } from './enums/team-member-role.enum'
 
 export interface TeamContext {
   teams: Array<Readonly<Team>>

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum RangeSegmentQuantile {
+export enum RangeSegmentSlice {
   ThirdQuartile = 'thirdQuartile',
   FirstQuartile = 'firstQuartile',
   TenthQuantile = 'tenthQuantile',

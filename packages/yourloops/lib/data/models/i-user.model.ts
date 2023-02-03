@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarms } from '../../patient/models/alarms.model'
-import { Monitoring } from '../../team/models/monitoring.model'
-import { MedicalData } from './medical-data.model'
-import { UserRoles } from '../../auth/models/enums/user-roles.enum'
-import { Profile } from '../../auth/models/profile.model'
-import { Settings } from '../../auth/models/settings.model'
-import { Preferences } from '../../auth/models/preferences.model'
+import { type Alarms } from '../../patient/models/alarms.model'
+import { type Monitoring } from '../../team/models/monitoring.model'
+import { type MedicalData } from './medical-data.model'
+import { type UserRoles } from '../../auth/models/enums/user-roles.enum'
+import { type Profile } from '../../auth/models/profile.model'
+import { type Settings } from '../../auth/models/settings.model'
+import { type Preferences } from '../../auth/models/preferences.model'
 
 export interface IUser {
   emails?: string[]

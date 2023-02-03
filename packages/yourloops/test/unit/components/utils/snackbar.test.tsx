@@ -29,7 +29,7 @@ import React from 'react'
 
 import { renderHook, act } from '@testing-library/react-hooks/dom'
 
-import { SnackbarContext, Snackbar, DefaultSnackbarContext } from '../../../../components/utils/snackbar'
+import { type SnackbarContext, Snackbar, DefaultSnackbarContext } from '../../../../components/utils/snackbar'
 import { render } from '@testing-library/react'
 
 describe('Snackbar', () => {

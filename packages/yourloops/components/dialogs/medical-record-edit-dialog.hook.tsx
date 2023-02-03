@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useState } from 'react'
+import { type Dispatch, type SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
-import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
+import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import { useAlert } from '../utils/snackbar'
-import { MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
+import { type MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
 
 interface MedicalRecordEditDialogHookProps extends CategoryProps {
   onSaved: (payload: MedicalRecord) => void
@@ -41,13 +41,13 @@ interface MedicalRecordEditDialogHookProps extends CategoryProps {
 interface MedicalRecordEditDialogHookReturn {
   saveMedicalRecord: () => Promise<void>
   diagnosis: string
-  setDiagnosis: Function
+  setDiagnosis: Dispatch<SetStateAction<string>>
   progressionProposal: string
-  setProgressionProposal: Function
+  setProgressionProposal: Dispatch<SetStateAction<string>>
   trainingSubject: string
-  setTrainingSubject: Function
+  setTrainingSubject: Dispatch<SetStateAction<string>>
   inProgress: boolean
-  setInProgress: Function
+  setInProgress: Dispatch<SetStateAction<boolean>>
   disabled: boolean
 }
 

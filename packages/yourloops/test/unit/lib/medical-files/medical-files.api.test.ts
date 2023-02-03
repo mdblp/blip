@@ -26,11 +26,11 @@
  */
 
 import HttpService from '../../../../lib/http/http.service'
-import { AxiosResponse } from 'axios'
+import { type AxiosResponse } from 'axios'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
-import { Prescription } from '../../../../lib/medical-files/models/prescription.model'
-import { WeeklyReport } from '../../../../lib/medical-files/models/weekly-report.model'
-import { MedicalRecord, NewMedicalRecord } from '../../../../lib/medical-files/models/medical-record.model'
+import { type Prescription } from '../../../../lib/medical-files/models/prescription.model'
+import { type WeeklyReport } from '../../../../lib/medical-files/models/weekly-report.model'
+import { type MedicalRecord, type NewMedicalRecord } from '../../../../lib/medical-files/models/medical-record.model'
 
 describe('Medical files API', () => {
   const patientId = 'patientId'

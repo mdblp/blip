@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-bar'
 import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
-import { CBGStatType } from '../../../models/stats.model'
+import { type CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
 import { BgPrefs, BgBounds } from '../../../models/blood-glucose.model'
@@ -68,7 +68,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
           hoveredStatId={hoveredStatId}
           {...titleProps}
         />
-        <Box className={styles.stats} onMouseLeave={() => onMouseLeave()} marginLeft="8px">
+        <Box className={styles.stats} onMouseLeave={() => { onMouseLeave() }} marginLeft="8px">
           <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
           <CBGPercentageBar {...cbgStatsProps.highStat} />
           <CBGPercentageBar {...cbgStatsProps.targetStat} />

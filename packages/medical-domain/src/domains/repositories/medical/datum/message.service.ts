@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Message from '../../../models/medical/datum/message.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import type Message from '../../../models/medical/datum/message.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Message => {

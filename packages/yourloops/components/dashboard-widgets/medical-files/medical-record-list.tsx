@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -50,11 +50,11 @@ import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import MedicalRecordEditDialog from '../../dialogs/medical-record-edit-dialog'
 import MedicalRecordDeleteDialog from '../../dialogs/medical-record-delete-dialog'
 import TrashCanOutlined from '../../icons/trash-can-outlined'
-import { CategoryProps } from './medical-files-widget'
+import { type CategoryProps } from './medical-files-widget'
 import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
-import { MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
+import { type MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
 
 const useStyle = makeStyles()((theme: Theme) => ({
   categoryTitle: {
@@ -135,7 +135,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   useEffect(() => {
     if (!medicalRecords) {
       MedicalFilesApi.getMedicalRecords(patientId, teamId)
-        .then(medicalRecords => setMedicalRecords(medicalRecords))
+        .then(medicalRecords => { setMedicalRecords(medicalRecords) })
         .catch(() => {
           setMedicalRecords([])
           alert.error(t('medical-records-get-failed'))
@@ -159,9 +159,9 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
               key={index}
               aria-label={`record-${medicalRecord.id}`}
               className={`${classes.hoveredItem} ${medicalRecord.id === hoveredItem ? 'selected' : ''}`}
-              onClick={() => onClickMedicalRecord(medicalRecord)}
-              onMouseOver={() => setHoveredItem(medicalRecord.id)}
-              onMouseOut={() => setHoveredItem(undefined)}
+              onClick={() => { onClickMedicalRecord(medicalRecord) }}
+              onMouseOver={() => { setHoveredItem(medicalRecord.id) }}
+              onMouseOut={() => { setHoveredItem(undefined) }}
             >
               <ListItemIcon>
                 <DescriptionOutlinedIcon />
@@ -178,7 +178,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
                       disableRipple
                       disableFocusRipple
                       aria-label={t('delete')}
-                      onClick={() => onDeleteMedicalRecord(medicalRecord)}
+                      onClick={() => { onDeleteMedicalRecord(medicalRecord) }}
                     >
                       <TrashCanOutlined />
                     </IconButton>
@@ -200,7 +200,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
             disableElevation
             className={commonStyles.button}
             startIcon={<NoteAddIcon />}
-            onClick={() => setIsEditDialogOpen(true)}
+            onClick={() => { setIsEditDialogOpen(true) }}
           >
             {t('new')}
           </Button>

@@ -28,8 +28,8 @@
 import { t } from './language'
 import metrics from './metrics'
 import moment from 'moment-timezone'
-import { IUser } from './data/models/i-user.model'
-import { Settings } from './auth/models/settings.model'
+import { type IUser } from './data/models/i-user.model'
+import { type Settings } from './auth/models/settings.model'
 import { UnitsType } from './units/models/enums/units-type.enum'
 import { CountryCodes } from './auth/models/country.model'
 
@@ -68,7 +68,7 @@ export const isZipCodeValid = (country: CountryCodes | string, zipCode: string):
  * @param timeout in milliseconds
  */
 export async function waitTimeout(timeout: number): Promise<void> {
-  return await new Promise((resolve) => {
+  await new Promise((resolve) => {
     setTimeout(resolve, timeout)
   })
 }

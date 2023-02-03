@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo } from 'react'
+import React, { type FunctionComponent, memo } from 'react'
 import styles from './loop-mode-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'

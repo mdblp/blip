@@ -28,14 +28,14 @@
 import React from 'react'
 import { act, render, waitFor } from '@testing-library/react'
 
-import { Team, TeamContext, TeamContextProvider, useTeam } from '../../../../lib/team'
+import { type Team, type TeamContext, TeamContextProvider, useTeam } from '../../../../lib/team'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as authHookMock from '../../../../lib/auth'
 import TeamApi from '../../../../lib/team/team.api'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { ITeam } from '../../../../lib/team/models/i-team.model'
+import { type ITeam } from '../../../../lib/team/models/i-team.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
@@ -73,7 +73,7 @@ describe('Team hook', () => {
           <DummyComponent />
         </TeamContextProvider>
       )
-      await waitFor(() => expect(teamHook.teams.length).toBeGreaterThan(0))
+      await waitFor(() => { expect(teamHook.teams.length).toBeGreaterThan(0) })
     })
   }
 
@@ -134,7 +134,7 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.updateTeamAlerts(team1)
         expect(updateTeamAlertsSpy).toHaveBeenCalled()
-        await waitFor(() => expect(getTeamsSpy).toHaveBeenCalledTimes(3))
+        await waitFor(() => { expect(getTeamsSpy).toHaveBeenCalledTimes(3) })
       })
     })
   })

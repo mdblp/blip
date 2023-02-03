@@ -28,9 +28,9 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import MedicalRecordDeleteDialog, {
-  MedicalRecordDeleteDialogProps
+  type MedicalRecordDeleteDialogProps
 } from '../../../../../components/dialogs/medical-record-delete-dialog'
-import { MedicalRecord } from '../../../../../lib/medical-files/model'
+import { type MedicalRecord } from '../../../../../lib/medical-files/model'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
 
@@ -59,7 +59,7 @@ describe('Medical record delete dialog', () => {
   it('should delete medical record when clicking delete button', async () => {
     render(getDialogJSX())
     fireEvent.click(screen.getByRole('button', { name: 'delete' }))
-    await waitFor(() => expect(deleteMedicalRecordSpy).toHaveBeenCalled())
+    await waitFor(() => { expect(deleteMedicalRecordSpy).toHaveBeenCalled() })
     expect(successMock).toHaveBeenCalledWith('medical-record-delete-success')
     expect(onDelete).toHaveBeenCalled()
   })
@@ -69,7 +69,7 @@ describe('Medical record delete dialog', () => {
       .mockImplementationOnce(() => Promise.reject(Error('delete-failed')))
     render(getDialogJSX())
     fireEvent.click(screen.getByRole('button', { name: 'delete' }))
-    await waitFor(() => expect(deleteMedicalRecordSpy).toHaveBeenCalled())
+    await waitFor(() => { expect(deleteMedicalRecordSpy).toHaveBeenCalled() })
     expect(errorMock).toHaveBeenCalledWith('medical-record-delete-failed')
   })
 

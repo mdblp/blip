@@ -32,11 +32,16 @@ import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
 import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
-import CBGSlicesContainer from '../cbg/CBGSlicesContainer'
-import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
-import TargetRangeLines from './TargetRangeLines'
-import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
-import { Background, NoDataLabel, XAxisLabels, XAxisTicks } from 'dumb'
+import {
+  Background,
+  CbgSlicesContainer,
+  FocusedCbgSliceSegment,
+  NoDataLabel,
+  TargetRangeLines,
+  XAxisLabels,
+  XAxisTicks,
+  YAxisLabelsAndTicks
+} from 'dumb'
 
 const BUMPERS = {
   top: 50,
@@ -158,9 +163,11 @@ export class TrendsSVGContainer extends React.Component {
         />
       )
       focused = (
-        <FocusedCBGSliceSegment
-          focusedSlice={focusedSlice}
-          focusedSliceKeys={focusedSliceKeys}
+        <FocusedCbgSliceSegment
+          leftPosition={focusedSlice.position.left}
+          segmentSliceBottom={focusedSliceKeys[0]}
+          segmentSliceTop={focusedSliceKeys[1]}
+          segmentsPosition={focusedSlice.position.yPositions}
           sliceWidth={sliceWidth}
         />
       )
@@ -168,7 +175,7 @@ export class TrendsSVGContainer extends React.Component {
 
     return (
       <g id="cbgTrends">
-        <CBGSlicesContainer
+        <CbgSlicesContainer
           bgBounds={this.props.bgPrefs.bgBounds}
           sliceWidth={sliceWidth}
           data={this.props.cbgData}
@@ -211,13 +218,14 @@ export class TrendsSVGContainer extends React.Component {
           />
           <YAxisLabelsAndTicks
             bgPrefs={this.props.bgPrefs}
-            margins={this.props.margins}
+            leftMargin={this.props.margins.left}
             yScale={yScale}
           />
           {this.renderCbg()}
           <TargetRangeLines
-            bgBounds={this.props.bgPrefs.bgBounds}
-            smbgOpts={this.props.smbgOpts}
+            upperBound={this.props.bgPrefs.bgBounds.targetUpperBound}
+            lowerBound={this.props.bgPrefs.bgBounds.targetLowerBound}
+            horizontalOffset={this.props.smbgOpts.maxR}
             xScale={xScale}
             yScale={yScale}
           />

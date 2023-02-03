@@ -29,9 +29,9 @@ import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import PrescriptionList from '../../../../../components/dashboard-widgets/medical-files/prescription-list'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
-import { Prescription } from '../../../../../lib/medical-files/model'
+import { type Prescription } from '../../../../../lib/medical-files/model'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/models/user.model'
+import type User from '../../../../../lib/auth/models/user.model'
 
 jest.mock('../../../../../lib/auth')
 describe('Prescription list', () => {
@@ -53,7 +53,7 @@ describe('Prescription list', () => {
 
   async function renderComponent() {
     render(<PrescriptionList patientId="patientId" teamId="teamId" />)
-    await waitFor(() => expect(getPrescriptionsSpy()).toHaveBeenCalled())
+    await waitFor(() => { expect(getPrescriptionsSpy()).toHaveBeenCalled() })
   }
 
   beforeEach(() => {
@@ -82,6 +82,6 @@ describe('Prescription list', () => {
     const listItem = screen.getByRole('listitem', { name: 'prescription-fakeId' })
     fireEvent.click(listItem)
     expect(getPrescriptionSpy()).toHaveBeenCalled()
-    await waitFor(() => expect(createObjectURLMock).toHaveBeenCalled())
+    await waitFor(() => { expect(createObjectURLMock).toHaveBeenCalled() })
   })
 })

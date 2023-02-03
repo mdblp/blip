@@ -28,13 +28,15 @@
 import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
-import { DurationUnit, TimePrefs } from 'medical-domain'
+import { DurationUnit, type TimePrefs } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
 export const ONE_HOUR_MS = 3600000
 export const HOURS_IN_DAY = 24
 export const TIMEZONE_UTC = 'UTC'
+export const THIRTY_MINS = ONE_HOUR_MS / 2
+export const TWENTY_FOUR_HRS = ONE_HOUR_MS * 24
 
 /**
  * getHourMinuteFormat
@@ -182,6 +184,10 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
 export const formatLocalizedFromUTC = (utc: string | number | Date | moment.Moment, timePrefs: TimePrefs, format = getDayFormat()): string => {
   const timezone = getTimezoneFromTimePrefs(timePrefs)
   return moment.utc(utc).tz(timezone).format(format)
+}
+
+export const formatDateToUtc = (date: string, format: string): string => {
+  return moment.utc(date).format(format)
 }
 
 export const convertValueToMinutes = (durationValue: number, durationUnit: DurationUnit): number => {

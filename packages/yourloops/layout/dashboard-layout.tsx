@@ -47,7 +47,7 @@ function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
   const authHook = useAuth()
   const isUserPatient = authHook.user?.isUserPatient()
 
-  const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant)
+  const onClickMainHeaderShrinkIcon = (): void => { setDrawerMiniVariant(!drawerMiniVariant) }
 
   return (
     <Box display="flex">

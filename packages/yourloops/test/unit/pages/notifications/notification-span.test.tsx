@@ -26,10 +26,10 @@
  */
 
 import React from 'react'
-import { NotificationSpan, NotificationSpanProps } from '../../../../pages/notifications/notification'
+import { NotificationSpan, type NotificationSpanProps } from '../../../../pages/notifications/notification'
 import { render, screen } from '@testing-library/react'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
-import { Profile } from '../../../../lib/auth/models/profile.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
+import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 describe('NotificationSpan', () => {

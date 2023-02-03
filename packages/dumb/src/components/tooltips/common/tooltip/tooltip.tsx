@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
 import TooltipTail from '../tooltip-tail/tooltip-tail'
-import { TimePrefs } from 'medical-domain'
+import { type TimePrefs } from 'medical-domain'
 
 export interface Offset {
   top: number
@@ -60,17 +60,17 @@ export const DEFAULT_TOOLTIP_OFFSET = { top: 0, left: 0 }
 export const DEFAULT_TOOLTIP_BORDER_WIDTH = 2
 
 interface TooltipProps {
-  title?: string
+  title?: string | JSX.Element
   dateTitle?: DateTitle
   content?: string | JSX.Element
   position: Position
-  offset: Offset
+  offset?: Offset
   tail?: boolean
   side: Side
-  tailWidth: number
-  tailHeight: number
+  tailWidth?: number
+  tailHeight?: number
   backgroundColor?: string
-  borderColor: string
+  borderColor?: string
   borderWidth: number
 }
 

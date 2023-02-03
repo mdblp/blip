@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -33,8 +33,8 @@ import {
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
+  type Position,
+  type Side
 } from '../common/tooltip/tooltip'
 import { Tooltip } from '../../../index'
 import commonStyles from '../../../styles/tooltip-common.css'
@@ -42,7 +42,7 @@ import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
-import { DurationUnit, DurationValue, PhysicalActivity, TimePrefs } from 'medical-domain'
+import { DurationUnit, type DurationValue, type PhysicalActivity, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 

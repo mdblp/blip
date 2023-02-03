@@ -28,10 +28,14 @@
 import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
+import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
   CBGPercentageBarChartMemoized as CBGPercentageBarChart
 } from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
+import {
+  CbgSlicesContainerMemoized as CbgSlicesContainer
+} from './components/trends/cbg/cbg-slice/cbg-slices-container'
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
@@ -54,30 +58,32 @@ import {
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
-import { CbgMedianAnimated } from './components/trends/cbg/cbg-median-animated/cbg-median-animated'
 import { Table } from './components/settings/table'
+import { TargetRangeLines } from './components/trends/common/target-range-lines/target-range-lines'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
 import { NoDataLabel } from './components/trends/common/no-data-label/no-data-label'
-import { CbgSliceAnimated } from './components/trends/cbg/cbg-slice/cbg-slice-animated'
-import { BgPrefs } from './models/blood-glucose.model'
+import { type BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
+import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
+import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
 
 export {
   AverageDailyDoseStat,
   Background,
-  BgPrefs,
+  type BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
+  CbgDateTraceLabel,
   CBGMeanStat,
-  CbgMedianAnimated,
   CBGPercentageBarChart,
-  CbgSliceAnimated,
+  CbgSlicesContainer,
   CbgSliceSegment,
   CBGStandardDeviation,
   CBGStatType,
   CgmTable,
   ConfidentialTooltip,
+  FocusedCbgSliceSegment,
   FoodTooltip,
   LabeledCheckbox,
   LoopModeStat,
@@ -89,10 +95,12 @@ export {
   SimpleStat,
   StatTooltip,
   Table,
+  TargetRangeLines,
   TerminalTable,
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,
   XAxisLabels,
-  XAxisTicks
+  XAxisTicks,
+  YAxisLabelsAndTicks
 }

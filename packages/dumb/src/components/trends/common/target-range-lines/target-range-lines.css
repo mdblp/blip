@@ -25,7 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface PermsOfLoggedInUser {
-  view: {}
-  notes: {}
+.targetRangeLine {
+  pointer-events: none;
+  stroke: white;
+  stroke-dasharray: 9,9;
+  stroke-width: 2px;
 }

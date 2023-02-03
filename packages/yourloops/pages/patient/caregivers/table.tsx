@@ -45,7 +45,7 @@ import PersonRemoveIcon from '../../../components/icons/person-remove-icon'
 import IconActionButton from '../../../components/buttons/icon-action'
 import CertifiedProfessionalIcon from '../../../components/icons/certified-professional-icon'
 
-import { ShareUser } from '../../../lib/share/models/share-user.model'
+import { type ShareUser } from '../../../lib/share/models/share-user.model'
 
 import { getUserFirstName, getUserLastName } from '../../../lib/utils'
 import { SortDirection, SortFields } from './types'

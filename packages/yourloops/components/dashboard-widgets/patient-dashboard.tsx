@@ -25,16 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { Patient } from '../../lib/patient/models/patient.model'
+import React, { type FunctionComponent } from 'react'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
-import MedicalDataService, { TimePrefs } from 'medical-domain'
-import { ChartPrefs } from './models/chart-prefs.model'
-import { BgPrefs } from 'dumb'
-import DataUtil from 'tidepool-viz/src/utils/data'
-import moment, { Moment } from 'moment-timezone'
-import { PermsOfLoggedInUser } from './models/perms-of-loggedin-user.model'
-import metrics from '../../lib/metrics'
+import { type TimePrefs } from 'medical-domain'
+import type MedicalDataService from 'medical-domain'
+import { type ChartPrefs } from './models/chart-prefs.model'
+import { type BgPrefs } from 'dumb'
+import type DataUtil from 'tidepool-viz/src/utils/data'
+import moment, { type Moment } from 'moment-timezone'
+import type metrics from '../../lib/metrics'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -61,7 +61,6 @@ interface PatientDashboardProps {
   medicalDataService: MedicalDataService
   msRange: number
   patient: Patient
-  permsOfLoggedInUser: PermsOfLoggedInUser
   timePrefs: TimePrefs
   trackMetric: typeof metrics.send
   onSwitchToDaily: (dateTime: Moment | Date | number | null) => void
@@ -77,7 +76,6 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
     medicalDataService,
     msRange,
     patient,
-    permsOfLoggedInUser,
     timePrefs,
     trackMetric,
     onSwitchToDaily
@@ -141,7 +139,6 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           timePrefs={timePrefs}
           patient={patient}
           tidelineData={medicalDataService}
-          permsOfLoggedInUser={permsOfLoggedInUser}
           trackMetric={trackMetric}
           dataUtil={dataUtil}
           chartPrefs={chartPrefs}

@@ -54,8 +54,8 @@ describe('Login page desktop view', () => {
     const moreInfoLink = within(infoContainer).getByRole('link')
 
     // Images
-    expect(screen.getByAltText('Yourloops brand colors')).toBeVisible()
-    expect(screen.getByAltText('Yourloops laptop')).toBeVisible()
+    expect(screen.getByAltText('YourLoops brand colors')).toBeVisible()
+    expect(screen.getByAltText('YourLoops laptop')).toBeVisible()
 
     // header
     expect(header).toBeVisible()
@@ -68,7 +68,7 @@ describe('Login page desktop view', () => {
     expect(languageSelector).toBeVisible()
 
     // main content
-    expect(infoContainer).toHaveTextContent('Yourloops is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.It provides access to visual representations of data that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.YourLoops also enables patients to securely share their data with their medical team or caregivers.For health professionals, YourLoops is the platform for monitoring their patients. Through these features, it saves time and facilitates therapeutic decision-making.Learn more')
+    expect(infoContainer).toHaveTextContent('YourLoops is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.It provides access to visual representations of data that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.YourLoops also enables patients to securely share their data with their medical team or caregivers.For health professionals, YourLoops is the platform for monitoring their patients. Through these features, it saves time and facilitates therapeutic decision-making.Learn more')
     expect(moreInfoLink).toBeVisible()
     expect(moreInfoLink).toHaveAttribute('href', 'https://www.dbl-diabetes.com')
     checkFooter({ needFooterLanguageSelector: false })
@@ -91,7 +91,7 @@ describe('Login page desktop view', () => {
     })
     let router
     await act(async () => {
-      router = await renderPage('/')
+      router = renderPage('/')
     })
     expect(router.current.history.location.pathname).toEqual('/verify-email')
   })
@@ -100,9 +100,7 @@ describe('Login page desktop view', () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       error: Error('Hi there, i\'m an error !!')
     })
-    await act(async () => {
-      await renderPage('/')
-    })
+    renderPage('/')
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Hi there, i\'m an error !!')
   })
 })

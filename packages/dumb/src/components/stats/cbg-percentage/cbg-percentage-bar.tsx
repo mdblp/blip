@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from './cbg-percentage-bar.css'
-import { CBGStatType } from '../../../models/stats.model'
+import { type CBGStatType, type StatLevel } from '../../../models/stats.model'
 import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
 export interface CBGPercentageBarProps {
   type: CBGStatType
-  id: string
+  id: StatLevel
   isDisabled: boolean
   legendTitle: string
-  onMouseEnter: Function
+  onMouseEnter: (id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => void
   title: string
   total: number
   value: number
@@ -57,7 +57,7 @@ const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
     <div
       data-testid={`cbg-percentage-stat-${id}-${type}`}
       className={styles.stat}
-      onMouseEnter={() => onMouseEnter(id, title, legendTitle, total !== 0)}
+      onMouseEnter={() => { onMouseEnter(id, title, legendTitle, total !== 0) }}
     >
       <div className={styles.bar}>
         {hasValues &&

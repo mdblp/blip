@@ -28,7 +28,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { Box, CardHeader, IconButton } from '@mui/material'
 import TuneIcon from '@mui/icons-material/Tune'
@@ -37,7 +37,7 @@ import AnnouncementIcon from '@mui/icons-material/Announcement'
 import Card from '@mui/material/Card'
 import PatientAlarmDialog from './patient-alarm-dialog'
 import { useAuth } from '../../lib/auth'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 
 const alarmCardStyles = makeStyles()((theme: Theme) => {
   return {
@@ -106,7 +106,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
                 id="configure-icon-button-id"
                 aria-label={t('configure-alarms')}
                 data-testid="alarm-card-configure-button"
-                onClick={() => setShowPatientAlarmDialog(true)}
+                onClick={() => { setShowPatientAlarmDialog(true) }}
                 size="large">
                 <TuneIcon />
               </IconButton>

@@ -26,10 +26,10 @@
  */
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
-import { convertBG, TimePrefs, Unit } from 'medical-domain'
+import { convertBG, type TimePrefs, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
-import { BgClass, BgPrefs } from '../../models/blood-glucose.model'
+import { BgClass, type BgPrefs } from '../../models/blood-glucose.model'
 import { min } from 'lodash'
 import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 
@@ -71,7 +71,7 @@ export const formatParameterValue = (value: number | string, unit: Unit): string
   return valueNumber.toFixed(decimalsCount)
 }
 
-export const formatBgValue = (value: number, bgPrefs?: BgPrefs, outOfRangeThresholds?: { [value: string]: number }): string => {
+export const formatBgValue = (value: number, bgPrefs?: BgPrefs, outOfRangeThresholds?: Record<string, number>)): string => {
   const unit = bgPrefs?.bgUnits ?? UnitsType.MGDL
   const isUnitMmolPerLiter = unit === UnitsType.MMOLL
 

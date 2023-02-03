@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2017-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,4 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export type XScale = (value: number) => number
+.segment {
+  stroke: black;
+  stroke-width: 2; /* When changing this value, make sure to update the value of STROKE_WIDTH in FocusedCbgSliceSegment */
+  pointer-events: none;
+  fill: transparent;
+}

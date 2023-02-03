@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
@@ -42,11 +42,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
-import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
+import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import useMedicalRecordEditDialog from './medical-record-edit-dialog.hook'
 import { useAuth } from '../../lib/auth'
-import { MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
+import { type MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
 
 export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void
@@ -121,7 +121,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           rows={4}
           disabled={readonly}
           data-testid="diagnosis"
-          onChange={(event) => setDiagnosis(event.target.value)}
+          onChange={(event) => { setDiagnosis(event.target.value) }}
         />
 
         <Divider className={divider} />
@@ -137,7 +137,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           rows={4}
           disabled={readonly}
           data-testid="progression-proposal"
-          onChange={(event) => setProgressionProposal(event.target.value)}
+          onChange={(event) => { setProgressionProposal(event.target.value) }}
         />
 
         <Divider className={divider} />
@@ -153,7 +153,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           rows={4}
           disabled={readonly}
           data-testid="training-subject"
-          onChange={(event) => setTrainingSubject(event.target.value)}
+          onChange={(event) => { setTrainingSubject(event.target.value) }}
         />
       </DialogContent>
 

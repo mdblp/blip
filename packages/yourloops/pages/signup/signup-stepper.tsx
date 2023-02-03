@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'

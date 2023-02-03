@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined'
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle'
@@ -200,6 +200,18 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     }
   ]
 
+  const onMouseEnter = (): void => {
+    if (miniVariant) {
+      setOnHover(true)
+    }
+  }
+
+  const onMouseLeave = (): void => {
+    if (miniVariant) {
+      setOnHover(false)
+    }
+  }
+
   return (
     <Drawer
       id="main-left-drawer"
@@ -207,8 +219,8 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
       variant="permanent"
       className={drawerClass}
       classes={{ paper: paperClass }}
-      onMouseEnter={() => miniVariant ? setOnHover(true) : undefined}
-      onMouseLeave={() => miniVariant ? setOnHover(false) : undefined}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <Toolbar />
       <List>

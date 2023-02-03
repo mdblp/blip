@@ -32,7 +32,7 @@ import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/team.util'
-import LeaveTeamDialog, { LeaveTeamDialogProps } from '../../../../components/dialogs/leave-team-dialog'
+import LeaveTeamDialog, { type LeaveTeamDialogProps } from '../../../../components/dialogs/leave-team-dialog'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')

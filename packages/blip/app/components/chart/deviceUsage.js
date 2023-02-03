@@ -103,7 +103,7 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, permsOfLoggedInUser, trackMetric, dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
@@ -219,7 +219,6 @@ const DeviceUsage = (props) => {
           onSelectDay={() => null}
           patient={patient}
           tidelineData={tidelineData}
-          permsOfLoggedInUser={permsOfLoggedInUser}
           timePrefs={timePrefs}
           trackMetric={trackMetric} />
       </CardContent>
@@ -242,7 +241,6 @@ DeviceUsage.propType = {
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
-  permsOfLoggedInUser: PropTypes.object.isRequired,
   trackMetric: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired
 }

@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from './background.css'
-import { XScale } from '../../../../models/x-scale.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { TRENDS_INTERVALS_ARRAY_MS } from '../../../../utils/trends/trends.util'
 
 interface BackgroundProps {
@@ -41,7 +41,7 @@ interface BackgroundProps {
     width: number
     height: number
   }
-  xScale: XScale
+  xScale: ScaleFunction
 }
 
 const DEFAULT_MARGIN = 0

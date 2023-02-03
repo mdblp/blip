@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Prescriptor from '../../../models/medical/datum/enums/prescriptor.enum'
-import Unit from '../../../models/medical/datum/enums/unit.enum'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
-import Meal from '../../../models/medical/datum/meal.model'
+import type Prescriptor from '../../../models/medical/datum/enums/prescriptor.enum'
+import type Unit from '../../../models/medical/datum/enums/unit.enum'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type Meal from '../../../models/medical/datum/meal.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Meal => {

@@ -26,37 +26,28 @@
  */
 
 import cx from 'classnames'
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import { springConfig } from '../../../../models/constants/animation.constants'
 
 import styles from './cbg-slice-animated.css'
-import { CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
+import { type CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
 import CbgSliceSegment from './cbg-slice-segment'
-import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
+import { type TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getRangeSegments } from './cbg-slice-animated.util'
-import { XScale } from '../../../../models/x-scale.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
+import { type TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 
 interface CbgSliceAnimatedProps {
-  datum: {
-    firstQuartile?: number
-    id: string
-    max?: number
-    median?: number
-    min?: number
-    msX: number
-    ninetiethQuantile?: number
-    tenthQuantile?: number
-    thirdQuartile?: number
-  }
+  datum: TrendsCalculatedCbgStats
   displayFlags: TrendsDisplayFlags
   showingCbgDateTraces: boolean
   sliceWidth: number
   tooltipLeftThreshold: number
   topMargin: number
-  xScale: XScale
-  yScale: Function
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
 const DEFAULT_SEGMENT_Y = 16

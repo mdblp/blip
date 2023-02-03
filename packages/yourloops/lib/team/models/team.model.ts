@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Monitoring } from './monitoring.model'
-import { TeamMember } from './team-member.model'
-import { TeamType } from './enums/team-type.enum'
-import { PostalAddress } from './postal-address.model'
+import { type Monitoring } from './monitoring.model'
+import { type TeamMember } from './team-member.model'
+import { type TeamType } from './enums/team-type.enum'
+import { type PostalAddress } from './postal-address.model'
 
 export const TEAM_CODE_LENGTH = 9
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/

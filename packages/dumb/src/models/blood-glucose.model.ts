@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BgClasses } from 'medical-domain'
-import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
+import { type BgClasses } from 'medical-domain'
+import { type UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 
 export interface BgBounds {
   veryHighThreshold: number

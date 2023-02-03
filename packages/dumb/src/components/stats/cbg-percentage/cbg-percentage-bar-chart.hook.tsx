@@ -52,7 +52,7 @@ interface CBGPercentageBarChartHookReturn {
     veryLowStat: CBGPercentageBarProps
   }
   hoveredStatId: StatLevel | null
-  onMouseLeave: Function
+  onMouseLeave: onMouseLeave: () => void
   titleProps: { legendTitle: string, title: string }
 }
 

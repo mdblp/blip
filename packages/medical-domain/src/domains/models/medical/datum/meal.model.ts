@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import Prescriptor from './enums/prescriptor.enum'
-import Unit from './enums/unit.enum'
-import { DatumType } from './enums/datum-type.enum'
+import type BaseDatum from './basics/base-datum.model'
+import type Prescriptor from './enums/prescriptor.enum'
+import type Unit from './enums/unit.enum'
+import { type DatumType } from './enums/datum-type.enum'
 
 type Meal = BaseDatum & {
   type: DatumType

@@ -29,7 +29,7 @@ import config from '../../../../../lib/config/config'
 import User from '../../../../../lib/auth/models/user.model'
 import { UserRoles } from '../../../../../lib/auth/models/enums/user-roles.enum'
 import { AuthenticatedUserMetadata } from '../../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
-import { Profile } from '../../../../../lib/auth/models/profile.model'
+import { type Profile } from '../../../../../lib/auth/models/profile.model'
 
 describe('User', () => {
   const email = 'text@example.com'

@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { FunctionComponent, memo } from 'react'
+import React, { type FunctionComponent, memo } from 'react'
 import styles from './total-carbs-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'

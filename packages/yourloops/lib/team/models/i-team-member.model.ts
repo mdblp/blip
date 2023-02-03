@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarms } from '../../patient/models/alarms.model'
-import { Monitoring } from './monitoring.model'
-import { TeamMemberRole } from './enums/team-member-role.enum'
-import { UserInvitationStatus } from './enums/user-invitation-status.enum'
-import { Profile } from '../../auth/models/profile.model'
-import { Settings } from '../../auth/models/settings.model'
-import { Preferences } from '../../auth/models/preferences.model'
+import { type Alarms } from '../../patient/models/alarms.model'
+import { type Monitoring } from './monitoring.model'
+import { type TeamMemberRole } from './enums/team-member-role.enum'
+import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
+import { type Profile } from '../../auth/models/profile.model'
+import { type Settings } from '../../auth/models/settings.model'
+import { type Preferences } from '../../auth/models/preferences.model'
 
 /**
  * Team member (API view)

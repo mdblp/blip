@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from './cbg-percentage-title.css'
 import cbgColorsStyles from '../common/cbg-colors.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { StatLevel } from '../../../models/stats.model'
+import { type StatLevel } from '../../../models/stats.model'
 
 interface CBGPercentageTitleProps {
   annotations: string[]

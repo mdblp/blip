@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { LanguageCodes } from './enums/language-codes.enum'
+import { type LanguageCodes } from './enums/language-codes.enum'
 
 export interface Preferences {
   displayLanguageCode?: LanguageCodes
