@@ -34,15 +34,12 @@ import { type CbgPositionData } from '../../../../models/cbg-position-data.model
 import { bindActionCreators, type Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { focusTrendsCbgDateTrace, unfocusTrendsCbgDateTrace } from 'tidepool-viz'
-import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
+import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
 
 interface CbgDateTracesAnimatedProps {
-  animationDuration: number
   bgBounds: BgBounds
-  cbgRadius: number
   data: CbgDateTrace[]
-  date: string
   focusDateTrace: (userId: string, dateTrace: CbgDateTrace, position: CbgPositionData) => void
   onSelectDate: (epoch: number) => void
   topMargin: number
@@ -55,7 +52,7 @@ interface CbgDateTracesAnimatedProps {
 const CBG_RADIUS = 2.5
 
 const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (props) => {
-  const { userId, bgBounds, data, date, focusDateTrace, onSelectDate, topMargin, unfocusDateTrace, xScale, yScale } = props
+  const { userId, bgBounds, data, focusDateTrace, onSelectDate, topMargin, unfocusDateTrace, xScale, yScale } = props
 
   const handleClick = (dateTrace: CbgDateTrace): void => {
     onSelectDate(dateTrace.epoch)
@@ -66,8 +63,7 @@ const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (pr
   }
 
   return (
-    // TODO Check if ids are useful
-    <g id={`cbgDateTrace-${date}`}>
+    <g>
       {data.map((dateTrace: CbgDateTrace) => (
         <circle
           className={styles[getBgClass(bgBounds, dateTrace.value, ClassificationType.FiveWay)]}

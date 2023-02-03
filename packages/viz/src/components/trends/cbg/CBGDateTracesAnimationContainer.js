@@ -29,7 +29,6 @@ const CBGDateTracesAnimationContainer = (props) => {
         <CbgDateTracesAnimated
           bgBounds={bgBounds}
           data={datum}
-          date={localDate}
           key={localDate}
           onSelectDate={onSelectDate}
           topMargin={topMargin}
