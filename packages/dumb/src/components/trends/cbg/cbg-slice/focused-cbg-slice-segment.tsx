@@ -30,7 +30,7 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './focused-cbg-slice-segment.css'
 import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
 
-interface FocusedCBGSliceSegmentProps {
+interface FocusedCbgSliceSegmentProps {
   leftPosition: number
   segmentSliceBottom: RangeSegmentSlice
   segmentSliceTop: RangeSegmentSlice
@@ -40,7 +40,7 @@ interface FocusedCBGSliceSegmentProps {
 
 const STROKE_WIDTH = 2 // When changing this value, make sure to update the value of stroke-width in the css file
 
-const FocusedCbgSliceSegment: FunctionComponent<FocusedCBGSliceSegmentProps> = (props) => {
+const FocusedCbgSliceSegment: FunctionComponent<FocusedCbgSliceSegmentProps> = (props) => {
   const { leftPosition, segmentsPosition, segmentSliceBottom, segmentSliceTop, sliceWidth } = props
 
   const segmentSliceBottomPosition = segmentsPosition[segmentSliceBottom]
