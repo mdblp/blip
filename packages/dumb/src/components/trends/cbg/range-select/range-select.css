@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2016-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { Checkbox, FormControlLabel } from '@mui/material'
-
-interface LabeledCheckboxProps {
-  checked: boolean
-  onFn: () => void
-  offFn: () => void
-  label: string
-}
-
-export const LabeledCheckbox: FunctionComponent<LabeledCheckboxProps> = (props) => {
-  const { checked, onFn, offFn, label } = props
-
-  const handleChange = (): void => {
-    checked ? offFn() : onFn()
-  }
-
-  return (
-    <FormControlLabel
-      label={label}
-      control={
-        <Checkbox
-          size="small"
-          checked={checked}
-          onChange={handleChange}
-        />
-      }
-    />
-  )
+.container {
+  display: flex;
+  flex-direction: row;
+  composes: mediumContrastText defaultSize from '../../../../styles/typography.css';
+  padding-top: 15px;
 }

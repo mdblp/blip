@@ -62,12 +62,6 @@ describe('TrendsSVGContainer', () => {
     dates: ['2017-01-01'],
     cbgData: [{ id: 'a2b3c4', localDate: '2017-01-01', msPer24: 6000, value: 180 }],
     yScaleDomain: [60, 300],
-    displayFlags: {
-      cbg100Enabled: false,
-      cbg80Enabled: true,
-      cbg50Enabled: true,
-      cbgMedianEnabled: true
-    },
     onSelectDate: _.noop,
     showingCbgDateTraces: false
   }

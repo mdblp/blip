@@ -32,7 +32,7 @@ import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
-import { CbgDateTraceLabel } from 'dumb'
+import { CbgDateTraceLabel, RangeSelect, TrendsProvider } from 'dumb'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -565,57 +565,51 @@ class Trends extends React.Component {
     const currentPatientInViewId = patient.userid
 
     if (_.isEmpty(_.get(trendsState, currentPatientInViewId))) {
-      return <CircularProgress className="centered-spinning-loader"/>
+      return <CircularProgress className="centered-spinning-loader" />
     }
 
     const endpoints = this.getEndpoints()
 
-    let rightFooter = null
-    // Get the component here, for the tests: Avoid having redux set
-    const { RangeSelect } = vizComponents
-    rightFooter = (
-      <RangeSelect displayFlags={trendsState[currentPatientInViewId].cbgFlags}
-        currentPatientInViewId={currentPatientInViewId} />
-    )
-
     return (
-      <div id="tidelineMain" className="trends grid">
-        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
-          <div>
-            {this.getTitle()}
-          </div>
-          <Box display="flex">
-            <div className="container-box-inner patient-data-content-inner">
-              {this.renderSubNav()}
-              <div className="patient-data-content">
-                {loading && <CircularProgress className="centered-spinning-loader" />}
-                <div id="tidelineContainer" className="patient-data-chart-trends">
-                  {this.renderChart()}
+      <TrendsProvider>
+        <div id="tidelineMain" className="trends grid">
+          <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+            <div>
+              {this.getTitle()}
+            </div>
+            <Box display="flex">
+              <div className="container-box-inner patient-data-content-inner">
+                {this.renderSubNav()}
+                <div className="patient-data-content">
+                  {loading && <CircularProgress className="centered-spinning-loader" />}
+                  <div id="tidelineContainer" className="patient-data-chart-trends">
+                    {this.renderChart()}
+                  </div>
+                  {this.renderFocusedCbgDateTraceLabel()}
+                  {this.renderFocusedRangeLabels()}
                 </div>
-                {this.renderFocusedCbgDateTraceLabel()}
-                {this.renderFocusedRangeLabels()}
               </div>
-            </div>
-            <div className="container-box-inner patient-data-sidebar">
-              <div className="patient-data-sidebar-inner">
-                <div id="toggle-bg-replacement" style={{ height: 36 }} />
-                <Stats
-                  bgPrefs={this.props.bgPrefs}
-                  bgSource={this.props.dataUtil.bgSource}
-                  chartPrefs={chartPrefs}
-                  chartType={this.chartType}
-                  dataUtil={this.props.dataUtil}
-                  endpoints={endpoints}
-                  loading={loading}
-                />
+              <div className="container-box-inner patient-data-sidebar">
+                <div className="patient-data-sidebar-inner">
+                  <div id="toggle-bg-replacement" style={{ height: 36 }} />
+                  <Stats
+                    bgPrefs={this.props.bgPrefs}
+                    bgSource={this.props.dataUtil.bgSource}
+                    chartPrefs={chartPrefs}
+                    chartType={this.chartType}
+                    dataUtil={this.props.dataUtil}
+                    endpoints={endpoints}
+                    loading={loading}
+                  />
+                </div>
               </div>
-            </div>
+            </Box>
           </Box>
-        </Box>
-        <Footer onClickRefresh={this.props.onClickRefresh}>
-          {rightFooter}
-        </Footer>
-      </div>
+          <Footer onClickRefresh={this.props.onClickRefresh}>
+            <RangeSelect/>
+          </Footer>
+        </div>
+      </TrendsProvider>
     )
   }
 

@@ -74,38 +74,6 @@ describe('trends action creators', () => {
     })
   })
 
-  describe('turnOffCbgRange', () => {
-    const range = '100'
-    const action = actions.turnOffCbgRange(userId, range)
-
-    it('should be a TSA', () => {
-      expect(isTSA(action)).to.be.true
-    })
-
-    it('should create an action to turn off cbg range', () => {
-      expect(action).to.deep.equal({
-        type: actionTypes.TURN_OFF_CBG_RANGE,
-        payload: { userId, range }
-      })
-    })
-  })
-
-  describe('turnOnCbgRange', () => {
-    const range = '100'
-    const action = actions.turnOnCbgRange(userId, range)
-
-    it('should be a TSA', () => {
-      expect(isTSA(action)).to.be.true
-    })
-
-    it('should create an action to turn on cbg range', () => {
-      expect(action).to.deep.equal({
-        type: actionTypes.TURN_ON_CBG_RANGE,
-        payload: { userId, range }
-      })
-    })
-  })
-
   describe('unfocusTrendsCbgDateTrace', () => {
     const action = actions.unfocusTrendsCbgDateTrace(userId)
 

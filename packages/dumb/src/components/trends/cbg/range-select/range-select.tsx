@@ -25,9 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DisplayFlag {
-  Cbg100Enabled = 'cbg100Enabled',
-  Cbg80Enabled = 'cbg80Enabled',
-  Cbg50Enabled = 'cbg50Enabled',
-  CbgMedianEnabled = 'cbgMedianEnabled'
+import React, { type FunctionComponent } from 'react'
+
+import styles from './range-select.css'
+
+import { RangeLabeledToggle } from '../../../controls/range-labeled-toggle/range-labeled-toggle'
+import { useTrendsContext } from '../../../../provider/trends.provider'
+import { DisplayFlag } from '../../../../models/enums/display-flag.enum'
+import { useTranslation } from 'react-i18next'
+
+export const RangeSelect: FunctionComponent = () => {
+  const { displayFlags } = useTrendsContext()
+  const { t } = useTranslation()
+
+  return (
+    <div className={styles.container} data-testid="range-selection">
+      <RangeLabeledToggle
+        checked={displayFlags.cbg100Enabled}
+        label={t('100% of Readings')}
+        displayFlag={DisplayFlag.Cbg100Enabled}
+      />
+      <RangeLabeledToggle
+        checked={displayFlags.cbg80Enabled}
+        label={t('80% of Readings')}
+        displayFlag={DisplayFlag.Cbg80Enabled}
+      />
+      <RangeLabeledToggle
+        checked={displayFlags.cbg50Enabled}
+        label={t('50% of Readings')}
+        displayFlag={DisplayFlag.Cbg50Enabled}
+      />
+      <RangeLabeledToggle
+        checked={displayFlags.cbgMedianEnabled}
+        displayFlag={DisplayFlag.CbgMedianEnabled}
+        label={t('Median')}
+      />
+    </div>
+  )
 }

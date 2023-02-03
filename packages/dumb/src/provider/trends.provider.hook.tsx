@@ -25,9 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DisplayFlag {
-  Cbg100Enabled = 'cbg100Enabled',
-  Cbg80Enabled = 'cbg80Enabled',
-  Cbg50Enabled = 'cbg50Enabled',
-  CbgMedianEnabled = 'cbgMedianEnabled'
+import { useState } from 'react'
+import { type TrendsDisplayFlags } from '../models/trends-display-flags.model'
+import { DisplayFlag } from '../models/enums/display-flag.enum'
+
+export interface TrendsContextResult {
+  displayFlags: TrendsDisplayFlags
+  toggleCbgSegments: (displayFlag: DisplayFlag) => void
+}
+
+export const useTrendsProviderHook = (): TrendsContextResult => {
+  const [displayFlags, setDisplayFlags] = useState<TrendsDisplayFlags>({
+    cbg50Enabled: true,
+    cbg80Enabled: true,
+    cbg100Enabled: true,
+    cbgMedianEnabled: true
+  })
+
+  const toggleCbgSegments = (displayFlag: DisplayFlag): void => {
+    switch (displayFlag) {
+      case DisplayFlag.Cbg50Enabled:
+        setDisplayFlags({ ...displayFlags, cbg50Enabled: !displayFlags.cbg50Enabled })
+        return
+      case DisplayFlag.Cbg80Enabled:
+        setDisplayFlags({ ...displayFlags, cbg80Enabled: !displayFlags.cbg80Enabled })
+        return
+      case DisplayFlag.Cbg100Enabled:
+        setDisplayFlags({ ...displayFlags, cbg100Enabled: !displayFlags.cbg100Enabled })
+        return
+      case DisplayFlag.CbgMedianEnabled:
+        setDisplayFlags({ ...displayFlags, cbgMedianEnabled: !displayFlags.cbgMedianEnabled })
+        return
+      default:
+        throw Error(`Display flag field ${displayFlag as string} is unknown`)
+    }
+  }
+
+  return { displayFlags, toggleCbgSegments }
 }
