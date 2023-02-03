@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2091 Remove withDefaultYPosition method wrapper from viz
 - YLP-2092 Migrate trends target range lines to dumb
 - YLP-2094 Update some dependencies with major changes
+- YLP-2095 Migrate FocusedCBGSliceSegment from viz to dumb
 
 ## 3.1.0 - 2023-01-31
 ### Fixed
