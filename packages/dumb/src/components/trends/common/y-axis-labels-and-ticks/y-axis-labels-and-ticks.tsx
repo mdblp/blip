@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import { formatBgValue } from '../../../../utils/format/format.util'
-import { type BgPrefs } from '../../../../models/blood-glucose.model'
+import { type BgBounds, type BgPrefs } from '../../../../models/blood-glucose.model'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import trendsStyles from '../../../../styles/trends-common.css'
 import typographyStyles from '../../../../styles/typography.css'
@@ -43,12 +43,13 @@ const DEFAULT_TICK_WIDTH = 8
 
 export const YAxisLabelsAndTicks: FunctionComponent<YAxisLabelsAndTicksProps> = (props) => {
   const { bgPrefs, leftMargin, yScale } = props
+  const bgBounds = bgPrefs.bgBounds as BgBounds
 
   return (
     <g data-testid="trends-y-axis-labels">
       {
         Object
-          .entries(bgPrefs.bgBounds)
+          .entries(bgBounds)
           .map(([boundKey, boundValue]: [boundKey: string, boundValue: number]) => (
             <g key={boundKey}>
               <text

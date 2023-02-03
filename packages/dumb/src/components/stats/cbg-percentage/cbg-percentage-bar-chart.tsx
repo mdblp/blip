@@ -33,8 +33,8 @@ import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { type CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
-import { BgPrefs, BgBounds } from '../../../models/blood-glucose.model'
-import { ReadingsInRangeData, TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { type BgPrefs, type BgBounds } from '../../../models/blood-glucose.model'
+import { type ReadingsInRangeData, type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 
 interface CBGPercentageBarChartProps {
   bgBounds: BgBounds

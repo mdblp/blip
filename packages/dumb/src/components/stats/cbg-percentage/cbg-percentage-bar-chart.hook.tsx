@@ -27,12 +27,12 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGPercentageBarProps } from './cbg-percentage-bar'
-import { CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
+import { type CBGPercentageBarProps } from './cbg-percentage-bar'
+import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
 import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.utils'
-import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
-import { TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { BgBounds } from '../../../models/blood-glucose.model'
+import { type UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
+import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { type BgBounds } from '../../../models/blood-glucose.model'
 
 export interface CBGPercentageBarChartHookProps {
   bgBounds: BgBounds
@@ -52,7 +52,7 @@ interface CBGPercentageBarChartHookReturn {
     veryLowStat: CBGPercentageBarProps
   }
   hoveredStatId: StatLevel | null
-  onMouseLeave: onMouseLeave: () => void
+  onMouseLeave: () => void
   titleProps: { legendTitle: string, title: string }
 }
 

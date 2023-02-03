@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, PropsWithChildren } from 'react'
+import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import GenericDashboardCard from './generic-dashboard-card'
 import { useTranslation } from 'react-i18next'
 import CardContent from '@mui/material/CardContent'
-import { PatientStatistics, PatientStatisticsProps } from '../statistics/PatientStatistics'
+import { PatientStatistics, type PatientStatisticsProps } from '../statistics/PatientStatistics'
 
 export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
   const { t } = useTranslation()

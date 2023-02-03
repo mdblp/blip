@@ -71,7 +71,7 @@ export const formatParameterValue = (value: number | string, unit: Unit): string
   return valueNumber.toFixed(decimalsCount)
 }
 
-export const formatBgValue = (value: number, bgPrefs?: BgPrefs, outOfRangeThresholds?: Record<string, number>)): string => {
+export const formatBgValue = (value: number, bgPrefs?: BgPrefs, outOfRangeThresholds?: Record<string, number>): string => {
   const unit = bgPrefs?.bgUnits ?? UnitsType.MGDL
   const isUnitMmolPerLiter = unit === UnitsType.MMOLL
 

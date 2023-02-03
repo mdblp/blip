@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { DataUtil } from 'tidepool-viz'
-import { BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
+import React, { type FunctionComponent } from 'react'
+import { type DataUtil } from 'tidepool-viz'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
 import { BgSource } from 'dumb/dist/src/models/blood-glucose.model'
 
 export interface PatientStatisticsProps {

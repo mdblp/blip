@@ -29,8 +29,8 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
 import { StatLegendElement } from './stat-legend-element'
-import { BgClasses } from 'medical-domain'
-import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
+import { type BgClasses } from 'medical-domain'
+import { type UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 
 interface StatLegendProps {
   bgClasses: BgClasses
