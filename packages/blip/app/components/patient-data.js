@@ -367,7 +367,7 @@ class PatientDataPage extends React.Component {
                 epochLocation={epochLocation}
                 msRange={msRange}
                 loading={loadingState !== LOADING_STATE_DONE}
-                tidelineData={medicalData}
+                medicalDataService={medicalData}
                 permsOfLoggedInUser={permsOfLoggedInUser}
                 trackMetric={this.trackMetric}
                 chatWidget={chatWidget}

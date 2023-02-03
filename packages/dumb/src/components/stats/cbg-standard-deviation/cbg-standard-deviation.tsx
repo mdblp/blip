@@ -37,14 +37,13 @@ export interface CBGStandardDeviationProps {
   annotations: string[]
   averageGlucose: number
   bgClasses: BgClasses
-  hideTooltip: boolean
   standardDeviation: number
   title: string
   units: string
 }
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props) => {
-  const { annotations, averageGlucose, bgClasses, hideTooltip, standardDeviation, title, units } = props
+  const { annotations, averageGlucose, bgClasses, standardDeviation, title, units } = props
 
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
@@ -64,7 +63,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <Box display="flex">
           {title}
-          {!Number.isNaN(standardDeviation) && !hideTooltip &&
+          {!Number.isNaN(standardDeviation) &&
             <>
               &nbsp;
               <span className={styles['title-value']}>
@@ -76,9 +75,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               </span>
             </>
           }
-          {!hideTooltip &&
-            <StatTooltip annotations={annotations} />
-          }
+          <StatTooltip annotations={annotations} />
         </Box>
         <Box fontSize="12px">
           {units}

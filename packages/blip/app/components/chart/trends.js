@@ -605,15 +605,15 @@ class Trends extends React.Component {
                   bgPrefs={this.props.bgPrefs}
                   endpoints={endpoints}
                 />
-                {/*<Stats*/}
-                {/*  bgPrefs={this.props.bgPrefs}*/}
-                {/*  bgSource={this.props.dataUtil.bgSource}*/}
-                {/*  chartPrefs={chartPrefs}*/}
-                {/*  chartType={this.chartType}*/}
-                {/*  dataUtil={this.props.dataUtil}*/}
-                {/*  endpoints={endpoints}*/}
-                {/*  loading={loading}*/}
-                {/*/>*/}
+                <Stats
+                  bgPrefs={this.props.bgPrefs}
+                  bgSource={this.props.dataUtil.bgSource}
+                  chartPrefs={chartPrefs}
+                  chartType={this.chartType}
+                  dataUtil={this.props.dataUtil}
+                  endpoints={endpoints}
+                  loading={loading}
+                />
               </div>
             </div>
           </Box>

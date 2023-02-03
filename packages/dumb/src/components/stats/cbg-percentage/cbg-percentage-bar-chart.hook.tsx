@@ -38,7 +38,6 @@ export interface CBGPercentageBarChartHookProps {
   bgBounds: BgBounds
   data: TimeInRangeData
   days: number
-  hideTooltip: boolean
   type: CBGStatType
   units: UnitsType
 }
@@ -54,11 +53,11 @@ interface CBGPercentageBarChartHookReturn {
   }
   hoveredStatId: StatLevel | null
   onMouseLeave: Function
-  titleProps: { legendTitle: string, showTooltipIcon: boolean, title: string }
+  titleProps: { legendTitle: string, title: string }
 }
 
 export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, hideTooltip, units, days, data, bgBounds } = props
+  const { type, units, days, data, bgBounds } = props
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
@@ -78,11 +77,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
 
   const title = computeTitle()
 
-  const [titleProps, setTitleProps] = useState({
-    legendTitle: '',
-    showTooltipIcon: !hideTooltip,
-    title
-  })
+  const [titleProps, setTitleProps] = useState({ legendTitle: '', title })
 
   const computeAnnotations = (): string[] => {
     switch (type) {
@@ -107,17 +102,13 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
 
   const onStatMouseover = (id: StatLevel, title: string, legendTitle: string, hasValues: boolean): void => {
     if (hasValues) {
-      setTitleProps({ legendTitle, showTooltipIcon: false, title: `${title}` })
+      setTitleProps({ legendTitle, title: `${title}` })
       setHoveredStatId(id)
     }
   }
 
   const onMouseLeave = (): void => {
-    setTitleProps({
-      legendTitle: '',
-      showTooltipIcon: !hideTooltip,
-      title
-    })
+    setTitleProps({ legendTitle: '', title })
     setHoveredStatId(null)
   }
 

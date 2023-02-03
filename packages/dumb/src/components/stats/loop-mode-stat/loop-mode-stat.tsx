@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022, Diabeloop
+ * Copyright (c) 2020-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,13 +37,12 @@ interface LoopModeStatProps {
   annotations: []
   automated: number
   manual: number
-  showTooltipIcon: boolean
   title: string
   total: number
 }
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
-  const { annotations, automated, showTooltipIcon, manual, title, total } = props
+  const { annotations, automated, manual, title, total } = props
 
   const automatedPercentage = Math.round(100 * automated / total)
   const manualPercentage = Math.round(100 * manual / total)
@@ -52,9 +51,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
     <div data-testid="loop-mode-stat">
       <Box className={styles.title}>
         {title}
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations} />
-        }
+        <StatTooltip annotations={annotations} />
       </Box>
       <svg
         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 80"

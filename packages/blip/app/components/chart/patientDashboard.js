@@ -9,6 +9,7 @@ import AccessTime from '@mui/icons-material/AccessTime'
 import RemoteMonitoringWidget from 'yourloops/components/dashboard-widgets/remote-monitoring-widget'
 import { useTeam } from 'yourloops/lib/team'
 import { PatientStatisticsWidget } from 'yourloops/components/dashboard-widgets/patient-statistics-widget'
+import Stats from './stats'
 
 const t = i18next.t.bind(i18next)
 
@@ -27,13 +28,13 @@ const PatientDashboard = (props) => {
     alarmCard: AlarmCard,
     medicalFilesWidget: MedicalFilesWidget,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToDaily, userIsHCP, isSelectedTeamMedical
+    timePrefs, medicalDataService, permsOfLoggedInUser, trackMetric, onSwitchToDaily, userIsHCP, isSelectedTeamMedical
   } = props
   const isMonitoringEnabled = patient.monitoring?.enabled
   const shouldDisplayChatWidget = isMonitoringEnabled && (!userIsHCP || isSelectedTeamMedical)
 
   const { getMedicalTeams } = useTeam()
-
+  const { medicalData } = medicalDataService
   const showRemoteMonitoringWidget = !user.isUserCaregiver() && getMedicalTeams().some(team => team.monitoring?.enabled)
 
   const getEndpoints = () => {
@@ -62,12 +63,23 @@ const PatientDashboard = (props) => {
           dataUtil={dataUtil}
           bgPrefs={bgPrefs}
           endpoints={endpoints}
-        />
+        >
+          <Stats
+            bgPrefs={bgPrefs}
+            bgSource={dataUtil.bgSource}
+            chartPrefs={chartPrefs}
+            chartType="patientStatistics"
+            dataUtil={dataUtil}
+            endpoints={endpoints}
+            loading={loading}
+            parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}
+          />
+        </PatientStatisticsWidget>
         <DeviceUsage
           bgPrefs={bgPrefs}
           timePrefs={timePrefs}
           patient={patient}
-          tidelineData={tidelineData}
+          tidelineData={medicalDataService}
           permsOfLoggedInUser={permsOfLoggedInUser}
           trackMetric={trackMetric}
           dataUtil={dataUtil}
@@ -106,7 +118,7 @@ PatientDashboard.propTypes = {
   msRange: PropTypes.number.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired,
   canPrint: PropTypes.bool,
-  tidelineData: PropTypes.object.isRequired
+  medicalDataService: PropTypes.object.isRequired
 }
 
 export default PatientDashboard

@@ -35,12 +35,11 @@ interface CBGPercentageTitleProps {
   annotations: string[]
   hoveredStatId: StatLevel | null
   legendTitle: string
-  showTooltipIcon: boolean
   title: string
 }
 
 const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
+  const { annotations, hoveredStatId, legendTitle, title } = props
 
   return (
     <>
@@ -58,9 +57,7 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
             {' )'}
           </span>
         }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations} />
-        }
+        <StatTooltip annotations={annotations} />
       </div>
     </>
   )

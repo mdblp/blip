@@ -35,7 +35,6 @@ import { BgClasses } from 'medical-domain'
 
 export interface CBGMeanStatProps {
   bgClasses: BgClasses
-  hideTooltip: boolean
   title: string
   tooltipValue: string
   units: string
@@ -43,7 +42,7 @@ export interface CBGMeanStatProps {
 }
 
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
-  const { bgClasses, hideTooltip, title, tooltipValue, units, value } = props
+  const { bgClasses, title, tooltipValue, units, value } = props
   const valueBasedStyles = computeCBGStyle(value, bgClasses)
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
@@ -56,9 +55,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <div>
           {title}
-          {!hideTooltip &&
-            <StatTooltip annotations={[tooltipValue]} />
-          }
+          <StatTooltip annotations={[tooltipValue]} />
         </div>
         <Box fontSize="12px">
           {units}

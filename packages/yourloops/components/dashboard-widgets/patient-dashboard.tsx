@@ -50,6 +50,7 @@ import {
   RESPONSIVE_GRID_HALF_WIDTH
 } from '../../css/css-utils'
 import { PatientStatisticsWidget } from './patient-statistics-widget'
+import Stats from 'blip/app/components/chart/stats'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -121,17 +122,18 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           dataUtil={dataUtil}
           bgPrefs={bgPrefs}
           endpoints={endpoints}
-        />
-        {/*<PatientStatistics*/}
-        {/*  bgPrefs={bgPrefs}*/}
-        {/*  bgSource={dataUtil.bgSource}*/}
-        {/*  chartPrefs={chartPrefs}*/}
-        {/*  chartType="patientStatistics"*/}
-        {/*  dataUtil={dataUtil}*/}
-        {/*  endpoints={endpoints}*/}
-        {/*  loading={loading}*/}
-        {/*  parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}*/}
-        {/*/>*/}
+        >
+          <Stats
+            bgPrefs={bgPrefs}
+            bgSource={dataUtil.bgSource}
+            chartPrefs={chartPrefs}
+            chartType="patientStatistics"
+            dataUtil={dataUtil}
+            endpoints={endpoints}
+            loading={loading}
+            parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}
+          />
+        </PatientStatisticsWidget>
       </Grid>
       <Grid item xs={gridWidgetSize}>
         <DeviceUsage

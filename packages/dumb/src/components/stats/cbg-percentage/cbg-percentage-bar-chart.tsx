@@ -42,11 +42,10 @@ interface CBGPercentageBarChartProps {
   cbgStatType: CBGStatType
   data: TimeInRangeData | ReadingsInRangeData
   days: number
-  hideTooltip?: boolean
 }
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
-  const { bgBounds, bgPrefs, cbgStatType, data, days, hideTooltip = false } = props
+  const { bgBounds, bgPrefs, cbgStatType, data, days } = props
   const {
     annotations,
     cbgStatsProps,
@@ -58,7 +57,6 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
     data,
     days,
     type: cbgStatType,
-    hideTooltip,
     units: bgPrefs.bgUnits
   })
 

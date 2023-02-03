@@ -44,6 +44,7 @@ import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/PatientStatistics'
+import Stats from './stats'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -377,15 +378,15 @@ class Daily extends React.Component {
                   bgPrefs={this.props.bgPrefs}
                   endpoints={endpoints}
                 />
-                {/*<Stats*/}
-                {/*  bgPrefs={this.props.bgPrefs}*/}
-                {/*  bgSource={this.props.dataUtil.bgSource}*/}
-                {/*  chartPrefs={this.props.chartPrefs}*/}
-                {/*  chartType={this.chartType}*/}
-                {/*  dataUtil={this.props.dataUtil}*/}
-                {/*  endpoints={endpoints}*/}
-                {/*  loading={loading}*/}
-                {/*/>*/}
+                <Stats
+                  bgPrefs={this.props.bgPrefs}
+                  bgSource={this.props.dataUtil.bgSource}
+                  chartPrefs={this.props.chartPrefs}
+                  chartType={this.chartType}
+                  dataUtil={this.props.dataUtil}
+                  endpoints={endpoints}
+                  loading={loading}
+                />
               </div>
             </div>
           </Box>

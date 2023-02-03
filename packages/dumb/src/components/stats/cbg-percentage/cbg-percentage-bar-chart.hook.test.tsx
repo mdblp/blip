@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,7 +43,6 @@ describe('CBGPercentageBarChart hook', () => {
 
   const defaultProps: CBGPercentageBarChartHookProps = {
     data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
-    hideTooltip: false,
     titleKey: 'fakeTitleKey',
     total,
     type: CBGStatType.TimeInRange
