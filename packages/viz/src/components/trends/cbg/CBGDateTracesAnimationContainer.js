@@ -18,15 +18,15 @@
 import _ from 'lodash'
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import CBGDateTraceAnimated from './CBGDateTraceAnimated'
+import { CbgDateTracesAnimated } from 'dumb'
 
 const CBGDateTracesAnimationContainer = (props) => {
   const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props
+
   return (
     <g id="cbgDateTraces">
       {_.map(data, (datum, localDate) => (
-        <CBGDateTraceAnimated
+        <CbgDateTracesAnimated
           bgBounds={bgBounds}
           data={datum}
           date={localDate}

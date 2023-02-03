@@ -32,7 +32,12 @@ declare module '@serprex/react-motion';
 declare module 'tidepool-viz' {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
+  import { type CbgDateTrace } from './models/cbg-date-trace.model'
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   import { type CbgPositionData } from './models/cbg-position-data.model'
   export const delayShowCbgTracesOnFocus: (userId: string, sliceData: { id: string }, slicePosition: CbgPositionData, focusedKeys: string[]) => void
+  export const focusTrendsCbgDateTrace: (userId: string, data: CbgDateTrace, cbgPosition: CbgPositionData) => void
+  export const unfocusTrendsCbgDateTrace: (userId: string) => void
   export const unfocusTrendsCbgSlice: (userId: string) => void
 }

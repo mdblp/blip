@@ -22,10 +22,9 @@ import { expect } from 'chai'
 import * as sinon from 'sinon'
 
 import bgBounds from '../../../helpers/bgBounds'
-import CBGDateTraceAnimated from '../../../../src/components/trends/cbg/CBGDateTraceAnimated'
 
-import CBGDateTracesAnimationContainer
-  from '../../../../src/components/trends/cbg/CBGDateTracesAnimationContainer'
+import CBGDateTracesAnimationContainer from '../../../../src/components/trends/cbg/CBGDateTracesAnimationContainer'
+import { CbgDateTracesAnimated } from 'dumb'
 
 describe('CBGDateTracesAnimationContainer', () => {
   const props = {
@@ -43,12 +42,12 @@ describe('CBGDateTracesAnimationContainer', () => {
     const noDataProps = _.assign({}, props, { data: {}, dates: [] })
     const wrapper = shallow(<CBGDateTracesAnimationContainer {...noDataProps} />)
     expect(wrapper.find('#cbgDateTraces')).to.have.length(1)
-    expect(wrapper.find(CBGDateTraceAnimated)).to.have.length(0)
+    expect(wrapper.find(CbgDateTracesAnimated)).to.have.length(0)
   })
 
   it('should render a group and a CBGDateTraceAnimated for each date', () => {
     const wrapper = shallow(<CBGDateTracesAnimationContainer {...props} />)
     expect(wrapper.find('#cbgDateTraces')).to.have.length(1)
-    expect(wrapper.find(CBGDateTraceAnimated)).to.have.length(2)
+    expect(wrapper.find(CbgDateTracesAnimated)).to.have.length(2)
   })
 })

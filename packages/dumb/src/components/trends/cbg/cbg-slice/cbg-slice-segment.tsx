@@ -32,6 +32,7 @@ import { type CbgPositionData } from '../../../../models/cbg-position-data.model
 import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from 'tidepool-viz'
 import { type CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
 import { type CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
+import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
 
 interface CbgSliceSegmentProps {
   classes: string
@@ -47,8 +48,6 @@ interface CbgSliceSegmentProps {
   unfocusSlice: (userId: string) => void
   userId: string
 }
-
-const CBG_CIRCLE_PREFIX_ID = 'cbgCircle'
 
 const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
   const { classes, datum, focusSlice, id, positionData, segment, style, unfocusSlice, x, width, userId } = props

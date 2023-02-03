@@ -28,6 +28,7 @@
 import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
+import CbgDateTracesAnimated from './components/trends/cbg/cbg-date-trace/cbg-date-traces-animated'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
@@ -66,7 +67,9 @@ import { type BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
 import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
-import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
+import {
+  FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment
+} from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
 
 export {
   AverageDailyDoseStat,
@@ -74,6 +77,7 @@ export {
   type BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
+  CbgDateTracesAnimated,
   CbgDateTraceLabel,
   CBGMeanStat,
   CBGPercentageBarChart,
