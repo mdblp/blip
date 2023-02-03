@@ -77,7 +77,7 @@ export function reshapeBgClassesToBgBounds(bgPrefs) {
     veryHighThreshold: bgClasses.high,
     targetUpperBound: bgClasses.target,
     targetLowerBound: bgClasses.low,
-    veryLowThreshold: bgClasses['very-low']
+    veryLowThreshold: bgClasses.veryLow
   }
 
   return bgBounds

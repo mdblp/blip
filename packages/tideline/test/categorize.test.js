@@ -22,22 +22,22 @@ import categorizer from '../js/data/util/categorize'
 
 describe('Categorize', function() {
   var defaultBgClasses = {
-    'very-low': DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
-    'low': DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
-    'target': DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
-    'high': DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh
+    veryLow: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+    low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh
   }
   var alternateBgClasses = {
-    'very-low': 60,
-    'low': 80,
-    'target': 150,
-    'high': 250
+    veryLow: 60,
+    low: 80,
+    target: 150,
+    high: 250
   }
   var mmollBgClasses = {
-    'very-low': DEFAULT_BG_BOUNDS[MMOLL_UNITS].veryLow,
-    'low': DEFAULT_BG_BOUNDS[MMOLL_UNITS].targetLower,
-    'target': DEFAULT_BG_BOUNDS[MMOLL_UNITS].targetUpper,
-    'high': DEFAULT_BG_BOUNDS[MMOLL_UNITS].veryHigh
+    veryLow: DEFAULT_BG_BOUNDS[MMOLL_UNITS].veryLow,
+    low: DEFAULT_BG_BOUNDS[MMOLL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MMOLL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MMOLL_UNITS].veryHigh
   }
 
   var defaultCategorizer = categorizer(defaultBgClasses)

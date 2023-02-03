@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,44 +26,29 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
-import cbgColorsStyles from '../common/cbg-colors.css'
-import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { StatLevel } from '../../../models/stats.model'
+import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
+import GenericDashboardCard from './generic-dashboard-card'
+import { useTranslation } from 'react-i18next'
+import CardContent from '@mui/material/CardContent'
+import { PatientStatistics, PatientStatisticsProps } from '../statistics/PatientStatistics'
 
-interface CBGPercentageTitleProps {
-  annotations: string[]
-  hoveredStatId: StatLevel | null
-  legendTitle: string
-  showTooltipIcon: boolean
-  title: string
-}
-
-const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
+export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> = (props) => {
+  const { t } = useTranslation()
+  const { dataUtil, bgPrefs, endpoints } = props
 
   return (
-    <>
-      <div
-        data-testid="cbg-percentage-title"
-        className={styles.title}
-      >
-        {title}
-        {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
-          </span>
-            {' )'}
-          </span>
-        }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations} />
-        }
-      </div>
-    </>
+    <GenericDashboardCard
+      avatar={<InsertChartOutlinedIcon />}
+      title={t('patient-statistics')}
+      data-testid="patient-statistics"
+    >
+      <CardContent>
+        <PatientStatistics
+          dataUtil={dataUtil}
+          bgPrefs={bgPrefs}
+          endpoints={endpoints}
+        />
+      </CardContent>
+    </GenericDashboardCard>
   )
 }
-
-export const CbgPercentageTitleMemoized = React.memo(CBGPercentageTitle)

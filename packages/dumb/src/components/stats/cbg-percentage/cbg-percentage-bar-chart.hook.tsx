@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useCallback, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CBGPercentageBarProps } from './cbg-percentage-bar'
 import { CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
+import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.utils'
+import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
+import { TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { BgBounds } from '../../../models/blood-glucose.model'
 
 export interface CBGPercentageBarChartHookProps {
-  type: CBGStatType
-  data: CBGPercentageData[]
+  bgBounds: BgBounds
+  data: TimeInRangeData
+  days: number
   hideTooltip: boolean
-  titleKey: string
-  total: number
+  type: CBGStatType
+  units: UnitsType
 }
 
 interface CBGPercentageBarChartHookReturn {
+  annotations: string[]
   cbgStatsProps: {
     veryHighStat: CBGPercentageBarProps
     highStat: CBGPercentageBarProps
@@ -52,33 +58,117 @@ interface CBGPercentageBarChartHookReturn {
 }
 
 export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, data, hideTooltip, titleKey, total } = props
+  const { type, hideTooltip, units, days, data, bgBounds } = props
   const { t } = useTranslation('main')
-  const title = t(titleKey)
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
+
+  const computeTitle = (): string => {
+    let title: string
+    switch (type) {
+      case CBGStatType.TimeInRange:
+        title = days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
+        break
+      case CBGStatType.ReadingsInRange:
+      default:
+        title = days > 1 ? t('Avg. Daily Readings In Range') : t('Readings In Range')
+        break
+    }
+    return title
+  }
+
+  const title = computeTitle()
+
   const [titleProps, setTitleProps] = useState({
     legendTitle: '',
     showTooltipIcon: !hideTooltip,
     title
   })
 
-  const onStatMouseover = useCallback((id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => {
+  const computeAnnotations = (): string[] => {
+    switch (type) {
+      case CBGStatType.TimeInRange:
+        if (days > 1) {
+          return [
+            t('time-in-range-cgm-one-day'),
+            t('compute-oneday-time-in-range')
+          ]
+        }
+        return [
+          t('time-in-range-cgm-daily-average'),
+          t('compute-ndays-time-in-range')
+        ]
+      case CBGStatType.ReadingsInRange:
+      default:
+        return [
+          t('readings-in-range-bgm-daily-average', { smbgLabel: t('BGM') })
+        ]
+    }
+  }
+
+  const onStatMouseover = (id: StatLevel, title: string, legendTitle: string, hasValues: boolean): void => {
     if (hasValues) {
       setTitleProps({ legendTitle, showTooltipIcon: false, title: `${title}` })
       setHoveredStatId(id)
     }
-  }, [])
-  const onMouseLeave = useCallback(() => {
+  }
+
+  const onMouseLeave = (): void => {
     setTitleProps({
       legendTitle: '',
       showTooltipIcon: !hideTooltip,
       title
     })
     setHoveredStatId(null)
-  }, [hideTooltip, title])
+  }
 
-  const getCBGPercentageBarProps = useCallback((id: string) => {
-    const stat = data.find(timeInRange => timeInRange.id === id)
+  const computeDataArray = (): CBGPercentageData[] => {
+    const titleType = type === CBGStatType.ReadingsInRange ? 'Readings' : 'Time'
+    const bounds = {
+      targetLowerBound: formatBgValue(bgBounds.targetLowerBound, units),
+      targetUpperBound: formatBgValue(bgBounds.targetUpperBound, units),
+      veryHighThreshold: formatBgValue(bgBounds.veryHighThreshold, units),
+      veryLowThreshold: formatBgValue(bgBounds.veryLowThreshold, units)
+    }
+
+    return [
+      {
+        id: StatLevel.VeryLow,
+        value: ensureNumeric(data.veryLow),
+        title: t(`${titleType} Below Range`),
+        legendTitle: `<${bounds.veryLowThreshold}`
+      },
+      {
+        id: StatLevel.Low,
+        value: ensureNumeric(data.low),
+        title: t(`${titleType} Below Range`),
+        legendTitle: `${bounds.veryLowThreshold}-${bounds.targetLowerBound}`
+      },
+      {
+        id: StatLevel.Target,
+        value: ensureNumeric(data.target),
+        title: t(`${titleType} In Range`),
+        legendTitle: `${bounds.targetLowerBound}-${bounds.targetUpperBound}`
+      },
+      {
+        id: StatLevel.High,
+        value: ensureNumeric(data.high),
+        title: t(`${titleType} Above Range`),
+        legendTitle: `${bounds.targetUpperBound}-${bounds.veryHighThreshold}`
+      },
+      {
+        id: StatLevel.VeryHigh,
+        value: ensureNumeric(data.veryHigh),
+        title: t(`${titleType} Above Range`),
+        legendTitle: `>${bounds.veryHighThreshold}`
+      }
+    ]
+  }
+
+  const dataArray = computeDataArray()
+  const total = dataArray.map(data => data.value).reduce((a, b) => a + b)
+
+  const getCBGPercentageBarProps = (id: string): CBGPercentageBarProps => {
+    const stat = dataArray.find(timeInRange => timeInRange.id === id)
     if (!stat) {
       throw Error(`Could not find stat with id ${id}`)
     }
@@ -92,20 +182,21 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
       total,
       value: stat.value
     }
-  }, [type, data, hoveredStatId, onStatMouseover, total])
+  }
 
-  const cbgStatsProps = useMemo(() => ({
+  const cbgStatsProps = {
     veryHighStat: getCBGPercentageBarProps(StatLevel.VeryHigh),
     highStat: getCBGPercentageBarProps(StatLevel.High),
     targetStat: getCBGPercentageBarProps(StatLevel.Target),
     lowStat: getCBGPercentageBarProps(StatLevel.Low),
     veryLowStat: getCBGPercentageBarProps(StatLevel.VeryLow)
-  }), [getCBGPercentageBarProps])
+  }
 
-  return useMemo(() => ({
+  return ({
+    annotations: computeAnnotations(),
     cbgStatsProps,
     onMouseLeave,
     hoveredStatId,
     titleProps
-  }), [cbgStatsProps, onMouseLeave, hoveredStatId, titleProps])
+  })
 }

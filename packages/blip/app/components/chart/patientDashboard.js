@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import Box from '@mui/material/Box'
-import PatientStatistics from './patientStatistics'
 import DeviceUsage from './deviceUsage'
 import './patientDashboardVars.css'
 import AccessTime from '@mui/icons-material/AccessTime'
 import RemoteMonitoringWidget from 'yourloops/components/dashboard-widgets/remote-monitoring-widget'
 import { useTeam } from 'yourloops/lib/team'
+import { PatientStatisticsWidget } from 'yourloops/components/dashboard-widgets/patient-statistics-widget'
 
 const t = i18next.t.bind(i18next)
 
@@ -58,15 +58,10 @@ const PatientDashboard = (props) => {
             userRole={user.role}
           />
         }
-        <PatientStatistics
-          bgPrefs={bgPrefs}
-          bgSource={dataUtil.bgSource}
-          chartPrefs={chartPrefs}
-          chartType="patientStatistics"
+        <PatientStatisticsWidget
           dataUtil={dataUtil}
+          bgPrefs={bgPrefs}
           endpoints={endpoints}
-          loading={loading}
-          parametersConfig={tidelineData.medicalData?.pumpSettings[0]?.payload?.parameters}
         />
         <DeviceUsage
           bgPrefs={bgPrefs}

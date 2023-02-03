@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BgClasses, BgUnit } from 'medical-domain'
+import { BgClasses } from 'medical-domain'
+import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 
 export interface BgBounds {
   veryHighThreshold: number
@@ -35,8 +36,8 @@ export interface BgBounds {
 }
 
 export interface BgPrefs {
-  bgUnits: BgUnit
-  bgBounds: BgBounds
+  bgUnits: UnitsType
+  bgBounds?: BgBounds
   bgClasses: BgClasses
 }
 
@@ -51,4 +52,9 @@ export enum BgClass {
   Target = 'target',
   VeryHigh = 'veryHigh',
   VeryLow = 'veryLow',
+}
+
+export enum BgSource {
+  Cbg = 'cbg',
+  Smbg = 'smbg'
 }

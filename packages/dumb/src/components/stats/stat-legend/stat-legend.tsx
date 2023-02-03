@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,12 +28,13 @@
 import React, { FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
-import { BgClasses } from '../../../models/stats.model'
 import { StatLegendElement } from './stat-legend-element'
+import { BgClasses } from 'medical-domain'
+import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 
 interface StatLegendProps {
   bgClasses: BgClasses
-  units: string
+  units: UnitsType
 }
 
 const StatLegend: FunctionComponent<StatLegendProps> = (props) => {

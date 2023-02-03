@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,31 +30,38 @@ import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-b
 import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
-import { BgClasses, CBGPercentageData, CBGStatType } from '../../../models/stats.model'
+import { CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
+import { BgPrefs, BgBounds } from '../../../models/blood-glucose.model'
+import { ReadingsInRangeData, TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 
 interface CBGPercentageBarChartProps {
-  annotations: []
-  bgClasses: BgClasses
+  bgBounds: BgBounds
+  bgPrefs: BgPrefs
   cbgStatType: CBGStatType
-  data: CBGPercentageData[]
-  hideTooltip: boolean
-  total: number
-  titleKey: string
-  units: string
+  data: TimeInRangeData | ReadingsInRangeData
+  days: number
+  hideTooltip?: boolean
 }
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
-  const { annotations, bgClasses, cbgStatType, data, hideTooltip, titleKey, total, units } = props
-
-  const { cbgStatsProps, hoveredStatId, onMouseLeave, titleProps } = useCBGPercentageBarChartHook({
-    type: cbgStatType,
+  const { bgBounds, bgPrefs, cbgStatType, data, days, hideTooltip = false } = props
+  const {
+    annotations,
+    cbgStatsProps,
+    hoveredStatId,
+    onMouseLeave,
+    titleProps
+  } = useCBGPercentageBarChartHook({
+    bgBounds,
     data,
+    days,
+    type: cbgStatType,
     hideTooltip,
-    titleKey,
-    total
+    units: bgPrefs.bgUnits
   })
+
   return (
     <>
       <div data-testid={`cbg-percentage-stats-${cbgStatType}`}>
@@ -72,7 +79,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
         </Box>
       </div>
       <div className={styles['stat-footer']} />
-      <StatLegend bgClasses={bgClasses} units={units} />
+      <StatLegend bgClasses={bgPrefs.bgClasses} units={bgPrefs.bgUnits} />
     </>
   )
 }

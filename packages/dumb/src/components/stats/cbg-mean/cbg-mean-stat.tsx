@@ -31,7 +31,7 @@ import stylesCbgMeanStat from './cbg-mean-stat.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
-import { BgClasses } from '../../../models/stats.model'
+import { BgClasses } from 'medical-domain'
 
 export interface CBGMeanStatProps {
   bgClasses: BgClasses

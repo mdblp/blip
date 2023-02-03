@@ -47,11 +47,11 @@ interface MedicalDataOptions {
 }
 
 interface BgClasses {
-  'very-low': number
+  'veryLow': number
   'low': number
   'target': number
   'high': number
-  'very-high': number
+  'veryHigh': number
 }
 
 interface TimePrefs {
@@ -88,11 +88,11 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
   dateRange: { start: 0, end: 0 },
   defaultPumpManufacturer: 'default',
   bgClasses: {
-    'very-low': DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+    veryLow: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
     low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
     target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
     high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh,
-    'very-high': BG_CLAMP_THRESHOLD[MGDL_UNITS]
+    veryHigh: BG_CLAMP_THRESHOLD[MGDL_UNITS]
   },
   fillOpts: {
     classes: {

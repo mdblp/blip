@@ -49,11 +49,11 @@ describe('TidelineData', function() {
 
   describe('Init', function () {
     const bgClasses = {
-      'very-low': DEFAULT_BG_BOUNDS[bgUnits].veryLow - roundingAllowance,
-      'low': DEFAULT_BG_BOUNDS[bgUnits].targetLower - roundingAllowance,
-      'target': DEFAULT_BG_BOUNDS[bgUnits].targetUpper + roundingAllowance,
-      'high': DEFAULT_BG_BOUNDS[bgUnits].veryHigh + roundingAllowance,
-      'very-high': BG_CLAMP_THRESHOLD[bgUnits]
+      veryLow: DEFAULT_BG_BOUNDS[bgUnits].veryLow - roundingAllowance,
+      low: DEFAULT_BG_BOUNDS[bgUnits].targetLower - roundingAllowance,
+      target: DEFAULT_BG_BOUNDS[bgUnits].targetUpper + roundingAllowance,
+      high: DEFAULT_BG_BOUNDS[bgUnits].veryHigh + roundingAllowance,
+      veryHigh: BG_CLAMP_THRESHOLD[bgUnits]
     }
     /** @type {TidelineData} */
     let td = null
@@ -1478,7 +1478,7 @@ describe('TidelineData', function() {
     });
 
     it('should apply `0.0001` rounding allowances for mg/dL values', function() {
-      expect(thisTd.bgClasses['very-low']).to.equal(DEFAULT_BG_BOUNDS[bgUnits].veryLow - roundingAllowance);
+      expect(thisTd.bgClasses.veryLow).to.equal(DEFAULT_BG_BOUNDS[bgUnits].veryLow - roundingAllowance);
       expect(thisTd.bgClasses.low).to.equal(DEFAULT_BG_BOUNDS[bgUnits].targetLower - roundingAllowance);
       expect(thisTd.bgClasses.target).to.equal(DEFAULT_BG_BOUNDS[bgUnits].targetUpper + roundingAllowance);
       expect(thisTd.bgClasses.high).to.equal(DEFAULT_BG_BOUNDS[bgUnits].veryHigh + roundingAllowance);

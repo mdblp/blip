@@ -26,7 +26,7 @@
  */
 
 import styles from './cbg-colors.css'
-import { BgClasses } from '../../../models/stats.model'
+import { BgClasses } from 'medical-domain'
 
 interface CBGStyle {
   backgroundColor: string

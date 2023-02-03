@@ -207,7 +207,7 @@ class Stats extends React.Component {
       high: bgPrefs.bgClasses.high,
       low: bgPrefs.bgClasses.low,
       target: bgPrefs.bgClasses.target,
-      veryLow: bgPrefs.bgClasses['very-low']
+      veryLow: bgPrefs.bgClasses.veryLow
     }
     return stats.map(stat => {
       return (

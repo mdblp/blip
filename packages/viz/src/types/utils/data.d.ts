@@ -1,4 +1,17 @@
+import { BgSource } from 'dumb/src/models/blood-glucose.model'
+
 export default DataUtil
+
+export interface TimeInRangeData {
+  veryLow: number
+  low: number
+  target: number
+  high: number
+  veryHigh: number
+  total: number
+}
+
+export interface ReadingsInRangeData extends TimeInRangeData {}
 
 declare class DataUtil {
   constructor(data: unknown[], opts?: {
@@ -30,7 +43,7 @@ declare class DataUtil {
     manufacturer: any
   }
 
-  get bgSource(): any
+  get bgSource(): BgSource
 
   set chartPrefs(arg: any)
   set endpoints(arg: any)
@@ -120,7 +133,7 @@ declare class DataUtil {
     manufacturer: any
   }
 
-  getReadingsInRangeData: () => any
+  getReadingsInRangeData: () => ReadingsInRangeData
   getSensorUsage: () => {
     sensorUsage: any
     total: number
@@ -141,7 +154,7 @@ declare class DataUtil {
   }
 
   getTimeInAutoData: () => any
-  getTimeInRangeData: () => any
+  getTimeInRangeData: () => TimeInRangeData
 
   getTotalInsulinAndWeightData(): {
     totalInsulin: any

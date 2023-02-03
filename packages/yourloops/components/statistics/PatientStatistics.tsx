@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,44 +26,31 @@
  */
 
 import React, { FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
-import cbgColorsStyles from '../common/cbg-colors.css'
-import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { StatLevel } from '../../../models/stats.model'
+import { DataUtil } from 'tidepool-viz'
+import { BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
+import { BgSource } from 'dumb/dist/src/models/blood-glucose.model'
 
-interface CBGPercentageTitleProps {
-  annotations: string[]
-  hoveredStatId: StatLevel | null
-  legendTitle: string
-  showTooltipIcon: boolean
-  title: string
+export interface PatientStatisticsProps {
+  dataUtil: DataUtil
+  bgPrefs: BgPrefs
+  endpoints: string[]
 }
 
-const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
+export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
+  const { dataUtil, bgPrefs, endpoints } = props
+  dataUtil.endpoints = endpoints
+  const cbgStatType = dataUtil.bgSource === BgSource.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
+    ? dataUtil.getTimeInRangeData()
+    : dataUtil.getReadingsInRangeData()
 
   return (
-    <>
-      <div
-        data-testid="cbg-percentage-title"
-        className={styles.title}
-      >
-        {title}
-        {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
-          </span>
-            {' )'}
-          </span>
-        }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations} />
-        }
-      </div>
-    </>
+    <CBGPercentageBarChart
+      bgBounds={dataUtil.bgBounds}
+      cbgStatType={cbgStatType}
+      data={cbgPercentageBarChartData}
+      bgPrefs={bgPrefs}
+      days={dataUtil?.days ?? 0}
+    />
   )
 }
-
-export const CbgPercentageTitleMemoized = React.memo(CBGPercentageTitle)

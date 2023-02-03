@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,45 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
-import cbgColorsStyles from '../common/cbg-colors.css'
-import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { StatLevel } from '../../../models/stats.model'
+import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 
-interface CBGPercentageTitleProps {
-  annotations: string[]
-  hoveredStatId: StatLevel | null
-  legendTitle: string
-  showTooltipIcon: boolean
-  title: string
+export const ensureNumeric = (value: number | undefined | null): number => {
+  return !value || isNaN(value) ? 0 : value
 }
 
-const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
-
-  return (
-    <>
-      <div
-        data-testid="cbg-percentage-title"
-        className={styles.title}
-      >
-        {title}
-        {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
-          </span>
-            {' )'}
-          </span>
-        }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations} />
-        }
-      </div>
-    </>
-  )
+export const formatBgValue = (value: number, units: UnitsType): string => {
+  const valueToString = value.toString()
+  switch (units) {
+    case UnitsType.MMOLL:
+      return parseFloat(valueToString).toFixed(1)
+    case UnitsType.MGDL:
+    default:
+      return parseInt(valueToString).toString()
+  }
 }
-
-export const CbgPercentageTitleMemoized = React.memo(CBGPercentageTitle)

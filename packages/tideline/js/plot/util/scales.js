@@ -88,7 +88,7 @@ function createScaleBG(tidelineData, pool, extent, pad) {
 function createTicksBG(tidelineData, extent) {
   /** @type {"mg/dL" | "mmol/L"} */
   const bgUnits = _.get(tidelineData, 'opts.bgUnits', MGDL_UNITS)
-  const bgValues = _.values(_.omit(tidelineData.opts.bgClasses, ['very-high', 'very-low']))
+  const bgValues = _.values(_.omit(tidelineData.opts.bgClasses, ['veryHigh', 'veryLow']))
   const ticks = _.map(bgValues, (n) => format.tooltipBGValue(_.get(n, 'boundary'), bgUnits))
   ticks.sort((a, b) => a - b)
   const targetBoundary = getTargetBoundary(tidelineData, bgUnits)

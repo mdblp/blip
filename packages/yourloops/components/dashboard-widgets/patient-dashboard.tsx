@@ -27,7 +27,6 @@
 
 import React, { FunctionComponent } from 'react'
 import { Patient } from '../../lib/patient/models/patient.model'
-import PatientStatistics from 'blip/app/components/chart/patientStatistics.js'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import MedicalDataService, { TimePrefs } from 'medical-domain'
 import { ChartPrefs } from './models/chart-prefs.model'
@@ -50,6 +49,7 @@ import {
   RESPONSIVE_GRID_FULL_WIDTH,
   RESPONSIVE_GRID_HALF_WIDTH
 } from '../../css/css-utils'
+import { PatientStatisticsWidget } from './patient-statistics-widget'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -117,16 +117,21 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={gridWidgetSize}>
-        <PatientStatistics
-          bgPrefs={bgPrefs}
-          bgSource={dataUtil.bgSource}
-          chartPrefs={chartPrefs}
-          chartType="patientStatistics"
+        <PatientStatisticsWidget
           dataUtil={dataUtil}
+          bgPrefs={bgPrefs}
           endpoints={endpoints}
-          loading={loading}
-          parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}
         />
+        {/*<PatientStatistics*/}
+        {/*  bgPrefs={bgPrefs}*/}
+        {/*  bgSource={dataUtil.bgSource}*/}
+        {/*  chartPrefs={chartPrefs}*/}
+        {/*  chartType="patientStatistics"*/}
+        {/*  dataUtil={dataUtil}*/}
+        {/*  endpoints={endpoints}*/}
+        {/*  loading={loading}*/}
+        {/*  parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}*/}
+        {/*/>*/}
       </Grid>
       <Grid item xs={gridWidgetSize}>
         <DeviceUsage

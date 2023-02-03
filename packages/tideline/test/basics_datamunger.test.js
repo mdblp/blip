@@ -24,11 +24,11 @@ import datamunger from '../plugins/blip/basics/logic/datamunger'
 
 describe('basics datamunger', function() {
   var bgClasses = {
-    'very-low': 10,
-    'low': 20,
-    'target': 30,
-    'high': 40,
-    'very-high': 50
+    veryLow: 10,
+    low: 20,
+    target: 30,
+    high: 40,
+    veryHigh: 50
   }
   var oneWeekDates = [{
     date: '2015-09-07',

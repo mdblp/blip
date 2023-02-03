@@ -277,10 +277,10 @@ describe('DataUtil', () => {
 
   const bgPrefs = {
     bgClasses: {
-      'very-low': 54,
-      'low': 70,
-      'target': 180,
-      'high': 250
+      veryLow: 54,
+      low: 70,
+      target: 180,
+      high: 250
     },
     bgUnits: MGDL_UNITS
   }
@@ -409,10 +409,10 @@ describe('DataUtil', () => {
 
       dataUtil.bgPrefs = {
         bgClasses: {
-          'very-low': 54,
-          'low': 70,
-          'target': 180,
-          'high': 250
+          veryLow: 54,
+          low: 70,
+          target: 180,
+          high: 250
         },
         bgUnits: MMOLL_UNITS
       }
@@ -430,10 +430,10 @@ describe('DataUtil', () => {
 
       dataUtil.bgPrefs = {
         bgClasses: {
-          'very-low': 50,
-          'low': 60,
-          'target': 70,
-          'high': 80
+          veryLow: 50,
+          low: 60,
+          target: 70,
+          high: 80
         },
         bgUnits: MGDL_UNITS
       }

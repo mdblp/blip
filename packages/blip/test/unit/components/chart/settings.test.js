@@ -14,19 +14,19 @@ describe('SettingsDialog', function () {
 
   const bgPrefs = {
     bgClasses: {
-      'very-low': {
+      veryLow: {
         boundary: 60
       },
-      'low': {
+      low: {
         boundary: 80
       },
-      'target': {
+      target: {
         boundary: 180
       },
-      'high': {
+      high: {
         boundary: 200
       },
-      'very-high': {
+      veryHigh: {
         boundary: 300
       }
     },

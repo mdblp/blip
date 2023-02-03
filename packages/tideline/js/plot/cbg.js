@@ -48,7 +48,7 @@ function plotCbg(pool, opts = defaults) {
   const d3 = window.d3
 
   _.defaults(opts, defaults)
-  opts.classes = _.omit(opts.classes, ['very-low', 'very-high'])
+  opts.classes = _.omit(opts.classes, ['veryLow', 'veryHigh'])
 
   const categorize = categorizer(opts.classes, opts.bgUnits)
   const mainGroup = pool.parent()

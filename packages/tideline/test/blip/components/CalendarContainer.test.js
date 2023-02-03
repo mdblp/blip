@@ -36,19 +36,19 @@ describe('CalendarContainer', () => {
 
   var props = {
     bgClasses: {
-      'very-low': {
+      veryLow: {
         boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow
       },
-      'low': {
+      low: {
         boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower
       },
-      'target': {
+      target: {
         boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper
       },
-      'high': {
+      high: {
         boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh
       },
-      'very-high': {
+      veryHigh: {
         boundary: BG_CLAMP_THRESHOLD[MGDL_UNITS]
       }
     },

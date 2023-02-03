@@ -34,7 +34,7 @@ export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
     veryHighThreshold: bgClasses.high,
     targetUpperBound: bgClasses.target,
     targetLowerBound: bgClasses.low,
-    veryLowThreshold: bgClasses['very-low']
+    veryLowThreshold: bgClasses.veryLow
   }
 }
 
