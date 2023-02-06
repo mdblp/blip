@@ -34,7 +34,7 @@ interface HistoryTableParameterChangeProps {
   parameter: HistorizedParameter
 }
 
-export const buildIcon = (change: ChangeType): JSX.Element => {
+const buildIcon = (change: ChangeType): JSX.Element => {
   switch (change) {
     case ChangeType.Added:
       return <i className="icon-add" />

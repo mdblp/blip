@@ -41,12 +41,12 @@ interface HistoryTableContentProps {
 
 export const HistoryTableContent: FunctionComponent<HistoryTableContentProps> = (props): JSX.Element => {
   const { onSwitchToDaily, rows, timePrefs, length } = props
-  const rs = buildAllRows(rows, timePrefs)
+  const allRows = buildAllRows(rows, timePrefs)
 
   return (
     <tbody>
     {
-      rs.map((row, key) => {
+      allRows.map((row, key) => {
         if (row.isGroupedParameterHeader) {
           return <HistorySpannedRow key={key} data={row} length={length} onSwitchToDaily={onSwitchToDaily} />
         }

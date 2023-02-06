@@ -38,6 +38,7 @@ import { TimePrefs, Unit } from 'medical-domain'
 const setCurrentParameter = (parameter: Parameter, currentParameters: Map<string, ParameterValue>): void => {
   switch (parameter.changeType) {
     case ChangeType.Added:
+    case ChangeType.Updated:
       currentParameters.set(parameter.name, {
         value: parameter.value,
         unit: parameter.unit
@@ -47,12 +48,6 @@ const setCurrentParameter = (parameter: Parameter, currentParameters: Map<string
       if (currentParameters.has(parameter.name)) {
         currentParameters.delete(parameter.name)
       }
-      break
-    case ChangeType.Updated:
-      currentParameters.set(parameter.name, {
-        value: parameter.value,
-        unit: parameter.unit
-      })
       break
     default:
       break
