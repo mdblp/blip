@@ -128,10 +128,6 @@ describe('Trends provider hook', () => {
         cbg100Enabled: true,
         cbgMedianEnabled: true
       })
-
-      expect(() => {
-        result.current.toggleCbgSegments('incorrect display flag' as DisplayFlag)
-      }).toThrow('Display flag field incorrect display flag is unknown')
     })
 
     it('should throw error when given display flags is incorrect', async () => {
@@ -139,7 +135,7 @@ describe('Trends provider hook', () => {
 
       expect(() => {
         result.current.toggleCbgSegments('incorrect display flag' as DisplayFlag)
-      }).toThrow('Display flag field incorrect display flag is unknown')
+      }).toThrow('Display flag field "incorrect display flag" is unknown')
     })
   })
 })

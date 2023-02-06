@@ -57,7 +57,7 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
         setDisplayFlags({ ...displayFlags, cbgMedianEnabled: !displayFlags.cbgMedianEnabled })
         return
       default:
-        throw Error(`Display flag field ${displayFlag as string} is unknown`)
+        throw Error(`Display flag field "${displayFlag as string}" is unknown`)
     }
   }
 
