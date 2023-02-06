@@ -14,6 +14,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-2094 Update some dependencies with major changes
 - YLP-2095 Migrate FocusedCBGSliceSegment from viz to dumb
 - YLP-2096 Migrate CBG date traces animated to dumb
+- YLP-2097 Migrate RangeSelect from viz to dumb
+- YLP-2110 Update i18next from 19.9.2 to 22.4.9
 
 ## 3.1.0 - 2023-01-31
 ### Fixed

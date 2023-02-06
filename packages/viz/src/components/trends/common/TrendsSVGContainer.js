@@ -179,7 +179,6 @@ export class TrendsSVGContainer extends React.Component {
           bgBounds={this.props.bgPrefs.bgBounds}
           sliceWidth={sliceWidth}
           data={this.props.cbgData}
-          displayFlags={this.props.displayFlags}
           showingCbgDateTraces={this.props.showingCbgDateTraces}
           tooltipLeftThreshold={this.props.tooltipLeftThreshold}
           topMargin={margins.top}
@@ -278,12 +277,6 @@ TrendsSVGContainer.propTypes = {
     value: PropTypes.number.isRequired
   })).isRequired,
   dates: PropTypes.arrayOf(PropTypes.string).isRequired,
-  displayFlags: PropTypes.shape({
-    cbg100Enabled: PropTypes.bool.isRequired,
-    cbg80Enabled: PropTypes.bool.isRequired,
-    cbg50Enabled: PropTypes.bool.isRequired,
-    cbgMedianEnabled: PropTypes.bool.isRequired
-  }).isRequired,
   focusedSlice: PropTypes.shape({
     data: PropTypes.shape({
       firstQuartile: PropTypes.number.isRequired,

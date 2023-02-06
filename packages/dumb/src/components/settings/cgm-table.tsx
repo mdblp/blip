@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,7 +55,8 @@ export const CgmTable: FunctionComponent<CgmTableProps> = (
   const { t } = useTranslation('main')
 
   const formatDate = (value: string): string => {
-    return value === '' ? DEFAULT_VALUE : formatLocalizedFromUTC(value, timePrefs, t('MMM D, YYYY'))
+    const dateFormat = t('MMM D, YYYY')
+    return value === '' ? DEFAULT_VALUE : formatLocalizedFromUTC(value, timePrefs, dateFormat)
   }
 
   const cgmEndOfLife = formatDate(cgm.endOfLifeTransmitterDate)

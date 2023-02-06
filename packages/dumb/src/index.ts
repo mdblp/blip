@@ -60,7 +60,7 @@ import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
-import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
+import { RangeLabeledToggle } from './components/controls/range-labeled-toggle/range-labeled-toggle'
 import { Table } from './components/settings/table'
 import { TargetRangeLines } from './components/trends/common/target-range-lines/target-range-lines'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
@@ -69,9 +69,9 @@ import { type BgPrefs } from './models/blood-glucose.model'
 import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-labels'
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
 import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
-import {
-  FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment
-} from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
+import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
+import { RangeSelect } from './components/trends/cbg/range-select/range-select'
+import { TrendsProvider } from './provider/trends.provider'
 
 export {
   AverageDailyDoseStat,
@@ -91,12 +91,13 @@ export {
   ConfidentialTooltip,
   FocusedCbgSliceSegment,
   FoodTooltip,
-  LabeledCheckbox,
   LoopModeStat,
   NoDataLabel,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,
+  RangeLabeledToggle,
+  RangeSelect,
   ReservoirTooltip,
   SimpleStat,
   StatTooltip,
@@ -106,6 +107,7 @@ export {
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,
+  TrendsProvider,
   XAxisLabels,
   XAxisTicks,
   YAxisLabelsAndTicks

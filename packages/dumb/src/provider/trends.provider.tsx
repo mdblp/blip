@@ -25,9 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DisplayFlag {
-  Cbg100Enabled = 'cbg100Enabled',
-  Cbg80Enabled = 'cbg80Enabled',
-  Cbg50Enabled = 'cbg50Enabled',
-  CbgMedianEnabled = 'cbgMedianEnabled'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import { type TrendsContextResult, useTrendsProviderHook } from './trends.provider.hook'
+
+const TrendsContext = createContext<TrendsContextResult>({} as TrendsContextResult)
+
+export const TrendsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const trendsContextResult = useTrendsProviderHook()
+  return <TrendsContext.Provider value={trendsContextResult}>{children}</TrendsContext.Provider>
+}
+
+export function useTrendsContext(): TrendsContextResult {
+  return useContext(TrendsContext)
 }

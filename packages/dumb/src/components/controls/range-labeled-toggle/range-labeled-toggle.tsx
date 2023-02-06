@@ -25,9 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DisplayFlag {
-  Cbg100Enabled = 'cbg100Enabled',
-  Cbg80Enabled = 'cbg80Enabled',
-  Cbg50Enabled = 'cbg50Enabled',
-  CbgMedianEnabled = 'cbgMedianEnabled'
+import React, { type FunctionComponent } from 'react'
+import { Checkbox, FormControlLabel } from '@mui/material'
+import { useTrendsContext } from '../../../provider/trends.provider'
+import { type DisplayFlag } from '../../../models/enums/display-flag.enum'
+
+interface LabeledCheckboxProps {
+  checked: boolean
+  displayFlag: DisplayFlag
+  label: string
+}
+
+export const RangeLabeledToggle: FunctionComponent<LabeledCheckboxProps> = (props) => {
+  const { checked, displayFlag, label } = props
+  const { toggleCbgSegments } = useTrendsContext()
+
+  return (
+    <FormControlLabel
+      label={label}
+      control={
+        <Checkbox
+          size="small"
+          checked={checked}
+          onChange={() => {
+            toggleCbgSegments(displayFlag)
+          }}
+        />
+      }
+    />
+  )
 }
