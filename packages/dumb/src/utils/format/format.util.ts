@@ -29,7 +29,7 @@ import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetim
 import { type BgUnit, convertBG, type TimePrefs, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
-import { BgClass, type BgPrefs } from '../../models/blood-glucose.model'
+import { BgClass } from '../../models/blood-glucose.model'
 import { min } from 'lodash'
 
 const t = i18next.t.bind(i18next)
