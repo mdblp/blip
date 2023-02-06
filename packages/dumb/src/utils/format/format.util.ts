@@ -26,7 +26,7 @@
  */
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
-import { convertBG, type TimePrefs, Unit } from 'medical-domain'
+import { type BgUnit, convertBG, type TimePrefs, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import { format } from 'd3-format'
 import { BgClass, type BgPrefs } from '../../models/blood-glucose.model'
@@ -70,8 +70,8 @@ export const formatParameterValue = (value: number | string, unit: Unit): string
   return valueNumber.toFixed(decimalsCount)
 }
 
-export const formatBgValue = (value: number, bgPrefs?: BgPrefs, outOfRangeThresholds?: Record<string, number>): string => {
-  const unit = bgPrefs?.bgUnits ?? Unit.MilligramPerDeciliter
+export const formatBgValue = (value: number, bgUnit?: BgUnit, outOfRangeThresholds?: Record<string, number>): string => {
+  const unit = bgUnit ?? Unit.MilligramPerDeciliter
   const isUnitMmolPerLiter = unit === Unit.MmolPerLiter
 
   if (outOfRangeThresholds) {

@@ -69,6 +69,7 @@ import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-an
 import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
+import { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
 
 export {
   AverageDailyDoseStat,
@@ -86,6 +87,7 @@ export {
   CgmTable,
   ConfidentialTooltip,
   FocusedCbgSliceSegment,
+  FocusedRangeLabels,
   FoodTooltip,
   RangeLabeledToggle,
   LoopModeStat,
