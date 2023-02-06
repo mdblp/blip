@@ -32,8 +32,8 @@ import { TooltipColor } from '../../../../models/enums/tooltip-color.enum'
 
 interface TooltipLineProps {
   label: string
-  value?: number | string
-  units?: string
+  value?: number | string | null
+  units?: string | null
   isBold?: boolean
   customColor?: TooltipColor
 }
