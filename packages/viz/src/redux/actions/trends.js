@@ -38,20 +38,6 @@ export function showCbgDateTraces(userId) {
   }
 }
 
-export function turnOffCbgRange(userId, range) {
-  return {
-    type: actionTypes.TURN_OFF_CBG_RANGE,
-    payload: { userId, range }
-  }
-}
-
-export function turnOnCbgRange(userId, range) {
-  return {
-    type: actionTypes.TURN_ON_CBG_RANGE,
-    payload: { userId, range }
-  }
-}
-
 export function unfocusTrendsCbgDateTrace(userId) {
   return {
     type: actionTypes.UNFOCUS_TRENDS_CBG_DATE_TRACE,

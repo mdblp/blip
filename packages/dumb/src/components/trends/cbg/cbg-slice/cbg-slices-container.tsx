@@ -29,17 +29,16 @@ import React, { type FunctionComponent, memo, useMemo } from 'react'
 
 import { type BgBounds } from '../../../../models/blood-glucose.model'
 import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
-import { type TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { CbgSliceAnimated } from './cbg-slice-animated'
 import { CbgMedianAnimated } from '../cbg-median-animated/cbg-median-animated'
 import { formatCbgs } from './cbg-slices-container.util'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
 interface CbgSlicesContainerProps {
   bgBounds: BgBounds
   sliceWidth: number
   data: CbgSlicesContainerData[]
-  displayFlags: TrendsDisplayFlags
   showingCbgDateTraces: boolean
   tooltipLeftThreshold: number
   topMargin: number
@@ -51,7 +50,6 @@ const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) =
   const {
     bgBounds,
     data,
-    displayFlags,
     showingCbgDateTraces,
     sliceWidth,
     tooltipLeftThreshold,
@@ -59,6 +57,8 @@ const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) =
     xScale,
     yScale
   } = props
+
+  const { displayFlags } = useTrendsContext()
 
   const cbgs = useMemo(() => formatCbgs(data), [data])
 
@@ -68,7 +68,6 @@ const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) =
         <g key={cbg.id} data-testid="cbg-slice-segments">
           <CbgSliceAnimated
             datum={cbg}
-            displayFlags={displayFlags}
             showingCbgDateTraces={showingCbgDateTraces}
             sliceWidth={sliceWidth}
             tooltipLeftThreshold={tooltipLeftThreshold}

@@ -18,7 +18,6 @@
 import './styles/colors.css'
 
 import FocusedRangeLabels from './components/trends/common/FocusedRangeLabels'
-import RangeSelect from './components/trends/cbg/RangeSelect'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import TrendsContainer from './components/trends/common/TrendsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
@@ -48,7 +47,6 @@ import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from './redux/action
 
 const components = {
   FocusedRangeLabels,
-  RangeSelect,
   WarmUpTooltip
 }
 
