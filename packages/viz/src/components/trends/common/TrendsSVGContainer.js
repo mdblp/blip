@@ -31,9 +31,9 @@ import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 
 import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
-import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
 import {
   Background,
+  CbgDateTracesAnimationContainer,
   CbgSlicesContainer,
   FocusedCbgSliceSegment,
   NoDataLabel,
@@ -153,7 +153,7 @@ export class TrendsSVGContainer extends React.Component {
     if (focusedSlice) {
       const { focusedSegmentDataGroupedByDate } = this.state
       dateTraces = focusedSegmentDataGroupedByDate === null ? null : (
-        <CBGDateTracesAnimationContainer
+        <CbgDateTracesAnimationContainer
           bgBounds={this.props.bgPrefs.bgBounds}
           data={focusedSegmentDataGroupedByDate}
           onSelectDate={this.props.onSelectDate}

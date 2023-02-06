@@ -40,13 +40,14 @@ import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants
 interface CbgDateTracesAnimatedProps {
   bgBounds: BgBounds
   data: CbgDateTrace[]
-  focusDateTrace: (userId: string, dateTrace: CbgDateTrace, position: CbgPositionData) => void
   onSelectDate: (epoch: number) => void
   topMargin: number
-  unfocusDateTrace: (userId: string) => void
-  userId: string
   xScale: ScaleFunction
   yScale: ScaleFunction
+  // Added via redux
+  userId: string
+  focusDateTrace: (userId: string, dateTrace: CbgDateTrace, position: CbgPositionData) => void
+  unfocusDateTrace: (userId: string) => void
 }
 
 const CBG_RADIUS = 2.5
