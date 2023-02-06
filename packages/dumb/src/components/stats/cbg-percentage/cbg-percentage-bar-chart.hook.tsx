@@ -90,7 +90,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
         }
         return [
           t('time-in-range-cgm-daily-average'),
-          t('compute-ndays-time-in-range')
+          t('compute-ndays-time-in-range', { cbgLabel: t('CGM') })
         ]
       case CBGStatType.ReadingsInRange:
       default:

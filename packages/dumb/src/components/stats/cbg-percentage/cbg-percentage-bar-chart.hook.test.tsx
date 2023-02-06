@@ -29,23 +29,52 @@ import { act, renderHook } from '@testing-library/react-hooks/dom'
 import { type CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { waitFor } from '@testing-library/dom'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
+import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
+import { type BgBounds } from '../../../models/blood-glucose.model'
 
 describe('CBGPercentageBarChart hook', () => {
-  const total = 1000
+  const veryHighStatValue = 100
+  const highStatValue = 200
+  const targetStatValue = 150
+  const lowStatValue = 250
+  const veryLowStatValue = 50
+  const total = veryLowStatValue + lowStatValue + targetStatValue + highStatValue + veryHighStatValue
   const createCBGTimeData = (id: StatLevel, legendTitle: string, title: string, value: number): CBGPercentageData => {
     return { id, legendTitle, title, value }
   }
-  const veryHighStat = createCBGTimeData(StatLevel.VeryHigh, 'fakeLegendTitle', 'fakeTitle', 100)
-  const highStat = createCBGTimeData(StatLevel.High, 'fakeLegendTitle2', 'fakeTitle2', 200)
-  const targetStat = createCBGTimeData(StatLevel.Target, 'fakeLegendTitle3', 'fakeTitle3', 150)
-  const lowStat = createCBGTimeData(StatLevel.Low, 'fakeLegendTitle4', 'fakeTitle4', 250)
-  const veryLowStat = createCBGTimeData(StatLevel.VeryLow, 'fakeLegendTitle5', 'fakeTitle5', 50)
+  const veryHighStat = createCBGTimeData(StatLevel.VeryHigh, '>250', 'Time Above Range', veryHighStatValue)
+  const highStat = createCBGTimeData(StatLevel.High, '180-250', 'Time Above Range', highStatValue)
+  const targetStat = createCBGTimeData(StatLevel.Target, '69-180', 'Time In Range', targetStatValue)
+  const lowStat = createCBGTimeData(StatLevel.Low, '53-69', 'Time Below Range', lowStatValue)
+  const veryLowStat = createCBGTimeData(StatLevel.VeryLow, '<53', 'Time Below Range', veryLowStatValue)
+
+  const data: TimeInRangeData = {
+    veryHigh: veryHighStatValue,
+    high: highStatValue,
+    target: targetStatValue,
+    low: lowStatValue,
+    veryLow: veryLowStatValue,
+    /*
+    TODO This stat is not calculated correctly in blip code, need to fix this when we will migrate data calculation to yourloops
+      Currently it's computed with sum of each bound
+     */
+    total: 1000
+  }
+
+  const bgBounds: BgBounds = {
+    veryHighThreshold: 250,
+    targetUpperBound: 180,
+    targetLowerBound: 69,
+    veryLowThreshold: 53
+  }
 
   const defaultProps: CBGPercentageBarChartHookProps = {
-    data: [veryHighStat, highStat, targetStat, lowStat, veryLowStat],
-    titleKey: 'fakeTitleKey',
-    total,
-    type: CBGStatType.TimeInRange
+    bgBounds,
+    data,
+    days: 2,
+    type: CBGStatType.TimeInRange,
+    units: UnitsType.MGDL
   }
 
   it('should return correct cbgStatsProps', () => {
@@ -56,46 +85,62 @@ describe('CBGPercentageBarChart hook', () => {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total: defaultProps.total,
+        total,
         ...veryHighStat
       },
       highStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total: defaultProps.total,
+        total,
         ...highStat
       },
       targetStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total: defaultProps.total,
+        total,
         ...targetStat
       },
       lowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total: defaultProps.total,
+        total,
         ...lowStat
       },
       veryLowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
         onMouseEnter: expect.anything(),
-        total: defaultProps.total,
+        total,
         ...veryLowStat
       }
     })
   })
 
+  it('should compute the right title and annotations', () => {
+    const { result: firstHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps }))
+    expect(firstHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Time In Range' })
+    expect(firstHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
+
+    const { result: secondHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, days: 0 }))
+    expect(secondHook.current.titleProps).toEqual({ legendTitle: '', title: 'Time In Range' })
+    expect(secondHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.'])
+
+    const { result: thirdHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, type: CBGStatType.ReadingsInRange }))
+    expect(thirdHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Readings In Range' })
+    expect(thirdHook.current.annotations).toEqual(['**Readings In Range:** Daily average of the number of BGM readings.'])
+
+    const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, days: 0, type: CBGStatType.ReadingsInRange }))
+    expect(fourthHook.current.titleProps).toEqual({ legendTitle: '', title: 'Readings In Range' })
+  })
+
   it('onMouseOver and OnMouseLeave should return correct values', async () => {
-    const props = { ...defaultProps, total: 1000 }
+    const props = { ...defaultProps }
     const defaultTitleProps = {
       legendTitle: '',
-      showTooltipIcon: true,
-      title: defaultProps.titleKey
+      title: 'Avg. Daily Time In Range'
     }
     const { result } = renderHook(() => useCBGPercentageBarChartHook(props))
     expect(result.current.hoveredStatId).toBeNull()
@@ -106,7 +151,6 @@ describe('CBGPercentageBarChart hook', () => {
     })
     expect(result.current.titleProps).toEqual({
       legendTitle: veryHighStat.legendTitle,
-      showTooltipIcon: false,
       title: veryHighStat.title
     })
     await act(async () => {
