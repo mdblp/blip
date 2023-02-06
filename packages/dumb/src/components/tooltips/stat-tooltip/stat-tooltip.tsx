@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -54,6 +54,8 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
   const { annotations } = props
   const { t } = useTranslation('main')
 
+  const imageAlt = t('img-alt-hover-for-more-info')
+
   return (
     <StyledTooltip
       disableFocusListener
@@ -80,7 +82,7 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
         <img
           data-testid="info-icon"
           src={InfoIcon}
-          alt={t('img-alt-hover-for-more-info')}
+          alt={imageAlt}
         />
       </span>
     </StyledTooltip>
