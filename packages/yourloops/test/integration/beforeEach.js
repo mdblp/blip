@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,6 +34,7 @@ const options = i18nOptions
 options.resources.en.yourloops = yourloopsEn
 options.resources.en.main = translationEn
 options.resources.en.params = parameterEn
+options.interpolation.skipOnVariables = false
 
 i18nInit(options).then(() => {
   // nothing to do
