@@ -4,7 +4,7 @@ on:
   push:
     branches: [ 'dblp' ]
   pull_request:
-    branches: [ '*' ]
+    branches: [ 'dblp' ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
