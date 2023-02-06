@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,16 +37,14 @@ import Tooltip from '../../../tooltips/common/tooltip/tooltip'
 
 interface FocusedRangeLabelsProps {
   bgUnit: BgUnit
-  focusedKeys: RangeSegmentSlice
+  focusedRangeSegments: RangeSegmentSlice
   data: {
     firstQuartile: number
-    id: string
     max: number
     median: number
     min: number
     msFrom: number
     msTo: number
-    msX: number
     ninetiethQuantile: number
     outOfRangeThresholds: {
       low: number
@@ -70,16 +68,16 @@ const OFFSET_BOTTOM = -5
 const OFFSET_TOP = 5
 
 export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (props) => {
-  const { focusedKeys, data, position, bgUnit } = props
+  const { focusedRangeSegments, data, position, bgUnit } = props
 
-  if (focusedKeys.length <= 1) {
+  if (focusedRangeSegments.length <= 1) {
     return null
   }
 
   const timeFrom = formatClocktimeFromMsPer24(data.msFrom)
   const timeTo = formatClocktimeFromMsPer24(data.msTo)
-  const bottom = focusedKeys[0] as RangeSegmentSlice
-  const top = focusedKeys[1] as RangeSegmentSlice
+  const bottom = focusedRangeSegments[0] as RangeSegmentSlice
+  const top = focusedRangeSegments[1] as RangeSegmentSlice
   const topPosition = {
     top: position.yPositions[top],
     left: position.left
@@ -88,6 +86,7 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
     top: position.yPositions[bottom],
     left: position.left
   }
+
   return (
     <div className={styles.container} data-testid="trends-tooltips">
       <Tooltip

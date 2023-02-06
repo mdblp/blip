@@ -672,7 +672,7 @@ class Trends extends React.Component {
     return (
       <FocusedRangeLabels
         bgUnit={this.props.bgPrefs.bgUnits}
-        focusedKeys={userTrendsState.focusedCbgSliceKeys}
+        focusedRangeSegments={userTrendsState.focusedCbgSliceKeys}
         data={userTrendsState.focusedCbgSlice.data}
         position={userTrendsState.focusedCbgSlice.position}
         timePrefs={this.props.timePrefs}
