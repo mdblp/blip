@@ -28,10 +28,26 @@
 import { formatParameterValue } from '../../../utils/format/format.util'
 import React, { FunctionComponent } from 'react'
 import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
-import { selectSpanClass } from './history-table.util'
+import styles from '../diabeloop.css'
 
 interface HistoryTableParameterValueChangeProps {
   parameter: HistorizedParameter
+}
+
+const selectSpanClass = (change: ChangeType): string => {
+  const spanClass = `parameters-history-table-value ${styles.historyValue}`
+  switch (change) {
+    case ChangeType.Added:
+      return `${spanClass} ${styles.valueAdded}`
+    case ChangeType.Deleted:
+      return `${spanClass} ${styles.valueDeleted}`
+    case ChangeType.Updated: {
+      return `${spanClass} ${styles.valueUpdated}`
+    }
+    default:
+      break
+  }
+  return spanClass
 }
 
 export const HistoryTableParameterValueChange: FunctionComponent<HistoryTableParameterValueChangeProps> = (props): JSX.Element => {

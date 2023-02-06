@@ -33,7 +33,13 @@ export enum ChangeType {
   Updated = 'updated'
 }
 
-interface Parameter {
+export interface ParameterValue {
+  value: string
+  unit: Unit
+}
+
+
+export interface Parameter {
   changeType: ChangeType
   effectiveDate: string
   name: string

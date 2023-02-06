@@ -27,12 +27,25 @@
 
 import styles from '../diabeloop.css'
 import React, { FunctionComponent } from 'react'
-import { HistorizedParameter } from '../../../models/historized-parameter.model'
+import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
 import { useTranslation } from 'react-i18next'
-import { buildIcon } from './history-table.util'
 
 interface HistoryTableParameterChangeProps {
   parameter: HistorizedParameter
+}
+
+export const buildIcon = (change: ChangeType): JSX.Element => {
+  switch (change) {
+    case ChangeType.Added:
+      return <i className="icon-add" />
+    case ChangeType.Deleted:
+      return <i className="icon-remove" />
+    case ChangeType.Updated:
+      return <i className="icon-refresh" />
+    default:
+      break
+  }
+  return <i className="icon-unsure-data" />
 }
 
 export const HistoryTableParameterChange: FunctionComponent<HistoryTableParameterChangeProps> = (props): JSX.Element => {

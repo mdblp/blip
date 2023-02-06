@@ -25,52 +25,80 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ChangeType, HistorizedParameter, IncomingRow } from '../../../models/historized-parameter.model'
-import React from 'react'
-import styles from '../diabeloop.css'
+import {
+  ChangeType,
+  HistorizedParameter,
+  IncomingRow,
+  Parameter,
+  ParameterValue
+} from '../../../models/historized-parameter.model'
 import { formatLocalizedFromUTC, getLongDayHourFormat } from '../../../utils/datetime/datetime.util'
 import { TimePrefs, Unit } from 'medical-domain'
 
-export const buildIcon = (change: ChangeType): JSX.Element => {
-  switch (change) {
+const setCurrentParameter = (parameter: Parameter, currentParameters: Map<string, ParameterValue>): void => {
+  switch (parameter.changeType) {
     case ChangeType.Added:
-      return <i className="icon-add" />
+      currentParameters.set(parameter.name, {
+        value: parameter.value,
+        unit: parameter.unit
+      })
+      break
     case ChangeType.Deleted:
-      return <i className="icon-remove" />
+      if (currentParameters.has(parameter.name)) {
+        currentParameters.delete(parameter.name)
+      }
+      break
     case ChangeType.Updated:
-      return <i className="icon-refresh" />
+      currentParameters.set(parameter.name, {
+        value: parameter.value,
+        unit: parameter.unit
+      })
+      break
     default:
       break
   }
-  return <i className="icon-unsure-data" />
 }
 
-export const selectSpanClass = (change: ChangeType): string => {
-  const spanClass = `parameters-history-table-value ${styles.historyValue}`
-  switch (change) {
-    case ChangeType.Added:
-      return `${spanClass} ${styles.valueAdded}`
-    case ChangeType.Deleted:
-      return `${spanClass} ${styles.valueDeleted}`
-    case ChangeType.Updated: {
-      return `${spanClass} ${styles.valueUpdated}`
+const getRowByParameter = (parameter: Parameter, timePrefs: TimePrefs, currentParameters: Map<string, ParameterValue>): HistorizedParameter => {
+  const dateFormat = getLongDayHourFormat()
+  const row: Partial<HistorizedParameter> = { ...parameter }
+  row.rawData = parameter.name
+  const changeDate = new Date(parameter.effectiveDate)
+
+  row.parameterDate = formatLocalizedFromUTC(changeDate, timePrefs, dateFormat)
+
+  if (parameter.changeType === ChangeType.Updated) {
+    if (currentParameters.has(parameter.name)) {
+      const currentParam = currentParameters.get(parameter.name)
+      if (currentParam) {
+        row.previousUnit = currentParam.unit
+        row.previousValue = currentParam.value
+      }
+    } else {
+      row.changeType = ChangeType.Added
     }
-    default:
-      break
   }
-  return spanClass
+
+  setCurrentParameter(parameter, currentParameters)
+
+  row.isGroupedParameterHeader = false
+
+  return row as HistorizedParameter
+}
+
+const getLatestDate = (parameters: Parameter[]): Date => {
+  return parameters.reduce((currentLatestDate: Date, parameter: Parameter) => {
+    const changeDate = new Date(parameter.effectiveDate)
+    return currentLatestDate.getTime() < changeDate.getTime() ? changeDate : currentLatestDate
+  }, new Date(0))
 }
 
 export const buildAllRows = (history: IncomingRow[], timePrefs: TimePrefs): HistorizedParameter[] => {
-  const rows: HistorizedParameter[] = []
   const dateFormat = getLongDayHourFormat()
-  const currentParameters = new Map()
+  const currentParameters = new Map<string, ParameterValue>()
 
-  const nHistory = history.length
-  for (let i = 0; i < nHistory; i++) {
-    const parameters = history[i].parameters
-    const nParameters = parameters.length
-    let latestDate = new Date(0)
+  const rows = history.reduce((currentRows: HistorizedParameter[], historyElement: IncomingRow) => {
+    const parameters = historyElement.parameters
 
     // Compare b->a since there is a reverse order at the end
     parameters.sort((a, b) =>
@@ -79,54 +107,12 @@ export const buildAllRows = (history: IncomingRow[], timePrefs: TimePrefs): Hist
       a.effectiveDate.localeCompare(b.effectiveDate)
     )
 
-    for (let j = 0; j < nParameters; j++) {
-      const parameter = parameters[j]
-      const row: Partial<HistorizedParameter> = { ...parameter }
-      row.rawData = parameter.name
-      const changeDate = new Date(parameter.effectiveDate)
-
-      if (latestDate.getTime() < changeDate.getTime()) {
-        latestDate = changeDate
-      }
-      row.parameterDate = formatLocalizedFromUTC(changeDate, timePrefs, dateFormat)
-
-      switch (row.changeType) {
-        case ChangeType.Added:
-          currentParameters.set(parameter.name, {
-            value: parameter.value,
-            unit: parameter.unit
-          })
-          break
-        case ChangeType.Deleted:
-          if (currentParameters.has(parameter.name)) {
-            currentParameters.delete(parameter.name)
-          }
-          break
-        case ChangeType.Updated:
-          if (currentParameters.has(parameter.name)) {
-            const currParam = currentParameters.get(parameter.name)
-            row.previousUnit = currParam.unit
-            row.previousValue = currParam.value
-          } else {
-            row.changeType = ChangeType.Added
-          }
-
-          currentParameters.set(parameter.name, {
-            value: parameter.value,
-            unit: parameter.unit
-          })
-          break
-        default:
-          break
-      }
-
-      row.isGroupedParameterHeader = false
-      rows.push(row as HistorizedParameter)
-    }
-
+    const parameterRows = parameters.map((parameter: Parameter) => getRowByParameter(parameter, timePrefs, currentParameters))
+    currentRows.push(...parameterRows)
+    const latestDate = getLatestDate(parameters)
     const mLatestDate = formatLocalizedFromUTC(latestDate, timePrefs, dateFormat)
 
-    rows.push({
+    currentRows.push({
       changeType: ChangeType.Added,
       effectiveDate: '',
       level: 0,
@@ -141,7 +127,9 @@ export const buildAllRows = (history: IncomingRow[], timePrefs: TimePrefs): Hist
       groupedParameterHeaderContent: mLatestDate,
       latestDate
     })
-  }
+
+    return currentRows
+  }, [])
 
   return rows.reverse()
 }
