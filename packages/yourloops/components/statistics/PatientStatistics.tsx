@@ -25,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type DataUtil } from 'tidepool-viz'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { BgSource } from 'dumb/dist/src/models/blood-glucose.model'
+import { BgSource } from 'dumb/src/models/blood-glucose.model'
+import Box from '@mui/material/Box'
 
 export interface PatientStatisticsProps {
   dataUtil: DataUtil
@@ -36,21 +37,25 @@ export interface PatientStatisticsProps {
   endpoints: string[]
 }
 
-export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
-  const { dataUtil, bgPrefs, endpoints } = props
+export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
+  const { dataUtil, bgPrefs, endpoints, children } = props
   dataUtil.endpoints = endpoints
-  const cbgStatType = dataUtil.bgSource === BgSource.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const cbgStatType: CBGStatType = dataUtil.bgSource === BgSource.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? dataUtil.getTimeInRangeData()
     : dataUtil.getReadingsInRangeData()
 
   return (
-    <CBGPercentageBarChart
-      bgBounds={dataUtil.bgBounds}
-      cbgStatType={cbgStatType}
-      data={cbgPercentageBarChartData}
-      bgPrefs={bgPrefs}
-      days={dataUtil?.days ?? 0}
-    />
+    <Box data-testid="patient-statistics">
+      <CBGPercentageBarChart
+        bgBounds={dataUtil.bgBounds}
+        bgSource={dataUtil.bgSource}
+        cbgStatType={cbgStatType}
+        data={cbgPercentageBarChartData}
+        bgPrefs={bgPrefs}
+        days={dataUtil?.days ?? 0}
+      />
+      {children}
+    </Box>
   )
 }

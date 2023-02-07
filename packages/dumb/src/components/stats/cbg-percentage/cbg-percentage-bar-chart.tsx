@@ -33,11 +33,12 @@ import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { type CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
-import { type BgPrefs, type BgBounds } from '../../../models/blood-glucose.model'
+import { type BgPrefs, type BgBounds, type BgSource } from '../../../models/blood-glucose.model'
 import { type ReadingsInRangeData, type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 
 interface CBGPercentageBarChartProps {
   bgBounds: BgBounds
+  bgSource: BgSource
   bgPrefs: BgPrefs
   cbgStatType: CBGStatType
   data: TimeInRangeData | ReadingsInRangeData
@@ -45,7 +46,7 @@ interface CBGPercentageBarChartProps {
 }
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
-  const { bgBounds, bgPrefs, cbgStatType, data, days } = props
+  const { bgBounds, bgPrefs, bgSource, cbgStatType, data, days } = props
   const {
     annotations,
     cbgStatsProps,
@@ -54,6 +55,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
     titleProps
   } = useCBGPercentageBarChartHook({
     bgBounds,
+    bgSource,
     data,
     days,
     type: cbgStatType,
@@ -61,8 +63,8 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
   })
 
   return (
-    <>
-      <div data-testid={`cbg-percentage-stats-${cbgStatType}`}>
+    <div data-testid='cbg-percentage-bar-chart'>
+      <div>
         <CbgPercentageTitle
           annotations={annotations}
           hoveredStatId={hoveredStatId}
@@ -78,7 +80,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
       </div>
       <div className={styles['stat-footer']} />
       <StatLegend bgClasses={bgPrefs.bgClasses} units={bgPrefs.bgUnits} />
-    </>
+    </div>
   )
 }
 export const CBGPercentageBarChartMemoized = React.memo(CBGPercentageBarChart)

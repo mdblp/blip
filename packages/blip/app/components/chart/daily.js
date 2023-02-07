@@ -377,16 +377,17 @@ class Daily extends React.Component {
                   dataUtil={this.props.dataUtil}
                   bgPrefs={this.props.bgPrefs}
                   endpoints={endpoints}
-                />
-                <Stats
-                  bgPrefs={this.props.bgPrefs}
-                  bgSource={this.props.dataUtil.bgSource}
-                  chartPrefs={this.props.chartPrefs}
-                  chartType={this.chartType}
-                  dataUtil={this.props.dataUtil}
-                  endpoints={endpoints}
-                  loading={loading}
-                />
+                >
+                  <Stats
+                    bgPrefs={this.props.bgPrefs}
+                    bgSource={this.props.dataUtil.bgSource}
+                    chartPrefs={this.props.chartPrefs}
+                    chartType={this.chartType}
+                    dataUtil={this.props.dataUtil}
+                    endpoints={endpoints}
+                    loading={loading}
+                  />
+                </PatientStatistics>
               </div>
             </div>
           </Box>

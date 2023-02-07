@@ -62,9 +62,9 @@ describe('Trends view for anyone', () => {
       await checkTrendsTidelineContainerTooltips()
       await checkTrendsStatsWidgetsTooltips()
 
-      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
+      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
 
-      checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
+      await checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
 
       await checkRangeSelection()
       await checkDaysSelection()
@@ -98,9 +98,9 @@ describe('Trends view for anyone', () => {
 
       await checkSMBGTrendsStatsWidgetsTooltips()
 
-      checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
+      await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
 
-      checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+      await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
     })
   })
 })

@@ -40,15 +40,15 @@ export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<Patien
     <GenericDashboardCard
       avatar={<InsertChartOutlinedIcon />}
       title={t('patient-statistics')}
-      data-testid="patient-statistics"
     >
       <CardContent>
         <PatientStatistics
           dataUtil={dataUtil}
           bgPrefs={bgPrefs}
           endpoints={endpoints}
-        />
-        {children}
+        >
+          {children}
+        </PatientStatistics>
       </CardContent>
     </GenericDashboardCard>
   )

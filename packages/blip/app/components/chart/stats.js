@@ -152,6 +152,7 @@ class Stats extends React.Component {
         const weight = weightParam ? Number(weightParam?.value) : WEIGHT_PARAM_DEFAULT_VALUE
         return (
           <AverageDailyDoseStat
+            annotations={stat.annotations}
             dailyDose={stat.data.data[0].value}
             footerLabel={stat.data.data[0].output.label}
             title={stat.title}

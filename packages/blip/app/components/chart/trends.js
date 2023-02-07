@@ -566,7 +566,7 @@ class Trends extends React.Component {
     const currentPatientInViewId = patient.userid
 
     if (_.isEmpty(_.get(trendsState, currentPatientInViewId))) {
-      return <CircularProgress className="centered-spinning-loader"/>
+      return <CircularProgress className="centered-spinning-loader" />
     }
 
     const endpoints = this.getEndpoints()
@@ -604,16 +604,17 @@ class Trends extends React.Component {
                   dataUtil={this.props.dataUtil}
                   bgPrefs={this.props.bgPrefs}
                   endpoints={endpoints}
-                />
-                <Stats
-                  bgPrefs={this.props.bgPrefs}
-                  bgSource={this.props.dataUtil.bgSource}
-                  chartPrefs={chartPrefs}
-                  chartType={this.chartType}
-                  dataUtil={this.props.dataUtil}
-                  endpoints={endpoints}
-                  loading={loading}
-                />
+                >
+                  <Stats
+                    bgPrefs={this.props.bgPrefs}
+                    bgSource={this.props.dataUtil.bgSource}
+                    chartPrefs={chartPrefs}
+                    chartType={this.chartType}
+                    dataUtil={this.props.dataUtil}
+                    endpoints={endpoints}
+                    loading={loading}
+                  />
+                </PatientStatistics>
               </div>
             </div>
           </Box>

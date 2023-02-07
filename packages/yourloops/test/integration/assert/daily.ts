@@ -75,28 +75,28 @@ export const checkDailyTidelineContainerTooltips = async () => {
 }
 
 export const checkDailyStatsWidgetsTooltips = async () => {
-  const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  await checkStatTooltip(statsWidgets, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
-  await checkStatTooltip(statsWidgets, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
-  await checkStatTooltip(statsWidgets, 'Total Insulin', TOTAL_INSULIN_TOOLTIP)
-  await checkStatTooltip(statsWidgets, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
-  await checkStatTooltip(statsWidgets, 'Total Carbs', TOTAL_CARBS_TOOLTIP)
-  await checkStatTooltip(statsWidgets, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
-  await checkStatTooltip(statsWidgets, 'CV (CGM)', CV_TOOLTIP)
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  await checkStatTooltip(patientStatistics, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Total Insulin', TOTAL_INSULIN_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Total Carbs', TOTAL_CARBS_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
 }
 
 export const checkSMBGDailyStatsWidgetsTooltips = async () => {
-  const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  await checkStatTooltip(statsWidgets, 'Readings In Range', READINGS_IN_RANGE_TOOLTIP)
-  await checkStatTooltip(statsWidgets, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  await checkStatTooltip(patientStatistics, 'Readings In Range', READINGS_IN_RANGE_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
 }
 
-export const checkDailyTimeInRangeStatsWidgets = () => {
-  const statsWidgets = within(screen.getByTestId('stats-widgets'))
-  expect(statsWidgets.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('10m13%')
-  expect(statsWidgets.getByTestId('cbg-percentage-stat-high-timeInRange')).toHaveTextContent('5m7%')
-  expect(statsWidgets.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('15m20%')
-  expect(statsWidgets.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('20m27%')
-  expect(statsWidgets.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('25m33%')
-  expect(statsWidgets.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
+export const checkDailyTimeInRangeStatsWidgets = async () => {
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  expect(patientStatistics.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('10m13%')
+  expect(patientStatistics.getByTestId('cbg-percentage-stat-high-timeInRange')).toHaveTextContent('5m7%')
+  expect(patientStatistics.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('15m20%')
+  expect(patientStatistics.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('20m27%')
+  expect(patientStatistics.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('25m33%')
+  expect(patientStatistics.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
 }

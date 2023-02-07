@@ -32,7 +32,7 @@ export const ensureNumeric = (value: number | undefined | null): number => {
 }
 
 export const formatBgValue = (value: number, units: UnitsType): string => {
-  const valueToString = value.toString()
+  const valueToString = Math.round(value).toString()
   switch (units) {
     case UnitsType.MMOLL:
       return parseFloat(valueToString).toFixed(1)

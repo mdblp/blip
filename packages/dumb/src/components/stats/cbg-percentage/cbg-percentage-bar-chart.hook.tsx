@@ -32,10 +32,11 @@ import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/
 import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.utils'
 import { type UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { type BgBounds } from '../../../models/blood-glucose.model'
+import { type BgBounds, BgSource } from '../../../models/blood-glucose.model'
 
 export interface CBGPercentageBarChartHookProps {
   bgBounds: BgBounds
+  bgSource: BgSource
   data: TimeInRangeData
   days: number
   type: CBGStatType
@@ -57,22 +58,18 @@ interface CBGPercentageBarChartHookReturn {
 }
 
 export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, units, days, data, bgBounds } = props
+  const { type, units, days, data, bgBounds, bgSource } = props
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
   const computeTitle = (): string => {
-    let title: string
     switch (type) {
       case CBGStatType.TimeInRange:
-        title = days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
-        break
+        return days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
       case CBGStatType.ReadingsInRange:
       default:
-        title = days > 1 ? t('Avg. Daily Readings In Range') : t('Readings In Range')
-        break
+        return days > 1 ? t('Avg. Daily Readings In Range') : t('Readings In Range')
     }
-    return title
   }
 
   const title = computeTitle()
@@ -84,13 +81,13 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
       case CBGStatType.TimeInRange:
         if (days > 1) {
           return [
-            t('time-in-range-cgm-one-day'),
-            t('compute-oneday-time-in-range')
+            t('time-in-range-cgm-daily-average'),
+            t('compute-ndays-time-in-range', { cbgLabel: t('CGM') })
           ]
         }
         return [
-          t('time-in-range-cgm-daily-average'),
-          t('compute-ndays-time-in-range', { cbgLabel: t('CGM') })
+          t('time-in-range-cgm-one-day'),
+          t('compute-oneday-time-in-range')
         ]
       case CBGStatType.ReadingsInRange:
       default:
@@ -183,8 +180,16 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     veryLowStat: getCBGPercentageBarProps(StatLevel.VeryLow)
   }
 
+  const annotations = computeAnnotations()
+  if (bgSource === BgSource.Smbg) {
+    annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
+      total: data.total,
+      smbgLabel: t('BGM')
+    }))
+  }
+
   return ({
-    annotations: computeAnnotations(),
+    annotations,
     cbgStatsProps,
     onMouseLeave,
     hoveredStatId,
