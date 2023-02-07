@@ -54,6 +54,7 @@ import { UserRoles } from './models/enums/user-roles.enum'
 import { AuthenticatedUser } from './models/authenticated-user.model'
 import { SignupForm } from './models/signup-form.model'
 import { ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
+import { v4 as uuidv4 } from 'uuid'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -172,6 +173,7 @@ export function AuthContextImpl(): AuthContext {
       }
 
       setUser(user)
+      HttpService.setTraceToken(uuidv4())
     } catch (err) {
       console.error(err)
     } finally {
