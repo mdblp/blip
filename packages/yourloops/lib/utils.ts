@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import metrics from './metrics'
 import moment from 'moment-timezone'
 import { type IUser } from './data/models/i-user.model'
 import { type Settings } from './auth/models/settings.model'
-import { UnitsType } from './units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
 import { CountryCodes } from './auth/models/country.model'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)

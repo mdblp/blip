@@ -42,7 +42,7 @@ import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 

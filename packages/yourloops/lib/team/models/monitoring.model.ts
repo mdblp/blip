@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { type MonitoringStatus } from './enums/monitoring-status.enum'
-import { type UnitsType } from '../../units/models/enums/units-type.enum'
+import { type UnitsType } from 'dumb/src/models/enums/units-type.enum'
 
 export interface Monitoring {
   enabled: boolean

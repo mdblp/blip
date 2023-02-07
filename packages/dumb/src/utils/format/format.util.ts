@@ -31,7 +31,7 @@ import i18next from 'i18next'
 import { format } from 'd3-format'
 import { BgClass, type BgPrefs } from '../../models/blood-glucose.model'
 import { min } from 'lodash'
-import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
+import { UnitsType } from '../../models/enums/units-type.enum'
 
 const t = i18next.t.bind(i18next)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import { type PatientTeam } from '../../../lib/patient/models/patient-team.model
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { type MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
-import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {

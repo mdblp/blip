@@ -30,8 +30,8 @@ import { type CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } fro
 import { waitFor } from '@testing-library/dom'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
 import { type BgBounds, BgSource } from '../../../models/blood-glucose.model'
+import { UnitsType } from '../../../models/enums/units-type.enum'
 
 describe('CBGPercentageBarChart hook', () => {
   const veryHighStatValue = 100

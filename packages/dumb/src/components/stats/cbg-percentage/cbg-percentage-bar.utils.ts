@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from 'yourloops/lib/units/models/enums/units-type.enum'
+import { UnitsType } from '../../../models/enums/units-type.enum'
 
 export const ensureNumeric = (value: number | undefined | null): number => {
   return !value || isNaN(value) ? 0 : value
