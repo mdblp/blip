@@ -60,8 +60,11 @@ interface FocusedRangeLabelsProps {
   }
 }
 
-const OFFSET_BOTTOM = -5
-const OFFSET_TOP = 5
+const BOTTOM_OFFSET = -5
+const TOP_OFFSET = 5
+const TOP_SIDE = 'top'
+const BOTTOM_SIDE = 'bottom'
+const TRANSPARENT_COLOR = 'transparent'
 
 export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (props) => {
   const { focusedRangeSegments, data, position, bgUnit } = props
@@ -74,14 +77,12 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
   const timeTo = formatClocktimeFromMsPer24(data.msTo)
   const bottom = focusedRangeSegments[0] as RangeSegmentSlice
   const top = focusedRangeSegments[1] as RangeSegmentSlice
-  const topPosition = {
-    top: position.yPositions[top],
-    left: position.left
-  }
-  const bottomPosition = {
-    top: position.yPositions[bottom],
-    left: position.left
-  }
+  const dateTooltipPosition = { left: position.left, top: position.yPositions.topMargin }
+  const topRangeSegmentTooltipPosition = { top: position.yPositions[top], left: position.left }
+  const bottomRangeSegmentTooltipPosition = { top: position.yPositions[bottom], left: position.left }
+
+  const topSegmentBgValue = formatBgValue(data[top], bgUnit, data.outOfRangeThresholds)
+  const bottomSegmentBgValue = formatBgValue(data[bottom], bgUnit, data.outOfRangeThresholds)
 
   return (
     <div className={styles.container} data-testid="trends-tooltips">
@@ -90,34 +91,34 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
           <span className={styles.timeLabel}>{timeFrom} - {timeTo}</span>
         }
         borderWidth={0}
-        position={{ left: position.left, top: position.yPositions.topMargin }}
-        side="bottom"
+        position={dateTooltipPosition}
+        side={BOTTOM_SIDE}
         tail={false}
       />
       <Tooltip
         content={
           <span className={styles.number}>
-            {formatBgValue(data[top], bgUnit, data.outOfRangeThresholds)}
+            {topSegmentBgValue}
           </span>
         }
-        backgroundColor="transparent"
-        borderColor="transparent"
-        offset={{ left: 0, top: OFFSET_TOP }}
-        position={topPosition}
-        side="top"
+        backgroundColor={TRANSPARENT_COLOR}
+        borderColor={TRANSPARENT_COLOR}
+        offset={{ left: 0, top: TOP_OFFSET }}
+        position={topRangeSegmentTooltipPosition}
+        side={TOP_SIDE}
         tail={false}
       />
       <Tooltip
         content={
           <span className={styles.number}>
-            {formatBgValue(data[bottom], bgUnit, data.outOfRangeThresholds)}
+            {bottomSegmentBgValue}
           </span>
         }
-        backgroundColor="transparent"
-        borderColor="transparent"
-        offset={{ left: 0, top: OFFSET_BOTTOM }}
-        position={bottomPosition}
-        side="bottom"
+        backgroundColor={TRANSPARENT_COLOR}
+        borderColor={TRANSPARENT_COLOR}
+        offset={{ left: 0, top: BOTTOM_OFFSET }}
+        position={bottomRangeSegmentTooltipPosition}
+        side={BOTTOM_SIDE}
         tail={false}
       />
     </div>
