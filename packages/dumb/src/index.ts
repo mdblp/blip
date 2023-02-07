@@ -28,6 +28,9 @@
 import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
+import {
+  CbgDateTracesAnimationContainer
+} from './components/trends/cbg/cbg-date-trace/cbg-date-traces-animation-container'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
@@ -57,7 +60,7 @@ import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
-import { LabeledCheckbox } from './components/controls/labeled-checkbox/labeled-checkbox'
+import { RangeLabeledToggle } from './components/controls/range-labeled-toggle/range-labeled-toggle'
 import { Table } from './components/settings/table'
 import { TargetRangeLines } from './components/trends/common/target-range-lines/target-range-lines'
 import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
@@ -67,6 +70,8 @@ import { XAxisLabels } from './components/trends/common/x-axis-labels/x-axis-lab
 import { XAxisTicks } from './components/trends/common/x-axis-ticks/x-axis-ticks'
 import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-and-ticks/y-axis-labels-and-ticks'
 import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
+import { RangeSelect } from './components/trends/cbg/range-select/range-select'
+import { TrendsProvider } from './provider/trends.provider'
 
 export {
   AverageDailyDoseStat,
@@ -74,6 +79,7 @@ export {
   type BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
+  CbgDateTracesAnimationContainer,
   CbgDateTraceLabel,
   CBGMeanStat,
   CBGPercentageBarChart,
@@ -85,12 +91,13 @@ export {
   ConfidentialTooltip,
   FocusedCbgSliceSegment,
   FoodTooltip,
-  LabeledCheckbox,
   LoopModeStat,
   NoDataLabel,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,
+  RangeLabeledToggle,
+  RangeSelect,
   ReservoirTooltip,
   SimpleStat,
   StatTooltip,
@@ -100,6 +107,7 @@ export {
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,
+  TrendsProvider,
   XAxisLabels,
   XAxisTicks,
   YAxisLabelsAndTicks

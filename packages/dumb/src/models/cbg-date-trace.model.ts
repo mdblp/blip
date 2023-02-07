@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DisplayFlag {
-  Cbg100Enabled = 'cbg100Enabled',
-  Cbg80Enabled = 'cbg80Enabled',
-  Cbg50Enabled = 'cbg50Enabled',
-  CbgMedianEnabled = 'cbgMedianEnabled'
+export interface CbgDateTrace {
+  id: string
+  msPer24: number
+  value: number
+  epoch: number
 }

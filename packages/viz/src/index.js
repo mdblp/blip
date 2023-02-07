@@ -18,7 +18,6 @@
 import './styles/colors.css'
 
 import FocusedRangeLabels from './components/trends/common/FocusedRangeLabels'
-import RangeSelect from './components/trends/cbg/RangeSelect'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import TrendsContainer from './components/trends/common/TrendsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
@@ -44,11 +43,15 @@ import DataUtil from './utils/data'
 import getParametersChanges from './utils/parametersHistory'
 import createPrintPDFPackage from './modules/print'
 import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './utils/print/data'
-import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from './redux/actions/index'
+import {
+  delayShowCbgTracesOnFocus,
+  focusTrendsCbgDateTrace,
+  unfocusTrendsCbgDateTrace,
+  unfocusTrendsCbgSlice
+} from './redux/actions/index'
 
 const components = {
   FocusedRangeLabels,
-  RangeSelect,
   WarmUpTooltip
 }
 
@@ -102,5 +105,7 @@ export {
   getLongDayHourFormat,
   formatParameterValue,
   delayShowCbgTracesOnFocus,
+  focusTrendsCbgDateTrace,
+  unfocusTrendsCbgDateTrace,
   unfocusTrendsCbgSlice
 }

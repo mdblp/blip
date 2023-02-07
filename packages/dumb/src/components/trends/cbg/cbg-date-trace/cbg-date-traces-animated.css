@@ -25,33 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { Checkbox, FormControlLabel } from '@mui/material'
-
-interface LabeledCheckboxProps {
-  checked: boolean
-  onFn: () => void
-  offFn: () => void
-  label: string
+.border {
+  stroke: white;
+  stroke-width: 0.5px;
 }
 
-export const LabeledCheckbox: FunctionComponent<LabeledCheckboxProps> = (props) => {
-  const { checked, onFn, offFn, label } = props
+.veryLow {
+  composes: border;
+  composes: bgVeryLow from '../../../../styles/diabetes.css';
+}
 
-  const handleChange = (): void => {
-    checked ? offFn() : onFn()
-  }
+.low {
+  composes: border;
+  composes: bgLow from '../../../../styles/diabetes.css';
+}
 
-  return (
-    <FormControlLabel
-      label={label}
-      control={
-        <Checkbox
-          size="small"
-          checked={checked}
-          onChange={handleChange}
-        />
-      }
-    />
-  )
+.target {
+  composes: border;
+  composes: bgTarget from '../../../../styles/diabetes.css';
+}
+
+.high {
+  composes: border;
+  composes: bgHigh from '../../../../styles/diabetes.css';
+}
+
+.veryHigh {
+  composes: border;
+  composes: bgVeryHigh from '../../../../styles/diabetes.css';
 }

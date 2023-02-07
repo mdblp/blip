@@ -25,15 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { type CbgPositionData } from './cbg-position-data.model'
+
 export interface FocusedDateTrace {
   data: {
     localDate: string
   }
-  position: {
-    left: number
-    yPositions: {
-      top: number
-      topMargin: number
-    }
-  }
+  position: CbgPositionData
 }

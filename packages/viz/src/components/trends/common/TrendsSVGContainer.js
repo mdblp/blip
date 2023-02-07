@@ -31,9 +31,9 @@ import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 
 import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
-import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
 import {
   Background,
+  CbgDateTracesAnimationContainer,
   CbgSlicesContainer,
   FocusedCbgSliceSegment,
   NoDataLabel,
@@ -153,7 +153,7 @@ export class TrendsSVGContainer extends React.Component {
     if (focusedSlice) {
       const { focusedSegmentDataGroupedByDate } = this.state
       dateTraces = focusedSegmentDataGroupedByDate === null ? null : (
-        <CBGDateTracesAnimationContainer
+        <CbgDateTracesAnimationContainer
           bgBounds={this.props.bgPrefs.bgBounds}
           data={focusedSegmentDataGroupedByDate}
           onSelectDate={this.props.onSelectDate}
@@ -179,7 +179,6 @@ export class TrendsSVGContainer extends React.Component {
           bgBounds={this.props.bgPrefs.bgBounds}
           sliceWidth={sliceWidth}
           data={this.props.cbgData}
-          displayFlags={this.props.displayFlags}
           showingCbgDateTraces={this.props.showingCbgDateTraces}
           tooltipLeftThreshold={this.props.tooltipLeftThreshold}
           topMargin={margins.top}
@@ -278,12 +277,6 @@ TrendsSVGContainer.propTypes = {
     value: PropTypes.number.isRequired
   })).isRequired,
   dates: PropTypes.arrayOf(PropTypes.string).isRequired,
-  displayFlags: PropTypes.shape({
-    cbg100Enabled: PropTypes.bool.isRequired,
-    cbg80Enabled: PropTypes.bool.isRequired,
-    cbg50Enabled: PropTypes.bool.isRequired,
-    cbgMedianEnabled: PropTypes.bool.isRequired
-  }).isRequired,
   focusedSlice: PropTypes.shape({
     data: PropTypes.shape({
       firstQuartile: PropTypes.number.isRequired,

@@ -13,12 +13,16 @@ It is based on Tidepool Blip 1.27.
 - YLP-2092 Migrate trends target range lines to dumb
 - YLP-2094 Update some dependencies with major changes
 - YLP-2095 Migrate FocusedCBGSliceSegment from viz to dumb
+- YLP-2096 Migrate CBG date traces animated to dumb
+- YLP-2097 Migrate RangeSelect from viz to dumb
+- YLP-2110 Update i18next from 19.9.2 to 22.4.9
 
 ## 3.1.0 - 2023-01-31
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
 - YLP-1963 Glucose unit not coherent between curves and DBL settings
+- YLP-2111 trace-session change on every request
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0

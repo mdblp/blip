@@ -25,9 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DisplayFlag {
-  Cbg100Enabled = 'cbg100Enabled',
-  Cbg80Enabled = 'cbg80Enabled',
-  Cbg50Enabled = 'cbg50Enabled',
-  CbgMedianEnabled = 'cbgMedianEnabled'
+import React, { type FunctionComponent } from 'react'
+import { noop } from 'lodash'
+import { type BgBounds } from '../../../../models/blood-glucose.model'
+import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
+import CbgDateTracesAnimated from './cbg-date-traces-animated'
+
+interface CbgDateTracesAnimationContainerProps {
+  bgBounds: BgBounds
+  data: Record<string, CbgDateTrace[]>
+  onSelectDate: (epoch: number) => void
+  topMargin: number
+  xScale: ScaleFunction
+  yScale: ScaleFunction
+}
+
+export const CbgDateTracesAnimationContainer: FunctionComponent<CbgDateTracesAnimationContainerProps> = (props) => {
+  const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props
+
+  return (
+    <g>
+      {Object.values(data).map((datum: CbgDateTrace[], index: number) => (
+        <CbgDateTracesAnimated
+          bgBounds={bgBounds}
+          data={datum}
+          key={index}
+          onSelectDate={onSelectDate}
+          topMargin={topMargin}
+          xScale={xScale}
+          yScale={yScale}
+          // Added via redux
+          focusDateTrace={noop}
+          unfocusDateTrace={noop}
+        />
+      ))}
+    </g>
+  )
 }

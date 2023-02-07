@@ -34,14 +34,13 @@ import { springConfig } from '../../../../models/constants/animation.constants'
 import styles from './cbg-slice-animated.css'
 import { type CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
 import CbgSliceSegment from './cbg-slice-segment'
-import { type TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getRangeSegments } from './cbg-slice-animated.util'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { type TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
 interface CbgSliceAnimatedProps {
   datum: TrendsCalculatedCbgStats
-  displayFlags: TrendsDisplayFlags
   showingCbgDateTraces: boolean
   sliceWidth: number
   tooltipLeftThreshold: number
@@ -55,7 +54,6 @@ const DEFAULT_SEGMENT_Y = 16
 export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props) => {
   const {
     datum,
-    displayFlags,
     showingCbgDateTraces,
     sliceWidth,
     tooltipLeftThreshold,
@@ -63,6 +61,8 @@ export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props
     xScale,
     yScale
   } = props
+
+  const { displayFlags } = useTrendsContext()
 
   const strokeWidth = sliceWidth / 8
   const binLeftX = xScale(datum.msX) - sliceWidth / 2 + strokeWidth / 2

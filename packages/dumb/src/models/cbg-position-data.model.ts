@@ -27,15 +27,16 @@
 
 export interface CbgPositionData {
   left: number
-  tooltipLeft: boolean
+  tooltipLeft?: boolean
   yPositions: {
-    firstQuartile: number
-    max: number
-    median: number
-    min: number
-    ninetiethQuantile: number
-    tenthQuantile: number
-    thirdQuartile: number
+    firstQuartile?: number
+    max?: number
+    median?: number
+    min?: number
+    ninetiethQuantile?: number
+    tenthQuantile?: number
+    thirdQuartile?: number
     topMargin: number
+    top?: number
   }
 }
