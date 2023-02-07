@@ -78,3 +78,5 @@ export const RANGE_SEGMENT_THIRD: CbgRangeSegment = {
   key: RangeSegmentKey.InnerQuartiles,
   y: RangeSegmentSlice.ThirdQuartile
 }
+
+export const CBG_CIRCLE_PREFIX_ID = 'cbgCircle'

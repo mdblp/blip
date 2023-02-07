@@ -28,6 +28,9 @@
 import { Background } from './components/trends/common/background/background'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
+import {
+  CbgDateTracesAnimationContainer
+} from './components/trends/cbg/cbg-date-trace/cbg-date-traces-animation-container'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
 import {
@@ -76,6 +79,7 @@ export {
   type BgPrefs,
   BloodGlucoseTooltip,
   BolusTooltip,
+  CbgDateTracesAnimationContainer,
   CbgDateTraceLabel,
   CBGMeanStat,
   CBGPercentageBarChart,
@@ -87,12 +91,12 @@ export {
   ConfidentialTooltip,
   FocusedCbgSliceSegment,
   FoodTooltip,
-  RangeLabeledToggle,
   LoopModeStat,
   NoDataLabel,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,
+  RangeLabeledToggle,
   RangeSelect,
   ReservoirTooltip,
   SimpleStat,
