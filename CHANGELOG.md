@@ -22,6 +22,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
 - YLP-1963 Glucose unit not coherent between curves and DBL settings
+- YLP-2111 trace-session change on every request
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
