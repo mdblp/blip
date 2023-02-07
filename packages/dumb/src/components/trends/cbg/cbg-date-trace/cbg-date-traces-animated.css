@@ -25,11 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type CbgPositionData } from './cbg-position-data.model'
+.border {
+  stroke: white;
+  stroke-width: 0.5px;
+}
 
-export interface FocusedDateTrace {
-  data: {
-    localDate: string
-  }
-  position: CbgPositionData
+.veryLow {
+  composes: border;
+  composes: bgVeryLow from '../../../../styles/diabetes.css';
+}
+
+.low {
+  composes: border;
+  composes: bgLow from '../../../../styles/diabetes.css';
+}
+
+.target {
+  composes: border;
+  composes: bgTarget from '../../../../styles/diabetes.css';
+}
+
+.high {
+  composes: border;
+  composes: bgHigh from '../../../../styles/diabetes.css';
+}
+
+.veryHigh {
+  composes: border;
+  composes: bgVeryHigh from '../../../../styles/diabetes.css';
 }
