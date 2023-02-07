@@ -26,7 +26,6 @@
  */
 
 import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from 'axios'
-import { v4 as uuidv4 } from 'uuid'
 import HttpService from './http.service'
 import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
 import appConfig from '../config/config'
@@ -38,17 +37,15 @@ export const onFulfilled = async (config: InternalAxiosRequestConfig): Promise<I
   }
 
   const accessToken: string = await HttpService.getAccessToken()
+  const traceToken: string = HttpService.getTraceToken()
 
   const headers = new AxiosHeaders({
     ...config.headers,
     Authorization: `Bearer ${accessToken}`,
-    [HttpHeaderKeys.traceToken]: uuidv4()
+    [HttpHeaderKeys.traceToken]: traceToken
   })
 
-  return {
-    ...config,
-    headers
-  }
+  return { ...config, headers }
 }
 
 function initAxios(): void {
