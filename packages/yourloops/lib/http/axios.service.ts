@@ -25,26 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { type AxiosRequestConfig } from 'axios'
+import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import HttpService from './http.service'
 import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
 import appConfig from '../config/config'
 
-export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
+export const onFulfilled = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
   if (config.params?.noHeader) {
     delete config.params.noHeader
     return config
   }
 
   const accessToken: string = await HttpService.getAccessToken()
+
+  const headers = new AxiosHeaders({
+    ...config.headers,
+    Authorization: `Bearer ${accessToken}`,
+    [HttpHeaderKeys.traceToken]: uuidv4()
+  })
+
   return {
     ...config,
-    headers: {
-      ...config.headers,
-      Authorization: `Bearer ${accessToken}`,
-      [HttpHeaderKeys.traceToken]: uuidv4()
-    }
+    headers
   }
 }
 
