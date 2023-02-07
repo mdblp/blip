@@ -30,7 +30,7 @@ import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
 import { StatLegendElement } from './stat-legend-element'
 import { type BgClasses } from 'medical-domain'
-import { type UnitsType } from 'src/models/enums/units-type.enum'
+import { type UnitsType } from '../../../models/enums/units-type.enum'
 
 interface StatLegendProps {
   bgClasses: BgClasses

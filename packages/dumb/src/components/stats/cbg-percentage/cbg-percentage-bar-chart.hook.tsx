@@ -30,9 +30,9 @@ import { useTranslation } from 'react-i18next'
 import { type CBGPercentageBarProps } from './cbg-percentage-bar'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
 import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.utils'
-import { type UnitsType } from 'src/models/enums/units-type.enum'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 import { type BgBounds, BgSource } from '../../../models/blood-glucose.model'
+import { type UnitsType } from '../../../models/enums/units-type.enum'
 
 export interface CBGPercentageBarChartHookProps {
   bgBounds: BgBounds

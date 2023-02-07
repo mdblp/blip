@@ -26,7 +26,7 @@
  */
 
 import { type BgClasses } from 'medical-domain'
-import { type UnitsType } from 'src/models/enums/units-type.enum'
+import { type UnitsType } from './enums/units-type.enum'
 
 export interface BgBounds {
   veryHighThreshold: number
