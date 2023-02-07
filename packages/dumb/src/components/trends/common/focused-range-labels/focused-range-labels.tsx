@@ -70,8 +70,8 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
   const top = focusedRangeSegments[1] as RangeSegmentSlice
   const leftPosition = position.left
   const dateTooltipPosition = { left: leftPosition, top: position.yPositions.topMargin }
-  const topRangeSegmentTooltipPosition = { top: position.yPositions[top], left: leftPosition }
-  const bottomRangeSegmentTooltipPosition = { top: position.yPositions[bottom], left: leftPosition }
+  const topRangeSegmentTooltipPosition = { top: position.yPositions[top] as number, left: leftPosition }
+  const bottomRangeSegmentTooltipPosition = { top: position.yPositions[bottom] as number, left: leftPosition }
 
   const thresholds = data.outOfRangeThresholds
   const topSegmentBgValue = formatBgValue(data[top], bgUnit, thresholds)
