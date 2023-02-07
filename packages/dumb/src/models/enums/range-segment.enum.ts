@@ -34,6 +34,10 @@ export enum RangeSegmentSlice {
   Min = 'min'
 }
 
+export type RangeSegmentSliceType = {
+  [key in RangeSegmentSlice]: number
+}
+
 export enum RangeSegmentHeightKeys {
   Top10Height = 'top10Height',
   Bottom10Height = 'bottom10Height',

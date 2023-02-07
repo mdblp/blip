@@ -31,16 +31,15 @@ import { type BgUnit } from 'medical-domain'
 
 import styles from './focused-range-labels.css'
 import { formatClocktimeFromMsPer24 } from '../../../../utils/datetime/datetime.util'
-import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
+import { type RangeSegmentSlice, type RangeSegmentSliceType } from '../../../../models/enums/range-segment.enum'
 import { formatBgValue } from '../../../../utils/format/format.util'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
+import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
 
 interface FocusedRangeLabelsProps {
   bgUnit: BgUnit
   focusedRangeSegments: RangeSegmentSlice
-  data: {
-    [key in RangeSegmentSlice]: number
-  } & {
+  data: RangeSegmentSliceType & {
     median: number
     msFrom: number
     msTo: number
@@ -49,15 +48,7 @@ interface FocusedRangeLabelsProps {
       high: number
     }
   }
-  position: {
-    left: number
-    tooltipLeft: boolean
-    yPositions: {
-      [key in RangeSegmentSlice]: number
-    } & {
-      topMargin: number
-    }
-  }
+  position: CbgPositionData
 }
 
 const BOTTOM_OFFSET = -5
@@ -77,12 +68,14 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
   const timeTo = formatClocktimeFromMsPer24(data.msTo)
   const bottom = focusedRangeSegments[0] as RangeSegmentSlice
   const top = focusedRangeSegments[1] as RangeSegmentSlice
-  const dateTooltipPosition = { left: position.left, top: position.yPositions.topMargin }
-  const topRangeSegmentTooltipPosition = { top: position.yPositions[top], left: position.left }
-  const bottomRangeSegmentTooltipPosition = { top: position.yPositions[bottom], left: position.left }
+  const leftPosition = position.left
+  const dateTooltipPosition = { left: leftPosition, top: position.yPositions.topMargin }
+  const topRangeSegmentTooltipPosition = { top: position.yPositions[top], left: leftPosition }
+  const bottomRangeSegmentTooltipPosition = { top: position.yPositions[bottom], left: leftPosition }
 
-  const topSegmentBgValue = formatBgValue(data[top], bgUnit, data.outOfRangeThresholds)
-  const bottomSegmentBgValue = formatBgValue(data[bottom], bgUnit, data.outOfRangeThresholds)
+  const thresholds = data.outOfRangeThresholds
+  const topSegmentBgValue = formatBgValue(data[top], bgUnit, thresholds)
+  const bottomSegmentBgValue = formatBgValue(data[bottom], bgUnit, thresholds)
 
   return (
     <div className={styles.container} data-testid="trends-tooltips">
