@@ -195,6 +195,8 @@ export class TrendsSVGContainer extends React.Component {
     const { width, height } = this.props.size
     const { xScale, yScale } = this.state
 
+    console.log(width)
+
     if (xScale === null || yScale === null) {
       return null
     }

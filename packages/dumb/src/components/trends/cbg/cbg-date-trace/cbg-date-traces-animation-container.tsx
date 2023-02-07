@@ -34,7 +34,7 @@ import CbgDateTracesAnimated from './cbg-date-traces-animated'
 
 interface CbgDateTracesAnimationContainerProps {
   bgBounds: BgBounds
-  data: Record<string, CbgDateTrace[]>
+  data: CbgDateTrace[][]
   onSelectDate: (epoch: number) => void
   topMargin: number
   xScale: ScaleFunction
@@ -46,7 +46,7 @@ export const CbgDateTracesAnimationContainer: FunctionComponent<CbgDateTracesAni
 
   return (
     <g>
-      {Object.values(data).map((datum: CbgDateTrace[], index: number) => (
+      {[...data.values()].map((datum: CbgDateTrace[], index: number) => (
         <CbgDateTracesAnimated
           bgBounds={bgBounds}
           data={datum}

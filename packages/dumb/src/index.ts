@@ -72,6 +72,7 @@ import { YAxisLabelsAndTicks } from './components/trends/common/y-axis-labels-an
 import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
+import { TrendsSvgContainerSized as TrendsSvgContainer } from './components/trends/common/trends-svg-container/trends-svg-container'
 
 export {
   AverageDailyDoseStat,
@@ -108,6 +109,7 @@ export {
   TotalInsulinStat,
   TotalCarbsStat,
   TrendsProvider,
+  TrendsSvgContainer,
   XAxisLabels,
   XAxisTicks,
   YAxisLabelsAndTicks
