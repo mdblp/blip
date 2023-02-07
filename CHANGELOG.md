@@ -2,11 +2,12 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.1.0-rc1 - 2023-01-31
+## 3.1.0-rc2 - 2023-02-07
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
 - YLP-1963 Glucose unit not coherent between curves and DBL settings
+- YLP-2111 trace-session change on every request
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
