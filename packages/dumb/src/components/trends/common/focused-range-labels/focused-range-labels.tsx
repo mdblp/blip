@@ -39,19 +39,15 @@ interface FocusedRangeLabelsProps {
   bgUnit: BgUnit
   focusedRangeSegments: RangeSegmentSlice
   data: {
-    firstQuartile: number
-    max: number
+    [key in RangeSegmentSlice]: number
+  } & {
     median: number
-    min: number
     msFrom: number
     msTo: number
-    ninetiethQuantile: number
     outOfRangeThresholds: {
       low: number
       high: number
     }
-    tenthQuantile: number
-    thirdQuartile: number
   }
   position: {
     left: number
