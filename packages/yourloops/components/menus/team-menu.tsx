@@ -44,7 +44,6 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-
 import { Team, useTeam } from '../../lib/team'
 import MenuLayout from '../../layout/menu-layout'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
@@ -52,9 +51,9 @@ import { TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import { ShareUser } from '../../lib/share/models/share-user.model'
-import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import { errorTextFromException } from '../../lib/utils'
 import DirectShareApi from '../../lib/share/direct-share.api'
+import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -156,11 +155,11 @@ function TeamMenu(): JSX.Element {
       }
     }
   }
-
   return (
     <React.Fragment>
       <Box
         id="team-menu"
+        data-testid='team-menu'
         display="flex"
         role="button"
         alignItems="center"
@@ -256,9 +255,10 @@ function TeamMenu(): JSX.Element {
         <TeamEditDialog teamToEdit={teamCreationDialogData} />
       }
       {showJoinTeamDialog &&
-        <AddTeamDialog
+        <JoinTeamDialog
           error={t('error-joining-team')}
-          actions={{ onDialogResult: async (teamId) => await onJoinTeam(teamId) }} />
+          onClose={onJoinTeam}
+        />
       }
     </React.Fragment>
   )

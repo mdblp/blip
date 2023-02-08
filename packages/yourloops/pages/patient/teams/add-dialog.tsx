@@ -26,7 +26,7 @@
  */
 
 import _ from 'lodash'
-import React from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Theme } from '@mui/material/styles'
 
@@ -48,7 +48,7 @@ import TextField from '@mui/material/TextField'
 import metrics from '../../../lib/metrics'
 import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from '../../../lib/team'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
-
+import ProgressIconButtonWrapper from '../../../components/buttons/progress-icon-button-wrapper'
 interface AddTeamDialogContentProps {
   onDialogResult: (teamId?: string) => void
 }
@@ -92,36 +92,37 @@ const addTeamDialogClasses = makeStyles({ name: 'ylp-patient-join-team-dialog' }
   }
 })
 
-function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
-  const { t } = useTranslation('yourloops')
-
-  return (
-    <React.Fragment>
-      <DialogContent id={`${props.id}-error-message`}>
-        {props.message}
-      </DialogContent>
-
-      <DialogActions>
-        <Button
-          id={`${props.id}-error-button-ok`}
-          color="primary"
-          variant="contained"
-          disableElevation
-          onClick={props.handleClose}
-        >
-          {t('button-ok')}
-        </Button>
-      </DialogActions>
-    </React.Fragment>
-  )
-}
+// function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
+//   const { t } = useTranslation('yourloops')
+//
+//   return (
+//     <React.Fragment>
+//       <DialogContent id={`${props.id}-error-message`}>
+//         {props.message}
+//       </DialogContent>
+//
+//       <DialogActions>
+//         <Button
+//           id={`${props.id}-error-button-ok`}
+//           color="primary"
+//           variant="contained"
+//           disableElevation
+//           onClick={props.handleClose}
+//         >
+//           {t('button-ok')}
+//         </Button>
+//       </DialogActions>
+//     </React.Fragment>
+//   )
+// }
 
 export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes } = addTeamDialogClasses()
-  const inputRef = React.createRef<HTMLInputElement>()
+  const inputRef = createRef<HTMLInputElement>()
   const [idCode, setIdCode] = React.useState('')
   const { teamName } = props
+  const [inProgress, setInProgress] = useState(false)
 
   const getNumericCode = (value: string): string => {
     let numericCode = ''
@@ -141,11 +142,12 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 
   const handleClickJoinTeam = (): void => {
     props.handleSetIdCode(getNumericCode(idCode))
+    setInProgress(true)
   }
 
   const buttonJoinDisabled = idCode.match(REGEX_TEAM_CODE_DISPLAY) === null
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
@@ -186,16 +188,18 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
         >
           {t('button-cancel')}
         </Button>
-        <Button
-          id="team-add-dialog-button-add-team"
-          disabled={buttonJoinDisabled}
-          variant="contained"
-          color="primary"
-          disableElevation
-          onClick={handleClickJoinTeam}
-        >
-          {t('button-add-team')}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={inProgress}>
+          <Button
+            id="team-add-dialog-button-add-team"
+            disabled={buttonJoinDisabled}
+            variant="contained"
+            color="primary"
+            disableElevation
+            onClick={handleClickJoinTeam}
+          >
+            {t('button-add-team')}
+          </Button>
+        </ProgressIconButtonWrapper>
       </DialogActions>
     </React.Fragment>
   )
@@ -257,14 +261,14 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
         <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary">
           {t('modal-patient-add-team-info')}
         </DialogContentText>
-        <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary" >
+        <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary">
           {props.team.name}
           <br />
           {teamAddress}
           {props.team.code}
         </DialogContentText>
 
-        <DialogContentText id="team-add-dialog-confirm-team-warning" color="textPrimary" >
+        <DialogContentText color="textPrimary">
           <strong>{t('modal-patient-team-warning')}</strong>
         </DialogContentText>
 
@@ -278,7 +282,8 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
           />
         </FormControl>
 
-        <DialogContentText id="team-add-dialog-config-team-privacy-read-link" color="textPrimary" data-testid="text-privacy-policy">
+        <DialogContentText id="team-add-dialog-config-team-privacy-read-link" color="textPrimary"
+                           data-testid="text-privacy-policy">
           <Trans
             i18nKey="modal-patient-team-privacy-2"
             t={t}
@@ -323,7 +328,7 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
   const handleSetTeamId = (id: string): void => {
     if (id !== '') {
       const team = teamHook.teams.find((team) => team.code === id)
-      if (!_.isNil(team)) {
+      if (team) {
         setErrorMessage(t('modal-patient-add-team-failure-exists'))
       }
       setIdCode(id)
@@ -343,7 +348,7 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
     content =
       <EnterIdentificationCode handleClose={handleClose} teamName={teamName} handleSetIdCode={handleSetTeamId} />
   } else if (errorMessage) {
-    content = <DisplayErrorMessage id="team-add-dialog" handleClose={handleClose} message={errorMessage} />
+    // content = <DisplayErrorMessage id="team-add-dialog" handleClose={handleClose} message={errorMessage} />
   } else if (team === null) {
     content = (
       <DialogContent>

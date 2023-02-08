@@ -104,9 +104,10 @@ describe('Notification page for patient', () => {
     const addCareTeamButton = within(dialogPrivacy).getByRole('button', { name: 'Add Care team' })
     const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
     const textPrivatePolicy = within(dialogPrivacy).getByTestId('text-privacy-policy')
+    const detailsTeam = within(dialogPrivacy).getByTestId('team-add-dialog-confirm-team-infos')
 
     expect(within(dialogPrivacy).getByText('You are about to share you data with')).toBeVisible()
-    expect(within(dialogPrivacy).getByText('PatientNotification6 rue des champs75000 Paris67951738')).toBeVisible()
+    expect(detailsTeam).toHaveTextContent('PatientNotification6 rue des champs75000Paris67951738')
     expect(within(dialogPrivacy).getByText('By accepting this invitation, I recognize this team as my care team and consent to share my personal data with all its members, who are authorized healthcare professionals registered on YourLoops. I acknowledge that I can revoke this access at any time.')).toBeVisible()
     expect(dialogPrivacy).toHaveTextContent('Share your data with a care team')
     expect(dialogPrivacy).toHaveTextContent('Please verify that the above details match the information provided by your healthcare professional before accepting the invitation.')

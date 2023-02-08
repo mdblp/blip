@@ -188,7 +188,7 @@ describe('Team Menu', () => {
   })
 
   it('should create new team when clicking on join care team button', async () => {
-    await fillJoinTeamDialog('mock-join')
+    await fillJoinTeamDialog('button-add-team')
     expect(joinTeamMock).toHaveBeenCalled()
     expect(successMock).toHaveBeenCalledWith('modal-patient-add-team-success')
   })
