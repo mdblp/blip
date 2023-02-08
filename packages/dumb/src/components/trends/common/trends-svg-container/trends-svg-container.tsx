@@ -34,18 +34,16 @@ import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.e
 import { NoDataLabel } from '../no-data-label/no-data-label'
 import { CbgDateTracesAnimationContainer } from '../../cbg/cbg-date-trace/cbg-date-traces-animation-container'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
-import {
-  Background,
-  type BgPrefs,
-  CbgSlicesContainer,
-  FocusedCbgSliceSegment,
-  TargetRangeLines,
-  XAxisLabels,
-  XAxisTicks,
-  YAxisLabelsAndTicks
-} from '../../../../index'
 import { THREE_HRS } from '../../../../utils/datetime/datetime.util'
 import { findCbgsIntersectingWithCbgSliceSegment } from './trends-svg-container.util'
+import { type BgPrefs } from '../../../../models/blood-glucose.model'
+import { Background } from '../background/background'
+import { XAxisLabels } from '../x-axis-labels/x-axis-labels'
+import { XAxisTicks } from '../x-axis-ticks/x-axis-ticks'
+import { YAxisLabelsAndTicks } from '../y-axis-labels-and-ticks/y-axis-labels-and-ticks'
+import { CbgSlicesContainerMemoized as CbgSlicesContainer } from '../../cbg/cbg-slice/cbg-slices-container'
+import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from '../../cbg/cbg-slice/focused-cbg-slice-segment'
+import { TargetRangeLines } from '../target-range-lines/target-range-lines'
 
 const BUMPERS = {
   top: 50,
@@ -197,26 +195,24 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
             xScale={xScale}
             yScale={yScale}
           />
+          {focusedSegmentDataGroupedByDate &&
+            <CbgDateTracesAnimationContainer
+              bgBounds={bgPrefs.bgBounds}
+              data={focusedSegmentDataGroupedByDate}
+              onSelectDate={onSelectDate}
+              topMargin={MARGINS.top}
+              xScale={xScale}
+              yScale={yScale}
+            />
+          }
           {focusedSlice &&
-            <>
-              {focusedSegmentDataGroupedByDate &&
-                <CbgDateTracesAnimationContainer
-                  bgBounds={bgPrefs.bgBounds}
-                  data={focusedSegmentDataGroupedByDate}
-                  onSelectDate={onSelectDate}
-                  topMargin={MARGINS.top}
-                  xScale={xScale}
-                  yScale={yScale}
-                />
-              }
-              <FocusedCbgSliceSegment
-                leftPosition={focusedSlice.position.left}
-                segmentSliceBottom={focusedSliceKeys[0]}
-                segmentSliceTop={focusedSliceKeys[1]}
-                segmentsPosition={focusedSlice.position.yPositions}
-                sliceWidth={sliceWidth}
-              />
-            </>
+            <FocusedCbgSliceSegment
+              leftPosition={focusedSlice.position.left}
+              segmentSliceBottom={focusedSliceKeys[0]}
+              segmentSliceTop={focusedSliceKeys[1]}
+              segmentsPosition={focusedSlice.position.yPositions}
+              sliceWidth={sliceWidth}
+            />
           }
         </g>
         <TargetRangeLines
