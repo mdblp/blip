@@ -13,10 +13,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
+- YLP-1874 Broken pdf report generation button
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 - YLP-1947 Add team selection dropdown on patient dashboard for HCP
 - YLP-1973 User should be able to uncheck the training check box
+- YLP-1976 PDF generation not showing stats
 - YLP-1989 New friendly login page
 ### Engineering use
 - YLP-1444 Handle user name display for Japanese
@@ -27,7 +29,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-1805 Push error to the backend
 - YLP-1868 Add route to invite team member
 - YLP-1873 Fix patient profile update not visible in dashboard
-- YLP-1874 Fix PDF report generation
 - YLP-1894 Retrieve pump settings in pump settings object if no upload object available
 - YLP-1892 Creation of an integration test for the team form
 - YLP-1900 Fix CSS in events configuration modal
@@ -45,7 +46,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-1953 Migrate WheelPercent to dumb
 - YLP-1960 enhance pipeline
 - YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
-- YLP-1976 Fix PDF generation
 - YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
 - YLP-1991 Update patient header design and add currently available patients fields
 - YLP-2004 Refine dashboard look and feel (part one)
