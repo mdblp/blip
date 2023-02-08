@@ -31,28 +31,28 @@ import { ConfirmPrivacyPolicy } from './confirm-privacy-policy'
 import useJoinTeamDialog from './join-team-dialog.hook'
 
 export interface JoinTeamDialogProps {
-  onClose: (teamId?: string) => Promise<void>
-  error?: string
+  onClose: () => void
+  onAccept: (teamId?: string) => Promise<void>
   teamName?: string
 }
 
 export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) => {
-  const { onClose, teamName } = props
-  const { teamId, team, closeDialog, currentStep, goToNextStep } = useJoinTeamDialog({ onClose })
+  const { onClose, onAccept, teamName } = props
+  const { teamId, team, currentStep, goToNextStep } = useJoinTeamDialog()
   return (
     <React.Fragment>
       <Dialog onClose={onClose} open>
         {currentStep === 1 &&
           <ConfirmCodeTeam
             onCompleteStep={goToNextStep}
-            onClickCancel={closeDialog}
+            onClickCancel={onClose}
             teamName={teamName}
           />
         }
         {currentStep === 2 &&
           <ConfirmPrivacyPolicy
-            onCompleteStep={() => closeDialog(teamId)}
-            onClickCancel={closeDialog}
+            onCompleteStep={async () => await onAccept(teamId)}
+            onClickCancel={onClose}
             team={team}
           />
         }

@@ -43,7 +43,7 @@ import metrics from '../../../lib/metrics'
 import FormControlLabel from '@mui/material/FormControlLabel'
 
 export interface ConfirmTeamProps {
-  onCompleteStep: () => void
+  onCompleteStep: () => Promise<void>
   team: Team
   onClickCancel: () => void
 

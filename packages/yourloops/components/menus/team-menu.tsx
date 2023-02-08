@@ -145,21 +145,22 @@ function TeamMenu(): JSX.Element {
 
   const onJoinTeam = async (teamId?: string): Promise<void> => {
     setShowJoinTeamDialog(false)
-    if (teamId) {
-      try {
-        await joinTeam(teamId)
-        alert.success(t('modal-patient-add-team-success'))
-      } catch (reason: unknown) {
-        const errorMessage = errorTextFromException(reason)
-        alert.error(t('modal-patient-add-team-failure', { errorMessage }))
-      }
+    try {
+      await joinTeam(teamId)
+      alert.success(t('modal-patient-add-team-success'))
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason)
+      alert.error(t('modal-patient-add-team-failure', { errorMessage }))
     }
+  }
+  const onCloseDialog = (): void => {
+    setShowJoinTeamDialog(false)
   }
   return (
     <React.Fragment>
       <Box
         id="team-menu"
-        data-testid='team-menu'
+        data-testid="team-menu"
         display="flex"
         role="button"
         alignItems="center"
@@ -219,7 +220,7 @@ function TeamMenu(): JSX.Element {
               <Divider variant="middle" />
             </Box>
 
-            <MenuItem id="team-menu-teams-link" onClick={onTeamAction}>
+            <MenuItem id="team-menu-teams-link" data-testId="team-menu-teams-link" onClick={onTeamAction}>
               <ListItemIcon>
                 <GroupOutlinedIcon />
               </ListItemIcon>
@@ -256,8 +257,8 @@ function TeamMenu(): JSX.Element {
       }
       {showJoinTeamDialog &&
         <JoinTeamDialog
-          error={t('error-joining-team')}
-          onClose={onJoinTeam}
+          onClose={onCloseDialog}
+          onAccept={onJoinTeam}
         />
       }
     </React.Fragment>

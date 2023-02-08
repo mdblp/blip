@@ -33,14 +33,9 @@ interface joinTeamDialogReturn {
   team: Team
   teamId: string
   goToNextStep: (team: Team, teamId: string) => void
-  closeDialog: (teamId?: string) => void
 }
 
-interface joinTeamDialogProps {
-  onClose: (teamId?: string) => Promise<void>
-}
-
-const useJoinTeamDialog = ({ onClose }: joinTeamDialogProps): joinTeamDialogReturn => {
+const useJoinTeamDialog = (): joinTeamDialogReturn => {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [team, setTeam] = useState<Team | undefined>(undefined)
   const [teamId, setTeamId] = useState<string>('')
@@ -49,14 +44,10 @@ const useJoinTeamDialog = ({ onClose }: joinTeamDialogProps): joinTeamDialogRetu
     setTeamId(teamId)
     setCurrentStep(oldValue => oldValue + 1)
   }
-  const closeDialog = (teamId?: string): void => {
-    onClose(teamId)
-  }
   return {
     team,
     teamId,
     currentStep,
-    closeDialog,
     goToNextStep
   }
 }

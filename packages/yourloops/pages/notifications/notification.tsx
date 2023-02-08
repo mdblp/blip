@@ -266,6 +266,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       await acceptInvitation()
     }
   }
+  const onCloseDialog = (): void => {
+    setAddTeamDialogVisible(false)
+  }
 
   return (
     <div id={`notification-line-${id}`} data-testid="notification-line"
@@ -276,8 +279,8 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
         <NotificationDate createdDate={notification.date} id={id} />
         {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
           <JoinTeamDialog
-            onClose={closeTeamAcceptDialog}
-            error={t('notification-patient-invitation-wrong-code', { careteam: notification.target.name })}
+            onClose={onCloseDialog}
+            onAccept={closeTeamAcceptDialog}
             teamName={notification.target.name} />
         }
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
