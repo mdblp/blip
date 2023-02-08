@@ -14,21 +14,11 @@ describe('SettingsDialog', function () {
 
   const bgPrefs = {
     bgClasses: {
-      veryLow: {
-        boundary: 60
-      },
-      low: {
-        boundary: 80
-      },
-      target: {
-        boundary: 180
-      },
-      high: {
-        boundary: 200
-      },
-      veryHigh: {
-        boundary: 300
-      }
+      veryLow: 60,
+      low: 80,
+      target: 180,
+      high: 200,
+      veryHigh: 300
     },
     bgUnits: MGDL_UNITS
   }
