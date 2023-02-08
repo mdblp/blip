@@ -168,7 +168,7 @@ export const teamThree: Team = {
 export const PatientNotification: ITeam = {
   name: 'PatientNotification',
   id: '63c7b7989cacc878ecce2c40',
-  code: '67951738',
+  code: '679517388',
   type: TeamType.medical,
   monitoring: {
     ...monitoringParameters,
@@ -176,6 +176,26 @@ export const PatientNotification: ITeam = {
   },
   phone: '0478780000',
   email: 'patientNotification@hey.hey',
+  address: {
+    line1: '6 rue des champs',
+    line2: '',
+    zip: '75000',
+    city: 'Paris',
+    country: 'FR'
+  },
+  members: null
+}
+export const getCodeTeam: ITeam = {
+  name: 'fakeTeamFive',
+  id: 'fakeIdTeam',
+  code: '263381988',
+  type: TeamType.medical,
+  monitoring: {
+    ...monitoringParameters,
+    enabled: true
+  },
+  phone: '0478780000',
+  email: 'fakeTeamFive@hey.hey',
   address: {
     line1: '6 rue des champs',
     line2: '',
