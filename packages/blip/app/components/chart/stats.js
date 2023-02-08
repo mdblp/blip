@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
-import Divider from '@mui/material/Divider'
 import { utils as vizUtils } from 'tidepool-viz'
 import {
   AverageDailyDoseStat,
@@ -15,6 +14,7 @@ import {
   TotalInsulinStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
+import Divider from '@mui/material/Divider'
 
 const WEIGHT_PARAM = 'WEIGHT'
 const WEIGHT_PARAM_DEFAULT_VALUE = -1
@@ -190,7 +190,7 @@ class Stats extends React.Component {
       return (
         <div key={stat.id} data-testid={`stat-${stat.id}`}>
           {this.getStatElementById(stat, bgClasses)}
-          <Divider variant="fullWidth" />
+          <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
         </div>
       )
     })

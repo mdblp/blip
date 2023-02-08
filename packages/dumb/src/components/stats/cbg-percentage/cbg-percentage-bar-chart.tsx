@@ -27,14 +27,15 @@
 
 import React, { type FunctionComponent } from 'react'
 import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-bar'
-import styles from './cbg-percentage-title.css'
 import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
 import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { type CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import { type BgPrefs, type BgBounds, type BgSource } from '../../../models/blood-glucose.model'
 import { type ReadingsInRangeData, type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { useTheme } from '@mui/material/styles'
 
 interface CBGPercentageBarChartProps {
   bgBounds: BgBounds
@@ -47,6 +48,7 @@ interface CBGPercentageBarChartProps {
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
   const { bgBounds, bgPrefs, bgSource, cbgStatType, data, days } = props
+  const theme = useTheme()
   const {
     annotations,
     cbgStatsProps,
@@ -63,14 +65,14 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
   })
 
   return (
-    <div data-testid='cbg-percentage-bar-chart'>
+    <div data-testid="cbg-percentage-bar-chart">
       <div>
         <CbgPercentageTitle
           annotations={annotations}
           hoveredStatId={hoveredStatId}
           {...titleProps}
         />
-        <Box className={styles.stats} onMouseLeave={() => { onMouseLeave() }} marginLeft="8px">
+        <Box onMouseLeave={() => { onMouseLeave() }}>
           <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
           <CBGPercentageBar {...cbgStatsProps.highStat} />
           <CBGPercentageBar {...cbgStatsProps.targetStat} />
@@ -78,7 +80,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
           <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
         </Box>
       </div>
-      <div className={styles['stat-footer']} />
+      <Divider sx={{ marginBlock: theme.spacing(1) }} />
       <StatLegend bgClasses={bgPrefs.bgClasses} units={bgPrefs.bgUnits} />
     </div>
   )

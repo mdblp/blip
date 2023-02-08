@@ -45,7 +45,11 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
   const highValue = Math.round(bgClasses.high)
 
   return (
-    <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
+    <Box
+      data-testid="cbg-percentage-stats-legends"
+      display="flex"
+      justifyContent="space-between"
+    >
       <ul className={styles['stat-legend']}>
         <StatLegendElement
           cbgClassName="very-low"
@@ -68,7 +72,7 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
           value={`>${highValue}`}
         />
       </ul>
-      <Box marginLeft="auto" marginRight="4px" fontSize="12px">
+      <Box fontSize="12px">
         {units}
       </Box>
     </Box>

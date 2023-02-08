@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,31 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.legend-title {
-  font-size: 12px;
+import React, { type FunctionComponent } from 'react'
+import Divider from '@mui/material/Divider'
+
+interface CustomDividerProps {
+  color?: string
+  margin?: string
+  marginTop?: string
+  marginRight?: string
+  marginBottom?: string
+  marginLeft?: string
+  marginInline?: string
+  marginBlock?: string
+  orientation?: 'horizontal' | 'vertical'
+  variant?: 'fullWidth' | 'inset' | 'middle'
 }
 
-.stat-footer {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--stat--border);
-  padding: 0.25em 0.625em .375em;
-  overflow: hidden;
-}
+export const CustomDivider: FunctionComponent<CustomDividerProps> = (props) => {
+  const {
+    color,
+    margin,
+    marginTop,
+    marginRight,
+    marginBottom,
+    marginLeft,
+    marginInline,
+    marginBlock,
+    orientation,
+    variant
+  } = props
 
-.title {
-  margin-left: 4px;
-  height: 21px;
-}
-
-.tooltip-icon {
-  position: relative;
-  top: -0.3em;
-  margin-left: 0.1em;
-}
-
-.tooltip-icon > img {
-  width: 0.9em;
+  return (
+    <Divider
+      orientation={orientation}
+      variant={variant ?? 'fullWidth'}
+      sx={{
+        backgroundColor: color,
+        margin,
+        marginTop,
+        marginRight,
+        marginBottom,
+        marginLeft,
+        marginInline,
+        marginBlock
+      }}
+    />
+  )
 }

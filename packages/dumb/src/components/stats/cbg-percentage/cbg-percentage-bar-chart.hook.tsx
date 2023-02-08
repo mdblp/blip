@@ -29,7 +29,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type CBGPercentageBarProps } from './cbg-percentage-bar'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
-import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.utils'
+import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.util'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 import { type BgBounds, BgSource } from '../../../models/blood-glucose.model'
 import { type UnitsType } from '../../../models/enums/units-type.enum'
@@ -56,6 +56,9 @@ interface CBGPercentageBarChartHookReturn {
   onMouseLeave: () => void
   titleProps: { legendTitle: string, title: string }
 }
+
+const TITLE_TYPE_READINGS = 'Readings'
+const TITLE_TYPE_TIME = 'Time'
 
 export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
   const { type, units, days, data, bgBounds, bgSource } = props
@@ -110,7 +113,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
   }
 
   const computeDataArray = (): CBGPercentageData[] => {
-    const titleType = type === CBGStatType.ReadingsInRange ? 'Readings' : 'Time'
+    const titleType = type === CBGStatType.ReadingsInRange ? TITLE_TYPE_READINGS : TITLE_TYPE_TIME
     const bounds = {
       targetLowerBound: formatBgValue(bgBounds.targetLowerBound, units),
       targetUpperBound: formatBgValue(bgBounds.targetUpperBound, units),
@@ -153,7 +156,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
   }
 
   const dataArray = computeDataArray()
-  const total = dataArray.map(data => data.value).reduce((a, b) => a + b)
+  const total = dataArray.map(data => data.value).reduce((sum: number, value: number) => sum + value)
 
   const getCBGPercentageBarProps = (id: string): CBGPercentageBarProps => {
     const stat = dataArray.find(timeInRange => timeInRange.id === id)

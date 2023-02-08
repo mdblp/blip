@@ -26,19 +26,22 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type DataUtil } from 'tidepool-viz'
+import { type VizDataUtil } from 'tidepool-viz'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
 import { BgSource } from 'dumb/src/models/blood-glucose.model'
 import Box from '@mui/material/Box'
+import { CustomDivider } from '../custom-divider'
+import { useTheme } from '@mui/styles'
 
 export interface PatientStatisticsProps {
-  dataUtil: DataUtil
+  dataUtil: VizDataUtil
   bgPrefs: BgPrefs
   endpoints: string[]
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
   const { dataUtil, bgPrefs, endpoints, children } = props
+  const theme = useTheme()
   dataUtil.endpoints = endpoints
   const cbgStatType: CBGStatType = dataUtil.bgSource === BgSource.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
@@ -55,6 +58,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgPrefs={bgPrefs}
         days={dataUtil?.days ?? 0}
       />
+      <CustomDivider marginBlock={theme.spacing(1)} color={theme.palette.grey[600]} />
       {children}
     </Box>
   )

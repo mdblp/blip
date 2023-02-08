@@ -26,10 +26,10 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
 import cbgColorsStyles from '../common/cbg-colors.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { type StatLevel } from '../../../models/stats.model'
+import Box from '@mui/material/Box'
 
 interface CBGPercentageTitleProps {
   annotations: string[]
@@ -43,22 +43,19 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
 
   return (
     <>
-      <div
+      <Box
         data-testid="cbg-percentage-title"
-        className={styles.title}
+        display="flex"
+        alignItems="center"
       >
         {title}
         {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
-          </span>
-            {' )'}
-          </span>
+          <Box fontSize={12} marginLeft={1}>
+            ( <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>{legendTitle}</span> )
+          </Box>
         }
         <StatTooltip annotations={annotations} />
-      </div>
+      </Box>
     </>
   )
 }

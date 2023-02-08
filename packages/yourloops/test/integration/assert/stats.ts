@@ -52,20 +52,20 @@ export const checkTooltip = (patientStatistics: BoundFunctions<typeof queries>, 
 
 export const checkTimeInRangeStatsTitle = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryHigh-timeInRange', 'Time Above Range ( >250 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-high-timeInRange', 'Time Above Range ( 180-250 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-target-timeInRange', 'Time In Range ( 70-180 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-low-timeInRange', 'Time Below Range ( 54-70 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryLow-timeInRange', 'Time Below Range ( <54 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryHigh-timeInRange', 'Time Above Range( >250 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-high-timeInRange', 'Time Above Range( 180-250 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-target-timeInRange', 'Time In Range( 70-180 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-low-timeInRange', 'Time Below Range( 54-70 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryLow-timeInRange', 'Time Below Range( <54 )')
 }
 
 export const checkReadingsInRangeStats = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryHigh-readingsInRange', 'Readings Above Range ( >250 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-high-readingsInRange', 'Readings Above Range ( 180-250 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-target-readingsInRange', 'Readings In Range ( 70-180 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-low-readingsInRange', 'Readings Below Range ( 54-70 )')
-  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryLow-readingsInRange', 'Readings Below Range ( <54 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryHigh-readingsInRange', 'Readings Above Range( >250 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-high-readingsInRange', 'Readings Above Range( 180-250 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-target-readingsInRange', 'Readings In Range( 70-180 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-low-readingsInRange', 'Readings Below Range( 54-70 )')
+  await hoverOnCBGPercentageStat(patientStatistics, 'cbg-percentage-stat-veryLow-readingsInRange', 'Readings Below Range( <54 )')
 }
 
 export const checkReadingsInRangeStatsWidgets = async () => {

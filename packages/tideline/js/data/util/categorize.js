@@ -32,13 +32,17 @@ function categorizer(bgClasses = {}, bgUnits = MGDL_UNITS) {
   return function (d) {
     if (d.value < classes.veryLow) {
       return 'verylow'
-    } else if (d.value >= classes.veryLow && d.value < classes.low) {
+    }
+    if (d.value >= classes.veryLow && d.value < classes.low) {
       return 'low'
-    } else if (d.value >= classes.low && d.value <= classes.target) {
+    }
+    if (d.value >= classes.low && d.value <= classes.target) {
       return 'target'
-    } else if (d.value > classes.target && d.value <= classes.high) {
+    }
+    if (d.value > classes.target && d.value <= classes.high) {
       return 'high'
-    } else if (d.value > classes.high) {
+    }
+    if (d.value > classes.high) {
       return 'veryhigh'
     }
   }
