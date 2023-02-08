@@ -6,19 +6,18 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
+- YLP-1874 Broken pdf report generation button
 - YLP-1963 Glucose unit not coherent between curves and DBL settings
-- YLP-2111 trace-session change on every request
+- YLP-1976 PDF generation not showing stats
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
 - YLP-1679 Allow caregivers to remove patients from their direct share
 - YLP-1850 Patient search should comply to INS standard
-- YLP-1874 Broken pdf report generation button
 - YLP-1943 Training material is acknowledged after Yourloops TM is opened and read (including the new checkbox message) and before any use of YLP
 - YLP-1944 Rename "Intended Use" in the footer as "Product labelling"
 - YLP-1947 Add team selection dropdown on patient dashboard for HCP
 - YLP-1973 User should be able to uncheck the training check box
-- YLP-1976 PDF generation not showing stats
 - YLP-1989 New friendly login page
 ### Engineering use
 - YLP-1444 Handle user name display for Japanese
@@ -64,6 +63,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2054 Migrate trends "no data" text to dumb
 - YLP-2055 Migrate CBGSliceAnimated from viz to dumb
 - YLP-2061 Migrate trends X axis labels and ticks to dumb
+- YLP-2111 trace-session change on every request
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5
