@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -130,7 +130,7 @@ export default class User {
    * @returns a boolean indicating if a new training is available
    */
   newTrainingAvailable(): boolean {
-    if (this.profile.trainingAck) {
+    if (this.profile?.trainingAck) {
       // A `null` is fine here, because `new Date(null).valueOf() === 0`
       const acceptDate = new Date(this.profile.trainingAck.acceptanceTimestamp)
       if (!Number.isFinite(acceptDate.getTime())) {
