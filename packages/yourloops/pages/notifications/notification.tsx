@@ -223,6 +223,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
       patientHook.refresh()
       teamHook.refresh()
+      alert.success(t('accept-notification-success', { teamName: notification.target.name }))
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))
