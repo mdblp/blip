@@ -5,9 +5,9 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.3-rc2 - 2023-02-08
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
+- YLP-1693 Glucose unit not coherent between curves and DBL settings
 - YLP-1704 PDF Report Generation failed
 - YLP-1874 Broken pdf report generation button
-- YLP-1963 Glucose unit not coherent between curves and DBL settings
 - YLP-1976 PDF generation not showing stats
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
