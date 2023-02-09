@@ -65,6 +65,6 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
   expect(cookiesPolicyLink).toBeVisible()
   expect(cookiesPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.cookiesPolicy)
   expect(releaseNotesLink).toBeVisible()
-  expect(releaseNotesLink).toHaveAttribute('href', `${config.ASSETS_URL}yourloops-release-notes.pdf`)
+  expect(releaseNotesLink).toHaveAttribute('href', 'fake-urlyourloops-release-notes.pdf')
   expect(contactLink).toBeVisible()
 }
