@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import i18n from 'i18next'
 import rawHtmlEN from './raw-html/EN'
 import { getCurrentLang } from '../../lib/language'
 import rawHtmlFR from './raw-html/FR'
+import rawHtmlES from './raw-html/ES'
 import Box from '@mui/material/Box'
 
 const ProductLabellingPage: FunctionComponent = () => {
@@ -38,6 +39,8 @@ const ProductLabellingPage: FunctionComponent = () => {
     switch (getCurrentLang()) {
       case 'fr':
         return rawHtmlFR
+      case 'es':
+        return rawHtmlES
       default:
         return rawHtmlEN
     }
