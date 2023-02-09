@@ -34,8 +34,8 @@ import { useAuth0 } from '@auth0/auth0-react'
 import Divider from '@mui/material/Divider'
 import Container from '@mui/material/Container'
 import config from '../../lib/config/config'
-import { useTheme } from '@mui/styles'
 import { GlobalStyles } from 'tss-react'
+import { useTheme } from '@mui/material'
 
 const VerifyEmailPage: FunctionComponent = () => {
   const { loginWithRedirect, logout } = useAuth0()

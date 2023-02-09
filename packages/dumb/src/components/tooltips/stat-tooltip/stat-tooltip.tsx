@@ -28,10 +28,10 @@
 import React, { type FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './stat-tooltip.css'
-import { styled } from '@mui/styles'
 import Tooltip, { tooltipClasses, type TooltipProps } from '@mui/material/Tooltip'
 import InfoIcon from '../../stats/assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
+import { styled } from '@mui/material'
 
 interface StatTooltipProps {
   annotations: string[]
