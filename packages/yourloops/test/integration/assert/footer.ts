@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,6 +28,7 @@
 import { screen, within } from '@testing-library/react'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import config from '../../../lib/config/config'
 
 interface CheckFooterProps {
   role?: UserRoles
@@ -45,6 +46,7 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
   const cookiesManagementLink = footer.getByText('Cookies management')
   const cookiesPolicyLink = footer.getByText('Cookies policy')
   const contactLink = footer.getByText('Contact')
+  const releaseNotesLink = footer.getByTestId('footer-link-url-release-notes')
   const languageSelector = footer.queryByTestId('language-selector')
 
   needFooterLanguageSelector
@@ -62,5 +64,7 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
   expect(cookiesManagementLink).toBeVisible()
   expect(cookiesPolicyLink).toBeVisible()
   expect(cookiesPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.cookiesPolicy)
+  expect(releaseNotesLink).toBeVisible()
+  expect(releaseNotesLink).toHaveAttribute('href', `${config.ASSETS_URL}yourloops-release-notes.pdf`)
   expect(contactLink).toBeVisible()
 }
