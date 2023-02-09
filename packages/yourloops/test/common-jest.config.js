@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -104,7 +104,8 @@ module.exports = {
       BRANDING: 'diabeloop/blue',
       YLPZ_RA_LAD_001_FR_REV: '1',
       YLPZ_RA_LAD_001_EN_REV: '2',
-      YLPZ_RA_LAD_001_NL_REV: '0'
+      YLPZ_RA_LAD_001_NL_REV: '0',
+      YLPZ_RA_LAD_001_IT_REV: '0'
     }
   },
 

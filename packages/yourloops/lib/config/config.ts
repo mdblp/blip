@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -58,9 +58,10 @@ const defaultConfig: AppConfig = {
   AUTH0_DOMAIN: '',
   AUTH0_ISSUER: '',
   AUTH0_CLIENT_ID: '',
-  YLPZ_RA_LAD_001_FR_REV: '2',
-  YLPZ_RA_LAD_001_EN_REV: '2',
-  YLPZ_RA_LAD_001_NL_REV: '0'
+  YLPZ_RA_LAD_001_FR_REV: '3',
+  YLPZ_RA_LAD_001_EN_REV: '3',
+  YLPZ_RA_LAD_001_NL_REV: '0',
+  YLPZ_RA_LAD_001_IT_REV: '0'
 }
 const appConfig = _.assign({}, defaultConfig)
 if (_.has(window, 'config') && _.isObjectLike(_.get(window, 'config', null))) {

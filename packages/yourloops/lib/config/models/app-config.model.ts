@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,4 +51,5 @@ export interface AppConfig {
   YLPZ_RA_LAD_001_FR_REV: string
   YLPZ_RA_LAD_001_EN_REV: string
   YLPZ_RA_LAD_001_NL_REV: string
+  YLPZ_RA_LAD_001_IT_REV: string
 }
