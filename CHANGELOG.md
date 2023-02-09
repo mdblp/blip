@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.3-rc4 - 2023-02-09
+## 3.0.3 - 2023-02-09
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
 - YLP-1693 Glucose unit not coherent between curves and DBL settings
