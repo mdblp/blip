@@ -103,7 +103,7 @@ module.exports = {
       API_HOST: 'http://localhost:8009',
       BRANDING: 'diabeloop/blue',
       YLPZ_RA_LAD_001_FR_REV: '1',
-      YLPZ_RA_LAD_001_EN_REV: '2',
+      YLPZ_RA_LAD_001_EN_REV: '3',
       YLPZ_RA_LAD_001_NL_REV: '0',
       YLPZ_RA_LAD_001_ES_REV: '0',
       YLPZ_RA_LAD_001_IT_REV: '0',
