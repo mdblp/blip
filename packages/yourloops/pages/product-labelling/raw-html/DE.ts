@@ -32,7 +32,7 @@ import factory from '../images/factory.png'
 import ceMark from '../images/ce-mark.png'
 import appConfig from '../../../lib/config/config'
 
-const rawHtmlEN = `
+const rawHtmlDE = `
   <style type="text/css">@import url('https://themes.googleusercontent.com/fonts/css?kit=dpiI8CyVsrzWsJLBFKehGpLhv3qFjX7dUn1mYxfCXhI');
     .lst-kix_y7fyeal6lle0-0 > li:before {
         content: "-  "
@@ -449,9 +449,9 @@ const rawHtmlEN = `
     <p class="c0"><span class="c9"></span></p>
     <div>
       <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 160.98px; height: 38.00px;"><img alt="" src="${diabeloopLogo}" style="width: 160.98px; height: 38.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-en-Rev${appConfig.YLPZ_RA_LAD_001_EN_REV}</span></p>
+      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-de-Rev${appConfig.YLPZ_RA_LAD_001_DE_REV}</span></p>
     </div>
   </div>
 `
 
-export default rawHtmlEN
+export default rawHtmlDE

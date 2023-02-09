@@ -401,7 +401,7 @@ const rawHtmlIT = `
     <p class="c0"><span class="c2"></span></p>
     <p class="c3">
       <span class="c11">&nbsp; </span>
-      <span class="c11">YourLoops, versione ${appConfig.VERSION}, rilasciato il le ${appConfig.LATEST_RELEASE}</span>
+      <span class="c11">YourLoops, versione ${appConfig.VERSION}, rilasciato il ${appConfig.LATEST_RELEASE}</span>
     </p>
     <p id="udi-version">${appConfig.VERSION}</p><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
     <p class="c18"><span class="c10 c30">Scopo previsto</span></p>

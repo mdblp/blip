@@ -14,6 +14,7 @@ export YLPZ_RA_LAD_001_EN_REV=2
 export YLPZ_RA_LAD_001_NL_REV=0
 export YLPZ_RA_LAD_001_IT_REV=0
 export YLPZ_RA_LAD_001_ES_REV=0
+export YLPZ_RA_LAD_001_DE_REV=0
 
 # External services:
 # URL to HELP system

@@ -27,15 +27,16 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import parse from 'html-react-parser'
+import { getCurrentLang } from '../../lib/language'
 import i18n from 'i18next'
 import rawHtmlEN from './raw-html/EN'
 import rawHtmlFR from './raw-html/FR'
 import rawHtmlES from './raw-html/ES'
 import rawHtmlDE from './raw-html/DE'
-import { getCurrentLang } from '../../lib/language'
+import rawHtmlNL from './raw-html/NL'
+import rawHtmlIT from './raw-html/IT'
 import Box from '@mui/material/Box'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
-import rawHtmlIT from './raw-html/IT'
 
 const ProductLabellingPage: FunctionComponent = () => {
   const getHtml = (): string => {
@@ -46,6 +47,8 @@ const ProductLabellingPage: FunctionComponent = () => {
         return rawHtmlES
       case LanguageCodes.Fr:
         return rawHtmlFR
+      case LanguageCodes.Nl:
+        return rawHtmlNL
       case LanguageCodes.It:
         return rawHtmlIT
       case LanguageCodes.En:
