@@ -218,7 +218,7 @@
   "medical-record-save-failed": "Speichern der medizinischen Daten fehlgeschlagen",
   "medical-record-save-success": "Medizinische Daten erfolgreich gespeichert",
   "medical-records": "Medizinische Daten",
-  "medical-records-get-failed": "Fehler beim Abrufen der medizinischen Daten, bitte die Seite neu laden",
+  "medical-records-get-failed": "Fehler beim Abrufen der medizinischen Aufzeichnungen, bitte Seite neu laden",
   "member": "Mitglied",
   "members": "Mitglieder",
   "menu-contact-support": "Kundendienst",
