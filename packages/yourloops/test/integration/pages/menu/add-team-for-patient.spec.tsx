@@ -37,14 +37,17 @@ describe('Team menu for patient', () => {
   beforeAll(() => {
     mockPatientLogin(monitoredPatientAsTeamMember)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne])
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(getCodeTeam)
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
   })
+  const mockGetTeamFromCod = () => {
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(getCodeTeam)
+  }
 
   it('should close the dialog after clicking the add care button with success message', async () => {
     await act(async () => {
       renderPage('/')
     })
+    mockGetTeamFromCod()
 
     const badgeTeamMenu = screen.getByLabelText('Open team menu')
     expect(badgeTeamMenu).toHaveTextContent('1')
@@ -88,10 +91,11 @@ describe('Team menu for patient', () => {
     expect(screen.getByText('Your care team has now access to your data.')).toBeVisible()
   })
 
-  it('should close dialog code after clicking in cancel button', async function () {
+  it('should close dialog code after clicking in cancel button', async () => {
     await act(async () => {
       renderPage('/')
     })
+    mockGetTeamFromCod()
 
     const badgeTeamMenu = screen.getByLabelText('Open team menu')
     expect(badgeTeamMenu).toHaveTextContent('1')
@@ -111,10 +115,11 @@ describe('Team menu for patient', () => {
     await userEvent.click(cancelButton)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
-  it('should close dialog policy privacy after clicking in cancel button', async function () {
+  it('should close dialog policy privacy after clicking in cancel button', async () => {
     await act(async () => {
       renderPage('/')
     })
+    mockGetTeamFromCod()
 
     const badgeTeamMenu = screen.getByLabelText('Open team menu')
     expect(badgeTeamMenu).toHaveTextContent('1')
@@ -155,10 +160,11 @@ describe('Team menu for patient', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('should after error in input code display an error message', async function () {
+  it('should after error in input code display an error message', async () => {
     await act(async () => {
       renderPage('/')
     })
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(null)
 
     const badgeTeamMenu = screen.getByLabelText('Open team menu')
     expect(badgeTeamMenu).toHaveTextContent('1')
@@ -176,10 +182,10 @@ describe('Team menu for patient', () => {
     const inputCode = within(dialog).getByRole('textbox')
     expect(addTeamButton).toBeDisabled()
     expect(cancelButton).toBeVisible()
-    await userEvent.type(inputCode, '263381900')
+    await userEvent.type(inputCode, '263381990')
     expect(addTeamButton).toBeEnabled()
     await userEvent.click(addTeamButton)
-    expect(within(dialog).getByText('Please check the code, is an bad code')).toBeVisible()
+    expect(screen.getByTestId('alert-snackbar')).toBeVisible()
     expect(dialog).toBeVisible()
   })
 })

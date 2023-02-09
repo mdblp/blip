@@ -123,19 +123,6 @@ describe('Team Menu', () => {
     }
   })
 
-  async function fillJoinTeamDialog(buttonName: string) {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => false, isUserPatient: () => true } as User }
-    })
-    await act(async () => {
-      render(getTeamMenuJSX())
-      await waitFor(() => expect(screen.queryByRole('button')).not.toBeNull())
-      fireEvent.click(screen.getByRole('button'))
-      fireEvent.click(screen.getByText('join-care-team'))
-      fireEvent.click(screen.getByRole('button', { name: buttonName }))
-    })
-  }
-
   async function fillEditTeamDialog(buttonName: string) {
     await act(async () => {
       render(getTeamMenuJSX())
@@ -185,25 +172,6 @@ describe('Team Menu', () => {
     await fillEditTeamDialog('mock-edit')
     expect(createTeamMock).toHaveBeenCalled()
     expect(errorMock).toHaveBeenCalledWith('team-page-failed-create')
-  })
-
-  it('should create new team when clicking on join care team button', async () => {
-    await fillJoinTeamDialog('button-add-team')
-    expect(joinTeamMock).toHaveBeenCalled()
-    expect(successMock).toHaveBeenCalledWith('modal-patient-add-team-success')
-  })
-
-  it('should not create new team when clicking on join care team button and it fails', async () => {
-    joinTeamMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
-    await fillJoinTeamDialog('mock-join')
-    expect(joinTeamMock).toHaveBeenCalled()
-    expect(errorMock).toHaveBeenCalledWith('modal-patient-add-team-failure')
-  })
-
-  it('should not join new team when clicking on join care team button and then cancel', async () => {
-    await fillJoinTeamDialog('mock-cancel')
-    expect(joinTeamMock).toHaveBeenCalledTimes(0)
-    expect(successMock).toHaveBeenCalledTimes(0)
   })
 
   it('should redirect to caregiver list when clicking on my caregivers', async () => {
