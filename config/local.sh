@@ -10,6 +10,7 @@ export LATEST_TRAINING='1970-01-01'
 export LATEST_RELEASE='2022-03-03'
 export YLPZ_RA_LAD_001_FR_REV=2
 export YLPZ_RA_LAD_001_EN_REV=2
+export YLPZ_RA_LAD_001_NL_REV=0
 
 # External services:
 # URL to HELP system
