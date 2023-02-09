@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,7 @@ import factory from '../images/factory.png'
 import ceMark from '../images/ce-mark.png'
 import appConfig from '../../../lib/config/config'
 
-const rawHtmlEN = `
+const rawHtmlNL = `
   <style type="text/css">@import url('https://themes.googleusercontent.com/fonts/css?kit=dpiI8CyVsrzWsJLBFKehGpLhv3qFjX7dUn1mYxfCXhI');
     .lst-kix_y7fyeal6lle0-0 > li:before {
         content: "-  "
@@ -394,39 +394,45 @@ const rawHtmlEN = `
       <a href="/"><p class="c37"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 176.57px; height: 51.50px;"><img alt="" src="${yourloopsLogo}" style="width: 176.57px; height: 51.50px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p></a>
     </div>
     <p class="c0"><span class="c21 c29"></span></p>
-    <p class="c3"><span class="c30 c31">Intended Purpose and regulatory information</span></p>
+    <p class="c3"><span class="c30 c31">Beoogd doel en informatie over de regelgeving</span></p>
     <p class="c0"><span class="c26"></span></p>
-    <p class="c3"><span class="c10">About</span></p>
+    <p class="c3"><span class="c10">Info</span></p>
     <hr>
     <p class="c0"><span class="c2"></span></p>
     <p class="c3">
       <span class="c11">&nbsp; </span>
-      <span class="c11">YourLoops, version ${appConfig.VERSION}, released on ${appConfig.LATEST_RELEASE}</span>
+      <span class="c11">YourLoops, versie ${appConfig.VERSION}, uitgebracht op ${appConfig.LATEST_RELEASE}</span>
     </p>
     <p id="udi-version">${appConfig.VERSION}</p><img alt="" src="${yourloopsLabel}" style="width: 494.00px; height: 99.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-    <p class="c18"><span class="c10 c30">Intended purpose</span></p>
+    <p class="c18"><span class="c10 c30">Beoogd doel</span></p>
     <hr>
     <p class="c18"><span class="c1">&nbsp;</span></p>
-    <p class="c7"><span class="c4">YourLoops is intended to be used by people affected by diabetes mellitus to assist in accessing and reviewing their diabetes data.</span></p>
-    <p class="c7"><span class="c4">Yourloops is intended to be used by other people to whom the person with diabetes would like to share their data and contextual data (e.g., a parent, friend, teacher or school nurse).</span></p>
-    <p class="c7"><span class="c4">Yourloops is also intended to be used by healthcare professionals (e.g., doctors, nurses, certified diabetes educators, clinic staff) .</span></p>
-    <p class="c7"><span class="c21">Yourloops displays information gathered from an A</span><span class="c21">utomated Insulin Delivery system </span><span class="c4">developed by Diabeloop.</span></p>
-    <p class="c7"><span class="c4">YourLoops is not intended to be used to take immediate action but permits to visualize data and trends on long term.</span></p>
-    <p class="c7"><span class="c4">YourLoops is used in the two following ways: </span></p>
+    <p class="c7"><span class="c4">YourLoops is bedoeld om mensen met diabetes mellitus te helpen bij het inzien en beoordelen van hun diabetesgegevens.</span></p>
+    <p class="c7"><span class="c4">YourLoops is bedoeld voor gebruik door andere mensen met wie de persoon met diabetes zijn gegevens en contextuele gegevens wil delen ( bijv. een ouder, vriend, leraar of schoolverpleegkundige).</span></p>
+    <p class="c7"><span class="c4">YourLoops is ook bedoeld voor gebruik door zorgverleners (bijv. artsen, verpleegkundigen, gecertificeerde diabeteseducators, kliniekpersoneel).</span></p>
+    <p class="c7"><span class="c4">YourLoops geeft informatie weer van een door Diabeloop ontwikkeld systeem voor geautomatiseerde insulinetoediening.</span></p>
+    <p class="c7"><span class="c21">YourLoops is niet bedoeld om direct actie te ondernemen, maar maakt het mogelijk om gegevens en trends op lange termijn te visualiseren.</span></p>
+    <p class="c7"><span class="c4">YourLoops wordt op de volgende twee manieren gebruikt:</span></p>
     <ul class="c12 lst-kix_y7fyeal6lle0-0 start">
-        <li class="c7 c32 li-bullet-0"><span class="c4">Yourloops is used as a secondary viewer.</span></li>
-        <li class="c7 c32 li-bullet-0"><span class="c4">Yourloops is used to remotely monitor the patients and to facilitate the healthcare professionals recommendations for the patients treatment.</span></li>
+        <li class="c7 c32 li-bullet-0"><span class="c4">YourLoops wordt gebruikt als secundaire viewer.</span></li>
+        <li class="c7 c32 li-bullet-0"><span class="c4">YourLoops wordt gebruikt voor op afstand patiëntenzorg en is bedoeld om zorgverleners te helpen aanbevelingen te doen voor de behandeling van de patiënt.</span></li>
     </ul>
-    <p class="c7"><span class="c21">This device is not intended to replace self-monitoring practices as advised by a doctor.</span></p>
+    <p class="c7"><span class="c21">Dit hulpmiddel is niet bedoeld als vervanging van zelfbewaking zoals aangeraden door een arts.</span></p>
     <p class="c18 c28"><span class="c4"></span></p>
-    <p class="c18"><span class="c10 c30">Warnings or precautions to be taken that need to be brought to the immediate attention of the user of the device, and to any other person.</span></p>
+    <p class="c18"><span class="c10 c30">Waarschuwingen of te nemen voorzorgsmaatregelen waarvan de gebruiker van het apparaat en eventuele andere personen uitdrukkelijk op de hoogte moeten worden gesteld</span></p>
     <hr>
     <p class="c18 c28"><span class="c1"></span></p>
-    <p class="c22"><span class="c17 c33">WARNING</span><span class="c17">: </span><span class="c21">This software does not provide any medical advice and may not be relied upon for that purpose. </span><span class="c21">Home users</span><span class="c21">&nbsp;must consult a healthcare professional before making any medical interpretation and therapy adjustments from the information in the software.</span></p>
+    <p class="c22"><span class="c17 c33">WAARSCHUWING</span><span class="c17">&nbsp;: Deze software geeft geen medisch advies en mag niet voor dat doel worden gebruikt. Thuisgebruikers moeten een zorgprofessional raadplegen alvorens hun behandeling aan te passen op basis van hun medische interpretatie van de informatie in de software.</span></p>
     <p class="c19"><span class="c1"></span></p>
-    <p class="c22"><span class="c33 c17">WARNING</span><span class="c17">: </span><span class="c21">Healthcare professionals should use information in the software in conjunction with other clinical information available to them.</span></p>
+    <p class="c22"><span class="c33 c17">WAARSCHUWING</span><span class="c17">&nbsp;: Zorgprofessionals dienen de informatie in de software te gebruiken in combinatie
+
+met andere klinische informatie waarover ze beschikken.
+
+</span></p>
     <p class="c19"><span class="c4"></span></p>
-    <p class="c18"><span class="c10">Legal Manufacturer </span></p>
+    <p class="c18"><span class="c10">Wettelijk fabrikant
+
+</span></p>
     <hr>
     <p class="c0"><span class="c2"></span></p>
     <p class="c0"><span class="c2"></span></p><a id="t.01dd871b06081fb0ac6b9fb856ac0aca41b364bf"></a><a id="t.0"></a>
@@ -449,9 +455,9 @@ const rawHtmlEN = `
     <p class="c0"><span class="c9"></span></p>
     <div>
       <p class="c3"><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 160.98px; height: 38.00px;"><img alt="" src="${diabeloopLogo}" style="width: 160.98px; height: 38.00px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title=""></span></p>
-      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-en-Rev${appConfig.YLPZ_RA_LAD_001_EN_REV}</span></p>
+      <p class="c38"><span class="c21">YLPZ-RA-LAD-001-nl-Rev${appConfig.YLPZ_RA_LAD_001_NL_REV}</span></p>
     </div>
   </div>
 `
 
-export default rawHtmlEN
+export default rawHtmlNL

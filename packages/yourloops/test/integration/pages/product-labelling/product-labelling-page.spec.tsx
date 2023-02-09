@@ -60,5 +60,37 @@ describe('Product labelling page', () => {
     expect(screen.getByText(`YLPZ-RA-LAD-001-fr-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_FR_REV as string}`)).toBeInTheDocument()
     expect(screen.getByText('Usage prévu et informations réglementaires')).toBeInTheDocument()
     expect(screen.getByText('Fabricant')).toBeInTheDocument()
+
+    act(() => {
+      i18n.changeLanguage(LanguageCodes.It)
+    })
+    expect(screen.getByText(`YourLoops, versione ${global.BUILD_CONFIG.VERSION as string}, rilasciato il 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YLPZ-RA-LAD-001-it-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_IT_REV as string}`)).toBeInTheDocument()
+    expect(screen.getByText('Scopo previsto')).toBeInTheDocument()
+    expect(screen.getByText('Fabricant')).toBeInTheDocument()
+
+    act(() => {
+      i18n.changeLanguage(LanguageCodes.Es)
+    })
+    expect(screen.getByText(`YourLoops, versión ${global.BUILD_CONFIG.VERSION as string}, publicada el 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YLPZ-RA-LAD-001-es-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_ES_REV as string}`)).toBeInTheDocument()
+    expect(screen.getByText('Finalidad prevista e información regulatoria')).toBeInTheDocument()
+    expect(screen.getByText('Fabricante légal')).toBeInTheDocument()
+
+    act(() => {
+      i18n.changeLanguage(LanguageCodes.Nl)
+    })
+    expect(screen.getByText(`YourLoops, versie ${global.BUILD_CONFIG.VERSION as string}, uitgebracht op 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YLPZ-RA-LAD-001-nl-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_NL_REV as string}`)).toBeInTheDocument()
+    expect(screen.getByText('Beoogd doel')).toBeInTheDocument()
+    expect(screen.getByText('Wettelijk fabrikant')).toBeInTheDocument()
+
+    act(() => {
+      i18n.changeLanguage(LanguageCodes.De)
+    })
+    expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, veröffentlicht am 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YLPZ-RA-LAD-001-de-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_DE_REV as string}`)).toBeInTheDocument()
+    expect(screen.getByText('Verwendungszweck')).toBeInTheDocument()
+    expect(screen.getByText('Rechtmäßiger Hersteller')).toBeInTheDocument()
   })
 })

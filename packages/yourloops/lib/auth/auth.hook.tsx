@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,7 +60,13 @@ const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
 
 export function AuthContextImpl(): AuthContext {
-  const { logout: auth0logout, user: auth0user, isAuthenticated, getAccessTokenSilently } = useAuth0()
+  const {
+    logout: auth0logout,
+    user: auth0user,
+    isAuthenticated,
+    getAccessTokenSilently,
+    getAccessTokenWithPopup
+  } = useAuth0()
   const [user, setUser] = useState<User | null>(null)
   const [fetchingUser, setFetchingUser] = useState<boolean>(false)
 
@@ -230,7 +236,7 @@ export function AuthContextImpl(): AuthContext {
   }
 
   const refreshToken = async (): Promise<void> => {
-    await getAccessTokenSilently({ ignoreCache: true })
+    await getAccessTokenWithPopup({ ignoreCache: true })
   }
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { act, fireEvent, screen, within } from '@testing-library/react'
-import { getAccessTokenSilentlyMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { getAccessTokenWithPopupMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
@@ -98,6 +98,6 @@ describe('Signup stepper as hcp', () => {
         settings: { country: CountryCodes.France }
       })
     )
-    expect(getAccessTokenSilentlyMock).toHaveBeenCalledWith({ ignoreCache: true })
+    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ ignoreCache: true })
   })
 })
