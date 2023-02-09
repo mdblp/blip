@@ -11,6 +11,8 @@ export LATEST_TERMS='2021-05-21'
 export LATEST_RELEASE='2022-03-03'
 export YLPZ_RA_LAD_001_FR_REV=2
 export YLPZ_RA_LAD_001_EN_REV=2
+export YLPZ_RA_LAD_001_NL_REV=0
+export YLPZ_RA_LAD_001_IT_REV=0
 export YLPZ_RA_LAD_001_ES_REV=0
 
 # External services:

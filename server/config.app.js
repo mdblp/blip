@@ -85,6 +85,8 @@ const config = {
   AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || 'HDp2TbUBxOeR6A9dEfII94HfzmUokQK6',
   YLPZ_RA_LAD_001_FR_REV: stringOption(process.env.YLPZ_RA_LAD_001_FR_REV, '1'),
   YLPZ_RA_LAD_001_EN_REV: stringOption(process.env.YLPZ_RA_LAD_001_EN_REV, '1'),
+  YLPZ_RA_LAD_001_NL_REV: stringOption(process.env.YLPZ_RA_LAD_001_NL_REV, '1'),
+  YLPZ_RA_LAD_001_IT_REV: stringOption(process.env.YLPZ_RA_LAD_001_IT_REV, '1'),
   YLPZ_RA_LAD_001_ES_REV: stringOption(process.env.YLPZ_RA_LAD_001_ES_REV, '0')
 }
 

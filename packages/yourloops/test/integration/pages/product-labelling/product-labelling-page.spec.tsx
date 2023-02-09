@@ -62,6 +62,14 @@ describe('Product labelling page', () => {
     expect(screen.getByText('Fabricant')).toBeInTheDocument()
 
     act(() => {
+      i18n.changeLanguage(LanguageCodes.It)
+    })
+    expect(screen.getByText(`YourLoops, versione ${global.BUILD_CONFIG.VERSION as string}, rilasciato il le 2000-01-01`)).toBeInTheDocument()
+    expect(screen.getByText(`YLPZ-RA-LAD-001-it-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_IT_REV as string}`)).toBeInTheDocument()
+    expect(screen.getByText('Scopo previsto e informazioni normative')).toBeInTheDocument()
+    expect(screen.getByText('Fabricant')).toBeInTheDocument()
+
+    act(() => {
       i18n.changeLanguage(LanguageCodes.Es)
     })
     expect(screen.getByText(`YourLoops, versión ${global.BUILD_CONFIG.VERSION as string}, publicada el 2000-01-01`)).toBeInTheDocument()

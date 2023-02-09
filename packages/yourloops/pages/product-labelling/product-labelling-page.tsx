@@ -25,22 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import parse from 'html-react-parser'
 import i18n from 'i18next'
 import rawHtmlEN from './raw-html/EN'
-import { getCurrentLang } from '../../lib/language'
 import rawHtmlFR from './raw-html/FR'
 import rawHtmlES from './raw-html/ES'
+import rawHtmlDE from './raw-html/DE'
+import { getCurrentLang } from '../../lib/language'
 import Box from '@mui/material/Box'
+import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import rawHtmlIT from './raw-html/IT'
 
 const ProductLabellingPage: FunctionComponent = () => {
   const getHtml = (): string => {
     switch (getCurrentLang()) {
-      case 'fr':
-        return rawHtmlFR
-      case 'es':
+      case LanguageCodes.De:
+        return rawHtmlDE
+      case LanguageCodes.Es:
         return rawHtmlES
+      case LanguageCodes.Fr:
+        return rawHtmlFR
+      case LanguageCodes.It:
+        return rawHtmlIT
+      case LanguageCodes.En:
       default:
         return rawHtmlEN
     }

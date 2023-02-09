@@ -38,6 +38,8 @@ const defaultConfig = {
   ECPS_ENABLED: true,
   YLPZ_RA_LAD_001_FR_REV: '2',
   YLPZ_RA_LAD_001_EN_REV: '2',
+  YLPZ_RA_LAD_001_NL_REV: '0',
+  YLPZ_RA_LAD_001_IT_REV: '0',
   YLPZ_RA_LAD_001_ES_REV: '0'
 }
 
