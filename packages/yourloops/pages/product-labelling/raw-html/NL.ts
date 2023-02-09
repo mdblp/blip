@@ -32,7 +32,7 @@ import factory from '../images/factory.png'
 import ceMark from '../images/ce-mark.png'
 import appConfig from '../../../lib/config/config'
 
-const rawHtmlFR = `
+const rawHtmlNL = `
   <style type="text/css">@import url('https://themes.googleusercontent.com/fonts/css?kit=dpiI8CyVsrzWsJLBFKehGpLhv3qFjX7dUn1mYxfCXhI');
     .lst-kix_y7fyeal6lle0-0 > li:before {
         content: "-  "
@@ -460,4 +460,4 @@ met andere klinische informatie waarover ze beschikken.
   </div>
 `
 
-export default rawHtmlFR
+export default rawHtmlNL
