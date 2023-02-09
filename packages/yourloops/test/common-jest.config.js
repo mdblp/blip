@@ -92,6 +92,7 @@ module.exports = {
   globals: {
     BUILD_CONFIG: {
       STONLY_WID: '',
+      ASSETS_URL: 'fake-url',
       TEST: true,
       CBG_BUCKETS_ENABLED: false,
       COOKIE_BANNER_CLIENT_ID: '',

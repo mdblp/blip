@@ -305,7 +305,7 @@ const Footer: FunctionComponent = () => {
             placement="right-start"
           >
             <Link
-              id="footer-link-url-release-notes"
+              data-testid="footer-link-url-release-notes"
               target="_blank"
               href={diabeloopExternalUrls.releaseNotes}
               rel="nofollow"
