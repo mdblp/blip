@@ -44,13 +44,22 @@ export enum ErrorMessageStatus {
 
 export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>
+  private static traceToken: string
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>): void {
     HttpService.retrieveAccessToken = accessTokenMethod
   }
 
+  static setTraceToken(sessionId: string): void {
+    HttpService.traceToken = sessionId
+  }
+
   static async getAccessToken(): Promise<string> {
     return await HttpService.retrieveAccessToken()
+  }
+
+  static getTraceToken(): string {
+    return HttpService.traceToken
   }
 
   static async get<T>(args: Args): Promise<AxiosResponse<T>> {
