@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import commonStyles from '../../../../styles/tooltip-common.css'
 import styles from './tooltip-line.css'
 import { TooltipColor } from '../../../../models/enums/tooltip-color.enum'
 
 interface TooltipLineProps {
   label: string
-  value?: number | string
-  units?: string
+  value?: number | string | null
+  units?: string | null
   isBold?: boolean
   customColor?: TooltipColor
 }

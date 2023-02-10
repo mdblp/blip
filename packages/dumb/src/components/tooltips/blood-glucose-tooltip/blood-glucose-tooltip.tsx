@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
@@ -39,11 +39,11 @@ import {
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
+  type Position,
+  type Side
 } from '../common/tooltip/tooltip'
-import { BgPrefs, ClassificationType } from '../../../models/blood-glucose.model'
-import { Cbg, Smbg, TimePrefs } from 'medical-domain'
+import { type BgPrefs, ClassificationType } from '../../../models/blood-glucose.model'
+import { type Cbg, type Smbg, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
@@ -61,7 +61,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
   const { bgPrefs, data, position, side, timePrefs, isSmbg } = props
   const { t } = useTranslation('main')
 
-  const formattedValue = formatBgValue(data.value, bgPrefs)
+  const formattedValue = formatBgValue(data.value, bgPrefs.bgUnits)
 
   const bgClass = getBgClass(
     convertBgClassesToBgBounds(bgPrefs.bgClasses),

@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from './enums/hcp-profession.enum'
-import { UserRoles } from './enums/user-roles.enum'
-import { LanguageCodes } from './enums/language-codes.enum'
-import { CountryCodes } from './country.model'
+import { type HcpProfession } from './enums/hcp-profession.enum'
+import { type UserRoles } from './enums/user-roles.enum'
+import { type LanguageCodes } from './enums/language-codes.enum'
+import { type CountryCodes } from './country.model'
 
 export interface SignupForm {
   accountRole: UserRoles

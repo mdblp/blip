@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,8 +26,7 @@
  */
 
 import { formatBgValue, formatDecimalNumber, formatParameterValue } from './format.util'
-import { BgPrefs } from '../../models/blood-glucose.model'
-import { Unit } from 'medical-domain'
+import { type BgUnit, Unit } from 'medical-domain'
 
 jest.mock('i18next', () => ({
   t: (value: string) => value
@@ -57,73 +56,73 @@ describe('FormatUtil', () => {
     describe('no recognizable units provided', () => {
       it('should return a String integer by default (no recognizable `units` provided)', () => {
         expect(formatBgValue(120.5)).toEqual('121')
-        expect(formatBgValue(120.5, 'foo' as unknown as BgPrefs)).toEqual('121')
+        expect(formatBgValue(120.5, 'foo' as unknown as BgUnit)).toEqual('121')
       })
     })
 
     describe('when units are `mg/dL`', () => {
       it('should return a String integer', () => {
-        expect(formatBgValue(120.5, { bgUnits: Unit.MilligramPerDeciliter } as BgPrefs)).toEqual('121')
+        expect(formatBgValue(120.5, Unit.MilligramPerDeciliter)).toEqual('121')
       })
 
       it('should give no decimals', () => {
-        expect(formatBgValue(352, { bgUnits: Unit.MilligramPerDeciliter } as BgPrefs)).toEqual('352')
+        expect(formatBgValue(352, Unit.MilligramPerDeciliter)).toEqual('352')
       })
 
       it('should round', () => {
-        expect(formatBgValue(352.77, { bgUnits: Unit.MilligramPerDeciliter } as BgPrefs)).toEqual('353')
+        expect(formatBgValue(352.77, Unit.MilligramPerDeciliter)).toEqual('353')
       })
 
       describe('when `outOfRangeThresholds` provided', () => {
         it('should return the String High if value over the high threshold', () => {
-          expect(formatBgValue(401, { bgUnits: Unit.MilligramPerDeciliter } as BgPrefs, { high: 400 }))
+          expect(formatBgValue(401, Unit.MilligramPerDeciliter, { high: 400 }))
             .toEqual('High')
         })
 
         it('should return normal String integer if value NOT over the high threshold', () => {
-          expect(formatBgValue(399, { bgUnits: Unit.MilligramPerDeciliter } as BgPrefs, { high: 400 })).toEqual('399')
+          expect(formatBgValue(399, Unit.MilligramPerDeciliter, { high: 400 })).toEqual('399')
         })
 
         it('should return the String Low if value under the low threshold', () => {
-          expect(formatBgValue(39, { bgUnits: Unit.MilligramPerDeciliter } as BgPrefs, { low: 40 })).toEqual('Low')
+          expect(formatBgValue(39, Unit.MilligramPerDeciliter, { low: 40 })).toEqual('Low')
         })
 
         it('should return normal String integer if value NOT under the low threshold', () => {
-          expect(formatBgValue(41, { bgUnits: Unit.MilligramPerDeciliter } as BgPrefs, { low: 40 })).toEqual('41')
+          expect(formatBgValue(41, Unit.MilligramPerDeciliter, { low: 40 })).toEqual('41')
         })
       })
     })
 
     describe('when units are `mmol/L`', () => {
       it('should return a String number', () => {
-        expect(formatBgValue(6.6886513292098675, { bgUnits: Unit.MmolPerLiter } as BgPrefs)).toEqual('6.7')
+        expect(formatBgValue(6.6886513292098675, Unit.MmolPerLiter)).toEqual('6.7')
       })
 
       it('should give one decimal place', () => {
-        expect(formatBgValue(12.52, { bgUnits: Unit.MmolPerLiter } as BgPrefs)).toEqual('12.5')
+        expect(formatBgValue(12.52, Unit.MmolPerLiter)).toEqual('12.5')
       })
 
       it('should round', () => {
-        expect(formatBgValue(12.77, { bgUnits: Unit.MmolPerLiter } as BgPrefs)).toEqual('12.8')
+        expect(formatBgValue(12.77, Unit.MmolPerLiter)).toEqual('12.8')
       })
 
       describe('when `outOfRangeThresholds` provided', () => {
         it('should return the String High if value over the high threshold', () => {
-          expect(formatBgValue(23.1, { bgUnits: Unit.MmolPerLiter } as BgPrefs, { high: 400 }))
+          expect(formatBgValue(23.1, Unit.MmolPerLiter, { high: 400 }))
             .toEqual('High')
         })
 
         it('should return normal String number if value NOT over the high threshold', () => {
-          expect(formatBgValue(22.0, { bgUnits: Unit.MmolPerLiter } as BgPrefs, { high: 400 }))
+          expect(formatBgValue(22.0, Unit.MmolPerLiter, { high: 400 }))
             .toEqual('22.0')
         })
 
         it('should return the String Low if value under the low threshold', () => {
-          expect(formatBgValue(2.1, { bgUnits: Unit.MmolPerLiter } as BgPrefs, { low: 40 })).toEqual('Low')
+          expect(formatBgValue(2.1, Unit.MmolPerLiter, { low: 40 })).toEqual('Low')
         })
 
         it('should return normal String number if value NOT under the low threshold', () => {
-          expect(formatBgValue(3.36, { bgUnits: Unit.MmolPerLiter } as BgPrefs, { low: 40 })).toEqual('3.4')
+          expect(formatBgValue(3.36, Unit.MmolPerLiter, { low: 40 })).toEqual('3.4')
         })
       })
     })

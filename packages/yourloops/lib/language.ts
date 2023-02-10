@@ -26,17 +26,17 @@
  */
 
 import _ from 'lodash'
-import i18n, { InitOptions, TOptions } from 'i18next'
+import i18n, { type InitOptions, type TOptions } from 'i18next'
 import dayjs from 'dayjs'
 import moment from 'moment-timezone'
 import { initReactI18next } from 'react-i18next'
 
 import locales from '../../../locales/languages.json'
-import { Country } from './auth/models/country.model'
+import { type Country } from './auth/models/country.model'
 import getLocale from './browser-locale'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
-import { LanguageCodes } from './auth/models/enums/language-codes.enum'
+import { type LanguageCodes } from './auth/models/enums/language-codes.enum'
 
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {

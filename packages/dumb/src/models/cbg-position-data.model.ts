@@ -25,17 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { type RangeSegmentSliceType } from './enums/range-segment.enum'
+
 export interface CbgPositionData {
   left: number
-  tooltipLeft: boolean
-  yPositions: {
-    firstQuartile: number
-    max: number
-    median: number
-    min: number
-    ninetiethQuantile: number
-    tenthQuantile: number
-    thirdQuartile: number
+  tooltipLeft?: boolean
+  yPositions: Partial<RangeSegmentSliceType> & {
+    median?: number
     topMargin: number
+    top?: number
   }
 }

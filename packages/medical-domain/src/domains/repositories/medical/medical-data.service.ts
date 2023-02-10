@@ -25,19 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Cbg, { MGDL_UNITS } from '../../models/medical/datum/cbg.model'
-import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
-import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
-import Fill from '../../models/medical/datum/fill.model'
-import MedicalData from '../../models/medical/medical-data.model'
-import Message from '../../models/medical/datum/message.model'
-import ReservoirChange from '../../models/medical/datum/reservoir-change.model'
-import WarmUp from '../../models/medical/datum/warm-up.model'
-import Wizard from '../../models/medical/datum/wizard.model'
+import type Cbg from '../../models/medical/datum/cbg.model'
+import { MGDL_UNITS } from '../../models/medical/datum/cbg.model'
+import type ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
+import type DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
+import type Fill from '../../models/medical/datum/fill.model'
+import type MedicalData from '../../models/medical/medical-data.model'
+import type Message from '../../models/medical/datum/message.model'
+import type ReservoirChange from '../../models/medical/datum/reservoir-change.model'
+import type WarmUp from '../../models/medical/datum/warm-up.model'
+import type Wizard from '../../models/medical/datum/wizard.model'
 
-import ZenMode from '../../models/medical/datum/zen-mode.model'
+import type ZenMode from '../../models/medical/datum/zen-mode.model'
 
-import BasicData, { generateBasicData } from './basics-data.service'
+import type BasicData from './basics-data.service'
+import { generateBasicData } from './basics-data.service'
 import BasalService from './datum/basal.service'
 import BolusService from './datum/bolus.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
@@ -47,13 +49,14 @@ import PhysicalActivityService from './datum/physical-activity.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
 import DatumService from './datum.service'
 
-import MedicalDataOptions, {
+import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
+import {
   BG_CLAMP_THRESHOLD,
   DEFAULT_BG_BOUNDS,
   defaultMedicalDataOptions
 } from '../../models/medical/medical-data-options.model'
-import Datum from '../../models/medical/datum.model'
-import TimeZoneItem from '../../models/time/time-zone-item.model'
+import type Datum from '../../models/medical/datum.model'
+import type TimeZoneItem from '../../models/time/time-zone-item.model'
 import {
   addAtTimezone,
   addMilliseconds,
@@ -70,14 +73,14 @@ import {
   toISOString,
   twoWeeksAgo
 } from '../time/time.service'
-import PumpSettings from '../../models/medical/datum/pump-settings.model'
+import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
-import Bolus from '../../models/medical/datum/bolus.model'
-import Basal from '../../models/medical/datum/basal.model'
-import Meal from '../../models/medical/datum/meal.model'
-import PhysicalActivity from '../../models/medical/datum/physical-activity.model'
-import Smbg from '../../models/medical/datum/smbg.model'
-import Upload from '../../models/medical/datum/upload.model'
+import type Bolus from '../../models/medical/datum/bolus.model'
+import type Basal from '../../models/medical/datum/basal.model'
+import type Meal from '../../models/medical/datum/meal.model'
+import type PhysicalActivity from '../../models/medical/datum/physical-activity.model'
+import type Smbg from '../../models/medical/datum/smbg.model'
+import type Upload from '../../models/medical/datum/upload.model'
 
 class MedicalDataService {
   medicalData: MedicalData = {

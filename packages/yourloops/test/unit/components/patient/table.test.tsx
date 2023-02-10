@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
-import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
+import { act, Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 
 import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'

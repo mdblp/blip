@@ -29,9 +29,9 @@ import React, { useCallback, useEffect } from 'react'
 import bows from 'bows'
 import { useAuth } from '../auth'
 import NotificationApi from './notification.api'
-import { NotificationContext } from './models/notification-context.model'
-import { Notification } from './models/notification.model'
-import { NotificationProvider } from './models/notification-provider.model'
+import { type NotificationContext } from './models/notification-context.model'
+import { type Notification } from './models/notification.model'
+import { type NotificationProvider } from './models/notification-provider.model'
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext)
 const log = bows('NotificationHook')

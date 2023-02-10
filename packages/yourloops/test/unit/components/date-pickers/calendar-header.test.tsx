@@ -30,7 +30,7 @@ import ReactDOM from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import dayjs from 'dayjs'
 
-import { CalendarChangeMonth } from '../../../../components/date-pickers/models'
+import { type CalendarChangeMonth } from '../../../../components/date-pickers/models'
 import CalendarHeader from '../../../../components/date-pickers/calendar-header'
 import i18n from '../../../../lib/language'
 

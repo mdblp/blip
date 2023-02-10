@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import i18next from 'i18next'
 import commonStyles from '../../../styles/tooltip-common.css'
 import {
@@ -35,13 +35,13 @@ import {
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
+  type Position,
+  type Side
 } from '../common/tooltip/tooltip'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
-import { PumpManufacturer, ReservoirChange, TimePrefs } from 'medical-domain'
+import { PumpManufacturer, type ReservoirChange, type TimePrefs } from 'medical-domain'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
 interface ReservoirTooltipProps {

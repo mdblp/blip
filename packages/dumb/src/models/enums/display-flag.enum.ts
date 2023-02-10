@@ -28,5 +28,6 @@
 export enum DisplayFlag {
   Cbg100Enabled = 'cbg100Enabled',
   Cbg80Enabled = 'cbg80Enabled',
-  Cbg50Enabled = 'cbg50Enabled'
+  Cbg50Enabled = 'cbg50Enabled',
+  CbgMedianEnabled = 'cbgMedianEnabled'
 }

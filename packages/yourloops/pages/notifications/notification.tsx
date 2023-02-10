@@ -29,7 +29,7 @@ import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
@@ -48,9 +48,9 @@ import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
-import { Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
+import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
-import { IUser } from '../../lib/data/models/i-user.model'
+import { type IUser } from '../../lib/data/models/i-user.model'
 import { NotificationType } from '../../lib/notifications/models/enums/notification-type.enum'
 
 export interface NotificationSpanProps {
@@ -294,7 +294,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             }}
           />}
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => setDisplayMonitoringTerms(false)}
+          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => { setDisplayMonitoringTerms(false) }}
                                    teamName={notification.target.name} />
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (

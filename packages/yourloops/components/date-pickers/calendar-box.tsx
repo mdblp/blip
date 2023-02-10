@@ -26,15 +26,15 @@
  */
 
 import React from 'react'
-import { Dayjs } from 'dayjs'
-import { Theme } from '@mui/material/styles'
+import { type Dayjs } from 'dayjs'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import {
-  CalendarOrientation,
-  CalendarPosition,
-  CalendarChangeMonth,
-  CalendarSelection,
-  CalendarSelectionSingle
+  type CalendarOrientation,
+  type CalendarPosition,
+  type CalendarChangeMonth,
+  type CalendarSelection,
+  type CalendarSelectionSingle
 } from './models'
 import Header from './calendar-header'
 import Calendar from './calendar'

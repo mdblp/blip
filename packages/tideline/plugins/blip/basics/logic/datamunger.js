@@ -37,7 +37,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
       return _.get(lastUploadDatum, 'source', null)
     },
 
-    processInfusionSiteHistory: function(basicsData, latestPump, patient, permissions) {
+    processInfusionSiteHistory: function(basicsData, latestPump, patient) {
       if (!latestPump) {
         basicsData.data.reservoirChange = {
           infusionSiteHistory: {},
@@ -52,7 +52,6 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
 
       basicsData.sections.siteChanges.selectorMetaData = {
         latestPump: latestPump,
-        canUpdateSettings: _.has(permissions, 'custodian') || _.has(permissions, 'root'),
         hasSiteChangeSourceSettings,
         patientName: fullName
       }

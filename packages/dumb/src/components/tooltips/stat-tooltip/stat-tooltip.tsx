@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './stat-tooltip.css'
-import { styled } from '@mui/styles'
-import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
+import Tooltip, { tooltipClasses, type TooltipProps } from '@mui/material/Tooltip'
 import InfoIcon from '../../stats/assets/info-outline-24-px.svg'
 import { useTranslation } from 'react-i18next'
+import { styled } from '@mui/material'
 
 interface StatTooltipProps {
   annotations: string[]
@@ -53,6 +53,8 @@ const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
 export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
   const { annotations } = props
   const { t } = useTranslation('main')
+
+  const imageAlt = t('img-alt-hover-for-more-info')
 
   return (
     <StyledTooltip
@@ -80,7 +82,7 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
         <img
           data-testid="info-icon"
           src={InfoIcon}
-          alt={t('img-alt-hover-for-more-info')}
+          alt={imageAlt}
         />
       </span>
     </StyledTooltip>

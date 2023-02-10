@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoundFunctions, queries, screen, within } from '@testing-library/react'
+import { type BoundFunctions, type queries, screen, within } from '@testing-library/react'
 
 const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>) => {
   const dashboardTab = patientNavBar.getByText('Dashboard')

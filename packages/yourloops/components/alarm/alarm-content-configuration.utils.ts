@@ -30,7 +30,7 @@ import {
   DEFAULT_BG_VALUES,
   DEFAULT_THRESHOLDS_IN_MGDL
 } from '../alarm/alarms.default'
-import { Thresholds, BgValues } from '../../lib/patient/models/alarms.model'
+import { type Thresholds, type BgValues } from '../../lib/patient/models/alarms.model'
 
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)

@@ -26,37 +26,27 @@
  */
 
 import cx from 'classnames'
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import { springConfig } from '../../../../models/constants/animation.constants'
 
 import styles from './cbg-slice-animated.css'
-import { CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
+import { type CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
 import CbgSliceSegment from './cbg-slice-segment'
-import { TrendsDisplayFlags } from '../../../../models/trends-display-flags.model'
 import { getRangeSegments } from './cbg-slice-animated.util'
-import { XScale } from '../../../../models/x-scale.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
+import { type TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
 interface CbgSliceAnimatedProps {
-  datum: {
-    firstQuartile?: number
-    id: string
-    max?: number
-    median?: number
-    min?: number
-    msX: number
-    ninetiethQuantile?: number
-    tenthQuantile?: number
-    thirdQuartile?: number
-  }
-  displayFlags: TrendsDisplayFlags
+  datum: TrendsCalculatedCbgStats
   showingCbgDateTraces: boolean
   sliceWidth: number
   tooltipLeftThreshold: number
   topMargin: number
-  xScale: XScale
-  yScale: Function
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
 const DEFAULT_SEGMENT_Y = 16
@@ -64,7 +54,6 @@ const DEFAULT_SEGMENT_Y = 16
 export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props) => {
   const {
     datum,
-    displayFlags,
     showingCbgDateTraces,
     sliceWidth,
     tooltipLeftThreshold,
@@ -72,6 +61,8 @@ export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props
     xScale,
     yScale
   } = props
+
+  const { displayFlags } = useTrendsContext()
 
   const strokeWidth = sliceWidth / 8
   const binLeftX = xScale(datum.msX) - sliceWidth / 2 + strokeWidth / 2

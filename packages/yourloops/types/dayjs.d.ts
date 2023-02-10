@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PluginFunc } from 'dayjs'
+import { type PluginFunc } from 'dayjs'
 
 declare module 'dayjs' {
   interface Dayjs {

@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AuthContext } from './models/auth-context.model'
-import { SignupForm } from './models/signup-form.model'
+import { type AuthContext } from './models/auth-context.model'
+import { type SignupForm } from './models/signup-form.model'
 
 import {
   AuthContextProvider,
@@ -36,9 +36,9 @@ import {
 import User from './models/user.model'
 
 export {
-  AuthContext,
+  type AuthContext,
   User,
-  SignupForm,
+  type SignupForm,
   AuthContextProvider,
   useAuth
 }

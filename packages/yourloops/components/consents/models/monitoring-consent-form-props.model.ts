@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from 'react'
+import type * as React from 'react'
 
 export interface MonitoringConsentFormProps {
   id: string

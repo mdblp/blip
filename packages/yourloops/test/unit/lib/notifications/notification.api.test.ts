@@ -28,11 +28,11 @@
 import HttpStatus from '../../../../lib/http/models/enums/http-status.enum'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { loggedInUsers } from '../../common'
-import axios, { AxiosResponse } from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
-import { INotification } from '../../../../lib/notifications/models/i-notification.model'
+import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 
 jest.mock('axios')

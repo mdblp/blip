@@ -2,6 +2,25 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.0.4-beta - 2023-02-10
+### Engineering use
+- YLP-2044 Remove redux settings store
+- YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
+- YLP-2068 Update minor dependencies
+- YLP-2069 Migrate CBGSlicesContainer from viz to dumb
+- YLP-2084 Migrate trends Y axis labels and ticks to dumb
+- YLP-2085 Update major dependencies with no API break
+- YLP-2091 Remove withDefaultYPosition method wrapper from viz
+- YLP-2092 Migrate trends target range lines to dumb
+- YLP-2094 Update some dependencies with major changes
+- YLP-2095 Migrate FocusedCBGSliceSegment from viz to dumb
+- YLP-2096 Migrate CBG date traces animated to dumb
+- YLP-2097 Migrate RangeSelect from viz to dumb
+- YLP-2110 Update i18next from 19.9.2 to 22.4.9
+- YLP-2113 Migrate FocusedRangeLabels from viz to dumb
+- YLP-2118 Update axios and minor dependencies
+- YLP-2121 Removing deprecated @mui/styles library
+
 ## 3.0.3 - 2023-02-09
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear

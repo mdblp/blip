@@ -26,9 +26,9 @@
  */
 
 import UserApi from '../../../lib/auth/user.api'
-import { Profile } from '../../../lib/auth/models/profile.model'
-import { Preferences } from '../../../lib/auth/models/preferences.model'
-import { Settings } from '../../../lib/auth/models/settings.model'
+import { type Profile } from '../../../lib/auth/models/profile.model'
+import { type Preferences } from '../../../lib/auth/models/preferences.model'
+import { type Settings } from '../../../lib/auth/models/settings.model'
 
 interface MockUserDataFetchParams {
   firstName?: string

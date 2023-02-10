@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
@@ -34,16 +34,16 @@ import { useAuth0 } from '@auth0/auth0-react'
 import Divider from '@mui/material/Divider'
 import Container from '@mui/material/Container'
 import config from '../../lib/config/config'
-import { useTheme } from '@mui/styles'
 import { GlobalStyles } from 'tss-react'
+import { useTheme } from '@mui/material'
 
 const VerifyEmailPage: FunctionComponent = () => {
   const { loginWithRedirect, logout } = useAuth0()
   const { t } = useTranslation()
   const theme = useTheme()
 
-  const onClickLogout = async (): Promise<void> => {
-    await logout({ returnTo: window.location.origin })
+  const onClickLogout = (): void => {
+    logout({ returnTo: window.location.origin })
   }
 
   return (

@@ -35,7 +35,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { SwitchRoleConsequencesDialogProps } from './models'
+import { type SwitchRoleConsequencesDialogProps } from './models'
 
 function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps): JSX.Element {
   const { open, onAccept, onCancel } = props

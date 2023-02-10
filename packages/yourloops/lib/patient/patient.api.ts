@@ -26,14 +26,14 @@
  */
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import bows from 'bows'
-import { INotification } from '../notifications/models/i-notification.model'
+import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
-import { Monitoring } from '../team/models/monitoring.model'
+import { type Monitoring } from '../team/models/monitoring.model'
 import { UserRoles } from '../auth/models/enums/user-roles.enum'
-import { ITeamMember } from '../team/models/i-team-member.model'
+import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
-import { Patient } from './models/patient.model'
+import { type Patient } from './models/patient.model'
 
 const log = bows('Patient API')
 

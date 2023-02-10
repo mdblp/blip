@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from './diabeloop.css'
 import { useTranslation } from 'react-i18next'
-import { DeviceConfig } from 'medical-domain'
+import { type DeviceConfig } from 'medical-domain'
 
 const DEFAULT_VALUE = '-'
 

@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import Box from '@mui/material/Box'
@@ -43,7 +43,7 @@ import Divider from '@mui/material/Divider'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../lib/utils'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
-import { WeeklyReport } from '../../lib/medical-files/models/weekly-report.model'
+import { type WeeklyReport } from '../../lib/medical-files/models/weekly-report.model'
 
 export interface WeeklyReportDialogProps {
   onClose: () => void

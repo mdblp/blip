@@ -36,7 +36,7 @@ import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/stethoscope-icon'
 
-import { Theme, useTheme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/material/Box'
@@ -132,7 +132,7 @@ function UserMenu(): JSX.Element {
         alignItems="center"
         className={clickableMenu}
         maxWidth={250}
-        onClick={event => setAnchorEl(event.currentTarget)}
+        onClick={event => { setAnchorEl(event.currentTarget) }}
       >
         <Box display="flex">
           {getRoleIcon()}

@@ -27,8 +27,8 @@
 
 import React, {
   createContext,
-  FunctionComponent,
-  PropsWithChildren,
+  type FunctionComponent,
+  type PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
@@ -39,21 +39,21 @@ import bows from 'bows'
 import _ from 'lodash'
 
 import { useAuth0 } from '@auth0/auth0-react'
-import { HcpProfession } from './models/enums/hcp-profession.enum'
+import { type HcpProfession } from './models/enums/hcp-profession.enum'
 import { zendeskLogout } from '../zendesk'
 import User from './models/user.model'
 import HttpService from '../http/http.service'
 import UserApi from './user.api'
 import { availableLanguageCodes, changeLanguage, getCurrentLang } from '../language'
 import metrics from '../metrics'
-import { AuthContext } from './models/auth-context.model'
-import { Preferences } from './models/preferences.model'
-import { Profile } from './models/profile.model'
-import { Settings } from './models/settings.model'
+import { type AuthContext } from './models/auth-context.model'
+import { type Preferences } from './models/preferences.model'
+import { type Profile } from './models/profile.model'
+import { type Settings } from './models/settings.model'
 import { UserRoles } from './models/enums/user-roles.enum'
-import { AuthenticatedUser } from './models/authenticated-user.model'
-import { SignupForm } from './models/signup-form.model'
-import { ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
+import { type AuthenticatedUser } from './models/authenticated-user.model'
+import { type SignupForm } from './models/signup-form.model'
+import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
 
 const ReactAuthContext = createContext({} as AuthContext)
@@ -193,7 +193,7 @@ export function AuthContextImpl(): AuthContext {
         window.cleanBlipReduxStore()
       }
       zendeskLogout()
-      await auth0logout({ returnTo: window.location.origin })
+      auth0logout({ returnTo: window.location.origin })
       metrics.resetUser()
     } catch (err) {
       log.error('logout', err)

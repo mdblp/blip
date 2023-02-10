@@ -25,13 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum RangeSegmentQuantile {
+export enum RangeSegmentSlice {
   ThirdQuartile = 'thirdQuartile',
   FirstQuartile = 'firstQuartile',
   TenthQuantile = 'tenthQuantile',
   NinetiethQuantile = 'ninetiethQuantile',
   Max = 'max',
   Min = 'min'
+}
+
+export type RangeSegmentSliceType = {
+  [key in RangeSegmentSlice]: number
 }
 
 export enum RangeSegmentHeightKeys {

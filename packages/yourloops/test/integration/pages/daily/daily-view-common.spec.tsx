@@ -114,7 +114,7 @@ describe('Daily view for anyone', () => {
 
       await userEvent.click(generateReportDialogFirstPdf.getByText('Generate'))
       // This checks that we tried to generate a pdf
-      await waitFor(() => expect(windowOpenMock).toBeCalled())
+      await waitFor(() => { expect(windowOpenMock).toBeCalled() })
 
       await userEvent.click(screen.getByText('Generate report'))
       const generateReportDialogFirstCsv = within(screen.getByRole('dialog'))

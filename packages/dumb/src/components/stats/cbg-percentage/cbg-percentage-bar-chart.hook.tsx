@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,8 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CBGPercentageBarProps } from './cbg-percentage-bar'
-import { CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
+import { type CBGPercentageBarProps } from './cbg-percentage-bar'
+import { type CBGPercentageData, type CBGStatType, StatLevel } from '../../../models/stats.model'
 
 export interface CBGPercentageBarChartHookProps {
   type: CBGStatType
@@ -47,7 +47,7 @@ interface CBGPercentageBarChartHookReturn {
     veryLowStat: CBGPercentageBarProps
   }
   hoveredStatId: StatLevel | null
-  onMouseLeave: Function
+  onMouseLeave: () => void
   titleProps: { legendTitle: string, showTooltipIcon: boolean, title: string }
 }
 

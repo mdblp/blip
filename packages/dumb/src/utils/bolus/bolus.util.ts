@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Bolus, BolusSubtype, DatumType, Prescriptor, Wizard } from 'medical-domain'
+import { type Bolus, BolusSubtype, DatumType, Prescriptor, type Wizard } from 'medical-domain'
 import { BolusType } from '../../models/enums/bolus-type.enum'
 import { inRange } from 'lodash'
 import { formatDecimalNumber } from '../format/format.util'

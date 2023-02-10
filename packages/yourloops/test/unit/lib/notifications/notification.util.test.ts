@@ -26,10 +26,10 @@
  */
 
 import { notificationConversion } from '../../../../lib/notifications/notification.util'
-import { INotification } from '../../../../lib/notifications/models/i-notification.model'
+import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 
 describe('Notification utils', () => {

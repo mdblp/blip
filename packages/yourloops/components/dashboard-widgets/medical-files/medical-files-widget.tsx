@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 
@@ -37,7 +37,7 @@ import MedicalRecordList from './medical-record-list'
 import PrescriptionList from './prescription-list'
 import WeeklyReportList from './weekly-report-list'
 import PatientUtils from '../../../lib/patient/patient.util'
-import { Patient } from '../../../lib/patient/models/patient.model'
+import { type Patient } from '../../../lib/patient/models/patient.model'
 
 const useStyle = makeStyles()(() => ({
   cardContent: {

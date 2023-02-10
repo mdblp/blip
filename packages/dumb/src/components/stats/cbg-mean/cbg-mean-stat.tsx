@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from '../common/cbg-common.css'
 import stylesCbgMeanStat from './cbg-mean-stat.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
-import { BgClasses } from '../../../models/stats.model'
+import { type BgClasses } from '../../../models/stats.model'
 
 export interface CBGMeanStatProps {
   bgClasses: BgClasses

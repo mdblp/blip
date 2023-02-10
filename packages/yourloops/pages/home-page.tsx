@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import _ from 'lodash'
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { type FunctionComponent, useMemo } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 
@@ -37,8 +37,8 @@ import Button from '@mui/material/Button'
 import metrics from '../lib/metrics'
 import { useAlert } from '../components/utils/snackbar'
 import { errorTextFromException, setPageTitle } from '../lib/utils'
-import { Team, useTeam } from '../lib/team'
-import { AddPatientDialogContentProps, AddPatientDialogResult } from './hcp/types'
+import { type Team, useTeam } from '../lib/team'
+import { type AddPatientDialogContentProps, type AddPatientDialogResult } from './hcp/types'
 import PatientsSecondaryBar from '../components/patient/secondary-bar'
 import AddPatientDialog from '../components/patient/add-dialog'
 import TeamCodeDialog from '../components/patient/team-code-dialog'
@@ -65,11 +65,11 @@ const HomePage: FunctionComponent = () => {
 
   const filterType = useMemo(() => new URLSearchParams(search).get('filter') as PatientFilterTypes ?? PatientFilterTypes.all, [search])
 
-  const handleRefresh = async (force = false): Promise<void> => {
+  const handleRefresh = (force = false): void => {
     log.debug('handleRefresh:', { force })
     setErrorMessage(null)
     try {
-      await patientHook.refresh()
+      patientHook.refresh()
     } catch (reason: unknown) {
       log.error('handleRefresh', reason)
       const errorMessage = t('error-failed-display-patients', { errorMessage: errorTextFromException(reason) })
@@ -150,7 +150,7 @@ const HomePage: FunctionComponent = () => {
           variant="contained"
           color="secondary"
           disableElevation
-          onClick={async () => await handleRefresh(true)}
+          onClick={() => { handleRefresh(true) }}
         >
           {t('button-refresh-page-on-error')}
         </Button>

@@ -29,7 +29,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory, useParams } from 'react-router-dom'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
@@ -39,7 +39,7 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
-import { Team, useTeam } from '../../lib/team'
+import { type Team, useTeam } from '../../lib/team'
 import BasicDropdown from '../../components/dropdown/basic-dropdown'
 import TeamInformation from '../../components/team/team-information'
 import TeamMembers from '../../components/team/team-members'
@@ -171,8 +171,8 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="information"
                   className={`${classes.drawerTitle} ${activeLink === 'information' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onKeyDown={() => scrollTo(teamInformation)}
-                  onClick={() => scrollTo(teamInformation)}
+                  onKeyDown={() => { scrollTo(teamInformation) }}
+                  onClick={() => { scrollTo(teamInformation) }}
                 >
                   <InfoOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -184,8 +184,8 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="members"
                   className={`${classes.drawerTitle} ${activeLink === 'members' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onClick={() => scrollTo(teamMembers)}
-                  onKeyDown={() => scrollTo(teamMembers)}
+                  onClick={() => { scrollTo(teamMembers) }}
+                  onKeyDown={() => { scrollTo(teamMembers) }}
                 >
                   <GroupOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -198,8 +198,8 @@ function TeamDetailsPage(): JSX.Element {
                     aria-label="alarms"
                     className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
                     tabIndex={0}
-                    onClick={() => scrollTo(teamAlarms)}
-                    onKeyDown={() => scrollTo(teamAlarms)}
+                    onClick={() => { scrollTo(teamAlarms) }}
+                    onKeyDown={() => { scrollTo(teamAlarms) }}
                   >
                     <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                     <Typography className={classes.title}>

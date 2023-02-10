@@ -28,13 +28,13 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Checkbox from '@mui/material/Checkbox'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import IconButton from '@mui/material/IconButton'
 
-import { Team, TeamMember, useTeam } from '../../lib/team'
+import { type Team, type TeamMember, useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
 import { errorTextFromException } from '../../lib/utils'
@@ -192,7 +192,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
               className={classes.deleteCell}
               disabled={removeMemberDisabled}
               aria-label="remove-member-button"
-              onClick={() => setShowConfirmRemoveDialog(true)}
+              onClick={() => { setShowConfirmRemoveDialog(true) }}
               size="large">
               <PersonRemoveIcon />
             </IconButton>
@@ -204,7 +204,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           title={t('remove-member-from-team')}
           label={t('remove-member-confirm', { fullName: teamMember.profile?.fullName, teamName: team.name })}
           inProgress={userUpdateInProgress}
-          onClose={() => setShowConfirmRemoveDialog(false)}
+          onClose={() => { setShowConfirmRemoveDialog(false) }}
           onConfirm={deleteMember}
         />
       }

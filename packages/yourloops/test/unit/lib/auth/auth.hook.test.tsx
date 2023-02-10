@@ -31,15 +31,15 @@ import { act } from 'react-dom/test-utils'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
 
-import { AuthContext, AuthContextProvider, SignupForm, useAuth, User } from '../../../../lib/auth'
+import { type AuthContext, AuthContextProvider, type SignupForm, useAuth, type User } from '../../../../lib/auth'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
-import { Profile } from '../../../../lib/auth/models/profile.model'
-import { Preferences } from '../../../../lib/auth/models/preferences.model'
-import { Settings } from '../../../../lib/auth/models/settings.model'
+import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type Preferences } from '../../../../lib/auth/models/preferences.model'
+import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
-import { UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
+import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
@@ -76,7 +76,7 @@ describe('Auth hook', () => {
           </AuthContextProvider>
         </Auth0Provider>
       )
-      await waitFor(() => expect(auth.isLoggedIn).toBeTruthy())
+      await waitFor(() => { expect(auth.isLoggedIn).toBeTruthy() })
     })
   }
 
@@ -173,7 +173,7 @@ describe('Auth hook', () => {
 
       const now = Date.now()
       await initAuthContext()
-      await act(async () => await auth.switchRoleToHCP(false, HcpProfession.diabeto))
+      await act(async () => { await auth.switchRoleToHCP(false, HcpProfession.diabeto) })
       const updatedUser: User = auth.user
 
       expect(UserApi.changeUserRoleToHcp).toHaveBeenCalledTimes(1)

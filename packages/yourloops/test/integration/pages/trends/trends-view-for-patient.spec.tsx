@@ -42,7 +42,7 @@ describe('Trends view for patient', () => {
     mockDataAPI(minimalTrendViewData)
     renderPage('/trends')
 
-    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient()
     checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
   })

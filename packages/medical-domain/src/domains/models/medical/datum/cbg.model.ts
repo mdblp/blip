@@ -26,8 +26,8 @@
  */
 
 import Unit from './enums/unit.enum'
-import BaseDatum from './basics/base-datum.model'
-import { DatumType } from './enums/datum-type.enum'
+import type BaseDatum from './basics/base-datum.model'
+import { type DatumType } from './enums/datum-type.enum'
 
 const MGDL_UNITS = Unit.MilligramPerDeciliter
 const MMOLL_UNITS = Unit.MmolPerLiter
@@ -57,4 +57,4 @@ type Cbg = Bg & {
 }
 
 export default Cbg
-export { Bg, MGDL_UNITS, MMOLL_UNITS, bgUnits, BgUnit, isBgUnit }
+export { type Bg, MGDL_UNITS, MMOLL_UNITS, bgUnits, type BgUnit, isBgUnit }

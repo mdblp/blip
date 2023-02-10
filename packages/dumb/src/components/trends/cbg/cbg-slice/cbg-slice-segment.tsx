@@ -25,13 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { bindActionCreators, Dispatch } from 'redux'
+import React, { type FunctionComponent } from 'react'
+import { bindActionCreators, type Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { CbgPositionData } from '../../../../models/cbg-position-data.model'
+import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
 import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from 'tidepool-viz'
-import { CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
-import { CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
+import { type CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
+import { type CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
+import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
 
 interface CbgSliceSegmentProps {
   classes: string
@@ -47,8 +48,6 @@ interface CbgSliceSegmentProps {
   unfocusSlice: (userId: string) => void
   userId: string
 }
-
-const CBG_CIRCLE_PREFIX_ID = 'cbgCircle'
 
 const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
   const { classes, datum, focusSlice, id, positionData, segment, style, unfocusSlice, x, width, userId } = props
@@ -93,7 +92,7 @@ const mapStateToProps = (state: { blip: { currentPatientInViewId: string } }): {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): { unfocusSlice: (userId: string) => void, focusSlice: (userId: string, sliceData: { id: string }, slicePosition: Object, focusedKeys: string[]) => void } => {
+const mapDispatchToProps = (dispatch: Dispatch): { unfocusSlice: (userId: string) => void, focusSlice: (userId: string, sliceData: { id: string }, slicePosition: CbgPositionData, focusedKeys: string[]) => void } => {
   return bindActionCreators({
     focusSlice: delayShowCbgTracesOnFocus,
     unfocusSlice: unfocusTrendsCbgSlice

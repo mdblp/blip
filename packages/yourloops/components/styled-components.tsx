@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { styled } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
-import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip'
+import Tooltip, { tooltipClasses, type TooltipProps } from '@mui/material/Tooltip'
 import React from 'react'
-
-declare module '@mui/styles/defaultTheme' {
-  interface DefaultTheme extends Theme {}
-}
+import { styled } from '@mui/material'
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   '&': {

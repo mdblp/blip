@@ -26,12 +26,12 @@
  */
 
 import React from 'react'
-import { Dayjs, isDayjs } from 'dayjs'
+import { type Dayjs, isDayjs } from 'dayjs'
 
 import {
-  CalendarOrientation,
-  CalendarChangeMonth,
-  CalendarSelectionRange
+  type CalendarOrientation,
+  type CalendarChangeMonth,
+  type CalendarSelectionRange
 } from './models'
 import PickerToolbar from './picker-toolbar'
 import CalendarBox from './calendar-box'

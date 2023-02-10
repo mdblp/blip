@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Monitoring } from '../../team/models/monitoring.model'
-import { PatientProfile } from './patient-profile.model'
-import { PatientSettings } from './patient-settings.model'
-import { PatientMetadata } from './patient-metadata.model'
-import { PatientTeam } from './patient-team.model'
-import { Alarms } from './alarms.model'
+import { type Monitoring } from '../../team/models/monitoring.model'
+import { type PatientProfile } from './patient-profile.model'
+import { type PatientSettings } from './patient-settings.model'
+import { type PatientMetadata } from './patient-metadata.model'
+import { type PatientTeam } from './patient-team.model'
+import { type Alarms } from './alarms.model'
 
 export interface Patient {
   alarms: Alarms

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from './parameter-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import moment from 'moment-timezone'
@@ -40,11 +40,11 @@ import {
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
+  type Position,
+  type Side
 } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
-import { DeviceParameterChange, Parameter, TimePrefs } from 'medical-domain'
+import { type DeviceParameterChange, type Parameter, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 
 interface ParameterTooltipProps {

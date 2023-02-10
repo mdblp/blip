@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -65,7 +65,7 @@ const ProfilePage: FunctionComponent = () => {
     metrics.send('switch_account', 'display_switch_preferences')
   }
 
-  const handleSwitchRoleCancel = (): void => setSwitchRoleOpen(false)
+  const handleSwitchRoleCancel = (): void => { setSwitchRoleOpen(false) }
 
   const sendChangePasswordEmail = async (): Promise<void> => {
     try {
@@ -77,7 +77,7 @@ const ProfilePage: FunctionComponent = () => {
     }
   }
 
-  useEffect(() => setPageTitle(t('account-preferences')), [lang, t])
+  useEffect(() => { setPageTitle(t('account-preferences')) }, [lang, t])
 
   return (
     <React.Fragment>

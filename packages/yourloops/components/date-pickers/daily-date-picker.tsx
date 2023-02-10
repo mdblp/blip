@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { FunctionComponent, MouseEventHandler } from 'react'
+import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -45,7 +45,7 @@ interface DailyDatePickerProps {
   onBackButtonClick: MouseEventHandler<HTMLButtonElement>
   onMostRecentButtonClick: MouseEventHandler<HTMLButtonElement>
   onNextButtonClick: MouseEventHandler<HTMLButtonElement>
-  onSelectedDateChange: Function
+  onSelectedDateChange: (start: string) => void
   startDate: number | string | Date
 }
 
@@ -87,7 +87,7 @@ export const DailyDatePicker: FunctionComponent<DailyDatePickerProps> = (props) 
       </IconButton>
       <TextField
         id="daily-chart-title-date"
-        onClick={() => setIsOpen(true)}
+        onClick={() => { setIsOpen(true) }}
         variant="standard"
         value={displayedDate}
         disabled={!isComponentReady || isOpen}

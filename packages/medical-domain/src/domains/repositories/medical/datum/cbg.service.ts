@@ -25,11 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
-import Cbg, { Bg, BgUnit, isBgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/cbg.model'
+import { type Bg, type BgUnit } from '../../../models/medical/datum/cbg.model'
+import type Cbg from '../../../models/medical/datum/cbg.model'
+import { isBgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/cbg.model'
 import DatumService from '../datum.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { getTrendsTime } from '../../time/time.service'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 

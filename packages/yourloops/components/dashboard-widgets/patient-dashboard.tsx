@@ -25,17 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import { Patient } from '../../lib/patient/models/patient.model'
+import React, { type FunctionComponent } from 'react'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientStatistics from 'blip/app/components/chart/patientStatistics.js'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
-import MedicalDataService, { TimePrefs } from 'medical-domain'
-import { ChartPrefs } from './models/chart-prefs.model'
-import { BgPrefs } from 'dumb'
-import DataUtil from 'tidepool-viz/src/utils/data'
-import moment, { Moment } from 'moment-timezone'
-import { PermsOfLoggedInUser } from './models/perms-of-loggedin-user.model'
-import metrics from '../../lib/metrics'
+import { type TimePrefs } from 'medical-domain'
+import type MedicalDataService from 'medical-domain'
+import { type ChartPrefs } from './models/chart-prefs.model'
+import { type BgPrefs } from 'dumb'
+import type DataUtil from 'tidepool-viz/src/utils/data'
+import moment, { type Moment } from 'moment-timezone'
+import type metrics from '../../lib/metrics'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -43,13 +43,13 @@ import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 import { useTeam } from '../../lib/team'
 import RemoteMonitoringWidget from './remote-monitoring-widget'
-import { useTheme } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {
   RESPONSIVE_GRID_FOUR_COLUMNS,
   RESPONSIVE_GRID_FULL_WIDTH,
   RESPONSIVE_GRID_HALF_WIDTH
 } from '../../css/css-utils'
+import { useTheme } from '@mui/material'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -60,7 +60,6 @@ interface PatientDashboardProps {
   medicalDataService: MedicalDataService
   msRange: number
   patient: Patient
-  permsOfLoggedInUser: PermsOfLoggedInUser
   timePrefs: TimePrefs
   trackMetric: typeof metrics.send
   onSwitchToDaily: (dateTime: Moment | Date | number | null) => void
@@ -76,7 +75,6 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
     medicalDataService,
     msRange,
     patient,
-    permsOfLoggedInUser,
     timePrefs,
     trackMetric,
     onSwitchToDaily
@@ -134,7 +132,6 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           timePrefs={timePrefs}
           patient={patient}
           tidelineData={medicalDataService}
-          permsOfLoggedInUser={permsOfLoggedInUser}
           trackMetric={trackMetric}
           dataUtil={dataUtil}
           chartPrefs={chartPrefs}

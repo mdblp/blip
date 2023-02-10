@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import AccountCircle from '@mui/icons-material/AccountCircle'
@@ -63,7 +63,7 @@ const PersonalInfoForm: FunctionComponent = () => {
           label={t('first-name')}
           variant="standard"
           value={profileForm.firstName}
-          onChange={event => updateProfileForm(ProfileFormKey.firstName, event.target.value)}
+          onChange={event => { updateProfileForm(ProfileFormKey.firstName, event.target.value) }}
           error={errors.firstName}
           helperText={errors.firstName && t('required-field')}
           className={classes.formInput}
@@ -74,7 +74,7 @@ const PersonalInfoForm: FunctionComponent = () => {
           label={t('last-name')}
           variant="standard"
           value={profileForm.lastName}
-          onChange={event => updateProfileForm(ProfileFormKey.lastName, event.target.value)}
+          onChange={event => { updateProfileForm(ProfileFormKey.lastName, event.target.value) }}
           error={errors.lastName}
           helperText={errors.lastName && t('required-field')}
           className={classes.formInput}
@@ -85,7 +85,7 @@ const PersonalInfoForm: FunctionComponent = () => {
         <Box className={classes.inputContainer}>
           <Box className={classes.formInput}>
             <BasicDropdownWithValidation
-              onSelect={(value: string) => updateProfileForm(ProfileFormKey.hcpProfession, value)}
+              onSelect={(value: string) => { updateProfileForm(ProfileFormKey.hcpProfession, value) }}
               defaultValue={profileForm.hcpProfession}
               disabledValues={[HcpProfession.empty]}
               values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
