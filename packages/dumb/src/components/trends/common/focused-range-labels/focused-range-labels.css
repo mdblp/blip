@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+.container {
+  composes: absolute smallHorizontalPadding from '../../../../styles/layout.css';
+  top: 0;
+  z-index: 1;
+}
 
-describe('Trends view for patient', () => {
-  beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
-  })
+.number {
+  composes: boldText highContrastText noWrap largeSize from '../../../../styles/typography.css';
+}
 
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
-
-    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient()
-    checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
-  })
-})
+.timeLabel {
+  composes: highContrastText noWrap defaultSize from '../../../../styles/typography.css';
+}

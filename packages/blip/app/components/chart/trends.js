@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 
 import CircularProgress from '@mui/material/CircularProgress'
 
-import { components as vizComponents, containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
+import { containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
 import SubNav, { weekDays } from './trendssubnav'
@@ -32,7 +32,7 @@ import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
-import { CbgDateTraceLabel, RangeSelect, TrendsProvider } from 'dumb'
+import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsProvider } from 'dumb'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -43,7 +43,6 @@ import { CbgDateTraceLabel, RangeSelect, TrendsProvider } from 'dumb'
  */
 
 const t = i18next.t.bind(i18next)
-const FocusedRangeLabels = vizComponents.FocusedRangeLabels
 
 const TrendsContainer = vizContainers.TrendsContainer
 const reshapeBgClassesToBgBounds = vizUtils.bg.reshapeBgClassesToBgBounds
@@ -606,7 +605,7 @@ class Trends extends React.Component {
             </Box>
           </Box>
           <Footer onClickRefresh={this.props.onClickRefresh}>
-            <RangeSelect/>
+            <RangeSelect />
           </Footer>
         </div>
       </TrendsProvider>
@@ -667,15 +666,15 @@ class Trends extends React.Component {
     const { patient, trendsState } = this.props
     const userTrendsState = _.get(trendsState, patient.userid)
 
-    if (_.isEmpty(userTrendsState)) {
+    if (_.isEmpty(userTrendsState) || !userTrendsState.focusedCbgSlice || !userTrendsState.focusedCbgSliceKeys) {
       return null
     }
     return (
       <FocusedRangeLabels
-        bgPrefs={this.props.bgPrefs}
-        dataType={'cbg'}
-        focusedKeys={userTrendsState.focusedCbgSliceKeys}
-        focusedSlice={userTrendsState.focusedCbgSlice}
+        bgUnit={this.props.bgPrefs.bgUnits}
+        focusedRangeSegments={userTrendsState.focusedCbgSliceKeys}
+        data={userTrendsState.focusedCbgSlice.data}
+        position={userTrendsState.focusedCbgSlice.position}
         timePrefs={this.props.timePrefs}
       />
     )

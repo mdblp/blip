@@ -71,7 +71,7 @@ interface TooltipProps {
   tailHeight?: number
   backgroundColor?: string
   borderColor?: string
-  borderWidth: number
+  borderWidth?: number
 }
 
 const Tooltip: FunctionComponent<TooltipProps> = (
