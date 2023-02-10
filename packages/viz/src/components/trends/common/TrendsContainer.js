@@ -241,7 +241,6 @@ export class TrendsContainer extends React.Component {
         dates={days}
         focusedSlice={this.props.trendsState.focusedCbgSlice}
         focusedSliceKeys={this.props.trendsState.focusedCbgSliceKeys}
-        displayFlags={this.props.trendsState.cbgFlags}
         showingCbgDateTraces={_.get(this.props, 'trendsState.showingCbgDateTraces', false)}
         onSelectDate={(date) => this.props.onSelectDate(date)}
         yScaleDomain={yScaleDomain}

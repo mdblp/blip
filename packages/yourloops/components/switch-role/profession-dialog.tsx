@@ -36,7 +36,7 @@ import Box from '@mui/material/Box'
 import DialogTitle from '@mui/material/DialogTitle'
 
 import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { SwitchRoleProfessionDialogProps } from './models'
+import { type SwitchRoleProfessionDialogProps } from './models'
 import BasicDropdownWithValidation from '../dropdown/basic-dropdown-with-validation'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 

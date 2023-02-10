@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,9 +37,9 @@ import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
 } from '../../../../lib/share/direct-share.api'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
-import { IUser } from '../../../../lib/data/models/i-user.model'
+import { type IUser } from '../../../../lib/data/models/i-user.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 
@@ -121,10 +121,10 @@ describe('Patient caregivers page', () => {
     const caregiversTable = screen.getByLabelText('Table caregiver list')
     expect(caregiversTable).toBeVisible()
 
-    const caregiversTableLastNameHeader = within(caregiversTable).getByText('Last Name')
+    const caregiversTableLastNameHeader = within(caregiversTable).getByText('Last name')
     expect(caregiversTableLastNameHeader).toBeVisible()
 
-    const caregiversTableFirstNameHeader = within(caregiversTable).getByText('First Name')
+    const caregiversTableFirstNameHeader = within(caregiversTable).getByText('First name')
     expect(caregiversTableFirstNameHeader).toBeVisible()
 
     const caregiversTableEmailHeader = within(caregiversTable).getByText('Email')

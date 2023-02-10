@@ -207,16 +207,6 @@ function genRandomId() {
   return hexID.join('')
 }
 
-function getTimerFuncs() {
-  // To be able to enable it when needed:
-  if (false) { // eslint-disable-line no-constant-condition
-    const startTimer = _.get(window, 'config.DEV', false) ? (name) => console.time(name) : _.noop
-    const endTimer = _.get(window, 'config.DEV', false) ? (name) => console.timeEnd(name) : _.noop
-    return { startTimer, endTimer }
-  }
-  return { startTimer: _.noop, endTimer: _.noop }
-}
-
 function isObjectWithStandardDuration(d) {
   switch (d.type) {
     case 'physicalActivity':
@@ -978,11 +968,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   }
 
   const nDataBefore = this.data.length
-  const { startTimer, endTimer } = getTimerFuncs()
 
-  startTimer('addData')
-
-  startTimer('filterUnwanted')
   // Remove all unwanted data
   // From our new data
   if (_.get(window, 'config.DEV', false)) {
@@ -995,8 +981,6 @@ TidelineData.prototype.addData = async function addData(newData) {
   newData = newData.filter(isWanted)
   if (newData.length < 1) {
     this.log.info('Nothing interested in theses new data')
-    endTimer('filterUnwanted')
-    endTimer('addData')
     return 0
   }
 
@@ -1011,29 +995,20 @@ TidelineData.prototype.addData = async function addData(newData) {
   this.latestPumpManufacturer = null
   this.endpoints = null
   this.basicsData = null
-
   this.dataByDate = null
-
   this.maxDuration = 0
   this.timezonesList = null
 
   // And our current ones too
   this.data = this.data.filter(isWanted)
-  endTimer('filterUnwanted')
 
   await dt.waitTimeout(1) // Allow JS main loop to recover
 
-  startTimer('normalizeTime')
   newData.forEach(this.normalizeTime.bind(this))
-  endTimer('normalizeTime')
-
-  startTimer('cleanData')
   newData.forEach(this.cleanDatum.bind(this))
-  endTimer('cleanData')
 
   await dt.waitTimeout(1) // Allow JS main loop to recover
 
-  startTimer('Concatenate & uniq & sort')
   // Concat our data and the new ones
   this.data = newData.concat(this.data)
   const nDateBeforeRemoveDuplicates = this.data.length
@@ -1043,93 +1018,41 @@ TidelineData.prototype.addData = async function addData(newData) {
     this.log.info(`${nDateBeforeRemoveDuplicates - this.data.length} duplicates data removed`)
   }
 
-  startTimer('deduplicateBoluses')
   this.deduplicateBoluses()
-  endTimer('deduplicateBoluses')
 
   // Initial sort
   this.data.sort((a, b) => a.epoch - b.epoch)
-  endTimer('Concatenate & uniq & sort')
-
-  startTimer('joinWizardsAndBoluses')
   this.joinWizardsAndBoluses()
-  endTimer('joinWizardsAndBoluses')
-
-  startTimer('setTimezones')
   this.setTimezones(this.data)
-  endTimer('setTimezones')
-
-  startTimer('validatedData')
   const validatedData = validateAll(this.data)
   this.log.info(`${validatedData.valid.length} valid items`)
   if (validatedData.invalid.length > 0) {
     this.log.warn('Invalid items:', validatedData.invalid.length, validatedData.invalid)
   }
-  endTimer('validatedData')
 
   await dt.waitTimeout(1) // Allow JS main loop to recover
-
-  startTimer('setDiabetesData')
   this.setDiabetesData()
-  endTimer('setDiabetesData')
-
-  startTimer('setEndPoints')
   this.setEndPoints()
-  endTimer('setEndPoints')
 
   // ** Grouped utilities **
-  startTimer('group')
   this.grouped = _.groupBy(this.data, 'type')
   _.forEach(this.grouped, (group, key) => {
     this.grouped[key] = _.sortBy(group, 'normalTime')
   })
-  endTimer('group')
 
   // generate the fill data for chart BGs
-  startTimer('generateFillData')
   this.generateFillData()
-  endTimer('generateFillData')
-
-  startTimer('setDeviceParameters')
   this.setDeviceParameters()
-  endTimer('setDeviceParameters')
-
-  startTimer('sortPumpSettingsParameters')
   this.sortPumpSettingsParameters()
-  endTimer('sortPumpSettingsParameters')
-
-  startTimer('latestPumpManufacturer')
   this.latestPumpManufacturer = this.getLatestManufacturer()
-  endTimer('latestPumpManufacturer')
-
-  startTimer('setEvents')
   this.zenEvents = this.setEvents({ type: 'deviceEvent', subType: 'zen' }, ['inputTime'])
   this.confidentialEvents = this.setEvents({ type: 'deviceEvent', subType: 'confidential' }, ['inputTime'])
   this.warmUpEvents = this.setEvents({ type: 'deviceEvent', subType: 'warmup' }, ['inputTime'])
-  endTimer('setEvents')
-
-  startTimer('deduplicatePhysicalActivities')
   this.deduplicatePhysicalActivities()
-  endTimer('deduplicatePhysicalActivities')
-
-  startTimer('deduplicateTempBasal')
   this.deduplicateTempBasal()
-  endTimer('deduplicateTempBasal')
-
-  startTimer('updateCrossFilters')
   this.updateCrossFilters()
-  endTimer('updateCrossFilters')
-
-  startTimer('checkRequired')
   this.checkRequired()
-  endTimer('checkRequired')
-
-  startTimer('setBasicsData')
   this.basicsData = this.generateBasicsData()
-  endTimer('setBasicsData')
-
-  endTimer('addData')
-
   this.log.info(`${this.data.length - nDataBefore} data added, ${this.data.length} total`)
   return this.data.length - nDataBefore
 }
@@ -1140,8 +1063,6 @@ TidelineData.prototype.addData = async function addData(newData) {
  * @return {Datum | null} Null if an error occurred
  */
 TidelineData.prototype.editMessage = function editMessage(editedMessage) {
-  const { startTimer, endTimer } = getTimerFuncs()
-  startTimer('editMessage')
 
   /** @type {Datum} */
   let message = null
@@ -1167,7 +1088,6 @@ TidelineData.prototype.editMessage = function editMessage(editedMessage) {
     this.log.warn('editMessage: Unwanted message:', editedMessage)
   }
 
-  endTimer('editMessage')
   return message
 }
 

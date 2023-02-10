@@ -26,8 +26,8 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks/dom'
-import useTooltip, { TooltipHookProps } from './tooltip.hook'
-import { DateTitle } from './tooltip'
+import useTooltip, { type TooltipHookProps } from './tooltip.hook'
+import { type DateTitle } from './tooltip'
 
 describe('Tooltip hook', () => {
   const defaultProps = { offset: { top: 0 }, position: { top: 0, left: 0 } } as TooltipHookProps

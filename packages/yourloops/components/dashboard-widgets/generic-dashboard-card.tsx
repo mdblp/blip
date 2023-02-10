@@ -25,12 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, PropsWithChildren } from 'react'
+import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import { makeStyles } from 'tss-react/mui'
 
 interface GenericDashboardCardProps {
+  action?: JSX.Element
   avatar: JSX.Element
   title: string
   width?: string
@@ -39,8 +40,9 @@ interface GenericDashboardCardProps {
 
 const useStyles = makeStyles()(() => ({
   header: {
-    textTransform: 'uppercase',
-    backgroundColor: 'var(--card-header-background-color)'
+    backgroundColor: 'var(--card-header-background-color)',
+    height: 58,
+    textTransform: 'uppercase'
   },
   headerTitle: {
     fontWeight: 600
@@ -49,16 +51,15 @@ const useStyles = makeStyles()(() => ({
 
 const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboardCardProps>> = (props) => {
   const { classes } = useStyles()
+
   return (
-    <Card
-      sx={{ width: props.width || '25%' }}
-      data-testid={props['data-testid']}
-    >
+    <Card data-testid={props['data-testid']}>
       <CardHeader
         className={classes.header}
         classes={{ title: classes.headerTitle }}
         avatar={props.avatar}
         title={props.title}
+        action={props.action}
       />
       {props.children}
     </Card>

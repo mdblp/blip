@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { type FunctionComponent, useMemo } from 'react'
 import { tz } from 'moment-timezone'
 import { useTranslation } from 'react-i18next'
 
@@ -63,7 +63,7 @@ const PatientProfileForm: FunctionComponent = () => {
           label={t('birthdate')}
           variant="standard"
           value={profileForm.birthday}
-          onChange={event => updateProfileForm(ProfileFormKey.birthday, event.target.value)}
+          onChange={event => { updateProfileForm(ProfileFormKey.birthday, event.target.value) }}
           error={errors.birthday}
           helperText={errors.birthday && t('required-field')}
           className={classes.formInput}
@@ -74,7 +74,7 @@ const PatientProfileForm: FunctionComponent = () => {
           label={t('birthplace')}
           variant="standard"
           value={profileForm.birthPlace}
-          onChange={event => updateProfileForm(ProfileFormKey.birthPlace, event.target.value)}
+          onChange={event => { updateProfileForm(ProfileFormKey.birthPlace, event.target.value) }}
           className={classes.formInput}
           inputProps={{ maxLength: '50' }}
         />
@@ -87,7 +87,7 @@ const PatientProfileForm: FunctionComponent = () => {
               label={t('ins')}
               variant="standard"
               value={profileForm.ins}
-              onChange={event => updateProfileForm(ProfileFormKey.ins, event.target.value)}
+              onChange={event => { updateProfileForm(ProfileFormKey.ins, event.target.value) }}
               className={classes.formInput}
               inputProps={{ maxLength: '15' }}
               error={errors.ins}
@@ -98,7 +98,7 @@ const PatientProfileForm: FunctionComponent = () => {
               label={t('ssn')}
               variant="standard"
               value={profileForm.ssn}
-              onChange={event => updateProfileForm(ProfileFormKey.ssn, event.target.value)}
+              onChange={event => { updateProfileForm(ProfileFormKey.ssn, event.target.value) }}
               className={classes.formInput}
               error={errors.ssn}
               helperText={errors.ssn && t('field-with-exactly-15-characters')}
@@ -125,7 +125,7 @@ const PatientProfileForm: FunctionComponent = () => {
             labelId="profile-select-gender-label"
             value={profileForm.sex}
             error={errors.sex}
-            onChange={event => updateProfileForm(ProfileFormKey.sex, event.target.value)}
+            onChange={event => { updateProfileForm(ProfileFormKey.sex, event.target.value) }}
           >
             <MenuItem value="I" aria-label={t('gender-i')}>{t('gender-i')}</MenuItem>
             <MenuItem value="M" aria-label={t('gender-m')}>{t('gender-m')}</MenuItem>
@@ -138,7 +138,7 @@ const PatientProfileForm: FunctionComponent = () => {
           label={t('referring-doctor')}
           variant="standard"
           value={profileForm.referringDoctor}
-          onChange={event => updateProfileForm(ProfileFormKey.referringDoctor, event.target.value)}
+          onChange={event => { updateProfileForm(ProfileFormKey.referringDoctor, event.target.value) }}
           className={classes.formInput}
           inputProps={{ maxLength: '50' }}
         />

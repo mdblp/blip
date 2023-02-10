@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ReactNode } from 'react'
-import { NotificationContext } from './notification-context.model'
+import { type ReactNode } from 'react'
+import { type NotificationContext } from './notification-context.model'
 
 export interface NotificationProvider {
   children: ReactNode

@@ -25,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
-import { Theme } from '@mui/material/styles'
+
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
@@ -44,9 +45,9 @@ import { useAlert } from '../../components/utils/snackbar'
 import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
-import { Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
+import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
-import { IUser } from '../../lib/data/models/i-user.model'
+import { type IUser } from '../../lib/data/models/i-user.model'
 import { NotificationType } from '../../lib/notifications/models/enums/notification-type.enum'
 import { JoinTeamDialog } from '../../components/dialogs/join-team/join-team-dialog'
 
@@ -160,7 +161,11 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({
+  id,
+  type,
+  className
+}: { id: string, type: NotificationType, className: string }): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
       return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
@@ -284,7 +289,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
             teamName={notification.target.name} />
         }
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => setDisplayMonitoringTerms(false)}
+          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => {
+            setDisplayMonitoringTerms(false)
+          }}
                                    teamName={notification.target.name} />
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (

@@ -27,8 +27,8 @@
 
 import React, {
   createContext,
-  FunctionComponent,
-  PropsWithChildren,
+  type FunctionComponent,
+  type PropsWithChildren,
   useCallback,
   useContext,
   useEffect,
@@ -42,10 +42,10 @@ import { useAuth } from '../auth'
 import { useNotification } from '../notifications/notification.hook'
 import TeamApi from './team.api'
 import TeamUtils from './team.util'
-import { Team } from './models/team.model'
-import { TeamContext } from './models/team-context.model'
-import { TeamMember } from './models/team-member.model'
-import { ITeam } from './models/i-team.model'
+import { type Team } from './models/team.model'
+import { type TeamContext } from './models/team-context.model'
+import { type TeamMember } from './models/team-member.model'
+import { type ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
 import { TeamType } from './models/enums/team-type.enum'

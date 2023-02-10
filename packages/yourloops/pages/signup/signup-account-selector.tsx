@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -40,7 +40,7 @@ import metrics from '../../lib/metrics'
 import SignupRadioLabel from './signup-radio-label'
 import { useSignUpFormState } from './signup-formstate-context'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
-import { SignUpFormProps } from './signup-stepper'
+import { type SignUpFormProps } from './signup-stepper'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
@@ -79,7 +79,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
     >
       <RadioGroup
         value={signupForm.accountRole}
-        onChange={event => updateForm(SignupFormKey.AccountRole, event.target.value)}
+        onChange={event => { updateForm(SignupFormKey.AccountRole, event.target.value) }}
       >
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel

@@ -27,11 +27,11 @@
 
 import React from 'react'
 
-import { Team } from '../../../../lib/team'
-import AddMemberDialog, { AddMemberDialogProps } from '../../../../pages/hcp/team-member-add-dialog'
-import { AddMemberDialogContentProps } from '../../../../pages/hcp/types'
+import { type Team } from '../../../../lib/team'
+import AddMemberDialog, { type AddMemberDialogProps } from '../../../../pages/hcp/team-member-add-dialog'
+import { type AddMemberDialogContentProps } from '../../../../pages/hcp/types'
 import ReactDOM from 'react-dom'
-import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
+import { act, Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 

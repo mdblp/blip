@@ -28,7 +28,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import moment from 'moment-timezone'
 
-import { Team, useTeam } from '../team'
+import { type Team, useTeam } from '../team'
 import { useNotification } from '../notifications/notification.hook'
 import PatientUtils from './patient.util'
 import PatientApi from './patient.api'
@@ -36,12 +36,12 @@ import DirectShareApi from '../share/direct-share.api'
 import { useAuth } from '../auth'
 import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
-import { PatientContextResult } from './models/patient-context-result.model'
-import { Patient } from './models/patient.model'
-import { PatientFilterTypes } from './models/enums/patient-filter-type.enum'
+import { type PatientContextResult } from './models/patient-context-result.model'
+import { type Patient } from './models/patient.model'
+import { type PatientFilterTypes } from './models/enums/patient-filter-type.enum'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
-import { MedicalData } from '../data/models/medical-data.model'
-import { PatientTeam } from './models/patient-team.model'
+import { type MedicalData } from '../data/models/medical-data.model'
+import { type PatientTeam } from './models/patient-team.model'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()

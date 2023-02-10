@@ -27,17 +27,17 @@
 
 import _ from 'lodash'
 import React from 'react'
-import { Dayjs } from 'dayjs'
-import { Theme } from '@mui/material/styles'
+import { type Dayjs } from 'dayjs'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 
 import {
-  CalendarPosition,
-  CalendarChangeMonth,
-  CalendarSelection,
-  CalendarSelectionRange,
-  CalendarSelectionSingle,
+  type CalendarPosition,
+  type CalendarChangeMonth,
+  type CalendarSelection,
+  type CalendarSelectionRange,
+  type CalendarSelectionSingle,
   animationStyle
 } from './models'
 import MonthDayElements, { dayStyles } from './month-days-elements'

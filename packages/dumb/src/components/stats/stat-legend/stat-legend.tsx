@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, memo } from 'react'
+import React, { type FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
-import { BgClasses } from '../../../models/stats.model'
+import { type BgClasses } from '../../../models/stats.model'
 import { StatLegendElement } from './stat-legend-element'
 
 interface StatLegendProps {

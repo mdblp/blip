@@ -26,11 +26,11 @@
  */
 
 import React from 'react'
-import { Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
 
 import {
-  CalendarOrientation,
-  CalendarSelectionSingle
+  type CalendarOrientation,
+  type CalendarSelectionSingle
 } from './models'
 import { useChangeMonthState, toYearMonth } from './change-month'
 import PickerToolbar from './picker-toolbar'
@@ -94,7 +94,7 @@ function DatePicker(props: DatePickerProps): JSX.Element {
       {props.showToolbar && <PickerToolbar
         selection={selection}
         orientation={orientation}
-        onClickYear={() => setSelectingYear(true)}
+        onClickYear={() => { setSelectingYear(true) }}
       />}
       <CalendarBox
         orientation={orientation}

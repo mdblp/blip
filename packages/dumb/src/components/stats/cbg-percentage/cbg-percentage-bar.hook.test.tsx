@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import { renderHook } from '@testing-library/react-hooks/dom'
 import { CBGStatType } from '../../../models/stats.model'
-import { CBGPercentageBarHookProps, useCBGPercentageBar } from './cbg-percentage-bar.hook'
+import { type CBGPercentageBarHookProps, useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
 describe('CBGPercentageBar hook', () => {
   const onMouseLeaveMock = jest.fn()
@@ -37,8 +37,8 @@ describe('CBGPercentageBar hook', () => {
     id: 'fakeId',
     isDisabled: false,
     legendTitle: 'fakeLegendTitle',
-    onMouseLeave: onMouseLeaveMock as Function,
-    onMouseOver: onMouseOverMock as Function,
+    onMouseLeave: onMouseLeaveMock,
+    onMouseOver: onMouseOverMock,
     title: 'fakeTitle',
     total: 1000,
     value: 200

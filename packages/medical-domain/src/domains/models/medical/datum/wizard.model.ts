@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import Bolus from './bolus.model'
-import { DatumType } from './enums/datum-type.enum'
-import { WizardInputMealFat } from './enums/wizard-input-meal-fat.enum'
+import type BaseDatum from './basics/base-datum.model'
+import type Bolus from './bolus.model'
+import { type DatumType } from './enums/datum-type.enum'
+import { type WizardInputMealFat } from './enums/wizard-input-meal-fat.enum'
 
 export type Wizard = BaseDatum & {
   type: DatumType

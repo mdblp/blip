@@ -28,15 +28,15 @@
 import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
-import { DurationUnit, TimePrefs } from 'medical-domain'
+import { DurationUnit, type TimePrefs } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
-export const THIRTY_MINS = 1800000
-export const ONE_HR = 3600000
-export const THREE_HRS = 10800000
-export const TWENTY_FOUR_HRS = 86400000
+export const ONE_HOUR_MS = 3600000
+export const HOURS_IN_DAY = 24
 export const TIMEZONE_UTC = 'UTC'
+export const THIRTY_MINS = ONE_HOUR_MS / 2
+export const TWENTY_FOUR_HRS = ONE_HOUR_MS * 24
 
 /**
  * getHourMinuteFormat
@@ -52,6 +52,14 @@ export const getHourMinuteFormat = (): string => {
  */
 export const getDayFormat = (): string => {
   return t('dddd, MMMM D')
+}
+
+/**
+ * getSimpleHourFormatSpace
+ * @returns string according to translation
+ */
+export const getSimpleHourFormatSpace = (): string => {
+  return t('h a')
 }
 
 /**
@@ -178,6 +186,10 @@ export const formatLocalizedFromUTC = (utc: string | number | Date | moment.Mome
   return moment.utc(utc).tz(timezone).format(format)
 }
 
+export const formatDateToUtc = (date: string, format: string): string => {
+  return moment.utc(date).format(format)
+}
+
 export const convertValueToMinutes = (durationValue: number, durationUnit: DurationUnit): number => {
   switch (durationUnit) {
     case DurationUnit.Seconds:
@@ -187,4 +199,21 @@ export const convertValueToMinutes = (durationValue: number, durationUnit: Durat
     default:
       return durationValue
   }
+}
+
+/**
+ * formatClocktimeFromMsPer24
+ * @param {number} milliseconds - positive integer representing a time of day
+ *                            in milliseconds within a 24-hr day
+ * @param {string} format - optional moment display format string; default is 'h:mm a'
+ *
+ * @return {string} formatted clocktime, e.g., '12:05 pm'
+ */
+export const formatClocktimeFromMsPer24 = (milliseconds: number, format?: string): string => {
+  if (!Number.isFinite(milliseconds) || milliseconds < 0 || milliseconds > ONE_HOUR_MS * HOURS_IN_DAY) {
+    throw new Error('First argument must be a value in milliseconds per twenty-four hour day')
+  }
+
+  const defaultFormat = getHourMinuteFormat()
+  return moment.utc(milliseconds).format(format ?? defaultFormat)
 }

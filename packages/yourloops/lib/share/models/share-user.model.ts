@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Notification } from '../../notifications/models/notification.model'
-import { IUser } from '../../data/models/i-user.model'
-import { UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
+import { type Notification } from '../../notifications/models/notification.model'
+import { type IUser } from '../../data/models/i-user.model'
+import { type UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
 
 export interface ShareUser {
   user: IUser

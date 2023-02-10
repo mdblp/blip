@@ -28,7 +28,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 
-import PatientInfo, { PatientInfoProps } from '../../../../components/patient/patient-info'
+import PatientInfo, { type PatientInfoProps } from '../../../../components/patient/patient-info'
 import { createPatient } from '../../common/utils'
 import { genderLabels } from '../../../../lib/auth/auth.helper'
 import moment from 'moment-timezone'

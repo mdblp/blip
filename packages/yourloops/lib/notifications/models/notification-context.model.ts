@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Notification } from './notification.model'
+import { type Notification } from './notification.model'
 
 export interface NotificationContext {
   initialized: boolean

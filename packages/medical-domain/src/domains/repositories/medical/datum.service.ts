@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Datum, { DatumProcessor } from '../../models/medical/datum.model'
-import MedicalDataOptions from '../../models/medical/medical-data-options.model'
+import { type DatumProcessor } from '../../models/medical/datum.model'
+import type Datum from '../../models/medical/datum.model'
+import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import BasalService from './datum/basal.service'
 import BolusService from './datum/bolus.service'
 import CbgService from './datum/cbg.service'

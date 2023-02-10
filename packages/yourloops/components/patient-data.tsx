@@ -47,9 +47,9 @@ import AlarmCard from './alarm/alarm-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
-import { Team, useTeam } from '../lib/team'
-import { Patient } from '../lib/patient/models/patient.model'
-import { PatientTeam } from '../lib/patient/models/patient-team.model'
+import { type Team, useTeam } from '../lib/team'
+import { type Patient } from '../lib/patient/models/patient.model'
+import { type PatientTeam } from '../lib/patient/models/patient-team.model'
 import { useUserName } from '../lib/custom-hooks/user-name.hook'
 
 const patientDataStyles = makeStyles()(() => {

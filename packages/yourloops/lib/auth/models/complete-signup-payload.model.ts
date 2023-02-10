@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserRoles } from './enums/user-roles.enum'
-import { UserMetadata } from './user-metadata.model'
+import { type UserRoles } from './enums/user-roles.enum'
+import { type UserMetadata } from './user-metadata.model'
 
 export interface CompleteSignupPayload extends UserMetadata {
   email: string

@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { ConfirmCodeTeam } from './confirm-code-team'
 import Dialog from '@mui/material/Dialog'
 import { ConfirmPrivacyPolicy } from './confirm-privacy-policy'
@@ -53,7 +53,7 @@ export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) =>
           }
           {currentStep === 2 &&
             <ConfirmPrivacyPolicy
-              onCompleteStep={async () => await onAccept(teamId)}
+              onCompleteStep={async () => { await onAccept(teamId) }}
               onClickCancel={onClose}
               team={team}
             />

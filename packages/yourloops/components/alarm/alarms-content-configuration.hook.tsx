@@ -25,14 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { useTeam } from '../../lib/team'
-import { Monitoring } from '../../lib/team/models/monitoring.model'
-import React, { useMemo, useState } from 'react'
+import { type Monitoring } from '../../lib/team/models/monitoring.model'
+import type React from 'react'
+import { useMemo, useState } from 'react'
 import PatientUtils from '../../lib/patient/patient.util'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import { buildThresholds, isInvalidPercentage, REGEX_VALUE_BG } from './alarm-content-configuration.utils'
 import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import { Thresholds } from '../../lib/patient/models/alarms.model'
+import { type Thresholds } from '../../lib/patient/models/alarms.model'
 import { DEFAULT_BG_VALUES } from '../alarm/alarms.default'
 
 export interface AlarmsContentConfigurationHookProps {

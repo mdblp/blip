@@ -33,7 +33,7 @@ import PatientAPI from '../../../lib/patient/patient.api'
 import { mockChatAPI } from './chat.api.mock'
 import { mockMedicalFilesAPI } from './medical-files.api.mock'
 import { unmonitoredPatientId } from './patient.api.mock'
-import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 import { mockUserApi } from './user.api.mock'
 

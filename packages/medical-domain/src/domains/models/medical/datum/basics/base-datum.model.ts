@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Source from '../enums/source.enum'
-import BaseTime from './base-time.model'
-import { DatumType } from '../enums/datum-type.enum'
+import type Source from '../enums/source.enum'
+import type BaseTime from './base-time.model'
+import { type DatumType } from '../enums/datum-type.enum'
 
 type BaseDatum = BaseTime & {
   id: string

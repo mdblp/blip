@@ -41,7 +41,6 @@ import {
   PhysicalTooltip,
   ReservoirTooltip
 } from 'dumb'
-import { PatientNavBarMemoized } from 'yourloops/components/header-bars/patient-nav-bar'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
@@ -49,7 +48,6 @@ import ChartType from 'yourloops/enum/chart-type.enum'
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
  * @typedef { import('../../index').DatePicker } DatePicker
- * @typedef { import('./index').DailyDatePickerProps } DailyDatePickerProps
  */
 
 const WarmUpTooltip = vizComponents.WarmUpTooltip
@@ -249,7 +247,6 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
-    userIsHCP: PropTypes.bool.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object.isRequired,
@@ -259,23 +256,15 @@ class Daily extends React.Component {
     msRange: PropTypes.number.isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
-    canPrint: PropTypes.bool.isRequired,
     // refresh handler
     onClickRefresh: PropTypes.func.isRequired,
     // message handlers
     onCreateMessage: PropTypes.func.isRequired,
     onShowMessageThread: PropTypes.func.isRequired,
     // navigation handlers
-    onSwitchToDashboard: PropTypes.func.isRequired,
-    onSwitchToDaily: PropTypes.func.isRequired,
-    onClickPrint: PropTypes.func.isRequired,
-    onSwitchToTrends: PropTypes.func.isRequired,
-    onSwitchPatient: PropTypes.func.isRequired,
     onDatetimeLocationChange: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
-    trackMetric: PropTypes.func.isRequired,
-    prefixURL: PropTypes.string,
-    onClickNavigationBack: PropTypes.func.isRequired
+    trackMetric: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -332,17 +321,6 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <PatientNavBarMemoized
-          chartType={this.chartType}
-          onClickBack={this.handlePanBack}
-          onClickDashboard={this.props.onSwitchToDashboard}
-          onClickDaily={this.handleClickOneDay}
-          onSwitchPatient={this.props.onSwitchPatient}
-          onClickPrint={this.props.onClickPrint}
-          onClickTrends={this.props.onSwitchToTrends}
-          currentPatient={this.props.patient}
-          prefixURL={this.props.prefixURL}
-        />
         <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
             <DailyDatePicker

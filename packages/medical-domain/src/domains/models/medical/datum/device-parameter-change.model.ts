@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Unit from './enums/unit.enum'
-import BaseDatum from './basics/base-datum.model'
-import { DatumType } from './enums/datum-type.enum'
+import type Unit from './enums/unit.enum'
+import type BaseDatum from './basics/base-datum.model'
+import { type DatumType } from './enums/datum-type.enum'
 
 type DeviceParameterChange = BaseDatum & {
   type: DatumType
@@ -49,4 +49,4 @@ interface Parameter {
 }
 
 export default DeviceParameterChange
-export { Parameter }
+export type { Parameter }

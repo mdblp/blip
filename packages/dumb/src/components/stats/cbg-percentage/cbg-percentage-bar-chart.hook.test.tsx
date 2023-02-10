@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,9 +26,9 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks/dom'
-import { CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
+import { type CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { waitFor } from '@testing-library/dom'
-import { CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
+import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
 
 describe('CBGPercentageBarChart hook', () => {
   const total = 1000
@@ -56,35 +56,35 @@ describe('CBGPercentageBarChart hook', () => {
       veryHighStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseEnter: expect.any(Function),
+        onMouseEnter: expect.anything(),
         total: defaultProps.total,
         ...veryHighStat
       },
       highStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseEnter: expect.any(Function),
+        onMouseEnter: expect.anything(),
         total: defaultProps.total,
         ...highStat
       },
       targetStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseEnter: expect.any(Function),
+        onMouseEnter: expect.anything(),
         total: defaultProps.total,
         ...targetStat
       },
       lowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseEnter: expect.any(Function),
+        onMouseEnter: expect.anything(),
         total: defaultProps.total,
         ...lowStat
       },
       veryLowStat: {
         type: CBGStatType.TimeInRange,
         isDisabled: false,
-        onMouseEnter: expect.any(Function),
+        onMouseEnter: expect.anything(),
         total: defaultProps.total,
         ...veryLowStat
       }
@@ -103,7 +103,7 @@ describe('CBGPercentageBarChart hook', () => {
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {
       result.current.cbgStatsProps.veryHighStat.onMouseEnter(veryHighStat.id, veryHighStat.title, veryHighStat.legendTitle, true)
-      await waitFor(() => expect(result.current.hoveredStatId).toEqual(veryHighStat.id))
+      await waitFor(() => { expect(result.current.hoveredStatId).toEqual(veryHighStat.id) })
     })
     expect(result.current.titleProps).toEqual({
       legendTitle: veryHighStat.legendTitle,
@@ -112,7 +112,7 @@ describe('CBGPercentageBarChart hook', () => {
     })
     await act(async () => {
       result.current.onMouseLeave()
-      await waitFor(() => expect(result.current.hoveredStatId).toBeNull())
+      await waitFor(() => { expect(result.current.hoveredStatId).toBeNull() })
     })
     expect(result.current.titleProps).toEqual(defaultTitleProps)
   })

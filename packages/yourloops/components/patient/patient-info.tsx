@@ -26,12 +26,12 @@
  */
 
 import React from 'react'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { genderLabels } from '../../lib/auth/auth.helper'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import moment from 'moment-timezone'
 
 const useStyles = makeStyles()((theme: Theme) => ({

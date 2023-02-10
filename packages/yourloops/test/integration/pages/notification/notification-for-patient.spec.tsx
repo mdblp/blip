@@ -31,7 +31,7 @@ import { renderPage } from '../../utils/render'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { Notification } from '../../../../lib/notifications/models/notification.model'
+import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import { PatientNotification, teamOne, teamTwo } from '../../mock/team.api.mock'
@@ -104,7 +104,7 @@ describe('Notification page for patient', () => {
     const addCareTeamButton = within(dialogPrivacy).getByRole('button', { name: 'Add Care team' })
     const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
     const textPrivatePolicy = within(dialogPrivacy).getByTestId('text-privacy-policy')
-    const detailsTeam = within(dialogPrivacy).getByTestId('team-add-dialog-confirm-team-infos')
+    const detailsTeam = within(dialogPrivacy).getByTestId('team-add-dialog-team-infos')
 
     expect(within(dialogPrivacy).getByText('You are about to share you data with')).toBeVisible()
     expect(detailsTeam).toHaveTextContent('PatientNotification6 rue des champs75000Paris67951738')

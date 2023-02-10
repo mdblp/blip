@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import React, { createRef, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -46,7 +46,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import metrics from '../../../lib/metrics'
-import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from '../../../lib/team'
+import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, type Team, useTeam } from '../../../lib/team'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import ProgressIconButtonWrapper from '../../../components/buttons/progress-icon-button-wrapper'
 interface AddTeamDialogContentProps {
@@ -236,7 +236,7 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
       href={diabeloopExternalUrls.privacyPolicy}
       target="_blank"
       rel="noreferrer"
-      onClick={() => metrics.send('pdf_document', 'view_document', 'privacy_policy')}
+      onClick={() => { metrics.send('pdf_document', 'view_document', 'privacy_policy') }}
     >
       {privacyPolicy}
     </Link>

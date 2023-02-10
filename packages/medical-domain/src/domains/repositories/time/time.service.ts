@@ -120,7 +120,7 @@ export function format(epoch: number, timezone: string, strFormat: string): stri
   return moment.tz(epoch, timezone).format(strFormat)
 }
 
-export function findBasicsDays(firstEpoch: number, firstTimezone: string, lastEpoch: number, lastTimezone: string, fullWeeks: boolean = false): Array<{date: string, type: string}> {
+export function findBasicsDays(firstEpoch: number, firstTimezone: string, lastEpoch: number, lastTimezone: string, fullWeeks: boolean = false): Array<{ date: string, type: string }> {
   const first = moment.tz(firstEpoch, firstTimezone)
   const last = moment.tz(lastEpoch, lastTimezone)
 

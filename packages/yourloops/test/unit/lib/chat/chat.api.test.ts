@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Message } from '../../../../components/chat/chat-widget'
+import { type Message } from '../../../../components/chat/chat-widget'
 import HttpService from '../../../../lib/http/http.service'
-import { AxiosResponse } from 'axios'
+import { type AxiosResponse } from 'axios'
 import ChatApi from '../../../../lib/chat/chat.api'
 
 describe('Chat API', () => {

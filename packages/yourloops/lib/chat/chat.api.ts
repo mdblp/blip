@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { IMessage } from './models/i-message.model'
+import { type IMessage } from './models/i-message.model'
 import HttpService from '../http/http.service'
 
 export default class ChatApi {

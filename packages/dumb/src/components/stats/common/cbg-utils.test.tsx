@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { computeBgClassesBarStyle, computeCBGStyle } from './cbg-utils'
-import { BgClasses } from '../../../models/stats.model'
+import { type BgClasses } from '../../../models/stats.model'
 
 describe('CBGUtils', () => {
   const bgClasses: BgClasses = {
@@ -43,24 +43,24 @@ describe('CBGUtils', () => {
 
     it('should return correct left when value is superior to high bg', () => {
       const computedStyle = computeCBGStyle(110, bgClasses)
-      expect(computedStyle.left).toBe('234px')
+      expect(computedStyle.left).toBe('100%')
     })
 
     it('should return correct left when value is superior to low bg and inferior to target bg', () => {
       const computedStyle = computeCBGStyle(70, bgClasses)
-      expect(computedStyle.left).toBe('134px')
+      expect(computedStyle.left).toBe('57%')
     })
 
     it('should return correct left when value is superior to very low bg and inferior to low bg', () => {
       const computedStyle = computeCBGStyle(50, bgClasses)
-      expect(computedStyle.left).toBe('67px')
+      expect(computedStyle.left).toBe('29%')
     })
   })
   describe('computeBgClassesBarStyle', () => {
     it('should return correct left when value is inferior to very low bg', () => {
       const computedStyle = computeBgClassesBarStyle(bgClasses)
-      expect(computedStyle.lowWidth).toBe('100px')
-      expect(computedStyle.targetWidth).toBe('67px')
+      expect(computedStyle.lowWidth).toBe('43%')
+      expect(computedStyle.targetWidth).toBe('28%')
     })
   })
 })

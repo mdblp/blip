@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, PropsWithChildren, useContext, useState } from 'react'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext, useState } from 'react'
 
 import { getCurrentLang } from '../../lib/language'
-import { SignupForm } from '../../lib/auth'
-import { SignupFormKey } from './models/enums/signup-form-key.enum'
+import { type SignupForm } from '../../lib/auth'
+import { type SignupFormKey } from './models/enums/signup-form-key.enum'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { CountryCodes } from '../../lib/auth/models/country.model'
 

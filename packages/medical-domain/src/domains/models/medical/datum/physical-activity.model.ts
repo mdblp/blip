@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import BaseDatum from './basics/base-datum.model'
-import Duration from './basics/duration.model'
-import Intensity from './enums/intensity.enum'
-import DurationUnit from './enums/duration-unit.enum'
-import { DatumType } from './enums/datum-type.enum'
+import type BaseDatum from './basics/base-datum.model'
+import type Duration from './basics/duration.model'
+import type Intensity from './enums/intensity.enum'
+import type DurationUnit from './enums/duration-unit.enum'
+import { type DatumType } from './enums/datum-type.enum'
 
 type PhysicalActivity = BaseDatum & Duration & {
   type: DatumType

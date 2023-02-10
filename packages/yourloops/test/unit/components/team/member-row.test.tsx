@@ -33,14 +33,14 @@ import TableBody from '@mui/material/TableBody'
 
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
-import { User } from '../../../../lib/auth'
-import MemberRow, { TeamMembersProps } from '../../../../components/team/member-row'
+import { type User } from '../../../../lib/auth'
+import MemberRow, { type TeamMembersProps } from '../../../../components/team/member-row'
 import { getTheme } from '../../../../components/theme'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamApi from '../../../../lib/team/team.api'
 import TeamUtils from '../../../../lib/team/team.util'
 import * as alertHookMock from '../../../../components/utils/snackbar'
-import { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
+import { type ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
@@ -159,10 +159,10 @@ describe('MemberRow', () => {
     const removeMemberButton = screen.getByRole('button', { name: 'remove-member-button' })
     await act(async () => {
       fireEvent.click(removeMemberButton)
-      await waitFor(() => expect(screen.getByRole('button', { name: 'confirm-mock' })).toBeInTheDocument())
+      await waitFor(() => { expect(screen.getByRole('button', { name: 'confirm-mock' })).toBeInTheDocument() })
       const confirmButton = screen.getByRole('button', { name: 'confirm-mock' })
       fireEvent.click(confirmButton)
-      await waitFor(() => expect(removeMemberMock).toHaveBeenCalledWith(teamMember, teamId))
+      await waitFor(() => { expect(removeMemberMock).toHaveBeenCalledWith(teamMember, teamId) })
       expect(refreshParent).toHaveBeenCalled()
     })
   }
@@ -271,7 +271,7 @@ describe('MemberRow', () => {
     expect(roleCheckbox).toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
-      await waitFor(() => expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member, team.id))
+      await waitFor(() => { expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member, team.id) })
       expect(refreshParent).toHaveBeenCalled()
     })
   })
@@ -292,7 +292,7 @@ describe('MemberRow', () => {
     expect(roleCheckbox).not.toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
-      await waitFor(() => expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin, team.id))
+      await waitFor(() => { expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin, team.id) })
       expect(refreshParent).toHaveBeenCalled()
       expect(errorMock).toHaveBeenCalledWith('team-page-failed-update-role')
     })

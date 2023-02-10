@@ -26,7 +26,7 @@
  */
 
 import { useState } from 'react'
-import { Team } from '../../../lib/team'
+import { type Team } from '../../../lib/team'
 
 interface joinTeamDialogReturn {
   currentStep: number

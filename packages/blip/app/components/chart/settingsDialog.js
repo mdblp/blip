@@ -16,7 +16,7 @@
  */
 
 /**
- * @typedef { import("medical-domain";).MedicalDataService } MedicalDataService
+ * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
  */
 
 import _ from 'lodash'
@@ -53,7 +53,7 @@ const useStyles = makeStyles()((theme) => ({
 
 
 const SettingsDialog = (props) => {
-  const {patientData, timePrefs, bgPrefs, onSwitchToDaily, trackMetric, open, setOpen } = props
+  const { patientData, timePrefs, bgPrefs, onSwitchToDaily, trackMetric, setOpen } = props
   const { classes } = useStyles()
   const log = bows('SettingsDialog')
   const { t } = useTranslation()
@@ -97,7 +97,7 @@ const SettingsDialog = (props) => {
   return (
     <Dialog
       id="device-usage-details-dialog"
-      open={open}
+      open
       onClose={()=>setOpen(false)}
       maxWidth="xl"
       scroll="body"
@@ -128,7 +128,6 @@ SettingsDialog.propTypes = {
   patientData: PropTypes.object.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired,
   trackMetric: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired
 }
 export default SettingsDialog

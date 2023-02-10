@@ -26,7 +26,7 @@
  */
 
 import { useCallback, useMemo } from 'react'
-import { DateTitle, Offset, Position } from './tooltip'
+import { type DateTitle, type Offset, type Position } from './tooltip'
 import { formatLocalizedFromUTC, getHourMinuteFormat, TIMEZONE_UTC } from '../../../../utils/datetime/datetime.util'
 import moment from 'moment-timezone'
 import { Source } from 'medical-domain'

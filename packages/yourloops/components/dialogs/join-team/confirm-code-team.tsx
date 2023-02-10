@@ -27,7 +27,7 @@
 
 import { useTranslation } from 'react-i18next'
 import React, { createRef, useEffect } from 'react'
-import { Team } from '../../../lib/team'
+import { type Team } from '../../../lib/team'
 import Box from '@mui/material/Box'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -59,7 +59,7 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
     <React.Fragment>
       <Box textAlign="center">
         <DialogTitle>
-          <strong id="team-add-dialog-title" data-testId='team-add-dialog-title'>
+          <strong id="team-add-dialog-title" data-testId="team-add-dialog-title">
             {teamName
               ? t('modal-add-medical-specific-team', { careteam: teamName })
               : t('modal-add-medical-team')
@@ -69,7 +69,7 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
 
         <DialogContent>
           <Box display="flex" flexDirection="column" alignItems="center">
-            <DialogContentText data-testId='label-dialog'>
+            <DialogContentText data-testId="label-dialog">
               {teamName
                 ? (t('modal-add-medical-team-code'))
                 : (t('modal-add-medical-team-code-no-invite'))

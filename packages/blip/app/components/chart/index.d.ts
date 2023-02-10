@@ -26,81 +26,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalDataService, { Datum } from 'medical-domain'
-import { utils as vizUtils } from 'tidepool-viz'
-import DialogDatePicker from '../../../../yourloops/components/date-pickers/dialog-date-picker'
+import MedicalDataService, { Datum, TimePrefs } from 'medical-domain'
+import DataUtil from 'tidepool-viz/src/utils/data'
 import DialogRangeDatePicker from '../../../../yourloops/components/date-pickers/dialog-range-date-picker'
 import { IUser } from 'yourloops/lib/data/models/i-user.model'
+import { ChartPrefs } from 'yourloops/components/dashboard-widgets/models/chart-prefs.model'
+import { BgPrefs } from 'yourloops/components/dashboard-widgets/models/bg-prefs.model'
 
-export type DataUtil = typeof vizUtils.data.DataUtil;
 export type TrackMetrics = (category: string, action: string, name?: string | undefined, value?: number | undefined) => void;
 export type OnLocationChange = (epoch: number, range: number) => Promise<void>;
-
-export interface ActiveDays {
-  monday: boolean;
-  tuesday: boolean;
-  wednesday: boolean;
-  thursday: boolean;
-  friday: boolean;
-  saturday: boolean;
-  sunday: boolean;
-}
-
-export interface ChartPrefs {
-  trends: {
-    extentSize: number;
-    activeDays: ActiveDays;
-  };
-}
-
 export type OnUpdateChartPrefs = (charPrefs: ChartPrefs, cb?: () => void) => void;
-
-export type BgUnits = 'mg/dL' | 'mmol/L';
-export interface BgBounds {
-  veryHighThreshold: number;
-  targetUpperBound: number;
-  targetLowerBound: number;
-  veryLowThreshold: number;
-}
-export interface BgPrefs {
-  bgUnits: BgUnits;
-  bgBounds: BgBounds;
-}
-export interface TimePrefs {
-  timezoneAware: boolean;
-  timezoneName: string;
-}
-
-export interface DailyDatePickerProps {
-  DialogDatePicker: typeof DialogDatePicker;
-  /** Date sent to the date picker */
-  date: number | string;
-  /** Displayed date for the user */
-  displayedDate: string;
-  /** Min date (earliest date we have data) */
-  startDate: string;
-  /** Max / latest date we have data for */
-  endDate: string;
-  inTransition: boolean;
-  loading: boolean;
-  onSelectedDateChange: (date: string) => void;
-}
-
-export interface TrendsDatePickerProps {
-  dialogRangeDatePicker: typeof DialogRangeDatePicker;
-  /** Displayed date for the user */
-  displayedDate: string;
-  /** Start selected date for the calendar */
-  start: string;
-  /** End selected date for the calendar*/
-  end: string;
-  /** Min selectionnable date for the calendar */
-  minDate: string;
-  /** Max selectionnable date for the calendar */
-  maxDate: string;
-  disabled: boolean;
-  onResult: (start?: string, end?: string) => void;
-}
 
 export interface TrendsProps {
   epochLocation: number;
@@ -118,7 +53,7 @@ export interface TrendsProps {
   trendsState: {
     [userId: string]: unknown;
   };
-  dataUtil: DataUtil;
+  dataUtil: typeof DataUtil;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   trackMetric: TrackMetrics;
   onDatetimeLocationChange: OnLocationChange;

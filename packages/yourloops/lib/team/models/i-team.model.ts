@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Monitoring } from './monitoring.model'
-import { TeamType } from './enums/team-type.enum'
-import { ITeamMember } from './i-team-member.model'
-import { PostalAddress } from './postal-address.model'
+import { type Monitoring } from './monitoring.model'
+import { type TeamType } from './enums/team-type.enum'
+import { type ITeamMember } from './i-team-member.model'
+import { type PostalAddress } from './postal-address.model'
 
 /**
  * Team interface (API view)

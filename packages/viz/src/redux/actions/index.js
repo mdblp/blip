@@ -20,12 +20,9 @@ import {
   focusTrendsCbgDateTrace,
   focusTrendsCbgSlice,
   showCbgDateTraces,
-  turnOffCbgRange,
-  turnOnCbgRange,
   unfocusTrendsCbgDateTrace,
   unfocusTrendsCbgSlice
 } from './trends'
-import { toggleSettingsSection } from './settings'
 
 
 export {
@@ -33,9 +30,6 @@ export {
   focusTrendsCbgDateTrace,
   focusTrendsCbgSlice,
   showCbgDateTraces,
-  turnOffCbgRange,
-  turnOnCbgRange,
   unfocusTrendsCbgDateTrace,
-  unfocusTrendsCbgSlice,
-  toggleSettingsSection
+  unfocusTrendsCbgSlice
 }

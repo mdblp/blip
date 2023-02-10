@@ -25,16 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, ReactElement } from 'react'
+import React, { type FunctionComponent, type ReactElement } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
+import { type PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   countLabel: {

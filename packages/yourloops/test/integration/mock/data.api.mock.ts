@@ -26,8 +26,9 @@
  */
 
 import DataAPI from '../../../lib/data/data.api'
-import moment from 'moment-timezone'
-import { PatientData } from '../../../lib/data/models/patient-datum.model'
+import moment, { type Moment } from 'moment-timezone'
+import { type PatientData } from '../../../lib/data/models/patient-datum.model'
+import { history } from '../data/data-api.data'
 
 const CARB_BOLUS_ID = 'carbBolusId'
 export const CBG_ID = 'cbgId'
@@ -39,6 +40,7 @@ export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const PARAMETER_ID = 'parameterId'
 export const WIZARD_INPUT_TIME = '2022-08-08T02:00:00Z'
+export const YESTERDAY_DATE: Moment = moment().subtract(1, 'days')
 
 interface Data { dataRange: string[], data: PatientData }
 
@@ -74,28 +76,30 @@ export const completeDailyViewData = {
   ]
 }
 
-const yesterdayDate = moment().subtract(1, 'days').format('YYYY-MM-DD')
+const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')
 export const completeDashboardData = {
-  dataRange: [`${yesterdayDate}T15:00:00Z`, `${moment().format('YYYY-MM-DDTHH:mm:SS')}Z`],
+  dataRange: [`${yesterdayDateAsString}T15:00:00Z`, `${moment().format('YYYY-MM-DDTHH:mm:SS')}Z`],
   data: [
-    { time: `${yesterdayDate}T17:05:00Z`, type: 'cbg', id: 'cbg_17:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 15, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:10:00Z`, type: 'cbg', id: 'cbg_17:10:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 55, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:15:00Z`, type: 'cbg', id: 'cbg_17:15:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 55, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:20:00Z`, type: 'cbg', id: 'cbg_17:20:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:30:00Z`, type: 'cbg', id: 'cbg_17:30:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:35:00Z`, type: 'cbg', id: 'cbg_17:35:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:40:00Z`, type: 'cbg', id: 'cbg_17:40:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:45:00Z`, type: 'cbg', id: 'cbg_17:45:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:50:00Z`, type: 'cbg', id: 'cbg_17:50:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T17:55:00Z`, type: 'cbg', id: 'cbg_17:55:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T18:00:00Z`, type: 'cbg', id: 'cbg_18:00:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T18:05:00Z`, type: 'cbg', id: 'cbg_18:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 260, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T18:25:00Z`, type: 'bolus', id: CARB_BOLUS_ID, timezone: 'Europe/Paris', prescriptor: 'auto', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T18:35:00Z`, type: 'wizard', id: CARB_ID1, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 45, bolus: CARB_BOLUS_ID, uploadId: 'osef', _userId: 'osef' },
-    { time: `${yesterdayDate}T16:35:00Z`, type: 'pumpSettings', id: 'pump_2022-08-08_6', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: 'beta' }, history: [], parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-    { time: `${yesterdayDate}T19:00:00Z`, type: 'basal', deliveryType: 'automated', duration: 72000, id: 'basal_166cc04053fac_2022-12-13_0', rate: 1, timezone: 'Europe/Paris' },
-    { time: `${yesterdayDate}T19:30:00Z`, type: 'basal', deliveryType: 'scheduled', duration: 7200, id: 'basal_166cc04053fac_2022-12-13_0', rate: 1, timezone: 'Europe/Paris' },
-    { time: `${yesterdayDate}T19:35:00Z`, type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 10, units: 'grams' } }, timezone: 'Europe/Paris', uploadId: 'osef' }
+    { time: `${yesterdayDateAsString}T17:05:00Z`, type: 'cbg', id: 'cbg_17:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 15, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:10:00Z`, type: 'cbg', id: 'cbg_17:10:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 55, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:15:00Z`, type: 'cbg', id: 'cbg_17:15:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 55, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:20:00Z`, type: 'cbg', id: 'cbg_17:20:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:30:00Z`, type: 'cbg', id: 'cbg_17:30:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:35:00Z`, type: 'cbg', id: 'cbg_17:35:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:40:00Z`, type: 'cbg', id: 'cbg_17:40:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:45:00Z`, type: 'cbg', id: 'cbg_17:45:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:50:00Z`, type: 'cbg', id: 'cbg_17:50:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T17:55:00Z`, type: 'cbg', id: 'cbg_17:55:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T18:00:00Z`, type: 'cbg', id: 'cbg_18:00:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T18:05:00Z`, type: 'cbg', id: 'cbg_18:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 260, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T18:25:00Z`, type: 'bolus', id: CARB_BOLUS_ID, timezone: 'Europe/Paris', prescriptor: 'auto', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T18:35:00Z`, type: 'wizard', id: CARB_ID1, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 45, bolus: CARB_BOLUS_ID, uploadId: 'osef', _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T16:35:00Z`, type: 'pumpSettings', id: 'pump_2022-08-08_6', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: 'beta' }, history, parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
+    { time: `${yesterdayDateAsString}T19:00:00Z`, type: 'basal', deliveryType: 'automated', duration: 72000, id: 'basal_166cc04053fac_2022-12-13_0', rate: 1, timezone: 'Europe/Paris' },
+    { time: `${yesterdayDateAsString}T19:30:00Z`, type: 'basal', deliveryType: 'scheduled', duration: 7200, id: 'basal_166cc04053fac_2022-12-13_0', rate: 1, timezone: 'Europe/Paris' },
+    { time: `${yesterdayDateAsString}T19:35:00Z`, type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 10, units: 'grams' } }, timezone: 'Europe/Paris', uploadId: 'osef' },
+    { time: `${yesterdayDateAsString}T19:40:00Z`, type: 'deviceEvent', id: 'osef', subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef' },
+    { dataSetType: 'continuous', deviceManufacturers: ['Diabeloop'], deviceModel: 'DBLG1', deviceTags: ['cgm', 'insulin-pump'], id: 'e00d2c6c2bf7eaf141bae9926a635dd0', revision: 1, time: `${yesterdayDateAsString}T17:05:00Z`, timezone: 'UTC', type: 'upload', uploadId: 'e00d2c6c2bf7eaf141bae9926a635dd0', version: '1.0.0' }
   ]
 } as Data
 
@@ -121,12 +125,12 @@ export const smbgData = {
 }
 
 export const minimalTrendViewData = {
-  dataRange: ['2020-01-18T00:00:00Z', '2020-01-20T00:00:00Z'],
+  dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T00:00:00Z'],
   data: [
-    { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.4, uploadId: 'osef', _userId: 'osef' }
+    { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.1, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.1, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.8, uploadId: 'osef', _userId: 'osef' }
   ]
 }
 

@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useState } from 'react'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import React, { type FunctionComponent, useState } from 'react'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
-import { ResourceLanguage } from 'i18next'
+import { type ResourceLanguage } from 'i18next'
 
 interface LanguageSelectProps {
   className?: string

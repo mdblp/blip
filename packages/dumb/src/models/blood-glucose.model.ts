@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BgClasses, BgUnit } from 'medical-domain'
+import { type BgClasses, type BgUnit } from 'medical-domain'
 
 export interface BgBounds {
   veryHighThreshold: number

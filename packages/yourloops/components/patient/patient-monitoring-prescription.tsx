@@ -27,7 +27,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -39,7 +39,7 @@ import Typography from '@mui/material/Typography'
 
 import BasicDropdown from '../dropdown/basic-dropdown'
 import Dropdown from '../dropdown/dropdown'
-import { Team, TeamMember, useTeam } from '../../lib/team'
+import { type Team, type TeamMember, useTeam } from '../../lib/team'
 import { commonComponentStyles } from '../common'
 import { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 

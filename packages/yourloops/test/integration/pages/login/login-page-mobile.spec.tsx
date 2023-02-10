@@ -54,8 +54,8 @@ describe('Login page mobile view', () => {
     const registerButton = screen.getByRole('button', { name: 'Register' })
     const loginButton = screen.getByRole('button', { name: 'Connect' })
 
-    expect(screen.getByAltText('Yourloops brand colors')).toBeVisible()
-    expect(screen.getByTestId('page-title')).toHaveTextContent('All you need for efficient data sharing and visualisation')
+    expect(screen.getByAltText('YourLoops brand colors')).toBeVisible()
+    expect(screen.getByTestId('page-title')).toHaveTextContent('All you need for efficient data sharing and visualization')
     expect(screen.getByTestId('header-main-logo')).toBeVisible()
     expect(screen.getByRole('button', { name: 'Register' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Connect' })).toBeVisible()

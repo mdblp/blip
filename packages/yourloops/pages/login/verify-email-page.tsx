@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
@@ -42,8 +42,8 @@ const VerifyEmailPage: FunctionComponent = () => {
   const { t } = useTranslation()
   const theme = useTheme()
 
-  const onClickLogout = async (): Promise<void> => {
-    await logout({ returnTo: window.location.origin })
+  const onClickLogout = (): void => {
+    logout({ returnTo: window.location.origin })
   }
 
   return (

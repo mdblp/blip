@@ -28,7 +28,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 
@@ -63,7 +63,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
   const { t } = useTranslation('yourloops')
 
   const handleOpenAddCaregiverDialog = async (): Promise<void> => {
-    return await props.onShowAddCaregiverDialog()
+    await props.onShowAddCaregiverDialog()
   }
 
   return (

@@ -27,9 +27,9 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 
-import { Theme, useTheme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -48,7 +48,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { Radio, RadioGroup } from '@mui/material'
 
-import { CalendarOrientation } from '../date-pickers/models'
+import { type CalendarOrientation } from '../date-pickers/models'
 import RangeDatePicker from '../date-pickers/range-date-picker'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
@@ -203,7 +203,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
       id="dialog-pdf-options"
       fullScreen={fullScreen}
       open={open}
-      onClose={() => onResult()}
+      onClose={() => { onResult() }}
       data-start={pdfOptions.start}
       data-end={pdfOptions.end}
       maxWidth={false}
@@ -219,7 +219,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
             variant={presetSelected === '1week' ? 'filled' : 'outlined'}
             color={presetSelected === '1week' ? 'primary' : 'default'}
             aria-selected={presetSelected === '1week'}
-            onClick={() => handleClickPreset('1week')}
+            onClick={() => { handleClickPreset('1week') }}
             className={classes.presetButtons}
             label={t('preset-dates-range-1week')}
           />
@@ -228,7 +228,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
             variant={presetSelected === '2weeks' ? 'filled' : 'outlined'}
             color={presetSelected === '2weeks' ? 'primary' : 'default'}
             aria-selected={presetSelected === '2weeks'}
-            onClick={() => handleClickPreset('2weeks')}
+            onClick={() => { handleClickPreset('2weeks') }}
             className={classes.presetButtons}
             label={t('preset-dates-range-2weeks')}
           />
@@ -237,7 +237,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
             variant={presetSelected === '4weeks' ? 'filled' : 'outlined'}
             color={presetSelected === '4weeks' ? 'primary' : 'default'}
             aria-selected={presetSelected === '4weeks'}
-            onClick={() => handleClickPreset('4weeks')}
+            onClick={() => { handleClickPreset('4weeks') }}
             className={classes.presetButtons}
             label={t('preset-dates-range-4weeks')}
           />
@@ -246,7 +246,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
             variant={presetSelected === '3months' ? 'filled' : 'outlined'}
             color={presetSelected === '3months' ? 'primary' : 'default'}
             aria-selected={presetSelected === '3months'}
-            onClick={() => handleClickPreset('3months')}
+            onClick={() => { handleClickPreset('3months') }}
             className={classes.presetButtons}
             label={t('preset-dates-range-3months')}
           />
@@ -309,7 +309,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
       </DialogContent>
 
       <DialogActions>
-        <Button id="pdf-options-button-cancel" onClick={() => onResult()}>
+        <Button id="pdf-options-button-cancel" onClick={() => { onResult() }}>
           {t('button-cancel')}
         </Button>
         <Button
@@ -318,7 +318,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
           color="primary"
           variant="contained"
           disableElevation
-          onClick={() => onResult(pdfOptions)}
+          onClick={() => { onResult(pdfOptions) }}
         >
           {t('button-generate')}
         </Button>

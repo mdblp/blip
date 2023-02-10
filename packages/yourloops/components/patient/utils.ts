@@ -26,11 +26,11 @@
  */
 
 import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
-import { Alarms } from '../../lib/patient/models/alarms.model'
-import { MedicalData } from '../../lib/data/models/medical-data.model'
-import { Patient } from '../../lib/patient/models/patient.model'
-import { MedicalTableValues } from './models/medical-table-values.model'
-import { ITeamMember } from '../../lib/team/models/i-team-member.model'
+import { type Alarms } from '../../lib/patient/models/alarms.model'
+import { type MedicalData } from '../../lib/data/models/medical-data.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import { type MedicalTableValues } from './models/medical-table-values.model'
+import { type ITeamMember } from '../../lib/team/models/i-team-member.model'
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
   let tir = '-'

@@ -32,7 +32,7 @@ import userEvent from '@testing-library/user-event'
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/team.util'
-import TeamMembers, { TeamMembersProps } from '../../../../components/team/team-members'
+import TeamMembers, { type TeamMembersProps } from '../../../../components/team/team-members'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { getTheme } from '../../../../components/theme'
 import { ThemeProvider } from '@mui/material/styles'
@@ -121,8 +121,8 @@ describe('TeamMembers', () => {
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
     await act(async () => {
       fireEvent.click(inviteButton)
-      await waitFor(() => expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin))
-      await waitFor(() => expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp'))
+      await waitFor(() => { expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin) })
+      await waitFor(() => { expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp') })
     })
   })
 
@@ -138,8 +138,8 @@ describe('TeamMembers', () => {
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
     await act(async () => {
       fireEvent.click(inviteButton)
-      await waitFor(() => expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member))
-      await waitFor(() => expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp'))
+      await waitFor(() => { expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member) })
+      await waitFor(() => { expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp') })
     })
   })
 

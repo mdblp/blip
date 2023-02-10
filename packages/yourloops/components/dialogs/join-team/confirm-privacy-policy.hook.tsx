@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 interface ConfirmPrivacyPolicyReturn {
   handleChangeChecked: (event: React.ChangeEvent<HTMLInputElement>) => void
   buttonAddTeamDisabled: boolean
