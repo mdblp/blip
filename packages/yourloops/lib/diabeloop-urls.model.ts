@@ -41,8 +41,8 @@ class DiabeloopExternalUrls {
   constructor() {
     this.dblDiabetes = 'https://www.dbl-diabetes.com'
     this.contactEmail = 'yourloops@diabeloop.com'
-    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
     this.rootPathName = `${config.ASSETS_URL}`
+    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
     this.support = 'https://www.diabeloop.com'
   }
 

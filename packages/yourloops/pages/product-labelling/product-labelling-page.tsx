@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,17 +27,31 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import parse from 'html-react-parser'
+import { getCurrentLang } from '../../lib/language'
 import i18n from 'i18next'
 import rawHtmlEN from './raw-html/EN'
-import { getCurrentLang } from '../../lib/language'
 import rawHtmlFR from './raw-html/FR'
+import rawHtmlES from './raw-html/ES'
+import rawHtmlDE from './raw-html/DE'
+import rawHtmlNL from './raw-html/NL'
+import rawHtmlIT from './raw-html/IT'
 import Box from '@mui/material/Box'
+import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 
 const ProductLabellingPage: FunctionComponent = () => {
   const getHtml = (): string => {
     switch (getCurrentLang()) {
-      case 'fr':
+      case LanguageCodes.De:
+        return rawHtmlDE
+      case LanguageCodes.Es:
+        return rawHtmlES
+      case LanguageCodes.Fr:
         return rawHtmlFR
+      case LanguageCodes.Nl:
+        return rawHtmlNL
+      case LanguageCodes.It:
+        return rawHtmlIT
+      case LanguageCodes.En:
       default:
         return rawHtmlEN
     }

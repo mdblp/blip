@@ -1,6 +1,6 @@
 {
   "name": "sundial",
-  "version": "3.2.0-beta",
+  "version": "3.0.4-beta",
   "description": "Tidepool's datetime wrapper",
   "keywords": [
     "datetime",
