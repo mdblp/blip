@@ -59,7 +59,7 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
     <React.Fragment>
       <Box textAlign="center">
         <DialogTitle>
-          <strong id="team-add-dialog-title" data-testId='team-add-dialog-title'>
+          <strong id="team-add-dialog-title" data-testId="team-add-dialog-title">
             {teamName
               ? t('modal-add-medical-specific-team', { careteam: teamName })
               : t('modal-add-medical-team')
@@ -69,7 +69,7 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
 
         <DialogContent>
           <Box display="flex" flexDirection="column" alignItems="center">
-            <DialogContentText data-testId='label-dialog'>
+            <DialogContentText data-testId="label-dialog">
               {teamName
                 ? (t('modal-add-medical-team-code'))
                 : (t('modal-add-medical-team-code-no-invite'))
@@ -107,5 +107,5 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
             {t('button-add-team')}
               </Button>
               </DialogActions>
-              </React.Fragment> )
+              </React.Fragment>)
 }

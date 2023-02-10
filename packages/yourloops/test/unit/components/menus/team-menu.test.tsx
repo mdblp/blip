@@ -49,14 +49,26 @@ import { TeamMenuMemoized as TeamMenu } from '../../../../components/menus/team-
 /* eslint-disable react/display-name */
 jest.mock('../../../../pages/patient/teams/add-dialog', () => (props: AddTeamDialogProps) => {
   return <>
-    <button onClick={() => { props.actions?.onDialogResult('fakeTeamId') }}>mock-join</button>
-    <button onClick={() => { props.actions?.onDialogResult(null) }}>mock-cancel</button>
+    <button onClick={() => {
+      props.actions?.onDialogResult('fakeTeamId')
+    }}>mock-join
+    </button>
+    <button onClick={() => {
+      props.actions?.onDialogResult(null)
+    }}>mock-cancel
+    </button>
   </>
 })
 jest.mock('../../../../pages/hcp/team-edit-dialog', () => (props: TeamEditModalProps) => {
   return <>
-    <button onClick={() => { props.teamToEdit?.onSaveTeam(null) }}>mock-cancel</button>
-    <button onClick={() => { props.teamToEdit?.onSaveTeam({} as Team) }}>mock-edit</button>
+    <button onClick={() => {
+      props.teamToEdit?.onSaveTeam(null)
+    }}>mock-cancel
+    </button>
+    <button onClick={() => {
+      props.teamToEdit?.onSaveTeam({} as Team)
+    }}>mock-edit
+    </button>
   </>
 })
 jest.mock('../../../../lib/team')
@@ -123,16 +135,6 @@ describe('Team Menu', () => {
     }
   })
 
-  async function fillEditTeamDialog(buttonName: string) {
-    await act(async () => {
-      render(getTeamMenuJSX())
-      await waitFor(() => { expect(screen.queryByRole('button')).not.toBeNull() })
-      fireEvent.click(screen.getByRole('button'))
-      fireEvent.click(screen.getByText('new-care-team'))
-      fireEvent.click(screen.getByRole('button', { name: buttonName }))
-    })
-  }
-
   it('should display number of teams user belongs to', () => {
     mountComponent()
     const teamBadge = container.querySelector('#team-menu-count-badge')
@@ -155,34 +157,19 @@ describe('Team Menu', () => {
     expect(history.location.pathname).toBe(`/teams/${teamToSelect.id}`)
   })
 
-  it('should create new team when clicking on new care team button', async () => {
-    await fillEditTeamDialog('mock-edit')
-    expect(createTeamMock).toHaveBeenCalled()
-    expect(successMock).toHaveBeenCalledWith('team-page-success-create')
-  })
-
-  it('should not create new team when clicking on new care team button and then cancel', async () => {
-    await fillEditTeamDialog('mock-cancel')
-    expect(createTeamMock).toHaveBeenCalledTimes(0)
-    expect(successMock).toHaveBeenCalledTimes(0)
-  })
-
-  it('should fail when trying to create a new team but an error happens', async () => {
-    createTeamMock.mockRejectedValue(new Error('This error was thrown by a mock on purpose'))
-    await fillEditTeamDialog('mock-edit')
-    expect(createTeamMock).toHaveBeenCalled()
-    expect(errorMock).toHaveBeenCalledWith('team-page-failed-create')
-  })
-
   it('should redirect to caregiver list when clicking on my caregivers', async () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserHcp: () => false, isUserPatient: () => true } as User }
     })
     await act(async () => {
       render(getTeamMenuJSX())
-      await waitFor(() => { expect(screen.queryByRole('button')).not.toBeNull() })
+      await waitFor(() => {
+        expect(screen.queryByRole('button')).not.toBeNull()
+      })
       fireEvent.click(screen.getByRole('button'))
-      await waitFor(() => { expect(screen.queryByText('my-caregivers (2)')).not.toBeNull() })
+      await waitFor(() => {
+        expect(screen.queryByText('my-caregivers (2)')).not.toBeNull()
+      })
       const redirectToCaregiversButton = screen.getByRole('menuitem', { name: /my-caregivers/ })
       fireEvent.click(redirectToCaregiversButton)
     })

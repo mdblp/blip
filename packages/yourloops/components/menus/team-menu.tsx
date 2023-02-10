@@ -165,9 +165,7 @@ function TeamMenu(): JSX.Element {
         role="button"
         alignItems="center"
         className={clickableMenu}
-        onClick={event => {
-          setAnchorEl(event.currentTarget)
-        }}
+        onClick={event => { setAnchorEl(event.currentTarget) }}
       >
         <Badge
           id="team-menu-count-badge"

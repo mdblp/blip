@@ -161,7 +161,11 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({
+  id,
+  type,
+  className
+}: { id: string, type: NotificationType, className: string }): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
       return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
@@ -285,7 +289,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
             teamName={notification.target.name} />
         }
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => { setDisplayMonitoringTerms(false) }}
+          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => {
+            setDisplayMonitoringTerms(false)
+          }}
                                    teamName={notification.target.name} />
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
