@@ -96,8 +96,7 @@ export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
         <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary">
           {t('modal-patient-add-team-info')}
         </DialogContentText>
-        <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary"
-                           data-testid={'team-add-dialog-confirm-team-infos'}>
+        <DialogContentText color="textPrimary" data-testid='team-add-dialog-team-infos'>
           <br />
           {team.name}
           <br />
@@ -116,8 +115,7 @@ export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
         </DialogContentText>
 
         <FormControl className={classes.formControl}>
-          <FormControlLabel control={<Checkbox checked={checked} onChange={handleChangeChecked} inputProps={{ 'aria-label': 'controlled' }} />}
-            id="team-add-dialog-confirm-team-privacy"
+          <FormControlLabel id="team-add-dialog-confirm-team-privacy-checkbox-policy" control={<Checkbox checked={checked} onChange={handleChangeChecked} inputProps={{ 'aria-label': 'controlled' }} />}
             data-testid="check-policy"
             label={t('modal-patient-share-team-privacy')}
             color="textPrimary" />

@@ -42,20 +42,23 @@ export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) =>
   return (
     <React.Fragment>
       <Dialog onClose={onClose} open>
-        {currentStep === 1 &&
-          <ConfirmCodeTeam
-            onCompleteStep={goToNextStep}
-            onClickCancel={onClose}
-            teamName={teamName}
-          />
-        }
-        {currentStep === 2 &&
-          <ConfirmPrivacyPolicy
-            onCompleteStep={async () => await onAccept(teamId)}
-            onClickCancel={onClose}
-            team={team}
-          />
-        }
+        <div id="team-add-dialog">
+          {currentStep === 1 &&
+            <ConfirmCodeTeam
+              onCompleteStep={goToNextStep}
+              onClickCancel={onClose}
+              teamName={teamName}
+            />
+
+          }
+          {currentStep === 2 &&
+            <ConfirmPrivacyPolicy
+              onCompleteStep={async () => await onAccept(teamId)}
+              onClickCancel={onClose}
+              team={team}
+            />
+          }
+        </div>
       </Dialog>
     </React.Fragment>
   )

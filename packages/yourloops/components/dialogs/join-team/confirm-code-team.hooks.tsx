@@ -65,19 +65,25 @@ const useConfirmCodeTeam = ({ onCompleteStep }: useConfirmCodeTeamProps): useCon
   }
 
   const handleClickJoinTeam = async (): Promise<void | string> => {
-    await teamHook
-      .getTeamFromCode(numericCode)
-      .then((team) => {
-        if (team === null) {
-          return alert.error(t('modal-patient-bad-code'))
-        } else {
-          onCompleteStep(team, team.id)
-        }
-      })
-      .catch((reason: unknown) => {
-        console.error(reason)
-        alert.error(t('modal-patient-add-team-failure'))
-      })
+    if (numericCode !== '') {
+      const team = teamHook.teams.find((team) => team.code === numericCode)
+      if (team) {
+        return alert.error(t('modal-patient-add-team-failure-exists'))
+      }
+      await teamHook
+        .getTeamFromCode(numericCode)
+        .then((team) => {
+          if (team === null) {
+            return alert.error(t('modal-patient-add-team-failure-exists'))
+          } else {
+            onCompleteStep(team, team.id)
+          }
+        })
+        .catch((reason: unknown) => {
+          console.error(reason)
+          alert.error(t('modal-patient-add-team-failure'))
+        })
+    }
   }
   return {
     handleChangeCode,

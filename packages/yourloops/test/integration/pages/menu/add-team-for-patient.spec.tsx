@@ -73,7 +73,7 @@ describe('Team menu for patient', () => {
     const addCareTeamButton = within(dialogPrivacy).getByRole('button', { name: 'Add Care team' })
     const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
     const textPrivatePolicy = within(dialogPrivacy).getByTestId('text-privacy-policy')
-    const detailsTeam = within(dialogPrivacy).getByTestId('team-add-dialog-confirm-team-infos')
+    const detailsTeam = within(dialogPrivacy).getByTestId('team-add-dialog-team-infos')
 
     expect(within(dialogPrivacy).getByText('You are about to share you data with')).toBeVisible()
     expect(detailsTeam).toHaveTextContent('fakeTeamFive6 rue des champs75000Paris263381988')
@@ -146,7 +146,7 @@ describe('Team menu for patient', () => {
     const cancelCareTeamButton = within(dialogPrivacy).getByRole('button', { name: 'Cancel' })
     const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
     const textPrivatePolicy = within(dialogPrivacy).getByTestId('text-privacy-policy')
-    const detailsTeam = within(dialogPrivacy).getByTestId('team-add-dialog-confirm-team-infos')
+    const detailsTeam = within(dialogPrivacy).getByTestId('team-add-dialog-team-infos')
 
     expect(within(dialogPrivacy).getByText('You are about to share you data with')).toBeVisible()
     expect(detailsTeam).toHaveTextContent('fakeTeamFive6 rue des champs75000Paris263381988')

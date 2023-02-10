@@ -67,7 +67,7 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
           </strong>
         </DialogTitle>
 
-        <DialogContent id="team-add-dialog-content">
+        <DialogContent>
           <Box display="flex" flexDirection="column" alignItems="center">
             <DialogContentText data-testId='label-dialog'>
               {teamName

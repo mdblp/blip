@@ -241,7 +241,6 @@
   "modal-patient-add-team-failure-exists": "You already share data with this team.",
   "modal-patient-add-team-info": "You are about to share you data with",
   "modal-patient-add-team-success": "Your care team has now access to your data.",
-  "modal-patient-bad-code": "Please check the code, is a bad code",
   "modal-patient-remove-caregiver-failure": "Impossible to remove caregiver. Please try again later.",
   "modal-patient-remove-caregiver-info-2": "They will no longer have access to your data.",
   "modal-patient-remove-caregiver-success": "Your caregiver has no longer access to your data.",
