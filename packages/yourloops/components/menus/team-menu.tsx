@@ -32,7 +32,7 @@ import { useHistory } from 'react-router-dom'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
-import { Theme, useTheme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Badge from '@mui/material/Badge'
@@ -44,13 +44,13 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { Team, useTeam } from '../../lib/team'
+import { type Team, useTeam } from '../../lib/team'
 import MenuLayout from '../../layout/menu-layout'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
-import { TeamEditModalContentProps } from '../../pages/hcp/types'
+import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
-import { ShareUser } from '../../lib/share/models/share-user.model'
+import { type ShareUser } from '../../lib/share/models/share-user.model'
 import { errorTextFromException } from '../../lib/utils'
 import DirectShareApi from '../../lib/share/direct-share.api'
 import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
@@ -165,7 +165,9 @@ function TeamMenu(): JSX.Element {
         role="button"
         alignItems="center"
         className={clickableMenu}
-        onClick={event => setAnchorEl(event.currentTarget)}
+        onClick={event => {
+          setAnchorEl(event.currentTarget)
+        }}
       >
         <Badge
           id="team-menu-count-badge"

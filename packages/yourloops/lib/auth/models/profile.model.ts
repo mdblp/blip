@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from './enums/hcp-profession.enum'
-import { Consent } from './consent.model'
-import { ProfilePatientFields } from './profile-patient-fields.model'
+import { type HcpProfession } from './enums/hcp-profession.enum'
+import { type Consent } from './consent.model'
+import { type ProfilePatientFields } from './profile-patient-fields.model'
 
 export interface Profile {
   email: string

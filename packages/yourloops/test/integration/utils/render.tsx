@@ -29,7 +29,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { AuthContextProvider } from '../../../lib/auth'
 import { MainLobby } from '../../../app/main-lobby'
 import { render } from '@testing-library/react'
-import React, { RefObject } from 'react'
+import React, { type RefObject } from 'react'
 
 const memoryRouterRef: { current: never } = React.createRef<never>()
 

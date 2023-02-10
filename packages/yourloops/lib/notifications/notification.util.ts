@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Notification } from './models/notification.model'
+import { type Notification } from './models/notification.model'
 import { NotificationType } from './models/enums/notification-type.enum'
 import { INotificationType } from './models/enums/i-notification-type.enum'
-import { INotification } from './models/i-notification.model'
+import { type INotification } from './models/i-notification.model'
 
 /**
  * Convert an API notification to our model

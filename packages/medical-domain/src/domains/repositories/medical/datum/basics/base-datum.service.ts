@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Source from '../../../../models/medical/datum/enums/source.enum'
-import MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
+import type Source from '../../../../models/medical/datum/enums/source.enum'
+import type MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 import BaseTimeService from './base-time.service'
-import BaseDatum from '../../../../models/medical/datum/basics/base-datum.model'
-import { DatumProcessor } from '../../../../models/medical/datum.model'
-import { DatumType } from '../../../../models/medical/datum/enums/datum-type.enum'
+import type BaseDatum from '../../../../models/medical/datum/basics/base-datum.model'
+import { type DatumProcessor } from '../../../../models/medical/datum.model'
+import { type DatumType } from '../../../../models/medical/datum/enums/datum-type.enum'
 
 /**
  * extracted from packages/tideline/js/tidelinedata.js

@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TeamMember } from './models/team-member.model'
-import { REGEX_TEAM_CODE, REGEX_TEAM_CODE_DISPLAY, Team, TEAM_CODE_LENGTH } from './models/team.model'
-import { TeamContext } from './models/team-context.model'
+import { type TeamMember } from './models/team-member.model'
+import { REGEX_TEAM_CODE, REGEX_TEAM_CODE_DISPLAY, type Team, TEAM_CODE_LENGTH } from './models/team.model'
+import { type TeamContext } from './models/team-context.model'
 
 import { TeamContextProvider, useTeam } from './team.hook'
 
 import { getDisplayTeamCode } from './team.util'
 
 export {
-  Team,
-  TeamMember,
-  TeamContext,
+  type Team,
+  type TeamMember,
+  type TeamContext,
   TeamContextProvider,
   useTeam,
   getDisplayTeamCode,

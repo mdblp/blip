@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,8 +26,8 @@
  */
 
 import { isNumber } from 'lodash'
-import { BgBounds, BgClass, ClassificationType } from '../../models/blood-glucose.model'
-import { BgClasses } from 'medical-domain'
+import { type BgBounds, BgClass, ClassificationType } from '../../models/blood-glucose.model'
+import { type BgClasses } from 'medical-domain'
 
 export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
   return {

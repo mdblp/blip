@@ -28,8 +28,10 @@
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
+  checkDaysSelection,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
+  checkTrendsLayout,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
@@ -43,6 +45,8 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
+import userEvent from '@testing-library/user-event'
+import { act, screen } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -58,11 +62,19 @@ describe('Trends view for anyone', () => {
       await checkTrendsTidelineContainerTooltips()
       await checkTrendsStatsWidgetsTooltips()
 
-      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL179')
+      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
 
-      checkStandardDeviationStatWidget('Standard Deviation (167-191)mg/dL12')
+      checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
 
-      checkRangeSelection()
+      await checkRangeSelection()
+      await checkDaysSelection()
+
+      checkTrendsLayout()
+
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('button-nav-back'))
+      })
+      expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
   })
 
@@ -73,8 +85,6 @@ describe('Trends view for anyone', () => {
 
       await checkTrendsTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
-
-      checkRangeSelection()
     })
   })
 
@@ -91,8 +101,6 @@ describe('Trends view for anyone', () => {
       checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
 
       checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-
-      checkRangeSelection()
     })
   })
 })

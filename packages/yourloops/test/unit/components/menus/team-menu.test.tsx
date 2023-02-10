@@ -31,32 +31,32 @@ import { act } from 'react-dom/test-utils'
 import { Router } from 'react-router-dom'
 
 import * as teamHookMock from '../../../../lib/team'
-import { Team } from '../../../../lib/team'
+import { type Team } from '../../../../lib/team'
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
-import { User } from '../../../../lib/auth'
+import { type User } from '../../../../lib/auth'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as alertHookMock from '../../../../components/utils/snackbar'
-import { ShareUser } from '../../../../lib/share/models/share-user.model'
-import { AddTeamDialogProps } from '../../../../pages/patient/teams/add-dialog'
-import { TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
+import { type ShareUser } from '../../../../lib/share/models/share-user.model'
+import { type AddTeamDialogProps } from '../../../../pages/patient/teams/add-dialog'
+import { type TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { IUser } from '../../../../lib/data/models/i-user.model'
+import { type IUser } from '../../../../lib/data/models/i-user.model'
 import { TeamMenuMemoized as TeamMenu } from '../../../../components/menus/team-menu'
 
 /* eslint-disable react/display-name */
 jest.mock('../../../../pages/patient/teams/add-dialog', () => (props: AddTeamDialogProps) => {
   return <>
-    <button onClick={() => props.actions?.onDialogResult('fakeTeamId')}>mock-join</button>
-    <button onClick={() => props.actions?.onDialogResult(null)}>mock-cancel</button>
+    <button onClick={() => { props.actions?.onDialogResult('fakeTeamId') }}>mock-join</button>
+    <button onClick={() => { props.actions?.onDialogResult(null) }}>mock-cancel</button>
   </>
 })
 jest.mock('../../../../pages/hcp/team-edit-dialog', () => (props: TeamEditModalProps) => {
   return <>
-    <button onClick={() => props.teamToEdit?.onSaveTeam(null)}>mock-cancel</button>
-    <button onClick={() => props.teamToEdit?.onSaveTeam({} as Team)}>mock-edit</button>
+    <button onClick={() => { props.teamToEdit?.onSaveTeam(null) }}>mock-cancel</button>
+    <button onClick={() => { props.teamToEdit?.onSaveTeam({} as Team) }}>mock-edit</button>
   </>
 })
 jest.mock('../../../../lib/team')
@@ -126,7 +126,7 @@ describe('Team Menu', () => {
   async function fillEditTeamDialog(buttonName: string) {
     await act(async () => {
       render(getTeamMenuJSX())
-      await waitFor(() => expect(screen.queryByRole('button')).not.toBeNull())
+      await waitFor(() => { expect(screen.queryByRole('button')).not.toBeNull() })
       fireEvent.click(screen.getByRole('button'))
       fireEvent.click(screen.getByText('new-care-team'))
       fireEvent.click(screen.getByRole('button', { name: buttonName }))
@@ -180,9 +180,9 @@ describe('Team Menu', () => {
     })
     await act(async () => {
       render(getTeamMenuJSX())
-      await waitFor(() => expect(screen.queryByRole('button')).not.toBeNull())
+      await waitFor(() => { expect(screen.queryByRole('button')).not.toBeNull() })
       fireEvent.click(screen.getByRole('button'))
-      await waitFor(() => expect(screen.queryByText('my-caregivers (2)')).not.toBeNull())
+      await waitFor(() => { expect(screen.queryByText('my-caregivers (2)')).not.toBeNull() })
       const redirectToCaregiversButton = screen.getByRole('menuitem', { name: /my-caregivers/ })
       fireEvent.click(redirectToCaregiversButton)
     })

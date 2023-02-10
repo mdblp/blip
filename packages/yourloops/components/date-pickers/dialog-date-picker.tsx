@@ -26,10 +26,10 @@
  */
 
 import React from 'react'
-import dayjs, { Dayjs, isDayjs } from 'dayjs'
+import dayjs, { type Dayjs, isDayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
-import { useTheme, Theme } from '@mui/material/styles'
+import { useTheme, type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
@@ -37,7 +37,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 
-import { CalendarOrientation, CalendarSelectionSingle, MIN_YEAR, MAX_YEAR } from './models'
+import { type CalendarOrientation, type CalendarSelectionSingle, MIN_YEAR, MAX_YEAR } from './models'
 import DatePicker from './date-picker'
 
 interface CalendarStylesProps {

@@ -33,9 +33,9 @@ import FormControl from '@mui/material/FormControl'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { makeStyles } from 'tss-react/mui'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { Trans, useTranslation } from 'react-i18next'
-import { Team } from '../../../lib/team'
+import { type Team } from '../../../lib/team'
 import useConfirmPrivacyPolicy from './confirm-privacy-policy.hook'
 import { Link } from '@mui/material'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
@@ -80,7 +80,7 @@ export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
       href={diabeloopExternalUrls.privacyPolicy}
       target="_blank"
       rel="noreferrer"
-      onClick={() => metrics.send('pdf_document', 'view_document', 'privacy_policy')}
+      onClick={() => { metrics.send('pdf_document', 'view_document', 'privacy_policy') }}
     >
       {privacyPolicy}
     </Link>

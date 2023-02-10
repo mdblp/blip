@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
-import * as React from 'react'
+import { type UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import type * as React from 'react'
 
 export interface ConsentFormProps {
   userRole: UserRoles

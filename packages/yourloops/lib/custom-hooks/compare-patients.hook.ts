@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Patient } from '../patient/models/patient.model'
+import { type Patient } from '../patient/models/patient.model'
 import { PatientTableSortFields } from '../../components/patient/models/enums/patient-table-sort-fields.enum'
 import { compareValues, getMedicalValues } from '../../components/patient/utils'
 import { useUserName } from './user-name.hook'

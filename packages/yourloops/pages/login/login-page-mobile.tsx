@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import loginPageBackground from 'images/login-page-background-mobile.png'
 import config from '../../lib/config/config'
@@ -78,7 +78,7 @@ const LoginPageMobile: FunctionComponent = () => {
   const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
 
-  const redirectToSignup = async (): Promise<void> => await loginWithRedirect({ screen_hint: 'signup' })
+  const redirectToSignup = async (): Promise<void> => { await loginWithRedirect({ screen_hint: 'signup' }) }
 
   return (
     <React.Fragment>

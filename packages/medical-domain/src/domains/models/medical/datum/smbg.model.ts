@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Bg } from './cbg.model'
-import { DatumType } from './enums/datum-type.enum'
+import { type Bg } from './cbg.model'
+import { type DatumType } from './enums/datum-type.enum'
 
 type Smbg = Bg & {
   type: DatumType

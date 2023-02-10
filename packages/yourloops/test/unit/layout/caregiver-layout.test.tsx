@@ -28,7 +28,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import * as authHookMock from '../../../lib/auth'
-import { User } from '../../../lib/auth'
+import { type User } from '../../../lib/auth'
 import * as patientHookMock from '../../../lib/patient/patient.provider'
 import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
 import { MemoryRouter } from 'react-router-dom'

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from '../../data/models/medical-data.model'
+import { type MedicalData } from '../../data/models/medical-data.model'
 
 interface PatientMetadata {
   flagged?: boolean
@@ -34,4 +34,4 @@ interface PatientMetadata {
   hasSentUnreadMessages: boolean
 }
 
-export { PatientMetadata }
+export type { PatientMetadata }

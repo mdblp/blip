@@ -31,15 +31,17 @@ import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 
 import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
-import Background from './Background'
-import CBGDateTracesAnimationContainer from '../cbg/CBGDateTracesAnimationContainer'
-import CBGSlicesContainer from '../cbg/CBGSlicesContainer'
-import FocusedCBGSliceSegment from '../cbg/FocusedCBGSliceSegment'
-import NoData from './NoData'
-import TargetRangeLines from './TargetRangeLines'
-import XAxisLabels from './XAxisLabels'
-import XAxisTicks from './XAxisTicks'
-import YAxisLabelsAndTicks from './YAxisLabelsAndTicks'
+import {
+  Background,
+  CbgDateTracesAnimationContainer,
+  CbgSlicesContainer,
+  FocusedCbgSliceSegment,
+  NoDataLabel,
+  TargetRangeLines,
+  XAxisLabels,
+  XAxisTicks,
+  YAxisLabelsAndTicks
+} from 'dumb'
 
 const BUMPERS = {
   top: 50,
@@ -122,7 +124,7 @@ export class TrendsSVGContainer extends React.Component {
     this.setState({ xScale, yScale })
   }
 
-  renderNoDataMessage(dataType) {
+  renderNoDataMessage() {
     if (_.isEmpty(this.props.cbgData)) {
       const { activeDays, margins } = this.props
       const { width, height } = this.props.size
@@ -132,10 +134,9 @@ export class TrendsSVGContainer extends React.Component {
       const messagePosition = { x: xPos, y: yPos }
       const unselectedAll = _.every(activeDays, (flag) => (!flag))
       return (
-        <NoData
-          dataType={dataType}
+        <NoDataLabel
           position={messagePosition}
-          unselectedAllData={unselectedAll}
+          isNoDataSelected={unselectedAll}
         />
       )
     }
@@ -152,7 +153,7 @@ export class TrendsSVGContainer extends React.Component {
     if (focusedSlice) {
       const { focusedSegmentDataGroupedByDate } = this.state
       dateTraces = focusedSegmentDataGroupedByDate === null ? null : (
-        <CBGDateTracesAnimationContainer
+        <CbgDateTracesAnimationContainer
           bgBounds={this.props.bgPrefs.bgBounds}
           data={focusedSegmentDataGroupedByDate}
           onSelectDate={this.props.onSelectDate}
@@ -162,9 +163,11 @@ export class TrendsSVGContainer extends React.Component {
         />
       )
       focused = (
-        <FocusedCBGSliceSegment
-          focusedSlice={focusedSlice}
-          focusedSliceKeys={focusedSliceKeys}
+        <FocusedCbgSliceSegment
+          leftPosition={focusedSlice.position.left}
+          segmentSliceBottom={focusedSliceKeys[0]}
+          segmentSliceTop={focusedSliceKeys[1]}
+          segmentsPosition={focusedSlice.position.yPositions}
           sliceWidth={sliceWidth}
         />
       )
@@ -172,11 +175,10 @@ export class TrendsSVGContainer extends React.Component {
 
     return (
       <g id="cbgTrends">
-        <CBGSlicesContainer
+        <CbgSlicesContainer
           bgBounds={this.props.bgPrefs.bgBounds}
           sliceWidth={sliceWidth}
           data={this.props.cbgData}
-          displayFlags={this.props.displayFlags}
           showingCbgDateTraces={this.props.showingCbgDateTraces}
           tooltipLeftThreshold={this.props.tooltipLeftThreshold}
           topMargin={margins.top}
@@ -201,32 +203,32 @@ export class TrendsSVGContainer extends React.Component {
       <div id="trends-svg-container">
         <svg id="trends-svg" height={height} width="100%">
           <Background
-            linesAtThreeHrs
             margins={this.props.margins}
             svgDimensions={{ height, width }}
             xScale={xScale}
           />
           <XAxisLabels
-            margins={this.props.margins}
+            topMargin={this.props.margins.top}
             xScale={xScale}
           />
           <XAxisTicks
-            margins={this.props.margins}
+            topMargin={this.props.margins.top}
             xScale={xScale}
           />
           <YAxisLabelsAndTicks
             bgPrefs={this.props.bgPrefs}
-            margins={this.props.margins}
+            leftMargin={this.props.margins.left}
             yScale={yScale}
           />
           {this.renderCbg()}
           <TargetRangeLines
-            bgBounds={this.props.bgPrefs.bgBounds}
-            smbgOpts={this.props.smbgOpts}
+            upperBound={this.props.bgPrefs.bgBounds.targetUpperBound}
+            lowerBound={this.props.bgPrefs.bgBounds.targetLowerBound}
+            horizontalOffset={this.props.smbgOpts.maxR}
             xScale={xScale}
             yScale={yScale}
           />
-          {this.renderNoDataMessage('cbg')}
+          {this.renderNoDataMessage()}
         </svg>
       </div>
     )
@@ -275,12 +277,6 @@ TrendsSVGContainer.propTypes = {
     value: PropTypes.number.isRequired
   })).isRequired,
   dates: PropTypes.arrayOf(PropTypes.string).isRequired,
-  displayFlags: PropTypes.shape({
-    cbg100Enabled: PropTypes.bool.isRequired,
-    cbg80Enabled: PropTypes.bool.isRequired,
-    cbg50Enabled: PropTypes.bool.isRequired,
-    cbgMedianEnabled: PropTypes.bool.isRequired
-  }).isRequired,
   focusedSlice: PropTypes.shape({
     data: PropTypes.shape({
       firstQuartile: PropTypes.number.isRequired,

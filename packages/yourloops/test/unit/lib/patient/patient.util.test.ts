@@ -27,8 +27,8 @@
 
 import { createPatient, createPatientTeam } from '../../common/utils'
 import PatientUtils from '../../../../lib/patient/patient.util'
-import { Monitoring } from '../../../../lib/team/models/monitoring.model'
-import { Patient } from '../../../../lib/patient/models/patient.model'
+import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'

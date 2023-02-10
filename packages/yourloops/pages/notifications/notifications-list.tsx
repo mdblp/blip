@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, PropsWithChildren, useEffect, useState } from 'react'
+import React, { type FunctionComponent, type PropsWithChildren, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
@@ -42,7 +42,7 @@ import { useAuth } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import SwitchRoleDialogs from '../../components/switch-role'
 
-import { Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
+import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { Notification } from './notification'
 
 const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Theme) => ({

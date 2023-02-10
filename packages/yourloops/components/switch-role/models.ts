@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
+import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 
 interface SwitchRoleDialogProps {
   open: boolean

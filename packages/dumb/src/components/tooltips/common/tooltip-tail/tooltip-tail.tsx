@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, RefObject } from 'react'
+import React, { type FunctionComponent, type RefObject } from 'react'
 import _ from 'lodash'
 import styles from '../tooltip/tooltip.css'
 

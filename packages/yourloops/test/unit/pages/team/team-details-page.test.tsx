@@ -36,7 +36,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
-import { User } from '../../../../lib/auth'
+import { type User } from '../../../../lib/auth'
 
 const teamId1 = 'teamId1'
 

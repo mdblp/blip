@@ -26,10 +26,10 @@
  */
 
 import React from 'react'
-import { Team, TeamMember } from '../../../../lib/team'
-import TeamEditDialog, { TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
+import { type Team, type TeamMember } from '../../../../lib/team'
+import TeamEditDialog, { type TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
 import { render, unmountComponentAtNode } from 'react-dom'
-import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
+import { act, Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'
 
 describe('TeamEditDialog', () => {

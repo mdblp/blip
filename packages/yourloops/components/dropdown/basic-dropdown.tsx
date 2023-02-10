@@ -29,9 +29,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import MenuItem from '@mui/material/MenuItem'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import { makeStyles } from 'tss-react/mui'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import OutlinedInput from '@mui/material/OutlinedInput'
 
 export interface BasicDropdownProps {

@@ -26,11 +26,11 @@
  */
 
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
-import { AxiosResponse } from 'axios'
-import { INotification } from '../../../../lib/notifications/models/i-notification.model'
+import { type AxiosResponse } from 'axios'
+import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { getCurrentLang } from '../../../../lib/language'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { ITeamMember } from '../../../../lib/team/models/i-team-member.model'
+import { type ITeamMember } from '../../../../lib/team/models/i-team-member.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 

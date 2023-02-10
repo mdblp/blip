@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 
-import { Team, useTeam } from '../../lib/team'
+import { type Team, useTeam } from '../../lib/team'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useHistory } from 'react-router-dom'

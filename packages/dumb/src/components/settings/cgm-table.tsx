@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from './diabeloop.css'
 import { formatLocalizedFromUTC } from '../../utils/datetime/datetime.util'
 import { useTranslation } from 'react-i18next'
-import { CgmConfig, TimePrefs } from 'medical-domain'
+import { type CgmConfig, type TimePrefs } from 'medical-domain'
 
 const DEFAULT_VALUE = '-'
 
@@ -55,7 +55,8 @@ export const CgmTable: FunctionComponent<CgmTableProps> = (
   const { t } = useTranslation('main')
 
   const formatDate = (value: string): string => {
-    return value === '' ? DEFAULT_VALUE : formatLocalizedFromUTC(value, timePrefs, t('MMM D, YYYY'))
+    const dateFormat = t('MMM D, YYYY')
+    return value === '' ? DEFAULT_VALUE : formatLocalizedFromUTC(value, timePrefs, dateFormat)
   }
 
   const cgmEndOfLife = formatDate(cgm.endOfLifeTransmitterDate)

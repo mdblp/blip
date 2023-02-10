@@ -26,7 +26,7 @@
  */
 
 import appConfig from '../config/config'
-import { AxiosResponse } from 'axios'
+import { type AxiosResponse } from 'axios'
 import HttpService from '../http/http.service'
 
 const AUTH0_CONNECTION_TYPE = 'Username-Password-Authentication'

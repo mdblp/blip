@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ComputedTIR } from './computed-tir.model'
-import { PatientData } from './patient-datum.model'
+import { type ComputedTIR } from './computed-tir.model'
+import { type PatientData } from './patient-datum.model'
 
 export interface MedicalData {
   data?: PatientData

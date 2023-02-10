@@ -130,7 +130,7 @@ describe('AlarmsContentConfiguration hook', () => {
     const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
     it('should return an error message if patient is not created', () => {
       const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: getDefaultMonitoring() }))
-      expect(() => result.current.resetToTeamDefaultValues()).toThrowError('This action cannot be done if the patient is undefined')
+      expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError('This action cannot be done if the patient is undefined')
     })
 
     it('should return a error message if patient team is not found', () => {
@@ -142,7 +142,7 @@ describe('AlarmsContentConfiguration hook', () => {
         monitoring: getDefaultMonitoring(),
         patient
       }))
-      expect(() => result.current.resetToTeamDefaultValues()).toThrowError(`Cannot find team with id ${teamId}`)
+      expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError(`Cannot find team with id ${teamId}`)
     })
 
     it('should return an error message if the team has no monitoring parameters', () => {
@@ -160,7 +160,7 @@ describe('AlarmsContentConfiguration hook', () => {
         patient,
         monitoring: getDefaultMonitoring()
       }))
-      expect(() => result.current.resetToTeamDefaultValues()).toThrowError('The given team has no monitoring values')
+      expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError('The given team has no monitoring values')
     })
 
     it('should set default values if there is no error', () => {

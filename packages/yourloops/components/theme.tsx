@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createTheme, Theme } from '@mui/material/styles'
+import { createTheme, type Theme } from '@mui/material/styles'
 import config from '../lib/config/config'
 import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
 import MuseoSlabBold from 'Museo_Slab/Museo_Slab_Bold.otf'

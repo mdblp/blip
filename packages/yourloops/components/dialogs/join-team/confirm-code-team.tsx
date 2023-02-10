@@ -27,7 +27,7 @@
 
 import { useTranslation } from 'react-i18next'
 import React, { createRef, useEffect } from 'react'
-import { Team } from '../../../lib/team'
+import { type Team } from '../../../lib/team'
 import Box from '@mui/material/Box'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -64,8 +64,8 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
               ? t('modal-add-medical-specific-team', { careteam: teamName })
               : t('modal-add-medical-team')
             }
-          </strong>
-        </DialogTitle>
+              </strong>
+              </DialogTitle>
 
         <DialogContent>
           <Box display="flex" flexDirection="column" alignItems="center">
@@ -77,36 +77,35 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
             </DialogContentText>
             <div id="team-add-dialog-field-code-parent" style={{ width: '42%' }}>
               <TextField
-                id="team-add-dialog-field-code"
-                variant="standard"
-                value={idCode}
-                onChange={handleChangeCode}
-                fullWidth
-                inputRef={inputRef}
+              id="team-add-dialog-field-code"
+              variant="standard"
+              value={idCode}
+              onChange={handleChangeCode}
+              fullWidth
+              inputRef={inputRef}
               />
-            </div>
-          </Box>
-        </DialogContent>
-      </Box>
+              </div>
+              </Box>
+              </DialogContent>
+              </Box>
 
-      <DialogActions>
-        <Button
-          id="team-add-dialog-button-cancel"
-          onClick={onClickCancel}
-        >
-          {t('button-cancel')}
-        </Button>
-        <Button
-          id="team-add-dialog-button-add-team"
-          disabled={joinButtonDisabled}
-          variant="contained"
-          color="primary"
-          disableElevation
-          onClick={handleClickJoinTeam}
-        >
-          {t('button-add-team')}
-        </Button>
-      </DialogActions>
-    </React.Fragment>
-  )
+              <DialogActions>
+              <Button
+              id="team-add-dialog-button-cancel"
+              onClick={onClickCancel}
+              >
+            {t('button-cancel')}
+              </Button>
+              <Button
+              id="team-add-dialog-button-add-team"
+              disabled={joinButtonDisabled}
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={handleClickJoinTeam}
+              >
+            {t('button-add-team')}
+              </Button>
+              </DialogActions>
+              </React.Fragment> )
 }

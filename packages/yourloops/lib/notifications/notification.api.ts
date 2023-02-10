@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,10 @@
 import bows from 'bows'
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { notificationConversion } from './notification.util'
-import { Notification } from './models/notification.model'
+import { type Notification } from './models/notification.model'
 import { NotificationType } from './models/enums/notification-type.enum'
-import { CancelInvitationPayload } from './models/cancel-invitation-payload.model'
-import { INotification } from './models/i-notification.model'
+import { type CancelInvitationPayload } from './models/cancel-invitation-payload.model'
+import { type INotification } from './models/i-notification.model'
 
 const log = bows('Notification API')
 
@@ -52,7 +52,7 @@ export default class NotificationApi {
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
     }
-    return await NotificationApi.updateInvitation(url, notification.id)
+    await NotificationApi.updateInvitation(url, notification.id)
   }
 
   static async cancelInvitation(notificationId: string, teamId?: string, inviteeEmail?: string): Promise<void> {
@@ -86,12 +86,13 @@ export default class NotificationApi {
         if (!notification.target) {
           throw Error('Cannot decline notification as team id is not specified')
         }
-        return await NotificationApi.cancelRemoteMonitoringInvite(notification.target?.id, userId)
+        await NotificationApi.cancelRemoteMonitoringInvite(notification.target?.id, userId)
+        return
       default:
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
     }
-    return await NotificationApi.updateInvitation(url, notification.id)
+    await NotificationApi.updateInvitation(url, notification.id)
   }
 
   static async cancelRemoteMonitoringInvite(teamId: string, userId: string): Promise<void> {

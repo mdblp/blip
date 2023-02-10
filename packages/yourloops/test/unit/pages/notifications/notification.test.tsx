@@ -30,10 +30,10 @@ import moment from 'moment-timezone'
 import _ from 'lodash'
 import { getByText, render, screen } from '@testing-library/react'
 import { Notification } from '../../../../pages/notifications/notification'
-import { Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
+import { type Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
-import { Profile } from '../../../../lib/auth/models/profile.model'
+import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')

@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -40,9 +40,9 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined'
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import EditIcon from '@mui/icons-material/Edit'
 
-import { Team, useTeam } from '../../lib/team'
+import { type Team, useTeam } from '../../lib/team'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
-import { TeamEditModalContentProps } from '../../pages/hcp/types'
+import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'

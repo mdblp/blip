@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from 'tss-react/mui'
@@ -35,7 +35,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import Typography from '@mui/material/Typography'
 
-import { CalendarOrientation, CalendarPosition, CalendarChangeMonth, animationStyle } from './models'
+import { type CalendarOrientation, type CalendarPosition, type CalendarChangeMonth, animationStyle } from './models'
 
 interface CalendarHeaderProps {
   /** For range calendar to distinguish  */

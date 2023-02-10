@@ -35,7 +35,7 @@ import { TssCacheProvider, GlobalStyles } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
 
-import { useAuth, User } from '../lib/auth'
+import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import Footer from '../components/footer/footer'

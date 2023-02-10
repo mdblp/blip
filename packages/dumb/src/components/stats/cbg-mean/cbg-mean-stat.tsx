@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from '../common/cbg-common.css'
 import stylesCbgMeanStat from './cbg-mean-stat.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
-import { BgClasses } from '../../../models/stats.model'
+import { type BgClasses } from '../../../models/stats.model'
 
 export interface CBGMeanStatProps {
   bgClasses: BgClasses
@@ -57,7 +57,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         <div>
           {title}
           {!hideTooltip &&
-            <StatTooltip annotations={[tooltipValue]}/>
+            <StatTooltip annotations={[tooltipValue]} />
           }
         </div>
         <Box fontSize="12px">
@@ -65,15 +65,14 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         </Box>
       </Box>
       <Box display="flex" marginLeft="6px" marginTop="4px">
-        {Number.isNaN(value) ? (
-          <>
+        {Number.isNaN(value)
+          ? <>
             <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
               --
             </Box>
           </>
-        ) : (
-          <>
+          : <>
             <div className={styles.lines}>
               <div
                 className={`${styles.line} ${styles['line-low']}`}
@@ -95,7 +94,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
               {value}
             </Box>
           </>
-        )}
+        }
       </Box>
     </Box>
   )

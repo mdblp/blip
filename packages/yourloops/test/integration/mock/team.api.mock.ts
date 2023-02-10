@@ -33,10 +33,10 @@ import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enu
 import { UnitsType } from '../../../lib/units/models/enums/units-type.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
-import { Team } from '../../../lib/team'
-import { Profile } from '../../../lib/auth/models/profile.model'
+import { type Team } from '../../../lib/team'
+import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms.default'
-import { ITeam } from '../../../lib/team/models/i-team.model'
+import { type ITeam } from '../../../lib/team/models/i-team.model'
 
 const {
   minVeryLowBg,

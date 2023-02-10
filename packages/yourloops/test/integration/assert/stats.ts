@@ -26,7 +26,7 @@
  */
 
 import userEvent from '@testing-library/user-event'
-import { BoundFunctions, queries, screen, waitFor, within } from '@testing-library/react'
+import { type BoundFunctions, type queries, screen, waitFor, within } from '@testing-library/react'
 
 export const checkStatTooltip = async (statsWidgets: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
   const element = statsWidgets.getByText(infoIconLabel)
@@ -35,7 +35,7 @@ export const checkStatTooltip = async (statsWidgets: BoundFunctions<typeof queri
   const tooltip = await screen.findByTestId('stat-tooltip-content')
   expect(tooltip).toHaveTextContent(expectedTextContent)
   await userEvent.unhover(infoIcon)
-  await waitFor(() => expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument(), { timeout: 3000 })
+  await waitFor(() => { expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument() }, { timeout: 3000 })
 }
 
 const hoverOnCBGPercentageStat = async (statsWidgets: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {

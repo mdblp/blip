@@ -27,7 +27,7 @@
 
 import React from 'react'
 
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
+import SvgIcon, { type SvgIconProps } from '@mui/material/SvgIcon'
 
 function VerifiedIcon(props: SvgIconProps): JSX.Element {
   // For some reason this icon is not available with material-ui

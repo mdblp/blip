@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, FunctionComponent, PropsWithChildren, useContext } from 'react'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
 import useProfilePageContextHook from './profil-page-context.hook'
-import { ProfileErrors, ProfileForm } from './models/profile-form.model'
-import { ProfileFormKey } from './models/enums/profile-form-key.enum'
-import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
-import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
-import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
+import { type ProfileErrors, type ProfileForm } from './models/profile-form.model'
+import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { type UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 
 interface ProfilePageContext {
   canSave: boolean

@@ -26,16 +26,16 @@
  */
 
 import TeamApi from '../../../../lib/team/team.api'
-import { Monitoring } from '../../../../lib/team/models/monitoring.model'
+import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
-import { AxiosResponse } from 'axios'
-import { INotification } from '../../../../lib/notifications/models/i-notification.model'
+import { type AxiosResponse } from 'axios'
+import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { getCurrentLang } from '../../../../lib/language'
-import { User } from '../../../../lib/auth'
+import { type User } from '../../../../lib/auth'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
-import { ITeam } from '../../../../lib/team/models/i-team.model'
+import { type ITeam } from '../../../../lib/team/models/i-team.model'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
-import { PostalAddress } from '../../../../lib/team/models/postal-address.model'
+import { type PostalAddress } from '../../../../lib/team/models/postal-address.model'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 describe('TeamApi', () => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,13 +26,13 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { Team, useTeam } from '../../lib/team'
+import { type Team, useTeam } from '../../lib/team'
 import TeamUtils from '../../lib/team/team.util'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
-import { Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void
@@ -44,7 +44,7 @@ interface RemovePatientDialogHookReturn {
   patientName: string
   processing: boolean
   selectedTeamId: string
-  setSelectedTeamId: Function
+  setSelectedTeamId: Dispatch<SetStateAction<string>>
   sortedTeams: Team[]
 }
 

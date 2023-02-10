@@ -26,7 +26,7 @@
  */
 
 import HttpService from '../../../../lib/http/http.service'
-import ErrorApi, { ErrorPayload } from '../../../../lib/error/error.api'
+import ErrorApi, { type ErrorPayload } from '../../../../lib/error/error.api'
 
 describe('ErrorApi', () => {
   describe('sendError', () => {

@@ -26,12 +26,12 @@
  */
 
 import React from 'react'
-import { Dayjs } from 'dayjs'
+import { type Dayjs } from 'dayjs'
 
 import {
-  ChangeMonthDirection,
-  CalendarChangeMonth,
-  CalendarMode,
+  type ChangeMonthDirection,
+  type CalendarChangeMonth,
+  type CalendarMode,
   TRANSITION_DURATION
 } from './models'
 

@@ -29,18 +29,18 @@ import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as authHookMock from '../../../../../lib/auth'
-import User from '../../../../../lib/auth/models/user.model'
-import { Alarms } from '../../../../../lib/patient/models/alarms.model'
+import type User from '../../../../../lib/auth/models/user.model'
+import { type Alarms } from '../../../../../lib/patient/models/alarms.model'
 import WeeklyReportList from '../../../../../components/dashboard-widgets/medical-files/weekly-report-list'
-import { WeeklyReportDialogProps } from '../../../../../components/dialogs/weekly-report-dialog'
-import { WeeklyReport } from '../../../../../lib/medical-files/models/weekly-report.model'
+import { type WeeklyReportDialogProps } from '../../../../../components/dialogs/weekly-report-dialog'
+import { type WeeklyReport } from '../../../../../lib/medical-files/models/weekly-report.model'
 
 jest.mock('../../../../../lib/auth')
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../../components/dialogs/weekly-report-dialog', () => (props: WeeklyReportDialogProps) => {
   return (
     <div aria-label="mock-dialog">
-      <button onClick={() => props.onClose()}>mock-close-button</button>
+      <button onClick={() => { props.onClose() }}>mock-close-button</button>
     </div>
   )
 })
@@ -60,7 +60,7 @@ describe('Weekly report list', () => {
 
   async function renderComponent() {
     render(<WeeklyReportList teamId="teamId" patientId="patientId" />)
-    await waitFor(() => expect(getWeeklyReportsSpy()).toHaveBeenCalled())
+    await waitFor(() => { expect(getWeeklyReportsSpy()).toHaveBeenCalled() })
   }
 
   beforeEach(() => {

@@ -29,7 +29,7 @@ import _ from 'lodash'
 import bows from 'bows'
 
 import config from './config/config'
-import { User } from './auth'
+import { type User } from './auth'
 
 type VariableScope = 'page' | 'visit'
 

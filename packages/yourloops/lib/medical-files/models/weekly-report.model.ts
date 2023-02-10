@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Alarms } from '../../patient/models/alarms.model'
-import { UnitsType } from '../../units/models/enums/units-type.enum'
+import { type Alarms } from '../../patient/models/alarms.model'
+import { type UnitsType } from '../../units/models/enums/units-type.enum'
 
 export interface WeeklyReport {
   id: string

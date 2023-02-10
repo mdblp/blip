@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { type AxiosError, type AxiosResponse } from 'axios'
 import HttpService from '../../../../lib/http/http.service'
 
 jest.mock('axios')

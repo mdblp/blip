@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -39,11 +39,11 @@ import Typography from '@mui/material/Typography'
 
 import FileChartOutlinedIcon from '../../icons/file-chart-outlined-icon'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { CategoryProps } from './medical-files-widget'
+import { type CategoryProps } from './medical-files-widget'
 import WeeklyReportDialog from '../../dialogs/weekly-report-dialog'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
-import { WeeklyReport } from '../../../lib/medical-files/models/weekly-report.model'
+import { type WeeklyReport } from '../../../lib/medical-files/models/weekly-report.model'
 
 const useStyle = makeStyles()((theme: Theme) => ({
   categoryTitle: {
@@ -77,7 +77,7 @@ const WeeklyReportList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
   useEffect(() => {
     if (!weeklyReports) {
       MedicalFilesApi.getWeeklyReports(patientId, teamId)
-        .then(weeklyReports => setWeeklyReports(weeklyReports))
+        .then(weeklyReports => { setWeeklyReports(weeklyReports) })
         .catch(() => {
           setWeeklyReports([])
           alert.error(t('weekly-reports-get-failed'))
@@ -101,9 +101,9 @@ const WeeklyReportList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
               key={index}
               aria-label={`weekly-report-${weeklyReport.id}`}
               className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? 'selected' : ''}`}
-              onMouseOver={() => setHoveredItem(weeklyReport.id)}
-              onMouseOut={() => setHoveredItem(undefined)}
-              onClick={() => setDisplayWeeklyReportDetails(weeklyReport)}
+              onMouseOver={() => { setHoveredItem(weeklyReport.id) }}
+              onMouseOut={() => { setHoveredItem(undefined) }}
+              onClick={() => { setDisplayWeeklyReportDetails(weeklyReport) }}
             >
               <ListItemIcon>
                 <FileChartOutlinedIcon />
@@ -120,7 +120,7 @@ const WeeklyReportList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
       {displayWeeklyReportDetails &&
         <WeeklyReportDialog
           weeklyReport={displayWeeklyReportDetails}
-          onClose={() => setDisplayWeeklyReportDetails(undefined)}
+          onClose={() => { setDisplayWeeklyReportDetails(undefined) }}
         />
       }
     </React.Fragment>

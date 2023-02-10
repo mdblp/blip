@@ -32,7 +32,7 @@ import { createMemoryHistory } from 'history'
 
 import { UserMenuMemoized as UserMenu } from '../../../../components/menus/user-menu'
 import { triggerMouseEvent } from '../../common/utils'
-import User from '../../../../lib/auth/models/user.model'
+import type User from '../../../../lib/auth/models/user.model'
 import * as authHookMock from '../../../../lib/auth/auth.hook'
 import { render, waitFor } from '@testing-library/react'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
@@ -80,7 +80,7 @@ describe('User Menu', () => {
     const logoutItem = document.getElementById('user-menu-logout-item')
     await act(async () => {
       triggerMouseEvent('click', logoutItem)
-      await waitFor(() => expect(logout).toBeCalledTimes(1))
+      await waitFor(() => { expect(logout).toBeCalledTimes(1) })
     })
   })
 })

@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import loginPageBackground from 'images/login-page-background-desktop.png'
 import loginPageLaptop from 'images/login-page-laptop.png'
@@ -61,7 +61,8 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     position: 'absolute',
     right: 0,
     bottom: -1,
-    zIndex: -1
+    zIndex: -1,
+    height: '100%'
   },
   button: {
     marginRight: theme.spacing(2),
@@ -108,10 +109,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     }
   },
   laptopImage: {
-    width: '720px',
-    [theme.breakpoints.down('lg')]: {
-      width: '550px'
-    }
+    width: '75%'
   }
 }))
 
@@ -120,7 +118,7 @@ const LoginPageDesktop: FunctionComponent = () => {
   const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
 
-  const redirectToSignup = async (): Promise<void> => await loginWithRedirect({ screen_hint: 'signup' })
+  const redirectToSignup = async (): Promise<void> => { await loginWithRedirect({ screen_hint: 'signup' }) }
 
   return (
     <React.Fragment>

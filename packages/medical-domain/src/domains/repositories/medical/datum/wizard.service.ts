@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Wizard from '../../../models/medical/datum/wizard.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import type Wizard from '../../../models/medical/datum/wizard.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
-import { WizardInputMealFat } from '../../../models/medical/datum/enums/wizard-input-meal-fat.enum'
+import { type WizardInputMealFat } from '../../../models/medical/datum/enums/wizard-input-meal-fat.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Wizard => {
   const base = BaseDatumService.normalize(rawData, opts)

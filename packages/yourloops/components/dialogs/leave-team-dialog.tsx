@@ -35,7 +35,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 
-import { Team } from '../../lib/team'
+import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import TeamUtils from '../../lib/team/team.util'
 

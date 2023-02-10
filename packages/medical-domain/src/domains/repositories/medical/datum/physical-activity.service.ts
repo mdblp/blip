@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Intensity from '../../../models/medical/datum/enums/intensity.enum'
-import MedicalDataOptions from '../../../models/medical/medical-data-options.model'
+import type Intensity from '../../../models/medical/datum/enums/intensity.enum'
+import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import BaseDatumService from './basics/base-datum.service'
 import DurationService from './basics/duration.service'
-import PhysicalActivity from '../../../models/medical/datum/physical-activity.model'
-import { DatumProcessor } from '../../../models/medical/datum.model'
+import type PhysicalActivity from '../../../models/medical/datum/physical-activity.model'
+import { type DatumProcessor } from '../../../models/medical/datum.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PhysicalActivity => {

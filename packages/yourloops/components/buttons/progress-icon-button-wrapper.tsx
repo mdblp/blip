@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { FunctionComponent, PropsWithChildren } from 'react'
+import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import CircularProgress from '@mui/material/CircularProgress'
 

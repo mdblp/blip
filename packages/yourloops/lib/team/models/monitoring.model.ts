@@ -24,8 +24,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { MonitoringStatus } from './enums/monitoring-status.enum'
-import { UnitsType } from '../../units/models/enums/units-type.enum'
+import { type MonitoringStatus } from './enums/monitoring-status.enum'
+import { type UnitsType } from '../../units/models/enums/units-type.enum'
 
 export interface Monitoring {
   enabled: boolean

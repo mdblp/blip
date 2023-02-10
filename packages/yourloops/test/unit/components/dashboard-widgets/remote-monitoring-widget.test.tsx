@@ -29,7 +29,7 @@ import React from 'react'
 import { act } from 'react-dom/test-utils'
 
 import RemoteMonitoringWidget, {
-  RemoteMonitoringWidgetProps
+  type RemoteMonitoringWidgetProps
 } from '../../../../components/dashboard-widgets/remote-monitoring-widget'
 import { buildTeam, buildTeamMember, createPatient } from '../../common/utils'
 import ReactDOM, { unmountComponentAtNode } from 'react-dom'
@@ -38,14 +38,14 @@ import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as notificationsHookMock from '../../../../lib/notifications/notification.hook'
-import User from '../../../../lib/auth/models/user.model'
-import { Monitoring } from '../../../../lib/team/models/monitoring.model'
+import type User from '../../../../lib/auth/models/user.model'
+import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as RemoteMonitoringPatientDialogMock from '../../../../components/dialogs/remote-monitoring-dialog'
-import { RemoteMonitoringPatientDialogProps } from '../../../../components/dialogs/remote-monitoring-dialog'
+import { type RemoteMonitoringPatientDialogProps } from '../../../../components/dialogs/remote-monitoring-dialog'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
+import { type ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
 import PatientUtils from '../../../../lib/patient/patient.util'
-import { PatientTeam } from '../../../../lib/patient/models/patient-team.model'
+import { type PatientTeam } from '../../../../lib/patient/models/patient-team.model'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 
 /* eslint-disable-next-line react/display-name */
@@ -123,7 +123,7 @@ describe('RemoteMonitoringWidget', () => {
     render(getRemoteMonitoringWidgetJSX())
     fireEvent.click(screen.getByRole('button', { name: buttonName }))
     fireEvent.click(screen.getByRole('button', { name: 'save-mock' }))
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'save-mock' })).toBeNull())
+    await waitFor(() => { expect(screen.queryByRole('button', { name: 'save-mock' })).toBeNull() })
   }
 
   it('should display correct patient information', () => {
@@ -191,7 +191,7 @@ describe('RemoteMonitoringWidget', () => {
     fireEvent.click(screen.getByRole('button', { name: 'cancel-invite' }))
     fireEvent.click(screen.getByRole('button', { name: 'confirm-mock' }))
     expect(cancelRemoteMonitoringInviteMock).toHaveBeenCalled()
-    await waitFor(() => expect(updatePatientMonitoringMock).toHaveBeenCalled())
+    await waitFor(() => { expect(updatePatientMonitoringMock).toHaveBeenCalled() })
     expect(screen.queryByRole('button', { name: 'confirm-mock' })).toBeNull()
   })
 
@@ -201,7 +201,7 @@ describe('RemoteMonitoringWidget', () => {
     fireEvent.click(screen.getByRole('button', { name: 'cancel-invite' }))
     fireEvent.click(screen.getByRole('button', { name: 'close-mock' }))
     expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled()
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'close-mock' })).toBeNull())
+    await waitFor(() => { expect(screen.queryByRole('button', { name: 'close-mock' })).toBeNull() })
   })
 
   it('should open dialog to confirm when clicking on delete button and edit the patient remote monitoring when clicking on confirm', async () => {
@@ -210,7 +210,7 @@ describe('RemoteMonitoringWidget', () => {
     fireEvent.click(screen.getByRole('button', { name: 'button-remove' }))
     fireEvent.click(screen.getByRole('button', { name: 'confirm-mock' }))
     expect(updatePatientMonitoringMock).toHaveBeenCalled()
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'confirm-mock' })).toBeNull())
+    await waitFor(() => { expect(screen.queryByRole('button', { name: 'confirm-mock' })).toBeNull() })
   })
 
   it('should open dialog to confirm when clicking on delete button and not edit the patient remote monitoring when clicking on close', async () => {
@@ -219,6 +219,6 @@ describe('RemoteMonitoringWidget', () => {
     fireEvent.click(screen.getByRole('button', { name: 'button-remove' }))
     fireEvent.click(screen.getByRole('button', { name: 'close-mock' }))
     expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled()
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'close-mock' })).toBeNull())
+    await waitFor(() => { expect(screen.queryByRole('button', { name: 'close-mock' })).toBeNull() })
   })
 })

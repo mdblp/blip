@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TeamMemberRole } from '../../team/models/enums/team-member-role.enum'
-import { Profile } from '../../auth/models/profile.model'
-import { NotificationType } from './enums/notification-type.enum'
+import { type TeamMemberRole } from '../../team/models/enums/team-member-role.enum'
+import { type Profile } from '../../auth/models/profile.model'
+import { type NotificationType } from './enums/notification-type.enum'
 
 export interface Notification {
   id: string
