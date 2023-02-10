@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.2.0-beta - 2023-02-01
 ### Engineering use
+- YLP-2044 Remove redux settings store
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
 - YLP-2068 Update minor dependencies
 - YLP-2069 Migrate CBGSlicesContainer from viz to dumb
@@ -17,12 +18,14 @@ It is based on Tidepool Blip 1.27.
 - YLP-2097 Migrate RangeSelect from viz to dumb
 - YLP-2110 Update i18next from 19.9.2 to 22.4.9
 - YLP-2113 Migrate FocusedRangeLabels from viz to dumb
+- YLP-2118 Update axios and minor dependencies
 
 ## 3.1.0 - 2023-01-31
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
 - YLP-1704 PDF Report Generation failed
 - YLP-1963 Glucose unit not coherent between curves and DBL settings
+- YLP-2111 trace-session change on every request
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
