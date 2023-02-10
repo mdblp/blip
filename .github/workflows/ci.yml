@@ -2,9 +2,9 @@ name: Front CI
 
 on:
   push:
-    branches: [ 'release/v3.0.x' ]
+    branches: [ 'dblp' ]
   pull_request:
-    branches: [ 'release/v3.0.x' ]
+    branches: [ 'dblp' ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -254,14 +254,14 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: github.ref_name == 'release/v3.0.x'
+        if: github.ref_name == 'dblp'
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
-    if: github.ref_name == 'release/v3.0.x'
+    if: github.ref_name == 'dblp'
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -323,7 +323,7 @@ jobs:
           force_push_tag: true
 
   documentation:
-    if: github.ref_name == 'release/v3.0.x'
+    if: github.ref_name == 'dblp'
     runs-on: ubuntu-latest
     needs: publish
     steps:
