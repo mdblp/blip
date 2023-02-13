@@ -31,7 +31,7 @@ import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
 import { BgSource } from 'dumb/src/models/blood-glucose.model'
 import Box from '@mui/material/Box'
 import { CustomDivider } from '../custom-divider'
-import { useTheme } from '@mui/styles'
+import { useTheme } from '@mui/material'
 
 export interface PatientStatisticsProps {
   dataUtil: VizDataUtil
