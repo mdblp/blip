@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.2.0-beta - 2023-02-01
+## 3.0.4-beta - 2023-02-10
 ### Engineering use
 - YLP-2044 Remove redux settings store
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
@@ -17,14 +17,17 @@ It is based on Tidepool Blip 1.27.
 - YLP-2096 Migrate CBG date traces animated to dumb
 - YLP-2097 Migrate RangeSelect from viz to dumb
 - YLP-2110 Update i18next from 19.9.2 to 22.4.9
+- YLP-2113 Migrate FocusedRangeLabels from viz to dumb
 - YLP-2118 Update axios and minor dependencies
+- YLP-2121 Removing deprecated @mui/styles library
 
-## 3.1.0 - 2023-01-31
+## 3.0.3 - 2023-02-09
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
+- YLP-1693 Glucose unit not coherent between curves and DBL settings
 - YLP-1704 PDF Report Generation failed
-- YLP-1963 Glucose unit not coherent between curves and DBL settings
-- YLP-2111 trace-session change on every request
+- YLP-1874 Broken pdf report generation button
+- YLP-1976 PDF generation not showing stats
 ### Added
 - YLP-1524 Add change password option for HCP and caregivers
 - YLP-1590 Changing role caregiver to hcp with auth0
@@ -45,7 +48,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-1805 Push error to the backend
 - YLP-1868 Add route to invite team member
 - YLP-1873 Fix patient profile update not visible in dashboard
-- YLP-1874 Fix PDF report generation
 - YLP-1894 Retrieve pump settings in pump settings object if no upload object available
 - YLP-1892 Creation of an integration test for the team form
 - YLP-1900 Fix CSS in events configuration modal
@@ -63,7 +65,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-1953 Migrate WheelPercent to dumb
 - YLP-1960 enhance pipeline
 - YLP-1968 Removing eCPS connection feature (revert of YLP-1182)
-- YLP-1976 Fix PDF generation
 - YLP-1971 Product labelling page should use blip version for UDI and configuration for doc revision in bottom page
 - YLP-1991 Update patient header design and add currently available patients fields
 - YLP-2004 Refine dashboard look and feel (part one)
@@ -82,6 +83,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2054 Migrate trends "no data" text to dumb
 - YLP-2055 Migrate CBGSliceAnimated from viz to dumb
 - YLP-2061 Migrate trends X axis labels and ticks to dumb
+- YLP-2111 trace-session change on every request
 - Automate copyright generation on new and updated files
 - Changing CI from Jenkins to GitHub Actions
 - Migrate MUI 4 to MUI 5

@@ -17,7 +17,6 @@
 
 import './styles/colors.css'
 
-import FocusedRangeLabels from './components/trends/common/FocusedRangeLabels'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import TrendsContainer from './components/trends/common/TrendsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
@@ -51,7 +50,6 @@ import {
 } from './redux/actions/index'
 
 const components = {
-  FocusedRangeLabels,
   WarmUpTooltip
 }
 

@@ -74,7 +74,7 @@ describe('Error page', () => {
       renderErrorPage()
     })
     expect(screen.getByText('Sorry! Something went wrong.')).toBeVisible()
-    expect(screen.getByText('Please contact yourloops support and forward them the error id:')).toBeVisible()
+    expect(screen.getByText('Please contact YourLoops support and forward them the error id:')).toBeVisible()
     const showMoreInfoButton = screen.getByText('Show more information')
     await userEvent.click(showMoreInfoButton)
     expect(screen.getByTestId('error-stacktrace')).toHaveTextContent(/fakeEvent Source: fakeSource:12:56 Error: This is the error we are supposed to throw to harbour Stack: Error: This is the error we are supposed to throw to harbour/)
