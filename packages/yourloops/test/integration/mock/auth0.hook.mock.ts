@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authen
 
 export const loggedInUserId = '919b1575bad58'
 export const loggedInUserEmail = 'john.doe@example.com'
-export const getAccessTokenSilentlyMock = jest.fn()
+export const getAccessTokenWithPopupMock = jest.fn()
 
 export const mockAuth0Hook = (role: UserRoles = UserRoles.hcp, userId = loggedInUserId) => {
   (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
@@ -43,6 +43,6 @@ export const mockAuth0Hook = (role: UserRoles = UserRoles.hcp, userId = loggedIn
       sub: 'auth0|' + userId,
       [AuthenticatedUserMetadata.Roles]: [role]
     },
-    getAccessTokenSilently: getAccessTokenSilentlyMock
+    getAccessTokenWithPopup: getAccessTokenWithPopupMock
   })
 }

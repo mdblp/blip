@@ -27,7 +27,7 @@
 
 import { renderPage } from '../../utils/render'
 import {
-  getAccessTokenSilentlyMock,
+  getAccessTokenWithPopupMock,
   loggedInUserEmail,
   loggedInUserId,
   mockAuth0Hook
@@ -187,7 +187,7 @@ describe('Caregiver page for hcp', () => {
     expect(hcpProfessionSelect).toHaveTextContent('Dietitian')
     await userEvent.click(validateButton)
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
-    expect(getAccessTokenSilentlyMock).toHaveBeenCalledWith({ ignoreCache: true })
+    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ ignoreCache: true })
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Your account has been successfully switched to HCP')
   })
 

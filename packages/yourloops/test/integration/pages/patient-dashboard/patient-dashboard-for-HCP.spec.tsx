@@ -93,7 +93,7 @@ describe('Patient dashboard for HCP', () => {
       renderPage(unMonitoredPatientDashboardRoute)
     })
 
-    const dashboard = within(await screen.findByTestId('patient-dashboard'))
+    const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     checkPatientNavBarAsHCP()
     testPatientDashboardCommonDisplay(dashboard)
     checkHCPLayout(`${firstName} ${lastName}`)

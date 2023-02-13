@@ -46,8 +46,6 @@ import Button from '@mui/material/Button'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 
-const LOGO_COLOR_LIGHT = '#40BAE9'
-
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -105,7 +103,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     color: 'var(--logo-color)',
     fontSize: '1rem',
     '&:hover': {
-      color: LOGO_COLOR_LIGHT
+      color: theme.palette.primary.light
     }
   },
   laptopImage: {

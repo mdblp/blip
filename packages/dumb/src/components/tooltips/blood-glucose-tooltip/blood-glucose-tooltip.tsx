@@ -61,7 +61,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
   const { bgPrefs, data, position, side, timePrefs, isSmbg } = props
   const { t } = useTranslation('main')
 
-  const formattedValue = formatBgValue(data.value, bgPrefs)
+  const formattedValue = formatBgValue(data.value, bgPrefs.bgUnits)
 
   const bgClass = getBgClass(
     convertBgClassesToBgBounds(bgPrefs.bgClasses),

@@ -93,7 +93,7 @@ describe('Auth hook', () => {
         [AuthenticatedUserMetadata.Roles]: ['caregiver']
       },
       logout: jest.fn(),
-      getAccessTokenSilently: jest.fn()
+      getAccessTokenWithPopup: jest.fn()
     })
     jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile, preferences, settings })
   })

@@ -26,8 +26,8 @@
  */
 
 import { formatBgValue, formatDecimalNumber, formatParameterValue } from './format.util'
+import { type BgUnit, Unit } from 'medical-domain'
 import { type BgPrefs } from '../../models/blood-glucose.model'
-import { Unit } from 'medical-domain'
 import { UnitsType } from '../../models/enums/units-type.enum'
 
 jest.mock('i18next', () => ({
@@ -58,7 +58,7 @@ describe('FormatUtil', () => {
     describe('no recognizable units provided', () => {
       it('should return a String integer by default (no recognizable `units` provided)', () => {
         expect(formatBgValue(120.5)).toEqual('121')
-        expect(formatBgValue(120.5, 'foo' as unknown as BgPrefs)).toEqual('121')
+        expect(formatBgValue(120.5, 'foo' as unknown as BgUnit)).toEqual('121')
       })
     })
 

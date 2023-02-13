@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { act, screen } from '@testing-library/react'
-import { getAccessTokenSilentlyMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { getAccessTokenWithPopupMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
@@ -84,6 +84,6 @@ describe('Signup stepper as caregiver', () => {
         settings: { country: CountryCodes.France }
       })
     )
-    expect(getAccessTokenSilentlyMock).toHaveBeenCalledWith({ ignoreCache: true })
+    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ ignoreCache: true })
   })
 })

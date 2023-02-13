@@ -57,7 +57,7 @@ export const YAxisLabelsAndTicks: FunctionComponent<YAxisLabelsAndTicksProps> = 
                 x={leftMargin - DEFAULT_TICK_WIDTH - DEFAULT_TEXT_TO_TICK_GAP}
                 y={yScale(boundValue)}
               >
-                {formatBgValue(boundValue, bgPrefs)}
+                {formatBgValue(boundValue, bgPrefs.bgUnits)}
               </text>
               <line
                 className={trendsStyles.tick}

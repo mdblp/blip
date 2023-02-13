@@ -42,7 +42,6 @@ import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 import { useTeam } from '../../lib/team'
 import RemoteMonitoringWidget from './remote-monitoring-widget'
-import { useTheme } from '@mui/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {
   RESPONSIVE_GRID_FOUR_COLUMNS,
@@ -51,6 +50,7 @@ import {
 } from '../../css/css-utils'
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
+import { useTheme } from '@mui/material'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
