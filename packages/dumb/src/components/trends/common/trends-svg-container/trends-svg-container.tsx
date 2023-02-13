@@ -35,7 +35,7 @@ import { NoDataLabel } from '../no-data-label/no-data-label'
 import { CbgDateTracesAnimationContainer } from '../../cbg/cbg-date-trace/cbg-date-traces-animation-container'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
 import { THREE_HRS } from '../../../../utils/datetime/datetime.util'
-import { findCbgsIntersectingWithCbgSliceSegment } from './trends-svg-container.util'
+import { getCbgsIntersectingWithCbgSliceSegment } from './trends-svg-container.util'
 import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import { Background } from '../background/background'
 import { XAxisLabels } from '../x-axis-labels/x-axis-labels'
@@ -44,6 +44,7 @@ import { YAxisLabelsAndTicks } from '../y-axis-labels-and-ticks/y-axis-labels-an
 import { CbgSlicesContainerMemoized as CbgSlicesContainer } from '../../cbg/cbg-slice/cbg-slices-container'
 import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from '../../cbg/cbg-slice/focused-cbg-slice-segment'
 import { TargetRangeLines } from '../target-range-lines/target-range-lines'
+import { type FocusedSlice } from '../../../../models/focused-slice.model'
 
 const BUMPERS = {
   top: 50,
@@ -66,33 +67,6 @@ const CHART_WIDTH_M_SIZE = 70
 const TOOLTIP_LEFT_THRESHOLD = 6 * THREE_HRS
 const WIDTH = 640
 const HEIGHT = 480
-
-export interface FocusedSlice {
-  data: {
-    firstQuartile: number
-    max: number
-    median: number
-    min: number
-    ninetiethQuantile: number
-    tenthQuantile: number
-    thirdQuartile: number
-    msFrom: number
-    msTo: number
-  }
-  position: {
-    left: number
-    tooltipLeft: boolean
-    yPositions: {
-      firstQuartile: number
-      max: number
-      median: number
-      min: number
-      ninetiethQuantile: number
-      tenthQuantile: number
-      thirdQuartile: number
-    }
-  }
-}
 
 interface TrendsSvgContainerProps {
   activeDays: {
@@ -147,7 +121,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
 
   const focusedSegmentDataGroupedByDate = useMemo(() => {
     if (showingCbgDateTraces && focusedSlice && focusedSliceKeys) {
-      return findCbgsIntersectingWithCbgSliceSegment(cbgData, focusedSlice, focusedSliceKeys)
+      return getCbgsIntersectingWithCbgSliceSegment(cbgData, focusedSlice.data, focusedSliceKeys)
     }
     return null
   }, [cbgData, focusedSlice, focusedSliceKeys, showingCbgDateTraces])

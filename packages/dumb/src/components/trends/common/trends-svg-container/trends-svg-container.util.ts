@@ -26,22 +26,21 @@
  */
 
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
-import { type FocusedSlice } from './trends-svg-container'
 import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
+import { type FocusedSliceData } from '../../../../models/focused-slice.model'
 
-const isCbgDateTraceIntersectingWithFocusedSlice = (cbgDateTrace: CbgDateTrace, focusedSlice: FocusedSlice, focusedSliceKeys: RangeSegmentSlice[]): boolean => {
-  const data = focusedSlice.data
-  return cbgDateTrace.msPer24 >= data.msFrom && cbgDateTrace.msPer24 < data.msTo && (cbgDateTrace.value >= data[focusedSliceKeys[0]] && cbgDateTrace.value <= data[focusedSliceKeys[1]])
+const isCbgDateTraceIntersectingWithFocusedSlice = (cbgDateTrace: CbgDateTrace, focusedSliceData: FocusedSliceData, focusedSliceKeys: RangeSegmentSlice[]): boolean => {
+  return cbgDateTrace.msPer24 >= focusedSliceData.msFrom && cbgDateTrace.msPer24 < focusedSliceData.msTo && (cbgDateTrace.value >= focusedSliceData[focusedSliceKeys[0]] && cbgDateTrace.value <= focusedSliceData[focusedSliceKeys[1]])
 }
 
-export const findCbgsIntersectingWithCbgSliceSegment = (cbgDateTraces: CbgDateTrace[], focusedSlice: FocusedSlice, focusedSliceKeys: RangeSegmentSlice[]): CbgDateTrace[][] => {
+export const getCbgsIntersectingWithCbgSliceSegment = (cbgDateTraces: CbgDateTrace[], focusedSliceData: FocusedSliceData, focusedSliceKeys: RangeSegmentSlice[]): CbgDateTrace[][] => {
   const datesOfCbgIntersectingWithFocusedSlice = cbgDateTraces.reduce((dates: string[], cbgDateTrace) => {
     const date = cbgDateTrace.localDate
     const isDateAlreadyIncluded = !date || dates.includes(date)
     if (isDateAlreadyIncluded) {
       return dates
     }
-    if (isCbgDateTraceIntersectingWithFocusedSlice(cbgDateTrace, focusedSlice, focusedSliceKeys)) {
+    if (isCbgDateTraceIntersectingWithFocusedSlice(cbgDateTrace, focusedSliceData, focusedSliceKeys)) {
       dates.push(date)
     }
     return dates
