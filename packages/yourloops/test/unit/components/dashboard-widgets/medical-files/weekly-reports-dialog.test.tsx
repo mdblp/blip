@@ -34,7 +34,7 @@ import { buildTeam, createPatient, createPatientTeam } from '../../../common/uti
 import { type Alarms } from '../../../../../lib/patient/models/alarms.model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../../../../lib/utils'
 import { type WeeklyReport } from '../../../../../lib/medical-files/models/weekly-report.model'
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { UserInvitationStatus } from '../../../../../lib/team/models/enums/user-invitation-status.enum'
 
 jest.mock('../../../../../lib/patient/patient.provider')

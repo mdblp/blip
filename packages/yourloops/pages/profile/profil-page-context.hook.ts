@@ -36,7 +36,7 @@ import { type ProfileErrors, type ProfileForm } from './models/profile-form.mode
 import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { CountryCodes } from '../../lib/auth/models/country.model'
 import { type Profile } from '../../lib/auth/models/profile.model'
 import { type Settings } from '../../lib/auth/models/settings.model'

@@ -35,7 +35,7 @@ import { type PatientData, type PatientDatum } from '../../../../lib/data/models
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { type MessageNote } from '../../../../lib/data/models/message-note.model'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../../../../lib/http/models/enums/http-header-values.enum'
 

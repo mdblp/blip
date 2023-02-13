@@ -30,8 +30,8 @@ import { type VizDataUtil } from 'tidepool-viz'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
 import { BgSource } from 'dumb/src/models/blood-glucose.model'
 import Box from '@mui/material/Box'
-import { CustomDivider } from '../custom-divider'
 import { useTheme } from '@mui/material'
+import Divider from '@mui/material/Divider'
 
 export interface PatientStatisticsProps {
   dataUtil: VizDataUtil
@@ -58,7 +58,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgPrefs={bgPrefs}
         days={dataUtil?.days ?? 0}
       />
-      <CustomDivider marginBlock={theme.spacing(1)} color={theme.palette.grey[600]} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}
     </Box>
   )

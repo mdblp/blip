@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 
 export const MGDL_PER_MMOL = 18.01577
 

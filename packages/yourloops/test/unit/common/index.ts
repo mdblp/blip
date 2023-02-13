@@ -29,7 +29,7 @@ import { User } from '../../../lib/auth'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { CountryCodes } from '../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 

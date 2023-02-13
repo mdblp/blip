@@ -40,7 +40,7 @@ import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-inv
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { PatientFilterTypes } from '../../../../lib/patient/models/enums/patient-filter-type.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
 

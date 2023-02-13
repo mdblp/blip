@@ -30,7 +30,7 @@ import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import GenericDashboardCard from './generic-dashboard-card'
 import { useTranslation } from 'react-i18next'
 import CardContent from '@mui/material/CardContent'
-import { PatientStatistics, type PatientStatisticsProps } from '../statistics/PatientStatistics'
+import { PatientStatistics, type PatientStatisticsProps } from '../statistics/patient-statistics'
 
 export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
   const { t } = useTranslation()

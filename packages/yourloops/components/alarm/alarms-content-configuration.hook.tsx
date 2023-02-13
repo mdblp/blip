@@ -32,7 +32,7 @@ import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import { buildThresholds, isInvalidPercentage, REGEX_VALUE_BG } from './alarm-content-configuration.utils'
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { type Thresholds } from '../../lib/patient/models/alarms.model'
 import { DEFAULT_BG_VALUES } from './alarms.default'
 

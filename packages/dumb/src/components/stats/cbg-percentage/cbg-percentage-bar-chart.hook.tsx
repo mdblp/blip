@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type CBGPercentageBarProps } from './cbg-percentage-bar'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
@@ -65,7 +65,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
-  const computeTitle = (): string => {
+  const title = useMemo<string>(() => {
     switch (type) {
       case CBGStatType.TimeInRange:
         return days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
@@ -73,32 +73,41 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
       default:
         return days > 1 ? t('Avg. Daily Readings In Range') : t('Readings In Range')
     }
-  }
-
-  const title = computeTitle()
+  }, [days, t, type])
 
   const [titleProps, setTitleProps] = useState({ legendTitle: '', title })
 
-  const computeAnnotations = (): string[] => {
+  const annotations = useMemo<string[]>(() => {
+    const annotations = []
     switch (type) {
       case CBGStatType.TimeInRange:
         if (days > 1) {
-          return [
+          annotations.push(
             t('time-in-range-cgm-daily-average'),
             t('compute-ndays-time-in-range', { cbgLabel: t('CGM') })
-          ]
+          )
+          break
         }
-        return [
+        annotations.push(
           t('time-in-range-cgm-one-day'),
           t('compute-oneday-time-in-range')
-        ]
+        )
+        break
       case CBGStatType.ReadingsInRange:
       default:
-        return [
-          t('readings-in-range-bgm-daily-average', { smbgLabel: t('BGM') })
-        ]
+        annotations.push(t('readings-in-range-bgm-daily-average', { smbgLabel: t('BGM') }))
+        break
     }
-  }
+
+    if (bgSource === BgSource.Smbg) {
+      annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
+        total: data.total,
+        smbgLabel: t('BGM')
+      }))
+    }
+
+    return annotations
+  }, [bgSource, data.total, days, t, type])
 
   const onStatMouseover = (id: StatLevel, title: string, legendTitle: string, hasValues: boolean): void => {
     if (hasValues) {
@@ -112,7 +121,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     setHoveredStatId(null)
   }
 
-  const computeDataArray = (): CBGPercentageData[] => {
+  const dataArray = useMemo<CBGPercentageData[]>(() => {
     const titleType = type === CBGStatType.ReadingsInRange ? TITLE_TYPE_READINGS : TITLE_TYPE_TIME
     const bounds = {
       targetLowerBound: formatBgValue(bgBounds.targetLowerBound, units),
@@ -153,9 +162,8 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
         legendTitle: `>${bounds.veryHighThreshold}`
       }
     ]
-  }
+  }, [bgBounds.targetLowerBound, bgBounds.targetUpperBound, bgBounds.veryHighThreshold, bgBounds.veryLowThreshold, data.high, data.low, data.target, data.veryHigh, data.veryLow, t, type, units])
 
-  const dataArray = computeDataArray()
   const total = dataArray.map(data => data.value).reduce((sum: number, value: number) => sum + value)
 
   const getCBGPercentageBarProps = (id: string): CBGPercentageBarProps => {
@@ -181,14 +189,6 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     targetStat: getCBGPercentageBarProps(StatLevel.Target),
     lowStat: getCBGPercentageBarProps(StatLevel.Low),
     veryLowStat: getCBGPercentageBarProps(StatLevel.VeryLow)
-  }
-
-  const annotations = computeAnnotations()
-  if (bgSource === BgSource.Smbg) {
-    annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
-      total: data.total,
-      smbgLabel: t('BGM')
-    }))
   }
 
   return ({

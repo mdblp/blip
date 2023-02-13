@@ -43,7 +43,7 @@ import {
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
-import { PatientStatistics } from 'yourloops/components/statistics/PatientStatistics'
+import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import Stats from './stats'
 
 /**

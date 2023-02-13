@@ -33,7 +33,7 @@ import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsProvider } from 'dumb'
-import { PatientStatistics } from 'yourloops/components/statistics/PatientStatistics'
+import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService

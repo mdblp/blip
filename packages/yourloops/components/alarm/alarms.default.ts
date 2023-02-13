@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
 
 export const DEFAULT_BG_VALUES: BgValues = {

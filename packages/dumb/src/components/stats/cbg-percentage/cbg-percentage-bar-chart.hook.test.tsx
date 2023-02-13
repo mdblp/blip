@@ -123,22 +123,49 @@ describe('CBGPercentageBarChart hook', () => {
   it('should compute the right title and annotations', () => {
     const { result: firstHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps }))
     expect(firstHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Time In Range' })
-    expect(firstHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.'])
 
     const { result: secondHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, days: 0 }))
     expect(secondHook.current.titleProps).toEqual({ legendTitle: '', title: 'Time In Range' })
-    expect(secondHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
 
-    const { result: thirdHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, type: CBGStatType.ReadingsInRange }))
+    const { result: thirdHook } = renderHook(() => useCBGPercentageBarChartHook({
+      ...defaultProps,
+      type: CBGStatType.ReadingsInRange
+    }))
     expect(thirdHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Readings In Range' })
 
-    const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, days: 0, type: CBGStatType.ReadingsInRange }))
+    const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({
+      ...defaultProps,
+      days: 0,
+      type: CBGStatType.ReadingsInRange
+    }))
     expect(fourthHook.current.titleProps).toEqual({ legendTitle: '', title: 'Readings In Range' })
+
+    const { result: fifthHook } = renderHook(() => useCBGPercentageBarChartHook({
+      ...defaultProps,
+      bgSource: BgSource.Smbg
+    }))
+    expect(fifthHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Time In Range' })
+  })
+
+  it('should compute the right annotations', () => {
+    const { result: firstHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps }))
+    expect(firstHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.'])
+
+    const { result: secondHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, days: 0 }))
+    expect(secondHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
+
+    const { result: thirdHook } = renderHook(() => useCBGPercentageBarChartHook({
+      ...defaultProps,
+      days: 0,
+      type: CBGStatType.ReadingsInRange
+    }))
     expect(thirdHook.current.annotations).toEqual(['**Readings In Range:** Daily average of the number of BGM readings.'])
 
-    const { result: fifthHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, bgSource: BgSource.Smbg }))
-    expect(fifthHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Time In Range' })
-    expect(fifthHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.', 'Derived from _**1000**_ BGM readings.'])
+    const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({
+      ...defaultProps,
+      bgSource: BgSource.Smbg
+    }))
+    expect(fourthHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.', 'Derived from _**1000**_ BGM readings.'])
   })
 
   it('onMouseOver and OnMouseLeave should return correct values', async () => {
@@ -152,7 +179,9 @@ describe('CBGPercentageBarChart hook', () => {
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {
       result.current.cbgStatsProps.veryHighStat.onMouseEnter(veryHighStat.id, veryHighStat.title, veryHighStat.legendTitle, true)
-      await waitFor(() => { expect(result.current.hoveredStatId).toEqual(veryHighStat.id) })
+      await waitFor(() => {
+        expect(result.current.hoveredStatId).toEqual(veryHighStat.id)
+      })
     })
     expect(result.current.titleProps).toEqual({
       legendTitle: veryHighStat.legendTitle,
@@ -160,7 +189,9 @@ describe('CBGPercentageBarChart hook', () => {
     })
     await act(async () => {
       result.current.onMouseLeave()
-      await waitFor(() => { expect(result.current.hoveredStatId).toBeNull() })
+      await waitFor(() => {
+        expect(result.current.hoveredStatId).toBeNull()
+      })
     })
     expect(result.current.titleProps).toEqual(defaultTitleProps)
   })

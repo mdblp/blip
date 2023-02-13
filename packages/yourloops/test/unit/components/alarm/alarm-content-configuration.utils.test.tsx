@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { buildBgValues, buildThresholds } from '../../../../components/alarm/alarm-content-configuration.utils'
 
 describe('Thresholds', () => {
