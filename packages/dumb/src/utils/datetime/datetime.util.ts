@@ -34,6 +34,7 @@ const t = i18next.t.bind(i18next)
 
 export const ONE_HOUR_MS = 3600000
 export const HOURS_IN_DAY = 24
+export const THREE_HRS = ONE_HOUR_MS * 3
 export const TIMEZONE_UTC = 'UTC'
 export const THIRTY_MINS = ONE_HOUR_MS / 2
 export const TWENTY_FOUR_HRS = ONE_HOUR_MS * 24

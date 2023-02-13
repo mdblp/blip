@@ -26,9 +26,9 @@ import { bindActionCreators } from 'redux'
 import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 
 import * as actions from '../../../redux/actions/'
-import TrendsSVGContainer from './TrendsSVGContainer'
 
 import { MGDL_CLAMP_TOP, MMOLL_CLAMP_TOP } from '../../../utils/constants'
+import { TrendsSvgContainer } from 'dumb'
 
 export class TrendsContainer extends React.Component {
   static propTypes = {
@@ -234,7 +234,7 @@ export class TrendsContainer extends React.Component {
     }
 
     return (
-      <TrendsSVGContainer
+      <TrendsSvgContainer
         activeDays={activeDays}
         bgPrefs={bgPrefs}
         cbgData={currentCbgData}

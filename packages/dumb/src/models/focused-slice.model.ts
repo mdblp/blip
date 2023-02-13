@@ -25,41 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { noop } from 'lodash'
-import { type BgBounds } from '../../../../models/blood-glucose.model'
-import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
-import { type ScaleFunction } from '../../../../models/scale-function.model'
-import CbgDateTracesAnimated from './cbg-date-traces-animated'
-
-interface CbgDateTracesAnimationContainerProps {
-  bgBounds: BgBounds
-  data: CbgDateTrace[][]
-  onSelectDate: (epoch: number) => void
-  topMargin: number
-  xScale: ScaleFunction
-  yScale: ScaleFunction
+interface SliceKeyIndicators {
+  firstQuartile: number
+  max: number
+  median: number
+  min: number
+  ninetiethQuantile: number
+  tenthQuantile: number
+  thirdQuartile: number
 }
 
-export const CbgDateTracesAnimationContainer: FunctionComponent<CbgDateTracesAnimationContainerProps> = (props) => {
-  const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props
+export interface FocusedSliceData extends SliceKeyIndicators {
+  msFrom: number
+  msTo: number
+}
 
-  return (
-    <g>
-      {data.map((datum: CbgDateTrace[], index: number) => (
-        <CbgDateTracesAnimated
-          bgBounds={bgBounds}
-          data={datum}
-          key={index}
-          onSelectDate={onSelectDate}
-          topMargin={topMargin}
-          xScale={xScale}
-          yScale={yScale}
-          // Added via redux
-          focusDateTrace={noop}
-          unfocusDateTrace={noop}
-        />
-      ))}
-    </g>
-  )
+export interface FocusedSlice {
+  data: FocusedSliceData
+  position: {
+    left: number
+    tooltipLeft: boolean
+    yPositions: SliceKeyIndicators
+  }
 }
