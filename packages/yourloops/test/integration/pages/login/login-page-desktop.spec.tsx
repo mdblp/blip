@@ -103,4 +103,17 @@ describe('Login page desktop view', () => {
     renderPage('/')
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Hi there, i\'m an error !!')
   })
+
+  it('should display an alert if the user is inactive', async () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      user: undefined,
+      loginWithRedirect: loginWithRedirectMock
+    })
+
+    renderPage('/login?idle=true')
+
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Your session has expired due to inactivity. Please login again.')
+  })
 })

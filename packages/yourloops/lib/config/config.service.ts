@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
-import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
+import appConfig from './config'
 
-export const loggedInUserId = '919b1575bad58'
-export const loggedInUserEmail = 'john.doe@example.com'
-export const getAccessTokenWithPopupMock = jest.fn()
-export const logoutMock = jest.fn()
-
-export const mockAuth0Hook = (role: UserRoles = UserRoles.hcp, userId = loggedInUserId) => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
-    user: {
-      email: loggedInUserEmail,
-      email_verified: true,
-      sub: 'auth0|' + userId,
-      [AuthenticatedUserMetadata.Roles]: [role]
-    },
-    getAccessTokenWithPopup: getAccessTokenWithPopupMock,
-    logout: logoutMock
-  })
+export class ConfigService {
+  static getIdleTimeout(): number {
+    return appConfig.IDLE_TIMEOUT_MS
+  }
 }

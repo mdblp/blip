@@ -57,7 +57,7 @@ import {
 import VerifyEmailPage from '../pages/login/verify-email-page'
 import Box from '@mui/material/Box'
 import { useIdleTimer } from 'react-idle-timer'
-import appConfig from '../lib/config/config'
+import { ConfigService } from '../lib/config/config.service'
 
 const muiCache = createCache({
   key: 'mui',
@@ -111,7 +111,7 @@ export function MainLobby(): JSX.Element {
     }
   }
 
-  useIdleTimer({ timeout: appConfig.IDLE_TIMEOUT_MS, onIdle })
+  useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
 
   if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />
