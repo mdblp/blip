@@ -46,7 +46,7 @@ export const CbgDateTracesAnimationContainer: FunctionComponent<CbgDateTracesAni
 
   return (
     <g>
-      {[...data.values()].map((datum: CbgDateTrace[], index: number) => (
+      {data.map((datum: CbgDateTrace[], index: number) => (
         <CbgDateTracesAnimated
           bgBounds={bgBounds}
           data={datum}

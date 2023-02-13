@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface FocusedSliceData {
+interface SliceKeyIndicators {
   firstQuartile: number
   max: number
   median: number
@@ -33,6 +33,9 @@ export interface FocusedSliceData {
   ninetiethQuantile: number
   tenthQuantile: number
   thirdQuartile: number
+}
+
+export interface FocusedSliceData extends SliceKeyIndicators {
   msFrom: number
   msTo: number
 }
@@ -42,14 +45,6 @@ export interface FocusedSlice {
   position: {
     left: number
     tooltipLeft: boolean
-    yPositions: {
-      firstQuartile: number
-      max: number
-      median: number
-      min: number
-      ninetiethQuantile: number
-      tenthQuantile: number
-      thirdQuartile: number
-    }
+    yPositions: SliceKeyIndicators
   }
 }

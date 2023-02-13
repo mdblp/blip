@@ -96,9 +96,9 @@ describe('TrendsSvgContainer util', () => {
 
       const focusedSliceKeys: RangeSegmentSlice[] = [RangeSegmentSlice.FirstQuartile, RangeSegmentSlice.ThirdQuartile]
 
-      const res = getCbgsIntersectingWithCbgSliceSegment(cbgDateTraces, focusedSliceData, focusedSliceKeys)
+      const result = getCbgsIntersectingWithCbgSliceSegment(cbgDateTraces, focusedSliceData, focusedSliceKeys)
 
-      expect(res).toEqual([cbgsTrace13OfFebruary, cbgsTrace15OfFebruary])
+      expect(result).toEqual([cbgsTrace13OfFebruary, cbgsTrace15OfFebruary])
     })
   })
 })

@@ -63,7 +63,7 @@ const SMBG_OPTS = {
   r: 6
 }
 
-const CHART_WIDTH_M_SIZE = 70
+const CHART_WIDTH = 70
 const TOOLTIP_LEFT_THRESHOLD = 6 * THREE_HRS
 const WIDTH = 640
 const HEIGHT = 480
@@ -107,7 +107,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
 
   const { height, width } = size
 
-  const sliceWidth = (width - CHART_WIDTH_M_SIZE) / 56
+  const sliceWidth = (width - CHART_WIDTH) / 56
 
   const xScale = useMemo(() => scaleLinear().domain([0, TimeService.MS_IN_DAY]).range([
     MARGINS.left + Math.round(SMBG_OPTS.maxR),
@@ -120,10 +120,10 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
   ]), [height, yScaleDomain])
 
   const focusedSegmentDataGroupedByDate = useMemo(() => {
-    if (showingCbgDateTraces && focusedSlice && focusedSliceKeys) {
-      return getCbgsIntersectingWithCbgSliceSegment(cbgData, focusedSlice.data, focusedSliceKeys)
+    if (!showingCbgDateTraces || !focusedSlice || !focusedSliceKeys) {
+      return null
     }
-    return null
+    return getCbgsIntersectingWithCbgSliceSegment(cbgData, focusedSlice.data, focusedSliceKeys)
   }, [cbgData, focusedSlice, focusedSliceKeys, showingCbgDateTraces])
 
   const noData = useMemo(() => {
