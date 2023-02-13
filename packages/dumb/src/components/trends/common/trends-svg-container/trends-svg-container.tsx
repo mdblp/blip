@@ -133,7 +133,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
     const xPos = (width / 2) + MARGINS.right
     const yPos = (height / 2) + MARGINS.bottom
     const messagePosition = { x: xPos, y: yPos }
-    const unselectedAll = Object.keys(activeDays).every(flag => !flag)
+    const unselectedAll = Object.values(activeDays).every(flag => !flag)
     return { messagePosition, unselectedAll }
   }, [activeDays, cbgData.length, height, width])
 
