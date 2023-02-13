@@ -31,7 +31,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import { ThemeProvider } from '@mui/material/styles'
 import { CacheProvider } from '@emotion/react'
-import { TssCacheProvider, GlobalStyles } from 'tss-react'
+import { GlobalStyles, TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
 
@@ -56,6 +56,8 @@ import {
 } from '../lib/diabeloop-urls.model'
 import VerifyEmailPage from '../pages/login/verify-email-page'
 import Box from '@mui/material/Box'
+import { useIdleTimer } from 'react-idle-timer'
+import appConfig from '../lib/config/config'
 
 const muiCache = createCache({
   key: 'mui',
@@ -97,11 +99,19 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
 
 export function MainLobby(): JSX.Element {
   const { isLoading, isAuthenticated } = useAuth0()
-  const { fetchingUser, user } = useAuth()
+  const { fetchingUser, isLoggedIn, logout, user } = useAuth()
   const location = useLocation()
   const currentRoute = location.pathname
   const theme = getTheme()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
+
+  const onIdle = async (): Promise<void> => {
+    if (isLoggedIn) {
+      await logout(true)
+    }
+  }
+
+  useIdleTimer({ timeout: appConfig.IDLE_TIMEOUT_MS, onIdle })
 
   if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />

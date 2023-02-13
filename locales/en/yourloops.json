@@ -21,6 +21,7 @@
   "admin": "Admin",
   "alert-change-password-email-failed": "Impossible to send the change password e-mail. Please try again later.",
   "alert-change-password-email-success": "E-mail sent successfully",
+  "alert-inactive-user-logged-out": "Your session has expired due to inactivity. Please login again.",
   "alert-hypoglycemic": "Severe hypoglycemia",
   "alert-invitation-caregiver-failed": "Impossible to add a caregiver. Please Try again later.",
   "alert-invitation-caregiver-failed-user-is-patient": "You cannot share your data with this user as they are not a caregiver.",

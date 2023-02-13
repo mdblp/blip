@@ -88,7 +88,8 @@ const config = {
   YLPZ_RA_LAD_001_NL_REV: stringOption(process.env.YLPZ_RA_LAD_001_NL_REV, '0'),
   YLPZ_RA_LAD_001_IT_REV: stringOption(process.env.YLPZ_RA_LAD_001_IT_REV, '0'),
   YLPZ_RA_LAD_001_ES_REV: stringOption(process.env.YLPZ_RA_LAD_001_ES_REV, '0'),
-  YLPZ_RA_LAD_001_DE_REV: stringOption(process.env.YLPZ_RA_LAD_001_DE_REV, '0')
+  YLPZ_RA_LAD_001_DE_REV: stringOption(process.env.YLPZ_RA_LAD_001_DE_REV, '0'),
+  IDLE_TIMEOUT_MS: process.env.IDLE_TIMEOUT_MS || 1800000
 }
 
 module.exports = config

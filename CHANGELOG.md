@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.4-beta - 2023-02-10
+### Added
+- YLP-1503 Logout idle user after 30 mn of inactivity
+
 ### Engineering use
 - YLP-2044 Remove redux settings store
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb

@@ -54,4 +54,5 @@ export interface AppConfig {
   YLPZ_RA_LAD_001_IT_REV: string
   YLPZ_RA_LAD_001_ES_REV: string
   YLPZ_RA_LAD_001_DE_REV: string
+  IDLE_TIMEOUT_MS: number
 }
