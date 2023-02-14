@@ -52,6 +52,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { UnitsType } from 'dumb'
 import { getTomorrowDate } from '../../utils/helpers'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
+import { checkMedicalWidgetForHcp } from '../../assert/medical-widget'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -126,7 +127,7 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()
     /* Medical files widget */
-    expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
+    await checkMedicalWidgetForHcp()
 
     /* Events widget */
     expect(dashboard.getByText('Events')).toBeVisible()

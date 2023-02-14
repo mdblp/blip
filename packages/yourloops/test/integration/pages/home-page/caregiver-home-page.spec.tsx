@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,7 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
 import {
   buildPatientAsTeamMember,
-  mockPatientApiForPatients,
+  mockPatientApiForCaregivers,
   monitoredPatientAsTeamMember,
   unmonitoredPatientAsTeamMember
 } from '../../mock/patient.api.mock'
@@ -54,7 +54,7 @@ describe('Caregiver home page', () => {
     mockNotificationAPI()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForPatients()
+    mockPatientApiForCaregivers()
     mockDirectShareApi()
   })
 

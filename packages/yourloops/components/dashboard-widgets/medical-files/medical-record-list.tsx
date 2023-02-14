@@ -41,7 +41,6 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
@@ -55,14 +54,21 @@ import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 import { type MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
+import ListItemButton from '@mui/material/ListItemButton'
 
 const useStyle = makeStyles()((theme: Theme) => ({
   categoryTitle: {
     fontWeight: 600
   },
+  hidden: {
+    visibility: 'hidden'
+  },
   list: {
     maxHeight: 160,
     overflow: 'auto'
+  },
+  listItem: {
+    padding: 0
   },
   hoveredItem: {
     '&:hover': {
@@ -84,29 +90,26 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
-  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined)
-  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecord | undefined>(undefined)
-  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
+  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<{ medicalRecord: MedicalRecord, medicalRecordName: string } | undefined>(undefined)
+  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<{ medicalRecord: MedicalRecord, medicalRecordName: string } | undefined>(undefined)
 
   const closeMedicalRecordEditDialog = (): void => {
-    setHoveredItem(undefined)
     setIsEditDialogOpen(false)
     setMedicalRecordToEdit(undefined)
   }
 
   const closeMedicalRecordDeleteDialog = (): void => {
-    setHoveredItem(undefined)
     setIsDeleteDialogOpen(false)
     setMedicalRecordToDelete(undefined)
   }
 
-  const onDeleteMedicalRecord = (medicalRecord: MedicalRecord): void => {
-    setMedicalRecordToDelete(medicalRecord)
+  const onDeleteMedicalRecord = (medicalRecord: MedicalRecord, medicalRecordName: string): void => {
+    setMedicalRecordToDelete({ medicalRecord, medicalRecordName })
     setIsDeleteDialogOpen(true)
   }
 
-  const onClickMedicalRecord = (medicalRecord: MedicalRecord): void => {
-    setMedicalRecordToEdit(medicalRecord)
+  const onClickMedicalRecord = (medicalRecord: MedicalRecord, medicalRecordName: string): void => {
+    setMedicalRecordToEdit({ medicalRecord, medicalRecordName })
     setIsEditDialogOpen(true)
   }
 
@@ -135,7 +138,9 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   useEffect(() => {
     if (!medicalRecords) {
       MedicalFilesApi.getMedicalRecords(patientId, teamId)
-        .then(medicalRecords => { setMedicalRecords(medicalRecords) })
+        .then(medicalRecords => {
+          setMedicalRecords(medicalRecords)
+        })
         .catch(() => {
           setMedicalRecords([])
           alert.error(t('medical-records-get-failed'))
@@ -152,41 +157,44 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
       </Typography>
       {medicalRecords
         ? <List className={classes.list}>
-          {medicalRecords.map((medicalRecord, index) => (
-            <ListItem
-              dense
-              divider
-              key={index}
-              aria-label={`record-${medicalRecord.id}`}
-              className={`${classes.hoveredItem} ${medicalRecord.id === hoveredItem ? 'selected' : ''}`}
-              onClick={() => { onClickMedicalRecord(medicalRecord) }}
-              onMouseOver={() => { setHoveredItem(medicalRecord.id) }}
-              onMouseOut={() => { setHoveredItem(undefined) }}
-            >
-              <ListItemIcon>
-                <DescriptionOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText>
-                {t('medical-record-pdf', { pdfName: buildFileName(medicalRecord.creationDate, index) })}
-              </ListItemText>
-              {user.isUserHcp() && medicalRecord.id === hoveredItem &&
-                <ListItemSecondaryAction>
-                  <Tooltip title={t('delete')}>
-                    <IconButton
-                      edge="end"
-                      size="small"
-                      disableRipple
-                      disableFocusRipple
-                      aria-label={t('delete')}
-                      onClick={() => { onDeleteMedicalRecord(medicalRecord) }}
-                    >
-                      <TrashCanOutlined />
-                    </IconButton>
-                  </Tooltip>
-                </ListItemSecondaryAction>
-              }
-            </ListItem>
-          ))}
+          {medicalRecords.map((medicalRecord, index) => {
+            const medicalRecordName = buildFileName(medicalRecord.creationDate, index)
+            return (
+              <ListItem
+                key={index}
+                dense
+                divider
+                className={classes.listItem}
+              >
+                <ListItemButton
+                  onClick={() => {
+                    onClickMedicalRecord(medicalRecord, medicalRecordName)
+                  }}
+                >
+                  <ListItemIcon>
+                    <DescriptionOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {t('medical-record-pdf', { pdfName: medicalRecordName })}
+                  </ListItemText>
+                </ListItemButton>
+                <Tooltip title={t('delete-medical-record', { date: medicalRecordName })}>
+                  <IconButton
+                    edge="end"
+                    size="small"
+                    className={user.id !== medicalRecord.authorId ? classes.hidden : ''}
+                    hidden={user.id !== medicalRecord.authorId}
+                    aria-label={t('delete-medical-record', { date: medicalRecordName })}
+                    onClick={() => {
+                      onDeleteMedicalRecord(medicalRecord, medicalRecordName)
+                    }}
+                  >
+                    <TrashCanOutlined />
+                  </IconButton>
+                </Tooltip>
+              </ListItem>
+            )
+          })}
         </List>
         : <CenteredSpinningLoader size={20} />
       }
@@ -200,7 +208,9 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
             disableElevation
             className={commonStyles.button}
             startIcon={<NoteAddIcon />}
-            onClick={() => { setIsEditDialogOpen(true) }}
+            onClick={() => {
+              setIsEditDialogOpen(true)
+            }}
           >
             {t('new')}
           </Button>
@@ -210,7 +220,8 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
       {isEditDialogOpen &&
         <MedicalRecordEditDialog
           {...props}
-          medicalRecord={medicalRecordToEdit}
+          medicalRecord={medicalRecordToEdit?.medicalRecord}
+          medicalRecordName={medicalRecordToEdit?.medicalRecordName}
           onClose={closeMedicalRecordEditDialog}
           onSaved={updateMedicalRecordList}
         />
@@ -218,7 +229,8 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
 
       {isDeleteDialogOpen && medicalRecordToDelete &&
         <MedicalRecordDeleteDialog
-          medicalRecord={medicalRecordToDelete}
+          medicalRecord={medicalRecordToDelete.medicalRecord}
+          medicalRecordName={medicalRecordToDelete.medicalRecordName}
           onClose={closeMedicalRecordDeleteDialog}
           onDelete={removeMedicalRecordFromList}
         />

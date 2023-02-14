@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { buildTeam, buildTeamMember, createPatient } from '../../../common/utils'
 import { type CategoryProps } from '../../../../../components/dashboard-widgets/medical-files/medical-files-widget'
 import MedicalRecordList from '../../../../../components/dashboard-widgets/medical-files/medical-record-list'
@@ -53,16 +53,26 @@ jest.mock('../../../../../components/dialogs/medical-record-edit-dialog', () => 
           progressionProposal: 'proposal',
           trainingSubject: 'trainingSubject'
         })
-      }}>mock-save-button</button>
-      <button onClick={() => { props.onClose() }}>mock-cancel-button</button>
+      }}>mock-save-button
+      </button>
+      <button onClick={() => {
+        props.onClose()
+      }}>mock-cancel-button
+      </button>
     </div>
   )
 })
 jest.mock('../../../../../components/dialogs/medical-record-delete-dialog', () => (props: MedicalRecordDeleteDialogProps) => {
   return (
     <div aria-label="mock-delete-dialog">
-      <button onClick={() => { props.onDelete('fakeId') }}>mock-delete-button</button>
-      <button onClick={() => { props.onClose() }}>mock-cancel-button</button>
+      <button onClick={() => {
+        props.onDelete('fakeId')
+      }}>mock-delete-button
+      </button>
+      <button onClick={() => {
+        props.onClose()
+      }}>mock-cancel-button
+      </button>
     </div>
   )
 })
@@ -108,7 +118,9 @@ describe('Medical Record list', () => {
 
   async function renderComponent() {
     render(getMedicalRecordListJSX())
-    await waitFor(() => { expect(getMedicalRecordsSpy()).toHaveBeenCalled() })
+    await waitFor(() => {
+      expect(getMedicalRecordsSpy()).toHaveBeenCalled()
+    })
   }
 
   function checkListLength(length: number) {
@@ -131,60 +143,5 @@ describe('Medical Record list', () => {
   it('should render a list if some medical records are saved', async () => {
     await renderComponent()
     checkListLength(2)
-  })
-
-  it('should not render create and delete button if the user is a patient', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => false, isUserPatient: () => true } as User }
-    })
-    await renderComponent()
-    expect(screen.queryByRole('button', { name: 'new' })).toBeNull()
-    const listItem = screen.getByRole('listitem', { name: 'record-fakeId' })
-    fireEvent.mouseOver(listItem)
-    expect(within(listItem).queryByRole('button', { name: 'delete-button' })).toBeNull()
-  })
-
-  it('should create a new medical record', async () => {
-    await renderComponent()
-    const newButton = screen.getByRole('button', { name: 'new' })
-    expect(newButton).toBeDefined()
-    fireEvent.click(newButton)
-    fireEvent.click(screen.getByRole('button', { name: 'mock-save-button' }))
-    await waitFor(() => { checkListLength(3) })
-  })
-
-  it('should close the edit dialog when clicking on cancel button', async () => {
-    await renderComponent()
-    const newButton = screen.getByRole('button', { name: 'new' })
-    expect(newButton).toBeDefined()
-    fireEvent.click(newButton)
-    fireEvent.click(screen.getByRole('button', { name: 'mock-cancel-button' }))
-    expect(screen.queryByLabelText('mock-edit-dialog')).toBeNull()
-  })
-
-  it('should delete a medical record', async () => {
-    await renderComponent()
-    const listItem = screen.getByRole('listitem', { name: 'record-fakeId' })
-    fireEvent.mouseOver(listItem)
-    fireEvent.click(screen.getByRole('button', { name: 'delete' }))
-    expect(screen.queryByLabelText('mock-delete-dialog')).not.toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: 'mock-delete-button' }))
-    await waitFor(() => { checkListLength(1) })
-  })
-
-  it('should close the delete dialog when clicking on cancel button', async () => {
-    await renderComponent()
-    const listItem = screen.getByRole('listitem', { name: 'record-fakeId' })
-    fireEvent.mouseOver(listItem)
-    fireEvent.click(screen.getByRole('button', { name: 'delete' }))
-    fireEvent.click(screen.getByRole('button', { name: 'mock-cancel-button' }))
-    expect(screen.queryByLabelText('mock-delete-dialog')).toBeNull()
-  })
-
-  it('should open the edit dialog when clicking on a list item', async () => {
-    await renderComponent()
-    const listItem = screen.getByRole('listitem', { name: 'record-fakeId' })
-    fireEvent.click(listItem)
-    expect(screen.queryByLabelText('mock-edit-dialog')).not.toBeNull()
   })
 })

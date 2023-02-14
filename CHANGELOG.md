@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.4-beta - 2023-02-10
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
+- YLP-2140 As a HCP, I can only edit my medical records
 
 ### Engineering use
 - YLP-2044 Remove redux settings store

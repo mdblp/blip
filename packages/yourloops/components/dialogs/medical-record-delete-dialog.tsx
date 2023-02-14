@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,9 +44,10 @@ export interface MedicalRecordDeleteDialogProps {
   onClose: () => void
   onDelete: (medicalRecordId: string) => void
   medicalRecord: MedicalRecord
+  medicalRecordName: string
 }
 
-export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete }: MedicalRecordDeleteDialogProps): JSX.Element {
+export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete, medicalRecordName }: MedicalRecordDeleteDialogProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
 
@@ -75,12 +76,12 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
       onClose={onClose}
     >
       <DialogTitle>
-        {t('delete-medical-report')}
+        {t('delete-medical-record', { date: medicalRecordName })}
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t('delete-warning', { fileName: t('medical-record-pdf', { pdfName: new Date(medicalRecord.creationDate).toLocaleDateString() }) })}
+          {t('delete-warning', { fileName: t('medical-record-pdf', { pdfName: medicalRecordName }) })}
         </DialogContentText>
       </DialogContent>
 

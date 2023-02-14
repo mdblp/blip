@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,13 +32,12 @@ import { mockTeamAPI } from './team.api.mock'
 import PatientAPI from '../../../lib/patient/patient.api'
 import { mockChatAPI } from './chat.api.mock'
 import { mockMedicalFilesAPI } from './medical-files.api.mock'
-import { unmonitoredPatientId } from './patient.api.mock'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 import { mockUserApi } from './user.api.mock'
 
 export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRoles.patient, unmonitoredPatientId)
+  mockAuth0Hook(UserRoles.patient, patient.userId)
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()

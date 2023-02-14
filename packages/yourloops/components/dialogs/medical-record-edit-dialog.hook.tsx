@@ -32,35 +32,52 @@ import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import { useAlert } from '../utils/snackbar'
 import { type MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
+import { useAuth } from '../../lib/auth'
 
 interface MedicalRecordEditDialogHookProps extends CategoryProps {
   onSaved: (payload: MedicalRecord) => void
   medicalRecord?: MedicalRecord
+  medicalRecordName?: string
 }
 
 interface MedicalRecordEditDialogHookReturn {
   saveMedicalRecord: () => Promise<void>
   diagnosis: string
+  dialogTitle: string
   setDiagnosis: Dispatch<SetStateAction<string>>
   progressionProposal: string
   setProgressionProposal: Dispatch<SetStateAction<string>>
   trainingSubject: string
   setTrainingSubject: Dispatch<SetStateAction<string>>
   inProgress: boolean
+  isInReadOnly: boolean
   setInProgress: Dispatch<SetStateAction<boolean>>
-  disabled: boolean
+  saveButtonDisabled: boolean
 }
 
 export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialogHookProps): MedicalRecordEditDialogHookReturn {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { onSaved, medicalRecord, teamId, patientId } = props
+  const { user } = useAuth()
+  const { onSaved, medicalRecord, teamId, patientId, medicalRecordName } = props
 
   const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || '')
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || '')
   const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || '')
   const [inProgress, setInProgress] = useState<boolean>(false)
-  const disabled = inProgress || (!diagnosis && !trainingSubject && !progressionProposal)
+  const saveButtonDisabled = inProgress || (!diagnosis && !trainingSubject && !progressionProposal)
+
+  const isInReadOnly = user.isUserPatient() || (user.isUserHcp() && medicalRecord !== undefined && medicalRecord?.authorId !== user.id)
+
+  const getTitle = (): string => {
+    if (!medicalRecord) {
+      return t('create-medical-record')
+    }
+    if (user.isUserHcp() && medicalRecord.authorId === user.id) {
+      return t('edit-medical-record', { date: medicalRecordName })
+    }
+    return t('consult-medical-record', { date: medicalRecordName })
+  }
 
   const saveMedicalRecord = async (): Promise<void> => {
     try {
@@ -95,13 +112,15 @@ export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialo
   return {
     saveMedicalRecord,
     diagnosis,
+    dialogTitle: getTitle(),
     setDiagnosis,
     progressionProposal,
     setProgressionProposal,
     trainingSubject,
     setTrainingSubject,
     inProgress,
+    isInReadOnly,
     setInProgress,
-    disabled
+    saveButtonDisabled
   }
 }

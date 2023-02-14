@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockPatientApiForPatients, unmonitoredPatientId } from '../../mock/patient.api.mock'
+import { mockPatientApiForCaregivers, unmonitoredPatientId } from '../../mock/patient.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -50,7 +50,7 @@ describe('Daily view for caregiver', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForPatients()
+    mockPatientApiForCaregivers()
     mockChatAPI()
     mockMedicalFilesAPI()
   })
