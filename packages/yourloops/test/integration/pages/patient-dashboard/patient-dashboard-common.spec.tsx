@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { completeDashboardData, mockDataAPI, YESTERDAY_DATE } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
@@ -34,13 +34,14 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { checkNoTooltip } from '../../assert/stats'
 import { mockUserApi } from '../../mock/user.api.mock'
 import crypto from 'crypto'
 import moment from 'moment-timezone'
 import { getTomorrowDate } from '../../utils/helpers'
 import userEvent from '@testing-library/user-event'
+import { ConfigService } from '../../../../lib/config/config.service'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {
@@ -118,5 +119,15 @@ describe('Patient dashboard for anyone', () => {
     const chartCard = screen.getByTestId('chat-card')
     expect(chartCard).toBeVisible()
     expect(chartCard).toHaveTextContent('Messages ReplyPrivate')
+  })
+
+  it('should automatically log out an idle user', async () => {
+    jest.spyOn(ConfigService, 'getIdleTimeout').mockReturnValue(1000)
+
+    renderPage(`/patient/${monitoredPatientId}/dashboard`)
+
+    await waitFor(() => {
+      expect(logoutMock).toHaveBeenCalledWith({ returnTo: 'http://localhost/login?idle=true' })
+    }, { timeout: 3000 })
   })
 })

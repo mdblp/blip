@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -221,9 +221,9 @@ export function SnackbarContextProvider(props: SnackbarProvider): JSX.Element {
 }
 
 /**
- * Hook for child components to get the snackbat functionalities
+ * Hook for child components to get the snackbar functionalities
  *
- * Trigger a re-render when it change.
+ * Trigger a re-render when it changes.
  */
 export function useAlert(): SnackbarContext {
   return React.useContext(ReactSnackbarContext)
