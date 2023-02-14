@@ -21,6 +21,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2116 Migrate TrendsSVGContainer from viz to dumb
 - YLP-2118 Update axios and minor dependencies
 - YLP-2121 Removing deprecated @mui/styles library
+- YLP-2139 Remove weekly reports
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

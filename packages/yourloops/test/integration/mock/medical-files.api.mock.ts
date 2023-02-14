@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,24 +27,8 @@
 
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { monitoredPatientId } from './patient.api.mock'
-import { monitoringParameters } from './team.api.mock'
 
 export const mockMedicalFilesAPI = () => {
-  jest.spyOn(MedicalFilesApi, 'getWeeklyReports').mockResolvedValue([{
-    id: 'weeklyReportMocked',
-    patientId: monitoredPatientId,
-    teamId: 'team1234',
-    parameters: monitoringParameters,
-    alarms: {
-      timeSpentAwayFromTargetRate: 20,
-      timeSpentAwayFromTargetActive: true,
-      frequencyOfSevereHypoglycemiaRate: 20,
-      frequencyOfSevereHypoglycemiaActive: true,
-      nonDataTransmissionRate: 20,
-      nonDataTransmissionActive: true
-    },
-    creationDate: '2022-01-02T08:34:06.898Z'
-  }])
   jest.spyOn(MedicalFilesApi, 'getPrescriptions').mockResolvedValue([{
     id: 'prescriptionMocked',
     name: 'patientPrescription',

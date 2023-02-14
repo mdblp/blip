@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,6 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import MedicalRecordList from './medical-record-list'
 import PrescriptionList from './prescription-list'
-import WeeklyReportList from './weekly-report-list'
 import PatientUtils from '../../../lib/patient/patient.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 
@@ -80,7 +79,6 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
       />
       <CardContent className={classes.cardContent}>
         <PrescriptionList teamId={team.teamId} patientId={patient.userid} />
-        <WeeklyReportList teamId={team.teamId} patientId={patient.userid} />
         <MedicalRecordList teamId={team.teamId} patientId={patient.userid} />
       </CardContent>
     </Card>
