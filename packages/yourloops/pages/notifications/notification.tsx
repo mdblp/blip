@@ -280,14 +280,14 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
          className={`${classes.container} notification-line`} data-notificationid={id}>
       <NotificationIcon id={id} className="notification-icon" type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} notification={notification} />
+      {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
+        <JoinTeamDialog
+          onClose={onCloseDialog}
+          onAccept={closeTeamAcceptDialog}
+          teamName={notification.target.name} />
+      }
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
-        {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
-          <JoinTeamDialog
-            onClose={onCloseDialog}
-            onAccept={closeTeamAcceptDialog}
-            teamName={notification.target.name} />
-        }
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
           <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => {
             setDisplayMonitoringTerms(false)
