@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.4-beta - 2023-02-10
+### Added
+- YLP-1503 Logout idle user after 30 mn of inactivity
+
 ### Engineering use
 - YLP-2044 Remove redux settings store
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
@@ -16,6 +19,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2095 Migrate FocusedCBGSliceSegment from viz to dumb
 - YLP-2096 Migrate CBG date traces animated to dumb
 - YLP-2097 Migrate RangeSelect from viz to dumb
+- YLP-2098 Migrate TimeInRange and ReadingsInRange stats to Yourloops
 - YLP-2110 Update i18next from 19.9.2 to 22.4.9
 - YLP-2113 Migrate FocusedRangeLabels from viz to dumb
 - YLP-2116 Migrate TrendsSVGContainer from viz to dumb

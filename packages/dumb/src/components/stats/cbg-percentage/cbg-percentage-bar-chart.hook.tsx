@@ -25,20 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type CBGPercentageBarProps } from './cbg-percentage-bar'
-import { type CBGPercentageData, type CBGStatType, StatLevel } from '../../../models/stats.model'
+import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
+import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.util'
+import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { type BgBounds, BgSource } from '../../../models/blood-glucose.model'
+import { type UnitsType } from '../../../models/enums/units-type.enum'
 
 export interface CBGPercentageBarChartHookProps {
+  bgBounds: BgBounds
+  bgSource: BgSource
+  data: TimeInRangeData
+  days: number
   type: CBGStatType
-  data: CBGPercentageData[]
-  hideTooltip: boolean
-  titleKey: string
-  total: number
+  units: UnitsType
 }
 
 interface CBGPercentageBarChartHookReturn {
+  annotations: string[]
   cbgStatsProps: {
     veryHighStat: CBGPercentageBarProps
     highStat: CBGPercentageBarProps
@@ -48,37 +54,120 @@ interface CBGPercentageBarChartHookReturn {
   }
   hoveredStatId: StatLevel | null
   onMouseLeave: () => void
-  titleProps: { legendTitle: string, showTooltipIcon: boolean, title: string }
+  titleProps: { legendTitle: string, title: string }
 }
 
-export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, data, hideTooltip, titleKey, total } = props
-  const { t } = useTranslation('main')
-  const title = t(titleKey)
-  const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
-  const [titleProps, setTitleProps] = useState({
-    legendTitle: '',
-    showTooltipIcon: !hideTooltip,
-    title
-  })
+const TITLE_TYPE_READINGS = 'Readings'
+const TITLE_TYPE_TIME = 'Time'
 
-  const onStatMouseover = useCallback((id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => {
+export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
+  const { type, units, days, data, bgBounds, bgSource } = props
+  const { t } = useTranslation('main')
+  const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
+
+  const title = useMemo<string>(() => {
+    switch (type) {
+      case CBGStatType.TimeInRange:
+        return days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
+      case CBGStatType.ReadingsInRange:
+      default:
+        return days > 1 ? t('Avg. Daily Readings In Range') : t('Readings In Range')
+    }
+  }, [days, t, type])
+
+  const [titleProps, setTitleProps] = useState({ legendTitle: '', title })
+
+  const annotations = useMemo<string[]>(() => {
+    const annotations = []
+    switch (type) {
+      case CBGStatType.TimeInRange:
+        if (days > 1) {
+          annotations.push(
+            t('time-in-range-cgm-daily-average'),
+            t('compute-ndays-time-in-range', { cbgLabel: t('CGM') })
+          )
+          break
+        }
+        annotations.push(
+          t('time-in-range-cgm-one-day'),
+          t('compute-oneday-time-in-range')
+        )
+        break
+      case CBGStatType.ReadingsInRange:
+      default:
+        annotations.push(t('readings-in-range-bgm-daily-average', { smbgLabel: t('BGM') }))
+        break
+    }
+
+    if (bgSource === BgSource.Smbg) {
+      annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
+        total: data.total,
+        smbgLabel: t('BGM')
+      }))
+    }
+
+    return annotations
+  }, [bgSource, data.total, days, t, type])
+
+  const onStatMouseover = (id: StatLevel, title: string, legendTitle: string, hasValues: boolean): void => {
     if (hasValues) {
-      setTitleProps({ legendTitle, showTooltipIcon: false, title: `${title}` })
+      setTitleProps({ legendTitle, title: `${title}` })
       setHoveredStatId(id)
     }
-  }, [])
-  const onMouseLeave = useCallback(() => {
-    setTitleProps({
-      legendTitle: '',
-      showTooltipIcon: !hideTooltip,
-      title
-    })
-    setHoveredStatId(null)
-  }, [hideTooltip, title])
+  }
 
-  const getCBGPercentageBarProps = useCallback((id: string) => {
-    const stat = data.find(timeInRange => timeInRange.id === id)
+  const onMouseLeave = (): void => {
+    setTitleProps({ legendTitle: '', title })
+    setHoveredStatId(null)
+  }
+
+  const dataArray = useMemo<CBGPercentageData[]>(() => {
+    const titleType = type === CBGStatType.ReadingsInRange ? TITLE_TYPE_READINGS : TITLE_TYPE_TIME
+    const bounds = {
+      targetLowerBound: formatBgValue(bgBounds.targetLowerBound, units),
+      targetUpperBound: formatBgValue(bgBounds.targetUpperBound, units),
+      veryHighThreshold: formatBgValue(bgBounds.veryHighThreshold, units),
+      veryLowThreshold: formatBgValue(bgBounds.veryLowThreshold, units)
+    }
+
+    return [
+      {
+        id: StatLevel.VeryLow,
+        value: ensureNumeric(data.veryLow),
+        title: t(`${titleType} Below Range`),
+        legendTitle: `<${bounds.veryLowThreshold}`
+      },
+      {
+        id: StatLevel.Low,
+        value: ensureNumeric(data.low),
+        title: t(`${titleType} Below Range`),
+        legendTitle: `${bounds.veryLowThreshold}-${bounds.targetLowerBound}`
+      },
+      {
+        id: StatLevel.Target,
+        value: ensureNumeric(data.target),
+        title: t(`${titleType} In Range`),
+        legendTitle: `${bounds.targetLowerBound}-${bounds.targetUpperBound}`
+      },
+      {
+        id: StatLevel.High,
+        value: ensureNumeric(data.high),
+        title: t(`${titleType} Above Range`),
+        legendTitle: `${bounds.targetUpperBound}-${bounds.veryHighThreshold}`
+      },
+      {
+        id: StatLevel.VeryHigh,
+        value: ensureNumeric(data.veryHigh),
+        title: t(`${titleType} Above Range`),
+        legendTitle: `>${bounds.veryHighThreshold}`
+      }
+    ]
+  }, [bgBounds.targetLowerBound, bgBounds.targetUpperBound, bgBounds.veryHighThreshold, bgBounds.veryLowThreshold, data.high, data.low, data.target, data.veryHigh, data.veryLow, t, type, units])
+
+  const total = dataArray.map(data => data.value).reduce((sum: number, value: number) => sum + value)
+
+  const getCBGPercentageBarProps = (id: string): CBGPercentageBarProps => {
+    const stat = dataArray.find(timeInRange => timeInRange.id === id)
     if (!stat) {
       throw Error(`Could not find stat with id ${id}`)
     }
@@ -92,20 +181,21 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
       total,
       value: stat.value
     }
-  }, [type, data, hoveredStatId, onStatMouseover, total])
+  }
 
-  const cbgStatsProps = useMemo(() => ({
+  const cbgStatsProps = {
     veryHighStat: getCBGPercentageBarProps(StatLevel.VeryHigh),
     highStat: getCBGPercentageBarProps(StatLevel.High),
     targetStat: getCBGPercentageBarProps(StatLevel.Target),
     lowStat: getCBGPercentageBarProps(StatLevel.Low),
     veryLowStat: getCBGPercentageBarProps(StatLevel.VeryLow)
-  }), [getCBGPercentageBarProps])
+  }
 
-  return useMemo(() => ({
+  return ({
+    annotations,
     cbgStatsProps,
     onMouseLeave,
     hoveredStatId,
     titleProps
-  }), [cbgStatsProps, onMouseLeave, hoveredStatId, titleProps])
+  })
 }

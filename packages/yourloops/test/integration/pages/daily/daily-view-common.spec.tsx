@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -64,11 +64,11 @@ describe('Daily view for anyone', () => {
       await checkDailyStatsWidgetsTooltips()
 
       // Check the time in range stats widgets
-      checkDailyTimeInRangeStatsWidgets()
+      await checkDailyTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
 
-      checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
-      checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
+      await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
     })
   })
 
@@ -137,7 +137,7 @@ describe('Daily view for anyone', () => {
 
       await checkReadingsInRangeStatsWidgets()
 
-      checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
+      await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
       expect(screen.queryByTestId('cbg-standard-deviation-stat')).not.toBeInTheDocument()
 
       await checkSMBGDailyStatsWidgetsTooltips()

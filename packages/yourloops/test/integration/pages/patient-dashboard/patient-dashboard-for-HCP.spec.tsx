@@ -49,7 +49,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { getTomorrowDate } from '../../utils/helpers'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 

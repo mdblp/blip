@@ -33,6 +33,7 @@ import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsProvider } from 'dumb'
+import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -591,15 +592,21 @@ class Trends extends React.Component {
               <div className="container-box-inner patient-data-sidebar">
                 <div className="patient-data-sidebar-inner">
                   <div id="toggle-bg-replacement" style={{ height: 36 }} />
-                  <Stats
-                    bgPrefs={this.props.bgPrefs}
-                    bgSource={this.props.dataUtil.bgSource}
-                    chartPrefs={chartPrefs}
-                    chartType={this.chartType}
+                  <PatientStatistics
                     dataUtil={this.props.dataUtil}
+                    bgPrefs={this.props.bgPrefs}
                     endpoints={endpoints}
-                    loading={loading}
-                  />
+                  >
+                    <Stats
+                      bgPrefs={this.props.bgPrefs}
+                      bgSource={this.props.dataUtil.bgSource}
+                      chartPrefs={chartPrefs}
+                      chartType={this.chartType}
+                      dataUtil={this.props.dataUtil}
+                      endpoints={endpoints}
+                      loading={loading}
+                    />
+                  </PatientStatistics>
                 </div>
               </div>
             </Box>

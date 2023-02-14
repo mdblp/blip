@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,17 +35,8 @@
 }
 
 .stat-legend-item {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
   margin: 0 1em 0 0;
   border-bottom: 2px solid;
-}
-
-.stat-legend-title {
-  letter-spacing: -.01em;
-  white-space: nowrap;
-  line-height: 16px;
 }
 
 .very-high-border-bottom {

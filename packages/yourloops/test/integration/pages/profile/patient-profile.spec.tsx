@@ -42,7 +42,7 @@ import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Profile page for patient', () => {

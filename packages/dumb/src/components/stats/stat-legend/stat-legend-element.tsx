@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,10 +37,8 @@ export const StatLegendElement: FunctionComponent<StatLegendElementProps> = (pro
   const { cbgClassName, value } = props
 
   return (
-    <li
-      className={`${styles['stat-legend-item']} ${styles[`${cbgClassName}-border-bottom`]}`}
-    >
-      <span className={styles['stat-legend-title']}>
+    <li className={`${styles['stat-legend-item']} ${styles[`${cbgClassName}-border-bottom`]}`}>
+      <span>
         {value}
       </span>
     </li>

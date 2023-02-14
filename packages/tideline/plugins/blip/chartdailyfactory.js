@@ -239,11 +239,11 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     guidelines: [
       {
         class: 'd3-line-bg-threshold',
-        height: chart.options.bgClasses.low.boundary
+        height: chart.options.bgClasses.low
       },
       {
         class: 'd3-line-bg-threshold',
-        height: chart.options.bgClasses.target.boundary
+        height: chart.options.bgClasses.target
       }
     ]
   }))

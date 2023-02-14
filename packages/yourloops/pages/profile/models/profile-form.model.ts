@@ -27,7 +27,7 @@
 
 import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type UnitsType } from '../../../lib/units/models/enums/units-type.enum'
+import { type UnitsType } from 'dumb'
 
 export interface ProfileForm {
   birthday: string | undefined

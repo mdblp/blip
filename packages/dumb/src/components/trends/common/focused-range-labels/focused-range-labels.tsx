@@ -27,17 +27,16 @@
 
 import React, { type FunctionComponent } from 'react'
 
-import { type BgUnit } from 'medical-domain'
-
 import styles from './focused-range-labels.css'
 import { formatClocktimeFromMsPer24 } from '../../../../utils/datetime/datetime.util'
 import { type RangeSegmentSlice, type RangeSegmentSliceType } from '../../../../models/enums/range-segment.enum'
 import { formatBgValue } from '../../../../utils/format/format.util'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
 import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
+import { type UnitsType } from '../../../../models/enums/units-type.enum'
 
 interface FocusedRangeLabelsProps {
-  bgUnit: BgUnit
+  bgUnit: UnitsType
   focusedRangeSegments: RangeSegmentSlice
   data: RangeSegmentSliceType & {
     median: number

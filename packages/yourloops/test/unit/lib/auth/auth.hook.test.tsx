@@ -41,7 +41,7 @@ import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/aut
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 
 jest.mock('@auth0/auth0-react')
@@ -59,7 +59,7 @@ describe('Auth hook', () => {
     email: 'fake@email.com',
     hcpProfession: HcpProfession.diabeto
   }
-  const preferences: Preferences = { displayLanguageCode: 'en' }
+  const preferences: Preferences = { displayLanguageCode: LanguageCodes.En }
   const settings: Settings = { country: CountryCodes.France, units: { bg: UnitsType.MGDL } }
 
   const initAuthContext = async (): Promise<void> => {
@@ -112,6 +112,16 @@ describe('Auth hook', () => {
       expect(auth.isLoggedIn).toBeTruthy()
       await auth.logout()
       expect(auth0Mock.useAuth0().logout).toHaveBeenCalledTimes(1)
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ returnTo: 'http://localhost/login' })
+    })
+
+    it('should logout the logged-in idle user', async () => {
+      await initAuthContext()
+      expect(auth.user).not.toBeNull()
+      expect(auth.isLoggedIn).toBeTruthy()
+      await auth.logout(true)
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledTimes(1)
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ returnTo: 'http://localhost/login?idle=true' })
     })
   })
 

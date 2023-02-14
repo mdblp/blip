@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import { type IUser } from './models/i-user.model'
 import { type MessageNote } from './models/message-note.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
-import { UnitsType } from '../units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 
 const log = bows('Data API')
 
