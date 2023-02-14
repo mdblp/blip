@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AppConfig {
-  VERSION: string
-  API_HOST: string
-  BRANDING: string
-  DOMAIN_NAME?: string
-  DEV: boolean
-  TEST: boolean
-  LATEST_TERMS?: string
-  LATEST_TRAINING?: string
-  LATEST_RELEASE?: string
-  SUPPORT_WEB_ADDRESS?: string
-  ASSETS_URL?: string | null
-  METRICS_SERVICE?: string | null
-  TERMS_PRIVACY_DATE?: string
-  STONLY_WID: string
-  COOKIE_BANNER_CLIENT_ID: string
-  SESSION_TIMEOUT: number
-  YLP820_BASAL_TIME: number
-  CBG_BUCKETS_ENABLED: boolean
-  ECPS_ENABLED: boolean
-  AUTH0_DOMAIN: string
-  AUTH0_ISSUER: string
-  AUTH0_CLIENT_ID: string
-  YLPZ_RA_LAD_001_FR_REV: string
-  YLPZ_RA_LAD_001_EN_REV: string
-  YLPZ_RA_LAD_001_NL_REV: string
-  YLPZ_RA_LAD_001_IT_REV: string
-  YLPZ_RA_LAD_001_ES_REV: string
-  YLPZ_RA_LAD_001_DE_REV: string
-  IDLE_TIMEOUT_MS: number
+import appConfig from './config'
+
+export class ConfigService {
+  static getIdleTimeout(): number {
+    return appConfig.IDLE_TIMEOUT_MS
+  }
 }

@@ -56,7 +56,9 @@ const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (pr
   const { userId, bgBounds, data, focusDateTrace, onSelectDate, topMargin, unfocusDateTrace, xScale, yScale } = props
 
   const handleClick = (dateTrace: CbgDateTrace): void => {
-    onSelectDate(dateTrace.epoch)
+    if (dateTrace.epoch) {
+      onSelectDate(dateTrace.epoch)
+    }
   }
 
   const handleMouseOut = (): void => {
