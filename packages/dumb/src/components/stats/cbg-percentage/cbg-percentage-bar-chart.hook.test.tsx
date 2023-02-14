@@ -56,8 +56,9 @@ describe('CBGPercentageBarChart hook', () => {
     low: lowStatValue,
     veryLow: veryLowStatValue,
     /*
-    TODO This stat is not calculated correctly in blip code, need to fix this when we will migrate data calculation to yourloops
-      Currently it's computed with sum of each bound
+    TODO waiting YLP-2141 (https://diabeloop.atlassian.net/browse/YLP-2141)
+     This stat is not calculated correctly in blip code, need to fix this when we will migrate data calculation to yourloops
+     Currently it's computed with sum of each bound
      */
     total: 1000
   }

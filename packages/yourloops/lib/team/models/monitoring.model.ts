@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { type MonitoringStatus } from './enums/monitoring-status.enum'
-import { type UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { type UnitsType } from 'dumb'
 
 export interface Monitoring {
   enabled: boolean

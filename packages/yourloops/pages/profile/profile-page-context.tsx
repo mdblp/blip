@@ -30,7 +30,7 @@ import useProfilePageContextHook from './profil-page-context.hook'
 import { type ProfileErrors, type ProfileForm } from './models/profile-form.model'
 import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
 import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
-import { type UnitsType } from 'dumb/src/models/enums/units-type.enum'
+import { type UnitsType } from 'dumb'
 import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 
 interface ProfilePageContext {
