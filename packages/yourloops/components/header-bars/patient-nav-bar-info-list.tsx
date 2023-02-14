@@ -119,7 +119,8 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
         sx={{ cursor: 'pointer' }}
         onClick={onShowMoreInfoClick}
       >
-        <Typography variant="caption" marginRight={1} sx={{ textDecoration: 'underline' }}>{t('show-more')}</Typography>
+        <Typography variant="caption" marginRight={1}
+                    sx={{ textDecoration: 'underline' }}>{showMoreInfo ? t('show-less') : t('show-more')}</Typography>
         {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
       </Box>
     </Box>
