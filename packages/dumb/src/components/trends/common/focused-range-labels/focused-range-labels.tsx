@@ -32,7 +32,7 @@ import { formatClocktimeFromMsPer24 } from '../../../../utils/datetime/datetime.
 import { type RangeSegmentSlice, type RangeSegmentSliceType } from '../../../../models/enums/range-segment.enum'
 import { formatBgValue } from '../../../../utils/format/format.util'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
-import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
+import { type BgPositionData } from '../../../../models/bg-position-data.model'
 import { type UnitsType } from '../../../../models/enums/units-type.enum'
 
 interface FocusedRangeLabelsProps {
@@ -47,7 +47,7 @@ interface FocusedRangeLabelsProps {
       high: number
     }
   }
-  position: CbgPositionData
+  position: BgPositionData
 }
 
 const BOTTOM_OFFSET = -5

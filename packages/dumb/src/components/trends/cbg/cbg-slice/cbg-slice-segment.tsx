@@ -28,7 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import { bindActionCreators, type Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
+import { type BgPositionData } from '../../../../models/bg-position-data.model'
 import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from 'tidepool-viz'
 import { type CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
 import { type CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
@@ -38,13 +38,13 @@ interface CbgSliceSegmentProps {
   classes: string
   datum: { id: string }
   id: string
-  positionData: CbgPositionData
+  positionData: BgPositionData
   segment: CbgRangeSegment
   style: CbgSliceTransitionMotionStyle
   width: number
   x: number
   // Properties added via Redux
-  focusSlice: (userId: string, datum: { id: string }, positionData: CbgPositionData, focusedKeys: string[]) => void
+  focusSlice: (userId: string, datum: { id: string }, positionData: BgPositionData, focusedKeys: string[]) => void
   unfocusSlice: (userId: string) => void
   userId: string
 }
@@ -92,7 +92,7 @@ const mapStateToProps = (state: { blip: { currentPatientInViewId: string } }): {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): { unfocusSlice: (userId: string) => void, focusSlice: (userId: string, sliceData: { id: string }, slicePosition: CbgPositionData, focusedKeys: string[]) => void } => {
+const mapDispatchToProps = (dispatch: Dispatch): { unfocusSlice: (userId: string) => void, focusSlice: (userId: string, sliceData: { id: string }, slicePosition: BgPositionData, focusedKeys: string[]) => void } => {
   return bindActionCreators({
     focusSlice: delayShowCbgTracesOnFocus,
     unfocusSlice: unfocusTrendsCbgSlice

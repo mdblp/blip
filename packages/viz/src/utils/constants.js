@@ -16,6 +16,7 @@
  */
 
 import i18next from 'i18next'
+
 const t = i18next.t.bind(i18next)
 
 export const BG_HIGH = 'High'
@@ -26,9 +27,6 @@ const DAMPING = 40
 const PRECISION = 0.1
 
 export const springConfig = { stiffness: STIFFNESS, damping: DAMPING, precision: PRECISION }
-
-export const MGDL_CLAMP_TOP = 400
-export const MMOLL_CLAMP_TOP = 22.5
 
 export const LBS_PER_KG = 2.2046226218
 
@@ -112,7 +110,3 @@ export const AUTOMATED_BASAL_DEVICE_MODELS = {
   [MEDTRONIC]: ['1580', '1581', '1582', '1780', '1781', '1782'],
   [DIABELOOP]: true
 }
-
-export const PRESCRIPTOR_AUTO = 'auto'
-export const PRESCRIPTOR_MODIFIED = 'hybrid'
-export const PRESCRIPTOR_NONE = 'manual'

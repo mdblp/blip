@@ -27,11 +27,10 @@
 
 import { type RangeSegmentSliceType } from './enums/range-segment.enum'
 
-export interface CbgPositionData {
+export interface BgPositionData {
   left: number
   tooltipLeft?: boolean
   yPositions: Partial<RangeSegmentSliceType> & {
-    median?: number
     topMargin: number
     top?: number
   }
