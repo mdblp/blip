@@ -74,10 +74,10 @@ export function classifyBgValue(bgBounds, bgValue, classificationType = 'threeWa
 export function reshapeBgClassesToBgBounds(bgPrefs) {
   const { bgClasses } = bgPrefs
   const bgBounds = {
-    veryHighThreshold: bgClasses.high.boundary,
-    targetUpperBound: bgClasses.target.boundary,
-    targetLowerBound: bgClasses.low.boundary,
-    veryLowThreshold: bgClasses['very-low'].boundary
+    veryHighThreshold: bgClasses.high,
+    targetUpperBound: bgClasses.target,
+    targetLowerBound: bgClasses.low,
+    veryLowThreshold: bgClasses.veryLow
   }
 
   return bgBounds

@@ -37,7 +37,7 @@ import format from '../../data/util/format'
  */
 function getTargetBoundary(tidelineData, bgUnits = MGDL_UNITS) {
   const defaultTarget = DEFAULT_BG_BOUNDS[bgUnits].targetUpper
-  return _.get(tidelineData, 'opts.bgClasses.target.boundary', defaultTarget)
+  return _.get(tidelineData, 'opts.bgClasses.target', defaultTarget)
 }
 
 /**
@@ -88,8 +88,8 @@ function createScaleBG(tidelineData, pool, extent, pad) {
 function createTicksBG(tidelineData, extent) {
   /** @type {"mg/dL" | "mmol/L"} */
   const bgUnits = _.get(tidelineData, 'opts.bgUnits', MGDL_UNITS)
-  const bgValues = _.values(_.omit(tidelineData.opts.bgClasses, ['very-high', 'very-low']))
-  const ticks = _.map(bgValues, (n) => format.tooltipBGValue(_.get(n, 'boundary'), bgUnits))
+  const bgValues = _.values(_.omit(tidelineData.opts.bgClasses, ['veryHigh', 'veryLow']))
+  const ticks = _.map(bgValues, (value) => format.tooltipBGValue(value))
   ticks.sort((a, b) => a - b)
   const targetBoundary = getTargetBoundary(tidelineData, bgUnits)
 

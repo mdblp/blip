@@ -33,21 +33,11 @@ describe('Stats', () => {
   const baseProps = {
     bgPrefs: {
       bgClasses: {
-        'very-low': {
-          boundary: 60
-        },
-        'low': {
-          boundary: 80
-        },
-        'target': {
-          boundary: 180
-        },
-        'high': {
-          boundary: 200
-        },
-        'very-high': {
-          boundary: 300
-        }
+        veryLow: 60,
+        low: 80,
+        target: 180,
+        high: 200,
+        veryHigh: 300
       },
       bgUnits: MGDL_UNITS
     },
@@ -145,9 +135,8 @@ describe('Stats', () => {
         })
         wrapper.update()
 
-        expect(wrapper.find('.Stats').children()).to.have.length(6)
+        expect(wrapper.find('.Stats').children()).to.have.length(5)
 
-        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-totalInsulin' })).to.have.length(1)
@@ -162,9 +151,8 @@ describe('Stats', () => {
         })
         wrapper.update()
 
-        expect(wrapper.find('.Stats').children()).to.have.length(4)
+        expect(wrapper.find('.Stats').children()).to.have.length(3)
 
-        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-totalInsulin' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
@@ -181,7 +169,7 @@ describe('Stats', () => {
           })
         })} />)
 
-        expect(wrapper.find('.Stats').children()).to.have.length(7)
+        expect(wrapper.find('.Stats').children()).to.have.length(6)
         expect(wrapper.find({ 'data-testid': 'stat-timeInAuto' })).to.have.length(1)
       })
     })
@@ -206,7 +194,7 @@ describe('Stats', () => {
         })
         wrapper.update()
 
-        expect(wrapper.find('.Stats').children()).to.have.length(6)
+        expect(wrapper.find('.Stats').children()).to.have.length(5)
 
         const expectedStats = [
           'sensorUsage',
@@ -214,7 +202,6 @@ describe('Stats', () => {
           'coefficientOfVariation'
         ]
 
-        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
         _.forEach(expectedStats, statId => {
@@ -229,9 +216,8 @@ describe('Stats', () => {
         })
         wrapper.update()
 
-        expect(wrapper.find('.Stats').children()).to.have.length(4)
+        expect(wrapper.find('.Stats').children()).to.have.length(3)
 
-        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-standardDev' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-coefficientOfVariation' })).to.have.length(1)
@@ -292,9 +278,8 @@ describe('Stats', () => {
         })
         wrapper.update()
 
-        expect(wrapper.find('.Stats').children()).to.have.length(4)
+        expect(wrapper.find('.Stats').children()).to.have.length(6)
 
-        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageDailyDose' })).to.have.length(1)
@@ -312,9 +297,8 @@ describe('Stats', () => {
           })
         })} />)
 
-        expect(wrapper.find('.Stats').children()).to.have.length(5)
+        expect(wrapper.find('.Stats').children()).to.have.length(7)
 
-        expect(wrapper.find({ 'data-testid': 'stat-timeInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-timeInAuto' })).to.have.length(1)
@@ -330,7 +314,6 @@ describe('Stats', () => {
         wrapper.update()
         expect(wrapper.find('.Stats').children()).to.have.length(4)
 
-        expect(wrapper.find({ 'data-testid': 'cbg-percentage-stats-readingsInRange' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageGlucose' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-carbs' })).to.have.length(1)
         expect(wrapper.find({ 'data-testid': 'stat-averageDailyDose' })).to.have.length(1)
@@ -363,7 +346,6 @@ describe('Stats', () => {
         const stats = instance.getStatsByChartType()
 
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
           'totalInsulin',
           'carbs',
@@ -383,7 +365,6 @@ describe('Stats', () => {
         const stats = instance.getStatsByChartType()
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'totalInsulin',
           'carbs'
@@ -435,7 +416,6 @@ describe('Stats', () => {
         const stats = instance.getStatsByChartType()
 
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
           'sensorUsage',
           'glucoseManagementIndicator',
@@ -455,7 +435,6 @@ describe('Stats', () => {
         const stats = instance.getStatsByChartType()
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
           'standardDev',
           'coefficientOfVariation'
@@ -530,10 +509,12 @@ describe('Stats', () => {
         const stats = instance.getStatsByChartType()
 
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
+          'totalInsulin',
           'averageDailyDose',
-          'carbs'
+          'carbs',
+          'standardDev',
+          'coefficientOfVariation'
         ]
 
         expect(_.map(stats, 'id')).to.have.ordered.members(expectedStats)
@@ -548,8 +529,8 @@ describe('Stats', () => {
         const stats = instance.getStatsByChartType()
 
         const expectedStats = [
-          'readingsInRange',
           'averageGlucose',
+          'totalInsulin',
           'averageDailyDose',
           'carbs'
         ]
@@ -572,7 +553,6 @@ describe('Stats', () => {
         const stats = instance.getStatsByChartType()
 
         const expectedStats = [
-          'timeInRange',
           'averageGlucose',
           'averageDailyDose',
           'timeInAuto',
@@ -758,13 +738,13 @@ describe('Stats', () => {
       const setStateSpy = sinon.spy(instance, 'setState')
       sinon.assert.callCount(setStateSpy, 0)
 
-      expect(instance.state.stats.length).to.equal(6)
+      expect(instance.state.stats.length).to.equal(5)
 
       instance.updateStatData()
 
-      sinon.assert.callCount(vizUtils.stat.getStatAnnotations, 6)
-      sinon.assert.callCount(vizUtils.stat.getStatData, 6)
-      sinon.assert.callCount(vizUtils.stat.getStatTitle, 6)
+      sinon.assert.callCount(vizUtils.stat.getStatAnnotations, 5)
+      sinon.assert.callCount(vizUtils.stat.getStatData, 5)
+      sinon.assert.callCount(vizUtils.stat.getStatTitle, 5)
 
       _.forEach(instance.state.stats, stat => {
         sinon.assert.calledWith(vizUtils.stat.getStatAnnotations, sinon.match.object, stat.id)

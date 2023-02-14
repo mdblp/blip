@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,42 +26,36 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import styles from './cbg-percentage-title.css'
 import cbgColorsStyles from '../common/cbg-colors.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { type StatLevel } from '../../../models/stats.model'
+import Box from '@mui/material/Box'
 
 interface CBGPercentageTitleProps {
-  annotations: []
+  annotations: string[]
   hoveredStatId: StatLevel | null
   legendTitle: string
-  showTooltipIcon: boolean
   title: string
 }
 
 const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) => {
-  const { annotations, hoveredStatId, legendTitle, showTooltipIcon, title } = props
+  const { annotations, hoveredStatId, legendTitle, title } = props
 
   return (
     <>
-      <div
+      <Box
         data-testid="cbg-percentage-title"
-        className={styles.title}
+        display="flex"
+        alignItems="center"
       >
         {title}
         {hoveredStatId &&
-          <span className={styles['legend-title']}>
-            {' ( '}
-            <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>
-            {legendTitle}
-          </span>
-            {' )'}
-          </span>
+          <Box fontSize={12} marginLeft={1}>
+            ( <span className={cbgColorsStyles[`${hoveredStatId}-color`]}>{legendTitle}</span> )
+          </Box>
         }
-        {showTooltipIcon &&
-          <StatTooltip annotations={annotations}/>
-        }
-      </div>
+        <StatTooltip annotations={annotations} />
+      </Box>
     </>
   )
 }

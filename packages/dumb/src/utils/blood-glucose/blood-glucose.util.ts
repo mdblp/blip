@@ -31,10 +31,10 @@ import { type BgClasses } from 'medical-domain'
 
 export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
   return {
-    veryHighThreshold: bgClasses.high.boundary,
-    targetUpperBound: bgClasses.target.boundary,
-    targetLowerBound: bgClasses.low.boundary,
-    veryLowThreshold: bgClasses['very-low'].boundary
+    veryHighThreshold: bgClasses.high,
+    targetUpperBound: bgClasses.target,
+    targetLowerBound: bgClasses.low,
+    veryLowThreshold: bgClasses.veryLow
   }
 }
 

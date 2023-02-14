@@ -29,9 +29,9 @@ import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from '../data/util/constants'
 const defaults = {
   bgUnits: MGDL_UNITS,
   classes: {
-    low: { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower },
-    target: { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper },
-    high: { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh }
+    low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh
   },
   radius: 2.5,
   /** @type {ScaleContinuousNumeric} */
@@ -48,7 +48,7 @@ function plotCbg(pool, opts = defaults) {
   const d3 = window.d3
 
   _.defaults(opts, defaults)
-  opts.classes = _.omit(opts.classes, ['very-low', 'very-high'])
+  opts.classes = _.omit(opts.classes, ['veryLow', 'veryHigh'])
 
   const categorize = categorizer(opts.classes, opts.bgUnits)
   const mainGroup = pool.parent()

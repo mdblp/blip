@@ -101,7 +101,7 @@ const mapStateToProps = (state: { blip: { currentPatientInViewId: string } }): {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): { unfocusDateTrace: (userId: string) => void, focusDateTrace: (userId: string, data: { id: string }, position: CbgPositionData) => void } => {
+const mapDispatchToProps = (dispatch: Dispatch): { unfocusDateTrace: typeof unfocusTrendsCbgDateTrace, focusDateTrace: typeof focusTrendsCbgDateTrace } => {
   return bindActionCreators({
     focusDateTrace: focusTrendsCbgDateTrace,
     unfocusDateTrace: unfocusTrendsCbgDateTrace

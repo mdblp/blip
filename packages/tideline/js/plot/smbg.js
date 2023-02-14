@@ -30,10 +30,10 @@ import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from '../data/util/constants'
 const defaults = {
   bgUnits: MGDL_UNITS,
   classes: {
-    'very-low': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow },
-    'low': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower },
-    'target': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper },
-    'high': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh }
+    veryLow: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+    low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh
   },
   size: 16,
   timezoneAware: false,

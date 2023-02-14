@@ -2,12 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
-import Divider from '@mui/material/Divider'
 import { utils as vizUtils } from 'tidepool-viz'
 import {
   AverageDailyDoseStat,
   CBGMeanStat,
-  CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
   LoopModeStat,
@@ -16,6 +14,7 @@ import {
   TotalInsulinStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
+import Divider from '@mui/material/Divider'
 
 const WEIGHT_PARAM = 'WEIGHT'
 const WEIGHT_PARAM_DEFAULT_VALUE = -1
@@ -29,11 +28,7 @@ class Stats extends React.Component {
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
-    hideToolTips: PropTypes.bool.isRequired,
     parametersConfig: PropTypes.array
-  }
-  static defaultProps = {
-    hideToolTips: false
   }
 
   constructor(props) {
@@ -100,7 +95,7 @@ class Stats extends React.Component {
       : false
   }
 
-  getStatElementById(stat, hideToolTips, bgClasses) {
+  getStatElementById(stat, bgClasses) {
     const { parametersConfig } = this.props
     switch (stat.id) {
       case CBGStatType.TimeInAuto:
@@ -108,7 +103,6 @@ class Stats extends React.Component {
           <LoopModeStat
             annotations={stat.annotations}
             automated={stat.data.raw.automated}
-            showTooltipIcon={!hideToolTips}
             manual={stat.data.raw.manual}
             title={stat.title}
             total={stat.data.total.value}
@@ -128,30 +122,14 @@ class Stats extends React.Component {
           <TotalCarbsStat
             annotations={stat.annotations}
             foodCarbs={stat.data.raw.foodCarbs}
-            hideTooltip={hideToolTips}
             title={stat.title}
             totalCarbs={stat.data.raw.totalCarbs}
-          />
-        )
-      case CBGStatType.TimeInRange:
-      case CBGStatType.ReadingsInRange:
-        return (
-          <CBGPercentageBarChart
-            annotations={stat.annotations}
-            bgClasses={bgClasses}
-            data={stat.data.data}
-            hideTooltip={hideToolTips}
-            total={stat.data.total.value}
-            titleKey={stat.title}
-            cbgStatType={stat.id}
-            units={stat.units}
           />
         )
       case CBGStatType.AverageGlucose:
         return (
           <CBGMeanStat
             bgClasses={bgClasses}
-            hideTooltip={hideToolTips}
             title={stat.title}
             tooltipValue={stat.annotations[0]}
             units={stat.units}
@@ -164,7 +142,6 @@ class Stats extends React.Component {
             annotations={stat.annotations}
             averageGlucose={Math.round(stat.data.raw.averageGlucose)}
             bgClasses={bgClasses}
-            hideTooltip={hideToolTips}
             standardDeviation={Math.round(stat.data.raw.standardDeviation)}
             title={stat.title}
             units={stat.units}
@@ -175,6 +152,7 @@ class Stats extends React.Component {
         const weight = weightParam ? Number(weightParam?.value) : WEIGHT_PARAM_DEFAULT_VALUE
         return (
           <AverageDailyDoseStat
+            annotations={stat.annotations}
             dailyDose={stat.data.data[0].value}
             footerLabel={stat.data.data[0].output.label}
             title={stat.title}
@@ -190,7 +168,6 @@ class Stats extends React.Component {
         return (
           <SimpleStat
             annotations={stat.annotations}
-            showToolTip={!hideToolTips}
             summaryFormat={stat.dataFormat.summary}
             title={stat.title}
             total={stat.data.total?.value}
@@ -201,30 +178,28 @@ class Stats extends React.Component {
     }
   }
 
-  renderStats(stats, hideToolTips) {
+  renderStats(stats) {
     const { bgPrefs } = this.props
     const bgClasses = {
-      high: bgPrefs.bgClasses.high.boundary,
-      low: bgPrefs.bgClasses.low.boundary,
-      target: bgPrefs.bgClasses.target.boundary,
-      veryLow: bgPrefs.bgClasses['very-low'].boundary
+      high: bgPrefs.bgClasses.high,
+      low: bgPrefs.bgClasses.low,
+      target: bgPrefs.bgClasses.target,
+      veryLow: bgPrefs.bgClasses.veryLow
     }
     return stats.map(stat => {
       return (
         <div key={stat.id} data-testid={`stat-${stat.id}`}>
-          {this.getStatElementById(stat, hideToolTips, bgClasses)}
-          <Divider variant="fullWidth" />
+          {this.getStatElementById(stat, bgClasses)}
+          <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
         </div>
       )
     })
   }
 
   render() {
-    const { hideToolTips } = this.props
-
     return (
       <div className="Stats" data-testid="stats-widgets">
-        {this.renderStats(this.state.stats, hideToolTips)}
+        {this.renderStats(this.state.stats)}
       </div>
     )
   }
@@ -261,12 +236,9 @@ class Stats extends React.Component {
     }
 
     const cbgSelected = bgSource === 'cbg'
-    const smbgSelected = bgSource === 'smbg'
 
     switch (chartType) {
       case 'daily':
-        cbgSelected && addStat(commonStats.timeInRange)
-        smbgSelected && addStat(commonStats.readingsInRange)
         addStat(commonStats.averageGlucose)
         addStat(commonStats.totalInsulin)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
@@ -276,8 +248,6 @@ class Stats extends React.Component {
         break
 
       case 'trends':
-        cbgSelected && addStat(commonStats.timeInRange)
-        smbgSelected && addStat(commonStats.readingsInRange)
         addStat(commonStats.averageGlucose)
         cbgSelected && addStat(commonStats.sensorUsage)
         cbgSelected && addStat(commonStats.glucoseManagementIndicator)
@@ -290,12 +260,13 @@ class Stats extends React.Component {
         break
 
       case 'patientStatistics':
-        cbgSelected && addStat(commonStats.timeInRange)
-        smbgSelected && addStat(commonStats.readingsInRange)
         addStat(commonStats.averageGlucose)
+        addStat(commonStats.totalInsulin)
         addStat(commonStats.averageDailyDose)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         addStat(commonStats.carbs)
+        cbgSelected && addStat(commonStats.standardDev)
+        cbgSelected && addStat(commonStats.coefficientOfVariation)
         break
     }
 

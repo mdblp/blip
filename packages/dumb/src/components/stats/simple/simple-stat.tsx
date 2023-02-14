@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,18 +35,13 @@ import { buildSimpleValueProps } from './simple-stat.util'
 
 interface SimpleStatProps {
   annotations: string[]
-  showToolTip: boolean
   summaryFormat: StatFormats
   title: string
   total: number
   value: number
 }
 
-const SimpleStat: FunctionComponent<SimpleStatProps> = (
-  {
-    showToolTip = true,
-    ...props
-  }) => {
+const SimpleStat: FunctionComponent<SimpleStatProps> = (props) => {
   const {
     annotations,
     summaryFormat,
@@ -65,7 +60,7 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (
         <div className={commonStyles.statHeader}>
           <div className={commonStyles.chartTitle}>
             {title}
-            {showToolTip && annotations &&
+            {annotations &&
               <StatTooltip annotations={annotations} />
             }
           </div>

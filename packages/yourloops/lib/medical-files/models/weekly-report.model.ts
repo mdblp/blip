@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { type Alarms } from '../../patient/models/alarms.model'
-import { type UnitsType } from '../../units/models/enums/units-type.enum'
+import { type UnitsType } from 'dumb'
 
 export interface WeeklyReport {
   id: string

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
