@@ -11,6 +11,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
 - YLP-2068 Update minor dependencies
 - YLP-2069 Migrate CBGSlicesContainer from viz to dumb
+- YLP-2072 Replace “Show more “ by “show less” when patient header is unfolded
 - YLP-2084 Migrate trends Y axis labels and ticks to dumb
 - YLP-2085 Update major dependencies with no API break
 - YLP-2091 Remove withDefaultYPosition method wrapper from viz
