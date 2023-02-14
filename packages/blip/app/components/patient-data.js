@@ -857,12 +857,6 @@ class PatientDataPage extends React.Component {
 
     // Don't do anything if we are currently loading
     if (loadingState === LOADING_STATE_DONE) {
-      const msRange = end.valueOf() - start.valueOf()
-      const epochLocation = Math.round(start.valueOf() + msRange / 2)
-
-      const updateLocation = chartType === 'pdf' ? _.noop : () => {
-        this.setState({ epochLocation, msRange })
-      }
 
       /** @type {DateRange} */
       let rangeDisplay = {
@@ -885,8 +879,6 @@ class PatientDataPage extends React.Component {
 
         dataLoaded = true
       }
-
-      updateLocation()
     }
 
     return dataLoaded
