@@ -26,8 +26,8 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import React, { createRef, useEffect } from 'react'
-import { type Team } from '../../../lib/team'
+import React, { createRef, useEffect, useState } from 'react'
+import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, type Team, useTeam } from '../../../lib/team'
 import Box from '@mui/material/Box'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -35,19 +35,57 @@ import DialogContentText from '@mui/material/DialogContentText'
 import TextField from '@mui/material/TextField'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import useConfirmCodeTeam from './confirm-code-team.hooks'
+import { useAlert } from '../../utils/snackbar'
 
 export interface ConfirmTeamProps {
   onClickCancel: () => void
-  onCompleteStep: (team: Team, teamId?: string) => void
+  onCompleteStep: (team: Team) => void
   teamName: string
 }
 
-export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
+export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const { onClickCancel, onCompleteStep, teamName } = props
   const { t } = useTranslation()
   const inputRef = createRef<HTMLInputElement>()
-  const { handleChangeCode, handleClickJoinTeam, joinButtonDisabled, idCode } = useConfirmCodeTeam({ onCompleteStep })
+  const teamHook = useTeam()
+  const alert = useAlert()
+  const [numericCode, setNumericCode] = useState<string>('')
+  const [idCode, setIdCode] = useState<string>('')
+  const joinButtonDisabled = !idCode.match(REGEX_TEAM_CODE_DISPLAY)
+  const getNumericCode = (value: string): string => {
+    const code = []
+    const arrayString = value.split('')
+    arrayString.forEach((element) => {
+      if (element.match(/^[0-9]$/)) {
+        code.push(element)
+      }
+    })
+    return code.join('')
+  }
+  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const numericCode = getNumericCode(event.target.value)
+    const displayCode = getDisplayTeamCode(numericCode)
+    setIdCode(displayCode)
+    setNumericCode(numericCode)
+  }
+
+  const handleClickJoinTeam = async (): Promise<void | string> => {
+    if (numericCode !== '') {
+      const team = teamHook.teams.find((team) => team.code === numericCode)
+      if (team) {
+        return alert.error(t('modal-patient-add-team-failure-exists'))
+      }
+      try {
+        const team = await teamHook.getTeamFromCode(numericCode)
+        if (!team) {
+          return alert.error(t('invalid-code'))
+        }
+        onCompleteStep(team)
+      } catch (err) {
+        alert.error(t('modal-patient-add-team-failure'))
+      }
+    }
+  }
 
   useEffect(() => {
     if (inputRef.current) {
@@ -59,31 +97,25 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
     <React.Fragment>
       <Box textAlign="center">
         <DialogTitle>
-          <strong id="team-add-dialog-title" data-testId="team-add-dialog-title">
-            {teamName
-              ? t('modal-add-medical-specific-team', { careteam: teamName })
-              : t('modal-add-medical-team')
-            }
+          <strong data-testId="team-add-dialog-title">
+            {t('join-team-title', { teamName })}
           </strong>
         </DialogTitle>
 
         <DialogContent>
           <Box display="flex" flexDirection="column" alignItems="center">
             <DialogContentText data-testId="label-dialog">
-              {teamName
-                ? (t('modal-add-medical-team-code'))
-                : (t('modal-add-medical-team-code-no-invite'))
-              }
+              {t('team-code')}
             </DialogContentText>
             <Box>
               <TextField
-                id="team-add-dialog-field-code"
+                id="field-code"
                 variant="standard"
                 value={idCode}
                 onChange={handleChangeCode}
                 fullWidth
                 inputRef={inputRef}
-                style={{ width: '55%' }}
+                InputProps={{ sx: { width: 120, '& > input': { textAlign: 'center' } } }}
               />
             </Box>
           </Box>
@@ -105,7 +137,7 @@ export const ConfirmCodeTeam = (props: ConfirmTeamProps): JSX.Element => {
           disableElevation
           onClick={handleClickJoinTeam}
         >
-          {t('button-add-team')}
+          {t('continue')}
         </Button>
       </DialogActions>
     </React.Fragment>

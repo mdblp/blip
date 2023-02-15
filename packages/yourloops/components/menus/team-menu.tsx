@@ -153,9 +153,6 @@ function TeamMenu(): JSX.Element {
       alert.error(t('modal-patient-add-team-failure', { errorMessage }))
     }
   }
-  const onCloseDialog = (): void => {
-    setShowJoinTeamDialog(false)
-  }
   return (
     <React.Fragment>
       <Box
@@ -257,7 +254,7 @@ function TeamMenu(): JSX.Element {
       }
       {showJoinTeamDialog &&
         <JoinTeamDialog
-          onClose={onCloseDialog}
+          onClose={() => setShowJoinTeamDialog(false)}
           onAccept={onJoinTeam}
         />
       }

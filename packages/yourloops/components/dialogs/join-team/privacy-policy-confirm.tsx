@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React from 'react'
+import React, { useState } from 'react'
 import Checkbox from '@mui/material/Checkbox'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -32,15 +32,13 @@ import DialogContentText from '@mui/material/DialogContentText'
 import FormControl from '@mui/material/FormControl'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
-import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
 import { Trans, useTranslation } from 'react-i18next'
 import { type Team } from '../../../lib/team'
-import useConfirmPrivacyPolicy from './confirm-privacy-policy.hook'
 import { Link } from '@mui/material'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import metrics from '../../../lib/metrics'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import { useTheme } from '@mui/material/styles'
 
 export interface ConfirmTeamProps {
   onCompleteStep: () => Promise<void>
@@ -49,30 +47,16 @@ export interface ConfirmTeamProps {
 
 }
 
-const addTeamDialogClasses = makeStyles({ name: 'ylp-patient-join-team-dialog' })((theme: Theme) => {
-  return {
-    formControl: {
-      marginBottom: theme.spacing(2)
-    },
-    divTeamCodeField: {
-      marginTop: theme.spacing(2),
-      width: '8em'
-    },
-    checkboxPrivacy: {
-      marginBottom: 'auto'
-    }
-  }
-})
-
-export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
+export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
-  const { classes } = addTeamDialogClasses()
   const { onCompleteStep, team, onClickCancel } = props
-  const {
-    handleChangeChecked,
-    checked,
-    buttonAddTeamDisabled
-  } = useConfirmPrivacyPolicy()
+  const [checked, setChecked] = useState(false)
+  const buttonAddTeamDisabled = checked ?? false
+  const theme = useTheme()
+
+  const handleChangeChecked = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setChecked(event.target.checked)
+  }
   const privacyPolicy = t('privacy-policy')
   const linkPrivacyPolicy = (
     <Link
@@ -80,7 +64,9 @@ export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
       href={diabeloopExternalUrls.privacyPolicy}
       target="_blank"
       rel="noreferrer"
-      onClick={() => { metrics.send('pdf_document', 'view_document', 'privacy_policy') }}
+      onClick={() => {
+        metrics.send('pdf_document', 'view_document', 'privacy_policy')
+      }}
     >
       {privacyPolicy}
     </Link>
@@ -96,13 +82,12 @@ export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
         <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary">
           {t('modal-patient-add-team-info')}
         </DialogContentText>
-        <DialogContentText color="textPrimary" data-testid='team-add-dialog-team-infos'>
+        <DialogContentText color="textPrimary" data-testid="team-add-dialog-team-infos">
           <br />
           {team.name}
           <br />
           {team.address.line1}
-          {team.address.line2 ?? ''}
-          {team.address.line2 ? null : <br />}
+          {team.address.line2 ?? <br />}
           {team.address.zip}
           <br />
           {team.address.city}
@@ -114,11 +99,13 @@ export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
           <strong>{t('modal-patient-team-warning')}</strong>
         </DialogContentText>
 
-        <FormControl className={classes.formControl}>
-          <FormControlLabel id="team-add-dialog-confirm-team-privacy-checkbox-policy" control={<Checkbox checked={checked} onChange={handleChangeChecked} inputProps={{ 'aria-label': 'controlled' }} />}
-            data-testid="check-policy"
+        <FormControl sx={{ marginBottom: theme.spacing(2) }}>
+          <FormControlLabel
+            control={<Checkbox checked={checked} onChange={handleChangeChecked} inputProps={{ 'aria-label': 'controlled' }} />}
+            data-testid="checkbox-policy"
             label={t('modal-patient-share-team-privacy')}
-            color="textPrimary" />
+            color="textPrimary"
+          />
         </FormControl>
         <DialogContentText id="team-add-dialog-config-team-privacy-read-link" color="textPrimary"
                            data-testid="text-privacy-policy">
@@ -148,7 +135,7 @@ export const ConfirmPrivacyPolicy = (props: ConfirmTeamProps): JSX.Element => {
           disableElevation
           onClick={onCompleteStep}
         >
-          {t('button-add-medical-team')}
+          {t('join-team')}
         </Button>
       </DialogActions>
     </React.Fragment>

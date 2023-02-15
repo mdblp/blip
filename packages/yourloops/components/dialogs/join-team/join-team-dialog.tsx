@@ -24,44 +24,47 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { type FunctionComponent } from 'react'
-import { ConfirmCodeTeam } from './confirm-code-team'
+import React, { type FunctionComponent, useState } from 'react'
+import { TeamCodeConfirm } from './team-code-confirm'
 import Dialog from '@mui/material/Dialog'
-import { ConfirmPrivacyPolicy } from './confirm-privacy-policy'
-import useJoinTeamDialog from './join-team-dialog.hook'
+import { PrivacyPolicyConfirm } from './privacy-policy-confirm'
+import { type Team } from '../../../lib/team'
 
 export interface JoinTeamDialogProps {
   onClose: () => void
   onAccept: (teamId?: string) => Promise<void>
   teamName?: string
 }
-
+const TEAM_CODE_STEP = 'team code step'
+const PRIVACY_POLICY_STEP = 'join team step'
 export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) => {
   const { onClose, onAccept, teamName } = props
-  const { teamId, team, currentStep, goToNextStep } = useJoinTeamDialog()
+  const [currentStep, setCurrentStep] = useState<string>(TEAM_CODE_STEP)
+  const [team, setTeam] = useState<Team | undefined>(undefined)
+  const goToNextStep = (team: Team): void => {
+    setTeam(team)
+    setCurrentStep(PRIVACY_POLICY_STEP)
+  }
+
   return (
-    <React.Fragment>
-      <Dialog onClose={onClose} open>
-        <div id="team-add-dialog">
-          {currentStep === 1 &&
-            <ConfirmCodeTeam
+      <Dialog onClose={onClose} open data-testId="join-team-dialog">
+          {currentStep === TEAM_CODE_STEP &&
+            <TeamCodeConfirm
               onCompleteStep={goToNextStep}
               onClickCancel={onClose}
               teamName={teamName}
             />
 
           }
-          {currentStep === 2 &&
-            <ConfirmPrivacyPolicy
+          {currentStep === PRIVACY_POLICY_STEP &&
+            <PrivacyPolicyConfirm
               onCompleteStep={async () => {
-                await onAccept(teamId)
+                await onAccept(team.id)
               }}
               onClickCancel={onClose}
               team={team}
             />
           }
-        </div>
       </Dialog>
-    </React.Fragment>
   )
 }

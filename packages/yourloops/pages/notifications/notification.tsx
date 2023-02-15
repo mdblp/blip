@@ -161,11 +161,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({
-  id,
-  type,
-  className
-}: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
       return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
@@ -264,12 +260,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       notifications.update()
     }
   }
-
-  const closeTeamAcceptDialog = async (teamId?: string): Promise<void> => {
-    setAddTeamDialogVisible(false)
-    if (notification.target && teamId && notification.target.id === teamId) {
-      await acceptInvitation()
-    }
+  const joinTeam = async (): Promise<void> => {
+    await acceptInvitation()
+    onCloseDialog()
   }
   const onCloseDialog = (): void => {
     setAddTeamDialogVisible(false)
@@ -283,16 +276,18 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
         <JoinTeamDialog
           onClose={onCloseDialog}
-          onAccept={closeTeamAcceptDialog}
-          teamName={notification.target.name} />
+          onAccept={joinTeam}
+          teamName={notification.target.name}
+        />
       }
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => {
-            setDisplayMonitoringTerms(false)
-          }}
-                                   teamName={notification.target.name} />
+          <MonitoringConsentDialog
+            onAccept={acceptTerms}
+            onCancel={() => setDisplayMonitoringTerms(false)}
+            teamName={notification.target.name}
+          />
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
           <IconButton
