@@ -27,7 +27,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2121 Removing deprecated @mui/styles library
 - YLP-2139 Remove weekly reports
 
-## Fixed
+### Fixed
 - YLP-2145 Monitoring widgets not visible by a patient when he is in more than 1 team
 
 ## 3.0.3 - 2023-02-09
