@@ -28,7 +28,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2139 Remove weekly reports
 
 ### Fixed
-- YLP-2145 Monitoring widgets not visible by a patient when he is in more than 1 team
+- YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 
 ## 3.0.3 - 2023-02-09
 ### Fixed
