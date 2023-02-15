@@ -104,8 +104,8 @@ const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const bgDomain = extent(tidelineData.grouped[DatumType.Cbg] as Cbg[], (datum: Cbg) => datum.value)
-  const veryLowThreshold = bgPrefs.bgBounds?.veryLowThreshold ?? 0
-  const lowerBound = bgDomain[0] && bgDomain[0] > veryLowThreshold ? veryLowThreshold : bgDomain[0] ?? 0
+  const veryLowThreshold = bgPrefs.bgBounds?.veryLowThreshold
+  const lowerBound = bgDomain[0] && veryLowThreshold && bgDomain[0] > veryLowThreshold ? veryLowThreshold : bgDomain[0] ?? 0
   const yScaleDomain = [lowerBound, upperBound]
 
   return (
@@ -127,7 +127,7 @@ const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
 
 const mapStateToProps = (state: { viz: { trends: Record<string, TrendsState> } }, componentProps: TrendsContainerProps): { trendsState: TrendsState } => {
   const userId = componentProps.currentPatientInViewId
-  return { trendsState: state.viz.trends[userId] } ?? {}
+  return { trendsState: state.viz.trends[userId] }
 }
 
 export default connect(mapStateToProps, null, (stateProps, dispatchProps, ownProps: TrendsContainerProps) => (_.assign({}, ownProps, stateProps, dispatchProps)), { forwardRef: true })(TrendsContainer)
