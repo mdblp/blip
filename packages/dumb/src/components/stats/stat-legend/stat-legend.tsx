@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,12 +28,13 @@
 import React, { type FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
-import { type BgClasses } from '../../../models/stats.model'
 import { StatLegendElement } from './stat-legend-element'
+import { type BgClasses } from 'medical-domain'
+import { type UnitsType } from '../../../models/enums/units-type.enum'
 
 interface StatLegendProps {
   bgClasses: BgClasses
-  units: string
+  units: UnitsType
 }
 
 const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
@@ -44,7 +45,11 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
   const highValue = Math.round(bgClasses.high)
 
   return (
-    <Box data-testid="cbg-percentage-stats-legends" display="flex" marginLeft="8px" marginBottom="8px">
+    <Box
+      data-testid="cbg-percentage-stats-legends"
+      display="flex"
+      justifyContent="space-between"
+    >
       <ul className={styles['stat-legend']}>
         <StatLegendElement
           cbgClassName="very-low"
@@ -67,7 +72,7 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
           value={`>${highValue}`}
         />
       </ul>
-      <Box marginLeft="auto" marginRight="4px" fontSize="12px">
+      <Box fontSize="12px">
         {units}
       </Box>
     </Box>

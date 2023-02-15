@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,6 +39,7 @@
 .statWrapper {
   position: relative;
   overflow: visible;
+  margin-top: 8px;
 }
 
 .stat {
@@ -55,7 +56,5 @@
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: space-between;
-  height: 1.5em;
   margin: var(--section-title-margin);
-  overflow: hidden;
 }

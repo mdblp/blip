@@ -36,7 +36,7 @@ import { CbgDateTracesAnimationContainer } from '../../cbg/cbg-date-trace/cbg-da
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
 import { THREE_HRS } from '../../../../utils/datetime/datetime.util'
 import { getCbgsIntersectingWithCbgSliceSegment } from './trends-svg-container.util'
-import { type BgPrefs } from '../../../../models/blood-glucose.model'
+import { type BgBounds, type BgPrefs } from '../../../../models/blood-glucose.model'
 import { Background } from '../background/background'
 import { XAxisLabels } from '../x-axis-labels/x-axis-labels'
 import { XAxisTicks } from '../x-axis-ticks/x-axis-ticks'
@@ -106,6 +106,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
   } = props
 
   const { height, width } = size
+  const bgBounds = bgPrefs.bgBounds as BgBounds
 
   const sliceWidth = (width - CHART_WIDTH) / 56
 
@@ -160,7 +161,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
         />
         <g>
           <CbgSlicesContainer
-            bgBounds={bgPrefs.bgBounds}
+            bgBounds={bgBounds}
             sliceWidth={sliceWidth}
             data={cbgData}
             showingCbgDateTraces={showingCbgDateTraces}
@@ -171,7 +172,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
           />
           {focusedSegmentDataGroupedByDate &&
             <CbgDateTracesAnimationContainer
-              bgBounds={bgPrefs.bgBounds}
+              bgBounds={bgBounds}
               data={focusedSegmentDataGroupedByDate}
               onSelectDate={onSelectDate}
               topMargin={MARGINS.top}
@@ -190,8 +191,8 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
           }
         </g>
         <TargetRangeLines
-          upperBound={bgPrefs.bgBounds.targetUpperBound}
-          lowerBound={bgPrefs.bgBounds.targetLowerBound}
+          upperBound={bgBounds.targetUpperBound}
+          lowerBound={bgBounds.targetLowerBound}
           horizontalOffset={SMBG_OPTS.maxR}
           xScale={xScale}
           yScale={yScale}

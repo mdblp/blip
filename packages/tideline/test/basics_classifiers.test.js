@@ -16,25 +16,25 @@
  */
 
 import { assert, expect } from 'chai'
-import { MMOLL_UNITS } from '../js/data/util/constants'
+import { MMOLL_UNITS } from '../js'
 
 import classifiers from '../plugins/blip/basics/logic/classifiers'
 
 describe('basics classifiers', function() {
   var bgClasses = {
-    'very-low': {boundary: 10},
-    'low': {boundary: 20},
-    'target': {boundary: 30},
-    'high': {boundary: 40},
-    'very-high': {boundary: 50}
+    veryLow: 10,
+    low: 20,
+    target: 30,
+    high: 40,
+    veryHigh: 50
   }
 
   var bgClassesMmoll = {
-    'very-low': {boundary: 2},
-    'low': {boundary: 3},
-    'target': {boundary: 4},
-    'high': {boundary: 10},
-    'very-high': {boundary: 20}
+    veryLow: 2,
+    low: 3,
+    target: 4,
+    high: 10,
+    veryHigh: 20
   }
 
   it('should be a function', function() {

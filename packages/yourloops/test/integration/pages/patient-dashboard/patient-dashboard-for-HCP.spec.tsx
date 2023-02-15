@@ -49,7 +49,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { getTomorrowDate } from '../../utils/helpers'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 
@@ -127,7 +127,6 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Remove')).toBeVisible()
     /* Medical files widget */
     expect(dashboard.getByText('Prescription_2022-01-02')).toBeVisible()
-    expect(dashboard.getByText('Weekly_report_2022-01-02')).toBeVisible()
 
     /* Events widget */
     expect(dashboard.getByText('Events')).toBeVisible()

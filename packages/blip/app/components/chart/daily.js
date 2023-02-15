@@ -30,7 +30,6 @@ import { TimeService } from 'medical-domain'
 import { components as vizComponents } from 'tidepool-viz'
 
 import { BG_DATA_TYPES } from '../../core/constants'
-import Stats from './stats'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
@@ -44,6 +43,8 @@ import {
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
+import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
+import Stats from './stats'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -372,15 +373,21 @@ class Daily extends React.Component {
             </div>
             <div className="container-box-inner patient-data-sidebar">
               <div className="patient-data-sidebar-inner">
-                <Stats
-                  bgPrefs={this.props.bgPrefs}
-                  bgSource={this.props.dataUtil.bgSource}
-                  chartPrefs={this.props.chartPrefs}
-                  chartType={this.chartType}
+                <PatientStatistics
                   dataUtil={this.props.dataUtil}
+                  bgPrefs={this.props.bgPrefs}
                   endpoints={endpoints}
-                  loading={loading}
-                />
+                >
+                  <Stats
+                    bgPrefs={this.props.bgPrefs}
+                    bgSource={this.props.dataUtil.bgSource}
+                    chartPrefs={this.props.chartPrefs}
+                    chartType={this.chartType}
+                    dataUtil={this.props.dataUtil}
+                    endpoints={endpoints}
+                    loading={loading}
+                  />
+                </PatientStatistics>
               </div>
             </div>
           </Box>

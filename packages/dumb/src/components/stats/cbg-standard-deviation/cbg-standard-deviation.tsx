@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,20 +31,19 @@ import stylesCbgCommon from '../common/cbg-common.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
-import { type BgClasses } from '../../../models/stats.model'
+import { type BgClasses } from 'medical-domain'
 
 export interface CBGStandardDeviationProps {
   annotations: string[]
   averageGlucose: number
   bgClasses: BgClasses
-  hideTooltip: boolean
   standardDeviation: number
   title: string
   units: string
 }
 
 const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (props) => {
-  const { annotations, averageGlucose, bgClasses, hideTooltip, standardDeviation, title, units } = props
+  const { annotations, averageGlucose, bgClasses, standardDeviation, title, units } = props
 
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
@@ -64,7 +63,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <Box display="flex">
           {title}
-          {!Number.isNaN(standardDeviation) && !hideTooltip &&
+          {!Number.isNaN(standardDeviation) &&
             <>
               &nbsp;
               <span className={styles['title-value']}>
@@ -76,9 +75,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               </span>
             </>
           }
-          {!hideTooltip &&
-            <StatTooltip annotations={annotations} />
-          }
+          <StatTooltip annotations={annotations} />
         </Box>
         <Box fontSize="12px">
           {units}

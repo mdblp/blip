@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,12 +24,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { convertBG } from '../../lib/units/units.util'
 import {
   DEFAULT_BG_VALUES,
   DEFAULT_THRESHOLDS_IN_MGDL
-} from '../alarm/alarms.default'
+} from './alarms.default'
 import { type Thresholds, type BgValues } from '../../lib/patient/models/alarms.model'
 
 export const PERCENTAGES = [...new Array(21)]

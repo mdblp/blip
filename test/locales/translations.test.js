@@ -72,7 +72,10 @@ const ignoredTransKeyInBlipFiles = [
   'bolus_${bolusType}',
   'bolus_${bolusSubType}',
   'params|${parameter.name}',
-  'params|${row.name}'
+  'params|${row.name}',
+  '${titleType} Above Range',
+  '${titleType} Below Range',
+  '${titleType} In Range'
 ]
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
@@ -157,6 +160,12 @@ const ignoredTransKeyForYourLoops = [
   'login-page-desktop-title',
   'login-page-mobile-title',
   'end-date',
+  'remaining-time',
+  'time-in-range-cgm-daily-average',
+  'readings-in-range-bgm-daily-average',
+  'time-in-range-cgm-one-day',
+  'compute-ndays-time-in-range',
+  'compute-oneday-time-in-range',
   'remaining-time',
   'show-less',
   'show-more'

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,22 +34,19 @@ import { Unit } from 'medical-domain'
 export interface TotalInsulinStatProps {
   annotations: []
   foodCarbs: number
-  hideTooltip: boolean
   title: string
   totalCarbs: number
 }
 
 const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { annotations, hideTooltip, title, totalCarbs, foodCarbs } = props
+  const { annotations, title, totalCarbs, foodCarbs } = props
   const { t } = useTranslation('main')
 
   return (
     <div data-testid="total-carbs-stat">
       <Box className={`${styles.title} ${styles.row}`}>
         {title}
-        {!hideTooltip &&
-          <StatTooltip annotations={annotations} />
-        }
+        <StatTooltip annotations={annotations} />
         <div className={styles.total}>
           <span className={styles.value}>
             {totalCarbs}

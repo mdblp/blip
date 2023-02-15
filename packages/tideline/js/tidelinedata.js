@@ -48,11 +48,11 @@ const defaults = {
   basicsTypes: BASICS_TYPE,
   bgUnits: MGDL_UNITS,
   bgClasses: {
-    'very-low': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow },
-    'low': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower },
-    'target': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper },
-    'high': { boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh },
-    'very-high': { boundary: BG_CLAMP_THRESHOLD[MGDL_UNITS] }
+    veryLow: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+    low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh,
+    veryHigh: BG_CLAMP_THRESHOLD[MGDL_UNITS]
   },
   fillOpts: {
     classes: {
@@ -92,11 +92,11 @@ function TidelineData(opts = defaults) {
   if (opts.bgUnits !== defaults.bgUnits) {
     const { bgUnits } = opts
     this.opts.bgClasses = {
-      'very-low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
-      'low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
-      'target': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
-      'high': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh },
-      'very-high': { boundary: BG_CLAMP_THRESHOLD[bgUnits] }
+      veryLow: DEFAULT_BG_BOUNDS[bgUnits].veryLow,
+      low: DEFAULT_BG_BOUNDS[bgUnits].targetLower,
+      target: DEFAULT_BG_BOUNDS[bgUnits].targetUpper,
+      high: DEFAULT_BG_BOUNDS[bgUnits].veryHigh,
+      veryHigh: BG_CLAMP_THRESHOLD[bgUnits]
     }
     this.log.info(`Using units ${bgUnits}: Updating bgClasses`, { bgClasses: this.opts.bgClasses })
   }
@@ -146,10 +146,10 @@ function TidelineData(opts = defaults) {
   // Thus, we need to allow for our thresholds accordingly.
   if (this.opts.bgUnits === MGDL_UNITS) {
     const roundingAllowance = 0.0001
-    this.opts.bgClasses['very-low'].boundary -= roundingAllowance
-    this.opts.bgClasses.low.boundary -= roundingAllowance
-    this.opts.bgClasses.target.boundary += roundingAllowance
-    this.opts.bgClasses.high.boundary += roundingAllowance
+    this.opts.bgClasses.veryLow -= roundingAllowance
+    this.opts.bgClasses.low -= roundingAllowance
+    this.opts.bgClasses.target += roundingAllowance
+    this.opts.bgClasses.high += roundingAllowance
   }
 
   this.log.info('Initialized', this)

@@ -20,11 +20,13 @@ It is based on Tidepool Blip 1.27.
 - YLP-2095 Migrate FocusedCBGSliceSegment from viz to dumb
 - YLP-2096 Migrate CBG date traces animated to dumb
 - YLP-2097 Migrate RangeSelect from viz to dumb
+- YLP-2098 Migrate TimeInRange and ReadingsInRange stats to Yourloops
 - YLP-2110 Update i18next from 19.9.2 to 22.4.9
 - YLP-2113 Migrate FocusedRangeLabels from viz to dumb
 - YLP-2116 Migrate TrendsSVGContainer from viz to dumb
 - YLP-2118 Update axios and minor dependencies
 - YLP-2121 Removing deprecated @mui/styles library
+- YLP-2139 Remove weekly reports
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

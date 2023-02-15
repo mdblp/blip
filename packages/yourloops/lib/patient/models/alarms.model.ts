@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type UnitsType } from '../../units/models/enums/units-type.enum'
+import { type UnitsType } from 'dumb'
 
 export interface Alarms {
   timeSpentAwayFromTargetRate: number

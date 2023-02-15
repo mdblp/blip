@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from './models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 
 export const MGDL_PER_MMOL = 18.01577
 
