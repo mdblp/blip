@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,6 @@ import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 import { type Prescription } from '../../../../lib/medical-files/models/prescription.model'
-import { type WeeklyReport } from '../../../../lib/medical-files/models/weekly-report.model'
 import { type MedicalRecord, type NewMedicalRecord } from '../../../../lib/medical-files/models/medical-record.model'
 
 describe('Medical files API', () => {
@@ -79,29 +78,6 @@ describe('Medical files API', () => {
           'Content-Type': 'multipart/form-data'
         }
       }
-    })
-  })
-
-  it('should get weekly reports', async () => {
-    const payload: WeeklyReport[] = [{} as WeeklyReport, {} as WeeklyReport]
-    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const weeklyReports = await MedicalFilesApi.getWeeklyReports(patientId, teamId)
-    expect(weeklyReports).toEqual(payload)
-    expect(HttpService.get).toHaveBeenCalledWith({
-      url: 'cargo/v0/weekly-reports',
-      config: { params: { teamId, patientId } }
-    })
-  })
-
-  it('should get a single weekly report', async () => {
-    const weeklyReportId = 'fakeId'
-    const payload = {} as WeeklyReport
-    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const weeklyReport = await MedicalFilesApi.getWeeklyReport(patientId, teamId, weeklyReportId)
-    expect(weeklyReport).toEqual(payload)
-    expect(HttpService.get).toHaveBeenCalledWith({
-      url: `/cargo/v0/weekly-reports/${weeklyReportId}`,
-      config: { params: { teamId, patientId } }
     })
   })
 

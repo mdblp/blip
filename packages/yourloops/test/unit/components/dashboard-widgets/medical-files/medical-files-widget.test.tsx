@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,16 +32,13 @@ import MedicalFilesWidget from '../../../../../components/dashboard-widgets/medi
 import * as authHookMock from '../../../../../lib/auth'
 import type User from '../../../../../lib/auth/models/user.model'
 import PatientUtils from '../../../../../lib/patient/patient.util'
-import { type PatientTeam } from '../../../../../lib/data/models/patient.model'
+import { type PatientTeam } from '../../../../../lib/patient/models/patient-team.model'
 
 /* eslint-disable react/display-name */
 jest.mock('../../../../../components/dashboard-widgets/medical-files/medical-record-list', () => () => {
   return (<></>)
 })
 jest.mock('../../../../../components/dashboard-widgets/medical-files/prescription-list', () => () => {
-  return (<></>)
-})
-jest.mock('../../../../../components/dashboard-widgets/medical-files/weekly-report-list', () => () => {
   return (<></>)
 })
 jest.mock('../../../../../lib/auth')
