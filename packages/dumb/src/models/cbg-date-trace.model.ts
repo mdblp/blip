@@ -29,5 +29,6 @@ export interface CbgDateTrace {
   id: string
   msPer24: number
   value: number
-  epoch: number
+  epoch?: number
+  localDate?: string
 }

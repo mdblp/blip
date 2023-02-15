@@ -51,7 +51,7 @@ import { type Preferences } from './models/preferences.model'
 import { type Profile } from './models/profile.model'
 import { type Settings } from './models/settings.model'
 import { UserRoles } from './models/enums/user-roles.enum'
-import { type AuthenticatedUser } from './models/authenticated-user.model'
+import { type AuthenticatedUser, IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
 import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
@@ -187,13 +187,25 @@ export function AuthContextImpl(): AuthContext {
     }
   }, [auth0user])
 
-  const logout = async (): Promise<void> => {
+  const getLogoutRedirectUrl = (isIdle = false): string => {
+    const defaultUrl = `${window.location.origin}/login`
+
+    if (isIdle) {
+      return `${defaultUrl}?${IDLE_USER_QUERY_PARAM}=true`
+    }
+    return defaultUrl
+  }
+
+  const logout = async (isIdle = false): Promise<void> => {
     try {
       if (window.cleanBlipReduxStore) {
         window.cleanBlipReduxStore()
       }
       zendeskLogout()
-      auth0logout({ returnTo: window.location.origin })
+
+      const redirectUrl = getLogoutRedirectUrl(isIdle)
+      auth0logout({ returnTo: redirectUrl })
+
       metrics.resetUser()
     } catch (err) {
       log.error('logout', err)

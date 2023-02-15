@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2022, Diabeloop
- * Patient Statistics widget component
+/*
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,50 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import PropTypes from 'prop-types'
-import CardContent from '@mui/material/CardContent'
+import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
+import GenericDashboardCard from './generic-dashboard-card'
 import { useTranslation } from 'react-i18next'
-import Stats from './stats'
-import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
+import CardContent from '@mui/material/CardContent'
+import { PatientStatistics, type PatientStatisticsProps } from '../statistics/patient-statistics'
 
-const PatientStatistics = (props) => {
-  //eslint-disable-next-line
-  const { bgPrefs, loading, chartPrefs, dataUtil, endpoints, parametersConfig } = props
+export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
   const { t } = useTranslation()
+  const { dataUtil, bgPrefs, endpoints, children } = props
 
   return (
     <GenericDashboardCard
       avatar={<InsertChartOutlinedIcon />}
       title={t('patient-statistics')}
-      data-testid="patient-statistics"
     >
-      <CardContent id="patient-statistics-content">
-        <Stats
-          bgPrefs={bgPrefs}
-          //eslint-disable-next-line
-          bgSource={dataUtil.bgSource}
-          chartPrefs={chartPrefs}
-          chartType="patientStatistics"
+      <CardContent>
+        <PatientStatistics
           dataUtil={dataUtil}
+          bgPrefs={bgPrefs}
           endpoints={endpoints}
-          loading={loading}
-          hideToolTips
-          parametersConfig={parametersConfig}
-        />
+        >
+          {children}
+        </PatientStatistics>
       </CardContent>
     </GenericDashboardCard>
   )
 }
-
-PatientStatistics.propType = {
-  bgPrefs: PropTypes.object.isRequired,
-  loading: PropTypes.bool.isRequired,
-  chartPrefs: PropTypes.object.isRequired,
-  dataUtil: PropTypes.object.isRequired,
-  endpoints: PropTypes.arrayOf(PropTypes.string),
-  parametersConfig: PropTypes.object
-}
-
-export default PatientStatistics

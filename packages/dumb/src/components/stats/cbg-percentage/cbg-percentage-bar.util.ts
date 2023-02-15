@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../patient/models/alarms.model'
-import { type UnitsType } from '../../units/models/enums/units-type.enum'
+import { UnitsType } from '../../../models/enums/units-type.enum'
 
-export interface WeeklyReport {
-  id: string
-  patientId: string
-  teamId: string
-  parameters: {
-    bgUnit: UnitsType
-    lowBg: number
-    highBg: number
-    outOfRangeThreshold: number
-    veryLowBg: number
-    hypoThreshold: number
-    nonDataTxThreshold: number
-    reportingPeriod: number
+export const ensureNumeric = (value: number | undefined | null): number => {
+  return !value || isNaN(value) ? 0 : value
+}
+
+export const formatBgValue = (value: number, units: UnitsType): string => {
+  const valueToString = Math.round(value).toString()
+  switch (units) {
+    case UnitsType.MMOLL:
+      return parseFloat(valueToString).toFixed(1)
+    case UnitsType.MGDL:
+    default:
+      return parseInt(valueToString).toString()
   }
-  alarms: Alarms
-  creationDate: string
 }

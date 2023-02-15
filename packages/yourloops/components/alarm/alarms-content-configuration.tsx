@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ import Button from '@mui/material/Button'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { UnitsType } from '../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
 import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
 import FormHelperText from '@mui/material/FormHelperText'

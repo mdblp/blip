@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ export interface AuthContext {
   flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
   getFlagPatients: () => string[]
   isLoggedIn: boolean
-  logout: () => Promise<void>
+  logout: (isIdle?: boolean) => Promise<void>
   setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
   completeSignup: (signupForm: SignupForm) => Promise<void>
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp

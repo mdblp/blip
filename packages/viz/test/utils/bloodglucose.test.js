@@ -248,11 +248,11 @@ describe('blood glucose utilities', () => {
   describe('reshapeBgClassesToBgBounds', () => {
     const bgPrefs = {
       bgClasses: {
-        'very-high': { boundary: 600 },
-        'high': { boundary: 300 },
-        'target': { boundary: 180 },
-        'low': { boundary: 70 },
-        'very-low': { boundary: 54 }
+        veryHigh: 600,
+        high: 300,
+        target: 180,
+        low: 70,
+        veryLow: 54
       },
       bgUnits: 'mg/dL'
     }

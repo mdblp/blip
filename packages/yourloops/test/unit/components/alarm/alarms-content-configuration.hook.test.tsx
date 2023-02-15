@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import useAlarmsContentConfiguration from '../../../../components/alarm/alarms-content-configuration.hook'
-import { UnitsType } from '../../../../lib/units/models/enums/units-type.enum'
+import { UnitsType } from 'dumb'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'

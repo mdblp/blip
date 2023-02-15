@@ -34,13 +34,25 @@ import { useAlert } from '../../components/utils/snackbar'
 import LoginPageMobile from './login-page-mobile'
 import LoginPageDesktop from './login-page-desktop'
 import { GlobalStyles } from 'tss-react'
+import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
+import { IDLE_USER_QUERY_PARAM } from '../../lib/auth'
+import { useTranslation } from 'react-i18next'
 
 const LoginPageLanding: FunctionComponent = () => {
+  const { t } = useTranslation('yourloops')
   const { error } = useAuth0()
   const history = useHistory()
   const alert = useAlert()
   const theme = useTheme()
   const isMobileView: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const queryParams = useQueryParams()
+
+  useEffect(() => {
+    if (queryParams.get(IDLE_USER_QUERY_PARAM)) {
+      alert.warning(t('alert-inactive-user-logged-out'), { infiniteTimeout: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryParams])
 
   useEffect(() => {
     if (error) {

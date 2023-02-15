@@ -56,7 +56,9 @@ const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (pr
   const { userId, bgBounds, data, focusDateTrace, onSelectDate, topMargin, unfocusDateTrace, xScale, yScale } = props
 
   const handleClick = (dateTrace: CbgDateTrace): void => {
-    onSelectDate(dateTrace.epoch)
+    if (dateTrace.epoch) {
+      onSelectDate(dateTrace.epoch)
+    }
   }
 
   const handleMouseOut = (): void => {
@@ -99,7 +101,7 @@ const mapStateToProps = (state: { blip: { currentPatientInViewId: string } }): {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): { unfocusDateTrace: (userId: string) => void, focusDateTrace: (userId: string, data: { id: string }, position: CbgPositionData) => void } => {
+const mapDispatchToProps = (dispatch: Dispatch): { unfocusDateTrace: typeof unfocusTrendsCbgDateTrace, focusDateTrace: typeof focusTrendsCbgDateTrace } => {
   return bindActionCreators({
     focusDateTrace: focusTrendsCbgDateTrace,
     unfocusDateTrace: unfocusTrendsCbgDateTrace

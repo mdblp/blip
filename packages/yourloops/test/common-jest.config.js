@@ -108,7 +108,8 @@ module.exports = {
       YLPZ_RA_LAD_001_NL_REV: '0',
       YLPZ_RA_LAD_001_ES_REV: '0',
       YLPZ_RA_LAD_001_IT_REV: '0',
-      YLPZ_RA_LAD_001_DE_REV: '0'
+      YLPZ_RA_LAD_001_DE_REV: '0',
+      IDLE_TIMEOUT_MS: 1800000
     }
   },
 
