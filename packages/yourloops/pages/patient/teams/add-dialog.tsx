@@ -24,7 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type Team } from '../../../lib/team'
 
 interface AddTeamDialogContentProps {
   onDialogResult: (teamId?: string) => void
@@ -34,9 +33,4 @@ export interface AddTeamDialogProps {
   teamName?: string
   error?: string
   actions: null | AddTeamDialogContentProps
-}
-export interface ConfirmTeamProps {
-  team: Team
-  handleClose: () => void
-  handleAccept: () => void
 }
