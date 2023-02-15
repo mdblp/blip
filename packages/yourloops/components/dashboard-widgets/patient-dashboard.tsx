@@ -43,11 +43,12 @@ import RemoteMonitoringWidget from './remote-monitoring-widget'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {
   RESPONSIVE_GRID_FOUR_COLUMNS,
-  RESPONSIVE_GRID_FULL_WIDTH
+  RESPONSIVE_GRID_FULL_WIDTH, RESPONSIVE_GRID_HALF_WIDTH
 } from '../../css/css-utils'
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
 import { useTheme } from '@mui/material'
+import { useAuth } from '../../lib/auth'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -77,6 +78,7 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
     trackMetric,
     onSwitchToDaily
   } = props
+  const { user } = useAuth()
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
   const theme = useTheme()
@@ -85,7 +87,8 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
     moment.utc(epochDate - msRange).toISOString(), // start
     moment.utc(epochDate).toISOString() // end
   ]
-  const gridWidgetSize = isMobileBreakpoint ? RESPONSIVE_GRID_FULL_WIDTH : RESPONSIVE_GRID_FOUR_COLUMNS
+  const showRemoteMonitoringWidget = user.isUserHcp()
+  const gridWidgetSize = isMobileBreakpoint ? RESPONSIVE_GRID_FULL_WIDTH : showRemoteMonitoringWidget ? RESPONSIVE_GRID_FOUR_COLUMNS : RESPONSIVE_GRID_HALF_WIDTH
 
   return (
     <Grid
@@ -141,9 +144,11 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           onSwitchToDaily={onSwitchToDaily}
         />
       </Grid>
+      {showRemoteMonitoringWidget &&
         <Grid item xs={gridWidgetSize}>
           <RemoteMonitoringWidget patient={patient} />
         </Grid>
+      }
     </Grid>
   )
 }

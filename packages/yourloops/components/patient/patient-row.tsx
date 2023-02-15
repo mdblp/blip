@@ -94,7 +94,7 @@ const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Th
   }
 })
 
-const PatientRow: FunctionComponent<PatientRowProps> = ({ filter, patient }) => {
+const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcp, filter, patient }) => {
   const historyHook = useHistory()
   const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
@@ -247,19 +247,21 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ filter, patient }) => 
           {lastUpload}
         </StyledTableCell>
 
-        <StyledTableCell className={classes.iconCell}>
-          <Tooltip
-            title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-            aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-          >
-            <Box display="flex" justifyContent="center">
-              {hasUnreadMessages
-                ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
-                : <EmailOpenIcon className={classes.lightGrey} />
-              }
-            </Box>
-          </Tooltip>
-        </StyledTableCell>
+        {loggedUserIsHcp &&
+          <StyledTableCell className={classes.iconCell}>
+            <Tooltip
+              title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+              aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+            >
+              <Box display="flex" justifyContent="center">
+                {hasUnreadMessages
+                  ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
+                  : <EmailOpenIcon className={classes.lightGrey} />
+                }
+              </Box>
+            </Tooltip>
+          </StyledTableCell>
+        }
 
         <StyledTableCell>
           <Tooltip

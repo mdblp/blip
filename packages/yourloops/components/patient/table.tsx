@@ -46,6 +46,7 @@ import { type PatientTableProps } from './models/patient-table-props.model'
 import { PatientTableSortFields } from './models/enums/patient-table-sort-fields.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { SortDirection } from './models/enums/sort-direction.enum'
+import { useAuth } from '../../lib/auth'
 
 const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-table' })((theme: Theme) => {
   return {
@@ -111,6 +112,8 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes } = patientListStyle()
   const { classes: patientListCommonClasses } = patientListCommonStyle()
+  const authHook = useAuth()
+  const isUserHcp = authHook.user?.isUserHcp()
   const [page, setPage] = React.useState<number>(0)
   const [rowPerPage, setRowPerPage] = React.useState<number>(10)
   const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage)
@@ -254,10 +257,12 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t('last-data-update')}
                 </TableSortLabel>
               </StyledTableCell>
+              {isUserHcp &&
                 <StyledTableCell
                   id="patients-list-message-icon"
                   className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
                 />
+              }
               <StyledTableCell
                 id="patients-list-remove-icon"
                 className={`${classes.tableCellHeader} ${classes.tableHeaderIcon}`}
@@ -269,6 +274,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
               (patient: Patient): JSX.Element => (
                 <PatientRow
                   key={patient.userid}
+                  loggedUserIsHcp={isUserHcp}
                   filter={filter}
                   patient={patient}
                 />
