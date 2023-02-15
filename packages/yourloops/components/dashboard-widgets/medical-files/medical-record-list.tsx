@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -167,7 +167,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
                 <DescriptionOutlinedIcon />
               </ListItemIcon>
               <ListItemText>
-                {t('medical-record-pdf')}{buildFileName(medicalRecord.creationDate, index)}
+                {t('medical-record-pdf', { pdfName: buildFileName(medicalRecord.creationDate, index) })}
               </ListItemText>
               {user.isUserHcp() && medicalRecord.id === hoveredItem &&
                 <ListItemSecondaryAction>

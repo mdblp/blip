@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,6 @@
  */
 import HttpService from '../http/http.service'
 import { type Prescription } from './models/prescription.model'
-import { type WeeklyReport } from './models/weekly-report.model'
 import { type MedicalRecord, type NewMedicalRecord } from './models/medical-record.model'
 
 export default class MedicalFilesApi {
@@ -61,22 +60,6 @@ export default class MedicalFilesApi {
           'Content-Type': 'multipart/form-data'
         }
       }
-    })
-    return data
-  }
-
-  static async getWeeklyReports(patientId: string, teamId: string): Promise<WeeklyReport[]> {
-    const { data } = await HttpService.get<WeeklyReport[]>({
-      url: 'cargo/v0/weekly-reports',
-      config: { params: { teamId, patientId } }
-    })
-    return data
-  }
-
-  static async getWeeklyReport(patientId: string, teamId: string, weeklyReportId: string): Promise<WeeklyReport> {
-    const { data } = await HttpService.get<WeeklyReport>({
-      url: `/cargo/v0/weekly-reports/${weeklyReportId}`,
-      config: { params: { teamId, patientId } }
     })
     return data
   }
