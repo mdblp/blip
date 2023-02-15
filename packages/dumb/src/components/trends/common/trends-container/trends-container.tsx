@@ -31,7 +31,6 @@ import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import type MedicalDataService from 'medical-domain'
 import { type Cbg, DatumType, Unit } from 'medical-domain'
 import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
-import { type BgPositionData } from '../../../../models/bg-position-data.model'
 import { type FocusedSlice } from '../../../../models/focused-slice.model'
 import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
 import { extent } from 'd3-array'
@@ -39,32 +38,9 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { type ActiveDays } from '../../../../models/active-days.model'
 
-interface SmbgPosition { top: number, left: number }
-
-interface SmbgValue { value: number }
-
 interface TrendsState {
   focusedCbgSlice: FocusedSlice
   focusedCbgSliceKeys: RangeSegmentSlice[]
-  focusedSmbg: {
-    allPositions: SmbgPosition
-    allSmbgsOnDate: SmbgValue[]
-    date: string
-    datum: SmbgValue
-    position: SmbgPosition
-  }
-  focusedSmbgRangeAvg: {
-    data: {
-      id: string
-      max: number
-      mean: number
-      min: number
-      msX: number
-      msFrom: number
-      msTo: number
-    }
-    position: BgPositionData
-  }
   showingCbgDateTraces: boolean
 }
 

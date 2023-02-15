@@ -52,8 +52,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       })
@@ -72,8 +70,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -97,8 +93,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -117,8 +111,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         },
         [USER_2]: {
@@ -131,8 +123,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       })
@@ -156,8 +146,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: ['median'],
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -178,8 +166,6 @@ describe('trendsStateByUser', () => {
         },
         focusedCbgSlice: null,
         focusedCbgSliceKeys: ['median'],
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -201,8 +187,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: ['median'],
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -220,8 +204,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: { data: datum, position },
         focusedCbgSliceKeys: focusedKeys,
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -241,8 +223,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -269,8 +249,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
-        focusedSmbg: { date, datum, position, allSmbgsOnDate, allPositions },
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -290,8 +268,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -309,8 +285,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: { data: datum, position },
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -330,8 +304,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: { datum, position },
           focusedCbgSliceKeys: ['median'],
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -356,8 +328,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -375,8 +345,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: true
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -396,8 +364,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -415,8 +381,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -436,8 +400,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -455,8 +417,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -482,8 +442,6 @@ describe('trendsStateByUser', () => {
           },
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: false
         }
       }
@@ -501,8 +459,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -522,8 +478,6 @@ describe('trendsStateByUser', () => {
           focusedCbgDateTrace: {},
           focusedCbgSlice: { datum, position },
           focusedCbgSliceKeys: ['median'],
-          focusedSmbg: null,
-          focusedSmbgRangeAvg: null,
           showingCbgDateTraces: true
         }
       }
@@ -541,8 +495,6 @@ describe('trendsStateByUser', () => {
         focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
-        focusedSmbg: null,
-        focusedSmbgRangeAvg: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false

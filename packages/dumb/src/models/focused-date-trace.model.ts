@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgPositionData } from './bg-position-data.model'
+import { type CbgPositionData } from './cbg-position-data.model'
 
 export interface FocusedDateTrace {
   data: {
     localDate: string
   }
-  position: BgPositionData
+  position: CbgPositionData
 }

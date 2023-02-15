@@ -30,7 +30,7 @@ import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { type BgBounds, ClassificationType } from '../../../../models/blood-glucose.model'
 import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
 import styles from './cbg-date-traces-animated.css'
-import { type BgPositionData } from '../../../../models/bg-position-data.model'
+import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
 import { bindActionCreators, type Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { focusTrendsCbgDateTrace, unfocusTrendsCbgDateTrace } from 'tidepool-viz'
@@ -46,7 +46,7 @@ interface CbgDateTracesAnimatedProps {
   yScale: ScaleFunction
   // Added via redux
   userId: string
-  focusDateTrace: (userId: string, dateTrace: CbgDateTrace, position: BgPositionData) => void
+  focusDateTrace: (userId: string, dateTrace: CbgDateTrace, position: CbgPositionData) => void
   unfocusDateTrace: (userId: string) => void
 }
 
