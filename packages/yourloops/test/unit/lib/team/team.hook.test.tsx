@@ -121,7 +121,7 @@ describe('Team hook', () => {
     })
 
     it('should throw an error when api called failed', async () => {
-      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamAlerts').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamMonitoringAlertsParams').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
         await teamHook.updateTeamAlerts(team1)
       }).rejects.toThrow()
@@ -129,7 +129,7 @@ describe('Team hook', () => {
     })
 
     it('should refresh team hook when api called succeeded', async () => {
-      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamAlerts').mockResolvedValue(null)
+      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamMonitoringAlertsParams').mockResolvedValue(null)
       await mountComponent()
       await act(async () => {
         await teamHook.updateTeamAlerts(team1)

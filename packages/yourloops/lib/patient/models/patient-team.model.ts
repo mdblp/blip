@@ -26,10 +26,8 @@
  */
 
 import { type UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
-import { type MonitoringStatus } from '../../team/models/enums/monitoring-status.enum'
 
 export interface PatientTeam {
   status: UserInvitationStatus
   teamId: string
-  monitoringStatus?: MonitoringStatus
 }

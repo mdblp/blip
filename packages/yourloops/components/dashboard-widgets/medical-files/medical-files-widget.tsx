@@ -35,7 +35,6 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import MedicalRecordList from './medical-record-list'
 import PrescriptionList from './prescription-list'
-import PatientUtils from '../../../lib/patient/patient.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 
 const useStyle = makeStyles()(() => ({
@@ -67,7 +66,9 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
   const { classes } = useStyle()
   const { patient } = props
 
-  const team = PatientUtils.getRemoteMonitoringTeam(patient)
+  const team = {
+    teamId: 'yann-changeme'
+  }
 
   return (
     <Card className={classes.medicalFilesWidget} id="medical-files-card" data-testid="medical-files-card">

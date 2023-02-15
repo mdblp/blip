@@ -85,11 +85,9 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       pending: patients.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
       directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
       unread: patients.filter(patient => patient.metadata.hasSentUnreadMessages).length,
-      outOfRange: patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
-      severeHypoglycemia: patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
-      dataNotTransferred: patients.filter(patient => patient.alarms.nonDataTransmissionActive).length,
-      remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
-      renew: patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
+      outOfRange: patients.filter(patient => patient.monitoringAlerts.timeSpentAwayFromTargetActive).length,
+      severeHypoglycemia: patients.filter(patient => patient.monitoringAlerts.frequencyOfSevereHypoglycemiaActive).length,
+      dataNotTransferred: patients.filter(patient => patient.monitoringAlerts.nonDataTransmissionActive).length
     }
   }, [patients])
 
@@ -129,7 +127,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     if (!patientUpdated) {
       throw Error(`Cannot update monitoring of patient with id ${patient.userid} as patient was not found`)
     }
-    patientUpdated.monitoring = patient.monitoring
+    patientUpdated.monitoringAlertsParams = patient.monitoringAlertsParams
     updatePatient(patientUpdated)
   }, [getPatientById, updatePatient])
 
@@ -138,13 +136,14 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     updatePatient(patient)
   }, [updatePatient])
 
+  /* TODO delete ? */
   const updatePatientMonitoring = useCallback(async (patient: Patient) => {
-    if (!patient.monitoring) {
+    if (!patient.monitoringAlertsParams) {
       throw Error('Cannot update patient monitoring with "undefined"')
     }
-    const monitoredTeam = PatientUtils.getRemoteMonitoringTeam(patient)
     try {
-      await PatientApi.updatePatientAlerts(monitoredTeam.teamId, patient.userid, patient.monitoring)
+      /* TODO : get team scoped by drop down */
+      await PatientApi.updatePatientMonitoringAlerts('yann-changeme', patient.userid, patient.monitoringAlertsParams)
       refresh()
     } catch (error) {
       console.error(error)

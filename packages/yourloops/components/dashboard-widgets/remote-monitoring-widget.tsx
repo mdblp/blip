@@ -25,36 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
+// import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Button from '@mui/material/Button'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+// import Button from '@mui/material/Button'
+// import Box from '@mui/material/Box'
+// import Typography from '@mui/material/Typography'
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined'
 
-import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
-import { useAuth } from '../../lib/auth'
-import { useNotification } from '../../lib/notifications/notification.hook'
-import { useTeam } from '../../lib/team'
-import ConfirmDialog from '../dialogs/confirm-dialog'
-import { usePatientContext } from '../../lib/patient/patient.provider'
-import PatientUtils from '../../lib/patient/patient.util'
+// import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
+// import { useAuth } from '../../lib/auth'
+// import { useNotification } from '../../lib/notifications/notification.hook'
+// import { useTeam } from '../../lib/team'
+// import ConfirmDialog from '../dialogs/confirm-dialog'
+// import { usePatientContext } from '../../lib/patient/patient.provider'
+// import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
-import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
-import { useUserName } from '../../lib/custom-hooks/user-name.hook'
+// import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
+// import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
+// import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import GenericDashboardCard from './generic-dashboard-card'
-import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
-import moment from 'moment-timezone'
+// import CardContent from '@mui/material/CardContent'
+// import CardActions from '@mui/material/CardActions'
+// import moment from 'moment-timezone'
 
 export interface RemoteMonitoringWidgetProps {
   patient: Patient
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element {
   const { t } = useTranslation()
+  /*
   const authHook = useAuth()
   const notificationHook = useNotification()
   const teamHook = useTeam()
@@ -143,7 +146,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   const onConfirmDeleteDialog = async (): Promise<void> => {
     setConfirmDeleteDialogActionInProgress(true)
     await removePatientRemoteMonitoring(setConfirmDeleteDialogActionInProgress, setShowConfirmDeleteDialog)
-  }
+  } */
 
   return (
     <React.Fragment>
@@ -152,6 +155,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
         title={t('remote-monitoring-program')}
         data-testid="remote-monitoring-card"
       >
+        {/*
         <CardContent>
           <Box display="flex" gap={2} marginBottom={2}>
             <Typography className="bold">{t('colon', { label: t('remote-monitoring') })}</Typography>
@@ -239,9 +243,10 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
             </Box>
           }
         </CardActions>
+        */}
       </GenericDashboardCard>
-
-      {showInviteRemoteMonitoringDialog &&
+      {
+        /* {showInviteRemoteMonitoringDialog &&
         <RemoteMonitoringPatientDialog
           patient={patient}
           action={RemoteMonitoringDialogAction.invite}
@@ -273,6 +278,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
           onConfirm={onConfirmDeleteDialog}
         />
       }
+      */
+      }
+
     </React.Fragment>
   )
 }

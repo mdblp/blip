@@ -348,42 +348,28 @@ class PatientDataPage extends React.Component {
         />
         <Switch>
           <Route path={`${prefixURL}/dashboard`}>
-            {patient.monitoring?.enabled
-              ? <BlipOldDashboard
-                bgPrefs={this.state.bgPrefs}
-                chartPrefs={chartPrefs}
-                patient={patient}
-                setPatient={setPatient}
-                userIsHCP={userIsHCP}
-                user={user}
-                isSelectedTeamMedical={isSelectedTeamMedical}
-                dataUtil={this.dataUtil}
-                timePrefs={this.state.timePrefs}
-                epochLocation={epochLocation}
-                msRange={msRange}
-                loading={loadingState !== LOADING_STATE_DONE}
-                medicalDataService={medicalData}
-                trackMetric={this.trackMetric}
-                chatWidget={chatWidget}
-                alarmCard={alarmCard}
-                medicalFilesWidget={medicalFilesWidget}
-                onSwitchToDaily={this.handleSwitchToDaily}
-                canPrint={canPrint}
-              />
-              : <PatientDashboard
-                bgPrefs={bgPrefs}
-                chartPrefs={chartPrefs}
-                dataUtil={this.dataUtil}
-                epochDate={epochLocation}
-                loading={loadingState !== LOADING_STATE_DONE}
-                medicalDataService={medicalData}
-                msRange={msRange}
-                patient={patient}
-                timePrefs={timePrefs}
-                trackMetric={this.trackMetric}
-                onSwitchToDaily={this.handleSwitchToDaily}
-              />
-            }
+            {/*DO NOT MERGE !!!, use new dashboard*/}
+            <BlipOldDashboard
+              bgPrefs={this.state.bgPrefs}
+              chartPrefs={chartPrefs}
+              patient={patient}
+              setPatient={setPatient}
+              userIsHCP={userIsHCP}
+              user={user}
+              isSelectedTeamMedical={isSelectedTeamMedical}
+              dataUtil={this.dataUtil}
+              timePrefs={this.state.timePrefs}
+              epochLocation={epochLocation}
+              msRange={msRange}
+              loading={loadingState !== LOADING_STATE_DONE}
+              medicalDataService={medicalData}
+              trackMetric={this.trackMetric}
+              chatWidget={chatWidget}
+              alarmCard={alarmCard}
+              medicalFilesWidget={medicalFilesWidget}
+              onSwitchToDaily={this.handleSwitchToDaily}
+              canPrint={canPrint}
+            />
           </Route>
           <Route path={`${prefixURL}/daily`}>
             <Daily

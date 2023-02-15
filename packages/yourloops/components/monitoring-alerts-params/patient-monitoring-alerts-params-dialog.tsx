@@ -33,10 +33,10 @@ import TuneIcon from '@mui/icons-material/Tune'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import { makeStyles } from 'tss-react/mui'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
+import { type MonitoringAlertsParams } from '../../lib/team/models/monitoring-alerts.model'
 import { useAlert } from '../utils/snackbar'
 import { commonComponentStyles } from '../common'
-import AlarmsContentConfiguration from './alarms-content-configuration'
+import MonitoringAlertsParamsContentConfiguration from './monitoring-alerts-params-content-configuration'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import DialogContent from '@mui/material/DialogContent'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -47,12 +47,12 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-interface PatientAlarmDialogProps {
+interface PatientMonitoringAlertsParamsDialogProps {
   patient: Patient
   onClose: () => void
 }
 
-function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
+function PatientMonitoringAlertsParamsDialog(props: PatientMonitoringAlertsParamsDialogProps): JSX.Element {
   const { patient, onClose } = props
   const { classes: commonClasses } = commonComponentStyles()
   const { classes } = useStyles()
@@ -61,12 +61,8 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   const alert = useAlert()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
-  if (!patient?.monitoring?.enabled) {
-    throw Error(`Cannot show monitoring info of team ${patient.userid} as its monitoring is not enabled`)
-  }
-
-  const save = async (monitoring: Monitoring): Promise<void> => {
-    patient.monitoring = monitoring
+  const save = async (monitoringAlertsParams: MonitoringAlertsParams): Promise<void> => {
+    patient.monitoringAlertsParams = monitoringAlertsParams
     setSaveInProgress(true)
     try {
       await patientHook.updatePatientMonitoring(patient)
@@ -100,8 +96,8 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
       </DialogTitle>
 
       <DialogContent className={'no-padding'}>
-        <AlarmsContentConfiguration
-          monitoring={patient.monitoring}
+        <MonitoringAlertsParamsContentConfiguration
+          monitoringAlertsParams={patient.monitoringAlertsParams}
           patient={patient}
           onSave={save}
           saveInProgress={saveInProgress}
@@ -111,4 +107,4 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   )
 }
 
-export default PatientAlarmDialog
+export default PatientMonitoringAlertsParamsDialog

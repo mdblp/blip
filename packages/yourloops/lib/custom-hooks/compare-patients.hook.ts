@@ -43,18 +43,18 @@ export const useComparePatients = (): ComparePatientsHookReturn => {
     switch (orderBy) {
       case PatientTableSortFields.alertTimeTarget:
         return {
-          a: a.alarms.timeSpentAwayFromTargetRate,
-          b: b.alarms.timeSpentAwayFromTargetRate
+          a: a.monitoringAlerts.timeSpentAwayFromTargetRate,
+          b: b.monitoringAlerts.timeSpentAwayFromTargetRate
         }
       case PatientTableSortFields.alertHypoglycemic:
         return {
-          a: a.alarms.frequencyOfSevereHypoglycemiaRate,
-          b: b.alarms.frequencyOfSevereHypoglycemiaRate
+          a: a.monitoringAlerts.frequencyOfSevereHypoglycemiaRate,
+          b: b.monitoringAlerts.frequencyOfSevereHypoglycemiaRate
         }
       case PatientTableSortFields.dataNotTransferred:
         return {
-          a: a.alarms.nonDataTransmissionRate,
-          b: b.alarms.nonDataTransmissionRate
+          a: a.monitoringAlerts.nonDataTransmissionRate,
+          b: b.monitoringAlerts.nonDataTransmissionRate
         }
       case PatientTableSortFields.flag:
         return {

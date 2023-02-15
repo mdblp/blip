@@ -62,7 +62,6 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
   const trNA = t('N/A')
   const isUserHcp = user?.isUserHcp()
   const isUserCaregiver = user?.isUserCaregiver()
-  const patientIsMonitored = patient.monitoring?.enabled
   const { classes: patientListCommonClasses } = patientListCommonStyle()
   const isFlagged = getFlagPatients().includes(patient.userid)
 
@@ -72,9 +71,9 @@ const usePatientRow = ({ patient, classes }: PatientRowHookProps): PatientRowHoo
     const largeCellWithAlertClasses = `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}`
     const largeCellClasses = `${classes.typography} ${patientListCommonClasses.largeCell}`
 
-    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.alarms?.timeSpentAwayFromTargetActive ? patient.alarms?.timeSpentAwayFromTargetActive : false
-    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.alarms?.frequencyOfSevereHypoglycemiaActive ? patient.alarms?.frequencyOfSevereHypoglycemiaActive : false
-    const nonDataTransmissionActive = patientIsMonitored && patient.alarms?.nonDataTransmissionActive ? patient.alarms?.nonDataTransmissionActive : false
+    const timeSpentAwayFromTargetActive = patient.monitoringAlerts?.timeSpentAwayFromTargetActive ? patient.monitoringAlerts?.timeSpentAwayFromTargetActive : false
+    const frequencyOfSevereHypoglycemiaActive = patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive ? patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive : false
+    const nonDataTransmissionActive = patient.monitoringAlerts?.nonDataTransmissionActive ? patient.monitoringAlerts?.nonDataTransmissionActive : false
     const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive
 
     const patientFullNameClasses = isUserHcp && hasAlert ? largeCellWithAlertClasses : largeCellClasses

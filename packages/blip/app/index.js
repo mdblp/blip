@@ -68,7 +68,7 @@ function ReduxProvider(props) {
         dialogRangeDatePicker={props.dialogRangeDatePicker}
         dialogPDFOptions={props.dialogPDFOptions}
         chatWidget={props.chatWidget}
-        alarmCard={props.alarmCard}
+        alarmCard={props.monitoringAlertsCard}
         medicalFilesWidget={props.medicalFilesWidget}
       />
     </Provider>
@@ -96,7 +96,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === 'object') {
     try {
-      const { config, api, patient, setPatient, userIsHCP, isSelectedTeamMedical, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, medicalFilesWidget } = props
+      const { config, api, patient, setPatient, userIsHCP, isSelectedTeamMedical, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, monitoringAlertsCard, medicalFilesWidget } = props
       updateConfig(config)
 
       return (
@@ -111,7 +111,7 @@ function Blip(props) {
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
           chatWidget={chatWidget}
-          alarmCard={alarmCard}
+          monitoringAlertsCard={monitoringAlertsCard}
           medicalFilesWidget={medicalFilesWidget}
         />
       )

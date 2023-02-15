@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../patient/models/alarms.model'
-import { type Monitoring } from './monitoring.model'
 import { type TeamMemberRole } from './enums/team-member-role.enum'
 import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
 import { type Profile } from '../../auth/models/profile.model'
 import { type Settings } from '../../auth/models/settings.model'
 import { type Preferences } from '../../auth/models/preferences.model'
+import { type MonitoringAlertsParams } from './monitoring-alerts.model'
+import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
 
 /**
  * Team member (API view)
@@ -46,7 +46,7 @@ export interface ITeamMember {
   settings?: Settings | null
   preferences?: Preferences | null
   idVerified: boolean
-  alarms?: Alarms
-  monitoring?: Monitoring
+  monitoringAlerts?: MonitoringAlerts
+  monitoringAlertsParams: MonitoringAlertsParams
   unreadMessages?: number
 }

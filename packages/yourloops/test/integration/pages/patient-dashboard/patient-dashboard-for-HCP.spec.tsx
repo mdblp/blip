@@ -347,7 +347,7 @@ describe('Patient dashboard for HCP', () => {
           reportingPeriod: 7
         }
       }
-      expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, monitoredPatientWithMmolId, expectedMonitoring)
+      expect(PatientApi.updatePatientMonitoringAlerts).toHaveBeenCalledWith(myThirdTeamId, monitoredPatientWithMmolId, expectedMonitoring)
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       expect(screen.getByText('Patient update succeeded')).toBeVisible()
     })

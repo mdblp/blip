@@ -150,7 +150,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
   const { getUserName } = useUserName()
-  const teamId = user.isUserHcp() ? selectedTeamId : PatientUtils.getRemoteMonitoringTeam(patient).teamId
+  const teamId = user.isUserHcp() ? selectedTeamId : 'yann-changeme'
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number): void => {

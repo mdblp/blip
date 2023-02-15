@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../../lib/patient/models/alarms.model'
+import { type MonitoringAlerts } from '../../../lib/patient/models/alarms.model'
 import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
@@ -61,7 +61,7 @@ const defaultMetadata: PatientMetadata = {
   hasSentUnreadMessages: false
 }
 
-const defaultAlarm: Alarms = {
+const defaultAlarm: MonitoringAlerts = {
   timeSpentAwayFromTargetRate: 0,
   timeSpentAwayFromTargetActive: false,
   frequencyOfSevereHypoglycemiaRate: 0,
@@ -77,7 +77,7 @@ export const buildPatient = (
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
-  alarms: Partial<Alarms> = undefined
+  alarms: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
     alarms: {
@@ -244,11 +244,11 @@ export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatien
 
 export const mockPatientApiForPatients = () => {
   jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember, unmonitoredPatientAsTeamMember, monitoredPatientTwoAsTeamMember, pendingPatientAsTeamMember])
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+  jest.spyOn(PatientApi, 'updatePatientMonitoringAlerts').mockResolvedValue(undefined)
 }
 export const mockPatientApiForHcp = () => {
   jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+  jest.spyOn(PatientApi, 'updatePatientMonitoringAlerts').mockResolvedValue(undefined)
 }
 
 export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {

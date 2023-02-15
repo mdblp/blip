@@ -89,10 +89,6 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
             fieldName={t('colon', { label: t('gender') })}
             fieldValue={gender}
           />
-          <PatientNavBarInfo
-            fieldName={t('colon', { label: t('remote-monitoring') })}
-            fieldValue={patient.monitoring?.enabled ? t('yes') : t('no')}
-          />
         </Box>
         {showMoreInfo &&
           <Box display="flex" marginY={1}>

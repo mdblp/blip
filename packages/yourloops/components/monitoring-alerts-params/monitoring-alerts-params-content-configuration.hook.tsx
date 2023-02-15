@@ -25,25 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { useTeam } from '../../lib/team'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
+import { type MonitoringAlertsParams } from '../../lib/team/models/monitoring-alerts.model'
 import type React from 'react'
 import { useMemo, useState } from 'react'
-import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
-import { buildThresholds, isInvalidPercentage, REGEX_VALUE_BG } from './alarm-content-configuration.utils'
+import { buildThresholds, isInvalidPercentage, REGEX_VALUE_BG } from './monitoring-alerts-params-content-configuration.utils'
 import { UnitsType } from 'dumb'
-import { type Thresholds } from '../../lib/patient/models/alarms.model'
-import { DEFAULT_BG_VALUES } from './alarms.default'
+import { type MonitoringAlertsThresholds } from '../../lib/patient/models/monitoring-alerts.model'
+import { DEFAULT_BG_VALUES } from './monitoring-alerts-params.default'
 
-export interface AlarmsContentConfigurationHookProps {
-  monitoring: Monitoring
+export interface MonitoringAlertsParamsContentConfigurationHookProps {
+  monitoringAlertsParams: MonitoringAlertsParams
   saveInProgress?: boolean
   patient?: Patient
-  onSave?: (monitoring: Monitoring) => void
+  onSave?: (monitoringAlertsParams: MonitoringAlertsParams) => void
 }
 
-interface AlarmsContentConfigurationHookReturn {
+interface MonitoringAlertsParamsContentConfigurationHookReturn {
   lowBg: ValueErrorMessagePair
   setLowBg: React.Dispatch<ValueErrorMessagePair>
   veryLowBg: ValueErrorMessagePair
@@ -73,8 +72,8 @@ interface ValueErrorPair {
   error?: boolean
 }
 
-const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
-  const bgUnit = monitoring.parameters?.bgUnit ?? UnitsType.MGDL
+const useMonitoringAlertsParamsContentConfiguration = ({ monitoringAlertsParams, saveInProgress, onSave, patient }: MonitoringAlertsParamsContentConfigurationHookProps): MonitoringAlertsParamsContentConfigurationHookReturn => {
+  const bgUnit = monitoringAlertsParams.bgUnit ?? UnitsType.MGDL
 
   const {
     highBgDefault,
@@ -87,8 +86,9 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     bgUnitDefault
   } = DEFAULT_BG_VALUES
 
-  if (!monitoring.parameters) {
-    monitoring.parameters = {
+  /* TODO : remove if ? because every team should have default alerts ? */
+  if (!monitoringAlertsParams) {
+    monitoringAlertsParams = {
       bgUnit: bgUnitDefault,
       lowBg: lowBgDefault,
       highBg: highBgDefault,
@@ -104,7 +104,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
 
   const teamHook = useTeam()
 
-  const thresholds = useMemo<Thresholds>(() => buildThresholds(bgUnit), [bgUnit])
+  const thresholds = useMemo<MonitoringAlertsThresholds>(() => buildThresholds(bgUnit), [bgUnit])
 
   const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
     if (bgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
@@ -121,38 +121,38 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
 
   const [highBg, setHighBg] = useState<ValueErrorMessagePair>(() => {
     return {
-      value: monitoring.parameters.highBg,
-      errorMessage: getErrorMessage(monitoring.parameters.highBg, thresholds.minHighBg, thresholds.maxHighBg)
+      value: monitoringAlertsParams.highBg,
+      errorMessage: getErrorMessage(monitoringAlertsParams.highBg, thresholds.minHighBg, thresholds.maxHighBg)
     }
   })
   const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>(() => {
     return {
-      value: monitoring.parameters.veryLowBg,
-      errorMessage: getErrorMessage(monitoring.parameters.veryLowBg, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
+      value: monitoringAlertsParams.veryLowBg,
+      errorMessage: getErrorMessage(monitoringAlertsParams.veryLowBg, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
     }
   })
   const [lowBg, setLowBg] = useState<ValueErrorMessagePair>(() => {
     return {
-      value: monitoring.parameters.lowBg,
-      errorMessage: getErrorMessage(monitoring.parameters.lowBg, thresholds.minLowBg, thresholds.maxLowBg)
+      value: monitoringAlertsParams.lowBg,
+      errorMessage: getErrorMessage(monitoringAlertsParams.lowBg, thresholds.minLowBg, thresholds.maxLowBg)
     }
   })
   const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(() => {
     return {
-      value: monitoring.parameters.nonDataTxThreshold,
-      error: isInvalidPercentage(monitoring.parameters.nonDataTxThreshold)
+      value: monitoringAlertsParams.nonDataTxThreshold,
+      error: isInvalidPercentage(monitoringAlertsParams.nonDataTxThreshold)
     }
   })
   const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(() => {
     return {
-      value: monitoring.parameters.outOfRangeThreshold,
-      error: isInvalidPercentage(monitoring.parameters.outOfRangeThreshold)
+      value: monitoringAlertsParams.outOfRangeThreshold,
+      error: isInvalidPercentage(monitoringAlertsParams.outOfRangeThreshold)
     }
   })
   const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(() => {
     return {
-      value: monitoring.parameters.hypoThreshold,
-      error: isInvalidPercentage(monitoring.parameters.hypoThreshold)
+      value: monitoringAlertsParams.hypoThreshold,
+      error: isInvalidPercentage(monitoringAlertsParams.hypoThreshold)
     }
   })
 
@@ -183,41 +183,29 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       throw Error('This action cannot be done if the patient is undefined')
     }
 
-    const monitoredTeam = PatientUtils.getRemoteMonitoringTeam(patient)
+    /* TODO : get the actual team selected by the drop down */
+    const team = teamHook.getTeam('test')
+    const defaultMonitoring = team.monitoringAlertsParams
 
-    const team = teamHook.getTeam(monitoredTeam.teamId)
-    if (!team) {
-      throw Error(`Cannot find team with id ${monitoredTeam.teamId}`)
-    }
-
-    const defaultMonitoring = team.monitoring
-    if (!defaultMonitoring?.parameters) {
-      throw Error('The given team has no monitoring values')
-    }
-    setHighBg({ ...highBg, value: defaultMonitoring.parameters.highBg })
-    setVeryLowBg({ ...veryLowBg, value: defaultMonitoring.parameters.veryLowBg })
-    setLowBg({ ...lowBg, value: defaultMonitoring.parameters.lowBg })
-    setNonDataTxThreshold({ ...nonDataTxThreshold, value: defaultMonitoring.parameters.nonDataTxThreshold })
-    setOutOfRangeThreshold({ ...outOfRangeThreshold, value: defaultMonitoring.parameters.outOfRangeThreshold })
-    setHypoThreshold({ ...hypoThreshold, value: defaultMonitoring.parameters.hypoThreshold })
+    setHighBg({ ...highBg, value: defaultMonitoring.highBg })
+    setVeryLowBg({ ...veryLowBg, value: defaultMonitoring.veryLowBg })
+    setLowBg({ ...lowBg, value: defaultMonitoring.lowBg })
+    setNonDataTxThreshold({ ...nonDataTxThreshold, value: defaultMonitoring.nonDataTxThreshold })
+    setOutOfRangeThreshold({ ...outOfRangeThreshold, value: defaultMonitoring.outOfRangeThreshold })
+    setHypoThreshold({ ...hypoThreshold, value: defaultMonitoring.hypoThreshold })
   }
 
   const save = (): void => {
-    const reportingPeriod = (monitoring.parameters.reportingPeriod && monitoring.parameters.reportingPeriod > 0) ? monitoring.parameters.reportingPeriod : 55
-    const monitoringUpdated: Monitoring = {
-      enabled: monitoring.enabled,
-      status: monitoring.status,
-      monitoringEnd: monitoring.monitoringEnd,
-      parameters: {
-        bgUnit,
-        lowBg: lowBg.value,
-        highBg: highBg.value,
-        outOfRangeThreshold: outOfRangeThreshold.value,
-        veryLowBg: veryLowBg.value,
-        hypoThreshold: hypoThreshold.value,
-        nonDataTxThreshold: nonDataTxThreshold.value,
-        reportingPeriod
-      }
+    const reportingPeriod = (monitoringAlertsParams.reportingPeriod && monitoringAlertsParams.reportingPeriod > 0) ? monitoringAlertsParams.reportingPeriod : 55
+    const monitoringUpdated: MonitoringAlertsParams = {
+      bgUnit,
+      lowBg: lowBg.value,
+      highBg: highBg.value,
+      outOfRangeThreshold: outOfRangeThreshold.value,
+      veryLowBg: veryLowBg.value,
+      hypoThreshold: hypoThreshold.value,
+      nonDataTxThreshold: nonDataTxThreshold.value,
+      reportingPeriod
     }
     onSave(monitoringUpdated)
   }
@@ -241,4 +229,4 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     bgUnit
   }
 }
-export default useAlarmsContentConfiguration
+export default useMonitoringAlertsParamsContentConfiguration

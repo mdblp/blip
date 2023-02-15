@@ -57,7 +57,7 @@ interface BlipProperties {
   dialogPDFOptions: typeof DialogPDFOptions;
   chatWidget: typeof ChatWidget;
   medicalFilesWidget: typeof MedicalFilesWidget;
-  alarmCard: typeof AlarmCard;
+  monitoringAlertsCard: typeof AlarmCard;
 }
 
 // FIXME: For some reason, the yourloops auth hook

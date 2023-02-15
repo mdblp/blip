@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../patient/models/alarms.model'
-import { type Monitoring } from '../../team/models/monitoring.model'
 import { type MedicalData } from './medical-data.model'
 import { type UserRoles } from '../../auth/models/enums/user-roles.enum'
 import { type Profile } from '../../auth/models/profile.model'
 import { type Settings } from '../../auth/models/settings.model'
 import { type Preferences } from '../../auth/models/preferences.model'
+import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
+import { type MonitoringAlertsParams } from '../../team/models/monitoring-alerts.model'
 
 export interface IUser {
   emails?: string[]
@@ -49,7 +49,7 @@ export interface IUser {
   preferences?: Preferences | null
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null
-  alarms?: Alarms | null
-  monitoring?: Monitoring
+  monitoringAlerts?: MonitoringAlerts | null
+  monitoringAlertsParams?: MonitoringAlertsParams
   unreadMessages?: number
 }

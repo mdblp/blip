@@ -103,10 +103,6 @@ function TeamContextImpl(): TeamContext {
     return teams.filter((team: Team) => types.includes(team.type))
   }
 
-  const getRemoteMonitoringTeams = (): Team[] => {
-    return teams.filter(team => team.monitoring?.enabled)
-  }
-
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     const result = await TeamApi.inviteMember(user.id, team.id, username, role)
     setTeams(result.teams)
@@ -135,15 +131,12 @@ function TeamContextImpl(): TeamContext {
     metrics.send('team_management', 'edit_care_team')
   }
 
-  const updateTeamAlerts = async (team: Team): Promise<void> => {
-    if (!team.monitoring) {
-      throw Error('Cannot update team monitoring with undefined')
-    }
+  const updateTeamMonitoringAlertsParams = async (team: Team): Promise<void> => {
     try {
-      await TeamApi.updateTeamAlerts(team.id, team.monitoring)
+      await TeamApi.updateTeamMonitoringAlertsParams(team.id, team.monitoringAlertsParams)
     } catch (error) {
       console.error(error)
-      throw Error(`Failed to update team with id ${team.id}`)
+      throw Error(`Failed to update team with id ${team.id} : ${error}`)
     }
     refresh()
   }
@@ -215,11 +208,10 @@ function TeamContextImpl(): TeamContext {
     getTeam,
     getMedicalTeams,
     getMedicalAndPrivateTeams,
-    getRemoteMonitoringTeams,
     inviteMember,
     createTeam,
     editTeam,
-    updateTeamAlerts,
+    updateTeamAlerts: updateTeamMonitoringAlertsParams,
     leaveTeam,
     removeMember,
     changeMemberRole,

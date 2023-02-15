@@ -43,7 +43,7 @@ import DialogDatePicker from './date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
 import ChatWidget from './chat/chat-widget'
-import AlarmCard from './alarm/alarm-card'
+import MonitoringAlertsCard from './monitoring-alerts-params/monitoring-alerts-card'
 import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
@@ -168,7 +168,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
         chatWidget={ChatWidget}
-        alarmCard={AlarmCard}
+        monitoringAlertsCard={MonitoringAlertsCard}
         medicalFilesWidget={MedicalFilesWidget}
       />
     </Container>

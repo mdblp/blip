@@ -33,6 +33,4 @@ export interface PatientFilterStats {
   outOfRange: number
   severeHypoglycemia: number
   dataNotTransferred: number
-  remoteMonitored: number
-  renew: number
 }

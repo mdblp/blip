@@ -24,21 +24,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type MonitoringStatus } from './enums/monitoring-status.enum'
 import { type UnitsType } from 'dumb'
 
-export interface Monitoring {
-  enabled: boolean
-  status?: MonitoringStatus
-  monitoringEnd?: Date
-  parameters?: {
-    bgUnit: UnitsType
-    lowBg: number
-    highBg: number
-    outOfRangeThreshold: number
-    veryLowBg: number
-    hypoThreshold: number
-    nonDataTxThreshold: number
-    reportingPeriod: number
-  }
+export interface MonitoringAlerts {
+  timeSpentAwayFromTargetRate: number
+  timeSpentAwayFromTargetActive: boolean
+  frequencyOfSevereHypoglycemiaRate: number
+  frequencyOfSevereHypoglycemiaActive: boolean
+  nonDataTransmissionRate: number
+  nonDataTransmissionActive: boolean
+}
+
+export interface MonitoringAlertsThresholds {
+  minHighBg: number
+  maxHighBg: number
+  minVeryLowBg: number
+  maxVeryLowBg: number
+  minLowBg: number
+  maxLowBg: number
+}
+
+export interface BgValues {
+  bgUnitDefault: UnitsType
+  outOfRangeThresholdDefault: number
+  nonDataTxThresholdDefault: number
+  hypoThresholdDefault: number
+  veryLowBgDefault: number
+  lowBgDefault: number
+  highBgDefault: number
+  reportingPeriodDefault: number
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,24 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from 'dumb'
-import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
+import { type UnitsType } from 'dumb'
 
-export const DEFAULT_BG_VALUES: BgValues = {
-  bgUnitDefault: UnitsType.MGDL,
-  outOfRangeThresholdDefault: 50,
-  nonDataTxThresholdDefault: 50,
-  hypoThresholdDefault: 5,
-  veryLowBgDefault: 54,
-  lowBgDefault: 70,
-  highBgDefault: 180,
-  reportingPeriodDefault: 7 * 24
-}
-export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
-  minHighBg: 140,
-  maxHighBg: 250,
-  minVeryLowBg: 40,
-  maxVeryLowBg: 90,
-  minLowBg: 50,
-  maxLowBg: 100
+export interface MonitoringAlertsParams {
+  bgUnit: UnitsType
+  lowBg: number
+  highBg: number
+  outOfRangeThreshold: number
+  veryLowBg: number
+  hypoThreshold: number
+  nonDataTxThreshold: number
+  reportingPeriod: number
 }

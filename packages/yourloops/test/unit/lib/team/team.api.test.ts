@@ -157,7 +157,7 @@ describe('TeamApi', () => {
         payload: monitoring
       }
 
-      TeamApi.updateTeamAlerts(teamId, monitoring)
+      TeamApi.updateTeamMonitoringAlertsParams(teamId, monitoring)
 
       expect(httpServiceSpy).toHaveBeenCalledWith(expectedParams)
     })

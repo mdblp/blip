@@ -34,15 +34,16 @@ import TuneIcon from '@mui/icons-material/Tune'
 
 import { commonComponentStyles } from '../common'
 import { type Team, useTeam } from '../../lib/team'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
+import { type MonitoringAlertsParams } from '../../lib/team/models/monitoring-alerts.model'
 import { useAlert } from '../utils/snackbar'
-import AlarmsContentConfiguration from '../alarm/alarms-content-configuration'
+import MonitoringAlertsParamsContentConfiguration
+  from '../monitoring-alerts-params/monitoring-alerts-params-content-configuration'
 
 export interface TeamAlarmsConfigurationProps {
   team: Team
 }
 
-function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Element {
+function TeamMonitoringAlertsParamsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Element {
   const { team } = props
   const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
@@ -50,12 +51,8 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
   const alert = useAlert()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
-  if (!team.monitoring?.enabled) {
-    throw Error(`Cannot show monitoring info of team ${team.id} as its monitoring is not enabled`)
-  }
-
-  const save = async (monitoring: Monitoring): Promise<void> => {
-    team.monitoring = monitoring
+  const save = async (monitoringAlertsParams: MonitoringAlertsParams): Promise<void> => {
+    team.monitoringAlertsParams = monitoringAlertsParams
     setSaveInProgress(true)
     try {
       await teamHook.updateTeamAlerts(team)
@@ -80,10 +77,10 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
       </div>
 
       <Box paddingX={3}>
-        <AlarmsContentConfiguration monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
+        <MonitoringAlertsParamsContentConfiguration monitoringAlertsParams={team.monitoringAlertsParams} onSave={save} saveInProgress={saveInProgress}/>
       </Box>
     </div>
   )
 }
 
-export default TeamAlarmsConfiguration
+export default TeamMonitoringAlertsParamsConfiguration

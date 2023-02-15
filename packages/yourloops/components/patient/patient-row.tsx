@@ -94,7 +94,7 @@ const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Th
   }
 })
 
-const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonitoring, filter, patient }) => {
+const PatientRow: FunctionComponent<PatientRowProps> = ({ filter, patient }) => {
   const historyHook = useHistory()
   const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
@@ -226,19 +226,19 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
         <StyledTableCell className={classes.typography}>{patientSystem}</StyledTableCell>
 
         <StyledTableCell className={timeSpentAwayFromTargetRateClasses}>
-          {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
+          {`${Math.round(patient.monitoringAlerts.timeSpentAwayFromTargetRate * 10) / 10}%`}
           {isUserHcp && timeSpentAwayFromTargetActive &&
             <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={frequencyOfSevereHypoglycemiaRateClasses}>
-          {`${Math.round(patient.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+          {`${Math.round(patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
             <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
 
         <StyledTableCell className={dataNotTransferredRateClasses}>
-          {`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}
+          {`${Math.round(patient.monitoringAlerts.nonDataTransmissionRate * 10) / 10}%`}
           {isUserHcp && nonDataTransmissionActive &&
             <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
         </StyledTableCell>
@@ -247,21 +247,19 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
           {lastUpload}
         </StyledTableCell>
 
-        {loggedUserIsHcpInMonitoring &&
-          <StyledTableCell className={classes.iconCell}>
-            <Tooltip
-              title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-              aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
-            >
-              <Box display="flex" justifyContent="center">
-                {hasUnreadMessages
-                  ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
-                  : <EmailOpenIcon className={classes.lightGrey} />
-                }
-              </Box>
-            </Tooltip>
-          </StyledTableCell>
-        }
+        <StyledTableCell className={classes.iconCell}>
+          <Tooltip
+            title={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+            aria-label={t(hasUnreadMessages ? 'unread-messages' : 'no-new-messages')}
+          >
+            <Box display="flex" justifyContent="center">
+              {hasUnreadMessages
+                ? <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
+                : <EmailOpenIcon className={classes.lightGrey} />
+              }
+            </Box>
+          </Tooltip>
+        </StyledTableCell>
 
         <StyledTableCell>
           <Tooltip

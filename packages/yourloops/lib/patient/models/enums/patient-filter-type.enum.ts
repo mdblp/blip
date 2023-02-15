@@ -33,8 +33,6 @@ export enum PatientFilterTypes {
   outOfRange = 'out-of-range',
   pending = 'pending',
   private = 'private',
-  remoteMonitored = 'remote-monitored',
-  renew = 'renew',
   severeHypoglycemia = 'severe-hypoglycemia',
   unread = 'unread-messages',
 }

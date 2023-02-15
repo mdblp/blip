@@ -31,9 +31,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
-import TeamAlarmsConfiguration, {
+import TeamMonitoringAlertsParamsConfiguration, {
   type TeamAlarmsConfigurationProps
-} from '../../../../components/team/team-alarms-configuration'
+} from '../../../../components/team/team-monitoring-alerts-params-configuration'
 import { type AlarmsContentConfigurationProps } from '../../../../components/alarm/alarms-content-configuration'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 
@@ -64,7 +64,7 @@ describe('TeamMembers', () => {
   })
 
   function getTeamAlarmConfigurationJSX(props: TeamAlarmsConfigurationProps = { team }) {
-    return <TeamAlarmsConfiguration
+    return <TeamMonitoringAlertsParamsConfiguration
       team={props.team}
     />
   }

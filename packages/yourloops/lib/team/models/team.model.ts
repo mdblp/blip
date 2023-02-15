@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Monitoring } from './monitoring.model'
+import { type MonitoringAlertsParams } from './monitoring-alerts.model'
 import { type TeamMember } from './team-member.model'
 import { type TeamType } from './enums/team-type.enum'
 import { type PostalAddress } from './postal-address.model'
@@ -43,5 +43,5 @@ export interface Team {
   email?: string
   address?: PostalAddress
   members: TeamMember[] // Members are only set when the current logged user has the HCP role
-  monitoring?: Monitoring
+  monitoringAlertsParams: MonitoringAlertsParams
 }

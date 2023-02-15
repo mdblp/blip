@@ -35,7 +35,7 @@ import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
 import AlarmCard from '../../../../components/alarm/alarm-card'
 import type User from '../../../../lib/auth/models/user.model'
-import { type Alarms } from '../../../../lib/patient/models/alarms.model'
+import { type MonitoringAlerts } from '../../../../lib/patient/models/alarms.model'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { getTheme } from '../../../../components/theme'
 
@@ -94,7 +94,7 @@ describe('AlarmCard', () => {
   })
 
   it('should display correct title patient has 2 alarms', () => {
-    const alarm: Alarms = {
+    const alarm: MonitoringAlerts = {
       timeSpentAwayFromTargetRate: 0,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 5,
@@ -108,7 +108,7 @@ describe('AlarmCard', () => {
   })
 
   it('should open dialog when clicking on configure button and close it when clicking on cancel', () => {
-    const alarm: Alarms = {
+    const alarm: MonitoringAlerts = {
       timeSpentAwayFromTargetRate: 10,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 20,

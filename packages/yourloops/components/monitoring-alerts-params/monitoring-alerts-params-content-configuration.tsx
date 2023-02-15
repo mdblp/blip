@@ -37,12 +37,12 @@ import Typography from '@mui/material/Typography'
 import BasicDropdown from '../dropdown/basic-dropdown'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
+import { type MonitoringAlertsParams } from '../../lib/team/models/monitoring-alerts.model'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from 'dumb'
-import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
-import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
+import useMonitoringAlertsParamsContentConfiguration from './monitoring-alerts-params-content-configuration.hook'
+import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './monitoring-alerts-params-content-configuration.utils'
 import FormHelperText from '@mui/material/FormHelperText'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -95,16 +95,16 @@ const useStyles = makeStyles()((theme: Theme) => ({
   }
 }))
 
-export interface AlarmsContentConfigurationProps {
-  monitoring: Monitoring
+export interface MonitoringAlertsParamsContentConfigurationProps {
+  monitoringAlertsParams: MonitoringAlertsParams
   saveInProgress: boolean
   patient?: Patient
   onClose?: () => void
-  onSave: (monitoring: Monitoring) => void
+  onSave: (monitoringAlertsParams: MonitoringAlertsParams) => void
 }
 
-function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
-  const { monitoring, patient, saveInProgress, onClose, onSave } = props
+function MonitoringAlertsParamsContentConfiguration(props: MonitoringAlertsParamsContentConfigurationProps): JSX.Element {
+  const { monitoringAlertsParams, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
   const { t } = useTranslation()
   const {
@@ -125,7 +125,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     setHypoThreshold,
     setNonDataTxThreshold,
     bgUnit
-  } = useAlarmsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
+  } = useMonitoringAlertsParamsContentConfiguration({ monitoringAlertsParams, saveInProgress, patient, onSave })
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
 
@@ -388,4 +388,4 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
   )
 }
 
-export default AlarmsContentConfiguration
+export default MonitoringAlertsParamsContentConfiguration

@@ -307,7 +307,7 @@ describe('Patient hook', () => {
     })
 
     it('should update patient alerts', async () => {
-      const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+      const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientMonitoringAlerts').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.updatePatientMonitoring(monitoredPatient)
         expect(updatePatientAlertsMock).toHaveBeenCalled()
@@ -316,7 +316,7 @@ describe('Patient hook', () => {
     })
 
     it('should throw error when could not updated patient alerts', async () => {
-      const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientAlerts').mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+      const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientMonitoringAlerts').mockRejectedValue(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
         await customHook.updatePatientMonitoring(monitoredPatient)
       }).rejects.toThrowError(`Failed to update patient with id ${monitoredPatient.userid}`)

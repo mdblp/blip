@@ -45,7 +45,7 @@ import TeamInformation from '../../components/team/team-information'
 import TeamMembers from '../../components/team/team-members'
 import { commonComponentStyles } from '../../components/common'
 import { useAuth } from '../../lib/auth'
-import TeamAlarmsConfiguration from '../../components/team/team-alarms-configuration'
+import TeamMonitoringAlertsParamsConfiguration from '../../components/team/team-monitoring-alerts-params-configuration'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeLink: {
@@ -137,10 +137,6 @@ function TeamDetailsPage(): JSX.Element {
     history.push(`/teams/${teamToRedirectTo?.id}`)
   }
 
-  const isMonitoringEnabled = (): boolean => {
-    return dropdownData.selectedTeam?.monitoring?.enabled
-  }
-
   return (
     <React.Fragment>
       {dropdownData.selectedTeam &&
@@ -192,21 +188,19 @@ function TeamDetailsPage(): JSX.Element {
                     {t('members')}
                   </Typography>
                 </div>
-                {isMonitoringEnabled() &&
-                  <div
-                    role="link"
-                    aria-label="alarms"
-                    className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
-                    tabIndex={0}
-                    onClick={() => { scrollTo(teamAlarms) }}
-                    onKeyDown={() => { scrollTo(teamAlarms) }}
-                  >
-                    <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
-                    <Typography className={classes.title}>
-                      {t('events-configuration')}
-                    </Typography>
-                  </div>
-                }
+                <div
+                  role="link"
+                  aria-label="alarms"
+                  className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
+                  tabIndex={0}
+                  onClick={() => { scrollTo(teamAlarms) }}
+                  onKeyDown={() => { scrollTo(teamAlarms) }}
+                >
+                  <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
+                  <Typography className={classes.title}>
+                    {t('events-configuration')}
+                  </Typography>
+                </div>
               </div>
             }
             <Box display="flex" justifyContent="center" margin="auto">
@@ -232,20 +226,18 @@ function TeamDetailsPage(): JSX.Element {
                     >
                       <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
                     </div>
-                    {isMonitoringEnabled() &&
-                      <div>
-                        <div className={classes.separator} />
-                        <div
-                          ref={teamAlarms}
-                          role="region"
-                          aria-label="alarms"
-                          data-link="configuration"
-                          className={classes.refElement}
-                        >
-                          <TeamAlarmsConfiguration team={dropdownData.selectedTeam} />
-                        </div>
+                    <div>
+                      <div className={classes.separator} />
+                      <div
+                        ref={teamAlarms}
+                        role="region"
+                        aria-label="alarms"
+                        data-link="configuration"
+                        className={classes.refElement}
+                      >
+                        <TeamMonitoringAlertsParamsConfiguration team={dropdownData.selectedTeam} />
                       </div>
-                    }
+                    </div>
                   </div>
                 }
               </div>

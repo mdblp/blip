@@ -27,7 +27,7 @@
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
-import { type Monitoring } from './models/monitoring.model'
+import { type MonitoringAlertsParams } from './models/monitoring-alerts.model'
 import bows from 'bows'
 import { type User } from '../auth'
 import { type TeamMemberRole } from './models/enums/team-member-role.enum'
@@ -125,10 +125,10 @@ export default class TeamApi {
     })
   }
 
-  static async updateTeamAlerts(teamId: string, monitoring: Monitoring): Promise<void> {
-    await HttpService.put<void, Monitoring>({
+  static async updateTeamMonitoringAlertsParams(teamId: string, monitoringAlertsParams: MonitoringAlertsParams): Promise<void> {
+    await HttpService.put<void, MonitoringAlertsParams>({
       url: `/crew/v0/teams/${teamId}/remote-monitoring`,
-      payload: monitoring
+      payload: monitoringAlertsParams
     })
   }
 

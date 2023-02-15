@@ -25,19 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Monitoring } from '../../team/models/monitoring.model'
 import { type PatientProfile } from './patient-profile.model'
 import { type PatientSettings } from './patient-settings.model'
 import { type PatientMetadata } from './patient-metadata.model'
 import { type PatientTeam } from './patient-team.model'
-import { type Alarms } from './alarms.model'
+import { type MonitoringAlerts } from './monitoring-alerts.model'
+import { type MonitoringAlertsParams } from '../../team/models/monitoring-alerts.model'
 
 export interface Patient {
-  alarms: Alarms
   profile: PatientProfile
   settings: PatientSettings
   metadata: PatientMetadata
-  monitoring?: Monitoring
+  monitoringAlerts: MonitoringAlerts
+  monitoringAlertsParams: MonitoringAlertsParams
   teams: PatientTeam[]
   readonly userid: string
 }

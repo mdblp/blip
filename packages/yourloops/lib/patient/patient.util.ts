@@ -35,14 +35,15 @@ import { PatientFilterTypes } from './models/enums/patient-filter-type.enum'
 import { type User } from '../auth'
 
 export default class PatientUtils {
+  /* TODO remove this method once drop done to select team is implemented */
   static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {
     const patientsWithoutDuplicates = []
     patientsWithDuplicates.forEach(patient => {
       if (!patientsWithoutDuplicates.find(mergedPatient => mergedPatient.userid === patient.userid)) {
         const patientDuplicates = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid)
-        const patientWithMonitoring = patientDuplicates.find(p => p.monitoring !== undefined)
-        patient.monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
-        const monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
+        const patientWithMonitoring = patientDuplicates.find(p => p.monitoringAlertsParams !== undefined)
+        patient.monitoringAlertsParams = patientWithMonitoring ? patientWithMonitoring.monitoringAlertsParams : undefined
+        const monitoringAlertsParams = patientWithMonitoring ? patientWithMonitoring.monitoringAlertsParams : undefined
         const teams = []
         patientDuplicates.forEach(p => {
           if (p.teams.length > 0) {
@@ -50,11 +51,11 @@ export default class PatientUtils {
           }
         })
         const patientToAdd: Patient = {
-          alarms: patient.alarms,
+          monitoringAlerts: patient.monitoringAlerts,
           profile: patient.profile,
           settings: patient.settings,
           metadata: patient.metadata,
-          monitoring,
+          monitoringAlertsParams,
           teams,
           userid: patient.userid
         }
@@ -78,14 +79,6 @@ export default class PatientUtils {
       return await PatientApi.getPatientsForHcp(user.id)
     }
     return PatientUtils.removeDuplicates(await PatientUtils.retrievePatients())
-  }
-
-  static getRemoteMonitoringTeam(patient: Patient): PatientTeam {
-    const remoteMonitoredTeam = patient.teams.find(team => team.monitoringStatus !== undefined)
-    if (!remoteMonitoredTeam) {
-      throw Error(`Could not find a monitored team for patient ${patient.userid}`)
-    }
-    return remoteMonitoredTeam
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
@@ -115,7 +108,6 @@ export default class PatientUtils {
   }
 
   static extractPatients = (patients: Patient[], filterType: PatientFilterTypes, flaggedPatients: string[]): Patient[] => {
-    const twoWeeksFromNow = new Date()
     switch (filterType) {
       case PatientFilterTypes.all:
         return patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient))
@@ -126,18 +118,13 @@ export default class PatientUtils {
       case PatientFilterTypes.unread:
         return patients.filter(patient => patient.metadata.hasSentUnreadMessages)
       case PatientFilterTypes.outOfRange:
-        return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive)
+        return patients.filter(patient => patient.monitoringAlerts.timeSpentAwayFromTargetActive)
       case PatientFilterTypes.severeHypoglycemia:
-        return patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive)
+        return patients.filter(patient => patient.monitoringAlerts.frequencyOfSevereHypoglycemiaActive)
       case PatientFilterTypes.dataNotTransferred:
-        return patients.filter(patient => patient.alarms.nonDataTransmissionActive)
-      case PatientFilterTypes.remoteMonitored:
-        return patients.filter(patient => patient.monitoring?.enabled)
+        return patients.filter(patient => patient.monitoringAlerts.nonDataTransmissionActive)
       case PatientFilterTypes.private:
         return patients.filter(patient => PatientUtils.isInTeam(patient, filterType))
-      case PatientFilterTypes.renew:
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
-        return patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
       default:
         return patients
     }

@@ -29,8 +29,11 @@ import { convertBG } from '../../lib/units/units.util'
 import {
   DEFAULT_BG_VALUES,
   DEFAULT_THRESHOLDS_IN_MGDL
-} from './alarms.default'
-import { type Thresholds, type BgValues } from '../../lib/patient/models/alarms.model'
+} from './monitoring-alerts-params.default'
+import {
+  type BgValues,
+  type MonitoringAlertsThresholds
+} from '../../lib/patient/models/monitoring-alerts.model'
 
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
@@ -46,7 +49,7 @@ export const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ 
   })
 }
 
-export const buildThresholds = (bgUnit: UnitsType): Thresholds => {
+export const buildThresholds = (bgUnit: UnitsType): MonitoringAlertsThresholds => {
   if (bgUnit === UnitsType.MMOLL) {
     return {
       minHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minHighBg, UnitsType.MGDL) * 10) / 10,

@@ -42,7 +42,6 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import FeedbackIcon from '@mui/icons-material/Feedback'
 import SignalWifiOffIcon from '@mui/icons-material/SignalWifiOff'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
-import HistoryIcon from '@mui/icons-material/History'
 import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
 
@@ -119,7 +118,6 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     setOnHover,
     patientFiltersStats,
     numberOfFlaggedPatients,
-    loggedUserIsHcpInMonitoring,
     selectedFilter
   } = useMainDrawer({ miniVariant })
 
@@ -152,21 +150,6 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
       text: `${t('private-practice')} (${patientFiltersStats.directShare})`,
       filter: PatientFilterTypes.private,
       ariaLabel: t('private-practice-patients-filter')
-    }
-  ]
-
-  const drawerRemoteMonitoringItems = [
-    {
-      icon: <SupervisedUserCircleIcon />,
-      text: `${t('monitored-patients')} (${patientFiltersStats.remoteMonitored})`,
-      filter: PatientFilterTypes.remoteMonitored,
-      ariaLabel: t('remote-monitoring-patients-filter')
-    },
-    {
-      icon: <HistoryIcon />,
-      count: patientFiltersStats.renew,
-      text: t('incoming-renewal'),
-      filter: PatientFilterTypes.renew
     }
   ]
 
@@ -231,50 +214,40 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
             {...item}
           />
         ))}
+        <Box bgcolor="var(--monitoring-filter-bg-color)" marginTop={2}>
+          <DrawerCategoryItem
+            icon={<DesktopMacOutlinedIcon />}
+            text={t('remote-monitoring')}
+          />
 
-        {loggedUserIsHcpInMonitoring &&
-          <Box bgcolor="var(--monitoring-filter-bg-color)" marginTop={2}>
-            <DrawerCategoryItem
-              icon={<DesktopMacOutlinedIcon />}
-              text={t('remote-monitoring')}
+          <Divider variant="middle" className={divider} />
+
+          <DrawerCategoryItem
+            icon={<FeedbackIcon />}
+            text={t('events')}
+          />
+          {drawerEventsItems.map((item, index) => (
+            <DrawerLinkItem
+              key={index}
+              selectedFilter={selectedFilter}
+              {...item}
             />
-            {drawerRemoteMonitoringItems.map((item, index) => (
-              <DrawerLinkItem
-                key={index}
-                selectedFilter={selectedFilter}
-                {...item}
-              />
-            ))}
+          ))}
 
-            <Divider variant="middle" className={divider} />
+          <Divider variant="middle" className={divider} />
 
-            <DrawerCategoryItem
-              icon={<FeedbackIcon />}
-              text={t('events')}
+          <DrawerCategoryItem
+            icon={<ContactMailIcon />}
+            text={t('messaging')}
+          />
+          {drawerMessagingItems.map((item, index) => (
+            <DrawerLinkItem
+              key={index}
+              selectedFilter={selectedFilter}
+              {...item}
             />
-            {drawerEventsItems.map((item, index) => (
-              <DrawerLinkItem
-                key={index}
-                selectedFilter={selectedFilter}
-                {...item}
-              />
-            ))}
-
-            <Divider variant="middle" className={divider} />
-
-            <DrawerCategoryItem
-              icon={<ContactMailIcon />}
-              text={t('messaging')}
-            />
-            {drawerMessagingItems.map((item, index) => (
-              <DrawerLinkItem
-                key={index}
-                selectedFilter={selectedFilter}
-                {...item}
-              />
-            ))}
-          </Box>
-        }
+          ))}
+        </Box>
       </List>
     </Drawer>
   )

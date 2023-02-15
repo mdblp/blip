@@ -46,6 +46,5 @@ export interface PatientListProps {
 
 export interface PatientRowProps {
   filter?: FilterType | string
-  loggedUserIsHcpInMonitoring: boolean
   patient: Patient
 }

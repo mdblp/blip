@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Monitoring } from './monitoring.model'
 import { type TeamType } from './enums/team-type.enum'
 import { type ITeamMember } from './i-team-member.model'
 import { type PostalAddress } from './postal-address.model'
+import { type MonitoringAlertsParams } from './monitoring-alerts.model'
 
 /**
  * Team interface (API view)
@@ -42,5 +42,5 @@ export interface ITeam {
   email?: string
   address?: PostalAddress
   members: ITeamMember[]
-  monitoring?: Monitoring
+  monitoringAlertsParams: MonitoringAlertsParams
 }
