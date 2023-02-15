@@ -46,7 +46,7 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
 
   const { t } = useTranslation('yourloops')
   const localStorageShowMoreInfo = localStorage.getItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID) === 'true'
-  const [showMoreInfo, setShowMoreInfo] = useState<boolean>(localStorageShowMoreInfo)
+  const [isShowingMore, setIsShowingMore] = useState<boolean>(localStorageShowMoreInfo)
 
   const trNaLabel = t('N/A')
 
@@ -67,8 +67,8 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
   }, [patient.profile.referringDoctor, trNaLabel])
 
   const onShowMoreInfoClick = (): void => {
-    localStorage.setItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID, String(!showMoreInfo))
-    setShowMoreInfo(!showMoreInfo)
+    localStorage.setItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID, String(!isShowingMore))
+    setIsShowingMore(!isShowingMore)
   }
 
   return (
@@ -94,7 +94,7 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
             fieldValue={patient.monitoring?.enabled ? t('yes') : t('no')}
           />
         </Box>
-        {showMoreInfo &&
+        {isShowingMore &&
           <Box display="flex" marginY={1}>
             <PatientNavBarInfo
               fieldName={t('colon', { label: t('referring-doctor') })}
@@ -119,9 +119,8 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
         sx={{ cursor: 'pointer' }}
         onClick={onShowMoreInfoClick}
       >
-        <Typography variant="caption" marginRight={1}
-                    sx={{ textDecoration: 'underline' }}>{showMoreInfo ? t('show-less') : t('show-more')}</Typography>
-        {showMoreInfo ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
+        <Typography variant="caption" marginRight={1} sx={{ textDecoration: 'underline' }}>{t('show-more')}</Typography>
+        {isShowingMore ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small" />}
       </Box>
     </Box>
   )
