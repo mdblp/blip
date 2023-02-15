@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ export default class PatientUtils {
     patientsWithDuplicates.forEach(patient => {
       if (!patientsWithoutDuplicates.find(mergedPatient => mergedPatient.userid === patient.userid)) {
         const patientDuplicates = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid)
-        const patientWithMonitoring = patientDuplicates.find(p => p.monitoring !== undefined)
+        const patientWithMonitoring = patientDuplicates.find(p => !!p.monitoring)
         patient.monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
         const monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
         const teams = []
