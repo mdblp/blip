@@ -25,21 +25,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type RangeSegmentSliceType } from './enums/range-segment.enum'
-
-export interface FocusedSliceData extends RangeSegmentSliceType {
-  msFrom: number
-  msTo: number
-  msX?: number
-  id?: string
-}
-
-export interface FocusedSlice {
-  data: FocusedSliceData
-  position: {
-    left: number
-    tooltipLeft: boolean
-    yPositions: RangeSegmentSliceType
-    topOptions?: RangeSegmentSliceType
-  }
-}
+export type OnSelectDateFunction = (epoch: number) => void
