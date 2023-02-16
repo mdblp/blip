@@ -28,7 +28,11 @@
 import { act, screen, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
+import {
+  mockPatientApiForPatients,
+  monitoredPatientAsTeamMember,
+  unmonitoredPatientId
+} from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import { iTeamOne, teamOne } from '../../mock/team.api.mock'
@@ -94,7 +98,7 @@ describe('Team menu for patient', () => {
     await userEvent.click(checkPolicy)
     expect(addCareTeamButton).toBeEnabled()
     await userEvent.click(addCareTeamButton)
-    expect(TeamAPI.joinTeam).toHaveBeenCalledWith('iTeamOneId', 'unmonitoredPatientId')
+    expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, unmonitoredPatientId)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(screen.getByText('Your care team has now access to your data.')).toBeVisible()
 
