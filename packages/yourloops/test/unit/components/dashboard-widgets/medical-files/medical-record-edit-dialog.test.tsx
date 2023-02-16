@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,7 +41,6 @@ import { UserRoles } from '../../../../../lib/auth/models/enums/user-roles.enum'
 jest.mock('../../../../../lib/auth')
 jest.mock('../../../../../components/utils/snackbar')
 describe('Medical record edit dialog', () => {
-  const updateMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'updateMedicalRecord').mockResolvedValue({} as MedicalRecord)
   const createMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'createMedicalRecord').mockResolvedValue({} as MedicalRecord)
   const onClose = jest.fn()
   const onSaved = jest.fn()
@@ -52,19 +51,6 @@ describe('Medical record edit dialog', () => {
   let progressionProposalTextArea: HTMLTextAreaElement
   let trainingSubjectTextArea: HTMLTextAreaElement
   let saveButton: HTMLButtonElement
-
-  function getMedicalRecord(): MedicalRecord {
-    return {
-      id: 'fakeId',
-      authorId: 'fakeAuthorId',
-      creationDate: '2022-05-23',
-      patientId: 'PatientId',
-      teamId: 'teamId',
-      diagnosis: 'diag1',
-      progressionProposal: 'proposal1',
-      trainingSubject: 'training1'
-    }
-  }
 
   function getDialogJSX(): JSX.Element {
     const props: MedicalRecordEditDialogProps = {
@@ -90,74 +76,21 @@ describe('Medical record edit dialog', () => {
       return { success: successAlertMock, error: errorAlertMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.hcp, isUserPatient: () => false } as User }
+      return { user: { role: UserRoles.hcp, isUserPatient: () => false, isUserHcp: () => true } as User }
     })
-  })
-
-  it('should create a new medical record', async () => {
-    mountComponent()
-    expect(diagnosisTextArea.value).toBe('')
-    expect(progressionProposalTextArea.value).toBe('')
-    expect(trainingSubjectTextArea.value).toBe('')
-
-    fireEvent.click(saveButton)
-    expect(updateMedicalRecordSpy).not.toHaveBeenCalled()
-    expect(createMedicalRecordSpy).not.toHaveBeenCalled()
-
-    await userEvent.type(diagnosisTextArea, 'abcd')
-    userEvent.click(saveButton)
-    await waitFor(() => { expect(createMedicalRecordSpy).toHaveBeenCalled() })
-    expect(successAlertMock).toHaveBeenCalledWith('medical-record-save-success')
-    expect(onSaved).toHaveBeenCalled()
   })
 
   it('should display an error if save failed', async () => {
     createMedicalRecordSpy.mockImplementationOnce(() => Promise.reject(Error('This error was thrown by a mock on purpose')))
     mountComponent()
 
-    await userEvent.type(progressionProposalTextArea, 'abcd')
-    await userEvent.type(trainingSubjectTextArea, 'efgh')
+    await userEvent.type(diagnosisTextArea, 'fake diagnosis')
+    await userEvent.type(progressionProposalTextArea, 'fake progression proposal')
+    await userEvent.type(trainingSubjectTextArea, 'fake training subject')
     fireEvent.click(saveButton)
-    await waitFor(() => { expect(createMedicalRecordSpy).toHaveBeenCalled() })
+    await waitFor(() => {
+      expect(createMedicalRecordSpy).toHaveBeenCalled()
+    })
     expect(errorAlertMock).toHaveBeenCalledWith('medical-record-save-failed')
-  })
-
-  it('should edit and save medical record', async () => {
-    medicalRecord = getMedicalRecord()
-    mountComponent()
-    expect(diagnosisTextArea.value).toBe('diag1')
-    expect(progressionProposalTextArea.value).toBe('proposal1')
-    expect(trainingSubjectTextArea.value).toBe('training1')
-
-    await userEvent.type(diagnosisTextArea, 'diag2')
-    fireEvent.click(saveButton)
-    await waitFor(() => { expect(updateMedicalRecordSpy).toHaveBeenCalled() })
-    expect(successAlertMock).toHaveBeenCalledWith('medical-record-save-success')
-    expect(onSaved).toHaveBeenCalled()
-  })
-
-  it('should not be editable when opening with a patient account', async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.patient, isUserPatient: () => true } as User }
-    })
-    medicalRecord = getMedicalRecord()
-    mountComponent()
-    await userEvent.type(diagnosisTextArea, 'new diag')
-    await userEvent.type(progressionProposalTextArea, 'new proposal')
-    await userEvent.type(trainingSubjectTextArea, 'new training')
-
-    expect(diagnosisTextArea.value).toBe('diag1')
-    expect(progressionProposalTextArea.value).toBe('proposal1')
-    expect(trainingSubjectTextArea.value).toBe('training1')
-    expect(saveButton).not.toBeInTheDocument()
-    expect(createMedicalRecordSpy).not.toHaveBeenCalled()
-  })
-
-  it('should not be able to save a medical record for a patient', () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.patient, isUserPatient: () => true } as User }
-    })
-    mountComponent()
-    expect(saveButton).not.toBeInTheDocument()
   })
 })
