@@ -75,8 +75,7 @@ const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
     [Unit.MmolPerLiter]: MMOLL_CLAMP_TOP
   }
   const upperBound = yScaleClampTop[bgPrefs.bgUnits]
-  // FIXME The `MedicalDataService.grouped` getter should be improved to allow stricter typing
-  // (e.g. passing a generic return type when wanting to access only one `DatumType` in particular)
+  // The `MedicalDataService.grouped` getter does not allow stricter typing
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const bgDomain = extent(medicalData.grouped[DatumType.Cbg] as Cbg[], (datum: Cbg) => datum.value)
