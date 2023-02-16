@@ -54,6 +54,7 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const [idCode, setIdCode] = useState<string>('')
   const [isInProgress, setIsInProgress] = useState<boolean>(false)
   const joinButtonDisabled = !idCode.match(REGEX_TEAM_CODE_DISPLAY)
+
   const getNumericCode = (value: string): string => {
     const code = []
     const arrayString = value.split('')
@@ -64,6 +65,7 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
     })
     return code.join('')
   }
+
   const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const numericCode = getNumericCode(event.target.value)
     const displayCode = getDisplayTeamCode(numericCode)
@@ -101,14 +103,14 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
     <React.Fragment>
       <Box textAlign="center">
         <DialogTitle>
-          <strong data-testId="team-add-dialog-title">
+          <strong data-testid="team-add-dialog-title">
             {t('join-team-title', { teamName })}
           </strong>
         </DialogTitle>
 
         <DialogContent>
           <Box display="flex" flexDirection="column" alignItems="center">
-            <DialogContentText data-testId="label-dialog">
+            <DialogContentText data-testid="label-dialog">
               {t('team-code')}
             </DialogContentText>
             <Box>

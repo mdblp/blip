@@ -143,7 +143,7 @@ function TeamMenu(): JSX.Element {
     closeMenu()
   }
 
-  const onJoinTeam = async (teamId?: string): Promise<void> => {
+  const onJoinTeam = async (teamId: string): Promise<void> => {
     setShowJoinTeamDialog(false)
     try {
       await joinTeam(teamId)
@@ -217,7 +217,7 @@ function TeamMenu(): JSX.Element {
               <Divider variant="middle" />
             </Box>
 
-            <MenuItem id="team-menu-teams-link" data-testId="team-menu-teams-link" onClick={onTeamAction}>
+            <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
               <ListItemIcon>
                 <GroupOutlinedIcon />
               </ListItemIcon>

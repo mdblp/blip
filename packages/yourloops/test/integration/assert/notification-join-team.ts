@@ -24,48 +24,25 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { type FunctionComponent, useState } from 'react'
-import { TeamCodeConfirm } from './team-code-confirm'
-import Dialog from '@mui/material/Dialog'
-import { PrivacyPolicyConfirm } from './privacy-policy-confirm'
-import { type Team } from '../../../lib/team'
 
-export interface JoinTeamDialogProps {
-  onClose: () => void
-  onAccept: (teamId: string) => Promise<void>
-  teamName?: string
-}
+import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
-export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) => {
-  const { onClose, onAccept, teamName } = props
-  const [team, setTeam] = useState<Team | undefined>(undefined)
-  const [isInprogress, setIsInProgress] = useState<boolean>(false)
+export const closeDialogNotificationTeam = async () => {
+  const badgeNotification = screen.getByLabelText('Go to notifications list')
+  expect(badgeNotification).toHaveTextContent('1')
+  const badgeTeam = screen.getByLabelText('Open team menu')
+  expect(badgeTeam).toHaveTextContent('2')
+  const acceptButtonNotification = screen.getByRole('button', { name: 'Accept' })
+  expect(screen.getByTestId('notification-line')).toHaveTextContent("You're invited to share your diabetes data with sysReq-67-team2.")
+  await userEvent.click(acceptButtonNotification)
 
-  const onCompleteTeamCodeConfirmStep = (team: Team): void => {
-    setTeam(team)
-  }
+  const dialog = screen.getByRole('dialog')
+  const addTeamButtonForCancelDialog = within(dialog).getByRole('button', { name: 'Continue' })
+  const cancelTeamButton = within(dialog).getByRole('button', { name: 'Cancel' })
 
-  return (
-    <Dialog onClose={onClose} open data-testId="join-team-dialog">
-      {!team ? (
-        <TeamCodeConfirm
-          onCompleteStep={onCompleteTeamCodeConfirmStep}
-          onClickCancel={onClose}
-          teamName={teamName}
-        />
-      ) : (
-        <PrivacyPolicyConfirm
-          onCompleteStep={async () => {
-            setIsInProgress(true)
-            await onAccept(team.id)
-            setIsInProgress(false)
-          }}
-          inProgress={isInprogress}
-          onClickCancel={onClose}
-          team={team}
-        />
-      )
-      }
-    </Dialog>
-  )
+  expect(dialog).toHaveTextContent('Join the care team sysReq-67-team2Please enter the team code (9 digits)CancelContinue')
+  expect(addTeamButtonForCancelDialog).toBeDisabled()
+  await userEvent.click(cancelTeamButton)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }

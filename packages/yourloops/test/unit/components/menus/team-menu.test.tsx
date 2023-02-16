@@ -40,25 +40,12 @@ import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { type ShareUser } from '../../../../lib/share/models/share-user.model'
-import { type AddTeamDialogProps } from '../../../../pages/patient/teams/add-dialog'
 import { type TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
 import { TeamMenuMemoized as TeamMenu } from '../../../../components/menus/team-menu'
 
-/* eslint-disable react/display-name */
-jest.mock('../../../../pages/patient/teams/add-dialog', () => (props: AddTeamDialogProps) => {
-  return <>
-    <button onClick={() => {
-      props.actions?.onDialogResult('fakeTeamId')
-    }}>mock-join
-    </button>
-    <button onClick={() => {
-      props.actions?.onDialogResult(null)
-    }}>mock-cancel
-    </button>
-  </>
-})
+// eslint-disable-next-line react/display-name
 jest.mock('../../../../pages/hcp/team-edit-dialog', () => (props: TeamEditModalProps) => {
   return <>
     <button onClick={() => {

@@ -46,18 +46,17 @@ export interface ConfirmTeamProps {
   team: Team
   onClickCancel: () => void
   inProgress?: boolean
-
 }
 
 export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
   const { onCompleteStep, team, onClickCancel, inProgress } = props
-  const [checked, setChecked] = useState<boolean>(false)
-  const buttonAddTeamDisabled = checked ?? false
+  const [policyChecked, setPolicyChecked] = useState<boolean>(false)
+  const buttonAddTeamDisabled = policyChecked ?? false
   const theme = useTheme()
 
   const handleChangeChecked = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setChecked(event.target.checked)
+    setPolicyChecked(event.target.checked)
   }
   const privacyPolicy = t('privacy-policy')
   const linkPrivacyPolicy = (
@@ -76,12 +75,12 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
   return (
     <React.Fragment>
-      <DialogTitle id="team-add-dialog-confirm-title">
+      <DialogTitle>
         <strong>{t('modal-patient-share-team-title')}</strong>
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary">
+        <DialogContentText color="textPrimary">
           {t('modal-patient-add-team-info')}
         </DialogContentText>
         <DialogContentText color="textPrimary" data-testid="team-add-dialog-team-infos">
@@ -103,15 +102,14 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
         <FormControl sx={{ marginBottom: theme.spacing(2) }}>
           <FormControlLabel
-            control={<Checkbox checked={checked} onChange={handleChangeChecked}
+            control={<Checkbox checked={policyChecked} onChange={handleChangeChecked}
                                inputProps={{ 'aria-label': 'controlled' }} />}
             data-testid="checkbox-policy"
             label={t('modal-patient-share-team-privacy')}
             color="textPrimary"
           />
         </FormControl>
-        <DialogContentText id="team-add-dialog-config-team-privacy-read-link" color="textPrimary"
-                           data-testid="text-privacy-policy">
+        <DialogContentText color="textPrimary" data-testid="text-privacy-policy">
           <Trans
             i18nKey="modal-patient-team-privacy-2"
             t={t}
