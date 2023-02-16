@@ -52,7 +52,7 @@ interface MedicalRecordEditDialogHookReturn {
   inProgress: boolean
   isInReadOnly: boolean
   setInProgress: Dispatch<SetStateAction<boolean>>
-  saveButtonDisabled: boolean
+  isSaveButtonDisabled: boolean
 }
 
 export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialogHookProps): MedicalRecordEditDialogHookReturn {
@@ -65,7 +65,7 @@ export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialo
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || '')
   const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || '')
   const [inProgress, setInProgress] = useState<boolean>(false)
-  const saveButtonDisabled = inProgress || (!diagnosis && !trainingSubject && !progressionProposal)
+  const isSaveButtonDisabled = inProgress || (!diagnosis && !trainingSubject && !progressionProposal)
 
   const isInReadOnly = user.isUserPatient() || (user.isUserHcp() && medicalRecord !== undefined && medicalRecord?.authorId !== user.id)
 
@@ -121,6 +121,6 @@ export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialo
     inProgress,
     isInReadOnly,
     setInProgress,
-    saveButtonDisabled
+    isSaveButtonDisabled
   }
 }

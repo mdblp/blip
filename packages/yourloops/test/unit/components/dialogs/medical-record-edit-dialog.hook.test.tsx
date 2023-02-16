@@ -118,7 +118,7 @@ describe('MedicalRecordEditDialog hook', () => {
   })
 
   describe('isInReadOnly', () => {
-    it('should be correct when user is a patient', async () => {
+    it('should be true when user is a patient', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: 'fakeUserId',
@@ -135,7 +135,7 @@ describe('MedicalRecordEditDialog hook', () => {
       expect(result.current.isInReadOnly).toBeTruthy()
     })
 
-    it('should be correct when user is a hcp that is not the author of the record', async () => {
+    it('should be false when user is a hcp that is not the author of the record', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,
@@ -152,7 +152,7 @@ describe('MedicalRecordEditDialog hook', () => {
       expect(result.current.isInReadOnly).toBeFalsy()
     })
 
-    it('should be correct when user is a hcp that is the author of the record', async () => {
+    it('should be true when user is a hcp that is the author of the record', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,
@@ -169,7 +169,7 @@ describe('MedicalRecordEditDialog hook', () => {
       expect(result.current.isInReadOnly).toBeTruthy()
     })
 
-    it('should be correct when no medical record is given', async () => {
+    it('should be false when no medical record is given', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,

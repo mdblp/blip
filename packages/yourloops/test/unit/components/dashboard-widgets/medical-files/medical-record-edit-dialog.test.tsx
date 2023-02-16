@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
 import MedicalRecordEditDialog, {
@@ -87,7 +87,7 @@ describe('Medical record edit dialog', () => {
     await userEvent.type(diagnosisTextArea, 'fake diagnosis')
     await userEvent.type(progressionProposalTextArea, 'fake progression proposal')
     await userEvent.type(trainingSubjectTextArea, 'fake training subject')
-    fireEvent.click(saveButton)
+    await userEvent.click(saveButton)
     await waitFor(() => {
       expect(createMedicalRecordSpy).toHaveBeenCalled()
     })

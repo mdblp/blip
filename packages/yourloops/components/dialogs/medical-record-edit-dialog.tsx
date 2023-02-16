@@ -87,7 +87,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
     inProgress,
     isInReadOnly,
     trainingSubject,
-    saveButtonDisabled,
+    isSaveButtonDisabled,
     setProgressionProposal,
     setTrainingSubject,
     saveMedicalRecord
@@ -165,6 +165,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
 
       <DialogActions>
         <Button
+          data-testid="medical-record-close"
           disableElevation
           onClick={onClose}
         >
@@ -176,7 +177,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
               variant="contained"
               color="primary"
               disableElevation
-              disabled={saveButtonDisabled}
+              disabled={isSaveButtonDisabled}
               onClick={saveMedicalRecord}
             >
               {t('save')}

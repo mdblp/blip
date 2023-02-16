@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -55,8 +54,9 @@ import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
 import { type MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
 import ListItemButton from '@mui/material/ListItemButton'
+import { type MedicalRecordDialogPayload } from '../models/medical-record-dialog-payload.model'
 
-const useStyle = makeStyles()((theme: Theme) => ({
+const useStyle = makeStyles()(() => ({
   categoryTitle: {
     fontWeight: 600
   },
@@ -69,14 +69,6 @@ const useStyle = makeStyles()((theme: Theme) => ({
   },
   listItem: {
     padding: 0
-  },
-  hoveredItem: {
-    '&:hover': {
-      cursor: 'pointer'
-    },
-    '&.selected': {
-      backgroundColor: theme.palette.grey[200]
-    }
   }
 }))
 
@@ -90,8 +82,8 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
-  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<{ medicalRecord: MedicalRecord, medicalRecordName: string } | undefined>(undefined)
-  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<{ medicalRecord: MedicalRecord, medicalRecordName: string } | undefined>(undefined)
+  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecordDialogPayload | undefined>(undefined)
+  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecordDialogPayload | undefined>(undefined)
 
   const closeMedicalRecordEditDialog = (): void => {
     setIsEditDialogOpen(false)
@@ -180,6 +172,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
                 </ListItemButton>
                 <Tooltip title={t('delete-medical-record', { date: medicalRecordName })}>
                   <IconButton
+                    data-testid="delete-medical-record"
                     edge="end"
                     size="small"
                     className={user.id !== medicalRecord.authorId ? classes.hidden : ''}
