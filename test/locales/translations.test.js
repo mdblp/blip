@@ -165,7 +165,9 @@ const ignoredTransKeyForYourLoops = [
   'readings-in-range-bgm-daily-average',
   'time-in-range-cgm-one-day',
   'compute-ndays-time-in-range',
-  'compute-oneday-time-in-range'
+  'compute-oneday-time-in-range',
+  'remaining-time',
+  'show-more'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
