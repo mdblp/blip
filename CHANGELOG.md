@@ -28,6 +28,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2121 Removing deprecated @mui/styles library
 - YLP-2139 Remove weekly reports
 - YLP-2143 Migrate TrendsContainer to dumb
+- YLP-2159 Get rid of connectWithTransitionGroup in viz
 
 ## 3.0.3 - 2023-02-09
 ### Fixed
