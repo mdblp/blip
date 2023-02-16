@@ -31,7 +31,6 @@ export interface CbgPositionData {
   left: number
   tooltipLeft?: boolean
   yPositions: Partial<RangeSegmentSliceType> & {
-    median?: number
     topMargin: number
     top?: number
   }

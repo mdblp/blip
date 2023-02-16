@@ -29,8 +29,6 @@ const CBG_MEDIAN_ENABLED = 'cbgMedianEnabled'
 const FOCUSED_CBG_DATE_TRACE = 'focusedCbgDateTrace'
 const FOCUSED_CBG_SLICE = 'focusedCbgSlice'
 const FOCUSED_CBG_KEYS = 'focusedCbgSliceKeys'
-const FOCUSED_SMBG = 'focusedSmbg'
-const FOCUSED_SMBG_RANGE_AVG = 'focusedSmbgRangeAvg'
 const SHOW_CBG_DATE_TRACES = 'showingCbgDateTraces'
 
 const CBG_FLAG_MAP = {
@@ -50,8 +48,6 @@ const initialState = {
   [FOCUSED_CBG_DATE_TRACE]: null,
   [FOCUSED_CBG_SLICE]: null,
   [FOCUSED_CBG_KEYS]: null,
-  [FOCUSED_SMBG]: null,
-  [FOCUSED_SMBG_RANGE_AVG]: null,
   [SHOW_CBG_DATE_TRACES]: false
 }
 
@@ -85,31 +81,6 @@ const trendsStateByUser = (state = {}, action) => {
         { [userId]: {
           [FOCUSED_CBG_SLICE]: { $set: { data, position } },
           [FOCUSED_CBG_KEYS]: { $set: focusedKeys }
-        } }
-      )
-    }
-    case actionTypes.FOCUS_TRENDS_SMBG: {
-      const {
-        smbgDatum: datum,
-        smbgPosition: position,
-        userId,
-        allSmbgsOnDate,
-        allPositions,
-        date
-      } = action.payload
-      return update(
-        state,
-        { [userId]: {
-          [FOCUSED_SMBG]: { $set: { datum, position, allSmbgsOnDate, allPositions, date } }
-        } }
-      )
-    }
-    case actionTypes.FOCUS_TRENDS_SMBG_RANGE_AVG: {
-      const { rangeAvgData: data, rangeAvgPosition: position, userId } = action.payload
-      return update(
-        state,
-        { [userId]: {
-          [FOCUSED_SMBG_RANGE_AVG]: { $set: { data, position } }
         } }
       )
     }

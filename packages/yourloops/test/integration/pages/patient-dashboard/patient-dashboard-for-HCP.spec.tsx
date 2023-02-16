@@ -157,9 +157,8 @@ describe('Patient dashboard for HCP', () => {
     expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
 
     await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
-    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow moreDashboardDailyTrendsGenerate report')
-
-    await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow lessDashboardDailyTrendsGenerate report')
+    await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show less'))
     expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
   })
 

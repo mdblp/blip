@@ -45,6 +45,8 @@ import { CbgSlicesContainerMemoized as CbgSlicesContainer } from '../../cbg/cbg-
 import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from '../../cbg/cbg-slice/focused-cbg-slice-segment'
 import { TargetRangeLines } from '../target-range-lines/target-range-lines'
 import { type FocusedSlice } from '../../../../models/focused-slice.model'
+import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
+import { type ActiveDays } from '../../../../models/active-days.model'
 
 const BUMPERS = {
   top: 50,
@@ -69,21 +71,13 @@ const WIDTH = 640
 const HEIGHT = 480
 
 interface TrendsSvgContainerProps {
-  activeDays: {
-    monday: boolean
-    tuesday: boolean
-    wednesday: boolean
-    thursday: boolean
-    friday: boolean
-    saturday: boolean
-    sunday: boolean
-  }
+  activeDays: ActiveDays
   bgPrefs: BgPrefs
   cbgData: CbgDateTrace[]
   dates: string[]
   focusedSlice: FocusedSlice
   focusedSliceKeys: RangeSegmentSlice[]
-  onSelectDate: (epoch: number) => void
+  onSelectDate: OnSelectDateFunction
   showingCbgDateTraces: boolean
   yScaleDomain: number[]
   size: { width: number, height: number }
