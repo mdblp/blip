@@ -36,6 +36,7 @@ import TextField from '@mui/material/TextField'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { useAlert } from '../../utils/snackbar'
+import ProgressIconButtonWrapper from '../../buttons/progress-icon-button-wrapper'
 
 export interface ConfirmTeamProps {
   onClickCancel: () => void
@@ -51,6 +52,7 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const alert = useAlert()
   const [numericCode, setNumericCode] = useState<string>('')
   const [idCode, setIdCode] = useState<string>('')
+  const [isInProgress, setIsInProgress] = useState<boolean>(false)
   const joinButtonDisabled = !idCode.match(REGEX_TEAM_CODE_DISPLAY)
   const getNumericCode = (value: string): string => {
     const code = []
@@ -76,7 +78,9 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
         return alert.error(t('modal-patient-add-team-failure-exists'))
       }
       try {
+        setIsInProgress(true)
         const team = await teamHook.getTeamFromCode(numericCode)
+        setIsInProgress(false)
         if (!team) {
           return alert.error(t('invalid-code'))
         }
@@ -129,16 +133,18 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
         >
           {t('button-cancel')}
         </Button>
-        <Button
-          id="team-add-dialog-button-add-team"
-          disabled={joinButtonDisabled}
-          variant="contained"
-          color="primary"
-          disableElevation
-          onClick={handleClickJoinTeam}
-        >
-          {t('continue')}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={isInProgress}>
+          <Button
+            id="team-add-dialog-button-add-team"
+            disabled={joinButtonDisabled || isInProgress}
+            variant="contained"
+            color="primary"
+            disableElevation
+            onClick={handleClickJoinTeam}
+          >
+            {t('continue')}
+          </Button>
+        </ProgressIconButtonWrapper>
       </DialogActions>
     </React.Fragment>
   )

@@ -50,7 +50,7 @@ export interface ConfirmTeamProps {
 export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
   const { onCompleteStep, team, onClickCancel } = props
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState<boolean>(false)
   const buttonAddTeamDisabled = checked ?? false
   const theme = useTheme()
 
@@ -101,7 +101,8 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
         <FormControl sx={{ marginBottom: theme.spacing(2) }}>
           <FormControlLabel
-            control={<Checkbox checked={checked} onChange={handleChangeChecked} inputProps={{ 'aria-label': 'controlled' }} />}
+            control={<Checkbox checked={checked} onChange={handleChangeChecked}
+                               inputProps={{ 'aria-label': 'controlled' }} />}
             data-testid="checkbox-policy"
             label={t('modal-patient-share-team-privacy')}
             color="textPrimary"
