@@ -53,18 +53,13 @@ import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
-import { RangeLabeledToggle } from './components/controls/range-labeled-toggle/range-labeled-toggle'
 import { Table } from './components/settings/table'
-import CbgSliceSegment from './components/trends/cbg/cbg-slice/cbg-slice-segment'
 import { type BgPrefs } from './models/blood-glucose.model'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
 import { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
 import { UnitsType } from './models/enums/units-type.enum'
-import {
-  TrendsSvgContainerSized as TrendsSvgContainer
-} from './components/trends/common/trends-svg-container/trends-svg-container'
-import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from './components/trends/cbg/cbg-slice/focused-cbg-slice-segment'
+import TrendsContainer from './components/trends/common/trends-container/trends-container'
 
 export {
   AverageDailyDoseStat,
@@ -75,19 +70,16 @@ export {
   CbgDateTraceLabel,
   CBGMeanStat,
   CBGPercentageBarChart,
-  CbgSliceSegment,
   CBGStandardDeviation,
   CBGStatType,
   CgmTable,
   ConfidentialTooltip,
-  FocusedCbgSliceSegment,
   FocusedRangeLabels,
   FoodTooltip,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,
   PumpTable,
-  RangeLabeledToggle,
   RangeSelect,
   ReservoirTooltip,
   SimpleStat,
@@ -97,6 +89,6 @@ export {
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,
-  TrendsProvider,
-  TrendsSvgContainer
+  TrendsContainer,
+  TrendsProvider
 }

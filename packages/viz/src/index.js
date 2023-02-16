@@ -18,7 +18,6 @@
 import './styles/colors.css'
 
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
-import TrendsContainer from './components/trends/common/TrendsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
 import reducers from './redux/reducers/'
@@ -54,8 +53,7 @@ const components = {
 }
 
 const containers = {
-  PumpSettingsContainer,
-  TrendsContainer
+  PumpSettingsContainer
 }
 
 const utils = {

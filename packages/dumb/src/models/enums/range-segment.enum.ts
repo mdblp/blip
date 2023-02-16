@@ -31,7 +31,8 @@ export enum RangeSegmentSlice {
   TenthQuantile = 'tenthQuantile',
   NinetiethQuantile = 'ninetiethQuantile',
   Max = 'max',
-  Min = 'min'
+  Min = 'min',
+  Median = 'median',
 }
 
 export type RangeSegmentSliceType = {
