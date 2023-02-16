@@ -49,7 +49,7 @@ interface TrendsContainerProps {
   days: string[]
   activeDays: ActiveDays
   bgPrefs: BgPrefs
-  tidelineData: MedicalDataService
+  medicalData: MedicalDataService
   onSelectDate: OnSelectDateFunction
   trendsState: TrendsState
   // Only for redux
@@ -65,7 +65,7 @@ const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
     days,
     activeDays,
     bgPrefs,
-    tidelineData,
+    medicalData,
     onSelectDate,
     trendsState
   } = props
@@ -79,7 +79,7 @@ const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
   // (e.g. passing a generic return type when wanting to access only one `DatumType` in particular)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
-  const bgDomain = extent(tidelineData.grouped[DatumType.Cbg] as Cbg[], (datum: Cbg) => datum.value)
+  const bgDomain = extent(medicalData.grouped[DatumType.Cbg] as Cbg[], (datum: Cbg) => datum.value)
   const veryLowThreshold = bgPrefs.bgBounds?.veryLowThreshold
   const lowerBound = bgDomain[0] && veryLowThreshold && bgDomain[0] > veryLowThreshold ? veryLowThreshold : bgDomain[0] ?? 0
   const yScaleDomain = [lowerBound, upperBound]

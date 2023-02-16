@@ -652,7 +652,7 @@ class Trends extends React.Component {
         currentPatientInViewId={this.props.patient.userid}
         loading={this.props.loading}
         // data
-        tidelineData={this.props.tidelineData}
+        medicalData={this.props.tidelineData}
         // handlers
         onSelectDate={this.handleSelectDate}
       />
