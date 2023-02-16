@@ -60,15 +60,9 @@ const useStyle = makeStyles()(() => ({
   categoryTitle: {
     fontWeight: 600
   },
-  hidden: {
-    visibility: 'hidden'
-  },
   list: {
     maxHeight: 160,
     overflow: 'auto'
-  },
-  listItem: {
-    padding: 0
   }
 }))
 
@@ -156,7 +150,22 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
                 key={index}
                 dense
                 divider
-                className={classes.listItem}
+                disablePadding
+                secondaryAction={user.id === medicalRecord.authorId &&
+                  <Tooltip title={t('delete-medical-record', { date: medicalRecordName })}>
+                    <IconButton
+                      data-testid="delete-medical-record"
+                      edge="end"
+                      size="small"
+                      aria-label={t('delete-medical-record', { date: medicalRecordName })}
+                      onClick={() => {
+                        onDeleteMedicalRecord(medicalRecord, medicalRecordName)
+                      }}
+                    >
+                      <TrashCanOutlined />
+                    </IconButton>
+                  </Tooltip>
+                }
               >
                 <ListItemButton
                   onClick={() => {
@@ -170,21 +179,6 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
                     {t('medical-record-pdf', { pdfName: medicalRecordName })}
                   </ListItemText>
                 </ListItemButton>
-                <Tooltip title={t('delete-medical-record', { date: medicalRecordName })}>
-                  <IconButton
-                    data-testid="delete-medical-record"
-                    edge="end"
-                    size="small"
-                    className={user.id !== medicalRecord.authorId ? classes.hidden : ''}
-                    hidden={user.id !== medicalRecord.authorId}
-                    aria-label={t('delete-medical-record', { date: medicalRecordName })}
-                    onClick={() => {
-                      onDeleteMedicalRecord(medicalRecord, medicalRecordName)
-                    }}
-                  >
-                    <TrashCanOutlined />
-                  </IconButton>
-                </Tooltip>
               </ListItem>
             )
           })}
