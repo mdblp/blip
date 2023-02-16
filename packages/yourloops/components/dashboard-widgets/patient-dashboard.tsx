@@ -40,17 +40,19 @@ import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
-import { useTeam } from '../../lib/team'
 import RemoteMonitoringWidget from './remote-monitoring-widget'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {
   RESPONSIVE_GRID_FOUR_COLUMNS,
   RESPONSIVE_GRID_FULL_WIDTH,
-  RESPONSIVE_GRID_HALF_WIDTH
+  RESPONSIVE_GRID_HALF_WIDTH, RESPONSIVE_GRID_THREE_COLUMNS
 } from '../../css/css-utils'
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
-import { useTheme } from '@mui/material'
+import MedicalFilesWidget from './medical-files/medical-files-widget'
+import AlarmCard from '../alarm/alarm-card'
+import { makeStyles } from 'tss-react/mui'
+import ChatWidget from '../chat/chat-widget'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -66,7 +68,15 @@ interface PatientDashboardProps {
   onSwitchToDaily: (dateTime: Moment | Date | number | null) => void
 }
 
-const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
+const useStyle = makeStyles()((theme) => ({
+  gridItemContainer: {
+    '& > div': {
+      marginBottom: theme.spacing(2)
+    }
+  }
+}))
+
+export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
     chartPrefs,
@@ -81,23 +91,22 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
     onSwitchToDaily
   } = props
   const { user } = useAuth()
-  const { getMedicalTeams } = useTeam()
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
-  const theme = useTheme()
+  const { classes, theme } = useStyle()
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const endpoints = [
     moment.utc(epochDate - msRange).toISOString(), // start
     moment.utc(epochDate).toISOString() // end
   ]
-  const showRemoteMonitoringWidget = user.isUserHcp() && getMedicalTeams().some(team => team.monitoring?.enabled)
-  const gridWidgetSize = isMobileBreakpoint ? RESPONSIVE_GRID_FULL_WIDTH : showRemoteMonitoringWidget ? RESPONSIVE_GRID_FOUR_COLUMNS : RESPONSIVE_GRID_HALF_WIDTH
+  const patientIsMonitored = !!patient?.monitoring?.enabled
+  const gridWidgetSize = isMobileBreakpoint ? RESPONSIVE_GRID_FULL_WIDTH : patientIsMonitored ? RESPONSIVE_GRID_FOUR_COLUMNS : user.isUserHcp() && !patientIsMonitored ? RESPONSIVE_GRID_THREE_COLUMNS : RESPONSIVE_GRID_HALF_WIDTH
 
   return (
     <Grid
       data-testid="patient-dashboard"
       container
-      spacing={5}
+      spacing={2}
       rowSpacing={2}
       paddingX={3}
     >
@@ -115,6 +124,7 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           {t('dashboard-header-period-text')}
         </Typography>
       </Grid>
+
       <Grid item xs={gridWidgetSize}>
         <PatientStatisticsWidget
           dataUtil={dataUtil}
@@ -133,6 +143,7 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           />
         </PatientStatisticsWidget>
       </Grid>
+
       <Grid item xs={gridWidgetSize}>
         <DeviceUsage
           bgPrefs={bgPrefs}
@@ -147,13 +158,30 @@ const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
           onSwitchToDaily={onSwitchToDaily}
         />
       </Grid>
-      {showRemoteMonitoringWidget &&
-        <Grid item xs={gridWidgetSize}>
+
+      {patientIsMonitored &&
+        <React.Fragment>
+          <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
+            <AlarmCard patient={patient} />
+            <MedicalFilesWidget patient={patient} />
+          </Grid>
+
+          <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
+            <ChatWidget
+              patient={patient}
+              userId={user.id}
+              userRole={user.role}
+            />
+            <RemoteMonitoringWidget patient={patient} />
+          </Grid>
+        </React.Fragment>
+      }
+
+      {user.isUserHcp() && !patientIsMonitored &&
+        <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
           <RemoteMonitoringWidget patient={patient} />
         </Grid>
       }
     </Grid>
   )
 }
-
-export default PatientDashboard

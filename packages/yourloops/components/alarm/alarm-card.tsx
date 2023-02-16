@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,32 +28,22 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import { Box, CardHeader, IconButton } from '@mui/material'
+import { Box, IconButton } from '@mui/material'
 import TuneIcon from '@mui/icons-material/Tune'
 import AnnouncementIcon from '@mui/icons-material/Announcement'
 
-import Card from '@mui/material/Card'
 import PatientAlarmDialog from './patient-alarm-dialog'
-import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
+import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import { useAuth } from '../../lib/auth'
 
-const alarmCardStyles = makeStyles()((theme: Theme) => {
+const alarmCardStyles = makeStyles()((theme) => {
   return {
     alertColor: {
       color: theme.palette.warning.main
-    },
-    eventCard: {
-      width: '400px',
-      height: '350px'
-    },
-    eventCardHeader: {
-      textTransform: 'uppercase',
-      backgroundColor: 'var(--card-header-background-color)'
-    },
-    headerIcon: {
-      display: 'flex'
     }
   }
 })
@@ -65,8 +55,7 @@ export interface AlarmCardProps {
 function AlarmCard(props: AlarmCardProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { patient } = props
-  const authHook = useAuth()
-  const loggedInUser = authHook.user
+  const { user } = useAuth()
   const { classes } = alarmCardStyles()
   const [showPatientAlarmDialog, setShowPatientAlarmDialog] = useState(false)
   const timeSpentAwayFromTargetActive = patient.alarms.timeSpentAwayFromTargetActive
@@ -89,45 +78,35 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   }
 
   return (
-    <Card className={classes.eventCard} id="alarm-card" data-testid="alarm-card">
-      <CardHeader
-        id="alarm-card-header-id"
-        avatar={
-          <AnnouncementIcon
-            className={noActiveAlarm ? 'headerIcon' : `${classes.alertColor} ${classes.headerIcon}`}
-          />
-        }
-        className={classes.eventCardHeader}
-        title={`${t('events')}${numberOfAlarmsLabel}`}
-        action={
-          <div>
-            {!loggedInUser?.isUserPatient() &&
-              <IconButton
-                id="configure-icon-button-id"
-                aria-label={t('configure-alarms')}
-                data-testid="alarm-card-configure-button"
-                onClick={() => { setShowPatientAlarmDialog(true) }}
-                size="large">
-                <TuneIcon />
-              </IconButton>
-            }
-          </div>
-        }
-      />
-      <Box marginTop={2} marginLeft={1} marginRight={1}>
-        <Box fontSize="16px" marginBottom={1} fontWeight={600} className={noActiveAlarm ? '' : classes.alertColor}>
+    <GenericDashboardCard
+      avatar={<AnnouncementIcon className={noActiveAlarm ? '' : classes.alertColor} />}
+      title={`${t('events')}${numberOfAlarmsLabel}`}
+      data-testid="alarm-card"
+      action={user.isUserHcp() &&
+        <IconButton
+          id="configure-icon-button-id"
+          aria-label={t('configure-alarms')}
+          data-testid="alarm-card-configure-button"
+          onClick={() => setShowPatientAlarmDialog(true)}
+          size="small"
+        >
+          <TuneIcon />
+        </IconButton>
+      }
+    >
+      <CardContent>
+        <Typography className={`${noActiveAlarm ? '' : classes.alertColor} bold`}>
           {t('current-events')}
-        </Box>
+        </Typography>
         <Box
           id="time-away-target-alarm-id"
           display="flex"
+          justifyContent="space-between"
           fontSize="13px"
           className={timeSpentAwayFromTargetActive ? classes.alertColor : ''}
         >
           {t('time-out-of-range-target')}
-          <Box
-            marginLeft="auto"
-          >
+          <Box>
             {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
           </Box>
         </Box>
@@ -135,28 +114,29 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
           id="severe-hypo-alarm-id"
           display="flex"
           fontSize="13px"
+          justifyContent="space-between"
           className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ''}
         >
           {t('alert-hypoglycemic')}
-          <Box
-            marginLeft="auto"
-          >
+          <Box>
             {`${Math.round(patient.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           </Box>
         </Box>
         <Box
           id="non-data-transmission-alarm-id"
-          display="flex" fontSize="13px"
+          display="flex"
+          justifyContent="space-between"
+          fontSize="13px"
           className={nonDataTransmissionActive ? classes.alertColor : ''}
         >
           {t('data-not-transferred')}
-          <Box marginLeft="auto">{`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}</Box>
+          <Box>{`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}</Box>
         </Box>
-      </Box>
+      </CardContent>
       {showPatientAlarmDialog &&
         <PatientAlarmDialog patient={patient} onClose={onClosePatientAlarmDialog} />
       }
-    </Card>
+    </GenericDashboardCard>
   )
 }
 

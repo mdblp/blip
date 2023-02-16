@@ -26,6 +26,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2118 Update axios and minor dependencies
 - YLP-2121 Removing deprecated @mui/styles library
 - YLP-2139 Remove weekly reports
+- YLP-2144 Migrate dashboard from blip to Yourloops
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

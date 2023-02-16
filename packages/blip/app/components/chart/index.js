@@ -17,12 +17,10 @@ import Daily from './daily'
 import Trends from './trends'
 import SettingsDialog from './settingsDialog'
 import Footer from './footer'
-import PatientDashboard from './patientDashboard'
 
 export {
   Daily,
   Trends,
   SettingsDialog,
-  Footer,
-  PatientDashboard
+  Footer
 }
