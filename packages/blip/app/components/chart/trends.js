@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 
 import CircularProgress from '@mui/material/CircularProgress'
 
-import { containers as vizContainers, utils as vizUtils } from 'tidepool-viz'
+import { utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
 import SubNav, { weekDays } from './trendssubnav'
@@ -32,7 +32,7 @@ import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import ChartType from 'yourloops/enum/chart-type.enum'
-import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsProvider } from 'dumb'
+import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 
 /**
@@ -45,7 +45,6 @@ import { PatientStatistics } from 'yourloops/components/statistics/patient-stati
 
 const t = i18next.t.bind(i18next)
 
-const TrendsContainer = vizContainers.TrendsContainer
 const reshapeBgClassesToBgBounds = vizUtils.bg.reshapeBgClassesToBgBounds
 
 // Do not translate this date, it's the ISO format!
@@ -641,6 +640,7 @@ class Trends extends React.Component {
   renderChart() {
     const { localDates, currentCbgData } = this.state
     return (
+      Array.isArray(localDates) && localDates.length >= 1 &&
       <TrendsContainer
         currentCbgData={currentCbgData}
         days={localDates}
@@ -650,10 +650,9 @@ class Trends extends React.Component {
           bgUnits: this.props.bgPrefs.bgUnits
         }}
         currentPatientInViewId={this.props.patient.userid}
-        extentSize={this.props.chartPrefs.trends.extentSize}
         loading={this.props.loading}
         // data
-        tidelineData={this.props.tidelineData}
+        medicalData={this.props.tidelineData}
         // handlers
         onSelectDate={this.handleSelectDate}
       />
