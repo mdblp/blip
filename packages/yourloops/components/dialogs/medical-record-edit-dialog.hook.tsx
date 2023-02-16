@@ -37,7 +37,7 @@ import { useAuth } from '../../lib/auth'
 interface MedicalRecordEditDialogHookProps extends CategoryProps {
   onSaved: (payload: MedicalRecord) => void
   medicalRecord?: MedicalRecord
-  medicalRecordName?: string
+  medicalRecordDate?: string
 }
 
 interface MedicalRecordEditDialogHookReturn {
@@ -59,24 +59,24 @@ export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialo
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { user } = useAuth()
-  const { onSaved, medicalRecord, teamId, patientId, medicalRecordName } = props
+  const { onSaved, medicalRecord, teamId, patientId, medicalRecordDate } = props
 
   const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || '')
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || '')
   const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || '')
   const [inProgress, setInProgress] = useState<boolean>(false)
   const isSaveButtonDisabled = inProgress || (!diagnosis && !trainingSubject && !progressionProposal)
-
-  const isInReadOnly = user.isUserPatient() || (user.isUserHcp() && medicalRecord !== undefined && medicalRecord?.authorId !== user.id)
+  const isUserAuthor = medicalRecord?.authorId === user.id
+  const isInReadOnly = user.isUserPatient() || (user.isUserHcp() && !!medicalRecord && !isUserAuthor)
 
   const getTitle = (): string => {
     if (!medicalRecord) {
       return t('create-medical-record')
     }
-    if (user.isUserHcp() && medicalRecord.authorId === user.id) {
-      return t('edit-medical-record', { date: medicalRecordName })
+    if (user.isUserHcp() && isUserAuthor) {
+      return t('edit-medical-record', { date: medicalRecordDate })
     }
-    return t('consult-medical-record', { date: medicalRecordName })
+    return t('consult-medical-record', { date: medicalRecordDate })
   }
 
   const saveMedicalRecord = async (): Promise<void> => {

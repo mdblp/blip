@@ -90,12 +90,12 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   }
 
   const onDeleteMedicalRecord = (medicalRecord: MedicalRecord, medicalRecordName: string): void => {
-    setMedicalRecordToDelete({ medicalRecord, medicalRecordName })
+    setMedicalRecordToDelete({ medicalRecord, medicalRecordDate: medicalRecordName })
     setIsDeleteDialogOpen(true)
   }
 
   const onClickMedicalRecord = (medicalRecord: MedicalRecord, medicalRecordName: string): void => {
-    setMedicalRecordToEdit({ medicalRecord, medicalRecordName })
+    setMedicalRecordToEdit({ medicalRecord, medicalRecordDate: medicalRecordName })
     setIsEditDialogOpen(true)
   }
 
@@ -115,10 +115,10 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
     closeMedicalRecordDeleteDialog()
   }
 
-  const buildFileName = (date: string, index: number): string => {
-    const fileDate = date.substring(0, 10)
+  const buildMedicalRecordDate = (date: string, index: number): string => {
+    const medicalRecordDate = date.substring(0, 10)
     const previousFileDate = index > 0 ? medicalRecords[index - 1].creationDate.substring(0, 10) : null
-    return `${fileDate}${fileDate === previousFileDate ? `_${index}` : ''}`
+    return `${medicalRecordDate}${medicalRecordDate === previousFileDate ? `_${index}` : ''}`
   }
 
   useEffect(() => {
@@ -144,22 +144,23 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
       {medicalRecords
         ? <List className={classes.list}>
           {medicalRecords.map((medicalRecord, index) => {
-            const medicalRecordName = buildFileName(medicalRecord.creationDate, index)
+            const medicalRecordDate = buildMedicalRecordDate(medicalRecord.creationDate, index)
+            const isUserAuthor = user.id === medicalRecord.authorId
             return (
               <ListItem
                 key={index}
                 dense
                 divider
                 disablePadding
-                secondaryAction={user.id === medicalRecord.authorId &&
-                  <Tooltip title={t('delete-medical-record', { date: medicalRecordName })}>
+                secondaryAction={isUserAuthor &&
+                  <Tooltip title={t('delete-medical-record', { date: medicalRecordDate })}>
                     <IconButton
                       data-testid="delete-medical-record"
                       edge="end"
                       size="small"
-                      aria-label={t('delete-medical-record', { date: medicalRecordName })}
+                      aria-label={t('delete-medical-record', { date: medicalRecordDate })}
                       onClick={() => {
-                        onDeleteMedicalRecord(medicalRecord, medicalRecordName)
+                        onDeleteMedicalRecord(medicalRecord, medicalRecordDate)
                       }}
                     >
                       <TrashCanOutlined />
@@ -169,14 +170,14 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
               >
                 <ListItemButton
                   onClick={() => {
-                    onClickMedicalRecord(medicalRecord, medicalRecordName)
+                    onClickMedicalRecord(medicalRecord, medicalRecordDate)
                   }}
                 >
                   <ListItemIcon>
                     <DescriptionOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText>
-                    {t('medical-record-pdf', { pdfName: medicalRecordName })}
+                    {t('medical-record-pdf', { date: medicalRecordDate })}
                   </ListItemText>
                 </ListItemButton>
               </ListItem>
@@ -208,7 +209,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
         <MedicalRecordEditDialog
           {...props}
           medicalRecord={medicalRecordToEdit?.medicalRecord}
-          medicalRecordName={medicalRecordToEdit?.medicalRecordName}
+          medicalRecordDate={medicalRecordToEdit?.medicalRecordDate}
           onClose={closeMedicalRecordEditDialog}
           onSaved={updateMedicalRecordList}
         />
@@ -217,7 +218,7 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
       {isDeleteDialogOpen && medicalRecordToDelete &&
         <MedicalRecordDeleteDialog
           medicalRecord={medicalRecordToDelete.medicalRecord}
-          medicalRecordName={medicalRecordToDelete.medicalRecordName}
+          medicalRecordDate={medicalRecordToDelete.medicalRecordDate}
           onClose={closeMedicalRecordDeleteDialog}
           onDelete={removeMedicalRecordFromList}
         />

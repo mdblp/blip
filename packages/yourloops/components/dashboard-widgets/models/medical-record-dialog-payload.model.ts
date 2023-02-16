@@ -29,5 +29,5 @@ import { type MedicalRecord } from '../../../lib/medical-files/models/medical-re
 
 export interface MedicalRecordDialogPayload {
   medicalRecord: MedicalRecord
-  medicalRecordName: string
+  medicalRecordDate: string
 }

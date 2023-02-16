@@ -51,7 +51,7 @@ export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void
   onSaved: (payload: MedicalRecord) => void
   medicalRecord?: MedicalRecord
-  medicalRecordName?: string
+  medicalRecordDate?: string
 }
 
 const classes = makeStyles()((theme: Theme) => ({
@@ -78,7 +78,7 @@ const classes = makeStyles()((theme: Theme) => ({
 export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
   const { classes: { title, textArea, divider } } = classes()
   const { t } = useTranslation('yourloops')
-  const { onClose, onSaved, medicalRecord, teamId, patientId, medicalRecordName } = props
+  const { onClose, onSaved, medicalRecord, teamId, patientId, medicalRecordDate } = props
   const {
     diagnosis,
     dialogTitle,
@@ -91,7 +91,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
     setProgressionProposal,
     setTrainingSubject,
     saveMedicalRecord
-  } = useMedicalRecordEditDialog({ onSaved, medicalRecord, teamId, patientId, medicalRecordName })
+  } = useMedicalRecordEditDialog({ onSaved, medicalRecord, teamId, patientId, medicalRecordDate })
 
   return (
     <Dialog

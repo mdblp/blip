@@ -39,9 +39,9 @@ const MEDICAL_RECORD_TO_CREATE_DATE = '01-01-2023'
 const checkMedicalRecordCancel = async (medicalFilesWidget: HTMLElement): Promise<void> => {
   const createMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'New' })
   await userEvent.click(createMedicalReportButton)
-  const createdMedicalRecordDialog = screen.getByRole('dialog')
-  expect(createdMedicalRecordDialog).toHaveTextContent('Create medical record1. Diagnosis​2. Progression proposal​3. Training subject​CancelSave')
-  const cancelMedicalRecordCreationButton = within(createdMedicalRecordDialog).getByRole('button', { name: 'Cancel' })
+  const medicalRecordDialog = screen.getByRole('dialog')
+  expect(medicalRecordDialog).toHaveTextContent('Create medical record1. Diagnosis​2. Progression proposal​3. Training subject​CancelSave')
+  const cancelMedicalRecordCreationButton = within(medicalRecordDialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelMedicalRecordCreationButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
@@ -158,5 +158,6 @@ export const checkMedicalWidgetForPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
   expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical recordsMedical_record_2022-01-02')
+  expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical_record_2022-01-02' })).not.toBeInTheDocument()
   await checkMedicalRecordConsult(medicalFilesWidget)
 }

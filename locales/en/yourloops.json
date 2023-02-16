@@ -218,7 +218,7 @@
   "medical-files": "Medical files",
   "medical-record-delete-failed": "Medical record delete failed",
   "medical-record-delete-success": "Medical record successfully deleted",
-  "medical-record-pdf": "Medical_record_{{pdfName}}",
+  "medical-record-pdf": "Medical_record_{{date}}",
   "medical-record-save-failed": "Medical record save failed",
   "medical-record-save-success": "Medical record successfully saved",
   "medical-records": "Medical records",
