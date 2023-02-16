@@ -167,7 +167,6 @@ const ignoredTransKeyForYourLoops = [
   'compute-ndays-time-in-range',
   'compute-oneday-time-in-range',
   'remaining-time',
-  'show-less',
   'show-more'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
