@@ -39,17 +39,19 @@ import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import metrics from '../../../lib/metrics'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { useTheme } from '@mui/material/styles'
+import ProgressIconButtonWrapper from '../../buttons/progress-icon-button-wrapper'
 
 export interface ConfirmTeamProps {
   onCompleteStep: () => Promise<void>
   team: Team
   onClickCancel: () => void
+  inProgress?: boolean
 
 }
 
 export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
-  const { onCompleteStep, team, onClickCancel } = props
+  const { onCompleteStep, team, onClickCancel, inProgress } = props
   const [checked, setChecked] = useState<boolean>(false)
   const buttonAddTeamDisabled = checked ?? false
   const theme = useTheme()
@@ -128,16 +130,18 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
         >
           {t('button-cancel')}
         </Button>
-        <Button
-          id="team-add-dialog-confirm-team-button-add-team"
-          disabled={!buttonAddTeamDisabled}
-          variant="contained"
-          color="primary"
-          disableElevation
-          onClick={onCompleteStep}
-        >
-          {t('join-team')}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={inProgress}>
+          <Button
+            id="team-add-dialog-confirm-team-button-add-team"
+            disabled={!buttonAddTeamDisabled || inProgress}
+            variant="contained"
+            color="primary"
+            disableElevation
+            onClick={onCompleteStep}
+          >
+            {t('join-team')}
+          </Button>
+        </ProgressIconButtonWrapper>
       </DialogActions>
     </React.Fragment>
   )
