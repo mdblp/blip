@@ -35,36 +35,41 @@ export interface JoinTeamDialogProps {
   onAccept: (teamId?: string) => Promise<void>
   teamName?: string
 }
+
 const TEAM_CODE_STEP = 'team code step'
 const PRIVACY_POLICY_STEP = 'join team step'
 export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) => {
   const { onClose, onAccept, teamName } = props
   const [currentStep, setCurrentStep] = useState<string>(TEAM_CODE_STEP)
   const [team, setTeam] = useState<Team | undefined>(undefined)
+  const [isInprogress, setIsInProgress] = useState<boolean>(false)
   const goToNextStep = (team: Team): void => {
     setTeam(team)
     setCurrentStep(PRIVACY_POLICY_STEP)
   }
 
   return (
-      <Dialog onClose={onClose} open data-testId="join-team-dialog">
-          {currentStep === TEAM_CODE_STEP &&
-            <TeamCodeConfirm
-              onCompleteStep={goToNextStep}
-              onClickCancel={onClose}
-              teamName={teamName}
-            />
+    <Dialog onClose={onClose} open data-testId="join-team-dialog">
+      {currentStep === TEAM_CODE_STEP &&
+        <TeamCodeConfirm
+          onCompleteStep={goToNextStep}
+          onClickCancel={onClose}
+          teamName={teamName}
+        />
 
-          }
-          {currentStep === PRIVACY_POLICY_STEP &&
-            <PrivacyPolicyConfirm
-              onCompleteStep={async () => {
-                await onAccept(team.id)
-              }}
-              onClickCancel={onClose}
-              team={team}
-            />
-          }
-      </Dialog>
+      }
+      {currentStep === PRIVACY_POLICY_STEP &&
+        <PrivacyPolicyConfirm
+          onCompleteStep={async () => {
+            setIsInProgress(true)
+            await onAccept(team.id)
+            setIsInProgress(false)
+          }}
+          inProgress={isInprogress}
+          onClickCancel={onClose}
+          team={team}
+        />
+      }
+    </Dialog>
   )
 }
