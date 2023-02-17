@@ -84,22 +84,23 @@ describe('Patient utils', () => {
   })
 
   describe('removeDuplicates', () => {
-    it('should return correct patient list', () => {
-      const monitoring: Monitoring = {
-        enabled: true,
-        status: MonitoringStatus.pending,
-        monitoringEnd: new Date(),
-        parameters: {
-          bgUnit: UnitsType.MGDL,
-          lowBg: 1,
-          highBg: 2,
-          outOfRangeThreshold: 3,
-          veryLowBg: 4,
-          hypoThreshold: 5,
-          nonDataTxThreshold: 6,
-          reportingPeriod: 7
-        }
+    const monitoring: Monitoring = {
+      enabled: true,
+      status: MonitoringStatus.pending,
+      monitoringEnd: new Date(),
+      parameters: {
+        bgUnit: UnitsType.MGDL,
+        lowBg: 1,
+        highBg: 2,
+        outOfRangeThreshold: 3,
+        veryLowBg: 4,
+        hypoThreshold: 5,
+        nonDataTxThreshold: 6,
+        reportingPeriod: 7
       }
+    }
+
+    it('should return correct patient list', () => {
       const patientTeamAccepted = createPatientTeam('patientTeamAccepted', UserInvitationStatus.accepted)
       const patientTeamPending = createPatientTeam('patientTeamPending', UserInvitationStatus.pending)
       const patientTeamMonitoringAccepted = createPatientTeam('patientTeamMonitoringAccepted', UserInvitationStatus.accepted, MonitoringStatus.accepted)
@@ -126,6 +127,26 @@ describe('Patient utils', () => {
       patientWithNoDuplicatesExpected.profile.birthdate = patientWithNoDuplicates.profile.birthdate
       patientWithNoDuplicatesExpected.settings.a1c = patientWithNoDuplicates.settings.a1c
       const expected = [firstPatientExpected, secondPatientExpected, thirdPatientExpected, patientWithNoDuplicatesExpected]
+
+      const actual = PatientUtils.removeDuplicates(allPatients)
+
+      expect(JSON.stringify(actual)).toEqual(JSON.stringify(expected))
+    })
+
+    it('should keep the monitoring value when a patient is monitored in a team and not in another', () => {
+      const patientTeamAccepted = createPatientTeam('patientTeamAccepted', UserInvitationStatus.accepted)
+      const patientTeamMonitoringAccepted = createPatientTeam('patientTeamMonitoringAccepted', UserInvitationStatus.accepted, MonitoringStatus.accepted)
+
+      const firstPatient1 = createPatient('patient1', [patientTeamAccepted])
+      const firstPatient2 = createPatient(firstPatient1.userid, [patientTeamMonitoringAccepted], monitoring)
+
+      const allPatients = [firstPatient1, firstPatient2]
+
+      const firstPatientExpected = createPatient(firstPatient1.userid, [patientTeamAccepted, patientTeamMonitoringAccepted], monitoring)
+      firstPatientExpected.profile.birthdate = firstPatient1.profile.birthdate
+      firstPatientExpected.settings.a1c = firstPatient1.settings.a1c
+
+      const expected = [firstPatientExpected]
 
       const actual = PatientUtils.removeDuplicates(allPatients)
 

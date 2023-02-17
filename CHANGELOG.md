@@ -30,6 +30,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2143 Migrate TrendsContainer to dumb
 - YLP-2159 Get rid of connectWithTransitionGroup in viz
 
+### Fixed
+- YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
+
 ## 3.0.3 - 2023-02-09
 ### Fixed
 - YLP-1682 Labels in PDF reports are not clear
