@@ -99,8 +99,22 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     moment.utc(epochDate - msRange).toISOString(), // start
     moment.utc(epochDate).toISOString() // end
   ]
-  const patientIsMonitored = !!patient?.monitoring?.enabled
-  const gridWidgetSize = isMobileBreakpoint ? RESPONSIVE_GRID_FULL_WIDTH : patientIsMonitored ? RESPONSIVE_GRID_FOUR_COLUMNS : user.isUserHcp() && !patientIsMonitored ? RESPONSIVE_GRID_THREE_COLUMNS : RESPONSIVE_GRID_HALF_WIDTH
+  const isPatientMonitored = !!patient?.monitoring?.enabled
+
+  const getGridWidgetSize = (): number => {
+    if (isMobileBreakpoint) {
+      return RESPONSIVE_GRID_FULL_WIDTH
+    }
+    if (isPatientMonitored) {
+      return RESPONSIVE_GRID_FOUR_COLUMNS
+    }
+    if (user.isUserHcp() && !isPatientMonitored) {
+      return RESPONSIVE_GRID_THREE_COLUMNS
+    }
+    return RESPONSIVE_GRID_HALF_WIDTH
+  }
+
+  const gridWidgetSize = getGridWidgetSize()
 
   return (
     <Grid
@@ -159,7 +173,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         />
       </Grid>
 
-      {patientIsMonitored &&
+      {isPatientMonitored &&
         <React.Fragment>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
             <AlarmCard patient={patient} />
@@ -177,7 +191,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         </React.Fragment>
       }
 
-      {user.isUserHcp() && !patientIsMonitored &&
+      {user.isUserHcp() && !isPatientMonitored &&
         <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
           <RemoteMonitoringWidget patient={patient} />
         </Grid>

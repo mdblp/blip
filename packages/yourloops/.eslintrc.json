@@ -53,7 +53,6 @@
     "@typescript-eslint/no-invalid-void-type": "off",
     "@typescript-eslint/no-extraneous-class": "off",
     "@typescript-eslint/no-unused-vars": ["error", { "vars": "all" }],
-    "@typescript-eslint/no-confusing-void-expression": ["error", { "ignoreArrowShorthand": true }],
     "@typescript-eslint/restrict-template-expressions": [
       "error",
       {

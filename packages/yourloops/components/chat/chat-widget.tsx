@@ -27,7 +27,7 @@
 
 import React, { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 
-import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react'
+import EmojiPicker, { type EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 
 import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -51,6 +51,7 @@ import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import Box from '@mui/material/Box'
 
 const CHAT_CONTENT_HEIGHT = '280px'
+const KEYBOARD_EVENT_ESCAPE = 'Escape'
 
 const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
   return {
@@ -164,7 +165,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }
 
   const onEmojiPickerKeyPress = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape') {
+    if (event.key === KEYBOARD_EVENT_ESCAPE) {
       setShowPicker(false)
     }
   }
@@ -204,6 +205,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               width="100%"
               height="440px"
               lazyLoadEmojis
+              emojiStyle={EmojiStyle.NATIVE}
               onEmojiClick={onEmojiClick}
             />
           </div>
@@ -213,21 +215,22 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               <Tabs
                 className={classes.chatWidgetTabs}
                 value={inputTab}
-                aria-label="basic tabs example"
                 onChange={handleChange}
                 sx={{ marginBottom: theme.spacing(1) }}
               >
                 <Tab
                   className={classes.chatWidgetTab}
                   label={t('chat-footer-reply')}
+                  aria-label={t('chat-footer-reply')}
                   data-testid="chat-card-reply"
-                  onClick={() => setPrivateMessage(false)}
+                  onClick={() => { setPrivateMessage(false) }}
                 />
                 <Tab
                   className={classes.chatWidgetTab}
                   label={t('chat-footer-private')}
+                  aria-label={t('chat-footer-private')}
                   data-testid="chat-card-private"
-                  onClick={() => setPrivateMessage(true)}
+                  onClick={() => { setPrivateMessage(true) }}
                 />
               </Tabs>
             }
@@ -236,7 +239,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               id="chat-widget-emoji-button"
               data-testid="chat-widget-emoji-button"
               className={classes.iconButton}
-              onClick={() => setShowPicker(true)}
+              onClick={() => { setShowPicker(true) }}
             >
               <SentimentSatisfiedOutlinedIcon />
             </Button>
@@ -247,7 +250,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               multiline
               maxRows={3}
               value={inputText}
-              onChange={event => setInputText(event.target.value)}
+              onChange={event => { setInputText(event.target.value) }}
               InputLabelProps={{ shrink: false }}
               data-testid="chat-card-input"
             />
