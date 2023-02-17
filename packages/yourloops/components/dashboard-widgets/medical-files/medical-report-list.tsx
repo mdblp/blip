@@ -52,8 +52,13 @@ import { type CategoryProps } from './medical-files-widget'
 import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
-import { type MedicalReportDialogPayload, type MedicalReport } from '../../../lib/medical-files/models/medical-report.model'
+import {
+  type MedicalReport,
+  type MedicalReportDialogPayload,
+  type MedicalReportWithIndex
+} from '../../../lib/medical-files/models/medical-report.model'
 import ListItemButton from '@mui/material/ListItemButton'
+import { getMedicalReportDate, getMedicalReportsToDisplay } from './medical-report-list.util'
 
 const useStyle = makeStyles()(() => ({
   categoryTitle: {
@@ -74,7 +79,6 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const { classes: commonStyles } = commonComponentStyles()
   const [medicalReports, setMedicalReports] = useState<MedicalReport[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
   const [medicalReportToEdit, setMedicalReportToEdit] = useState<MedicalReportDialogPayload | undefined>(undefined)
   const [medicalReportToDelete, setMedicalReportToDelete] = useState<MedicalReportDialogPayload | undefined>(undefined)
 
@@ -84,17 +88,15 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   }
 
   const closeMedicalReportDeleteDialog = (): void => {
-    setIsDeleteDialogOpen(false)
     setMedicalReportToDelete(undefined)
   }
 
-  const onDeleteMedicalReport = (medicalReport: MedicalReport, medicalReportName: string): void => {
-    setMedicalReportToDelete({ medicalReport, medicalReportDate: medicalReportName })
-    setIsDeleteDialogOpen(true)
+  const onDeleteMedicalReport = (medicalReportWithIndex: MedicalReportWithIndex, medicalReportDate: string): void => {
+    setMedicalReportToDelete({ ...medicalReportWithIndex, medicalReportDate })
   }
 
-  const onClickMedicalReport = (medicalReport: MedicalReport, medicalReportName: string): void => {
-    setMedicalReportToEdit({ medicalReport, medicalReportDate: medicalReportName })
+  const onClickMedicalReport = (medicalReportWithIndex: MedicalReportWithIndex, medicalReportDate: string): void => {
+    setMedicalReportToEdit({ ...medicalReportWithIndex, medicalReportDate })
     setIsEditDialogOpen(true)
   }
 
@@ -105,6 +107,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
     } else {
       medicalReports.push(payload)
     }
+    setMedicalReports(medicalReports)
     closeMedicalReportEditDialog()
   }
 
@@ -112,12 +115,6 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
     const index = medicalReports.findIndex((mr) => mr.id === medicalReportId)
     medicalReports.splice(index, 1)
     closeMedicalReportDeleteDialog()
-  }
-
-  const buildMedicalReportDate = (date: string, index: number): string => {
-    const medicalReportDate = date.substring(0, 10)
-    const previousFileDate = index > 0 ? medicalReports[index - 1].creationDate.substring(0, 10) : null
-    return `${medicalReportDate}${medicalReportDate === previousFileDate ? `_${index}` : ''}`
   }
 
   useEffect(() => {
@@ -142,8 +139,9 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
       </Typography>
       {medicalReports
         ? <List className={classes.list}>
-          {medicalReports.map((medicalReport, index) => {
-            const medicalReportDate = buildMedicalReportDate(medicalReport.creationDate, index)
+          {getMedicalReportsToDisplay(medicalReports).map((medicalReportWithIndex, index) => {
+            const medicalReport = medicalReportWithIndex.medicalReport
+            const medicalReportDate = getMedicalReportDate(medicalReportWithIndex)
             const isUserAuthor = user.id === medicalReport.authorId
             return (
               <ListItem
@@ -159,7 +157,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
                       size="small"
                       aria-label={t('delete-medical-report', { date: medicalReportDate })}
                       onClick={() => {
-                        onDeleteMedicalReport(medicalReport, medicalReportDate)
+                        onDeleteMedicalReport(medicalReportWithIndex, medicalReportDate)
                       }}
                     >
                       <TrashCanOutlined />
@@ -169,7 +167,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
               >
                 <ListItemButton
                   onClick={() => {
-                    onClickMedicalReport(medicalReport, medicalReportDate)
+                    onClickMedicalReport(medicalReportWithIndex, medicalReportDate)
                   }}
                 >
                   <ListItemIcon>
@@ -214,7 +212,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
         />
       }
 
-      {isDeleteDialogOpen && medicalReportToDelete &&
+      {medicalReportToDelete &&
         <MedicalReportDeleteDialog
           medicalReport={medicalReportToDelete.medicalReport}
           medicalReportDate={medicalReportToDelete.medicalReportDate}

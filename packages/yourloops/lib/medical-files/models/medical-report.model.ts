@@ -39,7 +39,11 @@ export interface MedicalReport extends NewMedicalReport {
   creationDate: string
 }
 
-export interface MedicalReportDialogPayload {
+export interface MedicalReportWithIndex {
   medicalReport: MedicalReport
+  index?: number
+}
+
+export interface MedicalReportDialogPayload extends MedicalReportWithIndex {
   medicalReportDate: string
 }

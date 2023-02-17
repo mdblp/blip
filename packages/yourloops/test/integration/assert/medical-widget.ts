@@ -78,7 +78,7 @@ const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement): Promis
   })
   expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully saved'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02Medical report 01-01-2023New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 01-01-2023Medical report 2022-01-02New')
 }
 
 const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
