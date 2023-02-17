@@ -29,7 +29,7 @@ import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 import { type Prescription } from '../../../../lib/medical-files/models/prescription.model'
-import { type MedicalRecord, type NewMedicalRecord } from '../../../../lib/medical-files/models/medical-record.model'
+import { type MedicalReport, type NewMedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
 
 describe('Medical files API', () => {
   const patientId = 'patientId'
@@ -81,57 +81,57 @@ describe('Medical files API', () => {
     })
   })
 
-  it('should get medical records', async () => {
-    const payload: MedicalRecord[] = [{} as MedicalRecord, {} as MedicalRecord]
+  it('should get medical reports', async () => {
+    const payload: MedicalReport[] = [{} as MedicalReport, {} as MedicalReport]
     jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const medicalRecords = await MedicalFilesApi.getMedicalRecords(patientId, teamId)
-    expect(medicalRecords).toEqual(payload)
+    const medicalReports = await MedicalFilesApi.getMedicalReports(patientId, teamId)
+    expect(medicalReports).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
       url: '/cargo/v0/medical-records',
       config: { params: { teamId, patientId } }
     })
   })
 
-  it('should get a single medical record', async () => {
-    const medicalRecordId = 'fakeId'
-    const payload = {} as MedicalRecord
+  it('should get a single medical report', async () => {
+    const medicalReportId = 'fakeId'
+    const payload = {} as MedicalReport
     jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const medicalRecord = await MedicalFilesApi.getMedicalRecord(patientId, teamId, medicalRecordId)
-    expect(medicalRecord).toEqual(payload)
+    const medicalReport = await MedicalFilesApi.getMedicalReport(patientId, teamId, medicalReportId)
+    expect(medicalReport).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
-      url: `/cargo/v0/medical-records/${medicalRecordId}`,
+      url: `/cargo/v0/medical-records/${medicalReportId}`,
       config: { params: { teamId, patientId } }
     })
   })
 
-  it('should create a medical record', async () => {
-    const payload = {} as NewMedicalRecord
+  it('should create a medical report', async () => {
+    const payload = {} as NewMedicalReport
     jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const medicalRecord = await MedicalFilesApi.createMedicalRecord(payload)
-    expect(medicalRecord).toEqual(payload)
+    const medicalReport = await MedicalFilesApi.createMedicalReport(payload)
+    expect(medicalReport).toEqual(payload)
     expect(HttpService.post).toHaveBeenCalledWith({
       url: '/cargo/v0/medical-records',
       payload
     })
   })
 
-  it('should update a medical record', async () => {
-    const payload = {} as MedicalRecord
+  it('should update a medical report', async () => {
+    const payload = {} as MedicalReport
     jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const medicalRecord = await MedicalFilesApi.createMedicalRecord(payload)
-    expect(medicalRecord).toEqual(payload)
+    const medicalReport = await MedicalFilesApi.createMedicalReport(payload)
+    expect(medicalReport).toEqual(payload)
     expect(HttpService.post).toHaveBeenCalledWith({
       url: '/cargo/v0/medical-records',
       payload
     })
   })
 
-  it('should delete a medical record', async () => {
-    const medicalRecordId = 'fakeId'
+  it('should delete a medical report', async () => {
+    const medicalReportId = 'fakeId'
     jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
-    await MedicalFilesApi.deleteMedicalRecord(medicalRecordId)
+    await MedicalFilesApi.deleteMedicalReport(medicalReportId)
     expect(HttpService.delete).toHaveBeenCalledWith({
-      url: `/cargo/v0/medical-records/${medicalRecordId}`
+      url: `/cargo/v0/medical-records/${medicalReportId}`
     })
   })
 })

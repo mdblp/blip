@@ -44,14 +44,14 @@ import Typography from '@mui/material/Typography'
 
 import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import useMedicalRecordEditDialog from './medical-record-edit-dialog.hook'
-import { type MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
+import { useMedicalReportEditDialog } from './medical-report-edit-dialog.hook'
+import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
 
-export interface MedicalRecordEditDialogProps extends CategoryProps {
+export interface MedicalReportEditDialogProps extends CategoryProps {
   onClose: () => void
-  onSaved: (payload: MedicalRecord) => void
-  medicalRecord?: MedicalRecord
-  medicalRecordDate?: string
+  onSaved: (payload: MedicalReport) => void
+  medicalReport?: MedicalReport
+  medicalReportDate?: string
 }
 
 const classes = makeStyles()((theme: Theme) => ({
@@ -75,10 +75,10 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
-export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
+export default function MedicalReportEditDialog(props: MedicalReportEditDialogProps): JSX.Element {
   const { classes: { title, textArea, divider } } = classes()
   const { t } = useTranslation('yourloops')
-  const { onClose, onSaved, medicalRecord, teamId, patientId, medicalRecordDate } = props
+  const { onClose, onSaved, medicalReport, teamId, patientId, medicalReportDate } = props
   const {
     diagnosis,
     dialogTitle,
@@ -90,8 +90,8 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
     isSaveButtonDisabled,
     setProgressionProposal,
     setTrainingSubject,
-    saveMedicalRecord
-  } = useMedicalRecordEditDialog({ onSaved, medicalRecord, teamId, patientId, medicalRecordDate })
+    saveMedicalReport
+  } = useMedicalReportEditDialog({ onSaved, medicalReport, teamId, patientId, medicalReportDate })
 
   return (
     <Dialog
@@ -165,7 +165,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
 
       <DialogActions>
         <Button
-          data-testid="medical-record-close"
+          data-testid="medical-report-close"
           disableElevation
           onClick={onClose}
         >
@@ -178,7 +178,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
               color="primary"
               disableElevation
               disabled={isSaveButtonDisabled}
-              onClick={saveMedicalRecord}
+              onClick={saveMedicalReport}
             >
               {t('save')}
             </Button>

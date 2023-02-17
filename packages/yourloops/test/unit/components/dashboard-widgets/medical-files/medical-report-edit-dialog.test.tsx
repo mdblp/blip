@@ -29,38 +29,38 @@ import React from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
-import MedicalRecordEditDialog, {
-  type MedicalRecordEditDialogProps
-} from '../../../../../components/dialogs/medical-record-edit-dialog'
+import MedicalReportEditDialog, {
+  type MedicalReportEditDialogProps
+} from '../../../../../components/dialogs/medical-report-edit-dialog'
 import userEvent from '@testing-library/user-event'
 import * as authHookMock from '../../../../../lib/auth'
 import type User from '../../../../../lib/auth/models/user.model'
-import { type MedicalRecord } from '../../../../../lib/medical-files/models/medical-record.model'
+import { type MedicalReport } from '../../../../../lib/medical-files/models/medical-report.model'
 import { UserRoles } from '../../../../../lib/auth/models/enums/user-roles.enum'
 
 jest.mock('../../../../../lib/auth')
 jest.mock('../../../../../components/utils/snackbar')
-describe('Medical record edit dialog', () => {
-  const createMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'createMedicalRecord').mockResolvedValue({} as MedicalRecord)
+describe('Medical report edit dialog', () => {
+  const createMedicalReportSpy = jest.spyOn(MedicalFilesApi, 'createMedicalReport').mockResolvedValue({} as MedicalReport)
   const onClose = jest.fn()
   const onSaved = jest.fn()
   const successAlertMock = jest.fn()
   const errorAlertMock = jest.fn()
-  let medicalRecord: MedicalRecord
+  let medicalReport: MedicalReport
   let diagnosisTextArea: HTMLTextAreaElement
   let progressionProposalTextArea: HTMLTextAreaElement
   let trainingSubjectTextArea: HTMLTextAreaElement
   let saveButton: HTMLButtonElement
 
   function getDialogJSX(): JSX.Element {
-    const props: MedicalRecordEditDialogProps = {
+    const props: MedicalReportEditDialogProps = {
       onClose,
       onSaved,
-      medicalRecord,
+      medicalReport,
       teamId: 'teamId',
       patientId: 'patientId'
     }
-    return <MedicalRecordEditDialog {...props} />
+    return <MedicalReportEditDialog {...props} />
   }
 
   function mountComponent() {
@@ -81,7 +81,7 @@ describe('Medical record edit dialog', () => {
   })
 
   it('should display an error if save failed', async () => {
-    createMedicalRecordSpy.mockImplementationOnce(() => Promise.reject(Error('This error was thrown by a mock on purpose')))
+    createMedicalReportSpy.mockImplementationOnce(() => Promise.reject(Error('This error was thrown by a mock on purpose')))
     mountComponent()
 
     await userEvent.type(diagnosisTextArea, 'fake diagnosis')
@@ -89,8 +89,8 @@ describe('Medical record edit dialog', () => {
     await userEvent.type(trainingSubjectTextArea, 'fake training subject')
     await userEvent.click(saveButton)
     await waitFor(() => {
-      expect(createMedicalRecordSpy).toHaveBeenCalled()
+      expect(createMedicalReportSpy).toHaveBeenCalled()
     })
-    expect(errorAlertMock).toHaveBeenCalledWith('medical-record-save-failed')
+    expect(errorAlertMock).toHaveBeenCalledWith('medical-report-save-failed')
   })
 })

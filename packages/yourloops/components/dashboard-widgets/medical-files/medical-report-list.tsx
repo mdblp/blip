@@ -45,16 +45,15 @@ import Typography from '@mui/material/Typography'
 
 import { useAuth } from '../../../lib/auth'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import MedicalRecordEditDialog from '../../dialogs/medical-record-edit-dialog'
-import MedicalRecordDeleteDialog from '../../dialogs/medical-record-delete-dialog'
+import MedicalReportEditDialog from '../../dialogs/medical-report-edit-dialog'
+import MedicalReportDeleteDialog from '../../dialogs/medical-report-delete-dialog'
 import TrashCanOutlined from '../../icons/trash-can-outlined'
 import { type CategoryProps } from './medical-files-widget'
 import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
 import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
-import { type MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
+import { type MedicalReportDialogPayload, type MedicalReport } from '../../../lib/medical-files/models/medical-report.model'
 import ListItemButton from '@mui/material/ListItemButton'
-import { type MedicalRecordDialogPayload } from '../models/medical-record-dialog-payload.model'
 
 const useStyle = makeStyles()(() => ({
   categoryTitle: {
@@ -66,70 +65,70 @@ const useStyle = makeStyles()(() => ({
   }
 }))
 
-const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
+const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { classes } = useStyle()
   const { teamId, patientId } = props
   const { user } = useAuth()
   const alert = useAlert()
   const { classes: commonStyles } = commonComponentStyles()
-  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[] | null>(null)
+  const [medicalReports, setMedicalReports] = useState<MedicalReport[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
-  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecordDialogPayload | undefined>(undefined)
-  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecordDialogPayload | undefined>(undefined)
+  const [medicalReportToEdit, setMedicalReportToEdit] = useState<MedicalReportDialogPayload | undefined>(undefined)
+  const [medicalReportToDelete, setMedicalReportToDelete] = useState<MedicalReportDialogPayload | undefined>(undefined)
 
-  const closeMedicalRecordEditDialog = (): void => {
+  const closeMedicalReportEditDialog = (): void => {
     setIsEditDialogOpen(false)
-    setMedicalRecordToEdit(undefined)
+    setMedicalReportToEdit(undefined)
   }
 
-  const closeMedicalRecordDeleteDialog = (): void => {
+  const closeMedicalReportDeleteDialog = (): void => {
     setIsDeleteDialogOpen(false)
-    setMedicalRecordToDelete(undefined)
+    setMedicalReportToDelete(undefined)
   }
 
-  const onDeleteMedicalRecord = (medicalRecord: MedicalRecord, medicalRecordName: string): void => {
-    setMedicalRecordToDelete({ medicalRecord, medicalRecordDate: medicalRecordName })
+  const onDeleteMedicalReport = (medicalReport: MedicalReport, medicalReportName: string): void => {
+    setMedicalReportToDelete({ medicalReport, medicalReportDate: medicalReportName })
     setIsDeleteDialogOpen(true)
   }
 
-  const onClickMedicalRecord = (medicalRecord: MedicalRecord, medicalRecordName: string): void => {
-    setMedicalRecordToEdit({ medicalRecord, medicalRecordDate: medicalRecordName })
+  const onClickMedicalReport = (medicalReport: MedicalReport, medicalReportName: string): void => {
+    setMedicalReportToEdit({ medicalReport, medicalReportDate: medicalReportName })
     setIsEditDialogOpen(true)
   }
 
-  const updateMedicalRecordList = (payload: MedicalRecord): void => {
-    const index = medicalRecords.findIndex((mr) => mr.id === payload.id)
+  const updateMedicalReportList = (payload: MedicalReport): void => {
+    const index = medicalReports.findIndex((mr) => mr.id === payload.id)
     if (index > -1) {
-      medicalRecords.splice(index, 1, payload)
+      medicalReports.splice(index, 1, payload)
     } else {
-      medicalRecords.push(payload)
+      medicalReports.push(payload)
     }
-    closeMedicalRecordEditDialog()
+    closeMedicalReportEditDialog()
   }
 
-  const removeMedicalRecordFromList = (medicalRecordId: string): void => {
-    const index = medicalRecords.findIndex((mr) => mr.id === medicalRecordId)
-    medicalRecords.splice(index, 1)
-    closeMedicalRecordDeleteDialog()
+  const removeMedicalReportFromList = (medicalReportId: string): void => {
+    const index = medicalReports.findIndex((mr) => mr.id === medicalReportId)
+    medicalReports.splice(index, 1)
+    closeMedicalReportDeleteDialog()
   }
 
-  const buildMedicalRecordDate = (date: string, index: number): string => {
-    const medicalRecordDate = date.substring(0, 10)
-    const previousFileDate = index > 0 ? medicalRecords[index - 1].creationDate.substring(0, 10) : null
-    return `${medicalRecordDate}${medicalRecordDate === previousFileDate ? `_${index}` : ''}`
+  const buildMedicalReportDate = (date: string, index: number): string => {
+    const medicalReportDate = date.substring(0, 10)
+    const previousFileDate = index > 0 ? medicalReports[index - 1].creationDate.substring(0, 10) : null
+    return `${medicalReportDate}${medicalReportDate === previousFileDate ? `_${index}` : ''}`
   }
 
   useEffect(() => {
-    if (!medicalRecords) {
-      MedicalFilesApi.getMedicalRecords(patientId, teamId)
-        .then(medicalRecords => {
-          setMedicalRecords(medicalRecords)
+    if (!medicalReports) {
+      MedicalFilesApi.getMedicalReports(patientId, teamId)
+        .then(medicalReports => {
+          setMedicalReports(medicalReports)
         })
         .catch(() => {
-          setMedicalRecords([])
-          alert.error(t('medical-records-get-failed'))
+          setMedicalReports([])
+          alert.error(t('medical-reports-get-failed'))
         })
     }
     // We don't have exhaustive deps here because we want to run the effect only on mount
@@ -139,13 +138,13 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
   return (
     <React.Fragment>
       <Typography className={classes.categoryTitle}>
-        {t('medical-records')}
+        {t('medical-reports')}
       </Typography>
-      {medicalRecords
+      {medicalReports
         ? <List className={classes.list}>
-          {medicalRecords.map((medicalRecord, index) => {
-            const medicalRecordDate = buildMedicalRecordDate(medicalRecord.creationDate, index)
-            const isUserAuthor = user.id === medicalRecord.authorId
+          {medicalReports.map((medicalReport, index) => {
+            const medicalReportDate = buildMedicalReportDate(medicalReport.creationDate, index)
+            const isUserAuthor = user.id === medicalReport.authorId
             return (
               <ListItem
                 key={index}
@@ -153,14 +152,14 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
                 divider
                 disablePadding
                 secondaryAction={isUserAuthor &&
-                  <Tooltip title={t('delete-medical-record', { date: medicalRecordDate })}>
+                  <Tooltip title={t('delete-medical-report', { date: medicalReportDate })}>
                     <IconButton
-                      data-testid="delete-medical-record"
+                      data-testid="delete-medical-report"
                       edge="end"
                       size="small"
-                      aria-label={t('delete-medical-record', { date: medicalRecordDate })}
+                      aria-label={t('delete-medical-report', { date: medicalReportDate })}
                       onClick={() => {
-                        onDeleteMedicalRecord(medicalRecord, medicalRecordDate)
+                        onDeleteMedicalReport(medicalReport, medicalReportDate)
                       }}
                     >
                       <TrashCanOutlined />
@@ -170,14 +169,14 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
               >
                 <ListItemButton
                   onClick={() => {
-                    onClickMedicalRecord(medicalRecord, medicalRecordDate)
+                    onClickMedicalReport(medicalReport, medicalReportDate)
                   }}
                 >
                   <ListItemIcon>
                     <DescriptionOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText>
-                    {t('medical-record-pdf', { date: medicalRecordDate })}
+                    {t('medical-report-pdf', { date: medicalReportDate })}
                   </ListItemText>
                 </ListItemButton>
               </ListItem>
@@ -206,25 +205,25 @@ const MedicalRecordList: FunctionComponent<CategoryProps> = (props) => {
       }
 
       {isEditDialogOpen &&
-        <MedicalRecordEditDialog
+        <MedicalReportEditDialog
           {...props}
-          medicalRecord={medicalRecordToEdit?.medicalRecord}
-          medicalRecordDate={medicalRecordToEdit?.medicalRecordDate}
-          onClose={closeMedicalRecordEditDialog}
-          onSaved={updateMedicalRecordList}
+          medicalReport={medicalReportToEdit?.medicalReport}
+          medicalReportDate={medicalReportToEdit?.medicalReportDate}
+          onClose={closeMedicalReportEditDialog}
+          onSaved={updateMedicalReportList}
         />
       }
 
-      {isDeleteDialogOpen && medicalRecordToDelete &&
-        <MedicalRecordDeleteDialog
-          medicalRecord={medicalRecordToDelete.medicalRecord}
-          medicalRecordDate={medicalRecordToDelete.medicalRecordDate}
-          onClose={closeMedicalRecordDeleteDialog}
-          onDelete={removeMedicalRecordFromList}
+      {isDeleteDialogOpen && medicalReportToDelete &&
+        <MedicalReportDeleteDialog
+          medicalReport={medicalReportToDelete.medicalReport}
+          medicalReportDate={medicalReportToDelete.medicalReportDate}
+          onClose={closeMedicalReportDeleteDialog}
+          onDelete={removeMedicalReportFromList}
         />
       }
     </React.Fragment>
   )
 }
 
-export default MedicalRecordList
+export default MedicalReportList

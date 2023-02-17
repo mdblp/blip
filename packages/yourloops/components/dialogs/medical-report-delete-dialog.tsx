@@ -38,32 +38,32 @@ import DialogTitle from '@mui/material/DialogTitle'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { type MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
+import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
 
-export interface MedicalRecordDeleteDialogProps {
+export interface MedicalReportDeleteDialogProps {
   onClose: () => void
-  onDelete: (medicalRecordId: string) => void
-  medicalRecord: MedicalRecord
-  medicalRecordDate: string
+  onDelete: (medicalReportId: string) => void
+  medicalReport: MedicalReport
+  medicalReportDate: string
 }
 
-export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete, medicalRecordDate }: MedicalRecordDeleteDialogProps): JSX.Element {
+export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDelete, medicalReportDate }: MedicalReportDeleteDialogProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
 
   const [inProgress, setInProgress] = useState<boolean>(false)
 
-  const deleteMedicalRecord = async (): Promise<void> => {
+  const deleteMedicalReport = async (): Promise<void> => {
     try {
       setInProgress(true)
-      await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id)
+      await MedicalFilesApi.deleteMedicalReport(medicalReport.id)
       setInProgress(false)
-      alert.success(t('medical-record-delete-success'))
-      onDelete(medicalRecord.id)
+      alert.success(t('medical-report-delete-success'))
+      onDelete(medicalReport.id)
     } catch (err) {
       console.log(err)
       setInProgress(false)
-      alert.error(t('medical-record-delete-failed'))
+      alert.error(t('medical-report-delete-failed'))
     }
   }
 
@@ -76,12 +76,12 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
       onClose={onClose}
     >
       <DialogTitle>
-        {t('delete-medical-record', { date: medicalRecordDate })}
+        {t('delete-medical-report', { date: medicalReportDate })}
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t('delete-warning', { fileName: t('medical-record-pdf', { date: medicalRecordDate }) })}
+          {t('delete-warning', { fileName: t('medical-report-pdf', { date: medicalReportDate }) })}
         </DialogContentText>
       </DialogContent>
 
@@ -98,7 +98,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
             disableElevation
             disabled={inProgress}
             color="error"
-            onClick={deleteMedicalRecord}
+            onClick={deleteMedicalReport}
           >
             {t('delete')}
           </Button>

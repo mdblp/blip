@@ -26,138 +26,138 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { type MedicalRecord } from '../../../lib/medical-files/models/medical-record.model'
+import { type MedicalReport } from '../../../lib/medical-files/models/medical-report.model'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { mySecondTeamId } from '../mock/team.api.mock'
 import { monitoredPatientId } from '../mock/patient.api.mock'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import userEvent from '@testing-library/user-event'
 
-const MEDICAL_RECORD_TO_CREATE_ID = 'fakeMedicalRecordId'
-const MEDICAL_RECORD_TO_CREATE_DATE = '01-01-2023'
+const MEDICAL_REPORT_TO_CREATE_ID = 'fakeMedicalReportId'
+const MEDICAL_REPORT_TO_CREATE_DATE = '01-01-2023'
 
-const checkMedicalRecordCancel = async (medicalFilesWidget: HTMLElement): Promise<void> => {
+const checkMedicalReportCancel = async (medicalFilesWidget: HTMLElement): Promise<void> => {
   const createMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'New' })
   await userEvent.click(createMedicalReportButton)
-  const medicalRecordDialog = screen.getByRole('dialog')
-  expect(medicalRecordDialog).toHaveTextContent('Create medical record1. Diagnosis​2. Progression proposal​3. Training subject​CancelSave')
-  const cancelMedicalRecordCreationButton = within(medicalRecordDialog).getByRole('button', { name: 'Cancel' })
-  await userEvent.click(cancelMedicalRecordCreationButton)
+  const medicalReportDialog = screen.getByRole('dialog')
+  expect(medicalReportDialog).toHaveTextContent('Create medical report1. Diagnosis​2. Progression proposal​3. Training subject​CancelSave')
+  const cancelMedicalReportCreationButton = within(medicalReportDialog).getByRole('button', { name: 'Cancel' })
+  await userEvent.click(cancelMedicalReportCreationButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-const checkMedicalRecordCreate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
+const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
   const createMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'New' })
   await userEvent.click(createMedicalReportButton)
-  const createdMedicalRecordDialog = within(screen.getByRole('dialog'))
-  const medicalRecordInputs = createdMedicalRecordDialog.getAllByRole('textbox')
+  const createdMedicalReportDialog = within(screen.getByRole('dialog'))
+  const medicalReportInputs = createdMedicalReportDialog.getAllByRole('textbox')
   const diagnosis = 'fake diagnosis'
   const progressionProposal = 'fake progression proposal'
   const trainingSubject = 'fake training subject'
-  await userEvent.type(medicalRecordInputs[0], diagnosis)
-  await userEvent.type(medicalRecordInputs[1], progressionProposal)
-  await userEvent.type(medicalRecordInputs[2], trainingSubject)
-  const medicalRecordCreated: MedicalRecord = {
-    id: MEDICAL_RECORD_TO_CREATE_ID,
+  await userEvent.type(medicalReportInputs[0], diagnosis)
+  await userEvent.type(medicalReportInputs[1], progressionProposal)
+  await userEvent.type(medicalReportInputs[2], trainingSubject)
+  const medicalReportCreated: MedicalReport = {
+    id: MEDICAL_REPORT_TO_CREATE_ID,
     authorId: loggedInUserId,
-    creationDate: MEDICAL_RECORD_TO_CREATE_DATE,
+    creationDate: MEDICAL_REPORT_TO_CREATE_DATE,
     teamId: mySecondTeamId,
     patientId: monitoredPatientId,
     diagnosis,
     progressionProposal,
     trainingSubject
   }
-  jest.spyOn(MedicalFilesApi, 'createMedicalRecord').mockResolvedValue(medicalRecordCreated)
+  jest.spyOn(MedicalFilesApi, 'createMedicalReport').mockResolvedValue(medicalReportCreated)
   await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Save' }))
-  expect(MedicalFilesApi.createMedicalRecord).toHaveBeenCalledWith({
+  expect(MedicalFilesApi.createMedicalReport).toHaveBeenCalledWith({
     teamId: mySecondTeamId,
     patientId: monitoredPatientId,
     diagnosis,
     progressionProposal,
     trainingSubject
   })
-  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical record successfully saved'))
+  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully saved'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical recordsMedical_record_2022-01-02Medical_record_01-01-2023New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02Medical report 01-01-2023New')
 }
 
-const checkMedicalRecordUpdate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
-  const medicalRecordButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical_record_01-01-2023' })
-  await userEvent.click(medicalRecordButton)
-  const createdMedicalRecordDialogEdit = screen.getByRole('dialog')
-  expect(createdMedicalRecordDialogEdit).toHaveTextContent('Edit Medical_record_01-01-20231. Diagnosisfake diagnosis​2. Progression proposalfake progression proposal​3. Training subjectfake training subject​CancelSave')
+const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
+  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical report 01-01-2023' })
+  await userEvent.click(medicalReportButton)
+  const createdMedicalReportDialogEdit = screen.getByRole('dialog')
+  expect(createdMedicalReportDialogEdit).toHaveTextContent('Edit medical report 01-01-20231. Diagnosisfake diagnosis​2. Progression proposalfake progression proposal​3. Training subjectfake training subject​CancelSave')
 
   const diagnosisEdited = 'fake diagnosis edited'
   const progressionProposalEdited = 'fake progression proposal edited'
   const trainingSubjectEdited = 'fake training subject edited'
-  const medicalRecordInputsToEdit = within(createdMedicalRecordDialogEdit).getAllByRole('textbox')
-  await userEvent.type(medicalRecordInputsToEdit[0], ' edited')
-  await userEvent.type(medicalRecordInputsToEdit[1], ' edited')
-  await userEvent.type(medicalRecordInputsToEdit[2], ' edited')
-  const medicalRecordUpdated: MedicalRecord = {
-    id: MEDICAL_RECORD_TO_CREATE_ID,
+  const medicalReportInputsToEdit = within(createdMedicalReportDialogEdit).getAllByRole('textbox')
+  await userEvent.type(medicalReportInputsToEdit[0], ' edited')
+  await userEvent.type(medicalReportInputsToEdit[1], ' edited')
+  await userEvent.type(medicalReportInputsToEdit[2], ' edited')
+  const medicalReportUpdated: MedicalReport = {
+    id: MEDICAL_REPORT_TO_CREATE_ID,
     authorId: loggedInUserId,
-    creationDate: MEDICAL_RECORD_TO_CREATE_DATE,
+    creationDate: MEDICAL_REPORT_TO_CREATE_DATE,
     teamId: mySecondTeamId,
     patientId: monitoredPatientId,
     diagnosis: diagnosisEdited,
     progressionProposal: progressionProposalEdited,
     trainingSubject: trainingSubjectEdited
   }
-  jest.spyOn(MedicalFilesApi, 'updateMedicalRecord').mockResolvedValue(medicalRecordUpdated)
-  await userEvent.click(within(createdMedicalRecordDialogEdit).getByRole('button', { name: 'Save' }))
-  expect(MedicalFilesApi.updateMedicalRecord).toHaveBeenCalledWith(medicalRecordUpdated)
-  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical record successfully saved'))
+  jest.spyOn(MedicalFilesApi, 'updateMedicalReport').mockResolvedValue(medicalReportUpdated)
+  await userEvent.click(within(createdMedicalReportDialogEdit).getByRole('button', { name: 'Save' }))
+  expect(MedicalFilesApi.updateMedicalReport).toHaveBeenCalledWith(medicalReportUpdated)
+  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully saved'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-const checkMedicalRecordConsult = async (medicalFilesWidget: HTMLElement): Promise<void> => {
-  const medicalRecordButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical_record_2022-01-02' })
-  await userEvent.click(medicalRecordButton)
-  const medicalRecordDialog = screen.getByRole('dialog')
-  expect(medicalRecordDialog).toHaveTextContent('Consult Medical_record_2022-01-021. Diagnosiswhatever diagnosis​2. Progression proposalwhatever proposal​3. Training subjecthere is the subject​Close')
+const checkMedicalReportConsult = async (medicalFilesWidget: HTMLElement): Promise<void> => {
+  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical report 2022-01-02' })
+  await userEvent.click(medicalReportButton)
+  const medicalReportDialog = screen.getByRole('dialog')
+  expect(medicalReportDialog).toHaveTextContent('Consult medical report 2022-01-021. Diagnosiswhatever diagnosis​2. Progression proposalwhatever proposal​3. Training subjecthere is the subject​Close')
 
-  const medicalRecordInputs = within(medicalRecordDialog).getAllByRole('textbox')
-  expect(medicalRecordInputs[0]).toBeDisabled()
-  expect(medicalRecordInputs[1]).toBeDisabled()
-  expect(medicalRecordInputs[2]).toBeDisabled()
-  await userEvent.click(within(medicalRecordDialog).getByRole('button', { name: 'Close' }))
+  const medicalReportInputs = within(medicalReportDialog).getAllByRole('textbox')
+  expect(medicalReportInputs[0]).toBeDisabled()
+  expect(medicalReportInputs[1]).toBeDisabled()
+  expect(medicalReportInputs[2]).toBeDisabled()
+  await userEvent.click(within(medicalReportDialog).getByRole('button', { name: 'Close' }))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-const checkMedicalRecordDelete = async (medicalFilesWidget: HTMLElement): Promise<void> => {
-  const deleteMedicalRecordButton = within(medicalFilesWidget).getByRole('button', { name: 'Delete Medical_record_01-01-2023' })
-  await userEvent.click(deleteMedicalRecordButton)
+const checkMedicalReportDelete = async (medicalFilesWidget: HTMLElement): Promise<void> => {
+  const deleteMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Delete medical report 01-01-2023' })
+  await userEvent.click(deleteMedicalReportButton)
   const deleteDialog = screen.getByRole('dialog')
-  expect(deleteDialog).toHaveTextContent('Delete Medical_record_01-01-2023Are you sure you want to delete Medical_record_01-01-2023?CancelDelete')
+  expect(deleteDialog).toHaveTextContent('Delete medical report 01-01-2023Are you sure you want to delete Medical report 01-01-2023?CancelDelete')
   const cancelButton = within(deleteDialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  await userEvent.click(deleteMedicalRecordButton)
+  await userEvent.click(deleteMedicalReportButton)
   const deleteButton = within(screen.queryByRole('dialog')).getByRole('button', { name: 'Delete' })
-  jest.spyOn(MedicalFilesApi, 'deleteMedicalRecord').mockResolvedValue(undefined)
+  jest.spyOn(MedicalFilesApi, 'deleteMedicalReport').mockResolvedValue(undefined)
   await userEvent.click(deleteButton)
-  expect(MedicalFilesApi.deleteMedicalRecord).toHaveBeenCalledWith(MEDICAL_RECORD_TO_CREATE_ID)
-  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical record successfully deleted'))
+  expect(MedicalFilesApi.deleteMedicalReport).toHaveBeenCalledWith(MEDICAL_REPORT_TO_CREATE_ID)
+  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully deleted'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical recordsMedical_record_2022-01-02New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02New')
 }
 
 export const checkMedicalWidgetForHcp = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical recordsMedical_record_2022-01-02New')
-  await checkMedicalRecordCancel(medicalFilesWidget)
-  await checkMedicalRecordCreate(medicalFilesWidget)
-  await checkMedicalRecordUpdate(medicalFilesWidget)
-  await checkMedicalRecordConsult(medicalFilesWidget)
-  await checkMedicalRecordDelete(medicalFilesWidget)
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02New')
+  await checkMedicalReportCancel(medicalFilesWidget)
+  await checkMedicalReportCreate(medicalFilesWidget)
+  await checkMedicalReportUpdate(medicalFilesWidget)
+  await checkMedicalReportConsult(medicalFilesWidget)
+  await checkMedicalReportDelete(medicalFilesWidget)
 }
 
 export const checkMedicalWidgetForPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical recordsMedical_record_2022-01-02')
-  expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical_record_2022-01-02' })).not.toBeInTheDocument()
-  await checkMedicalRecordConsult(medicalFilesWidget)
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02')
+  expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical report 2022-01-02' })).not.toBeInTheDocument()
+  await checkMedicalReportConsult(medicalFilesWidget)
 }

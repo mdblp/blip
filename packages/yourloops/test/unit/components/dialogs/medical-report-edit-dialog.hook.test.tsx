@@ -27,17 +27,17 @@
 
 import { renderHook } from '@testing-library/react-hooks'
 import * as authHookMock from '../../../../lib/auth'
-import useMedicalRecordEditDialog from '../../../../components/dialogs/medical-record-edit-dialog.hook'
-import { type MedicalRecord } from '../../../../lib/medical-files/models/medical-record.model'
+import { type MedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
+import { useMedicalReportEditDialog } from '../../../../components/dialogs/medical-report-edit-dialog.hook'
 
 jest.mock('../../../../lib/auth')
-describe('MedicalRecordEditDialog hook', () => {
+describe('MedicalReportEditDialog hook', () => {
   const onSaved = jest.fn()
   const patientId = 'patientId'
   const teamId = 'teamId'
   const authorId = 'authorId'
-  const medicalRecord: MedicalRecord = {
-    id: 'medicalRecordId',
+  const medicalReport: MedicalReport = {
+    id: 'medicalReportId',
     authorId,
     creationDate: '01-01-2023',
     patientId,
@@ -56,16 +56,16 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => true
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
         onSaved,
         teamId,
         patientId
       }))
-      expect(result.current.dialogTitle).toBe('consult-medical-record')
+      expect(result.current.dialogTitle).toBe('consult-medical-report')
     })
 
-    it('should be correct when user is a hcp that is not the author of the record', async () => {
+    it('should be correct when user is a hcp that is not the author of the report', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: 'fakeHcpId',
@@ -73,16 +73,16 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => true
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
         onSaved,
         teamId,
         patientId
       }))
-      expect(result.current.dialogTitle).toBe('consult-medical-record')
+      expect(result.current.dialogTitle).toBe('consult-medical-report')
     })
 
-    it('should be correct when user is a hcp that is the author of the record', async () => {
+    it('should be correct when user is a hcp that is the author of the report', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,
@@ -90,16 +90,16 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => true
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
         onSaved,
         teamId,
         patientId
       }))
-      expect(result.current.dialogTitle).toBe('edit-medical-record')
+      expect(result.current.dialogTitle).toBe('edit-medical-report')
     })
 
-    it('should be correct when no medical record is given', async () => {
+    it('should be correct when no medical report is given', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,
@@ -107,13 +107,13 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => true
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord: undefined,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport: undefined,
         onSaved,
         teamId,
         patientId
       }))
-      expect(result.current.dialogTitle).toBe('create-medical-record')
+      expect(result.current.dialogTitle).toBe('create-medical-report')
     })
   })
 
@@ -126,8 +126,8 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => true
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
         onSaved,
         teamId,
         patientId
@@ -135,7 +135,7 @@ describe('MedicalRecordEditDialog hook', () => {
       expect(result.current.isInReadOnly).toBeTruthy()
     })
 
-    it('should be false when user is a hcp that is not the author of the record', async () => {
+    it('should be false when user is a hcp that is not the author of the report', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,
@@ -143,8 +143,8 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => true
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
         onSaved,
         teamId,
         patientId
@@ -152,7 +152,7 @@ describe('MedicalRecordEditDialog hook', () => {
       expect(result.current.isInReadOnly).toBeFalsy()
     })
 
-    it('should be true when user is a hcp that is the author of the record', async () => {
+    it('should be true when user is a hcp that is the author of the report', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,
@@ -160,8 +160,8 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => false
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
         onSaved,
         teamId,
         patientId
@@ -169,7 +169,7 @@ describe('MedicalRecordEditDialog hook', () => {
       expect(result.current.isInReadOnly).toBeTruthy()
     })
 
-    it('should be false when no medical record is given', async () => {
+    it('should be false when no medical report is given', async () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
         user: {
           id: authorId,
@@ -177,8 +177,8 @@ describe('MedicalRecordEditDialog hook', () => {
           isUserHcp: () => true
         }
       }))
-      const { result } = renderHook(() => useMedicalRecordEditDialog({
-        medicalRecord: undefined,
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport: undefined,
         onSaved,
         teamId,
         patientId

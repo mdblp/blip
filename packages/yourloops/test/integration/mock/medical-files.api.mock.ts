@@ -38,8 +38,8 @@ export const mockMedicalFilesAPI = () => {
     link: 'https://linkToPrescription',
     uploadedAt: '2022-01-02T08:34:06.898Z'
   }])
-  jest.spyOn(MedicalFilesApi, 'getMedicalRecords').mockResolvedValue([{
-    id: 'medicalRecordId',
+  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
+    id: 'medicalReportId',
     authorId: 'authorId',
     creationDate: '2022-01-02T08:34:06.898Z',
     patientId: monitoredPatientId,
