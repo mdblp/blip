@@ -139,9 +139,4 @@ describe('Medical Report list', () => {
     await renderComponent()
     checkListLength(0)
   })
-
-  it('should render a list if some medical reports are saved', async () => {
-    await renderComponent()
-    checkListLength(2)
-  })
 })

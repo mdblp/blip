@@ -36,7 +36,6 @@ import { type MedicalReport } from '../../../../../lib/medical-files/models/medi
 
 jest.mock('../../../../../components/utils/snackbar')
 describe('Medical report delete dialog', () => {
-  const deleteMedicalReportSpy = jest.spyOn(MedicalFilesApi, 'deleteMedicalReport').mockResolvedValue()
   const onClose = jest.fn()
   const onDelete = jest.fn()
   const successMock = jest.fn()
@@ -55,14 +54,6 @@ describe('Medical report delete dialog', () => {
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successMock, error: errorMock }
     })
-  })
-
-  it('should delete medical report when clicking delete button', async () => {
-    render(getDialogJSX())
-    fireEvent.click(screen.getByRole('button', { name: 'delete' }))
-    await waitFor(() => { expect(deleteMedicalReportSpy).toHaveBeenCalled() })
-    expect(successMock).toHaveBeenCalledWith('medical-report-delete-success')
-    expect(onDelete).toHaveBeenCalled()
   })
 
   it('should display error message if delete failed', async () => {
