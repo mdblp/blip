@@ -45,7 +45,8 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import {
   RESPONSIVE_GRID_FOUR_COLUMNS,
   RESPONSIVE_GRID_FULL_WIDTH,
-  RESPONSIVE_GRID_HALF_WIDTH, RESPONSIVE_GRID_THREE_COLUMNS
+  RESPONSIVE_GRID_HALF_WIDTH,
+  RESPONSIVE_GRID_THREE_COLUMNS
 } from '../../css/css-utils'
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
