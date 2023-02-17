@@ -25,37 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { type BgBounds } from '../../../../models/blood-glucose.model'
-import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
-import { type ScaleFunction } from '../../../../models/scale-function.model'
-import { CbgDateTracesAnimated } from './cbg-date-traces-animated'
+import { type CbgDateTrace } from './cbg-date-trace.model'
+import { type CbgPositionData } from './cbg-position-data.model'
 
-interface CbgDateTracesAnimationContainerProps {
-  bgBounds: BgBounds
-  data: CbgDateTrace[][]
-  onSelectDate: (epoch: number) => void
-  topMargin: number
-  xScale: ScaleFunction
-  yScale: ScaleFunction
-}
-
-export const CbgDateTracesAnimationContainer: FunctionComponent<CbgDateTracesAnimationContainerProps> = (props) => {
-  const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props
-
-  return (
-    <g>
-      {data.map((datum: CbgDateTrace[], index: number) => (
-        <CbgDateTracesAnimated
-          bgBounds={bgBounds}
-          data={datum}
-          key={index}
-          onSelectDate={onSelectDate}
-          topMargin={topMargin}
-          xScale={xScale}
-          yScale={yScale}
-        />
-      ))}
-    </g>
-  )
+export interface FocusedCbgDateTrace {
+  data: CbgDateTrace
+  position: CbgPositionData
 }

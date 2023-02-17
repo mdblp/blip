@@ -31,13 +31,6 @@ const FOCUSED_CBG_SLICE = 'focusedCbgSlice'
 const FOCUSED_CBG_KEYS = 'focusedCbgSliceKeys'
 const SHOW_CBG_DATE_TRACES = 'showingCbgDateTraces'
 
-const CBG_FLAG_MAP = {
-  100: CBG_100_ENABLED,
-  80: CBG_80_ENABLED,
-  50: CBG_50_ENABLED,
-  median: CBG_MEDIAN_ENABLED
-}
-
 const initialState = {
   [CBG_FLAGS]: {
     [CBG_100_ENABLED]: true,
@@ -65,15 +58,6 @@ const trendsStateByUser = (state = {}, action) => {
         { [userId]: { $set: _.assign({}, initialState) } }
       )
     }
-    case actionTypes.FOCUS_TRENDS_CBG_DATE_TRACE: {
-      const { userId, cbgDatum: data, cbgPosition: position } = action.payload
-      return update(
-        state,
-        { [userId]: {
-          [FOCUSED_CBG_DATE_TRACE]: { $set: { data, position } }
-        } }
-      )
-    }
     case actionTypes.FOCUS_TRENDS_CBG_SLICE: {
       const { focusedKeys, sliceData: data, slicePosition: position, userId } = action.payload
       return update(
@@ -91,41 +75,6 @@ const trendsStateByUser = (state = {}, action) => {
       return update(
         state,
         { [userId]: { [SHOW_CBG_DATE_TRACES]: { $set: true } } }
-      )
-    }
-    case actionTypes.TURN_OFF_CBG_RANGE: {
-      const { userId, range } = action.payload
-      const key = _.get(CBG_FLAG_MAP, range)
-      if (!key) {
-        return state
-      }
-      return update(
-        state,
-        { [userId]: {
-          [CBG_FLAGS]: { [key]: { $set: false } }
-        } }
-      )
-    }
-    case actionTypes.TURN_ON_CBG_RANGE: {
-      const { userId, range } = action.payload
-      const key = _.get(CBG_FLAG_MAP, range)
-      if (!key) {
-        return state
-      }
-      return update(
-        state,
-        { [userId]: {
-          [CBG_FLAGS]: { [key]: { $set: true } }
-        } }
-      )
-    }
-    case actionTypes.UNFOCUS_TRENDS_CBG_DATE_TRACE: {
-      const { userId } = action.payload
-      return update(
-        state,
-        { [userId]: {
-          [FOCUSED_CBG_DATE_TRACE]: { $set: null }
-        } }
       )
     }
     case actionTypes.UNFOCUS_TRENDS_CBG_SLICE: {

@@ -30,12 +30,9 @@ import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { type BgBounds, ClassificationType } from '../../../../models/blood-glucose.model'
 import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
 import styles from './cbg-date-traces-animated.css'
-import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
-import { bindActionCreators, type Dispatch } from 'redux'
-import { connect } from 'react-redux'
-import { focusTrendsCbgDateTrace, unfocusTrendsCbgDateTrace } from 'tidepool-viz'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
 import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
 interface CbgDateTracesAnimatedProps {
   bgBounds: BgBounds
@@ -44,16 +41,13 @@ interface CbgDateTracesAnimatedProps {
   topMargin: number
   xScale: ScaleFunction
   yScale: ScaleFunction
-  // Added via redux
-  userId: string
-  focusDateTrace: (userId: string, dateTrace: CbgDateTrace, position: CbgPositionData) => void
-  unfocusDateTrace: (userId: string) => void
 }
 
 const CBG_RADIUS = 2.5
 
-const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (props) => {
-  const { userId, bgBounds, data, focusDateTrace, onSelectDate, topMargin, unfocusDateTrace, xScale, yScale } = props
+export const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (props) => {
+  const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props
+  const { focusCbgDateTrace, unfocusCbgDateTrace } = useTrendsContext()
 
   const handleClick = (dateTrace: CbgDateTrace): void => {
     if (dateTrace.epoch) {
@@ -62,7 +56,17 @@ const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (pr
   }
 
   const handleMouseOut = (): void => {
-    unfocusDateTrace(userId)
+    unfocusCbgDateTrace()
+  }
+
+  const handleMouseOver = (dateTrace: CbgDateTrace): void => {
+    focusCbgDateTrace(dateTrace, {
+      left: xScale(dateTrace.msPer24),
+      yPositions: {
+        top: yScale(dateTrace.value),
+        topMargin
+      }
+    })
   }
 
   return (
@@ -75,15 +79,11 @@ const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (pr
           id={`${CBG_CIRCLE_PREFIX_ID}-${dateTrace.id}`}
           data-testid="trends-cbg-circle"
           key={dateTrace.id}
-          onClick={() => { handleClick(dateTrace) }}
+          onClick={() => {
+            handleClick(dateTrace)
+          }}
           onMouseOver={() => {
-            focusDateTrace(userId, dateTrace, {
-              left: xScale(dateTrace.msPer24),
-              yPositions: {
-                top: yScale(dateTrace.value),
-                topMargin
-              }
-            })
+            handleMouseOver(dateTrace)
           }}
           onMouseOut={handleMouseOut}
           opacity={1}
@@ -93,22 +93,3 @@ const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps> = (pr
     </g>
   )
 }
-
-const mapStateToProps = (state: { blip: { currentPatientInViewId: string } }): { userId: string } => {
-  const { blip: { currentPatientInViewId } } = state
-  return {
-    userId: currentPatientInViewId
-  }
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): { unfocusDateTrace: typeof unfocusTrendsCbgDateTrace, focusDateTrace: typeof focusTrendsCbgDateTrace } => {
-  return bindActionCreators({
-    focusDateTrace: focusTrendsCbgDateTrace,
-    unfocusDateTrace: unfocusTrendsCbgDateTrace
-  }, dispatch)
-}
-
-// This workaround to avoid type error on `null` will be removed when redux is removed
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-export default connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(CbgDateTracesAnimated)
