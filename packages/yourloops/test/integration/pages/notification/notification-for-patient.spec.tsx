@@ -49,7 +49,7 @@ describe('Notification page for patient', () => {
       renderPage('/notifications')
     })
 
-    await checkAcceptTeamInvite()
     await closeDialogNotificationTeam()
+    await checkAcceptTeamInvite()
   })
 })

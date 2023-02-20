@@ -40,7 +40,8 @@ import { iTeamOne, teamOne } from '../../mock/team.api.mock'
 import {
   checkJoinTeamDialogCancel,
   checkJoinTeamDialogPrivacyCancel,
-  checkJoinTeamDialogDisplayErrorMessage, checkJoinTeamDialog
+  checkJoinTeamDialogDisplayErrorMessage,
+  checkJoinTeamDialog
 } from '../../assert/join-team'
 
 describe('Patient dashboard for HCP', () => {
@@ -51,7 +52,6 @@ describe('Patient dashboard for HCP', () => {
     mockPatientApiForPatients()
     mockDataAPI()
     mockMedicalFilesAPI()
-    mockPatientLogin(monitoredPatientAsTeamMember)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
@@ -64,13 +64,12 @@ describe('Patient dashboard for HCP', () => {
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
-
     await checkMedicalWidgetForPatient()
   })
 
   it('should close the dialog after clicking the join care team button with success message', async () => {
     await act(async () => {
-      renderPage('/')
+      renderPage(monitoredPatientDashboardRoute)
     })
 
     const badgeTeamMenu = screen.getByLabelText('Open team menu')

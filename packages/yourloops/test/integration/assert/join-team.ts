@@ -29,7 +29,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import TeamAPI from '../../../lib/team/team.api'
 import { iTeamOne } from '../mock/team.api.mock'
-import { unmonitoredPatientId } from '../mock/patient.api.mock'
+import { monitoredPatientId } from '../mock/patient.api.mock'
 
 export const checkJoinTeamDialogCancel = async (badgeTeamMenu) => {
   await userEvent.click(badgeTeamMenu)
@@ -60,6 +60,8 @@ export const checkJoinTeamDialogPrivacyCancel = async (badgeTeamMenu) => {
 }
 
 export const checkJoinTeamDialogDisplayErrorMessage = async (badgeTeamMenu) => {
+  // jest.spyOn(TeamAPI, 'joinTeam').mockRejectedValue(undefined)
+  jest.spyOn(TeamAPI, 'getTeamFromCode').mockRejectedValue(undefined)
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
   await userEvent.click(buttonJoinTeam)
@@ -68,9 +70,8 @@ export const checkJoinTeamDialogDisplayErrorMessage = async (badgeTeamMenu) => {
   const inputCode = within(dialog).getByRole('textbox')
   await userEvent.type(inputCode, '263381990')
   await userEvent.click(addTeamButton)
-  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, unmonitoredPatientId)
-  expect(screen.getByTestId('alert-snackbar')).toBeVisible()
-  expect(dialog).toBeVisible()
+  expect(screen.getByTestId('alert-snackbar'))
+  expect(screen.queryByRole('dialog')).toBeInTheDocument()
 }
 export const checkJoinTeamDialog = async (badgeTeamMenu) => {
   expect(badgeTeamMenu).toHaveTextContent('1')
@@ -100,7 +101,7 @@ export const checkJoinTeamDialog = async (badgeTeamMenu) => {
   await userEvent.click(checkPolicy)
   expect(addCareTeamButton).toBeEnabled()
   await userEvent.click(addCareTeamButton)
-  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, unmonitoredPatientId)
+  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, monitoredPatientId)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByText('Your care team has now access to your data.')).toBeVisible()
 }

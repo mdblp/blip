@@ -69,6 +69,6 @@ export const checkAcceptTeamInvite = async () => {
   await userEvent.click(checkPolicy)
   expect(addCareTeamButton).toBeEnabled()
   await userEvent.click(addCareTeamButton)
-  expect(NotificationApi.acceptInvitation).toHaveBeenCalledWith('unmonitoredPatientId', invitationTeam)
+  expect(NotificationApi.acceptInvitation).toHaveBeenCalledWith('monitoredPatientId', invitationTeam)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
