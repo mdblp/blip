@@ -78,7 +78,7 @@ const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement): Promis
   })
   expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully saved'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 01-01-2023Medical report 2022-01-02New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 01-01-2023Medical report 2022-01-02Medical report 2022-01-02_1New')
 }
 
 const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
@@ -140,13 +140,13 @@ const checkMedicalReportDelete = async (medicalFilesWidget: HTMLElement): Promis
   expect(MedicalFilesApi.deleteMedicalReport).toHaveBeenCalledWith(MEDICAL_REPORT_TO_CREATE_ID)
   expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully deleted'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02Medical report 2022-01-02_1New')
 }
 
 export const checkMedicalWidgetForHcp = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02Medical report 2022-01-02_1New')
   await checkMedicalReportCancel(medicalFilesWidget)
   await checkMedicalReportCreate(medicalFilesWidget)
   await checkMedicalReportUpdate(medicalFilesWidget)
