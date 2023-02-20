@@ -26,11 +26,10 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { noop } from 'lodash'
 import { type BgBounds } from '../../../../models/blood-glucose.model'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
-import CbgDateTracesAnimated from './cbg-date-traces-animated'
+import { CbgDateTracesAnimated } from './cbg-date-traces-animated'
 
 interface CbgDateTracesAnimationContainerProps {
   bgBounds: BgBounds
@@ -55,9 +54,6 @@ export const CbgDateTracesAnimationContainer: FunctionComponent<CbgDateTracesAni
           topMargin={topMargin}
           xScale={xScale}
           yScale={yScale}
-          // Added via redux
-          focusDateTrace={noop}
-          unfocusDateTrace={noop}
         />
       ))}
     </g>

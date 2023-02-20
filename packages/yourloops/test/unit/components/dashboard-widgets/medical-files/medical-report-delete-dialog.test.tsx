@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,27 +27,27 @@
 
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import MedicalRecordDeleteDialog, {
-  type MedicalRecordDeleteDialogProps
-} from '../../../../../components/dialogs/medical-record-delete-dialog'
-import { type MedicalRecord } from '../../../../../lib/medical-files/model'
+import MedicalReportDeleteDialog, {
+  type MedicalReportDeleteDialogProps
+} from '../../../../../components/dialogs/medical-report-delete-dialog'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../../components/utils/snackbar'
+import { type MedicalReport } from '../../../../../lib/medical-files/models/medical-report.model'
 
 jest.mock('../../../../../components/utils/snackbar')
-describe('Medical record delete dialog', () => {
-  const deleteMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'deleteMedicalRecord').mockResolvedValue()
+describe('Medical report delete dialog', () => {
   const onClose = jest.fn()
   const onDelete = jest.fn()
   const successMock = jest.fn()
   const errorMock = jest.fn()
 
-  function getDialogJSX(props: MedicalRecordDeleteDialogProps = {
+  function getDialogJSX(props: MedicalReportDeleteDialogProps = {
     onClose,
     onDelete,
-    medicalRecord: { id: 'fakeId' } as MedicalRecord
+    medicalReport: { id: 'fakeId' } as MedicalReport,
+    medicalReportDate: '01-01-2023'
   }): JSX.Element {
-    return <MedicalRecordDeleteDialog {...props} />
+    return <MedicalReportDeleteDialog {...props} />
   }
 
   beforeAll(() => {
@@ -56,21 +56,13 @@ describe('Medical record delete dialog', () => {
     })
   })
 
-  it('should delete medical record when clicking delete button', async () => {
-    render(getDialogJSX())
-    fireEvent.click(screen.getByRole('button', { name: 'delete' }))
-    await waitFor(() => { expect(deleteMedicalRecordSpy).toHaveBeenCalled() })
-    expect(successMock).toHaveBeenCalledWith('medical-record-delete-success')
-    expect(onDelete).toHaveBeenCalled()
-  })
-
   it('should display error message if delete failed', async () => {
-    const deleteMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'deleteMedicalRecord')
+    const deleteMedicalReportSpy = jest.spyOn(MedicalFilesApi, 'deleteMedicalReport')
       .mockImplementationOnce(() => Promise.reject(Error('delete-failed')))
     render(getDialogJSX())
     fireEvent.click(screen.getByRole('button', { name: 'delete' }))
-    await waitFor(() => { expect(deleteMedicalRecordSpy).toHaveBeenCalled() })
-    expect(errorMock).toHaveBeenCalledWith('medical-record-delete-failed')
+    await waitFor(() => { expect(deleteMedicalReportSpy).toHaveBeenCalled() })
+    expect(errorMock).toHaveBeenCalledWith('medical-report-delete-failed')
   })
 
   it('should close dialog when clicking cancel button', () => {

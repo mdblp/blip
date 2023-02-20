@@ -243,6 +243,11 @@ const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient)
 
 export const mockPatientApiForPatients = () => {
+  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember])
+  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+}
+
+export const mockPatientApiForCaregivers = () => {
   jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember, unmonitoredPatientAsTeamMember, monitoredPatientTwoAsTeamMember, pendingPatientAsTeamMember])
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }

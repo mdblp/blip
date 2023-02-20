@@ -30,6 +30,8 @@ import { renderPage } from '../../utils/render'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
+import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = '/dashboard'
@@ -38,6 +40,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientLogin(monitoredPatientAsTeamMember)
     mockPatientApiForPatients()
     mockDataAPI()
+    mockMedicalFilesAPI()
   })
 
   it('should display proper header', async () => {
@@ -46,5 +49,7 @@ describe('Patient dashboard for HCP', () => {
     })
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
+
+    await checkMedicalWidgetForPatient()
   })
 })

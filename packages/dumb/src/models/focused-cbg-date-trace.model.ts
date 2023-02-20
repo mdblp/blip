@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { monitoredPatientId } from './patient.api.mock'
+import { type CbgDateTrace } from './cbg-date-trace.model'
+import { type CbgPositionData } from './cbg-position-data.model'
 
-export const mockMedicalFilesAPI = () => {
-  jest.spyOn(MedicalFilesApi, 'getPrescriptions').mockResolvedValue([{
-    id: 'prescriptionMocked',
-    name: 'patientPrescription',
-    patientId: monitoredPatientId,
-    teamId: 'team1234',
-    prescriptorId: 'prescriptorId',
-    link: 'https://linkToPrescription',
-    uploadedAt: '2022-01-02T08:34:06.898Z'
-  }])
-  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
-    id: 'medicalReportId',
-    authorId: 'authorId',
-    creationDate: '2022-01-02T08:34:06.898Z',
-    patientId: monitoredPatientId,
-    teamId: 'team1234',
-    diagnosis: 'whatever diagnosis',
-    progressionProposal: 'whatever proposal',
-    trainingSubject: 'here is the subject'
-  },
-  {
-    id: 'medicalReportId2',
-    authorId: 'authorId',
-    creationDate: '2022-01-02T10:30:00.000Z',
-    patientId: monitoredPatientId,
-    teamId: 'team1234',
-    diagnosis: 'whatever diagnosis 2 ',
-    progressionProposal: 'whatever proposal 2',
-    trainingSubject: 'here is the subject 2'
-  }])
+export interface FocusedCbgDateTrace {
+  data: CbgDateTrace
+  position: CbgPositionData
 }
