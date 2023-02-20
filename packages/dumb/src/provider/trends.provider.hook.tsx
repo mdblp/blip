@@ -35,14 +35,12 @@ import { type FocusedCbgDateTrace } from '../models/focused-cbg-date-trace.model
 export interface TrendsContextResult {
   displayFlags: TrendsDisplayFlags
   focusCbgDateTrace: (cbgDateTrace: CbgDateTrace, position: CbgPositionData) => void
-  focusedCbgDateTrace: FocusedCbgDateTrace
+  focusedCbgDateTrace: FocusedCbgDateTrace | undefined
   toggleCbgSegments: (displayFlag: DisplayFlag) => void
   unfocusCbgDateTrace: () => void
 }
 
 export const useTrendsProviderHook = (): TrendsContextResult => {
-  const emptyCbgDateTraceValue = undefined as unknown as FocusedCbgDateTrace
-
   const [displayFlags, setDisplayFlags] = useState<TrendsDisplayFlags>({
     cbg50Enabled: true,
     cbg80Enabled: true,
@@ -50,7 +48,7 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
     cbgMedianEnabled: true
   })
 
-  const [focusedCbgDateTrace, setFocusedCbgDateTrace] = useState<FocusedCbgDateTrace>(emptyCbgDateTraceValue)
+  const [focusedCbgDateTrace, setFocusedCbgDateTrace] = useState<FocusedCbgDateTrace | undefined>(undefined)
 
   const toggleCbgSegments = (displayFlag: DisplayFlag): void => {
     switch (displayFlag) {
@@ -76,7 +74,7 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
   }
 
   const unfocusCbgDateTrace = (): void => {
-    setFocusedCbgDateTrace(emptyCbgDateTraceValue)
+    setFocusedCbgDateTrace(undefined)
   }
 
   return { displayFlags, focusCbgDateTrace, focusedCbgDateTrace, toggleCbgSegments, unfocusCbgDateTrace }
