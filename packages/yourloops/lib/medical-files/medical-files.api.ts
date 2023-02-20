@@ -26,7 +26,7 @@
  */
 import HttpService from '../http/http.service'
 import { type Prescription } from './models/prescription.model'
-import { type MedicalRecord, type NewMedicalRecord } from './models/medical-record.model'
+import { type MedicalReport, type NewMedicalReport } from './models/medical-report.model'
 
 export default class MedicalFilesApi {
   static async getPrescriptions(patientId: string, teamId: string): Promise<Prescription[]> {
@@ -64,39 +64,39 @@ export default class MedicalFilesApi {
     return data
   }
 
-  static async getMedicalRecords(patientId: string, teamId: string): Promise<MedicalRecord[]> {
-    const { data } = await HttpService.get<MedicalRecord[]>({
+  static async getMedicalReports(patientId: string, teamId: string): Promise<MedicalReport[]> {
+    const { data } = await HttpService.get<MedicalReport[]>({
       url: '/cargo/v0/medical-records',
       config: { params: { teamId, patientId } }
     })
     return data
   }
 
-  static async getMedicalRecord(patientId: string, teamId: string, medicalRecordId: string): Promise<MedicalRecord> {
-    const { data } = await HttpService.get<MedicalRecord>({
-      url: `/cargo/v0/medical-records/${medicalRecordId}`,
+  static async getMedicalReport(patientId: string, teamId: string, medicalReportId: string): Promise<MedicalReport> {
+    const { data } = await HttpService.get<MedicalReport>({
+      url: `/cargo/v0/medical-records/${medicalReportId}`,
       config: { params: { teamId, patientId } }
     })
     return data
   }
 
-  static async createMedicalRecord(payload: NewMedicalRecord): Promise<MedicalRecord> {
-    const { data } = await HttpService.post<MedicalRecord, NewMedicalRecord>({
+  static async createMedicalReport(payload: NewMedicalReport): Promise<MedicalReport> {
+    const { data } = await HttpService.post<MedicalReport, NewMedicalReport>({
       url: '/cargo/v0/medical-records',
       payload
     })
     return data
   }
 
-  static async updateMedicalRecord(payload: MedicalRecord): Promise<MedicalRecord> {
-    const { data } = await HttpService.post<MedicalRecord, MedicalRecord>({
+  static async updateMedicalReport(payload: MedicalReport): Promise<MedicalReport> {
+    const { data } = await HttpService.post<MedicalReport, MedicalReport>({
       url: '/cargo/v0/medical-records',
       payload
     })
     return data
   }
 
-  static async deleteMedicalRecord(medicalRecordId: string): Promise<void> {
-    await HttpService.delete({ url: `/cargo/v0/medical-records/${medicalRecordId}` })
+  static async deleteMedicalReport(medicalReportId: string): Promise<void> {
+    await HttpService.delete({ url: `/cargo/v0/medical-records/${medicalReportId}` })
   }
 }

@@ -33,6 +33,8 @@ import {
   monitoredPatientAsTeamMember
 } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
+import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import { iTeamOne, teamOne } from '../../mock/team.api.mock'
 import {
@@ -48,6 +50,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientLogin(monitoredPatientAsTeamMember)
     mockPatientApiForPatients()
     mockDataAPI()
+    mockMedicalFilesAPI()
     mockPatientLogin(monitoredPatientAsTeamMember)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
@@ -61,6 +64,8 @@ describe('Patient dashboard for HCP', () => {
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
+
+    await checkMedicalWidgetForPatient()
   })
 
   it('should close the dialog after clicking the join care team button with success message', async () => {
