@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,7 +52,12 @@ describe('AlarmCard', () => {
     container = document.createElement('div')
     document.body.appendChild(container);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserPatient: () => false } as User }
+      return {
+        user: {
+          isUserPatient: () => false,
+          isUserHcp: () => true
+        } as User
+      }
     })
   })
 
@@ -82,7 +87,12 @@ describe('AlarmCard', () => {
 
   it('should not display configure button when logged in user is a patient', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserPatient: () => true } as User }
+      return {
+        user: {
+          isUserPatient: () => true,
+          isUserHcp: () => false
+        } as User
+      }
     })
     mountComponent()
     expect(document.getElementById('configure-icon-button-id')).toBeNull()
@@ -90,7 +100,7 @@ describe('AlarmCard', () => {
 
   it('should display correct title when patient has no alarms', () => {
     mountComponent()
-    expect(document.getElementById('alarm-card-header-id').querySelector('.MuiCardHeader-title').innerHTML).toEqual('events')
+    expect(document.querySelector('[data-testid="alarm-card"] .MuiCardHeader-title').innerHTML).toEqual('events')
   })
 
   it('should display correct title patient has 2 alarms', () => {
@@ -104,7 +114,7 @@ describe('AlarmCard', () => {
     }
     const patientWithAlarms = createPatient('fakePatientId', [], undefined, undefined, undefined, undefined, alarm)
     mountComponent({ patient: patientWithAlarms })
-    expect(document.getElementById('alarm-card-header-id').querySelector('.MuiCardHeader-title').innerHTML).toEqual('events (+2)')
+    expect(document.querySelector('[data-testid="alarm-card"] .MuiCardHeader-title').innerHTML).toEqual('events (+2)')
   })
 
   it('should open dialog when clicking on configure button and close it when clicking on cancel', () => {

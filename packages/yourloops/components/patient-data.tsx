@@ -42,12 +42,8 @@ import { setPageTitle } from '../lib/utils'
 import DialogDatePicker from './date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
-import ChatWidget from './chat/chat-widget'
-import AlarmCard from './alarm/alarm-card'
-import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
-import { type Team, useTeam } from '../lib/team'
 import { type Patient } from '../lib/patient/models/patient.model'
 import { type PatientTeam } from '../lib/patient/models/patient-team.model'
 import { useUserName } from '../lib/custom-hooks/user-name.hook'
@@ -98,8 +94,6 @@ function PatientDataPage(): JSX.Element | null {
   const { getUserName } = useUserName()
 
   const { selectedTeamId, selectTeam } = useSelectedTeamContext()
-  const { getMedicalTeams } = useTeam()
-  const isSelectedTeamMedical = user.isUserHcp() && getMedicalTeams().some((team: Team) => team.id === selectedTeamId)
 
   useEffect(() => {
     const patientTeams = getPatientById(paramPatientId)?.teams
@@ -160,16 +154,11 @@ function PatientDataPage(): JSX.Element | null {
         config={appConfig}
         api={blipApi}
         patient={patient}
-        userIsHCP={!!userIsHCP}
         setPatient={setPatient}
-        isSelectedTeamMedical={isSelectedTeamMedical}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
-        chatWidget={ChatWidget}
-        alarmCard={AlarmCard}
-        medicalFilesWidget={MedicalFilesWidget}
       />
     </Container>
   )
