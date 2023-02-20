@@ -27,8 +27,6 @@ describe('trendsStateByUser', () => {
 
   const datum = { median: 100 }
   const position = { median: 10 }
-  const allPositions = [{ median: 10 }, { median: 10 }]
-  const allSmbgsOnDate = [{ id: 8, value: 200, msPer24: 10000 }]
 
   it('should return the initial state of {}', () => {
     expect(trendsStateByUser(undefined, {})).to.deep.equal({})
@@ -43,13 +41,6 @@ describe('trendsStateByUser', () => {
         payload: { patientId: USER_1 }
       })).to.deep.equal({
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: true,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
           showingCbgDateTraces: false
@@ -61,13 +52,6 @@ describe('trendsStateByUser', () => {
     it('should not change anything if the user is in tree already', () => {
       const initialState = {
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
           showingCbgDateTraces: false
@@ -84,13 +68,6 @@ describe('trendsStateByUser', () => {
     it('should set up the default trends state for an additional user w/o wiping first', () => {
       const initialState = {
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
           showingCbgDateTraces: false
@@ -102,71 +79,15 @@ describe('trendsStateByUser', () => {
         payload: { patientId: USER_2 }
       })).to.deep.equal({
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
           showingCbgDateTraces: false
         },
         [USER_2]: {
-          cbgFlags: {
-            cbg100Enabled: true,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
           showingCbgDateTraces: false
         }
-      })
-      expect(mutationTracker.hasMutated(tracked)).to.be.false
-    })
-  })
-
-  describe('FOCUS_TRENDS_CBG_DATE_TRACE', () => {
-    const cbgDatum = { value: 100 }
-    const cbgPosition = { left: 10, yPositions: { top: 50 } }
-
-    it('should store the hovered cbg and associated scaled position data', () => {
-      const initialState = {
-        [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
-          focusedCbgSlice: null,
-          focusedCbgSliceKeys: ['median'],
-          showingCbgDateTraces: false
-        }
-      }
-      const tracked = mutationTracker.trackObj(initialState)
-      expect(trendsStateByUser(initialState, {
-        type: actionTypes.FOCUS_TRENDS_CBG_DATE_TRACE,
-        payload: { userId: USER_1, cbgDatum, cbgPosition }
-      })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: {
-          data: cbgDatum,
-          position: cbgPosition
-        },
-        focusedCbgSlice: null,
-        focusedCbgSliceKeys: ['median'],
-        showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
     })
@@ -178,13 +99,6 @@ describe('trendsStateByUser', () => {
     it("should store focused slice, slice's position, and the focused slice keys", () => {
       const initialState = {
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: ['median'],
           showingCbgDateTraces: false
@@ -195,96 +109,8 @@ describe('trendsStateByUser', () => {
         type: actionTypes.FOCUS_TRENDS_CBG_SLICE,
         payload: { focusedKeys, sliceData: datum, slicePosition: position, userId: USER_1 }
       })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
         focusedCbgSlice: { data: datum, position },
         focusedCbgSliceKeys: focusedKeys,
-        showingCbgDateTraces: false
-      })
-      expect(mutationTracker.hasMutated(tracked)).to.be.false
-    })
-  })
-
-  describe('FOCUS_TRENDS_SMBG', () => {
-    it("should store focused datum and the datum's position", () => {
-      const initialState = {
-        [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
-          focusedCbgSlice: null,
-          focusedCbgSliceKeys: null,
-          showingCbgDateTraces: false
-        }
-      }
-      const tracked = mutationTracker.trackObj(initialState)
-      const date = {}
-
-      expect(trendsStateByUser(initialState, {
-        type: actionTypes.FOCUS_TRENDS_SMBG,
-        payload: {
-          smbgDatum: datum,
-          smbgPosition: position,
-          allSmbgsOnDate,
-          allPositions,
-          date,
-          userId: USER_1
-        }
-      })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
-        focusedCbgSlice: null,
-        focusedCbgSliceKeys: null,
-        showingCbgDateTraces: false
-      })
-      expect(mutationTracker.hasMutated(tracked)).to.be.false
-    })
-  })
-
-  describe('FOCUS_TRENDS_SMBG_RANGE_AVG', () => {
-    it("should store focused datum and the datum's position", () => {
-      const initialState = {
-        [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
-          focusedCbgSlice: null,
-          focusedCbgSliceKeys: null,
-          showingCbgDateTraces: false
-        }
-      }
-      const tracked = mutationTracker.trackObj(initialState)
-      expect(trendsStateByUser(initialState, {
-        type: actionTypes.FOCUS_TRENDS_SMBG_RANGE_AVG,
-        payload: { rangeAvgData: datum, rangeAvgPosition: position, userId: USER_1 }
-      })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
-        focusedCbgSlice: null,
-        focusedCbgSliceKeys: null,
         showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
@@ -295,13 +121,6 @@ describe('trendsStateByUser', () => {
     it('should reset to the initial state of {}', () => {
       const initialState = {
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: { datum, position },
           focusedCbgSliceKeys: ['median'],
           showingCbgDateTraces: false
@@ -319,13 +138,6 @@ describe('trendsStateByUser', () => {
     it('should set showingCbgDateTraces to true', () => {
       const initialState = {
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
           focusedCbgSlice: null,
           focusedCbgSliceKeys: null,
           showingCbgDateTraces: false
@@ -336,130 +148,9 @@ describe('trendsStateByUser', () => {
         type: actionTypes.SHOW_CBG_DATE_TRACES,
         payload: { userId: USER_1 }
       })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
         showingCbgDateTraces: true
-      })
-      expect(mutationTracker.hasMutated(tracked)).to.be.false
-    })
-  })
-
-  describe('TURN_OFF_CBG_RANGE', () => {
-    it('should set the specified cbgFlag to false', () => {
-      const initialState = {
-        [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
-          focusedCbgSlice: null,
-          focusedCbgSliceKeys: null,
-          showingCbgDateTraces: false
-        }
-      }
-      const tracked = mutationTracker.trackObj(initialState)
-      expect(trendsStateByUser(initialState, {
-        type: actionTypes.TURN_OFF_CBG_RANGE,
-        payload: { userId: USER_1, range: '80' }
-      })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: false,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
-        focusedCbgSlice: null,
-        focusedCbgSliceKeys: null,
-        showingCbgDateTraces: false
-      })
-      expect(mutationTracker.hasMutated(tracked)).to.be.false
-    })
-  })
-
-  describe('TURN_ON_CBG_RANGE', () => {
-    it('should set the specified cbgFlag to true', () => {
-      const initialState = {
-        [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: null,
-          focusedCbgSlice: null,
-          focusedCbgSliceKeys: null,
-          showingCbgDateTraces: false
-        }
-      }
-      const tracked = mutationTracker.trackObj(initialState)
-      expect(trendsStateByUser(initialState, {
-        type: actionTypes.TURN_ON_CBG_RANGE,
-        payload: { userId: USER_1, range: '100' }
-      })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: true,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
-        focusedCbgSlice: null,
-        focusedCbgSliceKeys: null,
-        showingCbgDateTraces: false
-      })
-      expect(mutationTracker.hasMutated(tracked)).to.be.false
-    })
-  })
-
-  describe('UNFOCUS_TRENDS_CBG_DATE_TRACE', () => {
-    const cbgDatum = { value: 100 }
-    const cbgPosition = { left: 10, yPositions: { top: 50 } }
-
-    it('should reset the focusedCbgDateTrace state to `null`', () => {
-      const initialState = {
-        [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: {
-            data: cbgDatum,
-            position: cbgPosition
-          },
-          focusedCbgSlice: null,
-          focusedCbgSliceKeys: null,
-          showingCbgDateTraces: false
-        }
-      }
-      const tracked = mutationTracker.trackObj(initialState)
-      expect(trendsStateByUser(initialState, {
-        type: actionTypes.UNFOCUS_TRENDS_CBG_DATE_TRACE,
-        payload: { userId: USER_1 }
-      })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
-        focusedCbgSlice: null,
-        focusedCbgSliceKeys: null,
-        showingCbgDateTraces: false
       })
       expect(mutationTracker.hasMutated(tracked)).to.be.false
     })
@@ -469,13 +160,6 @@ describe('trendsStateByUser', () => {
     it('should reset all focusedCbg* props and showingCbgDateTraces', () => {
       const initialState = {
         [USER_1]: {
-          cbgFlags: {
-            cbg100Enabled: false,
-            cbg80Enabled: true,
-            cbg50Enabled: true,
-            cbgMedianEnabled: true
-          },
-          focusedCbgDateTrace: {},
           focusedCbgSlice: { datum, position },
           focusedCbgSliceKeys: ['median'],
           showingCbgDateTraces: true
@@ -486,13 +170,6 @@ describe('trendsStateByUser', () => {
         type: actionTypes.UNFOCUS_TRENDS_CBG_SLICE,
         payload: { userId: USER_1 }
       })[USER_1]).to.deep.equal({
-        cbgFlags: {
-          cbg100Enabled: false,
-          cbg80Enabled: true,
-          cbg50Enabled: true,
-          cbgMedianEnabled: true
-        },
-        focusedCbgDateTrace: null,
         focusedCbgSlice: null,
         focusedCbgSliceKeys: null,
         showingCbgDateTraces: false

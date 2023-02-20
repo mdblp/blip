@@ -30,6 +30,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2139 Remove weekly reports
 - YLP-2143 Migrate TrendsContainer to dumb
 - YLP-2159 Get rid of connectWithTransitionGroup in viz
+- YLP-2162 Migrate CbgDateTrace store from redux to TrendsProvider
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
