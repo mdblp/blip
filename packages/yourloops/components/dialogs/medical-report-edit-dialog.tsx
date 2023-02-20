@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,14 +44,14 @@ import Typography from '@mui/material/Typography'
 
 import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import useMedicalRecordEditDialog from './medical-record-edit-dialog.hook'
-import { useAuth } from '../../lib/auth'
-import { type MedicalRecord } from '../../lib/medical-files/models/medical-record.model'
+import { useMedicalReportEditDialog } from './medical-report-edit-dialog.hook'
+import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
 
-export interface MedicalRecordEditDialogProps extends CategoryProps {
+export interface MedicalReportEditDialogProps extends CategoryProps {
   onClose: () => void
-  onSaved: (payload: MedicalRecord) => void
-  medicalRecord?: MedicalRecord
+  onSaved: (payload: MedicalReport) => void
+  medicalReport?: MedicalReport
+  medicalReportDate?: string
 }
 
 const classes = makeStyles()((theme: Theme) => ({
@@ -75,23 +75,23 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
-export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
+export default function MedicalReportEditDialog(props: MedicalReportEditDialogProps): JSX.Element {
   const { classes: { title, textArea, divider } } = classes()
   const { t } = useTranslation('yourloops')
-  const { user } = useAuth()
-  const { onClose, onSaved, medicalRecord, teamId, patientId } = props
-  const readonly = user.isUserPatient()
+  const { onClose, onSaved, medicalReport, teamId, patientId, medicalReportDate } = props
   const {
     diagnosis,
+    dialogTitle,
     setDiagnosis,
     progressionProposal,
-    setProgressionProposal,
     inProgress,
+    isInReadOnly,
     trainingSubject,
+    isSaveButtonDisabled,
+    setProgressionProposal,
     setTrainingSubject,
-    disabled,
-    saveMedicalRecord
-  } = useMedicalRecordEditDialog({ onSaved, medicalRecord, teamId, patientId })
+    saveMedicalReport
+  } = useMedicalReportEditDialog({ onSaved, medicalReport, teamId, patientId, medicalReportDate })
 
   return (
     <Dialog
@@ -104,7 +104,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
         <Box className={title}>
           <DescriptionOutlinedIcon />
           <Typography variant="h5">
-            {t('write-medical-record')}
+            {dialogTitle}
           </Typography>
         </Box>
       </DialogTitle>
@@ -119,9 +119,11 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           fullWidth
           multiline
           rows={4}
-          disabled={readonly}
+          disabled={isInReadOnly}
           data-testid="diagnosis"
-          onChange={(event) => { setDiagnosis(event.target.value) }}
+          onChange={(event) => {
+            setDiagnosis(event.target.value)
+          }}
         />
 
         <Divider className={divider} />
@@ -135,9 +137,11 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           fullWidth
           multiline
           rows={4}
-          disabled={readonly}
+          disabled={isInReadOnly}
           data-testid="progression-proposal"
-          onChange={(event) => { setProgressionProposal(event.target.value) }}
+          onChange={(event) => {
+            setProgressionProposal(event.target.value)
+          }}
         />
 
         <Divider className={divider} />
@@ -151,27 +155,30 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           fullWidth
           multiline
           rows={4}
-          disabled={readonly}
+          disabled={isInReadOnly}
           data-testid="training-subject"
-          onChange={(event) => { setTrainingSubject(event.target.value) }}
+          onChange={(event) => {
+            setTrainingSubject(event.target.value)
+          }}
         />
       </DialogContent>
 
       <DialogActions>
         <Button
+          data-testid="medical-report-close"
           disableElevation
           onClick={onClose}
         >
-          {t('cancel')}
+          {isInReadOnly ? t('close') : t('cancel')}
         </Button>
-        {!user.isUserPatient() &&
+        {!isInReadOnly &&
           <ProgressIconButtonWrapper inProgress={inProgress}>
             <Button
               variant="contained"
               color="primary"
               disableElevation
-              disabled={disabled}
-              onClick={saveMedicalRecord}
+              disabled={isSaveButtonDisabled}
+              onClick={saveMedicalReport}
             >
               {t('save')}
             </Button>

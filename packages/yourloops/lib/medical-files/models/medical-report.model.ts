@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface NewMedicalRecord {
+export interface NewMedicalReport {
   patientId: string
   teamId: string
   diagnosis: string
@@ -33,8 +33,17 @@ export interface NewMedicalRecord {
   trainingSubject: string
 }
 
-export interface MedicalRecord extends NewMedicalRecord {
+export interface MedicalReport extends NewMedicalReport {
   id: string
   authorId: string
   creationDate: string
+}
+
+export interface MedicalReportWithIndex {
+  medicalReport: MedicalReport
+  index?: number
+}
+
+export interface MedicalReportDialogPayload extends MedicalReportWithIndex {
+  medicalReportDate: string
 }

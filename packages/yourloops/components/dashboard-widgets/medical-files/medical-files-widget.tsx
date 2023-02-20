@@ -33,7 +33,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import MedicalRecordList from './medical-record-list'
+import MedicalReportList from './medical-report-list'
 import PrescriptionList from './prescription-list'
 import PatientUtils from '../../../lib/patient/patient.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
@@ -79,7 +79,7 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
       />
       <CardContent className={classes.cardContent}>
         <PrescriptionList teamId={team.teamId} patientId={patient.userid} />
-        <MedicalRecordList teamId={team.teamId} patientId={patient.userid} />
+        <MedicalReportList teamId={team.teamId} patientId={patient.userid} />
       </CardContent>
     </Card>
   )

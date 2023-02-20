@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,9 +29,9 @@ import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import PrescriptionList from '../../../../../components/dashboard-widgets/medical-files/prescription-list'
 import MedicalFilesApi from '../../../../../lib/medical-files/medical-files.api'
-import { type Prescription } from '../../../../../lib/medical-files/model'
 import * as authHookMock from '../../../../../lib/auth'
 import type User from '../../../../../lib/auth/models/user.model'
+import { type Prescription } from '../../../../../lib/medical-files/models/prescription.model'
 
 jest.mock('../../../../../lib/auth')
 describe('Prescription list', () => {
