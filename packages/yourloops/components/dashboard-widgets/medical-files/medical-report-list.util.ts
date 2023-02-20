@@ -27,23 +27,27 @@
 
 import { type MedicalReport, type MedicalReportWithIndex } from '../../../lib/medical-files/models/medical-report.model'
 
-const getMedicalReportsOrderedByDate = (medicalReports: MedicalReport[]): Map<string, MedicalReportWithIndex[]> => {
+const getSortedMedicalReports = (medicalReports: MedicalReport[]): MedicalReport[] => {
   return medicalReports.sort((firstMedicalReport, secondMedicalReport) => {
     return firstMedicalReport.creationDate.localeCompare(secondMedicalReport.creationDate)
-  }).reduce((medicalReportsOrderedByDate: Map<string, MedicalReportWithIndex[]>, medicalReport) => {
+  })
+}
+
+const getMedicalReportsOrderedByDate = (medicalReports: MedicalReport[]): Map<string, MedicalReportWithIndex[]> => {
+  const sortedMedicalReports = getSortedMedicalReports(medicalReports)
+  return sortedMedicalReports.reduce((medicalReportsOrderedByDate: Map<string, MedicalReportWithIndex[]>, medicalReport) => {
     const creationDate = medicalReport.creationDate.substring(0, 10)
     const medicalReportToAdd: MedicalReportWithIndex = {
       medicalReport
     }
-    const isDateAlreadyIncluded = !!medicalReportsOrderedByDate.get(creationDate)
-    if (isDateAlreadyIncluded) {
-      const medicalReportsAtGivenDate = medicalReportsOrderedByDate.get(creationDate)
+    const medicalReportsAtGivenDate = medicalReportsOrderedByDate.get(creationDate)
+    if (medicalReportsAtGivenDate) {
       medicalReportToAdd.index = medicalReportsAtGivenDate.length
       medicalReportsAtGivenDate.push(medicalReportToAdd)
       medicalReportsOrderedByDate.set(creationDate, medicalReportsAtGivenDate)
-      return medicalReportsOrderedByDate
+    } else {
+      medicalReportsOrderedByDate.set(creationDate, [medicalReportToAdd])
     }
-    medicalReportsOrderedByDate.set(creationDate, [medicalReportToAdd])
     return medicalReportsOrderedByDate
   }, new Map())
 }

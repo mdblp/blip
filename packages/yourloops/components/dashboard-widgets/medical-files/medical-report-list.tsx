@@ -101,7 +101,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   }
 
   const updateMedicalReportList = (payload: MedicalReport): void => {
-    const index = medicalReports.findIndex((mr) => mr.id === payload.id)
+    const index = medicalReports.findIndex((medicalReport) => medicalReport.id === payload.id)
     if (index > -1) {
       medicalReports.splice(index, 1, payload)
     } else {
