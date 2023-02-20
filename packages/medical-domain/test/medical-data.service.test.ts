@@ -41,6 +41,8 @@ import type BasicData from '../src/domains/repositories/medical/basics-data.serv
 import * as BasiscsDataService from '../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../src/domains/repositories/time/time.service'
 import crypto from 'crypto'
+import { DatumType } from '../src/domains/models/medical/datum/enums/datum-type.enum'
+import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/deviceevent-subtype.enum'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {
@@ -51,68 +53,24 @@ Object.defineProperty(global, 'crypto', {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const knownTypes: Array<Record<string, unknown>> = [
-  {
-    type: 'basal'
-  },
-  {
-    type: 'bolus'
-  },
-  {
-    type: 'cbg'
-  },
-  {
-    type: 'food'
-  },
-  {
-    type: 'message'
-  },
-  {
-    type: 'physicalActivity'
-  },
-  {
-    type: 'pumpSettings'
-  },
-  {
-    type: 'smbg'
-  },
-  {
-    type: 'upload'
-  },
-  {
-    type: 'wizard'
-  },
-  {
-    type: 'deviceEvent',
-    subType: 'confidential'
-  },
-  {
-    type: 'deviceEvent',
-    subType: 'deviceParameter'
-  },
-  {
-    type: 'deviceEvent',
-    subType: 'reservoirChange'
-  },
-  {
-    type: 'deviceEvent',
-    subType: 'zen'
-  },
-  {
-    type: 'deviceEvent',
-    subType: 'warmup'
+const knownTypes: Array<Record<string, unknown>> = Object.values(DatumType).flatMap(datumType => {
+  if (datumType !== DatumType.DeviceEvent) {
+    return [{ type: datumType }]
   }
-]
+  return Object.values(DeviceEventSubtype).map(
+    (datumSubtype) => ({ type: datumType, subType: datumSubtype })
+  )
+})
 
 const datumNormalizeMock = jest.fn(
   (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
-    return createRandomDatum(rawData.type as string, rawData.subType as string | undefined)
+    return createRandomDatum(rawData.type as DatumType, rawData.subType as DeviceEventSubtype | undefined)
   }
 )
 
 const datumNormalizeTzMock = jest.fn(
   (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
-    const datum = createRandomDatum(rawData.type as string, rawData.subType as string | undefined)
+    const datum = createRandomDatum(rawData.type as DatumType, rawData.subType as DeviceEventSubtype | undefined)
     if (rawData.type === 'bolus') {
       const pastDate = faker.date.between('2022-08-01T00:00:00.000Z', '2022-08-31T00:00:00.000Z')
       datum.epoch = pastDate.valueOf()
@@ -127,7 +85,7 @@ const datumNormalizeTzMock = jest.fn(
       // DST offset (Summer time)
       datum.displayOffset = -120
     }
-    // DST in Europe/Parus is on Sunday, March 27, 2022 at 01:00 GMT
+    // DST in Europe/Paris is on Sunday, March 27, 2022 at 01:00 GMT
     if (rawData.type === 'cbg') {
       const pastDate = faker.date.between('2022-03-27T00:00:00.001Z', '2022-03-27T00:59:59.999Z')
       datum.epoch = pastDate.valueOf()

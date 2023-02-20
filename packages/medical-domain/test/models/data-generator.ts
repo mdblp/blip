@@ -27,10 +27,10 @@
 
 import { faker } from '@faker-js/faker'
 import type Bolus from '../../src/domains/models/medical/datum/bolus.model'
-import { bolusSubTypes } from '../../src/domains/models/medical/datum/bolus.model'
+import { BolusSubtype } from '../../src/domains/models/medical/datum/enums/bolus-subtype.enum'
 import type Basal from '../../src/domains/models/medical/datum/basal.model'
 import type Cbg from '../../src/domains/models/medical/datum/cbg.model'
-import { bgUnits } from '../../src/domains/models/medical/datum/cbg.model'
+import { bgUnits } from '../../src/domains/models/medical/datum/bg.model'
 import type BaseDatum from '../../src/domains/models/medical/datum/basics/base-datum.model'
 import type ConfidentialMode from '../../src/domains/models/medical/datum/confidential-mode.model'
 import type Duration from '../../src/domains/models/medical/datum/basics/duration.model'
@@ -46,13 +46,21 @@ import type WarmUp from '../../src/domains/models/medical/datum/warm-up.model'
 import type Wizard from '../../src/domains/models/medical/datum/wizard.model'
 import type ZenMode from '../../src/domains/models/medical/datum/zen-mode.model'
 import type Datum from '../../src/domains/models/medical/datum.model'
+import { DatumType } from '../../src/domains/models/medical/datum/enums/datum-type.enum'
+import Source from '../../src/domains/models/medical/datum/enums/source.enum'
+import DurationUnit from '../../src/domains/models/medical/datum/enums/duration-unit.enum'
+import Unit from '../../src/domains/models/medical/datum/enums/unit.enum'
+import Intensity from '../../src/domains/models/medical/datum/enums/intensity.enum'
+import PumpManufacturer from '../../src/domains/models/medical/datum/enums/pump-manufacturer.enum'
+import { DeviceEventSubtype } from '../../src/domains/models/medical/datum/enums/deviceevent-subtype.enum'
+import { getTrendsTime } from '../../src/domains/repositories/time/time.service'
 
-function createBaseData(): BaseDatum {
-  const pastDate = faker.date.recent(20)
+function createBaseData(date?: Date): BaseDatum {
+  const pastDate = date || faker.date.recent(20)
   return {
     id: faker.datatype.uuid(),
-    type: 'upload',
-    source: 'Diabeloop',
+    type: DatumType.Upload,
+    source: Source.Diabeloop,
     timezone: 'Europe/Paris',
     epoch: pastDate.valueOf(),
     displayOffset: -60,
@@ -61,15 +69,15 @@ function createBaseData(): BaseDatum {
   }
 }
 
-function createBaseDurationData(): BaseDatum & Duration {
-  const baseData = createBaseData()
+function createBaseDurationData(date?: Date): BaseDatum & Duration {
+  const baseData = createBaseData(date)
   const duration = faker.datatype.number({ min: 60000, max: 300000 })
   const epochEnd = baseData.epoch + duration
   const normalEnd = new Date(epochEnd).toISOString()
   return {
     ...baseData,
     duration: {
-      units: 'ms',
+      units: DurationUnit.Milliseconds,
       value: duration
     },
     normalEnd,
@@ -77,14 +85,14 @@ function createBaseDurationData(): BaseDatum & Duration {
   }
 }
 
-function createRandomBasal(): Basal {
-  const baseData = createBaseData()
+function createRandomBasal(date?: Date): Basal {
+  const baseData = createBaseData(date)
   const duration = faker.datatype.number({ min: 60000, max: 300000 })
   const epochEnd = baseData.epoch + duration
   const normalEnd = new Date(epochEnd).toISOString()
   return {
     ...baseData,
-    type: 'basal',
+    type: DatumType.Basal,
     subType: 'automated',
     uploadId: faker.datatype.uuid(),
     internalId: faker.datatype.uuid(),
@@ -96,11 +104,11 @@ function createRandomBasal(): Basal {
   }
 }
 
-function createRandomBolus(): Bolus {
+function createRandomBolus(date?: Date): Bolus {
   return {
-    ...createBaseData(),
-    type: 'bolus',
-    subType: faker.helpers.arrayElement(bolusSubTypes),
+    ...createBaseData(date),
+    type: DatumType.Bolus,
+    subType: faker.helpers.arrayElement(Object.values(BolusSubtype)),
     uploadId: faker.datatype.uuid(),
     normal: 0,
     prescriptor: 'test',
@@ -108,23 +116,23 @@ function createRandomBolus(): Bolus {
   }
 }
 
-function createRandomCbg(): Cbg {
+function createRandomCbg(date?: Date): Cbg {
+  const base = createBaseData(date)
   return {
-    ...createBaseData(),
-    type: 'cbg',
+    ...base,
+    type: DatumType.Cbg,
     units: faker.helpers.arrayElement(bgUnits),
     value: faker.datatype.number(),
-    localDate: '',
-    isoWeekday: '',
-    msPer24: 0
+    ...getTrendsTime(base.epoch, base.timezone),
+    deviceName: 'Unknown'
   }
 }
 
-function createModeData(mode: 'confidential' | 'warmup' | 'zen'): ConfidentialMode | WarmUp | ZenMode {
+function createModeData(mode: DeviceEventSubtype.Confidential | DeviceEventSubtype.Warmup | DeviceEventSubtype.Zen, date?: Date): ConfidentialMode | WarmUp | ZenMode {
   const inputTime = faker.date.past().toISOString()
   return {
-    ...createBaseDurationData(),
-    type: 'deviceEvent',
+    ...createBaseDurationData(date),
+    type: DatumType.DeviceEvent,
     subType: mode,
     uploadId: faker.datatype.uuid(),
     guid: faker.datatype.uuid(),
@@ -132,38 +140,38 @@ function createModeData(mode: 'confidential' | 'warmup' | 'zen'): ConfidentialMo
   }
 }
 
-function createRandomConfidentialMode(): ConfidentialMode {
-  return createModeData('confidential') as ConfidentialMode
+function createRandomConfidentialMode(date?: Date): ConfidentialMode {
+  return createModeData(DeviceEventSubtype.Confidential, date) as ConfidentialMode
 }
 
-function createRandomDeviceParameterChange(): DeviceParameterChange {
+function createRandomDeviceParameterChange(date?: Date): DeviceParameterChange {
   return {
-    ...createBaseData(),
-    type: 'deviceEvent',
-    subType: 'deviceParameter',
+    ...createBaseData(date),
+    type: DatumType.DeviceEvent,
+    subType: DeviceEventSubtype.DeviceParameter,
     params: []
   }
 }
 
-function createRandomMeal(): Meal {
+function createRandomMeal(date?: Date): Meal {
   return {
-    ...createBaseData(),
-    type: 'food',
+    ...createBaseData(date),
+    type: DatumType.Food,
     meal: 'rescuecarbs',
     uploadId: faker.datatype.uuid(),
     nutrition: {
       carbohydrate: {
         net: faker.datatype.number({ min: 0, max: 200, precision: 0.01 }),
-        units: 'g'
+        units: Unit.Gram
       }
     }
   }
 }
 
-function createRandomMessage(): Message {
+function createRandomMessage(date?: Date): Message {
   return {
-    ...createBaseData(),
-    type: 'message',
+    ...createBaseData(date),
+    type: DatumType.Message,
     userid: faker.datatype.uuid(),
     groupid: faker.datatype.uuid(),
     messageText: faker.random.words(5),
@@ -174,23 +182,23 @@ function createRandomMessage(): Message {
   }
 }
 
-function createRandomPhysicalActivity(): PhysicalActivity {
+function createRandomPhysicalActivity(date?: Date): PhysicalActivity {
   const inputTime = faker.date.past().toISOString()
   return {
-    ...createBaseDurationData(),
-    type: 'physicalActivity',
+    ...createBaseDurationData(date),
+    type: DatumType.PhysicalActivity,
     uploadId: faker.datatype.uuid(),
     guid: faker.datatype.uuid(),
-    reportedIntensity: faker.helpers.arrayElement(['low', 'medium', 'high']),
+    reportedIntensity: faker.helpers.arrayElement(Object.values(Intensity)),
     eventId: faker.datatype.uuid(),
     inputTime
   }
 }
 
-function createRandomPumpSetttings(): PumpSettings {
+function createRandomPumpSetttings(date?: Date): PumpSettings {
   return {
-    ...createBaseData(),
-    type: 'pumpSettings',
+    ...createBaseData(date),
+    type: DatumType.PumpSettings,
     uploadId: faker.datatype.uuid(),
     basalSchedules: [],
     activeSchedule: '',
@@ -218,7 +226,7 @@ function createRandomPumpSetttings(): PumpSettings {
       history: [],
       pump: {
         expirationDate: faker.date.future().toISOString(),
-        manufacturer: '',
+        manufacturer: PumpManufacturer.Default,
         name: '',
         serialNumber: faker.datatype.uuid(),
         swVersion: faker.system.semver()
@@ -227,26 +235,33 @@ function createRandomPumpSetttings(): PumpSettings {
   }
 }
 
-function createRandomReservoirChange(): ReservoirChange {
+function createRandomReservoirChange(date?: Date): ReservoirChange {
   return {
-    ...createBaseData(),
-    type: 'deviceEvent',
-    subType: 'reservoirChange',
-    uploadId: faker.datatype.uuid()
+    ...createBaseData(date),
+    type: DatumType.DeviceEvent,
+    subType: DeviceEventSubtype.ReservoirChange,
+    uploadId: faker.datatype.uuid(),
+    pump: {
+      expirationDate: faker.date.future().toISOString(),
+      manufacturer: PumpManufacturer.Default,
+      name: '',
+      serialNumber: faker.datatype.uuid(),
+      swVersion: faker.system.semver()
+    }
   }
 }
 
-function createRandomSmbg(): Smbg {
+function createRandomSmbg(date?: Date): Smbg {
   return {
-    ...createRandomCbg(),
-    type: 'smbg'
+    ...createRandomCbg(date),
+    type: DatumType.Smbg
   }
 }
 
-function createRandomUpload(): Upload {
+function createRandomUpload(date?: Date): Upload {
   return {
-    ...createBaseData(),
-    type: 'upload',
+    ...createBaseData(date),
+    type: DatumType.Upload,
     uploadId: faker.datatype.uuid(),
 
     _dataState: '',
@@ -268,64 +283,65 @@ function createRandomUpload(): Upload {
   }
 }
 
-function createRandomWarmUp(): WarmUp {
-  return createModeData('warmup') as WarmUp
+function createRandomWarmUp(date?: Date): WarmUp {
+  return createModeData(DeviceEventSubtype.Warmup, date) as WarmUp
 }
 
-function createRandomWizard(): Wizard {
+function createRandomWizard(date?: Date): Wizard {
   return {
-    ...createBaseData(),
-    type: 'wizard',
+    ...createBaseData(date),
+    type: DatumType.Wizard,
     uploadId: faker.datatype.uuid(),
     bolusId: faker.datatype.uuid(),
     carbInput: faker.datatype.number({ min: 0, max: 200, precision: 0.01 }),
     units: 'g',
     bolus: null,
-    recommended: undefined
+    recommended: undefined,
+    inputTime: faker.date.past().toISOString()
   }
 }
 
-function createRandomZenMode(): ZenMode {
-  return createModeData('zen') as ZenMode
+function createRandomZenMode(date?: Date): ZenMode {
+  return createModeData(DeviceEventSubtype.Zen, date) as ZenMode
 }
 
-function createRandomDatum(type: string, subtype?: string): Datum {
+function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?: Date): Datum {
   switch (type) {
-    case 'basal':
-      return createRandomBasal()
-    case 'bolus':
-      return createRandomBolus()
-    case 'cbg':
-      return createRandomCbg()
-    case 'deviceEvent':
+    case DatumType.Basal:
+      return createRandomBasal(date)
+    case DatumType.Bolus:
+      return createRandomBolus(date)
+    case DatumType.Cbg:
+      return createRandomCbg(date)
+    case DatumType.DeviceEvent:
       switch (subtype) {
-        case 'confidential':
-          return createRandomConfidentialMode()
-        case 'deviceParameter':
-          return createRandomDeviceParameterChange()
-        case 'reservoirChange':
-          return createRandomReservoirChange()
-        case 'warmup':
-          return createRandomWarmUp()
-        case 'zen':
-          return createRandomZenMode()
+        case DeviceEventSubtype.Confidential:
+          return createRandomConfidentialMode(date)
+        case DeviceEventSubtype.DeviceParameter:
+          return createRandomDeviceParameterChange(date)
+        case DeviceEventSubtype.ReservoirChange:
+          return createRandomReservoirChange(date)
+        case DeviceEventSubtype.Warmup:
+          return createRandomWarmUp(date)
+        case DeviceEventSubtype.Zen:
+          return createRandomZenMode(date)
         default:
           throw new Error('unknown type')
       }
-    case 'food':
-      return createRandomMeal()
-    case 'message':
-      return createRandomMessage()
-    case 'physicalActivity':
-      return createRandomPhysicalActivity()
-    case 'pumpSettings':
-      return createRandomPumpSetttings()
-    case 'smbg':
-      return createRandomSmbg()
-    case 'upload':
-      return createRandomUpload()
-    case 'wizard':
-      return createRandomWizard()
+    case DatumType.Food:
+      return createRandomMeal(date)
+    case DatumType.Message:
+      return createRandomMessage(date)
+    case DatumType.PhysicalActivity:
+      return createRandomPhysicalActivity(date)
+    case DatumType.PumpSettings:
+      return createRandomPumpSetttings(date)
+    case DatumType.Smbg:
+      return createRandomSmbg(date)
+    case DatumType.Upload:
+      return createRandomUpload(date)
+    case DatumType.Wizard:
+      return createRandomWizard(date)
     default:
       throw new Error('unknown type')
   }
