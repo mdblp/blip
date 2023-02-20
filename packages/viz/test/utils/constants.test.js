@@ -31,18 +31,6 @@ describe('constants', () => {
     })
   })
 
-  describe('MGDL_CLAMP_TOP', () => {
-    it('should be `400`', () => {
-      expect(constants.MGDL_CLAMP_TOP).to.equal(400)
-    })
-  })
-
-  describe('MMOLL_CLAMP_TOP', () => {
-    it('should be `22.5`', () => {
-      expect(constants.MMOLL_CLAMP_TOP).to.equal(22.5)
-    })
-  })
-
   describe('LBS_PER_KG', () => {
     it('should be `2.2046226218`', () => {
       expect(constants.LBS_PER_KG).to.equal(2.2046226218)
