@@ -30,22 +30,22 @@ import React, { type FunctionComponent } from 'react'
 import styles from './cbg-date-trace-label.css'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
-import { type FocusedDateTrace } from '../../../../models/focused-date-trace.model'
 import { formatDateToUtc } from '../../../../utils/datetime/datetime.util'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
-interface CbgDateTraceLabelProps {
-  focusedDateTrace: FocusedDateTrace
-}
-
-export const CbgDateTraceLabel: FunctionComponent<CbgDateTraceLabelProps> = (props) => {
-  const { focusedDateTrace } = props
-
+export const CbgDateTraceLabel: FunctionComponent = () => {
+  const { focusedCbgDateTrace } = useTrendsContext()
   const { t } = useTranslation()
 
-  const formattedDate = formatDateToUtc(focusedDateTrace.data.localDate, t('dddd, MMMM D'))
+  if (!focusedCbgDateTrace) {
+    return null
+  }
+
+  const localDate = focusedCbgDateTrace.data.localDate
+  const formattedDate = localDate ? formatDateToUtc(localDate, t('dddd, MMMM D')) : ''
   const tooltipPosition = {
-    left: focusedDateTrace.position.left,
-    top: 2.25 * focusedDateTrace.position.yPositions.topMargin
+    left: focusedCbgDateTrace.position.left,
+    top: 2.25 * focusedCbgDateTrace.position.yPositions.topMargin
   }
 
   return (

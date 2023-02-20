@@ -24,23 +24,6 @@ import * as actions from '../../../src/redux/actions/'
 describe('trends action creators', () => {
   const userId = 'a1b2c3'
 
-  describe('focusTrendsCbgDateTrace', () => {
-    const cbgDatum = {}
-    const cbgPosition = {}
-    const action = actions.focusTrendsCbgDateTrace(userId, cbgDatum, cbgPosition)
-
-    it('should be a TSA', () => {
-      expect(isTSA(action)).to.be.true
-    })
-
-    it('should create an action to focus a cbg date trace', () => {
-      expect(action).to.deep.equal({
-        type: actionTypes.FOCUS_TRENDS_CBG_DATE_TRACE,
-        payload: { cbgDatum, cbgPosition, userId }
-      })
-    })
-  })
-
   describe('focusTrendsCbgSlice', () => {
     const sliceData = {}
     const slicePosition = {}
@@ -69,21 +52,6 @@ describe('trends action creators', () => {
     it('should create an action to toggle cbg traces on for the user', () => {
       expect(action).to.deep.equal({
         type: actionTypes.SHOW_CBG_DATE_TRACES,
-        payload: { userId }
-      })
-    })
-  })
-
-  describe('unfocusTrendsCbgDateTrace', () => {
-    const action = actions.unfocusTrendsCbgDateTrace(userId)
-
-    it('should be a TSA', () => {
-      expect(isTSA(action)).to.be.true
-    })
-
-    it('should create an action to unfocus a cbg date trace', () => {
-      expect(action).to.deep.equal({
-        type: actionTypes.UNFOCUS_TRENDS_CBG_DATE_TRACE,
         payload: { userId }
       })
     })
