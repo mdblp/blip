@@ -39,10 +39,16 @@ export interface JoinTeamDialogProps {
 export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) => {
   const { onClose, onAccept, teamName } = props
   const [team, setTeam] = useState<Team | undefined>(undefined)
-  const [isInprogress, setIsInProgress] = useState<boolean>(false)
+  const [isInProgress, setIsInProgress] = useState<boolean>(false)
 
   const onCompleteTeamCodeConfirmStep = (team: Team): void => {
     setTeam(team)
+  }
+
+  const onCompletePolicyConfirmStep = async (): Promise<void> => {
+    setIsInProgress(true)
+    await onAccept(team.id)
+    setIsInProgress(false)
   }
 
   return (
@@ -55,12 +61,8 @@ export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) =>
         />
       ) : (
         <PrivacyPolicyConfirm
-          onCompleteStep={async () => {
-            setIsInProgress(true)
-            await onAccept(team.id)
-            setIsInProgress(false)
-          }}
-          inProgress={isInprogress}
+          onCompleteStep={onCompletePolicyConfirmStep}
+          inProgress={isInProgress}
           onClickCancel={onClose}
           team={team}
         />

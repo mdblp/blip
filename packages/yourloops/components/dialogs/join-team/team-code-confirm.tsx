@@ -57,10 +57,10 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
   const getNumericCode = (value: string): string => {
     const code = value.replaceAll(' ', '').replaceAll('-', '')
-    if (code.match(/^[0-9]{0,9}$/)) {
+    if (code.match(/^[0-9]*$/)) {
       return code
     }
-    throw Error('invalid code')
+    console.log('invalid code')
   }
 
   const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void | string => {
@@ -79,13 +79,14 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
       try {
         setIsInProgress(true)
         const team = await teamHook.getTeamFromCode(numericCode)
-        setIsInProgress(false)
         if (!team) {
           return alert.error(t('invalid-code'))
         }
         onCompleteStep(team)
       } catch (err) {
         alert.error(t('modal-patient-add-team-failure'))
+      } finally {
+        setIsInProgress(false)
       }
     }
   }

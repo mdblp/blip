@@ -148,6 +148,7 @@ function TeamMenu(): JSX.Element {
     try {
       await joinTeam(teamId)
       alert.success(t('modal-patient-add-team-success'))
+      setShowJoinTeamDialog(false)
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t('modal-patient-add-team-failure', { errorMessage }))

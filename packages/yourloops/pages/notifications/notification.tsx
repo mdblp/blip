@@ -260,12 +260,18 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       notifications.update()
     }
   }
-  const joinTeam = async (): Promise<void> => {
-    await acceptInvitation()
-    onCloseDialog()
-  }
   const onCloseDialog = (): void => {
     setAddTeamDialogVisible(false)
+  }
+
+  const joinTeam = async (): Promise<void> => {
+    try {
+      await acceptInvitation()
+      onCloseDialog()
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason)
+      alert.error(t('modal-patient-add-team-failure', { errorMessage }))
+    }
   }
 
   return (
