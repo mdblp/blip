@@ -56,17 +56,14 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const joinButtonDisabled = !idCode.match(REGEX_TEAM_CODE_DISPLAY)
 
   const getNumericCode = (value: string): string => {
-    const code = []
-    const arrayString = value.split('')
-    arrayString.forEach((element) => {
-      if (element.match(/^[0-9]$/)) {
-        code.push(element)
-      }
-    })
-    return code.join('')
+    const code = value.replaceAll(' ', '').replaceAll('-', '')
+    if (code.match(/^[0-9]{0,9}$/)) {
+      return code
+    }
+    throw Error('invalid code')
   }
 
-  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void | string => {
     const numericCode = getNumericCode(event.target.value)
     const displayCode = getDisplayTeamCode(numericCode)
     setIdCode(displayCode)
