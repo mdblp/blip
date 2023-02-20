@@ -27,9 +27,11 @@
 
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import TeamAPI from '../../../lib/team/team.api'
+import { iTeamOne } from '../mock/team.api.mock'
+import { unmonitoredPatientId } from '../mock/patient.api.mock'
 
-export const closeDialogJoinTeam = async () => {
-  const badgeTeamMenu = screen.getByLabelText('Open team menu')
+export const checkJoinTeamDialogCancel = async (badgeTeamMenu) => {
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
   await userEvent.click(buttonJoinTeam)
@@ -40,20 +42,14 @@ export const closeDialogJoinTeam = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const closeDialogPrivacyPolicy = async () => {
-  const badgeTeamMenu = screen.getByLabelText('Open team menu')
+export const checkJoinTeamDialogPrivacyCancel = async (badgeTeamMenu) => {
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
   await userEvent.click(buttonJoinTeam)
   const dialog = screen.getByRole('dialog')
-  await userEvent.click(buttonJoinTeam)
-  await userEvent.click(badgeTeamMenu)
-  await userEvent.click(buttonJoinTeam)
   const inputCode = within(dialog).getByRole('textbox')
   await userEvent.type(inputCode, '263381988')
   const addTeamButton = within(dialog).getByRole('button', { name: 'Continue' })
-  await userEvent.click(addTeamButton)
-  await userEvent.type(inputCode, '263381988')
   await userEvent.click(addTeamButton)
   const dialogPrivacy = screen.getByRole('dialog')
   const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
@@ -63,8 +59,7 @@ export const closeDialogPrivacyPolicy = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const errorMessageDialogJoinTeam = async () => {
-  const badgeTeamMenu = screen.getByLabelText('Open team menu')
+export const checkJoinTeamDialogDisplayErrorMessage = async (badgeTeamMenu) => {
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
   await userEvent.click(buttonJoinTeam)
@@ -73,6 +68,39 @@ export const errorMessageDialogJoinTeam = async () => {
   const inputCode = within(dialog).getByRole('textbox')
   await userEvent.type(inputCode, '263381990')
   await userEvent.click(addTeamButton)
+  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, unmonitoredPatientId)
   expect(screen.getByTestId('alert-snackbar')).toBeVisible()
   expect(dialog).toBeVisible()
+}
+export const checkJoinTeamDialog = async (badgeTeamMenu) => {
+  expect(badgeTeamMenu).toHaveTextContent('1')
+  await userEvent.click(badgeTeamMenu)
+  const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
+  await userEvent.click(buttonJoinTeam)
+  const dialog = screen.getByRole('dialog')
+  expect(dialog).toHaveTextContent('Join the care team Please enter the team code (9 digits)CancelContinue')
+  const addTeamButton = within(dialog).getByRole('button', { name: 'Continue' })
+  const inputCode = within(dialog).getByRole('textbox')
+  expect(addTeamButton).toBeDisabled()
+  await userEvent.type(inputCode, '263381988')
+  expect(addTeamButton).toBeEnabled()
+  await userEvent.click(addTeamButton)
+  expect(TeamAPI.getTeamFromCode).toHaveBeenCalledWith('263381988')
+
+  const dialogPrivacy = screen.getByRole('dialog')
+  const addCareTeamButton = within(dialogPrivacy).getByRole('button', { name: 'Join team' })
+  const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
+  expect(dialogPrivacy).toHaveTextContent('Share your data with a care teamYou ' +
+    'are about to share you data with' +
+    'iTeamOne6 rue des champs75000Paris679517388' +
+    'Please verify that the above details match the information provided by your healthcare professional before accepting the invitation.' +
+    'By accepting this invitation, I recognize this team as my care team and consent to share my personal data with all its members, who are authorized healthcare professionals registered on YourLoops. ' +
+    'I acknowledge that I can revoke this access at any time.Read our Privacy Policy for more information.CancelJoin team')
+  expect(addCareTeamButton).toBeDisabled()
+  await userEvent.click(checkPolicy)
+  expect(addCareTeamButton).toBeEnabled()
+  await userEvent.click(addCareTeamButton)
+  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, unmonitoredPatientId)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.getByText('Your care team has now access to your data.')).toBeVisible()
 }

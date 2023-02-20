@@ -29,7 +29,7 @@ import { NotificationType } from '../../../lib/notifications/models/enums/notifi
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 
 export const invitationTeam: Notification = {
-  id: '26a11710e98e4',
+  id: 'invitationTeamId',
   type: NotificationType.careTeamPatientInvitation,
   metricsType: 'join_team',
   email: 'ylp.ui.test.67-patient12@diabeloop.fr',

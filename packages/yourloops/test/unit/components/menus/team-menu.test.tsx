@@ -40,24 +40,11 @@ import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { type ShareUser } from '../../../../lib/share/models/share-user.model'
-import { type TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
 import { TeamMenuMemoized as TeamMenu } from '../../../../components/menus/team-menu'
 
 // eslint-disable-next-line react/display-name
-jest.mock('../../../../pages/hcp/team-edit-dialog', () => (props: TeamEditModalProps) => {
-  return <>
-    <button onClick={() => {
-      props.teamToEdit?.onSaveTeam(null)
-    }}>mock-cancel
-    </button>
-    <button onClick={() => {
-      props.teamToEdit?.onSaveTeam({} as Team)
-    }}>mock-edit
-    </button>
-  </>
-})
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../components/utils/snackbar')

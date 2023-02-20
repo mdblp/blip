@@ -41,7 +41,7 @@ import ProgressIconButtonWrapper from '../../buttons/progress-icon-button-wrappe
 export interface ConfirmTeamProps {
   onClickCancel: () => void
   onCompleteStep: (team: Team) => void
-  teamName: string
+  teamName?: string
 }
 
 export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {

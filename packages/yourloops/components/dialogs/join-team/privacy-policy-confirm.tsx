@@ -52,7 +52,6 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const { t } = useTranslation('yourloops')
   const { onCompleteStep, team, onClickCancel, inProgress } = props
   const [policyChecked, setPolicyChecked] = useState<boolean>(false)
-  const buttonAddTeamDisabled = policyChecked ?? false
   const theme = useTheme()
 
   const handleChangeChecked = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -131,7 +130,7 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
         <ProgressIconButtonWrapper inProgress={inProgress}>
           <Button
             id="team-add-dialog-confirm-team-button-add-team"
-            disabled={!buttonAddTeamDisabled || inProgress}
+            disabled={!policyChecked || inProgress}
             variant="contained"
             color="primary"
             disableElevation
