@@ -63,24 +63,26 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
     console.log('invalid code')
   }
 
-  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void | string => {
+  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const numericCode = getNumericCode(event.target.value)
     const displayCode = getDisplayTeamCode(numericCode)
     setIdCode(displayCode)
     setNumericCode(numericCode)
   }
 
-  const handleClickJoinTeam = async (): Promise<void | string> => {
+  const handleClickJoinTeam = async (): Promise<void> => {
     if (numericCode !== '') {
       const team = teamHook.teams.find((team) => team.code === numericCode)
       if (team) {
-        return alert.error(t('modal-patient-add-team-failure-exists'))
+        alert.error(t('modal-patient-add-team-failure-exists'))
+        return
       }
       try {
         setIsInProgress(true)
         const team = await teamHook.getTeamFromCode(numericCode)
         if (!team) {
-          return alert.error(t('invalid-code'))
+          alert.error(t('invalid-code'))
+          return
         }
         onCompleteStep(team)
       } catch (err) {

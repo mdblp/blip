@@ -144,7 +144,6 @@ function TeamMenu(): JSX.Element {
   }
 
   const onJoinTeam = async (teamId: string): Promise<void> => {
-    setShowJoinTeamDialog(false)
     try {
       await joinTeam(teamId)
       alert.success(t('modal-patient-add-team-success'))
@@ -255,7 +254,7 @@ function TeamMenu(): JSX.Element {
       }
       {showJoinTeamDialog &&
         <JoinTeamDialog
-          onClose={() => setShowJoinTeamDialog(false)}
+          onClose={() => { setShowJoinTeamDialog(false) }}
           onAccept={onJoinTeam}
         />
       }
