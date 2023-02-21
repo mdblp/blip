@@ -291,7 +291,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
           <MonitoringConsentDialog
             onAccept={acceptTerms}
-            onCancel={() => setDisplayMonitoringTerms(false)}
+            onCancel={() => { setDisplayMonitoringTerms(false) }}
             teamName={notification.target.name}
           />
         }
