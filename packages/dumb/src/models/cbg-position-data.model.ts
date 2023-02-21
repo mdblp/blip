@@ -27,11 +27,18 @@
 
 import { type RangeSegmentSliceType } from './enums/range-segment.enum'
 
-export interface CbgPositionData {
+export interface CbgPositionData<T> {
   left: number
   tooltipLeft?: boolean
-  yPositions: Partial<RangeSegmentSliceType> & {
-    topMargin: number
-    top?: number
-  }
+  yPositions: T
+}
+
+export interface CbgSliceYPositions extends RangeSegmentSliceType {
+  topMargin: number
+  top?: number
+}
+
+export interface CbgDateTraceYPositions {
+  topMargin: number
+  top: number
 }

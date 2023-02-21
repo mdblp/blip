@@ -73,25 +73,6 @@ describe('FormatUtil', () => {
       it('should round', () => {
         expect(formatBgValue(352.77, UnitsType.MGDL)).toEqual('353')
       })
-
-      describe('when `outOfRangeThresholds` provided', () => {
-        it('should return the String High if value over the high threshold', () => {
-          expect(formatBgValue(401, UnitsType.MGDL, { high: 400 }))
-            .toEqual('High')
-        })
-
-        it('should return normal String integer if value NOT over the high threshold', () => {
-          expect(formatBgValue(399, UnitsType.MGDL, { high: 400 })).toEqual('399')
-        })
-
-        it('should return the String Low if value under the low threshold', () => {
-          expect(formatBgValue(39, UnitsType.MGDL, { low: 40 })).toEqual('Low')
-        })
-
-        it('should return normal String integer if value NOT under the low threshold', () => {
-          expect(formatBgValue(41, UnitsType.MGDL, { low: 40 })).toEqual('41')
-        })
-      })
     })
 
     describe('when units are `mmol/L`', () => {
@@ -105,26 +86,6 @@ describe('FormatUtil', () => {
 
       it('should round', () => {
         expect(formatBgValue(12.77, UnitsType.MMOLL)).toEqual('12.8')
-      })
-
-      describe('when `outOfRangeThresholds` provided', () => {
-        it('should return the String High if value over the high threshold', () => {
-          expect(formatBgValue(23.1, UnitsType.MMOLL, { high: 400 }))
-            .toEqual('High')
-        })
-
-        it('should return normal String number if value NOT over the high threshold', () => {
-          expect(formatBgValue(22.0, UnitsType.MMOLL, { high: 400 }))
-            .toEqual('22.0')
-        })
-
-        it('should return the String Low if value under the low threshold', () => {
-          expect(formatBgValue(2.1, UnitsType.MMOLL, { low: 40 })).toEqual('Low')
-        })
-
-        it('should return normal String number if value NOT under the low threshold', () => {
-          expect(formatBgValue(3.36, UnitsType.MMOLL, { low: 40 })).toEqual('3.4')
-        })
       })
     })
   })

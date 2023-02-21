@@ -25,20 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { type TrendsDisplayFlags } from '../models/trends-display-flags.model'
 import { DisplayFlag } from '../models/enums/display-flag.enum'
 import { type CbgDateTrace } from '../models/cbg-date-trace.model'
-import { type CbgPositionData } from '../models/cbg-position-data.model'
+import {
+  type CbgDateTraceYPositions,
+  type CbgPositionData,
+  type CbgSliceYPositions
+} from '../models/cbg-position-data.model'
 import { type FocusedCbgDateTrace } from '../models/focused-cbg-date-trace.model'
+import { type RangeSegmentSlice } from '../models/enums/range-segment.enum'
+import { type CbgSlice } from '../models/cbg-slice.model'
+import { type FocusedCbgSlice } from '../models/focused-cbg-slice.model'
 
 export interface TrendsContextResult {
   displayFlags: TrendsDisplayFlags
-  focusCbgDateTrace: (cbgDateTrace: CbgDateTrace, position: CbgPositionData) => void
+  focusCbgDateTrace: (cbgDateTrace: CbgDateTrace, position: CbgPositionData<CbgDateTraceYPositions>) => void
   focusedCbgDateTrace: FocusedCbgDateTrace | undefined
+  focusCbgSlice: (cbgSlice: CbgSlice, position: CbgPositionData<CbgSliceYPositions>, keys: RangeSegmentSlice[]) => void
+  focusedCbgSlice: FocusedCbgSlice | undefined
+  showCbgDateTraces: boolean
   toggleCbgSegments: (displayFlag: DisplayFlag) => void
   unfocusCbgDateTrace: () => void
+  unfocusCbgSlice: () => void
 }
+
+const SHOW_CBG_DATE_TRACES_TIMEOUT_MS = 250
 
 export const useTrendsProviderHook = (): TrendsContextResult => {
   const [displayFlags, setDisplayFlags] = useState<TrendsDisplayFlags>({
@@ -49,6 +62,11 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
   })
 
   const [focusedCbgDateTrace, setFocusedCbgDateTrace] = useState<FocusedCbgDateTrace | undefined>(undefined)
+
+  const [focusedCbgSlice, setFocusedCbgSlice] = useState<FocusedCbgSlice | undefined>(undefined)
+  const previousFocusedCbgSlice = useRef<FocusedCbgSlice | undefined>(undefined)
+
+  const [showCbgDateTraces, setShowCbgDateTraces] = useState<boolean>(false)
 
   const toggleCbgSegments = (displayFlag: DisplayFlag): void => {
     switch (displayFlag) {
@@ -69,7 +87,7 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
     }
   }
 
-  const focusCbgDateTrace = (cbgDateTrace: CbgDateTrace, position: CbgPositionData): void => {
+  const focusCbgDateTrace = (cbgDateTrace: CbgDateTrace, position: CbgPositionData<CbgDateTraceYPositions>): void => {
     setFocusedCbgDateTrace({ data: cbgDateTrace, position })
   }
 
@@ -77,5 +95,36 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
     setFocusedCbgDateTrace(undefined)
   }
 
-  return { displayFlags, focusCbgDateTrace, focusedCbgDateTrace, toggleCbgSegments, unfocusCbgDateTrace }
+  const focusCbgSlice = (cbgSlice: CbgSlice, position: CbgPositionData<CbgSliceYPositions>, keys: RangeSegmentSlice[]): void => {
+    const newFocusedCbgSlice = { data: cbgSlice, position, keys }
+
+    setFocusedCbgSlice(newFocusedCbgSlice)
+    previousFocusedCbgSlice.current = newFocusedCbgSlice
+
+    setTimeout(() => {
+      if (cbgSlice.id === previousFocusedCbgSlice.current?.data.id && keys === previousFocusedCbgSlice.current?.keys) {
+        setShowCbgDateTraces(true)
+      }
+    }, SHOW_CBG_DATE_TRACES_TIMEOUT_MS)
+  }
+
+  const unfocusCbgSlice = (): void => {
+    setFocusedCbgSlice(undefined)
+    previousFocusedCbgSlice.current = undefined
+
+    setShowCbgDateTraces(false)
+    setFocusedCbgDateTrace(undefined)
+  }
+
+  return {
+    displayFlags,
+    focusCbgDateTrace,
+    focusedCbgDateTrace,
+    focusCbgSlice,
+    focusedCbgSlice,
+    showCbgDateTraces,
+    toggleCbgSegments,
+    unfocusCbgDateTrace,
+    unfocusCbgSlice
+  }
 }

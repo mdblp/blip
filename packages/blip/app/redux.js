@@ -28,8 +28,7 @@
 
 import _ from 'lodash'
 import bows from 'bows'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import thunkMiddleware from 'redux-thunk'
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 
 import { reducers as vizReducers } from 'tidepool-viz'
 
@@ -84,7 +83,7 @@ export function initStore() {
   if (store === null) {
     log.info('Init Redux store')
     // I love redux
-    store = applyMiddleware(thunkMiddleware)(createStore)(combineReducers({ viz: vizReducers, blip: blipReducer }), {
+    store = applyMiddleware()(createStore)(combineReducers({ viz: vizReducers, blip: blipReducer }), {
       viz: {
         trends: {}
       },

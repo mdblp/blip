@@ -59,7 +59,7 @@ import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
 import { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
 import { UnitsType } from './models/enums/units-type.enum'
-import TrendsContainer from './components/trends/common/trends-container/trends-container'
+import { TrendsContainer } from './components/trends/common/trends-container/trends-container'
 
 export {
   AverageDailyDoseStat,

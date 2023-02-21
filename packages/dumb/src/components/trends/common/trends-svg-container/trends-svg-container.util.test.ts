@@ -27,8 +27,8 @@
 
 import { getCbgsIntersectingWithCbgSliceSegment } from './trends-svg-container.util'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
-import { type FocusedSliceData } from '../../../../models/focused-slice.model'
 import { RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
+import { type CbgSlice } from '../../../../models/cbg-slice.model'
 
 const MIN_CBG_VALID_VALUE = 40
 const MAX_CBG_VALID_VALUE = 60
@@ -82,7 +82,8 @@ describe('TrendsSvgContainer util', () => {
         ...cbgsTrace15OfFebruary
       ]
 
-      const focusedSliceData: FocusedSliceData = {
+      const focusedSliceData: CbgSlice = {
+        id: 'id',
         firstQuartile: MIN_CBG_VALID_VALUE,
         max: 2,
         median: 3,
@@ -91,7 +92,8 @@ describe('TrendsSvgContainer util', () => {
         tenthQuantile: 6,
         thirdQuartile: MAX_CBG_VALID_VALUE,
         msFrom: MIN_MS_VALUE,
-        msTo: MAX_MS_VALUE + 1
+        msTo: MAX_MS_VALUE + 1,
+        msX: 1
       }
 
       const focusedSliceKeys: RangeSegmentSlice[] = [RangeSegmentSlice.FirstQuartile, RangeSegmentSlice.ThirdQuartile]
