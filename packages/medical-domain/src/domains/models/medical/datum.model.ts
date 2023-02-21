@@ -16,6 +16,7 @@ import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
 import type MedicalDataOptions from './medical-data-options.model'
+import { type WeekDaysFilter } from '../time/date-filter.model'
 
 type Datum = Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
 Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Upload | Wizard |
@@ -24,6 +25,7 @@ ZenMode | TimeZoneChange | WarmUp
 interface DatumProcessor<T> {
   normalize: (rawData: Record<string, unknown>, opts: MedicalDataOptions) => T
   deduplicate: (data: T[], opts: MedicalDataOptions) => T[]
+  filterOnDate: (data: T[], start: number, end: number, weekDaysFilter: WeekDaysFilter) => T[]
 }
 export default Datum
 export type { DatumProcessor }

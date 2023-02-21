@@ -31,6 +31,7 @@ import type Fill from '../../../models/medical/datum/fill.model'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Fill => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -49,9 +50,14 @@ const deduplicate = (data: Fill[], opts: MedicalDataOptions): Fill[] => {
   return DatumService.deduplicate(data, opts) as Fill[]
 }
 
+const filterOnDate = (data: Fill[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Fill[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Fill[]
+}
+
 const FillService: DatumProcessor<Fill> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default FillService

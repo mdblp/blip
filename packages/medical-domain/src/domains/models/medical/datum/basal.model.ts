@@ -26,10 +26,11 @@
  */
 
 import type BaseDatum from './basics/base-datum.model'
-import { type DatumType } from './enums/datum-type.enum'
+import { isBaseDatum } from './basics/base-datum.model'
+import { DatumType } from './enums/datum-type.enum'
 
 type Basal = BaseDatum & {
-  type: DatumType
+  type: DatumType.Basal
   subType: string
   uploadId: string
   internalId: string
@@ -42,4 +43,15 @@ type Basal = BaseDatum & {
   replacedBy?: string
 }
 
+function isBasal(value: unknown): value is Basal {
+  if (!isBaseDatum(value)) {
+    return false
+  }
+  if (value.type !== DatumType.Basal) {
+    return false
+  }
+  return true
+}
+
 export default Basal
+export { isBasal }

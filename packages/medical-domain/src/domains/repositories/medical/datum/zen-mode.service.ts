@@ -32,6 +32,7 @@ import DurationService from './basics/duration.service'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ZenMode => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -52,9 +53,14 @@ const deduplicate = (data: ZenMode[], opts: MedicalDataOptions): ZenMode[] => {
   return DatumService.deduplicate(data, opts) as ZenMode[]
 }
 
+const filterOnDate = (data: ZenMode[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): ZenMode[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as ZenMode[]
+}
+
 const ZenModeService: DatumProcessor<ZenMode> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default ZenModeService

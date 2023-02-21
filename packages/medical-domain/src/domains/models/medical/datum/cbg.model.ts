@@ -27,7 +27,9 @@
 
 import Unit from './enums/unit.enum'
 import type BaseDatum from './basics/base-datum.model'
-import { type DatumType } from './enums/datum-type.enum'
+import { isBaseDatum } from './basics/base-datum.model'
+import { DatumType } from './enums/datum-type.enum'
+import type WeekDays from '../../time/enum/weekdays.enum'
 
 const MGDL_UNITS = Unit.MilligramPerDeciliter
 const MMOLL_UNITS = Unit.MmolPerLiter
@@ -48,13 +50,26 @@ type Bg = BaseDatum & {
   value: number
   // Used for trends view
   localDate: string
-  isoWeekday: string
+  isoWeekday: WeekDays
   msPer24: number
 }
 
+function isBg(value: unknown): value is Bg {
+  if (!isBaseDatum(value)) {
+    return false
+  }
+  const recordValue = value as unknown as Record<string, unknown>
+  if (!isBgUnit(recordValue.units)) {
+    return false
+  }
+  if (value.type === DatumType.Cbg || value.type === DatumType.Smbg) {
+    return true
+  }
+  return false
+}
 type Cbg = Bg & {
-  type: 'cbg'
+  type: DatumType.Cbg
 }
 
 export default Cbg
-export { type Bg, MGDL_UNITS, MMOLL_UNITS, bgUnits, type BgUnit, isBgUnit }
+export { type Bg, MGDL_UNITS, MMOLL_UNITS, bgUnits, type BgUnit, isBgUnit, isBg }

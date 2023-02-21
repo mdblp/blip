@@ -28,9 +28,12 @@
 import type Source from '../../../../models/medical/datum/enums/source.enum'
 import type MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 import BaseTimeService from './base-time.service'
+import DatumService from '../../datum.service'
 import type BaseDatum from '../../../../models/medical/datum/basics/base-datum.model'
+import type Datum from '../../../../models/medical/datum.model'
 import { type DatumProcessor } from '../../../../models/medical/datum.model'
 import { type DatumType } from '../../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../../models/time/date-filter.model'
 
 /**
  * extracted from packages/tideline/js/tidelinedata.js
@@ -69,9 +72,14 @@ const deduplicate = (data: BaseDatum[], _opts: MedicalDataOptions): BaseDatum[] 
   return data
 }
 
+const filterOnDate = (data: BaseDatum[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): BaseDatum[] => {
+  return DatumService.filterOnDate(data as Datum[], start, end, weekDaysFilter) as BaseDatum[]
+}
+
 const BaseDatumService: DatumProcessor<BaseDatum> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default BaseDatumService

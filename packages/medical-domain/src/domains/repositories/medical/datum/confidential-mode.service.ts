@@ -32,6 +32,7 @@ import DurationService from './basics/duration.service'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ConfidentialMode => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -52,9 +53,14 @@ const deduplicate = (data: ConfidentialMode[], opts: MedicalDataOptions): Confid
   return DatumService.deduplicate(data, opts) as ConfidentialMode[]
 }
 
+const filterOnDate = (data: ConfidentialMode[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): ConfidentialMode[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as ConfidentialMode[]
+}
+
 const ConfidentialModeService: DatumProcessor<ConfidentialMode> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default ConfidentialModeService

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,45 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { isRecord } from '../../../../utils/typeguard.utils'
-import DurationUnit from '../enums/duration-unit.enum'
-
-interface Duration {
-  duration: DurationValue
-  normalEnd: string
-  epochEnd: number
+enum WeekDays {
+  Monday = 'monday',
+  Tuesday = 'tuesday',
+  Wednesday = 'wednesday',
+  Thursday = 'thursday',
+  Friday = 'friday',
+  Saturday = 'saturday',
+  Sunday = 'sunday',
 }
-
-interface DurationValue {
-  units: DurationUnit
-  value: number
-}
-
-function isDuration(value: unknown): value is Duration {
-  if (!isRecord(value)) {
-    return false
-  }
-  if (!isRecord(value.duration)) {
-    return false
-  }
-  if (typeof value.duration.units !== 'string') {
-    return false
-  }
-  if (!(value.duration.units in DurationUnit)) {
-    return false
-  }
-  if (typeof value.duration.value !== 'number') {
-    return false
-  }
-  if (typeof value.normalEnd !== 'string') {
-    return false
-  }
-  if (typeof value.epochEnd !== 'number') {
-    return false
-  }
-  return true
-}
-
-export default Duration
-export type { DurationValue }
-export { isDuration }
+export default WeekDays

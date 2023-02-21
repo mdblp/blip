@@ -1,4 +1,5 @@
 import moment from 'moment-timezone'
+import type WeekDays from '../../models/time/enum/weekdays.enum'
 
 const INVALID_TIMEZONES = ['UTC', 'GMT', 'Etc/GMT']
 const timezones = moment.tz.names().filter((tz) => !INVALID_TIMEZONES.includes(tz))
@@ -14,12 +15,13 @@ interface NormalizedEndTime {
 }
 interface TrendsTime {
   localDate: string
-  isoWeekday: string
+  isoWeekday: WeekDays
   msPer24: number
 }
 
 export const MS_IN_DAY = 864e5
 export const MS_IN_HOUR = 3600000
+export const MS_IN_MIN = MS_IN_HOUR / 60
 
 // Find first Daily Saving Time(Summer/Winter time) in a timezone between two dates (unix timestamp)
 export function getDstChange(timezone: string, epochFrom: number, epochTo: number): number | null {
@@ -96,7 +98,7 @@ export function getTrendsTime(epoch: number, timezone: string): TrendsTime {
                   mTime.milliseconds()
   return {
     localDate: mTime.format('YYYY-MM-DD'),
-    isoWeekday: mTime.locale('en').format('dddd').toLowerCase(),
+    isoWeekday: mTime.locale('en').format('dddd').toLowerCase() as WeekDays,
     msPer24
   }
 }
@@ -159,3 +161,7 @@ export function twoWeeksAgo(time: string | number, timezone: string): number {
 export async function waitTimeout(timeout: number): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, timeout))
 }
+
+export const isEpochBetweenBounds = (epoch: number, start: number, end: number): boolean => (
+  epoch >= start && epoch < end
+)
