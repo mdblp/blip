@@ -46,7 +46,7 @@ import ZenModeService from './datum/zen-mode.service'
 import { isEpochBetweenBounds } from '../time/time.service'
 import { isBasal } from '../../models/medical/datum/basal.model'
 import { isDuration } from '../../models/medical/datum/basics/duration.model'
-import { isBg } from '../../models/medical/datum/cbg.model'
+import { isBg } from '../../models/medical/datum/bg.model'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Datum => {

@@ -25,12 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Bg from './bg.model'
-import { type DatumType } from './enums/datum-type.enum'
+import Unit from './enums/unit.enum'
+import type BaseDatum from './basics/base-datum.model'
+import { isBaseDatum } from './basics/base-datum.model'
+import { DatumType } from './enums/datum-type.enum'
+import type WeekDays from '../../time/enum/weekdays.enum'
 
-type Cbg = Bg & {
-  type: DatumType.Cbg
-  deviceName: string
+const MGDL_UNITS = Unit.MilligramPerDeciliter
+const MMOLL_UNITS = Unit.MmolPerLiter
+
+const bgUnits = [MGDL_UNITS, MMOLL_UNITS] as const
+type BgUnit = typeof bgUnits[number]
+
+function isBgUnit(value: unknown): value is BgUnit {
+  if (typeof value === 'string') {
+    return bgUnits.includes(value as BgUnit)
+  }
+  return false
 }
 
-export default Cbg
+type BgType = DatumType.Cbg | DatumType.Smbg
+
+type Bg = BaseDatum & {
+  type: BgType
+  units: BgUnit
+  value: number
+  // Used for trends view
+  localDate: string
+  isoWeekday: WeekDays
+  msPer24: number
+}
+
+function isBg(value: unknown): value is Bg {
+  if (!isBaseDatum(value)) {
+    return false
+  }
+  const recordValue = value as unknown as Record<string, unknown>
+  if (!isBgUnit(recordValue.units)) {
+    return false
+  }
+  if (value.type === DatumType.Cbg || value.type === DatumType.Smbg) {
+    return true
+  }
+  return false
+}
+
+export default Bg
+export { type BgType, MGDL_UNITS, MMOLL_UNITS, bgUnits, type BgUnit, isBgUnit, isBg }
