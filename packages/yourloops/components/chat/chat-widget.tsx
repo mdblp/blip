@@ -25,21 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 
-import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react'
+import EmojiPicker, { type EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 
-import { type Theme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
-import Card from '@mui/material/Card'
 import ChatMessage from './chat-message'
 import ChatApi from '../../lib/chat/chat.api'
 import { useAuth } from '../../lib/auth'
 import { type IMessage } from '../../lib/chat/models/i-message.model'
-import { Button, CardHeader, Tab, Tabs, TextField } from '@mui/material'
+import { Button, Tab, Tabs, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -48,20 +47,14 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
+import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
+import Box from '@mui/material/Box'
+
+const CHAT_CONTENT_HEIGHT = '280px'
+const KEYBOARD_EVENT_ESCAPE = 'Escape'
 
 const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
   return {
-    chatWidget: {
-      width: '400px',
-      height: '450px'
-    },
-    chatWidgetHeader: {
-      textTransform: 'uppercase',
-      backgroundColor: 'var(--card-header-background-color)'
-    },
-    chatWidgetHeaderText: {
-      padding: theme.spacing(1)
-    },
     iconButton: {
       backgroundColor: 'white',
       border: 'none',
@@ -71,23 +64,19 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetContent: {
       padding: theme.spacing(2),
-      background: theme.palette.common.white,
-      width: '100%',
-      height: '290px',
+      height: CHAT_CONTENT_HEIGHT,
       overflowY: 'auto',
       overflowX: 'hidden'
     },
     chatWidgetFooter: {
-      borderTop: '1px solid #E9E9E9',
-      background: theme.palette.common.white,
-      borderRadius: '0px 0px 12px 12px',
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1)
+      borderTop: `1px solid ${theme.palette.divider}`,
+      paddingBlock: theme.spacing(1)
     },
     chatWidgetEmojiPickerContainer: {
-      position: 'relative',
-      top: '-250px',
-      zIndex: 3
+      position: 'absolute',
+      top: -60,
+      zIndex: 3,
+      width: '100%'
     },
     chatWidgetTabs: {
       minHeight: '0px'
@@ -105,18 +94,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       display: 'flex',
       alignItems: 'center',
       background: theme.palette.common.white,
-      width: '100%',
-      height: '60px'
-    },
-    chatWidgetHCPToggle: {
-      height: '20px'
-    },
-    chatWidgetInput: {
-      width: '90%',
-      maxWidth: '90%'
-    },
-    icon: {
-      margin: theme.spacing(1)
+      paddingBlock: theme.spacing(1)
     }
   }
 })
@@ -133,11 +111,12 @@ export interface ChatWidgetProps {
 }
 
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
-  const { t } = useTranslation('yourloops')
+  const { t } = useTranslation()
   const { patient, userId, userRole } = props
   const { classes } = chatWidgetStyles()
   const authHook = useAuth()
   const teamHook = useTeam()
+  const theme = useTheme()
   const patientHook = usePatientContext()
   const { selectedTeamId } = useSelectedTeamContext()
   const { user } = useAuth()
@@ -152,8 +131,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { getUserName } = useUserName()
   const teamId = user.isUserHcp() ? selectedTeamId : PatientUtils.getRemoteMonitoringTeam(patient).teamId
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number): void => {
+  const handleChange = (_event: React.ChangeEvent, newValue: number): void => {
     setInputTab(newValue)
   }
 
@@ -179,113 +157,117 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     setInputText(inputText + emoji.emoji)
   }
 
-  const resetInputSize = (): void => {
-    if (!content.current || !inputRow.current) {
-      throw new Error('Cannot find elements for resize')
-    }
-    content.current.style.height = '290px'
-    inputRow.current.style.height = '60px'
-  }
-
   const sendMessage = async (): Promise<void> => {
     await ChatApi.sendChatMessage(teamId, patient.userid, inputText, privateMessage)
     const messages = await ChatApi.getChatMessages(teamId, patient.userid)
     setMessages(messages)
     setInputText('')
-    resetInputSize()
   }
 
-  const inputHandler = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    setInputText(event.target.value)
-    if (!content.current || !inputRow.current) {
-      throw new Error('Cannot find elements for resize')
-    }
-    // values for scrollHeight are 24 one line, 44 2 lines and 64 3 lines
-    // we display the scrollbar only when 3 lines are present
-    if (event.target.scrollHeight > 44) {
-      content.current.style.height = '250px'
-      inputRow.current.style.height = '100px'
-    } else if (event.target.scrollHeight > 24) {
-      content.current.style.height = '270px'
-      inputRow.current.style.height = '80px'
-    } else {
-      resetInputSize()
+  const onEmojiPickerKeyPress = (event: KeyboardEvent): void => {
+    if (event.key === KEYBOARD_EVENT_ESCAPE) {
+      setShowPicker(false)
     }
   }
 
   return (
-    <Card className={classes.chatWidget} id="chat-widget" data-testid="chat-card">
-      <CardHeader
-        id="chat-widget-header"
-        avatar={<EmailOutlinedIcon />}
-        className={classes.chatWidgetHeader}
-        title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
-      />
-      <div
-        ref={content}
-        id="chat-widget-messages"
-        className={classes.chatWidgetContent}
-        data-testid="chat-card-messages"
-      >
-        {messages.map((msg): JSX.Element => (
-          <ChatMessage
-            key={msg.id}
-            text={msg.text}
-            privateMsg={msg.private}
-            author={getUserName(msg.user.firstName, msg.user.lastName, msg.user.fullName)}
-            timestamp={msg.timestamp}
-            ack={msg.destAck}
-            isMine={msg.authorId === userId}
-          />
-        ))}
-      </div>
-      {showPicker &&
-        <div id="chat-widget-emoji-picker" data-testid="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
-          <EmojiPicker width="100%" onEmojiClick={onEmojiClick} />
-        </div>
-      }
-      <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
-        <div className={classes.chatWidgetHCPToggle}>
-          {userRole === UserRoles.hcp &&
-            <div>
-              <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example"
-                    onChange={handleChange}>
-                <Tab className={classes.chatWidgetTab} label={t('chat-footer-reply')} data-testid="chat-card-reply"
-                     onClick={() => { setPrivateMessage(false) }} />
-                <Tab className={classes.chatWidgetTab} label={t('chat-footer-private')} data-testid="chat-card-private"
-                     onClick={() => { setPrivateMessage(true) }} />
-              </Tabs>
-            </div>
-          }
-        </div>
-        <div ref={inputRow} className={classes.chatWidgetInputRow}>
-          <Button id="chat-widget-emoji-button" data-testid="chat-widget-emoji-button" className={classes.iconButton} onClick={() => { setShowPicker(true) }}>
-            <SentimentSatisfiedOutlinedIcon />
-          </Button>
-          <TextField
-            className={classes.chatWidgetInput}
-            id="standard-multiline-flexible"
-            placeholder={t('chat-footer-start-writing')}
-            multiline
-            maxRows={3}
-            value={inputText}
-            onChange={inputHandler}
-            InputLabelProps={{ shrink: false }}
-            data-testid="chat-card-input"
-          />
-          <Button
-            id="chat-widget-send-button"
-            disabled={inputText.length < 1}
-            className={classes.iconButton}
-            arial-label={t('send')}
-            data-testid="chat-card-send"
-            onClick={sendMessage}
+    <GenericDashboardCard
+      avatar={<EmailOutlinedIcon />}
+      title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
+      data-testid="chat-card"
+    >
+      <Box position="relative">
+        <Box
+          ref={content}
+          className={classes.chatWidgetContent}
+          data-testid="chat-card-messages"
+        >
+          {messages.map((msg): JSX.Element => (
+            <ChatMessage
+              key={msg.id}
+              text={msg.text}
+              privateMsg={msg.private}
+              author={getUserName(msg.user.firstName, msg.user.lastName, msg.user.fullName)}
+              timestamp={msg.timestamp}
+              ack={msg.destAck}
+              isMine={msg.authorId === userId}
+            />
+          ))}
+        </Box>
+        {showPicker &&
+          <div
+            id="chat-widget-emoji-picker"
+            data-testid="chat-widget-emoji-picker"
+            className={classes.chatWidgetEmojiPickerContainer}
+            onKeyDown={onEmojiPickerKeyPress}
           >
-            <SendIcon />
-          </Button>
+            <EmojiPicker
+              width="100%"
+              height="440px"
+              lazyLoadEmojis
+              emojiStyle={EmojiStyle.NATIVE}
+              onEmojiClick={onEmojiClick}
+            />
+          </div>
+        }
+        <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
+            {userRole === UserRoles.hcp &&
+              <Tabs
+                className={classes.chatWidgetTabs}
+                value={inputTab}
+                onChange={handleChange}
+                sx={{ marginBottom: theme.spacing(1) }}
+              >
+                <Tab
+                  className={classes.chatWidgetTab}
+                  label={t('chat-footer-reply')}
+                  aria-label={t('chat-footer-reply')}
+                  data-testid="chat-card-reply"
+                  onClick={() => { setPrivateMessage(false) }}
+                />
+                <Tab
+                  className={classes.chatWidgetTab}
+                  label={t('chat-footer-private')}
+                  aria-label={t('chat-footer-private')}
+                  data-testid="chat-card-private"
+                  onClick={() => { setPrivateMessage(true) }}
+                />
+              </Tabs>
+            }
+          <div ref={inputRow} className={classes.chatWidgetInputRow}>
+            <Button
+              id="chat-widget-emoji-button"
+              data-testid="chat-widget-emoji-button"
+              className={classes.iconButton}
+              onClick={() => { setShowPicker(true) }}
+            >
+              <SentimentSatisfiedOutlinedIcon />
+            </Button>
+            <TextField
+              id="standard-multiline-flexible"
+              placeholder={t('chat-footer-start-writing')}
+              size="small"
+              multiline
+              maxRows={3}
+              value={inputText}
+              onChange={event => { setInputText(event.target.value) }}
+              InputLabelProps={{ shrink: false }}
+              data-testid="chat-card-input"
+            />
+            <Button
+              id="chat-widget-send-button"
+              disabled={inputText.length < 1}
+              className={classes.iconButton}
+              arial-label={t('send')}
+              data-testid="chat-card-send"
+              onClick={sendMessage}
+            >
+              <SendIcon />
+            </Button>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Box>
+    </GenericDashboardCard>
   )
 }
 

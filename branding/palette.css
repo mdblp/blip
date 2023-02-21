@@ -1,9 +1,12 @@
 :root {
-  --text-base-color: #444444;
-  --text-base-color-light: #575756;
+  --body-background-color: #F7F7F7;
+  --card-header-background-color: #EEEEEE;
+  --chat-widget-private-msg-mine: #329F92;
+  --chat-widget-private-msg-not-mine: #5ABCB3;
   --footer-background-color: #EEEEEE;
   --monitoring-filter-bg-color: #FFF9F3;
-  --body-background-color: #F7F7F7;
+  --text-base-color: #444444;
+  --text-base-color-light: #575756;
 }
 
 :root .diabeloop-blue {
