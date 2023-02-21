@@ -16,20 +16,12 @@
  */
 
 import { delayShowCbgTracesOnFocus } from './thunks'
-import {
-  focusTrendsCbgDateTrace,
-  focusTrendsCbgSlice,
-  showCbgDateTraces,
-  unfocusTrendsCbgDateTrace,
-  unfocusTrendsCbgSlice
-} from './trends'
+import { focusTrendsCbgSlice, showCbgDateTraces, unfocusTrendsCbgSlice } from './trends'
 
 
 export {
   delayShowCbgTracesOnFocus,
-  focusTrendsCbgDateTrace,
   focusTrendsCbgSlice,
   showCbgDateTraces,
-  unfocusTrendsCbgDateTrace,
   unfocusTrendsCbgSlice
 }

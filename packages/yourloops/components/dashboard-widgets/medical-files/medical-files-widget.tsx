@@ -27,31 +27,14 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from 'tss-react/mui'
 
 import AssignmentIcon from '@mui/icons-material/Assignment'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import MedicalRecordList from './medical-record-list'
+import MedicalReportList from './medical-report-list'
 import PrescriptionList from './prescription-list'
 import PatientUtils from '../../../lib/patient/patient.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-
-const useStyle = makeStyles()(() => ({
-  cardContent: {
-    maxHeight: 450,
-    overflow: 'auto'
-  },
-  medicalFilesWidget: {
-    width: '400px',
-    height: 'fit-content'
-  },
-  medicalFilesWidgetHeader: {
-    textTransform: 'uppercase',
-    backgroundColor: 'var(--card-header-background-color)'
-  }
-}))
+import GenericDashboardCard from '../generic-dashboard-card'
 
 export interface MedicalFilesWidgetProps {
   patient: Patient
@@ -63,25 +46,22 @@ export interface CategoryProps {
 }
 
 const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) => {
-  const { t } = useTranslation('yourloops')
-  const { classes } = useStyle()
+  const { t } = useTranslation()
   const { patient } = props
 
   const team = PatientUtils.getRemoteMonitoringTeam(patient)
 
   return (
-    <Card className={classes.medicalFilesWidget} id="medical-files-card" data-testid="medical-files-card">
-      <CardHeader
-        id="medical-files-card-header"
-        avatar={<AssignmentIcon />}
-        className={classes.medicalFilesWidgetHeader}
-        title={`${t('medical-files')}`}
-      />
-      <CardContent className={classes.cardContent}>
+    <GenericDashboardCard
+      avatar={<AssignmentIcon />}
+      title={t('medical-files')}
+      data-testid="medical-files-card"
+    >
+      <CardContent>
         <PrescriptionList teamId={team.teamId} patientId={patient.userid} />
-        <MedicalRecordList teamId={team.teamId} patientId={patient.userid} />
+        <MedicalReportList teamId={team.teamId} patientId={patient.userid} />
       </CardContent>
-    </Card>
+    </GenericDashboardCard>
   )
 }
 

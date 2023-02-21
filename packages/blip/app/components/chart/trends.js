@@ -584,7 +584,7 @@ class Trends extends React.Component {
                   <div id="tidelineContainer" className="patient-data-chart-trends">
                     {this.renderChart()}
                   </div>
-                  {this.renderFocusedCbgDateTraceLabel()}
+                  <CbgDateTraceLabel />
                   {this.renderFocusedRangeLabels()}
                 </div>
               </div>
@@ -657,15 +657,6 @@ class Trends extends React.Component {
         onSelectDate={this.handleSelectDate}
       />
     )
-  }
-
-  renderFocusedCbgDateTraceLabel() {
-    const { patient, trendsState } = this.props
-    const focusedCbgDateTrace = _.get(trendsState, `${patient.userid}.focusedCbgDateTrace`)
-    if (focusedCbgDateTrace) {
-      return <CbgDateTraceLabel focusedDateTrace={focusedCbgDateTrace} />
-    }
-    return null
   }
 
   renderFocusedRangeLabels() {

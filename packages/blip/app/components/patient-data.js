@@ -33,12 +33,12 @@ import config from '../config'
 import personUtils from '../core/personutils'
 import utils from '../core/utils'
 import ApiUtils from '../core/api-utils'
-import { Daily, PatientDashboard as BlipOldDashboard, Trends } from './chart'
+import { Daily, Trends } from './chart'
 import Messages from './messages'
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
 import { PatientNavBarMemoized as PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
 import ChartType from 'yourloops/enum/chart-type.enum'
-import PatientDashboard from 'yourloops/components/dashboard-widgets/patient-dashboard'
+import { PatientDashboard } from 'yourloops/components/dashboard-widgets/patient-dashboard'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -312,18 +312,11 @@ class PatientDataPage extends React.Component {
     const {
       patient,
       setPatient,
-      userIsHCP,
-      isSelectedTeamMedical,
       prefixURL,
       dialogDatePicker,
-      dialogRangeDatePicker,
-      chatWidget,
-      alarmCard,
-      api,
-      medicalFilesWidget
+      dialogRangeDatePicker
     } = this.props
     const {
-      canPrint,
       loadingState,
       chartPrefs,
       chartStates,
@@ -333,7 +326,6 @@ class PatientDataPage extends React.Component {
       bgPrefs,
       timePrefs
     } = this.state
-    const user = api.whoami
 
     return (
       <React.Fragment>
@@ -348,42 +340,19 @@ class PatientDataPage extends React.Component {
         />
         <Switch>
           <Route path={`${prefixURL}/dashboard`}>
-            {patient.monitoring?.enabled
-              ? <BlipOldDashboard
-                bgPrefs={this.state.bgPrefs}
-                chartPrefs={chartPrefs}
-                patient={patient}
-                setPatient={setPatient}
-                userIsHCP={userIsHCP}
-                user={user}
-                isSelectedTeamMedical={isSelectedTeamMedical}
-                dataUtil={this.dataUtil}
-                timePrefs={this.state.timePrefs}
-                epochLocation={epochLocation}
-                msRange={msRange}
-                loading={loadingState !== LOADING_STATE_DONE}
-                medicalDataService={medicalData}
-                trackMetric={this.trackMetric}
-                chatWidget={chatWidget}
-                alarmCard={alarmCard}
-                medicalFilesWidget={medicalFilesWidget}
-                onSwitchToDaily={this.handleSwitchToDaily}
-                canPrint={canPrint}
-              />
-              : <PatientDashboard
-                bgPrefs={bgPrefs}
-                chartPrefs={chartPrefs}
-                dataUtil={this.dataUtil}
-                epochDate={epochLocation}
-                loading={loadingState !== LOADING_STATE_DONE}
-                medicalDataService={medicalData}
-                msRange={msRange}
-                patient={patient}
-                timePrefs={timePrefs}
-                trackMetric={this.trackMetric}
-                onSwitchToDaily={this.handleSwitchToDaily}
-              />
-            }
+            <PatientDashboard
+              bgPrefs={bgPrefs}
+              chartPrefs={chartPrefs}
+              dataUtil={this.dataUtil}
+              epochDate={epochLocation}
+              loading={loadingState !== LOADING_STATE_DONE}
+              medicalDataService={medicalData}
+              msRange={msRange}
+              patient={patient}
+              timePrefs={timePrefs}
+              trackMetric={this.trackMetric}
+              onSwitchToDaily={this.handleSwitchToDaily}
+            />
           </Route>
           <Route path={`${prefixURL}/daily`}>
             <Daily
@@ -985,13 +954,8 @@ class PatientDataPage extends React.Component {
 
 PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
-  chatWidget: PropTypes.func.isRequired,
-  alarmCard: PropTypes.func.isRequired,
-  medicalFilesWidget: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  userIsHCP: PropTypes.bool.isRequired,
-  isSelectedTeamMedical: PropTypes.bool.isRequired,
   store: PropTypes.object.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,

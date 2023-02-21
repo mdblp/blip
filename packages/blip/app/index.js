@@ -60,16 +60,11 @@ function ReduxProvider(props) {
         store={store}
         patient={props.patient}
         setPatient={props.setPatient}
-        userIsHCP={props.userIsHCP}
-        isSelectedTeamMedical={props.isSelectedTeamMedical}
         prefixURL={props.prefixURL}
         history={historyHook}
         dialogDatePicker={props.dialogDatePicker}
         dialogRangeDatePicker={props.dialogRangeDatePicker}
         dialogPDFOptions={props.dialogPDFOptions}
-        chatWidget={props.chatWidget}
-        alarmCard={props.alarmCard}
-        medicalFilesWidget={props.medicalFilesWidget}
       />
     </Provider>
   )
@@ -79,15 +74,10 @@ ReduxProvider.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  userIsHCP: PropTypes.bool.isRequired,
-  isSelectedTeamMedical: PropTypes.bool.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
-  dialogPDFOptions: PropTypes.func.isRequired,
-  chatWidget: PropTypes.func.isRequired,
-  alarmCard: PropTypes.func.isRequired,
-  medicalFilesWidget: PropTypes.func.isRequired
+  dialogPDFOptions: PropTypes.func.isRequired
 }
 
 /**
@@ -96,7 +86,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === 'object') {
     try {
-      const { config, api, patient, setPatient, userIsHCP, isSelectedTeamMedical, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, medicalFilesWidget } = props
+      const { config, api, patient, setPatient, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions } = props
       updateConfig(config)
 
       return (
@@ -104,15 +94,10 @@ function Blip(props) {
           api={api}
           patient={patient}
           setPatient={setPatient}
-          userIsHCP={userIsHCP}
-          isSelectedTeamMedical={isSelectedTeamMedical}
           prefixURL={prefixURL}
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
-          chatWidget={chatWidget}
-          alarmCard={alarmCard}
-          medicalFilesWidget={medicalFilesWidget}
         />
       )
     } catch (err) {
@@ -129,15 +114,10 @@ Blip.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  userIsHCP: PropTypes.bool.isRequired,
-  isSelectedTeamMedical: PropTypes.bool.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
-  dialogPDFOptions: PropTypes.func.isRequired,
-  chatWidget: PropTypes.func.isRequired,
-  alarmCard: PropTypes.func.isRequired,
-  medicalFilesWidget: PropTypes.func.isRequired
+  dialogPDFOptions: PropTypes.func.isRequired
 }
 
 export { cleanStore }

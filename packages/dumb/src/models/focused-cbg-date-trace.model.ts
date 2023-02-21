@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface NewMedicalRecord {
-  patientId: string
-  teamId: string
-  diagnosis: string
-  progressionProposal: string
-  trainingSubject: string
-}
+import { type CbgDateTrace } from './cbg-date-trace.model'
+import { type CbgPositionData } from './cbg-position-data.model'
 
-export interface MedicalRecord extends NewMedicalRecord {
-  id: string
-  authorId: string
-  creationDate: string
+export interface FocusedCbgDateTrace {
+  data: CbgDateTrace
+  position: CbgPositionData
 }

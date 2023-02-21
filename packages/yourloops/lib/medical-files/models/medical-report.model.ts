@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2022, Diabeloop
- * Dashboard common css variable
+/*
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,14 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-:root {
-  --section-title-color: #414141;
-  --section-title-font-size: 16px;
-  --section-title-font-weight: 500;
-  --section-title-line-height: 20px;
-  --section-title-margin: 0.25em;
-  /*equivalent to theme.palette.grey[100] in yourloops*/
-  --card-header-background-color: #EEEEEE;
-  --chat-widget-private-msg-mine: #329F92;
-  --chat-widget-private-msg-not-mine: #5ABCB3;
+export interface NewMedicalReport {
+  patientId: string
+  teamId: string
+  diagnosis: string
+  progressionProposal: string
+  trainingSubject: string
+}
+
+export interface MedicalReport extends NewMedicalReport {
+  id: string
+  authorId: string
+  creationDate: string
+}
+
+export interface MedicalReportWithIndex {
+  medicalReport: MedicalReport
+  index?: number
+}
+
+export interface MedicalReportDialogPayload extends MedicalReportWithIndex {
+  medicalReportDate: string
 }

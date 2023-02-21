@@ -50,7 +50,10 @@ interface PatientNavBarProps {
 const styles = makeStyles()((theme: Theme) => {
   return {
     topContainer: {
-      backgroundColor: theme.palette.common.white
+      backgroundColor: theme.palette.common.white,
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      paddingBlock: theme.spacing(1),
+      width: '100%'
     },
     backIcon: {
       cursor: 'pointer',
@@ -74,8 +77,7 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
 
   const { user } = useAuth()
   const history = useHistory()
-
-  const { classes, theme } = styles()
+  const { classes } = styles()
 
   const goBackHome = (): void => {
     history.push('/')
@@ -83,16 +85,15 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
 
   return (
     <Box data-testid="patient-nav-bar" display="flex" flexDirection="column" marginBottom={3}>
-      <Box className={classes.topContainer} borderBottom={`1px solid ${theme.palette.divider}`} width="100%">
-        {!user.isUserPatient() && (
+      {!user.isUserPatient() &&
+        <Box className={classes.topContainer}>
           <Box display="flex" paddingTop={2}>
             <ArrowBackIcon data-testid="subnav-arrow-back" className={classes.backIcon} onClick={goBackHome} />
             <PatientNavBarSelect currentPatient={currentPatient} onSwitchPatient={onSwitchPatient} />
             <PatientNavBarInfoList patient={currentPatient} />
           </Box>
-        )
-        }
-      </Box>
+        </Box>
+      }
       <PatientNavBarTabs
         chartType={chartType}
         onClickDashboard={onClickDashboard}

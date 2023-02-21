@@ -28,9 +28,6 @@
 
 import { AppConfig } from 'yourloops/lib/config/models/app-config.model'
 import { Patient } from 'yourloops/lib/patient/models/patient.model'
-import ChatWidget from 'yourloops/components/chat/chat-widget'
-import MedicalFilesWidget from 'yourloops/components/dashboard-widgets/medical-files/medical-files-widget'
-import AlarmCard from 'yourloops/components/alarm/alarm-card'
 import BlipApi from 'yourloops/lib/data/blip.api'
 import DialogDatePicker from 'yourloops/components/date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from 'yourloops/components/date-pickers/dialog-range-date-picker'
@@ -47,17 +44,11 @@ interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
   patient: Patient;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   setPatient: Function;
-  userIsHCP: boolean;
-  isSelectedTeamMedical: boolean;
   prefixURL: string;
   dialogDatePicker: typeof DialogDatePicker;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   dialogPDFOptions: typeof DialogPDFOptions;
-  chatWidget: typeof ChatWidget;
-  medicalFilesWidget: typeof MedicalFilesWidget;
-  alarmCard: typeof AlarmCard;
 }
 
 // FIXME: For some reason, the yourloops auth hook
