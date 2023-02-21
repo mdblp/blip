@@ -118,7 +118,7 @@ describe('Notification', () => {
       )
 
       expect(getByText(container, 'Jeanne Dubois invites you to join', { exact: false })).not.toBeNull()
-      expect(container.querySelector(`#notification-help-${notif.id}-icon`)).not.toBeNull()
+      expect(container.querySelector(`#notification-help-${notif.id}-button`)).not.toBeNull()
     })
 
     it('should display medical team join invitation for a patient', () => {
