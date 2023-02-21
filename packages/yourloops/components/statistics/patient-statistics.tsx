@@ -26,37 +26,37 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type VizDataUtil } from 'tidepool-viz'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { BgSource } from 'dumb/src/models/blood-glucose.model'
+import { type BgType, type DateFilter, type MedicalData, DatumType, TimeService } from 'medical-domain'
+import { GlycemiaStatisticsService } from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 
 export interface PatientStatisticsProps {
-  dataUtil: VizDataUtil
+  medicalData: MedicalData
   bgPrefs: BgPrefs
-  endpoints: string[]
+  dateFilter: DateFilter
+  bgSource: BgType
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { dataUtil, bgPrefs, endpoints, children } = props
+  const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
   const theme = useTheme()
-  dataUtil.endpoints = endpoints
-  const cbgStatType: CBGStatType = dataUtil.bgSource === BgSource.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
-    ? dataUtil.getTimeInRangeData()
-    : dataUtil.getReadingsInRangeData()
-
+    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, dateFilter)
+    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, dateFilter)
+  const numberOfDays = TimeService.numberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
-        bgBounds={dataUtil.bgBounds}
-        bgSource={dataUtil.bgSource}
+        bgBounds={bgPrefs.bgBounds}
+        bgSource={bgSource}
         cbgStatType={cbgStatType}
         data={cbgPercentageBarChartData}
         bgPrefs={bgPrefs}
-        days={dataUtil?.days ?? 0}
+        days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}
