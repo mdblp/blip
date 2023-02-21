@@ -33,9 +33,7 @@ import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
-import HelpIcon from '@mui/icons-material/Help'
 import MedicalServiceIcon from '../../components/icons/medical-service-icon'
-import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 
@@ -163,11 +161,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({
-  id,
-  type,
-  className
-}: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
       return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
@@ -257,7 +251,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   }
 
   const onDecline = async (): Promise<void> => {
-    setInProgress(true)
+    // setInProgress(true)
     try {
       await notifications.decline(notification)
       metrics.send('invitation', 'decline_invitation', notification.metricsType)
@@ -294,19 +288,22 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             }}
           />}
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => { setDisplayMonitoringTerms(false) }}
+          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => {
+            setDisplayMonitoringTerms(false)
+          }}
                                    teamName={notification.target.name} />
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
-          <IconButton
+          <Button
             id={`notification-help-${id}-button`}
-            className="notification-help-button"
-            size="medium"
             color="primary"
-            aria-label="notification-help-button"
+            variant="contained"
+            disableElevation
+            className={`${classes.buttonAccept} notification-button-accept`}
+            disabled={inProgress}
             onClick={props.onHelp}>
-            <HelpIcon id={`notification-help-${id}-icon`} />
-          </IconButton>
+            {t('button-accept')}
+          </Button>
         ) : (
           <Button
             id={`notification-button-accept-${id}`}
