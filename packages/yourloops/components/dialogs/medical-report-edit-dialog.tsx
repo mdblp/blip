@@ -167,9 +167,10 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
         <Button
           data-testid="medical-report-close"
           disableElevation
+          variant="outlined"
           onClick={onClose}
         >
-          {isInReadOnly ? t('close') : t('cancel')}
+          {isInReadOnly ? t('button-close') : t('button-cancel')}
         </Button>
         {!isInReadOnly &&
           <ProgressIconButtonWrapper inProgress={inProgress}>
@@ -180,7 +181,7 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
               disabled={isSaveButtonDisabled}
               onClick={saveMedicalReport}
             >
-              {t('save')}
+              {t('button-save')}
             </Button>
           </ProgressIconButtonWrapper>
         }

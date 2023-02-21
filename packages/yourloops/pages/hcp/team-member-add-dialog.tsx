@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -123,6 +123,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
       <DialogActions>
         <Button
           id="team-add-member-dialog-button-cancel"
+          variant="outlined"
           onClick={handleClickClose}
         >
           {t('button-cancel')}

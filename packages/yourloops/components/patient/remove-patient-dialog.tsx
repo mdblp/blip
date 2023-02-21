@@ -68,7 +68,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       onClose={onClose}
     >
       <DialogTitle>
-        <strong>{t('remove-patient')}</strong>
+        <strong>{t('button-remove-patient')}</strong>
       </DialogTitle>
 
       <DialogContent>
@@ -122,7 +122,10 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       }
 
       <DialogActions>
-        <Button onClick={onClose}>
+        <Button
+          variant="outlined"
+          onClick={onClose}
+        >
           {t('button-cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={processing}>
@@ -134,7 +137,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
             disableElevation
             onClick={handleOnClickRemove}
           >
-            {t('remove-patient')}
+            {t('button-remove-patient')}
           </Button>
         </ProgressIconButtonWrapper>
       </DialogActions>

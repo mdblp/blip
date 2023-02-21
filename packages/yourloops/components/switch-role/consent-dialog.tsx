@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -93,6 +93,7 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
       <DialogActions id="switch-role-consent-dialog-actions">
         <Button
           id="switch-role-consent-dialog-button-decline"
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-decline')}

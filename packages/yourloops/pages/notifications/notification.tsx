@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -322,6 +322,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
         )}
         <Button
           id={`notification-button-decline-${id}`}
+          variant="outlined"
           className={`${classes.buttonDecline} notification-button-decline`}
           disabled={inProgress}
           onClick={onDecline}>

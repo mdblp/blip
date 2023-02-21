@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,9 +60,10 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
     >
       <Box marginRight={2}>
         <Button
+          variant="outlined"
           onClick={onClickBackButton}
         >
-          {t('back')}
+          {t('button-back')}
         </Button>
       </Box>
       <ProgressIconButtonWrapper inProgress={inProgress}>

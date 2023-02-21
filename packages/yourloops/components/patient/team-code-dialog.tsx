@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -105,6 +105,7 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
       <DialogActions>
         <Button
           id="patient-list-dialog-team-code-button-ok"
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-ok')}

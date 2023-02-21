@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -194,7 +194,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
       }
 
       <SignupStepperActionButtons
-        nextButtonLabel={t('create-account')}
+        nextButtonLabel={t('button-create-account')}
         inProgress={saving}
         disabled={_.some(errors) || saving || isFormEmpty}
         onClickBackButton={handleBack}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -82,6 +82,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
       <DialogActions id="switch-role-profession-dialog-actions">
         <Button
           id="switch-role-profession-dialog-button-decline"
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-decline')}

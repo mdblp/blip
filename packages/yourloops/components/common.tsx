@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,9 +29,6 @@ import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 export const commonComponentStyles = makeStyles()((theme: Theme) => ({
-  button: {
-    textTransform: 'capitalize'
-  },
   categoryHeader: {
     display: 'flex',
     justifyContent: 'space-between',

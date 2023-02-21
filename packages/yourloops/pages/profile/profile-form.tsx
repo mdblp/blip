@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,7 +49,7 @@ export const ProfileForm: FunctionComponent = () => {
       <PreferencesForm />
       <Box display="flex" justifyContent="flex-end" my={3}>
         <LinkRedirect className={classes.cancelLink} to="/">
-          <Button>
+          <Button variant="outlined">
             {t('button-cancel')}
           </Button>
         </LinkRedirect>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,7 +69,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
       <DialogActions>
         <Button
           data-testid="confirm-dialog-cancel-button"
-          disableElevation
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-cancel')}
@@ -83,7 +83,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
             disabled={inProgress}
             onClick={onConfirm}
           >
-            {t('confirm')}
+            {t('button-confirm')}
           </Button>
         </ProgressIconButtonWrapper>
       </DialogActions>

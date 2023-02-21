@@ -44,7 +44,6 @@ import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   button: {
-    textTransform: 'capitalize',
     fontSize: '1.1rem',
     width: '100%',
     paddingBlock: theme.spacing(1)
@@ -142,7 +141,7 @@ const LoginPageMobile: FunctionComponent = () => {
             className={classes.button}
             sx={{ marginBlock: theme.spacing(3) }}
           >
-            {t('register')}
+            {t('button-register')}
           </Button>
           <Button
             data-testid="login-button"
@@ -151,7 +150,7 @@ const LoginPageMobile: FunctionComponent = () => {
             onClick={loginWithRedirect}
             className={classes.button}
           >
-            {t('connect')}
+            {t('button-connect')}
           </Button>
         </Box>
       </Box>

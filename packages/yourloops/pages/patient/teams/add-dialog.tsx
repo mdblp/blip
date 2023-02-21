@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -185,6 +185,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
       <DialogActions>
         <Button
           id="team-add-dialog-button-cancel"
+          variant="outlined"
           onClick={props.handleClose}
         >
           {t('button-cancel')}
@@ -295,6 +296,7 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
       <DialogActions>
         <Button
           id="team-add-dialog-confirm-team-button-cancel"
+          variant="outlined"
           onClick={props.handleClose}
         >
           {t('button-cancel')}

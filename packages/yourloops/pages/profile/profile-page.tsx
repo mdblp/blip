@@ -117,10 +117,9 @@ const ProfilePage: FunctionComponent = () => {
                     variant="outlined"
                     color="primary"
                     disableElevation
-                    className={classes.button}
                     onClick={sendChangePasswordEmail}
                   >
-                    {t('change-password')}
+                    {t('button-change-password')}
                   </Button>
                 </Box>
               </Box>

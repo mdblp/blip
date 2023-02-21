@@ -88,9 +88,10 @@ export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDe
       <DialogActions>
         <Button
           disableElevation
+          variant="outlined"
           onClick={onClose}
         >
-          {t('cancel')}
+          {t('button-cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={inProgress}>
           <Button
@@ -100,7 +101,7 @@ export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDe
             color="error"
             onClick={deleteMedicalReport}
           >
-            {t('delete')}
+            {t('button-delete')}
           </Button>
         </ProgressIconButtonWrapper>
       </DialogActions>

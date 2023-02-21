@@ -354,7 +354,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               onClick={resetToTeamDefaultValues}
               data-testid="alarm-config-reset"
             >
-              {t('default-values')}
+              {t('button-default-values')}
             </Button>
           }
         </Box>
@@ -363,6 +363,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Button
               id="cancel-button-id"
               className={classes.cancelButton}
+              variant="outlined"
               onClick={onClose}
               data-testid="alarm-config-cancel"
             >

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -219,6 +219,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
       </Box>
       <DialogActions>
         <Button
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-cancel')}
