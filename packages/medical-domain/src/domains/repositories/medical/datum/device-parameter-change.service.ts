@@ -34,6 +34,7 @@ import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { DeviceEventSubtype } from '../../../models/medical/datum/enums/deviceevent-subtype.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -49,7 +50,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const deviceParameterChange: DeviceParameterChange = {
     ...base,
     type: DatumType.DeviceEvent,
-    subType: 'deviceParameter',
+    subType: DeviceEventSubtype.DeviceParameter,
     params: [
       {
         id: base.id,

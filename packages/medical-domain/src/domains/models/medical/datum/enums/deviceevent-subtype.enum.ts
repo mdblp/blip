@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum DurationUnit {
-  Hours = 'hours',
-  Minutes = 'minutes',
-  Seconds = 'seconds',
-  Milliseconds = 'milliseconds'
+export enum DeviceEventSubtype {
+  Confidential = 'confidential',
+  DeviceParameter = 'deviceParameter',
+  ReservoirChange = 'reservoirChange',
+  Warmup = 'warmup',
+  Zen = 'zen',
 }
-
-export default DurationUnit

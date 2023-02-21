@@ -1,4 +1,5 @@
 import moment from 'moment-timezone'
+import { type WeekDaysFilter } from '../../models/time/date-filter.model'
 import type WeekDays from '../../models/time/enum/weekdays.enum'
 
 const INVALID_TIMEZONES = ['UTC', 'GMT', 'Etc/GMT']
@@ -90,6 +91,10 @@ export function getNormalizedEnd(time: string, duration: number, unit: string): 
   }
 }
 
+function getWeekDay(mTime: moment.Moment): WeekDays {
+  return mTime.locale('en').format('dddd').toLowerCase() as WeekDays
+}
+
 export function getTrendsTime(epoch: number, timezone: string): TrendsTime {
   const mTime = moment.tz(epoch, timezone)
   const msPer24 = mTime.hours() * 1000 * 60 * 60 +
@@ -98,7 +103,7 @@ export function getTrendsTime(epoch: number, timezone: string): TrendsTime {
                   mTime.milliseconds()
   return {
     localDate: mTime.format('YYYY-MM-DD'),
-    isoWeekday: mTime.locale('en').format('dddd').toLowerCase() as WeekDays,
+    isoWeekday: getWeekDay(mTime),
     msPer24
   }
 }
@@ -165,3 +170,20 @@ export async function waitTimeout(timeout: number): Promise<void> {
 export const isEpochBetweenBounds = (epoch: number, start: number, end: number): boolean => (
   epoch >= start && epoch < end
 )
+
+export function diffDays(start: number, end: number): number {
+  return moment.utc(end).diff(moment.utc(start)) / MS_IN_DAY
+}
+
+export function numberOfDays(start: number, end: number, daysFilter?: WeekDaysFilter): number {
+  const totalDays = diffDays(start, end)
+  if (daysFilter === undefined || Object.values(daysFilter).every(val => val)) {
+    return totalDays
+  }
+  const firstDay = moment.utc(start)
+  return [...Array(totalDays).keys()].reduce((count, dayOffset) => {
+    const currentDay = moment(firstDay).add(dayOffset, 'days')
+    const weekDay = getWeekDay(currentDay)
+    return daysFilter[weekDay] ? count + 1 : count
+  }, 0)
+}

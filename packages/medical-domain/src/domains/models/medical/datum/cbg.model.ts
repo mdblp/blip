@@ -69,6 +69,7 @@ function isBg(value: unknown): value is Bg {
 }
 type Cbg = Bg & {
   type: DatumType.Cbg
+  deviceName: string
 }
 
 export default Cbg

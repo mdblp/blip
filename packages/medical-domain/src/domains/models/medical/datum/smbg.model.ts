@@ -29,7 +29,7 @@ import { type Bg } from './cbg.model'
 import { type DatumType } from './enums/datum-type.enum'
 
 type Smbg = Bg & {
-  type: DatumType
+  type: DatumType.Smbg
 }
 
 export default Smbg
