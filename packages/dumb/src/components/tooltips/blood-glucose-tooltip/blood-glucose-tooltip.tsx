@@ -42,8 +42,8 @@ import {
   type Position,
   type Side
 } from '../common/tooltip/tooltip'
-import { type BgPrefs, ClassificationType } from '../../../models/blood-glucose.model'
-import { type Cbg, type Smbg, type TimePrefs } from 'medical-domain'
+import { type BgPrefs } from '../../../models/blood-glucose.model'
+import { type Cbg, type Smbg, type TimePrefs, ClassificationType } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TooltipColor } from '../../../models/enums/tooltip-color.enum'

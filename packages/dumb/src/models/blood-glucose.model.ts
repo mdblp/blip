@@ -25,25 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgClasses } from 'medical-domain'
+import { type BgBounds, type BgClasses } from 'medical-domain'
 import { type UnitsType } from './enums/units-type.enum'
-
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
 
 export interface BgPrefs {
   bgUnits: UnitsType
   bgBounds?: BgBounds
   bgClasses: BgClasses
-}
-
-export enum ClassificationType {
-  FiveWay = 'fiveWay',
-  ThreeWay = 'threeWay'
 }
 
 export enum BgClass {
@@ -52,9 +40,4 @@ export enum BgClass {
   Target = 'target',
   VeryHigh = 'veryHigh',
   VeryLow = 'veryLow',
-}
-
-export enum BgSource {
-  Cbg = 'cbg',
-  Smbg = 'smbg'
 }
