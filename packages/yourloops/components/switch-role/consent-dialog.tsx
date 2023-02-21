@@ -98,7 +98,7 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
           {t('button-decline')}
         </Button>
         <Button
-          id="switch-role-consent-dialog-button-accept"
+          data-testid='switch-role-consent-dialog-button-accept'
           variant="contained"
           color="primary"
           disableElevation
