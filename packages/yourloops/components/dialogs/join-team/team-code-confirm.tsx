@@ -37,6 +37,7 @@ import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { useAlert } from '../../utils/snackbar'
 import ProgressIconButtonWrapper from '../../buttons/progress-icon-button-wrapper'
+import { getNumericCode } from '../../../lib/team/team-code.utils'
 
 export interface ConfirmTeamProps {
   onClickCancel: () => void
@@ -54,14 +55,6 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const [idCode, setIdCode] = useState<string>('')
   const [isInProgress, setIsInProgress] = useState<boolean>(false)
   const joinButtonDisabled = !idCode.match(REGEX_TEAM_CODE_DISPLAY)
-
-  const getNumericCode = (value: string): string => {
-    const code = value.replaceAll(' ', '').replaceAll('-', '').replace(/\D/g, '')
-    if (/^[0-9]*$/.test(code)) {
-      return code
-    }
-    throw new Error('invalid code')
-  }
 
   const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const numericCode = getNumericCode(event.target.value)
@@ -119,7 +112,6 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
                 variant="standard"
                 value={idCode}
                 onChange={handleChangeCode}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 fullWidth
                 inputRef={inputRef}
                 InputProps={{ sx: { width: 120, '& > input': { textAlign: 'center' } } }}
