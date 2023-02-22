@@ -38,7 +38,6 @@ export interface ParameterValue {
   unit: Unit
 }
 
-
 export interface Parameter {
   changeType: ChangeType
   effectiveDate: string

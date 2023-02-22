@@ -88,7 +88,7 @@ const getLatestDate = (parameters: Parameter[]): Date => {
   }, new Date(0))
 }
 
-export const buildAllRows = (history: IncomingRow[], timePrefs: TimePrefs): HistorizedParameter[] => {
+export const transformToViewModels = (history: IncomingRow[], timePrefs: TimePrefs): HistorizedParameter[] => {
   const dateFormat = getLongDayHourFormat()
   const currentParameters = new Map<string, ParameterValue>()
 

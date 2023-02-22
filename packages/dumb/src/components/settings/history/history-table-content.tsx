@@ -30,7 +30,7 @@ import { HistoryTableRow } from './history-table-row'
 import React, { FunctionComponent } from 'react'
 import { TimePrefs } from 'medical-domain'
 import { IncomingRow } from '../../../models/historized-parameter.model'
-import { buildAllRows } from './history-table.util'
+import { transformToViewModels } from './history-table.core'
 
 interface HistoryTableContentProps {
   onSwitchToDaily: Function
@@ -41,17 +41,17 @@ interface HistoryTableContentProps {
 
 export const HistoryTableContent: FunctionComponent<HistoryTableContentProps> = (props): JSX.Element => {
   const { onSwitchToDaily, rows, timePrefs, length } = props
-  const allRows = buildAllRows(rows, timePrefs)
+  const allRows = transformToViewModels(rows, timePrefs)
 
   return (
     <tbody>
     {
-      allRows.map((row, key) => {
-        if (row.isGroupedParameterHeader) {
-          return <HistorySpannedRow key={key} data={row} length={length} onSwitchToDaily={onSwitchToDaily} />
-        }
-        return <HistoryTableRow key={key} data={row} />
-      })
+      allRows.map((row, key) =>
+        row.isGroupedParameterHeader
+          ? (<HistorySpannedRow key={key} data={row} length={length} onSwitchToDaily={onSwitchToDaily} />)
+          : (<HistoryTableRow key={key} data={row} />)
+      )
     }
-    </tbody>)
+    </tbody>
+  )
 }

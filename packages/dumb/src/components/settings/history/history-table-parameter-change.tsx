@@ -34,28 +34,28 @@ interface HistoryTableParameterChangeProps {
   parameter: HistorizedParameter
 }
 
-const buildIcon = (change: ChangeType): JSX.Element => {
+const buildIconCssClass = (change: ChangeType): string => {
   switch (change) {
     case ChangeType.Added:
-      return <i className="icon-add" />
+      return 'icon-add'
     case ChangeType.Deleted:
-      return <i className="icon-remove" />
+      return 'icon-remove'
     case ChangeType.Updated:
-      return <i className="icon-refresh" />
+      return 'icon-refresh'
     default:
       break
   }
-  return <i className="icon-unsure-data" />
+  return 'icon-unsure-data'
 }
 
 export const HistoryTableParameterChange: FunctionComponent<HistoryTableParameterChangeProps> = (props): JSX.Element => {
   const { t } = useTranslation('main')
   const { parameter } = props
 
-  const icon = buildIcon(parameter.changeType)
+  const iconClass = buildIconCssClass(parameter.changeType)
   return (
     <span>
-      {icon}
+      <i className={iconClass} />
       <span
         className={styles.parameterHistory}>
           {t(`params|${parameter.name}`)}

@@ -34,7 +34,7 @@ interface HistoryTableParameterValueChangeProps {
   parameter: HistorizedParameter
 }
 
-const selectSpanClass = (change: ChangeType): string => {
+const buildSpanClass = (change: ChangeType): string => {
   const spanClass = `parameters-history-table-value ${styles.historyValue}`
   switch (change) {
     case ChangeType.Added:
@@ -52,7 +52,7 @@ const selectSpanClass = (change: ChangeType): string => {
 
 export const HistoryTableParameterValueChange: FunctionComponent<HistoryTableParameterValueChangeProps> = (props): JSX.Element => {
   const { parameter } = props
-  const spanClass = selectSpanClass(parameter.changeType)
+  const spanClass = buildSpanClass(parameter.changeType)
   const currentValue = formatParameterValue(parameter.value, parameter.unit)
 
   return (
