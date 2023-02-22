@@ -32,6 +32,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2144 Migrate dashboard from blip to Yourloops
 - YLP-2159 Get rid of connectWithTransitionGroup in viz
 - YLP-2162 Migrate CbgDateTrace store from redux to TrendsProvider
+- YLP-2176 Migrate CBG slice actions from redux to TrendsProvider
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
