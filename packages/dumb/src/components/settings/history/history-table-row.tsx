@@ -27,30 +27,31 @@
 
 import React, { FunctionComponent } from 'react'
 import styles from '../diabeloop.css'
-import { TimePrefs } from 'medical-domain'
-import { useTranslation } from 'react-i18next'
-import { HistoryTableHeader } from './history-table-header'
-import { HistoryTableContent } from './history-table-content'
-import { IncomingRow } from '../../../models/historized-parameter.model'
+import { HistorizedParameter } from '../../../models/historized-parameter.model'
+import { HistoryTableParameterChange } from './history-table-parameter-change'
+import { HistoryTableParameterValueChange } from './history-table-parameter-value-change'
 
-interface HistoryParameterTableProps {
-  rows: IncomingRow[]
-  onSwitchToDaily: Function
-  timePrefs: TimePrefs
+interface HistoryTableRowsProps {
+  data: HistorizedParameter
 }
 
-export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps> = (props) => {
-  const { t } = useTranslation('main')
-  const { rows, onSwitchToDaily, timePrefs } = props
+export const HistoryTableRow: FunctionComponent<HistoryTableRowsProps> = (props) => {
+  const { data } = props
 
   return (
-    <table className={styles.settingsTable}>
-      <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}
-        <span className={styles.secondaryLabelWithMain} />
-      </caption>
-      <HistoryTableHeader />
-      <HistoryTableContent rows={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
-    </table>
+    <tr data-testid={`${data.rawData.toLowerCase()}-row`} >
+      <td data-testid={`${data.rawData.toLowerCase()}-level`} className={styles.secondaryLabelWithMain}>
+        {data.level}
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-valueChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterValueChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterDate`} className={styles.secondaryLabelWithMain}>
+        {data.parameterDate}
+      </td>
+    </tr>
   )
 }

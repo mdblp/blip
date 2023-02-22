@@ -25,32 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { formatParameterValue } from '../../../utils/format/format.util'
 import React, { FunctionComponent } from 'react'
+import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
 import styles from '../diabeloop.css'
-import { TimePrefs } from 'medical-domain'
-import { useTranslation } from 'react-i18next'
-import { HistoryTableHeader } from './history-table-header'
-import { HistoryTableContent } from './history-table-content'
-import { IncomingRow } from '../../../models/historized-parameter.model'
 
-interface HistoryParameterTableProps {
-  rows: IncomingRow[]
-  onSwitchToDaily: Function
-  timePrefs: TimePrefs
+interface HistoryTableParameterValueChangeProps {
+  parameter: HistorizedParameter
 }
 
-export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps> = (props) => {
-  const { t } = useTranslation('main')
-  const { rows, onSwitchToDaily, timePrefs } = props
+const buildSpanClass = (change: ChangeType): string => {
+  const spanClass = `parameters-history-table-value ${styles.historyValue}`
+  switch (change) {
+    case ChangeType.Added:
+      return `${spanClass} ${styles.valueAdded}`
+    case ChangeType.Deleted:
+      return `${spanClass} ${styles.valueDeleted}`
+    case ChangeType.Updated: {
+      return `${spanClass} ${styles.valueUpdated}`
+    }
+    default:
+      break
+  }
+  return spanClass
+}
+
+export const HistoryTableParameterValueChange: FunctionComponent<HistoryTableParameterValueChangeProps> = (props): JSX.Element => {
+  const { parameter } = props
+  const spanClass = buildSpanClass(parameter.changeType)
+  const currentValue = formatParameterValue(parameter.value, parameter.unit)
 
   return (
-    <table className={styles.settingsTable}>
-      <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}
-        <span className={styles.secondaryLabelWithMain} />
-      </caption>
-      <HistoryTableHeader />
-      <HistoryTableContent rows={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
-    </table>
+    <span className={spanClass} data-changetype={parameter.changeType}>
+      {parameter.changeType === ChangeType.Updated &&
+        <>
+          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
+          <i className="icon-next" key="icon-next" />
+        </>
+      }
+        <span>{`${currentValue} ${parameter.unit}`}</span>
+    </span>
   )
 }

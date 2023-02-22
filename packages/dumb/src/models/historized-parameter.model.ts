@@ -25,32 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
-import styles from '../diabeloop.css'
-import { TimePrefs } from 'medical-domain'
-import { useTranslation } from 'react-i18next'
-import { HistoryTableHeader } from './history-table-header'
-import { HistoryTableContent } from './history-table-content'
-import { IncomingRow } from '../../../models/historized-parameter.model'
+import { Unit } from 'medical-domain'
 
-interface HistoryParameterTableProps {
-  rows: IncomingRow[]
-  onSwitchToDaily: Function
-  timePrefs: TimePrefs
+export enum ChangeType {
+  Added = 'added',
+  Deleted = 'deleted',
+  Updated = 'updated'
 }
 
-export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps> = (props) => {
-  const { t } = useTranslation('main')
-  const { rows, onSwitchToDaily, timePrefs } = props
+export interface ParameterValue {
+  value: string
+  unit: Unit
+}
 
-  return (
-    <table className={styles.settingsTable}>
-      <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}
-        <span className={styles.secondaryLabelWithMain} />
-      </caption>
-      <HistoryTableHeader />
-      <HistoryTableContent rows={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
-    </table>
-  )
+export interface Parameter {
+  changeType: ChangeType
+  effectiveDate: string
+  name: string
+  unit: Unit
+  level: number
+  value: string
+}
+
+export interface IncomingRow {
+  changeDate: string
+  parameters: Parameter[]
+}
+
+export interface HistorizedParameter extends Parameter {
+  rawData: string
+  parameterDate: string
+  previousUnit: Unit
+  previousValue: string
+  isGroupedParameterHeader: boolean
+  groupedParameterHeaderContent: string
+  latestDate: Date
 }

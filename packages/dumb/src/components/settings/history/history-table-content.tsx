@@ -25,32 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { HistorySpannedRow } from './history-table-spanned-row'
+import { HistoryTableRow } from './history-table-row'
 import React, { FunctionComponent } from 'react'
-import styles from '../diabeloop.css'
 import { TimePrefs } from 'medical-domain'
-import { useTranslation } from 'react-i18next'
-import { HistoryTableHeader } from './history-table-header'
-import { HistoryTableContent } from './history-table-content'
 import { IncomingRow } from '../../../models/historized-parameter.model'
+import { transformToViewModels } from './history-table.core'
 
-interface HistoryParameterTableProps {
-  rows: IncomingRow[]
+interface HistoryTableContentProps {
   onSwitchToDaily: Function
+  rows: IncomingRow[]
   timePrefs: TimePrefs
+  length: number
 }
 
-export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps> = (props) => {
-  const { t } = useTranslation('main')
-  const { rows, onSwitchToDaily, timePrefs } = props
+export const HistoryTableContent: FunctionComponent<HistoryTableContentProps> = (props): JSX.Element => {
+  const { onSwitchToDaily, rows, timePrefs, length } = props
+  const allRows = transformToViewModels(rows, timePrefs)
 
   return (
-    <table className={styles.settingsTable}>
-      <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}
-        <span className={styles.secondaryLabelWithMain} />
-      </caption>
-      <HistoryTableHeader />
-      <HistoryTableContent rows={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
-    </table>
+    <tbody>
+    {
+      allRows.map((row, key) =>
+        row.isGroupedParameterHeader
+          ? (<HistorySpannedRow key={key} data={row} length={length} onSwitchToDaily={onSwitchToDaily} />)
+          : (<HistoryTableRow key={key} data={row} />)
+      )
+    }
+    </tbody>
   )
 }

@@ -27,11 +27,10 @@
 
 import styles from '../diabeloop.css'
 import React, { FunctionComponent } from 'react'
-import { HistorizedParameter } from './history-table'
+import { HistorizedParameter } from '../../../models/historized-parameter.model'
 
 interface HistorySpannedRowProps {
   data: HistorizedParameter
-  rowKey: number
   length: number
   onSwitchToDaily: Function
 }
@@ -39,16 +38,15 @@ interface HistorySpannedRowProps {
 const ONE_SPACE_STRING = '&nbsp;'
 
 export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data, rowKey, length } = props
-  const content = data.spannedContent ?? ONE_SPACE_STRING
+  const { onSwitchToDaily, data, length } = props
+  const content = data.groupedParameterHeaderContent ?? ONE_SPACE_STRING
 
   const handleSwitchToDaily = (): void => {
-    onSwitchToDaily(data.mLatestDate)
+    onSwitchToDaily(data.latestDate)
   }
-  const dateString = data.mLatestDate.toISOString()
-  console.log('key:', rowKey)
+  const dateString = data.latestDate.toString()
   return (
-    <tr key={rowKey} className={styles.spannedRow} >
+    <tr className={styles.spannedRow} >
       <td colSpan={length}>
         {content}
         <i

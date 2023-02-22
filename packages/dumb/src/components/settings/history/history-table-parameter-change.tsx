@@ -25,32 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
 import styles from '../diabeloop.css'
-import { TimePrefs } from 'medical-domain'
+import React, { FunctionComponent } from 'react'
+import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
 import { useTranslation } from 'react-i18next'
-import { HistoryTableHeader } from './history-table-header'
-import { HistoryTableContent } from './history-table-content'
-import { IncomingRow } from '../../../models/historized-parameter.model'
 
-interface HistoryParameterTableProps {
-  rows: IncomingRow[]
-  onSwitchToDaily: Function
-  timePrefs: TimePrefs
+interface HistoryTableParameterChangeProps {
+  parameter: HistorizedParameter
 }
 
-export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps> = (props) => {
-  const { t } = useTranslation('main')
-  const { rows, onSwitchToDaily, timePrefs } = props
+const buildIconCssClass = (change: ChangeType): string => {
+  switch (change) {
+    case ChangeType.Added:
+      return 'icon-add'
+    case ChangeType.Deleted:
+      return 'icon-remove'
+    case ChangeType.Updated:
+      return 'icon-refresh'
+    default:
+      break
+  }
+  return 'icon-unsure-data'
+}
 
+export const HistoryTableParameterChange: FunctionComponent<HistoryTableParameterChangeProps> = (props): JSX.Element => {
+  const { t } = useTranslation('main')
+  const { parameter } = props
+
+  const iconClass = buildIconCssClass(parameter.changeType)
   return (
-    <table className={styles.settingsTable}>
-      <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}
-        <span className={styles.secondaryLabelWithMain} />
-      </caption>
-      <HistoryTableHeader />
-      <HistoryTableContent rows={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
-    </table>
+    <span>
+      <i className={iconClass} />
+      <span
+        className={styles.parameterHistory}>
+          {t(`params|${parameter.name}`)}
+      </span>
+    </span>
   )
 }

@@ -145,19 +145,10 @@ const Diabeloop = (props) => {
         <div className={styles.historyContainer}>
           <div className={styles.categoryTitle}>&nbsp;</div>
           <HistoryParameterTable
-            //id="parameters-history-table"
             timePrefs={timePrefs}
-            // title={HistoryParameterTable.title}
             rows={history}
-            // columns={HistoryParameterTable.columns}
             tableStyle={styles.settingsTable}
             onSwitchToDaily={handleClickHistory}
-            // unknownParameterIcon={<i className="icon-unsure-data" />}
-            // addedParameterIcon={<i className="icon-add" />}
-            // deletedParameterIcon={<i className="icon-remove" />}
-            // updatedParameterIcon={<i className="icon-refresh" />}
-            // changeValueArrowIcon={<i className="icon-next" key="icon-next" />}
-            // switchToDailyIconClass="icon-chart-line"
           />
         </div>
       </div>
