@@ -251,7 +251,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   }
 
   const onDecline = async (): Promise<void> => {
-    // setInProgress(true)
+    setInProgress(true)
     try {
       await notifications.decline(notification)
       metrics.send('invitation', 'decline_invitation', notification.metricsType)
