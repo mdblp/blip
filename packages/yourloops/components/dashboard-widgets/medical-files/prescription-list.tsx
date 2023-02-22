@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,7 +41,7 @@ import FileChartOutlinedIcon from '../../icons/file-chart-outlined-icon'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { type CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
-import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
+import CustomSpinningLoader from '../../loaders/custom-spinning-loader'
 import { type Prescription } from '../../../lib/medical-files/models/prescription.model'
 
 const useStyle = makeStyles()((theme: Theme) => ({
@@ -126,7 +126,7 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
             </ListItem>
           ))}
         </List>
-        : <CenteredSpinningLoader size={20} />
+        : <CustomSpinningLoader size={20} />
       }
 
     </React.Fragment>

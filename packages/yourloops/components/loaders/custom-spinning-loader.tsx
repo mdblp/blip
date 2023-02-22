@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, useEffect, useRef } from 'react'
+import LottieCustomLoaderJson from './lottie-custom-loader.json'
+import Lottie from 'lottie-react'
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 
 interface CenteredSpinningLoaderProps {
+  className?: string
+  role?: string
   size?: number
 }
 
-const Loader: FunctionComponent<CenteredSpinningLoaderProps> = ({ size }) => {
+const Loader: FunctionComponent<CenteredSpinningLoaderProps> = ({ size = 40, className, role }) => {
+  const lottieRef = useRef(null)
+
+  useEffect(() => {
+    if (lottieRef?.current) {
+      lottieRef.current.setSpeed(3)
+    }
+  }, [])
+
   return (
-    <Box display="flex" justifyContent="center">
-      <CircularProgress size={size} />
+    <Box display="flex" justifyContent="center" alignItems="center">
+      <Lottie
+        autoplay
+        animationData={LottieCustomLoaderJson}
+        lottieRef={lottieRef}
+        loop
+        style={{ height: size, width: size }}
+        className={className}
+        role={role}
+      />
     </Box>
   )
 }
 
-const CenteredSpinningLoader = React.memo(Loader)
+const CustomSpinningLoader = React.memo(Loader)
 
-export default CenteredSpinningLoader
+export default CustomSpinningLoader

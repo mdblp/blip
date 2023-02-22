@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -44,6 +43,7 @@ import SwitchRoleDialogs from '../../components/switch-role'
 
 import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { Notification } from './notification'
+import CustomSpinningLoader from '../../components/loaders/custom-spinning-loader'
 
 const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Theme) => ({
   homeIcon: {
@@ -81,16 +81,6 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
   }
 
   const notifications = notificationsHook.receivedInvitations
-  const loading = !notificationsHook.initialized
-
-  if (loading) {
-    return (
-      <CircularProgress
-        id="notification-page-loading-progress"
-        className="centered-spinning-loader"
-      />
-    )
-  }
 
   const handleSwitchRoleOpen = (): void => {
     metrics.send('switch_account', 'display_switch_notification')
@@ -101,35 +91,40 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
   }
 
   return (
-    <Container maxWidth="lg">
-      <List>
-        {notifications.length > 0 ? (
-          notifications.map((notification: NotificationModel, index: number) => (
-            <ListItem
-              key={notification.id}
-              disableGutters
-              divider={index !== notifications.length - 1}
-            >
-              <Notification
-                notification={notification}
-                userRole={user.role}
-                onHelp={handleSwitchRoleOpen}
-              />
-            </ListItem>
-          ))
-        ) : (
-          <Typography
-            className={classes.noNotificationMessage}
-            id="typography-no-pending-invitation-message"
-            variant="body2"
-            gutterBottom
-          >
-            {t('notification-no-pending-invitation')}
-          </Typography>
-        )}
-      </List>
-      {switchRoleOpen && <SwitchRoleDialogs onCancel={handleSwitchRoleCancel} />}
-    </Container>
+    <>
+      {notificationsHook.initialized
+        ? <Container maxWidth="lg">
+          <List>
+            {notifications.length > 0 ? (
+              notifications.map((notification: NotificationModel, index: number) => (
+                <ListItem
+                  key={notification.id}
+                  disableGutters
+                  divider={index !== notifications.length - 1}
+                >
+                  <Notification
+                    notification={notification}
+                    userRole={user.role}
+                    onHelp={handleSwitchRoleOpen}
+                  />
+                </ListItem>
+              ))
+            ) : (
+              <Typography
+                className={classes.noNotificationMessage}
+                id="typography-no-pending-invitation-message"
+                variant="body2"
+                gutterBottom
+              >
+                {t('notification-no-pending-invitation')}
+              </Typography>
+            )}
+          </List>
+          {switchRoleOpen && <SwitchRoleDialogs onCancel={handleSwitchRoleCancel} />}
+        </Container>
+        : <CustomSpinningLoader className="centered-spinning-loader" />
+      }
+    </>
   )
 }
 

@@ -21,8 +21,6 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import CircularProgress from '@mui/material/CircularProgress'
-
 import { utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 
@@ -34,6 +32,7 @@ import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
+import CustomSpinningLoader from 'yourloops/components/loaders/custom-spinning-loader'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -564,7 +563,7 @@ class Trends extends React.Component {
     const currentPatientInViewId = patient.userid
 
     if (_.isEmpty(_.get(trendsState, currentPatientInViewId))) {
-      return <CircularProgress className="centered-spinning-loader" />
+      return <CustomSpinningLoader className="centered-spinning-loader" />
     }
 
     const endpoints = this.getEndpoints()
@@ -580,7 +579,7 @@ class Trends extends React.Component {
               <div className="container-box-inner patient-data-content-inner">
                 {this.renderSubNav()}
                 <div className="patient-data-content">
-                  {loading && <CircularProgress className="centered-spinning-loader" />}
+                  {loading && <CustomSpinningLoader className="centered-spinning-loader" />}
                   <div id="tidelineContainer" className="patient-data-chart-trends">
                     {this.renderChart()}
                   </div>

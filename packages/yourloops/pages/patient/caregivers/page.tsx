@@ -31,7 +31,6 @@ import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 
 import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 
 import { useAuth } from '../../../lib/auth'
@@ -49,6 +48,7 @@ import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invita
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
+import CustomSpinningLoader from '../../../components/loaders/custom-spinning-loader'
 
 const log = bows('PatientCaregiversPage')
 
@@ -148,9 +148,7 @@ function PatientCaregiversPage(): JSX.Element {
   return (
     <>
       {!caregivers
-        ? <CircularProgress
-          className="centered-spinning-loader"
-        />
+        ? <CustomSpinningLoader className="centered-spinning-loader" />
         : <>
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">

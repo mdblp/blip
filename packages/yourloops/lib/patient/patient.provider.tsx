@@ -26,9 +26,9 @@
  */
 
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import CircularProgress from '@mui/material/CircularProgress'
 import usePatientProviderCustomHook from './patient.hook'
 import { type PatientContextResult } from './models/patient-context-result.model'
+import CustomSpinningLoader from '../../components/loaders/custom-spinning-loader'
 
 const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
 
@@ -37,7 +37,7 @@ export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children
 
   return patientProviderCustomHook.initialized
     ? <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
-    : <CircularProgress className="centered-spinning-loader" />
+    : <CustomSpinningLoader className="centered-spinning-loader" />
 }
 
 export function usePatientContext(): PatientContextResult {

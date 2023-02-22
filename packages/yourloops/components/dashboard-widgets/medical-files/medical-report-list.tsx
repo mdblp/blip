@@ -50,7 +50,7 @@ import MedicalReportDeleteDialog from '../../dialogs/medical-report-delete-dialo
 import TrashCanOutlined from '../../icons/trash-can-outlined'
 import { type CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
-import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
+import CustomSpinningLoader from '../../loaders/custom-spinning-loader'
 import {
   type MedicalReport,
   type MedicalReportDialogPayload,
@@ -179,7 +179,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
             )
           })}
         </List>
-        : <CenteredSpinningLoader size={20} />
+        : <CustomSpinningLoader size={20} />
       }
 
       {user.isUserHcp() &&

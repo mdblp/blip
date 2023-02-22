@@ -24,7 +24,6 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import clsx from 'clsx'
 import { Route, Switch } from 'react-router-dom'
-import CircularProgress from '@mui/material/CircularProgress'
 
 import MedicalDataService, { MGDL_UNITS, TimeService } from 'medical-domain'
 import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
@@ -39,6 +38,7 @@ import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
 import { PatientNavBarMemoized as PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { PatientDashboard } from 'yourloops/components/dashboard-widgets/patient-dashboard'
+import CustomSpinningLoader from 'yourloops/components/loaders/custom-spinning-loader'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -217,7 +217,7 @@ class PatientDataPage extends React.Component {
         break
       case LOADING_STATE_INITIAL_FETCH:
       case LOADING_STATE_INITIAL_PROCESS:
-        loader = <CircularProgress className="centered-spinning-loader" />
+        loader = <CustomSpinningLoader className="centered-spinning-loader" />
         break
       default:
         if (errorMessage === 'no-data') {
