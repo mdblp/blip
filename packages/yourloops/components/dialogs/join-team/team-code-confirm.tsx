@@ -56,11 +56,11 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const joinButtonDisabled = !idCode.match(REGEX_TEAM_CODE_DISPLAY)
 
   const getNumericCode = (value: string): string => {
-    const code = value.replaceAll(' ', '').replaceAll('-', '')
-    if (code.match(/^[0-9]*$/)) {
+    const code = value.replaceAll(' ', '').replaceAll('-', '').replace(/\D/g, '')
+    if (/^[0-9]*$/.test(code)) {
       return code
     }
-    console.log('invalid code')
+    throw new Error('invalid code')
   }
 
   const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -119,6 +119,7 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
                 variant="standard"
                 value={idCode}
                 onChange={handleChangeCode}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 fullWidth
                 inputRef={inputRef}
                 InputProps={{ sx: { width: 120, '& > input': { textAlign: 'center' } } }}
