@@ -15,12 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-export const FOCUS_TRENDS_CBG_SLICE = 'FOCUS_TRENDS_CBG_SLICE'
-
-export const SHOW_CBG_DATE_TRACES = 'SHOW_CBG_DATE_TRACES'
-
-export const UNFOCUS_TRENDS_CBG_SLICE = 'UNFOCUS_TRENDS_CBG_SLICE'
-
 // from blip's redux implementation
 // TODO: how could we DRY this out??
 

@@ -27,19 +27,9 @@
 
 import { type RangeSegmentSliceType } from './enums/range-segment.enum'
 
-export interface FocusedSliceData extends RangeSegmentSliceType {
+export interface CbgSlice extends RangeSegmentSliceType {
+  id: string
   msFrom: number
   msTo: number
-  msX?: number
-  id?: string
-}
-
-export interface FocusedSlice {
-  data: FocusedSliceData
-  position: {
-    left: number
-    tooltipLeft: boolean
-    yPositions: RangeSegmentSliceType
-    topOptions?: RangeSegmentSliceType
-  }
+  msX: number
 }

@@ -30,19 +30,9 @@ import { TrendsSvgContainerSized as TrendsSvgContainer } from '../trends-svg-con
 import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import type MedicalDataService from 'medical-domain'
 import { type Cbg, DatumType, Unit } from 'medical-domain'
-import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
-import { type FocusedSlice } from '../../../../models/focused-slice.model'
 import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
 import { extent } from 'd3-array'
-import { connect } from 'react-redux'
-import _ from 'lodash'
 import { type ActiveDays } from '../../../../models/active-days.model'
-
-interface TrendsState {
-  focusedCbgSlice: FocusedSlice
-  focusedCbgSliceKeys: RangeSegmentSlice[]
-  showingCbgDateTraces: boolean
-}
 
 interface TrendsContainerProps {
   currentCbgData: []
@@ -51,23 +41,19 @@ interface TrendsContainerProps {
   bgPrefs: BgPrefs
   medicalData: MedicalDataService
   onSelectDate: OnSelectDateFunction
-  trendsState: TrendsState
-  // Only for redux
-  currentPatientInViewId: string
 }
 
 const MGDL_CLAMP_TOP = 400
 const MMOLL_CLAMP_TOP = 22.5
 
-const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
+export const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
   const {
     currentCbgData,
     days,
     activeDays,
     bgPrefs,
     medicalData,
-    onSelectDate,
-    trendsState
+    onSelectDate
   } = props
 
   const yScaleClampTop = {
@@ -89,9 +75,6 @@ const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
       bgPrefs={bgPrefs}
       cbgData={currentCbgData}
       dates={days}
-      focusedSlice={trendsState.focusedCbgSlice}
-      focusedSliceKeys={trendsState.focusedCbgSliceKeys}
-      showingCbgDateTraces={trendsState.showingCbgDateTraces || false}
       onSelectDate={(date: number) => {
         onSelectDate(date)
       }}
@@ -99,10 +82,3 @@ const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) => {
     />
   )
 }
-
-const mapStateToProps = (state: { viz: { trends: Record<string, TrendsState> } }, componentProps: TrendsContainerProps): { trendsState: TrendsState } => {
-  const userId = componentProps.currentPatientInViewId
-  return { trendsState: state.viz.trends[userId] }
-}
-
-export default connect(mapStateToProps, null, (stateProps, dispatchProps, ownProps: TrendsContainerProps) => (_.assign({}, ownProps, stateProps, dispatchProps)), { forwardRef: true })(TrendsContainer)

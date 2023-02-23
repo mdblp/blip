@@ -34,12 +34,12 @@ import { type BgBounds, ClassificationType } from '../../../../models/blood-gluc
 import { springConfig } from '../../../../models/constants/animation.constants'
 import { type CbgMedianTransitionMotionInterpolate } from '../../../../models/animation.model'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
 interface CbgMedianAnimatedProps {
   bgBounds: BgBounds
   median: number
   msX: number
-  showingCbgDateTraces: boolean
   sliceWidth: number
   xScale: ScaleFunction
   yScale: ScaleFunction
@@ -53,11 +53,12 @@ export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (pro
     bgBounds,
     median,
     msX,
-    showingCbgDateTraces,
     sliceWidth,
     xScale,
     yScale
   } = props
+
+  const { showCbgDateTraces } = useTrendsContext()
 
   // default Y position is the center of the target range
   // i.e., 100 mg/dL if target range is 80-120 mg/dL
@@ -89,8 +90,8 @@ export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (pro
 
   const medianClasses = cx({
     [styles.median]: true,
-    [styles[`${bgClass}FadeIn`]]: !showingCbgDateTraces,
-    [styles[`${bgClass}FadeOut`]]: showingCbgDateTraces
+    [styles[`${bgClass}FadeIn`]]: !showCbgDateTraces,
+    [styles[`${bgClass}FadeOut`]]: showCbgDateTraces
   })
 
   return (

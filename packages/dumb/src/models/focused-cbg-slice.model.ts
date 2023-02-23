@@ -25,11 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type CbgPositionData } from './cbg-position-data.model'
+import { type CbgSlice } from './cbg-slice.model'
+import { type CbgPositionData, type CbgSliceYPositions } from './cbg-position-data.model'
+import { type RangeSegmentSlice } from './enums/range-segment.enum'
 
-export interface FocusedDateTrace {
-  data: {
-    localDate: string
-  }
-  position: CbgPositionData
+export interface FocusedCbgSlice {
+  data: CbgSlice
+  position: CbgPositionData<CbgSliceYPositions>
+  keys: RangeSegmentSlice[]
 }

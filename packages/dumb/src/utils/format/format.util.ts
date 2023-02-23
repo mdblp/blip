@@ -26,24 +26,21 @@
  */
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
-import { convertBG, type TimePrefs, Unit } from 'medical-domain'
-import i18next from 'i18next'
+import { type TimePrefs, Unit } from 'medical-domain'
 import { format } from 'd3-format'
-import { BgClass } from '../../models/blood-glucose.model'
 import { min } from 'lodash'
 import { UnitsType } from '../../models/enums/units-type.enum'
 
-const t = i18next.t.bind(i18next)
-
 const NO_VALUE_STRING = '--'
-const BG_HIGH_LABEL_KEY = 'High'
-const BG_LOW_LABEL_KEY = 'Low'
 
 const EXPONENTIAL_LOW_VALUE = 1e-2
 const EXPONENTIAL_HIGH_VALUE = 9999
 
 const NO_DECIMAL_LENGTH = 1
 const DEFAULT_DECIMAL_LENGTH = 2
+
+const ONE_DIGIT_STRING_FORMAT = '.1f'
+const NO_DIGIT_STRING_FORMAT = 'd'
 
 export const formatInputTime = (utcTime: string, timePrefs: TimePrefs): string => {
   return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat())
@@ -71,28 +68,12 @@ export const formatParameterValue = (value: number | string, unit: Unit): string
   return valueNumber.toFixed(decimalsCount)
 }
 
-export const formatBgValue = (value: number, bgUnits?: UnitsType, outOfRangeThresholds?: Record<string, number>): string => {
+export const formatBgValue = (value: number, bgUnits?: UnitsType): string => {
   const unit = bgUnits ?? UnitsType.MGDL
   const isUnitMmolPerLiter = unit === UnitsType.MMOLL
 
-  if (outOfRangeThresholds) {
-    const lowThreshold = outOfRangeThresholds[BgClass.Low]
-    const highThreshold = outOfRangeThresholds[BgClass.High]
-
-    const lowThresholdInMgPerDl = isUnitMmolPerLiter ? convertBG(lowThreshold, Unit.MilligramPerDeciliter) : lowThreshold
-    const highThresholdInMgPerDl = isUnitMmolPerLiter ? convertBG(highThreshold, Unit.MilligramPerDeciliter) : highThreshold
-
-    if (lowThresholdInMgPerDl && value < lowThresholdInMgPerDl) {
-      return t(BG_LOW_LABEL_KEY)
-    }
-    if (highThresholdInMgPerDl && value > highThresholdInMgPerDl) {
-      return t(BG_HIGH_LABEL_KEY)
-    }
-  }
-  if (isUnitMmolPerLiter) {
-    return format('.1f')(value)
-  }
-  return format('d')(value)
+  const valueFormat = isUnitMmolPerLiter ? ONE_DIGIT_STRING_FORMAT : NO_DIGIT_STRING_FORMAT
+  return format(valueFormat)(value)
 }
 
 const convertValueToNumber = (value: string | number): number => {

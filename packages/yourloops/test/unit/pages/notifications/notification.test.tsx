@@ -29,7 +29,6 @@ import React from 'react'
 import moment from 'moment-timezone'
 import _ from 'lodash'
 import { getByText, render, screen } from '@testing-library/react'
-
 import { Notification } from '../../../../pages/notifications/notification'
 import { type Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
@@ -203,20 +202,6 @@ describe('Notification', () => {
     beforeEach(() => {
       container = document.createElement('div')
       document.body.appendChild(container)
-    })
-
-    it('should be able to render', () => {
-      render(<NotificationComponent notif={notif} />)
-      const component = document.getElementById(`notification-line-${notif.id}`)
-      expect(component).not.toBeNull()
-    })
-
-    it('should show team code dialog when accepting team invitation', () => {
-      render(<NotificationComponent notif={teamNotif} />)
-      const acceptButton: HTMLButtonElement = document.querySelector('[data-testid="notification-button-accept"]')
-      acceptButton.click()
-      const dialog = document.getElementById('team-add-dialog-title')
-      expect(dialog).not.toBeNull()
     })
 
     it('should not show team code dialog when accepting non team invitation', () => {

@@ -29,8 +29,6 @@ import React, { type FunctionComponent, useMemo } from 'react'
 import sizeMe from 'react-sizeme'
 import { scaleLinear } from 'd3-scale'
 import { TimeService } from 'medical-domain'
-
-import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
 import { NoDataLabel } from '../no-data-label/no-data-label'
 import { CbgDateTracesAnimationContainer } from '../../cbg/cbg-date-trace/cbg-date-traces-animation-container'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
@@ -44,9 +42,9 @@ import { YAxisLabelsAndTicks } from '../y-axis-labels-and-ticks/y-axis-labels-an
 import { CbgSlicesContainerMemoized as CbgSlicesContainer } from '../../cbg/cbg-slice/cbg-slices-container'
 import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from '../../cbg/cbg-slice/focused-cbg-slice-segment'
 import { TargetRangeLines } from '../target-range-lines/target-range-lines'
-import { type FocusedSlice } from '../../../../models/focused-slice.model'
 import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
 import { type ActiveDays } from '../../../../models/active-days.model'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
 const BUMPERS = {
   top: 50,
@@ -75,10 +73,7 @@ interface TrendsSvgContainerProps {
   bgPrefs: BgPrefs
   cbgData: CbgDateTrace[]
   dates: string[]
-  focusedSlice: FocusedSlice
-  focusedSliceKeys: RangeSegmentSlice[]
   onSelectDate: OnSelectDateFunction
-  showingCbgDateTraces: boolean
   yScaleDomain: number[]
   size: { width: number, height: number }
 }
@@ -90,10 +85,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
 ) => {
   const {
     yScaleDomain,
-    showingCbgDateTraces,
     cbgData,
-    focusedSlice,
-    focusedSliceKeys,
     activeDays,
     bgPrefs,
     onSelectDate
@@ -101,6 +93,9 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
 
   const { height, width } = size
   const bgBounds = bgPrefs.bgBounds as BgBounds
+
+  const { focusedCbgSlice, showCbgDateTraces } = useTrendsContext()
+  const focusedSliceKeys = focusedCbgSlice?.keys
 
   const sliceWidth = (width - CHART_WIDTH) / 56
 
@@ -115,11 +110,11 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
   ]), [height, yScaleDomain])
 
   const focusedSegmentDataGroupedByDate = useMemo(() => {
-    if (!showingCbgDateTraces || !focusedSlice || !focusedSliceKeys) {
+    if (!showCbgDateTraces || !focusedCbgSlice || !focusedSliceKeys) {
       return null
     }
-    return getCbgsIntersectingWithCbgSliceSegment(cbgData, focusedSlice.data, focusedSliceKeys)
-  }, [cbgData, focusedSlice, focusedSliceKeys, showingCbgDateTraces])
+    return getCbgsIntersectingWithCbgSliceSegment(cbgData, focusedCbgSlice.data, focusedSliceKeys)
+  }, [cbgData, focusedCbgSlice, focusedSliceKeys, showCbgDateTraces])
 
   const noData = useMemo(() => {
     if (cbgData.length > 0) {
@@ -158,7 +153,6 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
             bgBounds={bgBounds}
             sliceWidth={sliceWidth}
             data={cbgData}
-            showingCbgDateTraces={showingCbgDateTraces}
             tooltipLeftThreshold={TOOLTIP_LEFT_THRESHOLD}
             topMargin={MARGINS.top}
             xScale={xScale}
@@ -174,12 +168,12 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
               yScale={yScale}
             />
           }
-          {focusedSlice &&
+          {focusedCbgSlice &&
             <FocusedCbgSliceSegment
-              leftPosition={focusedSlice.position.left}
-              segmentSliceBottom={focusedSliceKeys[0]}
-              segmentSliceTop={focusedSliceKeys[1]}
-              segmentsPosition={focusedSlice.position.yPositions}
+              leftPosition={focusedCbgSlice.position.left}
+              segmentSliceBottom={focusedCbgSlice.keys[0]}
+              segmentSliceTop={focusedCbgSlice.keys[1]}
+              segmentsPosition={focusedCbgSlice.position.yPositions}
               sliceWidth={sliceWidth}
             />
           }

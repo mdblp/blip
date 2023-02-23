@@ -39,7 +39,6 @@ interface CbgSlicesContainerProps {
   bgBounds: BgBounds
   sliceWidth: number
   data: CbgSlicesContainerData[]
-  showingCbgDateTraces: boolean
   tooltipLeftThreshold: number
   topMargin: number
   xScale: ScaleFunction
@@ -50,7 +49,6 @@ const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) =
   const {
     bgBounds,
     data,
-    showingCbgDateTraces,
     sliceWidth,
     tooltipLeftThreshold,
     topMargin,
@@ -68,7 +66,6 @@ const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) =
         <g key={cbg.id} data-testid="cbg-slice-segments">
           <CbgSliceAnimated
             datum={cbg}
-            showingCbgDateTraces={showingCbgDateTraces}
             sliceWidth={sliceWidth}
             tooltipLeftThreshold={tooltipLeftThreshold}
             topMargin={topMargin}
@@ -80,7 +77,6 @@ const CbgSlicesContainer: FunctionComponent<CbgSlicesContainerProps> = (props) =
               bgBounds={bgBounds}
               median={cbg.median}
               msX={cbg.msX}
-              showingCbgDateTraces={showingCbgDateTraces}
               xScale={xScale}
               yScale={yScale}
               sliceWidth={sliceWidth}

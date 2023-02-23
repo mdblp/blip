@@ -25,20 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type RangeSegmentSliceType } from './enums/range-segment.enum'
+import { getNumericCode } from '../../../../lib/team/team-code.utils'
 
-export interface CbgPositionData<T> {
-  left: number
-  tooltipLeft?: boolean
-  yPositions: T
-}
-
-export interface CbgSliceYPositions extends RangeSegmentSliceType {
-  topMargin: number
-  top?: number
-}
-
-export interface CbgDateTraceYPositions {
-  topMargin: number
-  top: number
-}
+describe('Join team dialog', () => {
+  it('Should return a string composed of numbers and filter out alpha characters', () => {
+    expect(getNumericCode('f999f')).toEqual('999')
+    expect(getNumericCode('999')).toEqual('999')
+    expect(getNumericCode('Здравствуйте ')).toEqual('')
+    expect(getNumericCode('こんにちは  ')).toEqual('')
+    expect(getNumericCode(' &é@-)"(§è"_ #')).toEqual('')
+  })
+})
