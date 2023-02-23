@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,7 +60,7 @@ interface NotificationProps {
   onHelp: () => void
 }
 
-interface NotificationIcons {
+interface NotificationIconPayload {
   id: string
   type: NotificationType
   className: string
@@ -164,16 +164,33 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({ id, type, className }: NotificationIcons): JSX.Element => {
+const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
-      return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
+      return (
+        <PersonIcon
+          id={`person-icon-${id}`}
+          titleAccess="direct-invitation-icon"
+          className={className}
+        />
+      )
     case NotificationType.careTeamPatientInvitation:
-      return <MedicalServiceIcon id={`medical-service-icon-${id}`} titleAccess="care-team-invitation-icon"
-                                 className={className} />
+      return (
+        <MedicalServiceIcon
+          id={`medical-service-icon-${id}`}
+          titleAccess="care-team-invitation-icon"
+          className={className}
+        />
+      )
     case NotificationType.careTeamProInvitation:
     default:
-      return <GroupIcon id={`group-icon-${id}`} titleAccess="default-icon" className={className} />
+      return (
+        <GroupIcon
+          id={`group-icon-${id}`}
+          titleAccess="default-icon"
+          className={className}
+        />
+      )
   }
 }
 
