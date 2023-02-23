@@ -207,7 +207,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const patientHook = usePatientContext()
   const [inProgress, setInProgress] = React.useState(false)
   const { classes } = useStyles()
-  const { notification } = props
+  const { notification, userRole, onHelp } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = React.useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
@@ -269,6 +269,9 @@ export const Notification = (props: NotificationProps): JSX.Element => {
       acceptInvitation()
     }
   }
+  const handleAcceptButtonClick = (): void => {
+    userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
+  }
 
   return (
     <div id={`notification-line-${id}`} data-testid="notification-line"
@@ -288,35 +291,26 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             }}
           />}
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => {
-            setDisplayMonitoringTerms(false)
-          }}
-                                   teamName={notification.target.name} />
+          <MonitoringConsentDialog
+            onAccept={acceptTerms}
+            teamName={notification.target.name}
+            onCancel={() => {
+              setDisplayMonitoringTerms(false)
+            }}
+          />
         }
-        {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
-          <Button
-            id={`notification-help-${id}-button`}
-            color="primary"
-            variant="contained"
-            disableElevation
-            className={`${classes.buttonAccept} notification-button-accept`}
-            disabled={inProgress}
-            onClick={props.onHelp}>
-            {t('button-accept')}
-          </Button>
-        ) : (
-          <Button
-            id={`notification-button-accept-${id}`}
-            color="primary"
-            variant="contained"
-            disableElevation
-            className={`${classes.buttonAccept} notification-button-accept`}
-            disabled={inProgress}
-            onClick={onOpenInvitationDialog}
-          >
-            {t('button-accept')}
-          </Button>
-        )}
+        <Button
+          id={`notification-button-accept-${id}`}
+          color="primary"
+          variant="contained"
+          disableElevation
+          className={`${classes.buttonAccept} notification-button-accept`}
+          disabled={inProgress}
+          onClick={handleAcceptButtonClick}
+        >
+          {t('button-accept')}
+        </Button>
+
         <Button
           id={`notification-button-decline-${id}`}
           className={`${classes.buttonDecline} notification-button-decline`}
