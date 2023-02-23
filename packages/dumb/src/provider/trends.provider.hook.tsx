@@ -64,7 +64,7 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
   const [focusedCbgDateTrace, setFocusedCbgDateTrace] = useState<FocusedCbgDateTrace | undefined>(undefined)
 
   const [focusedCbgSlice, setFocusedCbgSlice] = useState<FocusedCbgSlice | undefined>(undefined)
-  const previousFocusedCbgSlice = useRef<FocusedCbgSlice | undefined>(undefined)
+  const currentFocusedCbgSlice = useRef<FocusedCbgSlice | undefined>(undefined)
 
   const [showCbgDateTraces, setShowCbgDateTraces] = useState<boolean>(false)
 
@@ -99,10 +99,10 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
     const newlyFocusedCbgSlice = { data: cbgSlice, position, keys }
 
     setFocusedCbgSlice(newlyFocusedCbgSlice)
-    previousFocusedCbgSlice.current = newlyFocusedCbgSlice
+    currentFocusedCbgSlice.current = newlyFocusedCbgSlice
 
     setTimeout(() => {
-      if (cbgSlice.id === previousFocusedCbgSlice.current?.data.id && keys === previousFocusedCbgSlice.current?.keys) {
+      if (cbgSlice.id === currentFocusedCbgSlice.current?.data.id && keys === currentFocusedCbgSlice.current?.keys) {
         setShowCbgDateTraces(true)
       }
     }, SHOW_CBG_DATE_TRACES_TIMEOUT_MS)
@@ -110,7 +110,7 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
 
   const unfocusCbgSlice = (): void => {
     setFocusedCbgSlice(undefined)
-    previousFocusedCbgSlice.current = undefined
+    currentFocusedCbgSlice.current = undefined
 
     setShowCbgDateTraces(false)
     setFocusedCbgDateTrace(undefined)
