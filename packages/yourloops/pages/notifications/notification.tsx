@@ -305,7 +305,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
           />
         }
         <Button
-          id='notification-button-accept'
+          data-testid='notification-button-accept'
           color="primary"
           variant="contained"
           disableElevation
@@ -317,7 +317,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
         </Button>
 
         <Button
-          id='notification-button-decline'
+          data-testid='notification-button-decline'
           className={`${classes.buttonDecline} notification-button-decline`}
           disabled={inProgress}
           onClick={onDecline}>
