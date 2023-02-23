@@ -28,10 +28,11 @@
 import { getNumericCode } from '../../../../lib/team/team-code.utils'
 
 describe('Join team dialog', () => {
-  it('Should return a string composed of numbers and filter out alphanumeric characters', () => {
+  it('Should return a string composed of numbers and filter out alpha characters', () => {
     expect(getNumericCode('f999f')).toEqual('999')
     expect(getNumericCode('999')).toEqual('999')
     expect(getNumericCode('Здравствуйте ')).toEqual('')
     expect(getNumericCode('こんにちは  ')).toEqual('')
+    expect(getNumericCode(' &é@-)"(§è"_ #')).toEqual('')
   })
 })
