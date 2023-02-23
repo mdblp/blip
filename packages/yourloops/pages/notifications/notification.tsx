@@ -62,6 +62,12 @@ interface NotificationProps {
   onHelp: () => void
 }
 
+interface NotificationIcons {
+  id: string
+  type: NotificationType
+  className: string
+}
+
 const useStyles = makeStyles({ name: 'ylp-page-notification' })((theme: Theme) => ({
   container: {
     display: 'flex',
@@ -157,11 +163,10 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
     default:
       notificationText = <i>Invalid invitation type</i>
   }
-
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({ id, type, className }: NotificationIcons): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
       return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
@@ -300,7 +305,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
           />
         }
         <Button
-          id={`notification-button-accept-${id}`}
+          id='notification-button-accept'
           color="primary"
           variant="contained"
           disableElevation
@@ -312,7 +317,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
         </Button>
 
         <Button
-          id={`notification-button-decline-${id}`}
+          id='notification-button-decline'
           className={`${classes.buttonDecline} notification-button-decline`}
           disabled={inProgress}
           onClick={onDecline}>

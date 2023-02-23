@@ -118,7 +118,7 @@ describe('Notification', () => {
       )
 
       expect(getByText(container, 'Jeanne Dubois invites you to join', { exact: false })).not.toBeNull()
-      expect(container.querySelector(`#notification-help-${notif.id}-button`)).not.toBeNull()
+      expect(container.querySelector('#notification-button-accept')).not.toBeNull()
     })
 
     it('should display medical team join invitation for a patient', () => {
@@ -213,7 +213,7 @@ describe('Notification', () => {
 
     it('should show team code dialog when accepting team invitation', () => {
       render(<NotificationComponent notif={teamNotif} />)
-      const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${teamNotif.id}`) as HTMLButtonElement
+      const acceptButton: HTMLButtonElement = document.getElementById('notification-button-accept') as HTMLButtonElement
       acceptButton.click()
       const dialog = document.getElementById('team-add-dialog-title')
       expect(dialog).not.toBeNull()
@@ -229,7 +229,7 @@ describe('Notification', () => {
         }
       })
       render(<NotificationComponent notif={notif} />)
-      const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${notif.id}`) as HTMLButtonElement
+      const acceptButton: HTMLButtonElement = document.getElementById('notification-button-accept') as HTMLButtonElement
       acceptButton.click()
       const dialog = document.getElementById('team-add-dialog-title')
       expect(dialog).toBeNull()
