@@ -43,9 +43,9 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
 import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
-import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { useMedicalReportEditDialog } from './medical-report-edit-dialog.hook'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
+import { LoadingButton } from '@mui/lab'
 
 export interface MedicalReportEditDialogProps extends CategoryProps {
   onClose: () => void
@@ -173,17 +173,16 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
           {isInReadOnly ? t('button-close') : t('button-cancel')}
         </Button>
         {!isInReadOnly &&
-          <ProgressIconButtonWrapper inProgress={inProgress}>
-            <Button
-              variant="contained"
-              color="primary"
-              disableElevation
-              disabled={isSaveButtonDisabled}
-              onClick={saveMedicalReport}
-            >
-              {t('button-save')}
-            </Button>
-          </ProgressIconButtonWrapper>
+          <LoadingButton
+            loading={inProgress}
+            variant="contained"
+            color="primary"
+            disableElevation
+            disabled={isSaveButtonDisabled}
+            onClick={saveMedicalReport}
+          >
+            {t('button-save')}
+          </LoadingButton>
         }
       </DialogActions>
     </Dialog>

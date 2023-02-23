@@ -34,7 +34,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
+import { LoadingButton } from '@mui/lab'
 
 export interface ConfirmDialogProps {
   title: string
@@ -74,18 +74,17 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
         >
           {t('button-cancel')}
         </Button>
-        <ProgressIconButtonWrapper inProgress={inProgress ?? false}>
-          <Button
-            data-testid="confirm-dialog-confirm-button"
-            variant="contained"
-            color="error"
-            disableElevation
-            disabled={inProgress}
-            onClick={onConfirm}
-          >
-            {t('button-confirm')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        <LoadingButton
+          loading={inProgress}
+          data-testid="confirm-dialog-confirm-button"
+          variant="contained"
+          color="error"
+          disableElevation
+          disabled={inProgress}
+          onClick={onConfirm}
+        >
+          {t('button-confirm')}
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

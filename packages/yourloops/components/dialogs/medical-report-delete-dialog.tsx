@@ -37,8 +37,8 @@ import DialogTitle from '@mui/material/DialogTitle'
 
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
-import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
+import { LoadingButton } from '@mui/lab'
 
 export interface MedicalReportDeleteDialogProps {
   onClose: () => void
@@ -93,17 +93,15 @@ export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDe
         >
           {t('button-cancel')}
         </Button>
-        <ProgressIconButtonWrapper inProgress={inProgress}>
-          <Button
-            variant="contained"
-            disableElevation
-            disabled={inProgress}
-            color="error"
-            onClick={deleteMedicalReport}
-          >
-            {t('button-delete')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        <LoadingButton
+          variant="contained"
+          disableElevation
+          loading={inProgress}
+          color="error"
+          onClick={deleteMedicalReport}
+        >
+          {t('button-delete')}
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

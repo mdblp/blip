@@ -26,11 +26,11 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
+import { LoadingButton } from '@mui/lab'
 
 interface SignupStepperActionButtonsProps {
   nextButtonLabel: string
@@ -66,17 +66,16 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
           {t('button-back')}
         </Button>
       </Box>
-      <ProgressIconButtonWrapper inProgress={inProgress}>
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          disabled={disabled}
-          onClick={onClickNextButton}
-        >
-          {nextButtonLabel}
-        </Button>
-      </ProgressIconButtonWrapper>
+      <LoadingButton
+        loading={inProgress}
+        variant="contained"
+        color="primary"
+        disableElevation
+        disabled={disabled}
+        onClick={onClickNextButton}
+      >
+        {nextButtonLabel}
+      </LoadingButton>
     </Box>
   )
 }
