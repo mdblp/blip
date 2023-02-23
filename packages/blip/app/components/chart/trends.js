@@ -562,7 +562,7 @@ class Trends extends React.Component {
 
     const currentPatientInViewId = patient.userid
 
-    if (_.isEmpty(_.get(trendsState, currentPatientInViewId))) {
+    if (!_.get(trendsState, currentPatientInViewId)) {
       return <CustomSpinningLoader className="centered-spinning-loader" />
     }
 
@@ -584,7 +584,7 @@ class Trends extends React.Component {
                     {this.renderChart()}
                   </div>
                   <CbgDateTraceLabel />
-                  {this.renderFocusedRangeLabels()}
+                  <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits} />
                 </div>
               </div>
               <div className="container-box-inner patient-data-sidebar">
@@ -654,24 +654,6 @@ class Trends extends React.Component {
         medicalData={this.props.tidelineData}
         // handlers
         onSelectDate={this.handleSelectDate}
-      />
-    )
-  }
-
-  renderFocusedRangeLabels() {
-    const { patient, trendsState } = this.props
-    const userTrendsState = _.get(trendsState, patient.userid)
-
-    if (_.isEmpty(userTrendsState) || !userTrendsState.focusedCbgSlice || !userTrendsState.focusedCbgSliceKeys) {
-      return null
-    }
-    return (
-      <FocusedRangeLabels
-        bgUnit={this.props.bgPrefs.bgUnits}
-        focusedRangeSegments={userTrendsState.focusedCbgSliceKeys}
-        data={userTrendsState.focusedCbgSlice.data}
-        position={userTrendsState.focusedCbgSlice.position}
-        timePrefs={this.props.timePrefs}
       />
     )
   }

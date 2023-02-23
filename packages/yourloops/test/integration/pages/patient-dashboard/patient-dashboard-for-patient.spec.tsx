@@ -28,10 +28,21 @@
 import { act, screen } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
+import {
+  mockPatientApiForPatients,
+  monitoredPatientAsTeamMember
+} from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
+import TeamAPI from '../../../../lib/team/team.api'
+import { iTeamOne, teamOne } from '../../mock/team.api.mock'
+import {
+  checkJoinTeamDialogCancel,
+  checkJoinTeamDialogPrivacyCancel,
+  checkJoinTeamDialogDisplayErrorMessage,
+  checkJoinTeamDialog
+} from '../../assert/join-team'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = '/dashboard'
@@ -41,15 +52,30 @@ describe('Patient dashboard for HCP', () => {
     mockPatientApiForPatients()
     mockDataAPI()
     mockMedicalFilesAPI()
+    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne])
+    jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
   })
 
   it('should display proper header', async () => {
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
+
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
-
     await checkMedicalWidgetForPatient()
+  })
+
+  it('should close the dialog after clicking the join care team button with success message', async () => {
+    await act(async () => {
+      renderPage(monitoredPatientDashboardRoute)
+    })
+
+    const badgeTeamMenu = screen.getByLabelText('Open team menu')
+    await checkJoinTeamDialog(badgeTeamMenu)
+    await checkJoinTeamDialogCancel(badgeTeamMenu)
+    await checkJoinTeamDialogPrivacyCancel(badgeTeamMenu)
+    await checkJoinTeamDialogDisplayErrorMessage(badgeTeamMenu)
   })
 })

@@ -25,16 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface TrendsCalculatedCbgStats {
-  id: string
-  min: number
-  tenthQuantile: number
-  firstQuartile: number
-  median: number
-  thirdQuartile: number
-  ninetiethQuantile: number
-  max: number
-  msX: number
-  msFrom: number
-  msTo: number
-}
+import { act } from '@testing-library/react'
+import { renderPage } from '../../utils/render'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
+import NotificationApi from '../../../../lib/notifications/notification.api'
+import { iTeamOne, teamOne, teamTwo } from '../../mock/team.api.mock'
+import TeamAPI from '../../../../lib/team/team.api'
+import { invitationTeam } from '../../data/notification.data'
+import { checkAcceptTeamInvite, closeDialogNotificationTeam } from '../../assert/notification-join-team'
+
+describe('Notification page for patient', () => {
+  beforeAll(() => {
+    mockPatientLogin(monitoredPatientAsTeamMember)
+    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne, teamTwo])
+    jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationTeam])
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
+    jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
+  })
+
+  it('should be able to accept a team invite', async () => {
+    await act(async () => {
+      renderPage('/notifications')
+    })
+
+    await closeDialogNotificationTeam()
+    await checkAcceptTeamInvite()
+  })
+})

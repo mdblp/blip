@@ -24,21 +24,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { type Notification } from '../../../lib/notifications/models/notification.model'
+import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 
-import { type RangeSegmentSliceType } from './enums/range-segment.enum'
-
-export interface CbgPositionData<T> {
-  left: number
-  tooltipLeft?: boolean
-  yPositions: T
-}
-
-export interface CbgSliceYPositions extends RangeSegmentSliceType {
-  topMargin: number
-  top?: number
-}
-
-export interface CbgDateTraceYPositions {
-  topMargin: number
-  top: number
+export const invitationTeam: Notification = {
+  id: 'invitationTeamId',
+  type: NotificationType.careTeamPatientInvitation,
+  metricsType: 'join_team',
+  email: 'ylp.ui.test.67-patient12@diabeloop.fr',
+  creatorId: 'dec0816009d32',
+  date: '',
+  target: { id: '63c7b7989cacc878ecce2c40', name: 'sysReq-67-team2' },
+  role: TeamMemberRole.patient,
+  creator: {
+    userid: 'dec0816009d32',
+    profile: {
+      fullName: 'Backloops test SysReq 67 hcp1',
+      patient: {
+        birthday: '',
+        diagnosisDate: ''
+      },
+      email: ''
+    }
+  }
 }

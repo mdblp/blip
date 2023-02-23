@@ -33,15 +33,14 @@ import { springConfig } from '../../../../models/constants/animation.constants'
 
 import styles from './cbg-slice-animated.css'
 import { type CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
-import CbgSliceSegment from './cbg-slice-segment'
+import { CbgSliceSegment } from './cbg-slice-segment'
 import { getRangeSegments } from './cbg-slice-animated.util'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
-import { type TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
+import { type CbgSlice } from '../../../../models/cbg-slice.model'
 
 interface CbgSliceAnimatedProps {
-  datum: TrendsCalculatedCbgStats
-  showingCbgDateTraces: boolean
+  datum: CbgSlice
   sliceWidth: number
   tooltipLeftThreshold: number
   topMargin: number
@@ -54,7 +53,6 @@ const DEFAULT_SEGMENT_Y = 16
 export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props) => {
   const {
     datum,
-    showingCbgDateTraces,
     sliceWidth,
     tooltipLeftThreshold,
     topMargin,
@@ -62,7 +60,7 @@ export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props
     yScale
   } = props
 
-  const { displayFlags } = useTrendsContext()
+  const { displayFlags, showCbgDateTraces } = useTrendsContext()
 
   const strokeWidth = sliceWidth / 8
   const binLeftX = xScale(datum.msX) - sliceWidth / 2 + strokeWidth / 2
@@ -121,8 +119,8 @@ export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props
               }
               const classes = cx({
                 [styles.segment]: true,
-                [styles[segment.classKey]]: !showingCbgDateTraces,
-                [styles[`${segment.classKey}Faded`]]: showingCbgDateTraces
+                [styles[segment.classKey]]: !showCbgDateTraces,
+                [styles[`${segment.classKey}Faded`]]: showCbgDateTraces
               })
               return (
                 <CbgSliceSegment

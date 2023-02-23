@@ -25,20 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type RangeSegmentSliceType } from './enums/range-segment.enum'
-
-export interface CbgPositionData<T> {
-  left: number
-  tooltipLeft?: boolean
-  yPositions: T
-}
-
-export interface CbgSliceYPositions extends RangeSegmentSliceType {
-  topMargin: number
-  top?: number
-}
-
-export interface CbgDateTraceYPositions {
-  topMargin: number
-  top: number
+export const getNumericCode = (value: string): string => {
+  const code = value.replaceAll(/\D/g, '')
+  if (/^[0-9]*$/.test(code)) {
+    return code
+  }
+  throw new Error('invalid code')
 }
