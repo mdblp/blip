@@ -36,6 +36,7 @@ import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-stat
 import { type Team } from '../../../lib/team'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms.default'
+import { type ITeam } from '../../../lib/team/models/i-team.model'
 
 const {
   minVeryLowBg,
@@ -162,6 +163,27 @@ export const teamThree: Team = {
     status: UserInvitationStatus.accepted,
     email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
   }]
+}
+
+export const iTeamOne: ITeam = {
+  name: 'iTeamOne',
+  id: 'iTeamOneId',
+  code: '679517388',
+  type: TeamType.medical,
+  monitoring: {
+    ...monitoringParameters,
+    enabled: true
+  },
+  phone: '0478780000',
+  email: 'iTeamOne@hey.hey',
+  address: {
+    line1: '6 rue des champs',
+    line2: '',
+    zip: '75000',
+    city: 'Paris',
+    country: 'FR'
+  },
+  members: null
 }
 
 export const mockTeamAPI = () => {

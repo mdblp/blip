@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
 
@@ -38,20 +38,18 @@ import MedicalServiceIcon from '../../components/icons/medical-service-icon'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
-
 import { errorTextFromException, getUserFirstName, getUserLastName } from '../../lib/utils'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
-import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
-import { useAuth } from '../../lib/auth'
 import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
 import { type IUser } from '../../lib/data/models/i-user.model'
 import { NotificationType } from '../../lib/notifications/models/enums/notification-type.enum'
+import { JoinTeamDialog } from '../../components/dialogs/join-team/join-team-dialog'
 
 export interface NotificationSpanProps {
   id: string
@@ -163,11 +161,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({
-  id,
-  type,
-  className
-}: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
       return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
@@ -204,21 +198,20 @@ const NotificationDate = ({ id, createdDate }: { id: string, createdDate: string
   )
 }
 
-export const Notification = (props: NotificationProps): JSX.Element => {
+export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const notifications = useNotification()
   const alert = useAlert()
   const teamHook = useTeam()
-  const { user } = useAuth()
   const patientHook = usePatientContext()
-  const [inProgress, setInProgress] = React.useState(false)
+  const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
   const { notification } = props
   const { id } = notification
-  const [addTeamDialogVisible, setAddTeamDialogVisible] = React.useState(false)
+  const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
   const isAMonitoringInvitation = notification.type === NotificationType.careTeamMonitoringInvitation
-  const [displayMonitoringTerms, setDisplayMonitoringTerms] = React.useState(false)
+  const [displayMonitoringTerms, setDisplayMonitoringTerms] = useState(false)
 
   if (isACareTeamPatientInvitation && !notification.target) {
     throw Error('Cannot accept team invite because notification is missing the team id info')
@@ -229,10 +222,9 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     try {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
-      if (user.isUserHcp()) {
-        teamHook.refresh()
-      }
       patientHook.refresh()
+      teamHook.refresh()
+      alert.success(t('accept-notification-success', { teamName: notification.target.name }))
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))
@@ -268,11 +260,17 @@ export const Notification = (props: NotificationProps): JSX.Element => {
       notifications.update()
     }
   }
-
-  const closeTeamAcceptDialog = (teamId?: string): void => {
+  const onCloseDialog = (): void => {
     setAddTeamDialogVisible(false)
-    if (notification.target && teamId && notification.target.id === teamId) {
-      acceptInvitation()
+  }
+
+  const joinTeam = async (): Promise<void> => {
+    try {
+      await acceptInvitation()
+      onCloseDialog()
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason)
+      alert.error(t('modal-patient-add-team-failure', { errorMessage }))
     }
   }
 
@@ -281,21 +279,21 @@ export const Notification = (props: NotificationProps): JSX.Element => {
          className={`${classes.container} notification-line`} data-notificationid={id}>
       <NotificationIcon id={id} className="notification-icon" type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} notification={notification} />
+      {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
+        <JoinTeamDialog
+          onClose={onCloseDialog}
+          onAccept={joinTeam}
+          teamName={notification.target.name}
+        />
+      }
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
-        {isACareTeamPatientInvitation && addTeamDialogVisible && notification.target &&
-          <AddTeamDialog
-            error={t('notification-patient-invitation-wrong-code', { careteam: notification.target.name })}
-            teamName={notification.target.name}
-            actions={{
-              onDialogResult: (teamId) => {
-                closeTeamAcceptDialog(teamId)
-              }
-            }}
-          />}
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => { setDisplayMonitoringTerms(false) }}
-                                   teamName={notification.target.name} />
+          <MonitoringConsentDialog
+            onAccept={acceptTerms}
+            onCancel={() => { setDisplayMonitoringTerms(false) }}
+            teamName={notification.target.name}
+          />
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
           <IconButton
