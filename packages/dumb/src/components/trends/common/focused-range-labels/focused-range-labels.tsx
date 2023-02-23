@@ -29,25 +29,13 @@ import React, { type FunctionComponent } from 'react'
 
 import styles from './focused-range-labels.css'
 import { formatClocktimeFromMsPer24 } from '../../../../utils/datetime/datetime.util'
-import { type RangeSegmentSlice, type RangeSegmentSliceType } from '../../../../models/enums/range-segment.enum'
 import { formatBgValue } from '../../../../utils/format/format.util'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
-import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
 import { type UnitsType } from '../../../../models/enums/units-type.enum'
+import { useTrendsContext } from '../../../../provider/trends.provider'
 
 interface FocusedRangeLabelsProps {
   bgUnit: UnitsType
-  focusedRangeSegments: RangeSegmentSlice
-  data: RangeSegmentSliceType & {
-    median: number
-    msFrom: number
-    msTo: number
-    outOfRangeThresholds: {
-      low: number
-      high: number
-    }
-  }
-  position: CbgPositionData
 }
 
 const BOTTOM_OFFSET = -5
@@ -57,7 +45,17 @@ const BOTTOM_SIDE = 'bottom'
 const TRANSPARENT_COLOR = 'transparent'
 
 export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (props) => {
-  const { focusedRangeSegments, data, position, bgUnit } = props
+  const { bgUnit } = props
+
+  const { focusedCbgSlice } = useTrendsContext()
+
+  if (!focusedCbgSlice) {
+    return null
+  }
+
+  const focusedRangeSegments = focusedCbgSlice.keys
+  const data = focusedCbgSlice.data
+  const position = focusedCbgSlice.position
 
   if (focusedRangeSegments.length <= 1) {
     return null
@@ -65,16 +63,15 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
 
   const timeFrom = formatClocktimeFromMsPer24(data.msFrom)
   const timeTo = formatClocktimeFromMsPer24(data.msTo)
-  const bottom = focusedRangeSegments[0] as RangeSegmentSlice
-  const top = focusedRangeSegments[1] as RangeSegmentSlice
+  const bottom = focusedRangeSegments[0]
+  const top = focusedRangeSegments[1]
   const leftPosition = position.left
   const dateTooltipPosition = { left: leftPosition, top: position.yPositions.topMargin }
-  const topRangeSegmentTooltipPosition = { top: position.yPositions[top] as number, left: leftPosition }
-  const bottomRangeSegmentTooltipPosition = { top: position.yPositions[bottom] as number, left: leftPosition }
+  const topRangeSegmentTooltipPosition = { top: position.yPositions[top], left: leftPosition }
+  const bottomRangeSegmentTooltipPosition = { top: position.yPositions[bottom], left: leftPosition }
 
-  const thresholds = data.outOfRangeThresholds
-  const topSegmentBgValue = formatBgValue(data[top], bgUnit, thresholds)
-  const bottomSegmentBgValue = formatBgValue(data[bottom], bgUnit, thresholds)
+  const topSegmentBgValue = formatBgValue(data[top], bgUnit)
+  const bottomSegmentBgValue = formatBgValue(data[bottom], bgUnit)
 
   return (
     <div className={styles.container} data-testid="trends-tooltips">

@@ -27,8 +27,9 @@
 
 import _ from 'lodash'
 import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
-import { type TrendsCalculatedCbgStats } from '../../../../models/trends-calculated-cbg-stats.model'
 import { THIRTY_MINS, TWENTY_FOUR_HRS } from '../../../../utils/datetime/datetime.util'
+import { type CbgSlice } from '../../../../models/cbg-slice.model'
+import { RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
 
 export const computeMsThresholdForTimeOfDay = (numberOfMs: number): number => {
   if (numberOfMs < 0 || numberOfMs >= TWENTY_FOUR_HRS) {
@@ -37,7 +38,7 @@ export const computeMsThresholdForTimeOfDay = (numberOfMs: number): number => {
   return Math.floor(numberOfMs / THIRTY_MINS) * THIRTY_MINS + (THIRTY_MINS / 2)
 }
 
-const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): TrendsCalculatedCbgStats => {
+const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): CbgSlice => {
   const sorted = data.sort((a, b) => a - b)
   const sortedDataLength = sorted.length
   const firstQuartileIndex = Math.floor(sortedDataLength / 4)
@@ -47,20 +48,20 @@ const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): T
   const ninetiethQuantileIndex = Math.floor((sortedDataLength / 10) * 9)
   return {
     id: numberOfMs.toString(),
-    min: sorted[0],
-    firstQuartile: sorted[firstQuartileIndex],
-    tenthQuantile: sorted[tenthQuantileIndex],
-    median: sorted[medianIndex],
-    thirdQuartile: sorted[thirdQuartileIndex],
-    ninetiethQuantile: sorted[ninetiethQuantileIndex],
-    max: sorted[sortedDataLength - 1],
+    [RangeSegmentSlice.Min]: sorted[0],
+    [RangeSegmentSlice.FirstQuartile]: sorted[firstQuartileIndex],
+    [RangeSegmentSlice.TenthQuantile]: sorted[tenthQuantileIndex],
+    [RangeSegmentSlice.Median]: sorted[medianIndex],
+    [RangeSegmentSlice.ThirdQuartile]: sorted[thirdQuartileIndex],
+    [RangeSegmentSlice.NinetiethQuantile]: sorted[ninetiethQuantileIndex],
+    [RangeSegmentSlice.Max]: sorted[sortedDataLength - 1],
     msX: numberOfMs,
     msFrom: numberOfMs - (THIRTY_MINS / 2),
     msTo: numberOfMs + (THIRTY_MINS / 2)
   }
 }
 
-export const formatCbgs = (cbgData: CbgSlicesContainerData[]): TrendsCalculatedCbgStats[] => {
+export const formatCbgs = (cbgData: CbgSlicesContainerData[]): CbgSlice[] => {
   const cbgDataSorted = _.groupBy(cbgData, (cbgSliceContainerData) => {
     return computeMsThresholdForTimeOfDay(cbgSliceContainerData.msPer24)
   })

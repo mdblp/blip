@@ -26,31 +26,28 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { bindActionCreators, type Dispatch } from 'redux'
-import { connect } from 'react-redux'
-import { type CbgPositionData } from '../../../../models/cbg-position-data.model'
-import { delayShowCbgTracesOnFocus, unfocusTrendsCbgSlice } from 'tidepool-viz'
+import { type CbgPositionData, type CbgSliceYPositions } from '../../../../models/cbg-position-data.model'
 import { type CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
 import { type CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
 import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
+import { useTrendsContext } from '../../../../provider/trends.provider'
+import { type CbgSlice } from '../../../../models/cbg-slice.model'
 
 interface CbgSliceSegmentProps {
   classes: string
-  datum: { id: string }
+  datum: CbgSlice
   id: string
-  positionData: CbgPositionData
+  positionData: CbgPositionData<CbgSliceYPositions>
   segment: CbgRangeSegment
   style: CbgSliceTransitionMotionStyle
   width: number
   x: number
-  // Properties added via Redux
-  focusSlice: (userId: string, datum: { id: string }, positionData: CbgPositionData, focusedKeys: string[]) => void
-  unfocusSlice: (userId: string) => void
-  userId: string
 }
 
-const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
-  const { classes, datum, focusSlice, id, positionData, segment, style, unfocusSlice, x, width, userId } = props
+export const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
+  const { classes, datum, id, positionData, segment, style, x, width } = props
+
+  const { focusCbgSlice, unfocusCbgSlice } = useTrendsContext()
 
   const handleMouseOut = (event: { relatedTarget: EventTarget | null | { id: string } }): void => {
     const relatedTarget = event.relatedTarget as { id: string }
@@ -58,12 +55,11 @@ const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
     if (relatedTarget?.id && relatedTarget.id.search(CBG_CIRCLE_PREFIX_ID) !== -1) {
       return
     }
-    unfocusSlice(userId)
+    unfocusCbgSlice()
   }
 
   const handleMouseOver = (): void => {
-    focusSlice(
-      userId,
+    focusCbgSlice(
       datum,
       positionData,
       segment.heightKeys
@@ -84,19 +80,3 @@ const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
     />
   )
 }
-
-const mapStateToProps = (state: { blip: { currentPatientInViewId: string } }): { userId: string } => {
-  const { blip: { currentPatientInViewId } } = state
-  return {
-    userId: currentPatientInViewId
-  }
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): { unfocusSlice: (userId: string) => void, focusSlice: (userId: string, sliceData: { id: string }, slicePosition: CbgPositionData, focusedKeys: string[]) => void } => {
-  return bindActionCreators({
-    focusSlice: delayShowCbgTracesOnFocus,
-    unfocusSlice: unfocusTrendsCbgSlice
-  }, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CbgSliceSegment)

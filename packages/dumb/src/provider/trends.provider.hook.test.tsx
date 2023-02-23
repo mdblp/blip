@@ -28,6 +28,7 @@
 import { act, renderHook } from '@testing-library/react-hooks/dom'
 import { useTrendsProviderHook } from './trends.provider.hook'
 import { DisplayFlag } from '../models/enums/display-flag.enum'
+import { RangeSegmentSlice } from '../models/enums/range-segment.enum'
 
 describe('Trends provider hook', () => {
   describe('toggleCbgSegments', () => {
@@ -136,6 +137,83 @@ describe('Trends provider hook', () => {
       expect(() => {
         result.current.toggleCbgSegments('incorrect display flag' as DisplayFlag)
       }).toThrow('Display flag field "incorrect display flag" is unknown')
+    })
+  })
+
+  describe('focusCbgSlice and unfocusCbgSlice', () => {
+    it('should set and unset the focused cbg slice', () => {
+      jest.useFakeTimers()
+
+      const cbgSlice = {
+        id: '65700000',
+        [RangeSegmentSlice.FirstQuartile]: 133,
+        [RangeSegmentSlice.Max]: 384,
+        [RangeSegmentSlice.Median]: 202,
+        [RangeSegmentSlice.Min]: 97,
+        msFrom: 64800000,
+        msTo: 66600000,
+        msX: 65700000,
+        [RangeSegmentSlice.NinetiethQuantile]: 277,
+        [RangeSegmentSlice.TenthQuantile]: 126,
+        [RangeSegmentSlice.ThirdQuartile]: 243
+      }
+
+      const cbgSlicePosition = {
+        left: 727.8125,
+        tooltipLeft: true,
+        yPositions: {
+          [RangeSegmentSlice.FirstQuartile]: 380.8450704225352,
+          [RangeSegmentSlice.Max]: 98.02816901408453,
+          [RangeSegmentSlice.Median]: 303.09859154929575,
+          [RangeSegmentSlice.Min]: 421.40845070422534,
+          [RangeSegmentSlice.NinetiethQuantile]: 218.59154929577466,
+          [RangeSegmentSlice.TenthQuantile]: 388.7323943661972,
+          [RangeSegmentSlice.ThirdQuartile]: 256.9014084507042,
+          topMargin: 30
+        }
+      }
+
+      const cbgSliceKeys = [RangeSegmentSlice.NinetiethQuantile, RangeSegmentSlice.Max]
+
+      const cbgDateTrace = {
+        epoch: 1668097800000,
+        id: 'cbg_c437da0c3215_2022-11-10_198',
+        localDate: '2022-11-10',
+        msPer24: 63000000,
+        value: 402
+      }
+
+      const cbgDateTracePosition = {
+        left: 699.875,
+        yPositions: { top: 80, topMargin: 30 }
+      }
+
+      const { result } = renderHook(() => useTrendsProviderHook())
+
+      act(() => {
+        result.current.focusCbgSlice(cbgSlice, cbgSlicePosition, cbgSliceKeys)
+        jest.runAllTimers()
+        result.current.focusCbgDateTrace(cbgDateTrace, cbgDateTracePosition)
+      })
+
+      expect(result.current.focusedCbgSlice).toEqual({
+        data: cbgSlice,
+        position: cbgSlicePosition,
+        keys: cbgSliceKeys
+      })
+      expect(result.current.showCbgDateTraces).toEqual(true)
+      expect(result.current.focusedCbgDateTrace).toEqual({
+        data: cbgDateTrace,
+        position: cbgDateTracePosition
+      })
+
+      act(() => {
+        result.current.unfocusCbgSlice()
+      })
+
+      expect(result.current.focusedCbgSlice).toEqual(undefined)
+      expect(result.current.showCbgDateTraces).toEqual(false)
+      expect(result.current.focusedCbgDateTrace).toEqual(undefined)
     })
   })
 })

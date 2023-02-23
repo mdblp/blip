@@ -29,12 +29,13 @@ import React, { type FunctionComponent, memo } from 'react'
 
 import styles from './focused-cbg-slice-segment.css'
 import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
+import { type CbgSliceYPositions } from '../../../../models/cbg-position-data.model'
 
 interface FocusedCbgSliceSegmentProps {
   leftPosition: number
   segmentSliceBottom: RangeSegmentSlice
   segmentSliceTop: RangeSegmentSlice
-  segmentsPosition: Record<RangeSegmentSlice, number>
+  segmentsPosition: CbgSliceYPositions
   sliceWidth: number
 }
 

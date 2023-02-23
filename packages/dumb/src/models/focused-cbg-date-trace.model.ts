@@ -26,9 +26,9 @@
  */
 
 import { type CbgDateTrace } from './cbg-date-trace.model'
-import { type CbgPositionData } from './cbg-position-data.model'
+import { type CbgDateTraceYPositions, type CbgPositionData } from './cbg-position-data.model'
 
 export interface FocusedCbgDateTrace {
   data: CbgDateTrace
-  position: CbgPositionData
+  position: CbgPositionData<CbgDateTraceYPositions>
 }
