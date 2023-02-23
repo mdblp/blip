@@ -26,7 +26,7 @@
  */
 
 export const getNumericCode = (value: string): string => {
-  const code = value.replaceAll(' ', '').replaceAll('-', '').replace(/\D/g, '')
+  const code = value.replaceAll(/\D/g, '')
   if (/^[0-9]*$/.test(code)) {
     return code
   }
