@@ -23,7 +23,6 @@ import i18next from 'i18next'
 import bows from 'bows'
 
 import Header from './common/Header'
-// import HistoryTable from './DiabeloopHistoryParameters'
 
 import * as datetime from '../../utils/datetime'
 import * as dblData from '../../utils/settings/diabeloopData'

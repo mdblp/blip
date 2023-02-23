@@ -27,13 +27,14 @@
 
 import { HistorySpannedRow } from './history-table-spanned-row'
 import { HistoryTableRow } from './history-table-row'
-import React, { FunctionComponent } from 'react'
-import { TimePrefs } from 'medical-domain'
-import { IncomingRow } from '../../../models/historized-parameter.model'
+import React, { type FunctionComponent } from 'react'
+import { type TimePrefs } from 'medical-domain'
+import { type IncomingRow } from '../../../models/historized-parameter.model'
 import { transformToViewModels } from './history-table.core'
+import type moment from 'moment-timezone'
 
 interface HistoryTableContentProps {
-  onSwitchToDaily: Function
+  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
   rows: IncomingRow[]
   timePrefs: TimePrefs
   length: number

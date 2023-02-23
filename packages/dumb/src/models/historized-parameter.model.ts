@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Unit } from 'medical-domain'
+import { type Unit } from 'medical-domain'
 
 export enum ChangeType {
   Added = 'added',

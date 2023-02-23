@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from '../diabeloop.css'
-import { HistorizedParameter } from '../../../models/historized-parameter.model'
+import { type HistorizedParameter } from '../../../models/historized-parameter.model'
 import { HistoryTableParameterChange } from './history-table-parameter-change'
 import { HistoryTableParameterValueChange } from './history-table-parameter-value-change'
 

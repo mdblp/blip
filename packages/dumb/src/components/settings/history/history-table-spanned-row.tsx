@@ -26,13 +26,14 @@
  */
 
 import styles from '../diabeloop.css'
-import React, { FunctionComponent } from 'react'
-import { HistorizedParameter } from '../../../models/historized-parameter.model'
+import React, { type FunctionComponent } from 'react'
+import { type HistorizedParameter } from '../../../models/historized-parameter.model'
+import type moment from 'moment-timezone'
 
 interface HistorySpannedRowProps {
   data: HistorizedParameter
   length: number
-  onSwitchToDaily: Function
+  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
 }
 
 const ONE_SPACE_STRING = '&nbsp;'

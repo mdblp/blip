@@ -25,17 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent } from 'react'
+import React, { type FunctionComponent } from 'react'
 import styles from '../diabeloop.css'
-import { TimePrefs } from 'medical-domain'
+import { type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { HistoryTableHeader } from './history-table-header'
 import { HistoryTableContent } from './history-table-content'
-import { IncomingRow } from '../../../models/historized-parameter.model'
+import { type IncomingRow } from '../../../models/historized-parameter.model'
+import type moment from 'moment-timezone'
 
 interface HistoryParameterTableProps {
   rows: IncomingRow[]
-  onSwitchToDaily: Function
+  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
   timePrefs: TimePrefs
 }
 

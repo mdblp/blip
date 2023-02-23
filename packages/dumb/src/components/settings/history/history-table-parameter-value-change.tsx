@@ -26,8 +26,8 @@
  */
 
 import { formatParameterValue } from '../../../utils/format/format.util'
-import React, { FunctionComponent } from 'react'
-import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
+import React, { type FunctionComponent } from 'react'
+import { ChangeType, type HistorizedParameter } from '../../../models/historized-parameter.model'
 import styles from '../diabeloop.css'
 
 interface HistoryTableParameterValueChangeProps {

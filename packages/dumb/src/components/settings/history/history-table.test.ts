@@ -26,7 +26,7 @@
  */
 
 import { transformToViewModels } from './history-table.core'
-import { TimePrefs, Unit } from 'medical-domain'
+import { type TimePrefs, Unit } from 'medical-domain'
 import { ChangeType } from '../../../models/historized-parameter.model'
 
 const preference: TimePrefs = { timezoneAware: false, timezoneName: 'Europe/Paris', timezoneOffset: 60 }

@@ -26,8 +26,8 @@
  */
 
 import styles from '../diabeloop.css'
-import React, { FunctionComponent } from 'react'
-import { ChangeType, HistorizedParameter } from '../../../models/historized-parameter.model'
+import React, { type FunctionComponent } from 'react'
+import { ChangeType, type HistorizedParameter } from '../../../models/historized-parameter.model'
 import { useTranslation } from 'react-i18next'
 
 interface HistoryTableParameterChangeProps {

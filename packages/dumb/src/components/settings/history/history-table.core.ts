@@ -27,13 +27,13 @@
 
 import {
   ChangeType,
-  HistorizedParameter,
-  IncomingRow,
-  Parameter,
-  ParameterValue
+  type HistorizedParameter,
+  type IncomingRow,
+  type Parameter,
+  type ParameterValue
 } from '../../../models/historized-parameter.model'
 import { formatLocalizedFromUTC, getLongDayHourFormat } from '../../../utils/datetime/datetime.util'
-import { TimePrefs, Unit } from 'medical-domain'
+import { type TimePrefs, Unit } from 'medical-domain'
 
 const setCurrentParameter = (parameter: Parameter, currentParameters: Map<string, ParameterValue>): void => {
   switch (parameter.changeType) {
