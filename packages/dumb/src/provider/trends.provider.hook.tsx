@@ -42,9 +42,9 @@ import { type FocusedCbgSlice } from '../models/focused-cbg-slice.model'
 export interface TrendsContextResult {
   displayFlags: TrendsDisplayFlags
   focusCbgDateTrace: (cbgDateTrace: CbgDateTrace, position: CbgPositionData<CbgDateTraceYPositions>) => void
-  focusedCbgDateTrace: FocusedCbgDateTrace | undefined
+  focusedCbgDateTrace?: FocusedCbgDateTrace
   focusCbgSlice: (cbgSlice: CbgSlice, position: CbgPositionData<CbgSliceYPositions>, keys: RangeSegmentSlice[]) => void
-  focusedCbgSlice: FocusedCbgSlice | undefined
+  focusedCbgSlice?: FocusedCbgSlice
   showCbgDateTraces: boolean
   toggleCbgSegments: (displayFlag: DisplayFlag) => void
   unfocusCbgDateTrace: () => void
@@ -96,10 +96,10 @@ export const useTrendsProviderHook = (): TrendsContextResult => {
   }
 
   const focusCbgSlice = (cbgSlice: CbgSlice, position: CbgPositionData<CbgSliceYPositions>, keys: RangeSegmentSlice[]): void => {
-    const newFocusedCbgSlice = { data: cbgSlice, position, keys }
+    const newlyFocusedCbgSlice = { data: cbgSlice, position, keys }
 
-    setFocusedCbgSlice(newFocusedCbgSlice)
-    previousFocusedCbgSlice.current = newFocusedCbgSlice
+    setFocusedCbgSlice(newlyFocusedCbgSlice)
+    previousFocusedCbgSlice.current = newlyFocusedCbgSlice
 
     setTimeout(() => {
       if (cbgSlice.id === previousFocusedCbgSlice.current?.data.id && keys === previousFocusedCbgSlice.current?.keys) {
