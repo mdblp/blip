@@ -314,12 +314,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
           <MonitoringConsentDialog
             onAccept={acceptTerms}
-            onCancel={() => { setDisplayMonitoringTerms(false) }}
             teamName={notification.target.name}
-            actions={{
-              onDialogResult: (teamId) => {
-                closeTeamAcceptDialog(teamId)
-              }
+            onCancel={() => {
+              setDisplayMonitoringTerms(false)
             }}
           />}
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
@@ -332,7 +329,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
           />
         }
         <Button
-          data-testid='notification-button-accept'
+          data-testid="notification-button-accept"
           color="primary"
           variant="contained"
           disableElevation
@@ -344,7 +341,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
         </Button>
 
         <Button
-          data-testid='notification-button-decline'
+          data-testid="notification-button-decline"
           className={`${classes.buttonDecline} notification-button-decline`}
           disabled={inProgress}
           onClick={onDecline}>
