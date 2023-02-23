@@ -20,8 +20,6 @@ import './styles/colors.css'
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
-import reducers from './redux/reducers/'
-
 import { formatBgValue, formatParameterValue } from './utils/format'
 import { reshapeBgClassesToBgBounds } from './utils/bloodglucose'
 import { getGroupDurations, getTotalBasalFromEndpoints } from './utils/basal'
@@ -89,7 +87,6 @@ export {
   components,
   containers,
   utils,
-  reducers,
   createPrintPDFPackage,
   getParametersChanges,
   getLongDayHourFormat,

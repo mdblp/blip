@@ -1,7 +1,4 @@
-
 import React from 'react'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
 import { mount } from 'enzyme'
 import * as sinon from 'sinon'
 import chai from 'chai'
@@ -39,9 +36,6 @@ describe('SettingsDialog', function () {
         settingsElem = null
       }
     })
-
-    const fakeState = { viz: {}, blip: { currentPatientInViewId: null } }
-    const fakeStore = createStore((state = fakeState) => { return state }, fakeState)
 
     it('should render without problems', function () {
       const props = {
@@ -99,7 +93,7 @@ describe('SettingsDialog', function () {
         setOpen: sinon.spy()
       }
 
-      settingsElem = mount(<Provider store={fakeStore}><SettingsDialog {...props} /></Provider>)
+      settingsElem = mount(<SettingsDialog {...props} />)
       expect(console.error.callCount).to.equal(0)
       expect(settingsElem.find('#device-usage-details-dialog').exists()).to.be.true
     })
