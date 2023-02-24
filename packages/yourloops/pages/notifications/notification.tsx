@@ -33,9 +33,7 @@ import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
-import HelpIcon from '@mui/icons-material/Help'
 import MedicalServiceIcon from '../../components/icons/medical-service-icon'
-import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import { errorTextFromException, getUserFirstName, getUserLastName } from '../../lib/utils'
@@ -60,6 +58,12 @@ interface NotificationProps {
   notification: NotificationModel
   userRole: UserRoles
   onHelp: () => void
+}
+
+interface NotificationIconPayload {
+  id: string
+  type: NotificationType
+  className: string
 }
 
 const useStyles = makeStyles({ name: 'ylp-page-notification' })((theme: Theme) => ({
@@ -157,20 +161,36 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
     default:
       notificationText = <i>Invalid invitation type</i>
   }
-
   return <span id={id} className={`${classes.notificationSpan} notification-text`}>{notificationText}</span>
 }
 
-const NotificationIcon = ({ id, type, className }: { id: string, type: NotificationType, className: string }): JSX.Element => {
+const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX.Element => {
   switch (type) {
     case NotificationType.directInvitation:
-      return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />
+      return (
+        <PersonIcon
+          id={`person-icon-${id}`}
+          titleAccess="direct-invitation-icon"
+          className={className}
+        />
+      )
     case NotificationType.careTeamPatientInvitation:
-      return <MedicalServiceIcon id={`medical-service-icon-${id}`} titleAccess="care-team-invitation-icon"
-                                 className={className} />
+      return (
+        <MedicalServiceIcon
+          id={`medical-service-icon-${id}`}
+          titleAccess="care-team-invitation-icon"
+          className={className}
+        />
+      )
     case NotificationType.careTeamProInvitation:
     default:
-      return <GroupIcon id={`group-icon-${id}`} titleAccess="default-icon" className={className} />
+      return (
+        <GroupIcon
+          id={`group-icon-${id}`}
+          titleAccess="default-icon"
+          className={className}
+        />
+      )
   }
 }
 
@@ -206,7 +226,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const patientHook = usePatientContext()
   const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
-  const { notification } = props
+  const { notification, userRole, onHelp } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
@@ -273,6 +293,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       alert.error(t('modal-patient-add-team-failure', { errorMessage }))
     }
   }
+  const handleAcceptButtonClick = (): void => {
+    userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
+  }
 
   return (
     <div id={`notification-line-${id}`} data-testid="notification-line"
@@ -291,35 +314,25 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
         {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
           <MonitoringConsentDialog
             onAccept={acceptTerms}
-            onCancel={() => { setDisplayMonitoringTerms(false) }}
             teamName={notification.target.name}
-          />
-        }
-        {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
-          <IconButton
-            id={`notification-help-${id}-button`}
-            className="notification-help-button"
-            size="medium"
-            color="primary"
-            aria-label="notification-help-button"
-            onClick={props.onHelp}>
-            <HelpIcon id={`notification-help-${id}-icon`} />
-          </IconButton>
-        ) : (
-          <Button
-            id={`notification-button-accept-${id}`}
-            color="primary"
-            variant="contained"
-            disableElevation
-            className={`${classes.buttonAccept} notification-button-accept`}
-            disabled={inProgress}
-            onClick={onOpenInvitationDialog}
-          >
-            {t('button-accept')}
-          </Button>
-        )}
+            onCancel={() => {
+              setDisplayMonitoringTerms(false)
+            }}
+          />}
         <Button
-          id={`notification-button-decline-${id}`}
+          data-testid="notification-button-accept"
+          color="primary"
+          variant="contained"
+          disableElevation
+          className={`${classes.buttonAccept} notification-button-accept`}
+          disabled={inProgress}
+          onClick={handleAcceptButtonClick}
+        >
+          {t('button-accept')}
+        </Button>
+
+        <Button
+          data-testid="notification-button-decline"
           variant="outlined"
           className={`${classes.buttonDecline} notification-button-decline`}
           disabled={inProgress}
