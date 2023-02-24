@@ -44,7 +44,6 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-
 import { type Team, useTeam } from '../../lib/team'
 import MenuLayout from '../../layout/menu-layout'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
@@ -52,9 +51,9 @@ import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import { type ShareUser } from '../../lib/share/models/share-user.model'
-import AddTeamDialog from '../../pages/patient/teams/add-dialog'
 import { errorTextFromException } from '../../lib/utils'
 import DirectShareApi from '../../lib/share/direct-share.api'
+import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -144,23 +143,21 @@ function TeamMenu(): JSX.Element {
     closeMenu()
   }
 
-  const onJoinTeam = async (teamId?: string): Promise<void> => {
-    setShowJoinTeamDialog(false)
-    if (teamId) {
-      try {
-        await joinTeam(teamId)
-        alert.success(t('modal-patient-add-team-success'))
-      } catch (reason: unknown) {
-        const errorMessage = errorTextFromException(reason)
-        alert.error(t('modal-patient-add-team-failure', { errorMessage }))
-      }
+  const onJoinTeam = async (teamId: string): Promise<void> => {
+    try {
+      await joinTeam(teamId)
+      alert.success(t('modal-patient-add-team-success'))
+      setShowJoinTeamDialog(false)
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason)
+      alert.error(t('modal-patient-add-team-failure', { errorMessage }))
     }
   }
-
   return (
     <React.Fragment>
       <Box
         id="team-menu"
+        data-testid="team-menu"
         display="flex"
         role="button"
         alignItems="center"
@@ -220,7 +217,7 @@ function TeamMenu(): JSX.Element {
               <Divider variant="middle" />
             </Box>
 
-            <MenuItem id="team-menu-teams-link" onClick={onTeamAction}>
+            <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
               <ListItemIcon>
                 <GroupOutlinedIcon />
               </ListItemIcon>
@@ -256,9 +253,10 @@ function TeamMenu(): JSX.Element {
         <TeamEditDialog teamToEdit={teamCreationDialogData} />
       }
       {showJoinTeamDialog &&
-        <AddTeamDialog
-          error={t('error-joining-team')}
-          actions={{ onDialogResult: async (teamId) => { await onJoinTeam(teamId) } }} />
+        <JoinTeamDialog
+          onClose={() => { setShowJoinTeamDialog(false) }}
+          onAccept={onJoinTeam}
+        />
       }
     </React.Fragment>
   )
