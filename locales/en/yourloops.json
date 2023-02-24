@@ -210,7 +210,6 @@
   "last-name": "Last name",
   "learn-more": "Learn more",
   "left-drawer-toggle": "Toggle left drawer",
-  "login": "Login",
   "login-page-desktop-info-1": "It provides access to <strong>visual representations of data</strong> that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.",
   "login-page-desktop-info-2": "<strong className=\"primary-color-main\">YourLoops</strong> also enables patients to securely <strong>share their data</strong> with their medical team or caregivers.",
   "login-page-desktop-info-3": "For health professionals, <strong className=\"primary-color-main\">YourLoops</strong> is the platform for monitoring their patients. Through these features, it <strong>saves time</strong> and <strong>facilitates therapeutic decision-making</strong>.",
