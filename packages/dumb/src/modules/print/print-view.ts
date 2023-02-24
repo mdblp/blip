@@ -1,53 +1,279 @@
 /*
- * == BSD2 LICENSE ==
- * Copyright (c) 2017, Tidepool Project
+ * Copyright (c) 2017-2023, Diabeloop
  *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the associated License, which is identical to the BSD 2-Clause
- * License as published by the Open Source Initiative at opensource.org.
+ * All rights reserved.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the License for more details.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * You should have received a copy of the License along with this program; if
- * not, you can obtain one from Tidepool Project at tidepool.org.
- * == BSD2 LICENSE ==
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 import _ from 'lodash'
+import type VoilabPdfTable from 'voilab-pdf-table'
 import PdfTable from 'voilab-pdf-table'
-import PdfTableFitColumn from 'voilab-pdf-table/plugins/fitcolumn'
 import i18next from 'i18next'
 import colors from '../../styles/colors.css'
+import PdfTableFitColumn from 'voilab-pdf-table/plugins/fitcolumn'
 
 import {
-  getTimezoneFromTimePrefs,
   formatBirthdate,
   formatCurrentDate,
-  formatDateRange
-} from '../../utils/datetime'
+  formatDateRange,
+  getTimezoneFromTimePrefs
+} from '../../utils/datetime/datetime.util'
 
-import { getPatientFullName } from '../../utils/misc'
 import {
-  DPI,
-  MARGINS,
-  WIDTH,
-  HEIGHT,
   DEFAULT_FONT_SIZE,
+  DPI,
   EXTRA_SMALL_FONT_SIZE,
+  FONTS,
   FOOTER_FONT_SIZE,
   HEADER_FONT_SIZE,
-  LARGE_FONT_SIZE,
-  SMALL_FONT_SIZE,
+  HEIGHT,
   Images,
-  Fonts
+  LARGE_FONT_SIZE,
+  MARGINS,
+  SMALL_FONT_SIZE,
+  WIDTH
 } from './utils/constants'
+import { type TimePrefs } from 'medical-domain'
+import { type BgBounds, type BgPrefs } from '../../models/blood-glucose.model'
+import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
+import { type UnitsType } from '../../models/enums/units-type.enum'
+
+interface TableHeading {
+  text: string
+  subText?: string
+  note?: string
+}
+
+interface Padding {
+  left?: number
+  top: number
+}
+
+interface TableOpts {
+  showHeaders?: boolean
+  bottomMargin?: number
+  flexColumn?: string
+  columnDefaults: Partial<VoilabPdfTable.VoilabPdfTableColumnDefaults<Opts>>
+  // columnDefaults?: {
+  //   zebra?: boolean
+  //   headerBorder?: string
+  //   headerFill?: boolean
+  // }
+}
+
+interface Position {
+  x: number
+  y: number
+}
+
+// interface CustomTextCellColumn {
+//   id: keyof Opts
+//   header: {
+//     text: string
+//     subText?: string
+//     note?: string
+//   }
+//   valign: string
+//   width: number
+//   height: number
+// }
+
+interface CellStripeColumn {
+  id: keyof Opts
+  header: TableHeading
+  valign: string
+  width: number
+  height: number
+  headerFillStripe: unknown
+  fillStripe: unknown
+  headerFill: unknown
+  fill: unknown
+}
+
+interface CellStripe {
+  width: number
+  height: number
+  padding: number
+  color: string
+  opacity: number
+  background: boolean
+}
+
+interface SectionHeading {
+  xPos: number
+  yPos: number
+  font: string
+  fontSize: number
+  subTextFont: string
+  subTextFontSize: number
+  moveDown: number
+}
+
+interface LayoutColumns {
+  activeIndex: number
+  columns: Array<{ x: number, y: number, width: number }>
+  count: number
+  gutter: number
+  type: string
+  width: number
+  widths: number[]
+}
+
+interface Margins {
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+interface Patient {
+  profile: { fullName: string, birthday: string }
+}
+
+export interface Opts {
+  // id: string
+  _bold: unknown
+  title: string
+  debug: boolean
+  defaultFontSize: number
+  dpi: number
+  footerFontSize: number
+  headerFontSize: number
+  height: number
+  margins: Margins
+  patient: Patient
+  smallFontSize: number
+  timePrefs: TimePrefs
+  width: number
+  largeFontSize: number
+  extraSmallFontSize: number
+  bgPrefs: BgPrefs
+  heading: TableHeading
+  note?: number
+  column: string
+  _fill: { color: string, opacity: number }
+  // heading: string
+}
+
+interface Data {
+  basics?: BasicData
+  // daily: vizUtils.data.selectDailyViewData(medicalData, start, end),
+  // settings: !printOptions.preset
+  // ? vizUtils.data.generatePumpSettings(lastPumpSettings, end)
+  //   : lastPumpSettings
+}
+
+interface Fonts {
+  regularName: string
+  boldName: string
+}
+
+type CustomPdfTable = PdfTable<Opts> & { pos: Position, bottomMargin: number }
+type CustomColumnTable = VoilabPdfTable.VoilabPdfTableColumn<Opts> & { font: string, fontSize: number, zebra?: boolean }
 
 const t = i18next.t.bind(i18next)
 
-class PrintView {
-  constructor(doc, data = {}, opts) {
+const getPatientFullName = (patient: { profile: { fullName: string } }): string => {
+  const fullName = patient?.profile?.fullName
+  return fullName ?? i18next.t('Anonymous user')
+}
+
+export class PrintView {
+  doc: PDFKit.PDFDocument
+  title: string
+  data: Data
+  debug: boolean
+  dpi: number
+  margins: Margins
+  font: string
+  boldFont: string
+  defaultFontSize: number
+  footerFontSize: number
+  headerFontSize: number
+  largeFontSize: number
+  smallFontSize: number
+  extraSmallFontSize: number
+  bgPrefs: BgPrefs
+  bgUnits: UnitsType
+  bgBounds?: BgBounds
+  timePrefs: TimePrefs
+  timezone: string
+  width: number
+  height: number
+  patient: Patient
+  patientInfoBox: {
+    width: number
+    height: number
+  }
+
+  colors: {
+    grey: string
+    basal: string
+    lightGrey: string
+  }
+
+  tableSettings: {
+    colors: {
+      border: string
+      tableHeader: string
+      zebraHeader: string
+      zebraEven: string
+      zebraOdd: string
+    }
+    borderWidth: number
+  }
+
+  leftEdge: number
+  rightEdge: number
+  bottomEdge: number
+
+  chartArea: {
+    leftEdge: number
+    topEdge: number
+    bottomEdge: number
+    width: number
+  }
+
+  initialChartArea: {
+    leftEdge: number
+    topEdge: number
+    bottomEdge: number
+    width: number
+  }
+
+  initialTotalPages: number
+  totalPages: number
+  currentPageIndex: number
+
+  table?: CustomPdfTable
+  // table?: VoilabPdfTableConfig<Opts>
+
+  layoutColumns?: LayoutColumns
+
+  dividerWidth?: number
+  titleWidth?: number
+  logoWidth?: number
+
+  constructor(doc: PDFKit.PDFDocument, data: Data, opts: Opts) {
     this.doc = doc
 
     this.title = opts.title
@@ -104,10 +330,10 @@ class PrintView {
     this.chartArea = {
       bottomEdge: this.margins.top + opts.height,
       leftEdge: this.margins.left,
-      topEdge: this.margins.top
+      topEdge: this.margins.top,
+      width: this.rightEdge - this.margins.left
     }
 
-    this.chartArea.width = this.rightEdge - this.chartArea.leftEdge
     this.initialChartArea = _.clone(this.chartArea)
 
     this.initialTotalPages = 0
@@ -127,7 +353,7 @@ class PrintView {
     this.doc.on('pageAdded', this.newPage)
   }
 
-  static renderPageNumbers(doc, opts = {}) {
+  static renderPageNumbers(doc: PDFKit.PDFDocument, opts: Opts): void {
     const footerFontSize = opts.footerFontSize ?? FOOTER_FONT_SIZE
     const margins = opts.margins ?? MARGINS
     const height = opts.height ?? HEIGHT
@@ -150,14 +376,18 @@ class PrintView {
     }
   }
 
-  static getFonts() {
+  static getFonts(): Fonts {
+    const boldNamePath = `${i18next.language}.boldName`
+    const regularNamePath = `${i18next.language}.regularName`
+    const boldName = _.get(FONTS, boldNamePath) ?? FONTS.default.boldName
+    const regularName = _.get(FONTS, regularNamePath) ?? FONTS.default.regularName
     return {
-      regularName: _.get(Fonts, `${i18next.language}.regularName`) ?? Fonts.default.regularName,
-      boldName: _.get(Fonts, `${i18next.language}.boldName`) ?? Fonts.default.boldName
+      regularName,
+      boldName
     }
   }
 
-  newPage(dateText) {
+  newPage(dateText: string): void {
     if (this.debug) {
       this.renderDebugGrid()
     }
@@ -170,7 +400,8 @@ class PrintView {
     this.currentPageIndex++
     this.totalPages++
 
-    this.renderHeader(dateText).renderFooter()
+    const view = this.renderHeader(dateText)
+    view.renderFooter()
     this.doc.x = this.chartArea.leftEdge
     this.doc.y = this.chartArea.topEdge
 
@@ -185,32 +416,40 @@ class PrintView {
       this.setNewPageTablePosition()
     }
 
-    if (this.layoutColumns) {
-      this.setLayoutColumns({
-        activeIndex: this.layoutColumns.activeIndex,
-        count: this.layoutColumns.count,
-        gutter: this.layoutColumns.gutter,
-        type: this.layoutColumns.type,
-        width: this.layoutColumns.width,
-        widths: this.layoutColumns.widths
-      })
+    // TODO: To remove?
+    // if (this.layoutColumns) {
+    //   this.setLayoutColumns({
+    //     activeIndex: this.layoutColumns.activeIndex,
+    //     count: this.layoutColumns.count,
+    //     gutter: this.layoutColumns.gutter,
+    //     type: this.layoutColumns.type,
+    //     width: this.layoutColumns.width,
+    //     widths: this.layoutColumns.widths
+    //   })
+    //
+    //   this.goToLayoutColumnPosition(this.layoutColumns.activeIndex)
+    // }
+  }
 
-      this.goToLayoutColumnPosition(this.layoutColumns.activeIndex)
+  setNewPageTablePosition(): void {
+    const xPos = this.chartArea.leftEdge
+
+    // TODO: To remove?
+    //
+    // const xPos = this.layoutColumns
+    //   ? _.get(this, `layoutColumns.columns.${this.layoutColumns.activeIndex}.x`)
+    //   : this.chartArea.leftEdge
+
+    if (this.table) {
+      if (this.table.pos) {
+        this.doc.x = this.table.pos.x = xPos
+        this.doc.y = this.table.pos.y = this.chartArea.topEdge
+      }
+      this.table.pdf.lineWidth(this.tableSettings.borderWidth)
     }
   }
 
-  setNewPageTablePosition() {
-    const xPos = this.layoutColumns
-      ? _.get(this, `layoutColumns.columns.${this.layoutColumns.activeIndex}.x`)
-      : this.chartArea.leftEdge
-
-    this.doc.x = this.table.pos.x = xPos
-    this.doc.y = this.table.pos.y = this.chartArea.topEdge
-
-    this.table.pdf.lineWidth(this.tableSettings.borderWidth)
-  }
-
-  setLayoutColumns(opts) {
+  setLayoutColumns(opts: LayoutColumns): void {
     const {
       activeIndex = 0,
       columns = [],
@@ -273,20 +512,27 @@ class PrintView {
     }
   }
 
-  updateLayoutColumnPosition(index) {
-    this.layoutColumns.columns[index].x = this.doc.x
-    this.layoutColumns.columns[index].y = this.doc.y
+  updateLayoutColumnPosition(index: number): void {
+    if (this.layoutColumns) {
+      this.layoutColumns.columns[index].x = this.doc.x
+      this.layoutColumns.columns[index].y = this.doc.y
+    }
   }
 
-  goToLayoutColumnPosition(index) {
-    this.doc.x = this.layoutColumns.columns[index].x
-    this.doc.y = this.layoutColumns.columns[index].y
-    this.layoutColumns.activeIndex = index
+  goToLayoutColumnPosition(index: number): void {
+    if (this.layoutColumns) {
+      this.doc.x = this.layoutColumns.columns[index].x
+      this.doc.y = this.layoutColumns.columns[index].y
+      this.layoutColumns.activeIndex = index
+    }
   }
 
-  getShortestLayoutColumn() {
-    let shortest
-    let shortestIndex
+  getShortestLayoutColumn(): number {
+    let shortest = 0
+    let shortestIndex = 0
+    if (!this.layoutColumns) {
+      throw Error('this.layoutColumns must be defined')
+    }
     _.forEach(this.layoutColumns.columns, (column, colIndex) => {
       if (!shortest || (shortest > column.y)) {
         shortest = column.y
@@ -297,9 +543,9 @@ class PrintView {
     return shortestIndex
   }
 
-  getLongestLayoutColumn() {
-    let longest
-    let longestIndex
+  getLongestLayoutColumn(): number {
+    let longest = 0
+    let longestIndex = 0
     _.forEach(_.get(this, 'layoutColumns.columns', []), (column, colIndex) => {
       if (!longest || (longest < column.y)) {
         longest = column.y
@@ -310,27 +556,30 @@ class PrintView {
     return longestIndex
   }
 
-  getActiveColumnWidth() {
+  getActiveColumnWidth(): number {
+    if (!this.layoutColumns) {
+      throw Error('this.layoutColumns must be defined')
+    }
     return this.layoutColumns.columns[this.layoutColumns.activeIndex].width
   }
 
-  getDateRange(startDate, endDate, format, timezone) {
+  getDateRange(startDate: string, endDate: string, format: string, timezone: string | undefined): string {
     return t('pdf-date-range', { range: formatDateRange(startDate, endDate, format, timezone) })
   }
 
-  setFill(color = 'black', opacity = 1) {
+  setFill(color = 'black', opacity = 1): void {
     this.doc
       .fillColor(color)
       .fillOpacity(opacity)
   }
 
-  setStroke(color = 'black', opacity = 1) {
+  setStroke(color = 'black', opacity = 1): void {
     this.doc
       .strokeColor(color)
       .strokeOpacity(opacity)
   }
 
-  resetText() {
+  resetText(): void {
     this.setFill()
     this.doc
       .lineGap(0)
@@ -338,7 +587,7 @@ class PrintView {
       .font(this.font)
   }
 
-  renderSectionHeading(heading, opts = {}) {
+  renderSectionHeading(heading: string | { text: string, subText: boolean }, opts: SectionHeading): void {
     const {
       xPos = this.doc.x,
       yPos = this.doc.y,
@@ -369,27 +618,27 @@ class PrintView {
       .fontSize(fontSize)
       .text(text, xPos, yPos, _.defaults(opts, {
         align: 'left',
-        continued: !!subText
+        continued: subText
       }))
 
     if (subText) {
       this.doc
         .font(subTextFont)
         .fontSize(subTextFontSize)
-        .text(` ${subText}`, xPos, yPos + subTextYOffset)
+        .text(' true', xPos, yPos + subTextYOffset)
     }
 
     this.resetText()
     this.doc.moveDown(moveDown)
   }
 
-  renderCellStripe(data = {}, column = {}, pos = {}, isHeader = false) {
+  renderCellStripe(data = {}, column: CellStripeColumn, pos: Position, isHeader = false): CellStripe {
     const fillStripeKey = isHeader ? 'headerFillStripe' : 'fillStripe'
     const fillKey = isHeader ? 'headerFill' : 'fill'
     const heightKey = isHeader ? 'headerHeight' : 'height'
 
-    const height = _.get(column, heightKey, column.height)
-                || _.get(data, '_renderedContent.height', 0)
+    const height = _.get(column, heightKey, column.height) ||
+      _.get(data, '_renderedContent.height', 0)
 
     const stripe = {
       width: 0,
@@ -434,22 +683,26 @@ class PrintView {
     return stripe
   }
 
-  renderCustomTextCell(tb, data, draw, column, pos, padding, isHeader) {
+  // renderCustomTextCell(table: VoilabPdfTable<T>, row: T, draw: boolean) => void {
+  renderCustomTextCell(tb: VoilabPdfTable<Opts>, data: Opts, draw: boolean, column: CellStripeColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
+    // console.log(draw)
+    // console.log(column)
+    // console.log(pos)
+    // console.log(padding)
+    // console.log(isHeader)
     if (draw) {
+      console.log(data)
       let {
         text = '',
         subText = '',
         note
-      } = _.get(data, column.id, column.header || {})
-      if(column.id==='stat') {
-        console.log(text)
-        console.log(subText)
-        console.log(note)
-      }
-
+      } = _.get(data, column.id, column.header || {}) as TableHeading
+      // const toto: TableHeading = _.get(data, column.id, column.header || { text: '', subText: '' }) as TableHeading
+      console.log(column.id)
+      // console.log(toto)
       if ((!isHeader && _.isString(data[column.id])) || _.isString(column.header)) {
-        text = isHeader ? column.header : data[column.id]
-        subText = note = null
+        text = isHeader ? column.header as unknown as string : data[column.id] as string
+        subText = note = ''
       }
 
       const alignKey = isHeader ? 'headerAlign' : 'align'
@@ -468,8 +721,8 @@ class PrintView {
 
       const heightKey = isHeader ? 'headerHeight' : 'height'
 
-      const height = _.get(column, heightKey, column.height)
-                  || _.get(data, '_renderedContent.height', 0)
+      const height = _.get(column, heightKey, column.height) ||
+        _.get(data, '_renderedContent.height', 0)
 
       const fontKey = isHeader ? 'headerFont' : 'font'
 
@@ -483,21 +736,22 @@ class PrintView {
       }
 
       this.doc.text(text, xPos, yPos, {
-        continued: !!subText,
+        continued: subText.length > 0,
         align,
         width
       })
 
       this.doc.font(this.font)
 
-      if (subText) {
+      if (subText.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         this.doc.text(` ${subText}`, xPos, yPos, {
           align,
           width
         })
       }
 
-      if (note) {
+      if (note && note.length > 0) {
         this.doc
           .fontSize(_.get(column, 'noteFontSize', this.defaultFontSize))
           .text(note, {
@@ -510,29 +764,29 @@ class PrintView {
     return ' '
   }
 
-  renderTableHeading(heading = {}, opts = {}) {
+  renderTableHeading(heading: TableHeading, opts = {}): void {
     this.doc
       .font(this.font)
       .fontSize(this.largeFontSize)
 
-    const columns = [
+    const columns: readonly CustomColumnTable[] = [
       {
         id: 'heading',
         align: _.get(opts, 'align', 'left'),
         height: _.get(opts, 'height', heading.note ? 37 : 24),
         cache: false,
-        renderer: this.renderCustomTextCell,
+        renderer: this.renderCustomTextCell as unknown as (table: VoilabPdfTable<Opts>, row: Opts, draw: boolean) => void,
         font: _.get(opts, 'font', this.boldFont),
         fontSize: _.get(opts, 'fontSize', this.largeFontSize)
       }
     ]
 
-    const rows = [
+    const rows: Opts[] = [
       {
         heading,
         note: heading.note
       }
-    ]
+    ] as Opts[]
 
     this.renderTable(columns, rows, _.defaultsDeep(opts, {
       columnDefaults: {
@@ -545,7 +799,7 @@ class PrintView {
     this.resetText()
   }
 
-  renderTable(columns = [], rows = [], opts = {}, Table = PdfTable, FitColumn = PdfTableFitColumn) {
+  renderTable(columns: readonly CustomColumnTable[] = [], rows: Opts[] = [], opts: TableOpts): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
 
     _.defaultsDeep(opts, {
@@ -567,10 +821,11 @@ class PrintView {
     const {
       flexColumn
     } = opts
-    const table = this.table = new Table(this.doc, opts)
+
+    const table = this.table = new PdfTable(this.doc, opts) as CustomPdfTable
     if (flexColumn) {
-      table.addPlugin(new FitColumn({
-        column: flexColumn
+      table.addPlugin(new PdfTableFitColumn<Opts>({
+        column: flexColumn as keyof Opts
       }))
     }
 
@@ -596,13 +851,22 @@ class PrintView {
 
     table.onBodyAdded(this.onBodyAdded.bind(this))
 
+    // if (rows[0].heading) {
+    //   // console.log(columns)
+    //   // console.log(rows)
+    //   table
+    //     .setColumnsDefaults(opts.columnDefaults)
+    //     .addColumns(columns)
+    //     .addBody([{ heading: 'tototototo', subText: 'tatata' }] as unknown as Opts[])
+    // } else {
     table
       .setColumnsDefaults(opts.columnDefaults)
       .addColumns(columns)
       .addBody(rows)
+    // }
   }
 
-  onPageAdd(tb, row, ev) {
+  onPageAdd(tb: VoilabPdfTable<Opts>, row: Opts, ev: { cancel: boolean }): void {
     const currentPageIndex = this.initialTotalPages + this.currentPageIndex
 
     if (currentPageIndex + 1 === this.totalPages) {
@@ -617,7 +881,7 @@ class PrintView {
     ev.cancel = true // eslint-disable-line no-param-reassign
   }
 
-  onBodyAdded(tb) {
+  onBodyAdded(tb: CustomPdfTable): void {
     // Restore x position after table is drawn
     this.doc.x = _.get(tb, 'pos.x', this.doc.page.margins.left)
 
@@ -625,12 +889,12 @@ class PrintView {
     this.doc.y += tb.bottomMargin
   }
 
-  onCellBackgroundAdd(tb, column, row, index, isHeader) {
+  onCellBackgroundAdd(tb: VoilabPdfTable<Opts>, column: VoilabPdfTable.VoilabPdfTableColumn<Opts>, row: Opts, index: number, isHeader: boolean): void {
     const {
       fill,
       headerFill,
       zebra
-    } = column
+    } = column as CustomColumnTable
 
     const isEven = index % 2 === 0
 
@@ -638,12 +902,11 @@ class PrintView {
 
     if (fillKey) {
       const fillDefined = _.isPlainObject(fillKey)
-      let color
+      let color: string
       let opacity
 
       if (!fillDefined) {
         opacity = 1
-
         if (zebra) {
           if (isHeader) {
             color = this.tableSettings.colors.zebraHeader
@@ -653,13 +916,14 @@ class PrintView {
               : this.tableSettings.colors.zebraOdd
           }
         } else {
-          color = fillKey || 'white'
+          color = 'white'
         }
       } else {
         const defaultOpacity = _.get(fillKey, 'opacity', 1)
 
         color = _.get(fillKey, 'color', 'white')
         opacity = zebra && !isEven ? defaultOpacity / 2 : defaultOpacity
+        opacity = defaultOpacity
       }
 
       this.setFill(color, opacity)
@@ -677,33 +941,33 @@ class PrintView {
     /* eslint-enable no-underscore-dangle */
   }
 
-  onCellBackgroundAdded() {
+  onCellBackgroundAdded(): void {
     this.setFill()
   }
 
-  onCellBorderAdd(tb, column) {
+  onCellBorderAdd(tb: VoilabPdfTable<Opts>, column: VoilabPdfTable.VoilabPdfTableColumn<Opts>): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
     this.setStroke(_.get(column, 'borderColor', 'black'), 1)
   }
 
-  onCellBorderAdded() {
+  onCellBorderAdded(): void {
     this.setStroke()
   }
 
-  onRowAdd(tb, row) {
+  onRowAdd(tb: VoilabPdfTable<Opts>, row: Opts): void {
     // eslint-disable-next-line no-underscore-dangle
     if (row._bold) {
       this.doc.font(this.boldFont)
     }
   }
 
-  onRowAdded() {
+  onRowAdded(): void {
     this.resetText()
   }
 
-  renderPatientInfo() {
+  renderPatientInfo(): void {
     const patientName = _.truncate(getPatientFullName(this.patient), { length: 32 })
-    const patientBirthdate = formatBirthdate(this.patient)
+    const patientBirthdate = formatBirthdate(this.patient.profile.birthday ?? '')
     const xOffset = this.margins.left
     const yOffset = this.margins.top
 
@@ -740,7 +1004,7 @@ class PrintView {
     this.dividerWidth = padding * 2 + 1
   }
 
-  renderTitle() {
+  renderTitle(): void {
     const lineHeight = this.doc.fontSize(14).currentLineHeight()
     const xOffset = this.margins.left + this.patientInfoBox.width + 21
     const yOffset = (
@@ -755,7 +1019,7 @@ class PrintView {
     this.titleWidth = this.doc.widthOfString(title)
   }
 
-  renderDateText(dateText = '') {
+  renderDateText(dateText = ''): void {
     const lineHeight = this.doc.fontSize(14).currentLineHeight()
 
     // Calculate the remaining available width so we can
@@ -767,7 +1031,16 @@ class PrintView {
       this.logoWidth,
       this.margins.left,
       this.margins.right
-    ], (a, b) => (a + b), 0)
+    ], (a, b) => {
+      if (b) {
+        return a + b
+      }
+      return a
+    }, 0)
+
+    if (!this.dividerWidth || !this.titleWidth) {
+      return
+    }
 
     const xOffset = (
       this.margins.left + this.patientInfoBox.width + this.dividerWidth + this.titleWidth
@@ -784,7 +1057,7 @@ class PrintView {
       })
   }
 
-  renderLogo() {
+  renderLogo(): void {
     this.logoWidth = 80
     const xOffset = this.doc.page.width - this.logoWidth - this.margins.right
     const yOffset = this.margins.top
@@ -792,7 +1065,7 @@ class PrintView {
     this.doc.image(Images.logo, xOffset, yOffset, { width: this.logoWidth })
   }
 
-  renderDebugGrid() {
+  renderDebugGrid(): PrintView {
     const minorLineColor = '#B8B8B8'
     const numMinorLines = 5
     let thisLineYPos = this.margins.top
@@ -834,7 +1107,7 @@ class PrintView {
     return this
   }
 
-  renderHeader(dateText) {
+  renderHeader(dateText: string): PrintView {
     this.renderPatientInfo()
 
     this.renderTitle()
@@ -852,18 +1125,10 @@ class PrintView {
       .lineTo(this.margins.left + this.width, height)
       .stroke('black')
 
-    // TODO: remove this; it is just for exposing/debugging the chartArea.topEdge adjustment
-    if (this.debug) {
-      this.doc
-        .fillColor('#E8E8E8', 0.3333333333)
-        .rect(this.margins.left, this.margins.top, this.width, lineHeight * 4)
-        .fill()
-    }
-
     return this
   }
 
-  renderFooter() {
+  renderFooter(): PrintView {
     this.doc.fontSize(this.footerFontSize)
 
     const helpText = t('pdf-footer-center-text', { appURL: `${window.location.protocol}//${window.location.hostname}/` })
@@ -891,7 +1156,7 @@ class PrintView {
     return this
   }
 
-  setFooterSize() {
+  setFooterSize(): PrintView {
     this.doc.fontSize(this.footerFontSize)
     const lineHeight = this.doc.currentLineHeight()
     this.chartArea.bottomEdge = this.chartArea.bottomEdge - lineHeight * 9
@@ -899,7 +1164,7 @@ class PrintView {
     return this
   }
 
-  setHeaderSize() {
+  setHeaderSize(): PrintView {
     this.doc.fontSize(this.headerFontSize)
     const lineHeight = this.doc.currentLineHeight()
     this.chartArea.topEdge = this.chartArea.topEdge + lineHeight * 4
@@ -907,5 +1172,3 @@ class PrintView {
     return this
   }
 }
-
-export default PrintView

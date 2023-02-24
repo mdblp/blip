@@ -489,7 +489,7 @@ class PatientDataPage extends React.Component {
     const pdfData = {
       basics: medicalData.generateBasicsData(start.toISOString(), end.toISOString()),
       daily: vizUtils.data.selectDailyViewData(medicalData, start, end),
-      settings: !printOptions.preset
+      settings: !printOptions.preset && lastPumpSettings
         ? vizUtils.data.generatePumpSettings(lastPumpSettings, end)
         : lastPumpSettings
     }

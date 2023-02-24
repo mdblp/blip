@@ -29,6 +29,7 @@ import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import { DurationUnit, type TimePrefs } from 'medical-domain'
+import { timeFormat } from 'd3-time-format'
 
 const t = i18next.t.bind(i18next)
 
@@ -94,6 +95,32 @@ export const getTimezoneFromTimePrefs = (timePrefs: TimePrefs): string => {
     return timePrefs.timezoneName ?? getBrowserTimezone() ?? TIMEZONE_UTC
   }
   return TIMEZONE_UTC
+}
+
+export const formatBirthdate = (birthday?: string): string => {
+  // const birthday = _.get(patient, 'profile.patient.birthday', '')
+  if (birthday) {
+    const birthdayFormat = t('birthday-format')
+    return moment.utc(birthday).format(birthdayFormat)
+  }
+  return ''
+}
+
+export const formatCurrentDate = (): string => {
+  return timeFormat(t('%b %-d, %Y'))(new Date())
+}
+
+export const formatDateRange = (startDate: string, endDate: string, format: string, timezone: string | undefined = 'UTC'): string => {
+  const start = moment.tz(startDate, format, timezone)
+  const end = moment.tz(endDate, format, timezone)
+
+  const isSameYear = start.isSame(end, 'year')
+  const sameYearFormat = t('MMM D')
+  const differentYearFormat = t('MMM D, YYYY')
+  const startFormat = isSameYear ? start.format(sameYearFormat) : start.format(differentYearFormat)
+  const endFormat = end.format(differentYearFormat)
+
+  return `${startFormat} - ${endFormat}`
 }
 
 /**

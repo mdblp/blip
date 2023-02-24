@@ -20,7 +20,6 @@ import i18next from 'i18next'
 import moment from 'moment-timezone'
 import PDFDocument from 'pdfkit'
 import blobStream from 'blob-stream'
-import PrintView from './PrintView'
 import BasicsPrintView from './BasicsPrintView'
 import DailyPrintView from './DailyPrintView'
 import SettingsPrintView from './SettingsPrintView'
@@ -38,6 +37,7 @@ import siteChangeTubingImage from './images/sitechange-tubing.png'
 import siteChangeReservoirDiabeloopImage from './images/diabeloop/sitechange-cartridge.png'
 import jaFontRegular from 'jaFont-Regular.ttf'
 import jaFontBold from 'jaFont-Bold.ttf'
+import { PrintView } from 'dumb/src/modules/print/print-view'
 
 const t = i18next.t.bind(i18next)
 
@@ -52,7 +52,7 @@ export const utils = {
   SettingsPrintView
 }
 
-async function loadImages() {
+async function loadImagesViz() {
   const base64Flag = 'data:image/jpeg;base64,'
   let imageStr = ''
 
@@ -108,7 +108,7 @@ async function loadImages() {
   }
 }
 
-async function loadFonts() {
+async function loadFontsViz() {
   if (i18next.language === 'ja') {
     if (constants.Fonts.ja.regular === null) {
       const response = await fetch(jaFontRegular)
@@ -290,8 +290,10 @@ export function createPrintPDFPackage(data, opts) {
 }
 
 async function doPrint(data, opts) {
-  await loadImages()
-  await loadFonts()
+  await loadImagesViz()
+  // await loadImages()
+  await loadFontsViz()
+  // await loadFonts()
   return createPrintPDFPackage(data, opts)
 }
 

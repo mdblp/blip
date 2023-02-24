@@ -299,6 +299,9 @@ const webpackConfig = {
       { enforce: 'pre', test: reJTSX, loader: 'source-map-loader' },
       { test: /locales\/languages\.json$/, loader: '../../webpack.locales-loader.js' }
     ]
+  },
+  experiments: {
+    topLevelAwait: true
   }
 }
 

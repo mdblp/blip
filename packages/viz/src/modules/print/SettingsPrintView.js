@@ -17,7 +17,9 @@
 
 import _ from 'lodash'
 import i18next from 'i18next'
-import PrintView from './PrintView'
+// import PrintView from './PrintView'
+
+import { PrintView } from 'dumb/src/modules/print/print-view'
 
 import {
   getDeviceMeta
