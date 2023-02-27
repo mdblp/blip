@@ -44,10 +44,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
   const theme = useTheme()
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
-    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, dateFilter)
-    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, dateFilter)
   const numberOfDays = TimeService.numberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+
+  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
+    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart

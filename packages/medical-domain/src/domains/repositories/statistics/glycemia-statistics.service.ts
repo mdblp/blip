@@ -82,9 +82,9 @@ const meanValues = (values: number[]): number => (
   values.length === 0 ? Number.NaN : sumValues(values) / values.length
 )
 
-function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, dateFilter: DateFilter): CbgRangeStatistics {
+function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter): CbgRangeStatistics {
   const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  return filteredCbg.reduce(
+  const durationInRange = filteredCbg.reduce(
     (result, cbg) => {
       const classification = classifyBgValue(bgBounds, cbg.value, ClassificationType.FiveWay)
       const duration = cgmSampleFrequency(cbg.deviceName)
@@ -101,11 +101,23 @@ function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, dateFilter: Date
       total: 0
     }
   )
+
+  if (numDays > 1) {
+    return {
+      veryLow: durationInRange.veryLow / durationInRange.total * MS_IN_DAY,
+      low: durationInRange.low / durationInRange.total * MS_IN_DAY,
+      target: durationInRange.target / durationInRange.total * MS_IN_DAY,
+      high: durationInRange.high / durationInRange.total * MS_IN_DAY,
+      veryHigh: durationInRange.veryHigh / durationInRange.total * MS_IN_DAY,
+      total: durationInRange.total
+    }
+  }
+  return durationInRange
 }
 
-function getReadingsInRangeData(smbgData: Smbg[], bgBounds: BgBounds, dateFilter: DateFilter): CbgRangeStatistics {
+function getReadingsInRangeData(smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter): CbgRangeStatistics {
   const filteredSmbg = SmbgService.filterOnDate(smbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  return filteredSmbg.reduce(
+  const readingsInRange = filteredSmbg.reduce(
     (result, smbg) => {
       const classification = classifyBgValue(bgBounds, smbg.value, ClassificationType.FiveWay)
       result[classification]++
@@ -121,6 +133,17 @@ function getReadingsInRangeData(smbgData: Smbg[], bgBounds: BgBounds, dateFilter
       total: 0
     }
   )
+  if (numDays > 1) {
+    return {
+      veryLow: readingsInRange.veryLow / numDays,
+      low: readingsInRange.low / numDays,
+      target: readingsInRange.target / numDays,
+      high: readingsInRange.high / numDays,
+      veryHigh: readingsInRange.veryHigh / numDays,
+      total: readingsInRange.total
+    }
+  }
+  return readingsInRange
 }
 
 function getSensorUsage(cbgData: Cbg[], numDays: number, dateFilter: DateFilter): SensorUsageStatistics {
@@ -235,8 +258,8 @@ function getStandardDevData(bgData: Cbg[] | Smbg[], dateFilter: DateFilter): Sta
 }
 
 export interface GlycemiaStatisticsAdapter {
-  getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, dateFilter: DateFilter) => CbgRangeStatistics
-  getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, dateFilter: DateFilter) => CbgRangeStatistics
+  getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
+  getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getSensorUsage: (cbgData: Cbg[], numDays: number, dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics

@@ -115,7 +115,7 @@ const dateFilterTwoWeeks: DateFilter = {
 
 describe('GlycemiaStatisticsService getTimeInRangeData', () => {
   it('should return time in range when viewing one day', () => {
-    const stats = GlycemiaStatisticsService.getTimeInRangeData(cbgData, bgBounds, dateFilterOneDay)
+    const stats = GlycemiaStatisticsService.getTimeInRangeData(cbgData, bgBounds, 1, dateFilterOneDay)
     expect(stats).toEqual({
       veryLow: MS_IN_MIN * 15,
       low: MS_IN_MIN * 15,
@@ -126,21 +126,23 @@ describe('GlycemiaStatisticsService getTimeInRangeData', () => {
     })
   })
   it('should return time in range when viewing more than 1 day', () => {
-    const stats = GlycemiaStatisticsService.getTimeInRangeData(cbgData, bgBounds, dateFilterTwoDays)
+    const stats = GlycemiaStatisticsService.getTimeInRangeData(cbgData, bgBounds, 2, dateFilterTwoDays)
+    const expectedTotalMinutes = (15 * 3 + 5 * 3)
+
     expect(stats).toEqual({
-      veryLow: MS_IN_MIN * 15,
-      low: MS_IN_MIN * 15,
-      target: MS_IN_MIN * 15 + MS_IN_MIN * 5,
-      high: MS_IN_MIN * 5,
-      veryHigh: MS_IN_MIN * 5,
-      total: MS_IN_MIN * 15 * 3 + MS_IN_MIN * 5 * 3
+      veryLow: 15 / expectedTotalMinutes * MS_IN_DAY,
+      low: 15 / expectedTotalMinutes * MS_IN_DAY,
+      target: (15 + 5) / expectedTotalMinutes * MS_IN_DAY,
+      high: 5 / expectedTotalMinutes * MS_IN_DAY,
+      veryHigh: 5 / expectedTotalMinutes * MS_IN_DAY,
+      total: expectedTotalMinutes * MS_IN_MIN
     })
   })
 })
 
 describe('GlycemiaStatisticsService getReadingsInRangeData', () => {
   it('should return readings in range when viewing one day', () => {
-    const stats = GlycemiaStatisticsService.getReadingsInRangeData(smbgData, bgBounds, dateFilterOneDay)
+    const stats = GlycemiaStatisticsService.getReadingsInRangeData(smbgData, bgBounds, 1, dateFilterOneDay)
     expect(stats).toEqual({
       veryLow: 1,
       low: 1,
@@ -151,13 +153,13 @@ describe('GlycemiaStatisticsService getReadingsInRangeData', () => {
     })
   })
   it('should return readings in range when viewing more than 1 day', () => {
-    const stats = GlycemiaStatisticsService.getReadingsInRangeData(smbgData, bgBounds, dateFilterTwoDays)
+    const stats = GlycemiaStatisticsService.getReadingsInRangeData(smbgData, bgBounds, 2, dateFilterTwoDays)
     expect(stats).toEqual({
-      veryLow: 1,
-      low: 1,
-      target: 2,
-      high: 1,
-      veryHigh: 1,
+      veryLow: 1 / 2,
+      low: 1 / 2,
+      target: 2 / 2,
+      high: 1 / 2,
+      veryHigh: 1 / 2,
       total: 6
     })
   })
