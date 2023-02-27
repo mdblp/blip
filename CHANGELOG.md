@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
 - YLP-2068 Update minor dependencies
 - YLP-2069 Migrate CBGSlicesContainer from viz to dumb
+- YLP-2071 Change the question mark icon to accept button
 - YLP-2072 Replace “Show more“ by “show less” when patient header is unfolded
 - YLP-2084 Migrate trends Y axis labels and ticks to dumb
 - YLP-2085 Update major dependencies with no API break
@@ -61,6 +62,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
+- YLP-1770 Team list is not refreshed after patient accept invitation from notification
 - YLP-1805 Push error to the backend
 - YLP-1868 Add route to invite team member
 - YLP-1873 Fix patient profile update not visible in dashboard
