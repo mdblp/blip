@@ -30,6 +30,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2118 Update axios and minor dependencies
 - YLP-2121 Removing deprecated @mui/styles library
 - YLP-2139 Remove weekly reports
+- YLP-2141 Process glycemia statistics in a dedicated service
 - YLP-2143 Migrate TrendsContainer to dumb
 - YLP-2144 Migrate dashboard from blip to Yourloops
 - YLP-2159 Get rid of connectWithTransitionGroup in viz
