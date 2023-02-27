@@ -26,7 +26,7 @@ import clsx from 'clsx'
 import { Route, Switch } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
 
-import MedicalDataService, { MGDL_UNITS, TimeService } from 'medical-domain'
+import MedicalDataService, { MGDL_UNITS, Source, TimeService } from 'medical-domain'
 import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
 
 import config from '../config'
@@ -35,7 +35,6 @@ import utils from '../core/utils'
 import ApiUtils from '../core/api-utils'
 import { Daily, Trends } from './chart'
 import Messages from './messages'
-import { FETCH_PATIENT_DATA_SUCCESS } from '../redux'
 import { PatientNavBarMemoized as PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { PatientDashboard } from 'yourloops/components/dashboard-widgets/patient-dashboard'
@@ -56,7 +55,6 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
 
 /**
  * @typedef { import('history').History } History
- * @typedef { import('redux').Store } Store
  * @typedef { import('../index').BlipApi } API
  * @typedef { import('../index').IUser } User
  * @typedef { import('../index').PatientData } PatientData
@@ -132,9 +130,6 @@ class PatientDataPage extends React.Component {
           bgSource: 'smbg'
         }
       },
-      chartStates: {
-        trends: {}
-      },
       /** @type {MedicalDataService | null} */
       medicalData: null
     }
@@ -150,22 +145,9 @@ class PatientDataPage extends React.Component {
     this.handleLoadDataRange = this.handleLoadDataRange.bind(this)
     this.updateChartPrefs = this.updateChartPrefs.bind(this)
     this.handleSwitchPatient = this.handleSwitchPatient.bind(this)
-
-    this.unsubscribeStore = null
-  }
-
-  reduxListener() {
-    const { store } = this.props
-    const { chartStates } = this.state
-    const reduxState = store.getState()
-    if (!_.isEqual(reduxState.viz.trends, this.state.chartStates.trends)) {
-      this.setState({ chartStates: { ...chartStates, trends: _.cloneDeep(reduxState.viz.trends) } })
-    }
   }
 
   componentDidMount() {
-    const { store } = this.props
-    this.unsubscribeStore = store.subscribe(this.reduxListener.bind(this))
     this.handleRefresh().then(() => {
       const locationChart = this.getChartType()
       switch (locationChart) {
@@ -186,10 +168,6 @@ class PatientDataPage extends React.Component {
   }
 
   componentWillUnmount() {
-    if (typeof this.unsubscribeStore === 'function') {
-      this.unsubscribeStore()
-      this.unsubscribeStore = null
-    }
     this.chartRef = null
     this.apiUtils = null
   }
@@ -319,7 +297,6 @@ class PatientDataPage extends React.Component {
     const {
       loadingState,
       chartPrefs,
-      chartStates,
       epochLocation,
       msRange,
       medicalData,
@@ -394,7 +371,6 @@ class PatientDataPage extends React.Component {
               onDatetimeLocationChange={this.handleDatetimeLocationChange}
               trackMetric={this.trackMetric}
               updateChartPrefs={this.updateChartPrefs}
-              trendsState={chartStates.trends}
             />
           </Route>
         </Switch>
@@ -880,7 +856,6 @@ class PatientDataPage extends React.Component {
    * @param {PatientData} data
    */
   async processData(data) {
-    const { store, patient } = this.props
     const { timePrefs, bgPrefs, epochLocation, msRange } = this.state
     let { medicalData } = this.state
 
@@ -892,7 +867,7 @@ class PatientDataPage extends React.Component {
     if (firstLoadOrRefresh) {
       medicalData = new MedicalDataService()
       medicalData.opts = {
-        defaultSource: 'Diabeloop',
+        defaultSource: Source.Diabeloop,
         YLP820_BASAL_TIME: config.YLP820_BASAL_TIME,
         timezoneName: timePrefs.timezoneName,
         dateRange: {
@@ -939,15 +914,6 @@ class PatientDataPage extends React.Component {
       canPrint: hasDiabetesData
     })
 
-    if (firstLoadOrRefresh) {
-      store.dispatch({
-        type: FETCH_PATIENT_DATA_SUCCESS,
-        payload: {
-          patientId: patient.userid
-        }
-      })
-    }
-
     this.props.api.metrics.endTimer('process_data')
   }
 }
@@ -956,7 +922,6 @@ PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
-  store: PropTypes.object.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,

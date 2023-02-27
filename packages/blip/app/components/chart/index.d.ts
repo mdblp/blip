@@ -49,10 +49,6 @@ export interface TrendsProps {
   timePrefs: TimePrefs;
   patient: IUser;
   prefixURL?: string;
-  /** Redux */
-  trendsState: {
-    [userId: string]: unknown;
-  };
   dataUtil: typeof DataUtil;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   trackMetric: TrackMetrics;
