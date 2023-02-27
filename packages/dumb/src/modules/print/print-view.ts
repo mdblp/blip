@@ -87,13 +87,14 @@ interface Position {
 interface CellStripeColumn {
   id: keyof Opts
   header: TableHeading
+  headerHeight: number
   valign: string
   width: number
   height: number
-  headerFillStripe: unknown
-  fillStripe: unknown
-  headerFill: unknown
-  fill: unknown
+  headerFillStripe: { color: string, opacity: number, width: number, padding: number, background: boolean }
+  fillStripe: { color: string, opacity: number, width: number, padding: number, background: boolean }
+  headerFill: { color: string, opacity: number }
+  fill: { color: string, opacity: number }
 }
 
 interface CellStripe {
@@ -124,16 +125,6 @@ export interface LayoutColumn {
 interface LayoutColumns {
   activeIndex: number
   columns: LayoutColumn[]
-  // TODO: useless field?
-  count: number
-  // TODO: useless field?
-  gutter: number
-  // TODO: useless field?
-  type: LayoutColumnType
-  // TODO: useless field?
-  width: number
-  // TODO: useless field?
-  widths: number[]
 }
 
 interface Margins {
@@ -165,7 +156,11 @@ export interface Opts {
   heading: TableHeading
   note?: number
   column: string
-  _fill: { color: string, opacity: number }
+  _fill?: { color: string, opacity: number }
+  _headerFill?: { color: string, opacity: number }
+  _headerFillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
+  _fillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
+  _renderedContent?: { height: number }
 }
 
 interface Data {
@@ -391,33 +386,12 @@ export class PrintView {
     }
   }
 
-  setLayoutColumns(opts: LayoutColumns): void {
-    const {
-      activeIndex = 0,
-      count = opts.widths.length ?? 0,
-      gutter = 0,
-      type = LayoutColumnType.Equal,
-      width = this.chartArea.width,
-      widths = []
-    } = opts
-
+  setLayoutColumns(width: number, gutter: number, type: LayoutColumnType, widths: number[]): void {
     const columns = buildLayoutColumns(widths, this.chartArea.width, type, this.chartArea.leftEdge, this.doc.y, gutter)
 
     this.layoutColumns = {
-      activeIndex,
-      columns,
-      count,
-      gutter,
-      type,
-      width,
-      widths
-    }
-  }
-
-  updateLayoutColumnPosition(index: number): void {
-    if (this.layoutColumns) {
-      this.layoutColumns.columns[index].x = this.doc.x
-      this.layoutColumns.columns[index].y = this.doc.y
+      activeIndex: 0,
+      columns
     }
   }
 
@@ -427,37 +401,6 @@ export class PrintView {
       this.doc.y = this.layoutColumns.columns[index].y
       this.layoutColumns.activeIndex = index
     }
-  }
-
-  getShortestLayoutColumn(): number {
-    let shortest = 0
-    let shortestIndex = 0
-    if (!this.layoutColumns) {
-      throw Error('this.layoutColumns must be defined')
-    }
-    this.layoutColumns.columns.forEach((column, colIndex) => {
-      if (!shortest || (shortest > column.y)) {
-        shortest = column.y
-        shortestIndex = colIndex
-      }
-    })
-
-    return shortestIndex
-  }
-
-  getLongestLayoutColumn(): number {
-    let longest = 0
-    let longestIndex = 0
-    if (!this.layoutColumns) {
-      throw Error('this.layoutColumns must be defined')
-    }
-    this.layoutColumns.columns.forEach((column, colIndex) => {
-      if (!longest || (longest < column.y)) {
-        longest = column.y
-        longestIndex = colIndex
-      }
-    })
-    return longestIndex
   }
 
   getActiveColumnWidth(): number {
@@ -491,58 +434,28 @@ export class PrintView {
       .font(this.font)
   }
 
-  renderSectionHeading(heading: string | { text: string, subText: boolean }, opts: SectionHeading): void {
+  renderSectionHeading(text: string, opts: SectionHeading): void {
     const {
       xPos = this.doc.x,
       yPos = this.doc.y,
       font = opts.font ?? this.font,
       fontSize = opts.fontSize ?? this.headerFontSize,
-      subTextFont = opts.subTextFont ?? this.font,
-      subTextFontSize = opts.subTextFontSize ?? this.defaultFontSize,
       moveDown = 1
     } = opts
-
-    const text = _.isString(heading) ? heading : heading.text
-    const subText = _.get(heading, 'subText', false)
-
-    const textHeight = this.doc
-      .font(font)
-      .fontSize(fontSize)
-      .heightOfString(' ')
-
-    const subTextHeight = this.doc
-      .font(subTextFont)
-      .fontSize(subTextFontSize)
-      .heightOfString(' ')
-
-    const subTextYOffset = (textHeight - subTextHeight) / 1.75
 
     this.doc
       .font(font)
       .fontSize(fontSize)
       .text(text, xPos, yPos, _.defaults(opts, {
-        align: 'left',
-        continued: subText
+        align: 'left'
       }))
-
-    if (subText) {
-      this.doc
-        .font(subTextFont)
-        .fontSize(subTextFontSize)
-        .text(' true', xPos, yPos + subTextYOffset)
-    }
 
     this.resetText()
     this.doc.moveDown(moveDown)
   }
 
   renderCellStripe(data: Opts, column: CellStripeColumn, pos: Position, isHeader = false): CellStripe {
-    const fillStripeKey = isHeader ? 'headerFillStripe' : 'fillStripe'
-    const fillKey = isHeader ? 'headerFill' : 'fill'
-    const heightKey = isHeader ? 'headerHeight' : 'height'
-
-    const height = _.get(column, heightKey, column.height) ||
-      _.get(data, '_renderedContent.height', 0)
+    const height = (isHeader ? column.headerHeight : column.height) ?? column.height ?? data._renderedContent?.height ?? 0
 
     const stripe = {
       width: 0,
@@ -553,36 +466,19 @@ export class PrintView {
       background: false
     }
 
-    const fillStripe = _.get(data, `_${fillStripeKey}`, column[fillStripeKey])
-    const fill = _.get(data, `_${fillKey}`, column[fillKey])
-
-    if (fillStripe) {
-      const stripeDefined = _.isPlainObject(fillStripe)
-
-      stripe.color = stripeDefined
-        ? _.get(fillStripe, 'color', this.colors.grey)
-        : _.get(fill, 'color', this.colors.grey)
-
-      stripe.opacity = stripeDefined ? _.get(fillStripe, 'opacity', 1) : 1
-      stripe.width = stripeDefined ? _.get(fillStripe, 'width', 6) : 6
-      stripe.background = _.get(fillStripe, 'background', false)
-      stripe.padding = _.get(fillStripe, 'padding', 0)
-
-      this.setFill(stripe.color, stripe.opacity)
-
-      const xPos = pos.x + 0.25 + stripe.padding
-      const yPos = pos.y + 0.25 + stripe.padding
-      const stripeWidth = stripe.width
-      const stripeHeight = stripe.height - 0.5 - (2 * stripe.padding)
-
-      if (stripe.width > 0) {
-        this.doc
-          .rect(xPos, yPos, stripeWidth, stripeHeight)
-          .fill()
-      }
-
-      this.setFill()
+    const fillStripe = isHeader ? (data._headerFillStripe ?? column.headerFillStripe) : (data._fillStripe ?? column.fillStripe)
+    if (!fillStripe) {
+      return stripe
     }
+
+    stripe.color = fillStripe.color ?? this.colors.grey
+
+    stripe.opacity = fillStripe.opacity ?? 1
+    stripe.width = fillStripe.width ?? 6
+    stripe.background = fillStripe.background ?? false
+    stripe.padding = fillStripe.padding ?? 0
+
+    this.setFill(stripe.color, stripe.opacity)
 
     return stripe
   }
