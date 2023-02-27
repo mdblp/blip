@@ -25,6 +25,7 @@ import DailyPrintView from './DailyPrintView'
 import SettingsPrintView from './SettingsPrintView'
 import { reshapeBgClassesToBgBounds } from '../../utils/bloodglucose'
 
+import { renderPageNumbers } from 'dumb/src/modules/print/print-view.util'
 import { getPatientFullName } from '../../utils/misc'
 import * as constants from './utils/constants'
 import { arrayBufferToBase64 } from './utils/functions'
@@ -267,7 +268,7 @@ export function createPrintPDFPackage(data, opts) {
       if (data.daily) createPrintView('daily', data.daily, pdfOpts, doc).render()
       if (data.settings) createPrintView('settings', data.settings, pdfOpts, doc).render()
 
-      PrintView.renderPageNumbers(doc, pdfOpts)
+      renderPageNumbers(doc, pdfOpts)
 
       doc.end()
 

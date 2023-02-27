@@ -32,7 +32,14 @@ export const DPI = 72
 export const MARGIN = DPI / 2
 export const HEIGHT = 11 * DPI - (2 * MARGIN)
 export const WIDTH = 8.5 * DPI - (2 * MARGIN)
-export const MARGINS = {
+
+interface Margins {
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+export const MARGINS: Margins = {
   left: MARGIN,
   top: MARGIN,
   right: MARGIN,

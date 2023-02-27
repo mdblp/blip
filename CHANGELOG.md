@@ -28,18 +28,15 @@ It is based on Tidepool Blip 1.27.
 - YLP-2118 Update axios and minor dependencies
 - YLP-2121 Removing deprecated @mui/styles library
 - YLP-2139 Remove weekly reports
-<<<<<<< Updated upstream
 - YLP-2143 Migrate TrendsContainer to dumb
 - YLP-2144 Migrate dashboard from blip to Yourloops
 - YLP-2159 Get rid of connectWithTransitionGroup in viz
+- YLP-2161 Migrate PrintView from viz to dumb
 - YLP-2162 Migrate CbgDateTrace store from redux to TrendsProvider
 - YLP-2176 Migrate CBG slice actions from redux to TrendsProvider
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
-=======
-- YLP-2161 Migrate PrintView from viz to dumb
->>>>>>> Stashed changes
 
 ## 3.0.3 - 2023-02-09
 ### Fixed
