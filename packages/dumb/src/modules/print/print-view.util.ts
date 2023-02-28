@@ -28,9 +28,7 @@ import _ from 'lodash'
 import i18next from 'i18next'
 
 import { FONTS, FOOTER_FONT_SIZE, HEIGHT, MARGINS } from './utils/constants'
-import { type TimePrefs } from 'medical-domain'
-import { type BgPrefs } from '../../models/blood-glucose.model'
-import { type LayoutColumn, LayoutColumnType } from './print-view'
+import { type CellStripeColumn, type LayoutColumn, LayoutColumnType, type Opts } from './print-view'
 
 interface TableHeading {
   text: string
@@ -43,31 +41,6 @@ interface Margins {
   bottom: number
   left: number
   right: number
-}
-
-interface Patient {
-  profile: { fullName: string, birthday: string }
-}
-
-export interface Opts {
-  _bold: unknown
-  title: string
-  defaultFontSize: number
-  footerFontSize: number
-  headerFontSize: number
-  height: number
-  margins: Margins
-  patient: Patient
-  smallFontSize: number
-  timePrefs: TimePrefs
-  width: number
-  largeFontSize: number
-  extraSmallFontSize: number
-  bgPrefs: BgPrefs
-  heading: TableHeading
-  note?: number
-  column: string
-  _fill: { color: string, opacity: number }
 }
 
 interface Fonts {
@@ -159,4 +132,12 @@ export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth:
     }
   }
   return columns
+}
+
+export const getTextData = (data: Opts, column: CellStripeColumn, isHeader: boolean | undefined): TableHeading => {
+  if ((!isHeader && _.isString(data[column.id])) || _.isString(column.header)) {
+    const text = isHeader ? column.header as unknown as string : data[column.id] as string
+    return { text, subText: undefined, note: undefined }
+  }
+  return data[column.id] as TableHeading ?? column.header ?? { text: '', subText: '', note: undefined }
 }

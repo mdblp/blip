@@ -441,11 +441,6 @@ class PrintView {
         subText = '',
         note
       } = _.get(data, column.id, column.header || {})
-      if(column.id==='stat') {
-        console.log(text)
-        console.log(subText)
-        console.log(note)
-      }
 
       if ((!isHeader && _.isString(data[column.id])) || _.isString(column.header)) {
         text = isHeader ? column.header : data[column.id]

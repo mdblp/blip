@@ -54,7 +54,7 @@ import { type TimePrefs } from 'medical-domain'
 import { type BgBounds, type BgPrefs } from '../../models/blood-glucose.model'
 import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
 import { type UnitsType } from '../../models/enums/units-type.enum'
-import { buildLayoutColumns, getFonts } from './print-view.util'
+import { buildLayoutColumns, getFonts, getTextData } from './print-view.util'
 
 export enum LayoutColumnType {
   Percentage = 'percentage',
@@ -67,30 +67,30 @@ interface TableHeading {
   note?: string
 }
 
-interface Padding {
+export interface Padding {
   left?: number
+  right?: number
   top: number
 }
 
-interface TableOpts {
-  showHeaders?: boolean
-  bottomMargin?: number
-  flexColumn?: string
-  columnDefaults: Partial<VoilabPdfTable.VoilabPdfTableColumnDefaults<Opts>>
-}
-
-interface Position {
+export interface Position {
   x: number
   y: number
 }
 
-interface CellStripeColumn {
+export interface CellStripeColumn {
   id: keyof Opts
   header: TableHeading
   headerHeight: number
+  headerFont: string
+  font: string
+  fontSize: number
+  noteFontSize: number
   valign: string
   width: number
   height: number
+  headerAlign: string
+  align: string
   headerFillStripe: { color: string, opacity: number, width: number, padding: number, background: boolean }
   fillStripe: { color: string, opacity: number, width: number, padding: number, background: boolean }
   headerFill: { color: string, opacity: number }
@@ -183,9 +183,21 @@ interface PdfDocumentExtra {
   _fontSize?: number
 }
 
+interface PdfTableConfigExtra {
+  font: string
+  fontSize: number
+  flexColumn: unknown
+  columnsDefaults: {
+    borderColor: string
+    zebra: boolean
+  }
+  pos: { maxY: number }
+}
+
 type CustomPdfTable = PdfTable<Opts> & PdfTableExtra
 type CustomColumnTable = VoilabPdfTable.VoilabPdfTableColumn<Opts> & PdfTableColumnExtra
-type CustomPdfDocument = PDFKit.PDFDocument & PdfDocumentExtra
+export type CustomPdfDocument = PDFKit.PDFDocument & PdfDocumentExtra
+type CustomPdfTableConfig = VoilabPdfTable.VoilabPdfTableConfig<Opts> & PdfTableConfigExtra
 
 const PAGE_ADDED = 'pageAdded'
 const APP_URL = `${window.location.protocol}//${window.location.hostname}/`
@@ -472,109 +484,98 @@ export class PrintView {
     }
 
     stripe.color = fillStripe.color ?? this.colors.grey
-
     stripe.opacity = fillStripe.opacity ?? 1
     stripe.width = fillStripe.width ?? 6
     stripe.background = fillStripe.background ?? false
     stripe.padding = fillStripe.padding ?? 0
-
     this.setFill(stripe.color, stripe.opacity)
+
+    const xPos = pos.x + 0.25 + stripe.padding
+    const yPos = pos.y + 0.25 + stripe.padding
+    const stripeWidth = stripe.width
+    const stripeHeight = stripe.height - 0.5 - (2 * stripe.padding)
+
+    if (stripe.width > 0) {
+      this.doc
+        .rect(xPos, yPos, stripeWidth, stripeHeight)
+        .fill()
+    }
+
+    this.setFill()
 
     return stripe
   }
 
+  computeCellYPosition(pos: Position, padding: Padding, column: CellStripeColumn, width: number, height: number, text: string): number {
+    const basicPosition = pos.y + padding.top
+    if (column.valign === 'center') {
+      const textHeight = this.doc.heightOfString(text, { width })
+      return basicPosition + (height - textHeight) / 2 + 1
+    }
+    return basicPosition
+  }
+
   renderCustomTextCell(tb: VoilabPdfTable<Opts>, data: Opts, draw: boolean, column: CellStripeColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
-    if (draw) {
-      let {
-        text = '',
-        subText = '',
-        note
-      } = _.get(data, column.id, column.header || {}) as TableHeading
-      if ((!isHeader && _.isString(data[column.id])) || _.isString(column.header)) {
-        text = isHeader ? column.header as unknown as string : data[column.id] as string
-        subText = note = ''
-      }
+    if (!draw) {
+      return ' '
+    }
 
-      const alignKey = isHeader ? 'headerAlign' : 'align'
-      const align = _.get(column, alignKey, 'left')
+    const { text, subText, note } = getTextData(data, column, isHeader)
 
-      const stripe = this.renderCellStripe(data, column, pos, isHeader)
-      const stripeOffset = stripe.background ? 0 : stripe.width
+    const stripe = this.renderCellStripe(data, column, pos, isHeader)
 
-      const xPos = pos.x + _.get(padding, 'left', 0) + stripeOffset
-      let yPos = pos.y + padding.top
+    const align = (isHeader ? column.headerAlign : column.align) ?? 'left'
+    const stripeOffset = stripe.background ? 0 : stripe.width
+    const paddingLeft = padding.left ?? 0
+    const paddingRight = padding.right ?? 0
+    const xPos = pos.x + paddingLeft + stripeOffset
+    const width = column.width - paddingLeft - paddingRight
+    const height = isHeader ? column.headerHeight : column.height
+    const font = isHeader ? column.headerFont : column.font
+    const fontSize = column.fontSize ?? this.defaultFontSize
 
-      const boldRow = data._bold || isHeader
+    this.doc
+      .font(font)
+      .fontSize(fontSize)
 
-      const width = column.width - _.get(padding, 'left', 0) - _.get(padding, 'right', 0)
+    const yPos = this.computeCellYPosition(pos, padding, column, width, height, text)
 
-      const heightKey = isHeader ? 'headerHeight' : 'height'
+    this.doc.text(text, xPos, yPos, { continued: !!subText, align, width })
 
-      const height = _.get(column, heightKey, column.height) ||
-        _.get(data, '_renderedContent.height', 0)
+    this.doc.font(this.font)
 
-      const fontKey = isHeader ? 'headerFont' : 'font'
+    if (subText) {
+      this.doc.text(` ${subText}`, xPos, yPos, { align, width })
+    }
 
+    if (note) {
+      const noteFontSize = column.noteFontSize ?? this.defaultFontSize
       this.doc
-        .font(_.get(column, fontKey, boldRow ? this.boldFont : this.font))
-        .fontSize(_.get(column, 'fontSize', this.defaultFontSize))
-
-      if (column.valign === 'center') {
-        const textHeight = this.doc.heightOfString(text, { width })
-        yPos += (height - textHeight) / 2 + 1
-      }
-
-      this.doc.text(text, xPos, yPos, {
-        continued: subText.length > 0,
-        align,
-        width
-      })
-
-      this.doc.font(this.font)
-
-      if (subText.length > 0) {
-        this.doc.text(` ${subText}`, xPos, yPos, {
-          align,
-          width
-        })
-      }
-
-      if (note && note.length > 0) {
-        this.doc
-          .fontSize(_.get(column, 'noteFontSize', this.defaultFontSize))
-          .text(note, {
-            align,
-            width
-          })
-      }
+        .fontSize(noteFontSize)
+        .text(note, { align, width })
     }
 
     return ' '
   }
 
-  renderTableHeading(heading: TableHeading, opts = {}): void {
+  renderTableHeading(heading: TableHeading, opts: CustomPdfTableConfig): void {
     this.doc
       .font(this.font)
       .fontSize(this.largeFontSize)
 
-    const columns: readonly CustomColumnTable[] = [
+    const columns: CustomColumnTable[] = [
       {
         id: 'heading',
-        align: _.get(opts, 'align', 'left'),
-        height: _.get(opts, 'height', heading.note ? 37 : 24),
+        align: 'left',
+        height: heading.note ? 37 : 24,
         cache: false,
         renderer: this.renderCustomTextCell as unknown as (table: VoilabPdfTable<Opts>, row: Opts, draw: boolean) => void,
-        font: _.get(opts, 'font', this.boldFont),
-        fontSize: _.get(opts, 'fontSize', this.largeFontSize)
+        font: opts.font ?? this.boldFont,
+        fontSize: opts.fontSize ?? this.largeFontSize
       }
     ]
 
-    const rows: Opts[] = [
-      {
-        heading,
-        note: heading.note
-      }
-    ] as Opts[]
+    const rows: Opts[] = [{ heading, note: heading.note }] as Opts[]
 
     this.renderTable(columns, rows, _.defaultsDeep(opts, {
       columnDefaults: {
@@ -587,18 +588,20 @@ export class PrintView {
     this.resetText()
   }
 
-  renderTable(columns: readonly CustomColumnTable[] = [], rows: Opts[] = [], opts: TableOpts): void {
+  renderTable(columns: CustomColumnTable[] = [], rows: Opts[] = [], opts: CustomPdfTableConfig): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
 
+    const fill = opts.columnsDefaults?.fill ?? opts.columnsDefaults?.zebra ?? false
+
     _.defaultsDeep(opts, {
-      columnDefaults: {
+      columnsDefaults: {
         borderColor: this.tableSettings.colors.border,
         headerBorder: 'TBLR',
         border: 'TBLR',
         align: 'left',
         padding: [7, 5, 3, 5],
         headerPadding: [7, 5, 3, 5],
-        fill: _.get(opts, 'columnDefaults.fill', _.get(opts, 'columnDefaults.zebra', false))
+        fill
       },
       bottomMargin: 20,
       pos: {
@@ -640,7 +643,7 @@ export class PrintView {
     table.onBodyAdded(this.onBodyAdded.bind(this))
 
     table
-      .setColumnsDefaults(opts.columnDefaults)
+      .setColumnsDefaults(opts.columnsDefaults)
       .addColumns(columns)
       .addBody(rows)
   }

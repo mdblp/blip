@@ -336,7 +336,7 @@ class BasicsPrintView extends PrintView {
         this.renderTableHeading(heading, {
           font: this.font,
           fontSize: this.defaultFontSize,
-          columnDefaults: {
+          columnsDefaults: {
             width: columnWidth,
             border: 'TLR'
           }

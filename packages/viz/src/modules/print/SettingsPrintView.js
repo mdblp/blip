@@ -121,7 +121,7 @@ class SettingsPrintView extends PrintView {
   /** @private */
   renderSettingsSection(tableData, width, { zebra, showHeaders } = false) {
     this.renderTableHeading(tableData.heading, {
-      columnDefaults: {
+      columnsDefaults: {
         fill: {
           color: this.tableSettings.colors.zebraHeader,
           opacity: 1
@@ -131,7 +131,7 @@ class SettingsPrintView extends PrintView {
     })
 
     this.renderTable(tableData.columns, tableData.rows, {
-      columnDefaults: {
+      columnsDefaults: {
         zebra : zebra ?? false,
         headerFill: false
       },
