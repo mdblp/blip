@@ -68,7 +68,7 @@ describe('history core', () => {
           changeDate: '2022-11-02T00:00:00Z',
           parameters: [
             {
-              changeType: ChangeType.Added,
+              changeType: ChangeType.Deleted,
               effectiveDate: '2022-11-02T01:00:00Z',
               name: 'BOLUS_AGGRESSIVENESS_FACTOR',
               unit: Unit.Percent,
