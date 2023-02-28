@@ -788,9 +788,7 @@ export class PrintView {
   renderTitle(): void {
     const lineHeight = this.doc.fontSize(14).currentLineHeight()
     const xOffset = this.margins.left + this.patientInfoBox.width + 21
-    const yOffset = (
-      this.margins.top + ((this.patientInfoBox.height - this.margins.top) / 2 - (lineHeight / 2))
-    )
+    const yOffset = this.margins.top + (this.patientInfoBox.height - this.margins.top) / 2 - lineHeight / 2
 
     const title = this.currentPageIndex === 0
       ? this.title
@@ -803,21 +801,23 @@ export class PrintView {
   renderDateText(dateText = ''): void {
     const lineHeight = this.doc.fontSize(14).currentLineHeight()
 
-    // Calculate the remaining available width so we can
-    // center the print text between the patient/title text and the logo
-    const availableWidth = this.doc.page.width - _.reduce([
+    const elements = [
       this.patientInfoBox.width,
       this.dividerWidth,
       this.titleWidth,
       this.logoWidth,
       this.margins.left,
       this.margins.right
-    ], (a, b) => {
+    ]
+    const widthUsed = elements.reduce((a: number, b: number | undefined) => {
       if (b) {
         return a + b
       }
       return a
     }, 0)
+    // Calculate the remaining available width so we can
+    // center the print text between the patient/title text and the logo
+    const availableWidth = this.doc.page.width - widthUsed
 
     if (!this.dividerWidth || !this.titleWidth) {
       return
@@ -827,7 +827,7 @@ export class PrintView {
       this.margins.left + this.patientInfoBox.width + this.dividerWidth + this.titleWidth
     )
     const yOffset = (
-      this.margins.top + ((this.patientInfoBox.height - this.margins.top) / 2 - (lineHeight / 2))
+      this.margins.top + (this.patientInfoBox.height - this.margins.top) / 2 - lineHeight / 2
     )
 
     this.doc
@@ -846,7 +846,7 @@ export class PrintView {
     this.doc.image(Images.logo, xOffset, yOffset, { width: this.logoWidth })
   }
 
-  renderHeader(dateText: string): PrintView {
+  renderHeader(dateText: string): void {
     this.renderPatientInfo()
 
     this.renderTitle()
@@ -857,17 +857,15 @@ export class PrintView {
 
     this.doc.moveDown()
 
-    const lineHeight = this.doc.fontSize(14).currentLineHeight()
+    const lineHeight = this.doc.fontSize(HEADER_FONT_SIZE).currentLineHeight()
     const height = lineHeight * 2.25 + this.margins.top
     this.doc
       .moveTo(this.margins.left, height)
       .lineTo(this.margins.left + this.width, height)
       .stroke('black')
-
-    return this
   }
 
-  renderFooter(): PrintView {
+  renderFooter(): void {
     this.doc.fontSize(this.footerFontSize)
 
     const helpText = t('pdf-footer-center-text', { appURL: APP_URL })
@@ -891,23 +889,17 @@ export class PrintView {
       })
 
     this.setFill()
-
-    return this
   }
 
-  setFooterSize(): PrintView {
+  setFooterSize(): void {
     this.doc.fontSize(this.footerFontSize)
     const lineHeight = this.doc.currentLineHeight()
     this.chartArea.bottomEdge = this.chartArea.bottomEdge - lineHeight * 9
-
-    return this
   }
 
-  setHeaderSize(): PrintView {
+  setHeaderSize(): void {
     this.doc.fontSize(this.headerFontSize)
     const lineHeight = this.doc.currentLineHeight()
     this.chartArea.topEdge = this.chartArea.topEdge + lineHeight * 4
-
-    return this
   }
 }
