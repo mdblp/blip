@@ -56,6 +56,10 @@ import type BasicData from 'medical-domain/dist/src/domains/repositories/medical
 import { type UnitsType } from '../../models/enums/units-type.enum'
 import { buildLayoutColumns, getFonts, getTextData } from './print-view.util'
 
+interface PageAddEvent {
+  cancel: boolean
+}
+
 export enum LayoutColumnType {
   Percentage = 'percentage',
   Equal = 'equal'
@@ -79,7 +83,7 @@ export interface Position {
 }
 
 export interface CellStripeColumn {
-  id: keyof Opts
+  id: keyof Row
   header: TableHeading
   headerHeight: number
   headerFont: string
@@ -138,7 +142,7 @@ interface Patient {
   profile: { fullName: string, birthday: string }
 }
 
-export interface Opts {
+export interface Row {
   _bold: unknown
   title: string
   defaultFontSize: number
@@ -176,6 +180,7 @@ interface PdfTableColumnExtra {
   font: string
   fontSize: number
   zebra?: boolean
+  borderColor?: string
 }
 
 interface PdfDocumentExtra {
@@ -194,12 +199,13 @@ interface PdfTableConfigExtra {
   pos: { maxY: number }
 }
 
-type CustomPdfTable = PdfTable<Opts> & PdfTableExtra
-type CustomColumnTable = VoilabPdfTable.VoilabPdfTableColumn<Opts> & PdfTableColumnExtra
+type CustomPdfTable = PdfTable<Row> & PdfTableExtra
+type CustomColumnTable = VoilabPdfTable.VoilabPdfTableColumn<Row> & PdfTableColumnExtra
 export type CustomPdfDocument = PDFKit.PDFDocument & PdfDocumentExtra
-type CustomPdfTableConfig = VoilabPdfTable.VoilabPdfTableConfig<Opts> & PdfTableConfigExtra
+type CustomPdfTableConfig = VoilabPdfTable.VoilabPdfTableConfig<Row> & PdfTableConfigExtra
 
 const PAGE_ADDED = 'pageAdded'
+const DEFAULT_OPACITY = 1
 const APP_URL = `${window.location.protocol}//${window.location.hostname}/`
 
 const t = i18next.t.bind(i18next)
@@ -282,7 +288,7 @@ export class PrintView {
   titleWidth?: number
   logoWidth?: number
 
-  constructor(doc: CustomPdfDocument, data: Data, opts: Opts) {
+  constructor(doc: CustomPdfDocument, data: Data, opts: Row) {
     this.doc = doc
 
     this.title = opts.title
@@ -466,7 +472,7 @@ export class PrintView {
     this.doc.moveDown(moveDown)
   }
 
-  renderCellStripe(data: Opts, column: CellStripeColumn, pos: Position, isHeader = false): CellStripe {
+  renderCellStripe(data: Row, column: CellStripeColumn, pos: Position, isHeader = false): CellStripe {
     const height = (isHeader ? column.headerHeight : column.height) ?? column.height ?? data._renderedContent?.height ?? 0
 
     const stripe = {
@@ -515,7 +521,7 @@ export class PrintView {
     return basicPosition
   }
 
-  renderCustomTextCell(tb: VoilabPdfTable<Opts>, data: Opts, draw: boolean, column: CellStripeColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
+  renderCustomTextCell(tb: VoilabPdfTable<Row>, data: Row, draw: boolean, column: CellStripeColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
     if (!draw) {
       return ' '
     }
@@ -569,13 +575,13 @@ export class PrintView {
         align: 'left',
         height: heading.note ? 37 : 24,
         cache: false,
-        renderer: this.renderCustomTextCell as unknown as (table: VoilabPdfTable<Opts>, row: Opts, draw: boolean) => void,
+        renderer: this.renderCustomTextCell as unknown as (table: VoilabPdfTable<Row>, row: Row, draw: boolean) => void,
         font: opts.font ?? this.boldFont,
         fontSize: opts.fontSize ?? this.largeFontSize
       }
     ]
 
-    const rows: Opts[] = [{ heading, note: heading.note }] as Opts[]
+    const rows: Row[] = [{ heading, note: heading.note }] as Row[]
 
     this.renderTable(columns, rows, _.defaultsDeep(opts, {
       columnDefaults: {
@@ -588,7 +594,7 @@ export class PrintView {
     this.resetText()
   }
 
-  renderTable(columns: CustomColumnTable[] = [], rows: Opts[] = [], opts: CustomPdfTableConfig): void {
+  renderTable(columns: CustomColumnTable[] = [], rows: Row[] = [], opts: CustomPdfTableConfig): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
 
     const fill = opts.columnsDefaults?.fill ?? opts.columnsDefaults?.zebra ?? false
@@ -615,8 +621,8 @@ export class PrintView {
 
     const table = this.table = new PdfTable(this.doc, opts) as CustomPdfTable
     if (flexColumn) {
-      table.addPlugin(new PdfTableFitColumn<Opts>({
-        column: flexColumn as keyof Opts
+      table.addPlugin(new PdfTableFitColumn<Row>({
+        column: flexColumn as keyof Row
       }))
     }
 
@@ -648,30 +654,51 @@ export class PrintView {
       .addBody(rows)
   }
 
-  onPageAdd(tb: VoilabPdfTable<Opts>, row: Opts, ev: { cancel: boolean }): void {
+  onPageAdd(table: VoilabPdfTable<Row>, row: Row, event: PageAddEvent): void {
     const currentPageIndex = this.initialTotalPages + this.currentPageIndex
 
     if (currentPageIndex + 1 === this.totalPages) {
-      tb.pdf.addPage()
+      table.pdf.addPage()
     } else {
       this.currentPageIndex++
-      tb.pdf.switchToPage(this.initialTotalPages + this.currentPageIndex)
+      table.pdf.switchToPage(this.initialTotalPages + this.currentPageIndex)
       this.setNewPageTablePosition()
     }
 
     // cancel event so the automatic page add is not triggered
-    ev.cancel = true // eslint-disable-line no-param-reassign
+    event.cancel = true
   }
 
-  onBodyAdded(tb: CustomPdfTable): void {
+  onBodyAdded(table: CustomPdfTable): void {
     // Restore x position after table is drawn
-    this.doc.x = _.get(tb, 'pos.x', this.doc.page.margins.left)
+    this.doc.x = table.pos.x ?? this.doc.page.margins.left
 
     // Add margin to the bottom of the table
-    this.doc.y += tb.bottomMargin
+    this.doc.y += table.bottomMargin
   }
 
-  onCellBackgroundAdd(tb: VoilabPdfTable<Opts>, column: VoilabPdfTable.VoilabPdfTableColumn<Opts>, row: Opts, index: number, isHeader: boolean): void {
+  computeCellBackgroundColor(fillDefined: boolean, zebra: boolean, isHeader: boolean, isEven: boolean): string {
+    if (!fillDefined && zebra) {
+      if (isHeader) {
+        return this.tableSettings.colors.zebraHeader
+      } else {
+        return isEven
+          ? this.tableSettings.colors.zebraEven
+          : this.tableSettings.colors.zebraOdd
+      }
+    }
+    return 'white'
+  }
+
+  computeCellOpacity(fillDefined: boolean, zebra: boolean, isEven: boolean): number {
+    if (!fillDefined) {
+      return 1
+    } else {
+      return zebra && !isEven ? DEFAULT_OPACITY / 2 : DEFAULT_OPACITY
+    }
+  }
+
+  onCellBackgroundAdd(table: VoilabPdfTable<Row>, column: VoilabPdfTable.VoilabPdfTableColumn<Row>, row: Row, index: number, isHeader: boolean): void {
     const {
       fill,
       headerFill,
@@ -684,39 +711,14 @@ export class PrintView {
 
     if (fillKey) {
       const fillDefined = _.isPlainObject(fillKey)
-      let color: string
-      let opacity
-
-      if (!fillDefined) {
-        opacity = 1
-        if (zebra) {
-          if (isHeader) {
-            color = this.tableSettings.colors.zebraHeader
-          } else {
-            color = isEven
-              ? this.tableSettings.colors.zebraEven
-              : this.tableSettings.colors.zebraOdd
-          }
-        } else {
-          color = 'white'
-        }
-      } else {
-        const defaultOpacity = _.get(fillKey, 'opacity', 1)
-
-        color = _.get(fillKey, 'color', 'white')
-        opacity = zebra && !isEven ? defaultOpacity / 2 : defaultOpacity
-        opacity = defaultOpacity
-      }
+      const color = this.computeCellBackgroundColor(fillDefined, !!zebra, isHeader, isEven)
+      const opacity = this.computeCellOpacity(fillDefined, !!zebra, isEven)
 
       this.setFill(color, opacity)
     }
 
     if (row._fill) {
-      const {
-        color,
-        opacity
-      } = row._fill
-
+      const { color, opacity } = row._fill
       this.setFill(color, opacity)
     }
   }
@@ -725,16 +727,16 @@ export class PrintView {
     this.setFill()
   }
 
-  onCellBorderAdd(tb: VoilabPdfTable<Opts>, column: VoilabPdfTable.VoilabPdfTableColumn<Opts>): void {
+  onCellBorderAdd(tb: VoilabPdfTable<Row>, column: VoilabPdfTable.VoilabPdfTableColumn<Row>): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
-    this.setStroke(_.get(column, 'borderColor', 'black'), 1)
+    this.setStroke((column as CustomColumnTable).borderColor ?? 'black', DEFAULT_OPACITY)
   }
 
   onCellBorderAdded(): void {
     this.setStroke()
   }
 
-  onRowAdd(tb: VoilabPdfTable<Opts>, row: Opts): void {
+  onRowAdd(tb: VoilabPdfTable<Row>, row: Row): void {
     if (row._bold) {
       this.doc.font(this.boldFont)
     }
@@ -757,7 +759,7 @@ export class PrintView {
         lineGap: 2
       })
 
-    const patientNameWidth = this.patientInfoBox.width = this.doc.widthOfString(patientName)
+    this.patientInfoBox.width = this.doc.widthOfString(patientName)
     const patientDOB = t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
 
     this.doc
@@ -768,7 +770,7 @@ export class PrintView {
     const patientBirthdayWidth = this.doc.widthOfString(patientDOB)
     this.patientInfoBox.height = this.doc.y
 
-    if (patientNameWidth < patientBirthdayWidth) {
+    if (this.patientInfoBox.width < patientBirthdayWidth) {
       this.patientInfoBox.width = patientBirthdayWidth
     }
 
