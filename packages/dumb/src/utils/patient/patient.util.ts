@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2023, Diabeloop
  *
@@ -26,17 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * https://medium.com/front-end-weekly/fetching-images-with-the-fetch-api-fb8761ed27b2
- * @param {ArrayBuffer} buffer image fetch buffer
- */
-export const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
-  let binary = ''
-  const bytes = [].slice.call(new Uint8Array(buffer))
+import i18next from 'i18next'
 
-  bytes.forEach((b) => {
-    binary += String.fromCharCode(b)
-  })
+i18next.t.bind(i18next)
 
-  return window.btoa(binary)
+export const getPatientFullName = (patient: { profile: { fullName: string } }): string => {
+  const fullName = patient?.profile?.fullName
+  return fullName ?? i18next.t('Anonymous user')
 }

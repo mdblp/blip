@@ -55,6 +55,10 @@ class DailyPrintView extends PrintView {
   constructor(doc, data, opts) {
     super(doc, data, opts)
 
+    this.bgBounds = opts.bgPrefs.bgBounds
+    this.leftEdge = this.margins.left
+    this.rightEdge = this.margins.left + this.width
+
     this.source = _.get(data, 'latestPumpUpload.source', '').toLowerCase()
     this.manufacturer = this.source === 'carelink' ? 'medtronic' : this.source
 

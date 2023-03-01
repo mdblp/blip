@@ -63,8 +63,8 @@ class PrintView {
     this.boldFont = fonts.boldName
 
     this.defaultFontSize = opts.defaultFontSize || DEFAULT_FONT_SIZE
-    this.footerFontSize = opts.footerFontSize || FOOTER_FONT_SIZE
-    this.headerFontSize = opts.headerFontSize || HEADER_FONT_SIZE
+    this.#footerFontSize = opts.footerFontSize || FOOTER_FONT_SIZE
+    this.#headerFontSize = opts.headerFontSize || HEADER_FONT_SIZE
     this.largeFontSize = opts.largeFontSize || LARGE_FONT_SIZE
     this.smallFontSize = opts.smallFontSize || SMALL_FONT_SIZE
     this.extraSmallFontSize = opts.extraSmallFontSize || EXTRA_SMALL_FONT_SIZE
@@ -79,7 +79,7 @@ class PrintView {
     this.height = opts.height || HEIGHT
 
     this.patient = opts.patient
-    this.patientInfoBox = {
+    this.#patientInfoBox = {
       width: 0,
       height: 0
     }
@@ -343,7 +343,7 @@ class PrintView {
       xPos = this.doc.x,
       yPos = this.doc.y,
       font = _.get(opts, 'font', this.font),
-      fontSize = _.get(opts, 'fontSize', this.headerFontSize),
+      fontSize = _.get(opts, 'fontSize', this.#headerFontSize),
       subTextFont = _.get(opts, 'subTextFont', this.font),
       subTextFontSize = _.get(opts, 'subTextFontSize', this.defaultFontSize),
       moveDown = 1
@@ -709,7 +709,7 @@ class PrintView {
         lineGap: 2
       })
 
-    const patientNameWidth = this.patientInfoBox.width = this.doc.widthOfString(patientName)
+    const patientNameWidth = this.#patientInfoBox.width = this.doc.widthOfString(patientName)
     const patientDOB = t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
 
     this.doc
@@ -718,28 +718,28 @@ class PrintView {
       .text(patientDOB)
 
     const patientBirthdayWidth = this.doc.widthOfString(patientDOB)
-    this.patientInfoBox.height = this.doc.y
+    this.#patientInfoBox.height = this.doc.y
 
     if (patientNameWidth < patientBirthdayWidth) {
-      this.patientInfoBox.width = patientBirthdayWidth
+      this.#patientInfoBox.width = patientBirthdayWidth
     }
 
     // Render the divider between the patient info and title
     const padding = 10
 
     this.doc
-      .moveTo(this.margins.left + this.patientInfoBox.width + padding, this.margins.top)
-      .lineTo(this.margins.left + this.patientInfoBox.width + padding, this.patientInfoBox.height)
+      .moveTo(this.margins.left + this.#patientInfoBox.width + padding, this.margins.top)
+      .lineTo(this.margins.left + this.#patientInfoBox.width + padding, this.#patientInfoBox.height)
       .stroke('black')
 
-    this.dividerWidth = padding * 2 + 1
+    this.#dividerWidth = padding * 2 + 1
   }
 
   renderTitle() {
     const lineHeight = this.doc.fontSize(14).currentLineHeight()
-    const xOffset = this.margins.left + this.patientInfoBox.width + 21
+    const xOffset = this.margins.left + this.#patientInfoBox.width + 21
     const yOffset = (
-      this.margins.top + ((this.patientInfoBox.height - this.margins.top) / 2 - (lineHeight / 2))
+      this.margins.top + ((this.#patientInfoBox.height - this.margins.top) / 2 - (lineHeight / 2))
     )
 
     const title = this.currentPageIndex === 0
@@ -747,7 +747,7 @@ class PrintView {
       : t('{{title}} (cont.)', { title: this.title })
 
     this.doc.font(this.font).text(title, xOffset, yOffset)
-    this.titleWidth = this.doc.widthOfString(title)
+    this.#titleWidth = this.doc.widthOfString(title)
   }
 
   renderDateText(dateText = '') {
@@ -756,19 +756,19 @@ class PrintView {
     // Calculate the remaining available width so we can
     // center the print text between the patient/title text and the logo
     const availableWidth = this.doc.page.width - _.reduce([
-      this.patientInfoBox.width,
-      this.dividerWidth,
-      this.titleWidth,
+      this.#patientInfoBox.width,
+      this.#dividerWidth,
+      this.#titleWidth,
       this.logoWidth,
       this.margins.left,
       this.margins.right
     ], (a, b) => (a + b), 0)
 
     const xOffset = (
-      this.margins.left + this.patientInfoBox.width + this.dividerWidth + this.titleWidth
+      this.margins.left + this.#patientInfoBox.width + this.#dividerWidth + this.#titleWidth
     )
     const yOffset = (
-      this.margins.top + ((this.patientInfoBox.height - this.margins.top) / 2 - (lineHeight / 2))
+      this.margins.top + ((this.#patientInfoBox.height - this.margins.top) / 2 - (lineHeight / 2))
     )
 
     this.doc
@@ -859,7 +859,7 @@ class PrintView {
   }
 
   renderFooter() {
-    this.doc.fontSize(this.footerFontSize)
+    this.doc.fontSize(this.#footerFontSize)
 
     const helpText = t('pdf-footer-center-text', { appURL: `${window.location.protocol}//${window.location.hostname}/` })
 
@@ -887,7 +887,7 @@ class PrintView {
   }
 
   setFooterSize() {
-    this.doc.fontSize(this.footerFontSize)
+    this.doc.fontSize(this.#footerFontSize)
     const lineHeight = this.doc.currentLineHeight()
     this.chartArea.bottomEdge = this.chartArea.bottomEdge - lineHeight * 9
 
@@ -895,7 +895,7 @@ class PrintView {
   }
 
   setHeaderSize() {
-    this.doc.fontSize(this.headerFontSize)
+    this.doc.fontSize(this.#headerFontSize)
     const lineHeight = this.doc.currentLineHeight()
     this.chartArea.topEdge = this.chartArea.topEdge + lineHeight * 4
 

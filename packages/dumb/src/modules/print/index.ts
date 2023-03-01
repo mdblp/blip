@@ -28,8 +28,7 @@
 import i18next from 'i18next'
 import blobStream from 'blob-stream'
 
-import * as constants from './utils/constants'
-import { arrayBufferToBase64 } from './utils/functions'
+import { arrayBufferToBase64 } from '../../utils/encoder/encoder.util'
 
 // TO_DO have a configuration variable to support specific branding or not like done e.g. in Blip
 // branding should make use of artifact.sh to download specific branding artifacts such as images
@@ -41,7 +40,7 @@ import siteChangeReservoirDiabeloopImage from './images/diabeloop/sitechange-car
 // import jaFontRegular from 'jaFont-Regular.ttf'
 // import jaFontBold from 'jaFont-Bold.ttf'
 import { PrintView } from 'dumb/src/modules/print/print-view'
-import { BASE_64_FLAG } from './utils/constants'
+import { BASE_64_FLAG, IMAGES } from '../../models/constants/pdf.constants'
 
 // Exporting utils for easy stubbing in tests
 export const utils = {
@@ -59,7 +58,7 @@ export const loadImages = async (): Promise<void> => {
   //   constants.Images.logo = imageStr
   // }
 
-  if (!constants.Images.siteChangeCannulaImage) {
+  if (!IMAGES.siteChangeCannulaImage) {
     if (siteChangeCannulaImage.startsWith(BASE_64_FLAG)) {
       imageStr = siteChangeCannulaImage
     } else {
@@ -67,10 +66,10 @@ export const loadImages = async (): Promise<void> => {
       const buffer = await response.arrayBuffer()
       imageStr = BASE_64_FLAG + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeCannulaImage = imageStr
+    IMAGES.siteChangeCannulaImage = imageStr
   }
 
-  if (!constants.Images.siteChangeReservoirImage) {
+  if (!IMAGES.siteChangeReservoirImage) {
     if (siteChangeReservoirImage.startsWith(BASE_64_FLAG)) {
       imageStr = siteChangeReservoirImage
     } else {
@@ -78,10 +77,10 @@ export const loadImages = async (): Promise<void> => {
       const buffer = await response.arrayBuffer()
       imageStr = BASE_64_FLAG + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeReservoirImage = imageStr
+    IMAGES.siteChangeReservoirImage = imageStr
   }
 
-  if (!constants.Images.siteChangeTubingImage) {
+  if (!IMAGES.siteChangeTubingImage) {
     if (siteChangeTubingImage.startsWith(BASE_64_FLAG)) {
       imageStr = siteChangeTubingImage
     } else {
@@ -89,10 +88,10 @@ export const loadImages = async (): Promise<void> => {
       const buffer = await response.arrayBuffer()
       imageStr = BASE_64_FLAG + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeTubingImage = imageStr
+    IMAGES.siteChangeTubingImage = imageStr
   }
 
-  if (!constants.Images.siteChangeReservoirDiabeloopImage) {
+  if (!IMAGES.siteChangeReservoirDiabeloopImage) {
     if (siteChangeReservoirDiabeloopImage.startsWith(BASE_64_FLAG)) {
       imageStr = siteChangeReservoirDiabeloopImage
     } else {
@@ -100,9 +99,8 @@ export const loadImages = async (): Promise<void> => {
       const buffer = await response.arrayBuffer()
       imageStr = BASE_64_FLAG + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeReservoirDiabeloopImage = imageStr
+    IMAGES.siteChangeReservoirDiabeloopImage = imageStr
   }
-  console.log(constants.Images)
 }
 
 export const loadFonts = (): void => {

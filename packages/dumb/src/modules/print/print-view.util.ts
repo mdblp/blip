@@ -27,7 +27,7 @@
 import _ from 'lodash'
 import i18next from 'i18next'
 
-import { FONTS, FOOTER_FONT_SIZE, HEIGHT, MARGINS } from './utils/constants'
+import { FONTS, FOOTER_FONT_SIZE, HEIGHT, MARGINS } from '../../models/constants/pdf.constants'
 import { type CellStripeColumn, type LayoutColumn, LayoutColumnType, type Row } from './print-view'
 
 interface TableHeading {

@@ -26,12 +26,13 @@
  */
 
 // DPI here is the coordinate system, not the resolution; sub-dot precision renders crisply!
-import { arrayBufferToBase64 } from './functions'
+import { arrayBufferToBase64 } from '../../utils/encoder/encoder.util'
 
 export const DPI = 72
 export const MARGIN = DPI / 2
 export const HEIGHT = 11 * DPI - (2 * MARGIN)
 export const WIDTH = 8.5 * DPI - (2 * MARGIN)
+export const LOGO_WIDTH = 80
 
 interface Margins {
   left: number
@@ -51,6 +52,9 @@ export const FOOTER_FONT_SIZE = 8
 export const HEADER_FONT_SIZE = 14
 export const SMALL_FONT_SIZE = 8
 export const EXTRA_SMALL_FONT_SIZE = 6
+export const DEFAULT_OPACITY = 1
+export const ZEBRA_COLOR = '#FAFAFA'
+export const ZEBRA_ODD_COLOR = '#FFFFFF'
 
 export const BASE_64_FLAG = 'data:image/jpeg;base64,'
 
@@ -79,7 +83,7 @@ const buildImages = async (): Promise<ImagesModel> => {
   return {}
 }
 
-export const Images = await buildImages()
+export const IMAGES = await buildImages()
 
 /** @type {{[x:string]: {regularName:string;regular:false|null|ArrayBuffer;boldName:string;bold:false|null|ArrayBuffer;}}} */
 export const FONTS = {

@@ -20,7 +20,7 @@ import i18next from 'i18next'
 import moment from 'moment-timezone'
 
 // import PrintView from './PrintView'
-import { PrintView } from 'dumb/src/modules/print/print-view'
+import { LayoutColumnType, PrintView } from 'dumb/src/modules/print/print-view'
 
 import {
   cgmStatusMessage,
@@ -51,6 +51,7 @@ import {
 } from '../../utils/constants'
 
 import { Images } from './utils/constants'
+import { buildLayoutColumns } from 'dumb/dist/src/modules/print/print-view.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -156,6 +157,30 @@ class BasicsPrintView extends PrintView {
   render() {
     this.renderLeftColumn()
     this.renderCenterColumn()
+  }
+
+  goToLayoutColumnPosition(index: number): void {
+    if (this.layoutColumns) {
+      this.doc.x = this.layoutColumns.columns[index].x
+      this.doc.y = this.layoutColumns.columns[index].y
+      this.layoutColumns.activeIndex = index
+    }
+  }
+
+  getActiveColumnWidth(): number {
+    if (!this.layoutColumns) {
+      throw Error('this.layoutColumns must be defined')
+    }
+    return this.layoutColumns.columns[this.layoutColumns.activeIndex].width
+  }
+
+  setLayoutColumns(width: number, gutter: number, type: LayoutColumnType, widths: number[]): void {
+    const columns = buildLayoutColumns(widths, this.chartArea.width, type, this.chartArea.leftEdge, this.doc.y, gutter)
+
+    this.layoutColumns = {
+      activeIndex: 0,
+      columns
+    }
   }
 
   renderLeftColumn() {
