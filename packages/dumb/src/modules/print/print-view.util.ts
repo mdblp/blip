@@ -28,7 +28,13 @@ import _ from 'lodash'
 import i18next from 'i18next'
 
 import { FONTS, FOOTER_FONT_SIZE, HEIGHT, MARGINS } from '../../models/constants/pdf.constants'
-import { type CellStripeColumn, type LayoutColumn, LayoutColumnType, type Row } from './print-view'
+import {
+  type TableColumn,
+  type Table,
+  type LayoutColumn,
+  LayoutColumnType,
+  type PrintViewParams
+} from './print-view'
 
 interface TableHeading {
   text: string
@@ -63,7 +69,7 @@ export const getFonts = (): Fonts => {
   }
 }
 
-export const renderPageNumbers = (doc: PDFKit.PDFDocument, opts: Row): void => {
+export const renderPageNumbers = (doc: PDFKit.PDFDocument, opts: PrintViewParams): void => {
   const footerFontSize = opts.footerFontSize ?? FOOTER_FONT_SIZE
   const margins = opts.margins ?? MARGINS
   const height = opts.height ?? HEIGHT
@@ -134,10 +140,10 @@ export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth:
   return columns
 }
 
-export const getTextData = (data: Row, column: CellStripeColumn, isHeader: boolean | undefined): TableHeading => {
+export const getTextData = (data: Table, column: TableColumn, isHeader: boolean | undefined): TableHeading => {
   if ((!isHeader && _.isString(data[column.id])) || _.isString(column.header)) {
-    const text = isHeader ? column.header as unknown as string : data[column.id] as string
+    const text = isHeader ? column.header as unknown as string : data[column.id]
     return { text, subText: undefined, note: undefined }
   }
-  return data[column.id] as TableHeading ?? column.header ?? { text: '', subText: '', note: undefined }
+  return data.heading ?? column.header ?? { text: '', subText: '', note: undefined }
 }
