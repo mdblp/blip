@@ -34,7 +34,7 @@ import DatumService from '../datum.service'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
-import { DeviceEventSubtype } from '../../../models/medical/datum/enums/deviceevent-subtype.enum'
+import { DeviceEventSubtype } from '../../../models/medical/datum/enums/device-event-subtype.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ReservoirChange => {
   const base = BaseDatumService.normalize(rawData, opts)

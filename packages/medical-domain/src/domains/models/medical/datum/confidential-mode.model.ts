@@ -28,7 +28,7 @@
 import type BaseDatum from './basics/base-datum.model'
 import type Duration from './basics/duration.model'
 import { type DatumType } from './enums/datum-type.enum'
-import { type DeviceEventSubtype } from './enums/deviceevent-subtype.enum'
+import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
 type ConfidentialMode = BaseDatum & Duration & {
   type: DatumType.DeviceEvent

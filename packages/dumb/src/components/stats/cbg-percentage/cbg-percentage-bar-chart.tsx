@@ -34,8 +34,7 @@ import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
-import { type BgBounds, type BgType } from 'medical-domain'
-import { type CbgRangeStatistics } from 'medical-domain/src/domains/models/statistics/glycemia-statistics.model'
+import { type CbgRangeStatistics, type BgBounds, type BgType } from 'medical-domain'
 import { useTheme } from '@mui/material/styles'
 
 interface CBGPercentageBarChartProps {

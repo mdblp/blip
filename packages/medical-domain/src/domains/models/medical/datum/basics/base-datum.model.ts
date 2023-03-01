@@ -45,17 +45,15 @@ function isBaseDatum(value: unknown): value is BaseDatum {
     if (typeof value.type !== 'string') {
       return false
     }
-    if (!(value.type in DatumType)) {
+    if (!(Object.values(DatumType).includes(value.type))) {
       return false
     }
     if (typeof value.source !== 'string') {
       return false
     }
-    if (!(value.source in Source)) {
-      return false
-    }
+    return value.source in Source
   }
-  return true
+  return false
 }
 
 export default BaseDatum

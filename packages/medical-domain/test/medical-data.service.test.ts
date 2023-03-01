@@ -42,7 +42,7 @@ import * as BasiscsDataService from '../src/domains/repositories/medical/basics-
 import * as TimeService from '../src/domains/repositories/time/time.service'
 import crypto from 'crypto'
 import { DatumType } from '../src/domains/models/medical/datum/enums/datum-type.enum'
-import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/deviceevent-subtype.enum'
+import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {

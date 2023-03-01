@@ -47,10 +47,7 @@ function isBasal(value: unknown): value is Basal {
   if (!isBaseDatum(value)) {
     return false
   }
-  if (value.type !== DatumType.Basal) {
-    return false
-  }
-  return true
+  return value.type === DatumType.Basal
 }
 
 export default Basal

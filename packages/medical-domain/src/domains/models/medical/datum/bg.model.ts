@@ -64,10 +64,7 @@ function isBg(value: unknown): value is Bg {
   if (!isBgUnit(recordValue.units)) {
     return false
   }
-  if (value.type === DatumType.Cbg || value.type === DatumType.Smbg) {
-    return true
-  }
-  return false
+  return value.type === DatumType.Cbg || value.type === DatumType.Smbg
 }
 
 export default Bg

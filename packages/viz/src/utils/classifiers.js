@@ -23,7 +23,7 @@ import {
   getRecommended
 } from './bolus'
 
-import { classifyBgValue } from './bloodglucose.js'
+import { classifyBgValue } from 'medical-domain'
 
 /**
  * Classification functions for tagging constious types of data

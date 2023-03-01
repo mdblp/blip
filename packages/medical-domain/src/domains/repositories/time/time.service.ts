@@ -202,7 +202,7 @@ export function diffDays(start: number, end: number): number {
   return moment.utc(end).diff(moment.utc(start)) / MS_IN_DAY
 }
 
-export function numberOfDays(start: number, end: number, daysFilter?: WeekDaysFilter): number {
+export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDaysFilter): number {
   const totalDays = diffDays(start, end)
   if (daysFilter === undefined || Object.values(daysFilter).every(val => val)) {
     return totalDays

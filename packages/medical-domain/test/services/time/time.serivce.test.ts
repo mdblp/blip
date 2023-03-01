@@ -28,20 +28,20 @@ import { defaultWeekDaysFilter } from '../../../src/domains/models/time/date-fil
 import WeekDays from '../../../src/domains/models/time/enum/weekdays.enum'
 import * as TimeService from '../../../src/domains/repositories/time/time.service'
 
-describe('TimeService numberOfDays', () => {
+describe('TimeService getNumberOfDays', () => {
   it('should return number of days when no week days are filtered ', () => {
     const start = new Date('2018-02-01T00:00:00.000Z').valueOf()
     const end = new Date('2018-02-02T00:00:00.000Z').valueOf()
     const fullWeekFilter = defaultWeekDaysFilter
 
-    const oneDay = TimeService.numberOfDays(start, end)
+    const oneDay = TimeService.getNumberOfDays(start, end)
     expect(oneDay).toBe(1)
-    const onDayWithFullWeekFilter = TimeService.numberOfDays(start, end, fullWeekFilter)
+    const onDayWithFullWeekFilter = TimeService.getNumberOfDays(start, end, fullWeekFilter)
     expect(onDayWithFullWeekFilter).toBe(1)
     const weekend = new Date('2018-02-08T00:00:00.000Z').valueOf()
-    const oneWeek = TimeService.numberOfDays(start, weekend)
+    const oneWeek = TimeService.getNumberOfDays(start, weekend)
     expect(oneWeek).toBe(7)
-    const oneWeekWithFullWeekFilter = TimeService.numberOfDays(start, weekend, fullWeekFilter)
+    const oneWeekWithFullWeekFilter = TimeService.getNumberOfDays(start, weekend, fullWeekFilter)
     expect(oneWeekWithFullWeekFilter).toBe(7)
   })
 
@@ -52,10 +52,10 @@ describe('TimeService numberOfDays', () => {
     // 2018-02-01 is a Thursday
     weekFilter[WeekDays.Thursday] = false
     weekFilter[WeekDays.Sunday] = false
-    const oneDayWithDaysFiltered = TimeService.numberOfDays(start, end, weekFilter)
+    const oneDayWithDaysFiltered = TimeService.getNumberOfDays(start, end, weekFilter)
     expect(oneDayWithDaysFiltered).toBe(0)
     const weekend = new Date('2018-02-08T00:00:00.000Z').valueOf()
-    const oneWeekWithDayFiltered = TimeService.numberOfDays(start, weekend, weekFilter)
+    const oneWeekWithDayFiltered = TimeService.getNumberOfDays(start, weekend, weekFilter)
     expect(oneWeekWithDayFiltered).toBe(5)
   })
 })

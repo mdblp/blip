@@ -49,7 +49,7 @@ function isDuration(value: unknown): value is Duration {
   if (typeof value.duration.units !== 'string') {
     return false
   }
-  if (!(value.duration.units in DurationUnit)) {
+  if (!(Object.values(DurationUnit).includes(value.duration.units as DurationUnit))) {
     return false
   }
   if (typeof value.duration.value !== 'number') {
@@ -58,10 +58,7 @@ function isDuration(value: unknown): value is Duration {
   if (typeof value.normalEnd !== 'string') {
     return false
   }
-  if (typeof value.epochEnd !== 'number') {
-    return false
-  }
-  return true
+  return typeof value.epochEnd === 'number'
 }
 
 export default Duration

@@ -44,7 +44,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
   const theme = useTheme()
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const numberOfDays = TimeService.numberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
 
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)

@@ -50,10 +50,7 @@ function isBaseTime(value: unknown): value is BaseTime {
   if (typeof value.displayOffset !== 'number') {
     return false
   }
-  if (typeof value.guessedTimezone !== 'boolean') {
-    return false
-  }
-  return true
+  return typeof value.guessedTimezone === 'boolean'
 }
 
 export default BaseTime

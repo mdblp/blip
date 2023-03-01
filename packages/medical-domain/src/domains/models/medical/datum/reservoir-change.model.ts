@@ -28,7 +28,7 @@
 import type BaseDatum from './basics/base-datum.model'
 import { type PumpConfig } from './pump-settings.model'
 import { type DatumType } from './enums/datum-type.enum'
-import { type DeviceEventSubtype } from './enums/deviceevent-subtype.enum'
+import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
 type ReservoirChange = BaseDatum & {
   type: DatumType.DeviceEvent
