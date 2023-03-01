@@ -33,6 +33,8 @@ export const MARGIN = DPI / 2
 export const HEIGHT = 11 * DPI - (2 * MARGIN)
 export const WIDTH = 8.5 * DPI - (2 * MARGIN)
 export const LOGO_WIDTH = 80
+export const PADDING_PATIENT_INFO = 10
+export const DIVIDER_WIDTH = PADDING_PATIENT_INFO * 2 + 1
 
 interface Margins {
   left: number

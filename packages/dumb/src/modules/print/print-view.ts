@@ -35,7 +35,7 @@ import { formatBirthdate, formatCurrentDate, formatDateRange } from '../../utils
 
 import {
   DEFAULT_FONT_SIZE,
-  DEFAULT_OPACITY,
+  DEFAULT_OPACITY, DIVIDER_WIDTH,
   EXTRA_SMALL_FONT_SIZE,
   FOOTER_FONT_SIZE,
   HEADER_FONT_SIZE,
@@ -44,6 +44,7 @@ import {
   LARGE_FONT_SIZE,
   LOGO_WIDTH,
   MARGINS,
+  PADDING_PATIENT_INFO,
   SMALL_FONT_SIZE,
   WIDTH,
   ZEBRA_COLOR,
@@ -110,6 +111,7 @@ interface CellStripe {
 }
 
 interface SectionHeading {
+  align: string
   xPos: number
   yPos: number
   font: string
@@ -123,11 +125,6 @@ export interface LayoutColumn {
   x: number
   y: number
   width: number
-}
-
-interface LayoutColumns {
-  activeIndex: number
-  columns: LayoutColumn[]
 }
 
 interface Margins {
@@ -166,7 +163,23 @@ export interface Row {
   _renderedContent?: { height: number }
 }
 
-interface Data {
+export interface PrintViewParams {
+  title: string
+  defaultFontSize: number
+  footerFontSize: number
+  headerFontSize: number
+  height: number
+  margins: Margins
+  patient: Patient
+  smallFontSize: number
+  timePrefs: TimePrefs
+  width: number
+  largeFontSize: number
+  extraSmallFontSize: number
+  bgPrefs: BgPrefs
+}
+
+interface PdfData {
   basics?: BasicData
 }
 
@@ -239,8 +252,7 @@ const t = i18next.t.bind(i18next)
 
 export class PrintView {
   doc: CustomPdfDocument
-  title: string
-  data: Data
+  data: PdfData
   margins: Margins
   font: string
   boldFont: string
@@ -251,52 +263,48 @@ export class PrintView {
   bgPrefs: BgPrefs
   bgBounds?: BgBounds
   timePrefs: TimePrefs
-  width: number
   height: number
   colors: Colors
   tableSettings: TableSettings
   bottomEdge: number
   chartArea: ChartArea
-  initialChartArea: ChartArea
   initialTotalPages: number
   totalPages: number
   currentPageIndex: number
-  layoutColumns?: LayoutColumns
 
   #table?: CustomPdfTable
-  #dividerWidth?: number
   #titleWidth?: number
+  readonly #title: string
   readonly #patient: Patient
   readonly #patientInfoBox: PatientInfoBox
   readonly #footerFontSize: number
   readonly #headerFontSize: number
 
-  constructor(doc: CustomPdfDocument, data: Data, opts: Row) {
+  constructor(doc: CustomPdfDocument, data: PdfData, params: PrintViewParams) {
     this.doc = doc
 
-    this.title = opts.title
+    this.#title = params.title
     this.data = data
 
-    this.margins = opts.margins ?? MARGINS
+    this.margins = params.margins ?? MARGINS
 
     const fonts = getFonts()
     this.font = fonts.regularName
     this.boldFont = fonts.boldName
 
-    this.defaultFontSize = opts.defaultFontSize ?? DEFAULT_FONT_SIZE
-    this.#footerFontSize = opts.footerFontSize ?? FOOTER_FONT_SIZE
-    this.#headerFontSize = opts.headerFontSize ?? HEADER_FONT_SIZE
-    this.largeFontSize = opts.largeFontSize ?? LARGE_FONT_SIZE
-    this.smallFontSize = opts.smallFontSize ?? SMALL_FONT_SIZE
-    this.extraSmallFontSize = opts.extraSmallFontSize ?? EXTRA_SMALL_FONT_SIZE
+    this.defaultFontSize = params.defaultFontSize ?? DEFAULT_FONT_SIZE
+    this.#footerFontSize = params.footerFontSize ?? FOOTER_FONT_SIZE
+    this.#headerFontSize = params.headerFontSize ?? HEADER_FONT_SIZE
+    this.largeFontSize = params.largeFontSize ?? LARGE_FONT_SIZE
+    this.smallFontSize = params.smallFontSize ?? SMALL_FONT_SIZE
+    this.extraSmallFontSize = params.extraSmallFontSize ?? EXTRA_SMALL_FONT_SIZE
 
-    this.bgPrefs = opts.bgPrefs
-    this.timePrefs = opts.timePrefs
+    this.bgPrefs = params.bgPrefs
+    this.timePrefs = params.timePrefs
 
-    this.width = opts.width ?? WIDTH
-    this.height = opts.height ?? HEIGHT
+    this.height = params.height ?? HEIGHT
 
-    this.#patient = opts.patient
+    this.#patient = params.patient
     this.#patientInfoBox = {
       width: 0,
       height: 0
@@ -318,13 +326,11 @@ export class PrintView {
     this.bottomEdge = this.margins.top + this.height
 
     this.chartArea = {
-      bottomEdge: this.margins.top + opts.height,
+      bottomEdge: this.margins.top + params.height,
       leftEdge: this.margins.left,
       topEdge: this.margins.top,
-      width: this.width
+      width: params.width ?? WIDTH
     }
-
-    this.initialChartArea = structuredClone(this.chartArea)
 
     this.initialTotalPages = 0
     this.totalPages = this.initialTotalPages = this.doc.bufferedPageRange().count || 0
@@ -408,13 +414,12 @@ export class PrintView {
       fontSize = sectionHeading.fontSize ?? this.#headerFontSize,
       moveDown = 1
     } = sectionHeading
+    sectionHeading.align = 'left'
 
     this.doc
       .font(font)
       .fontSize(fontSize)
-      .text(text, xPos, yPos, _.defaults(sectionHeading, {
-        align: 'left'
-      }))
+      .text(text, xPos, yPos, sectionHeading)
 
     this.resetText()
     this.doc.moveDown(moveDown)
@@ -722,15 +727,10 @@ export class PrintView {
       this.#patientInfoBox.width = patientBirthdayWidth
     }
 
-    // Render the divider between the patient info and title
-    const padding = 10
-
     this.doc
-      .moveTo(this.margins.left + this.#patientInfoBox.width + padding, this.margins.top)
-      .lineTo(this.margins.left + this.#patientInfoBox.width + padding, this.#patientInfoBox.height)
+      .moveTo(this.margins.left + this.#patientInfoBox.width + PADDING_PATIENT_INFO, this.margins.top)
+      .lineTo(this.margins.left + this.#patientInfoBox.width + PADDING_PATIENT_INFO, this.#patientInfoBox.height)
       .stroke('black')
-
-    this.#dividerWidth = padding * 2 + 1
   }
 
   renderTitle(): void {
@@ -739,8 +739,8 @@ export class PrintView {
     const yOffset = this.margins.top + (this.#patientInfoBox.height - this.margins.top) / 2 - lineHeight / 2
 
     const title = this.currentPageIndex === 0
-      ? this.title
-      : t('{{title}} (cont.)', { title: this.title })
+      ? this.#title
+      : t('{{title}} (cont.)', { title: this.#title })
 
     this.doc.font(this.font).text(title, xOffset, yOffset)
     this.#titleWidth = this.doc.widthOfString(title)
@@ -751,7 +751,7 @@ export class PrintView {
 
     const elements = [
       this.#patientInfoBox.width,
-      this.#dividerWidth,
+      DIVIDER_WIDTH,
       this.#titleWidth,
       LOGO_WIDTH,
       this.margins.left,
@@ -767,12 +767,8 @@ export class PrintView {
     // center the print text between the patient/title text and the logo
     const availableWidth = this.doc.page.width - widthUsed
 
-    if (!this.#dividerWidth || !this.#titleWidth) {
-      return
-    }
-
     const xOffset = (
-      this.margins.left + this.#patientInfoBox.width + this.#dividerWidth + this.#titleWidth
+      this.margins.left + this.#patientInfoBox.width + DIVIDER_WIDTH + (this.#titleWidth ?? 0)
     )
     const yOffset = (
       this.margins.top + (this.#patientInfoBox.height - this.margins.top) / 2 - lineHeight / 2
@@ -808,7 +804,7 @@ export class PrintView {
     const height = lineHeight * 2.25 + this.margins.top
     this.doc
       .moveTo(this.margins.left, height)
-      .lineTo(this.margins.left + this.width, height)
+      .lineTo(this.margins.left + this.chartArea.width, height)
       .stroke('black')
   }
 
@@ -824,7 +820,7 @@ export class PrintView {
 
     const xPos = this.margins.left
     const yPos = (this.height + this.margins.top) - this.doc.currentLineHeight() * 1.5
-    const innerWidth = (this.width) - printDateWidth - pageCountWidth
+    const innerWidth = (this.chartArea.width) - printDateWidth - pageCountWidth
 
     this.doc
       .fillColor(this.colors.lightGrey)

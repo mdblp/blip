@@ -108,7 +108,6 @@ class PrintView {
     }
 
     this.chartArea.width = this.rightEdge - this.chartArea.leftEdge
-    this.initialChartArea = _.clone(this.chartArea)
 
     this.initialTotalPages = 0
     this.totalPages = this.initialTotalPages = this.doc.bufferedPageRange().count || 0
