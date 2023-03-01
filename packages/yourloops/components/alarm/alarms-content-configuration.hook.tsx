@@ -79,11 +79,13 @@ interface ValueErrorPair {
   error?: boolean
 }
 
+const DEFAULT_BG_UNIT = UnitsType.MGDL
+
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
   const { user } = useAuth()
 
-  const userBgUnit = user.settings.units.bg ?? UnitsType.MGDL
-  const monitoringBgUnit = monitoring.parameters?.bgUnit ?? UnitsType.MGDL
+  const userBgUnit = user.settings?.units?.bg ?? DEFAULT_BG_UNIT
+  const monitoringBgUnit = monitoring.parameters?.bgUnit ?? DEFAULT_BG_UNIT
 
   const {
     highBgDefault,
