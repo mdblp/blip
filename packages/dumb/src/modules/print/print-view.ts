@@ -265,6 +265,7 @@ export class PrintView {
   tableSettings: TableSettings
   timePrefs: TimePrefs
   totalPages: number
+  width: number
   #table?: PdfTableOverridden
   #titleWidth?: number
   readonly #footerFontSize: number
@@ -301,6 +302,7 @@ export class PrintView {
     this.smallFontSize = params.smallFontSize ?? SMALL_FONT_SIZE
     this.timePrefs = params.timePrefs
     this.totalPages = this.initialTotalPages = this.doc.bufferedPageRange().count || 0
+    this.width = params.width ?? WIDTH
 
     this.tableSettings = {
       colors: {
@@ -317,7 +319,7 @@ export class PrintView {
       bottomEdge: this.margins.top + params.height,
       leftEdge: this.margins.left,
       topEdge: this.margins.top,
-      width: params.width ?? WIDTH
+      width: this.width
     }
 
     // kick off the dynamic calculation of chart area based on font sizes for header and footer
@@ -780,7 +782,7 @@ export class PrintView {
     const height = lineHeight * 2.25 + this.margins.top
     this.doc
       .moveTo(this.margins.left, height)
-      .lineTo(this.margins.left + this.chartArea.width, height)
+      .lineTo(this.margins.left + this.width, height)
       .stroke(BLACK)
   }
 

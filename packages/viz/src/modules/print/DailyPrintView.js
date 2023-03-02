@@ -54,7 +54,6 @@ const t = i18next.t.bind(i18next)
 class DailyPrintView extends PrintView {
   constructor(doc, data, opts) {
     super(doc, data, opts)
-
     this.bgBounds = opts.bgPrefs.bgBounds
     this.leftEdge = this.margins.left
     this.rightEdge = this.margins.left + this.chartArea.width
@@ -127,7 +126,7 @@ class DailyPrintView extends PrintView {
     this.chartArea.width = this.rightEdge - this.chartArea.leftEdge
 
     this.summaryArea = {
-      rightEdge: opts.margins.left + opts.summaryWidthAsPercentage * this.chartArea.width
+      rightEdge: opts.margins.left + opts.summaryWidthAsPercentage * this.width
     }
 
     this.summaryArea.width = this.summaryArea.rightEdge - this.margins.left
