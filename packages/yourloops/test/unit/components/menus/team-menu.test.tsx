@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,7 @@ import * as alertHookMock from '../../../../components/utils/snackbar'
 import { type ShareUser } from '../../../../lib/share/models/share-user.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
-import { TeamMenuMemoized as TeamMenu } from '../../../../components/menus/team-menu'
+import { PatientTeamSettingsMenuMemoized as PatientTeamSettingsMenu } from '../../../../components/menus/patient-team-settings-menu'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../lib/team')
@@ -70,7 +70,7 @@ describe('Team Menu', () => {
 
   function getTeamMenuJSX(): JSX.Element {
     return <Router history={history}>
-      <TeamMenu />
+      <PatientTeamSettingsMenu />
     </Router>
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -68,7 +68,7 @@ export default class TeamUtils {
     }, 0)
   }
 
-  static sortTeams(teams: Team[]): Team[] {
-    return teams.sort((a, b) => a.name.localeCompare(b.name))
+  static sortTeamsByName(teams: Team[]): Team[] {
+    return teams.sort((teamA: Team, teamB: Team) => teamA.name.localeCompare(teamB.name))
   }
 }

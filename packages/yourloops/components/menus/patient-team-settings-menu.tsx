@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,10 +44,8 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { type Team, useTeam } from '../../lib/team'
+import { useTeam } from '../../lib/team'
 import MenuLayout from '../../layout/menu-layout'
-import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
-import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import { type ShareUser } from '../../lib/share/models/share-user.model'
@@ -76,15 +74,13 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
-function TeamMenu(): JSX.Element {
+function PatientTeamSettingsMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes: { badge, teamIcon, clickableMenu, separator } } = classes()
-  const { teams, createTeam, joinTeam } = useTeam()
+  const { teams, joinTeam } = useTeam()
   const history = useHistory()
   const alert = useAlert()
   const { user } = useAuth()
-  const isUserHcp = user?.isUserHcp()
-  const isUserPatient = user?.isUserPatient()
   const theme = useTheme()
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
@@ -93,7 +89,6 @@ function TeamMenu(): JSX.Element {
   const opened = !!anchorEl
 
   const filteredTeams = teams.filter(team => team.code !== 'private')
-  const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
   const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false)
   const closeMenu = (): void => {
     setAnchorEl(null)
@@ -116,25 +111,8 @@ function TeamMenu(): JSX.Element {
     closeMenu()
   }
 
-  const onSaveTeam = async (createdTeam: Partial<Team> | null): Promise<void> => {
-    if (createdTeam) {
-      try {
-        await createTeam(createdTeam as Team)
-        alert.success(t('team-page-success-create'))
-      } catch (reason: unknown) {
-        alert.error(t('team-page-failed-create'))
-      }
-    }
-    setTeamCreationDialogData(null)
-  }
-
   const onTeamAction = (): void => {
-    if (isUserHcp) {
-      setTeamCreationDialogData({ team: null, onSaveTeam })
-    } else if (isUserPatient) {
-      setShowJoinTeamDialog(true)
-    }
-
+    setShowJoinTeamDialog(true)
     closeMenu()
   }
 
@@ -211,47 +189,41 @@ function TeamMenu(): JSX.Element {
           </ListItem>
         }
 
-        {(isUserHcp || isUserPatient) &&
-          <Box>
-            <Box marginY={1}>
-              <Divider variant="middle" />
-            </Box>
+        <Box>
+          <Box marginY={1}>
+            <Divider variant="middle" />
+          </Box>
 
-            <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
-              <ListItemIcon>
-                <GroupOutlinedIcon />
-              </ListItemIcon>
-              <Typography>
-                {isUserHcp && t('new-care-team')}
-                {isUserPatient && t('join-care-team')}
+          <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
+            <ListItemIcon>
+              <GroupOutlinedIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('join-care-team')}
+            </Typography>
+          </MenuItem>
+        </Box>
+
+        <Box>
+          <ListSubheader>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Typography variant="caption">
+                {t('my-caregivers')}
               </Typography>
-            </MenuItem>
-          </Box>
-        }
-        {isUserPatient &&
-          <Box>
-            <ListSubheader>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="caption">
-                  {t('my-caregivers')}
-                </Typography>
-                <div className={separator} />
-              </Box>
-            </ListSubheader>
-            <MenuItem id="team-menu-caregivers-link" onClick={redirectToCaregivers}>
-              <ListItemIcon>
-                <GroupOutlinedIcon />
-              </ListItemIcon>
-              <Typography>
-                {t('my-caregivers')} ({caregivers?.length})
-              </Typography>
-            </MenuItem>
-          </Box>
-        }
+              <div className={separator} />
+            </Box>
+          </ListSubheader>
+          <MenuItem id="team-menu-caregivers-link" onClick={redirectToCaregivers}>
+            <ListItemIcon>
+              <GroupOutlinedIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('my-caregivers')} ({caregivers?.length})
+            </Typography>
+          </MenuItem>
+        </Box>
       </MenuLayout>
-      {teamCreationDialogData &&
-        <TeamEditDialog teamToEdit={teamCreationDialogData} />
-      }
+
       {showJoinTeamDialog &&
         <JoinTeamDialog
           onClose={() => { setShowJoinTeamDialog(false) }}
@@ -262,4 +234,4 @@ function TeamMenu(): JSX.Element {
   )
 }
 
-export const TeamMenuMemoized = React.memo(TeamMenu)
+export const PatientTeamSettingsMenuMemoized = React.memo(PatientTeamSettingsMenu)

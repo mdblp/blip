@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,8 +41,8 @@ import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provide
 export function HcpLayout(): JSX.Element {
   return (
     <TeamContextProvider>
-      <PatientProvider>
-        <SelectedTeamProvider>
+      <SelectedTeamProvider>
+        <PatientProvider>
           <DashboardLayout>
             <Switch>
               <Route exact path="/not-found" component={InvalidRoute} />
@@ -55,8 +55,8 @@ export function HcpLayout(): JSX.Element {
               <Redirect to="/not-found" />
             </Switch>
           </DashboardLayout>
-        </SelectedTeamProvider>
-      </PatientProvider>
+        </PatientProvider>
+      </SelectedTeamProvider>
     </TeamContextProvider>
   )
 }

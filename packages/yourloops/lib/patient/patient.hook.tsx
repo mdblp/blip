@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,21 +42,35 @@ import { type PatientFilterTypes } from './models/enums/patient-filter-type.enum
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
+import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
+  const { selectedTeamId } = useSelectedTeamContext()
 
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
+  const [patientsForSelectedTeam, setPatientsForSelectedTeam] = useState<Patient[]>([])
+
   const fetchPatients = useCallback(() => {
     PatientUtils.computePatients(user).then(computedPatients => {
       setPatients(computedPatients)
       setErrorMessage(null)
+
+      console.log({ computedPatients })
+      console.log({ selectedTeamId })
+      const scopedPatients = computedPatients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => {
+        console.log({ teamId: team.teamId })
+        console.log({ selectedTeamId })
+        return team.teamId === selectedTeamId
+      }))
+      setPatientsForSelectedTeam(scopedPatients)
+      console.log({ scopedPatients })
     }).catch((reason: unknown) => {
       const message = errorTextFromException(reason)
       if (message !== errorMessage) {
@@ -100,7 +114,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const getPatientById = useCallback(userId => patients.find(patient => patient.userid === userId), [patients])
 
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
-    const filteredPatients = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
+    const filteredPatients = PatientUtils.extractPatients(patientsForSelectedTeam, filterType, flaggedPatients)
     if (search.length === 0) {
       return filteredPatients
     }

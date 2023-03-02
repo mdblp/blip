@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -92,15 +92,15 @@ function TeamContextImpl(): TeamContext {
   }
 
   const getMedicalTeams = (): Team[] => {
-    return getTeamsByType([TeamType.medical])
+    return getTeamsByType(TeamType.medical)
   }
 
-  const getMedicalAndPrivateTeams = (): Team[] => {
-    return getTeamsByType([TeamType.medical, TeamType.private])
+  const getPrivateTeam = (): Team => {
+    return getTeamsByType(TeamType.private)[0]
   }
 
-  const getTeamsByType = (types: TeamType[]): Team[] => {
-    return teams.filter((team: Team) => types.includes(team.type))
+  const getTeamsByType = (type: TeamType): Team[] => {
+    return teams.filter((team: Team) => team.type === type)
   }
 
   const getRemoteMonitoringTeams = (): Team[] => {
@@ -214,7 +214,8 @@ function TeamContextImpl(): TeamContext {
     refresh,
     getTeam,
     getMedicalTeams,
-    getMedicalAndPrivateTeams,
+    getPrivateTeam,
+    // getMedicalAndPrivateTeams,
     getRemoteMonitoringTeams,
     inviteMember,
     createTeam,

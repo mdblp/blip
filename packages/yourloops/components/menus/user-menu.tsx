@@ -31,7 +31,7 @@ import { useHistory } from 'react-router-dom'
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import CancelIcon from '@mui/icons-material/Cancel'
-import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined'
+import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/stethoscope-icon'
@@ -64,13 +64,18 @@ const classes = makeStyles()((theme: Theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
+  },
+  // TODO reuse classes (+ clickableMenu + typography)
+  menu: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1)
   }
 }))
 
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
-  const { classes: { clickableMenu, typography } } = classes()
+  const { classes: { clickableMenu, typography, menu } } = classes()
   const history = useHistory()
   const theme = useTheme()
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
@@ -132,7 +137,9 @@ function UserMenu(): JSX.Element {
         alignItems="center"
         className={clickableMenu}
         maxWidth={250}
-        onClick={event => { setAnchorEl(event.currentTarget) }}
+        onClick={event => {
+          setAnchorEl(event.currentTarget)
+        }}
       >
         <Box display="flex">
           {getRoleIcon()}
@@ -148,41 +155,44 @@ function UserMenu(): JSX.Element {
           </React.Fragment>
         }
       </Box>
+
       <MenuLayout
         open={opened}
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
-          <ListItemIcon>
-            <PermContactCalendarIcon />
-          </ListItemIcon>
-          <Typography>
-            {t('profile-settings')}
-          </Typography>
-        </MenuItem>
+        <Box className={menu}>
+          <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
+            <ListItemIcon>
+              <PermContactCalendarIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('profile-settings')}
+            </Typography>
+          </MenuItem>
 
-        <MenuItem id="contact-menu-item" onClick={onClickSupport}>
-          <ListItemIcon>
-            <ContactSupportOutlinedIcon />
-          </ListItemIcon>
-          <Typography>
-            {t('menu-contact-support')}
-          </Typography>
-        </MenuItem>
+          <MenuItem id="contact-menu-item" onClick={onClickSupport}>
+            <ListItemIcon>
+              <ContactSupportIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('menu-contact-support')}
+            </Typography>
+          </MenuItem>
 
-        <Box marginY={1}>
-          <Divider variant="middle" />
+          <Box marginY={2}>
+            <Divider variant="middle" />
+          </Box>
+
+          <MenuItem id="user-menu-logout-item" onClick={onClickLogout}>
+            <ListItemIcon>
+              <CancelIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('logout')}
+            </Typography>
+          </MenuItem>
         </Box>
-
-        <MenuItem id="user-menu-logout-item" onClick={onClickLogout}>
-          <ListItemIcon>
-            <CancelIcon />
-          </ListItemIcon>
-          <Typography>
-            {t('logout')}
-          </Typography>
-        </MenuItem>
       </MenuLayout>
     </React.Fragment>
   )

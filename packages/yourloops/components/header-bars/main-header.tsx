@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
@@ -43,14 +43,9 @@ import Toolbar from '@mui/material/Toolbar'
 import config from '../../lib/config/config'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import { useAuth } from '../../lib/auth'
-import { TeamMenuMemoized as TeamMenu } from '../menus/team-menu'
+import { PatientTeamSettingsMenuMemoized as PatientTeamSettingsMenu } from '../menus/patient-team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
-import Dropdown from '../dropdown/dropdown'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import { type Team, useTeam } from '../../lib/team'
-import TeamUtils from '../../lib/team/team.util'
-import { usePatientContext } from '../../lib/patient/patient.provider'
-import PatientUtils from '../../lib/patient/patient.util'
+import { HcpTeamScopeMenu } from '../menus/hcp-team-scope-menu'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -77,49 +72,16 @@ const classes = makeStyles()((theme: Theme) => ({
     backgroundColor: 'var(--text-base-color)',
     margin: `0 ${theme.spacing(2)}`
   },
-  teamsDropdown: {
-    paddingLeft: theme.spacing(2)
-  },
   toolbar: {
     padding: `0 ${theme.spacing(2)}`
   }
 }))
 
-const PATIENT_DASHBOARD_REGEX = /^\/patient\/([0-9a-f]+)\/dashboard/
-
 function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
-  const { classes: { desktopLogo, separator, appBar, leftIcon, teamsDropdown, toolbar } } = classes()
+  const { classes: { desktopLogo, separator, appBar, leftIcon, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
-  const { getMedicalAndPrivateTeams } = useTeam()
-  const { selectedTeamId, selectTeam } = useSelectedTeamContext()
-  const { pathname } = useLocation()
-  const { getPatientById } = usePatientContext()
-  const history = useHistory()
-  const patientDashboardRegexMatch = pathname.match(PATIENT_DASHBOARD_REGEX)
-  const isPatientDashboard = !!patientDashboardRegexMatch
-  /**
-   * TODO YLP-1987 Fix the condition once the January release is done
-   */
-  const shouldDisplayTeamsDropdown = false && user.isUserHcp() && isPatientDashboard
-
-  const getDropdownTeams = (): Map<string, string> => {
-    const teams = getMedicalAndPrivateTeams()
-    const sortedTeams = TeamUtils.sortTeams(teams)
-    const teamsMap = new Map<string, string>()
-    sortedTeams.forEach((team: Team) => teamsMap.set(team.id, team.name))
-    return teamsMap
-  }
-
-  const onSelectTeam = (teamId: string): void => {
-    const patientId = patientDashboardRegexMatch[1]
-    const isPatientInSelectedTeam = PatientUtils.isInTeam(getPatientById(patientId), teamId)
-    if (!isPatientInSelectedTeam) {
-      history.push('/')
-    }
-    selectTeam(teamId)
-  }
 
   return (
     <AppBar
@@ -151,21 +113,6 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
                 className={desktopLogo}
               />
             </Link>
-            {
-              shouldDisplayTeamsDropdown &&
-              <Box className={teamsDropdown}>
-                <Dropdown
-                  // "key" attribute is passed to force the component to render every time `selectedTeamId` changes,
-                  // in order to display the adequate default value (otherwise, the value of the dropdown cannot be
-                  // changed outside the dropdown itself)
-                  key={selectedTeamId}
-                  id="selected-team"
-                  defaultKey={selectedTeamId}
-                  values={getDropdownTeams()}
-                  onSelect={onSelectTeam}
-                />
-              </Box>
-            }
           </Box>
 
           <Box display="flex" alignItems="center">
@@ -183,7 +130,8 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
             <div className={separator} />
             {!user?.isUserCaregiver() &&
               <React.Fragment>
-                <TeamMenu />
+                {user.isUserPatient() && <PatientTeamSettingsMenu />}
+                {user.isUserHcp() && <HcpTeamScopeMenu />}
                 <div className={separator} />
               </React.Fragment>
             }
