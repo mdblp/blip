@@ -38,12 +38,12 @@ import BasicDropdown from '../dropdown/basic-dropdown'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
-import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from 'dumb'
 import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
 import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
 import FormHelperText from '@mui/material/FormHelperText'
+import { LoadingButton } from '@mui/lab'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -354,7 +354,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               onClick={resetToTeamDefaultValues}
               data-testid="alarm-config-reset"
             >
-              {t('default-values')}
+              {t('button-default-values')}
             </Button>
           }
         </Box>
@@ -363,25 +363,25 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Button
               id="cancel-button-id"
               className={classes.cancelButton}
+              variant="outlined"
               onClick={onClose}
               data-testid="alarm-config-cancel"
             >
               {t('button-cancel')}
             </Button>
           }
-          <ProgressIconButtonWrapper inProgress={saveInProgress}>
-            <Button
-              id="save-button-id"
-              variant="contained"
-              color="primary"
-              disableElevation
-              disabled={saveButtonDisabled}
-              onClick={save}
-              data-testid="alarm-config-save"
-            >
-              {t('button-save')}
-            </Button>
-          </ProgressIconButtonWrapper>
+          <LoadingButton
+            loading={saveInProgress}
+            id="save-button-id"
+            variant="contained"
+            color="primary"
+            disableElevation
+            disabled={saveButtonDisabled}
+            onClick={save}
+            data-testid="alarm-config-save"
+          >
+            {t('button-save')}
+          </LoadingButton>
         </Box>
       </Box>
     </React.Fragment>

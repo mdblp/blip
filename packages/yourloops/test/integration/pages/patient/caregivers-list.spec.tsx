@@ -73,7 +73,7 @@ describe('Patient caregivers page', () => {
     const secondaryBar = screen.getByTestId('patient-caregivers-secondary-bar')
     expect(secondaryBar).toBeVisible()
 
-    const addCaregiverButton = within(secondaryBar).getByText('Add Caregiver')
+    const addCaregiverButton = within(secondaryBar).getByText('Add caregiver')
     expect(addCaregiverButton).toBeVisible()
 
     await userEvent.click(addCaregiverButton)
@@ -174,7 +174,7 @@ describe('Patient caregivers page', () => {
     const secondaryBar2 = screen.getByTestId('patient-caregivers-secondary-bar')
     expect(secondaryBar2).toBeVisible()
 
-    const addCaregiverButton2 = within(secondaryBar2).getByText('Add Caregiver')
+    const addCaregiverButton2 = within(secondaryBar2).getByText('Add caregiver')
     expect(addCaregiverButton2).toBeVisible()
 
     await userEvent.click(addCaregiverButton2)

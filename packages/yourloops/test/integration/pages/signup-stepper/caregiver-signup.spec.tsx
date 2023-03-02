@@ -68,7 +68,7 @@ describe('Signup stepper as caregiver', () => {
     await userEvent.click(screen.getByText('Next'))
 
     // Step three
-    const createButton = screen.getByText('Create Account')
+    const createButton = screen.getByText('Create account')
     await checkProfileStep(firstName, lastName)
     expect(screen.queryByTestId('hcp-profession-selector')).not.toBeInTheDocument()
     expect(createButton).not.toBeDisabled()

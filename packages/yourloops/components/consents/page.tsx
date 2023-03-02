@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -164,6 +164,7 @@ function Page(props: ConsentProps): JSX.Element {
                 <div id="consent-button-group" className={classes.buttons}>
                   <Button
                     id="consent-button-decline"
+                    variant="outlined"
                     onClick={onDecline}
                   >
                     {t('button-decline')}

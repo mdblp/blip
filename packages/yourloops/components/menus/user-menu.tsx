@@ -180,7 +180,7 @@ function UserMenu(): JSX.Element {
             <CancelIcon />
           </ListItemIcon>
           <Typography>
-            {t('logout')}
+            {t('button-logout')}
           </Typography>
         </MenuItem>
       </MenuLayout>

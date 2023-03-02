@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -79,7 +79,7 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
       />
 
       <SignupStepperActionButtons
-        nextButtonLabel={t('next')}
+        nextButtonLabel={t('button-next')}
         disabled={!consentsChecked}
         onClickBackButton={handleBack}
         onClickNextButton={onNext}

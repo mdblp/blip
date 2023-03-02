@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -127,7 +127,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
       </RadioGroup>
 
       <SignupStepperActionButtons
-        nextButtonLabel={t('next')}
+        nextButtonLabel={t('button-next')}
         disabled={isRoleInvalid}
         onClickBackButton={handleBack}
         onClickNextButton={onNext}

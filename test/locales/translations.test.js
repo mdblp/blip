@@ -152,7 +152,6 @@ const ignoredTransKeyForYourLoops = [
   'initial-hba1c',
   'optional',
   'training-body',
-  'login',
   'refresh',
   'login-page-desktop-info-1',
   'login-page-desktop-info-2',

@@ -75,13 +75,13 @@ const VerifyEmailPage: FunctionComponent = () => {
             sx={{ marginRight: theme.spacing(4) }}
             onClick={onClickLogout}
           >
-            {t('logout')}
+            {t('button-logout')}
           </Button>
           <Button
             variant="outlined"
             onClick={loginWithRedirect}
           >
-            {t('continue')}
+            {t('button-continue')}
           </Button>
         </Box>
       </Container>

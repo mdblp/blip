@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,6 @@ import Typography from '@mui/material/Typography'
 import BasicDropdown from '../dropdown/basic-dropdown'
 import Dropdown from '../dropdown/dropdown'
 import { type Team, type TeamMember, useTeam } from '../../lib/team'
-import { commonComponentStyles } from '../common'
 import { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -98,7 +97,6 @@ export interface PatientMonitoringPrescriptionProps {
 function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps): JSX.Element {
   const { defaultTeamId, action, setPrescriptionInfo } = props
   const { classes } = useStyles()
-  const { classes: commonClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
   const month = t('month').toLowerCase()
@@ -230,11 +228,10 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
                 <Button
                   variant="contained"
                   color="primary"
-                  size="small"
+                  disableElevation
                   component="span"
-                  className={commonClasses.button}
                 >
-                  {t('browse')}
+                  {t('button-browse')}
                 </Button>
               </label>
             </Box>

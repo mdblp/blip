@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,13 +31,13 @@ import Button from '@mui/material/Button'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 
 import { type Team, useTeam } from '../../lib/team'
-import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useHistory } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
 import TeamUtils from '../../lib/team/team.util'
 import { usePatientContext } from '../../lib/patient/patient.provider'
+import { useTheme } from '@mui/material/styles'
 
 export interface LeaveTeamButtonProps {
   team: Team
@@ -50,7 +50,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const alert = useAlert()
   const { user } = useAuth()
   const historyHook = useHistory()
-  const { classes: commonTeamClasses } = commonComponentStyles()
+  const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
@@ -86,13 +86,14 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
     <React.Fragment>
       <Button
         data-testid="leave-team-button"
-        className={commonTeamClasses.button}
+        startIcon={<ExitToAppIcon />}
         variant="contained"
         color="primary"
         disableElevation
+        sx={{ marginRight: theme.spacing(2) }}
         onClick={openLeaveTeamDialog}
       >
-        <ExitToAppIcon className={commonTeamClasses.icon} />{t('button-team-leave')}
+        {t('button-team-leave')}
       </Button>
       {modalIsOpen && <LeaveTeamDialog team={team} onDialogResult={onTeamLeft} />}
     </React.Fragment>
