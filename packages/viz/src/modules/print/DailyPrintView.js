@@ -56,7 +56,7 @@ class DailyPrintView extends PrintView {
     super(doc, data, opts)
     this.bgBounds = opts.bgPrefs.bgBounds
     this.leftEdge = this.margins.left
-    this.rightEdge = this.margins.left + this.chartArea.width
+    this.rightEdge = this.margins.left + this.width
 
     this.source = _.get(data, 'latestPumpUpload.source', '').toLowerCase()
     this.manufacturer = this.source === 'carelink' ? 'medtronic' : this.source
@@ -112,14 +112,14 @@ class DailyPrintView extends PrintView {
       lightDividers: '#D8D8D8'
     })
 
-    this.rightEdge = this.margins.left + this.chartArea.width
+    this.rightEdge = this.margins.left + this.width
     this.bottomEdge = this.margins.top + this.height
 
     this.gapBtwnSummaryAndChartAsPercentage = 0.04
     this.chartArea = {
       bottomEdge: opts.margins.top + opts.height,
       leftEdge: opts.margins.left +
-        (opts.summaryWidthAsPercentage + this.gapBtwnSummaryAndChartAsPercentage) * this.chartArea.width,
+        (opts.summaryWidthAsPercentage + this.gapBtwnSummaryAndChartAsPercentage) * this.width,
       topEdge: opts.margins.top
     }
 
@@ -993,7 +993,7 @@ class DailyPrintView extends PrintView {
     const legendTop = this.bottomEdge - lineHeight * 6
 
     this.doc.lineWidth(1)
-      .rect(this.margins.left, legendTop, this.chartArea.width, legendHeight)
+      .rect(this.margins.left, legendTop, this.width, legendHeight)
       .stroke('black')
 
     this.doc.fontSize(this.smallFontSize)

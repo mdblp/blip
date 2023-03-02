@@ -98,7 +98,6 @@ export const getTimezoneFromTimePrefs = (timePrefs: TimePrefs): string => {
 }
 
 export const formatBirthdate = (birthday?: string): string => {
-  // const birthday = _.get(patient, 'profile.patient.birthday', '')
   if (birthday) {
     const birthdayFormat = t('birthday-format')
     return moment.utc(birthday).format(birthdayFormat)

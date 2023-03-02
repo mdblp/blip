@@ -153,6 +153,8 @@ export type Table = {
   note?: number
 } & Record<string, string>
 
+export type Row = Table
+
 export interface PrintViewParams {
   bgPrefs: BgPrefs
   defaultFontSize: number
@@ -242,6 +244,13 @@ const LEFT = 'left'
 const CENTER = 'center'
 const HEADING_COLUMN_ID = 'heading'
 const APP_URL = `${window.location.protocol}//${window.location.hostname}/`
+const PATIENT_FULL_NAME_MAX_LENGTH = 32
+const LINE_HEIGHT_REFERENCE_FONT_SIZE = 14
+const PATIENT_INFO_LINE_WIDTH = 1
+const PATIENT_INFO_LINE_GAP = 2
+const DEFAULT_STRIPE_WIDTH = 6
+const TABLE_BOTTOM_MARGIN = 20
+const COLUMN_DEFAULT_PADDING = [7, 5, 3, 5]
 
 const t = i18next.t.bind(i18next)
 
@@ -406,7 +415,7 @@ export class PrintView {
     this.doc.moveDown(moveDown)
   }
 
-  renderCustomTextCell(tb: VoilabPdfTable<Table>, row: Table, draw: boolean, column: TableColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
+  renderCustomTextCell(tb: VoilabPdfTable<Table>, row: Row, draw: boolean, column: TableColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
     if (!draw) {
       return ' '
     }
@@ -459,13 +468,13 @@ export class PrintView {
         align: LEFT,
         height: heading.note ? 37 : 24,
         cache: false,
-        renderer: this.renderCustomTextCell as unknown as (table: VoilabPdfTable<Table>, row: Table, draw: boolean) => void,
+        renderer: this.renderCustomTextCell as unknown as (table: VoilabPdfTable<Table>, row: Row, draw: boolean) => void,
         font: tableConfig.font ?? this.boldFont,
         fontSize: tableConfig.fontSize ?? this.largeFontSize
       }
     ]
 
-    const rows: Table[] = [{ heading, note: heading.note }] as Table[]
+    const rows: Row[] = [{ heading, note: heading.note }] as Row[]
 
     this.renderTable(columns, rows, _.defaultsDeep(tableConfig, {
       columnDefaults: {
@@ -478,7 +487,7 @@ export class PrintView {
     this.resetText()
   }
 
-  renderTable(columns: PdfTableColumnOverridden[] = [], rows: Table[] = [], pdfTableConfig: PdfTableConfigOverridden): void {
+  renderTable(columns: PdfTableColumnOverridden[] = [], rows: Row[] = [], pdfTableConfig: PdfTableConfigOverridden): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
 
     const fill = pdfTableConfig.columnsDefaults?.fill ?? pdfTableConfig.columnsDefaults?.zebra ?? false
@@ -489,19 +498,17 @@ export class PrintView {
         headerBorder: 'TBLR',
         border: 'TBLR',
         align: LEFT,
-        padding: [7, 5, 3, 5],
-        headerPadding: [7, 5, 3, 5],
+        padding: COLUMN_DEFAULT_PADDING,
+        headerPadding: COLUMN_DEFAULT_PADDING,
         fill
       },
-      bottomMargin: 20,
+      bottomMargin: TABLE_BOTTOM_MARGIN,
       pos: {
         maxY: this.chartArea.bottomEdge
       }
     })
 
-    const {
-      flexColumn
-    } = pdfTableConfig
+    const { flexColumn } = pdfTableConfig
 
     const table = this.#table = new PdfTable(this.doc, pdfTableConfig) as PdfTableOverridden
     if (flexColumn) {
@@ -512,7 +519,7 @@ export class PrintView {
 
     table.onPageAdd(this.#onPageAdd.bind(this))
 
-    table.onPageAdded((tb /*, row */) => {
+    table.onPageAdded((tb) => {
       if (pdfTableConfig.showHeaders) {
         tb.addHeader()
       }
@@ -557,7 +564,7 @@ export class PrintView {
     return basicPosition
   }
 
-  #onPageAdd(table: VoilabPdfTable<Table>, row: Table, event: PageAddEvent): void {
+  #onPageAdd(table: VoilabPdfTable<Table>, row: Row, event: PageAddEvent): void {
     const currentPageIndex = this.initialTotalPages + this.currentPageIndex
 
     if (currentPageIndex + 1 === this.totalPages) {
@@ -601,7 +608,7 @@ export class PrintView {
     }
   }
 
-  #onCellBackgroundAdd(table: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>, row: Table, index: number, isHeader: boolean): void {
+  #onCellBackgroundAdd(table: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>, row: Row, index: number, isHeader: boolean): void {
     const {
       fill,
       headerFill,
@@ -644,16 +651,16 @@ export class PrintView {
   }
 
   #renderPatientInfo(): void {
-    const patientName = _.truncate(getPatientFullName(this.#patient), { length: 32 })
-    const patientBirthdate = formatBirthdate(this.#patient.profile.birthday ?? '')
+    const patientName = _.truncate(getPatientFullName(this.#patient), { length: PATIENT_FULL_NAME_MAX_LENGTH })
+    const patientBirthdate = formatBirthdate(this.#patient.profile.birthday)
     const xOffset = this.margins.left
     const yOffset = this.margins.top
 
     this.doc
-      .lineWidth(1)
-      .fontSize(10)
+      .lineWidth(PATIENT_INFO_LINE_WIDTH)
+      .fontSize(DEFAULT_FONT_SIZE)
       .text(patientName, xOffset, yOffset, {
-        lineGap: 2
+        lineGap: PATIENT_INFO_LINE_GAP
       })
 
     this.#patientInfoBox.width = this.doc.widthOfString(patientName)
@@ -661,7 +668,7 @@ export class PrintView {
 
     this.doc
       .font(this.font)
-      .fontSize(10)
+      .fontSize(DEFAULT_FONT_SIZE)
       .text(patientDOB)
 
     const patientBirthdayWidth = this.doc.widthOfString(patientDOB)
@@ -691,7 +698,7 @@ export class PrintView {
   }
 
   #renderDateText(dateText = ''): void {
-    const lineHeight = this.doc.fontSize(14).currentLineHeight()
+    const lineHeight = this.doc.fontSize(LINE_HEIGHT_REFERENCE_FONT_SIZE).currentLineHeight()
 
     const elements = [
       this.#patientInfoBox.width,
@@ -719,7 +726,7 @@ export class PrintView {
     )
 
     this.doc
-      .fontSize(10)
+      .fontSize(DEFAULT_FONT_SIZE)
       .text(dateText, xOffset, yOffset + 2.5, {
         width: availableWidth,
         align: CENTER
@@ -764,7 +771,7 @@ export class PrintView {
 
     const xPos = this.margins.left
     const yPos = (this.height + this.margins.top) - this.doc.currentLineHeight() * 1.5
-    const innerWidth = (this.chartArea.width) - printDateWidth - pageCountWidth
+    const innerWidth = this.width - printDateWidth - pageCountWidth
 
     this.doc
       .fillColor(this.colors.lightGrey)
@@ -787,36 +794,30 @@ export class PrintView {
     }
   }
 
-  #renderCellStripe(data: Table, column: TableColumn, pos: Position, isHeader = false): CellStripe {
-    const height = (isHeader ? column.headerHeight : column.height) ?? column.height ?? data._renderedContent?.height ?? 0
+  #renderCellStripe(row: Row, column: TableColumn, pos: Position, isHeader = false): CellStripe {
+    const height = (isHeader ? column.headerHeight : column.height) ?? column.height ?? row._renderedContent?.height ?? 0
 
-    const stripe = {
-      width: 0,
-      height,
-      padding: 0,
-      color: this.colors.grey,
-      opacity: 1,
-      background: false
-    }
-
-    const fillStripe = isHeader ? (data._headerFillStripe ?? column.headerFillStripe) : (data._fillStripe ?? column.fillStripe)
+    const fillStripe = isHeader ? (row._headerFillStripe ?? column.headerFillStripe) : (row._fillStripe ?? column.fillStripe)
     if (!fillStripe) {
-      return stripe
+      return {
+        width: 0,
+        background: false
+      }
     }
 
-    stripe.color = fillStripe.color ?? this.colors.grey
-    stripe.opacity = fillStripe.opacity ?? 1
-    stripe.width = fillStripe.width ?? 6
-    stripe.background = fillStripe.background ?? false
-    stripe.padding = fillStripe.padding ?? 0
-    this.setFill(stripe.color, stripe.opacity)
+    const background = fillStripe.background ?? false
+    const color = fillStripe.color ?? this.colors.grey
+    const opacity = fillStripe.opacity ?? 1
+    const padding = fillStripe.padding ?? 0
+    const width = fillStripe.width ?? DEFAULT_STRIPE_WIDTH
+    this.setFill(color, opacity)
 
-    const xPos = pos.x + 0.25 + stripe.padding
-    const yPos = pos.y + 0.25 + stripe.padding
-    const stripeWidth = stripe.width
-    const stripeHeight = stripe.height - 0.5 - (2 * stripe.padding)
+    const xPos = pos.x + 0.25 + padding
+    const yPos = pos.y + 0.25 + padding
+    const stripeWidth = width
+    const stripeHeight = height - 0.5 - (2 * padding)
 
-    if (stripe.width > 0) {
+    if (width > 0) {
       this.doc
         .rect(xPos, yPos, stripeWidth, stripeHeight)
         .fill()
@@ -824,6 +825,6 @@ export class PrintView {
 
     this.setFill()
 
-    return stripe
+    return { background, width }
   }
 }
