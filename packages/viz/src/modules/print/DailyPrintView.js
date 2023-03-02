@@ -22,7 +22,6 @@ import { scaleLinear } from 'd3-scale'
 import moment from 'moment-timezone'
 
 import { MMOLL_UNITS } from 'medical-domain'
-// import PrintView from './PrintView'
 import { PrintView } from 'dumb/src/modules/print/print-view'
 import { calculateBasalPath, getBasalSequencePaths } from '../render/basal'
 import getBolusPaths from '../render/bolus'

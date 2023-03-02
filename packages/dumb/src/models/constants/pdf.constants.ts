@@ -25,14 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// DPI here is the coordinate system, not the resolution; sub-dot precision renders crisply!
-import { arrayBufferToBase64 } from '../../utils/encoder/encoder.util'
 import { type Margins } from '../print/margins.model'
-import { type ImagesModel } from '../print/images.model'
+import { buildPdfImages } from '../../utils/pdf/pdf.util'
 
+// DPI here is the coordinate system, not the resolution; sub-dot precision renders crisply!
 export const DPI = 72
 export const MARGIN = DPI / 2
 export const HEIGHT = 11 * DPI - (2 * MARGIN)
+export const FOOTER_FONT_SIZE = 8
+export const BASE_64_FLAG = 'data:image/jpeg;base64,'
 
 export const MARGINS: Margins = {
   left: MARGIN,
@@ -41,30 +42,8 @@ export const MARGINS: Margins = {
   bottom: MARGIN
 }
 
-export const FOOTER_FONT_SIZE = 8
+export const IMAGES = await buildPdfImages()
 
-export const BASE_64_FLAG = 'data:image/jpeg;base64,'
-
-const buildImages = async (): Promise<ImagesModel> => {
-  if (window.config) {
-    const response = await fetch(`/branding_${window.config.BRANDING}_pdf-logo.png`)
-    const buffer = await response.arrayBuffer()
-    const imageStr = BASE_64_FLAG + arrayBufferToBase64(buffer)
-    return {
-      logo: imageStr,
-      siteChangeCannulaImage: undefined,
-      siteChangeReservoirImage: undefined,
-      siteChangeTubingImage: undefined,
-      siteChangeReservoirDiabeloopImage: undefined
-    }
-  }
-
-  return {}
-}
-
-export const IMAGES = await buildImages()
-
-/** @type {{[x:string]: {regularName:string;regular:false|null|ArrayBuffer;boldName:string;bold:false|null|ArrayBuffer;}}} */
 export const FONTS = {
   default: {
     regularName: 'Helvetica',

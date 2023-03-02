@@ -19,7 +19,6 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import moment from 'moment-timezone'
 
-// import PrintView from './PrintView'
 import { LayoutColumnType, PrintView } from 'dumb/src/modules/print/print-view'
 
 import {

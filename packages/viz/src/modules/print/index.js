@@ -25,7 +25,7 @@ import DailyPrintView from './DailyPrintView'
 import SettingsPrintView from './SettingsPrintView'
 import { reshapeBgClassesToBgBounds } from '../../utils/bloodglucose'
 
-import { renderPageNumbers } from 'dumb/src/modules/print/print-view.util'
+import { renderPageNumbers } from 'dumb/src/utils/pdf/pdf.util'
 import { getPatientFullName } from '../../utils/misc'
 import * as constants from './utils/constants'
 import { arrayBufferToBase64 } from './utils/functions'
@@ -53,7 +53,7 @@ export const utils = {
   SettingsPrintView
 }
 
-async function loadImagesViz() {
+async function loadImages() {
   const base64Flag = 'data:image/jpeg;base64,'
   let imageStr = ''
 
@@ -109,7 +109,7 @@ async function loadImagesViz() {
   }
 }
 
-async function loadFontsViz() {
+async function loadFonts() {
   if (i18next.language === 'ja') {
     if (constants.Fonts.ja.regular === null) {
       const response = await fetch(jaFontRegular)
@@ -296,10 +296,8 @@ export function createPrintPDFPackage(data, opts) {
 }
 
 async function doPrint(data, opts) {
-  await loadImagesViz()
-  // await loadImages()
-  await loadFontsViz()
-  // await loadFonts()
+  await loadImages()
+  await loadFonts()
   return createPrintPDFPackage(data, opts)
 }
 

@@ -50,16 +50,6 @@ interface Fonts {
   boldName: string
 }
 
-interface PageNumbersParams {
-  footerFontSize: number
-  margins: Margins
-  height: number
-}
-
-const LIGHT_GREY = '#979797'
-
-const t = i18next.t.bind(i18next)
-
 export const getFonts = (): Fonts => {
   const boldNamePath = `${i18next.language}.boldName`
   const regularNamePath = `${i18next.language}.regularName`
@@ -69,40 +59,6 @@ export const getFonts = (): Fonts => {
     regularName,
     boldName
   }
-}
-
-export const renderPageNumbers = (doc: PDFKit.PDFDocument, params: PageNumbersParams): void => {
-  const footerFontSize = params.footerFontSize ?? FOOTER_FONT_SIZE
-  const margins = params.margins ?? MARGINS
-  const height = params.height ?? HEIGHT
-  const pageCount = doc.bufferedPageRange().count
-  const fonts = getFonts()
-  const pageNumbers = Array.from(Array(pageCount).keys())
-  pageNumbers.forEach(value => {
-    renderPageNumber(doc, value, fonts.regularName, footerFontSize, margins, pageCount, height)
-  })
-}
-
-const renderPageNumber = (
-  doc: PDFKit.PDFDocument,
-  pageNumber: number,
-  fontName: string,
-  footerFontSize: number,
-  margins: Margins,
-  numberOfPages: number,
-  height: number
-): void => {
-  doc.switchToPage(pageNumber)
-  doc.font(fontName)
-    .fontSize(footerFontSize)
-    .fillColor(LIGHT_GREY)
-    .fillOpacity(1)
-  doc.text(
-    t('Page {{page}} of {{pageCount}}', { page: pageNumber + 1, pageCount: numberOfPages }),
-    margins.left,
-    (height + margins.top) - doc.currentLineHeight() * 1.5,
-    { align: 'right' }
-  )
 }
 
 export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth: number, layoutColumnType: LayoutColumnType, leftEdge: number, docY: number, gutter: number = 0): LayoutColumn[] => {
