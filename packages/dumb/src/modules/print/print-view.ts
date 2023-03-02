@@ -56,6 +56,7 @@ import { type BgBounds, type BgPrefs } from '../../models/blood-glucose.model'
 import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
 import { getFonts, getTextData } from './print-view.util'
 import { getPatientFullName } from '../../utils/patient/patient.util'
+import { type UnitsType } from '../../models/enums/units-type.enum'
 
 interface PageAddEvent {
   cancel: boolean
@@ -247,6 +248,7 @@ const t = i18next.t.bind(i18next)
 export class PrintView {
   bgBounds?: BgBounds
   bgPrefs: BgPrefs
+  bgUnits: UnitsType
   boldFont: string
   bottomEdge: number
   chartArea: ChartArea
@@ -287,6 +289,7 @@ export class PrintView {
     const fonts = getFonts()
     this.height = params.height ?? HEIGHT
     this.bgPrefs = params.bgPrefs
+    this.bgUnits = this.bgPrefs.bgUnits
     this.boldFont = fonts.boldName
     this.bottomEdge = params.margins.top + this.height
     this.currentPageIndex = -1
