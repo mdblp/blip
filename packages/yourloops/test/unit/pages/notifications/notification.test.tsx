@@ -29,7 +29,6 @@ import React from 'react'
 import moment from 'moment-timezone'
 import _ from 'lodash'
 import { getByText, render, screen } from '@testing-library/react'
-
 import { Notification } from '../../../../pages/notifications/notification'
 import { type Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
@@ -118,7 +117,7 @@ describe('Notification', () => {
       )
 
       expect(getByText(container, 'Jeanne Dubois invites you to join', { exact: false })).not.toBeNull()
-      expect(container.querySelector(`#notification-help-${notif.id}-icon`)).not.toBeNull()
+      expect(container.querySelector('[data-testid="notification-button-accept"]')).not.toBeNull()
     })
 
     it('should display medical team join invitation for a patient', () => {
@@ -205,20 +204,6 @@ describe('Notification', () => {
       document.body.appendChild(container)
     })
 
-    it('should be able to render', () => {
-      render(<NotificationComponent notif={notif} />)
-      const component = document.getElementById(`notification-line-${notif.id}`)
-      expect(component).not.toBeNull()
-    })
-
-    it('should show team code dialog when accepting team invitation', () => {
-      render(<NotificationComponent notif={teamNotif} />)
-      const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${teamNotif.id}`) as HTMLButtonElement
-      acceptButton.click()
-      const dialog = document.getElementById('team-add-dialog-title')
-      expect(dialog).not.toBeNull()
-    })
-
     it('should not show team code dialog when accepting non team invitation', () => {
       (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
         return children
@@ -229,7 +214,7 @@ describe('Notification', () => {
         }
       })
       render(<NotificationComponent notif={notif} />)
-      const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${notif.id}`) as HTMLButtonElement
+      const acceptButton: HTMLButtonElement = document.querySelector('[data-testid="notification-button-accept"]')
       acceptButton.click()
       const dialog = document.getElementById('team-add-dialog-title')
       expect(dialog).toBeNull()

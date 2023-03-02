@@ -178,7 +178,7 @@ describe('HCP home page', () => {
     fireEvent.mouseDown(within(select).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
-    const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient already shared their data with the team.')
+    const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient is already sharing data with the team.')
     expect(alreadyInTeamErrorMessage).toBeVisible()
     expect(invitePatientButton).toBeDisabled()
 
