@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invita
 import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
-import CustomSpinningLoader from '../../../components/loaders/custom-spinning-loader'
+import SpinningLoader from '../../../components/loaders/spinning-loader'
 
 const log = bows('PatientCaregiversPage')
 
@@ -148,7 +148,7 @@ function PatientCaregiversPage(): JSX.Element {
   return (
     <>
       {!caregivers
-        ? <CustomSpinningLoader className="centered-spinning-loader" />
+        ? <SpinningLoader className="centered-spinning-loader" />
         : <>
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">

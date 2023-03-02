@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,7 +49,7 @@ import { type ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
 import { TeamType } from './models/enums/team-type.enum'
-import CustomSpinningLoader from '../../components/loaders/custom-spinning-loader'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
@@ -232,7 +232,7 @@ export const TeamContextProvider: FunctionComponent<PropsWithChildren> = ({ chil
   const context = TeamContextImpl()
   return context.initialized
     ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
-    : <CustomSpinningLoader className="centered-spinning-loader" />
+    : <SpinningLoader className="centered-spinning-loader" />
 }
 
 export const useTeam = (): TeamContext => {

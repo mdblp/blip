@@ -41,7 +41,7 @@ import FileChartOutlinedIcon from '../../icons/file-chart-outlined-icon'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { type CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
-import CustomSpinningLoader from '../../loaders/custom-spinning-loader'
+import SpinningLoader from '../../loaders/spinning-loader'
 import { type Prescription } from '../../../lib/medical-files/models/prescription.model'
 
 const useStyle = makeStyles()((theme: Theme) => ({
@@ -126,7 +126,7 @@ const PrescriptionList: FunctionComponent<CategoryProps> = ({ teamId, patientId 
             </ListItem>
           ))}
         </List>
-        : <CustomSpinningLoader size={20} />
+        : <SpinningLoader size={20} />
       }
 
     </React.Fragment>

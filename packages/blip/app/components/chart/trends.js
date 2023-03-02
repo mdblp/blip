@@ -32,7 +32,7 @@ import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
-import CustomSpinningLoader from 'yourloops/components/loaders/custom-spinning-loader'
+import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -564,7 +564,7 @@ class Trends extends React.Component {
               <div className="container-box-inner patient-data-content-inner">
                 {this.renderSubNav()}
                 <div className="patient-data-content">
-                  {loading && <CustomSpinningLoader className="centered-spinning-loader" />}
+                  {loading && <SpinningLoader className="centered-spinning-loader" />}
                   <div id="tidelineContainer" className="patient-data-chart-trends">
                     {this.renderChart()}
                   </div>

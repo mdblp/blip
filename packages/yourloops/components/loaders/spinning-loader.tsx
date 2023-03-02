@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useEffect, useRef } from 'react'
-import LottieCustomLoaderJson from './lottie-custom-loader.json'
+import LottieCustomLoaderJson from './lottie-spinning-loader.json'
 import Lottie from 'lottie-react'
 import Box from '@mui/material/Box'
 
@@ -60,6 +60,6 @@ const Loader: FunctionComponent<CenteredSpinningLoaderProps> = ({ size = 40, cla
   )
 }
 
-const CustomSpinningLoader = React.memo(Loader)
+const SpinningLoader = React.memo(Loader)
 
-export default CustomSpinningLoader
+export default SpinningLoader

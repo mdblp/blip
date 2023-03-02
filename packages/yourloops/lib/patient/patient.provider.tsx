@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
 import usePatientProviderCustomHook from './patient.hook'
 import { type PatientContextResult } from './models/patient-context-result.model'
-import CustomSpinningLoader from '../../components/loaders/custom-spinning-loader'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
 
@@ -37,7 +37,7 @@ export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children
 
   return patientProviderCustomHook.initialized
     ? <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
-    : <CustomSpinningLoader className="centered-spinning-loader" />
+    : <SpinningLoader className="centered-spinning-loader" />
 }
 
 export function usePatientContext(): PatientContextResult {

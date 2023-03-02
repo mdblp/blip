@@ -43,7 +43,7 @@ import SwitchRoleDialogs from '../../components/switch-role'
 
 import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { Notification } from './notification'
-import CustomSpinningLoader from '../../components/loaders/custom-spinning-loader'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Theme) => ({
   homeIcon: {
@@ -122,7 +122,7 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
           </List>
           {switchRoleOpen && <SwitchRoleDialogs onCancel={handleSwitchRoleCancel} />}
         </Container>
-        : <CustomSpinningLoader className="centered-spinning-loader" />
+        : <SpinningLoader className="centered-spinning-loader" />
       }
     </>
   )

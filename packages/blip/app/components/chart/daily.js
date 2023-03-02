@@ -43,7 +43,7 @@ import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-pi
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import Stats from './stats'
-import CustomSpinningLoader from 'yourloops/components/loaders/custom-spinning-loader'
+import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -340,7 +340,7 @@ class Daily extends React.Component {
           <Box display="flex">
             <div className="container-box-inner patient-data-content-inner">
               <div className="patient-data-content">
-                {loading && <CustomSpinningLoader className="centered-spinning-loader" />}
+                {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
                   loading={loading}
                   bgClasses={this.props.bgPrefs.bgClasses}

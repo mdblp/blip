@@ -37,7 +37,7 @@ import Messages from './messages'
 import { PatientNavBarMemoized as PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
 import ChartType from 'yourloops/enum/chart-type.enum'
 import { PatientDashboard } from 'yourloops/components/dashboard-widgets/patient-dashboard'
-import CustomSpinningLoader from 'yourloops/components/loaders/custom-spinning-loader'
+import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 
 const { waitTimeout } = utils
 const { DataUtil } = vizUtils.data
@@ -195,7 +195,7 @@ class PatientDataPage extends React.Component {
         break
       case LOADING_STATE_INITIAL_FETCH:
       case LOADING_STATE_INITIAL_PROCESS:
-        loader = <CustomSpinningLoader className="centered-spinning-loader" />
+        loader = <SpinningLoader className="centered-spinning-loader" />
         break
       default:
         if (errorMessage === 'no-data') {
