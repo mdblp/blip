@@ -34,223 +34,71 @@ import PdfTableFitColumn from 'voilab-pdf-table/plugins/fitcolumn'
 import { formatBirthdate, formatCurrentDate, formatDateRange } from '../../utils/datetime/datetime.util'
 
 import {
-  DEFAULT_FONT_SIZE,
-  DEFAULT_OPACITY,
-  DIVIDER_WIDTH,
-  EXTRA_SMALL_FONT_SIZE,
+  DPI,
   FOOTER_FONT_SIZE,
-  HEADER_FONT_SIZE,
   HEIGHT,
   IMAGES,
-  LARGE_FONT_SIZE,
-  LOGO_WIDTH,
-  MARGINS,
-  PADDING_PATIENT_INFO,
-  SMALL_FONT_SIZE,
-  WIDTH,
-  ZEBRA_COLOR,
-  ZEBRA_ODD_COLOR
+  MARGIN,
+  MARGINS
 } from '../../models/constants/pdf.constants'
 import { type TimePrefs } from 'medical-domain'
 import { type BgBounds, type BgPrefs } from '../../models/blood-glucose.model'
-import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
 import { getFonts, getTextData } from './print-view.util'
 import { getPatientFullName } from '../../utils/patient/patient.util'
 import { type UnitsType } from '../../models/enums/units-type.enum'
+import {
+  type PdfDocumentOverridden,
+  type PdfTableColumnOverridden,
+  type PdfTableConfigOverridden,
+  type PdfTableOverridden
+} from '../../models/print/pdf-override.model'
+import {
+  type Row,
+  type Table,
+  type TableColumn,
+  type TableHeading,
+  type TableSettings
+} from '../../models/print/pdf-table.model'
+import { type Position } from '../../models/print/position.model'
+import { type ChartArea } from '../../models/print/chart-area.model'
+import { type PdfData } from '../../models/print/pdf-data.model'
+import { type Margins } from '../../models/print/margins.model'
+import { type SectionHeading } from '../../models/print/section-heading.model'
+import { type Patient } from '../../models/print/patient.model'
+import { type PatientInfoBox } from '../../models/print/patient-info-box.model'
+import { type PrintViewParams } from '../../models/print/print-view-params.model'
+import { type Padding } from '../../models/print/padding.model'
+import { type PageAddEvent } from '../../models/print/page-add-event.model'
+import { type CellStripe } from '../../models/print/cell-stripe.model'
+import { type Colors } from '../../models/print/colors.model'
 
-interface PageAddEvent {
-  cancel: boolean
-}
+const PADDING_PATIENT_INFO = 10
 
-export enum LayoutColumnType {
-  Percentage = 'percentage',
-  Equal = 'equal'
-}
-
-interface TableHeading {
-  note?: string
-  subText?: string
-  text: string
-}
-
-export interface Padding {
-  left?: number
-  right?: number
-  top: number
-}
-
-export interface Position {
-  x: number
-  y: number
-}
-
-interface FillStripe {
-  background: boolean
-  color: string
-  opacity: number
-  padding: number
-  width: number
-}
-
-export interface TableColumn {
-  align: string
-  fillStripe: FillStripe
-  font: string
-  fontSize: number
-  header: TableHeading
-  headerAlign: string
-  headerFillStripe: FillStripe
-  headerFont: string
-  headerHeight: number
-  height: number
-  id: keyof Table
-  noteFontSize: number
-  valign: string
-  width: number
-}
-
-interface CellStripe {
-  background: boolean
-  width: number
-}
-
-interface SectionHeading {
-  align: string
-  font: string
-  fontSize: number
-  moveDown: number
-  xPos: number
-  yPos: number
-}
-
-export interface LayoutColumn {
-  x: number
-  y: number
-  width: number
-}
-
-interface Margins {
-  bottom: number
-  left: number
-  top: number
-  right: number
-}
-
-interface Patient {
-  profile: {
-    birthday: string
-    fullName: string
-  }
-}
-
-export type Table = {
-  _fill?: { color: string, opacity: number }
-  _fillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
-  _headerFillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
-  _renderedContent?: { height: number }
-  column: string
-  heading: TableHeading
-  note?: number
-} & Record<string, string>
-
-export type Row = Table
-
-export interface PrintViewParams {
-  bgPrefs: BgPrefs
-  defaultFontSize: number
-  extraSmallFontSize: number
-  footerFontSize: number
-  headerFontSize: number
-  height: number
-  largeFontSize: number
-  margins: Margins
-  patient: Patient
-  smallFontSize: number
-  timePrefs: TimePrefs
-  title: string
-  width: number
-}
-
-interface PdfData {
-  basics?: BasicData
-}
-
-interface PdfTableExtra {
-  bottomMargin: number
-  pos: Position
-}
-
-interface PdfTableColumnExtra {
-  borderColor?: string
-  font: string
-  fontSize: number
-  zebra?: boolean
-}
-
-interface PdfDocumentExtra {
-  _font?: {
-    name: string
-  }
-  _fontSize?: number
-}
-
-interface PdfTableConfigExtra {
-  columnsDefaults: {
-    zebra: boolean
-  }
-  font: string
-  fontSize: number
-  flexColumn: string
-}
-
-interface PatientInfoBox {
-  height: number
-  width: number
-}
-
-interface Colors {
-  basal: string
-  grey: string
-  lightGrey: string
-}
-
-interface TableSettings {
-  borderWidth: number
-  colors: {
-    border: string
-    tableHeader: string
-    zebraEven: string
-    zebraHeader: string
-    zebraOdd: string
-  }
-}
-
-interface ChartArea {
-  bottomEdge: number
-  leftEdge: number
-  topEdge: number
-  width: number
-}
-
-type PdfTableOverridden = PdfTable<Table> & PdfTableExtra
-type PdfTableColumnOverridden = VoilabPdfTable.VoilabPdfTableColumn<Table> & PdfTableColumnExtra
-type PdfDocumentOverridden = PDFKit.PDFDocument & PdfDocumentExtra
-type PdfTableConfigOverridden = VoilabPdfTable.VoilabPdfTableConfig<Table> & PdfTableConfigExtra
-
-const PAGE_ADDED = 'pageAdded'
-const WHITE = 'white'
-const BLACK = 'black'
-const LEFT = 'left'
-const CENTER = 'center'
-const HEADING_COLUMN_ID = 'heading'
 const APP_URL = `${window.location.protocol}//${window.location.hostname}/`
-const PATIENT_FULL_NAME_MAX_LENGTH = 32
-const LINE_HEIGHT_REFERENCE_FONT_SIZE = 14
-const PATIENT_INFO_LINE_WIDTH = 1
-const PATIENT_INFO_LINE_GAP = 2
-const DEFAULT_STRIPE_WIDTH = 6
-const TABLE_BOTTOM_MARGIN = 20
+const BLACK = 'black'
+const CENTER = 'center'
 const COLUMN_DEFAULT_PADDING = [7, 5, 3, 5]
+const DEFAULT_FONT_SIZE = 10
+const DEFAULT_OPACITY = 1
+const DEFAULT_STRIPE_WIDTH = 6
+const DIVIDER_WIDTH = PADDING_PATIENT_INFO * 2 + 1
+const EXTRA_SMALL_FONT_SIZE = 6
+const HEADER_FONT_SIZE = 14
+const HEADING_COLUMN_ID = 'heading'
+const LARGE_FONT_SIZE = 12
+const LEFT = 'left'
+const LINE_HEIGHT_REFERENCE_FONT_SIZE = 14
+const LOGO_WIDTH = 80
+const PAGE_ADDED = 'pageAdded'
+const PATIENT_FULL_NAME_MAX_LENGTH = 32
+const PATIENT_INFO_LINE_GAP = 2
+const PATIENT_INFO_LINE_WIDTH = 1
+const SMALL_FONT_SIZE = 8
+const TABLE_BOTTOM_MARGIN = 20
+const WHITE = 'white'
+const WIDTH = 8.5 * DPI - (2 * MARGIN)
+const ZEBRA_COLOR = '#FAFAFA'
+const ZEBRA_ODD_COLOR = '#FFFFFF'
 
 const t = i18next.t.bind(i18next)
 

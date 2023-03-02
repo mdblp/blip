@@ -27,46 +27,23 @@
 
 // DPI here is the coordinate system, not the resolution; sub-dot precision renders crisply!
 import { arrayBufferToBase64 } from '../../utils/encoder/encoder.util'
+import { type Margins } from '../print/margins.model'
+import { type ImagesModel } from '../print/images.model'
 
 export const DPI = 72
 export const MARGIN = DPI / 2
 export const HEIGHT = 11 * DPI - (2 * MARGIN)
-export const WIDTH = 8.5 * DPI - (2 * MARGIN)
-export const LOGO_WIDTH = 80
-export const PADDING_PATIENT_INFO = 10
-export const DIVIDER_WIDTH = PADDING_PATIENT_INFO * 2 + 1
 
-interface Margins {
-  left: number
-  top: number
-  right: number
-  bottom: number
-}
 export const MARGINS: Margins = {
   left: MARGIN,
   top: MARGIN,
   right: MARGIN,
   bottom: MARGIN
 }
-export const DEFAULT_FONT_SIZE = 10
-export const LARGE_FONT_SIZE = 12
+
 export const FOOTER_FONT_SIZE = 8
-export const HEADER_FONT_SIZE = 14
-export const SMALL_FONT_SIZE = 8
-export const EXTRA_SMALL_FONT_SIZE = 6
-export const DEFAULT_OPACITY = 1
-export const ZEBRA_COLOR = '#FAFAFA'
-export const ZEBRA_ODD_COLOR = '#FFFFFF'
 
 export const BASE_64_FLAG = 'data:image/jpeg;base64,'
-
-interface ImagesModel {
-  logo?: string
-  siteChangeCannulaImage?: string
-  siteChangeReservoirImage?: string
-  siteChangeTubingImage?: string
-  siteChangeReservoirDiabeloopImage?: string
-}
 
 const buildImages = async (): Promise<ImagesModel> => {
   if (window.config) {

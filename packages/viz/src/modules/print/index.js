@@ -268,7 +268,12 @@ export function createPrintPDFPackage(data, opts) {
       if (data.daily) createPrintView('daily', data.daily, pdfOpts, doc).render()
       if (data.settings) createPrintView('settings', data.settings, pdfOpts, doc).render()
 
-      renderPageNumbers(doc, pdfOpts)
+      const renderPageParams = {
+        footerFontSize: pdfOpts.footerFontSize,
+        margins: pdfOpts.margins,
+        height: pdfOpts.height
+      }
+      renderPageNumbers(doc, renderPageParams)
 
       doc.end()
 

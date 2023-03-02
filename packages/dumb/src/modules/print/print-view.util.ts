@@ -28,14 +28,9 @@ import _ from 'lodash'
 import i18next from 'i18next'
 
 import { FONTS, FOOTER_FONT_SIZE, HEIGHT, MARGINS } from '../../models/constants/pdf.constants'
-import {
-  type LayoutColumn,
-  LayoutColumnType,
-  type PrintViewParams,
-  type Row,
-  type Table,
-  type TableColumn
-} from './print-view'
+import { LayoutColumnType } from '../../models/enums/layout-column-type.enum'
+import { type Row, type TableColumn } from '../../models/print/pdf-table.model'
+import { type LayoutColumn } from '../../models/print/layout-column.model'
 
 interface TableHeading {
   text: string
@@ -55,6 +50,12 @@ interface Fonts {
   boldName: string
 }
 
+interface PageNumbersParams {
+  footerFontSize: number
+  margins: Margins
+  height: number
+}
+
 const LIGHT_GREY = '#979797'
 
 const t = i18next.t.bind(i18next)
@@ -70,10 +71,10 @@ export const getFonts = (): Fonts => {
   }
 }
 
-export const renderPageNumbers = (doc: PDFKit.PDFDocument, opts: PrintViewParams): void => {
-  const footerFontSize = opts.footerFontSize ?? FOOTER_FONT_SIZE
-  const margins = opts.margins ?? MARGINS
-  const height = opts.height ?? HEIGHT
+export const renderPageNumbers = (doc: PDFKit.PDFDocument, params: PageNumbersParams): void => {
+  const footerFontSize = params.footerFontSize ?? FOOTER_FONT_SIZE
+  const margins = params.margins ?? MARGINS
+  const height = params.height ?? HEIGHT
   const pageCount = doc.bufferedPageRange().count
   const fonts = getFonts()
   const pageNumbers = Array.from(Array(pageCount).keys())
