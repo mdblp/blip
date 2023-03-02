@@ -147,7 +147,8 @@ export function createPrintView(type, data, opts, doc) {
     dpi,
     width,
     height,
-    margins
+    margins,
+    logo
   } = opts
 
   let Renderer
@@ -161,6 +162,7 @@ export function createPrintView(type, data, opts, doc) {
     headerFontSize: constants.HEADER_FONT_SIZE,
     height: height ?? constants.HEIGHT,
     margins: margins ?? constants.MARGINS,
+    logo,
     patient,
     smallFontSize: constants.SMALL_FONT_SIZE,
     timePrefs,
@@ -230,6 +232,7 @@ export function createPrintPDFPackage(data, opts) {
         right: margin,
         bottom: margin
       }
+      pdfOpts.logo = constants.Images.logo
 
       const mReportDate = moment.tz(opts.endPDFDate, opts.timePrefs.timezoneName)
       const reportDate = mReportDate.format('YYYY-MM-DD')

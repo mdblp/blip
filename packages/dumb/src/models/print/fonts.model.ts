@@ -25,24 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgPrefs } from '../blood-glucose.model'
-import { type Margins } from './margins.model'
-import { type Patient } from './patient.model'
-import { type TimePrefs } from 'medical-domain'
-
-export interface PrintViewParams {
-  bgPrefs: BgPrefs
-  defaultFontSize: number
-  extraSmallFontSize: number
-  footerFontSize: number
-  headerFontSize: number
-  height: number
-  largeFontSize: number
-  logo: string
-  margins: Margins
-  patient: Patient
-  smallFontSize: number
-  timePrefs: TimePrefs
-  title: string
-  width: number
+export interface Fonts {
+  regularName: string
+  boldName: string
 }

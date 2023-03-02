@@ -33,14 +33,7 @@ import PdfTableFitColumn from 'voilab-pdf-table/plugins/fitcolumn'
 
 import { formatBirthdate, formatCurrentDate, formatDateRange } from '../../utils/datetime/datetime.util'
 
-import {
-  DPI,
-  FOOTER_FONT_SIZE,
-  HEIGHT,
-  IMAGES,
-  MARGIN,
-  MARGINS
-} from '../../models/constants/pdf.constants'
+import { DPI, FOOTER_FONT_SIZE, HEIGHT, MARGIN, MARGINS } from '../../models/constants/pdf.constants'
 import { type TimePrefs } from 'medical-domain'
 import { type BgBounds, type BgPrefs } from '../../models/blood-glucose.model'
 import { getFonts, getTextData } from './print-view.util'
@@ -125,6 +118,7 @@ export class PrintView {
   timePrefs: TimePrefs
   totalPages: number
   width: number
+  #logo: string
   #table?: PdfTableOverridden
   #titleWidth?: number
   readonly #footerFontSize: number
@@ -137,6 +131,7 @@ export class PrintView {
     this.#title = params.title
     this.#footerFontSize = params.footerFontSize ?? FOOTER_FONT_SIZE
     this.#headerFontSize = params.headerFontSize ?? HEADER_FONT_SIZE
+    this.#logo = params.logo
     this.#patient = params.patient
     this.#patientInfoBox = {
       width: 0,
@@ -585,7 +580,7 @@ export class PrintView {
     const xOffset = this.doc.page.width - LOGO_WIDTH - this.margins.right
     const yOffset = this.margins.top
 
-    this.doc.image(IMAGES.logo, xOffset, yOffset, { width: LOGO_WIDTH })
+    this.doc.image(this.#logo, xOffset, yOffset, { width: LOGO_WIDTH })
   }
 
   #renderHeader(dateText: string): void {

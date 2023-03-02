@@ -26,28 +26,24 @@
  */
 import _ from 'lodash'
 import i18next from 'i18next'
-
-import { FONTS, FOOTER_FONT_SIZE, HEIGHT, MARGINS } from '../../models/constants/pdf.constants'
 import { LayoutColumnType } from '../../models/enums/layout-column-type.enum'
-import { type Row, type TableColumn } from '../../models/print/pdf-table.model'
+import { type Row, type TableColumn, type TableHeading } from '../../models/print/pdf-table.model'
 import { type LayoutColumn } from '../../models/print/layout-column.model'
+import { type Fonts } from '../../models/print/fonts.model'
 
-interface TableHeading {
-  text: string
-  subText?: string
-  note?: string
-}
-
-interface Margins {
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
-
-interface Fonts {
-  regularName: string
-  boldName: string
+export const FONTS = {
+  default: {
+    regularName: 'Helvetica',
+    regular: false, // Be sure it is evaluated to false for default western font
+    boldName: 'Helvetica-Bold',
+    bold: false
+  },
+  ja: {
+    regular: null,
+    regularName: 'jaFontRegular',
+    bold: null,
+    boldName: 'jaFontBold'
+  }
 }
 
 export const getFonts = (): Fonts => {

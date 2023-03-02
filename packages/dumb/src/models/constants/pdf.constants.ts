@@ -26,7 +26,6 @@
  */
 
 import { type Margins } from '../print/margins.model'
-import { buildPdfImages } from '../../utils/pdf/pdf.util'
 
 // DPI here is the coordinate system, not the resolution; sub-dot precision renders crisply!
 export const DPI = 72
@@ -40,21 +39,4 @@ export const MARGINS: Margins = {
   top: MARGIN,
   right: MARGIN,
   bottom: MARGIN
-}
-
-export const IMAGES = await buildPdfImages()
-
-export const FONTS = {
-  default: {
-    regularName: 'Helvetica',
-    regular: false, // Be sure it is evaluated to false for default western font
-    boldName: 'Helvetica-Bold',
-    bold: false
-  },
-  ja: {
-    regular: null,
-    regularName: 'jaFontRegular',
-    bold: null,
-    boldName: 'jaFontBold'
-  }
 }
