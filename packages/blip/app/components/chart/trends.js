@@ -99,7 +99,6 @@ class Trends extends React.Component {
     patient: PropTypes.object,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
-    trendsState: PropTypes.object.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
     onDatetimeLocationChange: PropTypes.func.isRequired,
@@ -190,12 +189,6 @@ class Trends extends React.Component {
     const loadingDone = !this.props.loading && prevProps.loading
     const dateUpdated = !this.state.updatingDates && prevState.updatingDates
 
-    // this.log.debug("componentDidUpdate", {
-    //   locationChanged,
-    //   filtersChanged,
-    //   loadingDone,
-    //   dateUpdated,
-    // });
     if (locationChanged || dateUpdated) {
       this.updateAtMostRecent()
       const localDates = this.getDisplayedLocalDates()
@@ -555,16 +548,8 @@ class Trends extends React.Component {
   render() {
     const {
       chartPrefs,
-      trendsState,
-      loading,
-      patient
+      loading
     } = this.props
-
-    const currentPatientInViewId = patient.userid
-
-    if (!_.get(trendsState, currentPatientInViewId)) {
-      return <CustomSpinningLoader className="centered-spinning-loader" />
-    }
 
     const endpoints = this.getEndpoints()
 
@@ -648,7 +633,6 @@ class Trends extends React.Component {
           bgBounds: this.bgBounds,
           bgUnits: this.props.bgPrefs.bgUnits
         }}
-        currentPatientInViewId={this.props.patient.userid}
         loading={this.props.loading}
         // data
         medicalData={this.props.tidelineData}

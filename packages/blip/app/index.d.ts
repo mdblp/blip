@@ -51,10 +51,6 @@ interface BlipProperties {
   dialogPDFOptions: typeof DialogPDFOptions;
 }
 
-// FIXME: For some reason, the yourloops auth hook
-// don't like this export.
-declare function cleanStore(): void;
-
 export {
   BlipProperties,
   BlipApi,
@@ -66,8 +62,7 @@ export {
   PatientData,
   MessageNote,
   GetPatientDataOptions,
-  GetPatientDataOptionsV0,
-  cleanStore
+  GetPatientDataOptionsV0
 }
 
 declare function Blip(props: BlipProperties): JSX.Element;
