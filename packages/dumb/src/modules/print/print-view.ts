@@ -347,8 +347,8 @@ export class PrintView {
     this.currentPageIndex++
     this.totalPages++
 
-    this.renderHeader(dateText)
-    this.renderFooter()
+    this.#renderHeader(dateText)
+    this.#renderFooter()
     this.doc.x = this.chartArea.leftEdge
     this.doc.y = this.chartArea.topEdge
 
@@ -359,16 +359,7 @@ export class PrintView {
       .font(currentFont.name)
       .fontSize(currentFont.size)
 
-    this.updateUnfinishedTablePosition()
-  }
-
-  updateUnfinishedTablePosition(): void {
-    if (this.#table?.pos) {
-      const xPos = this.chartArea.leftEdge
-      this.doc.x = this.#table.pos.x = xPos
-      this.doc.y = this.#table.pos.y = this.chartArea.topEdge
-      this.#table.pdf.lineWidth(this.tableSettings.borderWidth)
-    }
+    this.#updateUnfinishedTablePosition()
   }
 
   getDateRange(startDate: string, endDate: string, format: string, timezone: string | undefined): string {
@@ -415,62 +406,13 @@ export class PrintView {
     this.doc.moveDown(moveDown)
   }
 
-  renderCellStripe(data: Table, column: TableColumn, pos: Position, isHeader = false): CellStripe {
-    const height = (isHeader ? column.headerHeight : column.height) ?? column.height ?? data._renderedContent?.height ?? 0
-
-    const stripe = {
-      width: 0,
-      height,
-      padding: 0,
-      color: this.colors.grey,
-      opacity: 1,
-      background: false
-    }
-
-    const fillStripe = isHeader ? (data._headerFillStripe ?? column.headerFillStripe) : (data._fillStripe ?? column.fillStripe)
-    if (!fillStripe) {
-      return stripe
-    }
-
-    stripe.color = fillStripe.color ?? this.colors.grey
-    stripe.opacity = fillStripe.opacity ?? 1
-    stripe.width = fillStripe.width ?? 6
-    stripe.background = fillStripe.background ?? false
-    stripe.padding = fillStripe.padding ?? 0
-    this.setFill(stripe.color, stripe.opacity)
-
-    const xPos = pos.x + 0.25 + stripe.padding
-    const yPos = pos.y + 0.25 + stripe.padding
-    const stripeWidth = stripe.width
-    const stripeHeight = stripe.height - 0.5 - (2 * stripe.padding)
-
-    if (stripe.width > 0) {
-      this.doc
-        .rect(xPos, yPos, stripeWidth, stripeHeight)
-        .fill()
-    }
-
-    this.setFill()
-
-    return stripe
-  }
-
-  computeCellYPosition(pos: Position, padding: Padding, column: TableColumn, width: number, height: number, text: string): number {
-    const basicPosition = pos.y + padding.top
-    if (column.valign === CENTER) {
-      const textHeight = this.doc.heightOfString(text, { width })
-      return basicPosition + (height - textHeight) / 2 + 1
-    }
-    return basicPosition
-  }
-
   renderCustomTextCell(tb: VoilabPdfTable<Table>, row: Table, draw: boolean, column: TableColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
     if (!draw) {
       return ' '
     }
 
     const { text, subText, note } = getTextData(row, column, isHeader)
-    const cellStripe = this.renderCellStripe(row, column, pos, isHeader)
+    const cellStripe = this.#renderCellStripe(row, column, pos, isHeader)
 
     const align = (isHeader ? column.headerAlign : column.align) ?? LEFT
     const stripeOffset = cellStripe.background ? 0 : cellStripe.width
@@ -486,7 +428,7 @@ export class PrintView {
       .font(font)
       .fontSize(fontSize)
 
-    const yPos = this.computeCellYPosition(pos, padding, column, width, height, text)
+    const yPos = this.#computeCellYPosition(pos, padding, column, width, height, text)
 
     this.doc.text(text, xPos, yPos, { continued: !!subText, align, width })
 
@@ -568,7 +510,7 @@ export class PrintView {
       }))
     }
 
-    table.onPageAdd(this.onPageAdd.bind(this))
+    table.onPageAdd(this.#onPageAdd.bind(this))
 
     table.onPageAdded((tb /*, row */) => {
       if (pdfTableConfig.showHeaders) {
@@ -576,17 +518,17 @@ export class PrintView {
       }
     })
 
-    table.onCellBackgroundAdd(this.onCellBackgroundAdd.bind(this))
+    table.onCellBackgroundAdd(this.#onCellBackgroundAdd.bind(this))
 
-    table.onCellBackgroundAdded(this.onCellBackgroundAdded.bind(this))
+    table.onCellBackgroundAdded(this.#onCellBackgroundAdded.bind(this))
 
-    table.onCellBorderAdd(this.onCellBorderAdd.bind(this))
+    table.onCellBorderAdd(this.#onCellBorderAdd.bind(this))
 
-    table.onCellBorderAdded(this.onCellBorderAdded.bind(this))
+    table.onCellBorderAdded(this.#onCellBorderAdded.bind(this))
 
-    table.onRowAdded(this.onRowAdded.bind(this))
+    table.onRowAdded(this.#onRowAdded.bind(this))
 
-    table.onBodyAdded(this.onBodyAdded.bind(this))
+    table.onBodyAdded(this.#onBodyAdded.bind(this))
 
     table
       .setColumnsDefaults(pdfTableConfig.columnsDefaults)
@@ -594,7 +536,28 @@ export class PrintView {
       .addBody(rows)
   }
 
-  onPageAdd(table: VoilabPdfTable<Table>, row: Table, event: PageAddEvent): void {
+  setFooterSize(): void {
+    this.doc.fontSize(this.#footerFontSize)
+    const lineHeight = this.doc.currentLineHeight()
+    this.chartArea.bottomEdge = this.chartArea.bottomEdge - lineHeight * 9
+  }
+
+  setHeaderSize(): void {
+    this.doc.fontSize(this.#headerFontSize)
+    const lineHeight = this.doc.currentLineHeight()
+    this.chartArea.topEdge = this.chartArea.topEdge + lineHeight * 4
+  }
+
+  #computeCellYPosition(pos: Position, padding: Padding, column: TableColumn, width: number, height: number, text: string): number {
+    const basicPosition = pos.y + padding.top
+    if (column.valign === CENTER) {
+      const textHeight = this.doc.heightOfString(text, { width })
+      return basicPosition + (height - textHeight) / 2 + 1
+    }
+    return basicPosition
+  }
+
+  #onPageAdd(table: VoilabPdfTable<Table>, row: Table, event: PageAddEvent): void {
     const currentPageIndex = this.initialTotalPages + this.currentPageIndex
 
     if (currentPageIndex + 1 === this.totalPages) {
@@ -602,14 +565,14 @@ export class PrintView {
     } else {
       this.currentPageIndex++
       table.pdf.switchToPage(this.initialTotalPages + this.currentPageIndex)
-      this.updateUnfinishedTablePosition()
+      this.#updateUnfinishedTablePosition()
     }
 
     // cancel event so the automatic page add is not triggered
     event.cancel = true
   }
 
-  onBodyAdded(table: PdfTableOverridden): void {
+  #onBodyAdded(table: PdfTableOverridden): void {
     // Restore x position after table is drawn
     this.doc.x = table.pos.x ?? this.doc.page.margins.left
 
@@ -617,7 +580,7 @@ export class PrintView {
     this.doc.y += table.bottomMargin
   }
 
-  computeCellBackgroundColor(fillDefined: boolean, zebra: boolean, isHeader: boolean, isEven: boolean): string {
+  #computeCellBackgroundColor(fillDefined: boolean, zebra: boolean, isHeader: boolean, isEven: boolean): string {
     if (!fillDefined && zebra) {
       if (isHeader) {
         return this.tableSettings.colors.zebraHeader
@@ -630,7 +593,7 @@ export class PrintView {
     return WHITE
   }
 
-  computeCellOpacity(fillDefined: boolean, zebra: boolean, isEven: boolean): number {
+  #computeCellOpacity(fillDefined: boolean, zebra: boolean, isEven: boolean): number {
     if (!fillDefined) {
       return 1
     } else {
@@ -638,7 +601,7 @@ export class PrintView {
     }
   }
 
-  onCellBackgroundAdd(table: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>, row: Table, index: number, isHeader: boolean): void {
+  #onCellBackgroundAdd(table: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>, row: Table, index: number, isHeader: boolean): void {
     const {
       fill,
       headerFill,
@@ -651,8 +614,8 @@ export class PrintView {
 
     if (fillKey) {
       const fillDefined = _.isPlainObject(fillKey)
-      const color = this.computeCellBackgroundColor(fillDefined, !!zebra, isHeader, isEven)
-      const opacity = this.computeCellOpacity(fillDefined, !!zebra, isEven)
+      const color = this.#computeCellBackgroundColor(fillDefined, !!zebra, isHeader, isEven)
+      const opacity = this.#computeCellOpacity(fillDefined, !!zebra, isEven)
 
       this.setFill(color, opacity)
     }
@@ -663,24 +626,24 @@ export class PrintView {
     }
   }
 
-  onCellBackgroundAdded(): void {
+  #onCellBackgroundAdded(): void {
     this.setFill()
   }
 
-  onCellBorderAdd(tb: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>): void {
+  #onCellBorderAdd(tb: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
     this.setStroke((column as PdfTableColumnOverridden).borderColor ?? BLACK, DEFAULT_OPACITY)
   }
 
-  onCellBorderAdded(): void {
+  #onCellBorderAdded(): void {
     this.setStroke()
   }
 
-  onRowAdded(): void {
+  #onRowAdded(): void {
     this.resetText()
   }
 
-  renderPatientInfo(): void {
+  #renderPatientInfo(): void {
     const patientName = _.truncate(getPatientFullName(this.#patient), { length: 32 })
     const patientBirthdate = formatBirthdate(this.#patient.profile.birthday ?? '')
     const xOffset = this.margins.left
@@ -714,7 +677,7 @@ export class PrintView {
       .stroke(BLACK)
   }
 
-  renderTitle(): void {
+  #renderTitle(): void {
     const lineHeight = this.doc.fontSize(14).currentLineHeight()
     const xOffset = this.margins.left + this.#patientInfoBox.width + 21
     const yOffset = this.margins.top + (this.#patientInfoBox.height - this.margins.top) / 2 - lineHeight / 2
@@ -727,7 +690,7 @@ export class PrintView {
     this.#titleWidth = this.doc.widthOfString(title)
   }
 
-  renderDateText(dateText = ''): void {
+  #renderDateText(dateText = ''): void {
     const lineHeight = this.doc.fontSize(14).currentLineHeight()
 
     const elements = [
@@ -763,21 +726,21 @@ export class PrintView {
       })
   }
 
-  renderLogo(): void {
+  #renderLogo(): void {
     const xOffset = this.doc.page.width - LOGO_WIDTH - this.margins.right
     const yOffset = this.margins.top
 
     this.doc.image(IMAGES.logo, xOffset, yOffset, { width: LOGO_WIDTH })
   }
 
-  renderHeader(dateText: string): void {
-    this.renderPatientInfo()
+  #renderHeader(dateText: string): void {
+    this.#renderPatientInfo()
 
-    this.renderTitle()
+    this.#renderTitle()
 
-    this.renderLogo()
+    this.#renderLogo()
 
-    this.renderDateText(dateText)
+    this.#renderDateText(dateText)
 
     this.doc.moveDown()
 
@@ -789,7 +752,7 @@ export class PrintView {
       .stroke(BLACK)
   }
 
-  renderFooter(): void {
+  #renderFooter(): void {
     this.doc.fontSize(this.#footerFontSize)
 
     const helpText = t('pdf-footer-center-text', { appURL: APP_URL })
@@ -815,15 +778,52 @@ export class PrintView {
     this.setFill()
   }
 
-  setFooterSize(): void {
-    this.doc.fontSize(this.#footerFontSize)
-    const lineHeight = this.doc.currentLineHeight()
-    this.chartArea.bottomEdge = this.chartArea.bottomEdge - lineHeight * 9
+  #updateUnfinishedTablePosition(): void {
+    if (this.#table?.pos) {
+      const xPos = this.chartArea.leftEdge
+      this.doc.x = this.#table.pos.x = xPos
+      this.doc.y = this.#table.pos.y = this.chartArea.topEdge
+      this.#table.pdf.lineWidth(this.tableSettings.borderWidth)
+    }
   }
 
-  setHeaderSize(): void {
-    this.doc.fontSize(this.#headerFontSize)
-    const lineHeight = this.doc.currentLineHeight()
-    this.chartArea.topEdge = this.chartArea.topEdge + lineHeight * 4
+  #renderCellStripe(data: Table, column: TableColumn, pos: Position, isHeader = false): CellStripe {
+    const height = (isHeader ? column.headerHeight : column.height) ?? column.height ?? data._renderedContent?.height ?? 0
+
+    const stripe = {
+      width: 0,
+      height,
+      padding: 0,
+      color: this.colors.grey,
+      opacity: 1,
+      background: false
+    }
+
+    const fillStripe = isHeader ? (data._headerFillStripe ?? column.headerFillStripe) : (data._fillStripe ?? column.fillStripe)
+    if (!fillStripe) {
+      return stripe
+    }
+
+    stripe.color = fillStripe.color ?? this.colors.grey
+    stripe.opacity = fillStripe.opacity ?? 1
+    stripe.width = fillStripe.width ?? 6
+    stripe.background = fillStripe.background ?? false
+    stripe.padding = fillStripe.padding ?? 0
+    this.setFill(stripe.color, stripe.opacity)
+
+    const xPos = pos.x + 0.25 + stripe.padding
+    const yPos = pos.y + 0.25 + stripe.padding
+    const stripeWidth = stripe.width
+    const stripeHeight = stripe.height - 0.5 - (2 * stripe.padding)
+
+    if (stripe.width > 0) {
+      this.doc
+        .rect(xPos, yPos, stripeWidth, stripeHeight)
+        .fill()
+    }
+
+    this.setFill()
+
+    return stripe
   }
 }
