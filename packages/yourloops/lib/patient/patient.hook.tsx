@@ -81,33 +81,31 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     setPatients(patientsUpdated)
   }, [patients])
 
+  const patientsForSelectedTeam = patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeamId))
+  const patientsList = user.isUserHcp() ? patientsForSelectedTeam : patients
+
   const buildPatientFiltersStats = useCallback(() => {
     return {
-      all: patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
-      pending: patients.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
-      directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
-      unread: patients.filter(patient => patient.metadata.hasSentUnreadMessages).length,
-      outOfRange: patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
-      severeHypoglycemia: patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
-      dataNotTransferred: patients.filter(patient => patient.alarms.nonDataTransmissionActive).length,
-      remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
-      renew: patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
+      all: patientsList.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
+      pending: patientsList.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
+      directShare: patientsList.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
+      unread: patientsList.filter(patient => patient.metadata.hasSentUnreadMessages).length,
+      outOfRange: patientsList.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
+      severeHypoglycemia: patientsList.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
+      dataNotTransferred: patientsList.filter(patient => patient.alarms.nonDataTransmissionActive).length,
+      remoteMonitored: patientsList.filter(patient => patient.monitoring?.enabled).length,
+      renew: patientsList.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
     }
-  }, [patients])
+  }, [patientsList])
 
   const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
 
-  const getPatientByEmail = useCallback((email: string) => patients.find(patient => patient.profile.email === email), [patients])
+  const getPatientByEmail = useCallback((email: string) => patientsList.find(patient => patient.profile.email === email), [patientsList])
 
-  const getPatientById = useCallback(userId => patients.find(patient => patient.userid === userId), [patients])
-
-  const getPatientsForSelectedTeam = useCallback((): Patient[] => {
-    return patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeamId))
-  }, [patients, selectedTeamId])
+  const getPatientById = useCallback(userId => patientsList.find(patient => patient.userid === userId), [patientsList])
 
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
-    const patientsForSelectedTeam = getPatientsForSelectedTeam()
-    const filteredPatients = PatientUtils.extractPatients(patientsForSelectedTeam, filterType, flaggedPatients)
+    const filteredPatients = PatientUtils.extractPatients(patientsList, filterType, flaggedPatients)
 
     if (search.length === 0) {
       return filteredPatients
@@ -127,7 +125,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       const lastName = patient.profile.lastName ?? ''
       return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
     })
-  }, [getPatientsForSelectedTeam])
+  }, [patientsList])
 
   const invitePatient = useCallback(async (team: Team, username: string) => {
     await PatientApi.invitePatient({ teamId: team.id, email: username })

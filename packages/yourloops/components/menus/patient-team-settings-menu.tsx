@@ -71,12 +71,19 @@ const classes = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.palette.divider,
     marginLeft: theme.spacing(1),
     marginTop: 2
+  },
+  menu: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1)
+  },
+  paddingBottom: {
+    paddingBottom: theme.spacing(1)
   }
 }))
 
 function PatientTeamSettingsMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const { classes: { badge, teamIcon, clickableMenu, separator } } = classes()
+  const { classes: { badge, teamIcon, clickableMenu, separator, menu, paddingBottom } } = classes()
   const { teams, joinTeam } = useTeam()
   const history = useHistory()
   const alert = useAlert()
@@ -132,7 +139,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
     }
   }
   return (
-    <React.Fragment>
+    <>
       <Box
         id="team-menu"
         data-testid="team-menu"
@@ -156,71 +163,76 @@ function PatientTeamSettingsMenu(): JSX.Element {
           <ArrowDropDownIcon />
         }
       </Box>
+
       <MenuLayout
         open={opened}
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <ListSubheader>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="caption">
-              {t('care-team-membership')}
-            </Typography>
-            <div className={separator} />
-          </Box>
-        </ListSubheader>
-
-        {filteredTeams.length
-          ? filteredTeams.map(team => (
-            <ListItemButton
-              key={team.id}
-              id={`team-menu-list-item-${team.id}`}
-              className="team-menu-list-item"
-              onClick={() => {
-                redirectToTeamDetails(team.id)
-              }}
-            >
-              <Box marginX={1}>•</Box>
-              <Typography>{team.name}</Typography>
-            </ListItemButton>
-          ))
-          : <ListItem>
-            <Typography>{t('care-team-no-membership')}</Typography>
-          </ListItem>
-        }
-
-        <Box>
-          <Box marginY={1}>
-            <Divider variant="middle" />
-          </Box>
-
-          <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
-            <ListItemIcon>
-              <GroupOutlinedIcon />
-            </ListItemIcon>
-            <Typography>
-              {t('join-care-team')}
-            </Typography>
-          </MenuItem>
-        </Box>
-
-        <Box>
+        <Box className={menu}>
           <ListSubheader>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
               <Typography variant="caption">
-                {t('my-caregivers')}
+                {t('care-team-membership')}
               </Typography>
               <div className={separator} />
             </Box>
           </ListSubheader>
-          <MenuItem id="team-menu-caregivers-link" onClick={redirectToCaregivers}>
-            <ListItemIcon>
-              <GroupOutlinedIcon />
-            </ListItemIcon>
-            <Typography>
-              {t('my-caregivers')} ({caregivers?.length})
-            </Typography>
-          </MenuItem>
+
+          {filteredTeams.length
+            ? filteredTeams.map(team => (
+              <ListItemButton
+                key={team.id}
+                id={`team-menu-list-item-${team.id}`}
+                className="team-menu-list-item"
+                onClick={() => {
+                  redirectToTeamDetails(team.id)
+                }}
+              >
+                <Box marginX={1}>•</Box>
+                <Typography>{team.name}</Typography>
+              </ListItemButton>
+            ))
+            : <ListItem>
+              <Typography>{t('care-team-no-membership')}</Typography>
+            </ListItem>
+          }
+
+          <Box>
+            <Box marginY={2}>
+              <Divider variant="middle" />
+            </Box>
+
+            <Box className={paddingBottom}>
+              <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
+                <ListItemIcon>
+                  <GroupOutlinedIcon />
+                </ListItemIcon>
+                <Typography>
+                  {t('join-care-team')}
+                </Typography>
+              </MenuItem>
+            </Box>
+          </Box>
+
+          <Box>
+            <ListSubheader>
+              <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
+                <Typography variant="caption">
+                  {t('my-caregivers')}
+                </Typography>
+                <div className={separator} />
+              </Box>
+            </ListSubheader>
+            <MenuItem id="team-menu-caregivers-link" onClick={redirectToCaregivers}>
+              <ListItemIcon>
+                <GroupOutlinedIcon />
+              </ListItemIcon>
+              <Typography>
+                {t('my-caregivers')} ({caregivers?.length})
+              </Typography>
+            </MenuItem>
+          </Box>
         </Box>
       </MenuLayout>
 
@@ -230,7 +242,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
           onAccept={onJoinTeam}
         />
       }
-    </React.Fragment>
+    </>
   )
 }
 

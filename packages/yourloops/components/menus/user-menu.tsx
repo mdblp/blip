@@ -78,7 +78,7 @@ function UserMenu(): JSX.Element {
   const { classes: { clickableMenu, typography, menu } } = classes()
   const history = useHistory()
   const theme = useTheme()
-  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const [tooltipText, setTooltipText] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const opened = !!anchorEl
@@ -144,7 +144,7 @@ function UserMenu(): JSX.Element {
         <Box display="flex">
           {getRoleIcon()}
         </Box>
-        {!isMobileBreakpoint &&
+        {!isMobile &&
           <React.Fragment>
             <Tooltip title={tooltipText} disableInteractive>
               <Typography id="user-menu-full-name" className={typography}>

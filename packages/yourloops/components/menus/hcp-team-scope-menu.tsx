@@ -34,9 +34,8 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import MenuLayout from '../../layout/menu-layout'
-import GroupIcon from '@mui/icons-material/Group'
 import { type Team, useTeam } from '../../lib/team'
 import PersonIcon from '@mui/icons-material/Person'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
@@ -48,8 +47,8 @@ import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
 import AddIcon from '@mui/icons-material/Add'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import { useHistory } from 'react-router-dom'
-import ListItem from '@mui/material/ListItem'
 import TeamUtils from '../../lib/team/team.util'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const classes = makeStyles()((theme: Theme) => ({
   clickableMenu: {
@@ -88,6 +87,8 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const alert = useAlert()
   const history = useHistory()
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
+  const theme = useTheme()
+  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   const privateTeam = getPrivateTeam()
   const sortedMedicalTeams = TeamUtils.sortTeamsByName(getMedicalTeams())
@@ -95,8 +96,11 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const availableTeams = [privateTeam, ...sortedMedicalTeams]
 
   const selectedTeam = availableTeams.find((team: Team) => team.id === selectedTeamId)
-  // TODO Add/use translation key
-  const selectedTeamName = selectedTeam.type === TeamType.private ? 'My private practice' : selectedTeam.name
+  const isSelectedTeamPrivate = selectedTeam.type === TeamType.private
+  const selectedTeamName = isSelectedTeamPrivate ? t('hcp-team-menu-private-practice-option') : selectedTeam.name
+
+  const privatePracticeIcon = <PersonIcon />
+  const medicalTeamIcon = <GroupsOutlinedIcon />
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const isMenuOpen = !!anchorEl
@@ -142,14 +146,16 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
         }}
       >
         <Box display="flex">
-          <GroupIcon />
+          {isSelectedTeamPrivate ? privatePracticeIcon : medicalTeamIcon}
         </Box>
-        <React.Fragment>
-          <Typography className={typography}>
-            {selectedTeamName}
-          </Typography>
-          <ArrowDropDownIcon />
-        </React.Fragment>
+        {!isMobile &&
+          <>
+            <Typography className={typography}>
+              {selectedTeamName}
+            </Typography>
+            <ArrowDropDownIcon />
+          </>
+        }
       </Box>
 
       <MenuLayout open={isMenuOpen} anchorEl={anchorEl} onClose={closeMenu}>
@@ -158,37 +164,34 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
             onSelectTeam(privateTeam.id)
           }}>
             <ListItemIcon>
-              <PersonIcon />
+              {privatePracticeIcon}
             </ListItemIcon>
             <ListItemText>
-              {/* TODO Add/use translation key */}
-              My private practice
+              {t('hcp-team-menu-private-practice-option')}
             </ListItemText>
           </MenuItem>
 
-          <Box marginY={2}>
-            <Divider variant="middle" />
-          </Box>
+          {hasMedicalTeams &&
+            <>
+              <Box marginY={2}>
+                <Divider variant="middle" />
+              </Box>
 
-          {/* TODO Add translation key */}
-          <Typography className={sectionTitle}>Care teams</Typography>
+              <Typography className={sectionTitle}>{t('hcp-team-menu-care-teams-section-title')}</Typography>
 
-          {hasMedicalTeams
-            ? sortedMedicalTeams.map((team: Team) =>
-              <MenuItem key={team.id} onClick={() => {
-                onSelectTeam(team.id)
-              }}>
-                <ListItemIcon>
-                  <GroupsOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText>
-                  {team.name}
-                </ListItemText>
-              </MenuItem>
-            )
-            : <ListItem>
-              <Typography>{t('care-team-no-membership')}</Typography>
-            </ListItem>
+              {sortedMedicalTeams.map((team: Team) =>
+                <MenuItem key={team.id} onClick={() => {
+                  onSelectTeam(team.id)
+                }}>
+                  <ListItemIcon>
+                    {medicalTeamIcon}
+                  </ListItemIcon>
+                  <ListItemText>
+                    {team.name}
+                  </ListItemText>
+                </MenuItem>
+              )}
+            </>
           }
 
           <Box marginY={2}>
@@ -200,7 +203,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
               <AddIcon />
             </ListItemIcon>
             <ListItemText>
-              {t('new-care-team')}
+              {t('hcp-team-menu-new-care-team-option')}
             </ListItemText>
           </MenuItem>
         </Box>
