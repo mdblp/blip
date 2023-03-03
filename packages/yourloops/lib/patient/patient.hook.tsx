@@ -55,22 +55,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
-  const [patientsForSelectedTeam, setPatientsForSelectedTeam] = useState<Patient[]>([])
-
   const fetchPatients = useCallback(() => {
     PatientUtils.computePatients(user).then(computedPatients => {
       setPatients(computedPatients)
       setErrorMessage(null)
-
-      console.log({ computedPatients })
-      console.log({ selectedTeamId })
-      const scopedPatients = computedPatients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => {
-        console.log({ teamId: team.teamId })
-        console.log({ selectedTeamId })
-        return team.teamId === selectedTeamId
-      }))
-      setPatientsForSelectedTeam(scopedPatients)
-      console.log({ scopedPatients })
     }).catch((reason: unknown) => {
       const message = errorTextFromException(reason)
       if (message !== errorMessage) {
@@ -113,24 +101,33 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const getPatientById = useCallback(userId => patients.find(patient => patient.userid === userId), [patients])
 
+  const getPatientsForSelectedTeam = useCallback((): Patient[] => {
+    return patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeamId))
+  }, [patients, selectedTeamId])
+
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
+    const patientsForSelectedTeam = getPatientsForSelectedTeam()
     const filteredPatients = PatientUtils.extractPatients(patientsForSelectedTeam, filterType, flaggedPatients)
+
     if (search.length === 0) {
       return filteredPatients
     }
+
     const searchText = search.toLocaleLowerCase()
     const birthdateAsString = searchText.slice(0, 10)
     const searchTextStartsWithBirthdate = !!moment(birthdateAsString, 'DD/MM/YYYY').toDate().getTime()
+
     if (searchTextStartsWithBirthdate) {
       const firstNameOrLastName = searchText.slice(10).trimStart()
       return PatientUtils.extractPatientsWithBirthdate(filteredPatients, birthdateAsString, firstNameOrLastName)
     }
+
     return filteredPatients.filter(patient => {
       const firstName = patient.profile.firstName ?? ''
       const lastName = patient.profile.lastName ?? ''
       return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
     })
-  }, [patients])
+  }, [getPatientsForSelectedTeam])
 
   const invitePatient = useCallback(async (team: Team, username: string) => {
     await PatientApi.invitePatient({ teamId: team.id, email: username })
