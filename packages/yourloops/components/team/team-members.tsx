@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -56,9 +56,6 @@ import TeamUtils from '../../lib/team/team.util'
 import { TeamMemberRole, type TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  addTeamMemberButton: {
-    marginLeft: theme.spacing(2)
-  },
   checkboxTableCellHeader: {
     padding: `0 ${theme.spacing(1)} !important`
   },
@@ -141,13 +138,12 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
               <Button
                 name="add-member"
                 data-testid="add-member-button"
-                className={`${commonTeamClasses.button} ${classes.addTeamMemberButton}`}
                 variant="contained"
                 color="primary"
+                startIcon={<GroupAddIcon />}
                 disableElevation
                 onClick={openInviteMemberDialog}
               >
-                <GroupAddIcon className={commonTeamClasses.icon} />
                 {t('button-team-add-member')}
               </Button>
             }

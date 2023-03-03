@@ -49,7 +49,7 @@ import { type ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
 import { TeamType } from './models/enums/team-type.enum'
-import { CircularProgress } from '@mui/material'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
@@ -233,7 +233,7 @@ export const TeamContextProvider: FunctionComponent<PropsWithChildren> = ({ chil
   const context = TeamContextImpl()
   return context.initialized
     ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
-    : <CircularProgress className="centered-spinning-loader" />
+    : <SpinningLoader className="centered-spinning-loader" />
 }
 
 export const useTeam = (): TeamContext => {

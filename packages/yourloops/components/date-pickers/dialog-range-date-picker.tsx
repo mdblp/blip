@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -204,7 +204,11 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
         />
       </DialogContent>
       <DialogActions>
-        <Button id="date-picker-button-cancel" onClick={handleCancel}>
+        <Button
+          id="date-picker-button-cancel"
+          variant="outlined"
+          onClick={handleCancel}
+        >
           {t('button-cancel')}
         </Button>
         <Button

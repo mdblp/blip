@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,33 +24,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { makeStyles } from 'tss-react/mui'
-import CircularProgress from '@mui/material/CircularProgress'
 
-const useStyles = makeStyles()(() =>
-  ({
-    wrapper: {
-      position: 'relative'
-    },
-    progressButton: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      marginTop: -12,
-      marginLeft: -12
+import React, { type FunctionComponent, useEffect, useRef } from 'react'
+import LottieCustomLoaderJson from './lottie-spinning-loader.json'
+import Lottie from 'lottie-react'
+import Box from '@mui/material/Box'
+
+interface CenteredSpinningLoaderProps {
+  className?: string
+  role?: string
+  size?: number
+}
+
+const Loader: FunctionComponent<CenteredSpinningLoaderProps> = ({ size = 40, className, role }) => {
+  const lottieRef = useRef(null)
+
+  useEffect(() => {
+    if (lottieRef?.current) {
+      lottieRef.current.setSpeed(3)
     }
-  }))
-
-export const ProgressIconButtonWrapper: FunctionComponent<PropsWithChildren<{ inProgress: boolean }>> = ({ children, inProgress }) => {
-  const { classes } = useStyles()
+  }, [])
 
   return (
-    <div className={classes.wrapper}>
-      {children}
-      {inProgress && <CircularProgress role="progressbar" size={24} className={classes.progressButton} />}
-    </div>
+    <Box display="flex" justifyContent="center" alignItems="center">
+      <Lottie
+        autoplay
+        animationData={LottieCustomLoaderJson}
+        lottieRef={lottieRef}
+        loop
+        style={{ height: size, width: size }}
+        className={className}
+        role={role}
+      />
+    </Box>
   )
 }
 
-export default ProgressIconButtonWrapper
+const SpinningLoader = React.memo(Loader)
+
+export default SpinningLoader

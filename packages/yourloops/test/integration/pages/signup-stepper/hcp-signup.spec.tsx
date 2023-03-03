@@ -75,7 +75,7 @@ describe('Signup stepper as hcp', () => {
     await userEvent.click(screen.getByText('Next'))
 
     // Step three
-    const createButton = screen.getByText('Create Account')
+    const createButton = screen.getByText('Create account')
     const hcpProfessionSelector = screen.queryByTestId('hcp-profession-selector')
 
     await checkProfileStep(firstName, lastName)
@@ -86,7 +86,7 @@ describe('Signup stepper as hcp', () => {
 
     expect(createButton).not.toBeDisabled()
     await act(async () => {
-      await userEvent.click(screen.getByText('Create Account'))
+      await userEvent.click(screen.getByText('Create account'))
     })
 
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(

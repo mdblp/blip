@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,10 +33,10 @@ import Button from '@mui/material/Button'
 
 import PersonalInfoForm from './personal-info-form'
 import PreferencesForm from './preferences-form'
-import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 import { useTranslation } from 'react-i18next'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
+import { LoadingButton } from '@mui/lab'
 
 export const ProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -49,23 +49,22 @@ export const ProfileForm: FunctionComponent = () => {
       <PreferencesForm />
       <Box display="flex" justifyContent="flex-end" my={3}>
         <LinkRedirect className={classes.cancelLink} to="/">
-          <Button>
+          <Button variant="outlined">
             {t('button-cancel')}
           </Button>
         </LinkRedirect>
-        <ProgressIconButtonWrapper inProgress={saving}>
-          <Button
-            id="profile-button-save"
-            variant="contained"
-            disabled={!canSave}
-            color="primary"
-            disableElevation
-            className={classes.button}
-            onClick={saveProfile}
-          >
-            {t('button-save')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        <LoadingButton
+          loading={saving}
+          id="profile-button-save"
+          variant="contained"
+          disabled={!canSave}
+          color="primary"
+          disableElevation
+          className={classes.button}
+          onClick={saveProfile}
+        >
+          {t('button-save')}
+        </LoadingButton>
       </Box>
     </React.Fragment>
   )

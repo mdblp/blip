@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,7 +38,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type SwitchRoleProfessionDialogProps } from './models'
 import BasicDropdownWithValidation from '../dropdown/basic-dropdown-with-validation'
-import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
+import { LoadingButton } from '@mui/lab'
 
 function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX.Element {
   const { open, onAccept, onCancel, inProgress } = props
@@ -82,22 +82,22 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
       <DialogActions id="switch-role-profession-dialog-actions">
         <Button
           id="switch-role-profession-dialog-button-decline"
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-decline')}
         </Button>
-        <ProgressIconButtonWrapper inProgress={inProgress}>
-          <Button
-            id="switch-role-profession-dialog-button-validate"
-            variant="contained"
-            color="primary"
-            disableElevation
-            disabled={hcpProfession === HcpProfession.empty || inProgress}
-            onClick={handleAccept}
-          >
-            {t('button-validate')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        <LoadingButton
+          loading={inProgress}
+          id="switch-role-profession-dialog-button-validate"
+          variant="contained"
+          color="primary"
+          disableElevation
+          disabled={hcpProfession === HcpProfession.empty}
+          onClick={handleAccept}
+        >
+          {t('button-validate')}
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

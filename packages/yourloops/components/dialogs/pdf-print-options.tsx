@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -209,7 +209,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
       maxWidth={false}
     >
       <DialogContent>
-        <Typography variant="h4">{t('pdf-generate-report')}</Typography>
+        <Typography variant="h4">{t('button-pdf-generate-report')}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t('dialog-pdf-options-presets')}</Typography>
         <Box display="flex" flexDirection="row" flexWrap="wrap"
@@ -309,7 +309,11 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
       </DialogContent>
 
       <DialogActions>
-        <Button id="pdf-options-button-cancel" onClick={() => { onResult() }}>
+        <Button
+          id="pdf-options-button-cancel"
+          variant="outlined"
+          onClick={() => { onResult() }}
+        >
           {t('button-cancel')}
         </Button>
         <Button

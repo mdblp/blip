@@ -47,7 +47,7 @@ const pageBarStyles = makeStyles()((theme: Theme) => {
   return {
     topBar: {
       display: 'flex',
-      margin: theme.spacing(1)
+      margin: theme.spacing(2, 3)
     },
     toolBarLeft: {
       display: 'flex',
@@ -60,14 +60,6 @@ const pageBarStyles = makeStyles()((theme: Theme) => {
       marginRight: theme.spacing(2),
       marginLeft: theme.spacing(2),
       flex: '1 1'
-    },
-    buttonAddPatient: {
-      marginLeft: 'auto'
-    },
-    buttonAddPatientText: {
-      [theme.breakpoints.down('sm')]: {
-        display: 'none'
-      }
     },
     modalAddPatient: {
       display: 'flex',
@@ -103,12 +95,11 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
         <Button
           color="primary"
           variant="contained"
+          startIcon={<PersonAddIcon />}
           disableElevation
-          className={classes.buttonAddPatient}
           onClick={handleOpenModalAddPatient}
         >
-          <PersonAddIcon />
-          <Box component="span" className={classes.buttonAddPatientText}>&nbsp;{t('add-patient')}</Box>
+         {t('button-add-patient')}
         </Button>
       }
     </Box>

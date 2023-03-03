@@ -160,13 +160,11 @@ const HomePage: FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      <Box marginTop={2} marginBottom={3}>
-        <PatientsSecondaryBar
-          filter={filter}
-          onFilter={handleFilter}
-          onInvitePatient={handleInvitePatient}
-        />
-      </Box>
+      <PatientsSecondaryBar
+        filter={filter}
+        onFilter={handleFilter}
+        onInvitePatient={handleInvitePatient}
+      />
       <PatientList filter={filter} filterType={filterType} />
       <AddPatientDialog actions={patientToAdd} />
       <TeamCodeDialog
