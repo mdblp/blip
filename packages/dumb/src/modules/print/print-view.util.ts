@@ -94,10 +94,10 @@ export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth:
   return columns
 }
 
-export const getTextData = (row: Row, column: TableColumn, isHeader: boolean | undefined): TableHeading | string => {
+export const getTextData = (row: Row, column: TableColumn, isHeader: boolean | undefined): TableHeading => {
   if ((!isHeader && _.isString(row[column.id])) || _.isString(column.header)) {
     const text = isHeader ? column.header as unknown as string : row[column.id]
     return { text, subText: undefined, note: undefined }
   }
-  return row[column.id] as unknown as TableHeading | string ?? column.header ?? { text: '', subText: '', note: undefined }
+  return row[column.id] as unknown as TableHeading ?? column.header ?? { text: '', subText: '', note: undefined }
 }
