@@ -25,6 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export function isRecord(value: unknown): value is Record<string, unknown> {
-  return !!value && typeof value === 'object' && !Array.isArray(value)
-}
+import { isRecord } from '../../src/domains/utils/typeguard.utils'
+
+describe('isRecord', () => {
+  it('should return true with a record + baseTime with all required keys/types', () => {
+    const testRecord = isRecord({
+      a: undefined,
+      b: 1,
+      c: true,
+      d: {},
+      e: [],
+      f: () => 15
+    })
+    expect(testRecord).toEqual(true)
+    const emptyRecordTest = isRecord({})
+    expect(emptyRecordTest).toEqual(true)
+  })
+
+  it('should return false with an object that is not a record', () => {
+    const notRecords = [
+      null,
+      undefined,
+      false,
+      true,
+      12,
+      'test',
+      [],
+      ['a', 'b'],
+      () => 15
+    ]
+    for (const testedValue of notRecords) {
+      const testKo = isRecord(testedValue)
+      console.log(testedValue, testKo)
+      expect(testKo).toEqual(false)
+    }
+  })
+})

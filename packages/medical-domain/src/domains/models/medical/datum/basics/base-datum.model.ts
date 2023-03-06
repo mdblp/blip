@@ -45,7 +45,7 @@ function isBaseDatum(value: unknown): value is BaseDatum {
     if (typeof value.type !== 'string') {
       return false
     }
-    if (!(Object.values(DatumType).includes(value.type))) {
+    if (!(Object.values(DatumType).includes(value.type as DatumType))) {
       return false
     }
     if (typeof value.source !== 'string') {

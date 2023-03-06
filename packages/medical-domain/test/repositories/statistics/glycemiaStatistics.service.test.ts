@@ -30,9 +30,10 @@ import type Cbg from '../../../src/domains/models/medical/datum/cbg.model'
 import Unit from '../../../src/domains/models/medical/datum/enums/unit.enum'
 import type Smbg from '../../../src/domains/models/medical/datum/smbg.model'
 import type DateFilter from '../../../src/domains/models/time/date-filter.model'
-import { GlycemiaStatisticsService } from '../../../src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlycemiaStatisticsService, classifyBgValue } from '../../../src/domains/repositories/statistics/glycemia-statistics.service'
 import { MS_IN_DAY, MS_IN_MIN } from '../../../src/domains/repositories/time/time.service'
-import { createRandomCbg, createRandomSmbg } from '../../models/data-generator'
+import { createRandomCbg, createRandomSmbg } from '../../data-generator'
+import { ClassificationType } from '../../../src/domains/models/statistics/enum/bg-classification.enum'
 
 const buildCbgData = (data: Array<[Date, number, string]>): Cbg[] => (
   data.map((cbgData) => (
@@ -112,6 +113,93 @@ const dateFilterTwoWeeks: DateFilter = {
   start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
   end: new Date('2018-02-15T00:00:00.000Z').valueOf()
 }
+
+describe('GlycemiaStatisticsService classifyBgValue', () => {
+  const bgBounds = {
+    veryHighThreshold: 300,
+    targetUpperBound: 180,
+    targetLowerBound: 70,
+    veryLowThreshold: 55
+  }
+  it('should error if bgValue is lower or equal than zero', () => {
+    expect(
+      () => classifyBgValue(bgBounds, -100, ClassificationType.FiveWay)
+    ).toThrow('You must provide a positive, numerical blood glucose value to categorize!')
+    expect(
+      () => classifyBgValue(bgBounds, 0, ClassificationType.FiveWay)
+    ).toThrow('You must provide a positive, numerical blood glucose value to categorize!')
+  })
+
+  it('should return `low` for a value < the `targetLowerBound` (three-way)', () => {
+    const classification = classifyBgValue(bgBounds, 69, ClassificationType.ThreeWay)
+    expect(classification).toBe('low')
+  })
+
+  it('should return `target` for a value equal to the `targetLowerBound` (three-way)', () => {
+    const classification = classifyBgValue(bgBounds, 70, ClassificationType.ThreeWay)
+    expect(classification).toBe('target')
+  })
+
+  it('should return `target` for a value > `targetLowerBound` and < `targetUpperBound` (three-way) (three-way)', () => {
+    const classification = classifyBgValue(bgBounds, 100, ClassificationType.ThreeWay)
+    expect(classification).toBe('target')
+  })
+
+  it('should return `target` for a value equal to the `targetUpperBound`', () => {
+    const classification = classifyBgValue(bgBounds, 180, ClassificationType.ThreeWay)
+    expect(classification).toBe('target')
+  })
+
+  it('should return `high` for a value > the `targetUpperBound` (three-way)', () => {
+    const classification = classifyBgValue(bgBounds, 181, ClassificationType.ThreeWay)
+    expect(classification).toBe('high')
+  })
+
+  it('should return `veryLow` for a value < the `veryLowThreshold` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 54, ClassificationType.FiveWay)
+    expect(classification).toBe('veryLow')
+  })
+
+  it('should return `low` for a value equal to the `veryLowThreshold` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 55, ClassificationType.FiveWay)
+    expect(classification).toBe('low')
+  })
+
+  it('should return `low` for a value < the `targetLowerBound` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 69, ClassificationType.FiveWay)
+    expect(classification).toBe('low')
+  })
+
+  it('should return `target` for a value equal to the `targetLowerBound` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 70, ClassificationType.FiveWay)
+    expect(classification).toBe('target')
+  })
+
+  it('should return `target` for a value > `targetLowerBound` and < `targetUpperBound` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 100, ClassificationType.FiveWay)
+    expect(classification).toBe('target')
+  })
+
+  it('should return `target` for a value equal to the `targetUpperBound` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 180, ClassificationType.FiveWay)
+    expect(classification).toBe('target')
+  })
+
+  it('should return `high` for a value > the `targetUpperBound` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 181, ClassificationType.FiveWay)
+    expect(classification).toBe('high')
+  })
+
+  it('should return `high` for a value equal to the `veryHighThreshold` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 300, ClassificationType.FiveWay)
+    expect(classification).toBe('high')
+  })
+
+  it('should return `veryHigh` for a value > the `veryHighThreshold` (five-way)', () => {
+    const classification = classifyBgValue(bgBounds, 301, ClassificationType.FiveWay)
+    expect(classification).toBe('veryHigh')
+  })
+})
 
 describe('GlycemiaStatisticsService getTimeInRangeData', () => {
   it('should return time in range when viewing one day', () => {
