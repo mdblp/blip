@@ -313,7 +313,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
           {t('button-cancel')}
         </Button>
         <Button
-          id="pdf-options-button-download"
+          data-testid="pdf-options-button-download"
           disabled={!!customStartDate}
           color="primary"
           variant="contained"
