@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import { buildTeam } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/team.util'
 
 describe('TeamUtils', () => {
-  describe('sortTeams', () => {
+  describe('sortTeamsByName', () => {
     it('should sort a list of teams in alphabetical order', () => {
       const teams = [
         buildTeam('fakeId2', [], 'B team'),
@@ -37,7 +37,7 @@ describe('TeamUtils', () => {
         buildTeam('fakeId1', [], 'A team')
       ]
       const expectedResult = [teams[2], teams[0], teams[1]]
-      expect(expectedResult).toEqual(TeamUtils.sortTeams(teams))
+      expect(expectedResult).toEqual(TeamUtils.sortTeamsByName(teams))
     })
   })
 })

@@ -84,7 +84,7 @@ const classes = makeStyles()((theme: Theme) => ({
 function PatientTeamSettingsMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes: { badge, teamIcon, clickableMenu, separator, menu, paddingBottom } } = classes()
-  const { teams, joinTeam } = useTeam()
+  const { teams, joinTeam, isPrivate } = useTeam()
   const history = useHistory()
   const alert = useAlert()
   const { user } = useAuth()
@@ -95,7 +95,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
   const opened = !!anchorEl
 
-  const filteredTeams = teams.filter(team => team.code !== 'private')
+  const filteredTeams = teams.filter(team => !isPrivate(team))
   const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false)
   const closeMenu = (): void => {
     setAnchorEl(null)

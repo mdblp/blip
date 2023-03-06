@@ -42,6 +42,10 @@ export interface TeamContext {
    */
   refresh: () => void
   /**
+   * Return whether a team is the user's private team
+   */
+  isPrivate: (team: Team) => boolean
+  /**
    * Return the medical teams only
    */
   getMedicalTeams: () => Array<Readonly<Team>>

@@ -48,13 +48,15 @@ describe('Remove patient dialog hook', () => {
   const removePatientMock = jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
   const onClose = jest.fn()
   const onSuccessMock = jest.fn()
+  const isPrivateMock = jest.fn()
 
   beforeEach(() => {
     (usePatientContextMock.usePatientContext as jest.Mock).mockImplementation(() => ({
       removePatient: removePatientMock
     }));
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => ({
-      getTeam: () => team
+      getTeam: () => team,
+      isPrivate: isPrivateMock
     }));
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({
       success: onSuccessMock,
@@ -71,30 +73,40 @@ describe('Remove patient dialog hook', () => {
     } as Patient
   }
 
-  it('should show success alert when removing a pending patient', async () => {
-    createDataMock(UserInvitationStatus.pending)
-    const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
-    await act(async () => {
-      await result.current.handleOnClickRemove()
+  describe('handleOnClickRemove', () => {
+    it('should show success alert when removing a pending patient', async () => {
+      createDataMock(UserInvitationStatus.pending)
+
+      const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
+      await act(async () => {
+        await result.current.handleOnClickRemove()
+      })
+
+      expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
+      expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-pending-invitation-success')
     })
-    expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
-    expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-pending-invitation-success')
-  })
 
-  it('should show success alert when removing a patient from a team', async () => {
-    createDataMock(UserInvitationStatus.accepted)
-    const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
-    await result.current.handleOnClickRemove()
-    expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
-    expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-from-team-success')
-  })
+    it('should show success alert when removing a patient from a team', async () => {
+      createDataMock(UserInvitationStatus.accepted)
+      isPrivateMock.mockReturnValueOnce(false)
 
-  it('should show success alert when removing a private practice patient', async () => {
-    createDataMock(UserInvitationStatus.accepted, 'private')
-    const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
-    result.current.setSelectedTeamId('private')
-    await result.current.handleOnClickRemove()
-    expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
-    expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-private-practice-success')
+      const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
+      await result.current.handleOnClickRemove()
+
+      expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
+      expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-from-team-success')
+    })
+
+    it('should show success alert when removing a private practice patient', async () => {
+      createDataMock(UserInvitationStatus.accepted, 'private')
+      isPrivateMock.mockReturnValueOnce(true)
+
+      const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
+      result.current.setSelectedTeamId('private')
+      await result.current.handleOnClickRemove()
+
+      expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
+      expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-private-practice-success')
+    })
   })
 })

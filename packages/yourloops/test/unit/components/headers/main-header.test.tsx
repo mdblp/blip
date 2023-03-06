@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,10 +42,12 @@ import type User from '../../../../lib/auth/models/user.model'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
+import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 
 jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/selected-team/selected-team.provider')
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom')),
   useLocation: () => ({ pathname: '' })
@@ -84,8 +86,16 @@ describe('Main Header', () => {
         receivedInvitations: notifications
       }
     });
+    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
+      return { selectedTeamId: 'private' }
+    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { teams }
+      return {
+        teams,
+        getPrivateTeam: () => ({ id: 'private' }),
+        getMedicalTeams: () => ([]),
+        isPrivate: () => true
+      }
     })
   })
 
@@ -138,10 +148,10 @@ describe('Main Header', () => {
     expect(teamMenu).toBeNull()
   })
 
-  it('Team Menu should be rendered for Hcp', () => {
+  it('Team Menu should not be rendered for HCP', () => {
     mountComponent()
     const teamMenu = container.querySelector('#team-menu')
-    expect(teamMenu).toBeTruthy()
+    expect(teamMenu).toBeNull()
   })
 
   it('Team Menu should be rendered for Patient', () => {

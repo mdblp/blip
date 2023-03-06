@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,16 +33,18 @@ describe('Selected team hook', () => {
   const initialTeamId = 'initial-team-id'
   const otherTeamId = '1-other-team-id'
 
-  const getMedicalAndPrivateTeamsMock = jest.fn().mockReturnValue([
+  const getMedicalTeamsMock = jest.fn().mockReturnValue([
     { id: initialTeamId, name: 'Initial team' },
     { id: 'a-team-id', name: 'A team' },
     { id: otherTeamId, name: '1 - Other team' }
   ])
+  const getPrivateTeamMock = jest.fn().mockReturnValue({ id: 'private' })
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
-        getMedicalAndPrivateTeams: getMedicalAndPrivateTeamsMock
+        getMedicalTeams: getMedicalTeamsMock,
+        getPrivateTeam: getPrivateTeamMock
       }
     })
   })

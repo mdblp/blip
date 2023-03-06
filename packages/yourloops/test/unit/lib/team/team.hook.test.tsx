@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -157,6 +157,13 @@ describe('Team hook', () => {
     })
   })
 
+  describe('isPrivate', () => {
+    it('should check whether the given team is the private team', () => {
+      expect(teamHook.isPrivate(team1)).toEqual(false)
+      expect(teamHook.isPrivate(privateTeam)).toEqual(true)
+    })
+  })
+
   describe('getMedicalTeams', () => {
     it('should return an array of medical teams', () => {
       const teams = teamHook.getMedicalTeams()
@@ -170,17 +177,10 @@ describe('Team hook', () => {
     })
   })
 
-  describe('getMedicalAndPrivateTeams', () => {
-    it('should return an array of medical teams along with the private team', () => {
-      const teams = teamHook.getMedicalAndPrivateTeams()
-      expect(teams).toEqual([
-        team1,
-        team2,
-        team3,
-        team4,
-        unmonitoredTeam,
-        privateTeam
-      ])
+  describe('getPrivateTeam', () => {
+    it('should return the private team', () => {
+      const team = teamHook.getPrivateTeam()
+      expect(team).toEqual(privateTeam)
     })
   })
 
