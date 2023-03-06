@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -130,12 +130,11 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               data-testid="edit-team-button"
               variant="contained"
               color="primary"
+              startIcon={<EditIcon />}
               disableElevation
               onClick={editTeam}
-              className={commonTeamClasses.button}
             >
-              <EditIcon className={commonTeamClasses.icon} />
-              {t('edit-information')}
+              {t('button-edit-information')}
             </Button>
           }
           {isUserPatient && !team.monitoring &&

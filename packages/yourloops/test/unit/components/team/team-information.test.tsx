@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -93,7 +93,7 @@ describe('TeamInformation', () => {
   })
 
   async function editTeamInfo() {
-    const editInfoButton = screen.getByRole('button', { name: 'edit-information' })
+    const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
       await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })
@@ -173,7 +173,7 @@ describe('TeamInformation', () => {
 
   it('should not save edited team when user clicked on cancel', async () => {
     render(getTeamInformationJSX())
-    const editInfoButton = screen.getByRole('button', { name: 'edit-information' })
+    const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
       await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })

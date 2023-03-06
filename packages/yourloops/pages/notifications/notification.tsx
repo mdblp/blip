@@ -333,6 +333,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
 
         <Button
           data-testid="notification-button-decline"
+          variant="outlined"
           className={`${classes.buttonDecline} notification-button-decline`}
           disabled={inProgress}
           onClick={onDecline}>

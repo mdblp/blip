@@ -49,9 +49,8 @@ import MedicalReportEditDialog from '../../dialogs/medical-report-edit-dialog'
 import MedicalReportDeleteDialog from '../../dialogs/medical-report-delete-dialog'
 import TrashCanOutlined from '../../icons/trash-can-outlined'
 import { type CategoryProps } from './medical-files-widget'
-import { commonComponentStyles } from '../../common'
 import { useAlert } from '../../utils/snackbar'
-import CenteredSpinningLoader from '../../loaders/centered-spinning-loader'
+import SpinningLoader from '../../loaders/spinning-loader'
 import {
   type MedicalReport,
   type MedicalReportDialogPayload,
@@ -76,7 +75,6 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const { teamId, patientId } = props
   const { user } = useAuth()
   const alert = useAlert()
-  const { classes: commonStyles } = commonComponentStyles()
   const [medicalReports, setMedicalReports] = useState<MedicalReport[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [medicalReportToEdit, setMedicalReportToEdit] = useState<MedicalReportDialogPayload | undefined>(undefined)
@@ -181,7 +179,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
             )
           })}
         </List>
-        : <CenteredSpinningLoader size={20} />
+        : <SpinningLoader size={20} />
       }
 
       {user.isUserHcp() &&
@@ -189,15 +187,13 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
           <Button
             variant="contained"
             color="primary"
-            size="small"
             disableElevation
-            className={commonStyles.button}
             startIcon={<NoteAddIcon />}
             onClick={() => {
               setIsEditDialogOpen(true)
             }}
           >
-            {t('new')}
+            {t('button-new')}
           </Button>
         </Box>
       }

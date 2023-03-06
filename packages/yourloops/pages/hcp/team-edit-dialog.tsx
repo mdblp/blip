@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -367,6 +367,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
       <DialogActions>
         <Button
           id="team-edit-dialog-button-close"
+          variant="outlined"
           onClick={handleCloseModal}
         >
           {t('button-cancel')}

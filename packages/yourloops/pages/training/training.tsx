@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -154,7 +154,7 @@ function TrainingPage(): JSX.Element {
                     onClick={ackTraining}
                     disabled={!checked}
                   >
-                    {t('confirm')}
+                    {t('button-confirm')}
                   </Button>
                   : <Link
                     underline="none"
@@ -168,7 +168,7 @@ function TrainingPage(): JSX.Element {
                       disableElevation
                       onClick={() => { setTrainingOpened(true) }}
                     >
-                      {t('open-training')}
+                      {t('button-open-training')}
                     </Button>
                   </Link>
                 }

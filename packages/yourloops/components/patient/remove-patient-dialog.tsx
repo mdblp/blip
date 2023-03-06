@@ -40,9 +40,9 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 
 import MedicalServiceIcon from '../icons/medical-service-icon'
-import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
 import { type Patient } from '../../lib/patient/models/patient.model'
+import { LoadingButton } from '@mui/lab'
 
 interface RemovePatientDialogProps {
   patient: Patient | null
@@ -68,7 +68,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       onClose={onClose}
     >
       <DialogTitle>
-        <strong>{t('remove-patient')}</strong>
+        <strong>{t('button-remove-patient')}</strong>
       </DialogTitle>
 
       <DialogContent>
@@ -122,21 +122,23 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       }
 
       <DialogActions>
-        <Button onClick={onClose}>
+        <Button
+          variant="outlined"
+          onClick={onClose}
+        >
           {t('button-cancel')}
         </Button>
-        <ProgressIconButtonWrapper inProgress={processing}>
-          <Button
-            data-testid="remove-patient-dialog-validate-button"
-            color="error"
-            disabled={!selectedTeamId || processing}
-            variant="contained"
-            disableElevation
-            onClick={handleOnClickRemove}
-          >
-            {t('remove-patient')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        <LoadingButton
+          loading={processing}
+          data-testid="remove-patient-dialog-validate-button"
+          color="error"
+          disabled={!selectedTeamId}
+          variant="contained"
+          disableElevation
+          onClick={handleOnClickRemove}
+        >
+          {t('button-remove-patient')}
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

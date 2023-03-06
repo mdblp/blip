@@ -65,8 +65,8 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   button: {
     marginRight: theme.spacing(2),
     paddingInline: theme.spacing(3),
-    textTransform: 'capitalize',
-    width: 150
+    width: 150,
+    fontWeight: 600
   },
   link: {
     textTransform: 'capitalize',
@@ -148,7 +148,7 @@ const LoginPageDesktop: FunctionComponent = () => {
                 onClick={redirectToSignup}
                 className={classes.button}
               >
-                {t('register')}
+                {t('button-register')}
               </Button>
               <Button
                 data-testid="login-button"
@@ -157,7 +157,7 @@ const LoginPageDesktop: FunctionComponent = () => {
                 onClick={loginWithRedirect}
                 className={classes.button}
               >
-                {t('connect')}
+                {t('button-connect')}
               </Button>
               <Box
                 display="flex"

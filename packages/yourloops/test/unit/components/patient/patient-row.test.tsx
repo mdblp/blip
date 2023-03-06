@@ -87,7 +87,7 @@ describe('Patient row', () => {
 
   it('should open modal when clicking on remove patient icon', () => {
     render(getPatientRowJSX())
-    const removeButton = screen.getByRole('button', { name: 'remove-patient fake@email.com' })
+    const removeButton = screen.getByRole('button', { name: 'button-remove-patient fake@email.com' })
     expect(screen.queryByTestId(removePatientDialogMockId)).not.toBeInTheDocument()
     fireEvent.click(removeButton)
     expect(screen.queryByTestId(removePatientDialogMockId)).toBeInTheDocument()
@@ -132,7 +132,7 @@ describe('Patient row', () => {
     expect(within(cells[5]).queryByText(`${patient.alarms.nonDataTransmissionRate}%`)).not.toBeNull()
     expect(within(cells[3]).queryByTitle('no-data-alert-icon')).toBeNull()
     expect(within(cells[6]).queryByText('N/A')).not.toBeNull()
-    expect(within(cells[7]).queryByLabelText('remove-patient fake@email.com')).not.toBeNull()
+    expect(within(cells[7]).queryByLabelText('button-remove-patient fake@email.com')).not.toBeNull()
   })
 
   it('should display correct fields when logged in user is caregiver', () => {

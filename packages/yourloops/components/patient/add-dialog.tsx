@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -167,7 +167,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   return (
     <Dialog
       id="patient-list-dialog-add"
-      aria-labelledby={t('add-patient')}
+      aria-labelledby={t('button-add-patient')}
       open={dialogIsOpen}
       onClose={handleClose}
     >
@@ -224,6 +224,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
       <DialogActions>
         <Button
           id="patient-list-dialog-add-button-cancel"
+          variant="outlined"
           onClick={handleClose}
         >
           {t('button-cancel')}

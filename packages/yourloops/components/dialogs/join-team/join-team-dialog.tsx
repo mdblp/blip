@@ -48,11 +48,10 @@ export const JoinTeamDialog: FunctionComponent<JoinTeamDialogProps> = (props) =>
   const onCompletePolicyConfirmStep = async (): Promise<void> => {
     setIsInProgress(true)
     await onAccept(team.id)
-    setIsInProgress(false)
   }
 
   return (
-    <Dialog onClose={onClose} open data-testId="join-team-dialog">
+    <Dialog onClose={onClose} open data-testid="join-team-dialog">
       {!team ? (
         <TeamCodeConfirm
           onCompleteStep={onCompleteTeamCodeConfirmStep}

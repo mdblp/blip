@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,6 +50,7 @@ import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
+import { LoadingButton } from '@mui/lab'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   categoryTitle: {
@@ -104,10 +105,11 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
     numberOfMonth: 3
   })
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const onSave = async (): Promise<void> => {
     try {
-      setSaveButtonDisabled(true)
+      setIsProcessing(true)
       const monitoringEnd = moment.utc(new Date()).add(prescriptionInfo.numberOfMonth, 'M').toDate()
       if (!prescriptionInfo.teamId || !prescriptionInfo.memberId || !prescriptionInfo.file) {
         throw Error('Cannot invite patient as prescription fields have not all be filled')
@@ -150,6 +152,8 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
     } catch (error) {
       setSaveButtonDisabled(false)
       alert.error(t('error-http-500'))
+    } finally {
+      setIsProcessing(false)
     }
   }
 
@@ -219,11 +223,13 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
       </Box>
       <DialogActions>
         <Button
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-cancel')}
         </Button>
-        <Button
+        <LoadingButton
+          loading={isProcessing}
           color="primary"
           variant="contained"
           disableElevation
@@ -232,7 +238,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
           data-testid="remote-monitoring-dialog-save-button"
         >
           {t('button-save')}
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -142,6 +142,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
       {(onlyHcpMember || !userIsTheOnlyAdministrator) &&
         <Button
           id="team-leave-dialog-button-cancel"
+          variant="outlined"
           onClick={handleClose}
         >
           {t('button-cancel')}

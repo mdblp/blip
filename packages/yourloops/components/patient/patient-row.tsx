@@ -265,12 +265,12 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
 
         <StyledTableCell>
           <Tooltip
-            title={t('remove-patient')}
-            aria-label={t('remove-patient')}
+            title={t('button-remove-patient')}
+            aria-label={t('button-remove-patient')}
           >
             <Box>
               <IconActionButton
-                ariaLabel={`${t('remove-patient')} ${email}`}
+                ariaLabel={`${t('button-remove-patient')} ${email}`}
                 icon={<PersonRemoveIcon />}
                 onClick={onClickRemovePatient}
               />

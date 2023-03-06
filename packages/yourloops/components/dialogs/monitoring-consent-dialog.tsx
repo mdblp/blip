@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -88,6 +88,7 @@ function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Eleme
       <DialogActions id="monitoring-consent-dialog-actions">
         <Button
           id="monitoring-consent-dialog-button-decline"
+          variant="outlined"
           onClick={onClose}
         >
           {t('button-decline')}
