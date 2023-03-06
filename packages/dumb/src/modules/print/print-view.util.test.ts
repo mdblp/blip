@@ -25,32 +25,79 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BaseDatum, type Source, type TimePrefs } from 'medical-domain'
-import { buildLayoutColumns } from './print-view.util'
+import { buildLayoutColumns, getTextData } from './print-view.util'
+import { LayoutColumnType } from '../../models/enums/layout-column-type.enum'
+import { type Row, type TableColumn } from '../../models/print/pdf-table.model'
 
 describe('Print view util', () => {
-  const timePrefs = {
-    timezoneAware: true,
-    timezoneName: 'Timezone'
-  }
-  const customNormalTime = 'Normal time'
-
   describe('buildLayoutColumns', () => {
-    it('should return the values from data if provided', () => {
-      const customSource = 'Other source'
-      const customTimezone = 'Custom timezone'
-      const data = {
-        source: customSource as Source,
-        normalTime: customNormalTime,
-        timezone: customTimezone
-      } as BaseDatum
+    it('should return correct values when layoutColumnType is equal', () => {
+      const layoutColumnWidths = [10, 20, 30]
+      const chartAreaWidth = 40
+      const leftEdge = 5
+      const layoutColumnType = LayoutColumnType.Equal
+      const docY = 2
+      const gutter = 1
 
-      expect(buildLayoutColumns().toEqual({
-        source: customSource,
-        normalTime: customNormalTime,
-        timezone: customTimezone,
-        timePrefs
-      })
+      const columns = buildLayoutColumns(layoutColumnWidths, chartAreaWidth, layoutColumnType, leftEdge, docY, gutter)
+
+      expect(columns).toEqual([
+        { width: 12.666666666666666, x: 5, y: 2 },
+        { width: 12.666666666666666, x: 18.666666666666664, y: 2 },
+        { width: 12.666666666666666, x: 32.33333333333333, y: 2 }
+      ])
+    })
+
+    it('should return correct values when layoutColumnType is percentage', () => {
+      const layoutColumnWidths = [10, 20, 30]
+      const chartAreaWidth = 40
+      const leftEdge = 5
+      const layoutColumnType = LayoutColumnType.Percentage
+      const docY = 2
+      const gutter = 1
+
+      const columns = buildLayoutColumns(layoutColumnWidths, chartAreaWidth, layoutColumnType, leftEdge, docY, gutter)
+
+      expect(columns).toEqual([
+        { width: 3.8, x: 5, y: 2 },
+        { width: 7.6, x: 9.8, y: 2 },
+        { width: 11.4, x: 18.4, y: 2 }
+      ])
+    })
+  })
+
+  describe('getTextData', () => {
+    it('should return correct text data when is an header and id is of table type', () => {
+      const textExpected = 'res'
+      const row: Row = { column: 'column', heading: { text: 'text' }, fakeId: textExpected } as unknown as Row
+      const column: TableColumn = { id: 'fakeId', header: { text: 'text' } } as TableColumn
+      const isHeader = true
+
+      const textData = getTextData(row, column, isHeader)
+
+      expect(textData).toEqual(textExpected)
+    })
+
+    it('should return correct text data when is an header and id is of table type', () => {
+      const textExpected = 'res'
+      const row: Row = { column: 'column', heading: { text: 'text' }, fakeId: 'res' } as unknown as Row
+      const column: TableColumn = { id: 'wrongId', header: { text: textExpected } } as TableColumn
+      const isHeader = true
+
+      const textData = getTextData(row, column, isHeader)
+
+      expect(textData).toEqual({ text: textExpected })
+    })
+
+    it('should return correct text data when not an header and id is of table type and column header is not defined', () => {
+      const textExpected = 'res'
+      const row: Row = { column: 'column', heading: { text: 'text' }, fakeId: textExpected } as unknown as Row
+      const column: TableColumn = { id: 'wrongId' } as TableColumn
+      const isHeader = false
+
+      const textData = getTextData(row, column, isHeader)
+
+      expect(textData).toEqual({ text: '', note: undefined, subText: '' })
     })
   })
 })
