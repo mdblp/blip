@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -90,6 +90,7 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
 
       <DialogActions>
         <Button
+          variant="outlined"
           onClick={closeDialog}
         >
           {t('button-cancel')}

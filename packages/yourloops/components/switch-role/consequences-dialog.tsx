@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -78,7 +78,10 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onCancel}>
+        <Button
+          variant="outlined"
+          onClick={onCancel}
+        >
           {t('button-cancel')}
         </Button>
         <Button
@@ -87,7 +90,7 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
           disableElevation
           onClick={onAccept}
         >
-          {t('modal-switch-hcp-action')}
+          {t('button-modal-switch-hcp-action')}
         </Button>
       </DialogActions>
     </Dialog>

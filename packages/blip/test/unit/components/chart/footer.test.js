@@ -30,7 +30,7 @@ describe('Footer', function () {
       }
       const wrapper = shallow(<Footer {...props} />)
       expect(props.onClickRefresh.callCount).to.equal(0)
-      wrapper.find('.btn-refresh').last().simulate('click')
+      wrapper.find('[data-testid="confirm-dialog-cancel-button"]').last().simulate('click')
       wrapper.update()
       expect(props.onClickRefresh.callCount).to.equal(1)
     })

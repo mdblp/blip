@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -58,7 +58,7 @@ describe('ConfirmDialog', () => {
 
   it('should call onConfirm when clicking on confirm button', () => {
     render(getConfirmDialogPropsJSX())
-    fireEvent.click(screen.getByRole('button', { name: 'confirm' }))
+    fireEvent.click(screen.getByRole('button', { name: 'button-confirm' }))
     expect(onConfirm).toHaveBeenCalled()
   })
 

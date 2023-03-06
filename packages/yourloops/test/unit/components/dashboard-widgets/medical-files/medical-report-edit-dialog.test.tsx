@@ -68,7 +68,7 @@ describe('Medical report edit dialog', () => {
     diagnosisTextArea = within(screen.getByTestId('diagnosis')).getByRole('textbox')
     progressionProposalTextArea = within(screen.getByTestId('progression-proposal')).getByRole('textbox')
     trainingSubjectTextArea = within(screen.getByTestId('training-subject')).getByRole('textbox')
-    saveButton = screen.queryByRole('button', { name: 'save' })
+    saveButton = screen.queryByRole('button', { name: 'button-save' })
   }
 
   beforeAll(() => {

@@ -65,7 +65,9 @@ export function getTheme(): Theme {
       MuiButton: {
         styleOverrides: {
           root: {
-            fontWeight: 600
+            fontWeight: 600,
+            borderRadius: '28px',
+            textTransform: 'none'
           }
         }
       },

@@ -18,6 +18,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import i18next from 'i18next'
+import Button from '@mui/material/Button'
 
 function TidelineFooter(props) {
   const { children, onClickRefresh } = props
@@ -25,8 +26,13 @@ function TidelineFooter(props) {
     <div className="container-box-outer patient-data-footer-outer">
       <div className="container-box-inner patient-data-footer-inner">
         <div className="patient-data-footer-left">
-          <button className="btn btn-chart btn-refresh" onClick={onClickRefresh}>
-            {i18next.t('Refresh')}</button>
+          <Button
+            data-testid="confirm-dialog-cancel-button"
+            variant="outlined"
+            onClick={onClickRefresh}
+          >
+            {i18next.t('Refresh')}
+          </Button>
         </div>
         <div className="patient-data-footer-right">{children}</div>
       </div>

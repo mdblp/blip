@@ -71,7 +71,7 @@ export const checkProfileStep = async (firstname: string, lastname: string) => {
   const firstnameInput = within(screen.getByLabelText('First name')).getByRole('textbox')
   const lastnameInput = within(screen.getByLabelText('Last name')).getByRole('textbox')
   const countrySelect = screen.getByTestId('country-selector')
-  const createButton = screen.getByRole('button', { name: 'Create Account' })
+  const createButton = screen.getByRole('button', { name: 'Create account' })
 
   expect(firstnameInput).toBeInTheDocument()
   expect(lastnameInput).toBeInTheDocument()

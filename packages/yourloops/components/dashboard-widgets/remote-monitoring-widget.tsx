@@ -187,11 +187,10 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                   variant="contained"
                   color="primary"
                   disableElevation
-                  size="small"
                   onClick={() => { setShowInviteRemoteMonitoringDialog(true) }}
                   data-testid="remote-monitoring-card-invite-button"
                 >
-                  {t('invite')}
+                  {t('button-invite')}
                 </Button>
               }
               {buttonsVisible.cancel &&
@@ -201,11 +200,10 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                   variant="contained"
                   color="primary"
                   disableElevation
-                  size="small"
                   onClick={() => { setShowConfirmCancelDialog(true) }}
                   data-testid="remote-monitoring-card-cancel-invite-button"
                 >
-                  {t('cancel-invite')}
+                  {t('button-cancel-invite')}
                 </Button>
               }
               {buttonsVisible.renewAndRemove &&
@@ -216,7 +214,6 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                     variant="contained"
                     color="primary"
                     disableElevation
-                    size="small"
                     onClick={() => { setShowRenewRemoteMonitoringDialog(true) }}
                     data-testid="remote-monitoring-card-renew-button"
                   >
@@ -228,7 +225,6 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                     variant="contained"
                     color="primary"
                     disableElevation
-                    size="small"
                     onClick={() => { setShowConfirmDeleteDialog(true) }}
                     data-testid="remote-monitoring-card-remove-button"
                   >

@@ -36,8 +36,8 @@ import TextField from '@mui/material/TextField'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { useAlert } from '../../utils/snackbar'
-import ProgressIconButtonWrapper from '../../buttons/progress-icon-button-wrapper'
 import { getNumericCode } from '../../../lib/team/team-code.utils'
+import { LoadingButton } from '@mui/lab'
 
 export interface ConfirmTeamProps {
   onClickCancel: () => void
@@ -124,22 +124,22 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
       <DialogActions>
         <Button
           id="team-add-dialog-button-cancel"
+          variant="outlined"
           onClick={onClickCancel}
         >
           {t('button-cancel')}
         </Button>
-        <ProgressIconButtonWrapper inProgress={isInProgress}>
-          <Button
-            id="team-add-dialog-button-add-team"
-            disabled={joinButtonDisabled || isInProgress}
-            variant="contained"
-            color="primary"
-            disableElevation
-            onClick={handleClickJoinTeam}
-          >
-            {t('continue')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        <LoadingButton
+          loading={isInProgress}
+          id="team-add-dialog-button-add-team"
+          disabled={joinButtonDisabled}
+          variant="contained"
+          color="primary"
+          disableElevation
+          onClick={handleClickJoinTeam}
+        >
+          {t('button-continue')}
+        </LoadingButton>
       </DialogActions>
     </React.Fragment>
   )

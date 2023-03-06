@@ -39,7 +39,7 @@ import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import metrics from '../../../lib/metrics'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { useTheme } from '@mui/material/styles'
-import ProgressIconButtonWrapper from '../../buttons/progress-icon-button-wrapper'
+import { LoadingButton } from '@mui/lab'
 
 export interface ConfirmTeamProps {
   onCompleteStep: () => Promise<void>
@@ -123,22 +123,22 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
       <DialogActions>
         <Button
           id="team-add-dialog-confirm-team-button-cancel"
+          variant="outlined"
           onClick={onClickCancel}
         >
           {t('button-cancel')}
         </Button>
-        <ProgressIconButtonWrapper inProgress={inProgress}>
-          <Button
-            id="team-add-dialog-confirm-team-button-add-team"
-            disabled={!policyChecked || inProgress}
-            variant="contained"
-            color="primary"
-            disableElevation
-            onClick={onCompleteStep}
-          >
-            {t('join-team')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        <LoadingButton
+          loading={inProgress}
+          id="team-add-dialog-confirm-team-button-add-team"
+          disabled={!policyChecked}
+          variant="contained"
+          color="primary"
+          disableElevation
+          onClick={onCompleteStep}
+        >
+          {t('join-team')}
+        </LoadingButton>
       </DialogActions>
     </React.Fragment>
   )
