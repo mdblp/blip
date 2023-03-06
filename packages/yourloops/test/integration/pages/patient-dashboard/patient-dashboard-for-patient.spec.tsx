@@ -63,7 +63,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsGenerate report')
+    expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
     await checkMedicalWidgetForPatient()
   })
 

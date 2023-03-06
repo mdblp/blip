@@ -41,13 +41,14 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
-import { screen, waitFor, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
 import { weekArrayPlugin, weekdaysPlugin } from '../../../../lib/dayjs'
 import * as constants from '../../../../../viz/src/modules/print/utils/constants'
 import DataApi from '../../../../lib/data/data.api'
 import { User } from '../../../../lib/auth'
+import { when } from 'jest-when'
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {
@@ -77,6 +78,13 @@ describe('Daily view for anyone', () => {
       dayjs.extend(weekArrayPlugin)
       dayjs.extend(weekdaysPlugin)
 
+      const downloadLinkElement = {
+        click: jest.fn(),
+        remove: jest.fn(),
+        download: '',
+        href: ''
+      }
+
       // This is a base64 encoded image
       constants.Images.logo = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA='
       constants.Images.siteChangeCannulaImage = 'fakeImage'
@@ -85,19 +93,18 @@ describe('Daily view for anyone', () => {
       constants.Images.siteChangeReservoirDiabeloopImage = 'fakeImage'
 
       mockDataAPI(twoWeeksOfCbg)
-      const windowOpenMock = jest.fn().mockReturnValue(null)
-      window.open = windowOpenMock
+
       const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockResolvedValue('')
 
       renderPage('/daily')
 
-      const generateReportButton = await screen.findByText('Generate report')
+      const generateReportButton = await screen.findByText('Download report')
       expect(generateReportButton).toBeVisible()
 
-      await userEvent.click(screen.getByText('Generate report'))
+      await userEvent.click(screen.getByText('Download report'))
 
       const generateReportDialogFirstPdf = within(screen.getByRole('dialog'))
-      expect(generateReportDialogFirstPdf.getByText('Generate report')).toBeVisible()
+      expect(generateReportDialogFirstPdf.getByText('Download report')).toBeVisible()
       expect(generateReportDialogFirstPdf.getByText('Choose a fixed period')).toBeVisible()
       expect(generateReportDialogFirstPdf.getByRole('button', { name: '1 week' })).toHaveAttribute('aria-selected', 'true')
       expect(generateReportDialogFirstPdf.getByRole('button', { name: '2 weeks' })).toHaveAttribute('aria-selected', 'false')
@@ -112,11 +119,21 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstPdf.getByRole('radio', { name: 'CSV' })).not.toBeChecked()
       expect(generateReportDialogFirstPdf.getByText('Cancel')).toBeVisible()
 
-      await userEvent.click(generateReportDialogFirstPdf.getByText('Generate'))
-      // This checks that we tried to generate a pdf
-      await waitFor(() => { expect(windowOpenMock).toBeCalled() })
+      const createElementSpy = jest.spyOn(document, 'createElement')
+      const appenChildSpy = jest.spyOn(document.body, 'appendChild')
 
-      await userEvent.click(screen.getByText('Generate report'))
+      when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
+      when(appenChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+
+      await userEvent.click(generateReportDialogFirstPdf.getByText('Download'))
+
+      // This checks that we tried to generate a pdf
+      expect(downloadLinkElement.download).toEqual(`yourloops-report-${unmonitoredPatientAsTeamMember.userId}.pdf`)
+      expect(downloadLinkElement.href.length).toBeGreaterThan(17950)
+      expect(downloadLinkElement.href.length).toBeLessThan(18030)
+      expect(downloadLinkElement.click).toHaveBeenCalledTimes(1)
+
+      await userEvent.click(screen.getByText('Download report'))
       const generateReportDialogFirstCsv = within(screen.getByRole('dialog'))
       await userEvent.click(generateReportDialogFirstCsv.getByRole('radio', { name: 'CSV' }))
       await userEvent.click(generateReportDialogFirstCsv.getByRole('button', { name: '2 weeks' }))
@@ -124,8 +141,14 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-02')).toHaveAttribute('aria-selected', 'true')
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
 
-      await userEvent.click(generateReportDialogFirstCsv.getByText('Generate'))
+      when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
+      when(appenChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+
+      await userEvent.click(generateReportDialogFirstCsv.getByText('Download'))
+
       // This checks for CSV generation
+      expect(downloadLinkElement.download).toEqual(`yourloops-report-${unmonitoredPatientAsTeamMember.userId}.csv`)
+      expect(downloadLinkElement.click).toHaveBeenCalledTimes(2)
       expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), unmonitoredPatientAsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
     })
   })

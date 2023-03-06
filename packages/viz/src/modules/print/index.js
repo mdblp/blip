@@ -279,13 +279,12 @@ export function createPrintPDFPackage(data, opts) {
       renderPageNumbers(doc, renderPageParams)
 
       doc.end()
-
-      stream.on('finish', () => {
-        const pdf = {
-          blob: stream.toBlob(),
-          url: stream.toBlobURL('application/pdf')
-        }
-        return resolve(pdf)
+      const buffers = []
+      doc.on('data', buffers.push.bind(buffers))
+      doc.on('end', async () => {
+        const pdfBuffer = Buffer.concat(buffers)
+        const pdfBase64 = pdfBuffer.toString('base64')
+        return resolve( {url : `data:application/octet-stream;charset=utf-16le;base64,${pdfBase64}`})
       })
 
       stream.on('error', (error) => {

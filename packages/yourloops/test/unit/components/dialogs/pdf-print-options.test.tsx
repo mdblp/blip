@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -117,7 +117,7 @@ describe('PDF print options', () => {
   }
 
   const expectResult = (preset: Presets | null, start = MIN_DATE, end = MAX_DATE) => {
-    const buttonGenerate = document.getElementById('pdf-options-button-generate')
+    const buttonGenerate = document.getElementById('pdf-options-button-download')
     buttonGenerate.click()
     expect(handleResult).toHaveBeenCalledTimes(1)
     expect(handleResult.mock.calls[0].length).toBe(1)

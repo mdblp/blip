@@ -107,6 +107,9 @@ const plugins = [
     inject: 'body',
     hash: false,
     minify: false
+  }),
+  new webpack.ProvidePlugin({
+    Buffer: ['buffer', 'Buffer']
   })
 ]
 

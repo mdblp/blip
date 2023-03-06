@@ -650,23 +650,22 @@ class PatientDataPage extends React.Component {
    * @returns {Promise<void>}
    */
   handlePrint = (printOptions) => {
-    const openPDFWindow = (pdf) => {
-      const printWindow = window.open(pdf.url)
-      if (printWindow !== null) {
-        printWindow.focus()
-        if (!utils.isFirefox()) {
-          printWindow.print()
-        }
-      }
-    }
-    const openCSVWindow = (csv, userid) => {
-      const url = window.URL.createObjectURL(new Blob([...csv], { type: 'application/zip' }))
-      var a = document.createElement('a')
+    const downloadFile = (url, fileName) => {
+      const a = document.createElement('a')
       a.href = url
-      a.download = `${userid}.csv`
+      a.download = fileName
       document.body.appendChild(a) // we need to append the element to the dom -> otherwise it will not work in firefox
       a.click()
       a.remove()
+    }
+
+    const openPDFWindow = (pdf, userid) => {
+      downloadFile(pdf.url, `yourloops-report-${userid}.pdf`)
+    }
+
+    const openCSVWindow = (csv, userid) => {
+      const url = window.URL.createObjectURL(new Blob([...csv], { type: 'application/zip' }))
+      downloadFile(url, `yourloops-report-${userid}.csv`)
     }
 
     this.setState({ showPDFPrintOptions: false })
@@ -683,7 +682,7 @@ class PatientDataPage extends React.Component {
         this.generateReport(printOptions)
           .then((pdf) => {
             this.trackMetric('export_data', 'save_report', printOptions.preset ?? 'custom')
-            openPDFWindow(pdf)
+            openPDFWindow(pdf, patient.userid)
             resolve()
           })
           .catch((err) => {
