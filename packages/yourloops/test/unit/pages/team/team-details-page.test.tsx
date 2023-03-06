@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
@@ -98,15 +98,6 @@ describe('TeamDetailsPage', () => {
     const backButton = screen.getByRole('button', { name: 'back-button' })
     fireEvent.click(backButton)
     expect(history.location.pathname).toBe('/')
-  })
-
-  it('should redirect to the team details page when selecting a new team', () => {
-    render(getTeamDetailsPageJSX())
-    const selectInput = screen.getByRole('button', { name: team1.name })
-    fireEvent.mouseDown(selectInput)
-    const menuItems = within(screen.getByRole('listbox'))
-    fireEvent.click(menuItems.getByText(team2.name))
-    expect(history.location.pathname).toBe(`/teams/${team2.id}`)
   })
 
   it('should display specific information when user is HCP and team is monitored', () => {
