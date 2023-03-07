@@ -80,7 +80,6 @@
     "@types/chai": "^4.2.22",
     "@types/d3-format": "^3.0.1",
     "@types/enzyme": "^3.10.9",
-    "@types/history": "*",
     "@types/jest": "^29.4.0",
     "@types/lodash": "^4.14.191",
     "@types/mini-css-extract-plugin": "^2.3.0",
