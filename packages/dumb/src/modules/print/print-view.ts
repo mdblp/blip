@@ -517,9 +517,10 @@ export class PrintView {
       this.#patientInfoBox.width = patientBirthdayWidth
     }
 
+    const lineStart = this.margins.left + this.#patientInfoBox.width + PADDING_PATIENT_INFO
     this.doc
-      .moveTo(this.margins.left + this.#patientInfoBox.width + PADDING_PATIENT_INFO, this.margins.top)
-      .lineTo(this.margins.left + this.#patientInfoBox.width + PADDING_PATIENT_INFO, this.#patientInfoBox.height)
+      .moveTo(lineStart, this.margins.top)
+      .lineTo(lineStart, this.#patientInfoBox.height)
       .stroke(COLOR_BLACK)
   }
 
