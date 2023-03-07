@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unrelelased
+### Fixed
+- YLP-2166 Objects with duration should have an end lower than the latest data time
+
 ## 2.0.6 - 2022-03-03
 ### Added
 - YLP-1105 Yourloops new blue theme
