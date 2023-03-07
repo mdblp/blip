@@ -2,7 +2,9 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 2.0.7-ALPHA1 - 2023-03-08
+## 2.0.7-ALPHA2 - 2023-03-08
+### Added
+- YLP-2214 Implement data-upload for UMM bolus
 ### Fixed
 - YLP-2166 Objects with duration should have an end lower than the latest data time
 
