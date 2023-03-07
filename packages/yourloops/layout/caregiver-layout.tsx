@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,13 +40,23 @@ export function CaregiverLayout(): JSX.Element {
     <PatientProvider>
       <DashboardLayout>
         <Switch>
-          <Route exact path="/not-found" component={InvalidRoute} />
-          <Route exact path="/preferences" component={ProfilePage} />
-          <Route exact path="/notifications" component={NotificationsPage} />
-          <Route path="/patient/:patientId" component={PatientDataPage} />
-          <Route exact path="/home" component={HomePage} />
-          <Redirect exact from="/" to="/home" />
-          <Redirect to="/not-found" />
+          <Route exact path="/not-found">
+            <InvalidRoute />
+          </Route>
+          <Route exact path="/preferences">
+            <ProfilePage />
+          </Route>
+          <Route exact path="/notifications">
+            <NotificationsPage />
+          </Route>
+          <Route path="/patient/:patientId">
+            <PatientDataPage />
+          </Route>
+          <Route exact path="/home">
+            <HomePage />
+          </Route>
+          <Route exact path="/" render={() => <Redirect to="/home" />} />
+          <Route render={() => <Redirect to="/not-found" />} />
         </Switch>
       </DashboardLayout>
     </PatientProvider>

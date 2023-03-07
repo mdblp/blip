@@ -132,14 +132,30 @@ export function MainLobby(): JSX.Element {
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
                   <Box>
                     <Switch>
-                      <Route exact path="/product-labelling" component={ProductLabellingPage} />
-                      <Route exact path="/login" component={LoginPage} />
-                      <Route exact path="/complete-signup" component={CompleteSignUpPage} />
-                      <Route exact path="/renew-consent" component={ConsentPage} />
-                      <Route exact path="/new-consent" component={PatientConsentPage} />
-                      <Route exact path="/training" component={TrainingPage} />
-                      <Route exact path="/verify-email" component={VerifyEmailPage} />
-                      <Route component={MainLayout} />
+                      <Route exact path="/product-labelling">
+                        <ProductLabellingPage />
+                      </Route>
+                      <Route exact path="/login">
+                        <LoginPage />
+                      </Route>
+                      <Route exact path="/complete-signup">
+                        <CompleteSignUpPage />
+                      </Route>
+                      <Route exact path="/renew-consent">
+                        <ConsentPage />
+                      </Route>
+                      <Route exact path="/new-consent">
+                        <PatientConsentPage />
+                      </Route>
+                      <Route exact path="/training">
+                        <TrainingPage />
+                      </Route>
+                      <Route exact path="/verify-email">
+                        <VerifyEmailPage />
+                      </Route>
+                      <Route>
+                        <MainLayout />
+                      </Route>
                     </Switch>
                   </Box>
                 </SnackbarContextProvider>

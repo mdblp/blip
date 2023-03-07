@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,14 +43,28 @@ export function PatientLayout(): JSX.Element {
       <PatientProvider>
         <DashboardLayout>
           <Switch>
-            <Route exact path="/not-found" component={InvalidRoute} />
-            <Route exact path="/preferences" component={ProfilePage} />
-            <Route exact path="/notifications" component={NotificationsPage} />
-            <Route exact path="/home" component={PatientDataPage} />
-            <Route exact path="/caregivers" component={CaregiversPage} />
-            <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-            <Redirect exact from="/" to="/dashboard" />
-            <Route path="/" component={PatientDataPage} />
+            <Route exact path="/not-found">
+              <InvalidRoute />
+            </Route>
+            <Route exact path="/preferences">
+              <ProfilePage />
+            </Route>
+            <Route exact path="/notifications">
+              <NotificationsPage />
+            </Route>
+            <Route exact path="/home">
+              <PatientDataPage />
+            </Route>
+            <Route exact path="/caregivers">
+              <CaregiversPage />
+            </Route>
+            <Route exact path="/teams/:teamId">
+              <TeamDetailsPage />
+            </Route>
+            <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
+            <Route path="/">
+              <PatientDataPage />
+            </Route>
           </Switch>
         </DashboardLayout>
       </PatientProvider>
