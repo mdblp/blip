@@ -29,9 +29,11 @@
   --bolus-underride: #7E7E7E;
   --bolus-undelivered: #E98D7C;
   --bolus-meal: #6FC3BB;
+  --bolus-umm: #C1EADF;
   --bolus-micro: #9A78BD;
   --bolus-manual: #8C65D6;
   --carbs: #6FC3BB;
+  --carbs-umm: #C1EADF;
   --carbs-text: black;
   --rescuecarbs: #E98D7C;
   --collapsible--border: #EDEDED;
