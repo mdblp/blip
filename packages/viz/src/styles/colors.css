@@ -87,6 +87,7 @@
   bolusMeal: var(--bolus-meal);
   bolusMicro: var(--bolus-micro);
   bolusManual: var(--bolus-manual);
+  bolusUmm: var(--bolus-umm);
   basal: #19A0D7;
   basalHeader: #DCF1F9;
   basalAutomated: #00D3E6;

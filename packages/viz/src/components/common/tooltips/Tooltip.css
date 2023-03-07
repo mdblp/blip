@@ -46,6 +46,7 @@
   flex-wrap: wrap;
   align-items: flex-start;
   width: 100%;
+  column-gap: 0.5em;
 }
 .titleDate {
   margin-right: auto;

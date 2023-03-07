@@ -121,11 +121,13 @@ class BolusTooltip extends React.Component {
     return overrideLine;
   }
 
-  getCarbsLine(carbs) {
+  getCarbsLine(carbs, wizardSource) {
     if (carbs !== null) {
+      const isUmm = wizardSource === 'umm'
+      console.log("carbs line", {carbs, isUmm})
       return (
         <div className={styles.carbs} id="bolus-tooltip-line-carbs">
-          <div className={styles.label} id="bolus-tooltip-line-carbs-label">{t("Carbs")}</div>
+          <div className={styles.label} id="bolus-tooltip-line-carbs-label">{isUmm ? t("Estimated carbs") : t("Carbs")}</div>
           <div className={styles.value} id="bolus-tooltip-line-carbs-value">{carbs}</div>
           <div className={styles.units} id="bolus-tooltip-line-carbs-units">{t("g")}</div>
         </div>
@@ -168,6 +170,7 @@ class BolusTooltip extends React.Component {
     const bolusType = _.get(wizard, "bolus.subType", null);
     const fatMeal = _.get(wizard, "inputMeal.fat", "no");
     const iob = _.get(wizard, "insulinOnBoard", _.get(wizard, "bolus.insulinOnBoard", null));
+    const wizardSource = _.get(wizard, "inputMeal.source", "manual");
     const carbs = bolusUtils.getCarbs(wizard);
     const delivered = bolusUtils.getDelivered(wizard);
     const isInterrupted = bolusUtils.isInterruptedBolus(wizard);
@@ -177,7 +180,7 @@ class BolusTooltip extends React.Component {
     const deliveredLine = this.getDeliveredLine(delivered);
     const undeliveredLine = isInterrupted ? this.getUndeliveredLine(programmed - delivered) : null;
     const recommendedLine = (isInterrupted || overrideLine !== null) && suggested !== null ? this.getRecommendedLine(suggested) : null;
-    const carbsLine = this.getCarbsLine(carbs);
+    const carbsLine = this.getCarbsLine(carbs, wizardSource);
 
     const iobLine = this.getIobLine(iob);
     const bolusTypeLine = this.getBolusTypeLine(bolusType);
@@ -257,6 +260,11 @@ class BolusTooltip extends React.Component {
     const bolusType = bolusUtils.getBolusType(bolus);
 
     switch (bolusType) {
+    case bolusUtils.BolusTypes.umm:
+      tailColor = colors.bolusUmm;
+      borderColor = colors.bolusUmm;
+      bolusTypeTitle = t("Unannounced Meal Bolus");
+      break;
     case bolusUtils.BolusTypes.meal:
       tailColor = colors.bolusMeal;
       borderColor = colors.bolusMeal;

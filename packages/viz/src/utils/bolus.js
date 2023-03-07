@@ -50,6 +50,7 @@ export const BolusTypes = {
   meal: 1,
   micro: 2,
   manual: 3,
+  umm: 4
 };
 
 /**
@@ -58,6 +59,9 @@ export const BolusTypes = {
  */
 export function getBolusType(b) {
   if (b.type === "wizard") {
+    if (b?.inputMeal?.source === 'umm') {
+      return BolusTypes.umm
+    }
     return BolusTypes.meal;
   }
   const bolus = getBolusFromInsulinEvent(b);
