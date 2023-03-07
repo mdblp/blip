@@ -27,14 +27,11 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory, useParams } from 'react-router-dom'
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { type Team, useTeam } from '../../lib/team'
@@ -95,7 +92,6 @@ function TeamDetailsPage(): JSX.Element {
   const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
-  const history = useHistory()
   const authContext = useAuth()
   const { t } = useTranslation('yourloops')
   const { teamId } = paramHook as { teamId: string }
@@ -125,10 +121,6 @@ function TeamDetailsPage(): JSX.Element {
     refresh()
   }, [refresh])
 
-  const redirectToDashboard = (): void => {
-    history.push('/')
-  }
-
   const isMonitoringEnabled = (): boolean => {
     return dropdownData.selectedTeam?.monitoring?.enabled
   }
@@ -137,15 +129,6 @@ function TeamDetailsPage(): JSX.Element {
     <React.Fragment>
       {dropdownData.selectedTeam &&
         <Box role="main" paddingLeft={2}>
-          <Box display="flex" alignItems="center">
-            <IconButton
-              className={classes.disableRipple}
-              aria-label="back-button"
-              onClick={redirectToDashboard}
-              size="large">
-              <ArrowBackIcon />
-            </IconButton>
-          </Box>
           <Box display="flex">
             {isUserHcp &&
               <div className={classes.drawer} role="navigation">
