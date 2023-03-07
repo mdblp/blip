@@ -23,15 +23,19 @@ const BolusTypes = {
   meal: 1,
   micro: 2,
   manual: 3,
-};
+  umm: 4
+}
 
 /**
  * @param {object} b The bolus or wizard
  * @returns {number} The type of bolus
  */
 function bolusToLegend(b) {
-  if (b.type === "wizard") {
-    return BolusTypes.meal;
+  if (b.type === 'wizard') {
+    if (b?.inputMeal?.source === 'umm') {
+      return BolusTypes.umm
+    }
+    return BolusTypes.meal
   }
   const bolus = commonbolus.getBolus(b);
   if (bolus.subType === "pen" || bolus.prescriptor === "manual") {
@@ -50,12 +54,14 @@ function bolusToLegend(b) {
  */
 function bolusClass(b, baseClass) {
   switch (bolusToLegend(b)) {
-  case BolusTypes.manual:
-    return `${baseClass} d3-bolus-manual`;
-  case BolusTypes.meal:
-    return `${baseClass} d3-bolus-meal`;
-  case BolusTypes.micro:
-    return `${baseClass} d3-bolus-micro`;
+    case BolusTypes.manual:
+      return `${baseClass} d3-bolus-manual`
+    case BolusTypes.meal:
+      return `${baseClass} d3-bolus-meal`
+    case BolusTypes.micro:
+      return `${baseClass} d3-bolus-micro`
+    case BolusTypes.umm:
+      return `${baseClass} d3-bolus-umm`
   }
   return baseClass;
 }
@@ -117,23 +123,30 @@ function drawBolus(pool, opts = {}) {
       const xPos = (d) => xPosition(d) + halfWidth;
       const yScaleCarbs = (ci) => opts.yScaleCarbs ? opts.yScaleCarbs(ci) : opts.r;
       const yPos = (d) => {
-        const r = yScaleCarbs(d.carbInput);
-        const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0;
-        return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0);
-      };
-
-      carbs.append("circle")
+        const r = yScaleCarbs(d.carbInput)
+        const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0
+        return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0)
+      }
+      const isUmm = (d) => d?.inputMeal?.source === 'umm'
+      const carbCircleClass = (d) => {
+        const baseClass = 'd3-circle-carbs d3-carbs'
+        if (isUmm(d)) {
+          return `${baseClass} d3-carbs-umm`
+        }
+        return baseClass
+      }
+      carbs.append('circle')
         .attr({
-          "cx": xPos,
-          "cy": yPos,
-          "r": (d) => yScaleCarbs(d.carbInput),
-          "stroke-width": 0,
-          "class": "d3-circle-carbs d3-carbs",
-          "id": (d) => `carbs_circle_${d.id}`,
-        });
+          'cx': xPos,
+          'cy': yPos,
+          'r': (d) => yScaleCarbs(d.carbInput),
+          'stroke-width': 0,
+          'class': carbCircleClass,
+          'id': (d) => `carbs_circle_${d.id}`
+        })
 
-      carbs.append("text")
-        .text((d) => d.carbInput)
+      carbs.append('text')
+        .text((d) => isUmm(d) ? '-':  d.carbInput)
         .attr({
           x: xPos,
           y: yPos,
