@@ -57,7 +57,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   if (rawData?.inputMeal) {
     const inputMeal = rawData.inputMeal as Record<string, unknown>
     wizard.inputMeal = {
-      fat: inputMeal?.fat as WizardInputMealFat
+      fat: inputMeal?.fat as WizardInputMealFat,
+      source: inputMeal?.source ? inputMeal.source as string : 'default'
     }
   }
   return wizard

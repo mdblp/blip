@@ -45,6 +45,7 @@ export type Wizard = BaseDatum & {
   inputTime: string
   inputMeal?: {
     fat: WizardInputMealFat
+    source: string
   }
 }
 
