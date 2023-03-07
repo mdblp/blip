@@ -38,6 +38,7 @@ import type User from '../../../../lib/auth/models/user.model'
 import { type Alarms } from '../../../../lib/patient/models/alarms.model'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { getTheme } from '../../../../components/theme'
+import { UnitsType } from 'dumb'
 
 jest.mock('../../../../lib/auth')
 describe('AlarmCard', () => {
@@ -54,6 +55,8 @@ describe('AlarmCard', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
+          id: 'id',
+          settings: { units: { bg: UnitsType.MGDL } },
           isUserPatient: () => false,
           isUserHcp: () => true
         } as User

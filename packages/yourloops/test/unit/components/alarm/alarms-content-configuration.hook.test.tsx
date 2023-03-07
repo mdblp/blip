@@ -30,15 +30,19 @@ import useAlarmsContentConfiguration from '../../../../components/alarm/alarms-c
 import { UnitsType } from 'dumb'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
+import * as authHookMock from '../../../../lib/auth'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import PatientUtils from '../../../../lib/patient/patient.util'
 
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/auth')
 
 describe('AlarmsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
   const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
+  const user = { id: 'id', settings: { units: { bg: UnitsType.MGDL } } }
+
   const getDefaultMonitoring = () => ({
     enabled: true,
     parameters: {
@@ -58,40 +62,61 @@ describe('AlarmsContentConfiguration hook', () => {
       return {
         getTeam: getTeamMock
       }
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user
+      }
     })
   })
 
   describe('getErrorMessage', () => {
+    afterAll(() => {
+      user.settings.units.bg = UnitsType.MGDL
+    })
+
     it('should return no error messages when monitoring values are correct', () => {
       const monitoring = getDefaultMonitoring()
+
       const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+
       expect(result.current.lowBg.errorMessage).toBeNull()
       expect(result.current.highBg.errorMessage).toBeNull()
       expect(result.current.veryLowBg.errorMessage).toBeNull()
     })
 
-    it('should return an error message if values are not integer or float (depending on bg unit)', () => {
-      const monitoringOne = getDefaultMonitoring()
-      monitoringOne.parameters.lowBg = 66.6
-      monitoringOne.parameters.highBg = 140.5
-      monitoringOne.parameters.veryLowBg = 64.1
+    it('should return an error message expecting integer values if BG unit is mg/dL', () => {
+      const monitoring = getDefaultMonitoring()
+
+      monitoring.parameters.lowBg = 66.6
+      monitoring.parameters.highBg = 140.5
+      monitoring.parameters.veryLowBg = 64.1
+
       const { result: firstHook } = renderHook(() => useAlarmsContentConfiguration({
-        monitoring: monitoringOne,
+        monitoring,
         patient
       }))
+
       expect(firstHook.current.veryLowBg.errorMessage).toBe('mandatory-integer')
       expect(firstHook.current.lowBg.errorMessage).toBe('mandatory-integer')
       expect(firstHook.current.highBg.errorMessage).toBe('mandatory-integer')
+    })
 
-      const monitoringTwo = getDefaultMonitoring()
-      monitoringTwo.parameters.bgUnit = UnitsType.MMOLL
-      monitoringTwo.parameters.lowBg = 3.55
-      monitoringTwo.parameters.highBg = 8.55
-      monitoringTwo.parameters.veryLowBg = 3.55
+    it('should return an error message expecting float values if BG unit is mmol/L', () => {
+      const monitoring = getDefaultMonitoring()
+
+      user.settings.units.bg = UnitsType.MMOLL
+
+      monitoring.parameters.lowBg = 3.55
+      monitoring.parameters.highBg = 8.55
+      monitoring.parameters.veryLowBg = 3.55
+      monitoring.parameters.bgUnit = UnitsType.MMOLL
+
       const { result: secondHook } = renderHook(() => useAlarmsContentConfiguration({
-        monitoring: monitoringTwo,
+        monitoring,
         patient
       }))
+
       expect(secondHook.current.veryLowBg.errorMessage).toBe('mandatory-float-number')
       expect(secondHook.current.lowBg.errorMessage).toBe('mandatory-float-number')
       expect(secondHook.current.highBg.errorMessage).toBe('mandatory-float-number')
@@ -102,7 +127,9 @@ describe('AlarmsContentConfiguration hook', () => {
       monitoring.parameters.lowBg = 25000
       monitoring.parameters.highBg = 14230
       monitoring.parameters.veryLowBg = 123456789
+
       const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+
       expect(result.current.veryLowBg.errorMessage).toBe('mandatory-range')
       expect(result.current.lowBg.errorMessage).toBe('mandatory-range')
       expect(result.current.highBg.errorMessage).toBe('mandatory-range')
@@ -115,21 +142,26 @@ describe('AlarmsContentConfiguration hook', () => {
         monitoring: getDefaultMonitoring(),
         patient
       }))
+
       expect(result.current.saveButtonDisabled).toBeFalsy()
     })
 
     it('should be disabled if monitoring is incorrect', () => {
       const monitoring = getDefaultMonitoring()
       monitoring.parameters.highBg = 260
+
       const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+
       expect(result.current.saveButtonDisabled).toBeTruthy()
     })
   })
 
   describe('resetToTeamDefaultValues', () => {
     const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
+
     it('should return an error message if patient is not created', () => {
       const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: getDefaultMonitoring() }))
+
       expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError('This action cannot be done if the patient is undefined')
     })
 
@@ -138,28 +170,34 @@ describe('AlarmsContentConfiguration hook', () => {
         status: UserInvitationStatus.accepted,
         teamId
       })
+
       const { result } = renderHook(() => useAlarmsContentConfiguration({
         monitoring: getDefaultMonitoring(),
         patient
       }))
+
       expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError(`Cannot find team with id ${teamId}`)
     })
 
     it('should return an error message if the team has no monitoring parameters', () => {
       delete team.monitoring.parameters;
+
       (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
         return {
           getTeam: () => team
         }
       })
+
       jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({
         status: UserInvitationStatus.accepted,
         teamId
       })
+
       const { result } = renderHook(() => useAlarmsContentConfiguration({
         patient,
         monitoring: getDefaultMonitoring()
       }))
+
       expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError('The given team has no monitoring values')
     })
 
@@ -168,13 +206,17 @@ describe('AlarmsContentConfiguration hook', () => {
         status: UserInvitationStatus.accepted,
         teamId
       })
+
       const defaultMonitoring = getDefaultMonitoring()
+
       team.monitoring = getDefaultMonitoring();
+
       (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
         return {
           getTeam: () => team
         }
       })
+
       const updatedMonitoring = {
         enabled: true,
         parameters: {
@@ -188,10 +230,12 @@ describe('AlarmsContentConfiguration hook', () => {
           reportingPeriod: 14
         }
       }
+
       const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: updatedMonitoring, patient }))
       act(() => {
         result.current.resetToTeamDefaultValues()
       })
+
       expect(result.current.highBg.value).toEqual(defaultMonitoring.parameters.highBg)
       expect(result.current.lowBg.value).toEqual(defaultMonitoring.parameters.lowBg)
       expect(result.current.veryLowBg.value).toEqual(defaultMonitoring.parameters.veryLowBg)
@@ -209,10 +253,12 @@ describe('AlarmsContentConfiguration hook', () => {
       monitoringEnd: undefined
     }
     const onSaveMock = jest.fn()
+
     const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave: onSaveMock }))
     act(() => {
       result.current.save()
     })
+
     expect(onSaveMock).toHaveBeenCalledWith(expectedResult)
   })
 })
