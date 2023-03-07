@@ -2,7 +2,7 @@
 
 pipeline {
     agent {
-        label 'blip'
+        label 'blp'
     }
     environment {
         node_version='14'
