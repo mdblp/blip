@@ -257,13 +257,13 @@ TidelineData.prototype.normalizeTime = function normalizeTime(d) {
   d.normalTime = mTime.toISOString();
   d.epoch = mTime.valueOf();
 
-  const HourMilliseconds = 60 * 60 * 1000
-  const maxEpoch = this?.opts?.dataRange ? this.opts.dataRange[1].valueOf() + HourMilliseconds : null
+  const HourMilliseconds = 60 * 60 * 1000;
+  const maxEpoch = this?.opts?.dataRange ? this.opts.dataRange[1].valueOf() + HourMilliseconds : null;
   if (d.type === "basal") {
     const duration = d.duration ?? 0;
     d.epochEnd = d.epoch + duration;
     if (maxEpoch && d.epochEnd > maxEpoch) {
-      d.epochEnd = maxEpoch
+      d.epochEnd = maxEpoch;
     }
     d.normalEnd = moment.utc(mTime).add(d.epochEnd - d.epoch, "milliseconds").toISOString();
     this.maxDuration = Math.max(this.maxDuration, d.epochEnd - d.epoch);
@@ -274,7 +274,7 @@ TidelineData.prototype.normalizeTime = function normalizeTime(d) {
     mEnd.add(duration, units);
     d.epochEnd = mEnd.valueOf();
     if (maxEpoch && d.epochEnd > maxEpoch) {
-      d.epochEnd = maxEpoch
+      d.epochEnd = maxEpoch;
     }
     d.normalEnd = moment.utc(mTime).add(d.epochEnd - d.epoch, "milliseconds").toISOString();
     this.maxDuration = Math.max(this.maxDuration, d.epochEnd - d.epoch);
