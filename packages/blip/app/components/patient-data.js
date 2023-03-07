@@ -659,11 +659,11 @@ class PatientDataPage extends React.Component {
       a.remove()
     }
 
-    const openPDFWindow = (pdf, userid) => {
+    const downloadPdf = (pdf, userid) => {
       downloadFile(pdf.url, `yourloops-report-${userid}.pdf`)
     }
 
-    const openCSVWindow = (csv, userid) => {
+    const downloadCsv = (csv, userid) => {
       const url = window.URL.createObjectURL(new Blob([...csv], { type: 'application/zip' }))
       downloadFile(url, `yourloops-report-${userid}.csv`)
     }
@@ -682,7 +682,7 @@ class PatientDataPage extends React.Component {
         this.generateReport(printOptions)
           .then((pdf) => {
             this.trackMetric('export_data', 'save_report', printOptions.preset ?? 'custom')
-            openPDFWindow(pdf, patient.userid)
+            downloadPdf(pdf, patient.userid)
             resolve()
           })
           .catch((err) => {
@@ -699,7 +699,7 @@ class PatientDataPage extends React.Component {
         this.generateCSV(printOptions)
           .then((blob) => {
             this.trackMetric('export_data', 'save_report_csv', printOptions.preset ?? 'custom')
-            openCSVWindow(blob, patient.userid)
+            downloadCsv(blob, patient.userid)
             resolve()
           })
           .catch((err) => {
