@@ -60,6 +60,6 @@ describe('Trends view for caregiver', () => {
     renderPage(`/patient/${unmonitoredPatientId}/trends`)
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiver()
-    checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
   })
 })

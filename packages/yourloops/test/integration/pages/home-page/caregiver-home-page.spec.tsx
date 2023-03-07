@@ -61,7 +61,7 @@ describe('Caregiver home page', () => {
   it('should render the home page with correct components', async () => {
     renderPage('/')
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
-    checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, false)
   })
 
@@ -138,7 +138,7 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, false)
 
     const patientTableBody = within(screen.getByTestId('patient-table-body'))

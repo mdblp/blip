@@ -68,7 +68,7 @@ describe('Patient caregivers page', () => {
       renderPage('/caregivers')
     })
 
-    checkPatientLayout(`${firstName} ${lastName}`)
+    await checkPatientLayout(`${firstName} ${lastName}`)
 
     const secondaryBar = screen.getByTestId('patient-caregivers-secondary-bar')
     expect(secondaryBar).toBeVisible()

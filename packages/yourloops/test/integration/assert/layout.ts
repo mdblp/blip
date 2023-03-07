@@ -37,14 +37,14 @@ export const checkHCPLayout = async (fullName: string, selectedTeamParams: { tea
   checkFooter({ role: UserRole.hcp, needFooterLanguageSelector })
 }
 
-export const checkCaregiverLayout = (fullName: string, needFooterLanguageSelector?: true) => {
-  checkCaregiverHeader(fullName)
+export const checkCaregiverLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
+  await checkCaregiverHeader(fullName)
   checkDrawer()
   checkFooter({ role: UserRole.caregiver, needFooterLanguageSelector })
 }
 
-export const checkPatientLayout = (fullName: string, needFooterLanguageSelector?: true) => {
-  checkPatientHeader(fullName)
+export const checkPatientLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
+  await checkPatientHeader(fullName)
   checkDrawerNotVisible()
   checkFooter({ role: UserRole.patient, needFooterLanguageSelector })
 }

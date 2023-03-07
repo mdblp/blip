@@ -89,7 +89,7 @@ describe('Caregiver page for hcp', () => {
     await act(async () => {
       renderPage('/preferences')
     })
-    checkCaregiverLayout(`${profile.firstName} ${profile.lastName}`)
+    await checkCaregiverLayout(`${profile.firstName} ${profile.lastName}`)
     const fields = checkCaregiverProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 

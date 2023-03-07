@@ -94,7 +94,7 @@ describe('Profile page for patient', () => {
     await act(async () => {
       renderPage('/preferences')
     })
-    checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
+    await checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
     const fields = checkPatientProfilePage(settings.country)
     const saveButton = screen.getByRole('button', { name: 'Save' })
 

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, fireEvent, type queries, screen, waitFor, within } from '@testing-library/react'
+import { type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
@@ -46,7 +46,7 @@ const getIconTestIdByRole = (role: UserRole): string => {
   }
 }
 
-const checkUserMenu = (header: BoundFunctions<typeof queries>, userName: string, role: UserRole) => {
+const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: string, role: UserRole) => {
   const iconTestId = getIconTestIdByRole(role)
 
   expect(header.getByTestId(iconTestId)).toBeVisible()
@@ -59,7 +59,8 @@ const checkUserMenu = (header: BoundFunctions<typeof queries>, userName: string,
   expect(userMenu.getByText('Customer support')).toBeVisible()
   expect(userMenu.getByText('Logout')).toBeVisible()
 
-  fireEvent.click(header.getByText(userName))
+  await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
+  expect(screen.queryByTestId('user-menu')).not.toBeInTheDocument()
 }
 
 const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[]) => {
@@ -82,7 +83,7 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, select
   })
   expect(teamScopeMenu.getByText('Create a new care team')).toBeVisible()
 
-  await userEvent.click(document.body)
+  await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
   expect(screen.queryByTestId('hcp-team-scope-menu')).not.toBeInTheDocument()
 }
 
@@ -91,24 +92,24 @@ export const checkHcpHeader = async (fullName: string, selectedTeamParams: { tea
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
 
   await checkTeamScopeMenu(header, selectedTeamParams, availableTeams)
-  checkUserMenu(header, fullName, UserRole.hcp)
+  await checkUserMenu(header, fullName, UserRole.hcp)
   checkHeader(header)
 }
 
-export const checkCaregiverHeader = (fullName: string) => {
+export const checkCaregiverHeader = async (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
 
-  checkUserMenu(header, fullName, UserRole.caregiver)
+  await checkUserMenu(header, fullName, UserRole.caregiver)
   checkHeader(header)
 }
 
-export const checkPatientHeader = (fullName: string) => {
+export const checkPatientHeader = async (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
-  checkUserMenu(header, fullName, UserRole.patient)
+  await checkUserMenu(header, fullName, UserRole.patient)
   checkHeader(header)
 }
