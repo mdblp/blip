@@ -97,12 +97,12 @@ export const getTimezoneFromTimePrefs = (timePrefs: TimePrefs): string => {
   return TIMEZONE_UTC
 }
 
-export const formatBirthdate = (birthday?: string): string => {
-  if (birthday) {
-    const birthdayFormat = t('birthday-format')
-    return moment.utc(birthday).format(birthdayFormat)
+export const formatBirthdate = (birthDate?: string): string => {
+  if (!birthDate) {
+    return ''
   }
-  return ''
+  const birthdayFormat = t('birthday-format')
+  return moment.utc(birthDate).format(birthdayFormat)
 }
 
 export const formatCurrentDate = (): string => {

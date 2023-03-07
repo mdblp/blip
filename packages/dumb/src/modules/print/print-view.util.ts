@@ -58,13 +58,12 @@ export const getFonts = (): Fonts => {
 }
 
 export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth: number, layoutColumnType: LayoutColumnType, leftEdge: number, docY: number, gutter: number = 0): LayoutColumn[] => {
-  const columns: LayoutColumn[] = []
   const count = layoutColumnWidths.length
-
   const availableWidth = chartAreaWidth - (gutter * (count - 1))
 
   switch (layoutColumnType) {
     case LayoutColumnType.Percentage: {
+      const columns: LayoutColumn[] = []
       layoutColumnWidths.reduce((combinedWidths, value, index) => {
         const columnWidth = availableWidth * value / 100
         columns.push({
@@ -74,30 +73,26 @@ export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth:
         })
         return combinedWidths + columnWidth
       }, 0)
-
-      break
+      return columns
     }
 
     case LayoutColumnType.Equal:
     default: {
       const columnWidth = availableWidth / count
-      layoutColumnWidths.forEach((value, index) => {
-        columns.push({
+      return layoutColumnWidths.map((value, index) => {
+        return {
           x: leftEdge + (gutter * index) + (columnWidth * index),
           y: docY,
           width: columnWidth
-        })
+        }
       })
-      break
     }
   }
-  return columns
 }
 
 export const getTextData = (row: Row, column: TableColumn, isHeader: boolean | undefined): TableHeading => {
   if ((!isHeader && _.isString(row[column.id])) || _.isString(column.header)) {
-    const text = isHeader ? column.header as unknown as string : row[column.id]
-    return { text, subText: undefined, note: undefined }
+    return { text: row[column.id] }
   }
   return row[column.id] as unknown as TableHeading ?? column.header ?? { text: '', subText: '', note: undefined }
 }

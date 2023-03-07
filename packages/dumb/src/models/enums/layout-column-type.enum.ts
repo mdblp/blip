@@ -26,6 +26,6 @@
  */
 
 export enum LayoutColumnType {
-  Percentage = 'percentage',
-  Equal = 'equal'
+  Equal = 'equal',
+  Percentage = 'percentage'
 }

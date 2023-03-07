@@ -25,12 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BASE_64_FLAG, FOOTER_FONT_SIZE, HEIGHT, MARGINS } from '../../models/constants/pdf.constants'
+import { FOOTER_FONT_SIZE, HEIGHT, MARGINS } from '../../models/constants/pdf.constants'
 import { getFonts } from '../../modules/print/print-view.util'
 import { type Margins } from '../../models/print/margins.model'
 import i18next from 'i18next'
-import { type ImagesModel } from '../../models/print/images.model'
-import { arrayBufferToBase64 } from '../encoder/encoder.util'
 
 interface PageNumbersParams {
   footerFontSize: number
@@ -38,6 +36,7 @@ interface PageNumbersParams {
   height: number
 }
 
+const ALIGN_RIGHT = 'right'
 const LIGHT_GREY = '#979797'
 
 const t = i18next.t.bind(i18next)
@@ -72,23 +71,6 @@ const renderPageNumber = (
     t('Page {{page}} of {{pageCount}}', { page: pageNumber + 1, pageCount: numberOfPages }),
     margins.left,
     (height + margins.top) - doc.currentLineHeight() * 1.5,
-    { align: 'right' }
+    { align: ALIGN_RIGHT }
   )
-}
-
-export const buildPdfImages = async (): Promise<ImagesModel> => {
-  if (window.config) {
-    const response = await fetch(`/branding_${window.config.BRANDING}_pdf-logo.png`)
-    const buffer = await response.arrayBuffer()
-    const imageStr = BASE_64_FLAG + arrayBufferToBase64(buffer)
-    return {
-      logo: imageStr,
-      siteChangeCannulaImage: undefined,
-      siteChangeReservoirImage: undefined,
-      siteChangeTubingImage: undefined,
-      siteChangeReservoirDiabeloopImage: undefined
-    }
-  }
-
-  return {}
 }

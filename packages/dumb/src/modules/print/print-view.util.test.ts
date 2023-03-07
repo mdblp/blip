@@ -67,7 +67,7 @@ describe('Print view util', () => {
   })
 
   describe('getTextData', () => {
-    it('should return correct text data when is an header and id is of table type', () => {
+    it('should return correct text data when row is a header and id is of table type', () => {
       const textExpected = 'res'
       const row: Row = { column: 'column', heading: { text: 'text' }, fakeId: textExpected } as unknown as Row
       const column: TableColumn = { id: 'fakeId', header: { text: 'text' } } as TableColumn
@@ -78,7 +78,7 @@ describe('Print view util', () => {
       expect(textData).toEqual(textExpected)
     })
 
-    it('should return correct text data when is an header and id is of table type', () => {
+    it('should return correct text data when row is a header and id is of table type', () => {
       const textExpected = 'res'
       const row: Row = { column: 'column', heading: { text: 'text' }, fakeId: 'res' } as unknown as Row
       const column: TableColumn = { id: 'wrongId', header: { text: textExpected } } as TableColumn
@@ -89,7 +89,7 @@ describe('Print view util', () => {
       expect(textData).toEqual({ text: textExpected })
     })
 
-    it('should return correct text data when not an header and id is of table type and column header is not defined', () => {
+    it('should return correct text data when row is not an header and id is of table type and column header is not defined', () => {
       const textExpected = 'res'
       const row: Row = { column: 'column', heading: { text: 'text' }, fakeId: textExpected } as unknown as Row
       const column: TableColumn = { id: 'wrongId' } as TableColumn

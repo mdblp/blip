@@ -68,8 +68,9 @@ import { type Colors } from '../../models/print/colors.model'
 const PADDING_PATIENT_INFO = 10
 
 const APP_URL = `${window.location.protocol}//${window.location.hostname}/`
-const BLACK = 'black'
 const CENTER = 'center'
+const COLOR_BLACK = 'black'
+const COLOR_WHITE = 'white'
 const COLUMN_DEFAULT_PADDING = [7, 5, 3, 5]
 const DEFAULT_FONT_SIZE = 10
 const DEFAULT_OPACITY = 1
@@ -88,7 +89,6 @@ const PATIENT_INFO_LINE_GAP = 2
 const PATIENT_INFO_LINE_WIDTH = 1
 const SMALL_FONT_SIZE = 8
 const TABLE_BOTTOM_MARGIN = 20
-const WHITE = 'white'
 const WIDTH = 8.5 * DPI - (2 * MARGIN)
 const ZEBRA_COLOR = '#FAFAFA'
 const ZEBRA_ODD_COLOR = '#FFFFFF'
@@ -218,13 +218,13 @@ export class PrintView {
     return t('pdf-date-range', { range: formatDateRange(startDate, endDate, format, timezone) })
   }
 
-  setFill(color = BLACK, opacity = DEFAULT_OPACITY): void {
+  setFill(color = COLOR_BLACK, opacity = DEFAULT_OPACITY): void {
     this.doc
       .fillColor(color)
       .fillOpacity(opacity)
   }
 
-  setStroke(color = BLACK, opacity = DEFAULT_OPACITY): void {
+  setStroke(color = COLOR_BLACK, opacity = DEFAULT_OPACITY): void {
     this.doc
       .strokeColor(color)
       .strokeOpacity(opacity)
@@ -434,21 +434,17 @@ export class PrintView {
     if (!fillDefined && zebra) {
       if (isHeader) {
         return this.tableSettings.colors.zebraHeader
-      } else {
-        return isEven
-          ? this.tableSettings.colors.zebraEven
-          : this.tableSettings.colors.zebraOdd
       }
+      return isEven ? this.tableSettings.colors.zebraEven : this.tableSettings.colors.zebraOdd
     }
-    return WHITE
+    return COLOR_WHITE
   }
 
   #computeCellOpacity(fillDefined: boolean, zebra: boolean, isEven: boolean): number {
     if (!fillDefined) {
       return 1
-    } else {
-      return zebra && !isEven ? DEFAULT_OPACITY / 2 : DEFAULT_OPACITY
     }
+    return zebra && !isEven ? DEFAULT_OPACITY / 2 : DEFAULT_OPACITY
   }
 
   #onCellBackgroundAdd(table: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>, row: Row, index: number, isHeader: boolean): void {
@@ -482,7 +478,7 @@ export class PrintView {
 
   #onCellBorderAdd(tb: VoilabPdfTable<Table>, column: VoilabPdfTable.VoilabPdfTableColumn<Table>): void {
     this.doc.lineWidth(this.tableSettings.borderWidth)
-    this.setStroke((column as PdfTableColumnOverridden).borderColor ?? BLACK, DEFAULT_OPACITY)
+    this.setStroke((column as PdfTableColumnOverridden).borderColor ?? COLOR_BLACK, DEFAULT_OPACITY)
   }
 
   #onCellBorderAdded(): void {
@@ -507,14 +503,14 @@ export class PrintView {
       })
 
     this.#patientInfoBox.width = this.doc.widthOfString(patientName)
-    const patientDOB = t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
+    const patientDateOfBirth = t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
 
     this.doc
       .font(this.font)
       .fontSize(DEFAULT_FONT_SIZE)
-      .text(patientDOB)
+      .text(patientDateOfBirth)
 
-    const patientBirthdayWidth = this.doc.widthOfString(patientDOB)
+    const patientBirthdayWidth = this.doc.widthOfString(patientDateOfBirth)
     this.#patientInfoBox.height = this.doc.y
 
     if (this.#patientInfoBox.width < patientBirthdayWidth) {
@@ -524,11 +520,11 @@ export class PrintView {
     this.doc
       .moveTo(this.margins.left + this.#patientInfoBox.width + PADDING_PATIENT_INFO, this.margins.top)
       .lineTo(this.margins.left + this.#patientInfoBox.width + PADDING_PATIENT_INFO, this.#patientInfoBox.height)
-      .stroke(BLACK)
+      .stroke(COLOR_BLACK)
   }
 
   #renderTitle(): void {
-    const lineHeight = this.doc.fontSize(14).currentLineHeight()
+    const lineHeight = this.doc.fontSize(HEADER_FONT_SIZE).currentLineHeight()
     const xOffset = this.margins.left + this.#patientInfoBox.width + 21
     const yOffset = this.margins.top + (this.#patientInfoBox.height - this.margins.top) / 2 - lineHeight / 2
 
@@ -599,7 +595,7 @@ export class PrintView {
     this.doc
       .moveTo(this.margins.left, height)
       .lineTo(this.margins.left + this.width, height)
-      .stroke(BLACK)
+      .stroke(COLOR_BLACK)
   }
 
   #renderFooter(): void {
@@ -631,8 +627,10 @@ export class PrintView {
   #updateUnfinishedTablePosition(): void {
     if (this.#table?.pos) {
       const xPos = this.chartArea.leftEdge
-      this.doc.x = this.#table.pos.x = xPos
-      this.doc.y = this.#table.pos.y = this.chartArea.topEdge
+      this.#table.pos.x = xPos
+      this.doc.x = xPos
+      this.#table.pos.y = this.chartArea.topEdge
+      this.doc.y = this.chartArea.topEdge
       this.#table.pdf.lineWidth(this.tableSettings.borderWidth)
     }
   }

@@ -26,7 +26,7 @@
  */
 
 import { isNumber } from 'lodash'
-import { type BgBounds, BgClass, type BgPrefs, ClassificationType } from '../../models/blood-glucose.model'
+import { type BgBounds, BgClass, ClassificationType } from '../../models/blood-glucose.model'
 import { type BgClasses } from 'medical-domain'
 
 export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
@@ -67,20 +67,4 @@ export const getBgClass = (bgBounds: BgBounds, bgValue?: number, classificationT
     return BgClass.VeryHigh
   }
   return BgClass.Target
-}
-
-/**
- * reshapeBgClassesToBgBounds
- * @param {Object} bgPrefs - bgPrefs object from blip containing tideline-style bgClasses
- *
- * @return {Object} bgBounds - tidepool-viz-style bgBounds
- */
-export const reshapeBgClassesToBgBounds = (bgPrefs: BgPrefs): BgBounds => {
-  const { bgClasses } = bgPrefs
-  return {
-    veryHighThreshold: bgClasses.high,
-    targetUpperBound: bgClasses.target,
-    targetLowerBound: bgClasses.low,
-    veryLowThreshold: bgClasses.veryLow
-  }
 }
