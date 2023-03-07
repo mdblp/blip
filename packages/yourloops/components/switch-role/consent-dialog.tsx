@@ -38,7 +38,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 
 import { ConsentForm } from '../consents'
 import { type SwitchRoleConsentDialogProps } from './models'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 
 function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Element {
   const theme = useTheme()
@@ -80,7 +80,7 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
       <DialogContent>
         <ConsentForm
           id="switch-role-consent-dialog"
-          userRole={UserRoles.hcp}
+          userRole={UserRole.hcp}
           policyAccepted={policyAccepted}
           setPolicyAccepted={setPolicyAccepted}
           termsAccepted={termsAccepted}

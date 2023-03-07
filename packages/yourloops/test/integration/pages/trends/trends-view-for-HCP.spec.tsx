@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import { screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
+import { availableTeams, mockTeamAPI, teamThree } from '../../mock/team.api.mock'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockPatientApiForHcp, unmonitoredPatientId } from '../../mock/patient.api.mock'
@@ -60,6 +60,6 @@ describe('Trends view for HCP', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP()
-    checkHCPLayout(`${firstName} ${lastName}`)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, availableTeams)
   })
 })

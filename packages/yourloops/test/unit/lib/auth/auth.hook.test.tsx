@@ -38,7 +38,7 @@ import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { UnitsType } from 'dumb'
@@ -191,7 +191,7 @@ describe('Auth hook', () => {
       expect(updatedUser.profile.privacyPolicy.isAccepted).toBe(true)
       expect(Date.parse(updatedUser.profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
       expect(Date.parse(updatedUser.profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
-      expect(updatedUser.role).toBe(UserRoles.hcp)
+      expect(updatedUser.role).toBe(UserRole.hcp)
       expect(updatedUser.profile.hcpProfession).toEqual(HcpProfession.diabeto)
       expect(updatedUser.profile.contactConsent.isAccepted).toBeFalsy()
     })
@@ -280,7 +280,7 @@ describe('Auth hook', () => {
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
       const signupForm: SignupForm = {
-        accountRole: UserRoles.hcp,
+        accountRole: UserRole.hcp,
         profileFirstname: 'Tim',
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
@@ -300,7 +300,7 @@ describe('Auth hook', () => {
         await auth.completeSignup(signupForm)
       })
 
-      expect(auth.user.role).toEqual(UserRoles.hcp)
+      expect(auth.user.role).toEqual(UserRole.hcp)
       expect(auth.user.profile.firstName).toEqual('Tim')
       expect(auth.user.profile.lastName).toEqual('Hagine')
       expect(auth.user.profile.fullName).toEqual('Tim Hagine')

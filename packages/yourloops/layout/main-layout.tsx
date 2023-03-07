@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,18 +34,18 @@ import { HcpLayout } from './hcp-layout'
 import { CaregiverLayout } from './caregiver-layout'
 import { PatientLayout } from './patient-layout'
 import { DataContextProvider, DefaultDataContext } from '../lib/data/data.hook'
-import { UserRoles } from '../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 
 export function MainLayout(): JSX.Element {
   const { user } = useAuth()
 
   const getUserLayout = (): JSX.Element => {
     switch (user?.role) {
-      case UserRoles.hcp:
+      case UserRole.hcp:
         return <HcpLayout />
-      case UserRoles.caregiver:
+      case UserRole.caregiver:
         return <CaregiverLayout />
-      case UserRoles.patient:
+      case UserRole.patient:
         return <PatientLayout />
       default:
         console.error(`no layout found for role ${user?.role}`)

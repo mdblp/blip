@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCaregiverHeader, checkHCPHeader, checkPatientHeader } from './header'
+import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader } from './header'
 import { checkDrawer, checkDrawerNotVisible } from './drawer'
 import { checkFooter } from './footer'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import { type Team } from '../../../lib/team'
 
-export const checkHCPLayout = (fullName: string, needFooterLanguageSelector: boolean = false) => {
-  checkHCPHeader(fullName)
+export const checkHCPLayout = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[], needFooterLanguageSelector: boolean = false) => {
+  await checkHcpHeader(fullName, selectedTeamParams, availableTeams)
   checkDrawer()
-  checkFooter({ role: UserRoles.hcp, needFooterLanguageSelector })
+  checkFooter({ role: UserRole.hcp, needFooterLanguageSelector })
 }
 
 export const checkCaregiverLayout = (fullName: string, needFooterLanguageSelector?: true) => {
   checkCaregiverHeader(fullName)
   checkDrawer()
-  checkFooter({ role: UserRoles.caregiver, needFooterLanguageSelector })
+  checkFooter({ role: UserRole.caregiver, needFooterLanguageSelector })
 }
 
 export const checkPatientLayout = (fullName: string, needFooterLanguageSelector?: true) => {
   checkPatientHeader(fullName)
   checkDrawerNotVisible()
-  checkFooter({ role: UserRoles.patient, needFooterLanguageSelector })
+  checkFooter({ role: UserRole.patient, needFooterLanguageSelector })
 }

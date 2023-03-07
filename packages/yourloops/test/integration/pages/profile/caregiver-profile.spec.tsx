@@ -47,7 +47,7 @@ import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UnitsType } from 'dumb'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 
@@ -69,7 +69,7 @@ describe('Caregiver page for hcp', () => {
   const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.caregiver)
+    mockAuth0Hook(UserRole.caregiver)
     mockAuthApi()
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()

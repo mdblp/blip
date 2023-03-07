@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ShareUser } from './models/share-user.model'
 import { type DirectShareAPI } from './models/direct-share-api.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
-import { UserRoles } from '../auth/models/enums/user-roles.enum'
+import { UserRole } from '../auth/models/enums/user-role.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 
 export const PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE = 'patient-cannot-be-invited-as-caregiver'
@@ -77,7 +77,7 @@ export default class DirectShareApi {
             settings: fixYLP878Settings(directShareUser.settings),
             username: directShareUser.email,
             emails: [directShareUser.email],
-            role: directShare.viewer ? UserRoles.caregiver : UserRoles.patient,
+            role: directShare.viewer ? UserRole.caregiver : UserRole.patient,
             idVerified: directShareUser.idVerified
           }
         })

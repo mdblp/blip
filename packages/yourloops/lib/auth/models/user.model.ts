@@ -27,7 +27,7 @@
 
 import { type Consent } from './consent.model'
 import config from '../../config/config'
-import { UserRoles } from './enums/user-roles.enum'
+import { UserRole } from './enums/user-role.enum'
 import { type MedicalData } from '../../data/models/medical-data.model'
 import { type Preferences } from './preferences.model'
 import { type Profile } from './profile.model'
@@ -44,7 +44,7 @@ export default class User {
   readonly username: string
   id: string
   frProId?: string
-  role: UserRoles
+  role: UserRole
   medicalData?: MedicalData
   preferences?: Preferences
   profile?: Profile
@@ -54,7 +54,7 @@ export default class User {
     this.email = authenticatedUser.email
     this.emailVerified = authenticatedUser.email_verified
     this.id = User.getId(authenticatedUser.sub)
-    this.role = authenticatedUser[AuthenticatedUserMetadata.Roles][0] as UserRoles
+    this.role = authenticatedUser[AuthenticatedUserMetadata.Roles][0] as UserRole
     this.username = authenticatedUser.email
     this.latestConsentChangeDate = new Date(config.LATEST_TERMS ?? 0)
     this.latestTrainingDate = new Date(config.LATEST_TRAINING ?? 0)
@@ -78,7 +78,7 @@ export default class User {
   }
 
   get birthday(): string | undefined {
-    if (this.role !== UserRoles.patient) {
+    if (this.role !== UserRole.patient) {
       return undefined
     }
     const birthday = this.getRawBirthday()
@@ -94,15 +94,15 @@ export default class User {
   }
 
   isUserHcp(): boolean {
-    return this.role === UserRoles.hcp
+    return this.role === UserRole.hcp
   }
 
   isUserPatient(): boolean {
-    return this.role === UserRoles.patient
+    return this.role === UserRole.patient
   }
 
   isUserCaregiver(): boolean {
-    return this.role === UserRoles.caregiver
+    return this.role === UserRole.caregiver
   }
 
   /**
@@ -161,7 +161,7 @@ export default class User {
   }
 
   isFirstLogin(): boolean {
-    return this.role === UserRoles.unset
+    return this.role === UserRole.unset
   }
 
   hasToAcceptNewConsent(): boolean {

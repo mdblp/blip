@@ -41,7 +41,7 @@ import SwitchRoleDialogs from '../../components/switch-role'
 import { ProfilePageContextProvider } from './profile-page-context'
 import { ProfileForm } from './profile-form'
 import { profileFormCommonClasses } from './css-classes'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import Button from '@mui/material/Button'
 import { Lock } from '@mui/icons-material'
 import { Divider } from '@mui/material'
@@ -91,7 +91,7 @@ const ProfilePage: FunctionComponent = () => {
             <ProfileForm />
           </ProfilePageContextProvider>
 
-          {UserRoles.caregiver === user.role &&
+          {UserRole.caregiver === user.role &&
             <Link
               data-testid="switch-role-link"
               component="button"

@@ -36,7 +36,7 @@ import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UnitsType } from 'dumb'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { ProfileFormKey } from '../../../../pages/profile/models/enums/profile-form-key.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 
@@ -94,7 +94,7 @@ describe('Profile page context hook', () => {
         updateSettings: updateSettingsMock,
         updatePreferences: updatePreferencesMock,
         user: {
-          role: UserRoles.patient,
+          role: UserRole.patient,
           isUserHcp: () => false,
           isUserCaregiver: () => false,
           isUserPatient: () => true,
@@ -147,7 +147,7 @@ describe('Profile page context hook', () => {
       return {
         updateProfile: jest.fn().mockRejectedValue(undefined),
         user: {
-          role: UserRoles.patient,
+          role: UserRole.patient,
           isUserHcp: () => false,
           isUserCaregiver: () => false,
           isUserPatient: () => true

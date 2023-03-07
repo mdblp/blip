@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +39,7 @@ import Link from '@mui/material/Link'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { type BaseConsentCheck, type ConsentCheck } from './models/consent-check.model'
 import { type ConsentFormProps } from './models/consent-form-props.model'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { type MonitoringConsentFormProps } from './models/monitoring-consent-form-props.model'
 
 const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
@@ -233,7 +233,7 @@ const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
   } = props
 
   const { classes } = formStyles()
-  const showFeedback = typeof setFeedbackAccepted === 'function' && userRole === UserRoles.hcp
+  const showFeedback = typeof setFeedbackAccepted === 'function' && userRole === UserRole.hcp
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const what = event.target.name

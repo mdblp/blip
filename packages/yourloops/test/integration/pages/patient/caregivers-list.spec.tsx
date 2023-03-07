@@ -36,7 +36,7 @@ import userEvent from '@testing-library/user-event'
 import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
 } from '../../../../lib/share/direct-share.api'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
@@ -55,7 +55,7 @@ describe('Patient caregivers page', () => {
   const otherPatientEmail = 'other-patient@email.com'
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.patient)
+    mockAuth0Hook(UserRole.patient)
     mockNotificationAPI()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })

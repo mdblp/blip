@@ -26,14 +26,19 @@
  */
 
 import { act, fireEvent, screen, within } from '@testing-library/react'
-import { getAccessTokenWithPopupMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import {
+  getAccessTokenWithPopupMock,
+  loggedInUserEmail,
+  loggedInUserId,
+  mockAuth0Hook
+} from '../../mock/auth0.hook.mock'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 
 describe('Signup stepper as hcp', () => {
@@ -52,7 +57,7 @@ describe('Signup stepper as hcp', () => {
   }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.unset)
+    mockAuth0Hook(UserRole.unset)
   })
 
   it('should be able to create a hcp account', async () => {
@@ -92,7 +97,7 @@ describe('Signup stepper as hcp', () => {
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,
       expect.objectContaining({
-        role: UserRoles.hcp,
+        role: UserRole.hcp,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
         settings: { country: CountryCodes.France }

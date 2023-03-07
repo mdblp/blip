@@ -32,7 +32,7 @@ import { buildPatient, buildTeamMemberFromPatient } from '../../mock/patient.api
 import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 describe('Training page when new training available', () => {
@@ -54,7 +54,7 @@ describe('Training page when new training available', () => {
     }], undefined, profile)
     const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient)
     mockPatientLogin(patientAsTeamMember)
-    mockAuth0Hook(UserRoles.patient)
+    mockAuth0Hook(UserRole.patient)
     mockUserApi()
   })
 

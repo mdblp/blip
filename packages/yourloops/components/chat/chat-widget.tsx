@@ -44,7 +44,7 @@ import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
@@ -211,7 +211,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           </div>
         }
         <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
-            {userRole === UserRoles.hcp &&
+            {userRole === UserRole.hcp &&
               <Tabs
                 className={classes.chatWidgetTabs}
                 value={inputTab}

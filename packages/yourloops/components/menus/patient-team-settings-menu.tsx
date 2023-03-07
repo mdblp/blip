@@ -52,6 +52,7 @@ import { type ShareUser } from '../../lib/share/models/share-user.model'
 import { errorTextFromException } from '../../lib/utils'
 import DirectShareApi from '../../lib/share/direct-share.api'
 import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
+import IconButton from '@mui/material/IconButton'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -61,9 +62,6 @@ const classes = makeStyles()((theme: Theme) => ({
     right: -8,
     color: theme.palette.common.white,
     backgroundColor: 'var(--text-base-color)'
-  },
-  clickableMenu: {
-    cursor: 'pointer'
   },
   separator: {
     flexGrow: 1,
@@ -83,13 +81,13 @@ const classes = makeStyles()((theme: Theme) => ({
 
 function PatientTeamSettingsMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const { classes: { badge, teamIcon, clickableMenu, separator, menu, paddingBottom } } = classes()
+  const { classes: { badge, teamIcon, separator, menu, paddingBottom } } = classes()
   const { teams, joinTeam, isPrivate } = useTeam()
   const history = useHistory()
   const alert = useAlert()
   const { user } = useAuth()
   const theme = useTheme()
-  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
@@ -140,15 +138,9 @@ function PatientTeamSettingsMenu(): JSX.Element {
   }
   return (
     <>
-      <Box
-        id="team-menu"
-        data-testid="team-menu"
-        display="flex"
-        role="button"
-        alignItems="center"
-        className={clickableMenu}
-        onClick={event => { setAnchorEl(event.currentTarget) }}
-      >
+      <IconButton color="inherit" onClick={event => {
+        setAnchorEl(event.currentTarget)
+      }}>
         <Badge
           id="team-menu-count-badge"
           aria-label={t('open-team-menu')}
@@ -159,10 +151,8 @@ function PatientTeamSettingsMenu(): JSX.Element {
         >
           <GroupOutlinedIcon />
         </Badge>
-        {!isMobileBreakpoint &&
-          <ArrowDropDownIcon />
-        }
-      </Box>
+        {!isMobile && <ArrowDropDownIcon />}
+      </IconButton>
 
       <MenuLayout
         open={opened}
@@ -238,7 +228,9 @@ function PatientTeamSettingsMenu(): JSX.Element {
 
       {showJoinTeamDialog &&
         <JoinTeamDialog
-          onClose={() => { setShowJoinTeamDialog(false) }}
+          onClose={() => {
+            setShowJoinTeamDialog(false)
+          }}
           onAccept={onJoinTeam}
         />
       }

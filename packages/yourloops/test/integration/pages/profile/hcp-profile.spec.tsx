@@ -27,7 +27,7 @@
 
 import { renderPage } from '../../utils/render'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
+import { availableTeams, mockTeamAPI, teamThree } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, within } from '@testing-library/react'
 import { checkHCPLayout } from '../../assert/layout'
@@ -91,7 +91,7 @@ describe('Profile page for hcp', () => {
       renderPage('/preferences')
     })
 
-    checkHCPLayout(`${profile.firstName} ${profile.lastName}`)
+    await checkHCPLayout(`${profile.firstName} ${profile.lastName}`, { teamName: teamThree.name, isPrivate: false }, availableTeams)
     const fields = checkHcpProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 

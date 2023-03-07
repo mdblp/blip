@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,7 @@ import { triggerMouseEvent } from '../../common/utils'
 import type User from '../../../../lib/auth/models/user.model'
 import * as authHookMock from '../../../../lib/auth/auth.hook'
 import { render, waitFor } from '@testing-library/react'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 
 jest.mock('../../../../lib/auth/auth.hook')
 describe('User Menu', () => {
@@ -60,7 +60,7 @@ describe('User Menu', () => {
   beforeEach(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.hcp } as User,
+        user: { role: UserRole.hcp } as User,
         logout
       }
     })

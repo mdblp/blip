@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,7 @@ import { type Profile } from './models/profile.model'
 import { type Preferences } from './models/preferences.model'
 import { type Settings } from './models/settings.model'
 import { type CompleteSignupPayload } from './models/complete-signup-payload.model'
-import { UserRoles } from './models/enums/user-roles.enum'
+import { UserRole } from './models/enums/user-role.enum'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 
 const log = bows('User API')
@@ -41,7 +41,7 @@ export default class UserApi {
   static async changeUserRoleToHcp(userId: string, payload: ChangeUserRoleToHcpPayload): Promise<void> {
     await HttpService.post({
       url: `/bff/v1/accounts/${userId}`,
-      payload: { ...payload, role: UserRoles.hcp }
+      payload: { ...payload, role: UserRole.hcp }
     })
   }
 

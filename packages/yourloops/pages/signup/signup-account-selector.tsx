@@ -41,7 +41,7 @@ import SignupRadioLabel from './signup-radio-label'
 import { useSignUpFormState } from './signup-formstate-context'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { type SignUpFormProps } from './signup-stepper'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -64,7 +64,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
   const { signupForm, updateForm } = useSignUpFormState()
   const { handleBack, handleNext } = props
 
-  const isRoleInvalid = signupForm.accountRole === UserRoles.unset || signupForm.accountRole === UserRoles.patient
+  const isRoleInvalid = signupForm.accountRole === UserRole.unset || signupForm.accountRole === UserRole.patient
 
   const onNext = (): void => {
     handleNext()
@@ -84,7 +84,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel
             className={classes.FormControlLabel}
-            value={UserRoles.caregiver}
+            value={UserRole.caregiver}
             aria-label={t('create-caregiver-account')}
             control={<Radio />}
             label={
@@ -98,7 +98,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel
             className={classes.FormControlLabel}
-            value={UserRoles.hcp}
+            value={UserRole.hcp}
             aria-label={t('hcp-radio-input')}
             control={<Radio />}
             label={
@@ -113,7 +113,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
           <FormControlLabel
             disabled
             className={classes.FormControlLabel}
-            value={UserRoles.patient}
+            value={UserRole.patient}
             aria-label={t('create-patient-account')}
             control={<Radio />}
             label={

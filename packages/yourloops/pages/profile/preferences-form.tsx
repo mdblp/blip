@@ -38,7 +38,7 @@ import Select from '@mui/material/Select'
 
 import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { UnitsType } from 'dumb'
 import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { useProfilePageState } from './profile-page-context'
@@ -63,7 +63,7 @@ const PreferencesForm: FunctionComponent = () => {
         <FormControl variant="standard" className={classes.formInput}>
           <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
-            disabled={user.role === UserRoles.patient}
+            disabled={user.role === UserRole.patient}
             labelId="unit-selector"
             id="profile-units-selector"
             data-testid="profile-units-selector"
@@ -96,7 +96,7 @@ const PreferencesForm: FunctionComponent = () => {
         </FormControl>
       </Box>
 
-      {user.role === UserRoles.hcp &&
+      {user.role === UserRole.hcp &&
         <Box marginTop={1}>
           <ConsentFeedback
             id="profile"

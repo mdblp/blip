@@ -26,16 +26,9 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { makeStyles } from 'tss-react/mui'
 import { type Theme, useTheme } from '@mui/material/styles'
-import MenuLayout from '../../layout/menu-layout'
 import { type Team, useTeam } from '../../lib/team'
 import PersonIcon from '@mui/icons-material/Person'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
@@ -43,23 +36,23 @@ import { TeamType } from '../../lib/team/models/enums/team-type.enum'
 import { useTranslation } from 'react-i18next'
 import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
-import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
-import AddIcon from '@mui/icons-material/Add'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import { useHistory } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import Typography from '@mui/material/Typography'
+import MenuLayout from '../../layout/menu-layout'
+import MenuItem from '@mui/material/MenuItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Divider from '@mui/material/Divider'
+import AddIcon from '@mui/icons-material/Add'
+import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
 
 const classes = makeStyles()((theme: Theme) => ({
-  clickableMenu: {
-    cursor: 'pointer'
-  },
-  typography: {
-    margin: `0 ${theme.spacing(1)}`,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
-  },
   sectionTitle: {
     fontWeight: 'bold',
     paddingLeft: theme.spacing(2),
@@ -75,9 +68,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const {
     classes: {
-      clickableMenu,
       sectionTitle,
-      typography,
       menu
     }
   } = classes()
@@ -99,8 +90,9 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const isSelectedTeamPrivate = selectedTeam.type === TeamType.private
   const selectedTeamName = isSelectedTeamPrivate ? t('hcp-team-menu-private-practice-option') : selectedTeam.name
 
-  const privatePracticeIcon = <PersonIcon />
-  const medicalTeamIcon = <GroupsOutlinedIcon />
+  const privatePracticeIcon = <PersonIcon data-testid="private-practice-icon" />
+  const medicalTeamIcon = <GroupsOutlinedIcon data-testid="medical-team-icon" />
+  const selectedTeamIcon = isSelectedTeamPrivate ? privatePracticeIcon : medicalTeamIcon
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const isMenuOpen = !!anchorEl
@@ -136,30 +128,32 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
 
   return (
     <>
-      <Box
-        display="flex"
-        alignItems="center"
-        className={clickableMenu}
-        maxWidth={250}
-        onClick={event => {
-          setAnchorEl(event.currentTarget)
-        }}
-      >
-        <Box display="flex">
-          {isSelectedTeamPrivate ? privatePracticeIcon : medicalTeamIcon}
-        </Box>
-        {!isMobile &&
-          <>
-            <Typography className={typography}>
-              {selectedTeamName}
-            </Typography>
-            <ArrowDropDownIcon />
-          </>
+      <Box maxWidth={250}>
+        {isMobile
+          ? <IconButton
+            color="inherit"
+            aria-label={t('hcp-team-menu-click-label')}
+            onClick={event => {
+              setAnchorEl(event.currentTarget)
+            }}>
+            {selectedTeamIcon}
+          </IconButton>
+          : <Button
+            color="inherit"
+            aria-label={t('hcp-team-menu-click-label')}
+            startIcon={selectedTeamIcon}
+            endIcon={<ArrowDropDownIcon />}
+            onClick={event => {
+              setAnchorEl(event.currentTarget)
+            }}
+          >
+            <Typography>{selectedTeamName}</Typography>
+          </Button>
         }
       </Box>
 
       <MenuLayout open={isMenuOpen} anchorEl={anchorEl} onClose={closeMenu}>
-        <Box className={menu}>
+        <Box className={menu} data-testid="hcp-team-scope-menu">
           <MenuItem onClick={() => {
             onSelectTeam(privateTeam.id)
           }}>

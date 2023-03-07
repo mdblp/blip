@@ -28,7 +28,7 @@
 import { User } from '../../../lib/auth'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { UnitsType } from 'dumb'
 import { CountryCodes } from '../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
@@ -39,7 +39,7 @@ const getHcp = (): User => {
     email,
     email_verified: true,
     sub: 'auth0|a0000000',
-    [AuthenticatedUserMetadata.Roles]: [UserRoles.hcp]
+    [AuthenticatedUserMetadata.Roles]: [UserRole.hcp]
   })
   hcp.frProId = 'ANS20211229094028'
   hcp.profile = { email, firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
@@ -54,7 +54,7 @@ const getCaregiver = (): User => {
     email,
     email_verified: true,
     sub: 'auth0|b0000000',
-    [AuthenticatedUserMetadata.Roles]: [UserRoles.caregiver]
+    [AuthenticatedUserMetadata.Roles]: [UserRole.caregiver]
   })
   caregiver.profile = { email, firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
   caregiver.preferences = { displayLanguageCode: 'de' }
@@ -68,7 +68,7 @@ const getPatient = (): User => {
     email,
     email_verified: true,
     sub: 'auth0|a0a0a0b0',
-    [AuthenticatedUserMetadata.Roles]: [UserRoles.patient]
+    [AuthenticatedUserMetadata.Roles]: [UserRole.patient]
   })
   patient.settings = { a1c: { rawdate: '2020-01-01', date: '2020-01-01', value: '7.5' }, country: CountryCodes.France }
   patient.profile = {

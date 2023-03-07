@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ import * as patientHookMock from '../../../lib/patient/patient.provider'
 import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
 import { MemoryRouter } from 'react-router-dom'
 import { CaregiverLayout } from '../../../layout/caregiver-layout'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
@@ -69,7 +69,7 @@ describe('Caregiver Layout', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
-          role: UserRoles.caregiver,
+          role: UserRole.caregiver,
           isUserHcp: () => false,
           isUserCaregiver: () => true,
           isUserPatient: () => false

@@ -33,11 +33,11 @@ import PatientAPI from '../../../lib/patient/patient.api'
 import { mockChatAPI } from './chat.api.mock'
 import { mockMedicalFilesAPI } from './medical-files.api.mock'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from './user.api.mock'
 
 export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRoles.patient, patient.userId)
+  mockAuth0Hook(UserRole.patient, patient.userId)
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()

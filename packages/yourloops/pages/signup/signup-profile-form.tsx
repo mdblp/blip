@@ -44,7 +44,7 @@ import { useAuth } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { type SignUpFormProps } from './signup-stepper'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
 interface Errors {
@@ -96,7 +96,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
   const validateHcpProfession = (): boolean => {
     let err = false
-    if (signupForm.accountRole === UserRoles.hcp) {
+    if (signupForm.accountRole === UserRole.hcp) {
       err = !signupForm.hcpProfession
       setErrors({ ...errors, hcpProfession: err })
     }
@@ -168,7 +168,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         </Select>
       </FormControl>
 
-      {signupForm.accountRole === UserRoles.hcp &&
+      {signupForm.accountRole === UserRole.hcp &&
         <FormControl
           margin="normal"
           required

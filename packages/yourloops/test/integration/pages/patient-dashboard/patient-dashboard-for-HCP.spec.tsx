@@ -27,7 +27,14 @@
 
 import { act, type BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI, myTeamId, myThirdTeamId } from '../../mock/team.api.mock'
+import {
+  availableTeams,
+  mockTeamAPI,
+  mySecondTeamId,
+  myThirdTeamId,
+  teamThree,
+  teamTwo
+} from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import {
@@ -97,35 +104,26 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     checkPatientNavBarAsHCP()
     testPatientDashboardCommonDisplay(dashboard)
-    checkHCPLayout(`${firstName} ${lastName}`)
-
-    /**
-     * TODO YLP-1987 Uncomment this test once the January release is done
-     */
-    // const header = within(screen.getByTestId('app-main-header'))
-    // const teamsDropdown = header.getByText(myThirdTeamName)
-    // expect(teamsDropdown).toBeVisible()
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name, isPrivate: false }, availableTeams)
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
-    localStorage.setItem('selectedTeamId', myTeamId)
+    localStorage.setItem('selectedTeamId', mySecondTeamId)
 
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    /**
-     * TODO YLP-1987 Uncomment this test once the January release is done
-     */
-    // const header = within(screen.getByTestId('app-main-header'))
-    // const teamsDropdown = header.getByText(mySecondTeamName)
-    // expect(teamsDropdown).toBeVisible()
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamTwo.name }, availableTeams)
+
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard)
+
     /* Patient info widget */
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()
+
     /* Medical files widget */
     await checkMedicalWidgetForHcp()
 
@@ -141,10 +139,11 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a dayRenewRemove`)
     expect(dashboard.getByText('Renew')).toBeVisible()
     expect(dashboard.getByText('Remove')).toBeVisible()
-    checkHCPLayout(`${firstName} ${lastName}`)
   })
 
   it('should switch between patients by using the dropdown', async () => {
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
+
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })

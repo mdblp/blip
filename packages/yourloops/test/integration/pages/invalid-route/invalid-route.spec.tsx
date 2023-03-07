@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
+import { availableTeams, mockTeamAPI, teamThree } from '../../mock/team.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 
@@ -58,6 +58,6 @@ describe('Invalid Route', () => {
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')
 
-    checkHCPLayout(`${firstName} ${lastName}`)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, availableTeams)
   })
 })

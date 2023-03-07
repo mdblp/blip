@@ -37,7 +37,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Daily view for caregiver', () => {
@@ -45,7 +45,7 @@ describe('Daily view for caregiver', () => {
   const lastName = 'Caregiver lastName'
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.caregiver)
+    mockAuth0Hook(UserRole.caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

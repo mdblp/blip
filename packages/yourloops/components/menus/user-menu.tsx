@@ -52,20 +52,18 @@ import config from '../../lib/config/config'
 import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 
 const classes = makeStyles()((theme: Theme) => ({
-  clickableMenu: {
-    cursor: 'pointer'
-  },
+  // TODO reuse classes (+ clickableMenu + typography)
   typography: {
-    margin: `0 ${theme.spacing(1)}`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
   },
-  // TODO reuse classes (+ clickableMenu + typography)
   menu: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1)
@@ -75,7 +73,7 @@ const classes = makeStyles()((theme: Theme) => ({
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
-  const { classes: { clickableMenu, typography, menu } } = classes()
+  const { classes: { menu, typography } } = classes()
   const history = useHistory()
   const theme = useTheme()
   const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
@@ -88,11 +86,11 @@ function UserMenu(): JSX.Element {
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
-      case UserRoles.hcp:
+      case UserRole.hcp:
         return <StethoscopeIcon data-testid="hcp-icon" />
-      case UserRoles.caregiver:
+      case UserRole.caregiver:
         return <RoundedHospitalIcon data-testid="caregiver-icon" />
-      case UserRoles.patient:
+      case UserRole.patient:
         return <FaceIcon data-testid="patient-icon" />
       default:
         console.error('Unknown role')
@@ -130,29 +128,29 @@ function UserMenu(): JSX.Element {
   }, [userName])
 
   return (
-    <React.Fragment>
-      <Box
-        id="user-menu"
-        display="flex"
-        alignItems="center"
-        className={clickableMenu}
-        maxWidth={250}
-        onClick={event => {
-          setAnchorEl(event.currentTarget)
-        }}
-      >
-        <Box display="flex">
-          {getRoleIcon()}
-        </Box>
-        {!isMobile &&
-          <React.Fragment>
+    <>
+      <Box maxWidth={250}>
+        {isMobile
+          ? <IconButton id="user-menu" color="inherit" onClick={event => {
+            setAnchorEl(event.currentTarget)
+          }}>
+            {getRoleIcon()}
+          </IconButton>
+          : <Button
+            id="user-menu"
+            color="inherit"
+            startIcon={getRoleIcon()}
+            endIcon={<ArrowDropDownIcon />}
+            onClick={event => {
+              setAnchorEl(event.currentTarget)
+            }}
+          >
             <Tooltip title={tooltipText} disableInteractive>
               <Typography id="user-menu-full-name" className={typography}>
                 {userName}
               </Typography>
             </Tooltip>
-            <ArrowDropDownIcon />
-          </React.Fragment>
+          </Button>
         }
       </Box>
 
@@ -161,7 +159,7 @@ function UserMenu(): JSX.Element {
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <Box className={menu}>
+        <Box className={menu} data-testid="user-menu">
           <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
             <ListItemIcon>
               <PermContactCalendarIcon />
@@ -194,7 +192,7 @@ function UserMenu(): JSX.Element {
           </MenuItem>
         </Box>
       </MenuLayout>
-    </React.Fragment>
+    </>
   )
 }
 

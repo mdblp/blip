@@ -45,7 +45,7 @@ import CaregiverTable from './table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
 import SpinningLoader from '../../../components/loaders/spinning-loader'
@@ -109,7 +109,7 @@ function PatientCaregiversPage(): JSX.Element {
         user: {
           username: invitation.email,
           userid: uuidv4(),
-          role: UserRoles.caregiver
+          role: UserRole.caregiver
         }
       }
       acc.push(caregiver)
