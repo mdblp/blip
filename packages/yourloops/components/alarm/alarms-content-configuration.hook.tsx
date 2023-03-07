@@ -31,10 +31,16 @@ import { useMemo, useState } from 'react'
 import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
-import { buildThresholds, isInvalidPercentage, REGEX_VALUE_BG } from './alarm-content-configuration.utils'
+import {
+  buildThresholds,
+  getConvertedValue,
+  isInvalidPercentage,
+  REGEX_VALUE_BG
+} from './alarm-content-configuration.util'
 import { UnitsType } from 'dumb'
 import { type Thresholds } from '../../lib/patient/models/alarms.model'
 import { DEFAULT_BG_VALUES } from './alarms.default'
+import { useAuth } from '../../lib/auth'
 
 export interface AlarmsContentConfigurationHookProps {
   monitoring: Monitoring
@@ -73,8 +79,13 @@ interface ValueErrorPair {
   error?: boolean
 }
 
+const DEFAULT_BG_UNIT = UnitsType.MGDL
+
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
-  const bgUnit = monitoring.parameters?.bgUnit ?? UnitsType.MGDL
+  const { user } = useAuth()
+
+  const userBgUnit = user.settings?.units?.bg ?? DEFAULT_BG_UNIT
+  const monitoringBgUnit = monitoring.parameters?.bgUnit ?? DEFAULT_BG_UNIT
 
   const {
     highBgDefault,
@@ -104,51 +115,62 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
 
   const teamHook = useTeam()
 
-  const thresholds = useMemo<Thresholds>(() => buildThresholds(bgUnit), [bgUnit])
+  const thresholds = useMemo<Thresholds>(() => buildThresholds(userBgUnit), [userBgUnit])
 
   const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
-    if (bgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
+    if (userBgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
       return t('mandatory-integer')
     }
+
     if (value < lowValue || value > highValue) {
       return t('mandatory-range', { lowValue, highValue })
     }
-    if (bgUnit === UnitsType.MMOLL && !REGEX_VALUE_BG.test(value.toString())) {
+
+    if (userBgUnit === UnitsType.MMOLL && !REGEX_VALUE_BG.test(value.toString())) {
       return t('mandatory-float-number')
     }
+
     return null
   }
 
+  const highBgValue = getConvertedValue(monitoring.parameters.highBg, monitoringBgUnit, userBgUnit)
   const [highBg, setHighBg] = useState<ValueErrorMessagePair>(() => {
     return {
-      value: monitoring.parameters.highBg,
-      errorMessage: getErrorMessage(monitoring.parameters.highBg, thresholds.minHighBg, thresholds.maxHighBg)
+      value: highBgValue,
+      errorMessage: getErrorMessage(highBgValue, thresholds.minHighBg, thresholds.maxHighBg)
     }
   })
+
+  const veryLowBgValue = getConvertedValue(monitoring.parameters.veryLowBg, monitoringBgUnit, userBgUnit)
   const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>(() => {
     return {
-      value: monitoring.parameters.veryLowBg,
-      errorMessage: getErrorMessage(monitoring.parameters.veryLowBg, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
+      value: veryLowBgValue,
+      errorMessage: getErrorMessage(veryLowBgValue, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
     }
   })
+
+  const lowBgValue = getConvertedValue(monitoring.parameters.lowBg, monitoringBgUnit, userBgUnit)
   const [lowBg, setLowBg] = useState<ValueErrorMessagePair>(() => {
     return {
-      value: monitoring.parameters.lowBg,
-      errorMessage: getErrorMessage(monitoring.parameters.lowBg, thresholds.minLowBg, thresholds.maxLowBg)
+      value: lowBgValue,
+      errorMessage: getErrorMessage(lowBgValue, thresholds.minLowBg, thresholds.maxLowBg)
     }
   })
+
   const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(() => {
     return {
       value: monitoring.parameters.nonDataTxThreshold,
       error: isInvalidPercentage(monitoring.parameters.nonDataTxThreshold)
     }
   })
+
   const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(() => {
     return {
       value: monitoring.parameters.outOfRangeThreshold,
       error: isInvalidPercentage(monitoring.parameters.outOfRangeThreshold)
     }
   })
+
   const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(() => {
     return {
       value: monitoring.parameters.hypoThreshold,
@@ -194,9 +216,19 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     if (!defaultMonitoring?.parameters) {
       throw Error('The given team has no monitoring values')
     }
-    setHighBg({ ...highBg, value: defaultMonitoring.parameters.highBg })
-    setVeryLowBg({ ...veryLowBg, value: defaultMonitoring.parameters.veryLowBg })
-    setLowBg({ ...lowBg, value: defaultMonitoring.parameters.lowBg })
+
+    const defaultParameters = defaultMonitoring.parameters
+    const teamBgUnit = defaultParameters.bgUnit
+
+    const defaultHighBgValue = getConvertedValue(defaultParameters.highBg, teamBgUnit, userBgUnit)
+    setHighBg({ ...highBg, value: defaultHighBgValue })
+
+    const defaultVeryLowBgValue = getConvertedValue(defaultParameters.veryLowBg, teamBgUnit, userBgUnit)
+    setVeryLowBg({ ...veryLowBg, value: defaultVeryLowBgValue })
+
+    const defaultLowBgValue = getConvertedValue(defaultParameters.lowBg, teamBgUnit, userBgUnit)
+    setLowBg({ ...lowBg, value: defaultLowBgValue })
+
     setNonDataTxThreshold({ ...nonDataTxThreshold, value: defaultMonitoring.parameters.nonDataTxThreshold })
     setOutOfRangeThreshold({ ...outOfRangeThreshold, value: defaultMonitoring.parameters.outOfRangeThreshold })
     setHypoThreshold({ ...hypoThreshold, value: defaultMonitoring.parameters.hypoThreshold })
@@ -209,7 +241,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       status: monitoring.status,
       monitoringEnd: monitoring.monitoringEnd,
       parameters: {
-        bgUnit,
+        bgUnit: userBgUnit,
         lowBg: lowBg.value,
         highBg: highBg.value,
         outOfRangeThreshold: outOfRangeThreshold.value,
@@ -221,6 +253,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     }
     onSave(monitoringUpdated)
   }
+
   return {
     lowBg,
     saveButtonDisabled,
@@ -238,7 +271,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     setHypoThreshold,
     setVeryLowBg,
     setNonDataTxThreshold,
-    bgUnit
+    bgUnit: userBgUnit
   }
 }
 export default useAlarmsContentConfiguration

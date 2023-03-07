@@ -36,10 +36,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-2162 Migrate CbgDateTrace store from redux to TrendsProvider
 - YLP-2176 Migrate CBG slice actions from redux to TrendsProvider
 - YLP-2178 Remove redux store
+- YLP-2186 Handle HCP in mmol settings in alarms configuration
 - YLP-2196 Removed the team selection drop-down menu on the care team definition page
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
+- YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

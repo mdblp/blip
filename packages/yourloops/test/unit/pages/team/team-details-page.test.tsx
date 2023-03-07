@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
+import { UnitsType } from 'dumb'
 
 const teamId1 = 'teamId1'
 
@@ -68,7 +69,14 @@ describe('TeamDetailsPage', () => {
       return { getMedicalTeams: getMedicalTeamsMock, getTeam: getTeamMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => true, isUserPatient: () => false } as User }
+      return {
+        user: {
+          id: 'id',
+          settings: { units: { bg: UnitsType.MGDL } },
+          isUserHcp: () => true,
+          isUserPatient: () => false
+        }
+      }
     })
   })
 
