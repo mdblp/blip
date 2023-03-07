@@ -131,13 +131,12 @@ function UserMenu(): JSX.Element {
     <>
       <Box maxWidth={250}>
         {isMobile
-          ? <IconButton id="user-menu" color="inherit" onClick={event => {
+          ? <IconButton color="inherit" onClick={event => {
             setAnchorEl(event.currentTarget)
           }}>
             {getRoleIcon()}
           </IconButton>
           : <Button
-            id="user-menu"
             color="inherit"
             startIcon={getRoleIcon()}
             endIcon={<ArrowDropDownIcon />}
@@ -160,7 +159,7 @@ function UserMenu(): JSX.Element {
         onClose={closeMenu}
       >
         <Box className={menu} data-testid="user-menu">
-          <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
+          <MenuItem onClick={onClickSettings}>
             <ListItemIcon>
               <PermContactCalendarIcon />
             </ListItemIcon>
@@ -169,7 +168,7 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <MenuItem id="contact-menu-item" onClick={onClickSupport}>
+          <MenuItem onClick={onClickSupport}>
             <ListItemIcon>
               <ContactSupportIcon />
             </ListItemIcon>
@@ -182,7 +181,7 @@ function UserMenu(): JSX.Element {
             <Divider variant="middle" />
           </Box>
 
-          <MenuItem id="user-menu-logout-item" onClick={onClickLogout}>
+          <MenuItem onClick={onClickLogout}>
             <ListItemIcon>
               <CancelIcon />
             </ListItemIcon>

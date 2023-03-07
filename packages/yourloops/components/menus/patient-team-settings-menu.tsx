@@ -138,7 +138,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
   }
   return (
     <>
-      <IconButton color="inherit" onClick={event => {
+      <IconButton id="team-menu" color="inherit" onClick={event => {
         setAnchorEl(event.currentTarget)
       }}>
         <Badge
