@@ -39,6 +39,7 @@
   --bolus-underride: #7E7E7E;
   --bolus-undelivered: #E98D7C;
   --bolus-meal: #6FC3BB;
+  --bolus-umm: #C1EADF;
   --bolus-micro: #9A78BD;
   --bolus-manual: #8C65D6;
   --carbs: #6FC3BB;
@@ -100,6 +101,7 @@
   basalHeader: #DCF1F9;
   basalAutomated: #00D3E6;
   basalManual: #A8C8D4;
+  bolusUmm: #C1EADF;
   statDark: #27385B;
   statDefault: #727375;
   statDisabled: #E7E9EE;

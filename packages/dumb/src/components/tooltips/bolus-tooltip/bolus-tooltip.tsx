@@ -84,6 +84,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const carbs = (bolus as Wizard).carbInput
   const fatMeal = (bolus as Wizard).inputMeal?.fat
   const isFatMeal = fatMeal === WizardInputMealFat.Yes
+  const isUmm = (bolus as Wizard).inputMeal?.source === 'umm'
   const inputTime = (bolus as Wizard).inputTime
   const recommended = getRecommended(bolus as Wizard)
   const suggested = Number.isFinite(recommended) ? recommended : null
@@ -100,6 +101,8 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return t('Meal Bolus')
       case BolusType.Micro:
         return t('Micro Bolus')
+      case BolusType.Umm:
+        return t('Unannounced Meal Bolus')
     }
   }
 
@@ -111,6 +114,8 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return colors.bolusMeal
       case BolusType.Micro:
         return colors.bolusMicro
+      case BolusType.Umm:
+        return colors.bolusUmm
     }
   }
 
@@ -135,7 +140,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       content={
         <div className={styles.container} id="bolus-tooltip-content">
           {isWizard && carbs &&
-            <TooltipLine label={t('Carbs')} value={carbs} units={t('g')} />
+            <TooltipLine label={isUmm ? t('Estimated carbs') : t('Carbs')} value={carbs} units={t('g')} />
           }
           {isWizard && isFatMeal &&
             <TooltipLine label={t('High fat meal')}></TooltipLine>

@@ -34,6 +34,9 @@ const DEFAULT_PROGRAMMED_VALUE = 0
 
 export const getBolusType = (insulinEvent: Bolus | Wizard): BolusType => {
   if (insulinEvent.type === DatumType.Wizard) {
+    if ((insulinEvent as Wizard).inputMeal?.source === 'umm') {
+      return BolusType.Umm
+    }
     return BolusType.Meal
   }
   const bolus = getBolusFromInsulinEvent(insulinEvent)
