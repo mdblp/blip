@@ -58,7 +58,6 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 
 const classes = makeStyles()((theme: Theme) => ({
-  // TODO reuse classes (+ clickableMenu + typography)
   typography: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
