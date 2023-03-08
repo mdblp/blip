@@ -36,6 +36,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
 import { MemoryRouter } from 'react-router-dom'
+import { UnitsType } from 'dumb'
 
 const teamId1 = 'teamId1'
 
@@ -66,7 +67,14 @@ describe('TeamDetailsPage', () => {
       return { getMedicalTeams: getMedicalTeamsMock, getTeam: getTeamMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => true, isUserPatient: () => false } as User }
+      return {
+        user: {
+          id: 'id',
+          settings: { units: { bg: UnitsType.MGDL } },
+          isUserHcp: () => true,
+          isUserPatient: () => false
+        }
+      }
     })
   })
 

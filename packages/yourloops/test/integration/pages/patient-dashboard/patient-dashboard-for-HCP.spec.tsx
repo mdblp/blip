@@ -60,13 +60,15 @@ describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRouteMmoL = `/patient/${monitoredPatientWithMmolId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
+  const mgdlSettings = { units: { bg: UnitsType.MGDL } }
+  const mmolSettings = { units: { bg: UnitsType.MMOLL } }
 
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mgdlSettings })
     mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
@@ -268,6 +270,8 @@ describe('Patient dashboard for HCP', () => {
     })
 
     it('should have units in mmol/L and save button working', async () => {
+      mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
+
       await act(async () => {
         renderPage(monitoredPatientDashboardRouteMmoL)
       })

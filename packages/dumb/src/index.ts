@@ -38,6 +38,7 @@ import {
 import { CBGStatType } from './models/stats.model'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
+import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
@@ -76,6 +77,7 @@ export {
   ConfidentialTooltip,
   FocusedRangeLabels,
   FoodTooltip,
+  formatBgValue,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,
