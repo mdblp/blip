@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -98,7 +98,7 @@ function TeamDetailsPage(): JSX.Element {
   const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
-  const history = useHistory()
+  const navigate = useNavigate()
   const authContext = useAuth()
   const { t } = useTranslation('yourloops')
   const { teamId } = paramHook as { teamId: string }
@@ -129,12 +129,12 @@ function TeamDetailsPage(): JSX.Element {
   }, [refresh])
 
   const redirectToDashboard = (): void => {
-    history.push('/')
+    navigate('/')
   }
 
   const redirectToTeam = (selectedTeam: string): void => {
     const teamToRedirectTo = getMedicalTeams().find((team: Team) => team.name === selectedTeam)
-    history.push(`/teams/${teamToRedirectTo?.id}`)
+    navigate(`/teams/${teamToRedirectTo?.id}`)
   }
 
   const isMonitoringEnabled = (): boolean => {
@@ -171,8 +171,12 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="information"
                   className={`${classes.drawerTitle} ${activeLink === 'information' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onKeyDown={() => { scrollTo(teamInformation) }}
-                  onClick={() => { scrollTo(teamInformation) }}
+                  onKeyDown={() => {
+                    scrollTo(teamInformation)
+                  }}
+                  onClick={() => {
+                    scrollTo(teamInformation)
+                  }}
                 >
                   <InfoOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -184,8 +188,12 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="members"
                   className={`${classes.drawerTitle} ${activeLink === 'members' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onClick={() => { scrollTo(teamMembers) }}
-                  onKeyDown={() => { scrollTo(teamMembers) }}
+                  onClick={() => {
+                    scrollTo(teamMembers)
+                  }}
+                  onKeyDown={() => {
+                    scrollTo(teamMembers)
+                  }}
                 >
                   <GroupOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -198,8 +206,12 @@ function TeamDetailsPage(): JSX.Element {
                     aria-label="alarms"
                     className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
                     tabIndex={0}
-                    onClick={() => { scrollTo(teamAlarms) }}
-                    onKeyDown={() => { scrollTo(teamAlarms) }}
+                    onClick={() => {
+                      scrollTo(teamAlarms)
+                    }}
+                    onKeyDown={() => {
+                      scrollTo(teamAlarms)
+                    }}
                   >
                     <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                     <Typography className={classes.title}>

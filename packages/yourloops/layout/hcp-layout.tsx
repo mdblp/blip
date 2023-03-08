@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
 import HomePage from '../pages/home-page'
@@ -44,28 +44,22 @@ export function HcpLayout(): JSX.Element {
       <PatientProvider>
         <SelectedTeamProvider>
           <DashboardLayout>
-            <Switch>
-              <Route exact path="/not-found">
-                <InvalidRoute />
-              </Route>
-              <Route exact path="/preferences">
-                <ProfilePage />
-              </Route>
-              <Route exact path="/notifications">
-                <NotificationsPage />
-              </Route>
-              <Route exact path="/home">
-                <HomePage />
-              </Route>
-              <Route path="/patient/:patientId">
-                <PatientDataPage />
-              </Route>
-              <Route exact path="/teams/:teamId">
-                <TeamDetailsPage />
-              </Route>
-              <Route exact path="/" render={() => <Redirect to="/home" />} />
-              <Route render={() => <Redirect to="/not-found" />} />
-            </Switch>
+            <Routes>
+              <Route path="/not-found" element={<InvalidRoute />} />
+              <Route path="/preferences" element={<ProfilePage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/patient/:patientId/*" element={<PatientDataPage />} />
+              <Route path="/teams/:teamId" element={<TeamDetailsPage />} />
+              <Route
+                path="/"
+                element={<Navigate to="/home" replace />}
+              />
+              <Route
+                path="*"
+                element={<Navigate to="/not-found" replace />}
+              />
+            </Routes>
           </DashboardLayout>
         </SelectedTeamProvider>
       </PatientProvider>

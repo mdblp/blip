@@ -32,7 +32,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 
 import { type Team, useTeam } from '../../lib/team'
 import { useAlert } from '../utils/snackbar'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
 import TeamUtils from '../../lib/team/team.util'
@@ -49,7 +49,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const patientHook = usePatientContext()
   const alert = useAlert()
   const { user } = useAuth()
-  const historyHook = useHistory()
+  const navigate = useNavigate()
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
@@ -66,7 +66,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
           ? t('team-page-success-deleted')
           : t('team-page-leave-success')
         alert.success(message)
-        historyHook.push('/')
+        navigate('/')
       } catch (reason: unknown) {
         const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-failure-deleted')

@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
 import CaregiversPage from '../pages/patient/caregivers/page'
@@ -42,30 +42,19 @@ export function PatientLayout(): JSX.Element {
     <TeamContextProvider>
       <PatientProvider>
         <DashboardLayout>
-          <Switch>
-            <Route exact path="/not-found">
-              <InvalidRoute />
-            </Route>
-            <Route exact path="/preferences">
-              <ProfilePage />
-            </Route>
-            <Route exact path="/notifications">
-              <NotificationsPage />
-            </Route>
-            <Route exact path="/home">
-              <PatientDataPage />
-            </Route>
-            <Route exact path="/caregivers">
-              <CaregiversPage />
-            </Route>
-            <Route exact path="/teams/:teamId">
-              <TeamDetailsPage />
-            </Route>
-            <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
-            <Route path="/">
-              <PatientDataPage />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/not-found" element={<InvalidRoute />} />
+            <Route path="/preferences" element={<ProfilePage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/home" element={<PatientDataPage />} />
+            <Route path="/caregivers" element={<CaregiversPage />} />
+            <Route path="/teams/:teamId" element={<TeamDetailsPage />} />
+            <Route
+              path="/"
+              element={<Navigate to="/dashboard" replace />}
+            />
+            <Route path="*" element={<PatientDataPage />} />
+          </Routes>
         </DashboardLayout>
       </PatientProvider>
     </TeamContextProvider>

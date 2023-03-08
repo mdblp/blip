@@ -27,7 +27,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import CancelIcon from '@mui/icons-material/Cancel'
@@ -71,7 +71,7 @@ function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
   const { classes: { clickableMenu, typography } } = classes()
-  const history = useHistory()
+  const navigate = useNavigate()
   const theme = useTheme()
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const [tooltipText, setTooltipText] = useState<string>('')
@@ -100,7 +100,7 @@ function UserMenu(): JSX.Element {
   }
 
   const onClickSettings = (): void => {
-    history.push('/preferences')
+    navigate('/preferences')
     closeMenu()
   }
 
@@ -132,7 +132,9 @@ function UserMenu(): JSX.Element {
         alignItems="center"
         className={clickableMenu}
         maxWidth={250}
-        onClick={event => { setAnchorEl(event.currentTarget) }}
+        onClick={event => {
+          setAnchorEl(event.currentTarget)
+        }}
       >
         <Box display="flex">
           {getRoleIcon()}

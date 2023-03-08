@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { ThemeProvider } from '@mui/material/styles'
@@ -122,7 +122,7 @@ export function MainLobby(): JSX.Element {
   return (
     <React.Fragment>
       {redirectTo
-        ? <Redirect to={redirectTo} />
+        ? <Navigate to={redirectTo} replace />
         : (!isLoading && !fetchingUser &&
           <CacheProvider value={muiCache}>
             <TssCacheProvider value={tssCache}>
@@ -131,32 +131,16 @@ export function MainLobby(): JSX.Element {
                 <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
                   <Box>
-                    <Switch>
-                      <Route exact path="/product-labelling">
-                        <ProductLabellingPage />
-                      </Route>
-                      <Route exact path="/login">
-                        <LoginPage />
-                      </Route>
-                      <Route exact path="/complete-signup">
-                        <CompleteSignUpPage />
-                      </Route>
-                      <Route exact path="/renew-consent">
-                        <ConsentPage />
-                      </Route>
-                      <Route exact path="/new-consent">
-                        <PatientConsentPage />
-                      </Route>
-                      <Route exact path="/training">
-                        <TrainingPage />
-                      </Route>
-                      <Route exact path="/verify-email">
-                        <VerifyEmailPage />
-                      </Route>
-                      <Route>
-                        <MainLayout />
-                      </Route>
-                    </Switch>
+                    <Routes>
+                      <Route path="/product-labelling" element={<ProductLabellingPage />} />
+                      <Route path="/login" element={<LoginPage />} />
+                      <Route path="/complete-signup" element={<CompleteSignUpPage />} />
+                      <Route path="/renew-consent" element={<ConsentPage />} />
+                      <Route path="/new-consent" element={<PatientConsentPage />} />
+                      <Route path="/training" element={<TrainingPage />} />
+                      <Route path="/verify-email" element={<VerifyEmailPage />} />
+                      <Route path="*" element={<MainLayout />} />
+                    </Routes>
                   </Box>
                 </SnackbarContextProvider>
                 <Footer />

@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import DashboardLayout from './dashboard-layout'
@@ -39,25 +39,21 @@ export function CaregiverLayout(): JSX.Element {
   return (
     <PatientProvider>
       <DashboardLayout>
-        <Switch>
-          <Route exact path="/not-found">
-            <InvalidRoute />
-          </Route>
-          <Route exact path="/preferences">
-            <ProfilePage />
-          </Route>
-          <Route exact path="/notifications">
-            <NotificationsPage />
-          </Route>
-          <Route path="/patient/:patientId">
-            <PatientDataPage />
-          </Route>
-          <Route exact path="/home">
-            <HomePage />
-          </Route>
-          <Route exact path="/" render={() => <Redirect to="/home" />} />
-          <Route render={() => <Redirect to="/not-found" />} />
-        </Switch>
+        <Routes>
+          <Route path="/not-found" element={<InvalidRoute />} />
+          <Route path="/preferences" element={<ProfilePage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/patient/:patientId/*" element={<PatientDataPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/"
+            element={<Navigate to="/home" replace />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to="/not-found" replace />}
+          />
+        </Routes>
       </DashboardLayout>
     </PatientProvider>
   )

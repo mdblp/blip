@@ -28,7 +28,6 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
 import bows from 'bows'
-import { useHistory } from 'react-router-dom'
 
 import '../../viz/src/styles/colors.css'
 import '../../tideline/css/tideline.less'
@@ -48,6 +47,8 @@ function Blip(props) {
       const {
         config,
         api,
+        navigate,
+        pathName,
         patient,
         setPatient,
         prefixURL,
@@ -57,16 +58,15 @@ function Blip(props) {
       } = props
       updateConfig(config)
 
-      const historyHook = useHistory()
-
       return (
         <PatientData
           key={patient.userid}
           api={api}
           patient={patient}
           setPatient={setPatient}
+          pathName={pathName}
           prefixURL={prefixURL}
-          history={historyHook}
+          navigate={navigate}
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
@@ -84,6 +84,8 @@ function Blip(props) {
 Blip.propTypes = {
   config: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
+  pathName: PropTypes.string.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,

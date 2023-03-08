@@ -29,7 +29,7 @@ import React, { useMemo, useState } from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -47,7 +47,6 @@ import { useAuth } from '../../lib/auth'
 import ConsentForm from './form'
 import appConfig from '../../lib/config/config'
 import { type Profile } from '../../lib/auth/models/profile.model'
-import { type HistoryState } from '../../models/history-state.model'
 
 interface ConsentProps {
   messageKey: string
@@ -91,14 +90,15 @@ const style = makeStyles({ name: 'ylp-component-consent' })((theme: Theme) => {
  */
 function Page(props: ConsentProps): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const historyHook = useHistory<HistoryState>()
+  const navigate = useNavigate()
+  const location = useLocation()
   const auth = useAuth()
   const { classes } = style()
   const [policyAccepted, setPolicyAccepted] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.profile?.contactConsent?.isAccepted)
   const log = useMemo(() => bows('consent'), [])
-  const fromPath = useMemo(() => historyHook.location.state?.from?.pathname, [historyHook])
+  const fromPath = useMemo(() => location.state?.from?.pathname, [location])
 
   const user = auth.user
 
@@ -109,7 +109,9 @@ function Page(props: ConsentProps): JSX.Element {
     const showFeedback = user.isUserHcp() && !user.profile?.contactConsent
 
     const onDecline = (): void => {
-      auth.logout().catch((reason) => { console.error('logout', reason) })
+      auth.logout().catch((reason) => {
+        console.error('logout', reason)
+      })
     }
 
     const onConfirm = (): void => {
@@ -123,7 +125,7 @@ function Page(props: ConsentProps): JSX.Element {
       auth.updateProfile(updatedProfile).catch((reason: unknown) => {
         log.error(reason)
       }).finally(() => {
-        historyHook.push(fromPath ?? '/')
+        navigate(fromPath ?? '/')
       })
     }
 
