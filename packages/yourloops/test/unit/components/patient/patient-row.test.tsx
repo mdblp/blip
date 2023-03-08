@@ -41,6 +41,7 @@ import PatientUtils from '../../../../lib/patient/patient.util'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type PatientRowProps } from '../../../../components/patient/models/patient-table-props.model'
 import { FilterType } from '../../../../lib/patient/models/enums/filter-type.enum'
+import { MemoryRouter } from 'react-router-dom'
 
 const removePatientDialogMockId = 'remove-patient-dialog-id'
 // eslint-disable-next-line react/display-name
@@ -71,17 +72,19 @@ describe('Patient row', () => {
 
   const getPatientRowJSX = (patientElementProps: PatientRowProps = props): JSX.Element => {
     return (
-      <ThemeProvider theme={getTheme()}>
-        <Table>
-          <TableBody>
-            <PatientRow
-              loggedUserIsHcpInMonitoring={patientElementProps.loggedUserIsHcpInMonitoring}
-              patient={patientElementProps.patient}
-              filter={patientElementProps.filter}
-            />
-          </TableBody>
-        </Table>
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider theme={getTheme()}>
+          <Table>
+            <TableBody>
+              <PatientRow
+                loggedUserIsHcpInMonitoring={patientElementProps.loggedUserIsHcpInMonitoring}
+                patient={patientElementProps.patient}
+                filter={patientElementProps.filter}
+              />
+            </TableBody>
+          </Table>
+        </ThemeProvider>
+      </MemoryRouter>
     )
   }
 
