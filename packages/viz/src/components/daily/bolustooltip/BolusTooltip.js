@@ -123,8 +123,7 @@ class BolusTooltip extends React.Component {
 
   getCarbsLine(carbs, wizardSource) {
     if (carbs !== null) {
-      const isUmm = wizardSource === 'umm'
-      console.log("carbs line", {carbs, isUmm})
+      const isUmm = wizardSource === "umm";
       return (
         <div className={styles.carbs} id="bolus-tooltip-line-carbs">
           <div className={styles.label} id="bolus-tooltip-line-carbs-label">{isUmm ? t("Estimated carbs") : t("Carbs")}</div>

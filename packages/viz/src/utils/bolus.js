@@ -59,8 +59,8 @@ export const BolusTypes = {
  */
 export function getBolusType(b) {
   if (b.type === "wizard") {
-    if (b?.inputMeal?.source === 'umm') {
-      return BolusTypes.umm
+    if (b?.inputMeal?.source === "umm") {
+      return BolusTypes.umm;
     }
     return BolusTypes.meal;
   }
