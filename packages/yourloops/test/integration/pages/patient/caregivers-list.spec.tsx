@@ -29,7 +29,7 @@ import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { addDirectShareMock, mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { act, screen, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
@@ -64,8 +64,9 @@ describe('Patient caregivers page', () => {
   })
 
   it('should render the caregivers page, allow to add and remove a caregiver', async () => {
-    await act(async () => {
-      renderPage('/caregivers')
+    const router = renderPage('/caregivers')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/caregivers')
     })
 
     checkPatientLayout(`${firstName} ${lastName}`)

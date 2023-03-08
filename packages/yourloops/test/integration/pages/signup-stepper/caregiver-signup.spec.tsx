@@ -25,8 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
-import { getAccessTokenWithPopupMock, loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { act, screen, waitFor } from '@testing-library/react'
+import {
+  getAccessTokenWithPopupMock,
+  loggedInUserEmail,
+  loggedInUserId,
+  mockAuth0Hook
+} from '../../mock/auth0.hook.mock'
 import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStepper } from '../../assert/signup-stepper'
 import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
@@ -53,7 +58,10 @@ describe('Signup stepper as caregiver', () => {
   })
 
   it('should be able to create a caregiver account', async () => {
-    renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/complete-signup')
+    })
     checkFooter({ needFooterLanguageSelector: true })
     checkStepper()
 

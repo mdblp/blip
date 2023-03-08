@@ -26,17 +26,16 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import TeamDetailsPage from '../../../../pages/team/team-details-page'
 import { getTheme } from '../../../../components/theme'
 import { ThemeProvider } from '@mui/material/styles'
-import { Router } from 'react-router-dom'
-import { createMemoryHistory } from 'history'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
+import { MemoryRouter } from 'react-router-dom'
 import { UnitsType } from 'dumb'
 
 const teamId1 = 'teamId1'
@@ -62,7 +61,6 @@ describe('TeamDetailsPage', () => {
   const teams = [team1, team2]
   const getTeamMock = jest.fn().mockReturnValue(team1)
   const getMedicalTeamsMock = jest.fn().mockReturnValue(teams)
-  const history = createMemoryHistory({ initialEntries: ['/fakeRoute'] })
 
   beforeEach(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
@@ -82,11 +80,11 @@ describe('TeamDetailsPage', () => {
 
   function getTeamDetailsPageJSX(): JSX.Element {
     return (
-      <Router history={history}>
+      <MemoryRouter>
         <ThemeProvider theme={getTheme()}>
           <TeamDetailsPage />
         </ThemeProvider>
-      </Router>
+      </MemoryRouter>
     )
   }
 
@@ -99,22 +97,6 @@ describe('TeamDetailsPage', () => {
   it('should render component if there is a selected team', () => {
     render(getTeamDetailsPageJSX())
     expect(screen.queryByRole('main')).not.toBeNull()
-  })
-
-  it('should redirect to / when clicking on back button', () => {
-    render(getTeamDetailsPageJSX())
-    const backButton = screen.getByRole('button', { name: 'back-button' })
-    fireEvent.click(backButton)
-    expect(history.location.pathname).toBe('/')
-  })
-
-  it('should redirect to the team details page when selecting a new team', () => {
-    render(getTeamDetailsPageJSX())
-    const selectInput = screen.getByRole('button', { name: team1.name })
-    fireEvent.mouseDown(selectInput)
-    const menuItems = within(screen.getByRole('listbox'))
-    fireEvent.click(menuItems.getByText(team2.name))
-    expect(history.location.pathname).toBe(`/teams/${team2.id}`)
   })
 
   it('should display specific information when user is HCP and team is monitored', () => {

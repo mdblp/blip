@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
@@ -96,7 +96,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
   const { selectedTeamId, selectTeam } = useSelectedTeamContext()
   const { pathname } = useLocation()
   const { getPatientById } = usePatientContext()
-  const history = useHistory()
+  const navigate = useNavigate()
   const patientDashboardRegexMatch = pathname.match(PATIENT_DASHBOARD_REGEX)
   const isPatientDashboard = !!patientDashboardRegexMatch
   /**
@@ -116,7 +116,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
     const patientId = patientDashboardRegexMatch[1]
     const isPatientInSelectedTeam = PatientUtils.isInTeam(getPatientById(patientId), teamId)
     if (!isPatientInSelectedTeam) {
-      history.push('/')
+      navigate('/')
     }
     selectTeam(teamId)
   }
@@ -139,7 +139,8 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
           <Box display="flex" alignItems="center">
             {
               withShrinkIcon &&
-              <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon} onClick={onClickShrinkIcon} />
+              <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon}
+                        onClick={onClickShrinkIcon} />
             }
             <Link to="/">
               <Avatar

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import DashboardLayout from './dashboard-layout'
@@ -39,15 +39,21 @@ export function CaregiverLayout(): JSX.Element {
   return (
     <PatientProvider>
       <DashboardLayout>
-        <Switch>
-          <Route exact path="/not-found" component={InvalidRoute} />
-          <Route exact path="/preferences" component={ProfilePage} />
-          <Route exact path="/notifications" component={NotificationsPage} />
-          <Route path="/patient/:patientId" component={PatientDataPage} />
-          <Route exact path="/home" component={HomePage} />
-          <Redirect exact from="/" to="/home" />
-          <Redirect to="/not-found" />
-        </Switch>
+        <Routes>
+          <Route path="/not-found" element={<InvalidRoute />} />
+          <Route path="/preferences" element={<ProfilePage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/patient/:patientId/*" element={<PatientDataPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/"
+            element={<Navigate to="/home" replace />}
+          />
+          <Route
+            path="*"
+            element={<Navigate to="/not-found" replace />}
+          />
+        </Routes>
       </DashboardLayout>
     </PatientProvider>
   )

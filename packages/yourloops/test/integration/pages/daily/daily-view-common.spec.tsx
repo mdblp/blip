@@ -57,7 +57,10 @@ describe('Daily view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI()
-      renderPage('/daily')
+      const router = renderPage('/daily')
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual('/daily')
+      })
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()
@@ -114,7 +117,9 @@ describe('Daily view for anyone', () => {
 
       await userEvent.click(generateReportDialogFirstPdf.getByText('Generate'))
       // This checks that we tried to generate a pdf
-      await waitFor(() => { expect(windowOpenMock).toBeCalled() })
+      await waitFor(() => {
+        expect(windowOpenMock).toBeCalled()
+      })
 
       await userEvent.click(screen.getByText('Generate report'))
       const generateReportDialogFirstCsv = within(screen.getByRole('dialog'))
