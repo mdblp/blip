@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,20 +27,15 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory, useParams } from 'react-router-dom'
-
+import { useParams } from 'react-router-dom'
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
-import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-
 import { type Team, useTeam } from '../../lib/team'
-import BasicDropdown from '../../components/dropdown/basic-dropdown'
 import TeamInformation from '../../components/team/team-information'
 import TeamMembers from '../../components/team/team-members'
 import { commonComponentStyles } from '../../components/common'
@@ -98,7 +93,6 @@ function TeamDetailsPage(): JSX.Element {
   const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
-  const history = useHistory()
   const authContext = useAuth()
   const { t } = useTranslation('yourloops')
   const { teamId } = paramHook as { teamId: string }
@@ -128,15 +122,6 @@ function TeamDetailsPage(): JSX.Element {
     refresh()
   }, [refresh])
 
-  const redirectToDashboard = (): void => {
-    history.push('/')
-  }
-
-  const redirectToTeam = (selectedTeam: string): void => {
-    const teamToRedirectTo = getMedicalTeams().find((team: Team) => team.name === selectedTeam)
-    history.push(`/teams/${teamToRedirectTo?.id}`)
-  }
-
   const isMonitoringEnabled = (): boolean => {
     return dropdownData.selectedTeam?.monitoring?.enabled
   }
@@ -145,24 +130,6 @@ function TeamDetailsPage(): JSX.Element {
     <React.Fragment>
       {dropdownData.selectedTeam &&
         <Box role="main" paddingLeft={2}>
-          <Box display="flex" alignItems="center">
-            <IconButton
-              className={classes.disableRipple}
-              aria-label="back-button"
-              onClick={redirectToDashboard}
-              size="large">
-              <ArrowBackIcon />
-            </IconButton>
-            <GroupOutlinedIcon />
-            <Box marginLeft={0.5} marginRight={2}>{t('team')}</Box>
-            <BasicDropdown
-              key={dropdownData.selectedTeam.name}
-              id="team-basic-dropdown"
-              defaultValue={dropdownData.selectedTeam.name}
-              values={dropdownData.teamNames}
-              onSelect={redirectToTeam}
-            />
-          </Box>
           <Box display="flex">
             {isUserHcp &&
               <div className={classes.drawer} role="navigation">
@@ -171,8 +138,12 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="information"
                   className={`${classes.drawerTitle} ${activeLink === 'information' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onKeyDown={() => { scrollTo(teamInformation) }}
-                  onClick={() => { scrollTo(teamInformation) }}
+                  onKeyDown={() => {
+                    scrollTo(teamInformation)
+                  }}
+                  onClick={() => {
+                    scrollTo(teamInformation)
+                  }}
                 >
                   <InfoOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -184,8 +155,12 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="members"
                   className={`${classes.drawerTitle} ${activeLink === 'members' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onClick={() => { scrollTo(teamMembers) }}
-                  onKeyDown={() => { scrollTo(teamMembers) }}
+                  onClick={() => {
+                    scrollTo(teamMembers)
+                  }}
+                  onKeyDown={() => {
+                    scrollTo(teamMembers)
+                  }}
                 >
                   <GroupOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -198,8 +173,12 @@ function TeamDetailsPage(): JSX.Element {
                     aria-label="alarms"
                     className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
                     tabIndex={0}
-                    onClick={() => { scrollTo(teamAlarms) }}
-                    onKeyDown={() => { scrollTo(teamAlarms) }}
+                    onClick={() => {
+                      scrollTo(teamAlarms)
+                    }}
+                    onKeyDown={() => {
+                      scrollTo(teamAlarms)
+                    }}
                   >
                     <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                     <Typography className={classes.title}>

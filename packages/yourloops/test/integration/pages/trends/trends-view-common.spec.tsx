@@ -46,7 +46,7 @@ import {
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
-import { act, screen } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -56,7 +56,10 @@ describe('Trends view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI(minimalTrendViewData)
-      renderPage('/trends')
+      const router = renderPage('/trends')
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual('/trends')
+      })
 
       // Check the tooltips
       await checkTrendsTidelineContainerTooltips()

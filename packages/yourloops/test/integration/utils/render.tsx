@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MemoryRouter } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { AuthContextProvider } from '../../../lib/auth'
 import { MainLobby } from '../../../app/main-lobby'
 import { render } from '@testing-library/react'
-import React, { type RefObject } from 'react'
+import React from 'react'
 
-const memoryRouterRef: { current: never } = React.createRef<never>()
-
-function getMainLobby(initialEntry: string) {
-  return (
-    <MemoryRouter ref={memoryRouterRef} initialEntries={[initialEntry]}>
-      <AuthContextProvider>
-        <MainLobby />
-      </AuthContextProvider>
-    </MemoryRouter>
+const renderMainLobby = (initialEntry: string) => {
+  const router = createMemoryRouter(
+    [
+      {
+        path: '*',
+        element: <AuthContextProvider>
+          <MainLobby />
+        </AuthContextProvider>
+      }
+    ],
+    {
+      initialEntries: [initialEntry],
+      initialIndex: 0
+    }
   )
+
+  render(<RouterProvider router={router} />)
+  return router
 }
 
-export const renderPage = (url: string): RefObject<never> => {
-  render(getMainLobby(url))
-  return memoryRouterRef
+export const renderPage = (url: string) => {
+  return renderMainLobby(url)
 }

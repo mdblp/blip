@@ -26,7 +26,7 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { fireEvent, screen, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
@@ -47,7 +47,10 @@ describe('Login page mobile view', () => {
   })
 
   it('should render entire page with correct elements', async () => {
-    renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/login')
+    })
 
     const languageSelector = screen.queryByTestId('language-selector')
     const moreInfoLink = screen.getByRole('link', { name: 'Learn more' })
