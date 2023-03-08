@@ -119,29 +119,16 @@ pipeline {
                 sh 'npm run test-locales'
             }
         }
-        // stage('Publish') {
-        //     when {
-        //         expression {
-        //             env.GIT_BRANCH == "dblp"
-        //         }
-        //     }
-        //     steps {
-        //         script {
-        //             env.target = "preview"
-        //             if (env.version == "UNRELEASED") {
-        //                 env.version = "master"
-        //             }
-        //         }
-        //         lock('blip-cloudfront-publish') {
-        //             withCredentials([string(credentialsId: 'DEV_AWS_ACCESS_KEY', variable: 'AWS_ACCESS_KEY_ID'),
-        //                 string(credentialsId: 'DEV_AWS_SECRET_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-        //                 string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT')]) {
-        //                 sh 'docker run --rm -e STACK_VERSION=${version}:${GIT_COMMIT} -e APP_VERSION=${version}:${GIT_COMMIT} -e AWS_ACCOUNT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY --env-file ./cloudfront-dist/deployment/${target}.env blip:${GIT_COMMIT}'
-        //             }
-        //             publish()
-        //         }
-        //     }
-        // }
+        stage('Publish') {
+            when {
+                expression {
+                    env.GIT_BRANCH == "v2.0.x"
+                }
+            }
+            steps {
+                publish()
+            }
+        }
     }
     post {
         always {
