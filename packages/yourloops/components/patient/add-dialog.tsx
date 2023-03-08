@@ -121,7 +121,6 @@ function AddDialog(props: AddDialogProps): JSX.Element {
     }
   }
 
-  const dialogIsOpen = props.actions !== null
   const buttonAddDisabled = errorMessage !== null || !isValidEmail() || teamId.length < 1
   const optionsTeamsElements: JSX.Element[] = [
     <MenuItem id="patient-list-dialog-add-team-option-none" aria-label={t('none')} value="" key="none" />
@@ -167,8 +166,8 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   return (
     <Dialog
       id="patient-list-dialog-add"
-      aria-labelledby={t('button-add-patient')}
-      open={dialogIsOpen}
+      aria-labelledby={t('add-patient')}
+      open
       onClose={handleClose}
     >
       <DialogTitle id="patient-list-dialog-add-title">

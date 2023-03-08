@@ -71,6 +71,14 @@ export function getTheme(): Theme {
           }
         }
       },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            fontWeight: 600,
+            textTransform: 'none'
+          }
+        }
+      },
       MuiDialogActions: {
         styleOverrides: {
           spacing: {

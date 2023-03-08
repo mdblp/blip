@@ -87,8 +87,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       padding: '0px',
       marginLeft: '10px',
       marginRight: '10px',
-      fontSize: '0.6rem',
-      textTransform: 'none'
+      fontSize: '0.6rem'
     },
     chatWidgetInputRow: {
       display: 'flex',
