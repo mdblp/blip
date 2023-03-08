@@ -141,7 +141,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
           : <Button
             color="inherit"
             aria-label={t('hcp-team-menu-click-label')}
-            data-testid="hcp-team-scope-menu"
+            data-testid="hcp-team-scope-menu-button"
             startIcon={selectedTeamIcon}
             endIcon={<ArrowDropDownIcon />}
             onClick={event => {

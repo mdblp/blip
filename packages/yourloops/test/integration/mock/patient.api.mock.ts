@@ -121,7 +121,7 @@ export const monitoredPatient: Patient = buildPatient(
     },
     {
       teamId: myThirdTeamId,
-      status: UserInvitationStatus.accepted,
+      status: UserInvitationStatus.accepted
     }
   ],
   defaultMonitoring,

@@ -106,7 +106,7 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     checkPatientNavBarAsHCP()
     testPatientDashboardCommonDisplay(dashboard)
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name, isPrivate: false }, availableTeams)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, availableTeams)
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {

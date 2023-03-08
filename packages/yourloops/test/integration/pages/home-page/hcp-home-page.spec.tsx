@@ -64,7 +64,7 @@ describe('HCP home page', () => {
       renderPage('/')
     })
 
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name, isPrivate: false }, availableTeams)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, availableTeams)
     checkSecondaryBar(false, true)
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)

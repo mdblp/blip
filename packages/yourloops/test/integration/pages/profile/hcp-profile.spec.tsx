@@ -91,7 +91,7 @@ describe('Profile page for hcp', () => {
       renderPage('/preferences')
     })
 
-    await checkHCPLayout(`${profile.firstName} ${profile.lastName}`, { teamName: teamThree.name, isPrivate: false }, availableTeams)
+    await checkHCPLayout(`${profile.firstName} ${profile.lastName}`, { teamName: teamThree.name }, availableTeams)
     const fields = checkHcpProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
