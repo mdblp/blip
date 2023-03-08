@@ -37,6 +37,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2176 Migrate CBG slice actions from redux to TrendsProvider
 - YLP-2178 Remove redux store
 - YLP-2186 Handle HCP in mmol settings in alarms configuration
+- YLP-2219 Migrate SensorUsage from stats.js to yourloops
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
