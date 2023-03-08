@@ -37,6 +37,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2176 Migrate CBG slice actions from redux to TrendsProvider
 - YLP-2178 Remove redux store
 - YLP-2186 Handle HCP in mmol settings in alarms configuration
+- YLP-2196 Removed the team selection drop-down menu on the care team definition page
 - YLP-2217 Bump react-router-dom to 6.8.2
 
 ### Fixed
