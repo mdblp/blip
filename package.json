@@ -45,7 +45,7 @@
   },
   "engines": {
     "node": ">=14.x",
-    "npm": ">=7.x"
+    "npm": ">=8.3.0"
   },
   "dependencies": {
     "blip": "file:packages/blip",
@@ -111,7 +111,7 @@
     "karma-sinon": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.8",
     "karma-webpack": "^5.0.0",
-    "lerna": "^4.0.0",
+    "lerna": "^5.6.0",
     "less": "^4.1.2",
     "less-loader": "^10.0.1",
     "mini-css-extract-plugin": "^2.4.2",
@@ -134,5 +134,8 @@
     "webpack-cli": "^4.9.0",
     "webpack-dev-server": "^4.3.1",
     "webpack-subresource-integrity": "^5.0.0"
+  },
+  "overrides": {
+    "d3-color": "3.1.0"
   }
 }

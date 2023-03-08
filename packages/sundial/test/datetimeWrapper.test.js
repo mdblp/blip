@@ -600,10 +600,10 @@ describe("sundial", function() {
         expect(Object.keys(tzs)).to.deep.equal(keys);
         expect(tzs.bigFour.length).to.equal(4);
         expect(tzs.unitedStates.length, JSON.stringify(tzs.unitedState)).to.equal(8);
-        expect(tzs.hoisted.length).to.equal(98);
+        expect(tzs.hoisted.length).to.equal(99);
         // The following value may change reflecting the modifications
         // in the IANA timezone database:
-        expect(tzs.theRest.length).to.equal(450);
+        expect(tzs.theRest.length).to.equal(451);
       });
 
       it("returns timezone objects with a non-empty string name and label each",function(){
