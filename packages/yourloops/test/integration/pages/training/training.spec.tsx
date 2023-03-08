@@ -54,7 +54,7 @@ describe('Training page when new training available', () => {
     }], undefined, profile)
     const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient)
     mockPatientLogin(patientAsTeamMember)
-    mockAuth0Hook(UserRole.patient)
+    mockAuth0Hook(UserRole.Patient)
     mockUserApi()
   })
 

@@ -34,17 +34,17 @@ import { type Team } from '../../../lib/team'
 export const checkHCPLayout = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[], needFooterLanguageSelector: boolean = false) => {
   await checkHcpHeader(fullName, selectedTeamParams, availableTeams)
   checkDrawer()
-  checkFooter({ role: UserRole.hcp, needFooterLanguageSelector })
+  checkFooter({ role: UserRole.Hcp, needFooterLanguageSelector })
 }
 
 export const checkCaregiverLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkCaregiverHeader(fullName)
   checkDrawer()
-  checkFooter({ role: UserRole.caregiver, needFooterLanguageSelector })
+  checkFooter({ role: UserRole.Caregiver, needFooterLanguageSelector })
 }
 
 export const checkPatientLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkPatientHeader(fullName)
   checkDrawerNotVisible()
-  checkFooter({ role: UserRole.patient, needFooterLanguageSelector })
+  checkFooter({ role: UserRole.Patient, needFooterLanguageSelector })
 }

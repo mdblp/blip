@@ -73,7 +73,7 @@ export default class PatientApi {
     try {
       const { data } = await HttpService.post<INotification, InvitePatientPayload>({
         url: '/confirm/send/team/invite',
-        payload: { teamId, email, role: UserRole.patient },
+        payload: { teamId, email, role: UserRole.Patient },
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
       }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE])
       return data

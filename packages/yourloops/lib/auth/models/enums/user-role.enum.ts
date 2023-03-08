@@ -26,9 +26,9 @@
  */
 
 export enum UserRole {
-  hcp = 'hcp',
-  caregiver = 'caregiver',
-  patient = 'patient',
+  Hcp = 'hcp',
+  Caregiver = 'caregiver',
+  Patient = 'patient',
   /** Used only for signup-account-selector */
-  unset = 'unset'
+  Unset = 'unset'
 }

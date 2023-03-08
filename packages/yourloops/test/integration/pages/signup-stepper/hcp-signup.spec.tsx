@@ -57,7 +57,7 @@ describe('Signup stepper as hcp', () => {
   }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRole.unset)
+    mockAuth0Hook(UserRole.Unset)
   })
 
   it('should be able to create a hcp account', async () => {
@@ -97,7 +97,7 @@ describe('Signup stepper as hcp', () => {
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,
       expect.objectContaining({
-        role: UserRole.hcp,
+        role: UserRole.Hcp,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
         settings: { country: CountryCodes.France }

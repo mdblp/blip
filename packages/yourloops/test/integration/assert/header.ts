@@ -37,11 +37,11 @@ const checkHeader = (header: BoundFunctions<typeof queries>) => {
 
 const getIconTestIdByRole = (role: UserRole): string => {
   switch (role) {
-    case UserRole.caregiver:
+    case UserRole.Caregiver:
       return 'caregiver-icon'
-    case UserRole.hcp:
+    case UserRole.Hcp:
       return 'hcp-icon'
-    case UserRole.patient:
+    case UserRole.Patient:
       return 'patient-icon'
   }
 }
@@ -92,7 +92,7 @@ export const checkHcpHeader = async (fullName: string, selectedTeamParams: { tea
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
 
   await checkTeamScopeMenu(header, selectedTeamParams, availableTeams)
-  await checkUserMenu(header, fullName, UserRole.hcp)
+  await checkUserMenu(header, fullName, UserRole.Hcp)
   checkHeader(header)
 }
 
@@ -101,7 +101,7 @@ export const checkCaregiverHeader = async (fullName: string) => {
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
 
-  await checkUserMenu(header, fullName, UserRole.caregiver)
+  await checkUserMenu(header, fullName, UserRole.Caregiver)
   checkHeader(header)
 }
 
@@ -110,6 +110,6 @@ export const checkPatientHeader = async (fullName: string) => {
   expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
-  await checkUserMenu(header, fullName, UserRole.patient)
+  await checkUserMenu(header, fullName, UserRole.Patient)
   checkHeader(header)
 }

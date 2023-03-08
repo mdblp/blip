@@ -55,7 +55,7 @@ describe('Patient caregivers page', () => {
   const otherPatientEmail = 'other-patient@email.com'
 
   beforeAll(() => {
-    mockAuth0Hook(UserRole.patient)
+    mockAuth0Hook(UserRole.Patient)
     mockNotificationAPI()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })

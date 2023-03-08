@@ -41,7 +41,7 @@ export default class UserApi {
   static async changeUserRoleToHcp(userId: string, payload: ChangeUserRoleToHcpPayload): Promise<void> {
     await HttpService.post({
       url: `/bff/v1/accounts/${userId}`,
-      payload: { ...payload, role: UserRole.hcp }
+      payload: { ...payload, role: UserRole.Hcp }
     })
   }
 

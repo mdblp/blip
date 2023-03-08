@@ -39,7 +39,7 @@ const getHcp = (): User => {
     email,
     email_verified: true,
     sub: 'auth0|a0000000',
-    [AuthenticatedUserMetadata.Roles]: [UserRole.hcp]
+    [AuthenticatedUserMetadata.Roles]: [UserRole.Hcp]
   })
   hcp.frProId = 'ANS20211229094028'
   hcp.profile = { email, firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
@@ -54,7 +54,7 @@ const getCaregiver = (): User => {
     email,
     email_verified: true,
     sub: 'auth0|b0000000',
-    [AuthenticatedUserMetadata.Roles]: [UserRole.caregiver]
+    [AuthenticatedUserMetadata.Roles]: [UserRole.Caregiver]
   })
   caregiver.profile = { email, firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
   caregiver.preferences = { displayLanguageCode: 'de' }
@@ -68,7 +68,7 @@ const getPatient = (): User => {
     email,
     email_verified: true,
     sub: 'auth0|a0a0a0b0',
-    [AuthenticatedUserMetadata.Roles]: [UserRole.patient]
+    [AuthenticatedUserMetadata.Roles]: [UserRole.Patient]
   })
   patient.settings = { a1c: { rawdate: '2020-01-01', date: '2020-01-01', value: '7.5' }, country: CountryCodes.France }
   patient.profile = {

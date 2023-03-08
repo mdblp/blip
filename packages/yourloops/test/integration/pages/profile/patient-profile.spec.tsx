@@ -77,7 +77,7 @@ describe('Profile page for patient', () => {
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRole.patient)
+    mockAuth0Hook(UserRole.Patient)
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()

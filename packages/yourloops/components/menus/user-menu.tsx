@@ -85,11 +85,11 @@ function UserMenu(): JSX.Element {
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
-      case UserRole.hcp:
+      case UserRole.Hcp:
         return <StethoscopeIcon data-testid="hcp-icon" />
-      case UserRole.caregiver:
+      case UserRole.Caregiver:
         return <RoundedHospitalIcon data-testid="caregiver-icon" />
-      case UserRole.patient:
+      case UserRole.Patient:
         return <FaceIcon data-testid="patient-icon" />
       default:
         console.error('Unknown role')

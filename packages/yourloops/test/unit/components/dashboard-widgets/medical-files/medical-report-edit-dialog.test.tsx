@@ -76,7 +76,7 @@ describe('Medical report edit dialog', () => {
       return { success: successAlertMock, error: errorAlertMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRole.hcp, isUserPatient: () => false, isUserHcp: () => true } as User }
+      return { user: { role: UserRole.Hcp, isUserPatient: () => false, isUserHcp: () => true } as User }
     })
   })
 

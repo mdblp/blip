@@ -38,7 +38,7 @@ describe('User', () => {
     config.LATEST_TERMS = '2021-01-01'
   })
 
-  function createUser(role: UserRole = UserRole.unset) {
+  function createUser(role: UserRole = UserRole.Unset) {
     return new User({
       sub: 'auth0|abcd',
       email,
@@ -145,18 +145,18 @@ describe('User', () => {
 
   describe('Get birthday', () => {
     it('should return the birthday if user is a patient and has a birthday in his profile', () => {
-      const user = createUser(UserRole.patient)
+      const user = createUser(UserRole.Patient)
       user.profile = { patient: { birthday: '1985-05-23T05:45:00Z07:00' } } as Profile
       expect(user.birthday).toEqual('1985-05-23')
     })
 
     it('should return an empty string if patient has no birthday in his profile', () => {
-      const user = createUser(UserRole.patient)
+      const user = createUser(UserRole.Patient)
       expect(user.birthday).toEqual('')
     })
 
     it('should return undefined if user is not a patient', () => {
-      const user = createUser(UserRole.hcp)
+      const user = createUser(UserRole.Hcp)
       expect(user.birthday).toBeUndefined()
     })
   })

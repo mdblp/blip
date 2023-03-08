@@ -54,7 +54,7 @@ describe('Signup stepper as caregiver', () => {
   }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRole.unset)
+    mockAuth0Hook(UserRole.Unset)
   })
 
   it('should be able to create a caregiver account', async () => {
@@ -83,7 +83,7 @@ describe('Signup stepper as caregiver', () => {
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,
       expect.objectContaining({
-        role: UserRole.caregiver,
+        role: UserRole.Caregiver,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
         settings: { country: CountryCodes.France }

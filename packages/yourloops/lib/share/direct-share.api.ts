@@ -77,7 +77,7 @@ export default class DirectShareApi {
             settings: fixYLP878Settings(directShareUser.settings),
             username: directShareUser.email,
             emails: [directShareUser.email],
-            role: directShare.viewer ? UserRole.caregiver : UserRole.patient,
+            role: directShare.viewer ? UserRole.Caregiver : UserRole.Patient,
             idVerified: directShareUser.idVerified
           }
         })

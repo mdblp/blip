@@ -85,7 +85,7 @@ describe('Hcp Layout', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
-          role: UserRole.hcp,
+          role: UserRole.Hcp,
           isUserHcp: () => true,
           isUserCaregiver: () => false,
           isUserPatient: () => false

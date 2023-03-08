@@ -34,7 +34,7 @@ export const loggedInUserEmail = 'john.doe@example.com'
 export const getAccessTokenWithPopupMock = jest.fn()
 export const logoutMock = jest.fn()
 
-export const mockAuth0Hook = (role: UserRole = UserRole.hcp, userId = loggedInUserId) => {
+export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId) => {
   (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
     isAuthenticated: true,
     isLoading: false,

@@ -77,7 +77,7 @@ describe('Notification', () => {
 
   const fakeNotification = (
     notification: NotificationModel = notif,
-    role: UserRole = UserRole.hcp,
+    role: UserRole = UserRole.Hcp,
     onHelp = () => _.noop
   ): JSX.Element => (
     <Notification
@@ -112,7 +112,7 @@ describe('Notification', () => {
           type: NotificationType.careTeamProInvitation,
           target: { id: '0', name: 'target' }
         },
-        UserRole.caregiver
+        UserRole.Caregiver
         )
       )
 
@@ -127,7 +127,7 @@ describe('Notification', () => {
           type: NotificationType.careTeamPatientInvitation,
           target: { id: '0', name: 'grenoble DIAB service' }
         },
-        UserRole.patient
+        UserRole.Patient
         )
       )
 
@@ -193,7 +193,7 @@ describe('Notification', () => {
       return (
         <Notification
           notification={props.notif}
-          userRole={UserRole.hcp}
+          userRole={UserRole.Hcp}
           onHelp={_.noop}
         />
       )

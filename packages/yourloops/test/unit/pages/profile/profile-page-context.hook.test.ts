@@ -94,7 +94,7 @@ describe('Profile page context hook', () => {
         updateSettings: updateSettingsMock,
         updatePreferences: updatePreferencesMock,
         user: {
-          role: UserRole.patient,
+          role: UserRole.Patient,
           isUserHcp: () => false,
           isUserCaregiver: () => false,
           isUserPatient: () => true,
@@ -147,7 +147,7 @@ describe('Profile page context hook', () => {
       return {
         updateProfile: jest.fn().mockRejectedValue(undefined),
         user: {
-          role: UserRole.patient,
+          role: UserRole.Patient,
           isUserHcp: () => false,
           isUserCaregiver: () => false,
           isUserPatient: () => true

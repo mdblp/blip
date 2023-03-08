@@ -80,7 +80,7 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
       <DialogContent>
         <ConsentForm
           id="switch-role-consent-dialog"
-          userRole={UserRole.hcp}
+          userRole={UserRole.Hcp}
           policyAccepted={policyAccepted}
           setPolicyAccepted={setPolicyAccepted}
           termsAccepted={termsAccepted}

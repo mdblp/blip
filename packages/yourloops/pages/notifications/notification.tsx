@@ -294,7 +294,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     }
   }
   const handleAcceptButtonClick = (): void => {
-    userRole === UserRole.caregiver && notification.type === NotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
+    userRole === UserRole.Caregiver && notification.type === NotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
   }
 
   return (

@@ -50,7 +50,7 @@ describe('Caregiver home page', () => {
   const lastName = 'Ard'
 
   beforeAll(() => {
-    mockAuth0Hook(UserRole.caregiver)
+    mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })

@@ -150,7 +150,7 @@ export function AuthContextImpl(): AuthContext {
     await UserApi.changeUserRoleToHcp(user.id, payload)
     await refreshToken() // Refreshing access token to get the new role in it
 
-    user.role = UserRole.hcp
+    user.role = UserRole.Hcp
     user.profile = { ...user.profile, ...payload }
     refreshUser()
   }
@@ -167,7 +167,7 @@ export function AuthContextImpl(): AuthContext {
       setFetchingUser(true)
       const user = new User(auth0user as AuthenticatedUser)
 
-      if (user.role !== UserRole.unset) {
+      if (user.role !== UserRole.Unset) {
         const userMetadata = await UserApi.getUserMetadata(user.id)
         if (userMetadata) {
           user.profile = userMetadata.profile
@@ -222,7 +222,7 @@ export function AuthContextImpl(): AuthContext {
       termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
       privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
     }
-    if (signupForm.accountRole === UserRole.hcp) {
+    if (signupForm.accountRole === UserRole.Hcp) {
       profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
       profile.hcpProfession = signupForm.hcpProfession
     }

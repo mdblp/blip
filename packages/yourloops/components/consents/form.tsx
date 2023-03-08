@@ -233,7 +233,7 @@ const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
   } = props
 
   const { classes } = formStyles()
-  const showFeedback = typeof setFeedbackAccepted === 'function' && userRole === UserRole.hcp
+  const showFeedback = typeof setFeedbackAccepted === 'function' && userRole === UserRole.Hcp
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const what = event.target.name

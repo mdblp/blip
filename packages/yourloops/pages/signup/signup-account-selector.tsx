@@ -64,7 +64,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
   const { signupForm, updateForm } = useSignUpFormState()
   const { handleBack, handleNext } = props
 
-  const isRoleInvalid = signupForm.accountRole === UserRole.unset || signupForm.accountRole === UserRole.patient
+  const isRoleInvalid = signupForm.accountRole === UserRole.Unset || signupForm.accountRole === UserRole.Patient
 
   const onNext = (): void => {
     handleNext()
@@ -84,7 +84,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel
             className={classes.FormControlLabel}
-            value={UserRole.caregiver}
+            value={UserRole.Caregiver}
             aria-label={t('create-caregiver-account')}
             control={<Radio />}
             label={
@@ -98,7 +98,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel
             className={classes.FormControlLabel}
-            value={UserRole.hcp}
+            value={UserRole.Hcp}
             aria-label={t('hcp-radio-input')}
             control={<Radio />}
             label={
@@ -113,7 +113,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
           <FormControlLabel
             disabled
             className={classes.FormControlLabel}
-            value={UserRole.patient}
+            value={UserRole.Patient}
             aria-label={t('create-patient-account')}
             control={<Radio />}
             label={

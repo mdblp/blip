@@ -63,7 +63,7 @@ const PreferencesForm: FunctionComponent = () => {
         <FormControl variant="standard" className={classes.formInput}>
           <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
-            disabled={user.role === UserRole.patient}
+            disabled={user.role === UserRole.Patient}
             labelId="unit-selector"
             id="profile-units-selector"
             data-testid="profile-units-selector"
@@ -96,7 +96,7 @@ const PreferencesForm: FunctionComponent = () => {
         </FormControl>
       </Box>
 
-      {user.role === UserRole.hcp &&
+      {user.role === UserRole.Hcp &&
         <Box marginTop={1}>
           <ConsentFeedback
             id="profile"

@@ -78,7 +78,7 @@ export default class User {
   }
 
   get birthday(): string | undefined {
-    if (this.role !== UserRole.patient) {
+    if (this.role !== UserRole.Patient) {
       return undefined
     }
     const birthday = this.getRawBirthday()
@@ -94,15 +94,15 @@ export default class User {
   }
 
   isUserHcp(): boolean {
-    return this.role === UserRole.hcp
+    return this.role === UserRole.Hcp
   }
 
   isUserPatient(): boolean {
-    return this.role === UserRole.patient
+    return this.role === UserRole.Patient
   }
 
   isUserCaregiver(): boolean {
-    return this.role === UserRole.caregiver
+    return this.role === UserRole.Caregiver
   }
 
   /**
@@ -161,7 +161,7 @@ export default class User {
   }
 
   isFirstLogin(): boolean {
-    return this.role === UserRole.unset
+    return this.role === UserRole.Unset
   }
 
   hasToAcceptNewConsent(): boolean {

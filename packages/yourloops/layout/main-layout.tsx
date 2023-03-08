@@ -41,11 +41,11 @@ export function MainLayout(): JSX.Element {
 
   const getUserLayout = (): JSX.Element => {
     switch (user?.role) {
-      case UserRole.hcp:
+      case UserRole.Hcp:
         return <HcpLayout />
-      case UserRole.caregiver:
+      case UserRole.Caregiver:
         return <CaregiverLayout />
-      case UserRole.patient:
+      case UserRole.Patient:
         return <PatientLayout />
       default:
         console.error(`no layout found for role ${user?.role}`)

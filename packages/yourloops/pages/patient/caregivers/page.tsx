@@ -109,7 +109,7 @@ function PatientCaregiversPage(): JSX.Element {
         user: {
           username: invitation.email,
           userid: uuidv4(),
-          role: UserRole.caregiver
+          role: UserRole.Caregiver
         }
       }
       acc.push(caregiver)

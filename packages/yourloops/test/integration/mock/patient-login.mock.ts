@@ -37,7 +37,7 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from './user.api.mock'
 
 export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRole.patient, patient.userId)
+  mockAuth0Hook(UserRole.Patient, patient.userId)
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()

@@ -81,7 +81,7 @@ describe('Patient Layout', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
-          role: UserRole.patient,
+          role: UserRole.Patient,
           isUserHcp: () => false,
           isUserCaregiver: () => false,
           isUserPatient: () => true

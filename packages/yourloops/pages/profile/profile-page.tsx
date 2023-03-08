@@ -91,7 +91,7 @@ const ProfilePage: FunctionComponent = () => {
             <ProfileForm />
           </ProfilePageContextProvider>
 
-          {UserRole.caregiver === user.role &&
+          {UserRole.Caregiver === user.role &&
             <Link
               data-testid="switch-role-link"
               component="button"

@@ -211,7 +211,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           </div>
         }
         <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
-            {userRole === UserRole.hcp &&
+            {userRole === UserRole.Hcp &&
               <Tabs
                 className={classes.chatWidgetTabs}
                 value={inputTab}

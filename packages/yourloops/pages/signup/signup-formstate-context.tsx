@@ -39,7 +39,7 @@ interface ISignUpFormStateContext {
 }
 
 const initialState: SignupForm = {
-  accountRole: UserRole.unset,
+  accountRole: UserRole.Unset,
   profileFirstname: '',
   profileLastname: '',
   profileCountry: CountryCodes.Unknown,
@@ -61,7 +61,7 @@ export const SignUpFormStateProvider: FunctionComponent<PropsWithChildren> = ({ 
 
   const updateForm = (key: SignupFormKey, value: unknown): void => {
     setSignupForm(prevState => ({ ...prevState, [key]: value }))
-    if (value === UserRole.caregiver) {
+    if (value === UserRole.Caregiver) {
       setSignupForm(prevState => {
         delete prevState.hcpProfession
         delete prevState.feedback

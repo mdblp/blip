@@ -45,7 +45,7 @@ describe('Daily view for caregiver', () => {
   const lastName = 'Caregiver lastName'
 
   beforeAll(() => {
-    mockAuth0Hook(UserRole.caregiver)
+    mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

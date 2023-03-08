@@ -96,7 +96,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
   const validateHcpProfession = (): boolean => {
     let err = false
-    if (signupForm.accountRole === UserRole.hcp) {
+    if (signupForm.accountRole === UserRole.Hcp) {
       err = !signupForm.hcpProfession
       setErrors({ ...errors, hcpProfession: err })
     }
@@ -168,7 +168,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         </Select>
       </FormControl>
 
-      {signupForm.accountRole === UserRole.hcp &&
+      {signupForm.accountRole === UserRole.Hcp &&
         <FormControl
           margin="normal"
           required

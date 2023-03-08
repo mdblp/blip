@@ -59,11 +59,11 @@ class DiabeloopExternalUrls {
   }
 
   training(role?: UserRole): string {
-    if (role === UserRole.patient) {
+    if (role === UserRole.Patient) {
       return `${this.rootPathName}yourloops-patient-training.${getCurrentLang()}.pdf`
-    } else if (role === UserRole.hcp) {
+    } else if (role === UserRole.Hcp) {
       return `${this.rootPathName}yourloops-hcp-training.${getCurrentLang()}.pdf`
-    } else if (role === UserRole.caregiver) {
+    } else if (role === UserRole.Caregiver) {
       return `${this.rootPathName}yourloops-caregiver-training.${getCurrentLang()}.pdf`
     }
     return `${this.rootPathName}yourloops-login-training.${getCurrentLang()}.pdf`

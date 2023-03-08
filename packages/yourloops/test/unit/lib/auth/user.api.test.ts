@@ -116,7 +116,7 @@ describe('User API', () => {
         settings,
         preferences,
         email: 'test@email.com',
-        role: UserRole.hcp
+        role: UserRole.Hcp
       }
       jest.spyOn(HttpService, 'post').mockResolvedValue({ data: payload } as AxiosResponse)
       const completedSignup = await UserApi.completeUserSignup(userId, payload)
@@ -141,7 +141,7 @@ describe('User API', () => {
       await UserApi.changeUserRoleToHcp(userId, payload)
       expect(HttpService.post).toHaveBeenCalledWith({
         url: `/bff/v1/accounts/${userId}`,
-        payload: { ...payload, role: UserRole.hcp }
+        payload: { ...payload, role: UserRole.Hcp }
       })
     })
   })

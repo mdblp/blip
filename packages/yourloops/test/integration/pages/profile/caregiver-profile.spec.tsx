@@ -69,7 +69,7 @@ describe('Caregiver page for hcp', () => {
   const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
 
   beforeAll(() => {
-    mockAuth0Hook(UserRole.caregiver)
+    mockAuth0Hook(UserRole.Caregiver)
     mockAuthApi()
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()

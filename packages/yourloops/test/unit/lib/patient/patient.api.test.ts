@@ -75,7 +75,7 @@ describe('PatientApi', () => {
       expect(notification).toEqual(data)
       expect(HttpService.post).toHaveBeenCalledWith({
         url: '/confirm/send/team/invite',
-        payload: { teamId, email, role: UserRole.patient },
+        payload: { teamId, email, role: UserRole.Patient },
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
       }, [409])
     })
