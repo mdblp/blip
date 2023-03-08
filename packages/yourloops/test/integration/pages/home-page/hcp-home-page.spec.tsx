@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import PatientAPI from '../../../../lib/patient/patient.api'
 import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
@@ -60,8 +60,9 @@ describe('HCP home page', () => {
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
-    await act(async () => {
-      renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
     })
 
     checkHCPLayout(`${firstName} ${lastName}`)
