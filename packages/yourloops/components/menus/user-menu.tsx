@@ -138,6 +138,7 @@ function UserMenu(): JSX.Element {
           </IconButton>
           : <Button
             color="inherit"
+            data-testid="user-menu-button"
             startIcon={getRoleIcon()}
             endIcon={<ArrowDropDownIcon />}
             onClick={event => {
@@ -159,7 +160,7 @@ function UserMenu(): JSX.Element {
         onClose={closeMenu}
       >
         <Box className={menu} data-testid="user-menu">
-          <MenuItem onClick={onClickSettings}>
+          <MenuItem onClick={onClickSettings} data-testid="user-menu-settings-item">
             <ListItemIcon>
               <PermContactCalendarIcon />
             </ListItemIcon>
@@ -168,7 +169,7 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <MenuItem onClick={onClickSupport}>
+          <MenuItem onClick={onClickSupport} data-testid="user-menu-contact-support-item">
             <ListItemIcon>
               <ContactSupportIcon />
             </ListItemIcon>
@@ -181,7 +182,7 @@ function UserMenu(): JSX.Element {
             <Divider variant="middle" />
           </Box>
 
-          <MenuItem onClick={onClickLogout}>
+          <MenuItem onClick={onClickLogout} data-testid="user-menu-logout-item">
             <ListItemIcon>
               <CancelIcon />
             </ListItemIcon>

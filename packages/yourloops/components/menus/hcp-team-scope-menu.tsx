@@ -141,6 +141,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
           : <Button
             color="inherit"
             aria-label={t('hcp-team-menu-click-label')}
+            data-testid="hcp-team-scope-menu"
             startIcon={selectedTeamIcon}
             endIcon={<ArrowDropDownIcon />}
             onClick={event => {
@@ -154,9 +155,11 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
 
       <MenuLayout open={isMenuOpen} anchorEl={anchorEl} onClose={closeMenu}>
         <Box className={menu} data-testid="hcp-team-scope-menu">
-          <MenuItem onClick={() => {
-            onSelectTeam(privateTeam.id)
-          }}>
+          <MenuItem
+            data-testid="hcp-team-menu-team-private-option"
+            onClick={() => {
+              onSelectTeam(privateTeam.id)
+            }}>
             <ListItemIcon>
               {privatePracticeIcon}
             </ListItemIcon>
@@ -174,9 +177,12 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
               <Typography className={sectionTitle}>{t('hcp-team-menu-care-teams-section-title')}</Typography>
 
               {sortedMedicalTeams.map((team: Team) =>
-                <MenuItem key={team.id} onClick={() => {
-                  onSelectTeam(team.id)
-                }}>
+                <MenuItem
+                  key={team.id}
+                  data-testid={`hcp-team-menu-team-${team.name}-option`}
+                  onClick={() => {
+                    onSelectTeam(team.id)
+                  }}>
                   <ListItemIcon>
                     {medicalTeamIcon}
                   </ListItemIcon>
@@ -192,7 +198,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
             <Divider variant="middle" />
           </Box>
 
-          <MenuItem onClick={onCreateTeam}>
+          <MenuItem onClick={onCreateTeam} data-testid="hcp-team-scope-menu-new-care-team-button">
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>

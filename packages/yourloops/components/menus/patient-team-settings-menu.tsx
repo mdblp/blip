@@ -159,7 +159,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <Box className={menu}>
+        <Box className={menu} data-testid="teams-list">
           <ListSubheader>
             <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
               <Typography variant="caption">
