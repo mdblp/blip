@@ -35,8 +35,8 @@ export const SensorUsageStat: FunctionComponent = () => {
     <>
       <Box sx={{ margin: '4px' }}>
         <SimpleStat
-          annotations={[t('**Sensor Usage:** Time the CGM collected data, divided by the total time represented in this view.')]}
-          title={t('Sensor Usage')}
+          annotations={[t('Sensor-Usage-Time-the-CGM')]}
+          title={t('Sensor-Usage')}
           value={41}
           summaryFormat={StatFormats.Cv}
           total={100} />
