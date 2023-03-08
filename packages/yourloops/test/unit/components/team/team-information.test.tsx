@@ -39,6 +39,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import * as teamHookMock from '../../../../lib/team'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { PhonePrefixCode } from '../../../../lib/utils'
+import { MemoryRouter } from 'react-router-dom'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
@@ -96,22 +97,28 @@ describe('TeamInformation', () => {
     const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
-      await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeNull()
+      })
       const editTeamDialog = within(screen.getByRole('dialog'))
       const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-save' })
       fireEvent.click(editTeamButton)
-      await waitFor(() => { expect(editTeamMock).toHaveBeenCalledWith(team) })
+      await waitFor(() => {
+        expect(editTeamMock).toHaveBeenCalledWith(team)
+      })
     })
   }
 
   function getTeamInformationJSX(props: TeamInformationProps = { team, refreshParent: refresh }): JSX.Element {
     return (
-      <ThemeProvider theme={getTheme()}>
-        <TeamInformation
-          team={props.team}
-          refreshParent={props.refreshParent}
-        />
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider theme={getTheme()}>
+          <TeamInformation
+            team={props.team}
+            refreshParent={props.refreshParent}
+          />
+        </ThemeProvider>
+      </MemoryRouter>
     )
   }
 
@@ -176,11 +183,15 @@ describe('TeamInformation', () => {
     const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
-      await waitFor(() => { expect(screen.queryByRole('dialog')).not.toBeNull() })
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeNull()
+      })
       const editTeamDialog = within(screen.getByRole('dialog'))
       const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-cancel' })
       fireEvent.click(editTeamButton)
-      await waitFor(() => { expect(editTeamMock).toHaveBeenCalledTimes(0) })
+      await waitFor(() => {
+        expect(editTeamMock).toHaveBeenCalledTimes(0)
+      })
     })
     expect(refresh).toHaveBeenCalledTimes(0)
   })

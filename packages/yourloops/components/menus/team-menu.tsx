@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
@@ -80,7 +80,7 @@ function TeamMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes: { badge, teamIcon, clickableMenu, separator } } = classes()
   const { teams, createTeam, joinTeam } = useTeam()
-  const history = useHistory()
+  const navigate = useNavigate()
   const alert = useAlert()
   const { user } = useAuth()
   const isUserHcp = user?.isUserHcp()
@@ -112,7 +112,7 @@ function TeamMenu(): JSX.Element {
   }, [caregivers, user])
 
   const redirectToTeamDetails = (teamId: string): void => {
-    history.push(`/teams/${teamId}`)
+    navigate(`/teams/${teamId}`)
     closeMenu()
   }
 
@@ -139,7 +139,7 @@ function TeamMenu(): JSX.Element {
   }
 
   const redirectToCaregivers = (): void => {
-    history.push('/caregivers')
+    navigate('/caregivers')
     closeMenu()
   }
 
@@ -162,7 +162,9 @@ function TeamMenu(): JSX.Element {
         role="button"
         alignItems="center"
         className={clickableMenu}
-        onClick={event => { setAnchorEl(event.currentTarget) }}
+        onClick={event => {
+          setAnchorEl(event.currentTarget)
+        }}
       >
         <Badge
           id="team-menu-count-badge"
@@ -254,7 +256,9 @@ function TeamMenu(): JSX.Element {
       }
       {showJoinTeamDialog &&
         <JoinTeamDialog
-          onClose={() => { setShowJoinTeamDialog(false) }}
+          onClose={() => {
+            setShowJoinTeamDialog(false)
+          }}
           onAccept={onJoinTeam}
         />
       }

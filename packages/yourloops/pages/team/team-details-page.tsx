@@ -138,8 +138,12 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="information"
                   className={`${classes.drawerTitle} ${activeLink === 'information' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onKeyDown={() => { scrollTo(teamInformation) }}
-                  onClick={() => { scrollTo(teamInformation) }}
+                  onKeyDown={() => {
+                    scrollTo(teamInformation)
+                  }}
+                  onClick={() => {
+                    scrollTo(teamInformation)
+                  }}
                 >
                   <InfoOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -151,8 +155,12 @@ function TeamDetailsPage(): JSX.Element {
                   aria-label="members"
                   className={`${classes.drawerTitle} ${activeLink === 'members' ? classes.activeLink : ''}`}
                   tabIndex={0}
-                  onClick={() => { scrollTo(teamMembers) }}
-                  onKeyDown={() => { scrollTo(teamMembers) }}
+                  onClick={() => {
+                    scrollTo(teamMembers)
+                  }}
+                  onKeyDown={() => {
+                    scrollTo(teamMembers)
+                  }}
                 >
                   <GroupOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
@@ -165,8 +173,12 @@ function TeamDetailsPage(): JSX.Element {
                     aria-label="alarms"
                     className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
                     tabIndex={0}
-                    onClick={() => { scrollTo(teamAlarms) }}
-                    onKeyDown={() => { scrollTo(teamAlarms) }}
+                    onClick={() => {
+                      scrollTo(teamAlarms)
+                    }}
+                    onKeyDown={() => {
+                      scrollTo(teamAlarms)
+                    }}
                   >
                     <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                     <Typography className={classes.title}>

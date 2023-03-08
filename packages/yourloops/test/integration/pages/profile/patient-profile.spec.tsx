@@ -29,7 +29,7 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkPatientLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
@@ -91,8 +91,9 @@ describe('Profile page for patient', () => {
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
 
-    await act(async () => {
-      renderPage('/preferences')
+    const router = renderPage('/preferences')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/preferences')
     })
     checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
     const fields = checkPatientProfilePage(settings.country)

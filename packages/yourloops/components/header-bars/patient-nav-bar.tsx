@@ -35,7 +35,7 @@ import { PatientNavBarTabs } from './patient-nav-bar-tabs'
 import { PatientNavBarInfoList } from './patient-nav-bar-info-list'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 interface PatientNavBarProps {
   chartType: string
@@ -76,11 +76,11 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   } = props
 
   const { user } = useAuth()
-  const history = useHistory()
+  const navigate = useNavigate()
   const { classes } = styles()
 
   const goBackHome = (): void => {
-    history.push('/')
+    navigate('/')
   }
 
   return (

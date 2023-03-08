@@ -67,7 +67,10 @@ describe('Patient dashboard for anyone', () => {
   })
 
   it('statistics should be displayed without tooltips and with correct labels', async () => {
-    renderPage(`/patient/${unmonitoredPatientId}/dashboard`)
+    const router = renderPage(`/patient/${unmonitoredPatientId}/dashboard`)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/dashboard`)
+    })
     const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
     checkTooltip(patientStatistics, 'Time In Range')
     checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')

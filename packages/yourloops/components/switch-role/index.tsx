@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,14 +37,14 @@ import { useAlert } from '../utils/snackbar'
 import SwitchRoleConsequencesDialog from './consequences-dialog'
 import SwitchRoleConsentDialog from './consent-dialog'
 import SwitchRoleProfessionDialog from './profession-dialog'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const log = bows('SwitchRoleDialogs')
 
 const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { switchRoleToHCP, user } = useAuth()
-  const history = useHistory()
+  const navigate = useNavigate()
   const alert = useAlert()
   const [switchRoleStep, setSwitchRoleStep] = useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.consequences)
   const [feedbackConsent, setFeedbackConsent] = useState<boolean>(false)
@@ -64,7 +64,7 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
       await switchRoleToHCP(feedbackConsent, hcpProfession)
       metrics.send('switch_account', 'accept_terms')
       alert.success(t('switch-role-success'))
-      history.push('/')
+      navigate('/')
     } catch (reason: unknown) {
       setInProgress(false)
       alert.error(t('modal-switch-hcp-failure'))

@@ -39,10 +39,13 @@ import {
   GetPatientDataOptions,
   GetPatientDataOptionsV0
 } from 'yourloops/lib/data/models/get-patient-data-options.model'
+import { NavigateFunction } from 'react-router-dom'
 
 interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
+  navigate: NavigateFunction;
+  pathName: string;
   patient: Patient;
   setPatient: Function;
   prefixURL: string;
