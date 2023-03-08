@@ -32,6 +32,7 @@ import { BgSource } from 'dumb/src/models/blood-glucose.model'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
+import { SensorUsageStat } from './sensor-usage-stat'
 
 export interface PatientStatisticsProps {
   dataUtil: VizDataUtil
@@ -59,6 +60,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={dataUtil?.days ?? 0}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <SensorUsageStat/>
       {children}
     </Box>
   )
