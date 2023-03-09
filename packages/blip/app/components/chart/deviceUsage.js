@@ -30,7 +30,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -44,14 +43,12 @@ import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import SettingsDialog from './settingsDialog'
-
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
-
 import { BasicsChart } from 'tideline'
-import Stats from './stats'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
+import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -107,14 +104,13 @@ const DeviceUsage = (props) => {
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
-  //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
 
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
-
+  const {total, sensorUsage} = dataUtil.getSensorUsage()
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
   const deviceData = {
@@ -201,20 +197,10 @@ const DeviceUsage = (props) => {
           </TableContainer>
         </Box>
         <Divider variant="fullWidth" className={classes.divider} />
-        <Stats
-          bgPrefs={bgPrefs}
-          //eslint-disable-next-line
-          bgSource={dataUtil.bgSource}
-          chartPrefs={chartPrefs}
-          chartType="deviceUsage"
-          dataUtil={dataUtil}
-          endpoints={endpoints}
-          loading={loading}
-        />
+        <SensorUsageStat total={total} sensorUsage={sensorUsage} />
+        <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
-          //eslint-disable-next-line
           bgClasses={bgPrefs.bgClasses}
-          //eslint-disable-next-line
           bgUnits={bgPrefs.bgUnits}
           onSelectDay={() => null}
           patient={patient}
