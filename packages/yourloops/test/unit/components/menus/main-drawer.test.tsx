@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -166,10 +166,6 @@ describe('Main Drawer', () => {
 
   it('should display correct filter value for pending patients and redirect to proper url', async () => {
     await checkFilterActionByText(PatientFilterTypes.pending.toString(), PatientFilterTypes.pending.toString(), patientsFilterStats.pending)
-  })
-
-  it('should display correct filter value for private patients and redirect to proper url', async () => {
-    await checkFilterActionByText('private-practice', PatientFilterTypes.private.toString(), patientsFilterStats.directShare)
   })
 
   it('should display correct filter value for monitored patient sand redirect to proper url', async () => {

@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2140 As a HCP, I can only edit my medical records
 - YLP-2175 Implement new design system
 - YLP-2192 Team scope dropdown for HCP
+- YLP-2220 Remove "private practice" filter from patients list
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
