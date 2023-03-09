@@ -35,7 +35,9 @@ export const checkStatTooltip = async (patientStatistics: BoundFunctions<typeof 
   const tooltip = await screen.findByTestId('stat-tooltip-content')
   expect(tooltip).toHaveTextContent(expectedTextContent)
   await userEvent.unhover(infoIcon)
-  await waitFor(() => { expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument() }, { timeout: 3000 })
+  await waitFor(() => {
+    expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument()
+  }, { timeout: 3000 })
 }
 
 const hoverOnCBGPercentageStat = async (patientStatistics: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {
@@ -86,4 +88,8 @@ export const checkAverageGlucoseStatWidget = async (expectedTextContent: string)
 export const checkStandardDeviationStatWidget = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent(expectedTextContent)
+}
+export const checkSensorUsage = async (expectedTextContent: string) => {
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  expect(patientStatistics.getByTestId('stat-sensorUsage')).toHaveTextContent(expectedTextContent)
 }
