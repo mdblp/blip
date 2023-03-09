@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022 - 2023, Diabeloop
  * Device Usage widget component
  *
  * All rights reserved.
