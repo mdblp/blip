@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import {
   getAccessTokenWithPopupMock,
   loggedInUserEmail,
@@ -61,7 +61,10 @@ describe('Signup stepper as hcp', () => {
   })
 
   it('should be able to create a hcp account', async () => {
-    renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/complete-signup')
+    })
     checkFooter({ needFooterLanguageSelector: true })
     checkStepper()
 

@@ -101,7 +101,8 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
           <Box display="flex" alignItems="center">
             {
               withShrinkIcon &&
-              <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon} onClick={onClickShrinkIcon} />
+              <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon}
+                        onClick={onClickShrinkIcon} />
             }
             <Link to="/">
               <Avatar

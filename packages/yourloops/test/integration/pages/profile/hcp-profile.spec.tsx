@@ -29,7 +29,7 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { availableTeams, mockTeamAPI, teamThree } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkHCPLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -87,8 +87,9 @@ describe('Profile page for hcp', () => {
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
 
-    await act(async () => {
-      renderPage('/preferences')
+    const router = renderPage('/preferences')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/preferences')
     })
 
     await checkHCPLayout(`${profile.firstName} ${profile.lastName}`, { teamName: teamThree.name }, availableTeams)

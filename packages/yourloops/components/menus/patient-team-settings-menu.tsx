@@ -27,7 +27,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
@@ -83,7 +83,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes: { badge, teamIcon, separator, menu, paddingBottom } } = classes()
   const { teams, joinTeam, isPrivate } = useTeam()
-  const history = useHistory()
+  const navigate = useNavigate()
   const alert = useAlert()
   const { user } = useAuth()
   const theme = useTheme()
@@ -112,7 +112,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
   }, [caregivers, user])
 
   const redirectToTeamDetails = (teamId: string): void => {
-    history.push(`/teams/${teamId}`)
+    navigate(`/teams/${teamId}`)
     closeMenu()
   }
 
@@ -122,7 +122,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
   }
 
   const redirectToCaregivers = (): void => {
-    history.push('/caregivers')
+    navigate('/caregivers')
     closeMenu()
   }
 

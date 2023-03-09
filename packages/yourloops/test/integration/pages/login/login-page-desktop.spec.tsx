@@ -26,7 +26,7 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
@@ -43,7 +43,10 @@ describe('Login page desktop view', () => {
   })
 
   it('should render entire page with correct elements', async () => {
-    renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/login')
+    })
 
     const header = screen.getByTestId('login-page-header')
     const registerButton = within(header).getByRole('button', { name: 'Register' })
@@ -89,11 +92,10 @@ describe('Login page desktop view', () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       error: Error('Please verify your email before logging in.')
     })
-    let router
-    await act(async () => {
-      router = renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/verify-email')
     })
-    expect(router.current.history.location.pathname).toEqual('/verify-email')
   })
 
   it('should show a snackbar alert if auth0 returns an error', async () => {

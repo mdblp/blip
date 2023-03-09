@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, type BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
+import { act, type BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import {
   availableTeams,
@@ -99,8 +99,9 @@ describe('Patient dashboard for HCP', () => {
   it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
     localStorage.setItem('selectedTeamId', '')
 
-    act(() => {
-      renderPage(unMonitoredPatientDashboardRoute)
+    const router = renderPage(unMonitoredPatientDashboardRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(unMonitoredPatientDashboardRoute)
     })
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))

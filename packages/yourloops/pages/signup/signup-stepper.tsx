@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { type Theme } from '@mui/material/styles'
@@ -61,7 +61,7 @@ const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes: { stepper } } = useStyles()
   const { logout } = useAuth()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [activeStep, setActiveStep] = useState(0)
   const steps = [
     'select-account-type',
@@ -82,7 +82,7 @@ const SignUpStepper: FunctionComponent = () => {
   }
 
   const redirectToHome = (): void => {
-    history.replace('/')
+    navigate('/')
   }
 
   const getStepContent = (step: number): JSX.Element | string => {

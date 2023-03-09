@@ -45,7 +45,7 @@ import PatientUtils from '../../lib/patient/patient.util'
 import PersonRemoveIcon from '../icons/person-remove-icon'
 import { isEllipsisActive } from '../../lib/utils'
 import usePatientRow from './patient-row.hook'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import RemovePatientDialog from './remove-patient-dialog'
 import EmailOpenIcon from '../icons/email-open-icon'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
@@ -95,7 +95,7 @@ const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Th
 })
 
 const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonitoring, filter, patient }) => {
-  const historyHook = useHistory()
+  const navigate = useNavigate()
   const patientHook = usePatientContext()
   const { t } = useTranslation('yourloops')
   const { classes } = patientListStyle()
@@ -144,7 +144,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
   }
 
   const onClickRow = (): void => {
-    historyHook.push(`/patient/${patient.userid}`)
+    navigate(`/patient/${patient.userid}`)
   }
 
   const onClickRemovePatient = (event: React.MouseEvent): void => {

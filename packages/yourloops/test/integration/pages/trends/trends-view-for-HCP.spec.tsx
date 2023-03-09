@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { availableTeams, mockTeamAPI, teamThree } from '../../mock/team.api.mock'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
@@ -56,7 +56,10 @@ describe('Trends view for HCP', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
-    renderPage(`/patient/${unmonitoredPatientId}/trends`)
+    const router = renderPage(`/patient/${unmonitoredPatientId}/trends`)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/trends`)
+    })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP()

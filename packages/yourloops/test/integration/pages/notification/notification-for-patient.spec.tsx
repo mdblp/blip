@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
@@ -45,8 +45,9 @@ describe('Notification page for patient', () => {
   })
 
   it('should be able to accept a team invite', async () => {
-    await act(async () => {
-      renderPage('/notifications')
+    const router = renderPage('/notifications')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/notifications')
     })
 
     await closeDialogNotificationTeam()

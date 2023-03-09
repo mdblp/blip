@@ -39,7 +39,7 @@ import {
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
-import { act, screen, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
@@ -59,7 +59,10 @@ describe('Caregiver home page', () => {
   })
 
   it('should render the home page with correct components', async () => {
-    renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, false)

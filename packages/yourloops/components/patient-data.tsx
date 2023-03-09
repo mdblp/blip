@@ -136,8 +136,10 @@ function PatientDataPage(): JSX.Element | null {
   return (
     <Container className={classes.container} maxWidth={false}>
       <Blip
-        config={appConfig}
         api={blipApi}
+        config={appConfig}
+        navigate={navigate}
+        pathName={pathName}
         patient={patient}
         setPatient={setPatient}
         prefixURL={prefixURL}

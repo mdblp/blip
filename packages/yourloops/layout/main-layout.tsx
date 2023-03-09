@@ -29,7 +29,7 @@ import React from 'react'
 
 import { useAuth } from '../lib/auth'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
-import { Redirect } from 'react-router-dom'
+import { Navigate, Route } from 'react-router-dom'
 import { HcpLayout } from './hcp-layout'
 import { CaregiverLayout } from './caregiver-layout'
 import { PatientLayout } from './patient-layout'
@@ -49,7 +49,10 @@ export function MainLayout(): JSX.Element {
         return <PatientLayout />
       default:
         console.error(`no layout found for role ${user?.role}`)
-        return <Redirect to="/not-found" />
+        return <Route
+          path="*"
+          element={<Navigate to="/not-found" replace />}
+        />
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,6 +38,7 @@ import { getTheme } from '../../../../components/theme'
 import { ThemeProvider } from '@mui/material/styles'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { MemoryRouter } from 'react-router-dom'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
@@ -80,12 +81,14 @@ describe('TeamMembers', () => {
 
   function getTeamMembersJSX(props: TeamMembersProps = { team, refreshParent: refresh }) {
     return (
-      <ThemeProvider theme={getTheme()}>
-        <TeamMembers
-          team={props.team}
-          refreshParent={props.refreshParent}
-        />
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider theme={getTheme()}>
+          <TeamMembers
+            team={props.team}
+            refreshParent={props.refreshParent}
+          />
+        </ThemeProvider>
+      </MemoryRouter>
     )
   }
 
@@ -121,8 +124,12 @@ describe('TeamMembers', () => {
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
     await act(async () => {
       fireEvent.click(inviteButton)
-      await waitFor(() => { expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin) })
-      await waitFor(() => { expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp') })
+      await waitFor(() => {
+        expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin)
+      })
+      await waitFor(() => {
+        expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp')
+      })
     })
   })
 
@@ -138,8 +145,12 @@ describe('TeamMembers', () => {
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
     await act(async () => {
       fireEvent.click(inviteButton)
-      await waitFor(() => { expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member) })
-      await waitFor(() => { expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp') })
+      await waitFor(() => {
+        expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member)
+      })
+      await waitFor(() => {
+        expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp')
+      })
     })
   })
 

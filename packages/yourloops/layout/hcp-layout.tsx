@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
 import HomePage from '../pages/home-page'
@@ -44,16 +44,22 @@ export function HcpLayout(): JSX.Element {
       <SelectedTeamProvider>
         <PatientProvider>
           <DashboardLayout>
-            <Switch>
-              <Route exact path="/not-found" component={InvalidRoute} />
-              <Route exact path="/preferences" component={ProfilePage} />
-              <Route exact path="/notifications" component={NotificationsPage} />
-              <Route exact path="/home" component={HomePage} />
-              <Route path="/patient/:patientId" component={PatientDataPage} />
-              <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-              <Redirect exact from="/" to="/home" />
-              <Redirect to="/not-found" />
-            </Switch>
+            <Routes>
+              <Route path="/not-found" element={<InvalidRoute />} />
+              <Route path="/preferences" element={<ProfilePage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/patient/:patientId/*" element={<PatientDataPage />} />
+              <Route path="/teams/:teamId" element={<TeamDetailsPage />} />
+              <Route
+                path="/"
+                element={<Navigate to="/home" replace />}
+              />
+              <Route
+                path="*"
+                element={<Navigate to="/not-found" replace />}
+              />
+            </Routes>
           </DashboardLayout>
         </PatientProvider>
       </SelectedTeamProvider>

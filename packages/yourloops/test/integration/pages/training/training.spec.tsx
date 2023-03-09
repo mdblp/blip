@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { buildPatient, buildTeamMemberFromPatient } from '../../mock/patient.api.mock'
@@ -59,11 +59,10 @@ describe('Training page when new training available', () => {
   })
 
   it('should render a button opening the training, then a checkbox and a validate button', async () => {
-    let router
-    await act(async () => {
-      router = renderPage('/training')
+    const router = renderPage('/training')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/training')
     })
-    const spyPush = jest.spyOn(router.current.history, 'push')
 
     expect(screen.getByText('New training available, please read what\'s new before continuing on YourLoops.')).toBeVisible()
     const openButton = screen.getByText('Open training')
@@ -82,6 +81,8 @@ describe('Training page when new training available', () => {
     await act(async () => {
       await userEvent.click(confirmButton)
     })
-    expect(spyPush).toHaveBeenCalledWith('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/new-consent')
+    })
   })
 })

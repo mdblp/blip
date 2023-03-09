@@ -34,7 +34,7 @@ import {
 } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp, mockPatientApiForPatients } from '../../mock/patient.api.mock'
@@ -86,8 +86,9 @@ describe('Caregiver page for hcp', () => {
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
-    await act(async () => {
-      renderPage('/preferences')
+    const router = renderPage('/preferences')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/preferences')
     })
     await checkCaregiverLayout(`${profile.firstName} ${profile.lastName}`)
     const fields = checkCaregiverProfilePage()

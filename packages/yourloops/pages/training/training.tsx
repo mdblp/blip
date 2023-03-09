@@ -30,8 +30,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import bows from 'bows'
-import { useHistory } from 'react-router-dom'
-import { type HistoryState } from '../../models/history-state.model'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
@@ -89,8 +88,9 @@ function TrainingPage(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const auth = useAuth()
   const log = bows('consent')
-  const historyHook = useHistory<HistoryState>()
-  const fromPath = historyHook.location.state?.from?.pathname
+  const navigate = useNavigate()
+  const location = useLocation()
+  const fromPath = location.state?.from?.pathname
   const user = auth.user
   const { classes } = style()
   const [trainingOpened, setTrainingOpened] = useState(false)
@@ -104,7 +104,7 @@ function TrainingPage(): JSX.Element {
     auth.updateProfile(updatedProfile).catch((reason: unknown) => {
       log.error(reason)
     }).finally(() => {
-      historyHook.push(fromPath ?? '/')
+      navigate(fromPath ?? '/')
     })
   }
 
@@ -136,7 +136,9 @@ function TrainingPage(): JSX.Element {
                       aria-label={t('training-checkbox')}
                       className={classes.checkbox}
                       checked={checked}
-                      onChange={() => { setChecked(!checked) }}
+                      onChange={() => {
+                        setChecked(!checked)
+                      }}
                       name="training"
                     />
                   }
@@ -166,7 +168,9 @@ function TrainingPage(): JSX.Element {
                       variant="contained"
                       color="primary"
                       disableElevation
-                      onClick={() => { setTrainingOpened(true) }}
+                      onClick={() => {
+                        setTrainingOpened(true)
+                      }}
                     >
                       {t('button-open-training')}
                     </Button>
