@@ -48,7 +48,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? dataUtil.getTimeInRangeData()
     : dataUtil.getReadingsInRangeData()
-
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
@@ -60,7 +59,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={dataUtil?.days ?? 0}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <SensorUsageStat/>
+      <SensorUsageStat data={dataUtil}/>
       {children}
     </Box>
   )
