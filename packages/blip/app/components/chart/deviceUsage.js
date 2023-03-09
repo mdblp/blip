@@ -100,7 +100,18 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily } = props
+  const {
+    bgPrefs,
+    timePrefs,
+    patient,
+    tidelineData,
+    trackMetric,
+    dataUtil,
+    chartPrefs,
+    endpoints,
+    loading,
+    onSwitchToDaily
+  } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
@@ -110,7 +121,8 @@ const DeviceUsage = (props) => {
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
-  const {total, sensorUsage} = dataUtil.getSensorUsage()
+  const { total, sensorUsage } = dataUtil.getSensorUsage()
+  const cbgSelect = dataUtil.bgSources.cbg
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
   const deviceData = {
@@ -196,8 +208,12 @@ const DeviceUsage = (props) => {
             </Table>
           </TableContainer>
         </Box>
-        <Divider variant="fullWidth" className={classes.divider} />
-        <SensorUsageStat total={total} sensorUsage={sensorUsage} />
+        {cbgSelect &&
+          <>
+            <Divider variant="fullWidth" className={classes.divider} />
+            <SensorUsageStat total={total} sensorUsage={sensorUsage} />
+          </>
+        }
         <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
           bgClasses={bgPrefs.bgClasses}

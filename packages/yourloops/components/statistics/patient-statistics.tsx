@@ -50,7 +50,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     : dataUtil.getReadingsInRangeData()
   const { sensorUsage, total } = dataUtil.getSensorUsage()
   const cbgSelect = dataUtil.bgSources.cbg
-
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
