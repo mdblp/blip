@@ -236,17 +236,6 @@ describe('Stats', () => {
         }
       })
 
-      // it('should show all expected stats when bgSource prop is `cbg`', () => {
-      //   wrapper.setProps({
-      //     ...wrapper.props(),
-      //     bgSource: 'cbg'
-      //   })
-      //   wrapper.update()
-      //   expect(wrapper.find('.Stats').children()).to.have.length(1)
-      //
-      //   expect(wrapper.find({ 'data-testid': 'stat-sensorUsage' })).to.have.length(1)
-      // })
-
       it('should show no stats when bgSource prop is `smbg`', () => {
         wrapper.setProps({
           ...wrapper.props(),
@@ -456,21 +445,6 @@ describe('Stats', () => {
           instance = null
         }
       })
-
-      // it('should show all expected stats when bgSource prop is `cbg`', () => {
-      //   wrapper.setProps({
-      //     ...wrapper.props(),
-      //     bgSource: 'cbg'
-      //   })
-      //   wrapper.update()
-      //   const stats = instance.getStatsByChartType()
-      //
-      //   const expectedStats = [
-      //     'sensorUsage'
-      //   ]
-      //
-      //   expect(_.map(stats, 'id')).to.have.ordered.members(expectedStats)
-      // })
 
       it('should show all expected stats when bgSource prop is `smbg`', () => {
         wrapper.setProps({
