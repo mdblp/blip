@@ -46,6 +46,8 @@ import { useAuth } from '../../lib/auth'
 import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
 import { TeamScopeMenu } from '../menus/team-scope-menu'
+import { Tab, Tabs } from '@mui/material'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -74,14 +76,28 @@ const classes = makeStyles()((theme: Theme) => ({
   },
   toolbar: {
     padding: `0 ${theme.spacing(2)}`
+  },
+  tab: {
+    fontWeight: 'bold',
+    textTransform: 'none',
+    fontSize: theme.typography.htmlFontSize,
+    color: 'var(--text-base-color)'
   }
 }))
 
 function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
-  const { classes: { desktopLogo, separator, appBar, leftIcon, toolbar } } = classes()
+  const { classes: { desktopLogo, separator, appBar, leftIcon, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
+  const { selectedTeamId } = useSelectedTeamContext()
+
+  const [value, setValue] = React.useState(0)
+
+  const shouldDisplayCareTeamTab = selectedTeamId !== 'private'
+  const handleChange = (event: React.SyntheticEvent, newValue: number): void => {
+    setValue(newValue)
+  }
 
   return (
     <AppBar
@@ -115,6 +131,11 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
               />
             </Link>
           </Box>
+
+          <Tabs value={value} onChange={handleChange} centered>
+            <Tab className={tab} label="Patients" />
+            {shouldDisplayCareTeamTab && <Tab className={tab} label="Care team" />}
+          </Tabs>
 
           <Box display="flex" alignItems="center">
             <Link to="/notifications" id="header-notification-link">
