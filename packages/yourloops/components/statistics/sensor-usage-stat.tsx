@@ -41,7 +41,7 @@ export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (prop) =>
   const value = data.getSensorUsage().sensorUsage
   return (
     <>
-      <Box sx={{ margin: '4px' }}>
+      <Box data-testid='stat-sensorUsage' sx={{ margin: '2px' }}>
         <SimpleStat
           annotations={[t('Sensor-Usage-Time-the-CGM')]}
           title={t('Sensor-Usage')}
