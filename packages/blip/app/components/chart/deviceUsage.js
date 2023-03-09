@@ -30,6 +30,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
+
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -100,29 +101,21 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const {
-    bgPrefs,
-    timePrefs,
-    patient,
-    tidelineData,
-    trackMetric,
-    dataUtil,
-    chartPrefs,
-    endpoints,
-    loading,
-    onSwitchToDaily
-  } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
+  //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
-
+  // eslint-disable-next-line react/prop-types
+  const {total, sensorUsage} = dataUtil.getSensorUsage()
+  // eslint-disable-next-line react/prop-types
+  const cbgSelect = dataUtil.bgSources.cbg
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
-  const { total, sensorUsage } = dataUtil.getSensorUsage()
-  const cbgSelect = dataUtil.bgSources.cbg
+
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
   const deviceData = {
@@ -208,15 +201,17 @@ const DeviceUsage = (props) => {
             </Table>
           </TableContainer>
         </Box>
+        <Divider variant="fullWidth" className={classes.divider} />
         {cbgSelect &&
           <>
             <Divider variant="fullWidth" className={classes.divider} />
             <SensorUsageStat total={total} sensorUsage={sensorUsage} />
           </>
         }
-        <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
+          //eslint-disable-next-line
           bgClasses={bgPrefs.bgClasses}
+          //eslint-disable-next-line
           bgUnits={bgPrefs.bgUnits}
           onSelectDay={() => null}
           patient={patient}
@@ -243,8 +238,11 @@ DeviceUsage.propType = {
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
+  bgSources:PropTypes.object.isRequired,
+  cbg:PropTypes.bool.isRequired,
   trackMetric: PropTypes.func.isRequired,
-  onSwitchToDaily: PropTypes.func.isRequired
+  onSwitchToDaily: PropTypes.func.isRequired,
+  getSensorUsage:PropTypes.func.isRequired
 }
 
 export default DeviceUsage
