@@ -37,7 +37,7 @@ import { useTranslation } from 'react-i18next'
 import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import IconButton from '@mui/material/IconButton'
@@ -76,7 +76,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const { selectTeam, selectedTeamId } = useSelectedTeamContext()
   const { createTeam } = useTeam()
   const alert = useAlert()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
   const theme = useTheme()
   const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
@@ -100,7 +100,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeamId) {
       selectTeam(teamId)
-      history.push('/')
+      navigate('/')
     }
     closeMenu()
   }

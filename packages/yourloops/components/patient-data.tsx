@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import bows from 'bows'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from 'tss-react/mui'
@@ -79,6 +79,10 @@ function PatientDataPage(): JSX.Element | null {
   const { getPatientById } = usePatientContext()
   const dataHook = useData()
   const { classes } = patientDataStyles()
+
+  const location = useLocation()
+  const navigate = useNavigate()
+  const pathName = useMemo(() => location.pathname, [location])
 
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null)
   const [error, setError] = React.useState<string | null>(null)
