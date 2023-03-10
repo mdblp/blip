@@ -27,7 +27,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
@@ -41,6 +40,8 @@ import TeamMembers from '../../components/team/team-members'
 import { commonComponentStyles } from '../../components/common'
 import { useAuth } from '../../lib/auth'
 import TeamAlarmsConfiguration from '../../components/team/team-alarms-configuration'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { useParams } from 'react-router-dom'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeLink: {
@@ -93,14 +94,19 @@ function TeamDetailsPage(): JSX.Element {
   const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
-  const authContext = useAuth()
+  const { user } = useAuth()
+  const isUserHcp = user?.isUserHcp()
+
   const { t } = useTranslation('yourloops')
-  const { teamId } = paramHook as { teamId: string }
+
+  const { teamId: queryParamTeamId } = paramHook as { teamId: string }
+  const { selectedTeamId } = useSelectedTeamContext()
+  const teamId = isUserHcp ? selectedTeamId : queryParamTeamId
+
   const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] }>(
     { selectedTeam: null, teamNames: [] }
   )
   const [activeLink, setActiveLink] = useState<string>('information')
-  const isUserHcp = authContext.user?.isUserHcp()
 
   const teamInformation = useRef<HTMLDivElement>(null)
   const teamMembers = useRef<HTMLDivElement>(null)

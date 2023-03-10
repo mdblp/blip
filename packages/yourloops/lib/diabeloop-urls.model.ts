@@ -27,6 +27,7 @@
 import config from './config/config'
 import { getCurrentLang } from './language'
 import { UserRole } from './auth/models/enums/user-role.enum'
+import { AppRoute } from '../models/enums/routes.enum'
 
 /**
  * Class containing all external URLs related to Diabeloop
@@ -71,13 +72,6 @@ class DiabeloopExternalUrls {
 }
 
 export const diabeloopExternalUrls = new DiabeloopExternalUrls()
-export const RENEW_CONSENT_PATH = '/renew-consent'
-export const TRAINING_PATH = '/training'
-export const NEW_CONSENT_PATH = '/new-consent'
-export const COMPLETE_SIGNUP_PATH = '/complete-signup'
-export const LOGIN_PATH = '/login'
-export const VERIFY_EMAIL_PATH = '/verify-email'
-export const PRODUCT_LABELLING_PATH = '/product-labelling'
-export const PUBLIC_ROUTES = [LOGIN_PATH, VERIFY_EMAIL_PATH]
-export const ALWAYS_ACCESSIBLE_ROUTES = [PRODUCT_LABELLING_PATH]
-export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [RENEW_CONSENT_PATH, NEW_CONSENT_PATH, TRAINING_PATH, COMPLETE_SIGNUP_PATH, PRODUCT_LABELLING_PATH, VERIFY_EMAIL_PATH]
+export const PUBLIC_ROUTES = [AppRoute.Login, AppRoute.VerifyEmail]
+export const ALWAYS_ACCESSIBLE_ROUTES = [AppRoute.ProductLabelling]
+export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [AppRoute.RenewConsent, AppRoute.NewConsent, AppRoute.Training, AppRoute.CompleteSignup, AppRoute.ProductLabelling, AppRoute.VerifyEmail]

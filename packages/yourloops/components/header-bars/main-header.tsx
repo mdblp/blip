@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
@@ -46,8 +46,10 @@ import { useAuth } from '../../lib/auth'
 import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
 import { TeamScopeMenu } from '../menus/team-scope-menu'
-import { Tab, Tabs } from '@mui/material'
+import { styled, Tab, Tabs } from '@mui/material'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -85,18 +87,29 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
+// Allow the tabs to take the whole height of the toolbar
+const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
+const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
+
 function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
   const { classes: { desktopLogo, separator, appBar, leftIcon, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
   const { selectedTeamId } = useSelectedTeamContext()
+  const navigate = useNavigate()
 
-  const [value, setValue] = React.useState(0)
+  const [selectedTab, setSelectedTab] = React.useState(HcpNavigationTab.Patients)
 
   const shouldDisplayCareTeamTab = selectedTeamId !== 'private'
-  const handleChange = (event: React.SyntheticEvent, newValue: number): void => {
-    setValue(newValue)
+
+  const handleTabChange = (event: React.SyntheticEvent, newTab: HcpNavigationTab): void => {
+    setSelectedTab(newTab)
+  }
+
+  const handleTabClick = (tab: HcpNavigationTab): void => {
+    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.Team : AppUserRoute.Home
+    navigate(route)
   }
 
   return (
@@ -132,10 +145,29 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
             </Link>
           </Box>
 
-          <Tabs value={value} onChange={handleChange} centered>
-            <Tab className={tab} label="Patients" />
-            {shouldDisplayCareTeamTab && <Tab className={tab} label="Care team" />}
-          </Tabs>
+          {user.isUserHcp() &&
+            <StyledTabs value={selectedTab} onChange={handleTabChange} centered>
+              {/* TODO: Add translation keys for labels Patients + Care teams */}
+              <StyledTab
+                className={tab}
+                label="Patients"
+                value={HcpNavigationTab.Patients}
+                onClick={() => {
+                  handleTabClick(HcpNavigationTab.Patients)
+                }}
+              />
+              {shouldDisplayCareTeamTab &&
+                <StyledTab
+                  className={tab}
+                  label="Care team"
+                  value={HcpNavigationTab.CareTeam}
+                  onClick={() => {
+                    handleTabClick(HcpNavigationTab.CareTeam)
+                  }}
+                />
+              }
+            </StyledTabs>
+          }
 
           <Box display="flex" alignItems="center">
             <Link to="/notifications" id="header-notification-link">

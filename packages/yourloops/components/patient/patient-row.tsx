@@ -55,6 +55,7 @@ import { type MedicalData } from '../../lib/data/models/medical-data.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { FilterType } from '../../lib/patient/models/enums/filter-type.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 const patientListStyle = makeStyles({ name: 'ylp-hcp-patients-row' })((theme: Theme) => {
   return {
@@ -144,7 +145,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
   }
 
   const onClickRow = (): void => {
-    navigate(`/patient/${patient.userid}`)
+    navigate(`${AppUserRoute.Patient}/${patient.userid}`)
   }
 
   const onClickRemovePatient = (event: React.MouseEvent): void => {
