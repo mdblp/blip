@@ -50,6 +50,7 @@ import { styled, Tab, Tabs } from '@mui/material'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -101,7 +102,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
 
   const [selectedTab, setSelectedTab] = React.useState(HcpNavigationTab.Patients)
 
-  const shouldDisplayCareTeamTab = selectedTeamId !== 'private'
+  const shouldDisplayCareTeamTab = selectedTeamId !== PRIVATE_TEAM_ID
 
   const handleTabChange = (event: React.SyntheticEvent, newTab: HcpNavigationTab): void => {
     setSelectedTab(newTab)
@@ -110,6 +111,10 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
   const handleTabClick = (tab: HcpNavigationTab): void => {
     const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.Team : AppUserRoute.Home
     navigate(route)
+  }
+
+  const onNewTeamSelected = (): void => {
+    setSelectedTab(HcpNavigationTab.Patients)
   }
 
   return (
@@ -147,10 +152,9 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
 
           {user.isUserHcp() &&
             <StyledTabs value={selectedTab} onChange={handleTabChange} centered>
-              {/* TODO: Add translation keys for labels Patients + Care teams */}
               <StyledTab
                 className={tab}
-                label="Patients"
+                label={t('header-tab-patients')}
                 value={HcpNavigationTab.Patients}
                 onClick={() => {
                   handleTabClick(HcpNavigationTab.Patients)
@@ -159,7 +163,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
               {shouldDisplayCareTeamTab &&
                 <StyledTab
                   className={tab}
-                  label="Care team"
+                  label={t('header-tab-care-team')}
                   value={HcpNavigationTab.CareTeam}
                   onClick={() => {
                     handleTabClick(HcpNavigationTab.CareTeam)
@@ -170,7 +174,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
           }
 
           <Box display="flex" alignItems="center">
-            <Link to="/notifications" id="header-notification-link">
+            <Link to={AppUserRoute.Notifications} id="header-notification-link">
               <Badge
                 id="notification-count-badge"
                 aria-label={t('notification-list')}
@@ -185,7 +189,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
             {!user?.isUserCaregiver() &&
               <React.Fragment>
                 {user.isUserPatient() && <TeamSettingsMenu />}
-                {user.isUserHcp() && <TeamScopeMenu />}
+                {user.isUserHcp() && <TeamScopeMenu onNewTeamSelected={onNewTeamSelected}/>}
                 <div className={separator} />
               </React.Fragment>
             }

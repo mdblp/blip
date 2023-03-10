@@ -51,6 +51,11 @@ import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+
+interface TeamScopeMenuProps {
+  onNewTeamSelected: () => void
+}
 
 const classes = makeStyles()((theme: Theme) => ({
   sectionTitle: {
@@ -67,8 +72,9 @@ const classes = makeStyles()((theme: Theme) => ({
 const MENU_MAX_WIDTH_PX = 250
 const HOME_PATHNAME = '/home'
 
-export const TeamScopeMenu: FunctionComponent = () => {
+export const TeamScopeMenu: FunctionComponent<TeamScopeMenuProps> = (props) => {
   const { t } = useTranslation('yourloops')
+  const { onNewTeamSelected } = props
   const {
     classes: {
       sectionTitle,
@@ -105,9 +111,11 @@ export const TeamScopeMenu: FunctionComponent = () => {
     if (teamId !== selectedTeamId) {
       selectTeam(teamId)
 
-      if (pathname !== HOME_PATHNAME) {
-        navigate(HOME_PATHNAME)
+      if (pathname !== AppUserRoute.Home) {
+        navigate(AppUserRoute.Home)
       }
+
+      onNewTeamSelected()
     }
     closeMenu()
   }

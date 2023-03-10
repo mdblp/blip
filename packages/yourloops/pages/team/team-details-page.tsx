@@ -42,6 +42,7 @@ import { useAuth } from '../../lib/auth'
 import TeamAlarmsConfiguration from '../../components/team/team-alarms-configuration'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useParams } from 'react-router-dom'
+import { setPageTitle } from '../../lib/utils'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   activeLink: {
@@ -127,6 +128,10 @@ function TeamDetailsPage(): JSX.Element {
   useEffect(() => {
     refresh()
   }, [refresh])
+
+  React.useEffect(() => {
+    setPageTitle(t('header-tab-care-team'))
+  }, [t])
 
   const isMonitoringEnabled = (): boolean => {
     return dropdownData.selectedTeam?.monitoring?.enabled
