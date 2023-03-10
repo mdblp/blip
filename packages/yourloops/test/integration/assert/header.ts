@@ -30,6 +30,8 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 
+const PRIVATE_TEAM_NAME = 'private'
+
 const checkHeader = (header: BoundFunctions<typeof queries>) => {
   expect(header.getByLabelText('YourLoops Logo')).toBeVisible()
   expect(header.getByLabelText('Go to notifications list')).toBeVisible()
@@ -65,18 +67,19 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
 
 const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[]) => {
   const teamScopeMenuIcon = selectedTeamParams.isPrivate ? 'private-practice-icon' : 'medical-team-icon'
+  const teamScopeMenuText = selectedTeamParams.isPrivate ? 'My private practice' : selectedTeamParams.teamName
 
   expect(header.getByLabelText('Open team selection menu')).toBeVisible()
   expect(header.getByTestId(teamScopeMenuIcon)).toBeVisible()
-  expect(header.getByText(selectedTeamParams.teamName)).toBeVisible()
+  expect(header.getByText(teamScopeMenuText)).toBeVisible()
 
-  await userEvent.click(header.getByText(selectedTeamParams.teamName))
+  await userEvent.click(header.getByText(teamScopeMenuText))
 
   const teamScopeMenu = within(screen.getByTestId('hcp-team-scope-menu'))
   expect(teamScopeMenu.getByText('My private practice')).toBeVisible()
   expect(teamScopeMenu.getByText('Care teams')).toBeVisible()
   availableTeams.forEach((team: Team) => {
-    if (team.name === 'private') {
+    if (team.name === PRIVATE_TEAM_NAME) {
       return
     }
     expect(teamScopeMenu.getByText(team.name)).toBeVisible()
@@ -90,6 +93,13 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, select
 export const checkHcpHeader = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[]) => {
   const header = within(screen.getByTestId('app-main-header'))
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
+
+  expect(header.getByText('Patients')).toBeVisible()
+  if (selectedTeamParams.isPrivate) {
+    expect(header.queryByText('Care team')).not.toBeInTheDocument()
+  } else {
+    expect(header.getByText('Care team')).toBeVisible()
+  }
 
   await checkTeamScopeMenu(header, selectedTeamParams, availableTeams)
   await checkUserMenu(header, fullName, UserRole.Hcp)
