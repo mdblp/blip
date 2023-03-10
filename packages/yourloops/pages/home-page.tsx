@@ -52,6 +52,7 @@ const log = bows('PatientListPage')
 
 const throttledMetrics = _.throttle(metrics.send, 60000) // No more than one per minute
 
+// TODO Clean this one
 const HomePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
@@ -166,7 +167,7 @@ const HomePage: FunctionComponent = () => {
         onInvitePatient={handleInvitePatient}
       />
       <PatientList filter={filter} filterType={filterType} />
-      <AddPatientDialog actions={patientToAdd} />
+      {patientToAdd && <AddPatientDialog actions={patientToAdd} />}
       <TeamCodeDialog
         onClose={handleCloseTeamCodeDialog}
         code={teamCodeToDisplay?.code ?? ''}

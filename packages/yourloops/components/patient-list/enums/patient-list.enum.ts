@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,40 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
-
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/theme.css'
-import 'classes.css'
-
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
-const Yourloops = (): JSX.Element => {
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      useRefreshTokens
-      audience="https://api-ext.your-loops.com"
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
-  )
+export enum PatientListTabs {
+  Current,
+  Pending
 }
 
-export default Yourloops
+export enum PatientListColumns {
+  Actions = 'actions',
+  DataNotTransferred = 'data-not-transferred',
+  Flag = 'flag',
+  LastDataUpdate = 'last-data-update',
+  Messages = 'messages',
+  Patient = 'patient',
+  SevereHypoglycemia = 'severe-hypoglycemia',
+  System = 'system',
+  TimeOutOfRange = 'time-out-of-range'
+}

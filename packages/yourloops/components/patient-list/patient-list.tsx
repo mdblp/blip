@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,40 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
+import React, { type FunctionComponent } from 'react'
+import { PatientListHeader } from './patient-list-header'
+import { usePatientListHook } from './patient-list.hook'
+import { DataGrid } from '@mui/x-data-grid'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/theme.css'
-import 'classes.css'
+export const PatientList: FunctionComponent = () => {
+  const {
+    columns,
+    columnsVisibility,
+    currentTab,
+    gridApiRef,
+    inputSearch,
+    rows,
+    onChangingTab,
+    setColumnsVisibility,
+    setInputSearch
+  } = usePatientListHook()
 
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
-const Yourloops = (): JSX.Element => {
   return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      useRefreshTokens
-      audience="https://api-ext.your-loops.com"
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
+    <React.Fragment>
+      <PatientListHeader
+        currentTab={currentTab}
+        inputSearch={inputSearch}
+        onChangingTab={onChangingTab}
+        setInputSearch={setInputSearch}
+      />
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        apiRef={gridApiRef}
+        autoHeight
+        disableColumnMenu
+        disableColumnFilter
+        disableColumnSelector
+        disableRowSelectionOnClick
+        columnVisibilityModel={columnsVisibility}
+        onColumnVisibilityModelChange={(model) => {
+          setColumnsVisibility(model)
+        }}
+        sx={{ borderRadius: 0 }}
+      />
+    </React.Fragment>
   )
 }
-
-export default Yourloops

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,40 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
+import { type PatientListColumns } from '../enums/patient-list.enum'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
+import { type Alarms } from '../../../lib/patient/models/alarms.model'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/theme.css'
-import 'classes.css'
-
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
-const Yourloops = (): JSX.Element => {
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      useRefreshTokens
-      audience="https://api-ext.your-loops.com"
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
-  )
+export interface GridRowModel {
+  id: number
+  [PatientListColumns.Flag]: Patient
+  [PatientListColumns.Patient]: PatientProfile
+  [PatientListColumns.System]: string
+  [PatientListColumns.TimeOutOfRange]: Alarms
+  [PatientListColumns.SevereHypoglycemia]: Alarms
+  [PatientListColumns.DataNotTransferred]: Alarms
+  [PatientListColumns.LastDataUpdate]: string
+  [PatientListColumns.Messages]: boolean
+  [PatientListColumns.Actions]: string
 }
-
-export default Yourloops

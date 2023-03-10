@@ -25,7 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientListTabs {
-  Current,
-  Pending
-}
+import { makeStyles } from 'tss-react/mui'
+
+export const usePatientListStyles = makeStyles()((theme) => ({
+  mandatoryCellBorder: {
+    borderLeft: `1px solid ${theme.palette.divider}`,
+    borderRight: `1px solid ${theme.palette.divider}`
+  }
+}))
