@@ -29,24 +29,29 @@ import { SimpleStat } from 'dumb'
 import { StatFormats } from 'dumb/dist/src/models/stats.model'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
+import { type VizDataUtil } from 'tidepool-viz'
+import { ensureNumeric } from 'dumb/dist/src/components/stats/stats.util'
 
 interface SensorUsageStatProp {
-  total: number
-  sensorUsage: number
+  dataUtil: VizDataUtil
 }
 
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (prop) => {
-  const { total, sensorUsage } = prop
+  const { dataUtil } = prop
+  const { total, sensorUsage } = dataUtil.getSensorUsage()
+  const sensorUsageData = {
+    total: ensureNumeric(total),
+    sensorUsage: ensureNumeric(sensorUsage)
+  }
+
   return (
-    <>
-      <Box data-testid="stat-sensorUsage" sx={{ margin: '2px' }}>
-        <SimpleStat
-          annotations={[t('Sensor-Usage-Time-the-CGM')]}
-          title={t('Sensor-Usage')}
-          value={sensorUsage}
-          summaryFormat={StatFormats.Percentage}
-          total={total} />
-      </Box>
-    </>
+    <Box data-testid="sensor-usage-stat">
+      <SimpleStat
+        annotations={[t('sensor-usage-tooltip', { cbgLabel: t('CGM') })]}
+        title={t('sensor-usage')}
+        value={sensorUsageData.sensorUsage}
+        summaryFormat={StatFormats.Percentage}
+        total={sensorUsageData.total} />
+    </Box>
   )
 }

@@ -91,5 +91,5 @@ export const checkStandardDeviationStatWidget = async (expectedTextContent: stri
 }
 export const checkSensorUsage = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('stat-sensorUsage')).toHaveTextContent(expectedTextContent)
+  expect(patientStatistics.getByTestId('sensor-usage-stat')).toHaveTextContent(expectedTextContent)
 }

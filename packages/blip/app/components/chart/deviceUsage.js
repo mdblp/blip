@@ -108,14 +108,11 @@ const DeviceUsage = (props) => {
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
   // eslint-disable-next-line react/prop-types
-  const {total, sensorUsage} = dataUtil.getSensorUsage()
-  // eslint-disable-next-line react/prop-types
   const cbgSelect = dataUtil.bgSources.cbg
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
-
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
   const deviceData = {
@@ -204,8 +201,8 @@ const DeviceUsage = (props) => {
         <Divider variant="fullWidth" className={classes.divider} />
         {cbgSelect &&
           <>
+            <SensorUsageStat dataUtil={dataUtil} />
             <Divider variant="fullWidth" className={classes.divider} />
-            <SensorUsageStat total={total} sensorUsage={sensorUsage} />
           </>
         }
         <BasicsChart
@@ -217,8 +214,10 @@ const DeviceUsage = (props) => {
           patient={patient}
           tidelineData={tidelineData}
           timePrefs={timePrefs}
-          trackMetric={trackMetric} />
+          trackMetric={trackMetric}
+        />
       </CardContent>
+
     </GenericDashboardCard>
     {dialogOpened &&
       <SettingsDialog
@@ -237,12 +236,9 @@ DeviceUsage.propType = {
   bgPrefs: PropTypes.object.isRequired,
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
+  dataUtil: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
-  bgSources:PropTypes.object.isRequired,
-  cbg:PropTypes.bool.isRequired,
   trackMetric: PropTypes.func.isRequired,
-  onSwitchToDaily: PropTypes.func.isRequired,
-  getSensorUsage:PropTypes.func.isRequired
+  onSwitchToDaily: PropTypes.func.isRequired
 }
-
 export default DeviceUsage

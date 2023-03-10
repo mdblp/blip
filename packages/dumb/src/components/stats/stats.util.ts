@@ -25,15 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UnitsType } from '../../../models/enums/units-type.enum'
-
-export const formatBgValue = (value: number, units: UnitsType): string => {
-  const valueToString = Math.round(value).toString()
-  switch (units) {
-    case UnitsType.MMOLL:
-      return parseFloat(valueToString).toFixed(1)
-    case UnitsType.MGDL:
-    default:
-      return parseInt(valueToString).toString()
-  }
+export const ensureNumeric = (value: number | undefined | null): number => {
+  return !value || isNaN(value) ? 0 : value
 }
