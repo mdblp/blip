@@ -29,7 +29,7 @@ import React, { type FunctionComponent, useEffect } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAlert } from '../../components/utils/snackbar'
 import LoginPageMobile from './login-page-mobile'
 import LoginPageDesktop from './login-page-desktop'
@@ -41,7 +41,7 @@ import { useTranslation } from 'react-i18next'
 const LoginPageLanding: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { error } = useAuth0()
-  const history = useHistory()
+  const navigate = useNavigate()
   const alert = useAlert()
   const theme = useTheme()
   const isMobileView: boolean = useMediaQuery(theme.breakpoints.only('xs'))
@@ -57,7 +57,7 @@ const LoginPageLanding: FunctionComponent = () => {
   useEffect(() => {
     if (error) {
       if (error.message === 'Please verify your email before logging in.') {
-        history.replace('/verify-email')
+        navigate('/verify-email')
         return
       }
       alert.error(error.message)

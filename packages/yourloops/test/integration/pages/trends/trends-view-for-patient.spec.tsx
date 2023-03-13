@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
@@ -40,7 +40,10 @@ describe('Trends view for patient', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
-    renderPage('/trends')
+    const router = renderPage('/trends')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/trends')
+    })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient()

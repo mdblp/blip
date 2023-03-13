@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,3 +26,6 @@
  */
 
 import '@testing-library/jest-dom/extend-expect'
+import { enableFetchMocks } from 'jest-fetch-mock'
+
+enableFetchMocks()

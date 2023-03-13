@@ -41,7 +41,7 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
 import { weekArrayPlugin, weekdaysPlugin } from '../../../../lib/dayjs'
@@ -58,7 +58,10 @@ describe('Daily view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI()
-      renderPage('/daily')
+      const router = renderPage('/daily')
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual('/daily')
+      })
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()

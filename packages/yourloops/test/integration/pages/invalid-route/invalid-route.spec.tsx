@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
@@ -49,10 +49,10 @@ describe('Invalid Route', () => {
   })
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {
-    await act(async () => {
-      renderPage('/wrongRoute')
+    const router = renderPage('/wrongRoute')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/not-found')
     })
-
     expect(await screen.findByText('Page not found')).toBeVisible()
     const homeLink = screen.getByText('Home')
     expect(homeLink).toBeVisible()

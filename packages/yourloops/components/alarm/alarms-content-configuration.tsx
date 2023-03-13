@@ -41,8 +41,9 @@ import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { UnitsType } from 'dumb'
 import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
-import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.utils'
+import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.util'
 import FormHelperText from '@mui/material/FormHelperText'
+import { useAuth } from '../../lib/auth'
 import { LoadingButton } from '@mui/lab'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -103,6 +104,13 @@ export interface AlarmsContentConfigurationProps {
   onSave: (monitoring: Monitoring) => void
 }
 
+const INPUT_STEP_MGDL = 1
+const INPUT_STEP_MMOLL = 0.1
+
+const TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT = 50
+const TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT = 5
+const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
+
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { monitoring, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
@@ -128,6 +136,11 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
   } = useAlarmsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
+  const { user } = useAuth()
+
+  const userBgUnit = user.settings.units.bg
+
+  const inputStep = userBgUnit === UnitsType.MGDL ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 
   return (
     <React.Fragment>
@@ -168,13 +181,13 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     inputProps: {
                       min: minLowBg,
                       max: maxLowBg,
-                      step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
+                      step: inputStep,
                       'aria-label': t('low-bg-input')
                     }
                   }}
                   onChange={(event) => { onChange(+event.target.value, minLowBg, maxLowBg, setLowBg) }}
                 />
-                <Typography>{bgUnit}</Typography>
+                <Typography>{userBgUnit}</Typography>
                 {!!lowBg.errorMessage &&
                   <FormHelperText error className={classes.inputHelperText}>
                     {lowBg.errorMessage}
@@ -199,7 +212,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                     inputProps: {
                       min: minHighBg,
                       max: maxHighBg,
-                      step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
+                      step: inputStep,
                       'aria-label': t('high-bg-input')
                     }
                   }}
@@ -235,7 +248,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               </div>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: '50%' })}</Typography>
+              <Typography className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT}%` })}</Typography>
             }
           </div>
         </Box>
@@ -273,7 +286,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   inputProps: {
                     min: minVeryLowBg,
                     max: maxVeryLowBg,
-                    step: bgUnit === UnitsType.MGDL ? '1' : '0.1',
+                    step: inputStep,
                     'aria-label': t('very-low-bg-input')
                   }
                 }}
@@ -304,12 +317,14 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   defaultValue={`${hypoThreshold.value}%` ?? ''}
                   values={PERCENTAGES}
                   error={hypoThreshold.error}
-                  onSelect={(value) => { onBasicDropdownSelect(value, setHypoThreshold) }}
+                  onSelect={(value) => {
+                    onBasicDropdownSelect(value, setHypoThreshold)
+                  }}
                 />
               </div>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: '5%' })}</Typography>
+              <Typography className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT}%` })}</Typography>
             }
           </div>
         </Box>
@@ -338,7 +353,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               </div>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: '50%' })}</Typography>
+              <Typography className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT}%` })}</Typography>
             }
           </div>
         </Box>

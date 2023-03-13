@@ -23,7 +23,7 @@ import bows from 'bows'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import clsx from 'clsx'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import MedicalDataService, { MGDL_UNITS, Source, TimeService } from 'medical-domain'
 import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
@@ -54,7 +54,6 @@ const LOADING_STATE_EARLIER_PROCESS = LOADING_STATE_EARLIER_FETCH + 1
 const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
 
 /**
- * @typedef { import('history').History } History
  * @typedef { import('../index').BlipApi } API
  * @typedef { import('../index').IUser } User
  * @typedef { import('../index').PatientData } PatientData
@@ -63,7 +62,7 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
  * @typedef { import('../index').DialogRangeDatePicker } DialogRangeDatePicker
  * @typedef { import('../core/lib/partial-data-load').DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker }} PatientDataProps
  * @typedef {{loadingState: number; medicalData: MedicalDataService | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -290,7 +289,6 @@ class PatientDataPage extends React.Component {
     const {
       patient,
       setPatient,
-      prefixURL,
       dialogDatePicker,
       dialogRangeDatePicker
     } = this.props
@@ -315,65 +313,72 @@ class PatientDataPage extends React.Component {
           onClickPrint={this.handleClickPrint}
           onSwitchPatient={this.handleSwitchPatient}
         />
-        <Switch>
-          <Route path={`${prefixURL}/dashboard`}>
-            <PatientDashboard
-              bgPrefs={bgPrefs}
-              chartPrefs={chartPrefs}
-              dataUtil={this.dataUtil}
-              epochDate={epochLocation}
-              loading={loadingState !== LOADING_STATE_DONE}
-              medicalDataService={medicalData}
-              msRange={msRange}
-              patient={patient}
-              timePrefs={timePrefs}
-              trackMetric={this.trackMetric}
-              onSwitchToDaily={this.handleSwitchToDaily}
-            />
-          </Route>
-          <Route path={`${prefixURL}/daily`}>
-            <Daily
-              dialogDatePicker={dialogDatePicker}
-              bgPrefs={this.state.bgPrefs}
-              chartPrefs={chartPrefs}
-              dataUtil={this.dataUtil}
-              timePrefs={this.state.timePrefs}
-              patient={patient}
-              setPatient={setPatient}
-              tidelineData={medicalData}
-              epochLocation={epochLocation}
-              msRange={msRange}
-              loading={loadingState !== LOADING_STATE_DONE}
-              onClickRefresh={this.handleClickRefresh}
-              onCreateMessage={this.handleShowMessageCreation}
-              onShowMessageThread={this.handleShowMessageThread.bind(this)}
-              onDatetimeLocationChange={this.handleDatetimeLocationChange}
-              trackMetric={this.trackMetric}
-              updateChartPrefs={this.updateChartPrefs}
-              ref={this.chartRef}
-            />
-          </Route>
-          <Route path={`${prefixURL}/trends`}>
-            <Trends
-              dialogRangeDatePicker={dialogRangeDatePicker}
-              bgPrefs={this.state.bgPrefs}
-              chartPrefs={chartPrefs}
-              dataUtil={this.dataUtil}
-              timePrefs={this.state.timePrefs}
-              epochLocation={epochLocation}
-              msRange={msRange}
-              patient={patient}
-              setPatient={setPatient}
-              tidelineData={medicalData}
-              loading={loadingState !== LOADING_STATE_DONE}
-              onClickRefresh={this.handleClickRefresh}
-              onSwitchToDaily={this.handleSwitchToDaily}
-              onDatetimeLocationChange={this.handleDatetimeLocationChange}
-              trackMetric={this.trackMetric}
-              updateChartPrefs={this.updateChartPrefs}
-            />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="dashboard"
+            element={
+              <PatientDashboard
+                bgPrefs={bgPrefs}
+                chartPrefs={chartPrefs}
+                dataUtil={this.dataUtil}
+                epochDate={epochLocation}
+                loading={loadingState !== LOADING_STATE_DONE}
+                medicalDataService={medicalData}
+                msRange={msRange}
+                patient={patient}
+                timePrefs={timePrefs}
+                trackMetric={this.trackMetric}
+                onSwitchToDaily={this.handleSwitchToDaily}
+              />
+            }
+          />
+          <Route path="daily"
+            element={
+              <Daily
+                dialogDatePicker={dialogDatePicker}
+                bgPrefs={this.state.bgPrefs}
+                chartPrefs={chartPrefs}
+                dataUtil={this.dataUtil}
+                timePrefs={this.state.timePrefs}
+                patient={patient}
+                setPatient={setPatient}
+                tidelineData={medicalData}
+                epochLocation={epochLocation}
+                msRange={msRange}
+                loading={loadingState !== LOADING_STATE_DONE}
+                onClickRefresh={this.handleClickRefresh}
+                onCreateMessage={this.handleShowMessageCreation}
+                onShowMessageThread={this.handleShowMessageThread.bind(this)}
+                onDatetimeLocationChange={this.handleDatetimeLocationChange}
+                trackMetric={this.trackMetric}
+                updateChartPrefs={this.updateChartPrefs}
+                ref={this.chartRef}
+              />
+            }
+          />
+          <Route
+            path="trends"
+            element={
+              <Trends
+                dialogRangeDatePicker={dialogRangeDatePicker}
+                bgPrefs={this.state.bgPrefs}
+                chartPrefs={chartPrefs}
+                dataUtil={this.dataUtil}
+                timePrefs={this.state.timePrefs}
+                epochLocation={epochLocation}
+                msRange={msRange}
+                patient={patient}
+                setPatient={setPatient}
+                tidelineData={medicalData}
+                loading={loadingState !== LOADING_STATE_DONE}
+                onClickRefresh={this.handleClickRefresh}
+                onSwitchToDaily={this.handleSwitchToDaily}
+                onDatetimeLocationChange={this.handleDatetimeLocationChange}
+                trackMetric={this.trackMetric}
+                updateChartPrefs={this.updateChartPrefs}
+              />
+            }
+          />
+        </Routes>
       </React.Fragment>
     )
   }
@@ -413,9 +418,9 @@ class PatientDataPage extends React.Component {
   }
 
   getChartType() {
-    const { history, prefixURL } = this.props
+    const { pathName, prefixURL } = this.props
 
-    switch (history.location.pathname) {
+    switch (pathName) {
       case `${prefixURL}/daily`:
         return ChartType.Daily
       case `${prefixURL}/trends`:
@@ -574,7 +579,7 @@ class PatientDataPage extends React.Component {
    * @param {moment.Moment | Date | number | null} datetime The day to display
    */
   handleSwitchToDaily(datetime = null) {
-    const { prefixURL, history } = this.props
+    const { prefixURL, navigate } = this.props
     const fromChart = this.getChartType()
     const toChart = 'daily'
 
@@ -592,7 +597,7 @@ class PatientDataPage extends React.Component {
       msRange: TimeService.MS_IN_DAY
     }, () => {
       if (fromChart !== toChart) {
-        history.push(`${prefixURL}/${toChart}`)
+        navigate(`${prefixURL}/${toChart}`)
         this.trackMetric('data_visualization', 'click_view', toChart)
       }
     })
@@ -603,7 +608,7 @@ class PatientDataPage extends React.Component {
   }
 
   handleSwitchToTrends(e) {
-    const { prefixURL, history } = this.props
+    const { prefixURL, navigate } = this.props
     const fromChart = this.getChartType()
     const toChart = 'trends'
     if (e) {
@@ -612,13 +617,13 @@ class PatientDataPage extends React.Component {
 
     this.dataUtil.chartPrefs = this.state.chartPrefs[toChart]
     if (fromChart !== toChart) {
-      history.push(`${prefixURL}/${toChart}`)
+      navigate(`${prefixURL}/${toChart}`)
       this.trackMetric('data_visualization', 'click_view', toChart)
     }
   }
 
   handleSwitchToDashboard(e) {
-    const { prefixURL, history } = this.props
+    const { prefixURL, navigate } = this.props
     const fromChart = this.getChartType()
     const toChart = 'dashboard'
     if (e) {
@@ -634,7 +639,7 @@ class PatientDataPage extends React.Component {
       msRange: TimeService.MS_IN_DAY * 7
     })
     if (fromChart !== toChart) {
-      history.push(`${prefixURL}/${toChart}`)
+      navigate(`${prefixURL}/${toChart}`)
       this.trackMetric('data_visualization', 'click_view', toChart)
     }
   }
@@ -925,7 +930,8 @@ PatientDataPage.propTypes = {
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
-  history: PropTypes.object.isRequired
+  pathName: PropTypes.string.isRequired,
+  navigate: PropTypes.func.isRequired
 }
 
 export default PatientDataPage

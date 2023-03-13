@@ -25,23 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import {
-  mockPatientApiForPatients,
-  monitoredPatientAsTeamMember
-} from '../../mock/patient.api.mock'
+import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import { iTeamOne, teamOne } from '../../mock/team.api.mock'
 import {
+  checkJoinTeamDialog,
   checkJoinTeamDialogCancel,
-  checkJoinTeamDialogPrivacyCancel,
   checkJoinTeamDialogDisplayErrorMessage,
-  checkJoinTeamDialog
+  checkJoinTeamDialogPrivacyCancel
 } from '../../assert/join-team'
 
 describe('Patient dashboard for HCP', () => {
@@ -58,8 +55,9 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should display proper header', async () => {
-    await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
+    const router = renderPage(monitoredPatientDashboardRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(monitoredPatientDashboardRoute)
     })
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')

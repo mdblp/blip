@@ -27,7 +27,7 @@
 
 import * as auth0Mock from '@auth0/auth0-react'
 import userEvent from '@testing-library/user-event'
-import { act, screen } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
@@ -43,10 +43,17 @@ describe('Product labelling page', () => {
   })
 
   it('should render product labelling with the right selected language and version', async () => {
-    renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/login')
+    })
     checkFooter({ needFooterLanguageSelector: false })
 
     await userEvent.click(screen.getByText('Product Labelling'))
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/product-labelling')
+    })
 
     expect(screen.getByText(`YourLoops, version ${global.BUILD_CONFIG.VERSION as string}, released on 2000-01-01`)).toBeInTheDocument()
     expect(screen.getByText(`YLPZ-RA-LAD-001-en-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_EN_REV as string}`)).toBeInTheDocument()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
 import CaregiversPage from '../pages/patient/caregivers/page'
@@ -42,16 +42,19 @@ export function PatientLayout(): JSX.Element {
     <TeamContextProvider>
       <PatientProvider>
         <DashboardLayout>
-          <Switch>
-            <Route exact path="/not-found" component={InvalidRoute} />
-            <Route exact path="/preferences" component={ProfilePage} />
-            <Route exact path="/notifications" component={NotificationsPage} />
-            <Route exact path="/home" component={PatientDataPage} />
-            <Route exact path="/caregivers" component={CaregiversPage} />
-            <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-            <Redirect exact from="/" to="/dashboard" />
-            <Route path="/" component={PatientDataPage} />
-          </Switch>
+          <Routes>
+            <Route path="/not-found" element={<InvalidRoute />} />
+            <Route path="/preferences" element={<ProfilePage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/home" element={<PatientDataPage />} />
+            <Route path="/caregivers" element={<CaregiversPage />} />
+            <Route path="/teams/:teamId" element={<TeamDetailsPage />} />
+            <Route
+              path="/"
+              element={<Navigate to="/dashboard" replace />}
+            />
+            <Route path="*" element={<PatientDataPage />} />
+          </Routes>
         </DashboardLayout>
       </PatientProvider>
     </TeamContextProvider>

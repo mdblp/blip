@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, type BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
+import { act, type BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI, myTeamId, myThirdTeamId } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
@@ -60,13 +60,15 @@ describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRouteMmoL = `/patient/${monitoredPatientWithMmolId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
+  const mgdlSettings = { units: { bg: UnitsType.MGDL } }
+  const mmolSettings = { units: { bg: UnitsType.MMOLL } }
 
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mgdlSettings })
     mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
@@ -90,8 +92,9 @@ describe('Patient dashboard for HCP', () => {
   it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
     localStorage.setItem('selectedTeamId', '')
 
-    act(() => {
-      renderPage(unMonitoredPatientDashboardRoute)
+    const router = renderPage(unMonitoredPatientDashboardRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(unMonitoredPatientDashboardRoute)
     })
 
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
@@ -267,6 +270,8 @@ describe('Patient dashboard for HCP', () => {
     })
 
     it('should have units in mmol/L and save button working', async () => {
+      mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
+
       await act(async () => {
         renderPage(monitoredPatientDashboardRouteMmoL)
       })

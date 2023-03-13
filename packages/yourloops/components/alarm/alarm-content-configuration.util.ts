@@ -24,16 +24,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { UnitsType } from 'dumb'
+import { formatBgValue, UnitsType } from 'dumb'
 import { convertBG } from '../../lib/units/units.util'
-import {
-  DEFAULT_BG_VALUES,
-  DEFAULT_THRESHOLDS_IN_MGDL
-} from './alarms.default'
-import { type Thresholds, type BgValues } from '../../lib/patient/models/alarms.model'
+import { DEFAULT_BG_VALUES, DEFAULT_THRESHOLDS_IN_MGDL } from './alarms.default'
+import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
 
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
+
+export const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
 export const isInvalidPercentage = (value: number): boolean => {
   return !PERCENTAGES.includes(`${value}%`)
@@ -59,6 +58,7 @@ export const buildThresholds = (bgUnit: UnitsType): Thresholds => {
   }
   return { ...DEFAULT_THRESHOLDS_IN_MGDL }
 }
+
 export const buildBgValues = (bgUnit: UnitsType): BgValues => {
   if (bgUnit === UnitsType.MMOLL) {
     return {
@@ -71,4 +71,16 @@ export const buildBgValues = (bgUnit: UnitsType): BgValues => {
   }
   return { ...DEFAULT_BG_VALUES }
 }
-export const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
+
+const convertAndFormatBgValue = (value: number, currentUnit: UnitsType): number => {
+  const newUnit = currentUnit === UnitsType.MGDL ? UnitsType.MMOLL : UnitsType.MGDL
+  const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
+
+  return newUnit === UnitsType.MGDL ? parseInt(formattedValueString) : parseFloat(formattedValueString)
+}
+
+export const getConvertedValue = (value: number, currentUnit: UnitsType, requiredUnit: UnitsType): number => {
+  const isConversionRequired = currentUnit !== requiredUnit
+
+  return isConversionRequired ? convertAndFormatBgValue(value, currentUnit) : value
+}
