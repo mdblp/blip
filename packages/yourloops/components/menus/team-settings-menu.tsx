@@ -52,7 +52,8 @@ import { type ShareUser } from '../../lib/share/models/share-user.model'
 import { errorTextFromException } from '../../lib/utils'
 import DirectShareApi from '../../lib/share/direct-share.api'
 import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
-import IconButton from '@mui/material/IconButton'
+import TeamUtils from '../../lib/team/team.util'
+import Button from '@mui/material/Button'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -79,10 +80,10 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
-function PatientTeamSettingsMenu(): JSX.Element {
+function TeamSettingsMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes: { badge, teamIcon, separator, menu, paddingBottom } } = classes()
-  const { teams, joinTeam, isPrivate } = useTeam()
+  const { teams, joinTeam } = useTeam()
   const navigate = useNavigate()
   const alert = useAlert()
   const { user } = useAuth()
@@ -93,8 +94,13 @@ function PatientTeamSettingsMenu(): JSX.Element {
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
   const opened = !!anchorEl
 
-  const filteredTeams = teams.filter(team => !isPrivate(team))
+  const filteredTeams = teams.filter(team => !TeamUtils.isPrivate(team))
   const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false)
+
+  const openMenu = ({ currentTarget }: { currentTarget: HTMLElement }): void => {
+    setAnchorEl(currentTarget)
+  }
+
   const closeMenu = (): void => {
     setAnchorEl(null)
   }
@@ -138,9 +144,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
   }
   return (
     <>
-      <IconButton id="team-menu" color="inherit" onClick={event => {
-        setAnchorEl(event.currentTarget)
-      }}>
+      <Button id="team-menu" color="inherit" onClick={openMenu}>
         <Badge
           id="team-menu-count-badge"
           aria-label={t('open-team-menu')}
@@ -152,7 +156,7 @@ function PatientTeamSettingsMenu(): JSX.Element {
           <GroupOutlinedIcon />
         </Badge>
         {!isMobile && <ArrowDropDownIcon />}
-      </IconButton>
+      </Button>
 
       <MenuLayout
         open={opened}
@@ -238,4 +242,4 @@ function PatientTeamSettingsMenu(): JSX.Element {
   )
 }
 
-export const PatientTeamSettingsMenuMemoized = React.memo(PatientTeamSettingsMenu)
+export const TeamSettingsMenuMemoized = React.memo(TeamSettingsMenu)

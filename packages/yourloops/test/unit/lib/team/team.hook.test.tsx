@@ -157,13 +157,6 @@ describe('Team hook', () => {
     })
   })
 
-  describe('isPrivate', () => {
-    it('should check whether the given team is the private team', () => {
-      expect(teamHook.isPrivate(team1)).toEqual(false)
-      expect(teamHook.isPrivate(privateTeam)).toEqual(true)
-    })
-  })
-
   describe('getMedicalTeams', () => {
     it('should return an array of medical teams', () => {
       const teams = teamHook.getMedicalTeams()

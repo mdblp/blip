@@ -37,7 +37,7 @@ import { useTranslation } from 'react-i18next'
 import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import IconButton from '@mui/material/IconButton'
@@ -64,7 +64,10 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
-export const HcpTeamScopeMenu: FunctionComponent = () => {
+const MENU_MAX_WIDTH_PX = 250
+const HOME_PATHNAME = '/home'
+
+export const TeamScopeMenu: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const {
     classes: {
@@ -80,6 +83,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
   const theme = useTheme()
   const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const { pathname } = useLocation()
 
   const privateTeam = getPrivateTeam()
   const sortedMedicalTeams = TeamUtils.sortTeamsByName(getMedicalTeams())
@@ -100,7 +104,10 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeamId) {
       selectTeam(teamId)
-      navigate('/')
+
+      if (pathname !== HOME_PATHNAME) {
+        navigate('/')
+      }
     }
     closeMenu()
   }
@@ -122,20 +129,22 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
     setTeamCreationDialogData(null)
   }
 
+  const openMenu = ({ currentTarget }: { currentTarget: HTMLElement }): void => {
+    setAnchorEl(currentTarget)
+  }
+
   const closeMenu = (): void => {
     setAnchorEl(null)
   }
 
   return (
     <>
-      <Box maxWidth={250}>
+      <Box maxWidth={MENU_MAX_WIDTH_PX}>
         {isMobile
           ? <IconButton
             color="inherit"
             aria-label={t('hcp-team-menu-click-label')}
-            onClick={event => {
-              setAnchorEl(event.currentTarget)
-            }}>
+            onClick={openMenu}>
             {selectedTeamIcon}
           </IconButton>
           : <Button
@@ -144,9 +153,7 @@ export const HcpTeamScopeMenu: FunctionComponent = () => {
             data-testid="hcp-team-scope-menu-button"
             startIcon={selectedTeamIcon}
             endIcon={<ArrowDropDownIcon />}
-            onClick={event => {
-              setAnchorEl(event.currentTarget)
-            }}
+            onClick={openMenu}
           >
             <Typography>{selectedTeamName}</Typography>
           </Button>

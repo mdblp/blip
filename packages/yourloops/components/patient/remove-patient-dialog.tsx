@@ -43,7 +43,7 @@ import MedicalServiceIcon from '../icons/medical-service-icon'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { LoadingButton } from '@mui/lab'
-import { useTeam } from '../../lib/team'
+import TeamUtils from '../../lib/team/team.util'
 
 interface RemovePatientDialogProps {
   patient: Patient | null
@@ -60,7 +60,6 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
     setSelectedTeamId,
     patientName
   } = useRemovePatientDialog({ patient, onClose })
-  const { isPrivate } = useTeam()
 
   return (
     <Dialog
@@ -97,7 +96,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
                 key={index}
                 data-testid={`select-option-${team.name}`}
               >
-                {isPrivate(team)
+                {TeamUtils.isPrivate(team)
                   ? <Box display="flex" alignItems="center">
                     <React.Fragment>
                       <Box display="flex" ml={0} mr={1}>

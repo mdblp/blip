@@ -38,7 +38,7 @@ import {
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
-import { availableTeams, mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/team.api.mock'
+import { AVAILABLE_TEAMS, mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/team.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
@@ -65,7 +65,7 @@ describe('HCP home page', () => {
       expect(router.state.location.pathname).toEqual('/home')
     })
 
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, availableTeams)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
     checkSecondaryBar(false, true)
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)

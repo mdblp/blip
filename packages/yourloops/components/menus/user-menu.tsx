@@ -69,6 +69,8 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
+const MENU_MAX_WIDTH_PX = 250
+
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
@@ -95,6 +97,10 @@ function UserMenu(): JSX.Element {
         console.error('Unknown role')
         return null
     }
+  }
+
+  const openMenu = ({ currentTarget }: { currentTarget: HTMLElement }): void => {
+    setAnchorEl(currentTarget)
   }
 
   const closeMenu = (): void => {
@@ -128,11 +134,9 @@ function UserMenu(): JSX.Element {
 
   return (
     <>
-      <Box maxWidth={250}>
+      <Box>
         {isMobile
-          ? <IconButton color="inherit" onClick={event => {
-            setAnchorEl(event.currentTarget)
-          }}>
+          ? <IconButton color="inherit" onClick={openMenu}>
             {getRoleIcon()}
           </IconButton>
           : <Button
@@ -140,12 +144,10 @@ function UserMenu(): JSX.Element {
             data-testid="user-menu-button"
             startIcon={getRoleIcon()}
             endIcon={<ArrowDropDownIcon />}
-            onClick={event => {
-              setAnchorEl(event.currentTarget)
-            }}
+            onClick={openMenu}
           >
             <Tooltip title={tooltipText} disableInteractive>
-              <Typography id="user-menu-full-name" className={typography}>
+              <Typography id="user-menu-full-name" className={typography} maxWidth={MENU_MAX_WIDTH_PX}>
                 {userName}
               </Typography>
             </Tooltip>

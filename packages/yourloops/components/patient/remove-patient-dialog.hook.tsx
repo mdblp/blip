@@ -52,7 +52,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { removePatient } = usePatientContext()
-  const { getTeam, isPrivate } = useTeam()
+  const { getTeam } = useTeam()
 
   const [selectedTeamId, setSelectedTeamId] = useState<string>('')
   const [processing, setProcessing] = useState<boolean>(false)
@@ -72,7 +72,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
       return
     }
     const team = getTeam(selectedTeamId)
-    if (isPrivate(team)) {
+    if (TeamUtils.isPrivate(team)) {
       alert.success(t('alert-remove-private-practice-success', { patientName }))
     } else {
       alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))

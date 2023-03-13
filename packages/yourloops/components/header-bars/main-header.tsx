@@ -43,9 +43,9 @@ import Toolbar from '@mui/material/Toolbar'
 import config from '../../lib/config/config'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import { useAuth } from '../../lib/auth'
-import { PatientTeamSettingsMenuMemoized as PatientTeamSettingsMenu } from '../menus/patient-team-settings-menu'
+import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
-import { HcpTeamScopeMenu } from '../menus/hcp-team-scope-menu'
+import { TeamScopeMenu } from '../menus/team-scope-menu'
 
 interface MainHeaderProps {
   withShrinkIcon?: boolean
@@ -131,8 +131,8 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
             <div className={separator} />
             {!user?.isUserCaregiver() &&
               <React.Fragment>
-                {user.isUserPatient() && <PatientTeamSettingsMenu />}
-                {user.isUserHcp() && <HcpTeamScopeMenu />}
+                {user.isUserPatient() && <TeamSettingsMenu />}
+                {user.isUserHcp() && <TeamScopeMenu />}
                 <div className={separator} />
               </React.Fragment>
             }

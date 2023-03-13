@@ -198,8 +198,8 @@ export const iTeamOne: ITeam = {
   members: null
 }
 
-export const availableTeams = [teamOne, teamTwo, teamThree, teamPrivate]
+export const AVAILABLE_TEAMS = [teamOne, teamTwo, teamThree, teamPrivate]
 
 export const mockTeamAPI = () => {
-  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(availableTeams)
+  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(AVAILABLE_TEAMS)
 }

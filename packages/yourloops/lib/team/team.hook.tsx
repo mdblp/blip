@@ -97,12 +97,8 @@ function TeamContextImpl(): TeamContext {
     return getTeamsByType(TeamType.medical)
   }
 
-  const isPrivate = (team: Team): boolean => {
-    return team.id === PRIVATE_TEAM_ID
-  }
-
   const getPrivateTeam = (): Team => {
-    return teams.find((team: Team) => isPrivate(team))
+    return teams.find((team: Team) => TeamUtils.isPrivate(team))
   }
 
   const getTeamsByType = (type: TeamType): Team[] => {
@@ -219,7 +215,6 @@ function TeamContextImpl(): TeamContext {
     refreshInProgress,
     refresh,
     getTeam,
-    isPrivate,
     getMedicalTeams,
     getPrivateTeam,
     getRemoteMonitoringTeams,

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
+import { type BoundFunctions, type queries, screen, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
@@ -52,7 +52,7 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   expect(header.getByTestId(iconTestId)).toBeVisible()
   expect(header.getByText(userName)).toBeVisible()
 
-  fireEvent.click(header.getByText(userName))
+  await userEvent.click(header.getByText(userName))
 
   const userMenu = within(screen.getByTestId('user-menu'))
   expect(userMenu.getByText('Profile settings')).toBeVisible()

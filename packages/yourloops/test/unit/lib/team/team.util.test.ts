@@ -27,6 +27,7 @@
 
 import { buildTeam } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/team.util'
+import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 describe('TeamUtils', () => {
   describe('sortTeamsByName', () => {
@@ -38,6 +39,16 @@ describe('TeamUtils', () => {
       ]
       const expectedResult = [teams[2], teams[0], teams[1]]
       expect(expectedResult).toEqual(TeamUtils.sortTeamsByName(teams))
+    })
+  })
+
+  describe('isPrivate', () => {
+    it('should check whether the given team is the private team', () => {
+      const team = buildTeam('teamId', [])
+      const privateTeam = buildTeam('private', undefined, undefined, TeamType.private)
+
+      expect(TeamUtils.isPrivate(team)).toEqual(false)
+      expect(TeamUtils.isPrivate(privateTeam)).toEqual(true)
     })
   })
 })

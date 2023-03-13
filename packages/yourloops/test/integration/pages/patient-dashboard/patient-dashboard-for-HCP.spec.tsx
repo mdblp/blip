@@ -28,7 +28,7 @@
 import { act, type BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import {
-  availableTeams,
+  AVAILABLE_TEAMS,
   mockTeamAPI,
   mySecondTeamId,
   myThirdTeamId,
@@ -107,7 +107,7 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     checkPatientNavBarAsHCP()
     testPatientDashboardCommonDisplay(dashboard)
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, availableTeams)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
@@ -117,7 +117,7 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamTwo.name }, availableTeams)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamTwo.name }, AVAILABLE_TEAMS)
 
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
