@@ -90,7 +90,7 @@ export const getRecommended = (wizard: Wizard): number => {
 }
 
 export const getBolusFromInsulinEvent = (insulinEvent: Bolus | Wizard): Bolus | null => {
-  return insulinEvent.type === DatumType.Wizard ? (insulinEvent as Wizard).bolus : (insulinEvent as Bolus)
+  return insulinEvent.type === DatumType.Wizard ? insulinEvent.bolus : insulinEvent
 }
 
 const fixFloatingPoint = (value: number): number => {

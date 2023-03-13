@@ -1,5 +1,4 @@
-import { BgSource } from 'dumb/src/models/blood-glucose.model'
-
+import { type BgType } from "medical-domain"
 export default DataUtil
 
 export interface TimeInRangeData {
@@ -43,7 +42,7 @@ declare class DataUtil {
     manufacturer: any
   }
 
-  get bgSource(): BgSource
+  get bgSource(): BgType
 
   set chartPrefs(arg: any)
   set endpoints(arg: any)

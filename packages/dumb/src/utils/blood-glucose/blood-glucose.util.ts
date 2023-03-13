@@ -26,8 +26,8 @@
  */
 
 import { isNumber } from 'lodash'
-import { type BgBounds, BgClass, ClassificationType } from '../../models/blood-glucose.model'
-import { type BgClasses } from 'medical-domain'
+import { BgClass } from '../../models/blood-glucose.model'
+import { type BgBounds, type BgClasses, ClassificationType } from 'medical-domain'
 
 export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
   return {

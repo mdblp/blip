@@ -552,6 +552,11 @@ class Trends extends React.Component {
     } = this.props
 
     const endpoints = this.getEndpoints()
+    const dateFilter = {
+      start: Date.parse(endpoints[0]).valueOf(),
+      end: Date.parse(endpoints[1]).valueOf(),
+      weekDays: this.props.chartPrefs.trends.activeDays
+    }
 
     return (
       <TrendsProvider>
@@ -576,9 +581,10 @@ class Trends extends React.Component {
                 <div className="patient-data-sidebar-inner">
                   <div id="toggle-bg-replacement" style={{ height: 36 }} />
                   <PatientStatistics
-                    dataUtil={this.props.dataUtil}
+                    medicalData={this.props.tidelineData.medicalData}
                     bgPrefs={this.props.bgPrefs}
-                    endpoints={endpoints}
+                    dateFilter={dateFilter}
+                    bgSource={this.props.dataUtil.bgSource}
                   >
                     <Stats
                       bgPrefs={this.props.bgPrefs}

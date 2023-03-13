@@ -21,7 +21,7 @@ import { range } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import moment from 'moment-timezone'
 
-import { MMOLL_UNITS } from 'medical-domain'
+import { MMOLL_UNITS, classifyBgValue } from 'medical-domain'
 
 import PrintView from './PrintView'
 import { calculateBasalPath, getBasalSequencePaths } from '../render/basal'
@@ -29,7 +29,6 @@ import getBolusPaths from '../render/bolus'
 import { getBasalPathGroups, getBasalPathGroupType } from '../../utils/basal'
 import { isAutomatedBasalDevice, getPumpVocabulary } from '../../utils/device'
 import {
-  classifyBgValue,
   getOutOfRangeThreshold
 } from '../../utils/bloodglucose'
 import {

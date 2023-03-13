@@ -25,7 +25,7 @@ import i18next from 'i18next'
 import clsx from 'clsx'
 import { Route, Routes } from 'react-router-dom'
 
-import MedicalDataService, { MGDL_UNITS, Source, TimeService } from 'medical-domain'
+import MedicalDataService, { defaultBgClasses, MGDL_UNITS, Source, TimeService } from 'medical-domain'
 import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
 
 import config from '../config'
@@ -84,7 +84,8 @@ class PatientDataPage extends React.Component {
 
     const currentUser = api.whoami
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-
+    const bgUnit = currentUser.settings?.units?.bg ?? MGDL_UNITS
+    const bgClasses = defaultBgClasses[bgUnit]
     this.state = {
       loadingState: LOADING_STATE_NONE,
       errorMessage: null,
@@ -97,8 +98,14 @@ class PatientDataPage extends React.Component {
         timezoneName: browserTimezone
       },
       bgPrefs: {
-        bgUnits: currentUser.settings?.units?.bg ?? MGDL_UNITS,
-        bgClasses: {}
+        bgUnits: bgUnit,
+        bgClasses: bgClasses,
+        bgBounds: {
+          veryHighThreshold: bgClasses.high,
+          targetUpperBound: bgClasses.target,
+          targetLowerBound: bgClasses.low,
+          veryLowThreshold: bgClasses.veryLow
+        }
       },
       canPrint: false,
       showPDFPrintOptions: false,
@@ -335,10 +342,10 @@ class PatientDataPage extends React.Component {
             element={
               <Daily
                 dialogDatePicker={dialogDatePicker}
-                bgPrefs={this.state.bgPrefs}
+                bgPrefs={bgPrefs}
                 chartPrefs={chartPrefs}
                 dataUtil={this.dataUtil}
-                timePrefs={this.state.timePrefs}
+                timePrefs={timePrefs}
                 patient={patient}
                 setPatient={setPatient}
                 tidelineData={medicalData}
@@ -360,10 +367,10 @@ class PatientDataPage extends React.Component {
             element={
               <Trends
                 dialogRangeDatePicker={dialogRangeDatePicker}
-                bgPrefs={this.state.bgPrefs}
+                bgPrefs={bgPrefs}
                 chartPrefs={chartPrefs}
                 dataUtil={this.dataUtil}
-                timePrefs={this.state.timePrefs}
+                timePrefs={timePrefs}
                 epochLocation={epochLocation}
                 msRange={msRange}
                 patient={patient}
@@ -892,7 +899,13 @@ class PatientDataPage extends React.Component {
 
     const bgPrefsUpdated = {
       bgUnits: medicalData.opts.bgUnits,
-      bgClasses: medicalData.opts.bgClasses
+      bgClasses: medicalData.opts.bgClasses,
+      bgBounds: {
+        veryHighThreshold: medicalData.opts.bgClasses.high,
+        targetUpperBound: medicalData.opts.bgClasses.target,
+        targetLowerBound: medicalData.opts.bgClasses.low,
+        veryLowThreshold: medicalData.opts.bgClasses.veryLow
+      }
     }
     this.dataUtil = new DataUtil(medicalData.data, {
       bgPrefs: bgPrefsUpdated,

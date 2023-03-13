@@ -31,6 +31,7 @@ import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Message => {
   rawData.time = rawData.timestamp
@@ -55,9 +56,14 @@ const deduplicate = (data: Message[], opts: MedicalDataOptions): Message[] => {
   return DatumService.deduplicate(data, opts) as Message[]
 }
 
+const filterOnDate = (data: Message[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Message[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Message[]
+}
+
 const MessageService: DatumProcessor<Message> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default MessageService
