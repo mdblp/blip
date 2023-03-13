@@ -92,7 +92,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   const selectedTeam = availableTeams.find((team: Team) => team.id === selectedTeamId)
   const isSelectedTeamPrivate = selectedTeam.type === TeamType.private
-  const selectedTeamName = isSelectedTeamPrivate ? t('hcp-team-menu-private-practice-option') : selectedTeam.name
+  const selectedTeamName = isSelectedTeamPrivate ? t('my-private-practice') : selectedTeam.name
 
   const privatePracticeIcon = <PersonIcon data-testid="private-practice-icon" />
   const medicalTeamIcon = <GroupsOutlinedIcon data-testid="medical-team-icon" />
@@ -106,7 +106,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
       selectTeam(teamId)
 
       if (pathname !== HOME_PATHNAME) {
-        navigate('/')
+        navigate(HOME_PATHNAME)
       }
     }
     closeMenu()
@@ -143,13 +143,13 @@ export const TeamScopeMenu: FunctionComponent = () => {
         {isMobile
           ? <IconButton
             color="inherit"
-            aria-label={t('hcp-team-menu-click-label')}
+            aria-label={t('open-team-selection-menu')}
             onClick={openMenu}>
             {selectedTeamIcon}
           </IconButton>
           : <Button
             color="inherit"
-            aria-label={t('hcp-team-menu-click-label')}
+            aria-label={t('open-team-selection-menu')}
             data-testid="hcp-team-scope-menu-button"
             startIcon={selectedTeamIcon}
             endIcon={<ArrowDropDownIcon />}
@@ -171,7 +171,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
               {privatePracticeIcon}
             </ListItemIcon>
             <ListItemText>
-              {t('hcp-team-menu-private-practice-option')}
+              {t('my-private-practice')}
             </ListItemText>
           </MenuItem>
 
@@ -181,7 +181,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
                 <Divider variant="middle" />
               </Box>
 
-              <Typography className={sectionTitle}>{t('hcp-team-menu-care-teams-section-title')}</Typography>
+              <Typography className={sectionTitle}>{t('care-teams')}</Typography>
 
               {sortedMedicalTeams.map((team: Team) =>
                 <MenuItem
@@ -210,7 +210,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
               <AddIcon />
             </ListItemIcon>
             <ListItemText>
-              {t('hcp-team-menu-new-care-team-option')}
+              {t('create-new-care-team')}
             </ListItemText>
           </MenuItem>
         </Box>
