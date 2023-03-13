@@ -57,7 +57,7 @@ import { type ChartArea } from '../../models/print/chart-area.model'
 import { type PdfData } from '../../models/print/pdf-data.model'
 import { type Margins } from '../../models/print/margins.model'
 import { type SectionHeading } from '../../models/print/section-heading.model'
-import { type Patient } from '../../models/print/patient.model'
+import { type PatientToPrint } from '../../models/print/patient-to-print.model'
 import { type PatientInfoBox } from '../../models/print/patient-info-box.model'
 import { type PrintViewParams } from '../../models/print/print-view-params.model'
 import { type Padding } from '../../models/print/padding.model'
@@ -68,7 +68,8 @@ import { type Colors } from '../../models/print/colors.model'
 const PADDING_PATIENT_INFO = 10
 
 const APP_URL = `${window.location.protocol}//${window.location.hostname}/`
-const CENTER = 'center'
+const ALIGN_CENTER = 'center'
+const ALIGN_LEFT = 'left'
 const COLOR_BLACK = 'black'
 const COLOR_WHITE = 'white'
 const COLUMN_DEFAULT_PADDING = [7, 5, 3, 5]
@@ -80,7 +81,6 @@ const EXTRA_SMALL_FONT_SIZE = 6
 const HEADER_FONT_SIZE = 14
 const HEADING_COLUMN_ID = 'heading'
 const LARGE_FONT_SIZE = 12
-const LEFT = 'left'
 const LINE_HEIGHT_REFERENCE_FONT_SIZE = 14
 const LOGO_WIDTH = 80
 const PAGE_ADDED = 'pageAdded'
@@ -123,7 +123,7 @@ export class PrintView {
   #titleWidth?: number
   readonly #footerFontSize: number
   readonly #headerFontSize: number
-  readonly #patient: Patient
+  readonly #patient: PatientToPrint
   readonly #patientInfoBox: PatientInfoBox
   readonly #title: string
 
@@ -247,7 +247,7 @@ export class PrintView {
       moveDown = 1
     } = sectionHeading
 
-    sectionHeading.align = LEFT
+    sectionHeading.align = ALIGN_LEFT
 
     this.doc
       .font(font)
@@ -266,7 +266,7 @@ export class PrintView {
     const { text, subText, note } = getTextData(row, column, isHeader)
     const cellStripe = this.#renderCellStripe(row, column, pos, isHeader)
 
-    const align = (isHeader ? column.headerAlign : column.align) ?? LEFT
+    const align = (isHeader ? column.headerAlign : column.align) ?? ALIGN_LEFT
     const stripeOffset = cellStripe.background ? 0 : cellStripe.width
     const paddingLeft = padding.left ?? 0
     const paddingRight = padding.right ?? 0
@@ -308,7 +308,7 @@ export class PrintView {
     const columns: PdfTableColumnOverridden[] = [
       {
         id: HEADING_COLUMN_ID,
-        align: LEFT,
+        align: ALIGN_LEFT,
         height: heading.note ? 37 : 24,
         cache: false,
         renderer: this.renderCustomTextCell as unknown as (table: VoilabPdfTable<Table>, row: Row, draw: boolean) => void,
@@ -340,7 +340,7 @@ export class PrintView {
         borderColor: this.tableSettings.colors.border,
         headerBorder: 'TBLR',
         border: 'TBLR',
-        align: LEFT,
+        align: ALIGN_LEFT,
         padding: COLUMN_DEFAULT_PADDING,
         headerPadding: COLUMN_DEFAULT_PADDING,
         fill
@@ -400,7 +400,7 @@ export class PrintView {
 
   #computeCellYPosition(pos: Position, padding: Padding, column: TableColumn, width: number, height: number, text: string): number {
     const basicPosition = pos.y + padding.top
-    if (column.valign === CENTER) {
+    if (column.valign === ALIGN_CENTER) {
       const textHeight = this.doc.heightOfString(text, { width })
       return basicPosition + (height - textHeight) / 2 + 1
     }
@@ -491,7 +491,7 @@ export class PrintView {
 
   #renderPatientInfo(): void {
     const patientName = _.truncate(getPatientFullName(this.#patient), { length: PATIENT_FULL_NAME_MAX_LENGTH })
-    const patientBirthdate = formatBirthdate(this.#patient.profile.birthday)
+    const patientBirthdate = formatBirthdate(this.#patient.profile.birthdate)
     const xOffset = this.margins.left
     const yOffset = this.margins.top
 
@@ -569,7 +569,7 @@ export class PrintView {
       .fontSize(DEFAULT_FONT_SIZE)
       .text(dateText, xOffset, yOffset + 2.5, {
         width: availableWidth,
-        align: CENTER
+        align: ALIGN_CENTER
       })
   }
 
@@ -619,7 +619,7 @@ export class PrintView {
       .text(printDateText, xPos, yPos)
       .text(helpText, xPos + printDateWidth, yPos, {
         width: innerWidth,
-        align: CENTER
+        align: ALIGN_CENTER
       })
 
     this.setFill()

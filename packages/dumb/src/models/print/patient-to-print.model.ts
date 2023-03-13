@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Patient {
+export interface PatientToPrint {
   profile: {
-    birthday: string
+    birthdate: string
     fullName: string
   }
 }

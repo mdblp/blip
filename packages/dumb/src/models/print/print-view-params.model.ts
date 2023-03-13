@@ -27,7 +27,7 @@
 
 import { type BgPrefs } from '../blood-glucose.model'
 import { type Margins } from './margins.model'
-import { type Patient } from './patient.model'
+import { type PatientToPrint } from './patient-to-print.model'
 import { type TimePrefs } from 'medical-domain'
 
 export interface PrintViewParams {
@@ -40,7 +40,7 @@ export interface PrintViewParams {
   largeFontSize: number
   logo: string
   margins: Margins
-  patient: Patient
+  patient: PatientToPrint
   smallFontSize: number
   timePrefs: TimePrefs
   title: string
