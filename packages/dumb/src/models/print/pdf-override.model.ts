@@ -25,10 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
+import type PdfTable from 'voilab-pdf-table'
+import { type Position } from './position.model'
+import { type Table } from './pdf-table.model'
 
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+interface PdfTableExtra {
+  bottomMargin: number
+  pos: Position
 }
+
+interface PdfTableColumnExtra {
+  borderColor?: string
+  font: string
+  fontSize: number
+  zebra?: boolean
+}
+
+interface PdfDocumentExtra {
+  _font?: {
+    name: string
+  }
+  _fontSize?: number
+}
+
+interface PdfTableConfigExtra {
+  columnsDefaults: {
+    zebra: boolean
+  }
+  font: string
+  fontSize: number
+  flexColumn: string
+}
+
+export type PdfTableOverridden = PdfTable<Table> & PdfTableExtra
+export type PdfTableColumnOverridden = PdfTable.VoilabPdfTableColumn<Table> & PdfTableColumnExtra
+export type PdfDocumentOverridden = PDFKit.PDFDocument & PdfDocumentExtra
+export type PdfTableConfigOverridden = PdfTable.VoilabPdfTableConfig<Table> & PdfTableConfigExtra

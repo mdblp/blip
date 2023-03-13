@@ -132,9 +132,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           }}
         />
       </Tabs>
-      <Button data-testid="generate-report" onClick={onClickPrint}>
+      <Button data-testid="download-report" onClick={onClickPrint}>
         <GetAppIcon />
-        {t('button-pdf-generate-report')}
+        {t('button-pdf-download-report')}
       </Button>
     </Box>
   )

@@ -25,10 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
-
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+export interface ChartArea {
+  bottomEdge: number
+  leftEdge: number
+  topEdge: number
+  width: number
 }

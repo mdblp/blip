@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ export const checkSecondaryBar = (hasGenerateReportButton = true, hasAddPatientB
   expect(screen.getByLabelText('Data calculated on the last 7 days')).toHaveTextContent('Data calculated on the last 7 days')
   expect(screen.getByLabelText('Search for a patient')).toBeInTheDocument()
   if (hasGenerateReportButton) {
-    expect(within(secondaryBar).getByText('Generate report')).toBeVisible()
+    expect(within(secondaryBar).getByText('Download report')).toBeVisible()
   }
   if (hasAddPatientButton) {
     expect(within(secondaryBar).getByText('Add patient')).toBeVisible()

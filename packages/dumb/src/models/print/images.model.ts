@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
-
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+export interface Images {
+  logo?: string
+  siteChangeCannulaImage?: string
+  siteChangeReservoirImage?: string
+  siteChangeTubingImage?: string
+  siteChangeReservoirDiabeloopImage?: string
 }
