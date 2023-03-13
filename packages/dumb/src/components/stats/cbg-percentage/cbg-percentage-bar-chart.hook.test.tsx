@@ -30,7 +30,7 @@ import { type CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } fro
 import { waitFor } from '@testing-library/dom'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { type BgBounds, BgSource } from '../../../models/blood-glucose.model'
+import { type BgBounds, DatumType } from 'medical-domain'
 import { UnitsType } from '../../../models/enums/units-type.enum'
 
 describe('CBGPercentageBarChart hook', () => {
@@ -72,7 +72,7 @@ describe('CBGPercentageBarChart hook', () => {
 
   const defaultProps: CBGPercentageBarChartHookProps = {
     bgBounds,
-    bgSource: BgSource.Cbg,
+    bgSource: DatumType.Cbg,
     data,
     days: 2,
     type: CBGStatType.TimeInRange,
@@ -143,7 +143,7 @@ describe('CBGPercentageBarChart hook', () => {
 
     const { result: fifthHook } = renderHook(() => useCBGPercentageBarChartHook({
       ...defaultProps,
-      bgSource: BgSource.Smbg
+      bgSource: DatumType.Smbg
     }))
     expect(fifthHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Time In Range' })
   })
@@ -164,7 +164,7 @@ describe('CBGPercentageBarChart hook', () => {
 
     const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({
       ...defaultProps,
-      bgSource: BgSource.Smbg
+      bgSource: DatumType.Smbg
     }))
     expect(fourthHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.', 'Derived from _**1000**_ BGM readings.'])
   })

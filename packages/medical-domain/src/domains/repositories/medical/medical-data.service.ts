@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Cbg from '../../models/medical/datum/cbg.model'
-import { MGDL_UNITS } from '../../models/medical/datum/cbg.model'
+import { MGDL_UNITS } from '../../models/medical/datum/bg.model'
 import type ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
 import type DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
 import type Fill from '../../models/medical/datum/fill.model'
@@ -35,7 +34,6 @@ import type Message from '../../models/medical/datum/message.model'
 import type ReservoirChange from '../../models/medical/datum/reservoir-change.model'
 import type WarmUp from '../../models/medical/datum/warm-up.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
-
 import type ZenMode from '../../models/medical/datum/zen-mode.model'
 
 import type BasicData from './basics-data.service'
@@ -75,12 +73,6 @@ import {
 } from '../time/time.service'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
-import type Bolus from '../../models/medical/datum/bolus.model'
-import type Basal from '../../models/medical/datum/basal.model'
-import type Meal from '../../models/medical/datum/meal.model'
-import type PhysicalActivity from '../../models/medical/datum/physical-activity.model'
-import type Smbg from '../../models/medical/datum/smbg.model'
-import type Upload from '../../models/medical/datum/upload.model'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -291,13 +283,13 @@ class MedicalDataService {
 
         switch (datum.type) {
           case DatumType.Bolus:
-            this.medicalData.bolus.push(datum as Bolus)
+            this.medicalData.bolus.push(datum)
             break
           case DatumType.Basal:
-            this.medicalData.basal.push(datum as Basal)
+            this.medicalData.basal.push(datum)
             break
           case DatumType.Cbg:
-            this.medicalData.cbg.push(datum as Cbg)
+            this.medicalData.cbg.push(datum)
             break
           case DatumType.DeviceEvent:
             switch (deviceEventDatum.subType as string) {
@@ -321,25 +313,25 @@ class MedicalDataService {
             }
             break
           case DatumType.Food:
-            this.medicalData.meals.push(datum as Meal)
+            this.medicalData.meals.push(datum)
             break
           case DatumType.Message:
-            this.medicalData.messages.push(datum as Message)
+            this.medicalData.messages.push(datum)
             break
           case DatumType.PhysicalActivity:
-            this.medicalData.physicalActivities.push(datum as PhysicalActivity)
+            this.medicalData.physicalActivities.push(datum)
             break
           case DatumType.PumpSettings:
-            this.medicalData.pumpSettings.push(datum as PumpSettings)
+            this.medicalData.pumpSettings.push(datum)
             break
           case DatumType.Smbg:
-            this.medicalData.smbg.push(datum as Smbg)
+            this.medicalData.smbg.push(datum)
             break
           case DatumType.Upload:
-            this.medicalData.uploads.push(datum as Upload)
+            this.medicalData.uploads.push(datum)
             break
           case DatumType.Wizard:
-            this.medicalData.wizards.push(datum as Wizard)
+            this.medicalData.wizards.push(datum)
             break
           default:
             break

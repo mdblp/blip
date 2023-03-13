@@ -26,7 +26,7 @@
  */
 
 import Source from './datum/enums/source.enum'
-import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from './datum/cbg.model'
+import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from './datum/bg.model'
 
 interface MedicalDataOptions {
   defaultSource: Source
@@ -80,6 +80,23 @@ const BG_CLAMP_THRESHOLD = {
   [MMOLL_UNITS]: 33.3 // round(10 * 600 / MGDL_PER_MMOLL) / 10
 }
 
+const defaultBgClasses: Record<BgUnit, BgClasses> = {
+  [MGDL_UNITS]: {
+    veryLow: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+    low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh,
+    veryHigh: BG_CLAMP_THRESHOLD[MGDL_UNITS]
+  },
+  [MMOLL_UNITS]: {
+    veryLow: DEFAULT_BG_BOUNDS[MMOLL_UNITS].veryLow,
+    low: DEFAULT_BG_BOUNDS[MMOLL_UNITS].targetLower,
+    target: DEFAULT_BG_BOUNDS[MMOLL_UNITS].targetUpper,
+    high: DEFAULT_BG_BOUNDS[MMOLL_UNITS].veryHigh,
+    veryHigh: BG_CLAMP_THRESHOLD[MMOLL_UNITS]
+  }
+}
+
 const defaultMedicalDataOptions: MedicalDataOptions = {
   defaultSource: Source.Diabeloop,
   YLP820_BASAL_TIME: 5000,
@@ -115,4 +132,4 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
 }
 
 export default MedicalDataOptions
-export { type BgClasses, type TimePrefs, defaultMedicalDataOptions, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }
+export { type BgClasses, type TimePrefs, defaultMedicalDataOptions, defaultBgClasses, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD }

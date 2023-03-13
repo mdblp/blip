@@ -26,7 +26,7 @@
  */
 
 import { getBgClass } from './blood-glucose.util'
-import { type BgBounds, ClassificationType } from '../../models/blood-glucose.model'
+import { type BgBounds, ClassificationType } from 'medical-domain'
 
 const bgBounds = {
   veryHighThreshold: 300,

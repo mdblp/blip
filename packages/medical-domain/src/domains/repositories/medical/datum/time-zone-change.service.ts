@@ -32,6 +32,8 @@ import type MedicalDataOptions from '../../../models/medical/medical-data-option
 import type TimeZoneChange from '../../../models/medical/datum/time-zone-change.model'
 import { getDstChange, toISOString } from '../../time/time.service'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import DatumService from '../datum.service'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): TimeZoneChange => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -113,6 +115,11 @@ const getTimeZoneChanges = (tzChanges: Datum[], opts: MedicalDataOptions): TimeZ
     return [normalize(rawTzChange, opts)]
   })
 }
+
+const filterOnDate = (data: TimeZoneChange[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): TimeZoneChange[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as TimeZoneChange[]
+}
+
 interface TimeZoneProcessor {
   getTimeZoneEvents: (data: Datum[]) => Datum[]
   getTimeZoneChanges: (tzChanges: Datum[], opts: MedicalDataOptions) => TimeZoneChange[]
@@ -121,6 +128,7 @@ interface TimeZoneProcessor {
 const TimeZoneChangeService: DatumProcessor<TimeZoneChange> & TimeZoneProcessor = {
   normalize,
   deduplicate,
+  filterOnDate,
   getTimeZoneEvents,
   getTimeZoneChanges
 }

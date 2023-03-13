@@ -25,36 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Unit from './enums/unit.enum'
-import type BaseDatum from './basics/base-datum.model'
+import type Bg from './bg.model'
 import { type DatumType } from './enums/datum-type.enum'
 
-const MGDL_UNITS = Unit.MilligramPerDeciliter
-const MMOLL_UNITS = Unit.MmolPerLiter
-
-const bgUnits = [MGDL_UNITS, MMOLL_UNITS] as const
-type BgUnit = typeof bgUnits[number]
-
-function isBgUnit(value: unknown): value is BgUnit {
-  if (typeof value === 'string') {
-    return bgUnits.includes(value as BgUnit)
-  }
-  return false
-}
-
-type Bg = BaseDatum & {
-  type: DatumType
-  units: BgUnit
-  value: number
-  // Used for trends view
-  localDate: string
-  isoWeekday: string
-  msPer24: number
-}
-
 type Cbg = Bg & {
-  type: 'cbg'
+  type: DatumType.Cbg
+  deviceName: string
 }
 
 export default Cbg
-export { type Bg, MGDL_UNITS, MMOLL_UNITS, bgUnits, type BgUnit, isBgUnit }
