@@ -231,6 +231,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
   const isAMonitoringInvitation = notification.type === NotificationType.careTeamMonitoringInvitation
+  const isADirectInvitation = notification.type === NotificationType.directInvitation
   const [displayMonitoringTerms, setDisplayMonitoringTerms] = useState(false)
 
   if (isACareTeamPatientInvitation && !notification.target) {
@@ -243,7 +244,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
       patientHook.refresh()
-      teamHook.refresh()
+      if (!isADirectInvitation) {
+        teamHook.refresh()
+      }
       alert.success(t('accept-notification-success', { teamName: notification.target.name }))
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
