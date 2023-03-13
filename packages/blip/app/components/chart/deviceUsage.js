@@ -30,7 +30,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -217,7 +216,6 @@ const DeviceUsage = (props) => {
           trackMetric={trackMetric}
         />
       </CardContent>
-
     </GenericDashboardCard>
     {dialogOpened &&
       <SettingsDialog
