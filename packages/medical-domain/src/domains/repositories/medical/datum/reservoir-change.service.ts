@@ -33,13 +33,15 @@ import { type PumpConfig } from '../../../models/medical/datum/pump-settings.mod
 import DatumService from '../datum.service'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { DeviceEventSubtype } from '../../../models/medical/datum/enums/device-event-subtype.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): ReservoirChange => {
   const base = BaseDatumService.normalize(rawData, opts)
   const reservoirChange: ReservoirChange = {
     ...base,
     type: DatumType.DeviceEvent,
-    subType: 'reservoirChange',
+    subType: DeviceEventSubtype.ReservoirChange,
     uploadId: rawData.uploadId as string,
     pump: { manufacturer: PumpManufacturer.Default } as PumpConfig
   }
@@ -50,9 +52,14 @@ const deduplicate = (data: ReservoirChange[], opts: MedicalDataOptions): Reservo
   return DatumService.deduplicate(data, opts) as ReservoirChange[]
 }
 
+const filterOnDate = (data: ReservoirChange[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): ReservoirChange[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as ReservoirChange[]
+}
+
 const ReservoirChangeService: DatumProcessor<ReservoirChange> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default ReservoirChangeService

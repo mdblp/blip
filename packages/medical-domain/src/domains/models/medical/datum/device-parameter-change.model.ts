@@ -28,10 +28,11 @@
 import type Unit from './enums/unit.enum'
 import type BaseDatum from './basics/base-datum.model'
 import { type DatumType } from './enums/datum-type.enum'
+import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
 type DeviceParameterChange = BaseDatum & {
-  type: DatumType
-  subType: 'deviceParameter'
+  type: DatumType.DeviceEvent
+  subType: DeviceEventSubtype.DeviceParameter
   params: Parameter[]
 }
 

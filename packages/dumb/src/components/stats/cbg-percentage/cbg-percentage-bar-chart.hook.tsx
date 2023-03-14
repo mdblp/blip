@@ -31,12 +31,12 @@ import { type CBGPercentageBarProps } from './cbg-percentage-bar'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
 import { ensureNumeric, formatBgValue } from './cbg-percentage-bar.util'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { type BgBounds, BgSource } from '../../../models/blood-glucose.model'
+import { type BgBounds, type BgType, DatumType } from 'medical-domain'
 import { type UnitsType } from '../../../models/enums/units-type.enum'
 
 export interface CBGPercentageBarChartHookProps {
   bgBounds: BgBounds
-  bgSource: BgSource
+  bgSource: BgType
   data: TimeInRangeData
   days: number
   type: CBGStatType
@@ -99,7 +99,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
         break
     }
 
-    if (bgSource === BgSource.Smbg) {
+    if (bgSource === DatumType.Smbg) {
       annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
         total: data.total,
         smbgLabel: t('BGM')

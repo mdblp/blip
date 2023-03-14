@@ -32,7 +32,7 @@ import type DurationUnit from './enums/duration-unit.enum'
 import { type DatumType } from './enums/datum-type.enum'
 
 type PhysicalActivity = BaseDatum & Duration & {
-  type: DatumType
+  type: DatumType.PhysicalActivity
   uploadId: string
   guid: string
   reportedIntensity: Intensity

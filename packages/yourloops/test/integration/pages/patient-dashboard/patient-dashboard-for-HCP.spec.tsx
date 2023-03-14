@@ -152,18 +152,18 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    expect(secondaryHeader).toHaveTextContent('PatientMonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsGenerate report')
+    expect(secondaryHeader).toHaveTextContent('PatientMonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsDownload report')
 
     fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))
     fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
 
     const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report')
 
     await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
-    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow lessDashboardDailyTrendsGenerate report')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow lessDashboardDailyTrendsDownload report')
     await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show less'))
-    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsGenerate report')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report')
   })
 
   describe('Alarms configuration dialog', () => {

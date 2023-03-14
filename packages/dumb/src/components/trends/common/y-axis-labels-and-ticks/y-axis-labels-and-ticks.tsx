@@ -27,7 +27,8 @@
 
 import React, { type FunctionComponent } from 'react'
 import { formatBgValue } from '../../../../utils/format/format.util'
-import { type BgBounds, type BgPrefs } from '../../../../models/blood-glucose.model'
+import { type BgBounds } from 'medical-domain'
+import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import trendsStyles from '../../../../styles/trends-common.css'
 import typographyStyles from '../../../../styles/typography.css'

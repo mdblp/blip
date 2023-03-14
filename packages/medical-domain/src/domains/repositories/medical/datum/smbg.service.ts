@@ -31,6 +31,7 @@ import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { normalizeBg } from './cbg.service'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Smbg => {
   return normalizeBg(rawData, opts, DatumType.Smbg) as Smbg
@@ -40,9 +41,14 @@ const deduplicate = (data: Smbg[], opts: MedicalDataOptions): Smbg[] => {
   return DatumService.deduplicate(data, opts) as Smbg[]
 }
 
+const filterOnDate = (data: Smbg[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Smbg[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Smbg[]
+}
+
 const SmbgService: DatumProcessor<Smbg> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default SmbgService
