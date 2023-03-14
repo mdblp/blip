@@ -26,114 +26,31 @@
  */
 
 import {
-  type MedicalReport,
-  type MedicalReportWithIndex
+  type MedicalReport
 } from '../../../../../lib/medical-files/models/medical-report.model'
 import {
-  getMedicalReportDate,
-  getMedicalReportsToDisplay
+  getMedicalReportDate
 } from '../../../../../components/dashboard-widgets/medical-files/medical-report-list.util'
 
 describe('Medical Report list util', () => {
-  const medicalReports: MedicalReport[] = [
-    {
-      id: 'fakeId',
-      authorId: 'fakeAuthorId',
-      creationDate: '2023-02-15T10:00:000Z',
-      patientId: 'PatientId',
-      teamId: 'teamId',
-      diagnosis: 'diag1',
-      progressionProposal: 'proposal1',
-      trainingSubject: 'training1'
-    },
-    {
-      id: 'fakeId2',
-      authorId: 'fakeAuthorId2',
-      creationDate: '2023-02-15T08:00:00.000Z',
-      patientId: 'PatientId2',
-      teamId: 'teamId2',
-      diagnosis: 'diag2',
-      progressionProposal: 'proposal2',
-      trainingSubject: 'training2'
-    },
-    {
-      id: 'fakeId3',
-      authorId: 'fakeAuthorId3',
-      creationDate: '2023-02-11T07:00:00.000Z',
-      patientId: 'PatientId2',
-      teamId: 'teamId2',
-      diagnosis: 'diag3',
-      progressionProposal: 'proposal3',
-      trainingSubject: 'training3'
-    },
-    {
-      id: 'fakeId4',
-      authorId: 'fakeAuthorId4',
-      creationDate: '2024-03-18T19:00:00.000Z',
-      patientId: 'PatientId2',
-      teamId: 'teamId2',
-      diagnosis: 'diag4',
-      progressionProposal: 'proposal4',
-      trainingSubject: 'training4'
-    }
-  ]
-
-  describe('getMedicalReportsToDisplay', () => {
-    it('should return correct list of medical report to display', async () => {
-      const medicalReportsExpected: MedicalReportWithIndex[] = [
-        { medicalReport: medicalReports[2] },
-        { medicalReport: medicalReports[1] },
-        { medicalReport: medicalReports[0], index: 1 },
-        { medicalReport: medicalReports[3] }
-      ]
-      const medicalReportsReceived = getMedicalReportsToDisplay(medicalReports)
-
-      expect(medicalReportsReceived).toEqual(medicalReportsExpected)
-    })
-
-    it('should return an empty array when no medical records are given', async () => {
-      const medicalReportsReceived = getMedicalReportsToDisplay(null)
-
-      expect(medicalReportsReceived).toEqual([])
-    })
-  })
-
   describe('getMedicalReportDate', () => {
     it('should return correct date when no index is given', async () => {
-      const medicalReport: MedicalReportWithIndex = {
-        medicalReport: {
-          id: 'fakeId',
-          authorId: 'fakeAuthorId',
-          creationDate: '2023-02-15T10:00:000Z',
-          patientId: 'PatientId',
-          teamId: 'teamId',
-          diagnosis: 'diag1',
-          progressionProposal: 'proposal1',
-          trainingSubject: 'training1'
-        }
+      const medicalReport: MedicalReport = {
+        id: 'fakeId',
+        authorId: 'fakeAuthorId',
+        creationDate: '2023-02-15T10:00:000Z',
+        patientId: 'PatientId',
+        teamId: 'teamId',
+        diagnosis: 'diag1',
+        progressionProposal: 'proposal1',
+        trainingSubject: 'training1',
+        authorFirstName: 'fakeFirstName',
+        authorLastName: 'fakeLastName',
+        number: 10
       }
       const dateReceived = getMedicalReportDate(medicalReport)
 
       expect(dateReceived).toEqual('2023-02-15')
-    })
-
-    it('should return correct date when an index is given', async () => {
-      const medicalReport: MedicalReportWithIndex = {
-        medicalReport: {
-          id: 'fakeId',
-          authorId: 'fakeAuthorId',
-          creationDate: '2023-02-15T10:00:000Z',
-          patientId: 'PatientId',
-          teamId: 'teamId',
-          diagnosis: 'diag1',
-          progressionProposal: 'proposal1',
-          trainingSubject: 'training1'
-        },
-        index: 30
-      }
-      const dateReceived = getMedicalReportDate(medicalReport)
-
-      expect(dateReceived).toEqual('2023-02-15_30')
     })
   })
 })

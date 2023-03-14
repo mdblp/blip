@@ -200,6 +200,14 @@ function TeamContextImpl(): TeamContext {
     refresh()
   }
 
+  const getTeamMember = (teamId: string, memberId: string): TeamMember | null => {
+    const team = getTeam(teamId)
+    if (!team) {
+      return null
+    }
+    return team.members.find(member => member.userId === memberId)
+  }
+
   useEffect(() => {
     if (!initialized) {
       fetchTeams()
@@ -224,7 +232,8 @@ function TeamContextImpl(): TeamContext {
     removeMember,
     changeMemberRole,
     getTeamFromCode,
-    joinTeam
+    joinTeam,
+    getTeamMember
   }
 }
 

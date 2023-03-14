@@ -29,24 +29,18 @@ import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { monitoredPatientId } from './patient.api.mock'
 
 export const mockMedicalFilesAPI = () => {
-  jest.spyOn(MedicalFilesApi, 'getPrescriptions').mockResolvedValue([{
-    id: 'prescriptionMocked',
-    name: 'patientPrescription',
-    patientId: monitoredPatientId,
-    teamId: 'team1234',
-    prescriptorId: 'prescriptorId',
-    link: 'https://linkToPrescription',
-    uploadedAt: '2022-01-02T08:34:06.898Z'
-  }])
   jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
     id: 'medicalReportId',
     authorId: 'authorId',
-    creationDate: '2022-01-02T08:34:06.898Z',
+    creationDate: '2022-01-10T08:34:06.898Z',
     patientId: monitoredPatientId,
     teamId: 'team1234',
     diagnosis: 'whatever diagnosis',
     progressionProposal: 'whatever proposal',
-    trainingSubject: 'here is the subject'
+    trainingSubject: 'here is the subject',
+    number: 1,
+    authorFirstName: 'Vishnou',
+    authorLastName: 'Lapaix'
   },
   {
     id: 'medicalReportId2',
@@ -56,6 +50,9 @@ export const mockMedicalFilesAPI = () => {
     teamId: 'team1234',
     diagnosis: 'whatever diagnosis 2 ',
     progressionProposal: 'whatever proposal 2',
-    trainingSubject: 'here is the subject 2'
+    trainingSubject: 'here is the subject 2',
+    number: 2,
+    authorFirstName: 'Vishnou',
+    authorLastName: 'Lapaix'
   }])
 }

@@ -53,19 +53,28 @@ import { useAlert } from '../../utils/snackbar'
 import SpinningLoader from '../../loaders/spinning-loader'
 import {
   type MedicalReport,
-  type MedicalReportDialogPayload,
-  type MedicalReportWithIndex
+  type MedicalReportDeleteDialogPayload
 } from '../../../lib/medical-files/models/medical-report.model'
 import ListItemButton from '@mui/material/ListItemButton'
-import { getMedicalReportDate, getMedicalReportsToDisplay } from './medical-report-list.util'
+import { getMedicalReportDate, getSortedMedicalReports } from './medical-report-list.util'
+import { useTeam } from '../../../lib/team'
+import { useUserName } from '../../../lib/custom-hooks/user-name.hook'
 
-const useStyle = makeStyles()(() => ({
+const useStyle = makeStyles()((theme) => ({
   categoryTitle: {
     fontWeight: 600
   },
+  dateItem: {
+    maxWidth: '30%',
+    minWidth: '30%',
+    width: '30%'
+  },
   list: {
-    maxHeight: 160,
+    maxHeight: 360,
     overflow: 'auto'
+  },
+  reportNameItem: {
+    paddingRight: theme.spacing(2)
   }
 }))
 
@@ -74,11 +83,13 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const { classes } = useStyle()
   const { teamId, patientId } = props
   const { user } = useAuth()
+  const { getTeam } = useTeam()
+  const { getUserName } = useUserName()
   const alert = useAlert()
   const [medicalReports, setMedicalReports] = useState<MedicalReport[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
-  const [medicalReportToEdit, setMedicalReportToEdit] = useState<MedicalReportDialogPayload | undefined>(undefined)
-  const [medicalReportToDelete, setMedicalReportToDelete] = useState<MedicalReportDialogPayload | undefined>(undefined)
+  const [medicalReportToEdit, setMedicalReportToEdit] = useState<MedicalReport | undefined>(undefined)
+  const [medicalReportToDelete, setMedicalReportToDelete] = useState<MedicalReportDeleteDialogPayload | undefined>(undefined)
 
   const closeMedicalReportEditDialog = (): void => {
     setIsEditDialogOpen(false)
@@ -89,12 +100,12 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
     setMedicalReportToDelete(undefined)
   }
 
-  const onDeleteMedicalReport = (medicalReportWithIndex: MedicalReportWithIndex, medicalReportDate: string): void => {
-    setMedicalReportToDelete({ ...medicalReportWithIndex, medicalReportDate })
+  const onDeleteMedicalReport = (medicalReport: MedicalReport, teamName: string): void => {
+    setMedicalReportToDelete({ medicalReport, teamName })
   }
 
-  const onClickMedicalReport = (medicalReportWithIndex: MedicalReportWithIndex, medicalReportDate: string): void => {
-    setMedicalReportToEdit({ ...medicalReportWithIndex, medicalReportDate })
+  const onClickMedicalReport = (medicalReport: MedicalReport): void => {
+    setMedicalReportToEdit(medicalReport)
     setIsEditDialogOpen(true)
   }
 
@@ -137,10 +148,17 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
       </Typography>
       {medicalReports
         ? <List className={classes.list}>
-          {getMedicalReportsToDisplay(medicalReports).map((medicalReportWithIndex, index) => {
-            const medicalReport = medicalReportWithIndex.medicalReport
-            const medicalReportDate = getMedicalReportDate(medicalReportWithIndex)
+          {getSortedMedicalReports(medicalReports).map((medicalReport, index) => {
+            const medicalReportDate = getMedicalReportDate(medicalReport)
+            const medicalReportNumber = medicalReport.number
             const isUserAuthor = user.id === medicalReport.authorId
+            const authorName = getUserName(medicalReport.authorFirstName, medicalReport.authorLastName, '')
+            const createdBy = authorName.length > 0 ? t('created-by', { name: authorName }) : t('created-by-unknown')
+            const teamName = getTeam(teamId)?.name ?? medicalReport.teamName
+            const deleteMedicalReportLabel = t('delete-medical-report-number', {
+              number: medicalReportNumber,
+              name: teamName
+            })
             return (
               <ListItem
                 key={index}
@@ -148,14 +166,14 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
                 divider
                 disablePadding
                 secondaryAction={isUserAuthor &&
-                  <Tooltip title={t('delete-medical-report', { date: medicalReportDate })}>
+                  <Tooltip title={deleteMedicalReportLabel}>
                     <IconButton
                       data-testid="delete-medical-report"
                       edge="end"
                       size="small"
-                      aria-label={t('delete-medical-report', { date: medicalReportDate })}
+                      aria-label={deleteMedicalReportLabel}
                       onClick={() => {
-                        onDeleteMedicalReport(medicalReportWithIndex, medicalReportDate)
+                        onDeleteMedicalReport(medicalReport, teamName)
                       }}
                     >
                       <TrashCanOutlined />
@@ -165,15 +183,40 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
               >
                 <ListItemButton
                   onClick={() => {
-                    onClickMedicalReport(medicalReportWithIndex, medicalReportDate)
+                    onClickMedicalReport(medicalReport)
                   }}
                 >
                   <ListItemIcon>
                     <DescriptionOutlinedIcon />
                   </ListItemIcon>
-                  <ListItemText>
-                    {t('medical-report-pdf', { date: medicalReportDate })}
-                  </ListItemText>
+                  <Box display="flex" justifyContent="space-between" width="100%">
+                    <ListItemText
+                      className={classes.reportNameItem}
+                      primary={
+                        <Typography className="bold" fontSize="14px">
+                          {t('medical-report')}-{medicalReport.number}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography fontSize="12px" color="var(--text-base-color-light)">
+                          {createdBy}
+                        </Typography>
+                      }
+                    />
+                    <ListItemText
+                      className={classes.dateItem}
+                      primary={
+                        <Typography fontSize="12px" color="var(--text-base-color-darker)">
+                          {medicalReportDate}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography fontSize="12px" color="var(--text-base-color-light)">
+                          {teamName}
+                        </Typography>
+                      }
+                    />
+                  </Box>
                 </ListItemButton>
               </ListItem>
             )
@@ -201,8 +244,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
       {isEditDialogOpen &&
         <MedicalReportEditDialog
           {...props}
-          medicalReport={medicalReportToEdit?.medicalReport}
-          medicalReportDate={medicalReportToEdit?.medicalReportDate}
+          medicalReport={medicalReportToEdit}
           onClose={closeMedicalReportEditDialog}
           onSaved={updateMedicalReportList}
         />
@@ -210,8 +252,8 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
 
       {medicalReportToDelete &&
         <MedicalReportDeleteDialog
+          teamName={medicalReportToDelete.teamName}
           medicalReport={medicalReportToDelete.medicalReport}
-          medicalReportDate={medicalReportToDelete.medicalReportDate}
           onClose={closeMedicalReportDeleteDialog}
           onDelete={removeMedicalReportFromList}
         />

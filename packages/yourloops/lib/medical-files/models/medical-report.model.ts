@@ -28,22 +28,22 @@
 export interface NewMedicalReport {
   patientId: string
   teamId: string
+  teamName: string
   diagnosis: string
   progressionProposal: string
   trainingSubject: string
+  authorFirstName: string
+  authorLastName: string
 }
 
 export interface MedicalReport extends NewMedicalReport {
   id: string
   authorId: string
   creationDate: string
+  number: number
 }
 
-export interface MedicalReportWithIndex {
+export interface MedicalReportDeleteDialogPayload {
+  teamName: string
   medicalReport: MedicalReport
-  index?: number
-}
-
-export interface MedicalReportDialogPayload extends MedicalReportWithIndex {
-  medicalReportDate: string
 }
