@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart } from 'dumb'
-import { type BgType, type DateFilter, type MedicalData } from 'medical-domain'
+import { type BgType, type DateFilter, DatumType, type MedicalData } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
@@ -50,6 +50,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     numberOfDays
   } = patientStatisticsHook({ medicalData, bgPrefs, bgSource, dateFilter })
   const theme = useTheme()
+  const cbgSelect = bgSource === DatumType.Cbg
 
   return (
     <Box data-testid="patient-statistics">
@@ -61,8 +62,13 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgPrefs={bgPrefs}
         days={numberOfDays}
       />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <SensorUsageStat total={sensorUsageData.total} sensorUsage={sensorUsageData.sensorUsage} />
+      {cbgSelect &&
+        <>
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} /><SensorUsageStat
+          total={sensorUsageData.total} sensorUsage={sensorUsageData.sensorUsage} /><Divider
+          sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
       {children}
     </Box>
   )
