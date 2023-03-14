@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -47,6 +47,9 @@ import { useTheme } from '@mui/material/styles'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type PatientListTabs } from './enums/patient-list.enum'
 import { makeStyles } from 'tss-react/mui'
+import { AddPatientDialog } from '../patient/add-dialog'
+import TeamCodeDialog from '../patient/team-code-dialog'
+import { type Team } from '../../lib/team'
 
 interface PatientListHeaderProps {
   currentTab: PatientListTabs
@@ -84,108 +87,132 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { currentTab, inputSearch, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
   const { patientsFilterStats } = usePatientContext()
+  const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
+  const [showTeamCodeDialog, setShowTeamCodeDialog] = useState<boolean>(false)
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
+
+  const onAddPatientSuccessful = (team: Team): void => {
+    setShowAddPatientDialog(false)
+    setSelectedTeam(team)
+    setShowTeamCodeDialog(true)
+  }
 
   return (
-    <Box padding={theme.spacing(4, 4, 0, 4)}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Box>
-          <TextField
-            data-testid="search-patient-bar"
-            aria-label={t('patient-list-searchbar')}
-            placeholder={t('placeholder-search')}
-            inputProps={{ 'aria-label': t('aria-search') }}
-            value={inputSearch}
-            className={classes.customTextField}
-            InputProps={{
-              endAdornment: <InputAdornment position="end"><SearchIcon /></InputAdornment>,
-              sx: { height: '42px', borderRadius: '28px' }
-            }}
-            onChange={event => { setInputSearch(event.target.value) }}
-          />
-          <Button
-            variant="outlined"
-            size="large"
-            color="inherit"
-            endIcon={<FilterList />}
-          >
-            {t('Filters')}
-          </Button>
-        </Box>
-        <Box>
-          <Button
-            startIcon={<PersonAddIcon />}
-            variant="contained"
-            size="large"
-            disableElevation
-            // TODO Reactivate add patient modal
-          >
-            {t('button-add-new-patient')}
-          </Button>
-          <Button
-            variant="outlined"
-            color="inherit"
-            sx={{ marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
-          >
-            <Settings />
-          </Button>
-        </Box>
-      </Box>
-
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        paddingTop={1}
-      >
-        <Tabs
-          value={currentTab}
-          onChange={(event, newValue) => {
-            onChangingTab(newValue)
-          }}
-        >
-          <Tab
-            icon={<HowToRegIcon />}
-            iconPosition="start"
-            label={t('current')}
-            classes={{ root: classes.tab }}
-          />
-          <Tab
-            icon={<HourglassEmptyIcon />}
-            iconPosition="start"
-            label={<>
-              {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
-            </>}
-            classes={{ root: classes.tab }}
-          />
-        </Tabs>
+    <React.Fragment>
+      <Box padding={theme.spacing(4, 4, 0, 4)}>
         <Box
           display="flex"
+          justifyContent="space-between"
           alignItems="center"
         >
-          <Typography
-            variant="subtitle2"
-            color="text.secondary"
+          <Box>
+            <TextField
+              data-testid="search-patient-bar"
+              aria-label={t('patient-list-searchbar')}
+              placeholder={t('placeholder-search')}
+              inputProps={{ 'aria-label': t('aria-search') }}
+              value={inputSearch}
+              className={classes.customTextField}
+              InputProps={{
+                endAdornment: <InputAdornment position="end"><SearchIcon /></InputAdornment>,
+                sx: { height: '42px', borderRadius: '28px' }
+              }}
+              onChange={event => { setInputSearch(event.target.value) }}
+            />
+            <Button
+              variant="outlined"
+              size="large"
+              color="inherit"
+              endIcon={<FilterList />}
+            >
+              {t('Filters')}
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              startIcon={<PersonAddIcon />}
+              variant="contained"
+              size="large"
+              disableElevation
+              onClick={() => { setShowAddPatientDialog(true) }}
+            >
+              {t('button-add-new-patient')}
+            </Button>
+            <Button
+              variant="outlined"
+              color="inherit"
+              sx={{ marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
+            >
+              <Settings />
+            </Button>
+          </Box>
+        </Box>
+
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          paddingTop={1}
+        >
+          <Tabs
+            value={currentTab}
+            onChange={(event, newValue) => {
+              onChangingTab(newValue)
+            }}
           >
-            Filters activated: X patients out of Y
-          </Typography>
-          <Divider
-            orientation="vertical"
-            variant="middle"
-            flexItem
-            sx={{ marginInline: theme.spacing(2) }}
-          />
-          <Link
-            color="inherit"
-            underline="always"
-            className={classes.resetButton}
+            <Tab
+              icon={<HowToRegIcon />}
+              iconPosition="start"
+              label={t('current')}
+              classes={{ root: classes.tab }}
+            />
+            <Tab
+              icon={<HourglassEmptyIcon />}
+              iconPosition="start"
+              label={<>
+                {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
+              </>}
+              classes={{ root: classes.tab }}
+            />
+          </Tabs>
+          <Box
+            display="flex"
+            alignItems="center"
           >
-            Reset
-          </Link>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+            >
+              Filters activated: X patients out of Y
+            </Typography>
+            <Divider
+              orientation="vertical"
+              variant="middle"
+              flexItem
+              sx={{ marginInline: theme.spacing(2) }}
+            />
+            <Link
+              color="inherit"
+              underline="always"
+              className={classes.resetButton}
+            >
+              Reset
+            </Link>
+          </Box>
         </Box>
       </Box>
-    </Box>
+      {showAddPatientDialog &&
+        <AddPatientDialog
+          onAddPatientSuccessful={onAddPatientSuccessful}
+          onClose={() => { setShowAddPatientDialog(false) }}
+        />
+      }
+      {selectedTeam && showTeamCodeDialog &&
+        <TeamCodeDialog
+          code={selectedTeam.code}
+          name={selectedTeam.name}
+          onClose={() => { setShowTeamCodeDialog(false) }}
+        />
+      }
+    </React.Fragment>
   )
 }
