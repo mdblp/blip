@@ -50,6 +50,7 @@ import { makeStyles } from 'tss-react/mui'
 import { AddPatientDialog } from '../patient/add-dialog'
 import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
+import { useAuth } from '../../lib/auth'
 
 interface PatientListHeaderProps {
   currentTab: PatientListTabs
@@ -84,6 +85,7 @@ const useStyles = makeStyles()((theme) => {
 export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation()
+  const { user } = useAuth()
   const { currentTab, inputSearch, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
   const { patientsFilterStats } = usePatientContext()
@@ -129,15 +131,17 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             </Button>
           </Box>
           <Box>
-            <Button
-              startIcon={<PersonAddIcon />}
-              variant="contained"
-              size="large"
-              disableElevation
-              onClick={() => { setShowAddPatientDialog(true) }}
-            >
-              {t('button-add-new-patient')}
-            </Button>
+            {user.isUserHcp() &&
+              <Button
+                startIcon={<PersonAddIcon />}
+                variant="contained"
+                size="large"
+                disableElevation
+                onClick={() => { setShowAddPatientDialog(true) }}
+              >
+                {t('button-add-new-patient')}
+              </Button>
+            }
             <Button
               variant="outlined"
               color="inherit"

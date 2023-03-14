@@ -281,6 +281,7 @@
   "new-message": "New",
   "no": "No",
   "no-new-messages": "No new messages",
+  "no-patient": "No patient",
   "none": "None",
   "not-logged-in": "You are not logged in",
   "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",

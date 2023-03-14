@@ -29,8 +29,12 @@ import React, { type FunctionComponent } from 'react'
 import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
 import { DataGrid } from '@mui/x-data-grid'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { useTranslation } from 'react-i18next'
 
 export const PatientList: FunctionComponent = () => {
+  const { t } = useTranslation()
   const {
     columns,
     columnsVisibility,
@@ -44,6 +48,19 @@ export const PatientList: FunctionComponent = () => {
     paginationModel,
     setPaginationModel
   } = usePatientListHook()
+
+  const NoPatientMessage = (): JSX.Element => {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+      >
+        <Typography>{t('no-patients')}</Typography>
+      </Box>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -68,6 +85,9 @@ export const PatientList: FunctionComponent = () => {
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[5, 10, 25]}
         sx={{ borderRadius: 0 }}
+        slots={{
+          noRowsOverlay: NoPatientMessage
+        }}
       />
     </React.Fragment>
   )
