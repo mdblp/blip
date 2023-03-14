@@ -64,9 +64,9 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       />
       {cbgSelect &&
         <>
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} /><SensorUsageStat
-          total={sensorUsageData.total} sensorUsage={sensorUsageData.sensorUsage} /><Divider
-          sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          <SensorUsageStat total={sensorUsageData.total} sensorUsage={sensorUsageData.sensorUsage} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
       {children}
