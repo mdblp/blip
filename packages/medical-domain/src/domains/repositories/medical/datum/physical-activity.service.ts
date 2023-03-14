@@ -32,6 +32,8 @@ import DurationService from './basics/duration.service'
 import type PhysicalActivity from '../../../models/medical/datum/physical-activity.model'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import DatumService from '../datum.service'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PhysicalActivity => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -69,9 +71,14 @@ const deduplicate = (data: PhysicalActivity[], _opts: MedicalDataOptions): Physi
   return Object.values(eventIdGroups).filter(pa => pa.duration.value > 0)
 }
 
+const filterOnDate = (data: PhysicalActivity[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): PhysicalActivity[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as PhysicalActivity[]
+}
+
 const PhysicalActivityService: DatumProcessor<PhysicalActivity> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default PhysicalActivityService

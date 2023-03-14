@@ -33,16 +33,16 @@ import { type CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import { type BgPrefs, type BgBounds, type BgSource } from '../../../models/blood-glucose.model'
-import { type ReadingsInRangeData, type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
+import { type BgPrefs } from '../../../models/blood-glucose.model'
+import { type CbgRangeStatistics, type BgBounds, type BgType } from 'medical-domain'
 import { useTheme } from '@mui/material/styles'
 
 interface CBGPercentageBarChartProps {
   bgBounds: BgBounds
-  bgSource: BgSource
+  bgSource: BgType
   bgPrefs: BgPrefs
   cbgStatType: CBGStatType
-  data: TimeInRangeData | ReadingsInRangeData
+  data: CbgRangeStatistics
   days: number
 }
 

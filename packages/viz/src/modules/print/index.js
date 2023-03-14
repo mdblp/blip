@@ -20,12 +20,12 @@ import i18next from 'i18next'
 import moment from 'moment-timezone'
 import PDFDocument from 'pdfkit'
 import blobStream from 'blob-stream'
-import PrintView from './PrintView'
 import BasicsPrintView from './BasicsPrintView'
 import DailyPrintView from './DailyPrintView'
 import SettingsPrintView from './SettingsPrintView'
 import { reshapeBgClassesToBgBounds } from '../../utils/bloodglucose'
 
+import { renderPageNumbers } from 'dumb/src/utils/pdf/pdf.util'
 import { getPatientFullName } from '../../utils/misc'
 import * as constants from './utils/constants'
 import { arrayBufferToBase64 } from './utils/functions'
@@ -38,6 +38,7 @@ import siteChangeTubingImage from './images/sitechange-tubing.png'
 import siteChangeReservoirDiabeloopImage from './images/diabeloop/sitechange-cartridge.png'
 import jaFontRegular from 'jaFont-Regular.ttf'
 import jaFontBold from 'jaFont-Bold.ttf'
+import { PrintView } from 'dumb/src/modules/print/print-view'
 
 const t = i18next.t.bind(i18next)
 
@@ -146,7 +147,8 @@ export function createPrintView(type, data, opts, doc) {
     dpi,
     width,
     height,
-    margins
+    margins,
+    logo
   } = opts
 
   let Renderer
@@ -160,6 +162,7 @@ export function createPrintView(type, data, opts, doc) {
     headerFontSize: constants.HEADER_FONT_SIZE,
     height: height ?? constants.HEIGHT,
     margins: margins ?? constants.MARGINS,
+    logo,
     patient,
     smallFontSize: constants.SMALL_FONT_SIZE,
     timePrefs,
@@ -229,6 +232,7 @@ export function createPrintPDFPackage(data, opts) {
         right: margin,
         bottom: margin
       }
+      pdfOpts.logo = constants.Images.logo
 
       const mReportDate = moment.tz(opts.endPDFDate, opts.timePrefs.timezoneName)
       const reportDate = mReportDate.format('YYYY-MM-DD')
@@ -267,16 +271,20 @@ export function createPrintPDFPackage(data, opts) {
       if (data.daily) createPrintView('daily', data.daily, pdfOpts, doc).render()
       if (data.settings) createPrintView('settings', data.settings, pdfOpts, doc).render()
 
-      PrintView.renderPageNumbers(doc, pdfOpts)
+      const renderPageParams = {
+        footerFontSize: pdfOpts.footerFontSize,
+        margins: pdfOpts.margins,
+        height: pdfOpts.height
+      }
+      renderPageNumbers(doc, renderPageParams)
 
       doc.end()
-
-      stream.on('finish', () => {
-        const pdf = {
-          blob: stream.toBlob(),
-          url: stream.toBlobURL('application/pdf')
-        }
-        return resolve(pdf)
+      const buffers = []
+      doc.on('data', buffers.push.bind(buffers))
+      doc.on('end', async () => {
+        const pdfBuffer = Buffer.concat(buffers)
+        const pdfBase64 = pdfBuffer.toString('base64')
+        return resolve( {url : `data:application/octet-stream;charset=utf-16le;base64,${pdfBase64}`})
       })
 
       stream.on('error', (error) => {

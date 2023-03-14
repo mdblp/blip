@@ -31,6 +31,7 @@ import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Upload => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -66,9 +67,14 @@ const deduplicate = (data: Upload[], opts: MedicalDataOptions): Upload[] => {
   return DatumService.deduplicate(data, opts) as Upload[]
 }
 
+const filterOnDate = (data: Upload[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Upload[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Upload[]
+}
+
 const UploadService: DatumProcessor<Upload> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default UploadService

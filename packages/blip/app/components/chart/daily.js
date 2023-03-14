@@ -309,7 +309,10 @@ class Daily extends React.Component {
     const { tidelineData, epochLocation, msRange, trackMetric, loading, timePrefs } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
     const endpoints = this.getEndpoints()
-
+    const dateFilter = {
+      start: Date.parse(endpoints[0]).valueOf(),
+      end: Date.parse(endpoints[1]).valueOf()
+    }
     const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
       if (typeof date === 'string' && this.chartRef.current !== null) {
         const timezone = tidelineData.getTimezoneAt(Date.parse(date).valueOf())
@@ -373,9 +376,10 @@ class Daily extends React.Component {
             <div className="container-box-inner patient-data-sidebar">
               <div className="patient-data-sidebar-inner">
                 <PatientStatistics
-                  dataUtil={this.props.dataUtil}
+                  medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
-                  endpoints={endpoints}
+                  dateFilter={dateFilter}
+                  bgSource={this.props.dataUtil.bgSource}
                 >
                   <Stats
                     bgPrefs={this.props.bgPrefs}

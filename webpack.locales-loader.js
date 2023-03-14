@@ -26,27 +26,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const buildConfig = require("./server/config.app");
+const buildConfig = require('./server/config.app')
 
 function localesLoader(source) {
   if (buildConfig.TEST) {
-    return source;
+    return source
   }
 
-  const localesParams = JSON.parse(source);
+  const localesParams = JSON.parse(source)
   for (const locale in localesParams.resources) {
     if (Object.prototype.hasOwnProperty.call(localesParams.resources, locale)) {
-      console.log(`Loading locale ${locale}`);
-      const main = require(`./locales/${locale}/translation.json`);
-      const params = require(`./locales/${locale}/parameter.json`);
-      const yourloops = require(`./locales/${locale}/yourloops.json`);
-      localesParams.resources[locale].main = main;
-      localesParams.resources[locale].params = params;
-      localesParams.resources[locale].yourloops = yourloops;
+      console.log(`Loading locale ${locale}`)
+      const main = require(`./locales/${locale}/translation.json`)
+      const params = require(`./locales/${locale}/parameter.json`)
+      const yourloops = require(`./locales/${locale}/yourloops.json`)
+      localesParams.resources[locale].main = main
+      localesParams.resources[locale].params = params
+      localesParams.resources[locale].yourloops = yourloops
     }
   }
 
-  return JSON.stringify(localesParams);
+  return JSON.stringify(localesParams)
 }
 
-module.exports = localesLoader;
+module.exports = localesLoader

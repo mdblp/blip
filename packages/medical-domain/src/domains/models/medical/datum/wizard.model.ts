@@ -31,7 +31,7 @@ import { type DatumType } from './enums/datum-type.enum'
 import { type WizardInputMealFat } from './enums/wizard-input-meal-fat.enum'
 
 export type Wizard = BaseDatum & {
-  type: DatumType
+  type: DatumType.Wizard
   uploadId: string
   bolusId: string
   carbInput: number

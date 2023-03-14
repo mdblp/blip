@@ -28,10 +28,11 @@
 import type BaseDatum from './basics/base-datum.model'
 import type Duration from './basics/duration.model'
 import { type DatumType } from './enums/datum-type.enum'
+import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
 type ConfidentialMode = BaseDatum & Duration & {
-  type: DatumType
-  subType: 'confidential'
+  type: DatumType.DeviceEvent
+  subType: DeviceEventSubtype.Confidential
   uploadId: string
   guid: string
   inputTime: string

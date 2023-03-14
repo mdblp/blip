@@ -35,7 +35,7 @@ function isBolusSubType(value: unknown): boolean {
 }
 
 type Bolus = BaseDatum & {
-  type: DatumType
+  type: DatumType.Bolus
   subType: BolusSubtype
   uploadId: string
   normal: number

@@ -34,7 +34,7 @@ const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>) => {
   expect(dashboardTab).toBeVisible()
   expect(dailyTab).toBeVisible()
   expect(trendsTab).toBeVisible()
-  expect(patientNavBar.getByText('Generate report')).toBeVisible()
+  expect(patientNavBar.getByText('Download report')).toBeVisible()
 }
 
 export const checkPatientNavBarAsHCP = () => {

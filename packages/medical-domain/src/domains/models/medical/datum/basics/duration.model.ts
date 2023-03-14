@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type DurationUnit from '../enums/duration-unit.enum'
+import { isRecord } from '../../../../utils/typeguard.utils'
+import DurationUnit from '../enums/duration-unit.enum'
 
 interface Duration {
   duration: DurationValue
@@ -38,5 +39,28 @@ interface DurationValue {
   value: number
 }
 
+function isDuration(value: unknown): value is Duration {
+  if (!isRecord(value)) {
+    return false
+  }
+  if (!isRecord(value.duration)) {
+    return false
+  }
+  if (typeof value.duration.units !== 'string') {
+    return false
+  }
+  if (!(Object.values(DurationUnit).includes(value.duration.units as DurationUnit))) {
+    return false
+  }
+  if (typeof value.duration.value !== 'number') {
+    return false
+  }
+  if (typeof value.normalEnd !== 'string') {
+    return false
+  }
+  return typeof value.epochEnd === 'number'
+}
+
 export default Duration
 export type { DurationValue }
+export { isDuration }

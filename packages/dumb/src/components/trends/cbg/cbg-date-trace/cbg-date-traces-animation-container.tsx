@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type BgBounds } from '../../../../models/blood-glucose.model'
+import { type BgBounds } from 'medical-domain'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { CbgDateTracesAnimated } from './cbg-date-traces-animated'
