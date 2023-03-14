@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2023, Diabeloop
  *
@@ -25,10 +26,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
+/**
+ * https://medium.com/front-end-weekly/fetching-images-with-the-fetch-api-fb8761ed27b2
+ * @param {ArrayBuffer} buffer image fetch buffer
+ */
+export const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+  const bytes = [].slice.call(new Uint8Array(buffer))
 
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+  const binary = bytes.reduce((acc, byte) => {
+    return acc + String.fromCharCode(byte)
+  }, '')
+
+  return window.btoa(binary)
 }

@@ -25,10 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
-
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
-}
+declare module '*.css'
+declare module '*.svg'
+declare module '@serprex/react-motion'
+declare module '*.png'

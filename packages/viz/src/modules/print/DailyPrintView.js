@@ -23,7 +23,7 @@ import moment from 'moment-timezone'
 
 import { MMOLL_UNITS, classifyBgValue } from 'medical-domain'
 
-import PrintView from './PrintView'
+import { PrintView } from 'dumb/src/modules/print/print-view'
 import { calculateBasalPath, getBasalSequencePaths } from '../render/basal'
 import getBolusPaths from '../render/bolus'
 import { getBasalPathGroups, getBasalPathGroupType } from '../../utils/basal'
@@ -41,30 +41,24 @@ import {
   getNormalPercentage
 } from '../../utils/bolus'
 import {
-  formatLocalizedFromUTC,
   formatDuration,
+  formatLocalizedFromUTC,
   getHourMinuteFormatNoSpace,
-  getSimpleHourFormat,
-  getLongFormat
+  getLongFormat,
+  getSimpleHourFormat
 } from '../../utils/datetime'
-import {
-  formatBgValue,
-  formatDecimalNumber,
-  formatPercentage,
-  removeTrailingZeroes
-} from '../../utils/format'
+import { formatBgValue, formatDecimalNumber, formatPercentage, removeTrailingZeroes } from '../../utils/format'
 
-import {
-  MS_IN_MIN,
-  AUTOMATED_DELIVERY,
-  SCHEDULED_DELIVERY
-} from '../../utils/constants'
+import { AUTOMATED_DELIVERY, MS_IN_MIN, SCHEDULED_DELIVERY } from '../../utils/constants'
 
 const t = i18next.t.bind(i18next)
 
 class DailyPrintView extends PrintView {
   constructor(doc, data, opts) {
     super(doc, data, opts)
+    this.bgBounds = opts.bgPrefs.bgBounds
+    this.leftEdge = this.margins.left
+    this.rightEdge = this.margins.left + this.width
 
     this.source = _.get(data, 'latestPumpUpload.source', '').toLowerCase()
     this.manufacturer = this.source === 'carelink' ? 'medtronic' : this.source
@@ -132,7 +126,6 @@ class DailyPrintView extends PrintView {
     }
 
     this.chartArea.width = this.rightEdge - this.chartArea.leftEdge
-    this.initialChartArea = _.clone(this.chartArea)
 
     this.summaryArea = {
       rightEdge: opts.margins.left + opts.summaryWidthAsPercentage * this.width
@@ -154,7 +147,9 @@ class DailyPrintView extends PrintView {
     this.chartIndex = this.initialChartIndex = 0
 
     // kick off the dynamic calculation of chart area based on font sizes for header and footer
-    this.setHeaderSize().setFooterSize().calculateChartMinimums(this.chartArea)
+    this.setHeaderSize()
+    this.setFooterSize()
+    this.calculateChartMinimums(this.chartArea)
 
     // calculate heights and place charts in preparation for rendering
     for (let i = 0; i < numDays; ++i) {
@@ -224,7 +219,7 @@ class DailyPrintView extends PrintView {
           return lines + 1
         }, 0)
         return totalLines
-      },
+      }
     ))
 
     const { notesEtc, bgEtcChart, basalChart, belowBasal, total } = this.chartMinimums
@@ -424,7 +419,7 @@ class DailyPrintView extends PrintView {
       this.doc.font(this.font)
         .text(
           `${lowerTarget} - ${upperTarget}`,
-          { indent: statsIndent, continued: true, width: widthWithoutIndent },
+          { indent: statsIndent, continued: true, width: widthWithoutIndent }
         )
         .text(`${formatPercentage(target / totalCbgDuration)}`, { align: 'right' })
 
@@ -433,7 +428,7 @@ class DailyPrintView extends PrintView {
       this.doc
         .text(
           t('Below {{threshold}}', { threshold: formatDecimalNumber(veryLowThreshold, bgPrecision) }),
-          { indent: statsIndent, continued: true, width: widthWithoutIndent },
+          { indent: statsIndent, continued: true, width: widthWithoutIndent }
         )
         .text(`${formatPercentage(veryLow / totalCbgDuration)}`, { align: 'right' })
 
@@ -489,7 +484,7 @@ class DailyPrintView extends PrintView {
       this.doc.font(this.font)
         .text(
           labels[ratio[0]],
-          { indent: statsIndent, continued: true, width: widthWithoutIndent },
+          { indent: statsIndent, continued: true, width: widthWithoutIndent }
         )
         .text(
           `${primary[ratio[0]]}${secondary[ratio[0]]}`,
@@ -501,7 +496,7 @@ class DailyPrintView extends PrintView {
       this.doc.font(this.font)
         .text(
           labels[ratio[1]],
-          { indent: statsIndent, continued: true, width: widthWithoutIndent },
+          { indent: statsIndent, continued: true, width: widthWithoutIndent }
         )
         .text(
           `${primary[ratio[1]]}${secondary[ratio[1]]}`,
@@ -637,7 +632,7 @@ class DailyPrintView extends PrintView {
             formatLocalizedFromUTC(loc, this.timePrefs, getSimpleHourFormat()),
             xPos,
             topEdge,
-            { indent: 3 },
+            { indent: 3 }
           )
       }
 
@@ -679,7 +674,7 @@ class DailyPrintView extends PrintView {
           `${bgTick}`,
           this.summaryArea.rightEdge,
           yPos - this.doc.currentLineHeight() / 2,
-          opts,
+          opts
         )
     })
 
@@ -726,7 +721,7 @@ class DailyPrintView extends PrintView {
           labelStartX,
           yPos - 12.5, {
             lineBreak: false
-          },
+          }
         )
     })
 
@@ -812,7 +807,7 @@ class DailyPrintView extends PrintView {
 
     const grouped = _.groupBy(
       _.map(insulinEvents, (d) => (getBolusFromInsulinEvent(d))),
-      (d) => (d.threeHrBin / 3),
+      (d) => (d.threeHrBin / 3)
     )
 
     _.forEach(grouped, (binOfBoluses, i) => {
@@ -838,7 +833,7 @@ class DailyPrintView extends PrintView {
           displayTime,
           groupXPos,
           yPos.current(),
-          { continued: true, indent: 2, width: groupWidth },
+          { continued: true, indent: 2, width: groupWidth }
         ).text(
           removeTrailingZeroes(formatDecimalNumber(getDelivered(bolus), 2)),
           { align: 'right' }
@@ -854,7 +849,7 @@ class DailyPrintView extends PrintView {
             percentagesText,
             groupXPos,
             yPos.update(),
-            { indent: 2, width: groupWidth },
+            { indent: 2, width: groupWidth }
           )
         }
         yPos.update()
@@ -886,7 +881,7 @@ class DailyPrintView extends PrintView {
           })
 
           currentSchedule.rate = datum.rate
-          currentSchedule.index ++
+          currentSchedule.index++
           currentSchedule.duration = 0
         } else if (labeledSchedules.length) {
           labeledSchedules[currentSchedule.index].duration += datum.duration

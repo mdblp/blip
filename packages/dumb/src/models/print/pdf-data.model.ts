@@ -25,10 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
+import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
 
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+export interface PdfData {
+  basics?: BasicData
 }

@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-interface BgBounds {
+export interface BgBounds {
   veryHighThreshold: number
   targetUpperBound: number
   targetLowerBound: number
   veryLowThreshold: number
 }
 
-interface CbgRangeStatistics {
+export interface CbgRangeStatistics {
   veryLow: number
   low: number
   target: number
@@ -41,36 +41,31 @@ interface CbgRangeStatistics {
   total: number
 }
 
-interface SensorUsageStatistics {
+export interface SensorUsageStatistics {
   sensorUsage: number
   total: number
 }
 
-interface AverageGlucoseStatistics {
+export interface AverageGlucoseStatistics {
   averageGlucose: number
   total: number
 }
 
-interface CoefficientOfVariationStatistics {
+export interface CoefficientOfVariationStatistics {
   insufficientData: boolean
   total: number
   coefficientOfVariation: number
 }
 
-interface GlucoseManagementIndicatoStatistics {
+export interface GlucoseManagementIndicatoStatistics {
   insufficientData: boolean
   glucoseManagementIndicator: number
   total: number
 }
 
-interface StandardDevStatistics {
+export interface StandardDevStatistics {
   insufficientData: boolean
   averageGlucose: number
   total: number
   standardDeviation: number
-}
-
-export type {
-  BgBounds, CbgRangeStatistics, SensorUsageStatistics, AverageGlucoseStatistics,
-  CoefficientOfVariationStatistics, GlucoseManagementIndicatoStatistics, StandardDevStatistics
 }

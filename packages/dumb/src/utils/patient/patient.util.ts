@@ -25,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
+import i18next from 'i18next'
 
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+i18next.t.bind(i18next)
+
+export const getPatientFullName = (patient: { profile: { fullName: string } }): string => {
+  const fullName = patient?.profile?.fullName
+  return fullName ?? i18next.t('Anonymous user')
 }

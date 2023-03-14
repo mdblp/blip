@@ -25,10 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
+import { type BgPrefs } from '../blood-glucose.model'
+import { type Margins } from './margins.model'
+import { type PatientToPrint } from './patient-to-print.model'
+import { type TimePrefs } from 'medical-domain'
 
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+export interface PrintViewParams {
+  bgPrefs: BgPrefs
+  defaultFontSize: number
+  extraSmallFontSize: number
+  footerFontSize: number
+  headerFontSize: number
+  height: number
+  largeFontSize: number
+  logo: string
+  margins: Margins
+  patient: PatientToPrint
+  smallFontSize: number
+  timePrefs: TimePrefs
+  title: string
+  width: number
 }

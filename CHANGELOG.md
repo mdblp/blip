@@ -34,6 +34,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2143 Migrate TrendsContainer to dumb
 - YLP-2144 Migrate dashboard from blip to Yourloops
 - YLP-2159 Get rid of connectWithTransitionGroup in viz
+- YLP-2161 Migrate PrintView from viz to dumb
 - YLP-2162 Migrate CbgDateTrace store from redux to TrendsProvider
 - YLP-2176 Migrate CBG slice actions from redux to TrendsProvider
 - YLP-2178 Remove redux store

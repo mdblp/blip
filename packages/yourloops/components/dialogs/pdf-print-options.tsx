@@ -209,7 +209,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
       maxWidth={false}
     >
       <DialogContent>
-        <Typography variant="h4">{t('button-pdf-generate-report')}</Typography>
+        <Typography variant="h4">{t('button-pdf-download-report')}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t('dialog-pdf-options-presets')}</Typography>
         <Box display="flex" flexDirection="row" flexWrap="wrap"
@@ -317,14 +317,14 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
           {t('button-cancel')}
         </Button>
         <Button
-          id="pdf-options-button-generate"
+          data-testid="pdf-options-button-download"
           disabled={!!customStartDate}
           color="primary"
           variant="contained"
           disableElevation
           onClick={() => { onResult(pdfOptions) }}
         >
-          {t('button-generate')}
+          {t('button-download')}
         </Button>
       </DialogActions>
     </Dialog>

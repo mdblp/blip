@@ -25,10 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
+import { type Margins } from '../print/margins.model'
 
-declare global {
-  interface Window {
-    config?: AppConfig
-  }
+// DPI here is the coordinate system, not the resolution; sub-dot precision renders crisply!
+export const DPI = 72
+export const MARGIN = DPI / 2
+export const HEIGHT = 11 * DPI - (2 * MARGIN)
+export const FOOTER_FONT_SIZE = 8
+export const BASE_64_FLAG = 'data:image/jpeg;base64,'
+
+export const MARGINS: Margins = {
+  left: MARGIN,
+  top: MARGIN,
+  right: MARGIN,
+  bottom: MARGIN
 }
