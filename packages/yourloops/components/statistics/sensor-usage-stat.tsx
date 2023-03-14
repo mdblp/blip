@@ -29,21 +29,22 @@ import { SimpleStat } from 'dumb'
 import { StatFormats } from 'dumb/dist/src/models/stats.model'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
+import { type SensorUsageData } from './use-patient-statistics.hook'
 
 interface SensorUsageStatProp {
-  sensorUsage: number
-  total: number
+  sensorUsageData: SensorUsageData
 }
 
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
-  const { total, sensorUsage } = props
+  const { sensorUsageData } = props
+  const { usage, total } = sensorUsageData
 
   return (
     <Box data-testid="sensor-usage-stat">
       <SimpleStat
         annotations={[t('sensor-usage-tooltip', { cbgLabel: t('CGM') })]}
         title={t('sensor-usage')}
-        value={sensorUsage}
+        value={usage}
         summaryFormat={StatFormats.Percentage}
         total={total} />
     </Box>

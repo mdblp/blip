@@ -29,41 +29,44 @@ import { type BgType, type CbgRangeStatistics, type DateFilter, DatumType, type 
 import { GlycemiaStatisticsService } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 import { ensureNumeric } from 'dumb/dist/src/components/stats/stats.util'
 
-interface patientStatisticsHookProps {
+interface usePatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
   dateFilter: DateFilter
   bgSource: BgType
 }
 
-interface SensorUsageData {
+export interface SensorUsageData {
   total: number
-  sensorUsage: number
+  usage: number
 }
 
-interface patientStatisticsHookReturn {
+interface usePatientStatisticsReturn {
   cbgStatType: CBGStatType
   numberOfDays: number
   cbgPercentageBarChartData: CbgRangeStatistics
   sensorUsageData: SensorUsageData
+  cbgSelected: boolean
 }
 
-export const patientStatisticsHook = ({ medicalData, bgPrefs, bgSource, dateFilter }: patientStatisticsHookProps): patientStatisticsHookReturn => {
+export const usePatientStatistics = ({ medicalData, bgPrefs, bgSource, dateFilter }: usePatientStatisticsProps): usePatientStatisticsReturn => {
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
-  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
-    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+  const cbgSelected = bgSource === DatumType.Cbg
   const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
   const sensorUsageData = {
     total: ensureNumeric(total),
-    sensorUsage: ensureNumeric(sensorUsage)
+    usage: ensureNumeric(sensorUsage)
   }
+  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
+    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
   return {
     cbgStatType,
     numberOfDays,
     cbgPercentageBarChartData,
-    sensorUsageData
+    sensorUsageData,
+    cbgSelected
   }
 }

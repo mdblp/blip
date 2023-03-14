@@ -49,7 +49,7 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
-import { patientStatisticsHook } from 'yourloops/components/statistics/patient-statistics.hook'
+import { usePatientStatisticsHook } from 'yourloops/components/statistics/use-patient-statistics.hook'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -108,7 +108,7 @@ const DeviceUsage = (props) => {
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
   // eslint-disable-next-line react/prop-types
-  const cbgSelect = dataUtil.bgSources.cbg
+  const cbgSelected = dataUtil.bgSources.cbg
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
@@ -129,7 +129,7 @@ const DeviceUsage = (props) => {
       value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
     }
   }
-  const {sensorUsageData} = patientStatisticsHook({bgPrefs,bgSource,medicalData,dateFilter})
+  const { sensorUsageData } = usePatientStatisticsHook({ bgPrefs, bgSource, medicalData, dateFilter })
 
   return <>
     <GenericDashboardCard
@@ -200,9 +200,9 @@ const DeviceUsage = (props) => {
           </TableContainer>
         </Box>
         <Divider variant="fullWidth" className={classes.divider} />
-        {cbgSelect &&
+        {cbgSelected &&
           <>
-            <SensorUsageStat total={sensorUsageData.total} sensorUsage={sensorUsageData.sensorUsage}/>
+            <SensorUsageStat sensorUsageData={sensorUsageData} />
             <Divider variant="fullWidth" className={classes.divider} />
           </>
         }
