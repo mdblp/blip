@@ -49,7 +49,10 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
-import { usePatientStatistics } from 'yourloops/components/statistics/use-patient-statistics.hook'
+import {
+  GlycemiaStatisticsService
+} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { TimeService } from 'medical-domain'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -101,7 +104,7 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily, medicalData, bgSource, dateFilter } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily, medicalData, dateFilter } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
@@ -115,7 +118,19 @@ const DeviceUsage = (props) => {
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
+  // eslint-disable-next-line react/prop-types
+  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  // eslint-disable-next-line react/prop-types
+  const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  const sensorUsageData = {
+    total,
+    usage: sensorUsage
+  }
   const deviceData = {
+    cgm: {
+      label: `${t('CGM')}:`,
+      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
+    },
     device: {
       label: `${t('dbl')}:`,
       value: device.manufacturer ?? ''
@@ -123,13 +138,8 @@ const DeviceUsage = (props) => {
     pump: {
       label: `${t('Pump')}:`,
       value: pump.manufacturer ?? ''
-    },
-    cgm: {
-      label: `${t('CGM')}:`,
-      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
     }
   }
-  const { sensorUsageData } = usePatientStatistics({ bgPrefs, bgSource, medicalData, dateFilter })
 
   return <>
     <GenericDashboardCard
@@ -239,7 +249,6 @@ DeviceUsage.propType = {
   dataUtil: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
   medicalData: PropTypes.object.isRequired,
-  bgSource: PropTypes.object.isRequired,
   dateFilter: PropTypes.object.isRequired,
   trackMetric: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired

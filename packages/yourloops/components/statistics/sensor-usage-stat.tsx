@@ -29,7 +29,11 @@ import { SimpleStat } from 'dumb'
 import { StatFormats } from 'dumb/dist/src/models/stats.model'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
-import { type SensorUsageData } from './use-patient-statistics.hook'
+
+export interface SensorUsageData {
+  total: number
+  usage: number
+}
 
 interface SensorUsageStatProp {
   sensorUsageData: SensorUsageData

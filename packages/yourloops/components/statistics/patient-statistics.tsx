@@ -26,13 +26,15 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart } from 'dumb'
-import { type BgType, type DateFilter, type MedicalData } from 'medical-domain'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
+import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import { usePatientStatistics } from './use-patient-statistics.hook'
+import {
+  GlycemiaStatisticsService
+} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -43,13 +45,17 @@ export interface PatientStatisticsProps {
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
   const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
-  const {
-    cbgPercentageBarChartData,
-    cbgStatType,
-    sensorUsageData,
-    numberOfDays,
-    cbgSelected
-  } = usePatientStatistics({ medicalData, bgPrefs, bgSource, dateFilter })
+  const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const cbgSelected = bgSource === DatumType.Cbg
+  const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  const sensorUsageData = {
+    total,
+    usage: sensorUsage
+  }
+  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
+    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
   const theme = useTheme()
 
   return (

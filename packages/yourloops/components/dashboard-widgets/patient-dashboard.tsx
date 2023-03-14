@@ -174,7 +174,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           onSwitchToDaily={onSwitchToDaily}
           medicalData={medicalData}
           dateFilter={dateFilter}
-          bgSource={dataUtil.bgSource}
         />
       </Grid>
 
