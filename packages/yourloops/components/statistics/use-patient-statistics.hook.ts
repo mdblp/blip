@@ -27,7 +27,6 @@
 import { type BgPrefs, CBGStatType } from 'dumb'
 import { type BgType, type CbgRangeStatistics, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import { GlycemiaStatisticsService } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
-import { ensureNumeric } from 'dumb/dist/src/components/stats/stats.util'
 
 interface usePatientStatisticsProps {
   medicalData: MedicalData
@@ -54,9 +53,10 @@ export const usePatientStatistics = ({ medicalData, bgPrefs, bgSource, dateFilte
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
   const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+
   const sensorUsageData = {
-    total: ensureNumeric(total),
-    usage: ensureNumeric(sensorUsage)
+    total,
+    usage: sensorUsage
   }
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
