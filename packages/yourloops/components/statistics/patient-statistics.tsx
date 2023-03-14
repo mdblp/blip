@@ -26,42 +26,43 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type VizDataUtil } from 'tidepool-viz'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { BgSource } from 'dumb/src/models/blood-glucose.model'
+import { type BgPrefs, CBGPercentageBarChart } from 'dumb'
+import { type BgType, type DateFilter, type MedicalData } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
+import { patientStatisticsHook } from './patient-statistics.hook'
 
 export interface PatientStatisticsProps {
-  dataUtil: VizDataUtil
+  medicalData: MedicalData
   bgPrefs: BgPrefs
-  endpoints: string[]
+  dateFilter: DateFilter
+  bgSource: BgType
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { dataUtil, bgPrefs, endpoints, children } = props
+  const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
+  const {
+    cbgPercentageBarChartData,
+    cbgStatType,
+    sensorUsageData,
+    numberOfDays
+  } = patientStatisticsHook({ medicalData, bgPrefs, bgSource, dateFilter })
   const theme = useTheme()
-  dataUtil.endpoints = endpoints
-  const cbgStatType: CBGStatType = dataUtil.bgSource === BgSource.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
-    ? dataUtil.getTimeInRangeData()
-    : dataUtil.getReadingsInRangeData()
-  const cbgSelect = dataUtil.bgSources.cbg
 
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
-        bgBounds={dataUtil.bgBounds}
-        bgSource={dataUtil.bgSource}
+        bgBounds={bgPrefs.bgBounds}
+        bgSource={bgSource}
         cbgStatType={cbgStatType}
         data={cbgPercentageBarChartData}
         bgPrefs={bgPrefs}
-        days={dataUtil?.days ?? 0}
+        days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {cbgSelect && <SensorUsageStat dataUtil={dataUtil} />}
+      <SensorUsageStat total={sensorUsageData.total} sensorUsage={sensorUsageData.sensorUsage} />
       {children}
     </Box>
   )

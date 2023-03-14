@@ -28,13 +28,13 @@
 import React, { type FunctionComponent, useMemo } from 'react'
 import sizeMe from 'react-sizeme'
 import { scaleLinear } from 'd3-scale'
-import { TimeService } from 'medical-domain'
+import { type BgBounds, type WeekDaysFilter, TimeService } from 'medical-domain'
 import { NoDataLabel } from '../no-data-label/no-data-label'
 import { CbgDateTracesAnimationContainer } from '../../cbg/cbg-date-trace/cbg-date-traces-animation-container'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
 import { THREE_HRS } from '../../../../utils/datetime/datetime.util'
 import { getCbgsIntersectingWithCbgSliceSegment } from './trends-svg-container.util'
-import { type BgBounds, type BgPrefs } from '../../../../models/blood-glucose.model'
+import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import { Background } from '../background/background'
 import { XAxisLabels } from '../x-axis-labels/x-axis-labels'
 import { XAxisTicks } from '../x-axis-ticks/x-axis-ticks'
@@ -43,7 +43,6 @@ import { CbgSlicesContainerMemoized as CbgSlicesContainer } from '../../cbg/cbg-
 import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from '../../cbg/cbg-slice/focused-cbg-slice-segment'
 import { TargetRangeLines } from '../target-range-lines/target-range-lines'
 import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
-import { type ActiveDays } from '../../../../models/active-days.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
 
 const BUMPERS = {
@@ -69,7 +68,7 @@ const WIDTH = 640
 const HEIGHT = 480
 
 interface TrendsSvgContainerProps {
-  activeDays: ActiveDays
+  activeDays: WeekDaysFilter
   bgPrefs: BgPrefs
   cbgData: CbgDateTrace[]
   dates: string[]

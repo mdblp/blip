@@ -30,7 +30,7 @@ import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import styles from './cbg-median-animated.css'
 import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
-import { type BgBounds, ClassificationType } from '../../../../models/blood-glucose.model'
+import { type BgBounds, ClassificationType } from 'medical-domain'
 import { springConfig } from '../../../../models/constants/animation.constants'
 import { type CbgMedianTransitionMotionInterpolate } from '../../../../models/animation.model'
 import { type ScaleFunction } from '../../../../models/scale-function.model'

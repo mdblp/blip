@@ -35,6 +35,7 @@ import type PumpManufacturer from '../../../models/medical/datum/enums/pump-manu
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {
@@ -138,9 +139,14 @@ const deduplicate = (data: PumpSettings[], opts: MedicalDataOptions): PumpSettin
   return DatumService.deduplicate(data, opts) as PumpSettings[]
 }
 
+const filterOnDate = (data: PumpSettings[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): PumpSettings[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as PumpSettings[]
+}
+
 const PumpSettingsService: DatumProcessor<PumpSettings> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default PumpSettingsService

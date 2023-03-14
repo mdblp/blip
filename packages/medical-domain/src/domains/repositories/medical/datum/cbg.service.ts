@@ -27,13 +27,14 @@
 
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
-import { type Bg, type BgUnit } from '../../../models/medical/datum/cbg.model'
 import type Cbg from '../../../models/medical/datum/cbg.model'
-import { isBgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/cbg.model'
+import type Bg from '../../../models/medical/datum/bg.model'
+import { type BgUnit, isBgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/bg.model'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { getTrendsTime } from '../../time/time.service'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const MGDL_PER_MMOLL = 18.01577
 
@@ -79,23 +80,31 @@ const normalizeBg = (rawData: Record<string, unknown>, opts: MedicalDataOptions,
     type: bgType,
     units: bgUnit,
     value: bgValue,
-    // only used for trends view ?
     ...getTrendsTime(base.epoch, base.timezone)
   }
   return bg
 }
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Cbg => {
-  return normalizeBg(rawData, opts, DatumType.Cbg) as Cbg
+  return {
+    ...normalizeBg(rawData, opts, DatumType.Cbg),
+    type: DatumType.Cbg,
+    deviceName: rawData.deviceName ? rawData.deviceName as string : 'Unknown'
+  }
 }
 
 const deduplicate = (data: Cbg[], opts: MedicalDataOptions): Cbg[] => {
   return DatumService.deduplicate(data, opts) as Cbg[]
 }
 
+const filterOnDate = (data: Cbg[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Cbg[] => (
+  DatumService.filterOnDate(data, start, end, weekDaysFilter) as Cbg[]
+)
+
 const CbgService: DatumProcessor<Cbg> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default CbgService

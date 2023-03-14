@@ -100,6 +100,10 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     moment.utc(epochDate - msRange).toISOString(), // start
     moment.utc(epochDate).toISOString() // end
   ]
+  const dateFilter = {
+    start: epochDate - msRange,
+    end: epochDate
+  }
   const isPatientMonitored = !!patient?.monitoring?.enabled
 
   const getGridWidgetSize = (): number => {
@@ -116,7 +120,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   }
 
   const gridWidgetSize = getGridWidgetSize()
-
   return (
     <Grid
       data-testid="patient-dashboard"
@@ -142,9 +145,10 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
 
       <Grid item xs={gridWidgetSize}>
         <PatientStatisticsWidget
-          dataUtil={dataUtil}
+          medicalData={medicalData}
           bgPrefs={bgPrefs}
-          endpoints={endpoints}
+          dateFilter={dateFilter}
+          bgSource={dataUtil.bgSource}
         >
           <Stats
             bgPrefs={bgPrefs}
@@ -168,6 +172,9 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           trackMetric={trackMetric}
           dataUtil={dataUtil}
           onSwitchToDaily={onSwitchToDaily}
+          medicalData={medicalData}
+          dateFilter={dateFilter}
+          bgSource={dataUtil.bgSource}
         />
       </Grid>
 

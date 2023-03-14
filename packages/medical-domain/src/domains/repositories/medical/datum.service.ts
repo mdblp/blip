@@ -43,6 +43,11 @@ import UploadService from './datum/upload.service'
 import WarmUpService from './datum/warm-up.service'
 import WizardService from './datum/wizard.service'
 import ZenModeService from './datum/zen-mode.service'
+import { isEpochBetweenBounds } from '../time/time.service'
+import { isBasal } from '../../models/medical/datum/basal.model'
+import { isDuration } from '../../models/medical/datum/basics/duration.model'
+import { isBg } from '../../models/medical/datum/bg.model'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Datum => {
   let type = rawData.type
@@ -100,9 +105,26 @@ const deduplicate = (data: Datum[], _opts: MedicalDataOptions): Datum[] => {
   })
 }
 
+export const filterOnDate = (data: Datum[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Datum[] => {
+  return data.filter((dat: Datum) => {
+    const epochStartInBounds = isEpochBetweenBounds(dat.epoch, start, end)
+    if (isBasal(dat) || isDuration(dat)) {
+      const epochEndInBounds = isEpochBetweenBounds(dat.epochEnd, start, end)
+      return epochStartInBounds || epochEndInBounds
+    }
+    if (isBg(dat)) {
+      if (!weekDaysFilter[dat.isoWeekday]) {
+        return false
+      }
+    }
+    return epochStartInBounds
+  })
+}
+
 const DatumService: DatumProcessor<Datum> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default DatumService

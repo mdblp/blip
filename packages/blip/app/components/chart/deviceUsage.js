@@ -49,6 +49,7 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
+import { patientStatisticsHook } from 'yourloops/components/statistics/patient-statistics.hook'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -100,7 +101,7 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily, medicalData, bgSource, dateFilter } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
@@ -128,6 +129,7 @@ const DeviceUsage = (props) => {
       value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
     }
   }
+  const {sensorUsageData} = patientStatisticsHook({bgPrefs,bgSource,medicalData,dateFilter})
 
   return <>
     <GenericDashboardCard
@@ -200,7 +202,7 @@ const DeviceUsage = (props) => {
         <Divider variant="fullWidth" className={classes.divider} />
         {cbgSelect &&
           <>
-            <SensorUsageStat dataUtil={dataUtil} />
+            <SensorUsageStat total={sensorUsageData.total} sensorUsage={sensorUsageData.sensorUsage}/>
             <Divider variant="fullWidth" className={classes.divider} />
           </>
         }
@@ -236,6 +238,9 @@ DeviceUsage.propType = {
   patient: PropTypes.object.isRequired,
   dataUtil: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
+  medicalData: PropTypes.object.isRequired,
+  bgSource: PropTypes.object.isRequired,
+  dateFilter: PropTypes.object.isRequired,
   trackMetric: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired
 }

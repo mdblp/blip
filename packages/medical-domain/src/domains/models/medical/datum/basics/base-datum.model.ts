@@ -25,9 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Source from '../enums/source.enum'
+import Source from '../enums/source.enum'
 import type BaseTime from './base-time.model'
-import { type DatumType } from '../enums/datum-type.enum'
+import { isBaseTime } from './base-time.model'
+import { DatumType } from '../enums/datum-type.enum'
+import { isRecord } from '../../../../utils/typeguard.utils'
 
 type BaseDatum = BaseTime & {
   id: string
@@ -35,4 +37,24 @@ type BaseDatum = BaseTime & {
   source: Source
 }
 
+function isBaseDatum(value: unknown): value is BaseDatum {
+  if (isBaseTime(value) && isRecord(value)) {
+    if (typeof value.id !== 'string') {
+      return false
+    }
+    if (typeof value.type !== 'string') {
+      return false
+    }
+    if (!(Object.values(DatumType).includes(value.type as DatumType))) {
+      return false
+    }
+    if (typeof value.source !== 'string') {
+      return false
+    }
+    return value.source in Source
+  }
+  return false
+}
+
 export default BaseDatum
+export { isBaseDatum }

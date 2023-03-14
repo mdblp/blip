@@ -29,7 +29,7 @@ import type BaseDatum from './basics/base-datum.model'
 import { type DatumType } from './enums/datum-type.enum'
 
 type Upload = BaseDatum & {
-  type: DatumType
+  type: DatumType.Upload
   uploadId: string
 
   _dataState: string
