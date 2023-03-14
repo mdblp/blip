@@ -49,7 +49,7 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
-import { usePatientStatisticsHook } from 'yourloops/components/statistics/use-patient-statistics.hook'
+import { usePatientStatistics } from 'yourloops/components/statistics/use-patient-statistics.hook'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -129,7 +129,7 @@ const DeviceUsage = (props) => {
       value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
     }
   }
-  const { sensorUsageData } = usePatientStatisticsHook({ bgPrefs, bgSource, medicalData, dateFilter })
+  const { sensorUsageData } = usePatientStatistics({ bgPrefs, bgSource, medicalData, dateFilter })
 
   return <>
     <GenericDashboardCard
