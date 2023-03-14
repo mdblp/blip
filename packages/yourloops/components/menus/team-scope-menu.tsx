@@ -70,7 +70,6 @@ const classes = makeStyles()((theme: Theme) => ({
 }))
 
 const MENU_MAX_WIDTH_PX = 250
-const HOME_PATHNAME = '/home'
 
 export const TeamScopeMenu: FunctionComponent<TeamScopeMenuProps> = (props) => {
   const { t } = useTranslation('yourloops')
