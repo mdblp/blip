@@ -38,7 +38,7 @@ import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 
 describe('Signup stepper as hcp', () => {
@@ -57,7 +57,7 @@ describe('Signup stepper as hcp', () => {
   }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.unset)
+    mockAuth0Hook(UserRole.Unset)
   })
 
   it('should be able to create a hcp account', async () => {
@@ -100,7 +100,7 @@ describe('Signup stepper as hcp', () => {
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,
       expect.objectContaining({
-        role: UserRoles.hcp,
+        role: UserRole.Hcp,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
         settings: { country: CountryCodes.France }

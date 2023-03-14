@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import type * as React from 'react'
-import { type UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { type UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
 export interface BaseConsentCheck {
   id: string
@@ -35,5 +35,5 @@ export interface BaseConsentCheck {
 }
 
 export interface ConsentCheck extends BaseConsentCheck {
-  userRole: UserRoles
+  userRole: UserRole
 }

@@ -39,7 +39,7 @@ import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { UnitsType } from 'dumb'
@@ -77,7 +77,7 @@ describe('Profile page for patient', () => {
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.patient)
+    mockAuth0Hook(UserRole.Patient)
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
@@ -95,7 +95,7 @@ describe('Profile page for patient', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/preferences')
     })
-    checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
+    await checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
     const fields = checkPatientProfilePage(settings.country)
     const saveButton = screen.getByRole('button', { name: 'Save' })
 

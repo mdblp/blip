@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import { type Alarms } from '../../patient/models/alarms.model'
 import { type Monitoring } from '../../team/models/monitoring.model'
 import { type MedicalData } from './medical-data.model'
-import { type UserRoles } from '../../auth/models/enums/user-roles.enum'
+import { type UserRole } from '../../auth/models/enums/user-role.enum'
 import { type Profile } from '../../auth/models/profile.model'
 import { type Settings } from '../../auth/models/settings.model'
 import { type Preferences } from '../../auth/models/preferences.model'
@@ -40,8 +40,8 @@ export interface IUser {
   /** A boolean that indicates if the user has certified another account, like eCPS */
   readonly idVerified?: boolean
   /** Main role of the user */
-  readonly role: UserRoles
-  roles?: UserRoles[]
+  readonly role: UserRole
+  roles?: UserRole[]
   readonly userid: string
   readonly username: string
   profile?: Profile | null

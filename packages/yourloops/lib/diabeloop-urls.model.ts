@@ -26,7 +26,7 @@
  */
 import config from './config/config'
 import { getCurrentLang } from './language'
-import { UserRoles } from './auth/models/enums/user-roles.enum'
+import { UserRole } from './auth/models/enums/user-role.enum'
 
 /**
  * Class containing all external URLs related to Diabeloop
@@ -58,12 +58,12 @@ class DiabeloopExternalUrls {
     return `${this.rootPathName}yourloops-terms-of-use.${getCurrentLang()}.pdf`
   }
 
-  training(role?: UserRoles): string {
-    if (role === UserRoles.patient) {
+  training(role?: UserRole): string {
+    if (role === UserRole.Patient) {
       return `${this.rootPathName}yourloops-patient-training.${getCurrentLang()}.pdf`
-    } else if (role === UserRoles.hcp) {
+    } else if (role === UserRole.Hcp) {
       return `${this.rootPathName}yourloops-hcp-training.${getCurrentLang()}.pdf`
-    } else if (role === UserRoles.caregiver) {
+    } else if (role === UserRole.Caregiver) {
       return `${this.rootPathName}yourloops-caregiver-training.${getCurrentLang()}.pdf`
     }
     return `${this.rootPathName}yourloops-login-training.${getCurrentLang()}.pdf`

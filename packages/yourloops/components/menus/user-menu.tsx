@@ -31,7 +31,7 @@ import { useNavigate } from 'react-router-dom'
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import CancelIcon from '@mui/icons-material/Cancel'
-import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined'
+import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/stethoscope-icon'
@@ -52,28 +52,32 @@ import config from '../../lib/config/config'
 import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 
 const classes = makeStyles()((theme: Theme) => ({
-  clickableMenu: {
-    cursor: 'pointer'
-  },
   typography: {
-    margin: `0 ${theme.spacing(1)}`,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
+  },
+  menu: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1)
   }
 }))
+
+const MENU_MAX_WIDTH_PX = 250
 
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
-  const { classes: { clickableMenu, typography } } = classes()
+  const { classes: { menu, typography } } = classes()
   const navigate = useNavigate()
   const theme = useTheme()
-  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const [tooltipText, setTooltipText] = useState<string>('')
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const opened = !!anchorEl
@@ -83,16 +87,20 @@ function UserMenu(): JSX.Element {
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
-      case UserRoles.hcp:
+      case UserRole.Hcp:
         return <StethoscopeIcon data-testid="hcp-icon" />
-      case UserRoles.caregiver:
+      case UserRole.Caregiver:
         return <RoundedHospitalIcon data-testid="caregiver-icon" />
-      case UserRoles.patient:
+      case UserRole.Patient:
         return <FaceIcon data-testid="patient-icon" />
       default:
         console.error('Unknown role')
         return null
     }
+  }
+
+  const openMenu = ({ currentTarget }: { currentTarget: HTMLElement }): void => {
+    setAnchorEl(currentTarget)
   }
 
   const closeMenu = (): void => {
@@ -125,68 +133,67 @@ function UserMenu(): JSX.Element {
   }, [userName])
 
   return (
-    <React.Fragment>
-      <Box
-        id="user-menu"
-        display="flex"
-        alignItems="center"
-        className={clickableMenu}
-        maxWidth={250}
-        onClick={event => {
-          setAnchorEl(event.currentTarget)
-        }}
-      >
-        <Box display="flex">
-          {getRoleIcon()}
-        </Box>
-        {!isMobileBreakpoint &&
-          <React.Fragment>
+    <>
+      <Box>
+        {isMobile
+          ? <IconButton color="inherit" onClick={openMenu}>
+            {getRoleIcon()}
+          </IconButton>
+          : <Button
+            color="inherit"
+            data-testid="user-menu-button"
+            startIcon={getRoleIcon()}
+            endIcon={<ArrowDropDownIcon />}
+            onClick={openMenu}
+          >
             <Tooltip title={tooltipText} disableInteractive>
-              <Typography id="user-menu-full-name" className={typography}>
+              <Typography id="user-menu-full-name" className={typography} maxWidth={MENU_MAX_WIDTH_PX}>
                 {userName}
               </Typography>
             </Tooltip>
-            <ArrowDropDownIcon />
-          </React.Fragment>
+          </Button>
         }
       </Box>
+
       <MenuLayout
         open={opened}
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
-          <ListItemIcon>
-            <PermContactCalendarIcon />
-          </ListItemIcon>
-          <Typography>
-            {t('profile-settings')}
-          </Typography>
-        </MenuItem>
+        <Box className={menu} data-testid="user-menu">
+          <MenuItem onClick={onClickSettings} data-testid="user-menu-settings-item">
+            <ListItemIcon>
+              <PermContactCalendarIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('profile-settings')}
+            </Typography>
+          </MenuItem>
 
-        <MenuItem id="contact-menu-item" onClick={onClickSupport}>
-          <ListItemIcon>
-            <ContactSupportOutlinedIcon />
-          </ListItemIcon>
-          <Typography>
-            {t('menu-contact-support')}
-          </Typography>
-        </MenuItem>
+          <MenuItem onClick={onClickSupport} data-testid="user-menu-contact-support-item">
+            <ListItemIcon>
+              <ContactSupportIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('menu-contact-support')}
+            </Typography>
+          </MenuItem>
 
-        <Box marginY={1}>
-          <Divider variant="middle" />
+          <Box marginY={2}>
+            <Divider variant="middle" />
+          </Box>
+
+          <MenuItem onClick={onClickLogout} data-testid="user-menu-logout-item">
+            <ListItemIcon>
+              <CancelIcon />
+            </ListItemIcon>
+            <Typography>
+              {t('button-logout')}
+            </Typography>
+          </MenuItem>
         </Box>
-
-        <MenuItem id="user-menu-logout-item" onClick={onClickLogout}>
-          <ListItemIcon>
-            <CancelIcon />
-          </ListItemIcon>
-          <Typography>
-            {t('button-logout')}
-          </Typography>
-        </MenuItem>
       </MenuLayout>
-    </React.Fragment>
+    </>
   )
 }
 

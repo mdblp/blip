@@ -36,7 +36,7 @@ import userEvent from '@testing-library/user-event'
 import * as authHookMock from '../../../../../lib/auth'
 import type User from '../../../../../lib/auth/models/user.model'
 import { type MedicalReport } from '../../../../../lib/medical-files/models/medical-report.model'
-import { UserRoles } from '../../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 
 jest.mock('../../../../../lib/auth')
 jest.mock('../../../../../components/utils/snackbar')
@@ -76,7 +76,7 @@ describe('Medical report edit dialog', () => {
       return { success: successAlertMock, error: errorAlertMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.hcp, isUserPatient: () => false, isUserHcp: () => true } as User }
+      return { user: { role: UserRole.Hcp, isUserPatient: () => false, isUserHcp: () => true } as User }
     })
   })
 

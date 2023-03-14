@@ -38,7 +38,7 @@ import {
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
-import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/team.api.mock'
+import { AVAILABLE_TEAMS, mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/team.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
@@ -65,14 +65,14 @@ describe('HCP home page', () => {
       expect(router.state.location.pathname).toEqual('/home')
     })
 
-    checkHCPLayout(`${firstName} ${lastName}`)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
     checkSecondaryBar(false, true)
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(4)
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
-    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient unmonitored-patient@diabeloop.fr' })
+    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}`, hidden: true })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -84,7 +84,7 @@ describe('HCP home page', () => {
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
+    expect(removePatientMock).toHaveBeenCalledWith(teamThree.id, unmonitoredPatient.userid)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
@@ -203,9 +203,9 @@ describe('HCP home page', () => {
     await act(async () => {
       renderPage('/')
     })
-    const teamMenu = screen.getByLabelText('Open team menu')
+    const teamMenu = screen.getByLabelText('Open team selection menu')
     await userEvent.click(teamMenu)
-    await userEvent.click(screen.getByText('New care team'))
+    await userEvent.click(screen.getByText('Create a new care team'))
     const dialogTeam = screen.getByRole('dialog')
     const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
     const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })

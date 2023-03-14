@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum UserRoles {
-  hcp = 'hcp',
-  caregiver = 'caregiver',
-  patient = 'patient',
+export enum UserRole {
+  Hcp = 'hcp',
+  Caregiver = 'caregiver',
+  Patient = 'patient',
   /** Used only for signup-account-selector */
-  unset = 'unset'
+  Unset = 'unset'
 }

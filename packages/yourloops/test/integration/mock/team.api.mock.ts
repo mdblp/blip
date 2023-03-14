@@ -68,7 +68,9 @@ export const myTeamId = '62fe00defc9374b2fed32bcc'
 export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
 export const myThirdTeamId = '62fe00defc9374b2fed32bce'
 export const mySecondTeamName = 'MySecondTeam'
-export const myThirdTeamName = 'MyThirdTeam - to be deleted'
+export const myThirdTeamName = 'A - MyThirdTeam - to be deleted'
+
+const privateTeamId = 'private'
 
 export const teamOne: Team = {
   name: 'MyTeam',
@@ -165,6 +167,16 @@ export const teamThree: Team = {
   }]
 }
 
+const teamPrivate: Team = {
+  name: 'private',
+  id: privateTeamId,
+  code: 'private',
+  type: TeamType.private,
+  phone: '',
+  email: '',
+  members: []
+}
+
 export const iTeamOne: ITeam = {
   name: 'iTeamOne',
   id: 'iTeamOneId',
@@ -186,6 +198,8 @@ export const iTeamOne: ITeam = {
   members: null
 }
 
+export const AVAILABLE_TEAMS = [teamOne, teamTwo, teamThree, teamPrivate]
+
 export const mockTeamAPI = () => {
-  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne, teamTwo, teamThree])
+  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(AVAILABLE_TEAMS)
 }

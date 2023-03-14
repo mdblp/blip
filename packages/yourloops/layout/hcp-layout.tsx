@@ -41,8 +41,8 @@ import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provide
 export function HcpLayout(): JSX.Element {
   return (
     <TeamContextProvider>
-      <PatientProvider>
-        <SelectedTeamProvider>
+      <SelectedTeamProvider>
+        <PatientProvider>
           <DashboardLayout>
             <Routes>
               <Route path="/not-found" element={<InvalidRoute />} />
@@ -61,8 +61,8 @@ export function HcpLayout(): JSX.Element {
               />
             </Routes>
           </DashboardLayout>
-        </SelectedTeamProvider>
-      </PatientProvider>
+        </PatientProvider>
+      </SelectedTeamProvider>
     </TeamContextProvider>
   )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,9 +27,10 @@
 
 import { buildTeam } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/team.util'
+import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 describe('TeamUtils', () => {
-  describe('sortTeams', () => {
+  describe('sortTeamsByName', () => {
     it('should sort a list of teams in alphabetical order', () => {
       const teams = [
         buildTeam('fakeId2', [], 'B team'),
@@ -37,7 +38,17 @@ describe('TeamUtils', () => {
         buildTeam('fakeId1', [], 'A team')
       ]
       const expectedResult = [teams[2], teams[0], teams[1]]
-      expect(expectedResult).toEqual(TeamUtils.sortTeams(teams))
+      expect(expectedResult).toEqual(TeamUtils.sortTeamsByName(teams))
+    })
+  })
+
+  describe('isPrivate', () => {
+    it('should check whether the given team is the private team', () => {
+      const team = buildTeam('teamId', [])
+      const privateTeam = buildTeam('private', undefined, undefined, TeamType.private)
+
+      expect(TeamUtils.isPrivate(team)).toEqual(false)
+      expect(TeamUtils.isPrivate(privateTeam)).toEqual(true)
     })
   })
 })

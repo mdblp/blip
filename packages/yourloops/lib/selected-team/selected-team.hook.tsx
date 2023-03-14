@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,20 +33,27 @@ import TeamUtils from '../team/team.util'
 const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 
 export function useSelectedTeamProviderCustomHook(): SelectedTeamContextResult {
-  const { getMedicalAndPrivateTeams } = useTeam()
+  const { getMedicalTeams, getPrivateTeam } = useTeam()
+  const medicalTeams = getMedicalTeams()
+  const privateTeam = getPrivateTeam()
 
-  const getSortedTeams = (): Team[] => {
-    const teams = getMedicalAndPrivateTeams()
-    return TeamUtils.sortTeams(teams)
+  const getDefaultTeam = (): Team => {
+    if (!medicalTeams.length) {
+      return privateTeam
+    }
+
+    return TeamUtils.sortTeamsByName(medicalTeams)[0]
   }
 
   const getDefaultTeamId = (): string => {
-    const sortedTeams = getSortedTeams()
+    const availableTeams = [...medicalTeams, privateTeam]
     const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
-    const isValidTeamId = sortedTeams.some((team: Team) => team.id === localStorageTeamId)
+    const isValidTeamId = availableTeams.some((team: Team) => team.id === localStorageTeamId)
 
     if (!isValidTeamId) {
-      const defaultId = sortedTeams[0].id
+      const defaultTeam = getDefaultTeam()
+      const defaultId = defaultTeam.id
+
       localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultId)
       return defaultId
     }

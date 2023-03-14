@@ -42,7 +42,7 @@ import { renderPage } from '../../utils/render'
 import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Caregiver home page', () => {
@@ -50,7 +50,7 @@ describe('Caregiver home page', () => {
   const lastName = 'Ard'
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.caregiver)
+    mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
@@ -64,7 +64,7 @@ describe('Caregiver home page', () => {
       expect(router.state.location.pathname).toEqual('/home')
     })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
-    checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, false)
   })
 
@@ -141,7 +141,7 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkSecondaryBar(false, false)
 
     const patientTableBody = within(screen.getByTestId('patient-table-body'))
