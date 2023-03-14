@@ -40,7 +40,9 @@ export const PatientList: FunctionComponent = () => {
     rows,
     onChangingTab,
     setColumnsVisibility,
-    setInputSearch
+    setInputSearch,
+    paginationModel,
+    setPaginationModel
   } = usePatientListHook()
 
   return (
@@ -61,9 +63,10 @@ export const PatientList: FunctionComponent = () => {
         disableColumnSelector
         disableRowSelectionOnClick
         columnVisibilityModel={columnsVisibility}
-        onColumnVisibilityModelChange={(model) => {
-          setColumnsVisibility(model)
-        }}
+        onColumnVisibilityModelChange={setColumnsVisibility}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[5, 10, 25]}
         sx={{ borderRadius: 0 }}
       />
     </React.Fragment>

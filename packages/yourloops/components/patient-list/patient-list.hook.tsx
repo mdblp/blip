@@ -33,6 +33,7 @@ import {
   type GridRenderCellParams,
   type GridRowsProp,
   type GridValueGetterParams,
+  type GridPaginationModel,
   useGridApiRef
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
@@ -54,9 +55,11 @@ interface PatientListHookReturns {
   currentTab: PatientListTabs
   inputSearch: string
   gridApiRef: React.MutableRefObject<GridApiCommon>
+  paginationModel: GridPaginationModel
   rows: GridRowsProp
   setInputSearch: (value: string) => void
   setColumnsVisibility: (model: GridColumnVisibilityModel) => void
+  setPaginationModel: (model: GridPaginationModel) => void
   onChangingTab: (newTab: PatientListTabs) => void
   toggleColumnVisibility: (columnName: PatientListColumns) => void
 }
@@ -72,6 +75,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
 
   const [currentTab, setCurrentTab] = useState<PatientListTabs>(PatientListTabs.Current)
   const [inputSearch, setInputSearch] = useState<string>('')
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [columnsVisibility, setColumnsVisibility] = useState<GridColumnVisibilityModel>({
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: true,
@@ -93,96 +97,102 @@ export const usePatientListHook = (): PatientListHookReturns => {
     gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
   }
 
-  const columns: GridColDef[] = [
-    {
-      field: PatientListColumns.Flag,
-      type: 'boolean',
-      headerName: '',
-      hideable: false,
-      sortable: false,
-      renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
-        const patient = params.value
-        const isFlagged = getFlagPatients().includes(patient.userid)
-        const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
-        return (
-          <React.Fragment>
-            {currentTab === PatientListTabs.Pending && hasPendingInvitation
-              ? <PendingIconCell />
-              : <FlagIconCell isFlagged={isFlagged} patientId={patient.userid} />
-            }
-          </React.Fragment>
-        )
+  const columns: GridColDef[] = useMemo(() => {
+    return [
+      {
+        field: PatientListColumns.Flag,
+        type: 'boolean',
+        headerName: '',
+        width: 55,
+        hideable: false,
+        sortable: false,
+        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
+          const patient = params.value
+          const isFlagged = getFlagPatients().includes(patient.userid)
+          const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
+          return (
+            <React.Fragment>
+              {currentTab === PatientListTabs.Pending && hasPendingInvitation
+                ? <PendingIconCell />
+                : <FlagIconCell isFlagged={isFlagged} patientId={patient.userid} />
+              }
+            </React.Fragment>
+          )
+        }
+      },
+      {
+        field: PatientListColumns.Patient,
+        headerName: t('patient'),
+        hideable: false,
+        flex: 1,
+        headerClassName: classes.mandatoryCellBorder,
+        cellClassName: classes.mandatoryCellBorder,
+        valueGetter: (params: GridValueGetterParams) => {
+          const { firstName, fullName, lastName } = params.row.patient
+          return getUserName(firstName, lastName, fullName)
+        }
+      },
+      {
+        field: PatientListColumns.System,
+        headerName: t('system')
+      },
+      {
+        field: PatientListColumns.TimeOutOfRange,
+        type: 'number',
+        headerName: t('time-out-of-range-target'),
+        description: t('time-out-of-range-target-tooltip'),
+        flex: 0.5,
+        sortable: false,
+        renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
+          const alarms = params.value
+          return <AlarmPercentageCell value={alarms.timeSpentAwayFromTargetRate} isAlarmActive={alarms.timeSpentAwayFromTargetActive} />
+        }
+      },
+      {
+        field: PatientListColumns.SevereHypoglycemia,
+        type: 'number',
+        headerName: t('alert-hypoglycemic'),
+        description: t('hypoglycemia-tooltip'),
+        sortable: false,
+        flex: 0.5,
+        renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
+          const alarms = params.value
+          return <AlarmPercentageCell value={alarms.frequencyOfSevereHypoglycemiaRate} isAlarmActive={alarms.frequencyOfSevereHypoglycemiaActive} />
+        }
+      },
+      {
+        field: PatientListColumns.DataNotTransferred,
+        type: 'number',
+        headerName: t('data-not-transferred'),
+        description: t('data-not-transferred-tooltip'),
+        sortable: false,
+        flex: 0.5,
+        renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
+          const alarms = params.value
+          return <AlarmPercentageCell value={alarms.nonDataTransmissionRate} isAlarmActive={alarms.nonDataTransmissionActive} />
+        }
+      },
+      {
+        type: 'string',
+        field: PatientListColumns.LastDataUpdate,
+        headerName: t('last-data-update'),
+        flex: 0.8
+      },
+      {
+        type: 'boolean',
+        field: PatientListColumns.Messages,
+        headerName: '',
+        width: 55,
+        renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => <MessageCell hasNewMessages={params.value} />
+      },
+      {
+        type: 'actions',
+        field: PatientListColumns.Actions,
+        headerName: 'Actions',
+        renderCell: (params: GridRenderCellParams<GridRowModel, string>) => <ActionsCell patientId={params.value} />
       }
-    },
-    {
-      field: PatientListColumns.Patient,
-      headerName: t('patient'),
-      hideable: false,
-      width: 300,
-      headerClassName: classes.mandatoryCellBorder,
-      cellClassName: classes.mandatoryCellBorder,
-      valueGetter: (params: GridValueGetterParams) => {
-        const { firstName, fullName, lastName } = params.row.patient
-        return getUserName(firstName, lastName, fullName)
-      }
-    },
-    {
-      field: PatientListColumns.System,
-      headerName: t('system')
-    },
-    {
-      field: PatientListColumns.TimeOutOfRange,
-      headerName: t('time-out-of-range-target'),
-      description: t('time-out-of-range-target-tooltip'),
-      sortable: false,
-      renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
-        const alarms = params.value
-        return <AlarmPercentageCell value={alarms.timeSpentAwayFromTargetRate} isAlarmActive={alarms.timeSpentAwayFromTargetActive} />
-      }
-    },
-    {
-      field: PatientListColumns.SevereHypoglycemia,
-      type: 'number',
-      headerName: t('alert-hypoglycemic'),
-      description: t('hypoglycemia-tooltip'),
-      sortable: false,
-      width: 150,
-      renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
-        const alarms = params.value
-        return <AlarmPercentageCell value={alarms.frequencyOfSevereHypoglycemiaRate} isAlarmActive={alarms.frequencyOfSevereHypoglycemiaActive} />
-      }
-    },
-    {
-      type: 'number',
-      field: PatientListColumns.DataNotTransferred,
-      headerName: t('data-not-transferred'),
-      description: t('data-not-transferred-tooltip'),
-      sortable: false,
-      width: 150,
-      renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
-        const alarms = params.value
-        return <AlarmPercentageCell value={alarms.nonDataTransmissionRate} isAlarmActive={alarms.nonDataTransmissionActive} />
-      }
-    },
-    {
-      type: 'string',
-      field: PatientListColumns.LastDataUpdate,
-      headerName: t('last-data-update'),
-      width: 200
-    },
-    {
-      type: 'boolean',
-      field: PatientListColumns.Messages,
-      headerName: '',
-      renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => <MessageCell hasNewMessages={params.value} />
-    },
-    {
-      type: 'actions',
-      field: PatientListColumns.Actions,
-      headerName: '',
-      renderCell: (params: GridRenderCellParams<GridRowModel, string>) => <ActionsCell patientId={params.value} />
-    }
-  ]
+    ]
+  }, [classes.mandatoryCellBorder, currentTab, getFlagPatients, getUserName, t])
 
   const rows: GridRowsProp = useMemo(() => {
     return patients.map((patient, index): GridRowModel => {
@@ -208,10 +218,12 @@ export const usePatientListHook = (): PatientListHookReturns => {
     currentTab,
     gridApiRef,
     inputSearch,
+    paginationModel,
     rows,
     setColumnsVisibility,
     onChangingTab,
     setInputSearch,
+    setPaginationModel,
     toggleColumnVisibility
   }
 }
