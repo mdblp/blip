@@ -41,3 +41,8 @@ export enum PatientListColumns {
   System = 'system',
   TimeOutOfRange = 'time-out-of-range'
 }
+
+export enum PatientListFilters {
+  All = 'all',
+  Pending = 'pending'
+}

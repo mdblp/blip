@@ -99,7 +99,7 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
           disableElevation
           onClick={handleOpenModalAddPatient}
         >
-         {t('button-add-patient')}
+         {t('button-add-new-patient')}
         </Button>
       }
     </Box>

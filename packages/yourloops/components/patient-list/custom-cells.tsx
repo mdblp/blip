@@ -56,6 +56,7 @@ interface MessageCellProps {
 
 interface ActionsCellProps {
   patientId: string
+  onClickRemove: (patientId: string) => void
 }
 
 export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patientId }) => {
@@ -132,7 +133,7 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
   )
 }
 
-export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patientId }) => {
+export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patientId, onClickRemove }) => {
   const { t } = useTranslation()
 
   return (
@@ -144,10 +145,7 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patientId }) 
         <IconActionButton
           ariaLabel={`${t('button-remove-patient')} ${patientId}`}
           icon={<PersonRemoveIcon />}
-          onClick={() => {
-            // TODO activate delete modal
-            console.log(patientId)
-          }}
+          onClick={() => { onClickRemove(patientId) }}
         />
       </Box>
     </Tooltip>

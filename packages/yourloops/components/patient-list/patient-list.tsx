@@ -33,6 +33,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import RemovePatientDialog from '../patient/remove-patient-dialog'
+import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
 
 export const PatientList: FunctionComponent = () => {
   const { t } = useTranslation()
@@ -43,10 +44,11 @@ export const PatientList: FunctionComponent = () => {
     gridApiRef,
     inputSearch,
     paginationModel,
-    patientToRemove,
+    patientToRemoveForHcp,
+    patientToRemoveForCaregiver,
     rows,
     onChangingTab,
-    onCloseRemovePatientDialog,
+    onCloseRemoveDialog,
     setColumnsVisibility,
     setInputSearch,
     setPaginationModel
@@ -60,7 +62,7 @@ export const PatientList: FunctionComponent = () => {
         alignItems="center"
         height="100%"
       >
-        <Typography>{t('no-patients')}</Typography>
+        <Typography>{t('no-patient')}</Typography>
       </Box>
     )
   }
@@ -90,10 +92,18 @@ export const PatientList: FunctionComponent = () => {
         sx={{ borderRadius: 0 }}
         slots={{ noRowsOverlay: NoPatientMessage }}
       />
-      {patientToRemove &&
+
+      {patientToRemoveForHcp &&
         <RemovePatientDialog
-          patient={patientToRemove}
-          onClose={onCloseRemovePatientDialog}
+          patient={patientToRemoveForHcp}
+          onClose={onCloseRemoveDialog}
+        />
+      }
+
+      {patientToRemoveForCaregiver &&
+        <RemoveDirectShareDialog
+          userToRemove={patientToRemoveForCaregiver}
+          onClose={onCloseRemoveDialog}
         />
       }
     </React.Fragment>
