@@ -32,6 +32,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
+import RemovePatientDialog from '../patient/remove-patient-dialog'
 
 export const PatientList: FunctionComponent = () => {
   const { t } = useTranslation()
@@ -41,11 +42,13 @@ export const PatientList: FunctionComponent = () => {
     currentTab,
     gridApiRef,
     inputSearch,
+    paginationModel,
+    patientToRemove,
     rows,
     onChangingTab,
+    onCloseRemovePatientDialog,
     setColumnsVisibility,
     setInputSearch,
-    paginationModel,
     setPaginationModel
   } = usePatientListHook()
 
@@ -85,10 +88,14 @@ export const PatientList: FunctionComponent = () => {
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[5, 10, 25]}
         sx={{ borderRadius: 0 }}
-        slots={{
-          noRowsOverlay: NoPatientMessage
-        }}
+        slots={{ noRowsOverlay: NoPatientMessage }}
       />
+      {patientToRemove &&
+        <RemovePatientDialog
+          patient={patientToRemove}
+          onClose={onCloseRemovePatientDialog}
+        />
+      }
     </React.Fragment>
   )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,16 +27,6 @@
 
 import { type Team } from '../../lib/team'
 import { type TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
-
-export interface AddPatientDialogResult {
-  email: string
-  teamId: string
-}
-
-export interface AddPatientDialogContentProps {
-  teams: Array<Readonly<Team>>
-  onDialogResult: (value: AddPatientDialogResult | null) => void
-}
 
 export interface AddMemberDialogContentProps {
   team: Readonly<Team>

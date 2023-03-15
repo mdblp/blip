@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   type GridApiCommon,
   type GridColDef,
@@ -56,11 +56,13 @@ interface PatientListHookReturns {
   inputSearch: string
   gridApiRef: React.MutableRefObject<GridApiCommon>
   paginationModel: GridPaginationModel
+  patientToRemove: Patient | null
   rows: GridRowsProp
   setInputSearch: (value: string) => void
   setColumnsVisibility: (model: GridColumnVisibilityModel) => void
   setPaginationModel: (model: GridPaginationModel) => void
   onChangingTab: (newTab: PatientListTabs) => void
+  onCloseRemovePatientDialog: () => void
   toggleColumnVisibility: (columnName: PatientListColumns) => void
 }
 
@@ -69,12 +71,13 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const trNA = t('N/A')
   const { classes } = usePatientListStyles()
   const { getFlagPatients } = useAuth()
-  const { patients } = usePatientContext()
+  const { patients, getPatientById } = usePatientContext()
   const { getUserName } = useUserName()
   const gridApiRef = useGridApiRef()
 
   const [currentTab, setCurrentTab] = useState<PatientListTabs>(PatientListTabs.Current)
   const [inputSearch, setInputSearch] = useState<string>('')
+  const [patientToRemove, setPatientToRemove] = useState<Patient | null>(null)
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [columnsVisibility, setColumnsVisibility] = useState<GridColumnVisibilityModel>({
     [PatientListColumns.Flag]: true,
@@ -95,6 +98,15 @@ export const usePatientListHook = (): PatientListHookReturns => {
 
   const toggleColumnVisibility = (columnName: PatientListColumns): void => {
     gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
+  }
+
+  const onClickRemovePatient = useCallback((patientId: string): void => {
+    const patient = getPatientById(patientId)
+    setPatientToRemove(patient)
+  }, [getPatientById])
+
+  const onCloseRemovePatientDialog = (): void => {
+    setPatientToRemove(null)
   }
 
   const columns: GridColDef[] = useMemo(() => {
@@ -189,10 +201,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         type: 'actions',
         field: PatientListColumns.Actions,
         headerName: 'Actions',
-        renderCell: (params: GridRenderCellParams<GridRowModel, string>) => <ActionsCell patientId={params.value} />
+        renderCell: (params: GridRenderCellParams<GridRowModel, string>) => <ActionsCell patientId={params.value} onClickRemove={onClickRemovePatient} />
       }
     ]
-  }, [classes.mandatoryCellBorder, currentTab, getFlagPatients, getUserName, t])
+  }, [classes.mandatoryCellBorder, currentTab, getFlagPatients, getUserName, onClickRemovePatient, t])
 
   const rows: GridRowsProp = useMemo(() => {
     return patients.map((patient, index): GridRowModel => {
@@ -219,9 +231,11 @@ export const usePatientListHook = (): PatientListHookReturns => {
     gridApiRef,
     inputSearch,
     paginationModel,
+    patientToRemove,
     rows,
     setColumnsVisibility,
     onChangingTab,
+    onCloseRemovePatientDialog,
     setInputSearch,
     setPaginationModel,
     toggleColumnVisibility
