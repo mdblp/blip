@@ -35,17 +35,13 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 
 import metrics from '../lib/metrics'
-import { useAlert } from '../components/utils/snackbar'
 import { errorTextFromException, setPageTitle } from '../lib/utils'
-import { type Team, useTeam } from '../lib/team'
-import { type AddPatientDialogContentProps, type AddPatientDialogResult } from './hcp/types'
+import { type Team } from '../lib/team'
 import PatientsSecondaryBar from '../components/patient/secondary-bar'
-import AddPatientDialog from '../components/patient/add-dialog'
 import TeamCodeDialog from '../components/patient/team-code-dialog'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
 import { usePatientContext } from '../lib/patient/patient.provider'
-import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../lib/patient/patient.api'
 import { PatientFilterTypes } from '../lib/patient/models/enums/patient-filter-type.enum'
 
 const log = bows('PatientListPage')
@@ -55,13 +51,10 @@ const throttledMetrics = _.throttle(metrics.send, 60000) // No more than one per
 // TODO Clean this one
 const HomePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const teamHook = useTeam()
   const patientHook = usePatientContext()
-  const alert = useAlert()
   const { search } = useLocation()
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [filter, setFilter] = React.useState<string>('')
-  const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null)
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null)
 
   const filterType = useMemo(() => new URLSearchParams(search).get('filter') as PatientFilterTypes ?? PatientFilterTypes.all, [search])
@@ -75,40 +68,6 @@ const HomePage: FunctionComponent = () => {
       log.error('handleRefresh', reason)
       const errorMessage = t('error-failed-display-patients', { errorMessage: errorTextFromException(reason) })
       setErrorMessage(errorMessage)
-    }
-  }
-
-  const handleInvitePatient = async (): Promise<void> => {
-    const getPatientEmailAndTeam = async (): Promise<AddPatientDialogResult | null> => {
-      const teams = teamHook.getMedicalTeams()
-      return await new Promise((resolve: (value: AddPatientDialogResult | null) => void) => {
-        setPatientToAdd({ onDialogResult: resolve, teams })
-      })
-    }
-
-    const result = await getPatientEmailAndTeam()
-    setPatientToAdd(null) // Close the dialog
-
-    if (!result) {
-      return
-    }
-
-    try {
-      const { email, teamId } = result
-      const team = teamHook.getTeam(teamId)
-      await patientHook.invitePatient(team as Team, email)
-      alert.success(t('alert-invitation-sent-success'))
-      metrics.send('invitation', 'send_invitation', 'patient')
-      setTeamCodeToDisplay(team)
-    } catch (err) {
-      const error = err as Error
-      log.error(error)
-
-      if (error.message === PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE) {
-        alert.error(t('alert-invitation-patient-failed-already-invited'))
-        return
-      }
-      alert.error(t('alert-invitation-patient-failed'))
     }
   }
 
@@ -151,7 +110,9 @@ const HomePage: FunctionComponent = () => {
           variant="contained"
           color="secondary"
           disableElevation
-          onClick={() => { handleRefresh(true) }}
+          onClick={() => {
+            handleRefresh(true)
+          }}
         >
           {t('button-refresh-page-on-error')}
         </Button>
@@ -164,10 +125,9 @@ const HomePage: FunctionComponent = () => {
       <PatientsSecondaryBar
         filter={filter}
         onFilter={handleFilter}
-        onInvitePatient={handleInvitePatient}
+        onInvitePatient={() => undefined}
       />
       <PatientList filter={filter} filterType={filterType} />
-      {patientToAdd && <AddPatientDialog actions={patientToAdd} />}
       <TeamCodeDialog
         onClose={handleCloseTeamCodeDialog}
         code={teamCodeToDisplay?.code ?? ''}

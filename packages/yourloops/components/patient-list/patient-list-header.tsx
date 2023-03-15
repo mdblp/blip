@@ -127,7 +127,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               color="inherit"
               endIcon={<FilterList />}
             >
-              {t('Filters')}
+              {t('filters')}
             </Button>
           </Box>
           <Box>
