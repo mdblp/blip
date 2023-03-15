@@ -24,48 +24,31 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { type FunctionComponent } from 'react'
+import { t } from 'i18next'
+import { SimpleStat } from 'dumb'
+import { Box } from '@mui/material'
+import { StatFormats } from 'dumb/dist/src/models/stats.model'
 
-export interface BgBounds {
-  veryHighThreshold: number
-  targetUpperBound: number
-  targetLowerBound: number
-  veryLowThreshold: number
-}
-
-export interface CbgRangeStatistics {
-  veryLow: number
-  low: number
-  target: number
-  high: number
-  veryHigh: number
-  total: number
-}
-
-export interface SensorUsageStatistics {
-  sensorUsage: number
-  totalUsage: number
-}
-
-export interface AverageGlucoseStatistics {
-  averageGlucose: number
-  total: number
-}
-
-export interface CoefficientOfVariationStatistics {
-  insufficientData: boolean
-  total: number
-  coefficientOfVariation: number
-}
-
-export interface GlucoseManagementIndicatoStatistics {
-  insufficientData: boolean
+interface GlucoseManagementIndicatorData {
   glucoseManagementIndicator: number
-  total: number
+  totalGMI: number
+}
+interface GlucoseManagementIndicatorProps {
+  glucoseManagementIndicatorData: GlucoseManagementIndicatorData
 }
 
-export interface StandardDevStatistics {
-  insufficientData: boolean
-  averageGlucose: number
-  total: number
-  standardDeviation: number
+export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
+  const { glucoseManagementIndicatorData } = props
+  const { glucoseManagementIndicator, totalGMI } = glucoseManagementIndicatorData
+  const annotations = [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
+  return (
+    <Box data-testid="GMI-stat">
+      <SimpleStat
+        annotations={annotations}
+        title={t('glucose-management-indicator-title')}
+        value={glucoseManagementIndicator}
+        summaryFormat={StatFormats.Percentage}
+        total={totalGMI} />
+    </Box>)
 }
