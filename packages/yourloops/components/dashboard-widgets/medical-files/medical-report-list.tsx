@@ -59,6 +59,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import { getMedicalReportDate, getSortedMedicalReports } from './medical-report-list.util'
 import { useTeam } from '../../../lib/team'
 import { useUserName } from '../../../lib/custom-hooks/user-name.hook'
+import { VAR_TEXT_BASE_COLOR_DARKER, VAR_TEXT_BASE_COLOR_LIGHT } from '../../theme'
 
 const useStyle = makeStyles()((theme) => ({
   categoryTitle: {
@@ -77,6 +78,8 @@ const useStyle = makeStyles()((theme) => ({
     paddingRight: theme.spacing(2)
   }
 }))
+
+const FONT_SIZE_SMALL = '12px'
 
 const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const { t } = useTranslation('yourloops')
@@ -198,7 +201,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
                         </Typography>
                       }
                       secondary={
-                        <Typography fontSize="12px" color="var(--text-base-color-light)">
+                        <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_LIGHT}>
                           {createdBy}
                         </Typography>
                       }
@@ -206,12 +209,12 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
                     <ListItemText
                       className={classes.dateItem}
                       primary={
-                        <Typography fontSize="12px" color="var(--text-base-color-darker)">
+                        <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_DARKER}>
                           {medicalReportDate}
                         </Typography>
                       }
                       secondary={
-                        <Typography fontSize="12px" color="var(--text-base-color-light)">
+                        <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_LIGHT}>
                           {teamName}
                         </Typography>
                       }

@@ -115,11 +115,4 @@ export interface TeamContext {
    * Join a specific team.
    */
   joinTeam: (teamId: string) => Promise<void>
-
-  /**
-   * Get a team member
-   * @param teamId The team we want the member from
-   * @param memberId The member id
-   */
-  getTeamMember: (teamId: string, memberId: string) => TeamMember | null
 }
