@@ -29,25 +29,17 @@ import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from 'tss-react/mui'
-
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import NoteAddIcon from '@mui/icons-material/NoteAdd'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 
 import { useAuth } from '../../../lib/auth'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import MedicalReportEditDialog from '../../dialogs/medical-report-edit-dialog'
 import MedicalReportDeleteDialog from '../../dialogs/medical-report-delete-dialog'
-import TrashCanOutlined from '../../icons/trash-can-outlined'
 import { type CategoryProps } from './medical-files-widget'
 import { useAlert } from '../../utils/snackbar'
 import SpinningLoader from '../../loaders/spinning-loader'
@@ -55,39 +47,24 @@ import {
   type MedicalReport,
   type MedicalReportDeleteDialogPayload
 } from '../../../lib/medical-files/models/medical-report.model'
-import ListItemButton from '@mui/material/ListItemButton'
-import { getMedicalReportDate, getSortedMedicalReports } from './medical-report-list.util'
-import { useTeam } from '../../../lib/team'
-import { useUserName } from '../../../lib/custom-hooks/user-name.hook'
-import { VAR_TEXT_BASE_COLOR_DARKER, VAR_TEXT_BASE_COLOR_LIGHT } from '../../theme'
+import { getSortedMedicalReports } from './medical-report-list.util'
+import { MedicalReportItem } from './medical-report'
 
-const useStyle = makeStyles()((theme) => ({
+const useStyle = makeStyles()(() => ({
   categoryTitle: {
     fontWeight: 600
-  },
-  dateItem: {
-    maxWidth: '30%',
-    minWidth: '30%',
-    width: '30%'
   },
   list: {
     maxHeight: 360,
     overflow: 'auto'
-  },
-  reportNameItem: {
-    paddingRight: theme.spacing(2)
   }
 }))
-
-const FONT_SIZE_SMALL = '12px'
 
 const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { classes } = useStyle()
   const { teamId, patientId } = props
   const { user } = useAuth()
-  const { getTeam } = useTeam()
-  const { getUserName } = useUserName()
   const alert = useAlert()
   const [medicalReports, setMedicalReports] = useState<MedicalReport[] | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
@@ -151,79 +128,14 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
       </Typography>
       {medicalReports
         ? <List className={classes.list}>
-          {getSortedMedicalReports(medicalReports).map((medicalReport, index) => {
-            const medicalReportDate = getMedicalReportDate(medicalReport)
-            const medicalReportNumber = medicalReport.number
-            const isUserAuthor = user.id === medicalReport.authorId
-            const authorName = getUserName(medicalReport.authorFirstName, medicalReport.authorLastName, '')
-            const createdBy = authorName.length > 0 ? t('created-by', { name: authorName }) : t('created-by-unknown')
-            const teamName = getTeam(teamId)?.name ?? medicalReport.teamName
-            const deleteMedicalReportLabel = t('delete-medical-report-number', {
-              number: medicalReportNumber,
-              name: teamName
-            })
-            return (
-              <ListItem
-                key={index}
-                dense
-                divider
-                disablePadding
-                secondaryAction={isUserAuthor &&
-                  <Tooltip title={deleteMedicalReportLabel}>
-                    <IconButton
-                      data-testid="delete-medical-report"
-                      edge="end"
-                      size="small"
-                      aria-label={deleteMedicalReportLabel}
-                      onClick={() => {
-                        onDeleteMedicalReport(medicalReport, teamName)
-                      }}
-                    >
-                      <TrashCanOutlined />
-                    </IconButton>
-                  </Tooltip>
-                }
-              >
-                <ListItemButton
-                  onClick={() => {
-                    onClickMedicalReport(medicalReport)
-                  }}
-                >
-                  <ListItemIcon>
-                    <DescriptionOutlinedIcon />
-                  </ListItemIcon>
-                  <Box display="flex" justifyContent="space-between" width="100%">
-                    <ListItemText
-                      className={classes.reportNameItem}
-                      primary={
-                        <Typography className="bold" fontSize="14px">
-                          {t('medical-report')}-{medicalReport.number}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_LIGHT}>
-                          {createdBy}
-                        </Typography>
-                      }
-                    />
-                    <ListItemText
-                      className={classes.dateItem}
-                      primary={
-                        <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_DARKER}>
-                          {medicalReportDate}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_LIGHT}>
-                          {teamName}
-                        </Typography>
-                      }
-                    />
-                  </Box>
-                </ListItemButton>
-              </ListItem>
-            )
-          })}
+          {getSortedMedicalReports(medicalReports).map((medicalReport, index) =>
+            <MedicalReportItem
+              key={index}
+              medicalReport={medicalReport}
+              onClickMedicalReport={onClickMedicalReport}
+              onDeleteMedicalReport={onDeleteMedicalReport}
+            />
+          )}
         </List>
         : <SpinningLoader size={20} />
       }
