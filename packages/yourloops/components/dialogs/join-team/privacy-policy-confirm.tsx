@@ -53,7 +53,6 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const { onCompleteStep, team, onClickCancel, inProgress } = props
   const [policyChecked, setPolicyChecked] = useState<boolean>(false)
   const theme = useTheme()
-
   const handleChangeChecked = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPolicyChecked(event.target.checked)
   }

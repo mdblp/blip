@@ -58,6 +58,7 @@ interface NotificationProps {
   notification: NotificationModel
   userRole: UserRoles
   onHelp: () => void
+  refreshNotificationHook: () => void
 }
 
 interface NotificationIconPayload {
@@ -226,7 +227,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const patientHook = usePatientContext()
   const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
-  const { notification, userRole, onHelp } = props
+  const { notification, userRole, onHelp, refreshNotificationHook } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
@@ -248,6 +249,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
         teamHook.refresh()
       }
       alert.success(t('accept-notification-success', { teamName: notification.target.name }))
+      refreshNotificationHook()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))
@@ -256,19 +258,19 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     }
   }
 
-  const onOpenInvitationDialog = (): void => {
+  const onOpenInvitationDialog = async (): Promise<void> => {
     if (isACareTeamPatientInvitation) {
       setAddTeamDialogVisible(true)
     } else if (isAMonitoringInvitation) {
       setDisplayMonitoringTerms(true)
     } else {
-      acceptInvitation()
+      await acceptInvitation()
     }
   }
 
-  const acceptTerms = (): void => {
+  const acceptTerms = async (): Promise<void> => {
     setDisplayMonitoringTerms(false)
-    acceptInvitation()
+    await acceptInvitation()
   }
 
   const onDecline = async (): Promise<void> => {

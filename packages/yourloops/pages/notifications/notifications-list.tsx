@@ -89,6 +89,9 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
   const handleSwitchRoleCancel = (): void => {
     setSwitchRoleOpen(false)
   }
+  const refreshNotificationHook = async (): Promise<void> => {
+    await notificationsHook.refreshReceivedInvitations()
+  }
 
   return (
     <>
@@ -106,6 +109,7 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
                     notification={notification}
                     userRole={user.role}
                     onHelp={handleSwitchRoleOpen}
+                    refreshNotificationHook={refreshNotificationHook}
                   />
                 </ListItem>
               ))
