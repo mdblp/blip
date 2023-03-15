@@ -27,7 +27,15 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
+import {
+  type BgType,
+  type DateFilter,
+  DatumType,
+  type MedicalData,
+  MGDL_UNITS,
+  MMOLL_UNITS,
+  TimeService
+} from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
@@ -35,6 +43,7 @@ import { SensorUsageStat } from './sensor-usage-stat'
 import {
   GlycemiaStatisticsService
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -48,9 +57,23 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
-  const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
-  const sensorUsageData = {
+  const bgUnits = MGDL_UNITS || MMOLL_UNITS
+  const {
+    sensorUsage,
+    totalUsage
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  const {
+    glucoseManagementIndicator,
     total,
+    insufficientData
+  } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
+  const glucoseManagementIndicatorData = {
+    glucoseManagementIndicator,
+    totalGMI: total,
+    title: bgSource
+  }
+  const sensorUsageData = {
+    totalUsage,
     usage: sensorUsage
   }
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
@@ -73,8 +96,14 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat sensorUsageData={sensorUsageData} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          {insufficientData &&
+            <>
+              <GlucoseManagementIndicator glucoseManagementIndicatorData={glucoseManagementIndicatorData} />
+              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+            </>}
         </>
       }
+
       {children}
     </Box>
   )

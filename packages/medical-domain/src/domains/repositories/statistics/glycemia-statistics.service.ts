@@ -150,11 +150,11 @@ function getSensorUsage(cbgData: Cbg[], numDays: number, dateFilter: DateFilter)
   const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const totalDuration = getCgmTotalDuration(filteredCbg)
 
-  const total = Math.round(numDays * MS_IN_DAY)
+  const totalUsage = Math.round(numDays * MS_IN_DAY)
 
   return {
     sensorUsage: totalDuration,
-    total
+    totalUsage
   }
 }
 
