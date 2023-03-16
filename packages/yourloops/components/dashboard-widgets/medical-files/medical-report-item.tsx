@@ -50,26 +50,24 @@ import { useUserName } from '../../../lib/custom-hooks/user-name.hook'
 import { VAR_TEXT_BASE_COLOR_DARKER, VAR_TEXT_BASE_COLOR_LIGHT } from '../../theme'
 
 interface MedicalReportItemProps {
+  displayDivider: boolean
   medicalReport: MedicalReport
   onClickMedicalReport: (medicalReport: MedicalReport) => void
   onDeleteMedicalReport: (medicalReport: MedicalReport, teamName: string) => void
 }
 
-const DATE_ITEM_WIDTH = '30%'
-
 const useStyle = makeStyles()((theme) => ({
-  dateItem: {
-    maxWidth: DATE_ITEM_WIDTH,
-    minWidth: DATE_ITEM_WIDTH,
-    width: DATE_ITEM_WIDTH
-  },
   reportNameItem: {
     paddingRight: theme.spacing(2)
+  },
+  secondaryText: {
+    display: 'flex',
+    flexDirection: 'column'
   }
 }))
 
 export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (props) => {
-  const { medicalReport, onClickMedicalReport, onDeleteMedicalReport } = props
+  const { displayDivider, medicalReport, onClickMedicalReport, onDeleteMedicalReport } = props
 
   const { t } = useTranslation('yourloops')
   const { classes } = useStyle()
@@ -92,7 +90,7 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
     <ListItem
       data-testid="medical-report-item"
       dense
-      divider
+      divider={displayDivider}
       disablePadding
       secondaryAction={
         isUserAuthor &&
@@ -123,27 +121,24 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
           <ListItemText
             className={classes.reportNameItem}
             primary={
-              <Typography variant="subtitle2" className="bold">
-                {t('medical-report')}-{medicalReport.number}
-              </Typography>
+              <>
+                <Typography component="span" variant="subtitle2" className="bold">
+                  {t('medical-report')}-{medicalReport.number}&nbsp;
+                </Typography>
+                <Typography component="span" variant="caption" color={VAR_TEXT_BASE_COLOR_DARKER} alignSelf="center">
+                  {medicalReportDate}
+                </Typography>
+              </>
             }
             secondary={
-              <Typography variant="caption" color={VAR_TEXT_BASE_COLOR_LIGHT}>
-                {createdBy}
-              </Typography>
-            }
-          />
-          <ListItemText
-            className={classes.dateItem}
-            primary={
-              <Typography variant="caption" color={VAR_TEXT_BASE_COLOR_DARKER}>
-                {medicalReportDate}
-              </Typography>
-            }
-            secondary={
-              <Typography fontSize="12px" color={VAR_TEXT_BASE_COLOR_LIGHT}>
-                {teamName}
-              </Typography>
+              <span className={classes.secondaryText}>
+                <Typography component="span" variant="caption" color={VAR_TEXT_BASE_COLOR_LIGHT}>
+                  {createdBy}
+                </Typography>
+                <Typography component="span" fontSize="12px" color={VAR_TEXT_BASE_COLOR_LIGHT}>
+                  {teamName}
+                </Typography>
+              </span>
             }
           />
         </Box>

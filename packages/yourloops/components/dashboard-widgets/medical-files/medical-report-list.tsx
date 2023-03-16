@@ -34,7 +34,6 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import List from '@mui/material/List'
-import Typography from '@mui/material/Typography'
 
 import { useAuth } from '../../../lib/auth'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
@@ -123,15 +122,13 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
 
   return (
     <React.Fragment>
-      <Typography className={classes.categoryTitle}>
-        {t('medical-reports')}
-      </Typography>
       {medicalReports
         ? <List className={classes.list}>
           {getSortedMedicalReports(medicalReports).map((medicalReport, index) =>
             <MedicalReportItem
               key={index}
               medicalReport={medicalReport}
+              displayDivider={index !== medicalReports.length - 1}
               onClickMedicalReport={onClickMedicalReport}
               onDeleteMedicalReport={onDeleteMedicalReport}
             />

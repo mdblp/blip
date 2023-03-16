@@ -230,7 +230,6 @@
   "medical-report-delete-success": "Medical report successfully deleted",
   "medical-report-save-failed": "Medical report save failed",
   "medical-report-save-success": "Medical report successfully saved",
-  "medical-reports": "Medical reports",
   "medical-reports-get-failed": "Failed to get medical reports, please reload the page",
   "member": "Member",
   "members": "Members",

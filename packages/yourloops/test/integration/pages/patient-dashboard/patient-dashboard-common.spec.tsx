@@ -113,7 +113,7 @@ describe('Patient dashboard for anyone', () => {
 
     const medicalFilesCard = screen.getByTestId('medical-files-card')
     expect(medicalFilesCard).toBeVisible()
-    expect(medicalFilesCard).toHaveTextContent('Medical filesMedical reportsMedical report-1Created by Vishnou Lapaix2022-01-10MySecondTeamMedical report-2Created by Vishnou Lapaix2022-01-02MySecondTeamNew')
+    expect(medicalFilesCard).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeamNew')
 
     const alarmCard = screen.getByTestId('alarm-card')
     expect(alarmCard).toBeVisible()
