@@ -95,5 +95,5 @@ export const checkSensorUsage = async (expectedTextContent: string) => {
 }
 export const checkGlucoseManagementIndicator = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('GMI-stat')).toHaveTextContent(expectedTextContent)
+  expect(patientStatistics.getByTestId('glucoseManagementIndicator-stat')).toHaveTextContent(expectedTextContent)
 }
