@@ -308,7 +308,7 @@ describe('MedicalReportEditDialog hook', () => {
       expect(onSaved).toHaveBeenCalled()
     })
 
-    it('should show error when update failed', async () => {
+    it('should show error when create failed', async () => {
       const firstName = 'Sandy'
       const lastName = 'Kilos';
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({

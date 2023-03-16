@@ -48,7 +48,7 @@ import {
   type MedicalReportDeleteDialogPayload
 } from '../../../lib/medical-files/models/medical-report.model'
 import { getSortedMedicalReports } from './medical-report-list.util'
-import { MedicalReportItem } from './medical-report'
+import { MedicalReportItem } from './medical-report-item'
 
 const useStyle = makeStyles()(() => ({
   categoryTitle: {

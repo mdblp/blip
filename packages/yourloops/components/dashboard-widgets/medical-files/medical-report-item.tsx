@@ -55,7 +55,6 @@ interface MedicalReportItemProps {
   onDeleteMedicalReport: (medicalReport: MedicalReport, teamName: string) => void
 }
 
-const FONT_SIZE_SMALL = '12px'
 const DATE_ITEM_WIDTH = '30%'
 
 const useStyle = makeStyles()((theme) => ({
@@ -124,12 +123,12 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
           <ListItemText
             className={classes.reportNameItem}
             primary={
-              <Typography className="bold" fontSize="14px">
+              <Typography variant="subtitle2" className="bold">
                 {t('medical-report')}-{medicalReport.number}
               </Typography>
             }
             secondary={
-              <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_LIGHT}>
+              <Typography variant="caption" color={VAR_TEXT_BASE_COLOR_LIGHT}>
                 {createdBy}
               </Typography>
             }
@@ -137,12 +136,12 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
           <ListItemText
             className={classes.dateItem}
             primary={
-              <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_DARKER}>
+              <Typography variant="caption" color={VAR_TEXT_BASE_COLOR_DARKER}>
                 {medicalReportDate}
               </Typography>
             }
             secondary={
-              <Typography fontSize={FONT_SIZE_SMALL} color={VAR_TEXT_BASE_COLOR_LIGHT}>
+              <Typography fontSize="12px" color={VAR_TEXT_BASE_COLOR_LIGHT}>
                 {teamName}
               </Typography>
             }
