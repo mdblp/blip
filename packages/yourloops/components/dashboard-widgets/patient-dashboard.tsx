@@ -171,10 +171,9 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           tidelineData={medicalDataService}
           trackMetric={trackMetric}
           dataUtil={dataUtil}
-          chartPrefs={chartPrefs}
-          endpoints={endpoints}
-          loading={loading}
           onSwitchToDaily={onSwitchToDaily}
+          medicalData={medicalData}
+          dateFilter={dateFilter}
         />
       </Grid>
 
