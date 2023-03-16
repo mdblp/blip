@@ -43,7 +43,7 @@ export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndi
   const { glucoseManagementIndicator, totalGMI } = glucoseManagementIndicatorData
   const annotations = [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
   return (
-    <Box data-testid="stat-glucoseManagementIndicator">
+    <Box data-testid="glucoseManagementIndicator-stat">
       <SimpleStat
         annotations={annotations}
         title={t('glucose-management-indicator-title')}
