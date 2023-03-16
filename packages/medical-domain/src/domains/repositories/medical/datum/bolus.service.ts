@@ -32,6 +32,8 @@ import BaseDatumService from './basics/base-datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { type BolusSubtype } from '../../../models/medical/datum/enums/bolus-subtype.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import DatumService from '../datum.service'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Bolus => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -91,9 +93,14 @@ const deduplicate = (data: Bolus[], _opts: MedicalDataOptions): Bolus[] => {
   })
 }
 
+const filterOnDate = (data: Bolus[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Bolus[] => (
+  DatumService.filterOnDate(data, start, end, weekDaysFilter) as Bolus[]
+)
+
 const BolusService: DatumProcessor<Bolus> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default BolusService

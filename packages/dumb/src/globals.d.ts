@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,6 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module '*.css'
-declare module '*.svg'
-declare module '@serprex/react-motion'
+import { type AppConfig } from 'yourloops/lib/config/models/app-config.model'
+
+declare global {
+  interface Window {
+    config?: AppConfig
+  }
+}

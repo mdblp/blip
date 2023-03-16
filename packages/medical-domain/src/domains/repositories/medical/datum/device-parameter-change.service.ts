@@ -32,6 +32,9 @@ import type MedicalDataOptions from '../../../models/medical/medical-data-option
 import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
+import DatumService from '../datum.service'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { DeviceEventSubtype } from '../../../models/medical/datum/enums/device-event-subtype.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -47,7 +50,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const deviceParameterChange: DeviceParameterChange = {
     ...base,
     type: DatumType.DeviceEvent,
-    subType: 'deviceParameter',
+    subType: DeviceEventSubtype.DeviceParameter,
     params: [
       {
         id: base.id,
@@ -102,6 +105,10 @@ const groupData = (data: DeviceParameterChange[]): DeviceParameterChange[] => {
   return groupedData
 }
 
+const filterOnDate = (data: DeviceParameterChange[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): DeviceParameterChange[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as DeviceParameterChange[]
+}
+
 interface DeviceParameterProcessor {
   groupData: (data: DeviceParameterChange[]) => DeviceParameterChange[]
 }
@@ -109,6 +116,7 @@ interface DeviceParameterProcessor {
 const DeviceParameterChangeService: DatumProcessor<DeviceParameterChange> & DeviceParameterProcessor = {
   normalize,
   deduplicate,
+  filterOnDate,
   groupData
 }
 

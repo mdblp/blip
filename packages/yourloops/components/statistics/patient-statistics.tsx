@@ -26,39 +26,55 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type VizDataUtil } from 'tidepool-viz'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { BgSource } from 'dumb/src/models/blood-glucose.model'
+import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
+import { SensorUsageStat } from './sensor-usage-stat'
+import {
+  GlycemiaStatisticsService
+} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 
 export interface PatientStatisticsProps {
-  dataUtil: VizDataUtil
+  medicalData: MedicalData
   bgPrefs: BgPrefs
-  endpoints: string[]
+  dateFilter: DateFilter
+  bgSource: BgType
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { dataUtil, bgPrefs, endpoints, children } = props
-  const theme = useTheme()
-  dataUtil.endpoints = endpoints
-  const cbgStatType: CBGStatType = dataUtil.bgSource === BgSource.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
+  const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const cbgSelected = bgSource === DatumType.Cbg
+  const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  const sensorUsageData = {
+    total,
+    usage: sensorUsage
+  }
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
-    ? dataUtil.getTimeInRangeData()
-    : dataUtil.getReadingsInRangeData()
+    ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+    : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+  const theme = useTheme()
 
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
-        bgBounds={dataUtil.bgBounds}
-        bgSource={dataUtil.bgSource}
+        bgBounds={bgPrefs.bgBounds}
+        bgSource={bgSource}
         cbgStatType={cbgStatType}
         data={cbgPercentageBarChartData}
         bgPrefs={bgPrefs}
-        days={dataUtil?.days ?? 0}
+        days={numberOfDays}
       />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      {cbgSelected &&
+        <>
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          <SensorUsageStat sensorUsageData={sensorUsageData} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
       {children}
     </Box>
   )

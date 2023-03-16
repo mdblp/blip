@@ -29,7 +29,7 @@ import type BaseDatum from './basics/base-datum.model'
 import { type DatumType } from './enums/datum-type.enum'
 
 type TimeZoneChange = BaseDatum & {
-  type: DatumType
+  type: DatumType.DeviceEvent
   subType: 'timeChange'
   from: {
     time: string

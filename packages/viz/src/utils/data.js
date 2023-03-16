@@ -3,10 +3,10 @@ import moment from 'moment-timezone'
 import _ from 'lodash'
 import bows from 'bows'
 
-import { convertBG, MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
+import { convertBG, classifyBgValue, MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import { getBasalGroupDurationsFromEndpoints, getTotalBasalFromEndpoints } from './basal'
 import { getTotalBolus } from './bolus'
-import { cgmSampleFrequency, classifyBgValue, reshapeBgClassesToBgBounds } from './bloodglucose'
+import { cgmSampleFrequency, reshapeBgClassesToBgBounds } from './bloodglucose'
 import { addDuration } from './datetime'
 import { getLatestPumpUpload } from './device'
 

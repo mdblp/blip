@@ -19,7 +19,7 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import moment from 'moment-timezone'
 
-import PrintView from './PrintView'
+import { LayoutColumnType, PrintView } from 'dumb/src/modules/print/print-view'
 
 import {
   cgmStatusMessage,
@@ -50,6 +50,7 @@ import {
 } from '../../utils/constants'
 
 import { Images } from './utils/constants'
+import { buildLayoutColumns } from 'dumb/dist/src/modules/print/print-view.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -149,17 +150,36 @@ class BasicsPrintView extends PrintView {
   }
 
   initLayout() {
-    this.setLayoutColumns({
-      width: this.chartArea.width,
-      gutter: 15,
-      type: 'percentage',
-      widths: [28, 72]
-    })
+    this.setLayoutColumns(this.chartArea.width, 15, 'percentage', [28, 72])
   }
 
   render() {
     this.renderLeftColumn()
     this.renderCenterColumn()
+  }
+
+  goToLayoutColumnPosition(index: number): void {
+    if (this.layoutColumns) {
+      this.doc.x = this.layoutColumns.columns[index].x
+      this.doc.y = this.layoutColumns.columns[index].y
+      this.layoutColumns.activeIndex = index
+    }
+  }
+
+  getActiveColumnWidth(): number {
+    if (!this.layoutColumns) {
+      throw Error('this.layoutColumns must be defined')
+    }
+    return this.layoutColumns.columns[this.layoutColumns.activeIndex].width
+  }
+
+  setLayoutColumns(width: number, gutter: number, type: LayoutColumnType, widths: number[]): void {
+    const columns = buildLayoutColumns(widths, this.chartArea.width, type, this.chartArea.leftEdge, this.doc.y, gutter)
+
+    this.layoutColumns = {
+      activeIndex: 0,
+      columns
+    }
   }
 
   renderLeftColumn() {
@@ -292,19 +312,22 @@ class BasicsPrintView extends PrintView {
       this.data.sections.averageDailyCarbs.title,
       averageDailyCarbs ? formatDecimalNumber(averageDailyCarbs) : '--',
       ' g',
-      !averageDailyCarbs,
+      !averageDailyCarbs
     )
 
     this.renderSimpleStat(this.data.sections.totalDailyDose.title,
       totalDailyDose ? formatDecimalNumber(totalDailyDose, 1) : '--',
       ' U',
-      !totalDailyDose,
+      !totalDailyDose
     )
 
     const { averageGlucose } = _.get(this.data.stats, 'averageGlucose.data.raw', {})
     this.renderSimpleStat(t('Average BG'), formatDecimalNumber(averageGlucose), `\n${this.bgUnits}`)
 
-    const { glucoseManagementIndicator, insufficientData } = _.get(this.data.stats, 'glucoseManagementIndicator.data.raw', {})
+    const {
+      glucoseManagementIndicator,
+      insufficientData
+    } = _.get(this.data.stats, 'glucoseManagementIndicator.data.raw', {})
     if (!insufficientData && !Number.isNaN(glucoseManagementIndicator)) {
       // HbA1c is an estimation, which only have meaning with enough data
       // If we don't have enough data to print it, don't display it
@@ -337,7 +360,7 @@ class BasicsPrintView extends PrintView {
         this.renderTableHeading(heading, {
           font: this.font,
           fontSize: this.defaultFontSize,
-          columnDefaults: {
+          columnsDefaults: {
             width: columnWidth,
             border: 'TLR'
           }
@@ -613,7 +636,7 @@ class BasicsPrintView extends PrintView {
 
     const columnWidth = this.getActiveColumnWidth()
 
-    this.renderSectionHeading(title, {
+    this.renderSectionHeading(title.text, {
       width: columnWidth,
       fontSize: this.largeFontSize,
       moveDown: 0.25
@@ -810,7 +833,7 @@ class BasicsPrintView extends PrintView {
 
     const gridValues = _.map(
       _.fill(Array(gridSpaces), 0),
-      (space, index) => (_.get(countArray, index, 0) + _.get(extrasArray, index, 0)),
+      (space, index) => (_.get(countArray, index, 0) + _.get(extrasArray, index, 0))
     )
 
     if (extrasArray.length) {

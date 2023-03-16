@@ -32,6 +32,7 @@ import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { type WizardInputMealFat } from '../../../models/medical/datum/enums/wizard-input-meal-fat.enum'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Wizard => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -66,9 +67,14 @@ const deduplicate = (data: Wizard[], opts: MedicalDataOptions): Wizard[] => {
   return DatumService.deduplicate(data, opts) as Wizard[]
 }
 
+const filterOnDate = (data: Wizard[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Wizard[] => {
+  return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Wizard[]
+}
+
 const WizardService: DatumProcessor<Wizard> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default WizardService

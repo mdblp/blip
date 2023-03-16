@@ -20,10 +20,8 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
-
 import { utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
-
 import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
@@ -552,6 +550,11 @@ class Trends extends React.Component {
     } = this.props
 
     const endpoints = this.getEndpoints()
+    const dateFilter = {
+      start: Date.parse(endpoints[0]).valueOf(),
+      end: Date.parse(endpoints[1]).valueOf(),
+      weekDays: this.props.chartPrefs.trends.activeDays
+    }
 
     return (
       <TrendsProvider>
@@ -576,9 +579,10 @@ class Trends extends React.Component {
                 <div className="patient-data-sidebar-inner">
                   <div id="toggle-bg-replacement" style={{ height: 36 }} />
                   <PatientStatistics
-                    dataUtil={this.props.dataUtil}
+                    medicalData={this.props.tidelineData.medicalData}
                     bgPrefs={this.props.bgPrefs}
-                    endpoints={endpoints}
+                    dateFilter={dateFilter}
+                    bgSource={this.props.dataUtil.bgSource}
                   >
                     <Stats
                       bgPrefs={this.props.bgPrefs}

@@ -27,10 +27,6 @@
 
 import { UnitsType } from '../../../models/enums/units-type.enum'
 
-export const ensureNumeric = (value: number | undefined | null): number => {
-  return !value || isNaN(value) ? 0 : value
-}
-
 export const formatBgValue = (value: number, units: UnitsType): string => {
   const valueToString = Math.round(value).toString()
   switch (units) {

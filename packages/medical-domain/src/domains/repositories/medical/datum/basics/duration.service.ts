@@ -28,8 +28,9 @@
 import DurationUnit from '../../../../models/medical/datum/enums/duration-unit.enum'
 import type Duration from '../../../../models/medical/datum/basics/duration.model'
 import type MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
-import { getNormalizedEnd } from '../../../time/time.service'
+import { getNormalizedEnd, isEpochBetweenBounds } from '../../../time/time.service'
 import { type DatumProcessor } from '../../../../models/medical/datum.model'
+import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, _opts: MedicalDataOptions): Duration => {
   if (typeof rawData.time !== 'string') {
@@ -53,9 +54,14 @@ const deduplicate = (data: Duration[], _opts: MedicalDataOptions): Duration[] =>
   return data
 }
 
+const filterOnDate = (data: Duration[], start: number, end: number, _weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Duration[] => {
+  return data.filter(dat => (isEpochBetweenBounds(dat.epochEnd, start, end)))
+}
+
 const DurationService: DatumProcessor<Duration> = {
   normalize,
-  deduplicate
+  deduplicate,
+  filterOnDate
 }
 
 export default DurationService

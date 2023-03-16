@@ -107,6 +107,9 @@ const plugins = [
     inject: 'body',
     hash: false,
     minify: false
+  }),
+  new webpack.ProvidePlugin({
+    Buffer: ['buffer', 'Buffer']
   })
 ]
 
@@ -299,6 +302,9 @@ const webpackConfig = {
       { enforce: 'pre', test: reJTSX, loader: 'source-map-loader' },
       { test: /locales\/languages\.json$/, loader: '../../webpack.locales-loader.js' }
     ]
+  },
+  experiments: {
+    topLevelAwait: true
   }
 }
 

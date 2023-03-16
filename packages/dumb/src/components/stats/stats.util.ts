@@ -25,12 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface ActiveDays {
-  monday: boolean
-  tuesday: boolean
-  wednesday: boolean
-  thursday: boolean
-  friday: boolean
-  saturday: boolean
-  sunday: boolean
+export const ensureNumeric = (value: number | undefined | null): number => {
+  return !value || isNaN(value) ? 0 : value
 }

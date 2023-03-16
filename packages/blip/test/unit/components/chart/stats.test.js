@@ -194,10 +194,9 @@ describe('Stats', () => {
         })
         wrapper.update()
 
-        expect(wrapper.find('.Stats').children()).to.have.length(5)
+        expect(wrapper.find('.Stats').children()).to.have.length(4)
 
         const expectedStats = [
-          'sensorUsage',
           'glucoseManagementIndicator',
           'coefficientOfVariation'
         ]
@@ -235,17 +234,6 @@ describe('Stats', () => {
           wrapper.unmount()
           wrapper = null
         }
-      })
-
-      it('should show all expected stats when bgSource prop is `cbg`', () => {
-        wrapper.setProps({
-          ...wrapper.props(),
-          bgSource: 'cbg'
-        })
-        wrapper.update()
-        expect(wrapper.find('.Stats').children()).to.have.length(1)
-
-        expect(wrapper.find({ 'data-testid': 'stat-sensorUsage' })).to.have.length(1)
       })
 
       it('should show no stats when bgSource prop is `smbg`', () => {
@@ -417,7 +405,6 @@ describe('Stats', () => {
 
         const expectedStats = [
           'averageGlucose',
-          'sensorUsage',
           'glucoseManagementIndicator',
           'standardDev',
           'coefficientOfVariation'
@@ -457,21 +444,6 @@ describe('Stats', () => {
           wrapper = null
           instance = null
         }
-      })
-
-      it('should show all expected stats when bgSource prop is `cbg`', () => {
-        wrapper.setProps({
-          ...wrapper.props(),
-          bgSource: 'cbg'
-        })
-        wrapper.update()
-        const stats = instance.getStatsByChartType()
-
-        const expectedStats = [
-          'sensorUsage'
-        ]
-
-        expect(_.map(stats, 'id')).to.have.ordered.members(expectedStats)
       })
 
       it('should show all expected stats when bgSource prop is `smbg`', () => {

@@ -30,15 +30,18 @@ It is based on Tidepool Blip 1.27.
 - YLP-2118 Update axios and minor dependencies
 - YLP-2121 Removing deprecated @mui/styles library
 - YLP-2139 Remove weekly reports
+- YLP-2141 Process glycemia statistics in a dedicated service
 - YLP-2143 Migrate TrendsContainer to dumb
 - YLP-2144 Migrate dashboard from blip to Yourloops
 - YLP-2159 Get rid of connectWithTransitionGroup in viz
+- YLP-2161 Migrate PrintView from viz to dumb
 - YLP-2162 Migrate CbgDateTrace store from redux to TrendsProvider
 - YLP-2176 Migrate CBG slice actions from redux to TrendsProvider
 - YLP-2178 Remove redux store
 - YLP-2186 Handle HCP in mmol settings in alarms configuration
 - YLP-2196 Removed the team selection drop-down menu on the care team definition page
 - YLP-2217 Bump react-router-dom to 6.8.2
+- YLP-2219 Migrate SensorUsage from stats.js to yourloops
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

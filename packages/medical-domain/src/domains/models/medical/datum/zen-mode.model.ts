@@ -30,7 +30,7 @@ import type Duration from './basics/duration.model'
 import { type DatumType } from './enums/datum-type.enum'
 
 type ZenMode = BaseDatum & Duration & {
-  type: DatumType
+  type: DatumType.DeviceEvent
   subType: 'zen'
   uploadId: string
   guid: string

@@ -29,7 +29,7 @@ import type BaseDatum from './basics/base-datum.model'
 import { type DatumType } from './enums/datum-type.enum'
 
 type Fill = BaseDatum & {
-  type: DatumType
+  type: DatumType.Fill
   epochEnd: number
   normalEnd: string
   fillColor: string

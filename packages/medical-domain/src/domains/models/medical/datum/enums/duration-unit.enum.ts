@@ -28,7 +28,8 @@
 enum DurationUnit {
   Hours = 'hours',
   Minutes = 'minutes',
-  Seconds = 'seconds'
+  Seconds = 'seconds',
+  Milliseconds = 'milliseconds'
 }
 
 export default DurationUnit

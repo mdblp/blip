@@ -17,7 +17,9 @@
 
 import _ from 'lodash'
 import i18next from 'i18next'
-import PrintView from './PrintView'
+// import PrintView from './PrintView'
+
+import { PrintView } from 'dumb/src/modules/print/print-view'
 
 import {
   getDeviceMeta
@@ -119,7 +121,7 @@ class SettingsPrintView extends PrintView {
   /** @private */
   renderSettingsSection(tableData, width, { zebra, showHeaders } = false) {
     this.renderTableHeading(tableData.heading, {
-      columnDefaults: {
+      columnsDefaults: {
         fill: {
           color: this.tableSettings.colors.zebraHeader,
           opacity: 1
@@ -129,7 +131,7 @@ class SettingsPrintView extends PrintView {
     })
 
     this.renderTable(tableData.columns, tableData.rows, {
-      columnDefaults: {
+      columnsDefaults: {
         zebra : zebra ?? false,
         headerFill: false
       },

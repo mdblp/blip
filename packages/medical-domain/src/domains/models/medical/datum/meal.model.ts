@@ -31,7 +31,7 @@ import type Unit from './enums/unit.enum'
 import { type DatumType } from './enums/datum-type.enum'
 
 type Meal = BaseDatum & {
-  type: DatumType
+  type: DatumType.Food
   uploadId: string
   meal: 'rescuecarbs'
   nutrition: Nutrition

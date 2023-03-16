@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, memo, useMemo } from 'react'
 
-import { type BgBounds } from '../../../../models/blood-glucose.model'
+import { type BgBounds } from 'medical-domain'
 import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
 import { CbgSliceAnimated } from './cbg-slice-animated'
 import { CbgMedianAnimated } from '../cbg-median-animated/cbg-median-animated'
