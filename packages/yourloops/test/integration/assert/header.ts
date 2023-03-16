@@ -75,7 +75,7 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, select
 
   await userEvent.click(header.getByText(teamScopeMenuText))
 
-  const teamScopeMenu = within(screen.getByTestId('hcp-team-scope-menu'))
+  const teamScopeMenu = within(screen.getByTestId('team-scope-menu'))
   expect(teamScopeMenu.getByText('My private practice')).toBeVisible()
   expect(teamScopeMenu.getByText('Care teams')).toBeVisible()
   availableTeams.forEach((team: Team) => {
@@ -87,7 +87,7 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, select
   expect(teamScopeMenu.getByText('Create a new care team')).toBeVisible()
 
   await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
-  expect(screen.queryByTestId('hcp-team-scope-menu')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('team-scope-menu')).not.toBeInTheDocument()
 }
 
 export const checkHcpHeader = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[]) => {

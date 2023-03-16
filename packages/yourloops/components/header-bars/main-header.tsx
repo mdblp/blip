@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
@@ -97,12 +97,13 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
-  const { selectedTeamId } = useSelectedTeamContext()
+  const { selectedTeam } = useSelectedTeamContext()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
 
-  const [selectedTab, setSelectedTab] = React.useState(HcpNavigationTab.Patients)
+  const [selectedTab, setSelectedTab] = React.useState<HcpNavigationTab | boolean>(HcpNavigationTab.Patients)
 
-  const shouldDisplayCareTeamTab = selectedTeamId !== PRIVATE_TEAM_ID
+  const shouldDisplayCareTeamTab = user.isUserHcp() && selectedTeam.id !== PRIVATE_TEAM_ID
 
   const handleTabChange = (event: React.SyntheticEvent, newTab: HcpNavigationTab): void => {
     setSelectedTab(newTab)
@@ -113,9 +114,22 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
     navigate(route)
   }
 
-  const onNewTeamSelected = (): void => {
-    setSelectedTab(HcpNavigationTab.Patients)
+  const getTabByPathname = (pathname): HcpNavigationTab | boolean => {
+    switch (pathname) {
+      case AppUserRoute.Team:
+        return HcpNavigationTab.CareTeam
+      case AppUserRoute.Preferences:
+      case AppUserRoute.Notifications:
+        return false
+      default:
+        return HcpNavigationTab.Patients
+    }
   }
+
+  useEffect(() => {
+    const tabToSelect = getTabByPathname(pathname)
+    setSelectedTab(tabToSelect)
+  }, [pathname, selectedTeam])
 
   return (
     <AppBar
@@ -153,6 +167,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
           {user.isUserHcp() &&
             <StyledTabs value={selectedTab} onChange={handleTabChange} centered>
               <StyledTab
+                data-testid="main-header-hcp-patients-tab"
                 className={tab}
                 label={t('header-tab-patients')}
                 value={HcpNavigationTab.Patients}
@@ -162,6 +177,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
               />
               {shouldDisplayCareTeamTab &&
                 <StyledTab
+                  data-testid="main-header-hcp-care-team-tab"
                   className={tab}
                   label={t('header-tab-care-team')}
                   value={HcpNavigationTab.CareTeam}
@@ -189,7 +205,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
             {!user?.isUserCaregiver() &&
               <React.Fragment>
                 {user.isUserPatient() && <TeamSettingsMenu />}
-                {user.isUserHcp() && <TeamScopeMenu onNewTeamSelected={onNewTeamSelected}/>}
+                {user.isUserHcp() && <TeamScopeMenu />}
                 <div className={separator} />
               </React.Fragment>
             }

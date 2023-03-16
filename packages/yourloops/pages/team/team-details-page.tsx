@@ -101,8 +101,8 @@ function TeamDetailsPage(): JSX.Element {
   const { t } = useTranslation('yourloops')
 
   const { teamId: queryParamTeamId } = paramHook as { teamId: string }
-  const { selectedTeamId } = useSelectedTeamContext()
-  const teamId = isUserHcp ? selectedTeamId : queryParamTeamId
+  const { selectedTeam } = useSelectedTeamContext()
+  const teamId = isUserHcp ? selectedTeam.id : queryParamTeamId
 
   const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] }>(
     { selectedTeam: null, teamNames: [] }
