@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022 - 2023, Diabeloop
  * Device Usage widget component
  *
  * All rights reserved.
@@ -30,7 +30,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import _ from 'lodash'
-
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -44,14 +43,16 @@ import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import SettingsDialog from './settingsDialog'
-
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
-
 import { BasicsChart } from 'tideline'
-import Stats from './stats'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
+import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
+import {
+  GlycemiaStatisticsService
+} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { TimeService } from 'medical-domain'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -103,21 +104,33 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily, medicalData, dateFilter } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
-
+  // eslint-disable-next-line react/prop-types
+  const cbgSelected = dataUtil.bgSources.cbg
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
-
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
+  // eslint-disable-next-line react/prop-types
+  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  // eslint-disable-next-line react/prop-types
+  const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  const sensorUsageData = {
+    total,
+    usage: sensorUsage
+  }
   const deviceData = {
+    cgm: {
+      label: `${t('CGM')}:`,
+      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
+    },
     device: {
       label: `${t('dbl')}:`,
       value: device.manufacturer ?? ''
@@ -125,10 +138,6 @@ const DeviceUsage = (props) => {
     pump: {
       label: `${t('Pump')}:`,
       value: pump.manufacturer ?? ''
-    },
-    cgm: {
-      label: `${t('CGM')}:`,
-      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
     }
   }
 
@@ -201,16 +210,12 @@ const DeviceUsage = (props) => {
           </TableContainer>
         </Box>
         <Divider variant="fullWidth" className={classes.divider} />
-        <Stats
-          bgPrefs={bgPrefs}
-          //eslint-disable-next-line
-          bgSource={dataUtil.bgSource}
-          chartPrefs={chartPrefs}
-          chartType="deviceUsage"
-          dataUtil={dataUtil}
-          endpoints={endpoints}
-          loading={loading}
-        />
+        {cbgSelected &&
+          <>
+            <SensorUsageStat sensorUsageData={sensorUsageData} />
+            <Divider variant="fullWidth" className={classes.divider} />
+          </>
+        }
         <BasicsChart
           //eslint-disable-next-line
           bgClasses={bgPrefs.bgClasses}
@@ -220,7 +225,8 @@ const DeviceUsage = (props) => {
           patient={patient}
           tidelineData={tidelineData}
           timePrefs={timePrefs}
-          trackMetric={trackMetric} />
+          trackMetric={trackMetric}
+        />
       </CardContent>
     </GenericDashboardCard>
     {dialogOpened &&
@@ -240,9 +246,11 @@ DeviceUsage.propType = {
   bgPrefs: PropTypes.object.isRequired,
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
+  dataUtil: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
+  medicalData: PropTypes.object.isRequired,
+  dateFilter: PropTypes.object.isRequired,
   trackMetric: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired
 }
-
 export default DeviceUsage

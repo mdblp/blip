@@ -41,6 +41,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2186 Handle HCP in mmol settings in alarms configuration
 - YLP-2196 Removed the team selection drop-down menu on the care team definition page
 - YLP-2217 Bump react-router-dom to 6.8.2
+- YLP-2219 Migrate SensorUsage from stats.js to yourloops
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

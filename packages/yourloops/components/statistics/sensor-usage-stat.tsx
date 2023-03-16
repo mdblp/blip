@@ -24,16 +24,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { type FunctionComponent } from 'react'
+import { SimpleStat } from 'dumb'
+import { StatFormats } from 'dumb/dist/src/models/stats.model'
+import { t } from 'i18next'
+import Box from '@mui/material/Box'
 
-import { UnitsType } from '../../../models/enums/units-type.enum'
+export interface SensorUsageData {
+  total: number
+  usage: number
+}
 
-export const formatBgValue = (value: number, units: UnitsType): string => {
-  const valueToString = Math.round(value).toString()
-  switch (units) {
-    case UnitsType.MMOLL:
-      return parseFloat(valueToString).toFixed(1)
-    case UnitsType.MGDL:
-    default:
-      return parseInt(valueToString).toString()
-  }
+interface SensorUsageStatProp {
+  sensorUsageData: SensorUsageData
+}
+
+export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
+  const { sensorUsageData } = props
+  const { usage, total } = sensorUsageData
+
+  return (
+    <Box data-testid="sensor-usage-stat">
+      <SimpleStat
+        annotations={[t('sensor-usage-tooltip', { cbgLabel: t('CGM') })]}
+        title={t('sensor-usage')}
+        value={usage}
+        summaryFormat={StatFormats.Percentage}
+        total={total} />
+    </Box>
+  )
 }

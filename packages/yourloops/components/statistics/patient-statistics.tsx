@@ -27,11 +27,14 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { type BgType, type DateFilter, type MedicalData, DatumType, TimeService } from 'medical-domain'
-import { GlycemiaStatisticsService } from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
+import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
+import { SensorUsageStat } from './sensor-usage-stat'
+import {
+  GlycemiaStatisticsService
+} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -42,13 +45,18 @@ export interface PatientStatisticsProps {
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
   const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
-  const theme = useTheme()
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
-
+  const cbgSelected = bgSource === DatumType.Cbg
+  const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  const sensorUsageData = {
+    total,
+    usage: sensorUsage
+  }
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+  const theme = useTheme()
 
   return (
     <Box data-testid="patient-statistics">
@@ -60,7 +68,13 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgPrefs={bgPrefs}
         days={numberOfDays}
       />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      {cbgSelected &&
+        <>
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          <SensorUsageStat sensorUsageData={sensorUsageData} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
       {children}
     </Box>
   )
