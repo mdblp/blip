@@ -258,14 +258,14 @@ describe('GlycemiaStatisticsService getSensorUsage', () => {
     const stats = GlycemiaStatisticsService.getSensorUsage(cbgData, 1, dateFilterOneDay)
     expect(stats).toEqual({
       sensorUsage: MS_IN_MIN * 15 * 3 + MS_IN_MIN * 5 * 2,
-      total: MS_IN_DAY
+      totalUsage: MS_IN_DAY
     })
   })
   it('should return sensor usage when viewing more than 1 day', () => {
     const stats = GlycemiaStatisticsService.getSensorUsage(cbgData, 2, dateFilterTwoDays)
     expect(stats).toEqual({
       sensorUsage: MS_IN_MIN * 15 * 3 + MS_IN_MIN * 5 * 3,
-      total: 2 * MS_IN_DAY
+      totalUsage: 2 * MS_IN_DAY
     })
   })
 })
