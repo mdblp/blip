@@ -62,11 +62,6 @@ export function useSelectedTeamProviderCustomHook(): SelectedTeamContextResult {
 
   const [selectedTeam, setSelectedTeam] = useState<Team>(() => getTeamToSelect())
 
-  useEffect(() => {
-    const team = getTeamToSelect()
-    setSelectedTeam(team)
-  }, [getDefaultTeam, medicalTeams])
-
   const selectTeam = (teamId: string): void => {
     const team = availableTeams.find((team: Team) => team.id === teamId)
     if (!team) {
@@ -75,6 +70,11 @@ export function useSelectedTeamProviderCustomHook(): SelectedTeamContextResult {
     setSelectedTeam(team)
     localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, teamId)
   }
+
+  useEffect(() => {
+    const team = getTeamToSelect()
+    setSelectedTeam(team)
+  }, [getDefaultTeam, getTeamToSelect, medicalTeams])
 
   return {
     selectedTeam,
