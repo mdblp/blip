@@ -20,10 +20,8 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
-
 import { utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
-
 import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
