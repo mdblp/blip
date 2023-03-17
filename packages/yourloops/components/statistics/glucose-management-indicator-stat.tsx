@@ -28,20 +28,15 @@ import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { SimpleStat } from 'dumb'
 import { Box } from '@mui/material'
-import { StatFormats } from 'dumb/dist/src/models/stats.model'
+import { StatFormats } from 'dumb/src/models/stats.model'
 
-interface GlucoseManagementIndicatorData {
+interface GlucoseManagementIndicatorProps {
   glucoseManagementIndicator: number
   totalGMI: number
 }
 
-interface GlucoseManagementIndicatorProps {
-  glucoseManagementIndicatorData: GlucoseManagementIndicatorData
-}
-
 export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
-  const { glucoseManagementIndicatorData } = props
-  const { glucoseManagementIndicator, totalGMI } = glucoseManagementIndicatorData
+  const { glucoseManagementIndicator, totalGMI } = props
   const annotations = [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
 
   return (
