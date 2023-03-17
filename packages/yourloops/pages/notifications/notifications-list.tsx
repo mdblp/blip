@@ -71,16 +71,14 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
   const { user } = useAuth()
   const notificationsHook = useNotification()
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
+  const notifications = notificationsHook.receivedInvitations
 
   useEffect(() => {
     setPageTitle(t('breadcrumb-notifications'))
   }, [t])
-
   if (user === null) {
     throw new Error('Notification require a logged-in user')
   }
-
-  const notifications = notificationsHook.receivedInvitations
 
   const handleSwitchRoleOpen = (): void => {
     metrics.send('switch_account', 'display_switch_notification')
