@@ -131,7 +131,7 @@ describe('Notification hook', () => {
         await notifications.accept(notification)
       })
       expect(NotificationApi.acceptInvitation).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2)
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
     })
   })

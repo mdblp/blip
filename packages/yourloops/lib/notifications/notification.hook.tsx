@@ -56,8 +56,6 @@ function NotificationContextImpl(): NotificationContext {
   const accept = async (notification: Notification): Promise<void> => {
     log.info('Accept invitation', notification)
     await NotificationApi.acceptInvitation(user.id, notification)
-    const r = await NotificationApi.getReceivedInvitations(user.id)
-    setReceivedInvitations(r)
   }
 
   const decline = async (notification: Notification): Promise<void> => {
