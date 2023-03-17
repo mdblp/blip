@@ -34,6 +34,7 @@ interface GlucoseManagementIndicatorData {
   glucoseManagementIndicator: number
   totalGMI: number
 }
+
 interface GlucoseManagementIndicatorProps {
   glucoseManagementIndicatorData: GlucoseManagementIndicatorData
 }
@@ -42,6 +43,7 @@ export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndi
   const { glucoseManagementIndicatorData } = props
   const { glucoseManagementIndicator, totalGMI } = glucoseManagementIndicatorData
   const annotations = [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
+
   return (
     <Box data-testid="glucoseManagementIndicator-stat">
       <SimpleStat
