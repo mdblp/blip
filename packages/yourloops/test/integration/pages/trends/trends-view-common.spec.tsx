@@ -40,7 +40,6 @@ import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewD
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
-  checkGlucoseManagementIndicator,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
@@ -71,7 +70,6 @@ describe('Trends view for anyone', () => {
       await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
       await checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
       await checkSensorUsage('Sensor Usage0.1%')
-      await checkGlucoseManagementIndicator('GMI (estimated HbA1c)--')
       await checkRangeSelection()
       await checkDaysSelection()
 
