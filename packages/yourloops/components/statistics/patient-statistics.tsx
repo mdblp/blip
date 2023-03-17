@@ -27,22 +27,12 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import {
-  type BgType,
-  type DateFilter,
-  DatumType,
-  type MedicalData,
-  MGDL_UNITS,
-  MMOLL_UNITS,
-  TimeService
-} from 'medical-domain'
+import { type BgType, type DateFilter, DatumType, type MedicalData, MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import {
-  GlycemiaStatisticsService
-} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlycemiaStatisticsService } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 
 export interface PatientStatisticsProps {
@@ -58,6 +48,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
   const bgUnits = MGDL_UNITS || MMOLL_UNITS
+  const theme = useTheme()
   const {
     sensorUsage,
     totalUsage
@@ -79,7 +70,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-  const theme = useTheme()
 
   return (
     <Box data-testid="patient-statistics">
