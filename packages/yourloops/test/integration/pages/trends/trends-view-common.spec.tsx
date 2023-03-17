@@ -39,7 +39,8 @@ import {
 import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
-  checkAverageGlucoseStatWidget, checkGlucoseManagementIndicator,
+  checkAverageGlucoseStatWidget,
+  checkGlucoseManagementIndicator,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
