@@ -58,7 +58,7 @@ interface NotificationProps {
   notification: NotificationModel
   userRole: UserRoles
   onHelp: () => void
-  refreshNotificationHook: () => void
+  refreshReceivedInvitations: () => void
 }
 
 interface NotificationIconPayload {
@@ -227,7 +227,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const patientHook = usePatientContext()
   const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
-  const { notification, userRole, onHelp, refreshNotificationHook } = props
+  const { notification, userRole, onHelp, refreshReceivedInvitations } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
@@ -249,7 +249,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
         teamHook.refresh()
       }
       alert.success(t('accept-notification-success', { teamName: notification.target.name }))
-      refreshNotificationHook()
+      refreshReceivedInvitations()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))

@@ -87,7 +87,7 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
   const handleSwitchRoleCancel = (): void => {
     setSwitchRoleOpen(false)
   }
-  const refreshNotificationHook = async (): Promise<void> => {
+  const refreshReceivedInvitations = async (): Promise<void> => {
     await notificationsHook.refreshReceivedInvitations()
   }
 
@@ -107,7 +107,7 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
                     notification={notification}
                     userRole={user.role}
                     onHelp={handleSwitchRoleOpen}
-                    refreshNotificationHook={refreshNotificationHook}
+                    refreshReceivedInvitations={refreshReceivedInvitations}
                   />
                 </ListItem>
               ))
