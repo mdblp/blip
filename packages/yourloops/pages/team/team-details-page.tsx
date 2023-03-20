@@ -100,6 +100,8 @@ function TeamDetailsPage(): JSX.Element {
 
   const { t } = useTranslation('yourloops')
 
+  setPageTitle(t('header-tab-care-team'))
+
   const { teamId: queryParamTeamId } = paramHook as { teamId: string }
   const { selectedTeam } = useSelectedTeamContext()
   const teamId = isUserHcp ? selectedTeam.id : queryParamTeamId
@@ -128,10 +130,6 @@ function TeamDetailsPage(): JSX.Element {
   useEffect(() => {
     refresh()
   }, [refresh])
-
-  React.useEffect(() => {
-    setPageTitle(t('header-tab-care-team'))
-  }, [t])
 
   const isMonitoringEnabled = (): boolean => {
     return dropdownData.selectedTeam?.monitoring?.enabled

@@ -142,26 +142,24 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   return (
     <>
-      <Box>
-        {isMobile
-          ? <IconButton
-            color="inherit"
-            aria-label={t('open-team-selection-menu')}
-            onClick={openMenu}>
-            {selectedTeamIcon}
-          </IconButton>
-          : <Button
-            color="inherit"
-            aria-label={t('open-team-selection-menu')}
-            data-testid="team-scope-menu-button"
-            startIcon={selectedTeamIcon}
-            endIcon={<ArrowDropDownIcon />}
-            onClick={openMenu}
-          >
-            <Typography className={typography} maxWidth={MENU_MAX_WIDTH_PX}>{selectedTeamName}</Typography>
-          </Button>
-        }
-      </Box>
+      {isMobile
+        ? <IconButton
+          color="inherit"
+          aria-label={t('open-team-selection-menu')}
+          onClick={openMenu}>
+          {selectedTeamIcon}
+        </IconButton>
+        : <Button
+          color="inherit"
+          aria-label={t('open-team-selection-menu')}
+          data-testid="team-scope-menu-button"
+          startIcon={selectedTeamIcon}
+          endIcon={<ArrowDropDownIcon />}
+          onClick={openMenu}
+        >
+          <Typography className={typography} maxWidth={MENU_MAX_WIDTH_PX}>{selectedTeamName}</Typography>
+        </Button>
+      }
 
       <MenuLayout open={isMenuOpen} anchorEl={anchorEl} onClose={closeMenu}>
         <Box className={menu} data-testid="team-scope-menu">
@@ -184,7 +182,8 @@ export const TeamScopeMenu: FunctionComponent = () => {
                 <Divider variant="middle" />
               </Box>
 
-              <Typography className={sectionTitle} data-testid="team-scope-menu-care-teams-section">{t('care-teams')}</Typography>
+              <Typography className={sectionTitle}
+                          data-testid="team-scope-menu-care-teams-section">{t('care-teams')}</Typography>
 
               {sortedMedicalTeams.map((team: Team) =>
                 <MenuItem

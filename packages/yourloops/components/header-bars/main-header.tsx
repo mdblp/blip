@@ -103,8 +103,6 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
 
   const [selectedTab, setSelectedTab] = React.useState<HcpNavigationTab | boolean>(HcpNavigationTab.Patients)
 
-  const shouldDisplayCareTeamTab = user.isUserHcp() && selectedTeam.id !== PRIVATE_TEAM_ID
-
   const handleTabChange = (event: React.SyntheticEvent, newTab: HcpNavigationTab): void => {
     setSelectedTab(newTab)
   }
@@ -175,7 +173,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
                   handleTabClick(HcpNavigationTab.Patients)
                 }}
               />
-              {shouldDisplayCareTeamTab &&
+              {selectedTeam.id !== PRIVATE_TEAM_ID &&
                 <StyledTab
                   data-testid="main-header-hcp-care-team-tab"
                   className={tab}

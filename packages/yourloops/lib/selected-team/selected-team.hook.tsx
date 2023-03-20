@@ -74,7 +74,7 @@ export function useSelectedTeamProviderCustomHook(): SelectedTeamContextResult {
   useEffect(() => {
     const team = getTeamToSelect()
     setSelectedTeam(team)
-  }, [getDefaultTeam, getTeamToSelect, medicalTeams])
+  }, [getDefaultTeam, getTeamToSelect])
 
   return {
     selectedTeam,
