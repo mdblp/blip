@@ -45,6 +45,7 @@ import config from '../../lib/config/config'
 import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
+import { type AppRoute } from '../../models/enums/routes.enum'
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme: Theme) => {
   return {
@@ -230,7 +231,7 @@ const Footer: FunctionComponent = () => {
         <Box className={classes.supportButton} />
       </Box>
       <Box className={classes.centerBox}>
-        {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname)
+        {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname as AppRoute)
           ? <Box className={classes.firstLine}>
             <Box className={classes.firstLineElement}>
               <LanguageIcon className={classes.icon} />

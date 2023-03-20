@@ -38,7 +38,7 @@ import {
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
-import { AVAILABLE_TEAMS, mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/team.api.mock'
+import { AVAILABLE_TEAMS, mockTeamAPI, teamOne, teamPrivate, teamThree, teamTwo } from '../../mock/team.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
@@ -59,7 +59,18 @@ describe('HCP home page', () => {
     mockDirectShareApi()
   })
 
+  it('should not display the Care team tab if the private practice is selected', async () => {
+    localStorage.setItem('selectedTeamId', 'private')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    })
+
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamPrivate.name, isPrivate: true }, AVAILABLE_TEAMS)
+  })
+
   it('should display a list of patients and allow to remove one of them', async () => {
+    localStorage.setItem('selectedTeamId', teamThree.id)
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')

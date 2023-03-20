@@ -26,7 +26,7 @@
  */
 
 import { type SelectedTeamContextResult } from './selected-team-context.model'
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { type Team, useTeam } from '../team'
 import TeamUtils from '../team/team.util'
 
@@ -36,39 +36,48 @@ export function useSelectedTeamProviderCustomHook(): SelectedTeamContextResult {
   const { getMedicalTeams, getPrivateTeam } = useTeam()
   const medicalTeams = getMedicalTeams()
   const privateTeam = getPrivateTeam()
+  const availableTeams = useMemo(() => ([...medicalTeams, privateTeam]), [medicalTeams, privateTeam])
 
-  const getDefaultTeam = (): Team => {
+  const getDefaultTeam = useCallback((): Team => {
     if (!medicalTeams.length) {
       return privateTeam
     }
 
     return TeamUtils.sortTeamsByName(medicalTeams)[0]
-  }
+  }, [medicalTeams, privateTeam])
 
-  const getDefaultTeamId = (): string => {
-    const availableTeams = [...medicalTeams, privateTeam]
+  const getTeamToSelect = useCallback((): Team => {
     const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
     const isValidTeamId = availableTeams.some((team: Team) => team.id === localStorageTeamId)
 
     if (!isValidTeamId) {
       const defaultTeam = getDefaultTeam()
-      const defaultId = defaultTeam.id
+      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultTeam.id)
 
-      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultId)
-      return defaultId
+      return defaultTeam
     }
-    return localStorageTeamId
-  }
 
-  const [selectedTeamId, setSelectedTeamId] = useState<string>(() => getDefaultTeamId())
+    return availableTeams.find((team: Team) => team.id === localStorageTeamId)
+  }, [availableTeams, getDefaultTeam])
+
+  const [selectedTeam, setSelectedTeam] = useState<Team>(() => getTeamToSelect())
 
   const selectTeam = (teamId: string): void => {
-    setSelectedTeamId(teamId)
+    const team = availableTeams.find((team: Team) => team.id === teamId)
+    if (!team) {
+      return
+    }
+    setSelectedTeam(team)
     localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, teamId)
   }
 
+  useEffect(() => {
+    const team = getTeamToSelect()
+    setSelectedTeam(team)
+  }, [getDefaultTeam, getTeamToSelect])
+
   return {
-    selectedTeamId,
+    selectedTeam,
     selectTeam
   }
 }

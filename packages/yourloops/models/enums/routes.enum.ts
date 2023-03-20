@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface HistoryState {
-  from?: {
-    pathname?: string
-  }
+export enum AppUserRoute {
+  Caregivers = '/caregivers',
+  Dashboard = '/dashboard',
+  Home = '/home',
+  NotFound = '/not-found',
+  Notifications = '/notifications',
+  Patient = '/patient',
+  Preferences = '/preferences',
+  Team = '/team',
+  Teams = '/teams'
+}
+
+export enum AppRoute {
+  CompleteSignup = '/complete-signup',
+  Login = '/login',
+  NewConsent = '/new-consent',
+  ProductLabelling = '/product-labelling',
+  RenewConsent = '/renew-consent',
+  Training = '/training',
+  VerifyEmail = '/verify-email'
 }

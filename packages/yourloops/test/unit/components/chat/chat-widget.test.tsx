@@ -69,7 +69,7 @@ describe('Chat widget', () => {
     jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue(patientTeam);
 
     (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-      return { selectedTeamId: teamId }
+      return { selectedTeam: { id: teamId } }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserHcp: () => true } }
