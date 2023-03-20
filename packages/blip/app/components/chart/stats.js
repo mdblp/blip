@@ -244,14 +244,12 @@ class Stats extends React.Component {
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         addStat(commonStats.carbs)
         cbgSelected && addStat(commonStats.standardDev)
-        cbgSelected && addStat(commonStats.coefficientOfVariation)
         break
 
       case 'trends':
         addStat(commonStats.averageGlucose)
         cbgSelected && addStat(commonStats.glucoseManagementIndicator)
         addStat(commonStats.standardDev)
-        addStat(commonStats.coefficientOfVariation)
         break
 
       case 'patientStatistics':
@@ -261,7 +259,6 @@ class Stats extends React.Component {
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         addStat(commonStats.carbs)
         cbgSelected && addStat(commonStats.standardDev)
-        cbgSelected && addStat(commonStats.coefficientOfVariation)
         break
     }
 

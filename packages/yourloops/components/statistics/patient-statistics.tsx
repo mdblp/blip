@@ -35,6 +35,7 @@ import { SensorUsageStat } from './sensor-usage-stat'
 import {
   GlycemiaStatisticsService
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -48,7 +49,16 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
+  const theme = useTheme()
+
   const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+
+  const {
+    totalCoefficientVariation,
+    insufficientData,
+    coefficientOfVariation
+  } = GlycemiaStatisticsService.getCoefficientOfVariationData(medicalData.cbg, dateFilter)
+
   const sensorUsageData = {
     total,
     usage: sensorUsage
@@ -56,7 +66,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-  const theme = useTheme()
 
   return (
     <Box data-testid="patient-statistics">
@@ -72,6 +81,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         <>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat sensorUsageData={sensorUsageData} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
+      {!insufficientData &&
+        <>
+          <CoefficientOfVariation totalCoefficientVariation={totalCoefficientVariation} coefficientOfVariation={coefficientOfVariation} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }

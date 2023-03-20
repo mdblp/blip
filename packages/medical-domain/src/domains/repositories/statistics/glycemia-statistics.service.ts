@@ -174,7 +174,7 @@ function getCoefficientOfVariationData(bgData: Cbg[] | Smbg[], dateFilter: DateF
   const noDataStatistics = {
     insufficientData: true,
     coefficientOfVariation: Number.NaN,
-    total: average.total
+    totalCoefficientVariation: average.total
   }
   const MIN_CBG_FOR_VARIATION_COEF = 3
   if (average.total < MIN_CBG_FOR_VARIATION_COEF) {
@@ -208,7 +208,7 @@ function getCoefficientOfVariationData(bgData: Cbg[] | Smbg[], dateFilter: DateF
   return {
     insufficientData: false,
     coefficientOfVariation: meanValues(coefficientOfVariationByDate),
-    total: average.total
+    totalCoefficientVariation: average.total
   }
 }
 
