@@ -54,6 +54,7 @@ const useStyle = makeStyles()(() => ({
     fontWeight: 600
   },
   list: {
+    paddingTop: 0,
     maxHeight: 360,
     overflow: 'auto'
   }
