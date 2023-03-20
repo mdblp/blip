@@ -1,11 +1,10 @@
 name: Front CI
 
 on:
-  # FIXME This should be removed before merging to dblp
   push:
-    branches: [ 'dblp', 'feature/hcp-team-scope' ]
+    branches: [ 'dblp' ]
   pull_request:
-    branches: [ 'dblp', 'feature/hcp-team-scope' ]
+    branches: [ 'dblp' ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
