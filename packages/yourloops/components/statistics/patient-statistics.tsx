@@ -57,7 +57,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     totalCoefficientVariation,
     insufficientData,
     coefficientOfVariation
-  } = GlycemiaStatisticsService.getCoefficientOfVariationData(medicalData.cbg, dateFilter)
+  } = GlycemiaStatisticsService.getCoefficientOfVariationData(medicalData.cbg || medicalData.smbg, dateFilter)
 
   const sensorUsageData = {
     total,
