@@ -31,7 +31,6 @@ import { useTranslation } from 'react-i18next'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import CardContent from '@mui/material/CardContent'
 import MedicalReportList from './medical-report-list'
-import PrescriptionList from './prescription-list'
 import PatientUtils from '../../../lib/patient/patient.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../generic-dashboard-card'
@@ -58,7 +57,6 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
       data-testid="medical-files-card"
     >
       <CardContent>
-        <PrescriptionList teamId={team.teamId} patientId={patient.userid} />
         <MedicalReportList teamId={team.teamId} patientId={patient.userid} />
       </CardContent>
     </GenericDashboardCard>

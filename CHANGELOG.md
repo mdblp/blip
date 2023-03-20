@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2175 Implement new design system
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2220 Remove "private practice" filter from patients list
+- YLP-2231 Implement new medical reports design for patients
 
 ### Engineering use
 - YLP-2044 Remove redux settings store

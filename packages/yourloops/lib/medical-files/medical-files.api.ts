@@ -29,22 +29,6 @@ import { type Prescription } from './models/prescription.model'
 import { type MedicalReport, type NewMedicalReport } from './models/medical-report.model'
 
 export default class MedicalFilesApi {
-  static async getPrescriptions(patientId: string, teamId: string): Promise<Prescription[]> {
-    const { data } = await HttpService.get<Prescription[]>({
-      url: 'cargo/v0/prescriptions',
-      config: { params: { teamId, patientId } }
-    })
-    return data
-  }
-
-  static async getPrescription(patientId: string, teamId: string, prescriptionId: string): Promise<Blob> {
-    const { data } = await HttpService.get<Blob>({
-      url: `/cargo/v0/prescriptions/${prescriptionId}`,
-      config: { params: { teamId, patientId }, responseType: 'blob' }
-    })
-    return data
-  }
-
   static async uploadPrescription(teamId: string, patientId: string, prescriptorId: string, initialPeriod: number, file: File): Promise<Prescription> {
     const formData = new FormData()
     formData.append('patientId', patientId)
@@ -67,14 +51,6 @@ export default class MedicalFilesApi {
   static async getMedicalReports(patientId: string, teamId: string): Promise<MedicalReport[]> {
     const { data } = await HttpService.get<MedicalReport[]>({
       url: '/cargo/v0/medical-records',
-      config: { params: { teamId, patientId } }
-    })
-    return data
-  }
-
-  static async getMedicalReport(patientId: string, teamId: string, medicalReportId: string): Promise<MedicalReport> {
-    const { data } = await HttpService.get<MedicalReport>({
-      url: `/cargo/v0/medical-records/${medicalReportId}`,
       config: { params: { teamId, patientId } }
     })
     return data
