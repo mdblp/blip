@@ -59,6 +59,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgSelected = bgSource === DatumType.Cbg
   const bgUnits = MGDL_UNITS || MMOLL_UNITS
   const theme = useTheme()
+  const curentPage = window.location.href.split('/').at(-1)
+  const isTrendsPage = curentPage === 'trends'
 
   const {
     sensorUsage,
@@ -90,7 +92,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat totalUsage={totalUsage} usage={sensorUsage} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          {!insufficientData &&
+          {isTrendsPage && !insufficientData &&
             <>
               <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} totalGMI={total} />
               <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
