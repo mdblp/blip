@@ -35,29 +35,6 @@ describe('Medical files API', () => {
   const patientId = 'patientId'
   const teamId = 'teamId'
 
-  it('should get all prescriptions', async () => {
-    const payload: Prescription[] = [{} as Prescription, {} as Prescription]
-    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const prescriptions = await MedicalFilesApi.getPrescriptions(patientId, teamId)
-    expect(prescriptions).toEqual(payload)
-    expect(HttpService.get).toHaveBeenCalledWith({
-      url: 'cargo/v0/prescriptions',
-      config: { params: { teamId, patientId } }
-    })
-  })
-
-  it('should get a single prescription', async () => {
-    const prescriptionId = 'fakeId'
-    const payload: Prescription = { id: prescriptionId } as Prescription
-    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const prescription = await MedicalFilesApi.getPrescription(patientId, teamId, prescriptionId)
-    expect(prescription).toEqual(payload)
-    expect(HttpService.get).toHaveBeenCalledWith({
-      url: `/cargo/v0/prescriptions/${prescriptionId}`,
-      config: { params: { teamId, patientId }, responseType: 'blob' }
-    })
-  })
-
   it('upload a prescription', async () => {
     const payload: Prescription = { id: 'presrId' } as Prescription
     const prescriptorId = 'prescriptorId'
@@ -88,18 +65,6 @@ describe('Medical files API', () => {
     expect(medicalReports).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
       url: '/cargo/v0/medical-records',
-      config: { params: { teamId, patientId } }
-    })
-  })
-
-  it('should get a single medical report', async () => {
-    const medicalReportId = 'fakeId'
-    const payload = {} as MedicalReport
-    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const medicalReport = await MedicalFilesApi.getMedicalReport(patientId, teamId, medicalReportId)
-    expect(medicalReport).toEqual(payload)
-    expect(HttpService.get).toHaveBeenCalledWith({
-      url: `/cargo/v0/medical-records/${medicalReportId}`,
       config: { params: { teamId, patientId } }
     })
   })
