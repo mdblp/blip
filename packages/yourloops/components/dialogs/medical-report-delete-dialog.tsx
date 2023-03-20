@@ -44,10 +44,10 @@ export interface MedicalReportDeleteDialogProps {
   onClose: () => void
   onDelete: (medicalReportId: string) => void
   medicalReport: MedicalReport
-  medicalReportDate: string
+  teamName: string
 }
 
-export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDelete, medicalReportDate }: MedicalReportDeleteDialogProps): JSX.Element {
+export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDelete, teamName }: MedicalReportDeleteDialogProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
 
@@ -76,12 +76,12 @@ export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDe
       onClose={onClose}
     >
       <DialogTitle>
-        {t('delete-medical-report', { date: medicalReportDate })}
+        {t('delete-medical-report')}
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t('delete-warning', { fileName: t('medical-report-pdf', { date: medicalReportDate }) })}
+          {t('delete-medical-report-confirmation', { number: medicalReport.number, name: teamName })}
         </DialogContentText>
       </DialogContent>
 

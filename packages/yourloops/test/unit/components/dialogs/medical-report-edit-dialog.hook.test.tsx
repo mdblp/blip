@@ -25,27 +25,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react-hooks'
 import * as authHookMock from '../../../../lib/auth'
-import { type MedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
+import { type MedicalReport, type NewMedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
 import { useMedicalReportEditDialog } from '../../../../components/dialogs/medical-report-edit-dialog.hook'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
+import * as alertHookMock from '../../../../components/utils/snackbar'
+import * as teamHookMock from '../../../../lib/team'
 
 jest.mock('../../../../lib/auth')
+jest.mock('../../../../components/utils/snackbar')
+jest.mock('../../../../lib/team')
 describe('MedicalReportEditDialog hook', () => {
+  const successMock = jest.fn()
+  const errorMock = jest.fn()
   const onSaved = jest.fn()
+  const teamName = 'fakeTeamName'
   const patientId = 'patientId'
   const teamId = 'teamId'
   const authorId = 'authorId'
   const medicalReport: MedicalReport = {
     id: 'medicalReportId',
     authorId,
+    authorFirstName: 'Terry',
+    authorLastName: 'Dicule',
     creationDate: '01-01-2023',
     patientId,
     teamId,
     diagnosis: 'Dude is almost dead...',
     progressionProposal: 'End the suffering :/',
-    trainingSubject: 'Best ways to do it?'
+    trainingSubject: 'Best ways to do it?',
+    number: 65,
+    teamName
   }
+
+  beforeAll(() => {
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return {
+        getTeam: () => {
+          return { name: teamName }
+        }
+      }
+    })
+  })
 
   describe('dialogTitle', () => {
     it('should be correct when user is a patient', async () => {
@@ -184,6 +206,150 @@ describe('MedicalReportEditDialog hook', () => {
         patientId
       }))
       expect(result.current.isInReadOnly).toBeFalsy()
+    })
+  })
+
+  describe('saveMedicalReport', () => {
+    beforeAll(() => {
+      (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
+        return { success: successMock, error: errorMock }
+      })
+    })
+
+    it('should update successfully medical record', async () => {
+      (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+        user: {
+          id: 'fakeUserId',
+          isUserPatient: () => false,
+          isUserHcp: () => true
+        }
+      }))
+      const updateMedicalReportSpy = jest.spyOn(MedicalFilesApi, 'updateMedicalReport').mockResolvedValue(medicalReport)
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
+        onSaved,
+        teamId,
+        patientId
+      }))
+      await act(async () => {
+        await result.current.saveMedicalReport()
+      })
+
+      expect(updateMedicalReportSpy).toHaveBeenCalledWith(medicalReport)
+      expect(successMock).toHaveBeenCalled()
+      expect(onSaved).toHaveBeenCalled()
+    })
+
+    it('should show error when update failed', async () => {
+      (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+        user: {
+          id: 'fakeUserId',
+          isUserPatient: () => false,
+          isUserHcp: () => true
+        }
+      }))
+      const updateMedicalReportSpy = jest.spyOn(MedicalFilesApi, 'updateMedicalReport').mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        medicalReport,
+        onSaved,
+        teamId,
+        patientId
+      }))
+      await act(async () => {
+        await result.current.saveMedicalReport()
+      })
+
+      expect(updateMedicalReportSpy).toHaveBeenCalledWith(medicalReport)
+      expect(errorMock).toHaveBeenCalled()
+      expect(onSaved).not.toHaveBeenCalled()
+    })
+
+    it('should create successfully medical record', async () => {
+      const firstName = 'Sandy'
+      const lastName = 'Kilos';
+      (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+        user: {
+          id: 'fakeUserId',
+          profile: { firstName, lastName },
+          isUserPatient: () => false,
+          isUserHcp: () => true
+        }
+      }))
+      const createMedicalReportSpy = jest.spyOn(MedicalFilesApi, 'createMedicalReport').mockResolvedValue(medicalReport)
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        onSaved,
+        teamId,
+        patientId
+      }))
+
+      await act(async () => {
+        result.current.setProgressionProposal(medicalReport.progressionProposal)
+        result.current.setDiagnosis(medicalReport.diagnosis)
+        result.current.setTrainingSubject(medicalReport.trainingSubject)
+      })
+
+      await act(async () => {
+        await result.current.saveMedicalReport()
+      })
+
+      const medicalReportExpected: NewMedicalReport = {
+        patientId,
+        teamId,
+        diagnosis: medicalReport.diagnosis,
+        progressionProposal: medicalReport.progressionProposal,
+        trainingSubject: medicalReport.trainingSubject,
+        authorFirstName: firstName,
+        authorLastName: lastName,
+        teamName: medicalReport.teamName
+      }
+
+      expect(createMedicalReportSpy).toHaveBeenCalledWith(medicalReportExpected)
+      expect(successMock).toHaveBeenCalled()
+      expect(onSaved).toHaveBeenCalled()
+    })
+
+    it('should show error when create failed', async () => {
+      const firstName = 'Sandy'
+      const lastName = 'Kilos';
+      (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+        user: {
+          id: 'fakeUserId',
+          profile: { firstName, lastName },
+          isUserPatient: () => false,
+          isUserHcp: () => true
+        }
+      }))
+      const createMedicalReportSpy = jest.spyOn(MedicalFilesApi, 'createMedicalReport').mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+      const { result } = renderHook(() => useMedicalReportEditDialog({
+        onSaved,
+        teamId,
+        patientId
+      }))
+
+      await act(async () => {
+        result.current.setProgressionProposal(medicalReport.progressionProposal)
+        result.current.setDiagnosis(medicalReport.diagnosis)
+        result.current.setTrainingSubject(medicalReport.trainingSubject)
+      })
+
+      await act(async () => {
+        await result.current.saveMedicalReport()
+      })
+
+      const medicalReportExpected: NewMedicalReport = {
+        patientId,
+        teamId,
+        diagnosis: medicalReport.diagnosis,
+        progressionProposal: medicalReport.progressionProposal,
+        trainingSubject: medicalReport.trainingSubject,
+        authorFirstName: firstName,
+        authorLastName: lastName,
+        teamName: medicalReport.teamName
+      }
+
+      expect(createMedicalReportSpy).toHaveBeenCalledWith(medicalReportExpected)
+      expect(errorMock).toHaveBeenCalled()
+      expect(onSaved).not.toHaveBeenCalled()
     })
   })
 })

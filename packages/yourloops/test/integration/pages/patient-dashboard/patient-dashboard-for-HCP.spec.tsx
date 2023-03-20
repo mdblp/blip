@@ -128,7 +128,7 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Remove')).toBeVisible()
 
     /* Medical files widget */
-    await checkMedicalWidgetForHcp()
+    await checkMedicalWidgetForHcp(firstName, lastName)
 
     /* Events widget */
     expect(dashboard.getByText('Events')).toBeVisible()
