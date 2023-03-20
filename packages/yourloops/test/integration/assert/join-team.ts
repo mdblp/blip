@@ -74,7 +74,7 @@ export const checkJoinTeamDialogDisplayErrorMessage = async (badgeTeamMenu) => {
   expect(screen.queryByRole('dialog')).toBeInTheDocument()
 }
 export const checkJoinTeamDialog = async (badgeTeamMenu) => {
-  expect(badgeTeamMenu).toHaveTextContent('1')
+  expect(badgeTeamMenu).toHaveTextContent('2')
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
   await userEvent.click(buttonJoinTeam)

@@ -58,6 +58,7 @@ interface NotificationProps {
   notification: NotificationModel
   userRole: UserRoles
   onHelp: () => void
+  refreshReceivedInvitations: () => void
 }
 
 interface NotificationIconPayload {
@@ -226,11 +227,12 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const patientHook = usePatientContext()
   const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
-  const { notification, userRole, onHelp } = props
+  const { notification, userRole, onHelp, refreshReceivedInvitations } = props
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
   const isAMonitoringInvitation = notification.type === NotificationType.careTeamMonitoringInvitation
+  const isADirectInvitation = notification.type === NotificationType.directInvitation
   const [displayMonitoringTerms, setDisplayMonitoringTerms] = useState(false)
 
   if (isACareTeamPatientInvitation && !notification.target) {
@@ -243,8 +245,11 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
       patientHook.refresh()
-      teamHook.refresh()
+      if (!isADirectInvitation) {
+        teamHook.refresh()
+      }
       alert.success(t('accept-notification-success', { teamName: notification.target.name }))
+      refreshReceivedInvitations()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))
@@ -253,19 +258,19 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     }
   }
 
-  const onOpenInvitationDialog = (): void => {
+  const onOpenInvitationDialog = async (): Promise<void> => {
     if (isACareTeamPatientInvitation) {
       setAddTeamDialogVisible(true)
     } else if (isAMonitoringInvitation) {
       setDisplayMonitoringTerms(true)
     } else {
-      acceptInvitation()
+      await acceptInvitation()
     }
   }
 
-  const acceptTerms = (): void => {
+  const acceptTerms = async (): Promise<void> => {
     setDisplayMonitoringTerms(false)
-    acceptInvitation()
+    await acceptInvitation()
   }
 
   const onDecline = async (): Promise<void> => {

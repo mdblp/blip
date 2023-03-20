@@ -30,6 +30,9 @@ import config from '../lib/config/config'
 import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
 import MuseoSlabBold from 'Museo_Slab/Museo_Slab_Bold.otf'
 
+export const VAR_TEXT_BASE_COLOR_LIGHT = 'var(--text-base-color-light)'
+export const VAR_TEXT_BASE_COLOR_DARKER = 'var(--text-base-color-darker)'
+
 const DEFAULT_COLOR = '#000'
 const appElement = document.getElementById('app')
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()

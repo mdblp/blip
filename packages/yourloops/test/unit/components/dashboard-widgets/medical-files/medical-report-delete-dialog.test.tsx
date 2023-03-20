@@ -45,7 +45,7 @@ describe('Medical report delete dialog', () => {
     onClose,
     onDelete,
     medicalReport: { id: 'fakeId' } as MedicalReport,
-    medicalReportDate: '01-01-2023'
+    teamName: 'fakeTeamName'
   }): JSX.Element {
     return <MedicalReportDeleteDialog {...props} />
   }

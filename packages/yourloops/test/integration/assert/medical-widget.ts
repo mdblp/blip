@@ -28,7 +28,7 @@
 import { screen, within } from '@testing-library/react'
 import { type MedicalReport } from '../../../lib/medical-files/models/medical-report.model'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
-import { mySecondTeamId } from '../mock/team.api.mock'
+import { mySecondTeamId, mySecondTeamName } from '../mock/team.api.mock'
 import { monitoredPatientId } from '../mock/patient.api.mock'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import userEvent from '@testing-library/user-event'
@@ -46,7 +46,7 @@ const checkMedicalReportCancel = async (medicalFilesWidget: HTMLElement): Promis
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
+const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement, firstName: string, lastName: string): Promise<void> => {
   const createMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'New' })
   await userEvent.click(createMedicalReportButton)
   const createdMedicalReportDialog = within(screen.getByRole('dialog'))
@@ -62,10 +62,14 @@ const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement): Promis
     authorId: loggedInUserId,
     creationDate: MEDICAL_REPORT_TO_CREATE_DATE,
     teamId: mySecondTeamId,
+    teamName: mySecondTeamName,
     patientId: monitoredPatientId,
     diagnosis,
     progressionProposal,
-    trainingSubject
+    trainingSubject,
+    authorFirstName: firstName,
+    authorLastName: lastName,
+    number: 3
   }
   jest.spyOn(MedicalFilesApi, 'createMedicalReport').mockResolvedValue(medicalReportCreated)
   await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Save' }))
@@ -74,18 +78,21 @@ const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement): Promis
     patientId: monitoredPatientId,
     diagnosis,
     progressionProposal,
-    trainingSubject
+    trainingSubject,
+    teamName: mySecondTeamName,
+    authorFirstName: firstName,
+    authorLastName: lastName
   })
   expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully saved'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 01-01-2023Medical report 2022-01-02Medical report 2022-01-02_1New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeamMedical report-3 01-01-2023Created by HCP firstName HCP lastNameMySecondTeamNew')
 }
 
-const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement): Promise<void> => {
-  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical report 01-01-2023' })
+const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement, firstName: string, lastName: string): Promise<void> => {
+  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical report-3 01-01-2023 Created by HCP firstName HCP lastName MySecondTeam' })
   await userEvent.click(medicalReportButton)
   const createdMedicalReportDialogEdit = screen.getByRole('dialog')
-  expect(createdMedicalReportDialogEdit).toHaveTextContent('Edit medical report 01-01-20231. Diagnosisfake diagnosis​2. Progression proposalfake progression proposal​3. Training subjectfake training subject​CancelSave')
+  expect(createdMedicalReportDialogEdit).toHaveTextContent('Edit medical report 31. Diagnosisfake diagnosis​2. Progression proposalfake progression proposal​3. Training subjectfake training subject​CancelSave')
 
   const diagnosisEdited = 'fake diagnosis edited'
   const progressionProposalEdited = 'fake progression proposal edited'
@@ -99,10 +106,14 @@ const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement): Promis
     authorId: loggedInUserId,
     creationDate: MEDICAL_REPORT_TO_CREATE_DATE,
     teamId: mySecondTeamId,
+    teamName: mySecondTeamName,
     patientId: monitoredPatientId,
     diagnosis: diagnosisEdited,
     progressionProposal: progressionProposalEdited,
-    trainingSubject: trainingSubjectEdited
+    trainingSubject: trainingSubjectEdited,
+    authorFirstName: firstName,
+    authorLastName: lastName,
+    number: 3
   }
   jest.spyOn(MedicalFilesApi, 'updateMedicalReport').mockResolvedValue(medicalReportUpdated)
   await userEvent.click(within(createdMedicalReportDialogEdit).getByRole('button', { name: 'Save' }))
@@ -112,10 +123,10 @@ const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement): Promis
 }
 
 const checkMedicalReportConsult = async (medicalFilesWidget: HTMLElement): Promise<void> => {
-  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical report 2022-01-02' })
+  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Medical report-2 2022-01-02 Created by Vishnou Lapaix MySecondTeam' })
   await userEvent.click(medicalReportButton)
   const medicalReportDialog = screen.getByRole('dialog')
-  expect(medicalReportDialog).toHaveTextContent('Consult medical report 2022-01-021. Diagnosiswhatever diagnosis​2. Progression proposalwhatever proposal​3. Training subjecthere is the subject​Close')
+  expect(medicalReportDialog).toHaveTextContent('Consult medical report 21. Diagnosiswhatever diagnosis 2 ​2. Progression proposalwhatever proposal 2​3. Training subjecthere is the subject 2​Close')
 
   const medicalReportInputs = within(medicalReportDialog).getAllByRole('textbox')
   expect(medicalReportInputs[0]).toBeDisabled()
@@ -126,10 +137,10 @@ const checkMedicalReportConsult = async (medicalFilesWidget: HTMLElement): Promi
 }
 
 const checkMedicalReportDelete = async (medicalFilesWidget: HTMLElement): Promise<void> => {
-  const deleteMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Delete medical report 01-01-2023' })
+  const deleteMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'Delete medical report 3 created by team MySecondTeam' })
   await userEvent.click(deleteMedicalReportButton)
   const deleteDialog = screen.getByRole('dialog')
-  expect(deleteDialog).toHaveTextContent('Delete medical report 01-01-2023Are you sure you want to delete Medical report 01-01-2023?CancelDelete')
+  expect(deleteDialog).toHaveTextContent('Delete medical reportAre you sure you want to delete the medical report 3 created by team MySecondTeam?CancelDelete')
   const cancelButton = within(deleteDialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -140,16 +151,16 @@ const checkMedicalReportDelete = async (medicalFilesWidget: HTMLElement): Promis
   expect(MedicalFilesApi.deleteMedicalReport).toHaveBeenCalledWith(MEDICAL_REPORT_TO_CREATE_ID)
   expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully deleted'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02Medical report 2022-01-02_1New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeamNew')
 }
 
-export const checkMedicalWidgetForHcp = async (): Promise<void> => {
+export const checkMedicalWidgetForHcp = async (firstName: string, lastName: string): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02Medical report 2022-01-02_1New')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeamNew')
   await checkMedicalReportCancel(medicalFilesWidget)
-  await checkMedicalReportCreate(medicalFilesWidget)
-  await checkMedicalReportUpdate(medicalFilesWidget)
+  await checkMedicalReportCreate(medicalFilesWidget, firstName, lastName)
+  await checkMedicalReportUpdate(medicalFilesWidget, firstName, lastName)
   await checkMedicalReportConsult(medicalFilesWidget)
   await checkMedicalReportDelete(medicalFilesWidget)
 }
@@ -157,7 +168,7 @@ export const checkMedicalWidgetForHcp = async (): Promise<void> => {
 export const checkMedicalWidgetForPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesPrescriptionsPrescription_2022-01-02Medical reportsMedical report 2022-01-02')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeam')
   expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical report 2022-01-02' })).not.toBeInTheDocument()
   await checkMedicalReportConsult(medicalFilesWidget)
 }
