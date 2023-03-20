@@ -119,8 +119,8 @@ describe('Hcp Layout', () => {
     checkInDocument(notificationsPageTestId)
   })
 
-  it('should render team details page when route matches /teams/:teamId and user is hcp', () => {
-    render(getMainLayoutJSX('/teams/fakeTeamId'))
+  it('should render team details page when route matches /team and user is hcp', () => {
+    render(getMainLayoutJSX('/team'))
     checkInDocument(teamDetailsPageTestId)
   })
 })

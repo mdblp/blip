@@ -134,7 +134,7 @@ const HomePage: FunctionComponent = () => {
   }, [patientHook.errorMessage, errorMessage, t])
 
   React.useEffect(() => {
-    setPageTitle(t('hcp-tab-patients'))
+    setPageTitle(t('header-tab-patients'))
   }, [t])
 
   if (errorMessage !== null) {

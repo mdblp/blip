@@ -81,7 +81,7 @@ describe('Patient hook', () => {
       }
     });
     (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-      return { selectedTeamId }
+      return { selectedTeam: { id: selectedTeamId } }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {

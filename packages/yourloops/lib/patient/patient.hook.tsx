@@ -49,7 +49,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
-  const { selectedTeamId } = useSelectedTeamContext()
+  const { selectedTeam } = useSelectedTeamContext()
 
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
@@ -82,7 +82,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     setPatients(patientsUpdated)
   }, [patients])
 
-  const patientsForSelectedTeam = patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeamId))
+  const patientsForSelectedTeam = user.isUserHcp() ? patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeam.id)) : []
   const patientList = user.isUserHcp() ? patientsForSelectedTeam : patients
 
   const isPatientTeamPrivate = (patientTeam: PatientTeam): boolean => {

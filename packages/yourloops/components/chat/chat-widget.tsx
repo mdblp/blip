@@ -118,7 +118,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const teamHook = useTeam()
   const theme = useTheme()
   const patientHook = usePatientContext()
-  const { selectedTeamId } = useSelectedTeamContext()
+  const { selectedTeam } = useSelectedTeamContext()
   const { user } = useAuth()
   const [showPicker, setShowPicker] = useState(false)
   const [privateMessage, setPrivateMessage] = useState(false)
@@ -129,7 +129,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
   const { getUserName } = useUserName()
-  const teamId = user.isUserHcp() ? selectedTeamId : PatientUtils.getRemoteMonitoringTeam(patient).teamId
+  const teamId = user.isUserHcp() ? selectedTeam.id : PatientUtils.getRemoteMonitoringTeam(patient).teamId
 
   const handleChange = (_event: React.ChangeEvent, newValue: number): void => {
     setInputTab(newValue)

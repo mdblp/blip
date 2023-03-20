@@ -56,6 +56,7 @@ import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   typography: {
@@ -108,7 +109,7 @@ function UserMenu(): JSX.Element {
   }
 
   const onClickSettings = (): void => {
-    navigate('/preferences')
+    navigate(AppUserRoute.Preferences)
     closeMenu()
   }
 

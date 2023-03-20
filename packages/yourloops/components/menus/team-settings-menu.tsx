@@ -54,6 +54,7 @@ import DirectShareApi from '../../lib/share/direct-share.api'
 import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
 import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -118,7 +119,7 @@ function TeamSettingsMenu(): JSX.Element {
   }, [caregivers, user])
 
   const redirectToTeamDetails = (teamId: string): void => {
-    navigate(`/teams/${teamId}`)
+    navigate(`${AppUserRoute.Teams}/${teamId}`)
     closeMenu()
   }
 
@@ -128,7 +129,7 @@ function TeamSettingsMenu(): JSX.Element {
   }
 
   const redirectToCaregivers = (): void => {
-    navigate('/caregivers')
+    navigate(AppUserRoute.Caregivers)
     closeMenu()
   }
 

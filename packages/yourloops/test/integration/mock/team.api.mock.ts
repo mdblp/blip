@@ -167,7 +167,7 @@ export const teamThree: Team = {
   }]
 }
 
-const teamPrivate: Team = {
+export const teamPrivate: Team = {
   name: 'private',
   id: privateTeamId,
   code: 'private',

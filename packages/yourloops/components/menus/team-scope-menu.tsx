@@ -51,6 +51,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
 import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   sectionTitle: {
@@ -61,26 +62,33 @@ const classes = makeStyles()((theme: Theme) => ({
   menu: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1)
+  },
+  typography: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   }
 }))
 
 const MENU_MAX_WIDTH_PX = 250
-const HOME_PATHNAME = '/home'
 
 export const TeamScopeMenu: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const {
     classes: {
       sectionTitle,
-      menu
+      menu,
+      typography
     }
   } = classes()
   const { getMedicalTeams, getPrivateTeam } = useTeam()
-  const { selectTeam, selectedTeamId } = useSelectedTeamContext()
+  const { selectTeam, selectedTeam } = useSelectedTeamContext()
   const { createTeam } = useTeam()
   const alert = useAlert()
   const navigate = useNavigate()
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const isMenuOpen = !!anchorEl
   const theme = useTheme()
   const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const { pathname } = useLocation()
@@ -88,9 +96,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const privateTeam = getPrivateTeam()
   const sortedMedicalTeams = TeamUtils.sortTeamsByName(getMedicalTeams())
   const hasMedicalTeams = sortedMedicalTeams.length > 0
-  const availableTeams = [privateTeam, ...sortedMedicalTeams]
 
-  const selectedTeam = availableTeams.find((team: Team) => team.id === selectedTeamId)
   const isSelectedTeamPrivate = selectedTeam.type === TeamType.private
   const selectedTeamName = isSelectedTeamPrivate ? t('my-private-practice') : selectedTeam.name
 
@@ -98,15 +104,12 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const medicalTeamIcon = <GroupsOutlinedIcon data-testid="medical-team-icon" />
   const selectedTeamIcon = isSelectedTeamPrivate ? privatePracticeIcon : medicalTeamIcon
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
-  const isMenuOpen = !!anchorEl
-
   const onSelectTeam = (teamId: string): void => {
-    if (teamId !== selectedTeamId) {
+    if (teamId !== selectedTeam.id) {
       selectTeam(teamId)
 
-      if (pathname !== HOME_PATHNAME) {
-        navigate(HOME_PATHNAME)
+      if (pathname !== AppUserRoute.Home) {
+        navigate(AppUserRoute.Home)
       }
     }
     closeMenu()
@@ -139,31 +142,29 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   return (
     <>
-      <Box maxWidth={MENU_MAX_WIDTH_PX}>
-        {isMobile
-          ? <IconButton
-            color="inherit"
-            aria-label={t('open-team-selection-menu')}
-            onClick={openMenu}>
-            {selectedTeamIcon}
-          </IconButton>
-          : <Button
-            color="inherit"
-            aria-label={t('open-team-selection-menu')}
-            data-testid="hcp-team-scope-menu-button"
-            startIcon={selectedTeamIcon}
-            endIcon={<ArrowDropDownIcon />}
-            onClick={openMenu}
-          >
-            <Typography>{selectedTeamName}</Typography>
-          </Button>
-        }
-      </Box>
+      {isMobile
+        ? <IconButton
+          color="inherit"
+          aria-label={t('open-team-selection-menu')}
+          onClick={openMenu}>
+          {selectedTeamIcon}
+        </IconButton>
+        : <Button
+          color="inherit"
+          aria-label={t('open-team-selection-menu')}
+          data-testid="team-scope-menu-button"
+          startIcon={selectedTeamIcon}
+          endIcon={<ArrowDropDownIcon />}
+          onClick={openMenu}
+        >
+          <Typography className={typography} maxWidth={MENU_MAX_WIDTH_PX}>{selectedTeamName}</Typography>
+        </Button>
+      }
 
       <MenuLayout open={isMenuOpen} anchorEl={anchorEl} onClose={closeMenu}>
-        <Box className={menu} data-testid="hcp-team-scope-menu">
+        <Box className={menu} data-testid="team-scope-menu">
           <MenuItem
-            data-testid="hcp-team-menu-team-private-option"
+            data-testid="team-scope-menu-team-private-option"
             onClick={() => {
               onSelectTeam(privateTeam.id)
             }}>
@@ -181,12 +182,13 @@ export const TeamScopeMenu: FunctionComponent = () => {
                 <Divider variant="middle" />
               </Box>
 
-              <Typography className={sectionTitle}>{t('care-teams')}</Typography>
+              <Typography className={sectionTitle}
+                          data-testid="team-scope-menu-care-teams-section">{t('care-teams')}</Typography>
 
               {sortedMedicalTeams.map((team: Team) =>
                 <MenuItem
                   key={team.id}
-                  data-testid={`hcp-team-menu-team-${team.name}-option`}
+                  data-testid={`team-scope-menu-team-${team.name}-option`}
                   onClick={() => {
                     onSelectTeam(team.id)
                   }}>
@@ -205,7 +207,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
             <Divider variant="middle" />
           </Box>
 
-          <MenuItem onClick={onCreateTeam} data-testid="hcp-team-scope-menu-new-care-team-button">
+          <MenuItem onClick={onCreateTeam} data-testid="team-scope-menu-new-care-team-button">
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>

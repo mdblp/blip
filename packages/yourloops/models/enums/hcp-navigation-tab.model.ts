@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team } from '../team'
-
-export interface SelectedTeamContextResult {
-  selectedTeam: Team
-  selectTeam: (teamId: string) => void
+export enum HcpNavigationTab {
+  CareTeam = 'Care team',
+  Patients = 'Patients'
 }
