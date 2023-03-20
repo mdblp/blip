@@ -51,7 +51,6 @@ export interface MedicalReportEditDialogProps extends CategoryProps {
   onClose: () => void
   onSaved: (payload: MedicalReport) => void
   medicalReport?: MedicalReport
-  medicalReportDate?: string
 }
 
 const classes = makeStyles()((theme: Theme) => ({
@@ -78,7 +77,7 @@ const classes = makeStyles()((theme: Theme) => ({
 export default function MedicalReportEditDialog(props: MedicalReportEditDialogProps): JSX.Element {
   const { classes: { title, textArea, divider } } = classes()
   const { t } = useTranslation('yourloops')
-  const { onClose, onSaved, medicalReport, teamId, patientId, medicalReportDate } = props
+  const { onClose, onSaved, medicalReport, teamId, patientId } = props
   const {
     diagnosis,
     dialogTitle,
@@ -91,7 +90,7 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
     setProgressionProposal,
     setTrainingSubject,
     saveMedicalReport
-  } = useMedicalReportEditDialog({ onSaved, medicalReport, teamId, patientId, medicalReportDate })
+  } = useMedicalReportEditDialog({ onSaved, medicalReport, teamId, patientId })
 
   return (
     <Dialog

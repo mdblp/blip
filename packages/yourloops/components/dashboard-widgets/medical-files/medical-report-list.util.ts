@@ -25,47 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MedicalReport, type MedicalReportWithIndex } from '../../../lib/medical-files/models/medical-report.model'
+import { type MedicalReport } from '../../../lib/medical-files/models/medical-report.model'
 
-const getSortedMedicalReports = (medicalReports: MedicalReport[]): MedicalReport[] => {
+export const getSortedMedicalReports = (medicalReports: MedicalReport[]): MedicalReport[] => {
   return medicalReports.sort((firstMedicalReport, secondMedicalReport) => {
-    return firstMedicalReport.creationDate.localeCompare(secondMedicalReport.creationDate)
+    return secondMedicalReport.creationDate.localeCompare(firstMedicalReport.creationDate)
   })
 }
 
-const getMedicalReportsOrderedByDate = (medicalReports: MedicalReport[]): Map<string, MedicalReportWithIndex[]> => {
-  const sortedMedicalReports = getSortedMedicalReports(medicalReports)
-  return sortedMedicalReports.reduce((medicalReportsOrderedByDate: Map<string, MedicalReportWithIndex[]>, medicalReport) => {
-    const creationDate = medicalReport.creationDate.substring(0, 10)
-    const medicalReportToAdd: MedicalReportWithIndex = {
-      medicalReport
-    }
-    const medicalReportsAtGivenDate = medicalReportsOrderedByDate.get(creationDate)
-    if (medicalReportsAtGivenDate) {
-      medicalReportToAdd.index = medicalReportsAtGivenDate.length
-      medicalReportsAtGivenDate.push(medicalReportToAdd)
-      medicalReportsOrderedByDate.set(creationDate, medicalReportsAtGivenDate)
-    } else {
-      medicalReportsOrderedByDate.set(creationDate, [medicalReportToAdd])
-    }
-    return medicalReportsOrderedByDate
-  }, new Map())
-}
-
-export const getMedicalReportsToDisplay = (medicalReports?: MedicalReport[]): MedicalReportWithIndex[] => {
-  if (!medicalReports) {
-    return []
-  }
-  const medicalReportsOrdered: Map<string, MedicalReportWithIndex[]> = getMedicalReportsOrderedByDate(medicalReports)
-
-  return Array.from(medicalReportsOrdered.values()).reduce((medicalReportsFlatten, medicalReports) => {
-    medicalReportsFlatten.push(...medicalReports)
-    return medicalReportsFlatten
-  }, [])
-}
-
-export const getMedicalReportDate = (medicalReportWithIndex: MedicalReportWithIndex): string => {
-  const index = medicalReportWithIndex.index
-  const medicalReportDate = medicalReportWithIndex.medicalReport.creationDate.substring(0, 10)
-  return index ? `${medicalReportDate}_${index}` : medicalReportDate
+export const getMedicalReportDate = (medicalReport: MedicalReport): string => {
+  return medicalReport.creationDate.substring(0, 10)
 }

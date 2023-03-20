@@ -33,11 +33,11 @@ import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-f
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
+import { useTeam } from '../../lib/team'
 
 interface MedicalReportEditDialogHookProps extends CategoryProps {
   onSaved: (payload: MedicalReport) => void
   medicalReport?: MedicalReport
-  medicalReportDate?: string
 }
 
 interface MedicalReportEditDialogHookReturn {
@@ -59,7 +59,8 @@ export function useMedicalReportEditDialog(props: MedicalReportEditDialogHookPro
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { user } = useAuth()
-  const { onSaved, medicalReport, teamId, patientId, medicalReportDate } = props
+  const { getTeam } = useTeam()
+  const { onSaved, medicalReport, teamId, patientId } = props
 
   const [diagnosis, setDiagnosis] = useState<string>(medicalReport?.diagnosis || '')
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalReport?.progressionProposal || '')
@@ -74,9 +75,9 @@ export function useMedicalReportEditDialog(props: MedicalReportEditDialogHookPro
       return t('create-medical-report')
     }
     if (user.isUserHcp() && isUserAuthor) {
-      return t('edit-medical-report', { date: medicalReportDate })
+      return t('edit-medical-report', { number: medicalReport.number })
     }
-    return t('consult-medical-report', { date: medicalReportDate })
+    return t('consult-medical-report', { number: medicalReport.number })
   }
 
   const saveMedicalReport = async (): Promise<void> => {
@@ -91,12 +92,17 @@ export function useMedicalReportEditDialog(props: MedicalReportEditDialogHookPro
           trainingSubject
         })
       } else {
+        const authorProfile = user.profile
+        const teamName = getTeam(teamId).name
         payload = await MedicalFilesApi.createMedicalReport({
           teamId,
           patientId,
           diagnosis,
           progressionProposal,
-          trainingSubject
+          trainingSubject,
+          authorFirstName: authorProfile.firstName,
+          authorLastName: authorProfile.lastName,
+          teamName
         })
       }
       setInProgress(false)

@@ -33,7 +33,7 @@ import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
-import { iTeamOne, teamOne } from '../../mock/team.api.mock'
+import { iTeamOne, teamOne, teamTwo } from '../../mock/team.api.mock'
 import {
   checkJoinTeamDialog,
   checkJoinTeamDialogCancel,
@@ -49,7 +49,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientApiForPatients()
     mockDataAPI()
     mockMedicalFilesAPI()
-    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne])
+    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne, teamTwo])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
   })
