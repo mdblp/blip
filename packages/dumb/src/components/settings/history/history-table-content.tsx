@@ -29,27 +29,26 @@ import { HistorySpannedRow } from './history-table-spanned-row'
 import { HistoryTableRow } from './history-table-row'
 import React, { type FunctionComponent } from 'react'
 import { type TimePrefs } from 'medical-domain'
-import { type IncomingRow } from '../../../models/historized-parameter.model'
-import { transformToViewModels } from './history-table.core'
+import { type ChangeDateParameterGroup } from '../../../models/historized-parameter.model'
+import { transformToHistorizedParameters } from './history-table.core'
 import type moment from 'moment-timezone'
 
 interface HistoryTableContentProps {
   onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
-  rows: IncomingRow[]
+  rows: ChangeDateParameterGroup[]
   timePrefs: TimePrefs
-  length: number
 }
 
 export const HistoryTableContent: FunctionComponent<HistoryTableContentProps> = (props): JSX.Element => {
-  const { onSwitchToDaily, rows, timePrefs, length } = props
-  const allRows = transformToViewModels(rows, timePrefs)
+  const { onSwitchToDaily, rows, timePrefs } = props
+  const historizedParameters = transformToHistorizedParameters(rows, timePrefs)
 
   return (
     <tbody>
     {
-      allRows.map((row, key) =>
+      historizedParameters.map((row, key) =>
         row.isGroupedParameterHeader
-          ? (<HistorySpannedRow key={key} data={row} length={length} onSwitchToDaily={onSwitchToDaily} />)
+          ? (<HistorySpannedRow key={key} data={row} onSwitchToDaily={onSwitchToDaily} />)
           : (<HistoryTableRow key={key} data={row} />)
       )
     }

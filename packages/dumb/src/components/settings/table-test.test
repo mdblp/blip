@@ -1,0 +1,165 @@
+/*
+ * Copyright (c) 2023, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+/*
+ * == BSD2 LICENSE ==
+ * Copyright (c) 2016, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ * == BSD2 LICENSE ==
+ */
+
+/*
+ * == BSD2 LICENSE ==
+ * Copyright (c) 2016, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ * == BSD2 LICENSE ==
+ */
+import React, { FunctionComponent, useCallback } from 'react';
+import PropTypes from 'prop-types'
+import _ from 'lodash'
+
+import styles from './Table.css'
+
+export const Table: FunctionComponent = props => {
+  const getItemField = () => {
+    return item[field];
+  };
+  const normalizeColumns = () => {
+    const getItemField = getItemField;
+    const {
+      columns
+    } = props;
+    return _.map(columns, column => ({
+      cell: getItemField,
+      className: column.className,
+      key: column.key,
+      label: column.label
+    }));
+  };
+  const renderHeader = useCallback(() => {
+    const cells = _.map(normalizedColumns, (column, key) => {
+      const {
+        label
+      } = column;
+
+      if (typeof label === 'object' && _.isEqual(_.keys(label), ['main', 'secondary'])) {
+        return <th key={key} className={column.className}>
+          {label.main}<span className={styles.secondaryLabelWithMain}>{label.secondary}</span>
+        </th>;
+      }
+
+      if (column.className) {
+        return <th key={key} className={column.className}>
+          {label}
+        </th>;
+      }
+
+      return <th key={key} className={styles.secondaryLabelAlone}>
+        {label}
+      </th>;
+    });
+
+    return <thead key={`thead_${cells.length}`}><tr>{cells}</tr></thead>;
+  });
+  const renderRow = useCallback(() => {
+    const cells = _.map(normalizedColumns, column => {
+      const classname = column.className ? `${styles.secondaryLabelWithMain} ${column.className}` : styles.secondaryLabelWithMain;
+      return <td key={column.key} data-testid={`${rowData.rawData.toLowerCase()}-${column.key}`} className={classname}>{column.cell(rowData, column.key)}</td>;
+    });
+
+    return <tr key={rowKey} data-testid={`${rowData.rawData.toLowerCase()}-row`} className={trClassName} data-raw={rowData.rawData}>{cells}</tr>;
+  });
+  const renderRows = useCallback(() => {
+    const rowData = _.map(props.rows, (row, key) => renderRow(normalizedColumns, key, row));
+
+    return <tbody key={`tbody_${rowData.length}`}>{rowData}</tbody>;
+  });
+  const {
+    id,
+    title,
+    tableStyle
+  } = props;
+  const normalizedColumns = normalizeColumns();
+  let tableContents = [];
+
+  if (!_.isEmpty(title)) {
+    const {
+      className,
+      label: {
+        main,
+        secondary
+      }
+    } = title;
+    const titleCaption = <caption key={main} className={className}>
+      {main}<span className={styles.secondaryLabelWithMain}>{secondary}</span>
+    </caption>;
+    tableContents = [titleCaption, renderHeader(normalizedColumns), renderRows(normalizedColumns)];
+  } else {
+    tableContents = [renderHeader(normalizedColumns), renderRows(normalizedColumns)];
+  }
+
+  return <table id={id} className={tableStyle}>
+    {tableContents}
+  </table>;
+};
+
+Table.propTypes = {
+  title: PropTypes.shape({
+    className: PropTypes.string.isRequired,
+    label: PropTypes.object.isRequired
+  }),
+  rows: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
+  tableStyle: PropTypes.string.isRequired,
+  id: PropTypes.string
+}
+
+Table.defaultProps = {
+  id: 'table'
+}
+
+export default Table
+

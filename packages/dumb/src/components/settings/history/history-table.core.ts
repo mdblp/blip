@@ -28,7 +28,7 @@
 import {
   ChangeType,
   type HistorizedParameter,
-  type IncomingRow,
+  type ChangeDateParameterGroup,
   type Parameter,
   type ParameterValue
 } from '../../../models/historized-parameter.model'
@@ -88,11 +88,11 @@ const getLatestDate = (parameters: Parameter[]): Date => {
   }, new Date(0))
 }
 
-export const transformToViewModels = (history: IncomingRow[], timePrefs: TimePrefs): HistorizedParameter[] => {
+export const transformToHistorizedParameters = (history: ChangeDateParameterGroup[], timePrefs: TimePrefs): HistorizedParameter[] => {
   const dateFormat = getLongDayHourFormat()
   const currentParameters = new Map<string, ParameterValue>()
 
-  const rows = history.reduce((currentRows: HistorizedParameter[], historyElement: IncomingRow) => {
+  const rows = history.reduce((currentRows: HistorizedParameter[], historyElement: ChangeDateParameterGroup) => {
     const parameters = historyElement.parameters
 
     // Compare b->a since there is a reverse order at the end

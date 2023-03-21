@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { transformToViewModels } from './history-table.core'
+import { transformToHistorizedParameters } from './history-table.core'
 import { type TimePrefs, Unit } from 'medical-domain'
 import { ChangeType } from '../../../models/historized-parameter.model'
 
@@ -95,13 +95,13 @@ describe('history core', () => {
         }
       ]
 
-      const arr = transformToViewModels(params, preference)
+      const arr = transformToHistorizedParameters(params, preference)
       // length of parameter array + row with the date
       expect(arr).toHaveLength(8)
     })
 
     it('should return empty array when passing any data', () => {
-      const arr = transformToViewModels([], preference)
+      const arr = transformToHistorizedParameters([], preference)
       expect(arr).toHaveLength(0)
     })
   })

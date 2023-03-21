@@ -32,14 +32,14 @@ import type moment from 'moment-timezone'
 
 interface HistorySpannedRowProps {
   data: HistorizedParameter
-  length: number
   onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
 }
 
 const ONE_SPACE_STRING = '&nbsp;'
+const NUMBER_OF_COLUMNS = 4
 
 export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data, length } = props
+  const { onSwitchToDaily, data } = props
   const content = data.groupedParameterHeaderContent ?? ONE_SPACE_STRING
 
   const handleSwitchToDaily = (): void => {
@@ -48,7 +48,7 @@ export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (pro
   const dateString = data.latestDate.toString()
   return (
     <tr className={styles.spannedRow} >
-      <td colSpan={length}>
+      <td colSpan={NUMBER_OF_COLUMNS}>
         {content}
         <i
           role="button"

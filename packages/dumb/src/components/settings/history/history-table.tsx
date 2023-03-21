@@ -31,11 +31,11 @@ import { type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { HistoryTableHeader } from './history-table-header'
 import { HistoryTableContent } from './history-table-content'
-import { type IncomingRow } from '../../../models/historized-parameter.model'
+import { type ChangeDateParameterGroup } from '../../../models/historized-parameter.model'
 import type moment from 'moment-timezone'
 
 interface HistoryParameterTableProps {
-  rows: IncomingRow[]
+  rows: ChangeDateParameterGroup[]
   onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
   timePrefs: TimePrefs
 }
@@ -51,7 +51,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
         <span className={styles.secondaryLabelWithMain} />
       </caption>
       <HistoryTableHeader />
-      <HistoryTableContent rows={rows} length={4} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
+      <HistoryTableContent rows={rows} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
     </table>
   )
 }

@@ -47,7 +47,7 @@ export interface Parameter {
   value: string
 }
 
-export interface IncomingRow {
+export interface ChangeDateParameterGroup {
   changeDate: string
   parameters: Parameter[]
 }
