@@ -25,25 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
-import { type CgmConfig, type DeviceConfig, ParameterConfig, type PumpConfig } from 'medical-domain'
+import { type Unit } from 'medical-domain'
+import { type TableHeading } from './pdf-table.model'
 
-export interface PdfData {
-  basics?: BasicData
+export type AlignType = 'left' | 'center' | 'right'
+
+export interface SettingsTableColumn {
+  id: string
+  headerFill?: boolean
+  cache: boolean
+  align: AlignType
+  width: number
+  header: string
 }
 
-export interface PdfSettingsData extends PdfData {
-  source: string
-  timezone?: string
-  normalTime?: string
-  deviceTime?: string
-  activeSchedule?: string
-  deviceSerialNumber?: string
-  payload?: {
-    device?: DeviceConfig
-    pump?: PumpConfig
-    cgm?: CgmConfig
-    parameters?: ParameterConfig[]
-  }
-  originalDate: string
+export interface BasicSettingsTableRow extends Record<string, string | number> {
+  value: string
 }
+
+export interface SettingsTableRow extends BasicSettingsTableRow {
+  label: string
+}
+
+export interface ParameterSettingsTableRow extends BasicSettingsTableRow {
+  rawData: string
+  name: string
+  unit: Unit
+  level: number
+}
+
+interface SettingsTableData<T> {
+  heading: TableHeading
+  columns: SettingsTableColumn[]
+  rows: T[]
+}
+
+export type BasicSettingsTable = SettingsTableData<BasicSettingsTableRow>
+export type SettingsTable = SettingsTableData<SettingsTableRow>
+export type ParameterSettingsTable = SettingsTableData<ParameterSettingsTableRow>

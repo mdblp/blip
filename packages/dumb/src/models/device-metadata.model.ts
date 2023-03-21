@@ -25,25 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
-import { type CgmConfig, type DeviceConfig, ParameterConfig, type PumpConfig } from 'medical-domain'
-
-export interface PdfData {
-  basics?: BasicData
-}
-
-export interface PdfSettingsData extends PdfData {
-  source: string
-  timezone?: string
-  normalTime?: string
-  deviceTime?: string
-  activeSchedule?: string
-  deviceSerialNumber?: string
-  payload?: {
-    device?: DeviceConfig
-    pump?: PumpConfig
-    cgm?: CgmConfig
-    parameters?: ParameterConfig[]
-  }
-  originalDate: string
+export interface DeviceMetadata {
+  schedule: string
+  uploaded: string
+  serial: string
 }

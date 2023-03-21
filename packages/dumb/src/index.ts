@@ -61,9 +61,14 @@ import { TrendsProvider } from './provider/trends.provider'
 import { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
 import { UnitsType } from './models/enums/units-type.enum'
 import { TrendsContainer } from './components/trends/common/trends-container/trends-container'
+import { SettingsPrintView } from './modules/print/settings-print-view/settings-print-view'
+import { PrintView } from './modules/print/print-view/print-view'
+import { LayoutColumnType } from './models/enums/layout-column-type.enum'
+import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 
 export {
   AverageDailyDoseStat,
+  buildLayoutColumns,
   type BgPrefs,
   UnitsType,
   BloodGlucoseTooltip,
@@ -78,12 +83,15 @@ export {
   FocusedRangeLabels,
   FoodTooltip,
   formatBgValue,
+  LayoutColumnType,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,
+  PrintView,
   PumpTable,
   RangeSelect,
   ReservoirTooltip,
+  SettingsPrintView,
   SimpleStat,
   StatTooltip,
   Table,

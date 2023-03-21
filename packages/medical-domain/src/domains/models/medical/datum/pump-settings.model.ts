@@ -28,6 +28,7 @@
 import type BaseDatum from './basics/base-datum.model'
 import type PumpManufacturer from './enums/pump-manufacturer.enum'
 import { type DatumType } from './enums/datum-type.enum'
+import type Unit from './enums/unit.enum'
 
 interface CgmConfig {
   apiVersion: string
@@ -73,7 +74,7 @@ interface ParameterConfig {
   effectiveDate: string
   level: number
   name: string
-  unit: string
+  unit: Unit
   value: string
 }
 

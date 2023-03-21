@@ -28,42 +28,42 @@ import _ from 'lodash'
 import type VoilabPdfTable from 'voilab-pdf-table'
 import PdfTable from 'voilab-pdf-table'
 import i18next from 'i18next'
-import colors from '../../styles/colors.css'
+import colors from '../../../styles/colors.css'
 import PdfTableFitColumn from 'voilab-pdf-table/plugins/fitcolumn'
 
-import { formatBirthdate, formatCurrentDate, formatDateRange } from '../../utils/datetime/datetime.util'
+import { formatBirthdate, formatCurrentDate, formatDateRange } from '../../../utils/datetime/datetime.util'
 
-import { DPI, FOOTER_FONT_SIZE, HEIGHT, MARGIN, MARGINS } from '../../models/constants/pdf.constants'
+import { DPI, FOOTER_FONT_SIZE, HEIGHT, MARGIN, MARGINS } from '../../../models/constants/pdf.constants'
 import { type BgBounds, type TimePrefs } from 'medical-domain'
-import { type BgPrefs } from '../../models/blood-glucose.model'
+import { type BgPrefs } from '../../../models/blood-glucose.model'
 import { getFonts, getTextData } from './print-view.util'
-import { getPatientFullName } from '../../utils/patient/patient.util'
-import { type UnitsType } from '../../models/enums/units-type.enum'
+import { getPatientFullName } from '../../../utils/patient/patient.util'
+import { type UnitsType } from '../../../models/enums/units-type.enum'
 import {
   type PdfDocumentOverridden,
   type PdfTableColumnOverridden,
   type PdfTableConfigOverridden,
   type PdfTableOverridden
-} from '../../models/print/pdf-override.model'
+} from '../../../models/print/pdf-override.model'
 import {
   type Row,
   type Table,
   type TableColumn,
   type TableHeading,
   type TableSettings
-} from '../../models/print/pdf-table.model'
-import { type Position } from '../../models/print/position.model'
-import { type ChartArea } from '../../models/print/chart-area.model'
-import { type PdfData } from '../../models/print/pdf-data.model'
-import { type Margins } from '../../models/print/margins.model'
-import { type SectionHeading } from '../../models/print/section-heading.model'
-import { type PatientToPrint } from '../../models/print/patient-to-print.model'
-import { type PatientInfoBox } from '../../models/print/patient-info-box.model'
-import { type PrintViewParams } from '../../models/print/print-view-params.model'
-import { type Padding } from '../../models/print/padding.model'
-import { type PageAddEvent } from '../../models/print/page-add-event.model'
-import { type CellStripe } from '../../models/print/cell-stripe.model'
-import { type Colors } from '../../models/print/colors.model'
+} from '../../../models/print/pdf-table.model'
+import { type Position } from '../../../models/print/position.model'
+import { type ChartArea } from '../../../models/print/chart-area.model'
+import { type PdfData } from '../../../models/print/pdf-data.model'
+import { type Margins } from '../../../models/print/margins.model'
+import { type SectionHeading } from '../../../models/print/section-heading.model'
+import { type PatientToPrint } from '../../../models/print/patient-to-print.model'
+import { type PatientInfoBox } from '../../../models/print/patient-info-box.model'
+import { type PrintViewParams } from '../../../models/print/print-view-params.model'
+import { type Padding } from '../../../models/print/padding.model'
+import { type PageAddEvent } from '../../../models/print/page-add-event.model'
+import { type CellStripe } from '../../../models/print/cell-stripe.model'
+import { type Colors } from '../../../models/print/colors.model'
 
 const PADDING_PATIENT_INFO = 10
 
@@ -95,7 +95,7 @@ const ZEBRA_ODD_COLOR = '#FFFFFF'
 
 const t = i18next.t.bind(i18next)
 
-export class PrintView {
+export class PrintView<T> {
   bgBounds?: BgBounds
   bgPrefs: BgPrefs
   bgUnits: UnitsType
@@ -104,7 +104,7 @@ export class PrintView {
   chartArea: ChartArea
   colors: Colors
   currentPageIndex: number
-  data: PdfData
+  data: T
   defaultFontSize: number
   doc: PdfDocumentOverridden
   extraSmallFontSize: number
@@ -115,7 +115,7 @@ export class PrintView {
   margins: Margins
   smallFontSize: number
   tableSettings: TableSettings
-  timePrefs: TimePrefs
+  timePrefs: Partial<TimePrefs>
   totalPages: number
   width: number
   #logo: string
@@ -147,7 +147,7 @@ export class PrintView {
     this.currentPageIndex = -1
     this.initialTotalPages = 0
     this.colors = { ...colors }
-    this.data = data
+    this.data = data as T
     this.defaultFontSize = params.defaultFontSize ?? DEFAULT_FONT_SIZE
     this.doc = doc
     this.extraSmallFontSize = params.extraSmallFontSize ?? EXTRA_SMALL_FONT_SIZE
@@ -238,16 +238,16 @@ export class PrintView {
       .font(this.font)
   }
 
-  renderSectionHeading(text: string, sectionHeading: SectionHeading): void {
-    const {
-      xPos = this.doc.x,
-      yPos = this.doc.y,
-      font = sectionHeading.font ?? this.font,
-      fontSize = sectionHeading.fontSize ?? this.#headerFontSize,
-      moveDown = 1
-    } = sectionHeading
+  renderSectionHeading(text: string, sectionHeading?: SectionHeading): void {
+    if (sectionHeading) {
+      sectionHeading.align = ALIGN_LEFT
+    }
 
-    sectionHeading.align = ALIGN_LEFT
+    const xPos = sectionHeading?.xPos ?? this.doc.x
+    const yPos = sectionHeading?.yPos ?? this.doc.y
+    const font = sectionHeading?.font ?? this.font
+    const fontSize = sectionHeading?.fontSize ?? this.#headerFontSize
+    const moveDown = sectionHeading?.moveDown ?? 1
 
     this.doc
       .font(font)

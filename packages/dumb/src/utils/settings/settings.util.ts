@@ -25,25 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
-import { type CgmConfig, type DeviceConfig, ParameterConfig, type PumpConfig } from 'medical-domain'
+import {
+  formatLocalizedFromUTC,
+  getHammertimeFromDatumWithTimePrefs,
+  getLongDayFormat
+} from '../datetime/datetime.util'
+import { type DeviceMetadata } from '../../models/device-metadata.model'
+import { type PdfSettingsData } from '../../models/print/pdf-data.model'
+import { type TimePrefs } from 'medical-domain'
+import i18next from 'i18next'
 
-export interface PdfData {
-  basics?: BasicData
-}
+const t = i18next.t.bind(i18next)
 
-export interface PdfSettingsData extends PdfData {
-  source: string
-  timezone?: string
-  normalTime?: string
-  deviceTime?: string
-  activeSchedule?: string
-  deviceSerialNumber?: string
-  payload?: {
-    device?: DeviceConfig
-    pump?: PumpConfig
-    cgm?: CgmConfig
-    parameters?: ParameterConfig[]
+export const getDeviceMetadata = (settingsData: PdfSettingsData, timePrefs: TimePrefs): DeviceMetadata => {
+  const utcTime = getHammertimeFromDatumWithTimePrefs(settingsData, timePrefs)
+  const uploadedTime = utcTime ? formatLocalizedFromUTC(utcTime, timePrefs, getLongDayFormat()) : ''
+
+  return {
+    schedule: settingsData.activeSchedule ?? t('unknown'),
+    uploaded: uploadedTime.length > 0 ? uploadedTime : t('unknown'),
+    serial: settingsData.deviceSerialNumber ?? t('unknown')
   }
-  originalDate: string
 }

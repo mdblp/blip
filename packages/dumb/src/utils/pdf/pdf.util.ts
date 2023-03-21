@@ -26,7 +26,7 @@
  */
 
 import { FOOTER_FONT_SIZE, HEIGHT, MARGINS } from '../../models/constants/pdf.constants'
-import { getFonts } from '../../modules/print/print-view.util'
+import { getFonts } from '../../modules/print/print-view/print-view.util'
 import { type Margins } from '../../models/print/margins.model'
 import i18next from 'i18next'
 
