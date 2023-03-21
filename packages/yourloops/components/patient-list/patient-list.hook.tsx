@@ -32,6 +32,7 @@ import {
   type GridColumnVisibilityModel,
   type GridPaginationModel,
   type GridRenderCellParams,
+  type GridRowParams,
   type GridRowsProp,
   type GridValueGetterParams,
   useGridApiRef
@@ -50,6 +51,7 @@ import PatientUtils from '../../lib/patient/patient.util'
 import { type GridRowModel } from './models/grid-row.model'
 import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
 import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
+import { useNavigate } from 'react-router-dom'
 
 interface PatientListHookReturns {
   columns: GridColDef[]
@@ -66,17 +68,19 @@ interface PatientListHookReturns {
   setPaginationModel: (model: GridPaginationModel) => void
   onChangingTab: (newTab: PatientListTabs) => void
   onCloseRemoveDialog: () => void
+  onRowClick: (params: GridRowParams) => void
   toggleColumnVisibility: (columnName: PatientListColumns) => void
 }
 
 export const usePatientListHook = (): PatientListHookReturns => {
   const { t } = useTranslation()
-  const trNA = t('N/A')
   const { classes } = usePatientListStyles()
   const { getFlagPatients, user } = useAuth()
   const { getPatientById, filterPatients } = usePatientContext()
   const { getUserName } = useUserName()
+  const navigate = useNavigate()
   const gridApiRef = useGridApiRef()
+  const trNA = t('N/A')
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)
   const [selectedFilter, setSelectedFilter] = useState<PatientListFilters>(PatientListFilters.All)
@@ -114,10 +118,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
     }
   }
 
-  const toggleColumnVisibility = (columnName: PatientListColumns): void => {
-    gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
-  }
-
   const onClickRemovePatient = useCallback((patientId: string): void => {
     const patient = getPatientById(patientId)
     if (user.isUserHcp()) {
@@ -136,11 +136,19 @@ export const usePatientListHook = (): PatientListHookReturns => {
     setPatientToRemoveForCaregiver(null)
   }
 
+  const onRowClick = (params: GridRowParams): void => {
+    navigate(`/patient/${params.id}`)
+  }
+
+  const toggleColumnVisibility = (columnName: PatientListColumns): void => {
+    gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
+  }
+
   const columns: GridColDef[] = useMemo(() => {
     return [
       {
         field: PatientListColumns.Flag,
-        type: 'boolean',
+        type: 'actions',
         headerName: '',
         width: 55,
         hideable: false,
@@ -233,11 +241,11 @@ export const usePatientListHook = (): PatientListHookReturns => {
   }, [classes.mandatoryCellBorder, selectedTab, getUserName, onClickRemovePatient, t])
 
   const rows: GridRowsProp = useMemo(() => {
-    return filteredPatients.map((patient, index): GridRowModel => {
+    return filteredPatients.map((patient): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const toto = patient.alarms
       return {
-        id: index,
+        id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient.profile,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
@@ -264,6 +272,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
     setColumnsVisibility,
     onChangingTab,
     onCloseRemoveDialog,
+    onRowClick,
     setInputSearch,
     setPaginationModel,
     toggleColumnVisibility

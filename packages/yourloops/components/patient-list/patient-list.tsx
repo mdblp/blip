@@ -49,6 +49,7 @@ export const PatientList: FunctionComponent = () => {
     rows,
     onChangingTab,
     onCloseRemoveDialog,
+    onRowClick,
     setColumnsVisibility,
     setInputSearch,
     setPaginationModel
@@ -93,6 +94,7 @@ export const PatientList: FunctionComponent = () => {
           onColumnVisibilityModelChange={setColumnsVisibility}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
+          onRowClick={onRowClick}
           pageSizeOptions={[5, 10, 25]}
           sx={{ borderRadius: 0 }}
           slots={{ noRowsOverlay: NoPatientMessage }}

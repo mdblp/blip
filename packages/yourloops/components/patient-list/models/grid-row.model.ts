@@ -31,7 +31,7 @@ import { type PatientProfile } from '../../../lib/patient/models/patient-profile
 import { type Alarms } from '../../../lib/patient/models/alarms.model'
 
 export interface GridRowModel {
-  id: number
+  id: string
   [PatientListColumns.Flag]: Patient
   [PatientListColumns.Patient]: PatientProfile
   [PatientListColumns.System]: string

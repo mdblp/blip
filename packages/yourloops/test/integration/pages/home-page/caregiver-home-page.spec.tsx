@@ -64,8 +64,8 @@ describe('Caregiver home page', () => {
       expect(router.state.location.pathname).toEqual('/home')
     })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
-   await checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientListHeader(UserRoles.caregiver)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
+    checkPatientListHeader(UserRole.Caregiver)
   })
 
   it('should filter patients correctly depending on the search value', async () => {
@@ -141,8 +141,8 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-   await checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientListHeader(UserRoles.caregiver)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
+    checkPatientListHeader(UserRole.Caregiver)
 
     const patientTableBody = within(screen.getByTestId('patient-list-body'))
     const patientData = patientTableBody.getByText(patientFullName)

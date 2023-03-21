@@ -42,8 +42,7 @@ import {
   monitoringParameters,
   mySecondTeamId,
   myThirdTeamId,
-  monitoringParametersBgUnitMmol,
-  myTeamId
+  monitoringParametersBgUnitMmol
 } from './team.api.mock'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { getTomorrowDate } from '../utils/helpers'
@@ -126,7 +125,7 @@ export const monitoredPatient: Patient = buildPatient(
       monitoringStatus: MonitoringStatus.accepted
     },
     {
-      teamId: myTeamId,
+      teamId: myThirdTeamId,
       status: UserInvitationStatus.accepted,
       monitoringStatus: MonitoringStatus.accepted
     }

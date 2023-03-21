@@ -26,15 +26,15 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
-export const checkPatientListHeader = (role: UserRoles = UserRoles.hcp) => {
+export const checkPatientListHeader = (role: UserRole = UserRole.Hcp) => {
   const header = screen.getByTestId('patient-list-header')
   expect(header).toBeInTheDocument()
   expect(within(header).getByLabelText('Search for a patient')).toBeVisible()
   expect(within(header).getByTestId('column-settings-button')).toBeVisible()
   expect(within(header).getByRole('button', { name: 'Filters' })).toBeVisible()
-  role === UserRoles.hcp
+  role === UserRole.Hcp
     ? expect(within(header).getByRole('button', { name: 'Add new patient' })).toBeVisible()
     : expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
 }

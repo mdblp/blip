@@ -76,7 +76,7 @@ describe('HCP home page', () => {
       expect(router.state.location.pathname).toEqual('/home')
     })
 
-   await checkHCPLayout(`${firstName} ${lastName}`)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
     checkPatientListHeader()
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
@@ -187,7 +187,7 @@ describe('HCP home page', () => {
 
     const select = within(addPatientDialog).getByTestId('patient-team-selector')
     fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: teamOne.name }))
+    fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
 
     const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient is already sharing data with the team.')
     expect(alreadyInTeamErrorMessage).toBeVisible()
