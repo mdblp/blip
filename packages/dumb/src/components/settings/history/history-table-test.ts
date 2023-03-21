@@ -98,6 +98,12 @@ describe('history core', () => {
       const arr = transformToHistorizedParameters(params, preference)
       // length of parameter array + row with the date
       expect(arr).toHaveLength(8)
+      // here use jest snapshot functionality to compare array
+      // for more details see https://jestjs.io/fr/docs/snapshot-testing
+      // specially for update purposes
+      arr.forEach((param) => {
+        expect(param).toMatchSnapshot()
+      })
     })
 
     it('should return empty array when passing any data', () => {
