@@ -143,6 +143,7 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patientId, on
     >
       <Box display="flex" justifyContent="end">
         <IconActionButton
+          data-testid={`${t('button-remove-patient')} ${patientId}`}
           ariaLabel={`${t('button-remove-patient')} ${patientId}`}
           icon={<PersonRemoveIcon />}
           onClick={() => { onClickRemove(patientId) }}

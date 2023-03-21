@@ -53,7 +53,7 @@ import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 
 interface PatientListHeaderProps {
-  currentTab: PatientListTabs
+  selectedTab: PatientListTabs
   inputSearch: string
   onChangingTab: (newTab: PatientListTabs) => void
   setInputSearch: (value: string) => void
@@ -86,7 +86,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const theme = useTheme()
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { currentTab, inputSearch, onChangingTab, setInputSearch } = props
+  const { selectedTab, inputSearch, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
   const { patientsFilterStats } = usePatientContext()
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
@@ -101,7 +101,10 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
 
   return (
     <React.Fragment>
-      <Box padding={theme.spacing(4, 4, 0, 4)}>
+      <Box
+        data-testid="patient-list-header"
+        padding={theme.spacing(4, 4, 0, 4)}
+      >
         <Box
           display="flex"
           justifyContent="space-between"
@@ -143,6 +146,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               </Button>
             }
             <Button
+              data-testid="column-settings-button"
               variant="outlined"
               color="inherit"
               sx={{ marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
@@ -158,7 +162,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
           paddingTop={1}
         >
           <Tabs
-            value={currentTab}
+            value={selectedTab}
             onChange={(event, newValue) => {
               onChangingTab(newValue)
             }}

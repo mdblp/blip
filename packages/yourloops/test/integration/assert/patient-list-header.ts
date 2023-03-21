@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,47 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
+import { screen, within } from '@testing-library/react'
+import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
 
-interface IconActionButtonProps {
-  ariaLabel?: string
-  className?: string
-  color?: 'inherit' | 'primary' | 'secondary' | 'default'
-  component?: React.ElementType
-  ['data-testid']?: string
-  icon: JSX.Element
-  id?: string
-  onClick: React.MouseEventHandler<HTMLButtonElement>
-  size?: 'small' | 'medium'
-  tooltip?: string
-  disabled?: boolean
+export const checkPatientListHeader = (role: UserRoles = UserRoles.hcp) => {
+  const header = screen.getByTestId('patient-list-header')
+  expect(header).toBeInTheDocument()
+  expect(within(header).getByLabelText('Search for a patient')).toBeVisible()
+  expect(within(header).getByTestId('column-settings-button')).toBeVisible()
+  expect(within(header).getByRole('button', { name: 'Filters' })).toBeVisible()
+  role === UserRoles.hcp
+    ? expect(within(header).getByRole('button', { name: 'Add new patient' })).toBeVisible()
+    : expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
 }
-
-const IconActionButton: FunctionComponent<IconActionButtonProps> = (props) => {
-  const { id, onClick, className, size, icon, disabled } = props
-  const color = props.color ?? 'primary'
-  const tooltip = props.tooltip ?? ''
-
-  return (
-    <Tooltip title={tooltip} aria-label={tooltip} placement="bottom">
-      <div>
-        <IconButton
-          id={id}
-          size={size}
-          color={color}
-          onClick={onClick}
-          aria-label={props.ariaLabel}
-          data-testid={props['data-testid']}
-          className={className}
-          disabled={disabled}
-        >
-          {icon}
-        </IconButton>
-      </div>
-    </Tooltip>
-  )
-}
-
-export default IconActionButton

@@ -26,7 +26,6 @@
  */
 
 import PatientAPI from '../../../../lib/patient/patient.api'
-import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
@@ -44,6 +43,7 @@ import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { checkPatientListHeader } from '../../assert/patient-list-header'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -65,7 +65,7 @@ describe('Caregiver home page', () => {
     })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkSecondaryBar(false, false)
+    checkPatientListHeader(UserRoles.caregiver)
   })
 
   it('should filter patients correctly depending on the search value', async () => {
@@ -103,15 +103,15 @@ describe('Caregiver home page', () => {
 
     renderPage('/')
 
-    expect(await screen.findByTestId('patient-table-body')).toBeVisible()
-    const patientTableBody = within(screen.getByTestId('patient-table-body'))
+    expect(await screen.findByTestId('patient-list-body')).toBeVisible()
+    const patientTableBody = within(screen.getByTestId('patient-list-body'))
 
     // Checking that all patients are displayed
     expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
     expect(patientTableBody.getByText(patient2.profile.fullName)).toBeVisible()
     expect(patientTableBody.getByText(patient3.profile.fullName)).toBeVisible()
 
-    const searchPatient = screen.getByPlaceholderText('Search for a patient by first name, last name or birthdate (dd/mm/yyyy)')
+    const searchPatient = screen.getByPlaceholderText('Search by first name, last name or birthdate (dd/mm/yyyy)')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
@@ -142,14 +142,13 @@ describe('Caregiver home page', () => {
     })
 
     checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkSecondaryBar(false, false)
+    checkPatientListHeader(UserRoles.caregiver)
 
-    const patientTableBody = within(screen.getByTestId('patient-table-body'))
+    const patientTableBody = within(screen.getByTestId('patient-list-body'))
     const patientData = patientTableBody.getByText(patientFullName)
     expect(patientData).toBeVisible()
 
-    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
-    const removePatientButton = within(patientRow).getByRole('button', { name: 'Remove patient unmonitored-patient@diabeloop.fr' })
+    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.userId}` })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -198,9 +197,7 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatientAsTeamMember.userId}`)
-
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.userId}` })
 
     await userEvent.click(removeButton)
 

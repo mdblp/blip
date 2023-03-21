@@ -54,7 +54,7 @@ import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
 interface PatientListHookReturns {
   columns: GridColDef[]
   columnsVisibility: GridColumnVisibilityModel
-  currentTab: PatientListTabs
+  selectedTab: PatientListTabs
   inputSearch: string
   gridApiRef: React.MutableRefObject<GridApiCommon>
   paginationModel: GridPaginationModel
@@ -235,13 +235,14 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const rows: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient, index): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
+      const toto = patient.alarms
       return {
         id: index,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient.profile,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.TimeOutOfRange]: patient.alarms,
-        [PatientListColumns.SevereHypoglycemia]: patient.alarms,
+        [PatientListColumns.SevereHypoglycemia]: toto,
         [PatientListColumns.DataNotTransferred]: patient.alarms,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
@@ -253,7 +254,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   return {
     columns,
     columnsVisibility,
-    currentTab: selectedTab,
+    selectedTab,
     gridApiRef,
     inputSearch,
     paginationModel,

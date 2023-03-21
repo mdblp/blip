@@ -40,7 +40,7 @@ export const PatientList: FunctionComponent = () => {
   const {
     columns,
     columnsVisibility,
-    currentTab,
+    selectedTab,
     gridApiRef,
     inputSearch,
     paginationModel,
@@ -70,29 +70,31 @@ export const PatientList: FunctionComponent = () => {
   return (
     <React.Fragment>
       <PatientListHeader
-        currentTab={currentTab}
+        selectedTab={selectedTab}
         inputSearch={inputSearch}
         onChangingTab={onChangingTab}
         setInputSearch={setInputSearch}
       />
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        apiRef={gridApiRef}
-        autoHeight
-        disableColumnMenu
-        disableColumnFilter
-        disableColumnSelector
-        disableRowSelectionOnClick
-        columnVisibilityModel={columnsVisibility}
-        onColumnVisibilityModelChange={setColumnsVisibility}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[5, 10, 25]}
-        sx={{ borderRadius: 0 }}
-        slots={{ noRowsOverlay: NoPatientMessage }}
-      />
-
+      <Box data-testid="patient-list-body">
+        <DataGrid
+          columns={columns}
+          rows={rows}
+          apiRef={gridApiRef}
+          autoHeight
+          disableColumnMenu
+          disableColumnFilter
+          disableColumnSelector
+          disableRowSelectionOnClick
+          disableVirtualization={process.env.NODE_ENV === 'test'}
+          columnVisibilityModel={columnsVisibility}
+          onColumnVisibilityModelChange={setColumnsVisibility}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[5, 10, 25]}
+          sx={{ borderRadius: 0 }}
+          slots={{ noRowsOverlay: NoPatientMessage }}
+        />
+      </Box>
       {patientToRemoveForHcp &&
         <RemovePatientDialog
           patient={patientToRemoveForHcp}
