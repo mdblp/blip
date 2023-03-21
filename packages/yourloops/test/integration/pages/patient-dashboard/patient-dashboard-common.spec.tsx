@@ -34,7 +34,7 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
-import { checkTooltip } from '../../assert/stats'
+import { checkStatTooltip, checkTooltip } from '../../assert/stats'
 import { screen, waitFor, within } from '@testing-library/react'
 import { mockUserApi } from '../../mock/user.api.mock'
 import crypto from 'crypto'
@@ -77,6 +77,7 @@ describe('Patient dashboard for anyone', () => {
     checkTooltip(patientStatistics, 'Avg. Daily Insulin')
     checkTooltip(patientStatistics, 'Avg. Daily Time In Loop Mode')
     checkTooltip(patientStatistics, 'Avg. Daily Carbs')
+    checkTooltip(patientStatistics, 'CV (CGM)')
 
     const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
     checkTooltip(deviceUsageWidget, 'Sensor Usage')
@@ -101,7 +102,7 @@ describe('Patient dashboard for anyone', () => {
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
     expect(statsWidgets).toBeVisible()
-    expect(statsWidgets).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLSensor Usage1%Avg. Glucose (CGM)mg/dL135Avg. Daily Total Insulin(1.3U)Bolus1.3 U100%Basal0.0 U2%Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10gStandard Deviation (61-209)mg/dL74CV (CGM)55%')
+    expect(statsWidgets).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLSensor Usage1%CV (CGM)457%Avg. Glucose (CGM)mg/dL135Avg. Daily Total Insulin(1.3U)Bolus1.3 U100%Basal0.0 U2%Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10gStandard Deviation (61-209)mg/dL74')
 
     const deviceUsageWidget = screen.getByTestId('device-usage-card')
     expect(deviceUsageWidget).toBeVisible()

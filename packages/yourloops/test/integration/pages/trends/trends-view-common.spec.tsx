@@ -43,11 +43,11 @@ import {
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
-  checkStandardDeviationStatWidget,
+  checkStandardDeviationStatWidget, checkStatTooltip,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
-import { act, screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -80,6 +80,22 @@ describe('Trends view for anyone', () => {
         await userEvent.click(screen.getByTestId('button-nav-back'))
       })
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
+    })
+
+    it('should data', async () => {
+      const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
+      mockDataAPI()
+      const router = renderPage('/trends')
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual('/trends')
+      })
+
+      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+      await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
+
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('button-nav-back'))
+      })
     })
   })
 

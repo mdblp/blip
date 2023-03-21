@@ -49,7 +49,7 @@ const TOTAL_INSULIN_TOOLTIP = 'Total Insulin: All basal and bolus insulin delive
 const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the estimated time in each mode.'
 const TOTAL_CARBS_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 2 carb entries, including rescue carbs.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the mean.'
-const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
+const CV_TOOLTIP = 'CV (Coefficient of Variation: The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 
 const checkTidelineContainerElementTooltip = async (id: string, expectedTextContent: string) => {
   const carbElement = screen.getByTestId(id)
