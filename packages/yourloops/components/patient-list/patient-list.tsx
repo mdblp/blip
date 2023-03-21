@@ -75,7 +75,10 @@ export const PatientList: FunctionComponent = () => {
         onChangingTab={onChangingTab}
         setInputSearch={setInputSearch}
       />
-      <Box data-testid="patient-list-body">
+      <Box
+        data-testid="patient-list-body"
+        aria-label={t('patient-list')}
+      >
         <DataGrid
           columns={columns}
           rows={rows}
