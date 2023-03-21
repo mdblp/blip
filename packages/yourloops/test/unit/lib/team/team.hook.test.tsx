@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -170,17 +170,10 @@ describe('Team hook', () => {
     })
   })
 
-  describe('getMedicalAndPrivateTeams', () => {
-    it('should return an array of medical teams along with the private team', () => {
-      const teams = teamHook.getMedicalAndPrivateTeams()
-      expect(teams).toEqual([
-        team1,
-        team2,
-        team3,
-        team4,
-        unmonitoredTeam,
-        privateTeam
-      ])
+  describe('getPrivateTeam', () => {
+    it('should return the private team', () => {
+      const team = teamHook.getPrivateTeam()
+      expect(team).toEqual(privateTeam)
     })
   })
 

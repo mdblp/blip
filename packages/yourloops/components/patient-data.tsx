@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import bows from 'bows'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -43,9 +43,7 @@ import DialogDatePicker from './date-pickers/dialog-date-picker'
 import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
 import { usePatientContext } from '../lib/patient/patient.provider'
-import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
 import { type Patient } from '../lib/patient/models/patient.model'
-import { type PatientTeam } from '../lib/patient/models/patient-team.model'
 import { useUserName } from '../lib/custom-hooks/user-name.hook'
 
 const patientDataStyles = makeStyles()(() => {
@@ -93,21 +91,8 @@ function PatientDataPage(): JSX.Element | null {
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam
   const userId = user?.id ?? null
   const userIsPatient = user?.isUserPatient()
-  const userIsHCP = user?.isUserHcp()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
   const { getUserName } = useUserName()
-
-  const { selectedTeamId, selectTeam } = useSelectedTeamContext()
-
-  useEffect(() => {
-    const patientTeams = getPatientById(paramPatientId)?.teams
-    const isPatientInSelectedTeam = patientTeams?.some((team: PatientTeam) => team.teamId === selectedTeamId)
-
-    if (userIsHCP && !isPatientInSelectedTeam) {
-      const defaultPatientTeamId = patientTeams[0].teamId
-      selectTeam(defaultPatientTeamId)
-    }
-  }, [getPatientById, paramPatientId, selectTeam, selectedTeamId, userIsHCP])
 
   const initialized = isLoggedIn && blipApi
 

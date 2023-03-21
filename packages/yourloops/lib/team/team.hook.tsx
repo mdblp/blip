@@ -53,6 +53,8 @@ import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
+export const PRIVATE_TEAM_ID = 'private'
+
 function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
   const notificationHook = useNotification()
@@ -92,15 +94,15 @@ function TeamContextImpl(): TeamContext {
   }
 
   const getMedicalTeams = (): Team[] => {
-    return getTeamsByType([TeamType.medical])
+    return getTeamsByType(TeamType.medical)
   }
 
-  const getMedicalAndPrivateTeams = (): Team[] => {
-    return getTeamsByType([TeamType.medical, TeamType.private])
+  const getPrivateTeam = (): Team => {
+    return teams.find((team: Team) => TeamUtils.isPrivate(team))
   }
 
-  const getTeamsByType = (types: TeamType[]): Team[] => {
-    return teams.filter((team: Team) => types.includes(team.type))
+  const getTeamsByType = (type: TeamType): Team[] => {
+    return teams.filter((team: Team) => team.type === type)
   }
 
   const getRemoteMonitoringTeams = (): Team[] => {
@@ -214,7 +216,7 @@ function TeamContextImpl(): TeamContext {
     refresh,
     getTeam,
     getMedicalTeams,
-    getMedicalAndPrivateTeams,
+    getPrivateTeam,
     getRemoteMonitoringTeams,
     inviteMember,
     createTeam,

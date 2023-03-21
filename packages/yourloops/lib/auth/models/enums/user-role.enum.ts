@@ -25,15 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type * as React from 'react'
-import { type UserRole } from '../../../lib/auth/models/enums/user-role.enum'
-
-export interface BaseConsentCheck {
-  id: string
-  checked: boolean
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
-
-export interface ConsentCheck extends BaseConsentCheck {
-  userRole: UserRole
+export enum UserRole {
+  Hcp = 'hcp',
+  Caregiver = 'caregiver',
+  Patient = 'patient',
+  /** Used only for signup-account-selector */
+  Unset = 'unset'
 }

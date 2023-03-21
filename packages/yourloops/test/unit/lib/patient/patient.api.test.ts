@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { type INotification } from '../../../../lib/notifications/models/i-notif
 import { getCurrentLang } from '../../../../lib/language'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { type ITeamMember } from '../../../../lib/team/models/i-team-member.model'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 
 describe('PatientApi', () => {
@@ -75,7 +75,7 @@ describe('PatientApi', () => {
       expect(notification).toEqual(data)
       expect(HttpService.post).toHaveBeenCalledWith({
         url: '/confirm/send/team/invite',
-        payload: { teamId, email, role: UserRoles.patient },
+        payload: { teamId, email, role: UserRole.Patient },
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
       }, [409])
     })

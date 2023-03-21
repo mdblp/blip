@@ -37,6 +37,7 @@ import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
 import { MemoryRouter } from 'react-router-dom'
 import { UnitsType } from 'dumb'
+import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 
 const teamId1 = 'teamId1'
 
@@ -48,6 +49,7 @@ jest.mock('react-router-dom', () => ({
 }))
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
+jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('TeamDetailsPage', () => {
   const teamId2 = 'teamId2'
 
@@ -75,6 +77,9 @@ describe('TeamDetailsPage', () => {
           isUserPatient: () => false
         }
       }
+    });
+    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
+      return { selectedTeam: team1 }
     })
   })
 

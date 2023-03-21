@@ -34,18 +34,18 @@ import { HcpLayout } from './hcp-layout'
 import { CaregiverLayout } from './caregiver-layout'
 import { PatientLayout } from './patient-layout'
 import { DataContextProvider, DefaultDataContext } from '../lib/data/data.hook'
-import { UserRoles } from '../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 
 export function MainLayout(): JSX.Element {
   const { user } = useAuth()
 
   const getUserLayout = (): JSX.Element => {
     switch (user?.role) {
-      case UserRoles.hcp:
+      case UserRole.Hcp:
         return <HcpLayout />
-      case UserRoles.caregiver:
+      case UserRole.Caregiver:
         return <CaregiverLayout />
-      case UserRoles.patient:
+      case UserRole.Patient:
         return <PatientLayout />
       default:
         console.error(`no layout found for role ${user?.role}`)
