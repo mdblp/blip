@@ -44,6 +44,7 @@ import {
   GlycemiaStatisticsService
 } from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
+import { useLocation } from 'react-router-dom'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -59,8 +60,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgSelected = bgSource === DatumType.Cbg
   const bgUnits = MGDL_UNITS || MMOLL_UNITS
   const theme = useTheme()
-  const curentPage = window.location.href.split('/').at(-1)
-  const isTrendsPage = curentPage === 'trends'
+  const location = useLocation()
+  const isTrendsPage = location.pathname.includes('trends')
 
   const {
     sensorUsage,
