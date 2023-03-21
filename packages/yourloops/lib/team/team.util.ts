@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,6 +28,7 @@
 import { type Team, TEAM_CODE_LENGTH } from './models/team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
+import { PRIVATE_TEAM_ID } from './team.hook'
 
 /**
  * Get the team code for display - Can be use with partial code.
@@ -68,7 +69,11 @@ export default class TeamUtils {
     }, 0)
   }
 
-  static sortTeams(teams: Team[]): Team[] {
-    return teams.sort((a, b) => a.name.localeCompare(b.name))
+  static sortTeamsByName(teams: Team[]): Team[] {
+    return teams.sort((teamA: Team, teamB: Team) => teamA.name.localeCompare(teamB.name))
+  }
+
+  static isPrivate(team: Team): boolean {
+    return team.id === PRIVATE_TEAM_ID
   }
 }

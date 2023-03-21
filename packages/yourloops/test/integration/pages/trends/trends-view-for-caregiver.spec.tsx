@@ -37,7 +37,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 
 describe('Trends view for caregiver', () => {
@@ -45,7 +45,7 @@ describe('Trends view for caregiver', () => {
   const lastName = 'HCP lastName'
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.caregiver)
+    mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
@@ -63,6 +63,6 @@ describe('Trends view for caregiver', () => {
     })
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiver()
-    checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${firstName} ${lastName}`)
   })
 })

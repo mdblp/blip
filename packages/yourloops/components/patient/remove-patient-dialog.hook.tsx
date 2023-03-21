@@ -64,7 +64,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const patientName = t('user-name', userName)
   const patientTeam = patient.teams.find(team => team.teamId === selectedTeamId)
   const teams = patient.teams.map(team => getTeam(team.teamId))
-  const sortedTeams = TeamUtils.sortTeams(teams)
+  const sortedTeams = TeamUtils.sortTeamsByName(teams)
 
   const getSuccessAlertMessage = (): void => {
     if (patientTeam.status === UserInvitationStatus.pending) {
@@ -72,7 +72,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
       return
     }
     const team = getTeam(selectedTeamId)
-    if (team.code === 'private') {
+    if (TeamUtils.isPrivate(team)) {
       alert.success(t('alert-remove-private-practice-success', { patientName }))
     } else {
       alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))

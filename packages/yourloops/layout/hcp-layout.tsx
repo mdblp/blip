@@ -38,32 +38,33 @@ import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
 import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
+import { AppUserRoute } from '../models/enums/routes.enum'
 
 export function HcpLayout(): JSX.Element {
   return (
     <TeamContextProvider>
-      <PatientProvider>
-        <SelectedTeamProvider>
+      <SelectedTeamProvider>
+        <PatientProvider>
           <DashboardLayout>
             <Routes>
-              <Route path="/not-found" element={<InvalidRoute />} />
-              <Route path="/preferences" element={<ProfilePage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/patient/:patientId/*" element={<PatientDataPage />} />
-              <Route path="/teams/:teamId" element={<TeamDetailsPage />} />
+              <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+              <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+              <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+              <Route path={AppUserRoute.Home} element={<HomePage />} />
+              <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
+              <Route path={AppUserRoute.Team} element={<TeamDetailsPage />} />
               <Route
                 path="/"
-                element={<Navigate to="/home" replace />}
+                element={<Navigate to={AppUserRoute.Home} replace />}
               />
               <Route
                 path="*"
-                element={<Navigate to="/not-found" replace />}
+                element={<Navigate to={AppUserRoute.NotFound} replace />}
               />
             </Routes>
           </DashboardLayout>
-        </SelectedTeamProvider>
-      </PatientProvider>
+        </PatientProvider>
+      </SelectedTeamProvider>
     </TeamContextProvider>
   )
 }

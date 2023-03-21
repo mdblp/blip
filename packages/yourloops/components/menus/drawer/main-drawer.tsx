@@ -45,8 +45,6 @@ import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import HistoryIcon from '@mui/icons-material/History'
 import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
-
-import MedicalServiceIcon from '../../icons/medical-service-icon'
 import PendingIcon from '../../icons/pending-icon'
 import DrawerLinkItem from './drawer-link-item'
 import useMainDrawer from './main-drawer.hook'
@@ -146,12 +144,6 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
       text: `${t('pending')} (${patientFiltersStats.pending})`,
       filter: PatientFilterTypes.pending,
       ariaLabel: t('pending-patients-filter')
-    },
-    {
-      icon: <MedicalServiceIcon />,
-      text: `${t('private-practice')} (${patientFiltersStats.directShare})`,
-      filter: PatientFilterTypes.private,
-      ariaLabel: t('private-practice-patients-filter')
     }
   ]
 
