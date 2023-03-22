@@ -176,6 +176,7 @@ function getCoefficientOfVariationData(bgData: Cbg[] | Smbg[], dateFilter: DateF
     coefficientOfVariation: Number.NaN,
     total: average.total
   }
+
   const MIN_CBG_FOR_VARIATION_COEF = 3
   if (average.total < MIN_CBG_FOR_VARIATION_COEF) {
     return noDataStatistics
@@ -215,7 +216,6 @@ function getCoefficientOfVariationData(bgData: Cbg[] | Smbg[], dateFilter: DateF
 function getGlucoseManagementIndicatorData(cbgData: Cbg[], bgUnit: BgUnit, dateFilter: DateFilter): GlucoseManagementIndicatoStatistics {
   const insufficientData = {
     glucoseManagementIndicator: Number.NaN,
-    total: Number.NaN,
     insufficientData: true
   }
   if (diffDays(dateFilter.start, dateFilter.end) < 14) {
@@ -226,17 +226,16 @@ function getGlucoseManagementIndicatorData(cbgData: Cbg[], bgUnit: BgUnit, dateF
   const totalCbgDuration = getCgmTotalDuration(filteredCbg)
   // Duration must be at least 70% of 14 days
   const SEVENTY_PERCENT = 0.7
-  if (totalCbgDuration < 14 * MS_IN_DAY * SEVENTY_PERCENT) {
+  if (totalCbgDuration < 14 * MS_IN_DAY * SEVENTY_PERCENT) { // 8 467 200 000
     return insufficientData
   }
 
-  const { averageGlucose, total } = getAverageGlucoseData(filteredCbg, dateFilter)
+  const { averageGlucose } = getAverageGlucoseData(filteredCbg, dateFilter)
   const averageGlucoseMgdl = bgUnit === MGDL_UNITS ? averageGlucose : convertBG(averageGlucose, MMOLL_UNITS)
 
   return {
     // This is a magic formula... https://www.jaeb.org/gmi/
     glucoseManagementIndicator: (3.31 + 0.02392 * averageGlucoseMgdl),
-    total,
     insufficientData: false
   }
 }

@@ -33,21 +33,21 @@ import {
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsLayout,
   checkTrendsStatsWidgetsTooltips,
-  checkTrendsTidelineContainerTooltips,
-  checkTrendsTimeInRangeStatsWidgets
+  checkTrendsTidelineContainerTooltips, checkTrendsTimeInRangeStatsWidgets, dataGeneration, GMI_TOOLTIP
 } from '../../assert/trends'
 import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
+  checkGlucoseManagementIndicator,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
   checkStandardDeviationStatWidget,
-  checkTimeInRangeStatsTitle
+  checkStatTooltip, checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
-import { act, screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -81,15 +81,24 @@ describe('Trends view for anyone', () => {
       })
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
-  })
 
-  describe('with time in range data', () => {
-    it('should display correct readings in range stats info', async () => {
-      mockDataAPI(timeInRangeStatsTrendViewData)
+    it('should correct value and tooltip GMI', async () => {
+      mockDataAPI(dataGeneration())
       renderPage('/trends')
 
-      await checkTrendsTimeInRangeStatsWidgets()
-      await checkTimeInRangeStatsTitle()
+      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+      await checkGlucoseManagementIndicator('GMI (estimated HbA1c)7.7%')
+      await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
+    })
+
+    describe('with time in range data', () => {
+      it('should display correct readings in range stats info', async () => {
+        mockDataAPI(timeInRangeStatsTrendViewData)
+        renderPage('/trends')
+
+        await checkTrendsTimeInRangeStatsWidgets()
+        await checkTimeInRangeStatsTitle()
+      })
     })
   })
 

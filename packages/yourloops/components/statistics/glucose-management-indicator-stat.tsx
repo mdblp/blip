@@ -32,20 +32,19 @@ import { StatFormats } from 'dumb/src/models/stats.model'
 
 interface GlucoseManagementIndicatorProps {
   glucoseManagementIndicator: number
-  totalGMI: number
 }
 
 export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
-  const { glucoseManagementIndicator, totalGMI } = props
+  const { glucoseManagementIndicator } = props
   const annotations = [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
 
   return (
-    <Box data-testid="glucoseManagementIndicator-stat">
+    <Box data-testid="glucose-management-indicator-stat">
       <SimpleStat
         annotations={annotations}
         title={t('glucose-management-indicator-title')}
         value={glucoseManagementIndicator}
-        summaryFormat={StatFormats.Percentage}
-        total={totalGMI} />
+        summaryFormat={StatFormats.Gmi}
+        total={0} />
     </Box>)
 }

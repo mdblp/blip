@@ -27,15 +27,7 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import {
-  type BgType,
-  type DateFilter,
-  DatumType,
-  type MedicalData,
-  MGDL_UNITS,
-  MMOLL_UNITS,
-  TimeService
-} from 'medical-domain'
+import { type BgType, type BgUnit, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
@@ -58,21 +50,20 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
-  const bgUnits = MGDL_UNITS || MMOLL_UNITS
   const theme = useTheme()
   const location = useLocation()
   const isTrendsPage = location.pathname.includes('trends')
+  const bgUnits = bgPrefs.bgUnits as unknown as BgUnit
+
+  const {
+    glucoseManagementIndicator,
+    insufficientData
+  } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const {
     sensorUsage,
     totalUsage
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
-
-  const {
-    glucoseManagementIndicator,
-    total,
-    insufficientData
-  } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
@@ -95,7 +86,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           {isTrendsPage && !insufficientData &&
             <>
-              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} totalGMI={total} />
+              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
               <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
             </>}
         </>
