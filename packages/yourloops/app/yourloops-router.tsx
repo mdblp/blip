@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,32 +26,21 @@
  */
 
 import React from 'react'
-import { Auth0Provider } from '@auth0/auth0-react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { useYourloopsRouterHook } from './yourloops-router.hook'
+import { useAuth } from '../lib/auth'
+import { useAuth0 } from '@auth0/auth0-react'
+import SpinningLoader from '../components/loaders/spinning-loader'
 
-import '@fontsource/roboto'
-import 'branding/theme.css'
-import 'classes.css'
+export function YourloopsRouter(): JSX.Element {
+  const { isLoading } = useAuth0()
+  const { fetchingUser } = useAuth()
+  const { routes } = useYourloopsRouterHook()
 
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { YourloopsRouter } from './yourloops-router'
-
-const Yourloops = (): JSX.Element => {
+  const router = createBrowserRouter(routes)
+  console.log('yourloops router')
   console.log(performance.now())
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      useRefreshTokens
-      audience="https://api-ext.your-loops.com"
-    >
-      <AuthContextProvider>
-        <YourloopsRouter />
-      </AuthContextProvider>
-    </Auth0Provider>
-  )
+  return <>
+    {(!isLoading && !fetchingUser) ? <RouterProvider router={router} /> : <SpinningLoader />}
+  </>
 }
-
-export default Yourloops

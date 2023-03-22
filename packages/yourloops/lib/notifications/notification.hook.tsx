@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -46,7 +46,8 @@ function NotificationContextImpl(): NotificationContext {
   const [initialized, setInitialized] = React.useState(false)
 
   if (!user) {
-    throw new Error('User must be logged-in to use the Notification hook')
+    console.warn('User must be logged-in to use the Notification hook')
+    return
   }
 
   const update = (): void => {

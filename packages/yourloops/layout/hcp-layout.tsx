@@ -51,7 +51,7 @@ export function HcpLayout(): JSX.Element {
               <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
               <Route path={AppUserRoute.Home} element={<HomePage />} />
               <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
-              <Route path={AppUserRoute.Team} element={<TeamDetailsPage />} />
+              <Route path={AppUserRoute.Teams} element={<TeamDetailsPage />} />
               <Route
                 path="/"
                 element={<Navigate to={AppUserRoute.Home} replace />}

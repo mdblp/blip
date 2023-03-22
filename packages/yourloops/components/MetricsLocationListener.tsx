@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,9 +28,6 @@
 import _ from 'lodash'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-
-import '@fontsource/roboto'
-import 'branding/theme.css'
 
 import metrics from '../lib/metrics'
 

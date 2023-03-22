@@ -29,42 +29,51 @@ import React from 'react'
 
 import { useAuth } from '../lib/auth'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
-import { Navigate, Route } from 'react-router-dom'
-import { HcpLayout } from './hcp-layout'
-import { CaregiverLayout } from './caregiver-layout'
-import { PatientLayout } from './patient-layout'
+import { Outlet } from 'react-router-dom'
 import { DataContextProvider, DefaultDataContext } from '../lib/data/data.hook'
-import { UserRole } from '../lib/auth/models/enums/user-role.enum'
+import { TeamContextProvider } from '../lib/team'
+import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
+import { PatientProvider } from '../lib/patient/patient.provider'
+import DashboardLayout from './dashboard-layout'
 
 export function MainLayout(): JSX.Element {
   const { user } = useAuth()
 
-  const getUserLayout = (): JSX.Element => {
-    switch (user?.role) {
-      case UserRole.Hcp:
-        return <HcpLayout />
-      case UserRole.Caregiver:
-        return <CaregiverLayout />
-      case UserRole.Patient:
-        return <PatientLayout />
-      default:
-        console.error(`no layout found for role ${user?.role}`)
-        return <Route
-          path="*"
-          element={<Navigate to="/not-found" replace />}
-        />
-    }
-  }
-
   return (
-    <React.Fragment>
+    <>
       {user &&
         <NotificationContextProvider>
           <DataContextProvider context={DefaultDataContext}>
-            {getUserLayout()}
+            {user.isUserHcp() &&
+              <TeamContextProvider>
+                <SelectedTeamProvider>
+                  <PatientProvider>
+                    <DashboardLayout>
+                      <Outlet />
+                    </DashboardLayout>
+                  </PatientProvider>
+                </SelectedTeamProvider>
+              </TeamContextProvider>
+            }
+            {user.isUserCaregiver() &&
+              <PatientProvider>
+                <DashboardLayout>
+                  <Outlet />
+                </DashboardLayout>
+              </PatientProvider>
+            }
+            {user.isUserPatient() &&
+              <TeamContextProvider>
+                <PatientProvider>
+                  <DashboardLayout>
+                    <Outlet />
+                  </DashboardLayout>
+                </PatientProvider>
+              </TeamContextProvider>
+            }
           </DataContextProvider>
         </NotificationContextProvider>
       }
-    </React.Fragment>
+    </>
   )
 }

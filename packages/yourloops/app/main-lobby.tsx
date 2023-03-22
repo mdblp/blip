@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { ThemeProvider } from '@mui/material/styles'
@@ -39,19 +39,12 @@ import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import Footer from '../components/footer/footer'
-import PatientConsentPage from '../pages/patient/patient-consent'
-import CompleteSignUpPage from '../pages/signup/complete-signup-page'
-import { ConsentPage } from '../pages/login'
-import { MainLayout } from '../layout/main-layout'
-import TrainingPage from '../pages/training/training'
-import ProductLabellingPage from '../pages/product-labelling/product-labelling-page'
-import LoginPage from '../pages/login/login-page-landing'
 import { ALWAYS_ACCESSIBLE_ROUTES, PUBLIC_ROUTES } from '../lib/diabeloop-urls.model'
-import VerifyEmailPage from '../pages/login/verify-email-page'
 import Box from '@mui/material/Box'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../lib/config/config.service'
 import { AppRoute } from '../models/enums/routes.enum'
+import MetricsLocationListener from '../components/MetricsLocationListener'
 
 const muiCache = createCache({
   key: 'mui',
@@ -92,12 +85,13 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
 }
 
 export function MainLobby(): JSX.Element {
-  const { isLoading, isAuthenticated } = useAuth0()
-  const { fetchingUser, isLoggedIn, logout, user } = useAuth()
+  const { isAuthenticated } = useAuth0()
+  const { isLoggedIn, logout, user } = useAuth()
   const location = useLocation()
   const currentRoute = location.pathname
   const theme = getTheme()
-  const isCurrentRoutePublic = isRoutePublic(currentRoute)
+  console.log('main lobby')
+  console.log(performance.now())
 
   const onIdle = async (): Promise<void> => {
     if (isLoggedIn) {
@@ -107,34 +101,21 @@ export function MainLobby(): JSX.Element {
 
   useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
 
-  if (!isCurrentRoutePublic && isLoading) {
-    return <React.Fragment />
-  }
-
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
 
   return (
     <React.Fragment>
+      <MetricsLocationListener />
       {redirectTo
         ? <Navigate to={redirectTo} replace />
-        : (!isLoading && !fetchingUser &&
-          <CacheProvider value={muiCache}>
+        : (<CacheProvider value={muiCache}>
             <TssCacheProvider value={tssCache}>
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
                   <Box>
-                    <Routes>
-                      <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
-                      <Route path={AppRoute.Login} element={<LoginPage />} />
-                      <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
-                      <Route path={AppRoute.RenewConsent} element={<ConsentPage />} />
-                      <Route path={AppRoute.NewConsent} element={<PatientConsentPage />} />
-                      <Route path={AppRoute.Training} element={<TrainingPage />} />
-                      <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
-                      <Route path="*" element={<MainLayout />} />
-                    </Routes>
+                    <Outlet />
                   </Box>
                 </SnackbarContextProvider>
                 <Footer />
