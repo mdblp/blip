@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,7 @@ import { MemoryRouter } from 'react-router-dom'
 import * as patientHookMock from '../../../lib/patient/patient.provider'
 import * as selectedTeamHookMock from '../../../lib/selected-team/selected-team.provider'
 import { HcpLayout } from '../../../layout/hcp-layout'
-import { UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
@@ -85,7 +85,7 @@ describe('Hcp Layout', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
-          role: UserRoles.hcp,
+          role: UserRole.Hcp,
           isUserHcp: () => true,
           isUserCaregiver: () => false,
           isUserPatient: () => false
@@ -119,8 +119,8 @@ describe('Hcp Layout', () => {
     checkInDocument(notificationsPageTestId)
   })
 
-  it('should render team details page when route matches /teams/:teamId and user is hcp', () => {
-    render(getMainLayoutJSX('/teams/fakeTeamId'))
+  it('should render team details page when route matches /team and user is hcp', () => {
+    render(getMainLayoutJSX('/team'))
     checkInDocument(teamDetailsPageTestId)
   })
 })

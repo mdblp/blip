@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { type CompleteSignupPayload } from '../../../../lib/auth/models/complete-signup-payload.model'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import { type ChangeUserRoleToHcpPayload } from '../../../../lib/auth/models/change-user-role-to-hcp-payload.model'
@@ -116,7 +116,7 @@ describe('User API', () => {
         settings,
         preferences,
         email: 'test@email.com',
-        role: UserRoles.hcp
+        role: UserRole.Hcp
       }
       jest.spyOn(HttpService, 'post').mockResolvedValue({ data: payload } as AxiosResponse)
       const completedSignup = await UserApi.completeUserSignup(userId, payload)
@@ -141,7 +141,7 @@ describe('User API', () => {
       await UserApi.changeUserRoleToHcp(userId, payload)
       expect(HttpService.post).toHaveBeenCalledWith({
         url: `/bff/v1/accounts/${userId}`,
-        payload: { ...payload, role: UserRoles.hcp }
+        payload: { ...payload, role: UserRole.Hcp }
       })
     })
   })

@@ -74,6 +74,16 @@ export const getLongDayFormat = (): string => {
 }
 
 /**
+ * Moment format for:
+ * - English: 'MMM D, YYYY h:mm a'
+ * - French: 'D MMM YYYY, H:mm'
+ * @returns {string} Format according to translation
+ */
+export const getLongDayHourFormat = (): string => {
+  return t('MMM D, YYYY h:mm a')
+}
+
+/**
  * addDuration
  * @param {String} startTime - an ISO date string
  * @param {Number} duration - milliseconds to add to date
@@ -264,15 +274,4 @@ export const formatClocktimeFromMsPer24 = (milliseconds: number, format?: string
 export const getHammertimeFromDatumWithTimePrefs = (datum: PdfSettingsData, timePrefs: TimePrefs): number | null => {
   const time = timePrefs.timezoneAware ? datum.normalTime : datum.deviceTime
   return time ? Date.parse(time) : null
-
-  // if (timePrefs.timezoneAware) {
-  //   if (data.normalTime) {
-  //     return Date.parse(data.normalTime)
-  //   }
-  //   return null
-  // }
-  // if (data.deviceTime) {
-  //   return Date.parse(data.deviceTime)
-  // }
-  // return null
 }
