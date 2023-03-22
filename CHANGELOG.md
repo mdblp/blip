@@ -15,6 +15,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-2044 Remove redux settings store
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
+- YLP-2066 Migrate historized settings table
 - YLP-2068 Update minor dependencies
 - YLP-2069 Migrate CBGSlicesContainer from viz to dumb
 - YLP-2071 Change the question mark icon to accept button
