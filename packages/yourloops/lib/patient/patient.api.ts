@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import bows from 'bows'
 import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
 import { type Monitoring } from '../team/models/monitoring.model'
-import { UserRoles } from '../auth/models/enums/user-roles.enum'
+import { UserRole } from '../auth/models/enums/user-role.enum'
 import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
@@ -46,7 +46,7 @@ interface InvitePatientArgs {
 }
 
 interface InvitePatientPayload extends InvitePatientArgs {
-  role: UserRoles
+  role: UserRole
 }
 
 export default class PatientApi {
@@ -73,7 +73,7 @@ export default class PatientApi {
     try {
       const { data } = await HttpService.post<INotification, InvitePatientPayload>({
         url: '/confirm/send/team/invite',
-        payload: { teamId, email, role: UserRoles.patient },
+        payload: { teamId, email, role: UserRole.Patient },
         config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
       }, [PATIENT_ALREADY_IN_TEAM_ERROR_CODE])
       return data

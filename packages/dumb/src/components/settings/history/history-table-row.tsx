@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum UserRoles {
-  hcp = 'hcp',
-  caregiver = 'caregiver',
-  patient = 'patient',
-  /** Used only for signup-account-selector */
-  unset = 'unset'
+import React, { type FunctionComponent } from 'react'
+import styles from '../diabeloop.css'
+import { type HistorizedParameter } from '../../../models/historized-parameter.model'
+import { HistoryTableParameterChange } from './history-table-parameter-change'
+import { HistoryTableParameterValueChange } from './history-table-parameter-value-change'
+
+interface HistoryTableRowsProps {
+  data: HistorizedParameter
+}
+
+export const HistoryTableRow: FunctionComponent<HistoryTableRowsProps> = (props) => {
+  const { data } = props
+
+  return (
+    <tr data-testid={`${data.rawData.toLowerCase()}-row`} >
+      <td data-testid={`${data.rawData.toLowerCase()}-level`} className={styles.secondaryLabelWithMain}>
+        {data.level}
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-valueChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterValueChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterDate`} className={styles.secondaryLabelWithMain}>
+        {data.parameterDate}
+      </td>
+    </tr>
+  )
 }

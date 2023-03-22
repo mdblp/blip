@@ -34,6 +34,7 @@ import { type MainDrawerProps } from './main-drawer'
 import { type PatientFilterStats } from '../../../lib/patient/models/patient-filter-stats.model'
 import { usePatientContext } from '../../../lib/patient/patient.provider'
 import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 interface MainDrawerHookReturn {
   fullDrawer: boolean
@@ -58,7 +59,7 @@ const useMainDrawer = ({ miniVariant }: MainDrawerProps): MainDrawerHookReturn =
   const numberOfFlaggedPatients = authHook.getFlagPatients().length
   const loggedUserIsHcpInMonitoring = !!(authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.userId === authHook.user?.id)))
   const queryParam: string | null = queryParams.get('filter')
-  const selectedFilter: string | null = queryParam ?? (pathname === '/home' ? PatientFilterTypes.all : null)
+  const selectedFilter: string | null = queryParam ?? (pathname === AppUserRoute.Home ? PatientFilterTypes.all : null)
 
   useEffect(() => { setFullDrawer(!miniVariant) }, [miniVariant])
 

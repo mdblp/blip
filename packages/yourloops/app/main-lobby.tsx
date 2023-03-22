@@ -46,18 +46,12 @@ import { MainLayout } from '../layout/main-layout'
 import TrainingPage from '../pages/training/training'
 import ProductLabellingPage from '../pages/product-labelling/product-labelling-page'
 import LoginPage from '../pages/login/login-page-landing'
-import {
-  ALWAYS_ACCESSIBLE_ROUTES,
-  COMPLETE_SIGNUP_PATH,
-  NEW_CONSENT_PATH,
-  PUBLIC_ROUTES,
-  RENEW_CONSENT_PATH,
-  TRAINING_PATH
-} from '../lib/diabeloop-urls.model'
+import { ALWAYS_ACCESSIBLE_ROUTES, PUBLIC_ROUTES } from '../lib/diabeloop-urls.model'
 import VerifyEmailPage from '../pages/login/verify-email-page'
 import Box from '@mui/material/Box'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../lib/config/config.service'
+import { AppRoute } from '../models/enums/routes.enum'
 
 const muiCache = createCache({
   key: 'mui',
@@ -69,30 +63,30 @@ const tssCache = createCache({
 })
 tssCache.compat = true
 
-const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route)
+const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
 
 export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
-  const renewConsentPath = route === RENEW_CONSENT_PATH || route === NEW_CONSENT_PATH
-  const trainingPath = route === TRAINING_PATH
-  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(route)
+  const renewConsentPath = route === AppRoute.RenewConsent || route === AppRoute.NewConsent
+  const trainingPath = route === AppRoute.Training
+  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
   if (routeIsPublic && isAuthenticated) {
     return '/'
   }
   if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
-    return '/login'
+    return AppRoute.Login
   }
-  if (route !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
-    return '/complete-signup'
+  if (route !== AppRoute.CompleteSignup && isAuthenticated && user && user.isFirstLogin()) {
+    return AppRoute.CompleteSignup
   }
   if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
-    return '/new-consent'
+    return AppRoute.NewConsent
   }
   if (!renewConsentPath && user && user.hasToRenewConsent()) {
-    return '/renew-consent'
+    return AppRoute.RenewConsent
   }
-  if (!trainingPath && route !== COMPLETE_SIGNUP_PATH && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
-    return '/training'
+  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
+    return AppRoute.Training
   }
   return undefined
 }
@@ -132,13 +126,13 @@ export function MainLobby(): JSX.Element {
                 <SnackbarContextProvider context={DefaultSnackbarContext}>
                   <Box>
                     <Routes>
-                      <Route path="/product-labelling" element={<ProductLabellingPage />} />
-                      <Route path="/login" element={<LoginPage />} />
-                      <Route path="/complete-signup" element={<CompleteSignUpPage />} />
-                      <Route path="/renew-consent" element={<ConsentPage />} />
-                      <Route path="/new-consent" element={<PatientConsentPage />} />
-                      <Route path="/training" element={<TrainingPage />} />
-                      <Route path="/verify-email" element={<VerifyEmailPage />} />
+                      <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
+                      <Route path={AppRoute.Login} element={<LoginPage />} />
+                      <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
+                      <Route path={AppRoute.RenewConsent} element={<ConsentPage />} />
+                      <Route path={AppRoute.NewConsent} element={<PatientConsentPage />} />
+                      <Route path={AppRoute.Training} element={<TrainingPage />} />
+                      <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
                       <Route path="*" element={<MainLayout />} />
                     </Routes>
                   </Box>

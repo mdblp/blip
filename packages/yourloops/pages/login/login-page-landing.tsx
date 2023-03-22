@@ -37,6 +37,7 @@ import { GlobalStyles } from 'tss-react'
 import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
 import { IDLE_USER_QUERY_PARAM } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
+import { AppRoute } from '../../models/enums/routes.enum'
 
 const LoginPageLanding: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -57,7 +58,7 @@ const LoginPageLanding: FunctionComponent = () => {
   useEffect(() => {
     if (error) {
       if (error.message === 'Please verify your email before logging in.') {
-        navigate('/verify-email')
+        navigate(AppRoute.VerifyEmail)
         return
       }
       alert.error(error.message)

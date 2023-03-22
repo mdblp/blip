@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import React, { createContext, type FunctionComponent, type PropsWithChildren, u
 import { getCurrentLang } from '../../lib/language'
 import { type SignupForm } from '../../lib/auth'
 import { type SignupFormKey } from './models/enums/signup-form-key.enum'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../lib/auth/models/country.model'
 
 interface ISignUpFormStateContext {
@@ -39,7 +39,7 @@ interface ISignUpFormStateContext {
 }
 
 const initialState: SignupForm = {
-  accountRole: UserRoles.unset,
+  accountRole: UserRole.Unset,
   profileFirstname: '',
   profileLastname: '',
   profileCountry: CountryCodes.Unknown,
@@ -61,7 +61,7 @@ export const SignUpFormStateProvider: FunctionComponent<PropsWithChildren> = ({ 
 
   const updateForm = (key: SignupFormKey, value: unknown): void => {
     setSignupForm(prevState => ({ ...prevState, [key]: value }))
-    if (value === UserRoles.caregiver) {
+    if (value === UserRole.Caregiver) {
       setSignupForm(prevState => {
         delete prevState.hcpProfession
         delete prevState.feedback

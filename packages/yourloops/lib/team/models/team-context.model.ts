@@ -46,9 +46,9 @@ export interface TeamContext {
    */
   getMedicalTeams: () => Array<Readonly<Team>>
   /**
-   * Return the medical and private teams
+   * Return the private team
    */
-  getMedicalAndPrivateTeams: () => Array<Readonly<Team>>
+  getPrivateTeam: () => Readonly<Team>
   /**
    * Return the remote monitoring teams only
    */

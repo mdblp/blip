@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type UserRoles } from '../../../lib/auth/models/enums/user-roles.enum'
+import { type UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import type * as React from 'react'
 
 export interface ConsentFormProps {
-  userRole: UserRoles
+  userRole: UserRole
   id: string
   /** className for the FormControl */
   className?: string

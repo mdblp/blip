@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,7 @@ import { type Notification as NotificationModel } from '../../../../lib/notifica
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
 import { type Profile } from '../../../../lib/auth/models/profile.model'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')
 describe('Notification', () => {
@@ -77,7 +77,7 @@ describe('Notification', () => {
 
   const fakeNotification = (
     notification: NotificationModel = notif,
-    role: UserRoles = UserRoles.hcp,
+    role: UserRole = UserRole.Hcp,
     onHelp = () => _.noop
   ): JSX.Element => (
     <Notification
@@ -112,7 +112,7 @@ describe('Notification', () => {
           type: NotificationType.careTeamProInvitation,
           target: { id: '0', name: 'target' }
         },
-        UserRoles.caregiver
+        UserRole.Caregiver
         )
       )
 
@@ -127,7 +127,7 @@ describe('Notification', () => {
           type: NotificationType.careTeamPatientInvitation,
           target: { id: '0', name: 'grenoble DIAB service' }
         },
-        UserRoles.patient
+        UserRole.Patient
         )
       )
 
@@ -193,7 +193,7 @@ describe('Notification', () => {
       return (
         <Notification
           notification={props.notif}
-          userRole={UserRoles.hcp}
+          userRole={UserRole.Hcp}
           onHelp={_.noop}
         />
       )

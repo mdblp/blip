@@ -36,6 +36,7 @@ import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
+import { AppUserRoute } from '../models/enums/routes.enum'
 
 export function PatientLayout(): JSX.Element {
   return (
@@ -43,15 +44,15 @@ export function PatientLayout(): JSX.Element {
       <PatientProvider>
         <DashboardLayout>
           <Routes>
-            <Route path="/not-found" element={<InvalidRoute />} />
-            <Route path="/preferences" element={<ProfilePage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/home" element={<PatientDataPage />} />
-            <Route path="/caregivers" element={<CaregiversPage />} />
-            <Route path="/teams/:teamId" element={<TeamDetailsPage />} />
+            <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+            <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+            <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+            <Route path={AppUserRoute.Home} element={<PatientDataPage />} />
+            <Route path={AppUserRoute.Caregivers} element={<CaregiversPage />} />
+            <Route path={`${AppUserRoute.Teams}/:teamId`} element={<TeamDetailsPage />} />
             <Route
               path="/"
-              element={<Navigate to="/dashboard" replace />}
+              element={<Navigate to={AppUserRoute.Dashboard} replace />}
             />
             <Route path="*" element={<PatientDataPage />} />
           </Routes>

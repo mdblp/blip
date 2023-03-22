@@ -7,11 +7,15 @@ It is based on Tidepool Blip 1.27.
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-2140 As a HCP, I can only edit my medical records
 - YLP-2175 Implement new design system
+- YLP-2192 Team scope dropdown for HCP
+- YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
+- YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
 - YLP-2065 Migrate CBGDateTraceLabel from viz to dumb
+- YLP-2066 Migrate historized settings table
 - YLP-2068 Update minor dependencies
 - YLP-2069 Migrate CBGSlicesContainer from viz to dumb
 - YLP-2071 Change the question mark icon to accept button

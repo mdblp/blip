@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,17 +32,21 @@ jest.mock('../../../../lib/team')
 describe('Selected team hook', () => {
   const initialTeamId = 'initial-team-id'
   const otherTeamId = '1-other-team-id'
+  const newTeamId = 'new-team-id'
 
-  const getMedicalAndPrivateTeamsMock = jest.fn().mockReturnValue([
+  const getMedicalTeamsMock = jest.fn().mockReturnValue([
     { id: initialTeamId, name: 'Initial team' },
     { id: 'a-team-id', name: 'A team' },
-    { id: otherTeamId, name: '1 - Other team' }
+    { id: otherTeamId, name: '1 - Other team' },
+    { id: newTeamId, name: 'New team' }
   ])
+  const getPrivateTeamMock = jest.fn().mockReturnValue({ id: 'private' })
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
-        getMedicalAndPrivateTeams: getMedicalAndPrivateTeamsMock
+        getMedicalTeams: getMedicalTeamsMock,
+        getPrivateTeam: getPrivateTeamMock
       }
     })
   })
@@ -53,7 +57,7 @@ describe('Selected team hook', () => {
 
       const { result } = renderHook(() => useSelectedTeamProviderCustomHook())
 
-      expect(result.current.selectedTeamId).toEqual(initialTeamId)
+      expect(result.current.selectedTeam.id).toEqual(initialTeamId)
     })
 
     it('should be initialized with the id of the first team by alphabetical order if the local storage value is invalid', () => {
@@ -61,13 +65,12 @@ describe('Selected team hook', () => {
 
       const { result } = renderHook(() => useSelectedTeamProviderCustomHook())
 
-      expect(result.current.selectedTeamId).toEqual(otherTeamId)
+      expect(result.current.selectedTeam.id).toEqual(otherTeamId)
     })
   })
 
   describe('selectTeam', () => {
     it('should store the new team id in state and local storage', async () => {
-      const newTeamId = 'new-team-id'
       localStorage.setItem('selectedTeamId', initialTeamId)
 
       const { result } = renderHook(() => useSelectedTeamProviderCustomHook())
@@ -76,7 +79,7 @@ describe('Selected team hook', () => {
       })
 
       expect(localStorage.getItem('selectedTeamId')).toEqual(newTeamId)
-      expect(result.current.selectedTeamId).toEqual(newTeamId)
+      expect(result.current.selectedTeam.id).toEqual(newTeamId)
     })
   })
 })

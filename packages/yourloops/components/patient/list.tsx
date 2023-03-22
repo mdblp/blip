@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -89,7 +89,7 @@ function PatientList(props: PatientListProps): JSX.Element {
   }, [updatePatientList, flagged, filter, filterType, orderBy, order])
 
   React.useEffect(() => {
-    setPageTitle(t('hcp-tab-patients'))
+    setPageTitle(t('header-tab-patients'))
   }, [t])
 
   return (
