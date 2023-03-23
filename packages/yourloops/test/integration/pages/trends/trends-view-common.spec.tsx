@@ -82,7 +82,7 @@ describe('Trends view for anyone', () => {
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
 
-    it('should correct value and tooltip GMI', async () => {
+    it('should render correct tooltip and values GMI', async () => {
       mockDataAPI(dataGeneration())
       renderPage('/trends')
 
