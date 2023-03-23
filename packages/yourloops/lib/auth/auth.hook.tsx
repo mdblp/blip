@@ -204,7 +204,7 @@ export function AuthContextImpl(): AuthContext {
       zendeskLogout()
 
       const redirectUrl = getLogoutRedirectUrl(isIdle)
-      auth0logout({ returnTo: redirectUrl })
+      auth0logout({ logoutParams: { returnTo: redirectUrl } })
 
       metrics.resetUser()
     } catch (err) {
@@ -248,7 +248,7 @@ export function AuthContextImpl(): AuthContext {
   }
 
   const refreshToken = async (): Promise<void> => {
-    await getAccessTokenWithPopup({ ignoreCache: true })
+    await getAccessTokenWithPopup({ authorizationParams: { ignoreCache: true } })
   }
 
   useEffect(() => {
