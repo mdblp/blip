@@ -33,7 +33,10 @@ import {
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsLayout,
   checkTrendsStatsWidgetsTooltips,
-  checkTrendsTidelineContainerTooltips, checkTrendsTimeInRangeStatsWidgets, dataGeneration, GMI_TOOLTIP
+  checkTrendsTidelineContainerTooltips,
+  checkTrendsTimeInRangeStatsWidgets,
+  dataGeneration,
+  GMI_TOOLTIP
 } from '../../assert/trends'
 import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
@@ -44,7 +47,8 @@ import {
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
   checkStandardDeviationStatWidget,
-  checkStatTooltip, checkTimeInRangeStatsTitle
+  checkStatTooltip,
+  checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor, within } from '@testing-library/react'

@@ -226,7 +226,7 @@ function getGlucoseManagementIndicatorData(cbgData: Cbg[], bgUnit: BgUnit, dateF
   const totalCbgDuration = getCgmTotalDuration(filteredCbg)
   // Duration must be at least 70% of 14 days
   const SEVENTY_PERCENT = 0.7
-  if (totalCbgDuration < 14 * MS_IN_DAY * SEVENTY_PERCENT) { // 8 467 200 000
+  if (totalCbgDuration < 14 * MS_IN_DAY * SEVENTY_PERCENT) {
     return insufficientData
   }
 
