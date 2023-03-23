@@ -26,7 +26,7 @@
  */
 
 import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
-import { type CgmConfig, type DeviceConfig, ParameterConfig, type PumpConfig } from 'medical-domain'
+import { type CgmConfig, type DeviceConfig, type ParameterConfig, type PumpConfig } from 'medical-domain'
 
 export interface PdfData {
   basics?: BasicData
