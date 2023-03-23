@@ -47,7 +47,6 @@ import TeamDetailsPage from '../pages/team/team-details-page'
 import CaregiversPage from '../pages/patient/caregivers/page'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import HomePage from '../pages/home-page'
-import TeamApi from '../lib/team/team.api'
 import PatientUtils from '../lib/patient/patient.util'
 import { errorTextFromException } from '../lib/utils'
 
@@ -62,15 +61,15 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
     return [
       {
         path: AppUserRoute.NotFound,
-        element: <InvalidRoute />
+        Component: InvalidRoute
       },
       {
         path: AppUserRoute.Preferences,
-        element: <ProfilePage />
+        Component: ProfilePage
       },
       {
         path: AppUserRoute.Notifications,
-        element: <NotificationsPage />
+        Component: NotificationsPage
       }
     ]
   }
@@ -88,11 +87,11 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
         //     return { error: errorTextFromException(reason) }
         //   }
         // },
-        element: <HomePage />
+        Component: HomePage
       },
       {
         path: `${AppUserRoute.Patient}/:patientId/*`,
-        element: <PatientDataPage />
+        Component: PatientDataPage
       },
       {
         path: '/',
@@ -111,7 +110,7 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
       ...getCaregiverRoutes(),
       {
         path: AppUserRoute.Team,
-        element: <TeamDetailsPage />
+        Component: TeamDetailsPage
       }
     ]
   }
@@ -121,19 +120,19 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
       ...getRolesCommonRoutes(),
       {
         path: AppUserRoute.Home,
-        element: <PatientDataPage />
+        Component: PatientDataPage
       },
       {
         path: `${AppUserRoute.Teams}/:teamId`,
-        element: <TeamDetailsPage />
+        Component: TeamDetailsPage
       },
       {
         path: AppUserRoute.Caregivers,
-        element: <CaregiversPage />
+        Component: CaregiversPage
       },
       {
         path: '*',
-        element: <PatientDataPage />
+        Component: PatientDataPage
       }
     ]
   }
@@ -155,38 +154,38 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
     const roleSpecificRoutes = getRoleSpecificRoutes()
     return [
       {
-        element: <MainLobby />,
+        Component: MainLobby,
         children: [
           {
             path: AppRoute.Login,
-            element: <LoginPage />
+            Component: LoginPage
           },
           {
             path: AppRoute.ProductLabelling,
-            element: <ProductLabellingPage />
+            Component: ProductLabellingPage
           },
           {
             path: AppRoute.CompleteSignup,
-            element: <CompleteSignUpPage />
+            Component: CompleteSignUpPage
           },
           {
             path: AppRoute.RenewConsent,
-            element: <ConsentPage />
+            Component: ConsentPage
           },
           {
             path: AppRoute.NewConsent,
-            element: <PatientConsentPage />
+            Component: PatientConsentPage
           },
           {
             path: AppRoute.Training,
-            element: <TrainingPage />
+            Component: TrainingPage
           },
           {
             path: AppRoute.VerifyEmail,
-            element: <VerifyEmailPage />
+            Component: VerifyEmailPage
           },
           {
-            element: <MainLayout />,
+            Component: MainLayout,
             id: 'mainLayout',
             loader: async () => {
               // if (user.isUserHcp() || user.isUserPatient()) {
