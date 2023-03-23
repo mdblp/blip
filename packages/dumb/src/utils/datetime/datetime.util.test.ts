@@ -30,10 +30,12 @@ import {
   formatClocktimeFromMsPer24,
   formatDuration,
   formatLocalizedFromUTC,
+  getHammertimeFromDatumWithTimePrefs,
   getTimezoneFromTimePrefs,
   ONE_HOUR_MS
 } from './datetime.util'
 import { type TimePrefs } from 'medical-domain'
+import { type PdfSettingsData } from '../../models/print/pdf-data.model'
 
 const ONE_MIN_MS = 6e4
 
@@ -295,6 +297,37 @@ describe('DatetimeUtil', () => {
 
     it('should use a custom format string passed as second arg', () => {
       expect(formatClocktimeFromMsPer24(twoTwentyAfternoonMs, 'kk🙃mm')).toEqual('14🙃20')
+    })
+  })
+
+  describe('getHammertimeFromDatumWithTimePrefs', () => {
+    const timezoneAware = {
+      timezoneAware: true,
+      timezoneName: 'US/Central'
+    }
+    const timezoneNaive = {
+      timezoneAware: false,
+      timezoneName: ''
+    }
+    const datum = {
+      normalTime: '2016-09-23T23:00:00.000Z',
+      deviceTime: '2016-09-23T19:00:00'
+    } as PdfSettingsData
+
+    it('should return 1474671600000 for timezone aware', () => {
+      expect(getHammertimeFromDatumWithTimePrefs(datum, timezoneAware)).toEqual(1474671600000)
+    })
+
+    it('should return 1474657200000 for timezone unaware', () => {
+      expect(getHammertimeFromDatumWithTimePrefs(datum, timezoneNaive)).toEqual(1474650000000)
+    })
+
+    it('should return `null` if `normalTime` is not present on datum when timezone-aware', () => {
+      expect(getHammertimeFromDatumWithTimePrefs({} as PdfSettingsData, timezoneAware)).toBeNull()
+    })
+
+    it('should return `null` if `deviceTime` is not present on datum when timezone-naive', () => {
+      expect(getHammertimeFromDatumWithTimePrefs({} as PdfSettingsData, timezoneNaive)).toBeNull()
     })
   })
 })

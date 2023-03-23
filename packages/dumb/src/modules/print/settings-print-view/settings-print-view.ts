@@ -117,6 +117,7 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
     const tableData = getTableDataByDataType(type, data, timezone, originalDate)
     const tableDataWidth = this.chartArea.width * 0.6
     const columnWidth = tableDataWidth / 2
+
     tableData.columns.forEach((column: SettingsTableColumn) => {
       column.width = columnWidth
     })

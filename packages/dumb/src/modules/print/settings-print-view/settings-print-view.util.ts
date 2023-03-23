@@ -48,6 +48,24 @@ import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-typ
 
 const t = i18next.t.bind(i18next)
 
+const TABLE_COLUMNS: SettingsTableColumn[] = [
+  {
+    id: 'label',
+    headerFill: false,
+    cache: false,
+    align: 'left' as AlignType,
+    width: 150,
+    header: ''
+  }, {
+    id: 'value',
+    headerFill: false,
+    cache: false,
+    align: 'right' as AlignType,
+    width: 150,
+    header: ''
+  }
+]
+
 const getTimePrefs = (timezone = TIMEZONE_UTC): TimePrefs => {
   const timezoneName = timezone === TIMEZONE_UTC ? new Intl.DateTimeFormat().resolvedOptions().timeZone : timezone
 
@@ -67,24 +85,6 @@ const getTableHeading = (text: string, timePrefs: TimePrefs, subText?: string, d
   }
 
   return heading
-}
-
-const getTableColumns = (): SettingsTableColumn[] => {
-  return [{
-    id: 'label',
-    headerFill: false,
-    cache: false,
-    align: 'left' as AlignType,
-    width: 150,
-    header: ''
-  }, {
-    id: 'value',
-    headerFill: false,
-    cache: false,
-    align: 'right' as AlignType,
-    width: 150,
-    header: ''
-  }]
 }
 
 const getTextByDataTableType = (type: PdfSettingsDataType): string => {
@@ -169,7 +169,7 @@ export const getTableDataByDataType = (type: PdfSettingsDataType, data: CgmConfi
   const subText = getSubTextByDataTableType(type, data)
 
   const heading = getTableHeading(text, timePrefs, subText, date)
-  const columns = getTableColumns()
+  const columns = TABLE_COLUMNS
   const rows = getTableRowsByDataTableType(type, data, timePrefs)
 
   return { heading, columns, rows }
