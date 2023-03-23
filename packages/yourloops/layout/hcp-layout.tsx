@@ -26,44 +26,28 @@
  */
 
 import React from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import PatientDataPage from '../components/patient-data'
-import TeamDetailsPage from '../pages/team/team-details-page'
-import HomePage from '../pages/home-page'
-import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
-import DashboardLayout from './dashboard-layout'
-import InvalidRoute from '../components/invalid-route'
-import ProfilePage from '../pages/profile/profile-page'
-import NotificationsPage from '../pages/notifications'
 import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
-import { AppUserRoute } from '../models/enums/routes.enum'
+import { DataContextProvider, DefaultDataContext } from '../lib/data/data.hook'
+import { NotificationContextProvider } from '../lib/notifications/notification.hook'
+import DashboardLayout from './dashboard-layout'
+import { Outlet } from 'react-router-dom'
+import { PatientProvider } from '../lib/patient/patient.provider'
 
 export function HcpLayout(): JSX.Element {
   return (
-    <TeamContextProvider>
-      <SelectedTeamProvider>
-        <PatientProvider>
-          <DashboardLayout>
-            <Routes>
-              <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-              <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-              <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-              <Route path={AppUserRoute.Home} element={<HomePage />} />
-              <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
-              <Route path={AppUserRoute.Teams} element={<TeamDetailsPage />} />
-              <Route
-                path="/"
-                element={<Navigate to={AppUserRoute.Home} replace />}
-              />
-              <Route
-                path="*"
-                element={<Navigate to={AppUserRoute.NotFound} replace />}
-              />
-            </Routes>
-          </DashboardLayout>
-        </PatientProvider>
-      </SelectedTeamProvider>
-    </TeamContextProvider>
+    <NotificationContextProvider>
+      <DataContextProvider context={DefaultDataContext}>
+        <TeamContextProvider>
+          <SelectedTeamProvider>
+            <PatientProvider>
+              <DashboardLayout>
+                <Outlet />
+              </DashboardLayout>
+            </PatientProvider>
+          </SelectedTeamProvider>
+        </TeamContextProvider>
+      </DataContextProvider>
+    </NotificationContextProvider>
   )
 }

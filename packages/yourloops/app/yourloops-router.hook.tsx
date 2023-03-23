@@ -38,7 +38,6 @@ import { ConsentPage } from '../pages/login'
 import PatientConsentPage from '../pages/patient/patient-consent'
 import TrainingPage from '../pages/training/training'
 import VerifyEmailPage from '../pages/login/verify-email-page'
-import { MainLayout } from '../layout/main-layout'
 import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
@@ -51,6 +50,9 @@ import PatientUtils from '../lib/patient/patient.util'
 import { errorTextFromException } from '../lib/utils'
 import SpinningLoader from '../components/loaders/spinning-loader'
 import { useAuth0 } from '@auth0/auth0-react'
+import { CaregiverLayout } from '../layout/caregiver-layout'
+import { HcpLayout } from '../layout/hcp-layout'
+import { PatientLayout } from '../layout/patient-layout'
 
 interface YourloopsRouterHookResult {
   routes: RouteObject[]
@@ -60,7 +62,7 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
   const { user, fetchingUser } = useAuth()
   const { isLoading } = useAuth0()
 
-  const getRolesCommonRoutes = useCallback((): RouteObject[] => {
+  const getRolesCommonChildrenRoutes = useCallback((): RouteObject[] => {
     return [
       {
         path: AppUserRoute.NotFound,
@@ -77,9 +79,9 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
     ]
   }, [])
 
-  const getCaregiverRoutes = useCallback((): RouteObject[] => {
+  const getCaregiverChildrenRoutes = useCallback((): RouteObject[] => {
     return [
-      ...getRolesCommonRoutes(),
+      ...getRolesCommonChildrenRoutes(),
       {
         path: AppUserRoute.Home,
         Component: HomePage
@@ -97,42 +99,78 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
         element: <Navigate to={AppUserRoute.NotFound} replace />
       }
     ]
-  }, [getRolesCommonRoutes])
+  }, [getRolesCommonChildrenRoutes])
 
-  const getHcpRoutes = useCallback((): RouteObject[] => {
-    return [
-      ...getRolesCommonRoutes(),
-      ...getCaregiverRoutes(),
-      {
-        path: AppUserRoute.Team,
-        Component: TeamDetailsPage
-      }
-    ]
-  }, [getCaregiverRoutes, getRolesCommonRoutes])
+  const getCaregiverRoutes = useCallback((): RouteObject => {
+    return {
+      id: 'mainLayout',
+      Component: CaregiverLayout,
+      loader: async () => {
+        try {
+          return { patients: await PatientUtils.computePatients(user) }
+        } catch (reason: unknown) {
+          return { error: errorTextFromException(reason) }
+        }
+      },
+      children: getCaregiverChildrenRoutes()
+    }
+  }, [getCaregiverChildrenRoutes, user])
 
-  const getPatientRoutes = useCallback((): RouteObject[] => {
-    return [
-      ...getRolesCommonRoutes(),
-      {
-        path: AppUserRoute.Home,
-        Component: PatientDataPage
+  const getHcpRoutes = useCallback((): RouteObject => {
+    return {
+      id: 'mainLayout',
+      Component: HcpLayout,
+      loader: async () => {
+        try {
+          return { patients: await PatientUtils.computePatients(user) }
+        } catch (reason: unknown) {
+          return { error: errorTextFromException(reason) }
+        }
       },
-      {
-        path: `${AppUserRoute.Teams}/:teamId`,
-        Component: TeamDetailsPage
-      },
-      {
-        path: AppUserRoute.Caregivers,
-        Component: CaregiversPage
-      },
-      {
-        path: '*',
-        Component: PatientDataPage
-      }
-    ]
-  }, [getRolesCommonRoutes])
+      children: [
+        ...getCaregiverChildrenRoutes(),
+        {
+          path: AppUserRoute.Team,
+          Component: TeamDetailsPage
+        }
+      ]
+    }
+  }, [getCaregiverChildrenRoutes, user])
 
-  const getRoleSpecificRoutes = useCallback((): RouteObject[] => {
+  const getPatientRoutes = useCallback((): RouteObject => {
+    return {
+      id: 'mainLayout',
+      Component: PatientLayout,
+      loader: async () => {
+        try {
+          return { patients: await PatientUtils.computePatients(user) }
+        } catch (reason: unknown) {
+          return { error: errorTextFromException(reason) }
+        }
+      },
+      children: [
+        ...getRolesCommonChildrenRoutes(),
+        {
+          path: AppUserRoute.Home,
+          Component: PatientDataPage
+        },
+        {
+          path: `${AppUserRoute.Teams}/:teamId`,
+          Component: TeamDetailsPage
+        },
+        {
+          path: AppUserRoute.Caregivers,
+          Component: CaregiversPage
+        },
+        {
+          path: '*',
+          Component: PatientDataPage
+        }
+      ]
+    }
+  }, [getRolesCommonChildrenRoutes, user])
+
+  const getRoleSpecificRoutes = useCallback((): RouteObject => {
     switch (user?.role) {
       case UserRole.Hcp:
         return getHcpRoutes()
@@ -141,7 +179,10 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
       case UserRole.Patient:
         return getPatientRoutes()
       default:
-        return []
+        return {
+          path: '*',
+          Component: SpinningLoader
+        }
     }
   }, [getCaregiverRoutes, getHcpRoutes, getPatientRoutes, user?.role])
 
@@ -176,39 +217,16 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
       {
         path: AppRoute.VerifyEmail,
         Component: VerifyEmailPage
-      }
+      },
+      roleSpecificRoutes
     ]
-    if (roleSpecificRoutes.length !== 0) {
-      mainLobbyChildren.push(
-        {
-          Component: MainLayout,
-          id: 'mainLayout',
-          loader: async () => {
-            try {
-              console.log('toto')
-              return { patients: await PatientUtils.computePatients(user) }
-            } catch (reason: unknown) {
-              return { error: errorTextFromException(reason) }
-            }
-          },
-          children: roleSpecificRoutes
-        }
-      )
-    } else {
-      mainLobbyChildren.push(
-        {
-          path: '*',
-          Component: SpinningLoader
-        }
-      )
-    }
     return [
       {
         Component: MainLobby,
         children: mainLobbyChildren
       }
     ]
-  }, [getRoleSpecificRoutes, user])
+  }, [getRoleSpecificRoutes])
 
   const routes = useMemo(() => {
     if (isLoading || fetchingUser) {

@@ -48,6 +48,8 @@ const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true }
 
 function PatientList(props: PatientListProps): JSX.Element {
   const { filter, filterType } = props
+  console.log('rendering patient list')
+  console.log(performance.now())
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
   const patientHook = usePatientContext()

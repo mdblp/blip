@@ -34,6 +34,7 @@ import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient } from './models/patient.model'
+import { waitTimeout } from '../utils'
 
 const log = bows('Patient API')
 
@@ -65,6 +66,7 @@ export default class PatientApi {
   }
 
   static async getPatientsForHcp(userId: string): Promise<Patient[]> {
+    await waitTimeout(2000)
     const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/patients` })
     return data
   }
