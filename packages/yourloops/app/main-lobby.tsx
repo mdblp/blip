@@ -85,6 +85,7 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
 }
 
 export function MainLobby(): JSX.Element {
+  console.log(performance.now())
   const { isAuthenticated } = useAuth0()
   const { isLoggedIn, logout, user } = useAuth()
   const location = useLocation()

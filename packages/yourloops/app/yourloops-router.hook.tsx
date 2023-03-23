@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Navigate, type RouteObject } from 'react-router-dom'
 
 import { useAuth } from '../lib/auth'
@@ -50,17 +50,15 @@ import HomePage from '../pages/home-page'
 import PatientUtils from '../lib/patient/patient.util'
 import { errorTextFromException } from '../lib/utils'
 import SpinningLoader from '../components/loaders/spinning-loader'
+import { useAuth0 } from '@auth0/auth0-react'
 
 interface YourloopsRouterHookResult {
   routes: RouteObject[]
 }
 
 export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
-  const { user } = useAuth()
-
-  useEffect(() => {
-    console.log(user)
-  }, [user])
+  const { user, fetchingUser } = useAuth()
+  const { isLoading } = useAuth0()
 
   const getRolesCommonRoutes = useCallback((): RouteObject[] => {
     return [
@@ -84,14 +82,6 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
       ...getRolesCommonRoutes(),
       {
         path: AppUserRoute.Home,
-        // id: 'home',
-        // loader: async () => {
-        //   try {
-        //     return { patients: await PatientUtils.computePatients(user) }
-        //   } catch (reason: unknown) {
-        //     return { error: errorTextFromException(reason) }
-        //   }
-        // },
         Component: HomePage
       },
       {
@@ -155,74 +145,9 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
     }
   }, [getCaregiverRoutes, getHcpRoutes, getPatientRoutes, user?.role])
 
-  const getRoutes = (): RouteObject[] => {
+  const getRoutes = useCallback((): RouteObject[] => {
     const roleSpecificRoutes = getRoleSpecificRoutes()
-    console.log(roleSpecificRoutes)
-    return [
-      {
-        Component: MainLobby,
-        children: [
-          {
-            path: AppRoute.Login,
-            Component: LoginPage
-          },
-          {
-            path: AppRoute.ProductLabelling,
-            Component: ProductLabellingPage
-          },
-          {
-            path: AppRoute.CompleteSignup,
-            Component: CompleteSignUpPage
-          },
-          {
-            path: AppRoute.RenewConsent,
-            Component: ConsentPage
-          },
-          {
-            path: AppRoute.NewConsent,
-            Component: PatientConsentPage
-          },
-          {
-            path: AppRoute.Training,
-            Component: TrainingPage
-          },
-          {
-            path: AppRoute.VerifyEmail,
-            Component: VerifyEmailPage
-          },
-          {
-            // path: '*',
-            Component: MainLayout,
-            id: 'mainLayout',
-            loader: async () => {
-              // if (user.isUserHcp() || user.isUserPatient()) {
-              //   try {
-              //     return { teams: await TeamApi.getTeams(user) }
-              //   } catch (reason: unknown) {
-              //     return { error: errorTextFromException(reason) }
-              //   }
-              // }
-              // return null
-              console.log(user)
-              if (!user) {
-                return null
-              }
-              try {
-                return { patients: await PatientUtils.computePatients(user) }
-              } catch (reason: unknown) {
-                return { error: errorTextFromException(reason) }
-              }
-            },
-            children: roleSpecificRoutes
-          }
-        ]
-      }
-    ]
-  }
 
-  const getRoutes2 = useCallback((): RouteObject[] => {
-    const roleSpecificRoutes = getRoleSpecificRoutes()
-    console.log(roleSpecificRoutes)
     const mainLobbyChildren: RouteObject[] = [
       {
         path: AppRoute.Login,
@@ -256,23 +181,11 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
     if (roleSpecificRoutes.length !== 0) {
       mainLobbyChildren.push(
         {
-          // path: '*',
           Component: MainLayout,
           id: 'mainLayout',
           loader: async () => {
-            // if (user.isUserHcp() || user.isUserPatient()) {
-            //   try {
-            //     return { teams: await TeamApi.getTeams(user) }
-            //   } catch (reason: unknown) {
-            //     return { error: errorTextFromException(reason) }
-            //   }
-            // }
-            // return null
-            console.log(user)
-            if (!user) {
-              return null
-            }
             try {
+              console.log('toto')
               return { patients: await PatientUtils.computePatients(user) }
             } catch (reason: unknown) {
               return { error: errorTextFromException(reason) }
@@ -298,10 +211,11 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
   }, [getRoleSpecificRoutes, user])
 
   const routes = useMemo(() => {
-    return getRoutes2()
-  }, [getRoutes2])
+    if (isLoading || fetchingUser) {
+      return []
+    }
+    return getRoutes()
+  }, [fetchingUser, getRoutes, isLoading])
 
-  return useMemo(() => {
-    return { routes }
-  }, [routes])
+  return { routes }
 }

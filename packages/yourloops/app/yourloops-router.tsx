@@ -28,17 +28,12 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { useYourloopsRouterHook } from './yourloops-router.hook'
-import { useAuth } from '../lib/auth'
-import { useAuth0 } from '@auth0/auth0-react'
 import SpinningLoader from '../components/loaders/spinning-loader'
 
 export function YourloopsRouter(): JSX.Element {
-  const { isLoading } = useAuth0()
-  const { fetchingUser } = useAuth()
   const { routes } = useYourloopsRouterHook()
 
-  const router = createBrowserRouter(routes)
   return <>
-    {(!isLoading && !fetchingUser) ? <RouterProvider router={router} /> : <SpinningLoader />}
+    {routes.length === 0 ? <SpinningLoader /> : <RouterProvider router={createBrowserRouter(routes)} />}
   </>
 }
