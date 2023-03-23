@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,36 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { Auth0Provider } from '@auth0/auth0-react'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext, useState } from 'react'
+import SpinningLoader from '../components/loaders/spinning-loader'
 
-import '@fontsource/roboto'
-import 'branding/theme.css'
-import 'classes.css'
-
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { YourloopsRouter } from './yourloops-router'
-import { LoaderProvider } from './yourloops-loader.hook'
-
-const Yourloops = (): JSX.Element => {
-  console.log(performance.now())
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      useRefreshTokens
-      audience="https://api-ext.your-loops.com"
-    >
-      <AuthContextProvider>
-        <LoaderProvider>
-          <YourloopsRouter />
-        </LoaderProvider>
-      </AuthContextProvider>
-    </Auth0Provider>
-  )
+interface LoaderContextResult {
+  isLoadingPatients: boolean
+  setLoadingPatients: (value: boolean) => void
 }
 
-export default Yourloops
+const LoaderContext = createContext<LoaderContextResult>({} as LoaderContextResult)
+
+export const LoaderProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const [isLoadingPatients, setLoadingPatients] = useState(false)
+
+  const res = { isLoadingPatients, setLoadingPatients }
+
+  return isLoadingPatients
+    ? <SpinningLoader className="centered-spinning-loader" />
+    : <LoaderContext.Provider value={res}>{children}</LoaderContext.Provider>
+}
+
+export function useLoaderContext(): LoaderContextResult {
+  return useContext(LoaderContext)
+}

@@ -32,7 +32,6 @@ import { useLocation } from 'react-router-dom'
 import { useQueryParams } from '../../../lib/custom-hooks/query-params.hook'
 import { type MainDrawerProps } from './main-drawer'
 import { type PatientFilterStats } from '../../../lib/patient/models/patient-filter-stats.model'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
 import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 
@@ -40,7 +39,7 @@ interface MainDrawerHookReturn {
   fullDrawer: boolean
   onHover: boolean
   setOnHover: Dispatch<SetStateAction<boolean>>
-  patientFiltersStats: PatientFilterStats
+  patientFiltersStats?: PatientFilterStats
   numberOfFlaggedPatients: number
   loggedUserIsHcpInMonitoring: boolean
   selectedFilter: string | null
@@ -51,23 +50,22 @@ const useMainDrawer = ({ miniVariant }: MainDrawerProps): MainDrawerHookReturn =
   const [onHover, setOnHover] = useState<boolean>(false)
   const teamHook = useTeam()
   const authHook = useAuth()
-  const patientHook = usePatientContext()
   const queryParams = useQueryParams()
   const { pathname } = useLocation()
 
-  const patientFiltersStats = patientHook.patientsFilterStats
   const numberOfFlaggedPatients = authHook.getFlagPatients().length
   const loggedUserIsHcpInMonitoring = !!(authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.userId === authHook.user?.id)))
   const queryParam: string | null = queryParams.get('filter')
   const selectedFilter: string | null = queryParam ?? (pathname === AppUserRoute.Home ? PatientFilterTypes.all : null)
 
-  useEffect(() => { setFullDrawer(!miniVariant) }, [miniVariant])
+  useEffect(() => {
+    setFullDrawer(!miniVariant)
+  }, [miniVariant])
 
   return {
     fullDrawer,
     onHover,
     setOnHover,
-    patientFiltersStats,
     numberOfFlaggedPatients,
     loggedUserIsHcpInMonitoring,
     selectedFilter
