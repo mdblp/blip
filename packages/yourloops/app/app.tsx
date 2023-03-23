@@ -37,7 +37,6 @@ import { AuthContextProvider } from '../lib/auth'
 import { YourloopsRouter } from './yourloops-router'
 
 const Yourloops = (): JSX.Element => {
-  console.log(performance.now())
   return (
     <Auth0Provider
       domain={appConfig.AUTH0_DOMAIN}

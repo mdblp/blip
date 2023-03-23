@@ -90,8 +90,6 @@ export function MainLobby(): JSX.Element {
   const location = useLocation()
   const currentRoute = location.pathname
   const theme = getTheme()
-  console.log('main lobby')
-  console.log(performance.now())
 
   const onIdle = async (): Promise<void> => {
     if (isLoggedIn) {
@@ -102,6 +100,7 @@ export function MainLobby(): JSX.Element {
   useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
 
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
+  console.log(currentRoute)
 
   return (
     <React.Fragment>

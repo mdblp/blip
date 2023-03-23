@@ -122,7 +122,7 @@ const HomePage: FunctionComponent = () => {
   }
 
   React.useEffect(() => {
-    if (patientHook.errorMessage !== null) {
+    if (patientHook.errorMessage) {
       const message = t('error-failed-display-patients', { errorMessage: patientHook.errorMessage })
       if (message !== errorMessage) {
         log.error('errorMessage', message)

@@ -44,19 +44,22 @@ import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
+import { useRouteLoaderData } from 'react-router-dom'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
+  const routerData = useRouteLoaderData('mainLayout') as { patients?: Patient[], error?: string }
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
   const { selectedTeam } = useSelectedTeamContext()
 
-  const [patients, setPatients] = useState<Patient[]>([])
-  const [initialized, setInitialized] = useState<boolean>(false)
+  const [patients, setPatients] = useState<Patient[]>(routerData.patients ?? [])
+  const [initialized, setInitialized] = useState<boolean>(!routerData.error)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(routerData.error)
 
   const fetchPatients = useCallback(() => {
+    console.log('fetching patients')
     PatientUtils.computePatients(user).then(computedPatients => {
       setPatients(computedPatients)
       setErrorMessage(null)

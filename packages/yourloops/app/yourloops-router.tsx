@@ -38,8 +38,6 @@ export function YourloopsRouter(): JSX.Element {
   const { routes } = useYourloopsRouterHook()
 
   const router = createBrowserRouter(routes)
-  console.log('yourloops router')
-  console.log(performance.now())
   return <>
     {(!isLoading && !fetchingUser) ? <RouterProvider router={router} /> : <SpinningLoader />}
   </>

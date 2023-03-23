@@ -47,6 +47,9 @@ import TeamDetailsPage from '../pages/team/team-details-page'
 import CaregiversPage from '../pages/patient/caregivers/page'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import HomePage from '../pages/home-page'
+import TeamApi from '../lib/team/team.api'
+import PatientUtils from '../lib/patient/patient.util'
+import { errorTextFromException } from '../lib/utils'
 
 interface YourloopsRouterHookResult {
   routes: RouteObject[]
@@ -54,7 +57,6 @@ interface YourloopsRouterHookResult {
 
 export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
   const { user } = useAuth()
-  console.log('rendering')
 
   const getRolesCommonRoutes = (): RouteObject[] => {
     return [
@@ -78,6 +80,14 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
       ...getRolesCommonRoutes(),
       {
         path: AppUserRoute.Home,
+        // id: 'home',
+        // loader: async () => {
+        //   try {
+        //     return { patients: await PatientUtils.computePatients(user) }
+        //   } catch (reason: unknown) {
+        //     return { error: errorTextFromException(reason) }
+        //   }
+        // },
         element: <HomePage />
       },
       {
@@ -123,7 +133,7 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
       },
       {
         path: '*',
-        element: <PatientDataPage/>
+        element: <PatientDataPage />
       }
     ]
   }
@@ -177,6 +187,26 @@ export const useYourloopsRouterHook = (): YourloopsRouterHookResult => {
           },
           {
             element: <MainLayout />,
+            id: 'mainLayout',
+            loader: async () => {
+              // if (user.isUserHcp() || user.isUserPatient()) {
+              //   try {
+              //     return { teams: await TeamApi.getTeams(user) }
+              //   } catch (reason: unknown) {
+              //     return { error: errorTextFromException(reason) }
+              //   }
+              // }
+              // return null
+              if (!user) {
+                return null
+              }
+              console.log(user)
+              try {
+                return { patients: await PatientUtils.computePatients(user) }
+              } catch (reason: unknown) {
+                return { error: errorTextFromException(reason) }
+              }
+            },
             children: roleSpecificRoutes
           }
         ]

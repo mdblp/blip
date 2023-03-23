@@ -63,6 +63,13 @@ function TeamContextImpl(): TeamContext {
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
+  // const routerData = useRouteLoaderData('mainLayout') as { teams?: Team[], error?: string }
+  // const notificationHook = useNotification()
+  // const [teams, setTeams] = useState<Team[]>(() => routerData.teams ?? [])
+  // const [initialized, setInitialized] = useState<boolean>(!routerData.error)
+  // const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
+  // const [errorMessage, setErrorMessage] = useState<string | null>(routerData.error)
+
   const user = authHook.user
   if (!user) {
     throw new Error('TeamHook need a logged-in user')
