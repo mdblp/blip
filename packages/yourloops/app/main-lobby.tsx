@@ -98,6 +98,7 @@ export function MainLobby(): JSX.Element {
   const currentRoute = location.pathname
   const theme = getTheme()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
+  console.log(currentRoute)
 
   const onIdle = async (): Promise<void> => {
     if (isLoggedIn) {

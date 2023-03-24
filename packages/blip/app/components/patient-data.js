@@ -173,11 +173,6 @@ class PatientDataPage extends React.Component {
     })
   }
 
-  componentWillUnmount() {
-    this.chartRef = null
-    this.apiUtils = null
-  }
-
   render() {
     const { dialogPDFOptions: DialogPDFOptions } = this.props
     const { loadingState, errorMessage, medicalData, canPrint, showPDFPrintOptions } = this.state

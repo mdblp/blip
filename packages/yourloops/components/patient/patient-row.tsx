@@ -145,7 +145,7 @@ const PatientRow: FunctionComponent<PatientRowProps> = ({ loggedUserIsHcpInMonit
   }
 
   const onClickRow = (): void => {
-    navigate(`${AppUserRoute.Patient}/${patient.userid}`)
+    navigate(`${AppUserRoute.Patient}/${patient.userid}/dashboard`)
   }
 
   const onClickRemovePatient = (event: React.MouseEvent): void => {
