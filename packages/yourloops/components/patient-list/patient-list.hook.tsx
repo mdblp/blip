@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   type GridApiCommon,
   type GridColDef,
@@ -34,7 +34,6 @@ import {
   type GridRenderCellParams,
   type GridRowParams,
   type GridRowsProp,
-  type GridValueGetterParams,
   useGridApiRef
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
@@ -52,6 +51,10 @@ import { type GridRowModel } from './models/grid-row.model'
 import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
 import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
+import Box from '@mui/material/Box'
+import { type PatientProfile } from '../../lib/patient/models/patient-profile.model'
+import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
+import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
 
 interface PatientListHookReturns {
   columns: GridColDef[]
@@ -78,8 +81,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { getFlagPatients, user } = useAuth()
   const { getPatientById, filterPatients } = usePatientContext()
   const { getUserName } = useUserName()
+  const { sortByUserName } = useSortComparatorsHook()
   const navigate = useNavigate()
   const gridApiRef = useGridApiRef()
+  const queryParams = useQueryParams()
   const trNA = t('N/A')
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)
@@ -173,10 +178,11 @@ export const usePatientListHook = (): PatientListHookReturns => {
         flex: 1,
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,
-        valueGetter: (params: GridValueGetterParams) => {
-          const { firstName, fullName, lastName } = params.row.patient
-          return getUserName(firstName, lastName, fullName)
-        }
+        renderCell: (params: GridRenderCellParams<GridRowModel, PatientProfile>) => {
+          const { firstName, fullName, lastName, email } = params.value
+          return <Box data-email={email}>{getUserName(firstName, lastName, fullName)}</Box>
+        },
+        sortComparator: sortByUserName
       },
       {
         field: PatientListColumns.System,
@@ -238,7 +244,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         renderCell: (params: GridRenderCellParams<GridRowModel, string>) => <ActionsCell patientId={params.value} onClickRemove={onClickRemovePatient} />
       }
     ]
-  }, [classes.mandatoryCellBorder, selectedTab, getUserName, onClickRemovePatient, t])
+  }, [t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
 
   const rows: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {
@@ -258,6 +264,13 @@ export const usePatientListHook = (): PatientListHookReturns => {
       }
     })
   }, [filteredPatients, trNA])
+
+  useEffect(() => {
+    const filter = queryParams.get('filter')
+    if (Object.values(PatientListFilters).includes(filter as PatientListFilters)) {
+      setSelectedFilter(filter as PatientListFilters)
+    }
+  }, [queryParams])
 
   return {
     columns,

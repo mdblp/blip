@@ -25,32 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientListTabs {
-  Current,
-  Pending
+import { useUserName } from './user-name.hook'
+import { type PatientProfile } from '../patient/models/patient-profile.model'
+import { type GridComparatorFn } from '@mui/x-data-grid'
+
+interface SortComparatorsHookReturn {
+  sortByUserName: GridComparatorFn<PatientProfile>
 }
 
-export enum PatientListColumns {
-  Actions = 'actions',
-  DataNotTransferred = 'data-not-transferred',
-  Flag = 'flag',
-  LastDataUpdate = 'last-data-update',
-  Messages = 'messages',
-  Patient = 'patient',
-  SevereHypoglycemia = 'severe-hypoglycemia',
-  System = 'system',
-  TimeOutOfRange = 'time-out-of-range'
-}
+export const useSortComparatorsHook = (): SortComparatorsHookReturn => {
+  const { getUserName } = useUserName()
 
-export enum PatientListFilters {
-  All = 'all',
-  DataNotTransferred = 'data-not-transferred',
-  Flagged = 'flagged',
-  IncomingRenewal = 'incoming-renewal',
-  RemoteMonitored = 'remote-monitored',
-  Pending = 'pending',
-  SevereHypoglycemia = 'severe-hypoglycemia',
-  OutOfRange = 'out-of-range',
-  Renew = 'renew',
-  UnreadMessages = 'unread-messages'
+  const sortByUserName: GridComparatorFn<PatientProfile> = (patient1, patient2): number => {
+    const patient1FullName = getUserName(patient1.firstName, patient1.lastName, patient1.fullName)
+    const patient2FullName = getUserName(patient2.firstName, patient2.lastName, patient2.fullName)
+    return patient1FullName.localeCompare(patient2FullName)
+  }
+
+  return { sortByUserName }
 }

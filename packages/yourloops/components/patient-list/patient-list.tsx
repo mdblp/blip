@@ -69,37 +69,36 @@ export const PatientList: FunctionComponent = () => {
   }
 
   return (
-    <React.Fragment>
+    <Box
+      data-testid="patient-list"
+      aria-label={t('patient-list')}
+    >
       <PatientListHeader
         selectedTab={selectedTab}
         inputSearch={inputSearch}
         onChangingTab={onChangingTab}
         setInputSearch={setInputSearch}
       />
-      <Box
-        data-testid="patient-list-body"
-        aria-label={t('patient-list')}
-      >
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          apiRef={gridApiRef}
-          autoHeight
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          disableRowSelectionOnClick
-          disableVirtualization={process.env.NODE_ENV === 'test'}
-          columnVisibilityModel={columnsVisibility}
-          onColumnVisibilityModelChange={setColumnsVisibility}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          onRowClick={onRowClick}
-          pageSizeOptions={[5, 10, 25]}
-          sx={{ borderRadius: 0 }}
-          slots={{ noRowsOverlay: NoPatientMessage }}
-        />
-      </Box>
+
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        apiRef={gridApiRef}
+        autoHeight
+        disableColumnMenu
+        disableColumnFilter
+        disableColumnSelector
+        disableRowSelectionOnClick
+        disableVirtualization={process.env.NODE_ENV === 'test'}
+        columnVisibilityModel={columnsVisibility}
+        onColumnVisibilityModelChange={setColumnsVisibility}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        onRowClick={onRowClick}
+        pageSizeOptions={[5, 10, 25]}
+        sx={{ borderRadius: 0 }}
+        slots={{ noRowsOverlay: NoPatientMessage }}
+      />
       {patientToRemoveForHcp &&
         <RemovePatientDialog
           patient={patientToRemoveForHcp}
@@ -113,6 +112,6 @@ export const PatientList: FunctionComponent = () => {
           onClose={onCloseRemoveDialog}
         />
       }
-    </React.Fragment>
+    </Box>
   )
 }

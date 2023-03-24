@@ -171,14 +171,17 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               icon={<HowToRegIcon />}
               iconPosition="start"
               label={t('current')}
+              aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
             <Tab
+              data-testid="patient-list-pending-tab"
               icon={<HourglassEmptyIcon />}
               iconPosition="start"
               label={<>
                 {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
               </>}
+              aria-label={t('pending')}
               classes={{ root: classes.tab }}
             />
           </Tabs>

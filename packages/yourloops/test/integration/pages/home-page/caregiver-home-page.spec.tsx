@@ -103,8 +103,8 @@ describe('Caregiver home page', () => {
 
     renderPage('/')
 
-    expect(await screen.findByTestId('patient-list-body')).toBeVisible()
-    const patientTableBody = within(screen.getByTestId('patient-list-body'))
+    expect(await screen.findByTestId('patient-list')).toBeVisible()
+    const patientTableBody = within(screen.getByTestId('patient-list'))
 
     // Checking that all patients are displayed
     expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
@@ -144,7 +144,7 @@ describe('Caregiver home page', () => {
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientListHeader(UserRole.Caregiver)
 
-    const patientTableBody = within(screen.getByTestId('patient-list-body'))
+    const patientTableBody = within(screen.getByTestId('patient-list'))
     const patientData = patientTableBody.getByText(patientFullName)
     expect(patientData).toBeVisible()
 

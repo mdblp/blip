@@ -35,6 +35,7 @@ interface IconActionButtonProps {
   color?: 'inherit' | 'primary' | 'secondary' | 'default'
   component?: React.ElementType
   ['data-testid']?: string
+  ['data-action']?: string
   icon: JSX.Element
   id?: string
   onClick: React.MouseEventHandler<HTMLButtonElement>
@@ -58,6 +59,7 @@ const IconActionButton: FunctionComponent<IconActionButtonProps> = (props) => {
           onClick={onClick}
           aria-label={props.ariaLabel}
           data-testid={props['data-testid']}
+          data-action={props['data-action']}
           className={className}
           disabled={disabled}
         >
