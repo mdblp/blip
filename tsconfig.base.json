@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "charset": "UTF-8",
     "module": "esnext",
     "target": "esnext",
     "jsx": "react",
