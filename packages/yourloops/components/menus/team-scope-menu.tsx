@@ -186,8 +186,8 @@ export const TeamScopeMenu: FunctionComponent = () => {
                           data-testid="team-scope-menu-care-teams-section">{t('care-teams')}</Typography>
 
               {sortedMedicalTeams.map((team: Team) => {
-                  const teamNameForTestId = team.name.replaceAll(' ', '-')
-                  return <MenuItem
+                const teamNameForTestId = team.name.replaceAll(' ', '-')
+                return <MenuItem
                     key={team.id}
                     data-testid={`team-scope-menu-team-${teamNameForTestId}-option`}
                     onClick={() => {
@@ -200,7 +200,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
                       {team.name}
                     </ListItemText>
                   </MenuItem>
-                }
+              }
               )}
             </>
           }
