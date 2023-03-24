@@ -35,7 +35,6 @@ import {
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets,
-  dataGeneration,
   GMI_TOOLTIP
 } from '../../assert/trends'
 import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
@@ -52,6 +51,7 @@ import {
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor, within } from '@testing-library/react'
+import { dataGeneration } from '../../data/data-api.data'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {

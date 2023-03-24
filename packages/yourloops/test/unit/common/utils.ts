@@ -36,8 +36,8 @@ import { type PatientTeam } from '../../../lib/patient/models/patient-team.model
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { type MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
-import { UnitsType } from 'dumb'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
+import { Unit } from 'medical-domain'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true })
@@ -124,7 +124,7 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
     monitoring: {
       enabled: monitoringEnabled,
       parameters: {
-        bgUnit: UnitsType.MGDL,
+        bgUnit: Unit.MilligramPerDeciliter,
         lowBg: 1,
         highBg: 2,
         outOfRangeThreshold: 10,

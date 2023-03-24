@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { type BgType, type BgUnit, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
+import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
@@ -51,11 +51,10 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const theme = useTheme()
   const location = useLocation()
   const isTrendsPage = location.pathname.includes('trends')
-  const bgUnits = bgPrefs.bgUnits as unknown as BgUnit
+  const bgUnits = bgPrefs.bgUnits
 
   const {
-    glucoseManagementIndicator,
-    insufficientData
+    glucoseManagementIndicator
   } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const {
@@ -82,7 +81,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat totalUsage={totalUsage} usage={sensorUsage} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          {isTrendsPage && !insufficientData &&
+          {isTrendsPage &&
             <>
               <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
               <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />

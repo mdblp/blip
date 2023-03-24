@@ -135,7 +135,7 @@ export const minimalTrendViewData = {
 }
 
 export const timeInRangeStatsTrendViewData = {
-  dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T00:00:00Z'],
+  dataRange: ['2020-01-19T00:00:00Z', '2020-01-20T00:00:00Z'],
   data: [
     { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
     { time: '2022-01-20T11:00:00Z', type: 'cbg', id: '2020-01-20_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },

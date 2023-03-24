@@ -24,7 +24,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type UnitsType } from 'dumb'
+
+import { type BgUnit } from 'medical-domain'
 
 export interface Alarms {
   timeSpentAwayFromTargetRate: number
@@ -45,7 +46,7 @@ export interface Thresholds {
 }
 
 export interface BgValues {
-  bgUnitDefault: UnitsType
+  bgUnitDefault: BgUnit
   outOfRangeThresholdDefault: number
   nonDataTxThresholdDefault: number
   hypoThresholdDefault: number

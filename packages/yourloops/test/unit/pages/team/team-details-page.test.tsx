@@ -36,8 +36,8 @@ import { ThemeProvider } from '@mui/material/styles'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
 import { MemoryRouter } from 'react-router-dom'
-import { UnitsType } from 'dumb'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
+import { Unit } from 'medical-domain'
 
 const teamId1 = 'teamId1'
 
@@ -72,7 +72,7 @@ describe('TeamDetailsPage', () => {
       return {
         user: {
           id: 'id',
-          settings: { units: { bg: UnitsType.MGDL } },
+          settings: { units: { bg: Unit.MilligramPerDeciliter } },
           isUserHcp: () => true,
           isUserPatient: () => false
         }
