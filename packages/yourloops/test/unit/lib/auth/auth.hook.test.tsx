@@ -76,7 +76,9 @@ describe('Auth hook', () => {
           </AuthContextProvider>
         </Auth0Provider>
       )
-      await waitFor(() => { expect(auth.isLoggedIn).toBeTruthy() })
+      await waitFor(() => {
+        expect(auth.isLoggedIn).toBeTruthy()
+      })
     })
   }
 
@@ -112,7 +114,7 @@ describe('Auth hook', () => {
       expect(auth.isLoggedIn).toBeTruthy()
       await auth.logout()
       expect(auth0Mock.useAuth0().logout).toHaveBeenCalledTimes(1)
-      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ returnTo: 'http://localhost/login' })
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login' } })
     })
 
     it('should logout the logged-in idle user', async () => {
@@ -121,7 +123,7 @@ describe('Auth hook', () => {
       expect(auth.isLoggedIn).toBeTruthy()
       await auth.logout(true)
       expect(auth0Mock.useAuth0().logout).toHaveBeenCalledTimes(1)
-      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ returnTo: 'http://localhost/login?idle=true' })
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })
     })
   })
 
@@ -183,7 +185,9 @@ describe('Auth hook', () => {
 
       const now = Date.now()
       await initAuthContext()
-      await act(async () => { await auth.switchRoleToHCP(false, HcpProfession.diabeto) })
+      await act(async () => {
+        await auth.switchRoleToHCP(false, HcpProfession.diabeto)
+      })
       const updatedUser: User = auth.user
 
       expect(UserApi.changeUserRoleToHcp).toHaveBeenCalledTimes(1)

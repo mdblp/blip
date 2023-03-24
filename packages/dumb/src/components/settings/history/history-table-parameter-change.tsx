@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,44 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
+import styles from '../diabeloop.css'
+import React, { type FunctionComponent } from 'react'
+import { ChangeType, type HistorizedParameter } from '../../../models/historized-parameter.model'
+import { useTranslation } from 'react-i18next'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/theme.css'
-import 'classes.css'
-
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
-const Yourloops = (): JSX.Element => {
-  const redirectUri = window.location.origin
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      useRefreshTokensFallback
-      authorizationParams={{
-        redirectUri,
-        audience: 'https://api-ext.your-loops.com'
-      }}
-      useRefreshTokens
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
-  )
+interface HistoryTableParameterChangeProps {
+  parameter: HistorizedParameter
 }
 
-export default Yourloops
+const buildIconCssClass = (change: ChangeType): string => {
+  switch (change) {
+    case ChangeType.Added:
+      return 'icon-add'
+    case ChangeType.Deleted:
+      return 'icon-remove'
+    case ChangeType.Updated:
+      return 'icon-refresh'
+    default:
+      break
+  }
+  return 'icon-unsure-data'
+}
+
+export const HistoryTableParameterChange: FunctionComponent<HistoryTableParameterChangeProps> = (props): JSX.Element => {
+  const { t } = useTranslation('main')
+  const { parameter } = props
+
+  const iconClass = buildIconCssClass(parameter.changeType)
+  return (
+    <span>
+      <i className={iconClass} />
+      <span
+        className={styles.parameterHistory}>
+          {t(`params|${parameter.name}`)}
+      </span>
+    </span>
+  )
+}

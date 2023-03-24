@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,44 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
+import { type Unit } from 'medical-domain'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/theme.css'
-import 'classes.css'
-
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
-const Yourloops = (): JSX.Element => {
-  const redirectUri = window.location.origin
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      useRefreshTokensFallback
-      authorizationParams={{
-        redirectUri,
-        audience: 'https://api-ext.your-loops.com'
-      }}
-      useRefreshTokens
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
-  )
+export enum ChangeType {
+  Added = 'added',
+  Deleted = 'deleted',
+  Updated = 'updated'
 }
 
-export default Yourloops
+export interface ParameterValue {
+  value: string
+  unit: Unit
+}
+
+export interface Parameter {
+  changeType: ChangeType
+  effectiveDate: string
+  name: string
+  unit: Unit
+  level: number
+  value: string
+}
+
+export interface ChangeDateParameterGroup {
+  changeDate: string
+  parameters: Parameter[]
+}
+
+export interface HistorizedParameter extends Parameter {
+  rawData: string
+  parameterDate: string
+  previousUnit: Unit
+  previousValue: string
+  isGroupedParameterHeader: boolean
+  groupedParameterHeaderContent: string
+  latestDate: Date
+}

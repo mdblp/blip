@@ -23,7 +23,6 @@ import i18next from 'i18next'
 import bows from 'bows'
 
 import Header from './common/Header'
-import HistoryTable from './DiabeloopHistoryParameters'
 
 import * as datetime from '../../utils/datetime'
 import * as dblData from '../../utils/settings/diabeloopData'
@@ -31,7 +30,7 @@ import * as dblData from '../../utils/settings/diabeloopData'
 import { deviceName, getDeviceMeta } from '../../utils/settings/data'
 
 import styles from './Diabeloop.css'
-import { CgmTable, PumpTable, Table, TerminalTable } from 'dumb'
+import { CgmTable, PumpTable, Table, TerminalTable, HistoryParameterTable } from 'dumb'
 
 const t = i18next.t.bind(i18next)
 const log = bows('DblSettings')
@@ -144,20 +143,11 @@ const Diabeloop = (props) => {
         {renderDiabeloopParameters(parametersByLevel)}
         <div className={styles.historyContainer}>
           <div className={styles.categoryTitle}>&nbsp;</div>
-          <HistoryTable
-            id="parameters-history-table"
+          <HistoryParameterTable
             timePrefs={timePrefs}
-            title={HistoryTable.title}
             rows={history}
-            columns={HistoryTable.columns}
             tableStyle={styles.settingsTable}
             onSwitchToDaily={handleClickHistory}
-            unknownParameterIcon={<i className="icon-unsure-data" />}
-            addedParameterIcon={<i className="icon-add" />}
-            deletedParameterIcon={<i className="icon-remove" />}
-            updatedParameterIcon={<i className="icon-refresh" />}
-            changeValueArrowIcon={<i className="icon-next" key="icon-next" />}
-            switchToDailyIconClass="icon-chart-line"
           />
         </div>
       </div>

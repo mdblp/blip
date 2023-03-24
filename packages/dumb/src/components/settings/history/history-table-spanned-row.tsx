@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,44 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
+import styles from '../diabeloop.css'
+import React, { type FunctionComponent } from 'react'
+import { type HistorizedParameter } from '../../../models/historized-parameter.model'
+import type moment from 'moment-timezone'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/theme.css'
-import 'classes.css'
-
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
-const Yourloops = (): JSX.Element => {
-  const redirectUri = window.location.origin
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      useRefreshTokensFallback
-      authorizationParams={{
-        redirectUri,
-        audience: 'https://api-ext.your-loops.com'
-      }}
-      useRefreshTokens
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
-  )
+interface HistorySpannedRowProps {
+  data: HistorizedParameter
+  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
 }
 
-export default Yourloops
+const ONE_SPACE_STRING = '&nbsp;'
+const NUMBER_OF_COLUMNS = 4
+
+export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
+  const { onSwitchToDaily, data } = props
+  const content = data.groupedParameterHeaderContent ?? ONE_SPACE_STRING
+
+  const handleSwitchToDaily = (): void => {
+    onSwitchToDaily(data.latestDate)
+  }
+  const dateString = data.latestDate.toString()
+  return (
+    <tr className={styles.spannedRow} >
+      <td colSpan={NUMBER_OF_COLUMNS}>
+        {content}
+        <i
+          role="button"
+          tabIndex={0}
+          data-date={dateString}
+          className={`icon-chart-line ${styles.clickableIcon}`}
+          onClick={handleSwitchToDaily}
+        />
+      </td>
+    </tr>
+  )
+}

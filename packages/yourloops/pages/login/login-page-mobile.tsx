@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -77,7 +77,9 @@ const LoginPageMobile: FunctionComponent = () => {
   const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
 
-  const redirectToSignup = async (): Promise<void> => { await loginWithRedirect({ screen_hint: 'signup' }) }
+  const redirectToSignup = async (): Promise<void> => {
+    await loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
+  }
 
   return (
     <React.Fragment>
@@ -147,7 +149,7 @@ const LoginPageMobile: FunctionComponent = () => {
             data-testid="login-button"
             variant="contained"
             disableElevation
-            onClick={loginWithRedirect}
+            onClick={loginWithRedirect as MouseEventHandler}
             className={classes.button}
           >
             {t('button-connect')}

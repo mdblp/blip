@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,44 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { Auth0Provider } from '@auth0/auth0-react'
+import React, { type FunctionComponent } from 'react'
+import styles from '../diabeloop.css'
+import { type HistorizedParameter } from '../../../models/historized-parameter.model'
+import { HistoryTableParameterChange } from './history-table-parameter-change'
+import { HistoryTableParameterValueChange } from './history-table-parameter-value-change'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/theme.css'
-import 'classes.css'
-
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
-const Yourloops = (): JSX.Element => {
-  const redirectUri = window.location.origin
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      issuer={appConfig.AUTH0_ISSUER}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      useRefreshTokensFallback
-      authorizationParams={{
-        redirectUri,
-        audience: 'https://api-ext.your-loops.com'
-      }}
-      useRefreshTokens
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
-  )
+interface HistoryTableRowsProps {
+  data: HistorizedParameter
 }
 
-export default Yourloops
+export const HistoryTableRow: FunctionComponent<HistoryTableRowsProps> = (props) => {
+  const { data } = props
+
+  return (
+    <tr data-testid={`${data.rawData.toLowerCase()}-row`} >
+      <td data-testid={`${data.rawData.toLowerCase()}-level`} className={styles.secondaryLabelWithMain}>
+        {data.level}
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-valueChange`} className={styles.secondaryLabelWithMain}>
+        <HistoryTableParameterValueChange parameter={data} />
+      </td>
+      <td data-testid={`${data.rawData.toLowerCase()}-parameterDate`} className={styles.secondaryLabelWithMain}>
+        {data.parameterDate}
+      </td>
+    </tr>
+  )
+}
