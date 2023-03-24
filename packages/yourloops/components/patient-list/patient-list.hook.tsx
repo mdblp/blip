@@ -38,7 +38,7 @@ import {
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { usePatientListStyles } from './patient-list.styles'
-import { PatientListColumns, PatientListFilters, PatientListTabs } from './enums/patient-list.enum'
+import { PatientListColumns, PatientListTabs, PatientListFilters } from './enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { getMedicalValues } from '../patient/utils'

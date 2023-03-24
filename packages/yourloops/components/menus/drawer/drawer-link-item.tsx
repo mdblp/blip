@@ -34,7 +34,7 @@ import Box from '@mui/material/Box'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import { type PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
+import { type PatientListFilters } from '../../patient-list/enums/patient-list.enum'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
@@ -68,7 +68,7 @@ interface DrawerLinkItemProps {
   ariaLabel?: string
   count?: number
   icon: ReactElement
-  filter: PatientFilterTypes
+  filter: PatientListFilters
   selectedFilter: string
   text: string
 }

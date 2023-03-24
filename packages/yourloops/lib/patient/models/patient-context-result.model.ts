@@ -29,9 +29,8 @@ import { type PatientFilterStats } from './patient-filter-stats.model'
 import { type Team } from '../../team'
 import { type MedicalData } from '../../data/models/medical-data.model'
 import { type Patient } from './patient.model'
-import { type PatientFilterTypes } from './enums/patient-filter-type.enum'
-import { type PatientTeam } from './patient-team.model'
 import { type PatientListFilters } from '../../../components/patient-list/enums/patient-list.enum'
+import { type PatientTeam } from './patient-team.model'
 
 export interface PatientContextResult {
   patients: Patient[]
@@ -41,7 +40,7 @@ export interface PatientContextResult {
   refreshInProgress: boolean
   getPatientByEmail: (email: string) => Patient
   getPatientById: (userId: string) => Patient
-  filterPatients: (filterType: PatientFilterTypes | PatientListFilters, search: string, flaggedPatients: string[]) => Patient[]
+  filterPatients: (filterType: PatientListFilters, search: string, flaggedPatients: string[]) => Patient[]
   invitePatient: (team: Team, username: string) => Promise<void>
   editPatientRemoteMonitoring: (patient: Patient) => void
   markPatientMessagesAsRead: (patient: Patient) => void

@@ -39,7 +39,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { PatientFilterTypes } from '../../../../lib/patient/models/enums/patient-filter-type.enum'
+import { PatientListFilters } from '../../../../components/patient-list/enums/patient-list.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 import { UnitsType } from 'dumb'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
@@ -129,32 +129,32 @@ describe('Patient hook', () => {
     })
 
     it('should return correct patients when filter is pending', () => {
-      const patientsReceived = customHook.filterPatients(PatientFilterTypes.pending, '', [])
+      const patientsReceived = customHook.filterPatients(PatientListFilters.Pending, '', [])
       expect(patientsReceived).toEqual([pendingPatient])
     })
 
     it('should return correct patients when provided a flag list', () => {
-      const patientsReceived = customHook.filterPatients(PatientFilterTypes.flagged, '', [basicPatient.userid])
+      const patientsReceived = customHook.filterPatients(PatientListFilters.Flagged, '', [basicPatient.userid])
       expect(patientsReceived).toEqual([basicPatient])
     })
 
     it('should return correct patients when provided a first name search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, 'big brain', [])
+      const patientsReceived = customHook.filterPatients(PatientListFilters.All, 'big brain', [])
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
 
     it('should return correct patients when provided a date search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '19/11/2001', [])
+      const patientsReceived = customHook.filterPatients(PatientListFilters.All, '19/11/2001', [])
       expect(patientsReceived).toEqual([basicPatient2])
     })
 
     it('should return correct patients when provided a date and first name search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '05/06/2005 big', [])
+      const patientsReceived = customHook.filterPatients(PatientListFilters.All, '05/06/2005 big', [])
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
 
     it('should return correct patients when provided a date and last name search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientFilterTypes.all, '05/06/2005smith', [])
+      const patientsReceived = customHook.filterPatients(PatientListFilters.All, '05/06/2005smith', [])
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
   })

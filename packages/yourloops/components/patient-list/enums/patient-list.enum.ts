@@ -43,14 +43,14 @@ export enum PatientListColumns {
 }
 
 export enum PatientListFilters {
-  All = 'all',
+  All = 'All',
   DataNotTransferred = 'data-not-transferred',
-  Flagged = 'flagged',
-  IncomingRenewal = 'incoming-renewal',
+  Flagged = 'Flagged',
   RemoteMonitored = 'remote-monitored',
-  Pending = 'pending',
+  Pending = 'Pending',
   SevereHypoglycemia = 'severe-hypoglycemia',
   OutOfRange = 'out-of-range',
-  Renew = 'renew',
+  Private = 'private',
+  Renew = 'Renew',
   UnreadMessages = 'unread-messages'
 }
