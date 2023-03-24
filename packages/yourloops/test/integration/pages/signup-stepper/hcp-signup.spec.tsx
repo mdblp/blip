@@ -106,6 +106,6 @@ describe('Signup stepper as hcp', () => {
         settings: { country: CountryCodes.France }
       })
     )
-    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ ignoreCache: true })
+    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
   })
 })

@@ -72,7 +72,7 @@ describe('Login page mobile view', () => {
     expect(moreInfoLink).not.toBeVisible()
 
     await userEvent.click(registerButton)
-    expect(loginWithRedirectMock).toHaveBeenCalledWith(expect.objectContaining({ screen_hint: 'signup' }))
+    expect(loginWithRedirectMock).toHaveBeenCalledWith(expect.objectContaining({ authorizationParams: { screen_hint: 'signup' } }))
 
     await userEvent.click(loginButton)
     expect(loginWithRedirectMock).toHaveBeenCalled()
