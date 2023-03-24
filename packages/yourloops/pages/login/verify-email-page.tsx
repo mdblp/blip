@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
@@ -43,7 +43,7 @@ const VerifyEmailPage: FunctionComponent = () => {
   const theme = useTheme()
 
   const onClickLogout = (): void => {
-    logout({ returnTo: window.location.origin })
+    logout({ logoutParams: { returnTo: window.location.origin } })
   }
 
   return (
@@ -79,7 +79,7 @@ const VerifyEmailPage: FunctionComponent = () => {
           </Button>
           <Button
             variant="outlined"
-            onClick={loginWithRedirect}
+            onClick={loginWithRedirect as MouseEventHandler}
           >
             {t('button-continue')}
           </Button>

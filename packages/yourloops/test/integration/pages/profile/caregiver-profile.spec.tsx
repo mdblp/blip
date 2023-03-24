@@ -188,7 +188,7 @@ describe('Caregiver page for hcp', () => {
     expect(hcpProfessionSelect).toHaveTextContent('Dietitian')
     await userEvent.click(validateButton)
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
-    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ ignoreCache: true })
+    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Your account has been successfully switched to HCP')
   })
 

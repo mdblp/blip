@@ -92,6 +92,6 @@ describe('Signup stepper as caregiver', () => {
         settings: { country: CountryCodes.France }
       })
     )
-    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ ignoreCache: true })
+    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
   })
 })

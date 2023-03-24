@@ -135,7 +135,7 @@ describe('Patient dashboard for anyone', () => {
     renderPage(`/patient/${monitoredPatientId}/dashboard`)
 
     await waitFor(() => {
-      expect(logoutMock).toHaveBeenCalledWith({ returnTo: 'http://localhost/login?idle=true' })
+      expect(logoutMock).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })
     }, { timeout: 3000 })
   })
 })
