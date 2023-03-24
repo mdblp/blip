@@ -30,12 +30,12 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 
 interface IconActionButtonProps {
-  ariaLabel?: string
+  ['data-action']?: string
+  ['aria-label']?: string
+  ['data-testid']?: string
   className?: string
   color?: 'inherit' | 'primary' | 'secondary' | 'default'
   component?: React.ElementType
-  ['data-testid']?: string
-  ['data-action']?: string
   icon: JSX.Element
   id?: string
   onClick: React.MouseEventHandler<HTMLButtonElement>
@@ -57,7 +57,7 @@ const IconActionButton: FunctionComponent<IconActionButtonProps> = (props) => {
           size={size}
           color={color}
           onClick={onClick}
-          aria-label={props.ariaLabel}
+          aria-label={props['aria-label']}
           data-testid={props['data-testid']}
           data-action={props['data-action']}
           className={className}

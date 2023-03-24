@@ -145,8 +145,9 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patientId, on
         <IconActionButton
           data-action="remove-patient"
           data-testid={`${t('button-remove-patient')} ${patientId}`}
-          ariaLabel={`${t('button-remove-patient')} ${patientId}`}
+          aria-label={`${t('button-remove-patient')} ${patientId}`}
           icon={<PersonRemoveIcon />}
+          color="inherit"
           onClick={() => { onClickRemove(patientId) }}
         />
       </Box>
