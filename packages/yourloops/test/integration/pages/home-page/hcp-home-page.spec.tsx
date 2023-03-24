@@ -44,7 +44,7 @@ import { PhonePrefixCode } from '../../../../lib/utils'
 import { renderPage } from '../../utils/render'
 import TeamAPI from '../../../../lib/team/team.api'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { checkPatientListHeader } from '../../assert/patient-list-header'
+import { checkPatientList } from '../../assert/patient-list-header'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -77,7 +77,7 @@ describe('HCP home page', () => {
     })
 
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
-    checkPatientListHeader()
+    checkPatientList()
 
     expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(4)

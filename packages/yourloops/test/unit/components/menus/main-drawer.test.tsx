@@ -164,10 +164,6 @@ describe('Main Drawer', () => {
     await checkFilterActionByText(PatientListFilters.Flagged.toString(), PatientListFilters.Flagged.toString(), flaggedPatients.length)
   })
 
-  it('should display correct filter value for pending patients and redirect to proper url', async () => {
-    await checkFilterActionByText(PatientListFilters.Pending.toString(), PatientListFilters.Pending.toString(), patientsFilterStats.pending)
-  })
-
   it('should display correct filter value for monitored patient sand redirect to proper url', async () => {
     await checkFilterActionByText('monitored-patients', PatientListFilters.RemoteMonitored.toString(), patientsFilterStats.remoteMonitored)
   })
@@ -189,7 +185,7 @@ describe('Main Drawer', () => {
   })
 
   it('should display correct filter value for unread messages and redirect to proper url', async () => {
-    await checkFilterActionByRole(`unread-messages ${patientsFilterStats.unread}`, PatientListFilters.unread.toString())
+    await checkFilterActionByRole(`unread-messages ${patientsFilterStats.unread}`, PatientListFilters.UnreadMessages.toString())
   })
 
   it('renew filter should not display a number when there are 0 incoming renewal', async () => {

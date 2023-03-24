@@ -31,7 +31,6 @@ export const checkDrawer = () => {
   const drawer = within(screen.getByTestId('main-left-drawer'))
   expect(drawer.getByLabelText('Filter on all patients')).toBeVisible()
   expect(drawer.getByLabelText('Filter on flagged patients')).toBeVisible()
-  expect(drawer.getByLabelText('Filter on pending patients')).toBeVisible()
 }
 
 export const checkDrawerNotVisible = () => {

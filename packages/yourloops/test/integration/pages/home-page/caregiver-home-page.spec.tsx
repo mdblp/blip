@@ -43,7 +43,7 @@ import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { checkPatientListHeader } from '../../assert/patient-list-header'
+import { checkPatientList } from '../../assert/patient-list-header'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -65,7 +65,7 @@ describe('Caregiver home page', () => {
     })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientListHeader(UserRole.Caregiver)
+    checkPatientList(UserRole.Caregiver)
   })
 
   it('should filter patients correctly depending on the search value', async () => {
@@ -142,7 +142,7 @@ describe('Caregiver home page', () => {
     })
 
     await checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientListHeader(UserRole.Caregiver)
+    checkPatientList(UserRole.Caregiver)
 
     const patientTableBody = within(screen.getByTestId('patient-list'))
     const patientData = patientTableBody.getByText(patientFullName)

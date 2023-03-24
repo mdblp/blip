@@ -81,28 +81,31 @@ export const PatientList: FunctionComponent = () => {
         setInputSearch={setInputSearch}
       />
 
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        apiRef={gridApiRef}
-        autoHeight
-        disableColumnMenu
-        disableColumnFilter
-        disableColumnSelector
-        disableRowSelectionOnClick
-        disableVirtualization={process.env.NODE_ENV === 'test'}
-        columnVisibilityModel={columnsVisibility}
-        onColumnVisibilityModelChange={setColumnsVisibility}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        onRowClick={onRowClick}
-        pageSizeOptions={[5, 10, 25]}
-        sx={{ borderRadius: 0 }}
-        slots={{
-          noRowsOverlay: NoPatientMessage,
-          footer: PatientListCustomFooter
-        }}
-      />
+      <Box data-testid="patient-list-grid">
+        <DataGrid
+          columns={columns}
+          rows={rows}
+          apiRef={gridApiRef}
+          autoHeight
+          disableColumnMenu
+          disableColumnFilter
+          disableColumnSelector
+          disableRowSelectionOnClick
+          disableVirtualization={process.env.NODE_ENV === 'test'}
+          columnVisibilityModel={columnsVisibility}
+          onColumnVisibilityModelChange={setColumnsVisibility}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          onRowClick={onRowClick}
+          pageSizeOptions={[5, 10, 25]}
+          sx={{ borderRadius: 0 }}
+          slots={{
+            noRowsOverlay: NoPatientMessage,
+            footer: PatientListCustomFooter
+          }}
+        />
+      </Box>
+
       {patientToRemoveForHcp &&
         <RemovePatientDialog
           patient={patientToRemoveForHcp}
