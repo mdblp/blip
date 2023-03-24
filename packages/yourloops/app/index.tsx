@@ -29,7 +29,6 @@
 import 'core-js/stable'
 
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import config from '../lib/config/config'
 import { init as i18nInit } from '../lib/language'
@@ -41,17 +40,9 @@ import Yourloops from './app'
 import OnError from './error'
 import { BrowserRouter } from 'react-router-dom'
 import initAxios from '../lib/http/axios.service'
+import { createRoot } from 'react-dom/client'
 
 i18nInit().then(() => {
-  window.onerror = (event, source, lineno, colno, error) => {
-    if (source && !source.endsWith('.js')) {
-      return true
-    }
-    console.error(event, source, lineno, colno, error)
-    ReactDOM.render(<BrowserRouter><OnError event={event} source={source} lineno={lineno} colno={colno} error={error} /></BrowserRouter>, document.body)
-    return false
-  }
-
   let div = document.getElementById('app')
   if (div === null) {
     div = document.createElement('div')
@@ -64,5 +55,15 @@ i18nInit().then(() => {
   initAxios()
   initTheme()
 
-  ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, div)
+  const root = createRoot(div)
+  root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
+
+  window.onerror = (event, source, lineno, colno, error) => {
+    if (source && !source.endsWith('.js')) {
+      return true
+    }
+    console.error(event, source, lineno, colno, error)
+    root.render(<BrowserRouter><OnError event={event} source={source} lineno={lineno} colno={colno} error={error} /></BrowserRouter>)
+    return false
+  }
 })
