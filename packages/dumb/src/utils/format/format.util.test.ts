@@ -26,8 +26,7 @@
  */
 
 import { formatBgValue, formatDecimalNumber, formatParameterValue } from './format.util'
-import { Unit } from 'medical-domain'
-import { BgUnits } from '../../models/enums/units-type.enum'
+import { type BgUnit, Unit } from 'medical-domain'
 
 jest.mock('i18next', () => ({
   t: (value: string) => value
@@ -57,35 +56,35 @@ describe('FormatUtil', () => {
     describe('no recognizable units provided', () => {
       it('should return a String integer by default (no recognizable `units` provided)', () => {
         expect(formatBgValue(120.5)).toEqual('121')
-        expect(formatBgValue(120.5, 'foo' as unknown as BgUnits)).toEqual('121')
+        expect(formatBgValue(120.5, 'foo' as BgUnit)).toEqual('121')
       })
     })
 
     describe('when units are `mg/dL`', () => {
       it('should return a String integer', () => {
-        expect(formatBgValue(120.5, BgUnits.MGDL)).toEqual('121')
+        expect(formatBgValue(120.5, Unit.MilligramPerDeciliter)).toEqual('121')
       })
 
       it('should give no decimals', () => {
-        expect(formatBgValue(352, BgUnits.MGDL)).toEqual('352')
+        expect(formatBgValue(352, Unit.MilligramPerDeciliter)).toEqual('352')
       })
 
       it('should round', () => {
-        expect(formatBgValue(352.77, BgUnits.MGDL)).toEqual('353')
+        expect(formatBgValue(352.77, Unit.MilligramPerDeciliter)).toEqual('353')
       })
     })
 
     describe('when units are `mmol/L`', () => {
       it('should return a String number', () => {
-        expect(formatBgValue(6.6886513292098675, BgUnits.MMOLL)).toEqual('6.7')
+        expect(formatBgValue(6.6886513292098675, Unit.MmolPerLiter)).toEqual('6.7')
       })
 
       it('should give one decimal place', () => {
-        expect(formatBgValue(12.52, BgUnits.MMOLL)).toEqual('12.5')
+        expect(formatBgValue(12.52, Unit.MmolPerLiter)).toEqual('12.5')
       })
 
       it('should round', () => {
-        expect(formatBgValue(12.77, BgUnits.MMOLL)).toEqual('12.8')
+        expect(formatBgValue(12.77, Unit.MmolPerLiter)).toEqual('12.8')
       })
     })
   })
