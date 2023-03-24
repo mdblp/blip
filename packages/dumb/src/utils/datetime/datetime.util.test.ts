@@ -311,7 +311,7 @@ describe('DatetimeUtil', () => {
     }
     const datum = {
       normalTime: '2016-09-23T23:00:00.000Z',
-      deviceTime: '2016-09-23T19:00:00'
+      deviceTime: '2016-09-23T19:00:00Z'
     } as PdfSettingsData
 
     it('should return 1474671600000 for timezone aware', () => {
@@ -319,7 +319,7 @@ describe('DatetimeUtil', () => {
     })
 
     it('should return 1474657200000 for timezone unaware', () => {
-      expect(getHammertimeFromDatumWithTimePrefs(datum, timezoneNaive)).toEqual(1474650000000)
+      expect(getHammertimeFromDatumWithTimePrefs(datum, timezoneNaive)).toEqual(1474657200000)
     })
 
     it('should return `null` if `normalTime` is not present on datum when timezone-aware', () => {
