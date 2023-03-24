@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, type MutableRefObject } from 'react'
 import {
   type GridApiCommon,
   type GridColDef,
@@ -61,7 +61,7 @@ interface PatientListHookReturns {
   columnsVisibility: GridColumnVisibilityModel
   selectedTab: PatientListTabs
   inputSearch: string
-  gridApiRef: React.MutableRefObject<GridApiCommon>
+  gridApiRef: MutableRefObject<GridApiCommon>
   paginationModel: GridPaginationModel
   patientToRemoveForHcp: Patient | null
   patientToRemoveForCaregiver: UserToRemove | null

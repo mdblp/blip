@@ -25,18 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { makeStyles } from 'tss-react/mui'
+import React, { type FunctionComponent } from 'react'
+import { GridPagination } from '@mui/x-data-grid'
+import Box from '@mui/material/Box'
+import { usePatientListStyles } from './patient-list.styles'
+import Typography from '@mui/material/Typography'
+import { useTranslation } from 'react-i18next'
 
-export const usePatientListStyles = makeStyles()((theme) => {
-  const dataGridBorder = `1px solid ${theme.palette.divider}`
+export const PatientListCustomFooter: FunctionComponent = () => {
+  const { t } = useTranslation()
+  const { classes } = usePatientListStyles()
 
-  return {
-    mandatoryCellBorder: {
-      borderLeft: dataGridBorder,
-      borderRight: dataGridBorder
-    },
-    customFooter: {
-      borderTop: dataGridBorder
-    }
-  }
-})
+  return (
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      className={classes.customFooter}
+    >
+      <Typography
+        color="text.secondary"
+        variant="body2"
+        paddingLeft={2}
+      >
+        {t('data-period-text')}
+      </Typography>
+      <GridPagination />
+    </Box>
+  )
+}

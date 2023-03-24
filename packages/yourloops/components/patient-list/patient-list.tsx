@@ -34,6 +34,7 @@ import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import RemovePatientDialog from '../patient/remove-patient-dialog'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
+import { PatientListCustomFooter } from './patient-list-custom-footer'
 
 export const PatientList: FunctionComponent = () => {
   const { t } = useTranslation()
@@ -97,7 +98,10 @@ export const PatientList: FunctionComponent = () => {
         onRowClick={onRowClick}
         pageSizeOptions={[5, 10, 25]}
         sx={{ borderRadius: 0 }}
-        slots={{ noRowsOverlay: NoPatientMessage }}
+        slots={{
+          noRowsOverlay: NoPatientMessage,
+          footer: PatientListCustomFooter
+        }}
       />
       {patientToRemoveForHcp &&
         <RemovePatientDialog
