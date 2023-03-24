@@ -143,16 +143,16 @@
     "postcss-loader": "^7.0.2",
     "sinon": "^11.1.2",
     "source-map-loader": "^4.0.1",
-    "style-loader": "^3.3.0",
-    "terser-webpack-plugin": "^5.2.4",
+    "style-loader": "^3.3.2",
+    "terser-webpack-plugin": "^5.3.7",
     "ts-loader": "^9.4.2",
     "typed-css-modules": "^0.7.2",
     "typescript": "^5.0.2",
     "typescript-plugin-css-modules": "^4.2.2",
     "voilab-pdf-table": "0.4.0",
-    "webpack": "^5.76.0",
+    "webpack": "^5.76.3",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.3.1",
-    "webpack-subresource-integrity": "^5.0.0"
+    "webpack-dev-server": "^4.13.1",
+    "webpack-subresource-integrity": "^5.1.0"
   }
 }
