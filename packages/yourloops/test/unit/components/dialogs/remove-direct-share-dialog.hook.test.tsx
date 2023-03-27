@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type User } from '../../../../lib/auth'

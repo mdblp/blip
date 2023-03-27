@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks/dom'
+import { renderHook } from '@testing-library/react'
 import useTooltip, { type TooltipHookProps } from './tooltip.hook'
 import { type DateTitle } from './tooltip'
 

@@ -27,7 +27,7 @@
 
 import { createAlarm, createPatient } from '../../common/utils'
 import { PatientTableSortFields } from '../../../../components/patient/models/enums/patient-table-sort-fields.enum'
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { useComparePatients } from '../../../../lib/custom-hooks/compare-patients.hook'
 import { useUserName as useUserNameMock } from '../../../../lib/custom-hooks/user-name.hook'
 

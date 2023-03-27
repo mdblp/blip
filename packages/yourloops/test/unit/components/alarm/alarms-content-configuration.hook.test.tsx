@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import useAlarmsContentConfiguration from '../../../../components/alarm/alarms-content-configuration.hook'
 import { UnitsType } from 'dumb'
 import { buildTeam, createPatient } from '../../common/utils'

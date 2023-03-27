@@ -26,7 +26,7 @@
  */
 
 import usePatientProviderCustomHook from '../../../../lib/patient/patient.hook'
-import { renderHook } from '@testing-library/react-hooks/dom'
+import { renderHook, act, waitFor } from '@testing-library/react'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
@@ -34,7 +34,6 @@ import * as notificationHookMock from '../../../../lib/notifications/notificatio
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
-import { act, waitFor } from '@testing-library/react'
 import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'

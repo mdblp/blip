@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
 import * as patientContext from '../../../../lib/patient/patient.provider'
