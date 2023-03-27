@@ -130,7 +130,6 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
 
   return (
     <div>
-      {/* <div className={styles.slideInTop}>tim</div> */}
       <svg height={height} width="100%">
         <Background
           margins={MARGINS}

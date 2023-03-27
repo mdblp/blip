@@ -152,8 +152,5 @@
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.13.1",
     "webpack-subresource-integrity": "^5.1.0"
-  },
-  "dependencies": {
-    "framer-motion": "^10.9.1"
   }
 }
