@@ -47,8 +47,7 @@ const t = i18next.t.bind(i18next)
 
 const LOADING_STATE_NONE = 0
 const LOADING_STATE_INITIAL_FETCH = LOADING_STATE_NONE + 1
-const LOADING_STATE_INITIAL_PROCESS = LOADING_STATE_INITIAL_FETCH + 1
-const LOADING_STATE_DONE = LOADING_STATE_INITIAL_PROCESS + 1
+const LOADING_STATE_DONE = LOADING_STATE_INITIAL_FETCH + 1
 const LOADING_STATE_EARLIER_FETCH = LOADING_STATE_DONE + 1
 const LOADING_STATE_EARLIER_PROCESS = LOADING_STATE_EARLIER_FETCH + 1
 const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
@@ -195,7 +194,6 @@ class PatientDataPage extends React.Component {
         messages = <p>Please select a patient</p>
         break
       case LOADING_STATE_INITIAL_FETCH:
-      case LOADING_STATE_INITIAL_PROCESS:
         loader = <SpinningLoader className="centered-spinning-loader" />
         break
       default:
@@ -845,8 +843,6 @@ class PatientDataPage extends React.Component {
 
     try {
       const data = await this.apiUtils.refresh()
-      this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS })
-      await waitTimeout(1)
       // Process the data to be usable by us
       await this.processData(data)
 
