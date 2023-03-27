@@ -31,9 +31,13 @@ import { type PrintViewParams } from '../../../models/print/print-view-params.mo
 import { PrintView } from '../print-view/print-view'
 import { type CgmConfig, type DeviceConfig, type PumpConfig, type TimePrefs } from 'medical-domain'
 import { type DeviceMetadata } from '../../../models/device-metadata.model'
-import { getDeviceMetadata } from '../../../utils/settings/settings.util'
 import i18next from 'i18next'
-import { getDeviceParametersTableData, getParametersByLevel, getTableDataByDataType } from './settings-print-view.util'
+import {
+  getDeviceMetadata,
+  getDeviceParametersTableData,
+  getParametersByLevel,
+  getTableDataByDataType
+} from './settings-print-view.util'
 import {
   type BasicSettingsTable,
   type ParameterSettingsTableRow,

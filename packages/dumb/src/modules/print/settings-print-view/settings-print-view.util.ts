@@ -25,7 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatLocalizedFromUTC, getLongDayFormat, TIMEZONE_UTC } from '../../../utils/datetime/datetime.util'
+import {
+  formatLocalizedFromUTC,
+  getHammertimeFromDatumWithTimePrefs,
+  getLongDayFormat,
+  TIMEZONE_UTC
+} from '../../../utils/datetime/datetime.util'
 import {
   type CgmConfig,
   type DeviceConfig,
@@ -45,6 +50,8 @@ import {
 import { type TableHeading } from '../../../models/print/pdf-table.model'
 import { formatParameterValue } from '../../../utils/format/format.util'
 import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-type.enum'
+import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
+import { type DeviceMetadata } from '../../../models/device-metadata.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -165,6 +172,17 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: CgmConfig 
 
 const sortParametersByName = (parameters: ParameterSettingsTableRow[]): ParameterSettingsTableRow[] => {
   return parameters.sort((parameterA: ParameterSettingsTableRow, parameterB: ParameterSettingsTableRow) => parameterA.name.localeCompare(parameterB.name))
+}
+
+export const getDeviceMetadata = (settingsData: PdfSettingsData, timePrefs: TimePrefs): DeviceMetadata => {
+  const utcTime = getHammertimeFromDatumWithTimePrefs(settingsData, timePrefs)
+  const uploadedTime = utcTime ? formatLocalizedFromUTC(utcTime, timePrefs, getLongDayFormat()) : ''
+
+  return {
+    schedule: settingsData.activeSchedule ?? t('unknown'),
+    uploaded: uploadedTime.length > 0 ? uploadedTime : t('unknown'),
+    serial: settingsData.deviceSerialNumber ?? t('unknown')
+  }
 }
 
 export const getTableDataByDataType = (type: PdfSettingsDataType, data: CgmConfig | DeviceConfig | PumpConfig, timezone?: string, date?: string): SettingsTable => {

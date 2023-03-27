@@ -25,10 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getDeviceParametersTableData, getParametersByLevel, getTableDataByDataType } from './settings-print-view.util'
+import {
+  getDeviceMetadata,
+  getDeviceParametersTableData,
+  getParametersByLevel,
+  getTableDataByDataType
+} from './settings-print-view.util'
 import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-type.enum'
 import { type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
 import { type ParameterSettingsTableRow } from '../../../models/print/pdf-settings-table.model'
+import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
 
 describe('Settings print view util', () => {
   const timezone = 'Europe/Paris'
@@ -56,6 +62,38 @@ describe('Settings print view util', () => {
     value: '80'
   }]
   const allParameters = [...level1Parameters, ...level2Parameters]
+
+  describe('getDeviceMetadata', () => {
+    const timePrefs = { timezoneAware: true, timezoneName: 'Europe/Paris' }
+
+    it('should fallback on the default values when there is no data', () => {
+      const emptyData = { activeSchedule: undefined, deviceSerialNumber: undefined }
+
+      expect(getDeviceMetadata(emptyData as PdfSettingsData, timePrefs)).toEqual({
+        schedule: 'unknown',
+        uploaded: 'unknown',
+        serial: 'unknown'
+      })
+    })
+
+    it('should compute the metadata', () => {
+      const activeSchedule = 'active schedule'
+      const deviceSerialNumber = 'ABCDEFG'
+
+      const fullData = {
+        activeSchedule,
+        deviceSerialNumber,
+        normalTime: '2016-09-23T23:00:00.000Z',
+        deviceTime: '2016-09-23T19:00:00Z'
+      }
+
+      expect(getDeviceMetadata(fullData as PdfSettingsData, timePrefs)).toEqual({
+        schedule: activeSchedule,
+        uploaded: 'Sep 24, 2016',
+        serial: deviceSerialNumber
+      })
+    })
+  })
 
   describe('getTableDataByDataType', () => {
     it('should return the table data for a CGM data', () => {
