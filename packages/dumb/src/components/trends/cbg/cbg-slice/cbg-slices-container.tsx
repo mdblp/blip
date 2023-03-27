@@ -34,6 +34,7 @@ import { CbgMedianAnimated } from '../cbg-median-animated/cbg-median-animated'
 import { formatCbgs } from './cbg-slices-container.util'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
+import styles from './cbg-slices-container.css'
 
 interface CbgSlicesContainerProps {
   bgBounds: BgBounds

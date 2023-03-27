@@ -27,12 +27,9 @@
 
 import cx from 'classnames'
 import React, { type FunctionComponent } from 'react'
-import { spring, TransitionMotion } from '@serprex/react-motion'
-
-import { springConfig } from '../../../../models/constants/animation.constants'
 
 import styles from './cbg-slice-animated.css'
-import { type CbgSliceTransitionMotionInterpolate } from '../../../../models/animation.model'
+import { type CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
 import { CbgSliceSegment } from './cbg-slice-segment'
 import { getRangeSegments } from './cbg-slice-animated.util'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
@@ -47,8 +44,6 @@ interface CbgSliceAnimatedProps {
   xScale: ScaleFunction
   yScale: ScaleFunction
 }
-
-const DEFAULT_SEGMENT_Y = 16
 
 export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props) => {
   const {
@@ -68,24 +63,12 @@ export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props
 
   const rangeSegments = getRangeSegments(displayFlags)
 
-  const defaultStyles = rangeSegments.map(segment => ({
-    key: segment.key,
-    style: {
-      [segment.y]: DEFAULT_SEGMENT_Y,
-      [segment.height]: 0,
-      opacity: 0
-    }
-  }))
-
   const transitionMotionStyle = rangeSegments.map(segment => ({
     key: segment.key,
     style: {
-      [segment.y]: spring(yScale(datum[segment.y]), springConfig),
-      [segment.height]: spring(
-        yScale(datum[segment.heightKeys[0]]) - yScale(datum[segment.heightKeys[1]]),
-        springConfig
-      ),
-      opacity: spring(1.0, springConfig)
+      [segment.y]: yScale(datum[segment.y]),
+      [segment.height]: yScale(datum[segment.heightKeys[0]]) - yScale(datum[segment.heightKeys[1]]),
+      opacity: 1
     }
   }))
 
@@ -101,48 +84,36 @@ export const CbgSliceAnimated: FunctionComponent<CbgSliceAnimatedProps> = (props
   }
 
   return (
-    <TransitionMotion
-      defaultStyles={defaultStyles}
-      styles={transitionMotionStyle}
-    >
-      {(interpolatedStyles: CbgSliceTransitionMotionInterpolate[]) => {
-        if (interpolatedStyles.length === 0) {
+    <g id={`cbgSlice-${datum.id}`}>
+      {transitionMotionStyle.map(interpolated => {
+        const key = interpolated.key
+        const segment = rangeSegments.find(segment => segment.key === key)
+        if (!segment) {
           return null
         }
+        const classes = cx({
+          [styles.segment]: true,
+          [styles[segment.classKey]]: !showCbgDateTraces,
+          [styles[`${segment.classKey}Faded`]]: showCbgDateTraces
+        })
         return (
-          <g id={`cbgSlice-${datum.id}`}>
-            {interpolatedStyles.map(interpolated => {
-              const key = interpolated.key
-              const segment = rangeSegments.find(segment => segment.key === key)
-              if (!segment) {
-                return null
-              }
-              const classes = cx({
-                [styles.segment]: true,
-                [styles[segment.classKey]]: !showCbgDateTraces,
-                [styles[`${segment.classKey}Faded`]]: showCbgDateTraces
-              })
-              return (
-                <CbgSliceSegment
-                  classes={classes}
-                  datum={datum}
-                  id={key}
-                  key={key}
-                  positionData={{
-                    left: xScale(datum.msX),
-                    tooltipLeft: datum.msX > tooltipLeftThreshold,
-                    yPositions
-                  }}
-                  segment={segment}
-                  style={interpolated.style}
-                  width={width}
-                  x={binLeftX}
-                />
-              )
-            })}
-          </g>
+          <CbgSliceSegment
+            classes={classes}
+            datum={datum}
+            id={key}
+            key={key}
+            positionData={{
+              left: xScale(datum.msX),
+              tooltipLeft: datum.msX > tooltipLeftThreshold,
+              yPositions
+            }}
+            segment={segment}
+            style={interpolated.style as CbgSliceTransitionMotionStyle}
+            width={width}
+            x={binLeftX}
+          />
         )
-      }}
-    </TransitionMotion>
+      })}
+    </g>
   )
 }

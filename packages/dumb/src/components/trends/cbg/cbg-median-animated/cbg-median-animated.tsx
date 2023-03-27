@@ -26,13 +26,10 @@
  */
 import cx from 'classnames'
 import React, { type FunctionComponent } from 'react'
-import { spring, TransitionMotion } from '@serprex/react-motion'
 
 import styles from './cbg-median-animated.css'
 import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
 import { type BgBounds, ClassificationType } from 'medical-domain'
-import { springConfig } from '../../../../models/constants/animation.constants'
-import { type CbgMedianTransitionMotionInterpolate } from '../../../../models/animation.model'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
 
@@ -44,9 +41,6 @@ interface CbgMedianAnimatedProps {
   xScale: ScaleFunction
   yScale: ScaleFunction
 }
-
-const DEFAULT_MEDIAN = 16
-const TRANSITION_STYLES_KEY = 'median'
 
 export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (props) => {
   const {
@@ -67,26 +61,7 @@ export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (pro
   const width = medianWidth - strokeWidth
   const medianHeight = medianWidth * 0.75
   const x = xScale(msX) - medianWidth / 2 + strokeWidth / 2
-  const defaultY = yScale(bgBounds.targetUpperBound - (bgBounds.targetUpperBound - bgBounds.targetLowerBound) / 2)
   const bgClass = getBgClass(bgBounds, median, ClassificationType.FiveWay)
-
-  const defaultStyles = [{
-    key: TRANSITION_STYLES_KEY,
-    style: {
-      height: 0,
-      median: DEFAULT_MEDIAN,
-      opacity: 0
-    }
-  }]
-
-  const transitionMotionStyles = [{
-    key: TRANSITION_STYLES_KEY,
-    style: {
-      height: spring(medianHeight, springConfig),
-      median: spring(yScale(median) - medianHeight / 2, springConfig),
-      opacity: spring(1.0, springConfig)
-    }
-  }]
 
   const medianClasses = cx({
     [styles.median]: true,
@@ -95,26 +70,14 @@ export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (pro
   })
 
   return (
-    <TransitionMotion
-      defaultY={defaultY}
-      defaultStyles={defaultStyles}
-      styles={transitionMotionStyles}
-    >
-      {(interpolatedStyles: CbgMedianTransitionMotionInterpolate[]) => {
-        if (interpolatedStyles.length === 0) {
-          return null
-        }
-        const interpolatedStyle = interpolatedStyles[0]
-        return <rect
-          className={medianClasses}
-          data-testid={`cbgMedian-${interpolatedStyle.key}`}
-          width={width}
-          height={interpolatedStyle.style.height}
-          x={x}
-          y={interpolatedStyle.style.median}
-          opacity={interpolatedStyle.style.opacity}
-        />
-      }}
-    </TransitionMotion>
+    <rect
+      className={medianClasses}
+      data-testid="cbgMedian-median"
+      width={width}
+      height={medianHeight}
+      x={x}
+      y={yScale(median) - medianHeight / 2}
+      opacity={1}
+    />
   )
 }
