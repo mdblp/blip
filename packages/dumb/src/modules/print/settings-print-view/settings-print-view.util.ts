@@ -163,6 +163,10 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: CgmConfig 
   }
 }
 
+const sortParametersByName = (parameters: ParameterSettingsTableRow[]): ParameterSettingsTableRow[] => {
+  return parameters.sort((parameterA: ParameterSettingsTableRow, parameterB: ParameterSettingsTableRow) => parameterA.name.localeCompare(parameterB.name))
+}
+
 export const getTableDataByDataType = (type: PdfSettingsDataType, data: CgmConfig | DeviceConfig | PumpConfig, timezone?: string, date?: string): SettingsTable => {
   const timePrefs = getTimePrefs(timezone)
   const text = getTextByDataTableType(type)
@@ -211,10 +215,10 @@ export const getParametersByLevel = (parameters?: ParameterConfig[]): Map<number
     return new Map()
   }
 
-  const mapParams = new Map<number, ParameterSettingsTableRow[]>()
+  const parametersMap = new Map<number, ParameterSettingsTableRow[]>()
   parameters.forEach((parameter: ParameterConfig) => {
-    if (!mapParams.has(parameter.level)) {
-      mapParams.set(parameter.level, [])
+    if (!parametersMap.has(parameter.level)) {
+      parametersMap.set(parameter.level, [])
     }
 
     const value = formatParameterValue(parameter.value, parameter.unit)
@@ -225,8 +229,13 @@ export const getParametersByLevel = (parameters?: ParameterConfig[]): Map<number
       unit: parameter.unit,
       level: parameter.level
     }
-    mapParams.get(parameter.level)?.push(parameterInfoDataRow)
+    parametersMap.get(parameter.level)?.push(parameterInfoDataRow)
   })
 
-  return mapParams
+  parametersMap.forEach((parametersByLevel: ParameterSettingsTableRow[], key: number) => {
+    const sortedValues = sortParametersByName(parametersByLevel)
+    parametersMap.set(key, sortedValues)
+  })
+
+  return parametersMap
 }

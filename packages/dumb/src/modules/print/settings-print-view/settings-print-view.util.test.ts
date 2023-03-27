@@ -256,7 +256,7 @@ describe('Settings print view util', () => {
       expect(getParametersByLevel(undefined)).toEqual(emptyMap)
     })
 
-    it('should build a map sorting the parameters by level', () => {
+    it('should build a map sorting the parameters by level and by name inside each level', () => {
       const result = getParametersByLevel(allParameters as ParameterConfig[])
 
       expect(result.get(1)).toEqual([
@@ -265,12 +265,12 @@ describe('Settings print view util', () => {
           rawData: 'MEDIUM_MEAL_LUNCH'
         },
         {
-          ...level1Parameters[1],
-          rawData: 'WEIGHT'
-        },
-        {
           ...level1Parameters[2],
           rawData: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA'
+        },
+        {
+          ...level1Parameters[1],
+          rawData: 'WEIGHT'
         }
       ])
       expect(result.get(2)).toEqual([{
