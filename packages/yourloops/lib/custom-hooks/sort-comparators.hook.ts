@@ -26,19 +26,23 @@
  */
 
 import { useUserName } from './user-name.hook'
-import { type PatientProfile } from '../patient/models/patient-profile.model'
 import { type GridComparatorFn } from '@mui/x-data-grid'
+import { type Patient } from '../patient/models/patient.model'
 
 interface SortComparatorsHookReturn {
-  sortByUserName: GridComparatorFn<PatientProfile>
+  sortByUserName: SortByUserNameComparator
+}
+
+interface SortByUserNameComparator extends GridComparatorFn<Patient> {
+  (patient1: Patient, patient2: Patient): number
 }
 
 export const useSortComparatorsHook = (): SortComparatorsHookReturn => {
   const { getUserName } = useUserName()
 
-  const sortByUserName: GridComparatorFn<PatientProfile> = (patient1, patient2): number => {
-    const patient1FullName = getUserName(patient1.firstName, patient1.lastName, patient1.fullName)
-    const patient2FullName = getUserName(patient2.firstName, patient2.lastName, patient2.fullName)
+  const sortByUserName: SortByUserNameComparator = (patient1, patient2): number => {
+    const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
+    const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
     return patient1FullName.localeCompare(patient2FullName)
   }
 

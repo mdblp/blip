@@ -50,7 +50,6 @@ import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
 import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import { type PatientProfile } from '../../lib/patient/models/patient-profile.model'
 import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
 import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
 
@@ -90,8 +89,8 @@ export const usePatientListHook = (): PatientListHookReturns => {
 
   const filteredPatients = useMemo(() => {
     const filteredPatients = filterPatients(selectedFilter, inputSearch, flaggedPatients)
-    return PatientUtils.computeFlaggedPatients(filteredPatients, flaggedPatients)
-  }, [selectedFilter, filterPatients, flaggedPatients, inputSearch])
+    return PatientUtils.computeFlaggedPatients(filteredPatients, flaggedPatients).sort(sortByUserName)
+  }, [filterPatients, selectedFilter, inputSearch, flaggedPatients, sortByUserName])
 
   const onChangingTab = (newTab: PatientListTabs): void => {
     setSelectedTab(newTab)
@@ -155,8 +154,8 @@ export const usePatientListHook = (): PatientListHookReturns => {
         flex: 1,
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, PatientProfile>) => {
-          const { firstName, fullName, lastName, email } = params.value
+        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
+          const { firstName, fullName, lastName, email } = params.value.profile
           return <Box data-email={email}>{getUserName(firstName, lastName, fullName)}</Box>
         },
         sortComparator: sortByUserName
@@ -230,7 +229,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
-        [PatientListColumns.Patient]: patient.profile,
+        [PatientListColumns.Patient]: patient,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.TimeOutOfRange]: alarms,
         [PatientListColumns.SevereHypoglycemia]: alarms,
