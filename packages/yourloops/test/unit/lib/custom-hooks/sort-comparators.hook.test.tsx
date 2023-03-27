@@ -27,7 +27,7 @@
 
 import { renderHook } from '@testing-library/react-hooks'
 import { useSortComparatorsHook } from '../../../../lib/custom-hooks/sort-comparators.hook'
-import { type PatientProfile } from '../../../../lib/patient/models/patient-profile.model'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 
 describe('useSortComparatorsHook', () => {
   describe('sortByUserName', () => {
@@ -35,8 +35,8 @@ describe('useSortComparatorsHook', () => {
     const biggerPatientName = 'zacchaeus'
 
     it('should return negative number when first patient has a smaller fullname', () => {
-      const patient1 = { fullName: smallerPatientName } as PatientProfile
-      const patient2 = { fullName: biggerPatientName } as PatientProfile
+      const patient1 = { profile: { fullName: smallerPatientName } } as Patient
+      const patient2 = { profile: { fullName: biggerPatientName } } as Patient
 
       const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
@@ -45,8 +45,8 @@ describe('useSortComparatorsHook', () => {
     })
 
     it('should return positive number when second patient has a bigger fullname', () => {
-      const patient1 = { fullName: biggerPatientName } as PatientProfile
-      const patient2 = { fullName: smallerPatientName } as PatientProfile
+      const patient1 = { profile: { fullName: biggerPatientName } } as Patient
+      const patient2 = { profile: { fullName: smallerPatientName } } as Patient
 
       const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
@@ -55,8 +55,8 @@ describe('useSortComparatorsHook', () => {
     })
 
     it('should return 0 when patients have same fullname', () => {
-      const patient1 = { fullName: biggerPatientName } as PatientProfile
-      const patient2 = { fullName: biggerPatientName } as PatientProfile
+      const patient1 = { profile: { fullName: biggerPatientName } } as Patient
+      const patient2 = { profile: { fullName: biggerPatientName } } as Patient
 
       const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)

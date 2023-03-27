@@ -81,7 +81,7 @@ describe('HCP home page', () => {
 
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(5)
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 
     const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()

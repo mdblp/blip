@@ -217,6 +217,8 @@ export const usePatientListHook = (): PatientListHookReturns => {
         type: 'actions',
         field: PatientListColumns.Actions,
         headerName: 'Actions',
+        headerClassName: classes.mandatoryCellBorder,
+        cellClassName: classes.mandatoryCellBorder,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
       }
     ]
