@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import DashboardLayout from './dashboard-layout'
-import { HomePage } from '../pages/home/home-page'
 import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
 import { AppUserRoute } from '../models/enums/routes.enum'
+import { PatientList } from '../components/patient-list/patient-list'
 
-export function CaregiverLayout(): JSX.Element {
+export const CaregiverLayout: FunctionComponent = () => {
   return (
     <PatientProvider>
       <DashboardLayout>
@@ -45,7 +45,7 @@ export function CaregiverLayout(): JSX.Element {
           <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
           <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
-          <Route path={AppUserRoute.Home} element={<HomePage />} />
+          <Route path={AppUserRoute.Home} element={<PatientList />} />
           <Route
             path="/"
             element={<Navigate to={AppUserRoute.Home} replace />}

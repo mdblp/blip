@@ -93,7 +93,7 @@ describe('Patient dashboard for anyone', () => {
     const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
     expect(reservoirChange).toBeVisible()
     await userEvent.hover(reservoirChange)
-    expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}8:40 pm`)
+    expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}9:40 pm`)
   })
 
   it('monitored patient should have correct cards', async () => {

@@ -25,36 +25,55 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, type GridColumnVisibilityModel, type GridPaginationModel } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import RemovePatientDialog from '../patient/remove-patient-dialog'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
 import { PatientListCustomFooter } from './patient-list-custom-footer'
+import { PatientListColumns } from './enums/patient-list.enum'
+import { useAuth } from '../../lib/auth'
+import { GlobalStyles } from 'tss-react'
+import { useTheme } from '@mui/material/styles'
 
 export const PatientList: FunctionComponent = () => {
   const { t } = useTranslation()
+  const { user } = useAuth()
+  const theme = useTheme()
   const {
     columns,
-    columnsVisibility,
     selectedTab,
     gridApiRef,
     inputSearch,
-    paginationModel,
     patientToRemoveForHcp,
     patientToRemoveForCaregiver,
-    rows,
+    rowsProps,
     onChangingTab,
     onCloseRemoveDialog,
     onRowClick,
-    setColumnsVisibility,
-    setInputSearch,
-    setPaginationModel
+    setInputSearch
   } = usePatientListHook()
+
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
+  const [columnsVisibility, setColumnsVisibility] = useState<GridColumnVisibilityModel>({
+    [PatientListColumns.Flag]: true,
+    [PatientListColumns.System]: true,
+    [PatientListColumns.Patient]: true,
+    [PatientListColumns.TimeOutOfRange]: true,
+    [PatientListColumns.SevereHypoglycemia]: true,
+    [PatientListColumns.DataNotTransferred]: true,
+    [PatientListColumns.LastDataUpdate]: true,
+    [PatientListColumns.Messages]: user.isUserHcp() ?? false,
+    [PatientListColumns.Actions]: true
+  })
+
+  // const toggleColumnVisibility = (columnName: PatientListColumns): void => {
+  //   gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
+  // }
 
   const NoPatientMessage = (): JSX.Element => {
     return (
@@ -70,55 +89,58 @@ export const PatientList: FunctionComponent = () => {
   }
 
   return (
-    <Box
-      data-testid="patient-list"
-      aria-label={t('patient-list')}
-    >
-      <PatientListHeader
-        selectedTab={selectedTab}
-        inputSearch={inputSearch}
-        onChangingTab={onChangingTab}
-        setInputSearch={setInputSearch}
-      />
-
-      <Box data-testid="patient-list-grid">
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          apiRef={gridApiRef}
-          autoHeight
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          disableRowSelectionOnClick
-          disableVirtualization={process.env.NODE_ENV === 'test'}
-          columnVisibilityModel={columnsVisibility}
-          onColumnVisibilityModelChange={setColumnsVisibility}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          onRowClick={onRowClick}
-          pageSizeOptions={[5, 10, 25]}
-          sx={{ borderRadius: 0 }}
-          slots={{
-            noRowsOverlay: NoPatientMessage,
-            footer: PatientListCustomFooter
-          }}
+    <React.Fragment>
+      <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
+      <Box
+        data-testid="patient-list"
+        aria-label={t('patient-list')}
+      >
+        <PatientListHeader
+          selectedTab={selectedTab}
+          inputSearch={inputSearch}
+          onChangingTab={onChangingTab}
+          setInputSearch={setInputSearch}
         />
+
+        <Box data-testid="patient-list-grid">
+          <DataGrid
+            columns={columns}
+            rows={rowsProps}
+            apiRef={gridApiRef}
+            autoHeight
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
+            disableRowSelectionOnClick
+            disableVirtualization={process.env.NODE_ENV === 'test'}
+            columnVisibilityModel={columnsVisibility}
+            onColumnVisibilityModelChange={setColumnsVisibility}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            onRowClick={onRowClick}
+            pageSizeOptions={[5, 10, 25]}
+            sx={{ borderRadius: 0, '& .MuiDataGrid-cell:hover': { cursor: 'pointer' } }}
+            slots={{
+              noRowsOverlay: NoPatientMessage,
+              footer: PatientListCustomFooter
+            }}
+          />
+        </Box>
+
+        {patientToRemoveForHcp &&
+          <RemovePatientDialog
+            patient={patientToRemoveForHcp}
+            onClose={onCloseRemoveDialog}
+          />
+        }
+
+        {patientToRemoveForCaregiver &&
+          <RemoveDirectShareDialog
+            userToRemove={patientToRemoveForCaregiver}
+            onClose={onCloseRemoveDialog}
+          />
+        }
       </Box>
-
-      {patientToRemoveForHcp &&
-        <RemovePatientDialog
-          patient={patientToRemoveForHcp}
-          onClose={onCloseRemoveDialog}
-        />
-      }
-
-      {patientToRemoveForCaregiver &&
-        <RemoveDirectShareDialog
-          userToRemove={patientToRemoveForCaregiver}
-          onClose={onCloseRemoveDialog}
-        />
-      }
-    </Box>
+    </React.Fragment>
   )
 }

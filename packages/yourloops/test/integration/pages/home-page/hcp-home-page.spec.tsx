@@ -33,7 +33,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import {
   mockPatientApiForHcp,
   mockPatientApiForPatients,
-  monitoredPatient,
+  monitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol,
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
@@ -79,10 +79,11 @@ describe('HCP home page', () => {
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
     checkPatientList()
 
-    expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(4)
+    const dataGridRow = screen.getByTestId('patient-list-grid')
+    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(5)
+    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.userid}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -90,13 +91,13 @@ describe('HCP home page', () => {
     expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient])
+    jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
     const teamId = unmonitoredPatient.teams[0].teamId
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(teamId, unmonitoredPatient.userid)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
+    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
   })
@@ -107,7 +108,7 @@ describe('HCP home page', () => {
       renderPage('/')
     })
 
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.userid}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -135,7 +136,7 @@ describe('HCP home page', () => {
       renderPage('/')
     })
 
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.userid}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
     await userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })

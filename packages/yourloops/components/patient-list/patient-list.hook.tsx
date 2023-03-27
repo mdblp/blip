@@ -29,8 +29,6 @@ import React, { useCallback, useEffect, useMemo, useState, type MutableRefObject
 import {
   type GridApiCommon,
   type GridColDef,
-  type GridColumnVisibilityModel,
-  type GridPaginationModel,
   type GridRenderCellParams,
   type GridRowParams,
   type GridRowsProp,
@@ -58,21 +56,16 @@ import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
 
 interface PatientListHookReturns {
   columns: GridColDef[]
-  columnsVisibility: GridColumnVisibilityModel
   selectedTab: PatientListTabs
   inputSearch: string
   gridApiRef: MutableRefObject<GridApiCommon>
-  paginationModel: GridPaginationModel
   patientToRemoveForHcp: Patient | null
   patientToRemoveForCaregiver: UserToRemove | null
-  rows: GridRowsProp
+  rowsProps: GridRowsProp
   setInputSearch: (value: string) => void
-  setColumnsVisibility: (model: GridColumnVisibilityModel) => void
-  setPaginationModel: (model: GridPaginationModel) => void
   onChangingTab: (newTab: PatientListTabs) => void
   onCloseRemoveDialog: () => void
   onRowClick: (params: GridRowParams) => void
-  toggleColumnVisibility: (columnName: PatientListColumns) => void
 }
 
 export const usePatientListHook = (): PatientListHookReturns => {
@@ -92,18 +85,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const [inputSearch, setInputSearch] = useState<string>('')
   const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
   const [patientToRemoveForCaregiver, setPatientToRemoveForCaregiver] = useState<UserToRemove | null>(null)
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
-  const [columnsVisibility, setColumnsVisibility] = useState<GridColumnVisibilityModel>({
-    [PatientListColumns.Flag]: true,
-    [PatientListColumns.System]: true,
-    [PatientListColumns.Patient]: true,
-    [PatientListColumns.TimeOutOfRange]: true,
-    [PatientListColumns.SevereHypoglycemia]: true,
-    [PatientListColumns.DataNotTransferred]: true,
-    [PatientListColumns.LastDataUpdate]: true,
-    [PatientListColumns.Messages]: user.isUserHcp() ?? false,
-    [PatientListColumns.Actions]: true
-  })
 
   const flaggedPatients = getFlagPatients()
 
@@ -142,11 +123,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   }
 
   const onRowClick = (params: GridRowParams): void => {
-    navigate(`/patient/${params.id}`)
-  }
-
-  const toggleColumnVisibility = (columnName: PatientListColumns): void => {
-    gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
+    navigate(`/patient/${params.id}/dashboard`)
   }
 
   const columns: GridColDef[] = useMemo(() => {
@@ -165,7 +142,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
             <React.Fragment>
               {selectedTab === PatientListTabs.Pending && hasPendingInvitation
                 ? <PendingIconCell />
-                : <FlagIconCell isFlagged={patient.metadata.flagged} patientId={patient.userid} />
+                : <FlagIconCell isFlagged={patient.metadata.flagged} patient={patient} />
               }
             </React.Fragment>
           )
@@ -241,26 +218,26 @@ export const usePatientListHook = (): PatientListHookReturns => {
         type: 'actions',
         field: PatientListColumns.Actions,
         headerName: 'Actions',
-        renderCell: (params: GridRenderCellParams<GridRowModel, string>) => <ActionsCell patientId={params.value} onClickRemove={onClickRemovePatient} />
+        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
       }
     ]
   }, [t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
 
-  const rows: GridRowsProp = useMemo(() => {
+  const rowsProps: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
-      const toto = patient.alarms
+      const alarms = patient.alarms
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient.profile,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
-        [PatientListColumns.TimeOutOfRange]: patient.alarms,
-        [PatientListColumns.SevereHypoglycemia]: toto,
-        [PatientListColumns.DataNotTransferred]: patient.alarms,
+        [PatientListColumns.TimeOutOfRange]: alarms,
+        [PatientListColumns.SevereHypoglycemia]: alarms,
+        [PatientListColumns.DataNotTransferred]: alarms,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
-        [PatientListColumns.Actions]: patient.userid
+        [PatientListColumns.Actions]: patient
       }
     })
   }, [filteredPatients, trNA])
@@ -274,20 +251,15 @@ export const usePatientListHook = (): PatientListHookReturns => {
 
   return {
     columns,
-    columnsVisibility,
     selectedTab,
     gridApiRef,
     inputSearch,
-    paginationModel,
     patientToRemoveForHcp,
     patientToRemoveForCaregiver,
-    rows,
-    setColumnsVisibility,
+    rowsProps,
     onChangingTab,
     onCloseRemoveDialog,
     onRowClick,
-    setInputSearch,
-    setPaginationModel,
-    toggleColumnVisibility
+    setInputSearch
   }
 }

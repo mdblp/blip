@@ -62,7 +62,7 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
   const alert = useAlert()
   const patientHook = usePatientContext()
   const { t } = useTranslation()
-  const { teams } = useTeam()
+  const { teams, getTeam } = useTeam()
   const [email, setEmail] = useState<string>('')
   const [teamId, setTeamId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -122,7 +122,7 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
   const addPatient = async (): Promise<void> => {
     try {
       setInProgress(true)
-      const team = teams.find(team => team.id === teamId)
+      const team = getTeam(teamId)
       await patientHook.invitePatient(team, email)
       alert.success(t('alert-invitation-sent-success'))
       metrics.send('invitation', 'send_invitation', 'patient')
@@ -199,7 +199,7 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
               value={teamId}
               onChange={handleChangeTeam}
             >
-              <MenuItem id="patient-list-dialog-add-team-option-none" aria-label={t('none')} value="" key="none" />
+              <MenuItem aria-label={t('none')} value="" />
               {teams.map((team) => (
                 <MenuItem
                   id={`patient-list-dialog-add-team-option-${team.name}`}

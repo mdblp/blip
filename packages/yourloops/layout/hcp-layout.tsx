@@ -25,11 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
-import { HomePage } from '../pages/home/home-page'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from './dashboard-layout'
@@ -38,8 +37,9 @@ import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
 import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
 import { AppUserRoute } from '../models/enums/routes.enum'
+import { PatientList } from '../components/patient-list/patient-list'
 
-export function HcpLayout(): JSX.Element {
+export const HcpLayout: FunctionComponent = () => {
   return (
     <TeamContextProvider>
       <SelectedTeamProvider>
@@ -49,7 +49,7 @@ export function HcpLayout(): JSX.Element {
               <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
               <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
               <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-              <Route path={AppUserRoute.Home} element={<HomePage />} />
+              <Route path={AppUserRoute.Home} element={<PatientList />} />
               <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
               <Route path={AppUserRoute.Team} element={<TeamDetailsPage />} />
               <Route

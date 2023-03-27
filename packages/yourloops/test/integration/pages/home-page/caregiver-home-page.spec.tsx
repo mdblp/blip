@@ -148,7 +148,7 @@ describe('Caregiver home page', () => {
     const patientData = patientTableBody.getByText(patientFullName)
     expect(patientData).toBeVisible()
 
-    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.userId}` })
+    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -197,7 +197,7 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.userId}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
 
     await userEvent.click(removeButton)
 

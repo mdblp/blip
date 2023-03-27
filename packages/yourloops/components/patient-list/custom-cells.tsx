@@ -39,10 +39,12 @@ import PersonRemoveIcon from '../icons/person-remove-icon'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import { formatAlarmSettingThreshold } from '../../lib/utils'
 
 interface FlagCellProps {
   isFlagged: boolean
-  patientId: string
+  patient: Patient
 }
 
 interface AlarmPercentageCellProps {
@@ -55,27 +57,28 @@ interface MessageCellProps {
 }
 
 interface ActionsCellProps {
-  patientId: string
+  patient: Patient
   onClickRemove: (patientId: string) => void
 }
 
-export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patientId }) => {
+export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patient }) => {
   const { flagPatient } = useAuth()
+  const { t } = useTranslation()
 
   const onClickFlag = async (): Promise<void> => {
-    await flagPatient(patientId)
+    await flagPatient(patient.userid)
   }
 
   return (
     <IconActionButton
       icon={isFlagged
         ? <FlagIcon
-          titleAccess="flag-icon-active"
-          aria-label="flag-icon-active"
+          titleAccess={t('unflag-patient', { patientEmail: patient.profile.email }) }
+          aria-label={t('unflag-patient', { patientEmail: patient.profile.email }) }
         />
         : <FlagOutlineIcon
-          titleAccess="flag-icon-inactive"
-          aria-label="flag-icon-inactive"
+          titleAccess={t('flag-patient', { patientEmail: patient.profile.email }) }
+          aria-label={t('flag-patient', { patientEmail: patient.profile.email }) }
         />}
       onClick={onClickFlag}
     />
@@ -107,7 +110,7 @@ export const AlarmPercentageCell: FunctionComponent<AlarmPercentageCellProps> = 
       alignItems="end"
       sx={{ color: user.isUserHcp() && isAlarmActive ? theme.palette.warning.main : 'inherit' }}
     >
-      {Math.round(value * 10) / 10}%
+      {formatAlarmSettingThreshold(value)}
       {user.isUserHcp() && isAlarmActive &&
         <ReportProblemIcon sx={{ marginLeft: theme.spacing(1) }} color="warning" />
       }
@@ -125,15 +128,22 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
     >
       <Box display="flex" justifyContent="center">
         {hasNewMessages
-          ? <EmailIcon titleAccess="unread-messages-icon" color="primary" />
-          : <EmailOpenIcon />
+          ? <EmailIcon
+            titleAccess={t('new-unread-messages')}
+            aria-label={t('new-unread-messages')}
+            color="primary"
+          />
+          : <EmailOpenIcon
+            titleAccess={t('no-new-messages')}
+            aria-label={t('no-new-messages')}
+          />
         }
       </Box>
     </Tooltip>
   )
 }
 
-export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patientId, onClickRemove }) => {
+export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onClickRemove }) => {
   const { t } = useTranslation()
 
   return (
@@ -144,11 +154,11 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patientId, on
       <Box display="flex" justifyContent="end">
         <IconActionButton
           data-action="remove-patient"
-          data-testid={`${t('button-remove-patient')} ${patientId}`}
-          aria-label={`${t('button-remove-patient')} ${patientId}`}
+          data-testid={`${t('button-remove-patient')} ${patient.profile.email}`}
+          aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
           icon={<PersonRemoveIcon />}
           color="inherit"
-          onClick={() => { onClickRemove(patientId) }}
+          onClick={() => { onClickRemove(patient.userid) }}
         />
       </Box>
     </Tooltip>

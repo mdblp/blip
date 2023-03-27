@@ -40,5 +40,5 @@ export interface GridRowModel {
   [PatientListColumns.DataNotTransferred]: Alarms
   [PatientListColumns.LastDataUpdate]: string
   [PatientListColumns.Messages]: boolean
-  [PatientListColumns.Actions]: string
+  [PatientListColumns.Actions]: Patient
 }

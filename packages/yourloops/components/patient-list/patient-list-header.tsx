@@ -90,13 +90,11 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { classes } = useStyles()
   const { patientsFilterStats } = usePatientContext()
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
-  const [showTeamCodeDialog, setShowTeamCodeDialog] = useState<boolean>(false)
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null)
+  const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
 
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
-    setSelectedTeam(team)
-    setShowTeamCodeDialog(true)
+    setTeamCodeDialogSelectedTeam(team)
   }
 
   return (
@@ -217,11 +215,11 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
           onClose={() => { setShowAddPatientDialog(false) }}
         />
       }
-      {selectedTeam && showTeamCodeDialog &&
+      {teamCodeDialogSelectedTeam &&
         <TeamCodeDialog
-          code={selectedTeam.code}
-          name={selectedTeam.name}
-          onClose={() => { setShowTeamCodeDialog(false) }}
+          code={teamCodeDialogSelectedTeam.code}
+          name={teamCodeDialogSelectedTeam.name}
+          onClose={() => { setTeamCodeDialogSelectedTeam(null) }}
         />
       }
     </React.Fragment>
