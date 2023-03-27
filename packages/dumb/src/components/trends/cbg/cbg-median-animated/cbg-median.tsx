@@ -27,7 +27,7 @@
 import cx from 'classnames'
 import React, { type FunctionComponent } from 'react'
 
-import styles from './cbg-median-animated.css'
+import styles from './cbg-median.css'
 import { getBgClass } from '../../../../utils/blood-glucose/blood-glucose.util'
 import { type BgBounds, ClassificationType } from 'medical-domain'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
@@ -42,7 +42,7 @@ interface CbgMedianAnimatedProps {
   yScale: ScaleFunction
 }
 
-export const CbgMedianAnimated: FunctionComponent<CbgMedianAnimatedProps> = (props) => {
+export const CbgMedian: FunctionComponent<CbgMedianAnimatedProps> = (props) => {
   const {
     bgBounds,
     median,

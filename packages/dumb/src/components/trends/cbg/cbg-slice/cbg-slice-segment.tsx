@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2017-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,29 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import cx from 'classnames'
 import React, { type FunctionComponent } from 'react'
-import { type CbgPositionData, type CbgSliceYPositions } from '../../../../models/cbg-position-data.model'
-import { type CbgRangeSegment } from '../../../../models/cbg-range-segment.model'
-import { type CbgSliceTransitionMotionStyle } from '../../../../models/animation.model'
-import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
+
+import styles from './cbg-slice-animated.css'
+import { getRangeSegments } from './cbg-slice-animated.util'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
 import { type CbgSlice } from '../../../../models/cbg-slice.model'
+import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
+import { type CbgPositionData, type CbgSliceYPositions } from '../../../../models/cbg-position-data.model'
+import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
 
-interface CbgSliceSegmentProps {
-  classes: string
+interface CbgSliceAnimatedProps {
   datum: CbgSlice
-  id: string
-  positionData: CbgPositionData<CbgSliceYPositions>
-  segment: CbgRangeSegment
-  style: CbgSliceTransitionMotionStyle
-  width: number
-  x: number
+  sliceWidth: number
+  tooltipLeftThreshold: number
+  topMargin: number
+  xScale: ScaleFunction
+  yScale: ScaleFunction
 }
 
-export const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) => {
-  const { classes, datum, id, positionData, segment, style, x, width } = props
+export const CbgSliceSegment: FunctionComponent<CbgSliceAnimatedProps> = (props) => {
+  const {
+    datum,
+    sliceWidth,
+    tooltipLeftThreshold,
+    topMargin,
+    xScale,
+    yScale
+  } = props
 
-  const { focusCbgSlice, unfocusCbgSlice } = useTrendsContext()
+  const { displayFlags, showCbgDateTraces, focusCbgSlice, unfocusCbgSlice } = useTrendsContext()
 
   const handleMouseOut = (event: { relatedTarget: EventTarget | null | { id: string } }): void => {
     const relatedTarget = event.relatedTarget as { id: string }
@@ -58,25 +67,61 @@ export const CbgSliceSegment: FunctionComponent<CbgSliceSegmentProps> = (props) 
     unfocusCbgSlice()
   }
 
-  const handleMouseOver = (): void => {
+  const handleMouseOver = (positionData: CbgPositionData<CbgSliceYPositions>, heightKeys: RangeSegmentSlice[]): void => {
     focusCbgSlice(
       datum,
       positionData,
-      segment.heightKeys
+      heightKeys
     )
   }
 
+  const strokeWidth = sliceWidth / 8
+  const binLeftX = xScale(datum.msX) - sliceWidth / 2 + strokeWidth / 2
+  const width = sliceWidth - strokeWidth
+
+  const rangeSegments = getRangeSegments(displayFlags)
+
+  const yPositions = {
+    firstQuartile: yScale(datum.firstQuartile),
+    max: yScale(datum.max),
+    median: yScale(datum.median),
+    min: yScale(datum.min),
+    ninetiethQuantile: yScale(datum.ninetiethQuantile),
+    tenthQuantile: yScale(datum.tenthQuantile),
+    thirdQuartile: yScale(datum.thirdQuartile),
+    topMargin
+  }
+
   return (
-    <rect
-      className={classes}
-      data-testid={`cbg-slice-rectangle-${id}`}
-      width={width}
-      height={style[segment.height]}
-      x={x}
-      y={style[segment.y]}
-      opacity={style.opacity}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-    />
+    <g id={`cbgSlice-${datum.id}`}>
+      {rangeSegments.map(segment => {
+        const key = segment.key
+        const classes = cx({
+          [styles.segment]: true,
+          [styles[segment.classKey]]: !showCbgDateTraces,
+          [styles[`${segment.classKey}Faded`]]: showCbgDateTraces
+        })
+        const positionData = {
+          left: xScale(datum.msX),
+          tooltipLeft: datum.msX > tooltipLeftThreshold,
+          yPositions
+        }
+        return (
+          <rect
+            className={classes}
+            data-testid={`cbg-slice-rectangle-${key}`}
+            key={key}
+            width={width}
+            height={yScale(datum[segment.heightKeys[0]]) - yScale(datum[segment.heightKeys[1]])}
+            x={binLeftX}
+            y={yScale(datum[segment.y])}
+            onMouseOver={() => {
+              handleMouseOver(positionData, segment.heightKeys)
+            }}
+            onMouseOut={handleMouseOut}
+          />
+        )
+      })}
+    </g>
   )
 }

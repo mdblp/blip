@@ -47,7 +47,7 @@ const Yourloops = (): JSX.Element => {
       clientId={appConfig.AUTH0_CLIENT_ID}
       useRefreshTokensFallback
       authorizationParams={{
-        redirectUri,
+        redirect_uri: redirectUri,
         audience: 'https://api-ext.your-loops.com'
       }}
       useRefreshTokens
