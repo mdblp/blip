@@ -28,7 +28,7 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
-import { DataGrid, type GridColumnVisibilityModel, type GridPaginationModel } from '@mui/x-data-grid'
+import { DataGrid, type GridColumnVisibilityModel, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
@@ -59,6 +59,7 @@ export const PatientList: FunctionComponent = () => {
   } = usePatientListHook()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
+  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
   const [columnsVisibility, setColumnsVisibility] = useState<GridColumnVisibilityModel>({
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: true,
@@ -118,6 +119,8 @@ export const PatientList: FunctionComponent = () => {
             disableVirtualization={process.env.NODE_ENV === 'test'}
             columnVisibilityModel={columnsVisibility}
             onColumnVisibilityModelChange={setColumnsVisibility}
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             onRowClick={onRowClick}
