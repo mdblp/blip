@@ -302,7 +302,6 @@
   "patient-list": "Patient list",
   "patient-list-search-placeholder": "Search for a patient...",
   "patient-list-search-tooltip": "Search by first name, last name or birthdate (dd/mm/yyyy)",
-  "patient-list-searchbar": "Search for a patient",
   "patient-profile-hba1c": "Initial HbA1c {{hba1cDate}}",
   "patient-statistics": "Patient statistics",
   "patient-update-error": "Patient update failed",
