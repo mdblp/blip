@@ -111,7 +111,7 @@ describe('Caregiver home page', () => {
     expect(patientTableBody.getByText(patient2.profile.fullName)).toBeVisible()
     expect(patientTableBody.getByText(patient3.profile.fullName)).toBeVisible()
 
-    const searchPatient = screen.getByPlaceholderText('Search by first name, last name or birthdate (dd/mm/yyyy)')
+    const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
