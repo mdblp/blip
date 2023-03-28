@@ -83,7 +83,10 @@ describe('HCP home page', () => {
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(4)
 
     const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}`, hidden: true })
+    const removeButton = within(patientRow).getByRole('button', {
+      name: `Remove patient ${unmonitoredPatient.profile.email}`,
+      hidden: true
+    })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -92,9 +95,7 @@ describe('HCP home page', () => {
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
     jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient])
-    await act(async () => {
-      await userEvent.click(confirmRemoveButton)
-    })
+    await userEvent.click(confirmRemoveButton)
     expect(removePatientMock).toHaveBeenCalledWith(teamThree.id, unmonitoredPatient.userid)
     expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
@@ -120,9 +121,7 @@ describe('HCP home page', () => {
 
     fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
 
-    await act(async () => {
-      await userEvent.click(confirmRemoveButton)
-    })
+    await userEvent.click(confirmRemoveButton)
     expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teams[0].teamId, monitoredPatient.userid)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} is no longer a member of ${teamTwo.name}`)
@@ -141,9 +140,7 @@ describe('HCP home page', () => {
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    await act(async () => {
-      await userEvent.click(confirmRemoveButton)
-    })
+    await userEvent.click(confirmRemoveButton)
     expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
@@ -281,9 +278,7 @@ describe('HCP home page', () => {
     await userEvent.type(emailInput, 'toto@titi.com')
     expect(createTeamButton).not.toBeDisabled()
 
-    await act(async () => {
-      await userEvent.click(createTeamButton)
-    })
+    await userEvent.click(createTeamButton)
     expect(createTeamMock).toHaveBeenCalledTimes(1)
   })
 })

@@ -181,9 +181,7 @@ describe('Caregiver home page', () => {
     const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
 
     jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatientAsTeamMember])
-    await act(async () => {
-      await userEvent.click(removePatientDialog2ConfirmButton)
-    })
+    await userEvent.click(removePatientDialog2ConfirmButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
     expect(patientData).not.toBeInTheDocument()
@@ -208,9 +206,7 @@ describe('Caregiver home page', () => {
 
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    await act(async () => {
-      await userEvent.click(confirmRemoveButton)
-    })
+    await userEvent.click(confirmRemoveButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { CountryCodes } from '../../../lib/auth/models/country.model'
 import userEvent from '@testing-library/user-event'
 import { AuthApi } from '../../../lib/auth/auth.api'
@@ -132,9 +132,7 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
   const changePasswordButton = screen.getByRole('button', { name: 'Change password' })
   expect(changePasswordButton).toBeEnabled()
 
-  await act(async () => {
-    await userEvent.click(changePasswordButton)
-  })
+  await userEvent.click(changePasswordButton)
 
   expect(AuthApi.sendResetPasswordEmail).toHaveBeenCalledWith(email)
 
@@ -146,9 +144,7 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
   await userEvent.click(changePasswordEmailSuccessfulSnackbarCloseButton)
 
   jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockRejectedValueOnce('Error')
-  await act(async () => {
-    await userEvent.click(changePasswordButton)
-  })
+  await userEvent.click(changePasswordButton)
 
   const changePasswordEmailFailedSnackbar = screen.getByTestId('alert-snackbar')
   expect(changePasswordEmailFailedSnackbar).toHaveTextContent('Impossible to send the change password e-mail. Please try again later.')

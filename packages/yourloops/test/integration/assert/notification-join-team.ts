@@ -31,7 +31,7 @@ import NotificationApi from '../../../lib/notifications/notification.api'
 import { invitationTeam } from '../data/notification.data'
 
 export const closeDialogNotificationTeam = async () => {
-  const badgeNotification = screen.getByLabelText('Go to notifications list')
+  const badgeNotification = await screen.findByLabelText('Go to notifications list')
   expect(badgeNotification).toHaveTextContent('1')
   const badgeTeam = screen.getByLabelText('Open team menu')
   expect(badgeTeam).toHaveTextContent('2')

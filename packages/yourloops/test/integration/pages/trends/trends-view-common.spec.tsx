@@ -47,7 +47,7 @@ import {
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
-import { act, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -76,9 +76,7 @@ describe('Trends view for anyone', () => {
       // Check Layout
       checkTrendsLayout()
 
-      await act(async () => {
-        await userEvent.click(screen.getByTestId('button-nav-back'))
-      })
+      await userEvent.click(screen.getByTestId('button-nav-back'))
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
   })

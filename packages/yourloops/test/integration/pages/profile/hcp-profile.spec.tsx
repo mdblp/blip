@@ -29,7 +29,7 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { AVAILABLE_TEAMS, mockTeamAPI, teamThree } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkHCPLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -118,9 +118,7 @@ describe('Profile page for hcp', () => {
     await userEvent.type(fields.lastNameInput, 'Talue')
 
     expect(saveButton).not.toBeDisabled()
-    await act(async () => {
-      await userEvent.click(saveButton)
-    })
+    await userEvent.click(saveButton)
 
     expect(saveButton).toBeDisabled()
     expect(screen.getByRole('alert')).toBeVisible()

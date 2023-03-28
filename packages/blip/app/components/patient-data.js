@@ -231,9 +231,8 @@ class PatientDataPage extends React.Component {
           {messages}
           {patientData}
           {errorDisplay}
-          {canPrint &&
+          {canPrint && showPDFPrintOptions &&
             <DialogPDFOptions
-              open={showPDFPrintOptions}
               minDate={start}
               maxDate={end}
               onResult={this.handlePrint}

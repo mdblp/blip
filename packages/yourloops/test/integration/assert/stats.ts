@@ -46,8 +46,8 @@ const hoverOnCBGPercentageStat = async (patientStatistics: BoundFunctions<typeof
   await userEvent.unhover(patientStatistics.getByTestId(statId))
 }
 
-export const checkTooltip = (patientStatistics: BoundFunctions<typeof queries>, labelToQuery: string) => {
-  const stat = patientStatistics.getByText(labelToQuery)
+export const checkTooltip = async (patientStatistics: BoundFunctions<typeof queries>, labelToQuery: string) => {
+  const stat = await patientStatistics.findByText(labelToQuery)
   expect(stat).toBeVisible()
   expect(within(stat).queryByTestId('info-icon')).toBeInTheDocument()
 }
@@ -72,7 +72,9 @@ export const checkReadingsInRangeStats = async () => {
 
 export const checkReadingsInRangeStatsWidgets = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('cbg-percentage-stat-veryHigh-readingsInRange')).toHaveTextContent('213%')
+  await waitFor(() => {
+    expect(patientStatistics.getByTestId('cbg-percentage-stat-veryHigh-readingsInRange')).toHaveTextContent('213%')
+  })
   expect(patientStatistics.getByTestId('cbg-percentage-stat-high-readingsInRange')).toHaveTextContent('17%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-target-readingsInRange')).toHaveTextContent('320%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-low-readingsInRange')).toHaveTextContent('427%')

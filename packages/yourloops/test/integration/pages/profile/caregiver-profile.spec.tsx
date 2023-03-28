@@ -115,9 +115,7 @@ describe('Caregiver page for hcp', () => {
     await userEvent.type(fields.lastNameInput, 'Talue')
     expect(saveButton).toBeEnabled()
 
-    await act(async () => {
-      await userEvent.click(saveButton)
-    })
+    await userEvent.click(saveButton)
 
     expect(saveButton).toBeDisabled()
     expect(screen.getByRole('alert')).toBeVisible()
