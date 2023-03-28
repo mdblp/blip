@@ -51,6 +51,7 @@ import { AddPatientDialog } from '../patient/add-dialog'
 import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
+import Tooltip from '@mui/material/Tooltip'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -109,19 +110,22 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
           alignItems="center"
         >
           <Box>
-            <TextField
-              data-testid="search-patient-bar"
-              aria-label={t('patient-list-searchbar')}
-              placeholder={t('placeholder-search')}
-              inputProps={{ 'aria-label': t('aria-search') }}
-              value={inputSearch}
-              className={classes.customTextField}
-              InputProps={{
-                endAdornment: <InputAdornment position="end"><SearchIcon /></InputAdornment>,
-                sx: { height: '42px', borderRadius: '28px' }
-              }}
-              onChange={event => { setInputSearch(event.target.value) }}
-            />
+            <Tooltip title={t('patient-list-search-tooltip')}>
+              <TextField
+                data-testid="search-patient-bar"
+                aria-label={t('patient-list-search-tooltip')}
+                placeholder={t('patient-list-search-placeholder')}
+                inputProps={{ 'aria-label': t('aria-search') }}
+                value={inputSearch}
+                className={classes.customTextField}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end"><SearchIcon /></InputAdornment>,
+                  sx: { height: '42px', borderRadius: '28px' }
+                }}
+                onChange={event => { setInputSearch(event.target.value) }}
+              />
+            </Tooltip>
+            {/* TODO activate this button with Filters YLP-2151 https://diabeloop.atlassian.net/browse/YLP-2151 */}
             <Button
               variant="outlined"
               size="large"
@@ -143,6 +147,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                 {t('button-add-new-patient')}
               </Button>
             }
+            {/* TODO activate this button with columns choice YLP-2154 https://diabeloop.atlassian.net/browse/YLP-2154 */}
             <Button
               data-testid="column-settings-button"
               variant="outlined"
@@ -201,6 +206,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             />
             <Link
               color="inherit"
+              variant="subtitle2"
               underline="always"
               className={classes.resetButton}
             >

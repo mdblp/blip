@@ -71,6 +71,9 @@ export const PatientList: FunctionComponent = () => {
     [PatientListColumns.Actions]: true
   })
 
+  // TODO relates to YLP-2154 https://diabeloop.atlassian.net/browse/YLP-2154
+  //  This function handles the switch between column visibility.
+  //  Add it when a toggle will be switched for a column
   // const toggleColumnVisibility = (columnName: PatientListColumns): void => {
   //   gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
   // }

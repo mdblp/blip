@@ -80,6 +80,7 @@ export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, pati
           titleAccess={t('flag-patient', { patientEmail: patient.profile.email }) }
           aria-label={t('flag-patient', { patientEmail: patient.profile.email }) }
         />}
+      color="inherit"
       onClick={onClickFlag}
     />
   )
@@ -94,7 +95,7 @@ export const PendingIconCell: FunctionComponent = () => {
       aria-label={t('pending-invitation')}
     >
       <Box display="flex">
-        <AccessTimeIcon titleAccess="pending-icon" />
+        <AccessTimeIcon titleAccess={t('pending-invitation')} />
       </Box>
     </Tooltip>
   )
@@ -123,8 +124,8 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
 
   return (
     <Tooltip
-      title={t(hasNewMessages ? 'unread-messages' : 'no-new-messages')}
-      aria-label={t(hasNewMessages ? 'unread-messages' : 'no-new-messages')}
+      title={t(hasNewMessages ? 'new-unread-messages' : 'no-new-messages')}
+      aria-label={t(hasNewMessages ? 'new-unread-messages' : 'no-new-messages')}
     >
       <Box display="flex" justifyContent="center">
         {hasNewMessages

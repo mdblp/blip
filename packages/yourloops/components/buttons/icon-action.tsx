@@ -46,26 +46,24 @@ interface IconActionButtonProps {
 
 const IconActionButton: FunctionComponent<IconActionButtonProps> = (props) => {
   const { id, onClick, className, size, icon, disabled } = props
-  const color = props.color ?? 'primary'
+  const color = props.color
   const tooltip = props.tooltip ?? ''
 
   return (
-    <Tooltip title={tooltip} aria-label={tooltip} placement="bottom">
-      <div>
-        <IconButton
-          id={id}
-          size={size}
-          color={color}
-          onClick={onClick}
-          aria-label={props['aria-label']}
-          data-testid={props['data-testid']}
-          data-action={props['data-action']}
-          className={className}
-          disabled={disabled}
-        >
-          {icon}
-        </IconButton>
-      </div>
+    <Tooltip title={tooltip} aria-label={tooltip}>
+      <IconButton
+        id={id}
+        size={size}
+        color={color}
+        onClick={onClick}
+        aria-label={props['aria-label']}
+        data-testid={props['data-testid']}
+        data-action={props['data-action']}
+        className={className}
+        disabled={disabled}
+      >
+        {icon}
+      </IconButton>
     </Tooltip>
   )
 }
