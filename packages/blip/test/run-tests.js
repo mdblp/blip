@@ -4,5 +4,4 @@
  */
 
 import './language'
-import './enzyme'
 import './import-tests'
