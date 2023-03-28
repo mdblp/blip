@@ -43,8 +43,15 @@ import { mockUserApi } from '../../mock/user.api.mock'
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
+  const { ResizeObserver } = window
 
-  beforeAll(() => {
+  beforeEach(() => {
+    delete window.ResizeObserver
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn()
+    }))
     mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
@@ -55,6 +62,11 @@ describe('Trends view for caregiver', () => {
     mockMedicalFilesAPI()
   })
 
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
+  })
+
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
     const router = renderPage(`/patient/${unmonitoredPatientId}/trends`)
@@ -62,7 +74,7 @@ describe('Trends view for caregiver', () => {
       expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/trends`)
     })
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
-    checkPatientNavBarAsCaregiver()
+    await checkPatientNavBarAsCaregiver()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
   })
 })

@@ -42,8 +42,15 @@ import { mockUserApi } from '../../mock/user.api.mock'
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
+  const { ResizeObserver } = window
 
-  beforeAll(() => {
+  beforeEach(() => {
+    delete window.ResizeObserver
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn()
+    }))
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
@@ -52,6 +59,11 @@ describe('Trends view for HCP', () => {
     mockPatientApiForHcp()
     mockChatAPI()
     mockMedicalFilesAPI()
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   it('should render correct layout', async () => {

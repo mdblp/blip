@@ -50,8 +50,21 @@ import userEvent from '@testing-library/user-event'
 import { screen, waitFor } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
-  beforeAll(() => {
+  const { ResizeObserver } = window
+
+  beforeEach(() => {
+    delete window.ResizeObserver
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn()
+    }))
     mockPatientLogin(unmonitoredPatientAsTeamMember)
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   describe('with all kind of data', () => {

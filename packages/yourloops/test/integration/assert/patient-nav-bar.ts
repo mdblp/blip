@@ -44,8 +44,8 @@ export const checkPatientNavBarAsHCP = () => {
   checkPatientNavBar(patientNavBar)
 }
 
-export const checkPatientNavBarAsCaregiver = () => {
-  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
+export const checkPatientNavBarAsCaregiver = async () => {
+  const patientNavBar = within(await screen.findByTestId('patient-nav-bar'))
   expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
   expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
   checkPatientNavBar(patientNavBar)

@@ -34,8 +34,21 @@ import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
 
 describe('Trends view for patient', () => {
-  beforeAll(() => {
+  const { ResizeObserver } = window
+
+  beforeEach(() => {
+    delete window.ResizeObserver
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn()
+    }))
     mockPatientLogin(unmonitoredPatientAsTeamMember)
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   it('should render correct layout', async () => {

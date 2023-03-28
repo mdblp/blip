@@ -48,8 +48,8 @@ export const checkTrendsTidelineContainerTooltips = async () => {
   expect(trendsTooltips).toHaveTextContent('11:00 am - 11:30 am196177')
   const cbgSliceAnimated = screen.getByTestId('cbg-slice-animated')
   expect(cbgSliceAnimated).toBeVisible()
-  expect(cbgSliceAnimated).toHaveAttribute('y', '9.248575361683429')
-  expect(cbgSliceAnimated).toHaveAttribute('height', '-6.5895934712157676')
+  expect(cbgSliceAnimated).toHaveAttribute('y', '292.2542739149497')
+  expect(cbgSliceAnimated).toHaveAttribute('height', '19.768780413647335')
 
   // Test tooltips when hovering a cbg circle (cbg slice must still be hovered)
   const cbgCircles = await screen.findAllByTestId('trends-cbg-circle')
