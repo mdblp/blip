@@ -44,7 +44,6 @@ import { TargetRangeLines } from '../target-range-lines/target-range-lines'
 import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
 import { withResizeDetector } from 'react-resize-detector'
-import styles from '../../cbg/cbg-slice/cbg-slices-container.css'
 
 const BUMPERS = {
   top: 50,

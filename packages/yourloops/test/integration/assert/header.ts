@@ -107,7 +107,7 @@ export const checkHcpHeader = async (fullName: string, selectedTeamParams: { tea
 }
 
 export const checkCaregiverHeader = async (fullName: string) => {
-  const header = within(screen.getByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header'))
   expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
 
