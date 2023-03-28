@@ -124,14 +124,17 @@ describe('Profile page context hook', () => {
     const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
     const expectedPreferences = { displayLanguageCode: 'en' }
 
-    await act(async () => {
-      const { result } = await renderCustomHook()
-      const { updateProfileForm } = result.current
+    const { result } = await renderCustomHook()
+    const { updateProfileForm } = result.current
+
+    act(() => {
       updateProfileForm(ProfileFormKey.firstName, firstName)
       updateProfileForm(ProfileFormKey.lastName, lastName)
       updateProfileForm(ProfileFormKey.units, UnitsType.MGDL)
       updateProfileForm(ProfileFormKey.lang, 'en')
+    })
 
+    await act(async () => {
       await result.current.saveProfile()
     })
 
@@ -154,11 +157,13 @@ describe('Profile page context hook', () => {
         } as User
       }
     })
+    let result
     await act(async () => {
-      const { result } = await renderCustomHook()
-
-      await result.current.saveProfile()
+      const hook = await renderCustomHook()
+      result = hook.result
     })
+
+    await result.current.saveProfile()
     expect(onErrorAlertMock).toHaveBeenCalled()
   })
 })

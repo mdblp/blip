@@ -94,8 +94,8 @@ describe('Patient hook', () => {
     jest.spyOn(PatientUtils, 'computePatients').mockResolvedValue(patients)
     await act(async () => {
       hook = renderHook(() => usePatientProviderCustomHook())
-      await waitFor(() => { expect(hook.result.current.patients).toBeDefined() })
     })
+    await waitFor(() => { expect(hook.result.current.patients).toBeDefined() })
     return hook
   }
 

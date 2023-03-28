@@ -180,9 +180,9 @@ describe('CBGPercentageBarChart hook', () => {
     expect(result.current.titleProps).toEqual(defaultTitleProps)
     await act(async () => {
       result.current.cbgStatsProps.veryHighStat.onMouseEnter(veryHighStat.id, veryHighStat.title, veryHighStat.legendTitle, true)
-      await waitFor(() => {
-        expect(result.current.hoveredStatId).toEqual(veryHighStat.id)
-      })
+    })
+    await waitFor(() => {
+      expect(result.current.hoveredStatId).toEqual(veryHighStat.id)
     })
     expect(result.current.titleProps).toEqual({
       legendTitle: veryHighStat.legendTitle,
@@ -190,9 +190,9 @@ describe('CBGPercentageBarChart hook', () => {
     })
     await act(async () => {
       result.current.onMouseLeave()
-      await waitFor(() => {
-        expect(result.current.hoveredStatId).toBeNull()
-      })
+    })
+    await waitFor(() => {
+      expect(result.current.hoveredStatId).toBeNull()
     })
     expect(result.current.titleProps).toEqual(defaultTitleProps)
   })

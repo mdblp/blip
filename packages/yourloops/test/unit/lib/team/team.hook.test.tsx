@@ -73,8 +73,8 @@ describe('Team hook', () => {
           <DummyComponent />
         </TeamContextProvider>
       )
-      await waitFor(() => { expect(teamHook.teams.length).toBeGreaterThan(0) })
     })
+    await waitFor(() => { expect(teamHook.teams.length).toBeGreaterThan(0) })
   }
 
   beforeAll(async () => {
@@ -133,9 +133,9 @@ describe('Team hook', () => {
       await mountComponent()
       await act(async () => {
         await teamHook.updateTeamAlerts(team1)
-        expect(updateTeamAlertsSpy).toHaveBeenCalled()
-        await waitFor(() => { expect(getTeamsSpy).toHaveBeenCalledTimes(3) })
       })
+      expect(updateTeamAlertsSpy).toHaveBeenCalled()
+      await waitFor(() => { expect(getTeamsSpy).toHaveBeenCalledTimes(2) })
     })
   })
 

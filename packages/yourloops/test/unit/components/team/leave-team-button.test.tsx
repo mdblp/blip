@@ -80,13 +80,13 @@ describe('TeamMembers', () => {
     const leaveButton = screen.getByRole('button')
     await act(async () => {
       fireEvent.click(leaveButton)
-      await waitFor(() => {
-        expect(screen.queryByRole('dialog')).not.toBeNull()
-      })
-      const leaveDialog = within(screen.getByRole('dialog'))
-      const confirmButton = leaveDialog.getByRole('button', { name: 'team-leave-dialog-button-leave' })
-      fireEvent.click(confirmButton)
     })
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeNull()
+    })
+    const leaveDialog = within(screen.getByRole('dialog'))
+    const confirmButton = leaveDialog.getByRole('button', { name: 'team-leave-dialog-button-leave' })
+    fireEvent.click(confirmButton)
     expect(mockToBeCalled).toHaveBeenCalled()
   }
 
@@ -146,13 +146,13 @@ describe('TeamMembers', () => {
     const leaveButton = screen.getByRole('button')
     await act(async () => {
       fireEvent.click(leaveButton)
-      await waitFor(() => {
-        expect(screen.queryByRole('dialog')).not.toBeNull()
-      })
-      const leaveDialog = within(screen.getByRole('dialog'))
-      const cancelButton = leaveDialog.getByRole('button', { name: 'button-cancel' })
-      fireEvent.click(cancelButton)
     })
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeNull()
+    })
+    const leaveDialog = within(screen.getByRole('dialog'))
+    const cancelButton = leaveDialog.getByRole('button', { name: 'button-cancel' })
+    fireEvent.click(cancelButton)
     expect(leaveTeamMock).toHaveBeenCalledTimes(0)
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(router.state.location.pathname).toBe(initialRoute)

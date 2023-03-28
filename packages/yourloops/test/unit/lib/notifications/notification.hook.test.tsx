@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,10 +60,10 @@ describe('Notification hook', () => {
           </NotificationContextProvider>
         </BrowserRouter>
       )
-      await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
     })
+    await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
+    expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
+    expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
   }
 
   beforeAll(() => {

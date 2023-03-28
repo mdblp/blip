@@ -26,8 +26,7 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
+import { act, render, waitFor } from '@testing-library/react'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
 
@@ -76,9 +75,9 @@ describe('Auth hook', () => {
           </AuthContextProvider>
         </Auth0Provider>
       )
-      await waitFor(() => {
-        expect(auth.isLoggedIn).toBeTruthy()
-      })
+    })
+    await waitFor(() => {
+      expect(auth.isLoggedIn).toBeTruthy()
     })
   }
 
