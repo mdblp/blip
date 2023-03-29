@@ -25,12 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  formatLocalizedFromUTC,
-  getHammertimeFromDatumWithTimePrefs,
-  getLongDayFormat,
-  TIMEZONE_UTC
-} from '../../../utils/datetime/datetime.util'
+import { formatLocalizedFromUTC, getLongDayFormat, TIMEZONE_UTC } from '../../../utils/datetime/datetime.util'
 import {
   type CgmConfig,
   type DeviceConfig,
@@ -175,7 +170,8 @@ const sortParametersByName = (parameters: ParameterSettingsTableRow[]): Paramete
 }
 
 export const getDeviceMetadata = (settingsData: PdfSettingsData, timePrefs: TimePrefs): DeviceMetadata => {
-  const utcTime = getHammertimeFromDatumWithTimePrefs(settingsData, timePrefs)
+  const normalTime = settingsData.normalTime
+  const utcTime = normalTime ? Date.parse(normalTime) : null
   const uploadedTime = utcTime ? formatLocalizedFromUTC(utcTime, timePrefs, getLongDayFormat()) : ''
 
   return {
@@ -255,5 +251,5 @@ export const getParametersByLevel = (parameters?: ParameterConfig[]): Map<number
     parametersMap.set(key, sortedValues)
   })
 
-  return parametersMap
+  return new Map([...parametersMap.entries()].sort(([key1], [key2]) => key1 - key2))
 }

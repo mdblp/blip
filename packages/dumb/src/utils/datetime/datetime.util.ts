@@ -30,7 +30,6 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import { DurationUnit, type TimePrefs } from 'medical-domain'
 import { timeFormat } from 'd3-time-format'
-import { type PdfSettingsData } from '../../models/print/pdf-data.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -262,16 +261,4 @@ export const formatClocktimeFromMsPer24 = (milliseconds: number, format?: string
 
   const defaultFormat = getHourMinuteFormat()
   return moment.utc(milliseconds).format(format ?? defaultFormat)
-}
-
-/**
- * getHammertimeFromDatumWithTimePrefs
- * @param {Object} datum - a Tidepool datum with a normalTime (required) and deviceTime (optional)
- * @param {Object} timePrefs - object containing timezoneAware Boolean and timezoneName String
- *
- * @return {Number} Integer hammertime (i.e., UTC time in milliseconds)
- */
-export const getHammertimeFromDatumWithTimePrefs = (datum: PdfSettingsData, timePrefs: TimePrefs): number | null => {
-  const time = timePrefs.timezoneAware ? datum.normalTime : datum.deviceTime
-  return time ? Date.parse(time) : null
 }
