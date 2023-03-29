@@ -64,7 +64,6 @@ const styles = makeStyles()((theme: Theme) => {
     tab: {
       fontWeight: 'bold',
       marginRight: theme.spacing(5),
-      textTransform: 'capitalize',
       fontSize: theme.typography.htmlFontSize,
       color: 'var(--text-base-color)'
     }
@@ -86,12 +85,13 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
 
   const selectedTab = (): number => {
     switch (chartType) {
-      case ChartType.Dashboard:
-        return 0
       case ChartType.Daily:
         return 1
       case ChartType.Trends:
         return 2
+      case ChartType.Dashboard:
+      default:
+        return 0
     }
   }
 

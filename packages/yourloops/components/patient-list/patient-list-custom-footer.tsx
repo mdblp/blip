@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,15 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientFilterTypes {
-  all = 'all',
-  flagged = 'flagged',
-  dataNotTransferred = 'data-not-transferred',
-  outOfRange = 'out-of-range',
-  pending = 'pending',
-  private = 'private',
-  remoteMonitored = 'remote-monitored',
-  renew = 'renew',
-  severeHypoglycemia = 'severe-hypoglycemia',
-  unread = 'unread-messages',
+import React, { type FunctionComponent } from 'react'
+import { GridPagination } from '@mui/x-data-grid'
+import Box from '@mui/material/Box'
+import { usePatientListStyles } from './patient-list.styles'
+import Typography from '@mui/material/Typography'
+import { useTranslation } from 'react-i18next'
+
+export const PatientListCustomFooter: FunctionComponent = () => {
+  const { t } = useTranslation()
+  const { classes } = usePatientListStyles()
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      className={classes.customFooter}
+    >
+      <Typography
+        color="text.secondary"
+        variant="body2"
+        paddingLeft={2}
+      >
+        {t('data-period-text')}
+      </Typography>
+      <GridPagination />
+    </Box>
+  )
 }

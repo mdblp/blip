@@ -27,8 +27,6 @@
 
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
-import Tooltip, { tooltipClasses, type TooltipProps } from '@mui/material/Tooltip'
-import React from 'react'
 import { styled } from '@mui/material'
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,19 +35,6 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRight: `0.5px solid ${theme.palette.divider}`,
     fontSize: '15px',
     height: 'inherit'
-  }
-}))
-
-export const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.primary.main,
-    boxShadow: theme.shadows[1],
-    whiteSpace: 'pre-line'
-  },
-  [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.primary.main
   }
 }))
 

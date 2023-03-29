@@ -61,6 +61,10 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
     patientName
   } = useRemovePatientDialog({ patient, onClose })
 
+  if (!!selectedTeamId && !sortedTeams.find(team => team.id === selectedTeamId)) {
+    setSelectedTeamId('')
+  }
+
   return (
     <Dialog
       id="remove-hcp-patient-dialog"
@@ -88,7 +92,9 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
             data-testid="patient-team-selector"
             label={t('select-team')}
             value={selectedTeamId}
-            onChange={(e) => { setSelectedTeamId(e.target.value) }}
+            onChange={(e) => {
+              setSelectedTeamId(e.target.value)
+            }}
           >
             {sortedTeams.map((team, index) => (
               <MenuItem
