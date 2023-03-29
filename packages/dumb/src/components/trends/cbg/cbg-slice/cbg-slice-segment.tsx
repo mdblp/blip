@@ -106,13 +106,14 @@ export const CbgSliceSegment: FunctionComponent<CbgSliceAnimatedProps> = (props)
           tooltipLeft: datum.msX > tooltipLeftThreshold,
           yPositions
         }
+        const height = yScale(datum[segment.heightKeys[0]]) - yScale(datum[segment.heightKeys[1]])
         return (
           <rect
             className={classes}
             data-testid={`cbg-slice-rectangle-${key}`}
             key={key}
             width={width}
-            height={yScale(datum[segment.heightKeys[0]]) - yScale(datum[segment.heightKeys[1]])}
+            height={height}
             x={binLeftX}
             y={yScale(datum[segment.y])}
             onMouseOver={() => {

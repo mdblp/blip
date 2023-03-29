@@ -157,13 +157,12 @@ describe('Profile page context hook', () => {
         } as User
       }
     })
-    let result
-    await act(async () => {
-      const hook = await renderCustomHook()
-      result = hook.result
-    })
 
-    await result.current.saveProfile()
+    const { result } = await renderCustomHook()
+
+    await act(async () => {
+      await result.current.saveProfile()
+    })
     expect(onErrorAlertMock).toHaveBeenCalled()
   })
 })

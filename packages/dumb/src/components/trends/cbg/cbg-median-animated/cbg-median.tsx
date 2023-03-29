@@ -61,6 +61,7 @@ export const CbgMedian: FunctionComponent<CbgMedianAnimatedProps> = (props) => {
   const width = medianWidth - strokeWidth
   const medianHeight = medianWidth * 0.75
   const x = xScale(msX) - medianWidth / 2 + strokeWidth / 2
+  const y = yScale(median) - medianHeight / 2
   const bgClass = getBgClass(bgBounds, median, ClassificationType.FiveWay)
 
   const medianClasses = cx({
@@ -76,7 +77,7 @@ export const CbgMedian: FunctionComponent<CbgMedianAnimatedProps> = (props) => {
       width={width}
       height={medianHeight}
       x={x}
-      y={yScale(median) - medianHeight / 2}
+      y={y}
       opacity={1}
     />
   )
