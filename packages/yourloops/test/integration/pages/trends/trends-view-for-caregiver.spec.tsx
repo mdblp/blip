@@ -39,6 +39,7 @@ import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
@@ -46,12 +47,7 @@ describe('Trends view for caregiver', () => {
   const { ResizeObserver } = window
 
   beforeEach(() => {
-    delete window.ResizeObserver
-    window.ResizeObserver = jest.fn().mockImplementation(() => ({
-      observe: jest.fn(),
-      unobserve: jest.fn(),
-      disconnect: jest.fn()
-    }))
+    mockWindowResizer()
     mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()

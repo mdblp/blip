@@ -48,17 +48,13 @@ import {
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
 import { screen, waitFor } from '@testing-library/react'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Trends view for anyone', () => {
   const { ResizeObserver } = window
 
   beforeEach(() => {
-    delete window.ResizeObserver
-    window.ResizeObserver = jest.fn().mockImplementation(() => ({
-      observe: jest.fn(),
-      unobserve: jest.fn(),
-      disconnect: jest.fn()
-    }))
+    mockWindowResizer()
     mockPatientLogin(unmonitoredPatientAsTeamMember)
   })
 

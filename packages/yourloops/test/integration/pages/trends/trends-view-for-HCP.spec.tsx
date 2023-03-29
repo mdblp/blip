@@ -38,6 +38,7 @@ import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { checkHCPLayout } from '../../assert/layout'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -45,12 +46,7 @@ describe('Trends view for HCP', () => {
   const { ResizeObserver } = window
 
   beforeEach(() => {
-    delete window.ResizeObserver
-    window.ResizeObserver = jest.fn().mockImplementation(() => ({
-      observe: jest.fn(),
-      unobserve: jest.fn(),
-      disconnect: jest.fn()
-    }))
+    mockWindowResizer()
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()

@@ -25,37 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
-import { mockWindowResizer } from '../../mock/window-resizer.mock'
-
-describe('Trends view for patient', () => {
-  const { ResizeObserver } = window
-
-  beforeEach(() => {
-    mockWindowResizer()
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
-  })
-
-  afterEach(() => {
-    window.ResizeObserver = ResizeObserver
-    jest.restoreAllMocks()
-  })
-
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    const router = renderPage('/trends')
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/trends')
-    })
-
-    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient()
-    await checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
-  })
-})
+export const mockWindowResizer = () => {
+  delete window.ResizeObserver
+  window.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn()
+  }))
+}
