@@ -97,7 +97,10 @@ describe('Patient dashboard for anyone', () => {
   })
 
   it('monitored patient should have correct cards', async () => {
-    renderPage(`/patient/${monitoredPatientId}/dashboard`)
+    const router = renderPage(`/patient/${monitoredPatientId}/dashboard`)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(`/patient/${monitoredPatientId}/dashboard`)
+    })
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
     expect(statsWidgets).toBeVisible()

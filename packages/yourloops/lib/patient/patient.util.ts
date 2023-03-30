@@ -31,7 +31,7 @@ import moment from 'moment-timezone'
 import { type Patient } from './models/patient.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
-import { PatientFilterTypes } from './models/enums/patient-filter-type.enum'
+import { PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
 import { type User } from '../auth'
 
 export default class PatientUtils {
@@ -114,28 +114,28 @@ export default class PatientUtils {
     return !!tm
   }
 
-  static extractPatients = (patients: Patient[], filterType: PatientFilterTypes, flaggedPatients: string[]): Patient[] => {
+  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[]): Patient[] => {
     const twoWeeksFromNow = new Date()
     switch (filterType) {
-      case PatientFilterTypes.all:
+      case PatientListFilters.All:
         return patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient))
-      case PatientFilterTypes.pending:
+      case PatientListFilters.Pending:
         return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
-      case PatientFilterTypes.flagged:
+      case PatientListFilters.Flagged:
         return patients.filter(patient => flaggedPatients.includes(patient.userid))
-      case PatientFilterTypes.unread:
+      case PatientListFilters.UnreadMessages:
         return patients.filter(patient => patient.metadata.hasSentUnreadMessages)
-      case PatientFilterTypes.outOfRange:
+      case PatientListFilters.OutOfRange:
         return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive)
-      case PatientFilterTypes.severeHypoglycemia:
+      case PatientListFilters.SevereHypoglycemia:
         return patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive)
-      case PatientFilterTypes.dataNotTransferred:
+      case PatientListFilters.DataNotTransferred:
         return patients.filter(patient => patient.alarms.nonDataTransmissionActive)
-      case PatientFilterTypes.remoteMonitored:
+      case PatientListFilters.RemoteMonitored:
         return patients.filter(patient => patient.monitoring?.enabled)
-      case PatientFilterTypes.private:
+      case PatientListFilters.Private:
         return patients.filter(patient => PatientUtils.isInTeam(patient, filterType))
-      case PatientFilterTypes.renew:
+      case PatientListFilters.Renew:
         twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
         return patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
       default:

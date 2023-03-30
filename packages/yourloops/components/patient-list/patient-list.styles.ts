@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Consent } from './consent.model'
-import { type HcpProfession } from './enums/hcp-profession.enum'
+import { makeStyles } from 'tss-react/mui'
 
-export interface ChangeUserRoleToHcpPayload {
-  termsOfUse: Consent
-  privacyPolicy: Consent
-  contactConsent: Consent
-  hcpProfession: HcpProfession
-}
+export const usePatientListStyles = makeStyles()((theme) => {
+  const dataGridBorder = `1px solid ${theme.palette.divider}`
+
+  return {
+    mandatoryCellBorder: {
+      borderLeft: dataGridBorder,
+      borderRight: dataGridBorder
+    },
+    customFooter: {
+      borderTop: dataGridBorder
+    }
+  }
+})

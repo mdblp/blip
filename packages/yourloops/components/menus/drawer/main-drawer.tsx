@@ -45,11 +45,10 @@ import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import HistoryIcon from '@mui/icons-material/History'
 import Divider from '@mui/material/Divider'
 import Box from '@mui/material/Box'
-import PendingIcon from '../../icons/pending-icon'
 import DrawerLinkItem from './drawer-link-item'
 import useMainDrawer from './main-drawer.hook'
 import DrawerCategoryItem from './drawer-category-item'
-import { PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
+import { PatientListFilters } from '../../patient-list/enums/patient-list.enum'
 
 export interface MainDrawerProps {
   miniVariant?: boolean
@@ -130,20 +129,14 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     {
       icon: <SupervisedUserCircleIcon />,
       text: `${t('all-patients')} (${patientFiltersStats.all})`,
-      filter: PatientFilterTypes.all,
+      filter: PatientListFilters.All,
       ariaLabel: t('all-patients-filter')
     },
     {
       icon: <FlagOutlinedIcon />,
       text: `${t('flagged')} (${numberOfFlaggedPatients})`,
-      filter: PatientFilterTypes.flagged,
+      filter: PatientListFilters.Flagged,
       ariaLabel: t('flagged-patients-filter')
-    },
-    {
-      icon: <PendingIcon />,
-      text: `${t('pending')} (${patientFiltersStats.pending})`,
-      filter: PatientFilterTypes.pending,
-      ariaLabel: t('pending-patients-filter')
     }
   ]
 
@@ -151,14 +144,14 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
     {
       icon: <SupervisedUserCircleIcon />,
       text: `${t('monitored-patients')} (${patientFiltersStats.remoteMonitored})`,
-      filter: PatientFilterTypes.remoteMonitored,
+      filter: PatientListFilters.RemoteMonitored,
       ariaLabel: t('remote-monitoring-patients-filter')
     },
     {
       icon: <HistoryIcon />,
       count: patientFiltersStats.renew,
       text: t('incoming-renewal'),
-      filter: PatientFilterTypes.renew
+      filter: PatientListFilters.Renew
     }
   ]
 
@@ -167,19 +160,19 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
       icon: <HourglassEmptyIcon />,
       count: patientFiltersStats.outOfRange,
       text: t('time-away-from-target'),
-      filter: PatientFilterTypes.outOfRange
+      filter: PatientListFilters.OutOfRange
     },
     {
       icon: <TimelineIcon />,
       count: patientFiltersStats.severeHypoglycemia,
       text: t('alert-hypoglycemic'),
-      filter: PatientFilterTypes.severeHypoglycemia
+      filter: PatientListFilters.SevereHypoglycemia
     },
     {
       icon: <SignalWifiOffIcon />,
       count: patientFiltersStats.dataNotTransferred,
       text: t('data-not-transferred'),
-      filter: PatientFilterTypes.dataNotTransferred
+      filter: PatientListFilters.DataNotTransferred
     }
   ]
 
@@ -188,7 +181,7 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
       icon: <EmailIcon />,
       count: patientFiltersStats.unread,
       text: t('unread-messages'),
-      filter: PatientFilterTypes.unread
+      filter: PatientListFilters.UnreadMessages
     }
   ]
 

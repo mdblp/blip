@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -176,7 +176,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
             <IconActionButton
               icon={<PersonRemoveIcon />}
               id={`patient-caregivers-table-row-${userId}-button-remove`}
-              ariaLabel={`${t('remove-caregiver')}-${userId}`}
+              aria-label={`${t('remove-caregiver')}-${userId}`}
               onClick={onClickRemoveCaregiver}
               tooltip={t('remove-caregiver')} />
           </TableCell>

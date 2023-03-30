@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
+import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { renderHook } from '@testing-library/react-hooks'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
@@ -36,6 +37,7 @@ import { NotificationType } from '../../../../lib/notifications/models/enums/not
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/notifications/notification.hook')
+jest.mock('../../../../lib/patient/patient.provider')
 
 describe('Remove direct share dialog hook', () => {
   const userToRemoveEmail = 'fake@email.com'
@@ -49,6 +51,7 @@ describe('Remove direct share dialog hook', () => {
   const onClose = jest.fn()
   const onSuccessAlertMock = jest.fn()
   const onErrorAlertMock = jest.fn()
+  const refreshMock = jest.fn()
 
   const currentUser = { id: authUserId, isUserCaregiver: isUserCaregiverMock } as unknown as User
 
@@ -63,6 +66,10 @@ describe('Remove direct share dialog hook', () => {
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({
       success: onSuccessAlertMock,
       error: onErrorAlertMock
+    }));
+
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+      refresh: refreshMock
     }))
   })
 
@@ -109,6 +116,7 @@ describe('Remove direct share dialog hook', () => {
 
       expect(removeDirectShareMock).toHaveBeenCalledWith(authUserId, userToRemove.id)
       expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-success')
+      expect(refreshMock).toHaveBeenCalled()
       expect(onClose).toHaveBeenCalledWith(true)
     })
 
@@ -138,6 +146,7 @@ describe('Remove direct share dialog hook', () => {
 
       expect(removeDirectShareMock).toHaveBeenCalledWith(userToRemove.id, authUserId)
       expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-caregiver-remove-patient-success')
+      expect(refreshMock).toHaveBeenCalled()
       expect(onClose).toHaveBeenCalledWith(true)
     })
 

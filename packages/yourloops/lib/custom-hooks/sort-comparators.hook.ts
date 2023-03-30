@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Consent } from './consent.model'
-import { type HcpProfession } from './enums/hcp-profession.enum'
+import { useUserName } from './user-name.hook'
+import { type GridComparatorFn } from '@mui/x-data-grid'
+import { type Patient } from '../patient/models/patient.model'
 
-export interface ChangeUserRoleToHcpPayload {
-  termsOfUse: Consent
-  privacyPolicy: Consent
-  contactConsent: Consent
-  hcpProfession: HcpProfession
+interface SortComparatorsHookReturn {
+  sortByUserName: SortByUserNameComparator
+}
+
+interface SortByUserNameComparator extends GridComparatorFn<Patient> {
+  (patient1: Patient, patient2: Patient): number
+}
+
+export const useSortComparatorsHook = (): SortComparatorsHookReturn => {
+  const { getUserName } = useUserName()
+
+  const sortByUserName: SortByUserNameComparator = (patient1, patient2): number => {
+    const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
+    const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
+    return patient1FullName.localeCompare(patient2FullName)
+  }
+
+  return { sortByUserName }
 }

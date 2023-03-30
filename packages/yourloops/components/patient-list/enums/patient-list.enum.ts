@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Consent } from './consent.model'
-import { type HcpProfession } from './enums/hcp-profession.enum'
+export enum PatientListTabs {
+  Current,
+  Pending
+}
 
-export interface ChangeUserRoleToHcpPayload {
-  termsOfUse: Consent
-  privacyPolicy: Consent
-  contactConsent: Consent
-  hcpProfession: HcpProfession
+export enum PatientListColumns {
+  Actions = 'actions',
+  DataNotTransferred = 'data-not-transferred',
+  Flag = 'flag',
+  LastDataUpdate = 'last-data-update',
+  Messages = 'messages',
+  Patient = 'patient',
+  SevereHypoglycemia = 'severe-hypoglycemia',
+  System = 'system',
+  TimeOutOfRange = 'time-out-of-range'
+}
+
+export enum PatientListFilters {
+  All = 'all',
+  DataNotTransferred = 'data-not-transferred',
+  Flagged = 'flagged',
+  RemoteMonitored = 'remote-monitored',
+  Pending = 'pending',
+  SevereHypoglycemia = 'severe-hypoglycemia',
+  OutOfRange = 'out-of-range',
+  Private = 'private',
+  Renew = 'renew',
+  UnreadMessages = 'unread-messages'
 }
