@@ -29,15 +29,15 @@
 }
 
 :root .diabeloop-blue {
-  --color-primary-main: #009bd6;
-  --color-primary-light: #40bae9;
-  --color-primary-dark: #006c95;
-  --color-primary-contrast-text: #fff;
+  --primary-color-main: #009bd6;
+  --primary-color-light: #40bae9;
+  --primary-color-dark: #006c95;
+  --primary-color-contrast-text: #fff;
   --logo-color: #00a3e2;
 
-  --color-secondary-main: #edfaff;
-  --color-secondary-light: #f5f9f9;
-  --color-secondary-dark: #bbc7cc;
+  --secondary-color-main: #edfaff;
+  --secondary-color-light: #f5f9f9;
+  --secondary-color-dark: #bbc7cc;
 
   --blip-color-primary-light: #4dabf5;
   --blip-color-primary-alt: #039be5;
@@ -45,15 +45,15 @@
 }
 
 :root .diabeloop-pink {
-  --color-primary-main: #e71980;
-  --color-primary-light: #eb4799;
-  --color-primary-dark: #a11159;
-  --color-primary-contrast-text: #fff;
+  --primary-color-main: #e71980;
+  --primary-color-light: #eb4799;
+  --primary-color-dark: #a11159;
+  --primary-color-contrast-text: #fff;
   --logo-color: #e72980;
 
-  --color-secondary-main: #ffedf6;
-  --color-secondary-light: #fcf1f7;
-  --color-secondary-dark: #ccbbc5;
+  --secondary-color-main: #ffedf6;
+  --secondary-color-light: #fcf1f7;
+  --secondary-color-dark: #ccbbc5;
 
   --blip-color-primary-light: #ff67af;
   --blip-color-primary-alt: #d92575;

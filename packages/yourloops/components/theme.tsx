@@ -126,15 +126,15 @@ export function getTheme(): Theme {
         secondary: getColor('--text-color-secondary')
       },
       primary: {
-        main: getColor('--color-primary-main'),
-        light: getColor('--color-primary-light'),
-        dark: getColor('--color-primary-dark'),
-        contrastText: getColor('--color-primary-contrast-text')
+        main: getColor('--primary-color-main'),
+        light: getColor('--primary-color-light'),
+        dark: getColor('--primary-color-dark'),
+        contrastText: getColor('--primary-color-contrast-text')
       },
       secondary: {
-        main: getColor('--color-secondary-main'),
-        light: getColor('--color-secondary-light'),
-        dark: getColor('--color-secondary-dark')
+        main: getColor('--secondary-color-main'),
+        light: getColor('--secondary-color-light'),
+        dark: getColor('--secondary-color-dark')
       },
       success: {
         main: getColor('--success-color-main'),
