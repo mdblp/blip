@@ -25,8 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type CgmConfig, type DeviceConfig, type ParameterConfig, type ParametersChange, type PumpConfig } from '../../../models/medical/datum/pump-settings.model'
 import type PumpSettings from '../../../models/medical/datum/pump-settings.model'
+import {
+  type CgmConfig,
+  type DeviceConfig,
+  type ParameterConfig,
+  type ParametersChange,
+  type PumpConfig
+} from '../../../models/medical/datum/pump-settings.model'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
@@ -35,7 +41,7 @@ import type PumpManufacturer from '../../../models/medical/datum/enums/pump-manu
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {
@@ -100,7 +106,7 @@ const normalizeParameters = (rawParams: Array<Record<string, unknown>>, opts: Me
       effectiveDate: (rawParam?.effectiveDate ?? '') as string,
       level: (rawParam?.level ?? 1) as number,
       name: (rawParam?.name ?? '') as string,
-      unit,
+      unit: unit as Unit,
       value
     }
   })

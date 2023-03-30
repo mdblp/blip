@@ -26,8 +26,8 @@
  */
 
 import { buildLayoutColumns, getTextData } from './print-view.util'
-import { LayoutColumnType } from '../../models/enums/layout-column-type.enum'
-import { type Row, type TableColumn } from '../../models/print/pdf-table.model'
+import { LayoutColumnType } from '../../../models/enums/layout-column-type.enum'
+import { type Row, type TableColumn } from '../../../models/print/pdf-table.model'
 
 describe('Print view util', () => {
   describe('buildLayoutColumns', () => {

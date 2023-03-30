@@ -26,10 +26,10 @@
  */
 import _ from 'lodash'
 import i18next from 'i18next'
-import { LayoutColumnType } from '../../models/enums/layout-column-type.enum'
-import { type Row, type TableColumn, type TableHeading } from '../../models/print/pdf-table.model'
-import { type LayoutColumn } from '../../models/print/layout-column.model'
-import { type Fonts } from '../../models/print/fonts.model'
+import { LayoutColumnType } from '../../../models/enums/layout-column-type.enum'
+import { type Row, type TableColumn, type TableHeading } from '../../../models/print/pdf-table.model'
+import { type LayoutColumn } from '../../../models/print/layout-column.model'
+import { type Fonts } from '../../../models/print/fonts.model'
 
 export const FONTS = {
   default: {
@@ -91,8 +91,8 @@ export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth:
 }
 
 export const getTextData = (row: Row, column: TableColumn, isHeader: boolean | undefined): TableHeading => {
-  if ((!isHeader && _.isString(row[column.id])) || _.isString(column.header)) {
-    return { text: row[column.id] }
+  if ((!isHeader && _.isString(row[column.id])) || (_.isString(column.header) && column.header !== '')) {
+    return { text: row[column.id] as string }
   }
   return row[column.id] as unknown as TableHeading ?? column.header ?? { text: '', subText: '', note: undefined }
 }

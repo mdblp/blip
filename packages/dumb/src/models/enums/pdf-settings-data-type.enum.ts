@@ -25,56 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-interface FillStripe {
-  background: boolean
-  color: string
-  opacity: number
-  padding: number
-  width: number
+export enum PdfSettingsDataType {
+  Cgm = 'Cgm',
+  Device = 'Device',
+  Pump = 'Pump'
 }
-
-export interface TableSettings {
-  borderWidth: number
-  colors: {
-    border: string
-    tableHeader: string
-    zebraEven: string
-    zebraHeader: string
-    zebraOdd: string
-  }
-}
-
-export interface TableHeading {
-  note?: string
-  subText?: string
-  text: string
-}
-
-export interface TableColumn {
-  align: string
-  fillStripe: FillStripe
-  font: string
-  fontSize: number
-  header: TableHeading
-  headerAlign: string
-  headerFillStripe: FillStripe
-  headerFont: string
-  headerHeight: number
-  height: number
-  id: keyof Table
-  noteFontSize: number
-  valign: string
-  width: number
-}
-
-export type Table = {
-  _fill?: { color: string, opacity: number }
-  _fillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
-  _headerFillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
-  _renderedContent?: { height: number }
-  column?: string
-  heading?: TableHeading
-  note?: number
-} & Record<string, string | number>
-
-export type Row = Table
