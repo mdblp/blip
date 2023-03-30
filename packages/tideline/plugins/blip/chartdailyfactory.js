@@ -83,6 +83,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   // ***
 
   chart.id(parentElement.id).width(width).height(height)
+  d3.select(parentElement).selectAll('#tidelineSVGOneDayContainer').remove()
   d3.select(parentElement).call(chart)
   // ***
   // Setup Pools
