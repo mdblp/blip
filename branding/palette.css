@@ -1,49 +1,59 @@
 :root {
-  --body-background-color: #FAFDFF;
-  --card-header-background-color: #EEEEEE;
-  --chat-widget-private-msg-mine: #329F92;
-  --chat-widget-private-msg-not-mine: #5ABCB3;
-  --footer-background-color: #EEEEEE;
-  --monitoring-filter-bg-color: #FFF9F3;
-  --text-base-color: #444444;
-  --text-base-color-light: #575756;
-  --text-base-color-darker: #1F1F1E;
+  --body-background-color: #fafdff;
+
+  /* Design system common colors */
+  --text-color-primary: #1f1f1e;
+  --text-color-secondary: #575756;
+
+  --success-color-main: #21c6b6;
+  --success-color-light: #59d4c8;
+  --success-color-dark: #178a7f;
+
+  --error-color-main: #e12a4e;
+  --error-color-light: #e85f7a;
+  --error-color-dark: #9d1d36;
+
+  --warning-color-main: #f28b2d;
+  --warning-color-light: #f5a861;
+  --warning-color-dark: #a9611f;
+
+  --info-color-main: #575756;
+  --info-color-light: #848483;
+  --info-color-dark: #2e2e2d;
+
+  /* Components */
+  --card-header-background-color: #eee;
+  --chat-widget-private-msg-mine: #329f92;
+  --chat-widget-private-msg-not-mine: #5abcb3;
+  --footer-background-color: #eee;
 }
 
 :root .diabeloop-blue {
   --color-primary-main: #009bd6;
-  --color-primary-light: #5fccff;
-  --color-primary-dark: #006da4;
+  --color-primary-light: #40bae9;
+  --color-primary-dark: #006c95;
   --color-primary-contrast-text: #fff;
   --logo-color: #00a3e2;
 
-  --color-secondary-main: #EDFAFF;
-  --color-secondary-light: #F5F9F9;
+  --color-secondary-main: #edfaff;
+  --color-secondary-light: #f5f9f9;
   --color-secondary-dark: #bbc7cc;
-
-  --color-info-main: #575756;
-  --color-info-light: #848483;
-  --color-info-dark: #2e2e2d;
 
   --blip-color-primary-light: #4dabf5;
   --blip-color-primary-alt: #039be5;
-  --blip-color-secondary-alt: #EDFAFF;
+  --blip-color-secondary-alt: #edfaff;
 }
 
 :root .diabeloop-pink {
-  --color-primary-main: #e72980;
-  --color-primary-light: #ff67af;
-  --color-primary-dark: #af0054;
+  --color-primary-main: #e71980;
+  --color-primary-light: #eb4799;
+  --color-primary-dark: #a11159;
   --color-primary-contrast-text: #fff;
   --logo-color: #e72980;
 
   --color-secondary-main: #ffedf6;
   --color-secondary-light: #fcf1f7;
   --color-secondary-dark: #ccbbc5;
-
-  --color-info-main: #575756;
-  --color-info-light: #848483;
-  --color-info-dark: #2e2e2d;
 
   --blip-color-primary-light: #ff67af;
   --blip-color-primary-alt: #d92575;

@@ -63,7 +63,7 @@ const classes = makeStyles()((theme: Theme) => ({
   badge: {
     right: -8,
     color: theme.palette.common.white,
-    backgroundColor: 'var(--text-base-color)'
+    backgroundColor: 'var(--text-color-primary)'
   },
   separator: {
     flexGrow: 1,
