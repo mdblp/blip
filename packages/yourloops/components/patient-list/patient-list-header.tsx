@@ -89,7 +89,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { user } = useAuth()
   const { selectedTab, inputSearch, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
-  const { patientsFilterStats } = usePatientContext()
+  const { pendingPatientsCount } = usePatientContext()
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
 
@@ -182,7 +182,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               icon={<HourglassEmptyIcon />}
               iconPosition="start"
               label={<>
-                {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
+                {t('pending')} <Badge badgeContent={pendingPatientsCount} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
               </>}
               aria-label={t('pending')}
               classes={{ root: classes.tab }}

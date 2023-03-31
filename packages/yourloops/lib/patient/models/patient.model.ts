@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,5 +39,6 @@ export interface Patient {
   metadata: PatientMetadata
   monitoring?: Monitoring
   teams: PatientTeam[]
+  currentTeam?: PatientTeam
   readonly userid: string
 }

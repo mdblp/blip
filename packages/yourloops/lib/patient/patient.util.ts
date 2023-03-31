@@ -94,19 +94,17 @@ export default class PatientUtils {
     })
   }
 
-  static isInAtLeastATeam = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.accepted)
-    return !!tm
-  }
-
   static isInvitationPending = (patient: Patient): boolean => {
     const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending)
     return !!tm
   }
 
-  static isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending)
-    return !tm
+  static getAllPatients = (patients: Patient[]): Patient[] => {
+    return patients.filter(patient => patient.currentTeam.status !== UserInvitationStatus.pending)
+  }
+
+  static getPendingPatients = (patients: Patient[]): Patient[] => {
+    return patients.filter(patient => patient.currentTeam.status === UserInvitationStatus.pending)
   }
 
   static isInTeam = (patient: Patient, teamId: string): boolean => {
@@ -114,13 +112,16 @@ export default class PatientUtils {
     return !!tm
   }
 
-  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[]): Patient[] => {
+  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[], selectedTeamId: string): Patient[] => {
     const twoWeeksFromNow = new Date()
+    patients.forEach(patient => {
+      patient.currentTeam = patient.teams.filter(team => team.teamId === selectedTeamId)[0]
+    })
     switch (filterType) {
       case PatientListFilters.All:
-        return patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient))
+        return PatientUtils.getAllPatients(patients)
       case PatientListFilters.Pending:
-        return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
+        return PatientUtils.getPendingPatients(patients)
       case PatientListFilters.Flagged:
         return patients.filter(patient => flaggedPatients.includes(patient.userid))
       case PatientListFilters.UnreadMessages:

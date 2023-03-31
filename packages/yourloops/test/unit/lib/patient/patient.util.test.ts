@@ -46,29 +46,6 @@ describe('Patient utils', () => {
     })
   })
 
-  describe('isInAtLeastATeam', () => {
-    it('should return false when team user does not have an accepted status in any team', () => {
-      const teams = [
-        createPatientTeam('team1Id', UserInvitationStatus.pending),
-        createPatientTeam('team2Id', UserInvitationStatus.pending)
-      ]
-      const teamUser = createPatient('id1', teams)
-      const res = PatientUtils.isInAtLeastATeam(teamUser)
-      expect(res).toBe(false)
-    })
-
-    it('should return true when team user does has an accepted status in a team', () => {
-      const teams = [
-        createPatientTeam('team1Id', UserInvitationStatus.pending),
-        createPatientTeam('team2Id', UserInvitationStatus.accepted)
-      ]
-      const teamUser = createPatient('id1', teams)
-
-      const res = PatientUtils.isInAtLeastATeam(teamUser)
-      expect(res).toBe(true)
-    })
-  })
-
   describe('getPatientRemoteMonitoringTeam', () => {
     const patientTeam1 = createPatientTeam('team1Id', UserInvitationStatus.accepted, MonitoringStatus.accepted)
     const unknownPatient = createPatient('nigma')
@@ -151,6 +128,27 @@ describe('Patient utils', () => {
       const actual = PatientUtils.removeDuplicates(allPatients)
 
       expect(JSON.stringify(actual)).toEqual(JSON.stringify(expected))
+    })
+  })
+
+  describe('getAllPatients and getPendingPatients', () => {
+    const acceptedPatientTeam = createPatientTeam('patientTeamAccepted', UserInvitationStatus.accepted)
+    const pendingPatientTeam = createPatientTeam('patientTeamAPending', UserInvitationStatus.pending)
+
+    const acceptedPatient1 = createPatient('acceptedPatient1', [acceptedPatientTeam])
+    const acceptedPatient2 = createPatient('acceptedPatient2', [acceptedPatientTeam])
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam])
+    acceptedPatient1.currentTeam = acceptedPatientTeam
+    acceptedPatient2.currentTeam = acceptedPatientTeam
+    pendingPatient.currentTeam = pendingPatientTeam
+
+    it('should return all the patients of the selected team without pending patients', () => {
+      const result = PatientUtils.getAllPatients([acceptedPatient1, acceptedPatient2, pendingPatient])
+      expect(result).toEqual([acceptedPatient1, acceptedPatient2])
+    })
+    it('should return pending patients of the selected team without other accepted patients', () => {
+      const result = PatientUtils.getAllPatients([acceptedPatient1, acceptedPatient2, pendingPatient])
+      expect(result).toEqual([acceptedPatient1, acceptedPatient2])
     })
   })
 })

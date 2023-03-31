@@ -38,7 +38,7 @@ import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
 import { type Patient } from './models/patient.model'
-import { type PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
+import { PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
@@ -91,8 +91,6 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const buildPatientFiltersStats = useCallback(() => {
     return {
-      all: patientList.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
-      pending: patientList.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
       directShare: patientList.filter((patient) => patient.teams.find(team => isPatientTeamPrivate(team))).length,
       unread: patientList.filter(patient => patient.metadata.hasSentUnreadMessages).length,
       outOfRange: patientList.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
@@ -109,8 +107,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const getPatientById = useCallback(userId => patientList.find(patient => patient.userid === userId), [patientList])
 
+  const pendingPatientsCount = PatientUtils.extractPatients(patientList, PatientListFilters.Pending, [], selectedTeam.id).length
+
   const filterPatients = useCallback((filterType: PatientListFilters, search: string, flaggedPatients: string[]) => {
-    const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients)
+    const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients, selectedTeam.id)
 
     if (search.length === 0) {
       return filteredPatients
@@ -130,7 +130,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       const lastName = patient.profile.lastName ?? ''
       return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
     })
-  }, [patientList])
+  }, [patientList, selectedTeam.id])
 
   const invitePatient = useCallback(async (team: Team, username: string) => {
     await PatientApi.invitePatient({ teamId: team.id, email: username })
@@ -210,6 +210,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   return useMemo(() => ({
     patients: patientList,
     patientsFilterStats,
+    pendingPatientsCount,
     errorMessage,
     initialized,
     refreshInProgress,
@@ -224,5 +225,5 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     leaveTeam,
     setPatientMedicalData,
     refresh
-  }), [patientList, patientsFilterStats, errorMessage, initialized, refreshInProgress, getPatientByEmail, getPatientById, filterPatients, invitePatient, editPatientRemoteMonitoring, markPatientMessagesAsRead, updatePatientMonitoring, removePatient, leaveTeam, setPatientMedicalData, refresh])
+  }), [patientList, patientsFilterStats, pendingPatientsCount, errorMessage, initialized, refreshInProgress, getPatientByEmail, getPatientById, filterPatients, invitePatient, editPatientRemoteMonitoring, markPatientMessagesAsRead, updatePatientMonitoring, removePatient, leaveTeam, setPatientMedicalData, refresh])
 }

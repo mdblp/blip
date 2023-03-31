@@ -33,8 +33,6 @@
   "alert-remove-patient-from-team-success": "{{patientName}} is no longer a member of {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "The invitation has been canceled",
   "alert-remove-private-practice-success": "Direct data sharing with {{patientName}} has been removed",
-  "all-patients": "All patients",
-  "all-patients-filter": "Filter on all patients",
   "alt-img-login-page-background": "YourLoops brand colors",
   "alt-img-login-page-laptop": "YourLoops laptop",
   "alt-img-logo": "YourLoops Logo",
