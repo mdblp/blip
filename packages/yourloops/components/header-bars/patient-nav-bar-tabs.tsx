@@ -65,7 +65,7 @@ const styles = makeStyles()((theme: Theme) => {
       fontWeight: 'bold',
       marginRight: theme.spacing(5),
       fontSize: theme.typography.htmlFontSize,
-      color: 'var(--text-base-color)'
+      color: 'var(--text-color-primary)'
     }
   }
 })

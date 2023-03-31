@@ -30,12 +30,11 @@ import config from '../lib/config/config'
 import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
 import MuseoSlabBold from 'Museo_Slab/Museo_Slab_Bold.otf'
 
-export const VAR_TEXT_BASE_COLOR_LIGHT = 'var(--text-base-color-light)'
-export const VAR_TEXT_BASE_COLOR_DARKER = 'var(--text-base-color-darker)'
-
 const DEFAULT_COLOR = '#000'
 const appElement = document.getElementById('app')
+
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
+const getColor = (variable: string): string => appElement ? cssVar(variable) : DEFAULT_COLOR
 
 /** Set one and only one class for the branding in `<div id='app'>` */
 export function initTheme(): void {
@@ -108,7 +107,7 @@ export function getTheme(): Theme {
         styleOverrides: {
           root: {
             minWidth: 40,
-            color: appElement ? cssVar('--text-base-color') : DEFAULT_COLOR
+            color: getColor('--text-color-primary')
           }
         }
       },
@@ -123,23 +122,39 @@ export function getTheme(): Theme {
     palette: {
       mode: 'light',
       text: {
-        primary: appElement ? cssVar('--text-base-color') : DEFAULT_COLOR
+        primary: getColor('--text-color-primary'),
+        secondary: getColor('--text-color-secondary')
       },
       primary: {
-        main: appElement ? cssVar('--color-primary-main') : DEFAULT_COLOR,
-        light: appElement ? cssVar('--color-primary-light') : DEFAULT_COLOR,
-        dark: appElement ? cssVar('--color-primary-dark') : DEFAULT_COLOR,
-        contrastText: appElement ? cssVar('--color-primary-contrast-text') : DEFAULT_COLOR
+        main: getColor('--primary-color-main'),
+        light: getColor('--primary-color-light'),
+        dark: getColor('--primary-color-dark'),
+        contrastText: getColor('--primary-color-contrast-text')
       },
       secondary: {
-        main: appElement ? cssVar('--color-secondary-main') : DEFAULT_COLOR,
-        light: appElement ? cssVar('--color-secondary-light') : DEFAULT_COLOR,
-        dark: appElement ? cssVar('--color-secondary-dark') : DEFAULT_COLOR
+        main: getColor('--secondary-color-main'),
+        light: getColor('--secondary-color-light'),
+        dark: getColor('--secondary-color-dark')
+      },
+      success: {
+        main: getColor('--success-color-main'),
+        light: getColor('--success-color-light'),
+        dark: getColor('--success-color-dark')
+      },
+      error: {
+        main: getColor('--error-color-main'),
+        light: getColor('--error-color-light'),
+        dark: getColor('--error-color-dark')
+      },
+      warning: {
+        main: getColor('--warning-color-main'),
+        light: getColor('--warning-color-light'),
+        dark: getColor('--warning-color-dark')
       },
       info: {
-        main: appElement ? cssVar('--color-info-main') : DEFAULT_COLOR,
-        light: appElement ? cssVar('--color-info-light') : DEFAULT_COLOR,
-        dark: appElement ? cssVar('--color-info-dark') : DEFAULT_COLOR
+        main: getColor('--info-color-main'),
+        light: getColor('--info-color-light'),
+        dark: getColor('--info-color-dark')
       }
     }
   })

@@ -51,7 +51,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
-    color: 'var(--text-base-color)',
+    color: 'var(--text-color-primary)',
     paddingBlock: theme.spacing(2),
     paddingInline: theme.spacing(7)
   },
@@ -86,7 +86,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     lineHeight: theme.spacing(4)
   },
   infoContainer: {
-    color: 'var(--text-base-color-light)',
+    color: 'var(--text-color-secondary)',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',

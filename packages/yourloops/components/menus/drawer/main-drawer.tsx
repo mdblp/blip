@@ -218,7 +218,7 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
         ))}
 
         {loggedUserIsHcpInMonitoring &&
-          <Box bgcolor="var(--monitoring-filter-bg-color)" marginTop={2}>
+          <Box bgcolor="#FFF9F3" marginTop={2}>
             <DrawerCategoryItem
               icon={<DesktopMacOutlinedIcon />}
               text={t('remote-monitoring')}
