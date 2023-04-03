@@ -353,7 +353,7 @@ export const reservoirChanges = [
   }
 ]
 
-export const dataGeneration = () => {
+export const buildHba1cData = () => {
   const dataGMI = {
     dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T23:00:00Z'],
     data: []

@@ -51,7 +51,7 @@ import {
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor, within } from '@testing-library/react'
-import { dataGeneration } from '../../data/data-api.data'
+import { buildHba1cData } from '../../data/data-api.data'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -87,7 +87,7 @@ describe('Trends view for anyone', () => {
     })
 
     it('should render correct tooltip and values GMI', async () => {
-      mockDataAPI(dataGeneration())
+      mockDataAPI(buildHba1cData())
       renderPage('/trends')
 
       const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
