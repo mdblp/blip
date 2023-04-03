@@ -484,6 +484,7 @@ class Daily extends React.Component {
    */
   handleDatetimeLocationChange = (epoch) => {
     const { loading } = this.props
+    console.log('handleDatetimeLocationChange', epoch)
     if (!loading) {
       this.setState({ title: this.getTitle(epoch), atMostRecent: this.isAtMostRecent(epoch) })
       this.props.onDatetimeLocationChange(epoch, TimeService.MS_IN_DAY).then((dataLoaded) => {

@@ -154,7 +154,6 @@ class PatientDataPage extends React.Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount')
     this.handleRefresh().then(() => {
       const locationChart = this.getChartType()
       switch (locationChart) {
@@ -175,9 +174,8 @@ class PatientDataPage extends React.Component {
   }
 
   render() {
-    console.log('render')
     const { dialogPDFOptions: DialogPDFOptions } = this.props
-    const { loadingState, errorMessage, medicalData, canPrint, showPDFPrintOptions, epochLocation } = this.state
+    const { loadingState, errorMessage, medicalData, canPrint, showPDFPrintOptions } = this.state
     const chartType = this.getChartType()
     let loader = null
     let messages = null
@@ -193,7 +191,6 @@ class PatientDataPage extends React.Component {
         loader = <SpinningLoader className="centered-spinning-loader" />
         break
       case LOADING_STATE_DONE:
-        console.log('chartType', chartType)
         if (chartType === 'daily') {
           messages = this.renderMessagesContainer()
         }
@@ -307,7 +304,6 @@ class PatientDataPage extends React.Component {
       timePrefs
     } = this.state
 
-    console.log('rendering with routes, epoch:', epochLocation)
     return (
       <React.Fragment>
         <PatientNavBar
@@ -808,7 +804,8 @@ class PatientDataPage extends React.Component {
     this.log.info('handleLoadDataRange', chartType, start.toISOString(), '→', end.toISOString())
 
     // Don't do anything if we are currently loading
-    if (loadingState === LOADING_STATE_DONE) {
+    console.log('handleLoadDataRange loadingState should be 3:', loadingState)
+    if (loadingState === LOADING_STATE_DONE || loadingState === LOADING_STATE_INITIAL_PROCESS) {
 
       /** @type {DateRange} */
       let rangeDisplay = {
@@ -849,10 +846,13 @@ class PatientDataPage extends React.Component {
       const data = await this.apiUtils.refresh()
       // Process the data to be usable by us
       this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS })
-      await this.processData(data)
+      const { epochLocation, msRange } = await this.processData(data)
 
       console.log('SETTING STATE TO DONE')
       this.setState({ loadingState: LOADING_STATE_DONE })
+
+      console.log('handleDatetimeLocationChange')
+      await this.handleDatetimeLocationChange(epochLocation, msRange)
 
     } catch (reason) {
       this.onLoadingFailure(reason)
@@ -909,11 +909,6 @@ class PatientDataPage extends React.Component {
       endpoints: medicalData.endpoints
     })
 
-    console.log('oldLocation', epochLocation)
-    console.log('newLocation', moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2)
-    console.log('endLocation', moment.utc(medicalData.endpoints[1]).valueOf())
-    console.log(medicalData.endpoints[1])
-
     let newLocation = epochLocation
     if (epochLocation === 0) {
       // First loading, display the last day in the daily chart
@@ -924,15 +919,12 @@ class PatientDataPage extends React.Component {
       newLocation = currentDayEpoch
     }
 
-    console.log('newLocation (safe)', newLocation)
-
     let newRange = msRange
     if (msRange === 0) {
       newRange = TimeService.MS_IN_DAY
     }
 
     const hasDiabetesData = medicalData.hasDiabetesData()
-    console.log('Updating state with new location', newLocation)
     this.setState({
       bgPrefs: bgPrefsUpdated,
       timePrefs: medicalData.opts.timePrefs,
@@ -943,6 +935,7 @@ class PatientDataPage extends React.Component {
     })
 
     this.props.api.metrics.endTimer('process_data')
+    return { epochLocation: newLocation, msRange: newRange }
   }
 }
 
