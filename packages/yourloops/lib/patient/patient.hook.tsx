@@ -108,10 +108,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const getPatientById = (userId: string): Patient => patientList.find(patient => patient.userid === userId)
 
-  const pendingPatientsCount = PatientUtils.extractPatients(patientList, PatientListFilters.Pending, [], selectedTeam.id).length
+  const pendingPatientsCount = selectedTeam ? PatientUtils.extractPatients(patientList, PatientListFilters.Pending, [], selectedTeam.id).length : undefined
 
   const filterPatients = (filterType: PatientListFilters, search: string, flaggedPatients: string[]): Patient[] => {
-    const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients, selectedTeam.id)
+    const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients, user.isUserHcp() ? selectedTeam.id : undefined)
 
     if (search.length === 0) {
       return filteredPatients

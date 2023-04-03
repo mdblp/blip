@@ -33,7 +33,9 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import {
   mockPatientApiForHcp,
   mockPatientApiForPatients,
-  monitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol,
+  monitoredPatient,
+  monitoredPatientTwo,
+  monitoredPatientWithMmol,
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
@@ -69,7 +71,7 @@ describe('HCP home page', () => {
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamPrivate.name, isPrivate: true }, AVAILABLE_TEAMS)
   })
 
-  it('should display a list of patients and allow to remove one of them', async () => {
+  it('should display a list of current and pending patients and allow to remove one of them', async () => {
     localStorage.setItem('selectedTeamId', teamThree.id)
     const router = renderPage('/')
     await waitFor(() => {
@@ -79,9 +81,19 @@ describe('HCP home page', () => {
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
     checkPatientList()
 
-    const dataGridRow = screen.getByTestId('patient-list-grid')
-    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(5)
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+    const currentTab = screen.getByRole('tab', { name: 'Current' })
+    const pendingTab = screen.getByRole('tab', { name: 'Pending' })
+
+    const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
+    expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
+    expect(dataGridCurrentRows).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+
+    await userEvent.click(pendingTab)
+    const dataGridPendingRows = screen.getByTestId('patient-list-grid')
+    expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
+    expect(dataGridPendingRows).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsPending invitationPending PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+
+    await userEvent.click(currentTab)
 
     const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
@@ -97,7 +109,7 @@ describe('HCP home page', () => {
       await userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(teamId, unmonitoredPatient.userid)
-    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
+    expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(4)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
   })

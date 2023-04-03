@@ -112,14 +112,16 @@ export default class PatientUtils {
     return !!tm
   }
 
-  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[], selectedTeamId: string): Patient[] => {
+  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[], selectedTeamId?: string): Patient[] => {
     const twoWeeksFromNow = new Date()
-    patients.forEach(patient => {
-      patient.currentTeam = patient.teams.filter(team => team.teamId === selectedTeamId)[0]
-    })
+    if (selectedTeamId) {
+      patients.forEach(patient => {
+        patient.currentTeam = patient.teams.filter(team => team.teamId === selectedTeamId)[0]
+      })
+    }
     switch (filterType) {
       case PatientListFilters.All:
-        return PatientUtils.getAllPatients(patients)
+        return selectedTeamId ? PatientUtils.getAllPatients(patients) : patients
       case PatientListFilters.Pending:
         return PatientUtils.getPendingPatients(patients)
       case PatientListFilters.Flagged:
