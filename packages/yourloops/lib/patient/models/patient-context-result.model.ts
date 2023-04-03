@@ -36,7 +36,6 @@ export interface PatientContextResult {
   patients: Patient[]
   patientsFilterStats: PatientFilterStats
   pendingPatientsCount: number
-  errorMessage: string | null
   initialized: boolean
   refreshInProgress: boolean
   getPatientByEmail: (email: string) => Patient
