@@ -120,7 +120,6 @@ const DeviceUsage = (props) => {
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
   // eslint-disable-next-line react/prop-types
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
-  // eslint-disable-next-line react/prop-types
   const {
     sensorUsage,
     totalUsage
