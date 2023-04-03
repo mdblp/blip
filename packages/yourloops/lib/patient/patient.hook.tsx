@@ -68,6 +68,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       setInitialized(true)
       setRefreshInProgress(false)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Need to rewrite the alert component, or it triggers infinite loop...
   }, [user])
 
   const refresh = (): void => {
