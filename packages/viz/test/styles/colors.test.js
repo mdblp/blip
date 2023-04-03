@@ -5,7 +5,7 @@ import colors from '../../src/styles/colors.css'
 
 describe('colors', () => {
   it('should export all required colors', () => {
-    expect(colors.bolus).to.equal('#6FC3BB')
+    expect(colors.bolus).to.equal('#178A7F')
     expect(colors.bolusMeal).to.equal('var(--bolus-meal)')
     expect(colors.bolusMicro).to.equal('var(--bolus-micro)')
     expect(colors.bolusManual).to.equal('var(--bolus-manual)')
