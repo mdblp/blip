@@ -182,7 +182,6 @@ class PatientDataPage extends React.Component {
     let patientData = null
     let errorDisplay = null
 
-    console.log('rendering with state', this.state)
     switch (loadingState) {
       case LOADING_STATE_INITIAL_PROCESS:
       case LOADING_STATE_INITIAL_FETCH:
@@ -804,7 +803,6 @@ class PatientDataPage extends React.Component {
     this.log.info('handleLoadDataRange', chartType, start.toISOString(), '→', end.toISOString())
 
     // Don't do anything if we are currently loading
-    console.log('handleLoadDataRange loadingState should be 3:', loadingState)
     if (loadingState === LOADING_STATE_DONE || loadingState === LOADING_STATE_INITIAL_PROCESS) {
 
       /** @type {DateRange} */
@@ -823,7 +821,6 @@ class PatientDataPage extends React.Component {
         if (chartType !== 'pdf') {
           // The loading state will be changed after the PDF is generated,
           // for other cases, we have finished
-          console.log('SETTING STATE TO DONE')
           this.setState({ loadingState: LOADING_STATE_DONE })
         }
 
@@ -848,10 +845,8 @@ class PatientDataPage extends React.Component {
       this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS })
       const { epochLocation, msRange } = await this.processData(data)
 
-      console.log('SETTING STATE TO DONE')
       this.setState({ loadingState: LOADING_STATE_DONE })
 
-      console.log('handleDatetimeLocationChange')
       await this.handleDatetimeLocationChange(epochLocation, msRange)
 
     } catch (reason) {

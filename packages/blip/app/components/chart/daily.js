@@ -294,12 +294,6 @@ class Daily extends React.Component {
     const { epochLocation, loading } = this.props
     const { epochLocation: prevEpochLocation } = prevProps
     const { title } = this.state
-    const { tidelineData } = this.props
-    const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints()
-    /** @type {Date} */
-    this.startDate = Date.parse(startDate)
-    /** @type {Date} */
-    this.endDate = Date.parse(endDate)
 
     if (loading && !prevProps.loading) {
       this.setState({ title: i18next.t('Loading...') })
@@ -484,7 +478,6 @@ class Daily extends React.Component {
    */
   handleDatetimeLocationChange = (epoch) => {
     const { loading } = this.props
-    console.log('handleDatetimeLocationChange', epoch)
     if (!loading) {
       this.setState({ title: this.getTitle(epoch), atMostRecent: this.isAtMostRecent(epoch) })
       this.props.onDatetimeLocationChange(epoch, TimeService.MS_IN_DAY).then((dataLoaded) => {
