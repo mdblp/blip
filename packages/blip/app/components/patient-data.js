@@ -46,11 +46,12 @@ const { DataUtil } = vizUtils.data
 const t = i18next.t.bind(i18next)
 
 const LOADING_STATE_NONE = 0
-const LOADING_STATE_INITIAL_FETCH = LOADING_STATE_NONE + 1
-const LOADING_STATE_DONE = LOADING_STATE_INITIAL_FETCH + 1
-const LOADING_STATE_EARLIER_FETCH = LOADING_STATE_DONE + 1
-const LOADING_STATE_EARLIER_PROCESS = LOADING_STATE_EARLIER_FETCH + 1
-const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
+const LOADING_STATE_INITIAL_FETCH = 1
+const LOADING_STATE_INITIAL_PROCESS = 2
+const LOADING_STATE_DONE = 3
+const LOADING_STATE_EARLIER_FETCH = 4
+const LOADING_STATE_EARLIER_PROCESS = 5
+const LOADING_STATE_ERROR = 6
 
 /**
  * @typedef { import('../index').BlipApi } API
@@ -153,6 +154,7 @@ class PatientDataPage extends React.Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount')
     this.handleRefresh().then(() => {
       const locationChart = this.getChartType()
       switch (locationChart) {
@@ -173,18 +175,25 @@ class PatientDataPage extends React.Component {
   }
 
   render() {
+    console.log('render')
     const { dialogPDFOptions: DialogPDFOptions } = this.props
-    const { loadingState, errorMessage, medicalData, canPrint, showPDFPrintOptions } = this.state
+    const { loadingState, errorMessage, medicalData, canPrint, showPDFPrintOptions, epochLocation } = this.state
     const chartType = this.getChartType()
     let loader = null
     let messages = null
     let patientData = null
     let errorDisplay = null
 
+    console.log('rendering with state', this.state)
     switch (loadingState) {
+      case LOADING_STATE_INITIAL_PROCESS:
+      case LOADING_STATE_INITIAL_FETCH:
       case LOADING_STATE_EARLIER_FETCH:
       case LOADING_STATE_EARLIER_PROCESS:
+        loader = <SpinningLoader className="centered-spinning-loader" />
+        break
       case LOADING_STATE_DONE:
+        console.log('chartType', chartType)
         if (chartType === 'daily') {
           messages = this.renderMessagesContainer()
         }
@@ -192,9 +201,6 @@ class PatientDataPage extends React.Component {
         break
       case LOADING_STATE_NONE:
         messages = <p>Please select a patient</p>
-        break
-      case LOADING_STATE_INITIAL_FETCH:
-        loader = <SpinningLoader className="centered-spinning-loader" />
         break
       default:
         if (errorMessage === 'no-data') {
@@ -301,6 +307,7 @@ class PatientDataPage extends React.Component {
       timePrefs
     } = this.state
 
+    console.log('rendering with routes, epoch:', epochLocation)
     return (
       <React.Fragment>
         <PatientNavBar
@@ -754,7 +761,7 @@ class PatientDataPage extends React.Component {
    * @param {number} msRange ms around epochLocation
    * @returns {Promise<boolean>} true if new data are loaded
    */
-  handleDatetimeLocationChange(epochLocation, msRange) {
+  async handleDatetimeLocationChange(epochLocation, msRange) {
     const chartType = this.getChartType()
 
     if (!Number.isFinite(epochLocation) || !Number.isFinite(msRange)) {
@@ -774,10 +781,7 @@ class PatientDataPage extends React.Component {
       }
     }
 
-    return this.handleLoadDataRange(start, end, chartType).then((result) => {
-      this.setState({ epochLocation, msRange })
-      return result
-    })
+    return await this.handleLoadDataRange(start, end, chartType)
   }
 
   /**
@@ -822,6 +826,7 @@ class PatientDataPage extends React.Component {
         if (chartType !== 'pdf') {
           // The loading state will be changed after the PDF is generated,
           // for other cases, we have finished
+          console.log('SETTING STATE TO DONE')
           this.setState({ loadingState: LOADING_STATE_DONE })
         }
 
@@ -843,8 +848,10 @@ class PatientDataPage extends React.Component {
     try {
       const data = await this.apiUtils.refresh()
       // Process the data to be usable by us
+      this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS })
       await this.processData(data)
 
+      console.log('SETTING STATE TO DONE')
       this.setState({ loadingState: LOADING_STATE_DONE })
 
     } catch (reason) {
@@ -901,17 +908,31 @@ class PatientDataPage extends React.Component {
       timePrefs,
       endpoints: medicalData.endpoints
     })
+
+    console.log('oldLocation', epochLocation)
+    console.log('newLocation', moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2)
+    console.log('endLocation', moment.utc(medicalData.endpoints[1]).valueOf())
+    console.log(medicalData.endpoints[1])
+
     let newLocation = epochLocation
     if (epochLocation === 0) {
       // First loading, display the last day in the daily chart
       newLocation = moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2
     }
+    const currentDayEpoch = new Date().valueOf()
+    if (newLocation > currentDayEpoch) {
+      newLocation = currentDayEpoch
+    }
+
+    console.log('newLocation (safe)', newLocation)
+
     let newRange = msRange
     if (msRange === 0) {
       newRange = TimeService.MS_IN_DAY
     }
 
     const hasDiabetesData = medicalData.hasDiabetesData()
+    console.log('Updating state with new location', newLocation)
     this.setState({
       bgPrefs: bgPrefsUpdated,
       timePrefs: medicalData.opts.timePrefs,

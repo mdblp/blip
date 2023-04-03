@@ -56,7 +56,7 @@ i18nInit().then(() => {
   initTheme()
 
   const root = createRoot(div)
-  root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
+  root.render(config.DEV ? <Yourloops /> : <Yourloops />)
 
   window.onerror = (event, source, lineno, colno, error) => {
     if (source && !source.endsWith('.js')) {
