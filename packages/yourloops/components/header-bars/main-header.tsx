@@ -62,7 +62,7 @@ const classes = makeStyles()((theme: Theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
-    color: 'var(--text-base-color)'
+    color: 'var(--text-color-primary)'
   },
   leftIcon: {
     cursor: 'pointer',
@@ -74,7 +74,7 @@ const classes = makeStyles()((theme: Theme) => ({
   separator: {
     height: 25,
     width: 1,
-    backgroundColor: 'var(--text-base-color)',
+    backgroundColor: 'var(--text-color-primary)',
     margin: `0 ${theme.spacing(2)}`
   },
   toolbar: {
@@ -84,7 +84,7 @@ const classes = makeStyles()((theme: Theme) => ({
     fontWeight: 'bold',
     textTransform: 'none',
     fontSize: theme.typography.htmlFontSize,
-    color: 'var(--text-base-color)'
+    color: 'var(--text-color-primary)'
   }
 }))
 

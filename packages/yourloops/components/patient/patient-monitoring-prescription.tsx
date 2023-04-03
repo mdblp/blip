@@ -57,7 +57,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   fileTextFieldOutlined: {
     fontSize: 13,
-    color: 'var(--text-base-color)'
+    color: 'var(--text-color-primary)'
   },
   input: {
     display: 'none'

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -74,40 +74,6 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
     tbrNumber,
     lastUploadEpoch
   }
-}
-
-export const compareNumbers = (a: number, b: number): number => {
-  return a - b
-}
-
-export const compareString = (a: string, b: string): number => {
-  return a.localeCompare(b)
-}
-
-export const compareDate = (a: Date, b: Date): number => {
-  return a.getTime() - b.getTime()
-}
-
-export function compareValues(
-  a: string | number | Date | boolean | null | undefined,
-  b: string | number | boolean | Date | null | undefined
-): number {
-  if (typeof a === 'string' && typeof b === 'string') {
-    return compareString(a, b)
-  }
-  if (a instanceof Date && b instanceof Date) {
-    return compareDate(a, b)
-  }
-  if (typeof a === 'number' && typeof b === 'number') {
-    return compareNumbers(a, b)
-  }
-  if (!a && b) {
-    return 1
-  }
-  if (!b && a) {
-    return -1
-  }
-  return 0
 }
 
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {

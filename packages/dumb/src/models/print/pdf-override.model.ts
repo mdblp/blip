@@ -36,8 +36,8 @@ interface PdfTableExtra {
 
 interface PdfTableColumnExtra {
   borderColor?: string
-  font: string
-  fontSize: number
+  font?: string
+  fontSize?: number
   zebra?: boolean
 }
 
@@ -50,11 +50,12 @@ interface PdfDocumentExtra {
 
 interface PdfTableConfigExtra {
   columnsDefaults: {
-    zebra: boolean
+    zebra?: boolean
+    width?: number
   }
-  font: string
-  fontSize: number
-  flexColumn: string
+  font?: string
+  fontSize?: number
+  flexColumn?: string
 }
 
 export type PdfTableOverridden = PdfTable<Table> & PdfTableExtra

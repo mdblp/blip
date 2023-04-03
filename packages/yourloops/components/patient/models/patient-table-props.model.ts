@@ -27,7 +27,7 @@
 
 import { type FilterType } from '../../../lib/patient/models/enums/filter-type.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
+import { type PatientListFilters } from '../../patient-list/enums/patient-list.enum'
 import { type SortDirection } from './enums/sort-direction.enum'
 import { type PatientTableSortFields } from './enums/patient-table-sort-fields.enum'
 
@@ -41,7 +41,7 @@ export interface PatientTableProps {
 
 export interface PatientListProps {
   filter: string
-  filterType: PatientFilterTypes
+  filterType: PatientListFilters
 }
 
 export interface PatientRowProps {

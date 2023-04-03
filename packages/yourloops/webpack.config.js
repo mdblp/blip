@@ -61,7 +61,7 @@ if (!brandings.includes(buildConfig.BRANDING)) {
 }
 
 const alias = {
-  'branding/theme.css': path.resolve(__dirname, '../../branding/theme.css'),
+  'branding/global.css': path.resolve(__dirname, '../../branding/global.css'),
   'classes.css': path.resolve(__dirname, 'css/classes.css'),
   'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
   'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),

@@ -98,11 +98,14 @@ describe('Patient dashboard for anyone', () => {
     const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
     expect(reservoirChange).toBeVisible()
     await userEvent.hover(reservoirChange)
-    expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}8:40 pm`)
+    expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}9:40 pm`)
   })
 
   it('monitored patient should have correct cards', async () => {
-    renderPage(`/patient/${monitoredPatientId}/dashboard`)
+    const router = renderPage(`/patient/${monitoredPatientId}/dashboard`)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(`/patient/${monitoredPatientId}/dashboard`)
+    })
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
     expect(statsWidgets).toBeVisible()

@@ -57,7 +57,7 @@ interface BgClasses {
 interface TimePrefs {
   timezoneAware: boolean
   timezoneName: string
-  timezoneOffset: number
+  timezoneOffset?: number
 }
 
 const DEFAULT_BG_BOUNDS = {

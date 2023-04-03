@@ -19,7 +19,7 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import moment from 'moment-timezone'
 
-import { LayoutColumnType, PrintView } from 'dumb/src/modules/print/print-view'
+import { buildLayoutColumns, LayoutColumnType, PrintView } from 'dumb'
 
 import {
   cgmStatusMessage,
@@ -50,7 +50,6 @@ import {
 } from '../../utils/constants'
 
 import { Images } from './utils/constants'
-import { buildLayoutColumns } from 'dumb/dist/src/modules/print/print-view.util'
 
 const t = i18next.t.bind(i18next)
 

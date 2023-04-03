@@ -38,7 +38,7 @@ import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
 import { type Patient } from './models/patient.model'
-import { type PatientFilterTypes } from './models/enums/patient-filter-type.enum'
+import { type PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
@@ -109,7 +109,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const getPatientById = useCallback(userId => patientList.find(patient => patient.userid === userId), [patientList])
 
-  const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
+  const filterPatients = useCallback((filterType: PatientListFilters, search: string, flaggedPatients: string[]) => {
     const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients)
 
     if (search.length === 0) {
