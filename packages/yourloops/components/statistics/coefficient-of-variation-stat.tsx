@@ -59,11 +59,10 @@ import Box from '@mui/material/Box'
 
 export interface CoefficientOfVariationProps {
   coefficientOfVariation: number
-  totalCoefficientVariation: number
 }
 
 export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
-  const { totalCoefficientVariation, coefficientOfVariation } = props
+  const { coefficientOfVariation } = props
 
   return (
     <Box data-testid="coefficient-of-variation-stat">
@@ -71,8 +70,8 @@ export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationPro
         annotations={[t('coefficient-of-variation-tooltip')]}
         title={t('coefficient-of-variation', { cbgLabel: t('CGM') })}
         value={coefficientOfVariation}
-        summaryFormat={StatFormats.Percentage}
-        total={totalCoefficientVariation} />
+        summaryFormat={StatFormats.Cv}
+        total={0} />
     </Box>
   )
 }

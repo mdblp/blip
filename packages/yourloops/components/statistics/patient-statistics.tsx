@@ -54,8 +54,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const {
-    totalCoefficientVariation,
-    insufficientData,
     coefficientOfVariation
   } = GlycemiaStatisticsService.getCoefficientOfVariationData(medicalData.cbg || medicalData.smbg, dateFilter)
 
@@ -63,6 +61,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     total,
     usage: sensorUsage
   }
+
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
@@ -82,14 +81,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat sensorUsageData={sensorUsageData} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
-      {!insufficientData &&
-        <>
-          <CoefficientOfVariation totalCoefficientVariation={totalCoefficientVariation} coefficientOfVariation={coefficientOfVariation} />
+          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
+
       {children}
     </Box>
   )
