@@ -40,7 +40,7 @@ import { useTranslation } from 'react-i18next'
 import RemovePatientDialog from '../patient/remove-patient-dialog'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
 import { PatientListCustomFooter } from './patient-list-custom-footer'
-import { PatientListColumns } from './enums/patient-list.enum'
+import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
 import { useAuth } from '../../lib/auth'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
@@ -124,9 +124,9 @@ export const PatientList: FunctionComponent = () => {
           onSortModelChange={setSortModel}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          onRowClick={onRowClick}
+          onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
           pageSizeOptions={[5, 10, 25]}
-          sx={{ borderRadius: 0, '& .MuiDataGrid-cell:hover': { cursor: 'pointer' } }}
+          sx={{ borderRadius: 0, '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' } }}
           slots={{
             noRowsOverlay: NoPatientMessage,
             footer: PatientListCustomFooter
