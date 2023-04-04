@@ -48,7 +48,7 @@ import {
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
-import { act, logDOM, screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
