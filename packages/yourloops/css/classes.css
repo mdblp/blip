@@ -32,7 +32,7 @@
 }
 
 :global(.primary-color-main) {
-  color: var(--color-primary-main)
+  color: var(--primary-color-main)
 }
 
 :global(.bold) {

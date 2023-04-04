@@ -29,8 +29,11 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Auth0Provider } from '@auth0/auth0-react'
 
-import '@fontsource/roboto'
-import 'branding/theme.css'
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+import 'branding/global.css'
 import 'classes.css'
 
 import appConfig from '../lib/config/config'
@@ -39,14 +42,18 @@ import { MainLobby } from './main-lobby'
 import MetricsLocationListener from '../components/MetricsLocationListener'
 
 const Yourloops = (): JSX.Element => {
+  const redirectUri = window.location.origin
   return (
     <Auth0Provider
       domain={appConfig.AUTH0_DOMAIN}
       issuer={appConfig.AUTH0_ISSUER}
       clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
+      useRefreshTokensFallback
+      authorizationParams={{
+        redirectUri,
+        audience: 'https://api-ext.your-loops.com'
+      }}
       useRefreshTokens
-      audience="https://api-ext.your-loops.com"
     >
       <BrowserRouter>
         <MetricsLocationListener />

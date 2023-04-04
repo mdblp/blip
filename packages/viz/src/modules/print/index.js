@@ -22,8 +22,8 @@ import PDFDocument from 'pdfkit'
 import blobStream from 'blob-stream'
 import BasicsPrintView from './BasicsPrintView'
 import DailyPrintView from './DailyPrintView'
-import SettingsPrintView from './SettingsPrintView'
 import { reshapeBgClassesToBgBounds } from '../../utils/bloodglucose'
+import { PrintView, SettingsPrintView } from 'dumb'
 
 import { renderPageNumbers } from 'dumb/src/utils/pdf/pdf.util'
 import { getPatientFullName } from '../../utils/misc'
@@ -38,7 +38,6 @@ import siteChangeTubingImage from './images/sitechange-tubing.png'
 import siteChangeReservoirDiabeloopImage from './images/diabeloop/sitechange-cartridge.png'
 import jaFontRegular from 'jaFont-Regular.ttf'
 import jaFontBold from 'jaFont-Bold.ttf'
-import { PrintView } from 'dumb/src/modules/print/print-view'
 
 const t = i18next.t.bind(i18next)
 

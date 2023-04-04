@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum UserRoles {
-  hcp = 'hcp',
-  caregiver = 'caregiver',
-  patient = 'patient',
-  /** Used only for signup-account-selector */
-  unset = 'unset'
+import styles from '../diabeloop.css'
+import React, { type FunctionComponent } from 'react'
+import { ChangeType, type HistorizedParameter } from '../../../models/historized-parameter.model'
+import { useTranslation } from 'react-i18next'
+
+interface HistoryTableParameterChangeProps {
+  parameter: HistorizedParameter
+}
+
+const buildIconCssClass = (change: ChangeType): string => {
+  switch (change) {
+    case ChangeType.Added:
+      return 'icon-add'
+    case ChangeType.Deleted:
+      return 'icon-remove'
+    case ChangeType.Updated:
+      return 'icon-refresh'
+    default:
+      break
+  }
+  return 'icon-unsure-data'
+}
+
+export const HistoryTableParameterChange: FunctionComponent<HistoryTableParameterChangeProps> = (props): JSX.Element => {
+  const { t } = useTranslation('main')
+  const { parameter } = props
+
+  const iconClass = buildIconCssClass(parameter.changeType)
+  return (
+    <span>
+      <i className={iconClass} />
+      <span
+        className={styles.parameterHistory}>
+          {t(`params|${parameter.name}`)}
+      </span>
+    </span>
+  )
 }

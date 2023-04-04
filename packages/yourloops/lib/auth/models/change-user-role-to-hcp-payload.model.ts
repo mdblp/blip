@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,12 +33,4 @@ export interface ChangeUserRoleToHcpPayload {
   privacyPolicy: Consent
   contactConsent: Consent
   hcpProfession: HcpProfession
-}
-export interface Alarms {
-  timeSpentAwayFromTargetRate: number
-  timeSpentAwayFromTargetActive: boolean
-  frequencyOfSevereHypoglycemiaRate: number
-  frequencyOfSevereHypoglycemiaActive: boolean
-  nonDataTransmissionRate: number
-  nonDataTransmissionActive: boolean
 }

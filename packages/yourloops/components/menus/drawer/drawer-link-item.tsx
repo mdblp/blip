@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,8 @@ import Box from '@mui/material/Box'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import { type PatientFilterTypes } from '../../../lib/patient/models/enums/patient-filter-type.enum'
+import { type PatientListFilters } from '../../patient-list/enums/patient-list.enum'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   countLabel: {
@@ -67,7 +68,7 @@ interface DrawerLinkItemProps {
   ariaLabel?: string
   count?: number
   icon: ReactElement
-  filter: PatientFilterTypes
+  filter: PatientListFilters
   selectedFilter: string
   text: string
 }
@@ -77,7 +78,7 @@ const DrawerLinkItem: FunctionComponent<DrawerLinkItemProps> = (props) => {
   const selected = props.filter === props.selectedFilter
 
   return (
-    <Link to={`/home?filter=${props.filter}`} aria-label={props.filter}>
+    <Link to={`${AppUserRoute.Home}?filter=${props.filter}`} aria-label={props.filter}>
       <ListItemButton selected={selected} classes={{ root: listItemRoot }}>
         <ListItemIcon aria-label={props.ariaLabel} className={selected ? selectedColor : undefined}>
           {props.icon}

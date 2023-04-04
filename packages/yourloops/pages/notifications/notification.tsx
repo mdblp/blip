@@ -44,7 +44,7 @@ import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
 import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { type IUser } from '../../lib/data/models/i-user.model'
 import { NotificationType } from '../../lib/notifications/models/enums/notification-type.enum'
 import { JoinTeamDialog } from '../../components/dialogs/join-team/join-team-dialog'
@@ -56,7 +56,7 @@ export interface NotificationSpanProps {
 
 interface NotificationProps {
   notification: NotificationModel
-  userRole: UserRoles
+  userRole: UserRole
   onHelp: () => void
   refreshReceivedInvitations: () => void
 }
@@ -299,7 +299,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     }
   }
   const handleAcceptButtonClick = (): void => {
-    userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
+    userRole === UserRole.Caregiver && notification.type === NotificationType.careTeamProInvitation ? onHelp() : onOpenInvitationDialog()
   }
 
   return (

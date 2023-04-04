@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,15 +38,18 @@ import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
 import { type Patient } from './models/patient.model'
-import { type PatientFilterTypes } from './models/enums/patient-filter-type.enum'
+import { type PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
+import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
+import { PRIVATE_TEAM_ID } from '../team/team.hook'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
 
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
@@ -79,44 +82,55 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     setPatients(patientsUpdated)
   }, [patients])
 
+  const patientsForSelectedTeam = user.isUserHcp() ? patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeam.id)) : []
+  const patientList = user.isUserHcp() ? patientsForSelectedTeam : patients
+
+  const isPatientTeamPrivate = (patientTeam: PatientTeam): boolean => {
+    return patientTeam.teamId === PRIVATE_TEAM_ID
+  }
+
   const buildPatientFiltersStats = useCallback(() => {
     return {
-      all: patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
-      pending: patients.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
-      directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
-      unread: patients.filter(patient => patient.metadata.hasSentUnreadMessages).length,
-      outOfRange: patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
-      severeHypoglycemia: patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
-      dataNotTransferred: patients.filter(patient => patient.alarms.nonDataTransmissionActive).length,
-      remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
-      renew: patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
+      all: patientList.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
+      pending: patientList.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
+      directShare: patientList.filter((patient) => patient.teams.find(team => isPatientTeamPrivate(team))).length,
+      unread: patientList.filter(patient => patient.metadata.hasSentUnreadMessages).length,
+      outOfRange: patientList.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
+      severeHypoglycemia: patientList.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
+      dataNotTransferred: patientList.filter(patient => patient.alarms.nonDataTransmissionActive).length,
+      remoteMonitored: patientList.filter(patient => patient.monitoring?.enabled).length,
+      renew: patientList.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
     }
-  }, [patients])
+  }, [patientList])
 
   const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
 
-  const getPatientByEmail = useCallback((email: string) => patients.find(patient => patient.profile.email === email), [patients])
+  const getPatientByEmail = useCallback((email: string) => patientList.find(patient => patient.profile.email === email), [patientList])
 
-  const getPatientById = useCallback(userId => patients.find(patient => patient.userid === userId), [patients])
+  const getPatientById = useCallback(userId => patientList.find(patient => patient.userid === userId), [patientList])
 
-  const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
-    const filteredPatients = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
+  const filterPatients = useCallback((filterType: PatientListFilters, search: string, flaggedPatients: string[]) => {
+    const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients)
+
     if (search.length === 0) {
       return filteredPatients
     }
+
     const searchText = search.toLocaleLowerCase()
     const birthdateAsString = searchText.slice(0, 10)
     const searchTextStartsWithBirthdate = !!moment(birthdateAsString, 'DD/MM/YYYY').toDate().getTime()
+
     if (searchTextStartsWithBirthdate) {
       const firstNameOrLastName = searchText.slice(10).trimStart()
       return PatientUtils.extractPatientsWithBirthdate(filteredPatients, birthdateAsString, firstNameOrLastName)
     }
+
     return filteredPatients.filter(patient => {
       const firstName = patient.profile.firstName ?? ''
       const lastName = patient.profile.lastName ?? ''
       return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
     })
-  }, [patients])
+  }, [patientList])
 
   const invitePatient = useCallback(async (team: Team, username: string) => {
     await PatientApi.invitePatient({ teamId: team.id, email: username })
@@ -157,7 +171,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       const invitation = getInvitation(patientTeam.teamId)
       await cancelInvitation(invitation.id, undefined, invitation.email)
     }
-    if (patientTeam.teamId === 'private') {
+    if (isPatientTeamPrivate(patientTeam)) {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
     } else {
       await PatientApi.removePatient(patientTeam.teamId, patient.userid)
@@ -194,7 +208,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [fetchPatients, initialized, user])
 
   return useMemo(() => ({
-    patients,
+    patients: patientList,
     patientsFilterStats,
     errorMessage,
     initialized,
@@ -210,22 +224,5 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     leaveTeam,
     setPatientMedicalData,
     refresh
-  }), [
-    refreshInProgress,
-    editPatientRemoteMonitoring,
-    errorMessage,
-    filterPatients,
-    getPatientByEmail,
-    getPatientById,
-    initialized,
-    invitePatient,
-    leaveTeam,
-    markPatientMessagesAsRead,
-    patients,
-    patientsFilterStats,
-    refresh,
-    removePatient,
-    setPatientMedicalData,
-    updatePatientMonitoring
-  ])
+  }), [patientList, patientsFilterStats, errorMessage, initialized, refreshInProgress, getPatientByEmail, getPatientById, filterPatients, invitePatient, editPatientRemoteMonitoring, markPatientMessagesAsRead, updatePatientMonitoring, removePatient, leaveTeam, setPatientMedicalData, refresh])
 }

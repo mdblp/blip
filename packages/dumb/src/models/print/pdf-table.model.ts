@@ -72,9 +72,9 @@ export type Table = {
   _fillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
   _headerFillStripe?: { color: string, opacity: number, width: number, padding: number, background: boolean }
   _renderedContent?: { height: number }
-  column: string
-  heading: TableHeading
+  column?: string
+  heading?: TableHeading
   note?: number
-} & Record<string, string>
+} & Record<string, string | number>
 
 export type Row = Table

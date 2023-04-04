@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,8 +31,6 @@ export const checkDrawer = () => {
   const drawer = within(screen.getByTestId('main-left-drawer'))
   expect(drawer.getByLabelText('Filter on all patients')).toBeVisible()
   expect(drawer.getByLabelText('Filter on flagged patients')).toBeVisible()
-  expect(drawer.getByLabelText('Filter on pending patients')).toBeVisible()
-  expect(drawer.getByLabelText('Filter on patients in private practice')).toBeVisible()
 }
 
 export const checkDrawerNotVisible = () => {

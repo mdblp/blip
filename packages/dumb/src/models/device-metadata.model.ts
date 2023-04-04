@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,15 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientFilterTypes {
-  all = 'all',
-  flagged = 'flagged',
-  dataNotTransferred = 'data-not-transferred',
-  outOfRange = 'out-of-range',
-  pending = 'pending',
-  private = 'private',
-  remoteMonitored = 'remote-monitored',
-  renew = 'renew',
-  severeHypoglycemia = 'severe-hypoglycemia',
-  unread = 'unread-messages',
+export interface DeviceMetadata {
+  schedule: string
+  uploaded: string
+  serial: string
 }

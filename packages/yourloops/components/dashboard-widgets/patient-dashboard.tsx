@@ -139,7 +139,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           variant="subtitle2"
           sx={{ marginLeft: theme.spacing(1), fontStyle: 'italic' }}
         >
-          {t('dashboard-header-period-text')}
+          {t('data-period-text')}
         </Typography>
       </Grid>
 

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -51,7 +51,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
-    color: 'var(--text-base-color)',
+    color: 'var(--text-color-primary)',
     paddingBlock: theme.spacing(2),
     paddingInline: theme.spacing(7)
   },
@@ -86,7 +86,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     lineHeight: theme.spacing(4)
   },
   infoContainer: {
-    color: 'var(--text-base-color-light)',
+    color: 'var(--text-color-secondary)',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
@@ -116,7 +116,9 @@ const LoginPageDesktop: FunctionComponent = () => {
   const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
 
-  const redirectToSignup = async (): Promise<void> => { await loginWithRedirect({ screen_hint: 'signup' }) }
+  const redirectToSignup = async (): Promise<void> => {
+    await loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
+  }
 
   return (
     <React.Fragment>
@@ -154,7 +156,7 @@ const LoginPageDesktop: FunctionComponent = () => {
                 data-testid="login-button"
                 variant="contained"
                 disableElevation
-                onClick={loginWithRedirect}
+                onClick={loginWithRedirect as MouseEventHandler}
                 className={classes.button}
               >
                 {t('button-connect')}

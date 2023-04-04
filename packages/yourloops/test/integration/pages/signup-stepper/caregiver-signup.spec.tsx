@@ -37,7 +37,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooter } from '../../assert/footer'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 
 describe('Signup stepper as caregiver', () => {
@@ -54,7 +54,7 @@ describe('Signup stepper as caregiver', () => {
   }
 
   beforeAll(() => {
-    mockAuth0Hook(UserRoles.unset)
+    mockAuth0Hook(UserRole.Unset)
   })
 
   it('should be able to create a caregiver account', async () => {
@@ -86,12 +86,12 @@ describe('Signup stepper as caregiver', () => {
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,
       expect.objectContaining({
-        role: UserRoles.caregiver,
+        role: UserRole.Caregiver,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
         settings: { country: CountryCodes.France }
       })
     )
-    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ ignoreCache: true })
+    expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
   })
 })

@@ -44,7 +44,7 @@ import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { UserRoles } from '../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
@@ -87,8 +87,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       padding: '0px',
       marginLeft: '10px',
       marginRight: '10px',
-      fontSize: '0.6rem',
-      textTransform: 'none'
+      fontSize: '0.6rem'
     },
     chatWidgetInputRow: {
       display: 'flex',
@@ -118,7 +117,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const teamHook = useTeam()
   const theme = useTheme()
   const patientHook = usePatientContext()
-  const { selectedTeamId } = useSelectedTeamContext()
+  const { selectedTeam } = useSelectedTeamContext()
   const { user } = useAuth()
   const [showPicker, setShowPicker] = useState(false)
   const [privateMessage, setPrivateMessage] = useState(false)
@@ -129,7 +128,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
   const { getUserName } = useUserName()
-  const teamId = user.isUserHcp() ? selectedTeamId : PatientUtils.getRemoteMonitoringTeam(patient).teamId
+  const teamId = user.isUserHcp() ? selectedTeam.id : PatientUtils.getRemoteMonitoringTeam(patient).teamId
 
   const handleChange = (_event: React.ChangeEvent, newValue: number): void => {
     setInputTab(newValue)
@@ -211,7 +210,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           </div>
         }
         <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
-            {userRole === UserRoles.hcp &&
+            {userRole === UserRole.Hcp &&
               <Tabs
                 className={classes.chatWidgetTabs}
                 value={inputTab}

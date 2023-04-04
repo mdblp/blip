@@ -27,24 +27,24 @@
 
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import PatientAPI from '../../../../lib/patient/patient.api'
-import { checkSecondaryBar } from '../../utils/patientSecondaryBar'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import {
   mockPatientApiForHcp,
   mockPatientApiForPatients,
-  monitoredPatient,
+  monitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol,
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
-import { mockTeamAPI, teamOne, teamThree, teamTwo } from '../../mock/team.api.mock'
+import { AVAILABLE_TEAMS, mockTeamAPI, teamOne, teamPrivate, teamThree, teamTwo } from '../../mock/team.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
 import { renderPage } from '../../utils/render'
 import TeamAPI from '../../../../lib/team/team.api'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { checkPatientList } from '../../assert/patient-list-header'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -59,20 +59,31 @@ describe('HCP home page', () => {
     mockDirectShareApi()
   })
 
-  it('should display a list of patients and allow to remove one of them', async () => {
+  it('should not display the Care team tab if the private practice is selected', async () => {
+    localStorage.setItem('selectedTeamId', 'private')
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
     })
 
-    checkHCPLayout(`${firstName} ${lastName}`)
-    checkSecondaryBar(false, true)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamPrivate.name, isPrivate: true }, AVAILABLE_TEAMS)
+  })
 
-    expect(screen.queryAllByLabelText('flag-icon-active')).toHaveLength(0)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(4)
+  it('should display a list of patients and allow to remove one of them', async () => {
+    localStorage.setItem('selectedTeamId', teamThree.id)
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    })
 
-    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
-    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient unmonitored-patient@diabeloop.fr' })
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
+    checkPatientList()
+
+    const dataGridRow = screen.getByTestId('patient-list-grid')
+    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(5)
+    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -80,23 +91,24 @@ describe('HCP home page', () => {
     expect(removeDialog).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient])
+    jest.spyOn(PatientAPI, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
+    const teamId = unmonitoredPatient.teams[0].teamId
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
-    expect(screen.getAllByLabelText('flag-icon-inactive')).toHaveLength(1)
+    expect(removePatientMock).toHaveBeenCalledWith(teamId, unmonitoredPatient.userid)
+    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
   })
 
   it('should allow to remove a patient who is in multiple teams', async () => {
+    const teamId = monitoredPatient.teams[0].teamId
     await act(async () => {
       renderPage('/')
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${monitoredPatient.userid}`)
-    const removeButton = within(patientRow).getByRole('button', { name: 'Remove patient monitored-patient@diabeloop.fr' })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
 
     await userEvent.click(removeButton)
@@ -112,7 +124,7 @@ describe('HCP home page', () => {
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teams[0].teamId, monitoredPatient.userid)
+    expect(removePatientMock).toHaveBeenCalledWith(teamId, monitoredPatient.userid)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} is no longer a member of ${teamTwo.name}`)
   })
@@ -124,8 +136,7 @@ describe('HCP home page', () => {
       renderPage('/')
     })
 
-    const patientRow = screen.queryByTestId(`patient-row-${unmonitoredPatient.userid}`)
-    const removeButton = within(patientRow).getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
     await userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
@@ -133,7 +144,7 @@ describe('HCP home page', () => {
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(unmonitoredPatient.teams[0].teamId, unmonitoredPatient.userid)
+    expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teams[0].teamId, monitoredPatient.userid)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })
@@ -143,8 +154,8 @@ describe('HCP home page', () => {
       renderPage('/')
     })
 
-    const secondaryBar = screen.getByTestId('patients-secondary-bar')
-    const addPatientButton = within(secondaryBar).getByText('Add patient')
+    const patientListHeader = screen.getByTestId('patient-list-header')
+    const addPatientButton = within(patientListHeader).getByText('Add new patient')
     expect(addPatientButton).toBeVisible()
 
     await userEvent.click(addPatientButton)
@@ -177,7 +188,7 @@ describe('HCP home page', () => {
 
     const select = within(addPatientDialog).getByTestId('patient-team-selector')
     fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
+    fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
 
     const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient is already sharing data with the team.')
     expect(alreadyInTeamErrorMessage).toBeVisible()
@@ -203,9 +214,9 @@ describe('HCP home page', () => {
     await act(async () => {
       renderPage('/')
     })
-    const teamMenu = screen.getByLabelText('Open team menu')
+    const teamMenu = screen.getByLabelText('Open team selection menu')
     await userEvent.click(teamMenu)
-    await userEvent.click(screen.getByText('New care team'))
+    await userEvent.click(screen.getByText('Create a new care team'))
     const dialogTeam = screen.getByRole('dialog')
     const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
     const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })

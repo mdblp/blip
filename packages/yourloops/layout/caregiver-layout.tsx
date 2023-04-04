@@ -25,33 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import DashboardLayout from './dashboard-layout'
-import HomePage from '../pages/home-page'
 import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
+import { AppUserRoute } from '../models/enums/routes.enum'
+import { PatientList } from '../components/patient-list/patient-list'
 
-export function CaregiverLayout(): JSX.Element {
+export const CaregiverLayout: FunctionComponent = () => {
   return (
     <PatientProvider>
       <DashboardLayout>
         <Routes>
-          <Route path="/not-found" element={<InvalidRoute />} />
-          <Route path="/preferences" element={<ProfilePage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/patient/:patientId/*" element={<PatientDataPage />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+          <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+          <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+          <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
+          <Route path={AppUserRoute.Home} element={<PatientList />} />
           <Route
             path="/"
-            element={<Navigate to="/home" replace />}
+            element={<Navigate to={AppUserRoute.Home} replace />}
           />
           <Route
             path="*"
-            element={<Navigate to="/not-found" replace />}
+            element={<Navigate to={AppUserRoute.NotFound} replace />}
           />
         </Routes>
       </DashboardLayout>

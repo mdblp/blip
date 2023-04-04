@@ -38,7 +38,12 @@ import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { type Monitoring } from '../../../lib/team/models/monitoring.model'
 import PatientApi from '../../../lib/patient/patient.api'
 import { type Profile } from '../../../lib/auth/models/profile.model'
-import { monitoringParameters, mySecondTeamId, myThirdTeamId, monitoringParametersBgUnitMmol } from './team.api.mock'
+import {
+  monitoringParameters,
+  mySecondTeamId,
+  myThirdTeamId,
+  monitoringParametersBgUnitMmol
+} from './team.api.mock'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { getTomorrowDate } from '../utils/helpers'
 
@@ -116,6 +121,11 @@ export const monitoredPatient: Patient = buildPatient(
   [
     {
       teamId: mySecondTeamId,
+      status: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      teamId: myThirdTeamId,
       status: UserInvitationStatus.accepted,
       monitoringStatus: MonitoringStatus.accepted
     }

@@ -47,7 +47,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import { getMedicalReportDate } from './medical-report-list.util'
 import { useTeam } from '../../../lib/team'
 import { useUserName } from '../../../lib/custom-hooks/user-name.hook'
-import { VAR_TEXT_BASE_COLOR_DARKER, VAR_TEXT_BASE_COLOR_LIGHT } from '../../theme'
 
 interface MedicalReportItemProps {
   displayDivider: boolean
@@ -125,17 +124,17 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
                 <Typography component="span" variant="subtitle2" className="bold">
                   {t('medical-report')}-{medicalReport.number}&nbsp;
                 </Typography>
-                <Typography component="span" variant="caption" color={VAR_TEXT_BASE_COLOR_DARKER} alignSelf="center">
+                <Typography component="span" variant="caption" alignSelf="center">
                   {medicalReportDate}
                 </Typography>
               </>
             }
             secondary={
               <span className={classes.secondaryText}>
-                <Typography component="span" variant="caption" color={VAR_TEXT_BASE_COLOR_LIGHT}>
+                <Typography component="span" variant="caption" color="text.secondary">
                   {createdBy}
                 </Typography>
-                <Typography component="span" fontSize="12px" color={VAR_TEXT_BASE_COLOR_LIGHT}>
+                <Typography component="span" fontSize="12px" color="text.secondary">
                   {teamName}
                 </Typography>
               </span>

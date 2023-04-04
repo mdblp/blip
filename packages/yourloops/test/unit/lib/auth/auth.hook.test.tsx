@@ -38,7 +38,7 @@ import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
-import { UserRoles } from '../../../../lib/auth/models/enums/user-roles.enum'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { UnitsType } from 'dumb'
@@ -76,7 +76,9 @@ describe('Auth hook', () => {
           </AuthContextProvider>
         </Auth0Provider>
       )
-      await waitFor(() => { expect(auth.isLoggedIn).toBeTruthy() })
+      await waitFor(() => {
+        expect(auth.isLoggedIn).toBeTruthy()
+      })
     })
   }
 
@@ -112,7 +114,7 @@ describe('Auth hook', () => {
       expect(auth.isLoggedIn).toBeTruthy()
       await auth.logout()
       expect(auth0Mock.useAuth0().logout).toHaveBeenCalledTimes(1)
-      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ returnTo: 'http://localhost/login' })
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login' } })
     })
 
     it('should logout the logged-in idle user', async () => {
@@ -121,7 +123,7 @@ describe('Auth hook', () => {
       expect(auth.isLoggedIn).toBeTruthy()
       await auth.logout(true)
       expect(auth0Mock.useAuth0().logout).toHaveBeenCalledTimes(1)
-      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ returnTo: 'http://localhost/login?idle=true' })
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })
     })
   })
 
@@ -183,7 +185,9 @@ describe('Auth hook', () => {
 
       const now = Date.now()
       await initAuthContext()
-      await act(async () => { await auth.switchRoleToHCP(false, HcpProfession.diabeto) })
+      await act(async () => {
+        await auth.switchRoleToHCP(false, HcpProfession.diabeto)
+      })
       const updatedUser: User = auth.user
 
       expect(UserApi.changeUserRoleToHcp).toHaveBeenCalledTimes(1)
@@ -191,7 +195,7 @@ describe('Auth hook', () => {
       expect(updatedUser.profile.privacyPolicy.isAccepted).toBe(true)
       expect(Date.parse(updatedUser.profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
       expect(Date.parse(updatedUser.profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
-      expect(updatedUser.role).toBe(UserRoles.hcp)
+      expect(updatedUser.role).toBe(UserRole.Hcp)
       expect(updatedUser.profile.hcpProfession).toEqual(HcpProfession.diabeto)
       expect(updatedUser.profile.contactConsent.isAccepted).toBeFalsy()
     })
@@ -280,7 +284,7 @@ describe('Auth hook', () => {
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
       const signupForm: SignupForm = {
-        accountRole: UserRoles.hcp,
+        accountRole: UserRole.Hcp,
         profileFirstname: 'Tim',
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
@@ -300,7 +304,7 @@ describe('Auth hook', () => {
         await auth.completeSignup(signupForm)
       })
 
-      expect(auth.user.role).toEqual(UserRoles.hcp)
+      expect(auth.user.role).toEqual(UserRole.Hcp)
       expect(auth.user.profile.firstName).toEqual('Tim')
       expect(auth.user.profile.lastName).toEqual('Hagine')
       expect(auth.user.profile.fullName).toEqual('Tim Hagine')

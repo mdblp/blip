@@ -50,6 +50,7 @@ import Tooltip from './components/tooltips/common/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
+import { HistoryParameterTable } from './components/settings/history/history-table'
 import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
@@ -61,9 +62,14 @@ import { TrendsProvider } from './provider/trends.provider'
 import { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
 import { UnitsType } from './models/enums/units-type.enum'
 import { TrendsContainer } from './components/trends/common/trends-container/trends-container'
+import { SettingsPrintView } from './modules/print/settings-print-view/settings-print-view'
+import { PrintView } from './modules/print/print-view/print-view'
+import { LayoutColumnType } from './models/enums/layout-column-type.enum'
+import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 
 export {
   AverageDailyDoseStat,
+  buildLayoutColumns,
   type BgPrefs,
   UnitsType,
   BloodGlucoseTooltip,
@@ -77,13 +83,17 @@ export {
   ConfidentialTooltip,
   FocusedRangeLabels,
   FoodTooltip,
+  HistoryParameterTable,
   formatBgValue,
+  LayoutColumnType,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,
+  PrintView,
   PumpTable,
   RangeSelect,
   ReservoirTooltip,
+  SettingsPrintView,
   SimpleStat,
   StatTooltip,
   Table,

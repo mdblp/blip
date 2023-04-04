@@ -50,7 +50,7 @@ import { type AuthContext } from './models/auth-context.model'
 import { type Preferences } from './models/preferences.model'
 import { type Profile } from './models/profile.model'
 import { type Settings } from './models/settings.model'
-import { UserRoles } from './models/enums/user-roles.enum'
+import { UserRole } from './models/enums/user-role.enum'
 import { type AuthenticatedUser, IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
 import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
@@ -150,7 +150,7 @@ export function AuthContextImpl(): AuthContext {
     await UserApi.changeUserRoleToHcp(user.id, payload)
     await refreshToken() // Refreshing access token to get the new role in it
 
-    user.role = UserRoles.hcp
+    user.role = UserRole.Hcp
     user.profile = { ...user.profile, ...payload }
     refreshUser()
   }
@@ -167,7 +167,7 @@ export function AuthContextImpl(): AuthContext {
       setFetchingUser(true)
       const user = new User(auth0user as AuthenticatedUser)
 
-      if (user.role !== UserRoles.unset) {
+      if (user.role !== UserRole.Unset) {
         const userMetadata = await UserApi.getUserMetadata(user.id)
         if (userMetadata) {
           user.profile = userMetadata.profile
@@ -204,7 +204,7 @@ export function AuthContextImpl(): AuthContext {
       zendeskLogout()
 
       const redirectUrl = getLogoutRedirectUrl(isIdle)
-      auth0logout({ returnTo: redirectUrl })
+      auth0logout({ logoutParams: { returnTo: redirectUrl } })
 
       metrics.resetUser()
     } catch (err) {
@@ -222,7 +222,7 @@ export function AuthContextImpl(): AuthContext {
       termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
       privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
     }
-    if (signupForm.accountRole === UserRoles.hcp) {
+    if (signupForm.accountRole === UserRole.Hcp) {
       profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
       profile.hcpProfession = signupForm.hcpProfession
     }
@@ -248,7 +248,7 @@ export function AuthContextImpl(): AuthContext {
   }
 
   const refreshToken = async (): Promise<void> => {
-    await getAccessTokenWithPopup({ ignoreCache: true })
+    await getAccessTokenWithPopup({ authorizationParams: { ignoreCache: true } })
   }
 
   useEffect(() => {

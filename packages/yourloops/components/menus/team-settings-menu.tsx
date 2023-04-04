@@ -44,16 +44,17 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { type Team, useTeam } from '../../lib/team'
+import { useTeam } from '../../lib/team'
 import MenuLayout from '../../layout/menu-layout'
-import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
-import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import { type ShareUser } from '../../lib/share/models/share-user.model'
 import { errorTextFromException } from '../../lib/utils'
 import DirectShareApi from '../../lib/share/direct-share.api'
 import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
+import TeamUtils from '../../lib/team/team.util'
+import Button from '@mui/material/Button'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -62,10 +63,7 @@ const classes = makeStyles()((theme: Theme) => ({
   badge: {
     right: -8,
     color: theme.palette.common.white,
-    backgroundColor: 'var(--text-base-color)'
-  },
-  clickableMenu: {
-    cursor: 'pointer'
+    backgroundColor: 'var(--text-color-primary)'
   },
   separator: {
     flexGrow: 1,
@@ -73,28 +71,37 @@ const classes = makeStyles()((theme: Theme) => ({
     backgroundColor: theme.palette.divider,
     marginLeft: theme.spacing(1),
     marginTop: 2
+  },
+  menu: {
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1)
+  },
+  paddingBottom: {
+    paddingBottom: theme.spacing(1)
   }
 }))
 
-function TeamMenu(): JSX.Element {
+function TeamSettingsMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const { classes: { badge, teamIcon, clickableMenu, separator } } = classes()
-  const { teams, createTeam, joinTeam } = useTeam()
+  const { classes: { badge, teamIcon, separator, menu, paddingBottom } } = classes()
+  const { teams, joinTeam } = useTeam()
   const navigate = useNavigate()
   const alert = useAlert()
   const { user } = useAuth()
-  const isUserHcp = user?.isUserHcp()
-  const isUserPatient = user?.isUserPatient()
   const theme = useTheme()
-  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
   const opened = !!anchorEl
 
-  const filteredTeams = teams.filter(team => team.code !== 'private')
-  const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
+  const filteredTeams = teams.filter(team => !TeamUtils.isPrivate(team))
   const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false)
+
+  const openMenu = ({ currentTarget }: { currentTarget: HTMLElement }): void => {
+    setAnchorEl(currentTarget)
+  }
+
   const closeMenu = (): void => {
     setAnchorEl(null)
   }
@@ -112,34 +119,17 @@ function TeamMenu(): JSX.Element {
   }, [caregivers, user])
 
   const redirectToTeamDetails = (teamId: string): void => {
-    navigate(`/teams/${teamId}`)
+    navigate(`${AppUserRoute.Teams}/${teamId}`)
     closeMenu()
   }
 
-  const onSaveTeam = async (createdTeam: Partial<Team> | null): Promise<void> => {
-    if (createdTeam) {
-      try {
-        await createTeam(createdTeam as Team)
-        alert.success(t('team-page-success-create'))
-      } catch (reason: unknown) {
-        alert.error(t('team-page-failed-create'))
-      }
-    }
-    setTeamCreationDialogData(null)
-  }
-
   const onTeamAction = (): void => {
-    if (isUserHcp) {
-      setTeamCreationDialogData({ team: null, onSaveTeam })
-    } else if (isUserPatient) {
-      setShowJoinTeamDialog(true)
-    }
-
+    setShowJoinTeamDialog(true)
     closeMenu()
   }
 
   const redirectToCaregivers = (): void => {
-    navigate('/caregivers')
+    navigate(AppUserRoute.Caregivers)
     closeMenu()
   }
 
@@ -154,18 +144,8 @@ function TeamMenu(): JSX.Element {
     }
   }
   return (
-    <React.Fragment>
-      <Box
-        id="team-menu"
-        data-testid="team-menu"
-        display="flex"
-        role="button"
-        alignItems="center"
-        className={clickableMenu}
-        onClick={event => {
-          setAnchorEl(event.currentTarget)
-        }}
-      >
+    <>
+      <Button id="team-menu" color="inherit" onClick={openMenu}>
         <Badge
           id="team-menu-count-badge"
           aria-label={t('open-team-menu')}
@@ -176,64 +156,63 @@ function TeamMenu(): JSX.Element {
         >
           <GroupOutlinedIcon />
         </Badge>
-        {!isMobileBreakpoint &&
-          <ArrowDropDownIcon />
-        }
-      </Box>
+        {!isMobile && <ArrowDropDownIcon />}
+      </Button>
+
       <MenuLayout
         open={opened}
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <ListSubheader>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="caption">
-              {t('care-team-membership')}
-            </Typography>
-            <div className={separator} />
-          </Box>
-        </ListSubheader>
+        <Box className={menu} data-testid="teams-list">
+          <ListSubheader>
+            <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
+              <Typography variant="caption">
+                {t('care-team-membership')}
+              </Typography>
+              <div className={separator} />
+            </Box>
+          </ListSubheader>
 
-        {filteredTeams.length
-          ? filteredTeams.map(team => (
-            <ListItemButton
-              key={team.id}
-              id={`team-menu-list-item-${team.id}`}
-              className="team-menu-list-item"
-              onClick={() => {
-                redirectToTeamDetails(team.id)
-              }}
-            >
-              <Box marginX={1}>•</Box>
-              <Typography>{team.name}</Typography>
-            </ListItemButton>
-          ))
-          : <ListItem>
-            <Typography>{t('care-team-no-membership')}</Typography>
-          </ListItem>
-        }
+          {filteredTeams.length
+            ? filteredTeams.map(team => (
+              <ListItemButton
+                key={team.id}
+                id={`team-menu-list-item-${team.id}`}
+                className="team-menu-list-item"
+                onClick={() => {
+                  redirectToTeamDetails(team.id)
+                }}
+              >
+                <Box marginX={1}>•</Box>
+                <Typography>{team.name}</Typography>
+              </ListItemButton>
+            ))
+            : <ListItem>
+              <Typography>{t('care-team-no-membership')}</Typography>
+            </ListItem>
+          }
 
-        {(isUserHcp || isUserPatient) &&
           <Box>
-            <Box marginY={1}>
+            <Box marginY={2}>
               <Divider variant="middle" />
             </Box>
 
-            <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
-              <ListItemIcon>
-                <GroupOutlinedIcon />
-              </ListItemIcon>
-              <Typography>
-                {isUserHcp && t('new-care-team')}
-                {isUserPatient && t('join-care-team')}
-              </Typography>
-            </MenuItem>
+            <Box className={paddingBottom}>
+              <MenuItem id="team-menu-teams-link" data-testid="team-menu-teams-link" onClick={onTeamAction}>
+                <ListItemIcon>
+                  <GroupOutlinedIcon />
+                </ListItemIcon>
+                <Typography>
+                  {t('join-care-team')}
+                </Typography>
+              </MenuItem>
+            </Box>
           </Box>
-        }
-        {isUserPatient &&
+
           <Box>
             <ListSubheader>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
                 <Typography variant="caption">
                   {t('my-caregivers')}
                 </Typography>
@@ -249,11 +228,9 @@ function TeamMenu(): JSX.Element {
               </Typography>
             </MenuItem>
           </Box>
-        }
+        </Box>
       </MenuLayout>
-      {teamCreationDialogData &&
-        <TeamEditDialog teamToEdit={teamCreationDialogData} />
-      }
+
       {showJoinTeamDialog &&
         <JoinTeamDialog
           onClose={() => {
@@ -262,8 +239,8 @@ function TeamMenu(): JSX.Element {
           onAccept={onJoinTeam}
         />
       }
-    </React.Fragment>
+    </>
   )
 }
 
-export const TeamMenuMemoized = React.memo(TeamMenu)
+export const TeamSettingsMenuMemoized = React.memo(TeamSettingsMenu)

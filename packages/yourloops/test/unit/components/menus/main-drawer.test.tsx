@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,7 +41,7 @@ import * as authHookMock from '../../../../lib/auth'
 import { type PatientFilterStats } from '../../../../lib/patient/models/patient-filter-stats.model'
 import type User from '../../../../lib/auth/models/user.model'
 import { MemoryRouter } from 'react-router-dom'
-import { PatientFilterTypes } from '../../../../lib/patient/models/enums/patient-filter-type.enum'
+import { PatientListFilters } from '../../../../components/patient-list/enums/patient-list.enum'
 
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/patient/patient.provider')
@@ -157,43 +157,35 @@ describe('Main Drawer', () => {
   })
 
   it('should display correct filter value for all patients and redirect to proper url', async () => {
-    await checkFilterActionByText('all-patients', PatientFilterTypes.all.toString(), patientsFilterStats.all)
+    await checkFilterActionByText('all-patients', PatientListFilters.All.toString(), patientsFilterStats.all)
   })
 
   it('should display correct filter value for flagged patients and redirect to proper url', async () => {
-    await checkFilterActionByText(PatientFilterTypes.flagged.toString(), PatientFilterTypes.flagged.toString(), flaggedPatients.length)
-  })
-
-  it('should display correct filter value for pending patients and redirect to proper url', async () => {
-    await checkFilterActionByText(PatientFilterTypes.pending.toString(), PatientFilterTypes.pending.toString(), patientsFilterStats.pending)
-  })
-
-  it('should display correct filter value for private patients and redirect to proper url', async () => {
-    await checkFilterActionByText('private-practice', PatientFilterTypes.private.toString(), patientsFilterStats.directShare)
+    await checkFilterActionByText(PatientListFilters.Flagged.toString(), PatientListFilters.Flagged.toString(), flaggedPatients.length)
   })
 
   it('should display correct filter value for monitored patient sand redirect to proper url', async () => {
-    await checkFilterActionByText('monitored-patients', PatientFilterTypes.remoteMonitored.toString(), patientsFilterStats.remoteMonitored)
+    await checkFilterActionByText('monitored-patients', PatientListFilters.RemoteMonitored.toString(), patientsFilterStats.remoteMonitored)
   })
 
   it('should display correct filter value for soon to renew patients and redirect to proper url', async () => {
-    await checkFilterActionByRole(`incoming-renewal ${patientsFilterStats.renew}`, PatientFilterTypes.renew.toString())
+    await checkFilterActionByRole(`incoming-renewal ${patientsFilterStats.renew}`, PatientListFilters.Renew.toString())
   })
 
   it('should display correct filter value for out of range alert patients and redirect to proper url', async () => {
-    await checkFilterActionByRole(`time-away-from-target ${patientsFilterStats.outOfRange}`, PatientFilterTypes.outOfRange.toString())
+    await checkFilterActionByRole(`time-away-from-target ${patientsFilterStats.outOfRange}`, PatientListFilters.OutOfRange.toString())
   })
 
   it('should display correct filter value for severe hypoglycemia alert patients and redirect to proper url', async () => {
-    await checkFilterActionByRole(`alert-hypoglycemic ${patientsFilterStats.severeHypoglycemia}`, PatientFilterTypes.severeHypoglycemia.toString())
+    await checkFilterActionByRole(`alert-hypoglycemic ${patientsFilterStats.severeHypoglycemia}`, PatientListFilters.SevereHypoglycemia.toString())
   })
 
   it('should display correct filter value for data not transferred alert patients and redirect to proper url', async () => {
-    await checkFilterActionByRole(`data-not-transferred ${patientsFilterStats.dataNotTransferred}`, PatientFilterTypes.dataNotTransferred.toString())
+    await checkFilterActionByRole(`data-not-transferred ${patientsFilterStats.dataNotTransferred}`, PatientListFilters.DataNotTransferred.toString())
   })
 
   it('should display correct filter value for unread messages and redirect to proper url', async () => {
-    await checkFilterActionByRole(`unread-messages ${patientsFilterStats.unread}`, PatientFilterTypes.unread.toString())
+    await checkFilterActionByRole(`unread-messages ${patientsFilterStats.unread}`, PatientListFilters.UnreadMessages.toString())
   })
 
   it('renew filter should not display a number when there are 0 incoming renewal', async () => {
