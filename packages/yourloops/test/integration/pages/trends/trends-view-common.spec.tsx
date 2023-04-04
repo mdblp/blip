@@ -40,14 +40,15 @@ import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewD
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
+  checkCoefficientOfVariation,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
-  checkStandardDeviationStatWidget, checkStatTooltip,
+  checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
-import { act, screen, waitFor, within } from '@testing-library/react'
+import { act, logDOM, screen, waitFor } from '@testing-library/react'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -70,6 +71,7 @@ describe('Trends view for anyone', () => {
       await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
       await checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
       await checkSensorUsage('Sensor Usage0.1%')
+      await checkCoefficientOfVariation('CV (CGM)78%')
       await checkRangeSelection()
       await checkDaysSelection()
 
@@ -80,22 +82,6 @@ describe('Trends view for anyone', () => {
         await userEvent.click(screen.getByTestId('button-nav-back'))
       })
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
-    })
-
-    it('should data', async () => {
-      const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
-      mockDataAPI()
-      const router = renderPage('/trends')
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual('/trends')
-      })
-
-      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-      await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
-
-      await act(async () => {
-        await userEvent.click(screen.getByTestId('button-nav-back'))
-      })
     })
   })
 
@@ -108,20 +94,20 @@ describe('Trends view for anyone', () => {
       await checkTimeInRangeStatsTitle()
     })
   })
-
   describe('with smbg data', () => {
     it('should display correct readings in range stats info', async () => {
       mockDataAPI(smbgData)
       renderPage('/trends')
 
       await checkReadingsInRangeStatsWidgets()
+
       await checkReadingsInRangeStats()
 
       await checkSMBGTrendsStatsWidgetsTooltips()
 
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
-
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+      await checkCoefficientOfVariation('')
     })
   })
 })
