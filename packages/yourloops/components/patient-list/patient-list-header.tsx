@@ -47,11 +47,13 @@ import { useTheme } from '@mui/material/styles'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type PatientListTabs } from './enums/patient-list.enum'
 import { makeStyles } from 'tss-react/mui'
-import { AddPatientDialog } from '../patient/add-dialog'
+import { AddPatientDialog } from '../patient/add-patient-dialog'
 import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -92,6 +94,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { patientsFilterStats } = usePatientContext()
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
+  const { selectedTeam } = useSelectedTeamContext()
 
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
@@ -136,7 +139,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             </Button>
           </Box>
           <Box>
-            {user.isUserHcp() &&
+            {user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
               <Button
                 startIcon={<PersonAddIcon />}
                 variant="contained"
@@ -146,6 +149,25 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               >
                 {t('button-add-new-patient')}
               </Button>
+            }
+            {
+              user.isUserHcp() && TeamUtils.isPrivate(selectedTeam) &&
+              <Tooltip
+                title={t('add-new-patient-disabled-info')}
+                placement="left"
+              >
+                <span data-testid="add-patient-button-disabled">
+                  <Button
+                    startIcon={<PersonAddIcon />}
+                    variant="contained"
+                    size="large"
+                    disableElevation
+                    disabled
+                  >
+                    {t('button-add-new-patient')}
+                  </Button>
+                </span>
+              </Tooltip>
             }
             {/* TODO activate this button with columns choice YLP-2154 https://diabeloop.atlassian.net/browse/YLP-2154 */}
             <Button
