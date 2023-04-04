@@ -138,17 +138,15 @@ describe('Patient utils', () => {
     const acceptedPatient1 = createPatient('acceptedPatient1', [acceptedPatientTeam])
     const acceptedPatient2 = createPatient('acceptedPatient2', [acceptedPatientTeam])
     const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam])
-    acceptedPatient1.currentTeam = acceptedPatientTeam
-    acceptedPatient2.currentTeam = acceptedPatientTeam
-    pendingPatient.currentTeam = pendingPatientTeam
 
     it('should return all the patients of the selected team without pending patients', () => {
-      const result = PatientUtils.getAllPatients([acceptedPatient1, acceptedPatient2, pendingPatient])
+      const result = PatientUtils.getNonPendingPatients([acceptedPatient1, acceptedPatient2, pendingPatient], 'patientTeamAccepted')
       expect(result).toEqual([acceptedPatient1, acceptedPatient2])
     })
+
     it('should return pending patients of the selected team without other accepted patients', () => {
-      const result = PatientUtils.getAllPatients([acceptedPatient1, acceptedPatient2, pendingPatient])
-      expect(result).toEqual([acceptedPatient1, acceptedPatient2])
+      const result = PatientUtils.getPendingPatients([acceptedPatient1, acceptedPatient2, pendingPatient], 'patientTeamAPending')
+      expect(result).toEqual([pendingPatient])
     })
   })
 })
