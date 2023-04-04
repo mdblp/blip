@@ -36,6 +36,8 @@ import {
   GlycemiaStatisticsService
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { useLocation } from 'react-router-dom'
+import { t } from 'i18next'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -50,7 +52,9 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
   const theme = useTheme()
-
+  const location = useLocation()
+  const isTrendsPage = location.pathname.includes('trends')
+  const selectedLabel = bgSource === DatumType.Cbg ? t('CGM') : t('BGM')
   const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const {
@@ -81,11 +85,16 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat sensorUsageData={sensorUsageData} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} />
+          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} label={selectedLabel} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
-
+      {isTrendsPage && !cbgSelected &&
+        <>
+          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} label={selectedLabel} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
       {children}
     </Box>
   )

@@ -59,17 +59,18 @@ import Box from '@mui/material/Box'
 
 export interface CoefficientOfVariationProps {
   coefficientOfVariation: number
+  label: string
 }
 
 export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
-  const { coefficientOfVariation } = props
+  const { coefficientOfVariation, label } = props
   const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('coefficient-of-variation-empty-stat')]
 
   return (
     <Box data-testid="coefficient-of-variation-stat">
       <SimpleStat
         annotations={annotation}
-        title={t('coefficient-of-variation', { cbgLabel: t('CGM') })}
+        title={t('coefficient-of-variation', { cbgLabel: label })}
         value={coefficientOfVariation}
         summaryFormat={StatFormats.Cv}
         total={0} />

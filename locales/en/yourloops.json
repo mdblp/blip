@@ -110,7 +110,7 @@
   "choice-of-healthcare-professional": "Choice of healthcare professional",
   "choice-of-remote-monitoring-team": "Choice of remote monitoring team",
   "coefficient-of-variation": "CV ({{cbgLabel}})",
-  "coefficient-of-variation-empty-stat": "Why is this stat empty?\n\n    There is not enough data present in this view to calculate it",
+  "coefficient-of-variation-empty-stat": "**Why is this stat empty?**\n\nThere is not enough data present in this view to calculate it",
   "coefficient-of-variation-tooltip": "**CV (Coefficient of Variation):** The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.",
   "colon": "{{label}}:",
   "compute-ndays-time-in-range": "**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the {{cbgLabel}} sample frequency.",
