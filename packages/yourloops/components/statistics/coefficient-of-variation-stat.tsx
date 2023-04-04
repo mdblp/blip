@@ -63,11 +63,12 @@ export interface CoefficientOfVariationProps {
 
 export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
   const { coefficientOfVariation } = props
+  const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('coefficient-of-variation-empty-stat')]
 
   return (
     <Box data-testid="coefficient-of-variation-stat">
       <SimpleStat
-        annotations={[t('coefficient-of-variation-tooltip')]}
+        annotations={annotation}
         title={t('coefficient-of-variation', { cbgLabel: t('CGM') })}
         value={coefficientOfVariation}
         summaryFormat={StatFormats.Cv}
