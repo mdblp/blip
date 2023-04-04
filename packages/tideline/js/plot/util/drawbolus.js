@@ -16,7 +16,6 @@
  */
 
 import _ from 'lodash'
-import { WizardInputMealSource } from 'medical-domain'
 import commonbolus from './commonbolus'
 
 const BolusTypes = {
@@ -32,7 +31,7 @@ const BolusTypes = {
  */
 function bolusToLegend(b) {
   if (b.type === 'wizard') {
-    if (b?.inputMeal?.source === WizardInputMealSource.Umm) {
+    if (b?.inputMeal?.source === 'umm') {
       return BolusTypes.umm
     }
     return BolusTypes.meal
@@ -127,7 +126,7 @@ function drawBolus(pool, opts = {}) {
         const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0
         return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0)
       }
-      const isUmm = (d) => d?.inputMeal?.source === WizardInputMealSource.Umm
+      const isUmm = (d) => d?.inputMeal?.source === 'umm'
       const carbCircleClass = (d) => {
         const baseClass = 'd3-circle-carbs d3-carbs'
         if (isUmm(d)) {
