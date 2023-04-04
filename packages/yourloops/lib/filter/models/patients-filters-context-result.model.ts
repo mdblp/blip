@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,46 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type ReactElement } from 'react'
+import { type PatientsFilters } from './patients-filters.model'
 
-import { type Theme } from '@mui/material/styles'
-import { makeStyles } from 'tss-react/mui'
-import Box from '@mui/material/Box'
-import ListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-
-const classes = makeStyles()((theme: Theme) => ({
-  title: {
-    fontWeight: 700,
-    lineHeight: '20px',
-    textTransform: 'uppercase'
-  },
-  icon: {
-    color: theme.palette.grey[600]
-  }
-}))
-
-interface DrawerCategoryItemProps {
-  icon: ReactElement
-  text: string
+export interface PatientsFiltersContextResult {
+  filters: PatientsFilters
+  updatePatientsFilters: (filters: PatientsFilters) => void
+  updatePendingFilter: (pendingEnabled: boolean) => void
+  resetFilters: () => void
 }
-
-const DrawerCategoryItem: FunctionComponent<DrawerCategoryItemProps> = (props) => {
-  const { classes: { title, icon } } = classes()
-
-  return (
-    <ListItem>
-      <ListItemIcon className={icon}>
-        {props.icon}
-      </ListItemIcon>
-      <ListItemText>
-        <Box className={title}>
-          {props.text}
-        </Box>
-      </ListItemText>
-    </ListItem>
-  )
-}
-
-export default DrawerCategoryItem

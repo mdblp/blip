@@ -51,7 +51,7 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 
-describe('Caregiver page for hcp', () => {
+describe('Profile page for caregiver', () => {
   const profile: Profile = {
     email: 'phil@defer.com',
     firstName: 'Phil',

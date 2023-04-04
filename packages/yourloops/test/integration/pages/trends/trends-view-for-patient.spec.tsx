@@ -27,11 +27,11 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout'
+import { unmonitoredPatientAsTeamMember } from '../../data/patient.api.data'
 
 describe('Trends view for patient', () => {
   beforeAll(() => {

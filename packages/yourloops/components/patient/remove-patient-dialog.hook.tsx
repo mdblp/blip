@@ -33,6 +33,7 @@ import { type Team, useTeam } from '../../lib/team'
 import TeamUtils from '../../lib/team/team.util'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void
@@ -53,8 +54,9 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const alert = useAlert()
   const { removePatient } = usePatientContext()
   const { getTeam } = useTeam()
+  const { selectedTeam } = useSelectedTeamContext()
 
-  const [selectedTeamId, setSelectedTeamId] = useState<string>('')
+  const [selectedTeamId, setSelectedTeamId] = useState<string>(selectedTeam.id)
   const [processing, setProcessing] = useState<boolean>(false)
 
   const userName = patient ? {

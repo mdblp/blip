@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,14 +25,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import React, { type FunctionComponent } from 'react'
+import Typography from '@mui/material/Typography'
+import Switch from '@mui/material/Switch'
+import { makeStyles } from 'tss-react/mui'
+import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 
-export const checkDrawer = () => {
-  const drawer = within(screen.getByTestId('main-left-drawer'))
-  expect(drawer.getByLabelText('Filter on all patients')).toBeVisible()
-  expect(drawer.getByLabelText('Filter on flagged patients')).toBeVisible()
+interface PatientsFiltersToggleProps {
+  ariaLabel: string
+  checked: boolean
+  icon: JSX.Element
+  label: string
+  onToggleChange: () => void
 }
 
-export const checkDrawerNotVisible = () => {
-  expect(screen.queryByTestId('main-left-drawer')).not.toBeInTheDocument()
+const useStyles = makeStyles()(() => ({
+  label: {
+    maxWidth: '200px'
+  },
+  toggle: {
+    marginLeft: 'auto',
+    marginRight: 0
+  }
+}))
+
+export const PatientsFiltersToggle: FunctionComponent<PatientsFiltersToggleProps> = (props) => {
+  const { ariaLabel, checked, icon, label, onToggleChange } = props
+  const { classes } = useStyles()
+  const theme = useTheme()
+
+  return (
+    <Stack direction="row" alignItems="center" gap={1} marginBottom={theme.spacing(1)}>
+      {icon}
+      <Typography variant="subtitle1" className={classes.label}>{label}</Typography>
+      <Switch
+        aria-label={ariaLabel}
+        className={classes.toggle}
+        checked={checked}
+        onChange={onToggleChange}
+      />
+    </Stack>
+  )
 }

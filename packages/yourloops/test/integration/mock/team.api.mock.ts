@@ -64,117 +64,155 @@ export const monitoringParametersBgUnitMmol = {
   reportingPeriod: 7
 }
 
-export const myTeamId = '62fe00defc9374b2fed32bcc'
-export const mySecondTeamId = '62fe00defc9374b2fed32bcd'
-export const myThirdTeamId = '62fe00defc9374b2fed32bce'
+export const myTeamId = 'myTeamId'
+export const mySecondTeamId = 'mySecondTeamId'
+export const myThirdTeamId = 'myThirdTeamId'
+export const filtersTeamId = 'filtersTeamId'
+export const myFirstTeamName = 'MyFirstTeam'
 export const mySecondTeamName = 'MySecondTeam'
 export const myThirdTeamName = 'A - MyThirdTeam - to be deleted'
+export const filtersTeamName = 'Team used to test the patients filters'
 
 const privateTeamId = 'private'
 
-export const teamOne: Team = {
-  name: 'MyTeam',
-  id: myTeamId,
-  code: '036038775',
-  type: TeamType.medical,
-  phone: '0476000000',
-  email: 'hey@hey.hey',
-  address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
-  members: [{
-    userId: loggedInUserId,
-    role: TeamMemberRole.admin,
-    profile: {
-      email: 'hey@hey.hey',
-      firstName: 'Yourloops UI 28.0',
-      fullName: 'Yourloops UI 28.0 HCP 0',
-      hcpProfession: HcpProfession.other,
-      lastName: 'HCP 0',
-      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    } as Profile,
-    status: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28@diabeloop.fr'
-  }]
-}
-
-export const teamTwo: Team = {
-  name: mySecondTeamName,
-  id: mySecondTeamId,
-  code: '241548778',
-  type: TeamType.medical,
-  phone: '0476000000',
-  email: 'hey@hey.hey',
-  address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
-  members: [{
-    userId: loggedInUserId,
-    role: TeamMemberRole.admin,
-    profile: {
-      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-      firstName: 'Yourloops UI 28.0',
-      fullName: 'Yourloops UI 28.0 HCP 0',
-      hcpProfession: HcpProfession.other,
-      lastName: 'HCP 0',
-      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    } as Profile,
-    status: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28@diabeloop.fr'
-  }],
-  monitoring: {
-    enabled: true,
-    monitoringEnd: null,
-    status: MonitoringStatus.accepted,
-    parameters: monitoringParameters
+export const buildTeamOne = (): Team => {
+  return {
+    name: myFirstTeamName,
+    id: myTeamId,
+    code: '036038775',
+    type: TeamType.medical,
+    phone: '0476000000',
+    email: 'hey@hey.hey',
+    address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
+    members: [{
+      userId: loggedInUserId,
+      role: TeamMemberRole.admin,
+      profile: {
+        email: 'hey@hey.hey',
+        firstName: 'Yourloops UI 28.0',
+        fullName: 'Yourloops UI 28.0 HCP 0',
+        hcpProfession: HcpProfession.other,
+        lastName: 'HCP 0',
+        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+      } as Profile,
+      status: UserInvitationStatus.accepted,
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr'
+    }]
   }
 }
 
-export const teamThree: Team = {
-  name: myThirdTeamName,
-  id: myThirdTeamId,
-  code: '263381988',
-  type: TeamType.medical,
-  phone: '0476000000',
-  email: 'hey@third.hey',
-  address: { line1: 'Guiness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'IE' },
-  members: [{
-    userId: loggedInUserId,
-    role: TeamMemberRole.admin,
-    profile: {
-      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-      firstName: 'Yourloops UI 28.0',
-      fullName: 'Yourloops UI 28.0 HCP 0',
-      hcpProfession: HcpProfession.other,
-      lastName: 'HCP 0',
-      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    } as Profile,
-    status: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28@diabeloop.fr'
-  }, {
-    userId: '4d9afc649ae4',
-    role: TeamMemberRole.admin,
-    profile: {
-      email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-      firstName: 'Yourloops UI 28.1',
-      fullName: 'Yourloops UI 28.1 HCP 1',
-      hcpProfession: HcpProfession.other,
-      lastName: 'HCP 1',
-      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-    } as Profile,
-    status: UserInvitationStatus.accepted,
-    email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
-  }]
+export const buildTeamTwo = (): Team => {
+  return {
+    name: mySecondTeamName,
+    id: mySecondTeamId,
+    code: '241548778',
+    type: TeamType.medical,
+    phone: '0476000000',
+    email: 'hey@hey.hey',
+    address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
+    members: [{
+      userId: loggedInUserId,
+      role: TeamMemberRole.admin,
+      profile: {
+        email: 'ylp.ui.test.hcp.28@diabeloop.fr',
+        firstName: 'Yourloops UI 28.0',
+        fullName: 'Yourloops UI 28.0 HCP 0',
+        hcpProfession: HcpProfession.other,
+        lastName: 'HCP 0',
+        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+      } as Profile,
+      status: UserInvitationStatus.accepted,
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr'
+    }],
+    monitoring: {
+      enabled: true,
+      monitoringEnd: null,
+      status: MonitoringStatus.accepted,
+      parameters: monitoringParameters
+    }
+  }
 }
 
-export const teamPrivate: Team = {
-  name: 'private',
-  id: privateTeamId,
-  code: 'private',
-  type: TeamType.private,
-  phone: '',
-  email: '',
-  members: []
+export const buildTeamThree = (): Team => {
+  return {
+    name: myThirdTeamName,
+    id: myThirdTeamId,
+    code: '263381988',
+    type: TeamType.medical,
+    phone: '0476000000',
+    email: 'hey@third.hey',
+    address: { line1: 'Guiness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'IE' },
+    members: [{
+      userId: loggedInUserId,
+      role: TeamMemberRole.admin,
+      profile: {
+        email: 'ylp.ui.test.hcp.28@diabeloop.fr',
+        firstName: 'Yourloops UI 28.0',
+        fullName: 'Yourloops UI 28.0 HCP 0',
+        hcpProfession: HcpProfession.other,
+        lastName: 'HCP 0',
+        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+      } as Profile,
+      status: UserInvitationStatus.accepted,
+      email: 'ylp.ui.test.hcp.28@diabeloop.fr'
+    }, {
+      userId: '4d9afc649ae4',
+      role: TeamMemberRole.admin,
+      profile: {
+        email: 'ylp.ui.test.hcp.28@diabeloop.fr',
+        firstName: 'Yourloops UI 28.1',
+        fullName: 'Yourloops UI 28.1 HCP 1',
+        hcpProfession: HcpProfession.other,
+        lastName: 'HCP 1',
+        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+      } as Profile,
+      status: UserInvitationStatus.accepted,
+      email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
+    }]
+  }
+}
+
+export const buildFiltersTeam = (): Team => {
+  return {
+    name: filtersTeamName,
+    id: filtersTeamId,
+    code: '126534897',
+    type: TeamType.medical,
+    phone: '0476000001',
+    email: 'filters@team.com',
+    address: { line1: 'Vaucansson', line2: '', zip: '380000', city: 'Grenoble', country: 'FR' },
+    members: [{
+      userId: loggedInUserId,
+      role: TeamMemberRole.admin,
+      profile: {
+        email: 'filters@user.com',
+        firstName: 'Test',
+        lastName: 'Patients Filters',
+        fullName: 'Test Patients Filters',
+        hcpProfession: HcpProfession.other,
+        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+      } as Profile,
+      status: UserInvitationStatus.accepted,
+      email: 'filters@user.com'
+    }]
+  }
+}
+
+export const buildPrivateTeam = (): Team => {
+  return {
+    name: 'private',
+    id: privateTeamId,
+    code: 'private',
+    type: TeamType.private,
+    phone: '',
+    email: '',
+    members: []
+  }
 }
 
 export const iTeamOne: ITeam = {
@@ -198,8 +236,10 @@ export const iTeamOne: ITeam = {
   members: null
 }
 
-export const AVAILABLE_TEAMS = [teamOne, teamTwo, teamThree, teamPrivate]
+export const buildAvailableTeams = (): Team[] => {
+  return [buildTeamOne(), buildTeamTwo(), buildTeamThree(), buildFiltersTeam(), buildPrivateTeam()]
+}
 
 export const mockTeamAPI = () => {
-  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(AVAILABLE_TEAMS)
+  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams())
 }

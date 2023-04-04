@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,27 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type FilterType } from '../../../lib/patient/models/enums/filter-type.enum'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type PatientListFilters } from '../../patient-list/enums/patient-list.enum'
-import { type SortDirection } from './enums/sort-direction.enum'
-import { type PatientTableSortFields } from './enums/patient-table-sort-fields.enum'
-
-export interface PatientTableProps {
-  filter?: FilterType | string
-  order: SortDirection
-  orderBy: PatientTableSortFields
-  onSortList: (field: PatientTableSortFields, direction: SortDirection) => void
-  patients: Patient[]
-}
-
-export interface PatientListProps {
-  filter: string
-  filterType: PatientListFilters
-}
-
-export interface PatientRowProps {
-  filter?: FilterType | string
-  loggedUserIsHcpInMonitoring: boolean
-  patient: Patient
+export interface PatientsFilters {
+  pendingEnabled: boolean
+  manualFlagEnabled: boolean
+  telemonitoredEnabled: boolean
+  timeOutOfTargetEnabled: boolean
+  hypoglycemiaEnabled: boolean
+  dataNotTransferredEnabled: boolean
+  messagesEnabled: boolean
 }

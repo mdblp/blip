@@ -31,8 +31,8 @@ import moment from 'moment-timezone'
 import { type Patient } from './models/patient.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
-import { PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
 import { type User } from '../auth'
+import { type PatientsFilters } from '../filter/models/patients-filters.model'
 
 export default class PatientUtils {
   static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {
@@ -109,38 +109,51 @@ export default class PatientUtils {
     return !tm
   }
 
-  static isInTeam = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId)
-    return !!tm
+  static getNonPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
+    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status !== UserInvitationStatus.pending))
   }
 
-  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[]): Patient[] => {
-    const twoWeeksFromNow = new Date()
-    switch (filterType) {
-      case PatientListFilters.All:
-        return patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient))
-      case PatientListFilters.Pending:
-        return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
-      case PatientListFilters.Flagged:
-        return patients.filter(patient => flaggedPatients.includes(patient.userid))
-      case PatientListFilters.UnreadMessages:
-        return patients.filter(patient => patient.metadata.hasSentUnreadMessages)
-      case PatientListFilters.OutOfRange:
-        return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive)
-      case PatientListFilters.SevereHypoglycemia:
-        return patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive)
-      case PatientListFilters.DataNotTransferred:
-        return patients.filter(patient => patient.alarms.nonDataTransmissionActive)
-      case PatientListFilters.RemoteMonitored:
-        return patients.filter(patient => patient.monitoring?.enabled)
-      case PatientListFilters.Private:
-        return patients.filter(patient => PatientUtils.isInTeam(patient, filterType))
-      case PatientListFilters.Renew:
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
-        return patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
-      default:
-        return patients
+  static filterPatientsOnMonitoringAlerts = (patients: Patient[], patientFilters: PatientsFilters): Patient[] => {
+    if (!patientFilters.timeOutOfTargetEnabled && !patientFilters.hypoglycemiaEnabled && !patientFilters.dataNotTransferredEnabled) {
+      return patients
     }
+    if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
+      return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive || patient.alarms.frequencyOfSevereHypoglycemiaActive || patient.alarms.nonDataTransmissionActive)
+    }
+    if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled) {
+      return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive || patient.alarms.frequencyOfSevereHypoglycemiaActive)
+    }
+    if (patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
+      return patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive || patient.alarms.nonDataTransmissionActive)
+    }
+    if (patientFilters.timeOutOfTargetEnabled && patientFilters.dataNotTransferredEnabled) {
+      return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive || patient.alarms.nonDataTransmissionActive)
+    }
+    if (patientFilters.timeOutOfTargetEnabled) {
+      return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive)
+    }
+    if (patientFilters.hypoglycemiaEnabled) {
+      return patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive)
+    }
+    return patients.filter(patient => patient.alarms.nonDataTransmissionActive)
+  }
+
+  static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined, selectedTeamId: string): Patient[] => {
+    if (patientFilters.pendingEnabled) {
+      return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
+    }
+    let patientsExtracted = PatientUtils.getNonPendingPatients(patients, selectedTeamId)
+    patientsExtracted = PatientUtils.filterPatientsOnMonitoringAlerts(patientsExtracted, patientFilters)
+    if (patientFilters.telemonitoredEnabled) {
+      patientsExtracted = patientsExtracted.filter(patient => patient.monitoring?.enabled)
+    }
+    if (patientFilters.manualFlagEnabled) {
+      patientsExtracted = patientsExtracted.filter(patient => flaggedPatientsId?.includes(patient.userid))
+    }
+    if (patientFilters.messagesEnabled) {
+      return patientsExtracted.filter(patient => patient.metadata.hasSentUnreadMessages)
+    }
+    return patientsExtracted
   }
 
   static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {

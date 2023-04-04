@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
+- YLP-2151 As a HCP I want to be able to filter my patients via the new design
 
 ### Engineering use
 - YLP-2044 Remove redux settings store

@@ -38,17 +38,18 @@ import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
 import { type Patient } from './models/patient.model'
-import { type PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
+import { usePatientsFiltersContext } from '../filter/patients-filters.provider'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
+  const { filters } = usePatientsFiltersContext()
   const { selectedTeam } = useSelectedTeamContext()
 
   const [patients, setPatients] = useState<Patient[]>([])
@@ -82,8 +83,19 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     setPatients(patientsUpdated)
   }, [patients])
 
-  const patientsForSelectedTeam = user.isUserHcp() ? patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeam.id)) : []
-  const patientList = user.isUserHcp() ? patientsForSelectedTeam : patients
+  const patientsForSelectedTeam = useMemo(() => {
+    if (!user.isUserHcp()) {
+      return patients
+    }
+    return patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeam.id))
+  }, [patients, selectedTeam, user])
+
+  const patientList = useMemo(() => {
+    if (!user.isUserHcp()) {
+      return patients
+    }
+    return PatientUtils.extractPatients(patientsForSelectedTeam, filters, user.preferences.patientsStarred, selectedTeam.id)
+  }, [user, patientsForSelectedTeam, filters, selectedTeam, patients])
 
   const isPatientTeamPrivate = (patientTeam: PatientTeam): boolean => {
     return patientTeam.teamId === PRIVATE_TEAM_ID
@@ -91,29 +103,20 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const buildPatientFiltersStats = useCallback(() => {
     return {
-      all: patientList.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
-      pending: patientList.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
-      directShare: patientList.filter((patient) => patient.teams.find(team => isPatientTeamPrivate(team))).length,
-      unread: patientList.filter(patient => patient.metadata.hasSentUnreadMessages).length,
-      outOfRange: patientList.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
-      severeHypoglycemia: patientList.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
-      dataNotTransferred: patientList.filter(patient => patient.alarms.nonDataTransmissionActive).length,
-      remoteMonitored: patientList.filter(patient => patient.monitoring?.enabled).length,
-      renew: patientList.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
+      all: patientsForSelectedTeam.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
+      pending: patientsForSelectedTeam.filter((patient) => PatientUtils.isInvitationPending(patient)).length
     }
-  }, [patientList])
+  }, [patientsForSelectedTeam])
 
   const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
 
-  const getPatientByEmail = useCallback((email: string) => patientList.find(patient => patient.profile.email === email), [patientList])
+  const getPatientByEmail = useCallback((email: string) => patientsForSelectedTeam.find(patient => patient.profile.email === email), [patientsForSelectedTeam])
 
   const getPatientById = useCallback(userId => patientList.find(patient => patient.userid === userId), [patientList])
 
-  const filterPatients = useCallback((filterType: PatientListFilters, search: string, flaggedPatients: string[]) => {
-    const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients)
-
+  const searchPatients = useCallback((search: string) => {
     if (search.length === 0) {
-      return filteredPatients
+      return patientList
     }
 
     const searchText = search.toLocaleLowerCase()
@@ -122,10 +125,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
     if (searchTextStartsWithBirthdate) {
       const firstNameOrLastName = searchText.slice(10).trimStart()
-      return PatientUtils.extractPatientsWithBirthdate(filteredPatients, birthdateAsString, firstNameOrLastName)
+      return PatientUtils.extractPatientsWithBirthdate(patientList, birthdateAsString, firstNameOrLastName)
     }
 
-    return filteredPatients.filter(patient => {
+    return patientList.filter(patient => {
       const firstName = patient.profile.firstName ?? ''
       const lastName = patient.profile.lastName ?? ''
       return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
@@ -215,7 +218,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     refreshInProgress,
     getPatientByEmail,
     getPatientById,
-    filterPatients,
+    searchPatients,
     invitePatient,
     editPatientRemoteMonitoring,
     markPatientMessagesAsRead,
@@ -224,5 +227,5 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     leaveTeam,
     setPatientMedicalData,
     refresh
-  }), [patientList, patientsFilterStats, errorMessage, initialized, refreshInProgress, getPatientByEmail, getPatientById, filterPatients, invitePatient, editPatientRemoteMonitoring, markPatientMessagesAsRead, updatePatientMonitoring, removePatient, leaveTeam, setPatientMedicalData, refresh])
+  }), [patientList, patientsFilterStats, errorMessage, initialized, refreshInProgress, getPatientByEmail, getPatientById, searchPatients, invitePatient, editPatientRemoteMonitoring, markPatientMessagesAsRead, updatePatientMonitoring, removePatient, leaveTeam, setPatientMedicalData, refresh])
 }

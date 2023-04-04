@@ -28,7 +28,12 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
-import { DataGrid, type GridColumnVisibilityModel, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
+import {
+  DataGrid,
+  type GridColumnVisibilityModel,
+  type GridPaginationModel,
+  type GridSortModel
+} from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
@@ -102,6 +107,7 @@ export const PatientList: FunctionComponent = () => {
         <PatientListHeader
           selectedTab={selectedTab}
           inputSearch={inputSearch}
+          numberOfPatientsDisplayed={rowsProps.length}
           onChangingTab={onChangingTab}
           setInputSearch={setInputSearch}
         />

@@ -31,10 +31,9 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
 import {
   buildPatientAsTeamMember,
-  mockPatientApiForCaregivers,
   monitoredPatientAsTeamMember,
   unmonitoredPatientAsTeamMember
-} from '../../mock/patient.api.mock'
+} from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
@@ -43,7 +42,8 @@ import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { checkPatientList } from '../../assert/patient-list-header'
+import { checkPatientListHeader } from '../../assert/patient-list-header'
+import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -65,7 +65,7 @@ describe('Caregiver home page', () => {
     })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientList(UserRole.Caregiver)
+    checkPatientListHeader(UserRole.Caregiver)
   })
 
   it('should filter patients correctly depending on the search value', async () => {
@@ -142,7 +142,7 @@ describe('Caregiver home page', () => {
     })
 
     await checkCaregiverLayout(`${firstName} ${lastName}`)
-    checkPatientList(UserRole.Caregiver)
+    checkPatientListHeader(UserRole.Caregiver)
 
     const patientTableBody = within(screen.getByTestId('patient-list'))
     const patientData = patientTableBody.getByText(patientFullName)

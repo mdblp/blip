@@ -28,7 +28,7 @@
 import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { buildPatient, buildTeamMemberFromPatient } from '../../mock/patient.api.mock'
+import { buildPatient, buildTeamMemberFromPatient } from '../../data/patient.api.data'
 import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockUserApi } from '../../mock/user.api.mock'

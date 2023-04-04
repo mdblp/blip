@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -41,7 +41,6 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import Badge from '@mui/material/Badge'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
-import Link from '@mui/material/Link'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -52,10 +51,14 @@ import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
+import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
+import Link from '@mui/material/Link'
+import { PatientsFiltersDialog } from '../dialogs/patients-filters-dialog'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
   inputSearch: string
+  numberOfPatientsDisplayed: number
   onChangingTab: (newTab: PatientListTabs) => void
   setInputSearch: (value: string) => void
 }
@@ -87,15 +90,36 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const theme = useTheme()
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { selectedTab, inputSearch, onChangingTab, setInputSearch } = props
+  const { selectedTab, inputSearch, numberOfPatientsDisplayed, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
   const { patientsFilterStats } = usePatientContext()
+  const { filters, resetFilters } = usePatientsFiltersContext()
+  const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
+
+  const filtersRef = useRef<HTMLButtonElement>(null)
+
+  const filtersLabel = user.isUserHcp() && filters.pendingEnabled
+    ? t('filter-pending', { numberOfPatientsFiltered: numberOfPatientsDisplayed })
+    : t('filters-activated', {
+      numberOfPatientsFiltered: numberOfPatientsDisplayed,
+      totalNumberOfPatients: patientsFilterStats.all
+    })
+
+  const filterButtonTooltipTitle = user.isUserHcp() && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
 
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
     setTeamCodeDialogSelectedTeam(team)
+  }
+
+  const openFiltersDialog = (): void => {
+    setFiltersDialogOpen(true)
+  }
+
+  const closeFiltersDialog = (): void => {
+    setFiltersDialogOpen(false)
   }
 
   return (
@@ -122,18 +146,28 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                   endAdornment: <InputAdornment position="end"><SearchIcon /></InputAdornment>,
                   sx: { height: '42px', borderRadius: '28px' }
                 }}
-                onChange={event => { setInputSearch(event.target.value) }}
+                onChange={event => {
+                  setInputSearch(event.target.value)
+                }}
               />
             </Tooltip>
-            {/* TODO activate this button with Filters YLP-2151 https://diabeloop.atlassian.net/browse/YLP-2151 */}
-            <Button
-              variant="outlined"
-              size="large"
-              color="inherit"
-              endIcon={<FilterList />}
-            >
-              {t('filters')}
-            </Button>
+            {user.isUserHcp() &&
+              <Tooltip title={filterButtonTooltipTitle}>
+                <span>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    color="inherit"
+                    endIcon={<FilterList />}
+                    onClick={openFiltersDialog}
+                    disabled={filters.pendingEnabled}
+                    ref={filtersRef}
+                  >
+                    {t('filters')}
+                  </Button>
+                </span>
+              </Tooltip>
+            }
           </Box>
           <Box>
             {user.isUserHcp() &&
@@ -142,7 +176,9 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                 variant="contained"
                 size="large"
                 disableElevation
-                onClick={() => { setShowAddPatientDialog(true) }}
+                onClick={() => {
+                  setShowAddPatientDialog(true)
+                }}
               >
                 {t('button-add-new-patient')}
               </Button>
@@ -182,7 +218,8 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               icon={<HourglassEmptyIcon />}
               iconPosition="start"
               label={<>
-                {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
+                {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary"
+                                      sx={{ marginLeft: theme.spacing(2) }} />
               </>}
               aria-label={t('pending')}
               classes={{ root: classes.tab }}
@@ -193,39 +230,56 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             alignItems="center"
           >
             <Typography
+              data-testid="filters-label"
               variant="subtitle2"
               color="text.secondary"
             >
-              Filters activated: X patients out of Y
+              {filtersLabel}
             </Typography>
-            <Divider
-              orientation="vertical"
-              variant="middle"
-              flexItem
-              sx={{ marginInline: theme.spacing(2) }}
-            />
-            <Link
-              color="inherit"
-              variant="subtitle2"
-              underline="always"
-              className={classes.resetButton}
-            >
-              Reset
-            </Link>
+            {user.isUserHcp() && !filters.pendingEnabled &&
+              <>
+                <Divider
+                  orientation="vertical"
+                  variant="middle"
+                  flexItem
+                  sx={{ marginInline: theme.spacing(2) }}
+                />
+                <Link
+                  data-testid="reset-filters-link"
+                  color="inherit"
+                  variant="subtitle2"
+                  underline="always"
+                  className={classes.resetButton}
+                  onClick={resetFilters}
+                >
+                  {t('reset')}
+                </Link>
+              </>
+            }
           </Box>
         </Box>
       </Box>
       {showAddPatientDialog &&
         <AddPatientDialog
           onAddPatientSuccessful={onAddPatientSuccessful}
-          onClose={() => { setShowAddPatientDialog(false) }}
+          onClose={() => {
+            setShowAddPatientDialog(false)
+          }}
         />
       }
       {teamCodeDialogSelectedTeam &&
         <TeamCodeDialog
           code={teamCodeDialogSelectedTeam.code}
           name={teamCodeDialogSelectedTeam.name}
-          onClose={() => { setTeamCodeDialogSelectedTeam(null) }}
+          onClose={() => {
+            setTeamCodeDialogSelectedTeam(null)
+          }}
+        />
+      }
+      {isFiltersDialogOpen &&
+        <PatientsFiltersDialog
+          anchorEl={filtersRef.current}
+          onClose={closeFiltersDialog}
         />
       }
     </React.Fragment>

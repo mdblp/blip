@@ -26,25 +26,21 @@
  */
 
 import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader } from './header'
-import { checkDrawer, checkDrawerNotVisible } from './drawer'
 import { checkFooter } from './footer'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 
 export const checkHCPLayout = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[], needFooterLanguageSelector: boolean = false) => {
   await checkHcpHeader(fullName, selectedTeamParams, availableTeams)
-  checkDrawer()
   checkFooter({ role: UserRole.Hcp, needFooterLanguageSelector })
 }
 
 export const checkCaregiverLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkCaregiverHeader(fullName)
-  checkDrawer()
   checkFooter({ role: UserRole.Caregiver, needFooterLanguageSelector })
 }
 
 export const checkPatientLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkPatientHeader(fullName)
-  checkDrawerNotVisible()
   checkFooter({ role: UserRole.Patient, needFooterLanguageSelector })
 }
