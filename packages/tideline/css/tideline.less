@@ -65,7 +65,7 @@ svg {
     fill: @text;
     &.d3-day-label {
       dominant-baseline: hanging;
-      fill: var(--stat--default, @text-light);
+      fill: var(--stat--default, @text);
     }
 
     @media (max-width: @screen-sm-max) {
@@ -132,7 +132,7 @@ svg {
 .d3-pool-legend {
   font-size: @font-size-axes;
   text-anchor: end;
-  fill: var(--stat--default, @text-light);
+  fill: var(--stat--default, @text);
 
   @media (max-width: @screen-sm-max) {
     font-size: 10px;
@@ -251,6 +251,9 @@ svg {
   font-size: @font-size-small;
   dominant-baseline: central;
   text-anchor: middle;
+  &.d3-carbs-text-meal {
+    fill: var(--carbs-light-text, @text);
+  }
 }
 .d3-circle-rescuecarbs {
   fill: @rescuecarbs;

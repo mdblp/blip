@@ -135,6 +135,13 @@ function drawBolus(pool, opts = {}) {
         }
         return baseClass
       }
+      const carbTextClass = (d) => {
+        const baseClass = 'd3-carbs-text'
+        if (isUmm(d)) {
+          return `${baseClass} d3-carbs-text-estimated`
+        }
+        return `${baseClass} d3-carbs-text-meal`
+      }
       carbs.append('circle')
         .attr({
           'cx': xPos,
@@ -150,7 +157,7 @@ function drawBolus(pool, opts = {}) {
         .attr({
           x: xPos,
           y: yPos,
-          class: 'd3-carbs-text',
+          class: carbTextClass,
           id: (d) => `carbs_text_${d.id}`
         })
     },
