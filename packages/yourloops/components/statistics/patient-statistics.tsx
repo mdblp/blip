@@ -54,7 +54,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const theme = useTheme()
   const location = useLocation()
   const isTrendsPage = location.pathname.includes('trends')
-  const selectedLabel = bgSource === DatumType.Cbg ? t('CGM') : t('BGM')
+  const selectedLabel = cbgSelected ? t('CGM') : t('BGM')
   const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const {
@@ -91,6 +91,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       }
       {isTrendsPage && !cbgSelected &&
         <>
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} label={selectedLabel} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
