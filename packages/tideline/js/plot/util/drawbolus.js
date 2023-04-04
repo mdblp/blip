@@ -152,7 +152,7 @@ function drawBolus(pool, opts = {}) {
         })
 
       carbs.append('text')
-        .text((d) => isUmm(d) ? '-':  d.carbInput)
+        .text((d) => d.carbInput)
         .attr({
           x: xPos,
           y: yPos,
