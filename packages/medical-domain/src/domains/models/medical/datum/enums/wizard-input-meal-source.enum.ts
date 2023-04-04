@@ -25,29 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BaseDatum from './basics/base-datum.model'
-import type Bolus from './bolus.model'
-import { type DatumType } from './enums/datum-type.enum'
-import { type WizardInputMealFat } from './enums/wizard-input-meal-fat.enum'
-import { type WizardInputMealSource } from './enums/wizard-input-meal-source.enum'
-
-export type Wizard = BaseDatum & {
-  type: DatumType.Wizard
-  uploadId: string
-  bolusId: string
-  carbInput: number
-  units: string
-  bolus: Bolus | null
-  recommended?: {
-    carb: number
-    correction: number
-    net: number
-  }
-  inputTime: string
-  inputMeal?: {
-    fat: WizardInputMealFat
-    source: WizardInputMealSource
-  }
+export enum WizardInputMealSource {
+  Umm = 'umm',
+  Manual = 'manual'
 }
-
-export default Wizard

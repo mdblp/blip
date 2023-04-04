@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type Bolus, DatumType, Prescriptor, type TimePrefs, type Wizard, WizardInputMealFat } from 'medical-domain'
+import { type Bolus, DatumType, Prescriptor, type TimePrefs, type Wizard, WizardInputMealFat, WizardInputMealSource } from 'medical-domain'
 import { Tooltip } from '../../../index'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import {
@@ -84,7 +84,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const carbs = (bolus as Wizard).carbInput
   const fatMeal = (bolus as Wizard).inputMeal?.fat
   const isFatMeal = fatMeal === WizardInputMealFat.Yes
-  const isUmm = (bolus as Wizard).inputMeal?.source === 'umm'
+  const isUmm = (bolus as Wizard).inputMeal?.source === WizardInputMealSource.Umm
   const inputTime = (bolus as Wizard).inputTime
   const recommended = getRecommended(bolus as Wizard)
   const suggested = Number.isFinite(recommended) ? recommended : null
