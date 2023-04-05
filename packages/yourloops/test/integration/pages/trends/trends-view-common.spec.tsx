@@ -36,7 +36,12 @@ import {
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets
 } from '../../assert/trends'
-import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
+import {
+  minimalTrendViewData,
+  mockDataAPI,
+  smbgData,
+  timeInRangeStatsTrendViewData
+} from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
@@ -71,7 +76,6 @@ describe('Trends view for anyone', () => {
       await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
       await checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
       await checkSensorUsage('Sensor Usage0.1%')
-      await checkCoefficientOfVariation('CV (CGM)78%')
       await checkRangeSelection()
       await checkDaysSelection()
 
@@ -94,10 +98,10 @@ describe('Trends view for anyone', () => {
       await checkTimeInRangeStatsTitle()
     })
 
-    it('should data', async () => {
-      mockDataAPI(smbgData)
+    it('with the Cbg data', async () => {
+      mockDataAPI()
       renderPage('/trends')
-      await checkCoefficientOfVariation('')
+      await checkCoefficientOfVariation('CV (CGM)78%')
     })
   })
 
@@ -114,7 +118,7 @@ describe('Trends view for anyone', () => {
 
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-
+      await checkCoefficientOfVariation('CV (BGM)78%')
     })
   })
 })
