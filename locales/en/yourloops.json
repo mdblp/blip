@@ -234,6 +234,7 @@
   "member": "Member",
   "members": "Members",
   "menu-contact-support": "Customer support",
+  "message-from-current-settings-on-device": "This view shows the current settings, history of change and device information, but it looks like the system hasn't sent data yet.",
   "messaging": "Messaging",
   "minimum": "Minimum:",
   "modal-add-caregiver": "Add a caregiver",
