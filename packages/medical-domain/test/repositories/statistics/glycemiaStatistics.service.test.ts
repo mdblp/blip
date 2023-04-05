@@ -307,7 +307,7 @@ describe('GlycemiaStatisticsService getCoefficientOfVariationData', () => {
     const expected = {
       coefficientOfVariation: 68.47579720288888,
       insufficientData: false,
-      total: 5
+      totalCoefficientVariation: 5
     }
     expect(statsCbg).toEqual(expected)
     const statsSmbg = GlycemiaStatisticsService.getCoefficientOfVariationData(smbgData, dateFilterOneDay)
@@ -318,7 +318,7 @@ describe('GlycemiaStatisticsService getCoefficientOfVariationData', () => {
     const expected = {
       coefficientOfVariation: 68.47579720288888,
       insufficientData: false,
-      total: 6
+      totalCoefficientVariation: 6
     }
     expect(statsCbg).toEqual(expected)
     const statsSmbg = GlycemiaStatisticsService.getCoefficientOfVariationData(smbgData, dateFilterTwoDays)
@@ -329,7 +329,7 @@ describe('GlycemiaStatisticsService getCoefficientOfVariationData', () => {
     const expected = {
       coefficientOfVariation: 47.136149296106296,
       insufficientData: false,
-      total: 9
+      totalCoefficientVariation: 9
     }
     expect(statsCbg).toEqual(expected)
     const statsSmbg = GlycemiaStatisticsService.getCoefficientOfVariationData(smbgData, dateFilterThreeDays)
@@ -339,7 +339,7 @@ describe('GlycemiaStatisticsService getCoefficientOfVariationData', () => {
     const statsCbg = GlycemiaStatisticsService.getCoefficientOfVariationData(cbgData, dateFilterThreeDays2020)
     const expected = {
       insufficientData: true,
-      total: 3,
+      totalCoefficientVariation: 3,
       coefficientOfVariation: Number.NaN
     }
     expect(statsCbg).toEqual(expected)
@@ -350,7 +350,7 @@ describe('GlycemiaStatisticsService getCoefficientOfVariationData', () => {
     const statsCbg = GlycemiaStatisticsService.getCoefficientOfVariationData(cbgData.slice(0, 2), dateFilterOneDay)
     const expected = {
       insufficientData: true,
-      total: 2,
+      totalCoefficientVariation: 2,
       coefficientOfVariation: Number.NaN
     }
     expect(statsCbg).toEqual(expected)
