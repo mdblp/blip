@@ -27,7 +27,7 @@
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { SimpleStat } from 'dumb'
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { StatFormats } from 'dumb/src/models/stats.model'
 
 interface GlucoseManagementIndicatorProps {
@@ -45,6 +45,7 @@ export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndi
         title={t('glucose-management-indicator-title')}
         value={glucoseManagementIndicator}
         summaryFormat={StatFormats.Gmi}
-        total={0} />
+        total={0}
+      />
     </Box>)
 }
