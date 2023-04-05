@@ -27,7 +27,7 @@
 
 import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type UnitsType } from 'dumb'
+import { type BgUnit } from 'medical-domain'
 
 export interface ProfileForm {
   birthday: string | undefined
@@ -41,7 +41,7 @@ export interface ProfileForm {
   referringDoctor: string | undefined
   sex: string | undefined
   ssn: string | undefined
-  units: UnitsType
+  units: BgUnit
 }
 
 export type ProfileErrors = Record<string, boolean>

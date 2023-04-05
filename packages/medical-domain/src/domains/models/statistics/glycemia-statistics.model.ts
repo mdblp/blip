@@ -43,7 +43,7 @@ export interface CbgRangeStatistics {
 
 export interface SensorUsageStatistics {
   sensorUsage: number
-  total: number
+  totalUsage: number
 }
 
 export interface AverageGlucoseStatistics {
@@ -60,7 +60,6 @@ export interface CoefficientOfVariationStatistics {
 export interface GlucoseManagementIndicatoStatistics {
   insufficientData: boolean
   glucoseManagementIndicator: number
-  total: number
 }
 
 export interface StandardDevStatistics {

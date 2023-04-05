@@ -26,22 +26,17 @@
  */
 import React, { type FunctionComponent } from 'react'
 import { SimpleStat } from 'dumb'
-import { StatFormats } from 'dumb/dist/src/models/stats.model'
+import { StatFormats } from 'dumb/src/models/stats.model'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
 
-export interface SensorUsageData {
-  total: number
+export interface SensorUsageStatProp {
+  totalUsage: number
   usage: number
 }
 
-interface SensorUsageStatProp {
-  sensorUsageData: SensorUsageData
-}
-
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
-  const { sensorUsageData } = props
-  const { usage, total } = sensorUsageData
+  const { usage, totalUsage } = props
 
   return (
     <Box data-testid="sensor-usage-stat">
@@ -50,7 +45,7 @@ export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) =
         title={t('sensor-usage')}
         value={usage}
         summaryFormat={StatFormats.Percentage}
-        total={total} />
+        total={totalUsage} />
     </Box>
   )
 }

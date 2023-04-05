@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { formatBgValue } from 'dumb/src/utils/format/format.util'
-import { UnitsType } from 'dumb/src/models/enums/units-type.enum'
 import { convertBG } from '../../lib/units/units.util'
 import { DEFAULT_BG_VALUES, DEFAULT_THRESHOLDS_IN_MGDL } from './alarms.default'
 import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
+import { type BgUnit, Unit } from 'medical-domain'
 
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
@@ -46,41 +46,41 @@ export const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ 
   })
 }
 
-export const buildThresholds = (bgUnit: UnitsType): Thresholds => {
-  if (bgUnit === UnitsType.MMOLL) {
+export const buildThresholds = (bgUnit: BgUnit): Thresholds => {
+  if (bgUnit === Unit.MmolPerLiter) {
     return {
-      minHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minHighBg, UnitsType.MGDL) * 10) / 10,
-      maxHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxHighBg, UnitsType.MGDL) * 10) / 10,
-      minVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, UnitsType.MGDL) * 10) / 10,
-      maxVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryLowBg, UnitsType.MGDL) * 10) / 10,
-      minLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, UnitsType.MGDL) * 10) / 10,
-      maxLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxLowBg, UnitsType.MGDL) * 10) / 10
+      minHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minHighBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      maxHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxHighBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      minVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      maxVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      minLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      maxLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxLowBg, Unit.MilligramPerDeciliter) * 10) / 10
     }
   }
   return { ...DEFAULT_THRESHOLDS_IN_MGDL }
 }
 
-export const buildBgValues = (bgUnit: UnitsType): BgValues => {
-  if (bgUnit === UnitsType.MMOLL) {
+export const buildBgValues = (bgUnit: BgUnit): BgValues => {
+  if (bgUnit === Unit.MmolPerLiter) {
     return {
       ...DEFAULT_BG_VALUES,
-      bgUnitDefault: UnitsType.MMOLL,
-      highBgDefault: Math.round(convertBG(DEFAULT_BG_VALUES.highBgDefault, UnitsType.MGDL) * 10) / 10,
-      veryLowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, UnitsType.MGDL) * 10) / 10,
-      lowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, UnitsType.MGDL) * 10) / 10
+      bgUnitDefault: Unit.MmolPerLiter,
+      highBgDefault: Math.round(convertBG(DEFAULT_BG_VALUES.highBgDefault, Unit.MilligramPerDeciliter) * 10) / 10,
+      veryLowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      lowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, Unit.MilligramPerDeciliter) * 10) / 10
     }
   }
   return { ...DEFAULT_BG_VALUES }
 }
 
-const convertAndFormatBgValue = (value: number, currentUnit: UnitsType): number => {
-  const newUnit = currentUnit === UnitsType.MGDL ? UnitsType.MMOLL : UnitsType.MGDL
+const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => {
+  const newUnit = currentUnit === Unit.MilligramPerDeciliter ? Unit.MmolPerLiter : Unit.MilligramPerDeciliter
   const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
 
-  return newUnit === UnitsType.MGDL ? parseInt(formattedValueString) : parseFloat(formattedValueString)
+  return newUnit === Unit.MilligramPerDeciliter ? parseInt(formattedValueString) : parseFloat(formattedValueString)
 }
 
-export const getConvertedValue = (value: number, currentUnit: UnitsType, requiredUnit: UnitsType): number => {
+export const getConvertedValue = (value: number, currentUnit: BgUnit, requiredUnit: BgUnit): number => {
   const isConversionRequired = currentUnit !== requiredUnit
 
   return isConversionRequired ? convertAndFormatBgValue(value, currentUnit) : value

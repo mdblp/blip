@@ -41,9 +41,9 @@ import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-inv
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { PatientListFilters } from '../../../../components/patient-list/enums/patient-list.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
-import { UnitsType } from 'dumb'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
+import { Unit } from 'medical-domain'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/selected-team/selected-team.provider')
@@ -180,7 +180,7 @@ describe('Patient hook', () => {
         status: MonitoringStatus.pending,
         monitoringEnd: new Date(),
         parameters: {
-          bgUnit: UnitsType.MGDL,
+          bgUnit: Unit.MilligramPerDeciliter,
           lowBg: 1,
           highBg: 2,
           outOfRangeThreshold: 3,

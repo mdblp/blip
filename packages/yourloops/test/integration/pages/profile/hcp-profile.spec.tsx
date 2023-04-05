@@ -42,9 +42,9 @@ import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
-import { UnitsType } from 'dumb'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
+import { Unit } from 'medical-domain'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {
@@ -59,7 +59,7 @@ describe('Profile page for hcp', () => {
   }
   const settings: Settings = {
     country: CountryCodes.France,
-    units: { bg: UnitsType.MMOLL }
+    units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
 
@@ -82,7 +82,7 @@ describe('Profile page for hcp', () => {
       hcpProfession: HcpProfession.nurse
     }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
+    const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
@@ -107,7 +107,7 @@ describe('Profile page for hcp', () => {
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: UnitsType.MGDL }))
+    fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
 
     fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('button'))
     fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
