@@ -55,11 +55,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const location = useLocation()
   const isTrendsPage = location.pathname.includes('trends')
   const selectedLabel = cbgSelected ? t('CGM') : t('BGM')
+  const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
+
   const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
-  const {
-    coefficientOfVariation
-  } = GlycemiaStatisticsService.getCoefficientOfVariationData(medicalData.cbg || medicalData.smbg, dateFilter)
+  const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
 
   const sensorUsageData = {
     total,
