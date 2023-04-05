@@ -24,12 +24,11 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import { UnitsType } from 'dumb'
 import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
+import { Unit } from 'medical-domain'
 
 export const DEFAULT_BG_VALUES: BgValues = {
-  bgUnitDefault: UnitsType.MGDL,
+  bgUnitDefault: Unit.MilligramPerDeciliter,
   outOfRangeThresholdDefault: 50,
   nonDataTxThresholdDefault: 50,
   hypoThresholdDefault: 5,

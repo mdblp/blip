@@ -258,14 +258,14 @@ describe('GlycemiaStatisticsService getSensorUsage', () => {
     const stats = GlycemiaStatisticsService.getSensorUsage(cbgData, 1, dateFilterOneDay)
     expect(stats).toEqual({
       sensorUsage: MS_IN_MIN * 15 * 3 + MS_IN_MIN * 5 * 2,
-      total: MS_IN_DAY
+      totalUsage: MS_IN_DAY
     })
   })
   it('should return sensor usage when viewing more than 1 day', () => {
     const stats = GlycemiaStatisticsService.getSensorUsage(cbgData, 2, dateFilterTwoDays)
     expect(stats).toEqual({
       sensorUsage: MS_IN_MIN * 15 * 3 + MS_IN_MIN * 5 * 3,
-      total: 2 * MS_IN_DAY
+      totalUsage: 2 * MS_IN_DAY
     })
   })
 })
@@ -367,8 +367,7 @@ describe('GlycemiaStatisticsService getGlucoseManagementIndicatorData', () => {
     const stats = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(sufficientData, Unit.MilligramPerDeciliter, dateFilterTwoWeeks)
     expect(stats).toEqual({
       glucoseManagementIndicator: 9.5292,
-      insufficientData: false,
-      total: numDexcomCbgForTwoWeeks
+      insufficientData: false
     })
   })
   it('should return `NaN` when viewing less than 14 days of data', () => {
@@ -382,8 +381,7 @@ describe('GlycemiaStatisticsService getGlucoseManagementIndicatorData', () => {
     const stats = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(insufficientData, Unit.MilligramPerDeciliter, dateFilter13Days)
     expect(stats).toEqual({
       glucoseManagementIndicator: Number.NaN,
-      insufficientData: true,
-      total: Number.NaN
+      insufficientData: true
     })
   })
   it('should return `NaN` when not having enough CGM data', () => {
@@ -394,8 +392,7 @@ describe('GlycemiaStatisticsService getGlucoseManagementIndicatorData', () => {
     const stats = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(insufficientData, Unit.MilligramPerDeciliter, dateFilterTwoWeeks)
     expect(stats).toEqual({
       glucoseManagementIndicator: Number.NaN,
-      insufficientData: true,
-      total: Number.NaN
+      insufficientData: true
     })
   })
 })

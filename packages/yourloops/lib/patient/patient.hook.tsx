@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import moment from 'moment-timezone'
 
 import { type Team, useTeam } from '../team'
@@ -44,6 +44,7 @@ import { type PatientTeam } from './models/patient-team.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
 import { usePatientsFiltersContext } from '../filter/patients-filters.provider'
+import { useAlert } from '../../components/utils/snackbar'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
@@ -51,31 +52,30 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const { user, getFlagPatients, flagPatient } = useAuth()
   const { filters } = usePatientsFiltersContext()
   const { selectedTeam } = useSelectedTeamContext()
+  const alert = useAlert()
 
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const fetchPatients = useCallback(() => {
     PatientUtils.computePatients(user).then(computedPatients => {
       setPatients(computedPatients)
-      setErrorMessage(null)
     }).catch((reason: unknown) => {
       const message = errorTextFromException(reason)
-      if (message !== errorMessage) {
-        setErrorMessage(message)
-      }
+      alert.error(message)
     }).finally(() => {
       setInitialized(true)
       setRefreshInProgress(false)
     })
-  }, [errorMessage, user])
+    // Need to rewrite the alert component, or it triggers infinite loop...
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
 
-  const refresh = useCallback(() => {
+  const refresh = (): void => {
     setRefreshInProgress(true)
     fetchPatients()
-  }, [fetchPatients])
+  }
 
   const updatePatient = useCallback((patient: Patient) => {
     const patientsUpdated = patients.filter(p => p.userid !== patient.userid)
@@ -101,20 +101,14 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     return patientTeam.teamId === PRIVATE_TEAM_ID
   }
 
-  const buildPatientFiltersStats = useCallback(() => {
-    return {
-      all: patientsForSelectedTeam.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
-      pending: patientsForSelectedTeam.filter((patient) => PatientUtils.isInvitationPending(patient)).length
-    }
-  }, [patientsForSelectedTeam])
+  const pendingPatientsCount = user.isUserHcp() ? patients.filter((patient) => PatientUtils.isInvitationPending(patient, selectedTeam.id)).length : undefined
+  const allPatientsCount = user.isUserHcp() ? patients.filter((patient) => !PatientUtils.isInvitationPending(patient, selectedTeam.id)).length : undefined
 
-  const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
+  const getPatientByEmail = (email: string): Patient => patientsForSelectedTeam.find(patient => patient.profile.email === email)
 
-  const getPatientByEmail = useCallback((email: string) => patientsForSelectedTeam.find(patient => patient.profile.email === email), [patientsForSelectedTeam])
+  const getPatientById = (userId: string): Patient => patientList.find(patient => patient.userid === userId)
 
-  const getPatientById = useCallback(userId => patientList.find(patient => patient.userid === userId), [patientList])
-
-  const searchPatients = useCallback((search: string) => {
+  const searchPatients = (search: string): Patient[] => {
     if (search.length === 0) {
       return patientList
     }
@@ -133,29 +127,29 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       const lastName = patient.profile.lastName ?? ''
       return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
     })
-  }, [patientList])
+  }
 
-  const invitePatient = useCallback(async (team: Team, username: string) => {
+  const invitePatient = async (team: Team, username: string): Promise<void> => {
     await PatientApi.invitePatient({ teamId: team.id, email: username })
     await refreshSentInvitations()
     refresh()
-  }, [refresh, refreshSentInvitations])
+  }
 
-  const editPatientRemoteMonitoring = useCallback((patient: Patient) => {
+  const editPatientRemoteMonitoring = (patient: Patient): void => {
     const patientUpdated = getPatientById(patient.userid)
     if (!patientUpdated) {
       throw Error(`Cannot update monitoring of patient with id ${patient.userid} as patient was not found`)
     }
     patientUpdated.monitoring = patient.monitoring
     updatePatient(patientUpdated)
-  }, [getPatientById, updatePatient])
+  }
 
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
     patient.metadata.hasSentUnreadMessages = false
     updatePatient(patient)
   }, [updatePatient])
 
-  const updatePatientMonitoring = useCallback(async (patient: Patient) => {
+  const updatePatientMonitoring = async (patient: Patient): Promise<void> => {
     if (!patient.monitoring) {
       throw Error('Cannot update patient monitoring with "undefined"')
     }
@@ -167,9 +161,9 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       console.error(error)
       throw Error(`Failed to update patient with id ${patient.userid}`)
     }
-  }, [refresh])
+  }
 
-  const removePatient = useCallback(async (patient: Patient, patientTeam: PatientTeam) => {
+  const removePatient = async (patient: Patient, patientTeam: PatientTeam): Promise<void> => {
     if (patientTeam.status === UserInvitationStatus.pending) {
       const invitation = getInvitation(patientTeam.teamId)
       await cancelInvitation(invitation.id, undefined, invitation.email)
@@ -186,23 +180,23 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
       await flagPatient(patient.userid)
     }
     refresh()
-  }, [cancelInvitation, flagPatient, getFlagPatients, getInvitation, user.id, refresh])
+  }
 
-  const leaveTeam = useCallback(async (teamId: string) => {
+  const leaveTeam = async (teamId: string): Promise<void> => {
     const loggedInUserAsPatient = getPatientById(user.id)
     await PatientApi.removePatient(teamId, loggedInUserAsPatient.userid)
     metrics.send('team_management', 'leave_team')
     refresh()
     refreshTeams()
-  }, [getPatientById, refresh, refreshTeams, user.id])
+  }
 
-  const setPatientMedicalData = useCallback((userId: string, medicalData: MedicalData | null) => {
+  const setPatientMedicalData = (userId: string, medicalData: MedicalData | null): void => {
     const patient = getPatientById(userId)
     if (patient !== null) {
       patient.metadata.medicalData = medicalData
       updatePatient(patient)
     }
-  }, [getPatientById, updatePatient])
+  }
 
   useEffect(() => {
     if (!initialized && user) {
@@ -210,10 +204,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     }
   }, [fetchPatients, initialized, user])
 
-  return useMemo(() => ({
+  return {
     patients: patientList,
-    patientsFilterStats,
-    errorMessage,
+    pendingPatientsCount,
+    allPatientsCount,
     initialized,
     refreshInProgress,
     getPatientByEmail,
@@ -227,5 +221,5 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     leaveTeam,
     setPatientMedicalData,
     refresh
-  }), [patientList, patientsFilterStats, errorMessage, initialized, refreshInProgress, getPatientByEmail, getPatientById, searchPatients, invitePatient, editPatientRemoteMonitoring, markPatientMessagesAsRead, updatePatientMonitoring, removePatient, leaveTeam, setPatientMedicalData, refresh])
+  }
 }

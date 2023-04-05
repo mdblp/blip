@@ -54,6 +54,7 @@ import Unit from './domains/models/medical/datum/enums/unit.enum'
 import type Upload from './domains/models/medical/datum/upload.model'
 import type Wizard from './domains/models/medical/datum/wizard.model'
 import { WizardInputMealFat } from './domains/models/medical/datum/enums/wizard-input-meal-fat.enum'
+import { WizardInputMealSource } from './domains/models/medical/datum/enums/wizard-input-meal-source.enum'
 import type ZenMode from './domains/models/medical/datum/zen-mode.model'
 import MedicalDataService from './domains/repositories/medical/medical-data.service'
 import { convertBG } from './domains/repositories/medical/datum/cbg.service'
@@ -65,7 +66,7 @@ import type MedicalData from './domains/models/medical/medical-data.model'
 import { classifyBgValue } from './domains/repositories/statistics/glycemia-statistics.service'
 export {
   type Basal, type BaseDatum, type BgBounds, type BgClasses, type BgType, type BgUnit, type Bolus, BolusSubtype, type Cbg, type CbgRangeStatistics, type CgmConfig, ClassificationType, type ConfidentialMode, DatumType, type DateFilter, type Datum, type DeviceConfig, type DeviceParameterChange, type DurationValue, DurationUnit,
-  type Meal, type MedicalData, type Message, type Parameter, type ParameterConfig, type PhysicalActivity, Prescriptor, PumpManufacturer, type PumpConfig, type PumpSettings, type ReservoirChange, type Smbg, Source, type TimePrefs, Unit, type Upload, type Wizard, WizardInputMealFat, type ZenMode, type WeekDaysFilter,
+  type Meal, type MedicalData, type Message, type Parameter, type ParameterConfig, type PhysicalActivity, Prescriptor, PumpManufacturer, type PumpConfig, type PumpSettings, type ReservoirChange, type Smbg, Source, type TimePrefs, Unit, type Upload, type Wizard, WizardInputMealFat, WizardInputMealSource, type ZenMode, type WeekDaysFilter,
   defaultMedicalDataOptions, defaultBgClasses, TimeService, MGDL_UNITS, MMOLL_UNITS, classifyBgValue, convertBG
 }
 export default MedicalDataService

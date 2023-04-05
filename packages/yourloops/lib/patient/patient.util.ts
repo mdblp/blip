@@ -94,23 +94,16 @@ export default class PatientUtils {
     })
   }
 
-  static isInAtLeastATeam = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.accepted)
-    return !!tm
-  }
-
-  static isInvitationPending = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending)
-    return !!tm
-  }
-
-  static isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending)
-    return !tm
+  static isInvitationPending = (patient: Patient, selectedTeamId: string): boolean => {
+    return patient.teams.some((team: PatientTeam) => team.teamId === selectedTeamId && team.status === UserInvitationStatus.pending)
   }
 
   static getNonPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
     return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status !== UserInvitationStatus.pending))
+  }
+
+  static getPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
+    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status === UserInvitationStatus.pending))
   }
 
   static filterPatientsOnMonitoringAlerts = (patients: Patient[], patientFilters: PatientsFilters): Patient[] => {
@@ -140,7 +133,7 @@ export default class PatientUtils {
 
   static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined, selectedTeamId: string): Patient[] => {
     if (patientFilters.pendingEnabled) {
-      return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
+      return patients.filter((patient) => PatientUtils.isInvitationPending(patient, selectedTeamId))
     }
     let patientsExtracted = PatientUtils.getNonPendingPatients(patients, selectedTeamId)
     patientsExtracted = PatientUtils.filterPatientsOnMonitoringAlerts(patientsExtracted, patientFilters)

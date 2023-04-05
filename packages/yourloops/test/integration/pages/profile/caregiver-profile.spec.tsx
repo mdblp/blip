@@ -46,10 +46,10 @@ import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
-import { UnitsType } from 'dumb'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
+import { Unit } from 'medical-domain'
 
 describe('Profile page for caregiver', () => {
   const profile: Profile = {
@@ -63,7 +63,7 @@ describe('Profile page for caregiver', () => {
   }
   const settings: Settings = {
     country: CountryCodes.France,
-    units: { bg: UnitsType.MMOLL }
+    units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
   const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
@@ -82,7 +82,7 @@ describe('Profile page for caregiver', () => {
   it('should render profile page for a caregiver and be able to change his password and change his role to HCP', async () => {
     const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
+    const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
@@ -104,7 +104,7 @@ describe('Profile page for caregiver', () => {
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: UnitsType.MGDL }))
+    fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
 
     await userEvent.clear(fields.firstNameInput)
     expect(saveButton).toBeDisabled()

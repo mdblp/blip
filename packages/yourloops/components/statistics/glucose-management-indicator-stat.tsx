@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,27 +24,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { type FunctionComponent } from 'react'
+import { t } from 'i18next'
+import { SimpleStat } from 'dumb'
+import Box from '@mui/material/Box'
+import { StatFormats } from 'dumb/src/models/stats.model'
 
-import { type Team } from '../../team'
-import { type MedicalData } from '../../data/models/medical-data.model'
-import { type Patient } from './patient.model'
-import { type PatientTeam } from './patient-team.model'
+interface GlucoseManagementIndicatorProps {
+  glucoseManagementIndicator: number
+}
 
-export interface PatientContextResult {
-  patients: Patient[]
-  pendingPatientsCount?: number
-  allPatientsCount?: number
-  initialized: boolean
-  refreshInProgress: boolean
-  getPatientByEmail: (email: string) => Patient
-  getPatientById: (userId: string) => Patient
-  searchPatients: (search: string) => Patient[]
-  invitePatient: (team: Team, username: string) => Promise<void>
-  editPatientRemoteMonitoring: (patient: Patient) => void
-  markPatientMessagesAsRead: (patient: Patient) => void
-  updatePatientMonitoring: (patient: Patient) => Promise<void>
-  removePatient: (patient: Patient, patientTeam: PatientTeam) => Promise<void>
-  leaveTeam: (team: string) => Promise<void>
-  setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
-  refresh: () => void
+export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
+  const { glucoseManagementIndicator } = props
+  const annotations = glucoseManagementIndicator ? [t('glucose-management-indicator-tooltip')] : [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
+
+  return (
+    <Box data-testid="glucose-management-indicator-stat">
+      <SimpleStat
+        annotations={annotations}
+        title={t('glucose-management-indicator-title')}
+        value={glucoseManagementIndicator}
+        summaryFormat={StatFormats.Gmi}
+        total={0}
+      />
+    </Box>)
 }

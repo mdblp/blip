@@ -39,12 +39,12 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { UnitsType } from 'dumb'
 import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
 import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.util'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useAuth } from '../../lib/auth'
 import { LoadingButton } from '@mui/lab'
+import { Unit } from 'medical-domain'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -140,7 +140,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
 
   const userBgUnit = user.settings?.units?.bg
 
-  const inputStep = userBgUnit === UnitsType.MGDL ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
+  const inputStep = userBgUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 
   return (
     <React.Fragment>

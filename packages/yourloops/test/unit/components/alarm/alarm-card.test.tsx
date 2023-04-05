@@ -38,7 +38,7 @@ import type User from '../../../../lib/auth/models/user.model'
 import { type Alarms } from '../../../../lib/patient/models/alarms.model'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { getTheme } from '../../../../components/theme'
-import { UnitsType } from 'dumb'
+import { Unit } from 'medical-domain'
 
 jest.mock('../../../../lib/auth')
 describe('AlarmCard', () => {
@@ -56,7 +56,7 @@ describe('AlarmCard', () => {
       return {
         user: {
           id: 'id',
-          settings: { units: { bg: UnitsType.MGDL } },
+          settings: { units: { bg: Unit.MilligramPerDeciliter } },
           isUserPatient: () => false,
           isUserHcp: () => true
         } as User

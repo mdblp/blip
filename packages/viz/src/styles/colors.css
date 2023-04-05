@@ -28,11 +28,14 @@
   --bolus-override: #7E7E7E;
   --bolus-underride: #7E7E7E;
   --bolus-undelivered: #E98D7C;
-  --bolus-meal: #6FC3BB;
+  --bolus-meal: #178A7F;
+  --bolus-umm: #21C6B6;
   --bolus-micro: #9A78BD;
   --bolus-manual: #8C65D6;
-  --carbs: #6FC3BB;
+  --carbs: #178A7F;
+  --carbs-umm: #21C6B6;
   --carbs-text: black;
+  --carbs-light-text: white;
   --rescuecarbs: #E98D7C;
   --collapsible--border: #EDEDED;
   --table-stripe--light: #F7F7F7;

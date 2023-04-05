@@ -30,7 +30,6 @@ import { render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
-
 import { type AuthContext, AuthContextProvider, type SignupForm, useAuth, type User } from '../../../../lib/auth'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
@@ -41,8 +40,8 @@ import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/aut
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
-import { UnitsType } from 'dumb'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { Unit } from 'medical-domain'
 
 jest.mock('@auth0/auth0-react')
 
@@ -60,7 +59,7 @@ describe('Auth hook', () => {
     hcpProfession: HcpProfession.diabeto
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.En }
-  const settings: Settings = { country: CountryCodes.France, units: { bg: UnitsType.MGDL } }
+  const settings: Settings = { country: CountryCodes.France, units: { bg: Unit.MilligramPerDeciliter } }
 
   const initAuthContext = async (): Promise<void> => {
     auth = null

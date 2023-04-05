@@ -63,7 +63,7 @@ const classes = makeStyles()((theme: Theme) => ({
   separator: {
     height: 25,
     width: 1,
-    backgroundColor: 'var(--text-color-primary)',
+    backgroundColor: theme.palette.divider,
     margin: `0 ${theme.spacing(2)}`
   },
   toolbar: {
@@ -72,8 +72,7 @@ const classes = makeStyles()((theme: Theme) => ({
   tab: {
     fontWeight: 'bold',
     textTransform: 'none',
-    fontSize: theme.typography.htmlFontSize,
-    color: 'var(--text-color-primary)'
+    fontSize: theme.typography.htmlFontSize
   }
 }))
 

@@ -29,12 +29,11 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
 import { StatLegendElement } from './stat-legend-element'
-import { type BgClasses } from 'medical-domain'
-import { type UnitsType } from '../../../models/enums/units-type.enum'
+import { type BgClasses, type BgUnit } from 'medical-domain'
 
 interface StatLegendProps {
   bgClasses: BgClasses
-  units: UnitsType
+  units: BgUnit
 }
 
 const StatLegend: FunctionComponent<StatLegendProps> = (props) => {

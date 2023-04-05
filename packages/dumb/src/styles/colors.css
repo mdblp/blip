@@ -38,11 +38,13 @@
   --bolus-override: #7E7E7E;
   --bolus-underride: #7E7E7E;
   --bolus-undelivered: #E98D7C;
-  --bolus-meal: #6FC3BB;
+  --bolus-meal: #178A7F;
+  --bolus-umm: #21C6B6;
   --bolus-micro: #9A78BD;
   --bolus-manual: #8C65D6;
-  --carbs: #6FC3BB;
+  --carbs: #178A7F;
   --carbs-text: black;
+  --carbs-light-text: white;
   --rescuecarbs: #E98D7C;
   --collapsible--border: #EDEDED;
   --table-stripe--light: #F7F7F7;
@@ -91,7 +93,7 @@
 }
 
 :export {
-  bolus: #6FC3BB;
+  bolus: #178A7F;
   bolusHeader: #EBF7FC;
   bolusMeal: var(--bolus-meal);
   bolusMicro: var(--bolus-micro);
@@ -100,6 +102,7 @@
   basalHeader: #DCF1F9;
   basalAutomated: #00D3E6;
   basalManual: #A8C8D4;
+  bolusUmm: #21C6B6;
   statDark: #27385B;
   statDefault: #727375;
   statDisabled: #E7E9EE;

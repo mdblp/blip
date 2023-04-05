@@ -36,12 +36,14 @@ export const checkPatientListHeader = (role: UserRole.Hcp | UserRole.Caregiver =
   expect(within(header).getByTestId('column-settings-button')).toBeVisible()
   expect(screen.getByTestId('patient-list-grid')).toBeVisible()
   expect(screen.getByText('Data calculated on the last 7 days')).toBeVisible()
-
+  expect(screen.getByRole('tab', { name: 'Current' })).toBeVisible()
   if (role === UserRole.Hcp) {
     expect(within(header).getByRole('button', { name: 'Filters' })).toBeVisible()
     expect(within(header).getByRole('button', { name: 'Add new patient' })).toBeVisible()
+    expect(screen.getByRole('tab', { name: 'Pending' })).toBeVisible()
   } else {
     expect(within(header).queryByRole('button', { name: 'Filters' })).not.toBeInTheDocument()
     expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
   }
 }

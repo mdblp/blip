@@ -92,7 +92,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { user } = useAuth()
   const { selectedTab, inputSearch, numberOfPatientsDisplayed, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
-  const { patientsFilterStats } = usePatientContext()
+  const { allPatientsCount, pendingPatientsCount } = usePatientContext()
   const { filters, resetFilters } = usePatientsFiltersContext()
   const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
@@ -104,7 +104,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
     ? t('filter-pending', { numberOfPatientsFiltered: numberOfPatientsDisplayed })
     : t('filters-activated', {
       numberOfPatientsFiltered: numberOfPatientsDisplayed,
-      totalNumberOfPatients: patientsFilterStats.all
+      totalNumberOfPatients: allPatientsCount
     })
 
   const filterButtonTooltipTitle = user.isUserHcp() && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
@@ -213,17 +213,24 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            <Tab
-              data-testid="patient-list-pending-tab"
-              icon={<HourglassEmptyIcon />}
-              iconPosition="start"
-              label={<>
-                {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary"
-                                      sx={{ marginLeft: theme.spacing(2) }} />
-              </>}
-              aria-label={t('pending')}
-              classes={{ root: classes.tab }}
-            />
+            {user.isUserHcp() &&
+              <Tab
+                data-testid="patient-list-pending-tab"
+                icon={<HourglassEmptyIcon />}
+                iconPosition="start"
+                label={
+                  <>
+                    {t('pending')}
+                    <Badge
+                      badgeContent={pendingPatientsCount}
+                      color="primary"
+                      sx={{ marginLeft: theme.spacing(2) }} />
+                  </>
+                }
+                aria-label={t('pending')}
+                classes={{ root: classes.tab }}
+              />
+            }
           </Tabs>
           <Box
             display="flex"
