@@ -40,7 +40,6 @@
   composes: extraLargeSize from '../../../styles/typography.css';
   opacity: 1;
   display: inline-block;
-  font-weight: 500;
 }
 
 .suffix {
