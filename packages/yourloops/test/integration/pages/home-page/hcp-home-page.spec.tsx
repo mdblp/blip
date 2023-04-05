@@ -73,7 +73,7 @@ describe('HCP home page', () => {
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamPrivate.name, isPrivate: true }, AVAILABLE_TEAMS)
   })
 
-  it('should display a list of current and allow to remove one of them', async () => {
+  it('should display a list of current patients and allow to remove one of them', async () => {
     localStorage.setItem('selectedTeamId', teamThree.id)
     const router = renderPage('/')
     await waitFor(() => {
