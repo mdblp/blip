@@ -16,13 +16,13 @@
  */
 
 import _ from 'lodash'
-
 import commonbolus from './commonbolus'
 
 const BolusTypes = {
   meal: 1,
   micro: 2,
-  manual: 3
+  manual: 3,
+  umm: 4
 }
 
 /**
@@ -31,6 +31,9 @@ const BolusTypes = {
  */
 function bolusToLegend(b) {
   if (b.type === 'wizard') {
+    if (b?.inputMeal?.source === 'umm') {
+      return BolusTypes.umm
+    }
     return BolusTypes.meal
   }
   const bolus = commonbolus.getBolus(b)
@@ -56,6 +59,8 @@ function bolusClass(b, baseClass) {
       return `${baseClass} d3-bolus-meal`
     case BolusTypes.micro:
       return `${baseClass} d3-bolus-micro`
+    case BolusTypes.umm:
+      return `${baseClass} d3-bolus-umm`
   }
   return baseClass
 }
@@ -121,14 +126,28 @@ function drawBolus(pool, opts = {}) {
         const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0
         return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0)
       }
-
+      const isUmm = (d) => d?.inputMeal?.source === 'umm'
+      const carbCircleClass = (d) => {
+        const baseClass = 'd3-circle-carbs d3-carbs'
+        if (isUmm(d)) {
+          return `${baseClass} d3-carbs-umm`
+        }
+        return baseClass
+      }
+      const carbTextClass = (d) => {
+        const baseClass = 'd3-carbs-text'
+        if (isUmm(d)) {
+          return `${baseClass} d3-carbs-text-estimated`
+        }
+        return `${baseClass} d3-carbs-text-meal`
+      }
       carbs.append('circle')
         .attr({
           'cx': xPos,
           'cy': yPos,
           'r': (d) => yScaleCarbs(d.carbInput),
           'stroke-width': 0,
-          'class': 'd3-circle-carbs d3-carbs',
+          'class': carbCircleClass,
           'id': (d) => `carbs_circle_${d.id}`
         })
 
@@ -137,7 +156,7 @@ function drawBolus(pool, opts = {}) {
         .attr({
           x: xPos,
           y: yPos,
-          class: 'd3-carbs-text',
+          class: carbTextClass,
           id: (d) => `carbs_text_${d.id}`
         })
     },

@@ -103,8 +103,8 @@ describe('Caregiver home page', () => {
 
     renderPage('/')
 
-    expect(await screen.findByTestId('patient-list')).toBeVisible()
-    const patientTableBody = within(screen.getByTestId('patient-list'))
+    expect(await screen.findByTestId('patient-list-grid')).toBeVisible()
+    const patientTableBody = within(screen.getByTestId('patient-list-grid'))
 
     // Checking that all patients are displayed
     expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
@@ -135,8 +135,6 @@ describe('Caregiver home page', () => {
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
-    const patientFullName = 'Unmonitored Patient'
-
     await act(async () => {
       renderPage('/')
     })
@@ -144,9 +142,9 @@ describe('Caregiver home page', () => {
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientList(UserRole.Caregiver)
 
-    const patientTableBody = within(screen.getByTestId('patient-list'))
-    const patientData = patientTableBody.getByText(patientFullName)
-    expect(patientData).toBeVisible()
+    const patientTableBody = screen.getByTestId('patient-list-grid')
+    expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
+    expect(patientTableBody).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/AFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/AFlag patient pending-patient@diabeloop.frPending PatientDBLG110%20%30%N/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/AData calculated on the last 7 daysRows per page:101–4 of 4')
 
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
@@ -185,7 +183,8 @@ describe('Caregiver home page', () => {
     })
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
-    expect(patientData).not.toBeInTheDocument()
+    expect(within(patientTableBody).getAllByRole('row')).toHaveLength(2)
+    expect(patientTableBody).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/AData calculated on the last 7 daysRows per page:101–1 of 1')
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })

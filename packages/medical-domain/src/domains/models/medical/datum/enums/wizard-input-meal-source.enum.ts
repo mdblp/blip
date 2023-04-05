@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,19 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Monitoring } from '../../team/models/monitoring.model'
-import { type PatientProfile } from './patient-profile.model'
-import { type PatientSettings } from './patient-settings.model'
-import { type PatientMetadata } from './patient-metadata.model'
-import { type PatientTeam } from './patient-team.model'
-import { type Alarms } from './alarms.model'
-
-export interface Patient {
-  alarms: Alarms
-  profile: PatientProfile
-  settings: PatientSettings
-  metadata: PatientMetadata
-  monitoring?: Monitoring
-  teams: PatientTeam[]
-  readonly userid: string
+export enum WizardInputMealSource {
+  Umm = 'umm',
+  Manual = 'manual'
 }
