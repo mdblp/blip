@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Bolus, BolusSubtype, DatumType, Prescriptor, type Wizard } from 'medical-domain'
+import { type Bolus, BolusSubtype, DatumType, Prescriptor, type Wizard, WizardInputMealSource } from 'medical-domain'
 import { BolusType } from '../../models/enums/bolus-type.enum'
 import { inRange } from 'lodash'
 import { formatDecimalNumber } from '../format/format.util'
@@ -34,6 +34,9 @@ const DEFAULT_PROGRAMMED_VALUE = 0
 
 export const getBolusType = (insulinEvent: Bolus | Wizard): BolusType => {
   if (insulinEvent.type === DatumType.Wizard) {
+    if (insulinEvent.inputMeal?.source === WizardInputMealSource.Umm) {
+      return BolusType.Umm
+    }
     return BolusType.Meal
   }
   const bolus = getBolusFromInsulinEvent(insulinEvent)

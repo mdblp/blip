@@ -91,7 +91,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { user } = useAuth()
   const { selectedTab, inputSearch, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
-  const { patientsFilterStats } = usePatientContext()
+  const { pendingPatientsCount } = usePatientContext()
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { selectedTeam } = useSelectedTeamContext()
@@ -189,16 +189,18 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            <Tab
-              data-testid="patient-list-pending-tab"
-              icon={<HourglassEmptyIcon />}
-              iconPosition="start"
-              label={<>
-                {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
-              </>}
-              aria-label={t('pending')}
-              classes={{ root: classes.tab }}
-            />
+            {user.isUserHcp() &&
+              <Tab
+                data-testid="patient-list-pending-tab"
+                icon={<HourglassEmptyIcon />}
+                iconPosition="start"
+                label={<>
+                  {t('pending')} <Badge badgeContent={pendingPatientsCount} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
+                </>}
+                aria-label={t('pending')}
+                classes={{ root: classes.tab }}
+              />
+            }
           </Tabs>
           <Box
             display="flex"

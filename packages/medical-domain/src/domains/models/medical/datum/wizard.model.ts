@@ -29,6 +29,7 @@ import type BaseDatum from './basics/base-datum.model'
 import type Bolus from './bolus.model'
 import { type DatumType } from './enums/datum-type.enum'
 import { type WizardInputMealFat } from './enums/wizard-input-meal-fat.enum'
+import { type WizardInputMealSource } from './enums/wizard-input-meal-source.enum'
 
 export type Wizard = BaseDatum & {
   type: DatumType.Wizard
@@ -45,6 +46,7 @@ export type Wizard = BaseDatum & {
   inputTime: string
   inputMeal?: {
     fat: WizardInputMealFat
+    source: WizardInputMealSource
   }
 }
 

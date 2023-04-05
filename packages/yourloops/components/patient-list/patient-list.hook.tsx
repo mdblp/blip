@@ -136,10 +136,9 @@ export const usePatientListHook = (): PatientListHookReturns => {
         sortable: false,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
           const patient = params.value
-          const hasPendingInvitation = PatientUtils.isInvitationPending(patient)
           return (
             <React.Fragment>
-              {selectedTab === PatientListTabs.Pending && hasPendingInvitation
+              {selectedTab === PatientListTabs.Pending
                 ? <PendingIconCell />
                 : <FlagIconCell isFlagged={patient.metadata.flagged} patient={patient} />
               }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,8 +26,6 @@
  */
 
 export interface PatientFilterStats {
-  all: number
-  pending: number
   directShare: number
   unread: number
   outOfRange: number

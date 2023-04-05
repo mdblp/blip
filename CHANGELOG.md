@@ -6,10 +6,12 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-2140 As a HCP, I can only edit my medical records
+- YLP-2146 Adding groups in patient list
 - YLP-2160 Patient list new design
 - YLP-2175 Implement new design system
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
+- YLP-2215 Implement specific daily visualisation of UMM bolus
 - YLP-2216 Use selected team in Add patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
