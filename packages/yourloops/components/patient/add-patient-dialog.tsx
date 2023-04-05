@@ -68,15 +68,9 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
   const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
 
   const handleClickAdd = async (): Promise<void> => {
-    if (isValidEmail() && selectedTeam.id.length > 0) {
+    if (isValidEmail()) {
       await addPatient()
     } else {
-      setErrorMessage(t('invalid-email'))
-    }
-  }
-
-  const handleVerifyEmail = (): void => {
-    if (email.length > 0 && !isValidEmail()) {
       setErrorMessage(t('invalid-email'))
     }
   }
@@ -175,7 +169,6 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
             value={email}
             required
             error={!!errorMessage}
-            onBlur={handleVerifyEmail}
             onChange={handleChangeEmail}
             helperText={errorMessage}
           />
@@ -210,7 +203,7 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
         </Button>
         <LoadingButton
           id="patient-list-dialog-add-button-add"
-          disabled={!!errorMessage || !isValidEmail() || selectedTeam.id.length < 1}
+          disabled={!!errorMessage || !isValidEmail()}
           loading={inProgress}
           variant="contained"
           color="primary"

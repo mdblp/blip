@@ -75,7 +75,7 @@ describe('HCP home page', () => {
     expect(addPatientButton).toBeVisible()
     expect(addPatientButton).toBeDisabled()
 
-    const addPatientHoverZone = within(patientListHeader).getByTestId('add-patient-button-disabled')
+    const addPatientHoverZone = within(patientListHeader).getByTestId('add-patient-button')
     await userEvent.hover(addPatientHoverZone)
     const informationTooltip = screen.getByText('To invite a patient, you must first select a care team from the dropdown menu. You can create you own care team if you need to. Alternatively, you can provide the patient with your YourLoops email address so they can enable private data sharing with you.')
     expect(informationTooltip).toBeVisible()
@@ -178,7 +178,7 @@ describe('HCP home page', () => {
     const addPatientDialog = screen.getByRole('dialog')
     expect(addPatientDialog).toBeVisible()
 
-    const title = within(addPatientDialog).getByText('Invite a patient in A - MyThirdTeam - to be deleted')
+    const title = within(addPatientDialog).getByText('Invite a patient to A - MyThirdTeam - to be deleted')
     expect(title).toBeVisible()
 
     const infoAlert = within(addPatientDialog).getByText('To invite a patient to share their data with another care team, you must first select the care team in the dropdown menu at the top right of YourLoops.')

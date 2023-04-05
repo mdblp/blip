@@ -95,6 +95,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { selectedTeam } = useSelectedTeamContext()
+  const isSelectedTeamPrivate = user.isUserHcp() ? TeamUtils.isPrivate(selectedTeam) : undefined
 
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
@@ -139,30 +140,19 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             </Button>
           </Box>
           <Box>
-            {user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
-              <Button
-                startIcon={<PersonAddIcon />}
-                variant="contained"
-                size="large"
-                disableElevation
-                onClick={() => { setShowAddPatientDialog(true) }}
-              >
-                {t('button-add-new-patient')}
-              </Button>
-            }
-            {
-              user.isUserHcp() && TeamUtils.isPrivate(selectedTeam) &&
+            {user.isUserHcp() &&
               <Tooltip
-                title={t('add-new-patient-disabled-info')}
+                title={isSelectedTeamPrivate ? t('add-new-patient-disabled-info') : ''}
                 placement="left"
               >
-                <span data-testid="add-patient-button-disabled">
+                <span data-testid="add-patient-button">
                   <Button
                     startIcon={<PersonAddIcon />}
                     variant="contained"
                     size="large"
                     disableElevation
-                    disabled
+                    disabled={isSelectedTeamPrivate}
+                    onClick={() => { setShowAddPatientDialog(true) }}
                   >
                     {t('button-add-new-patient')}
                   </Button>

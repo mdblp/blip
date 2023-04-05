@@ -240,7 +240,7 @@
   "messaging": "Messaging",
   "minimum": "Minimum:",
   "modal-add-caregiver": "Add a caregiver",
-  "modal-add-patient": "Invite a patient in {{selectedCareTeam}}",
+  "modal-add-patient": "Invite a patient to {{selectedCareTeam}}",
   "modal-add-patient-info": "To invite a patient to share their data with another care team, you must first select the care team in the dropdown menu at the top right of YourLoops.",
   "modal-add-patient-warning-line1": "By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations.",
   "modal-add-patient-warning-line2": "Read our <linkTerms>{{terms}}</linkTerms> and <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>.",
