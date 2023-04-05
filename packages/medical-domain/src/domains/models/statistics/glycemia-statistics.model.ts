@@ -53,7 +53,7 @@ export interface AverageGlucoseStatistics {
 
 export interface CoefficientOfVariationStatistics {
   insufficientData: boolean
-  totalCoefficientVariation: number
+  total: number
   coefficientOfVariation: number
 }
 

@@ -56,24 +56,26 @@ import { SimpleStat } from 'dumb'
 import { StatFormats } from 'dumb/dist/src/models/stats.model'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
+import { type BgType, DatumType } from 'medical-domain'
 
 export interface CoefficientOfVariationProps {
   coefficientOfVariation: number
-  label: string
+  bgSource: BgType
 }
 
 export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
-  const { coefficientOfVariation, label } = props
+  const { coefficientOfVariation, bgSource } = props
   const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('coefficient-of-variation-empty-stat')]
-
+  const selectedLabel = bgSource === DatumType.Cbg ? t('CGM') : t('BGM')
   return (
     <Box data-testid="coefficient-of-variation-stat">
       <SimpleStat
         annotations={annotation}
-        title={t('coefficient-of-variation', { cbgLabel: label })}
+        title={t('coefficient-of-variation', { cbgLabel: selectedLabel })}
         value={coefficientOfVariation}
         summaryFormat={StatFormats.Cv}
-        total={0} />
+        total={0}
+      />
     </Box>
   )
 }

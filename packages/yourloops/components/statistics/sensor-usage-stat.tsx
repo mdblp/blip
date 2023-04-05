@@ -31,7 +31,7 @@ import { t } from 'i18next'
 import Box from '@mui/material/Box'
 
 export interface SensorUsageData {
-  total: number
+  sensorUsageTotal: number
   usage: number
 }
 
@@ -41,7 +41,7 @@ interface SensorUsageStatProp {
 
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
   const { sensorUsageData } = props
-  const { usage, total } = sensorUsageData
+  const { usage, sensorUsageTotal } = sensorUsageData
 
   return (
     <Box data-testid="sensor-usage-stat">
@@ -50,7 +50,7 @@ export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) =
         title={t('sensor-usage')}
         value={usage}
         summaryFormat={StatFormats.Percentage}
-        total={total} />
+        total={sensorUsageTotal} />
     </Box>
   )
 }

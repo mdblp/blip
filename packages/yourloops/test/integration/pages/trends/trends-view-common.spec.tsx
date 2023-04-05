@@ -45,7 +45,7 @@ import {
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
-  checkCoefficientOfVariation,
+  checkCoefficientOfVariationStatWidget,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
@@ -98,10 +98,10 @@ describe('Trends view for anyone', () => {
       await checkTimeInRangeStatsTitle()
     })
 
-    it('with the Cbg data', async () => {
+    it('Should display correct Coefficient of variation stats info with CBG', async () => {
       mockDataAPI()
       renderPage('/trends')
-      await checkCoefficientOfVariation('CV (CGM)78%')
+      await checkCoefficientOfVariationStatWidget('CV (CGM)78%')
     })
   })
 
@@ -110,15 +110,13 @@ describe('Trends view for anyone', () => {
       mockDataAPI(smbgData)
       renderPage('/trends')
 
-      await checkReadingsInRangeStatsWidgets()
-
       await checkReadingsInRangeStats()
-
       await checkSMBGTrendsStatsWidgetsTooltips()
 
+      await checkReadingsInRangeStatsWidgets()
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-      await checkCoefficientOfVariation('CV (BGM)78%')
+      await checkCoefficientOfVariationStatWidget('CV (BGM)78%')
     })
   })
 })
