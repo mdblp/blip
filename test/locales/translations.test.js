@@ -169,7 +169,8 @@ const ignoredTransKeyForYourLoops = [
   'show-more',
   'created-by-unknown',
   'delete-medical-report-number',
-  'coefficient-of-variation-empty-stat'
+  'coefficient-of-variation-empty-stat',
+  'BGM'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
