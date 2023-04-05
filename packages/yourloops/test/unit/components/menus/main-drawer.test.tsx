@@ -49,8 +49,6 @@ jest.mock('../../../../lib/auth')
 describe('Main Drawer', () => {
   let container: HTMLElement | null = null
   const patientsFilterStats: PatientFilterStats = {
-    all: 1,
-    pending: 2,
     directShare: 3,
     unread: 4,
     outOfRange: 5,
@@ -154,10 +152,6 @@ describe('Main Drawer', () => {
     const drawer = document.querySelector('#main-left-drawer .MuiPaper-root')
     triggerMouseEvent('mouseover', drawer)
     expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth)
-  })
-
-  it('should display correct filter value for all patients and redirect to proper url', async () => {
-    await checkFilterActionByText('all-patients', PatientListFilters.All.toString(), patientsFilterStats.all)
   })
 
   it('should display correct filter value for flagged patients and redirect to proper url', async () => {
