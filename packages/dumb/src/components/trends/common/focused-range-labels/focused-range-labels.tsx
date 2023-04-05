@@ -31,11 +31,11 @@ import styles from './focused-range-labels.css'
 import { formatClocktimeFromMsPer24 } from '../../../../utils/datetime/datetime.util'
 import { formatBgValue } from '../../../../utils/format/format.util'
 import Tooltip from '../../../tooltips/common/tooltip/tooltip'
-import { type UnitsType } from '../../../../models/enums/units-type.enum'
 import { useTrendsContext } from '../../../../provider/trends.provider'
+import { type BgUnit } from 'medical-domain'
 
 interface FocusedRangeLabelsProps {
-  bgUnit: UnitsType
+  bgUnit: BgUnit
 }
 
 const BOTTOM_OFFSET = -5

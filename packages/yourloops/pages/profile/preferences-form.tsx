@@ -39,12 +39,12 @@ import Select from '@mui/material/Select'
 import { availableLanguageCodes, getLangName } from '../../lib/language'
 import { ConsentFeedback } from '../../components/consents'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
-import { UnitsType } from 'dumb'
 import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { useProfilePageState } from './profile-page-context'
 import { useAuth } from '../../lib/auth'
 import { profileFormCommonClasses } from './css-classes'
 import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { type BgUnit, Unit } from 'medical-domain'
 
 const PreferencesForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -68,13 +68,15 @@ const PreferencesForm: FunctionComponent = () => {
             id="profile-units-selector"
             data-testid="profile-units-selector"
             value={profileForm.units}
-            onChange={event => { updateProfileForm(ProfileFormKey.units, event.target.value as UnitsType) }}
+            onChange={event => {
+              updateProfileForm(ProfileFormKey.units, event.target.value as BgUnit)
+            }}
           >
-            <MenuItem id="profile-units-mmoll" value={UnitsType.MMOLL}>
-              {UnitsType.MMOLL}
+            <MenuItem id="profile-units-mmoll" value={Unit.MmolPerLiter}>
+              {Unit.MmolPerLiter}
             </MenuItem>
-            <MenuItem id="profile-units-mgdl" value={UnitsType.MGDL}>
-              {UnitsType.MGDL}
+            <MenuItem id="profile-units-mgdl" value={Unit.MilligramPerDeciliter}>
+              {Unit.MilligramPerDeciliter}
             </MenuItem>
           </Select>
         </FormControl>
@@ -85,7 +87,9 @@ const PreferencesForm: FunctionComponent = () => {
             id="profile-locale-selector"
             data-testid="profile-local-selector"
             value={profileForm.lang}
-            onChange={event => { updateProfileForm(ProfileFormKey.lang, event.target.value as LanguageCodes) }}
+            onChange={event => {
+              updateProfileForm(ProfileFormKey.lang, event.target.value as LanguageCodes)
+            }}
           >
             {availableLanguageCodes.map((languageCode) => (
               <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
@@ -102,7 +106,9 @@ const PreferencesForm: FunctionComponent = () => {
             id="profile"
             userRole={user.role}
             checked={profileForm.feedbackAccepted}
-            onChange={() => { updateProfileForm(ProfileFormKey.feedbackAccepted, !profileForm.feedbackAccepted) }}
+            onChange={() => {
+              updateProfileForm(ProfileFormKey.feedbackAccepted, !profileForm.feedbackAccepted)
+            }}
           />
         </Box>
       }

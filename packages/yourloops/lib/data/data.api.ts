@@ -36,7 +36,7 @@ import { type IUser } from './models/i-user.model'
 import { type MessageNote } from './models/message-note.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
-import { UnitsType } from 'dumb'
+import { Unit } from 'medical-domain'
 
 const log = bows('Data API')
 
@@ -97,7 +97,7 @@ export default class DataApi {
   }
 
   static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<string> {
-    const bgUnits = user.settings?.units ?? UnitsType.MGDL
+    const bgUnits = user.settings?.units ?? Unit.MilligramPerDeciliter
     const { data } = await HttpService.get<string>({
       url: `/export/${patientId}`,
       config: {

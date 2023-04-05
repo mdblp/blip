@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,8 +24,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { type FunctionComponent } from 'react'
+import { t } from 'i18next'
+import { SimpleStat } from 'dumb'
+import Box from '@mui/material/Box'
+import { StatFormats } from 'dumb/src/models/stats.model'
 
-export enum UnitsType {
-  MGDL = 'mg/dL',
-  MMOLL = 'mmol/L',
+interface GlucoseManagementIndicatorProps {
+  glucoseManagementIndicator: number
+}
+
+export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
+  const { glucoseManagementIndicator } = props
+  const annotations = glucoseManagementIndicator ? [t('glucose-management-indicator-tooltip')] : [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
+
+  return (
+    <Box data-testid="glucose-management-indicator-stat">
+      <SimpleStat
+        annotations={annotations}
+        title={t('glucose-management-indicator-title')}
+        value={glucoseManagementIndicator}
+        summaryFormat={StatFormats.Gmi}
+        total={0}
+      />
+    </Box>)
 }

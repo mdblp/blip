@@ -24,8 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import { UnitsType } from 'dumb'
+import { type BgUnit, Unit } from 'medical-domain'
 
 export const MGDL_PER_MMOL = 18.01577
 
@@ -35,14 +34,14 @@ export const MGDL_PER_MMOL = 18.01577
  * @param {"mg/dL"|"mmol/L"} currentUnit The unit of the passed value
  * @return: The converted value in the opposite unit
  */
-export function convertBG(value: number, currentUnit: UnitsType): number {
+export function convertBG(value: number, currentUnit: BgUnit): number {
   if (value < 0) {
     throw Error('Invalid glycemia value')
   }
   switch (currentUnit) {
-    case UnitsType.MGDL:
+    case Unit.MilligramPerDeciliter:
       return value / MGDL_PER_MMOL
-    case UnitsType.MMOLL:
+    case Unit.MmolPerLiter:
       return value * MGDL_PER_MMOL
     default:
       throw new Error('Invalid parameter unit')

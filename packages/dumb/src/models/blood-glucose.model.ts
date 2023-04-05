@@ -25,11 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgBounds, type BgClasses } from 'medical-domain'
-import { type UnitsType } from './enums/units-type.enum'
+import { type BgBounds, type BgClasses, type BgUnit } from 'medical-domain'
 
 export interface BgPrefs {
-  bgUnits: UnitsType
+  bgUnits: BgUnit
   bgBounds?: BgBounds
   bgClasses: BgClasses
 }

@@ -36,11 +36,11 @@ import { type ProfileErrors, type ProfileForm } from './models/profile-form.mode
 import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { UnitsType } from 'dumb'
 import { CountryCodes } from '../../lib/auth/models/country.model'
 import { type Profile } from '../../lib/auth/models/profile.model'
 import { type Settings } from '../../lib/auth/models/settings.model'
 import { type Preferences } from '../../lib/auth/models/preferences.model'
+import { Unit } from 'medical-domain'
 
 interface UseProfilePageContextHookReturn {
   canSave: boolean
@@ -71,7 +71,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     referringDoctor: user.profile?.patient?.referringDoctor ?? undefined,
     sex: user.profile?.patient?.sex ?? undefined,
     ssn: user.profile?.patient?.ssn ?? undefined,
-    units: user.settings?.units?.bg ?? UnitsType.MGDL
+    units: user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   })
   const [saving, setSaving] = useState<boolean>(false)
 

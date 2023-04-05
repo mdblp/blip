@@ -56,10 +56,10 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { UnitsType } from 'dumb'
 import { getTomorrowDate } from '../../utils/helpers'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { checkMedicalWidgetForHcp } from '../../assert/medical-widget'
+import { Unit } from 'medical-domain'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -67,8 +67,8 @@ describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRouteMmoL = `/patient/${monitoredPatientWithMmolId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
-  const mgdlSettings = { units: { bg: UnitsType.MGDL } }
-  const mmolSettings = { units: { bg: UnitsType.MMOLL } }
+  const mgdlSettings = { units: { bg: Unit.MilligramPerDeciliter } }
+  const mmolSettings = { units: { bg: Unit.MmolPerLiter } }
 
   beforeAll(() => {
     mockAuth0Hook()
@@ -341,7 +341,7 @@ describe('Patient dashboard for HCP', () => {
       const expectedMonitoring = {
         ...monitoredPatientWithMmol.monitoring,
         parameters: {
-          bgUnit: UnitsType.MMOLL,
+          bgUnit: Unit.MmolPerLiter,
           lowBg: 4.8,
           highBg: 8.8,
           veryLowBg: 3.2,

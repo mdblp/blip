@@ -32,8 +32,7 @@ import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/
 import { formatBgValue } from './cbg-percentage-bar.util'
 import { ensureNumeric } from '../stats.util'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { type BgBounds, type BgType, DatumType } from 'medical-domain'
-import { type UnitsType } from '../../../models/enums/units-type.enum'
+import { type BgBounds, type BgType, type BgUnit, DatumType } from 'medical-domain'
 
 export interface CBGPercentageBarChartHookProps {
   bgBounds: BgBounds
@@ -41,7 +40,7 @@ export interface CBGPercentageBarChartHookProps {
   data: TimeInRangeData
   days: number
   type: CBGStatType
-  units: UnitsType
+  units: BgUnit
 }
 
 interface CBGPercentageBarChartHookReturn {
