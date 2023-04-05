@@ -93,7 +93,14 @@ describe('Trends view for anyone', () => {
       await checkTrendsTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
     })
+
+    it('should data', async () => {
+      mockDataAPI(smbgData)
+      renderPage('/trends')
+      await checkCoefficientOfVariation('')
+    })
   })
+
   describe('with smbg data', () => {
     it('should display correct readings in range stats info', async () => {
       mockDataAPI(smbgData)
@@ -107,7 +114,7 @@ describe('Trends view for anyone', () => {
 
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-      await checkCoefficientOfVariation('')
+
     })
   })
 })

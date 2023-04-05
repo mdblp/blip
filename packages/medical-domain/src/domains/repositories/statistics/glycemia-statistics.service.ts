@@ -28,7 +28,15 @@
 import { MS_IN_MIN, MS_IN_DAY, diffDays } from '../time/time.service'
 import type Cbg from '../../models/medical/datum/cbg.model'
 import type Smbg from '../../models/medical/datum/smbg.model'
-import type { BgBounds, AverageGlucoseStatistics, CbgRangeStatistics, CoefficientOfVariationStatistics, GlucoseManagementIndicatoStatistics, SensorUsageStatistics, StandardDevStatistics } from '../../models/statistics/glycemia-statistics.model'
+import type {
+  BgBounds,
+  AverageGlucoseStatistics,
+  CbgRangeStatistics,
+  CoefficientOfVariationStatistics,
+  GlucoseManagementIndicatoStatistics,
+  SensorUsageStatistics,
+  StandardDevStatistics
+} from '../../models/statistics/glycemia-statistics.model'
 import { ClassificationType } from '../../models/statistics/enum/bg-classification.enum'
 import CbgService, { convertBG } from '../medical/datum/cbg.service'
 import SmbgService from '../medical/datum/smbg.service'
