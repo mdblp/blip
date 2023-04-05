@@ -33,7 +33,9 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import {
   mockPatientApiForHcp,
   mockPatientApiForPatients,
-  monitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol,
+  monitoredPatient,
+  monitoredPatientTwo,
+  monitoredPatientWithMmol,
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
@@ -103,6 +105,7 @@ describe('HCP home page', () => {
   })
 
   it('should allow to remove a patient who is in multiple teams', async () => {
+    localStorage.setItem('selectedTeamId', teamTwo.id)
     const teamId = monitoredPatient.teams[0].teamId
     await act(async () => {
       renderPage('/')
@@ -114,12 +117,17 @@ describe('HCP home page', () => {
     await userEvent.click(removeButton)
     const removeDialog = screen.getByRole('dialog')
     expect(removeDialog).toBeVisible()
+
+    const dialogTitle = within(removeDialog).getByText(`Remove ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} from ${teamTwo.name}`)
+    expect(dialogTitle).toBeVisible()
+    const dialogQuestion = within(removeDialog).getByTestId('modal-remove-patient-question')
+    expect(dialogQuestion).toHaveTextContent(`Are you sure you want to remove ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} from ${teamTwo.name}?`)
+    const dialogInfo = within(removeDialog).getByText('You and the care team will no longer have access to their data.')
+    expect(dialogInfo).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
-
-    const select = within(removeDialog).getByTestId('patient-team-selector')
-    fireEvent.mouseDown(within(select).getByRole('button'))
-
-    fireEvent.click(screen.getByRole('option', { name: teamTwo.name }))
+    expect(confirmRemoveButton).toBeVisible()
+    const cancelButton = within(removeDialog).getByText('Cancel')
+    expect(cancelButton).toBeVisible()
 
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
@@ -130,6 +138,7 @@ describe('HCP home page', () => {
   })
 
   it('should display an error message if patient removal failed', async () => {
+    localStorage.setItem('selectedTeamId', teamThree.id)
     mockPatientApiForPatients()
     jest.spyOn(PatientAPI, 'removePatient').mockRejectedValueOnce(Error('error'))
     await act(async () => {
