@@ -65,7 +65,7 @@ svg {
     fill: @text;
     &.d3-day-label {
       dominant-baseline: hanging;
-      fill: var(--stat--default, @text-light);
+      fill: var(--stat--default, @text);
     }
 
     @media (max-width: @screen-sm-max) {
@@ -132,7 +132,7 @@ svg {
 .d3-pool-legend {
   font-size: @font-size-axes;
   text-anchor: end;
-  fill: var(--stat--default, @text-light);
+  fill: var(--stat--default, @text);
 
   @media (max-width: @screen-sm-max) {
     font-size: 10px;
@@ -211,6 +211,10 @@ svg {
   fill: @carbs;
   stroke: @carbs;
   stroke-width: 1.5;
+  &.d3-carbs-umm {
+    fill: @carbs-umm;
+    stroke: @carbs-umm;
+  }
 }
 .d3-rect-rescuecarbs {
   fill: @rescuecarbs;
@@ -238,12 +242,18 @@ svg {
 }
 .d3-circle-carbs {
   fill: @carbs;
+  &.d3-carbs-umm {
+    fill: @carbs-umm;
+  }
 }
 .d3-carbs-text {
   fill: var(--carbs-text, @text);
   font-size: @font-size-small;
   dominant-baseline: central;
   text-anchor: middle;
+  &.d3-carbs-text-meal {
+    fill: var(--carbs-light-text, @text);
+  }
 }
 .d3-circle-rescuecarbs {
   fill: @rescuecarbs;
@@ -309,6 +319,9 @@ svg {
 .d3-bolus {
   &.d3-bolus-meal {
     fill: @bolus-meal !important;
+  }
+  &.d3-bolus-umm {
+    fill: @bolus-umm
   }
   &.d3-bolus-micro {
     fill: @bolus-micro !important;

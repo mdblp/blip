@@ -28,5 +28,6 @@
 export enum BolusType {
   Manual = 'Manual',
   Meal = 'Meal',
-  Micro = 'Micro'
+  Micro = 'Micro',
+  Umm = 'Umm'
 }

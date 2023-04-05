@@ -28,14 +28,19 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
-import { DataGrid, type GridColumnVisibilityModel, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
+import {
+  DataGrid,
+  type GridColumnVisibilityModel,
+  type GridPaginationModel,
+  type GridSortModel
+} from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import RemovePatientDialog from '../patient/remove-patient-dialog'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
 import { PatientListCustomFooter } from './patient-list-custom-footer'
-import { PatientListColumns } from './enums/patient-list.enum'
+import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
 import { useAuth } from '../../lib/auth'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
@@ -95,58 +100,53 @@ export const PatientList: FunctionComponent = () => {
   return (
     <React.Fragment>
       <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
-      <Box
-        data-testid="patient-list"
-        aria-label={t('patient-list')}
-      >
-        <PatientListHeader
-          selectedTab={selectedTab}
-          inputSearch={inputSearch}
-          onChangingTab={onChangingTab}
-          setInputSearch={setInputSearch}
+      <PatientListHeader
+        selectedTab={selectedTab}
+        inputSearch={inputSearch}
+        onChangingTab={onChangingTab}
+        setInputSearch={setInputSearch}
+      />
+
+      <Box data-testid="patient-list-grid">
+        <DataGrid
+          columns={columns}
+          rows={rowsProps}
+          apiRef={gridApiRef}
+          autoHeight
+          disableColumnMenu
+          disableColumnFilter
+          disableColumnSelector
+          disableRowSelectionOnClick
+          disableVirtualization={process.env.NODE_ENV === 'test'}
+          columnVisibilityModel={columnsVisibility}
+          onColumnVisibilityModelChange={setColumnsVisibility}
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
+          pageSizeOptions={[5, 10, 25]}
+          sx={{ borderRadius: 0, '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' } }}
+          slots={{
+            noRowsOverlay: NoPatientMessage,
+            footer: PatientListCustomFooter
+          }}
         />
-
-        <Box data-testid="patient-list-grid">
-          <DataGrid
-            columns={columns}
-            rows={rowsProps}
-            apiRef={gridApiRef}
-            autoHeight
-            disableColumnMenu
-            disableColumnFilter
-            disableColumnSelector
-            disableRowSelectionOnClick
-            disableVirtualization={process.env.NODE_ENV === 'test'}
-            columnVisibilityModel={columnsVisibility}
-            onColumnVisibilityModelChange={setColumnsVisibility}
-            sortModel={sortModel}
-            onSortModelChange={setSortModel}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            onRowClick={onRowClick}
-            pageSizeOptions={[5, 10, 25]}
-            sx={{ borderRadius: 0, '& .MuiDataGrid-cell:hover': { cursor: 'pointer' } }}
-            slots={{
-              noRowsOverlay: NoPatientMessage,
-              footer: PatientListCustomFooter
-            }}
-          />
-        </Box>
-
-        {patientToRemoveForHcp &&
-          <RemovePatientDialog
-            patient={patientToRemoveForHcp}
-            onClose={onCloseRemoveDialog}
-          />
-        }
-
-        {patientToRemoveForCaregiver &&
-          <RemoveDirectShareDialog
-            userToRemove={patientToRemoveForCaregiver}
-            onClose={onCloseRemoveDialog}
-          />
-        }
       </Box>
+
+      {patientToRemoveForHcp &&
+        <RemovePatientDialog
+          patient={patientToRemoveForHcp}
+          onClose={onCloseRemoveDialog}
+        />
+      }
+
+      {patientToRemoveForCaregiver &&
+        <RemoveDirectShareDialog
+          userToRemove={patientToRemoveForCaregiver}
+          onClose={onCloseRemoveDialog}
+        />
+      }
     </React.Fragment>
   )
 }
