@@ -60,7 +60,6 @@ export interface CoefficientOfVariationStatistics {
 export interface GlucoseManagementIndicatoStatistics {
   insufficientData: boolean
   glucoseManagementIndicator: number
-  total: number
 }
 
 export interface StandardDevStatistics {

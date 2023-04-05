@@ -35,10 +35,10 @@ import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
-import { UnitsType } from 'dumb'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { ProfileFormKey } from '../../../../pages/profile/models/enums/profile-form-key.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { Unit } from 'medical-domain'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/patient/patient.provider')
@@ -70,7 +70,7 @@ describe('Profile page context hook', () => {
       value: '7.5'
     },
     country: CountryCodes.France,
-    units: { bg: UnitsType.MMOLL }
+    units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
   const onSuccessAlertMock = jest.fn()
@@ -121,7 +121,7 @@ describe('Profile page context hook', () => {
     const firstName = 'Odile'
     const lastName = 'Deray'
     const expectedProfile = { ...profile, firstName, lastName, fullName: `${firstName} ${lastName}` }
-    const expectedSettings = { ...settings, units: { bg: UnitsType.MGDL } }
+    const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const expectedPreferences = { displayLanguageCode: 'en' }
 
     await act(async () => {
@@ -129,7 +129,7 @@ describe('Profile page context hook', () => {
       const { updateProfileForm } = result.current
       updateProfileForm(ProfileFormKey.firstName, firstName)
       updateProfileForm(ProfileFormKey.lastName, lastName)
-      updateProfileForm(ProfileFormKey.units, UnitsType.MGDL)
+      updateProfileForm(ProfileFormKey.units, Unit.MilligramPerDeciliter)
       updateProfileForm(ProfileFormKey.lang, 'en')
 
       await result.current.saveProfile()

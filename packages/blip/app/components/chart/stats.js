@@ -248,7 +248,6 @@ class Stats extends React.Component {
 
       case 'trends':
         addStat(commonStats.averageGlucose)
-        cbgSelected && addStat(commonStats.glucoseManagementIndicator)
         addStat(commonStats.standardDev)
         break
 

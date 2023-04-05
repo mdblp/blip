@@ -37,10 +37,10 @@ import {
   isInvalidPercentage,
   REGEX_VALUE_BG
 } from './alarm-content-configuration.util'
-import { UnitsType } from 'dumb'
 import { type Thresholds } from '../../lib/patient/models/alarms.model'
 import { DEFAULT_BG_VALUES } from './alarms.default'
 import { useAuth } from '../../lib/auth'
+import { type BgUnit, Unit } from 'medical-domain'
 
 export interface AlarmsContentConfigurationHookProps {
   monitoring: Monitoring
@@ -66,7 +66,7 @@ interface AlarmsContentConfigurationHookReturn {
   save: () => void
   resetToTeamDefaultValues: () => void
   onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
-  bgUnit: UnitsType
+  bgUnit: BgUnit
 }
 
 interface ValueErrorMessagePair {
@@ -79,7 +79,7 @@ interface ValueErrorPair {
   error?: boolean
 }
 
-const DEFAULT_BG_UNIT = UnitsType.MGDL
+const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
 
 const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
   const { user } = useAuth()
@@ -118,7 +118,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
   const thresholds = useMemo<Thresholds>(() => buildThresholds(userBgUnit), [userBgUnit])
 
   const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
-    if (userBgUnit === UnitsType.MGDL && !(Number.isInteger(value))) {
+    if (userBgUnit === Unit.MilligramPerDeciliter && !(Number.isInteger(value))) {
       return t('mandatory-integer')
     }
 
@@ -126,7 +126,7 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
       return t('mandatory-range', { lowValue, highValue })
     }
 
-    if (userBgUnit === UnitsType.MMOLL && !REGEX_VALUE_BG.test(value.toString())) {
+    if (userBgUnit === Unit.MmolPerLiter && !REGEX_VALUE_BG.test(value.toString())) {
       return t('mandatory-float-number')
     }
 

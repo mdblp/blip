@@ -30,8 +30,8 @@ import useProfilePageContextHook from './profil-page-context.hook'
 import { type ProfileErrors, type ProfileForm } from './models/profile-form.model'
 import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
 import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
-import { type UnitsType } from 'dumb'
 import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
+import { type BgUnit } from 'medical-domain'
 
 interface ProfilePageContext {
   canSave: boolean
@@ -39,7 +39,7 @@ interface ProfilePageContext {
   profileForm: ProfileForm
   saveProfile: () => Promise<void>
   saving: boolean
-  updateProfileForm: (key: ProfileFormKey, value: boolean | string | LanguageCodes | UnitsType | HcpProfession) => void
+  updateProfileForm: (key: ProfileFormKey, value: boolean | string | LanguageCodes | BgUnit | HcpProfession) => void
 }
 
 const ProfilePageStateContext = createContext<ProfilePageContext>({} as ProfilePageContext)

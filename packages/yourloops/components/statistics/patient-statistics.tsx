@@ -36,8 +36,8 @@ import {
   GlycemiaStatisticsService
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
-
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
@@ -53,17 +53,21 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
-  const isTrendsPage = location.pathname.includes('trends')
+  const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
+  const isTrendsPage = location.pathname.includes('trends')
 
   const { sensorUsage, total: sensorUsageTotal } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
-
-  const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
-
   const sensorUsageData = {
     sensorUsageTotal,
     usage: sensorUsage
   }
+
+  const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
+
+  const {
+    glucoseManagementIndicator
+  } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
@@ -84,6 +88,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat sensorUsageData={sensorUsageData} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          {isTrendsPage &&
+            <>
+              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
+              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+            </>}
           <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
@@ -95,6 +104,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
+
       {children}
     </Box>
   )

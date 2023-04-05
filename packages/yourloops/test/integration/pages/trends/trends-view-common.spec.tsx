@@ -34,7 +34,8 @@ import {
   checkTrendsLayout,
   checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
-  checkTrendsTimeInRangeStatsWidgets
+  checkTrendsTimeInRangeStatsWidgets,
+  GMI_TOOLTIP
 } from '../../assert/trends'
 import {
   minimalTrendViewData,
@@ -45,15 +46,18 @@ import {
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
+  checkGlucoseManagementIndicator,
   checkCoefficientOfVariationStatWidget,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
   checkStandardDeviationStatWidget,
+  checkStatTooltip,
   checkTimeInRangeStatsTitle
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
-import { act, screen, waitFor } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
+import { buildHba1cData } from '../../data/data-api.data'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
@@ -87,15 +91,24 @@ describe('Trends view for anyone', () => {
       })
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
-  })
 
-  describe('with time in range data', () => {
-    it('should display correct readings in range stats info', async () => {
-      mockDataAPI(timeInRangeStatsTrendViewData)
+    it('should render correct tooltip and values GMI', async () => {
+      mockDataAPI(buildHba1cData())
       renderPage('/trends')
 
-      await checkTrendsTimeInRangeStatsWidgets()
-      await checkTimeInRangeStatsTitle()
+      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+      await checkGlucoseManagementIndicator('GMI (estimated HbA1c)7.7%')
+      await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
+    })
+
+    describe('with time in range data', () => {
+      it('should display correct readings in range stats info', async () => {
+        mockDataAPI(timeInRangeStatsTrendViewData)
+        renderPage('/trends')
+
+        await checkTrendsTimeInRangeStatsWidgets()
+        await checkTimeInRangeStatsTitle()
+      })
     })
 
     it('Should display correct Coefficient of variation stats info with CBG', async () => {

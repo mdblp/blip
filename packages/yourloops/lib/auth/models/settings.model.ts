@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type UnitsType } from 'dumb'
 import { type CountryCodes } from './country.model'
+import { type BgUnit } from 'medical-domain'
 
 export interface Settings {
   units?: {
-    bg?: UnitsType
+    bg?: BgUnit
   }
   country?: CountryCodes
   a1c?: {

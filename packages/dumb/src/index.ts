@@ -60,7 +60,6 @@ import { type BgPrefs } from './models/blood-glucose.model'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
 import { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
-import { UnitsType } from './models/enums/units-type.enum'
 import { TrendsContainer } from './components/trends/common/trends-container/trends-container'
 import { SettingsPrintView } from './modules/print/settings-print-view/settings-print-view'
 import { PrintView } from './modules/print/print-view/print-view'
@@ -71,7 +70,6 @@ export {
   AverageDailyDoseStat,
   buildLayoutColumns,
   type BgPrefs,
-  UnitsType,
   BloodGlucoseTooltip,
   BolusTooltip,
   CbgDateTraceLabel,

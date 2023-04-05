@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { type MonitoringStatus } from './enums/monitoring-status.enum'
-import { type UnitsType } from 'dumb'
+import { type BgUnit } from 'medical-domain'
 
 export interface Monitoring {
   enabled: boolean
   status?: MonitoringStatus
   monitoringEnd?: Date
   parameters?: {
-    bgUnit: UnitsType
+    bgUnit: BgUnit
     lowBg: number
     highBg: number
     outOfRangeThreshold: number

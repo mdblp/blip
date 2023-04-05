@@ -27,12 +27,12 @@
 
 import { act, renderHook } from '@testing-library/react-hooks'
 import useAlarmsContentConfiguration from '../../../../components/alarm/alarms-content-configuration.hook'
-import { UnitsType } from 'dumb'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import PatientUtils from '../../../../lib/patient/patient.util'
+import { Unit } from 'medical-domain'
 
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
@@ -41,12 +41,12 @@ describe('AlarmsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
   const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
-  const user = { id: 'id', settings: { units: { bg: UnitsType.MGDL } } }
+  const user = { id: 'id', settings: { units: { bg: Unit.MilligramPerDeciliter } } }
 
   const getDefaultMonitoring = () => ({
     enabled: true,
     parameters: {
-      bgUnit: UnitsType.MGDL,
+      bgUnit: Unit.MilligramPerDeciliter,
       lowBg: 50,
       highBg: 140,
       outOfRangeThreshold: 10,
@@ -72,7 +72,7 @@ describe('AlarmsContentConfiguration hook', () => {
 
   describe('getErrorMessage', () => {
     afterAll(() => {
-      user.settings.units.bg = UnitsType.MGDL
+      user.settings.units.bg = Unit.MilligramPerDeciliter
     })
 
     it('should return no error messages when monitoring values are correct', () => {
@@ -105,12 +105,12 @@ describe('AlarmsContentConfiguration hook', () => {
     it('should return an error message expecting float values if BG unit is mmol/L', () => {
       const monitoring = getDefaultMonitoring()
 
-      user.settings.units.bg = UnitsType.MMOLL
+      user.settings.units.bg = Unit.MmolPerLiter
 
       monitoring.parameters.lowBg = 3.55
       monitoring.parameters.highBg = 8.55
       monitoring.parameters.veryLowBg = 3.55
-      monitoring.parameters.bgUnit = UnitsType.MMOLL
+      monitoring.parameters.bgUnit = Unit.MmolPerLiter
 
       const { result: secondHook } = renderHook(() => useAlarmsContentConfiguration({
         monitoring,
@@ -220,7 +220,7 @@ describe('AlarmsContentConfiguration hook', () => {
       const updatedMonitoring = {
         enabled: true,
         parameters: {
-          bgUnit: UnitsType.MGDL,
+          bgUnit: Unit.MilligramPerDeciliter,
           lowBg: 55,
           highBg: 120,
           outOfRangeThreshold: 15,
