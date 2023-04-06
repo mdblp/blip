@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useMemo, useRef, useState } from 'react'
+import React, { type FunctionComponent, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -39,8 +39,6 @@ import Tab from '@mui/material/Tab'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import Badge from '@mui/material/Badge'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -52,8 +50,8 @@ import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
 import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
-import Link from '@mui/material/Link'
 import { PatientsFiltersPopover } from '../patients-filters/patients-filters-popover'
+import { PatientListHeaderFiltersLabel } from './patient-list-header-filters-label'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -87,13 +85,13 @@ const useStyles = makeStyles()((theme) => {
 })
 
 export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (props) => {
+  const { selectedTab, inputSearch, numberOfPatientsDisplayed, onChangingTab, setInputSearch } = props
   const theme = useTheme()
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { selectedTab, inputSearch, numberOfPatientsDisplayed, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
-  const { allPatientsForSelectedTeamCount, pendingPatientsCount } = usePatientContext()
-  const { filters, resetFilters, hasAnyNonPendingFiltersEnabled } = usePatientsFiltersContext()
+  const { pendingPatientsCount } = usePatientContext()
+  const { filters } = usePatientsFiltersContext()
   const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
@@ -101,22 +99,6 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const filtersRef = useRef<HTMLButtonElement>(null)
 
   const isUserHcp = user.isUserHcp()
-
-  const filtersLabel = useMemo((): string | undefined => {
-    if (!isUserHcp) {
-      return null
-    }
-    if (filters.pendingEnabled) {
-      return t('filter-pending', { numberOfPatientsFiltered: numberOfPatientsDisplayed })
-    }
-    if (hasAnyNonPendingFiltersEnabled) {
-      return t('filters-activated', {
-        numberOfPatientsFiltered: numberOfPatientsDisplayed,
-        totalNumberOfPatients: allPatientsForSelectedTeamCount
-      })
-    }
-    return null
-  }, [allPatientsForSelectedTeamCount, filters, hasAnyNonPendingFiltersEnabled, isUserHcp, numberOfPatientsDisplayed, t])
 
   const filterButtonTooltipTitle = isUserHcp && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
 
@@ -243,42 +225,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               />
             }
           </Tabs>
-          <Box
-            display="flex"
-            alignItems="center"
-          >
-            {filtersLabel &&
-              <>
-                <Typography
-                  data-testid="filters-label"
-                  variant="subtitle2"
-                  color="text.secondary"
-                >
-                  {filtersLabel}
-                </Typography>
-                {!filters.pendingEnabled &&
-                  <>
-                    <Divider
-                      orientation="vertical"
-                      variant="middle"
-                      flexItem
-                      sx={{ marginInline: theme.spacing(2) }}
-                    />
-                    <Link
-                      data-testid="reset-filters-link"
-                      color="inherit"
-                      variant="subtitle2"
-                      underline="always"
-                      className={classes.resetButton}
-                      onClick={resetFilters}
-                    >
-                      {t('reset')}
-                    </Link>
-                  </>
-                }
-              </>
-            }
-          </Box>
+          <PatientListHeaderFiltersLabel numberOfPatientsDisplayed={numberOfPatientsDisplayed} />
         </Box>
       </Box>
       {showAddPatientDialog &&
