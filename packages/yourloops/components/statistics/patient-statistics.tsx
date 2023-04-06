@@ -91,18 +91,23 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat sensorUsageData={sensorUsageData} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          {isTrendsPage &&
-            <>
-              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
-              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-            </>}
         </>
       }
 
       {children}
 
-      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      {cbgSelected &&
+        <>
+          {isTrendsPage &&
+            <>
+              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
+              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+            </>
+          }
+          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
 
       {isTrendsPage && !cbgSelected &&
         <>
