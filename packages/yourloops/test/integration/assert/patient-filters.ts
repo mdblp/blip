@@ -46,7 +46,7 @@ export const defaultToggles: FilterPatientsPresentationToggles = {
   unreadMessagesFilterToggle: false
 }
 
-export const checkPatientsFilters = (args: FilterPatientsPresentationToggles = defaultToggles): void => {
+export const checkPatientsFilters = (toggles: FilterPatientsPresentationToggles = defaultToggles): void => {
   const filtersPresentation = screen.getByRole('presentation')
   expect(filtersPresentation).toHaveTextContent('Type of careManual flagTelemonitoredMonitoring alertsTime spent out of the target rangeHypoglycemiaData not transferredNotificationMessagesCancelApply')
   const manualFlagFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients being flagged')).getByRole('checkbox')
@@ -55,37 +55,37 @@ export const checkPatientsFilters = (args: FilterPatientsPresentationToggles = d
   const hypoglycemiaFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having an hypoglycemia alert')).getByRole('checkbox')
   const dataNotTransferredFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having data not transferred')).getByRole('checkbox')
   const unreadMessagesFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having sent unread messages')).getByRole('checkbox')
-  expect(manualFlagFilterToggle).toHaveProperty('checked', args.manualFlagFilterToggle)
-  expect(telemonitoredFilterToggle).toHaveProperty('checked', args.telemonitoredFilterToggle)
-  expect(outOfRangeFilterToggle).toHaveProperty('checked', args.outOfRangeFilterToggle)
-  expect(hypoglycemiaFilterToggle).toHaveProperty('checked', args.hypoglycemiaFilterToggle)
-  expect(dataNotTransferredFilterToggle).toHaveProperty('checked', args.dataNotTransferredFilterToggle)
-  expect(unreadMessagesFilterToggle).toHaveProperty('checked', args.unreadMessagesFilterToggle)
+  expect(manualFlagFilterToggle).toHaveProperty('checked', toggles.manualFlagFilterToggle)
+  expect(telemonitoredFilterToggle).toHaveProperty('checked', toggles.telemonitoredFilterToggle)
+  expect(outOfRangeFilterToggle).toHaveProperty('checked', toggles.outOfRangeFilterToggle)
+  expect(hypoglycemiaFilterToggle).toHaveProperty('checked', toggles.hypoglycemiaFilterToggle)
+  expect(dataNotTransferredFilterToggle).toHaveProperty('checked', toggles.dataNotTransferredFilterToggle)
+  expect(unreadMessagesFilterToggle).toHaveProperty('checked', toggles.unreadMessagesFilterToggle)
 }
 
-export const updatePatientsFilters = async (args: FilterPatientsPresentationToggles = defaultToggles): Promise<void> => {
+export const updatePatientsFilters = async (toggles: FilterPatientsPresentationToggles = defaultToggles): Promise<void> => {
   const filtersPresentation = screen.getByRole('presentation')
-  if (args.manualFlagFilterToggle) {
+  if (toggles.manualFlagFilterToggle) {
     const manualFlagFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients being flagged')).getByRole('checkbox')
     await userEvent.click(manualFlagFilterToggle)
   }
-  if (args.telemonitoredFilterToggle) {
+  if (toggles.telemonitoredFilterToggle) {
     const telemonitoredFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients being telemonitored')).getByRole('checkbox')
     await userEvent.click(telemonitoredFilterToggle)
   }
-  if (args.outOfRangeFilterToggle) {
+  if (toggles.outOfRangeFilterToggle) {
     const outOfRangeFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a time out of range from the target')).getByRole('checkbox')
     await userEvent.click(outOfRangeFilterToggle)
   }
-  if (args.hypoglycemiaFilterToggle) {
+  if (toggles.hypoglycemiaFilterToggle) {
     const hypoglycemiaFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having an hypoglycemia alert')).getByRole('checkbox')
     await userEvent.click(hypoglycemiaFilterToggle)
   }
-  if (args.dataNotTransferredFilterToggle) {
+  if (toggles.dataNotTransferredFilterToggle) {
     const dataNotTransferredFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having data not transferred')).getByRole('checkbox')
     await userEvent.click(dataNotTransferredFilterToggle)
   }
-  if (args.unreadMessagesFilterToggle) {
+  if (toggles.unreadMessagesFilterToggle) {
     const unreadMessagesFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having sent unread messages')).getByRole('checkbox')
     await userEvent.click(unreadMessagesFilterToggle)
   }

@@ -26,7 +26,6 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { type User } from '../../lib/auth'
 
 interface PatientListHeaderFiltersLabelHookProps {
   allPatientsForSelectedTeamCount: number
