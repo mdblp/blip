@@ -77,9 +77,11 @@ describe('Trends view for anyone', () => {
       await checkTrendsStatsWidgetsTooltips()
 
       // Check the widget
-      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
-      await checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
+      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL175')
+      await checkStandardDeviationStatWidget('Standard Deviation (167-183)mg/dL8')
       await checkSensorUsage('Sensor Usage0.1%')
+      await checkCoefficientOfVariationStatWidget('CV (CGM)4%')
+
       await checkRangeSelection()
       await checkDaysSelection()
 
@@ -109,12 +111,6 @@ describe('Trends view for anyone', () => {
         await checkTrendsTimeInRangeStatsWidgets()
         await checkTimeInRangeStatsTitle()
       })
-    })
-
-    it('Should display correct Coefficient of variation stats info with CBG', async () => {
-      mockDataAPI()
-      renderPage('/trends')
-      await checkCoefficientOfVariationStatWidget('CV (CGM)78%')
     })
   })
 
