@@ -29,6 +29,7 @@ import { type PatientsFilters } from './patients-filters.model'
 
 export interface PatientsFiltersContextResult {
   filters: PatientsFilters
+  hasAnyNonPendingFiltersEnabled: boolean
   updatePatientsFilters: (filters: PatientsFilters) => void
   updatePendingFilter: (pendingEnabled: boolean) => void
   resetFilters: () => void

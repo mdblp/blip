@@ -46,6 +46,8 @@ import {
   buildAvailableTeams,
   buildFiltersTeam,
   buildPrivateTeam,
+  buildTeamThree,
+  filtersTeamId,
   filtersTeamName,
   mockTeamAPI,
   myFirstTeamName,
@@ -132,9 +134,10 @@ describe('HCP home page', () => {
   })
 
   it('should display a list of patients and allow to filter them', async () => {
-    const teams = [buildFiltersTeam(), buildPrivateTeam()]
+    localStorage.setItem('selectedTeamId', filtersTeamId)
+    const teams = [buildFiltersTeam(), buildTeamThree(), buildPrivateTeam()]
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(teams)
-    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unreadMessagesPatient, timeSpentOutOfTargetRangePatient, hypoglycemiaPatient, noDataTransferredPatient, flaggedPatient, pendingPatient])
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unreadMessagesPatient, timeSpentOutOfTargetRangePatient, hypoglycemiaPatient, noDataTransferredPatient, flaggedPatient, pendingPatient, monitoredPatientTwo])
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
@@ -143,6 +146,7 @@ describe('HCP home page', () => {
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: filtersTeamName }, teams)
     checkPatientListHeader()
 
+    expect(screen.queryByTestId('filters-label')).not.toBeInTheDocument()
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(7)
     expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG110%20%30%N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG110%20%30%N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG110%20%30%N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG110%20%30%N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')

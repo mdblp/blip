@@ -62,7 +62,9 @@ export const PatientsFiltersProvider: FunctionComponent<PropsWithChildren> = ({ 
     })
   }
 
-  const result = { filters, updatePatientsFilters, updatePendingFilter, resetFilters }
+  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.telemonitoredEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
+
+  const result = { filters, hasAnyNonPendingFiltersEnabled, updatePatientsFilters, updatePendingFilter, resetFilters }
 
   return <PatientsFiltersContext.Provider value={result}>{children}</PatientsFiltersContext.Provider>
 }

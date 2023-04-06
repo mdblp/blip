@@ -94,7 +94,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     if (!user.isUserHcp()) {
       return patients
     }
-    return PatientUtils.extractPatients(patientsForSelectedTeam, filters, user.preferences.patientsStarred, selectedTeam.id)
+    const patientsStarred = user.preferences?.patientsStarred ?? []
+    return PatientUtils.extractPatients(patientsForSelectedTeam, filters, patientsStarred, selectedTeam.id)
   }, [user, patientsForSelectedTeam, filters, selectedTeam, patients])
 
   const isPatientTeamPrivate = (patientTeam: PatientTeam): boolean => {
@@ -102,7 +103,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }
 
   const pendingPatientsCount = user.isUserHcp() ? patients.filter((patient) => PatientUtils.isInvitationPending(patient, selectedTeam.id)).length : undefined
-  const allPatientsCount = user.isUserHcp() ? patients.filter((patient) => !PatientUtils.isInvitationPending(patient, selectedTeam.id)).length : undefined
+  const allPatientsForSelectedTeamCount = user.isUserHcp() ? patientsForSelectedTeam.filter((patient) => !PatientUtils.isInvitationPending(patient, selectedTeam.id)).length : undefined
 
   const getPatientByEmail = (email: string): Patient => patientsForSelectedTeam.find(patient => patient.profile.email === email)
 
@@ -207,7 +208,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   return {
     patients: patientList,
     pendingPatientsCount,
-    allPatientsCount,
+    allPatientsForSelectedTeamCount,
     initialized,
     refreshInProgress,
     getPatientByEmail,

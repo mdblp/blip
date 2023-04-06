@@ -51,6 +51,7 @@ export const checkPatientListHeader = (role: UserRole.Hcp | UserRole.Caregiver =
     expect(screen.getByRole('tab', { name: 'Pending' })).toBeVisible()
   } else {
     expect(within(header).queryByRole('button', { name: 'Filters' })).not.toBeInTheDocument()
+    expect(screen.queryByTestId('filters-label')).not.toBeInTheDocument()
     expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
     expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
   }

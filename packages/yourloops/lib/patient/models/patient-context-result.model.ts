@@ -33,7 +33,7 @@ import { type PatientTeam } from './patient-team.model'
 export interface PatientContextResult {
   patients: Patient[]
   pendingPatientsCount?: number
-  allPatientsCount?: number
+  allPatientsForSelectedTeamCount?: number
   initialized: boolean
   refreshInProgress: boolean
   getPatientByEmail: (email: string) => Patient

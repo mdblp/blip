@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useRef, useState } from 'react'
+import React, { type FunctionComponent, useMemo, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -92,22 +92,33 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { user } = useAuth()
   const { selectedTab, inputSearch, numberOfPatientsDisplayed, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
-  const { allPatientsCount, pendingPatientsCount } = usePatientContext()
-  const { filters, resetFilters } = usePatientsFiltersContext()
+  const { allPatientsForSelectedTeamCount, pendingPatientsCount } = usePatientContext()
+  const { filters, resetFilters, hasAnyNonPendingFiltersEnabled } = usePatientsFiltersContext()
   const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
 
   const filtersRef = useRef<HTMLButtonElement>(null)
 
-  const filtersLabel = user.isUserHcp() && filters.pendingEnabled
-    ? t('filter-pending', { numberOfPatientsFiltered: numberOfPatientsDisplayed })
-    : t('filters-activated', {
-      numberOfPatientsFiltered: numberOfPatientsDisplayed,
-      totalNumberOfPatients: allPatientsCount
-    })
+  const isUserHcp = user.isUserHcp()
 
-  const filterButtonTooltipTitle = user.isUserHcp() && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
+  const filtersLabel = useMemo((): string | undefined => {
+    if (!isUserHcp) {
+      return null
+    }
+    if (filters.pendingEnabled) {
+      return t('filter-pending', { numberOfPatientsFiltered: numberOfPatientsDisplayed })
+    }
+    if (hasAnyNonPendingFiltersEnabled) {
+      return t('filters-activated', {
+        numberOfPatientsFiltered: numberOfPatientsDisplayed,
+        totalNumberOfPatients: allPatientsForSelectedTeamCount
+      })
+    }
+    return null
+  }, [allPatientsForSelectedTeamCount, filters, hasAnyNonPendingFiltersEnabled, isUserHcp, numberOfPatientsDisplayed, t])
+
+  const filterButtonTooltipTitle = isUserHcp && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
 
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
@@ -151,7 +162,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                 }}
               />
             </Tooltip>
-            {user.isUserHcp() &&
+            {isUserHcp &&
               <Tooltip title={filterButtonTooltipTitle}>
                 <span>
                   <Button
@@ -170,7 +181,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             }
           </Box>
           <Box>
-            {user.isUserHcp() &&
+            {isUserHcp &&
               <Button
                 startIcon={<PersonAddIcon />}
                 variant="contained"
@@ -213,7 +224,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            {user.isUserHcp() &&
+            {isUserHcp &&
               <Tab
                 data-testid="patient-list-pending-tab"
                 icon={<HourglassEmptyIcon />}
@@ -236,31 +247,35 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             display="flex"
             alignItems="center"
           >
-            <Typography
-              data-testid="filters-label"
-              variant="subtitle2"
-              color="text.secondary"
-            >
-              {filtersLabel}
-            </Typography>
-            {user.isUserHcp() && !filters.pendingEnabled &&
+            {filtersLabel &&
               <>
-                <Divider
-                  orientation="vertical"
-                  variant="middle"
-                  flexItem
-                  sx={{ marginInline: theme.spacing(2) }}
-                />
-                <Link
-                  data-testid="reset-filters-link"
-                  color="inherit"
+                <Typography
+                  data-testid="filters-label"
                   variant="subtitle2"
-                  underline="always"
-                  className={classes.resetButton}
-                  onClick={resetFilters}
+                  color="text.secondary"
                 >
-                  {t('reset')}
-                </Link>
+                  {filtersLabel}
+                </Typography>
+                {!filters.pendingEnabled &&
+                  <>
+                    <Divider
+                      orientation="vertical"
+                      variant="middle"
+                      flexItem
+                      sx={{ marginInline: theme.spacing(2) }}
+                    />
+                    <Link
+                      data-testid="reset-filters-link"
+                      color="inherit"
+                      variant="subtitle2"
+                      underline="always"
+                      className={classes.resetButton}
+                      onClick={resetFilters}
+                    >
+                      {t('reset')}
+                    </Link>
+                  </>
+                }
               </>
             }
           </Box>
