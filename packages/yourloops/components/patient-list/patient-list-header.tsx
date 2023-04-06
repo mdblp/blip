@@ -53,7 +53,7 @@ import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
 import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
 import Link from '@mui/material/Link'
-import { PatientsFiltersDialog } from '../dialogs/patients-filters-dialog'
+import { PatientsFiltersPopover } from '../patients-filters/patients-filters-popover'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -284,7 +284,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
         />
       }
       {isFiltersDialogOpen &&
-        <PatientsFiltersDialog
+        <PatientsFiltersPopover
           anchorEl={filtersRef.current}
           onClose={closeFiltersDialog}
         />

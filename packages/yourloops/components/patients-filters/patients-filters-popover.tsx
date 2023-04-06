@@ -42,7 +42,7 @@ import Popover from '@mui/material/Popover'
 import { useTheme } from '@mui/material/styles'
 import EmailIcon from '@mui/icons-material/Email'
 import { makeStyles } from 'tss-react/mui'
-import { PatientsFiltersToggle } from '../patients-filters/patients-filters-toggle'
+import { PatientsFiltersToggle } from './patients-filters-toggle'
 import Divider from '@mui/material/Divider'
 import DialogActions from '@mui/material/DialogActions'
 
@@ -58,7 +58,7 @@ const useStyles = makeStyles()((theme) => ({
   }
 }))
 
-export const PatientsFiltersDialog: FunctionComponent<PatientsFiltersDialogProps> = (props) => {
+export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProps> = (props) => {
   const { anchorEl, onClose } = props
   const { t } = useTranslation('yourloops')
   const { filters: patientsFiltersContext, updatePatientsFilters } = usePatientsFiltersContext()
