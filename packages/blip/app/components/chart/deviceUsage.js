@@ -122,10 +122,14 @@ const DeviceUsage = (props) => {
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const {
     sensorUsage,
-    totalUsage
+    total: sensorUsageTotal
     // eslint-disable-next-line react/prop-types
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
+  const sensorUsageData = {
+    sensorUsageTotal,
+    usage: sensorUsage
+  }
   const deviceData = {
     cgm: {
       label: `${t('CGM')}:`,
@@ -212,7 +216,7 @@ const DeviceUsage = (props) => {
         <Divider variant="fullWidth" className={classes.divider} />
         {cbgSelected &&
           <>
-            <SensorUsageStat totalUsage={totalUsage} usage={sensorUsage} />
+            <SensorUsageStat sensorUsageData={sensorUsageData} />
             <Divider variant="fullWidth" className={classes.divider} />
           </>
         }

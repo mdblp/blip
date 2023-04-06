@@ -35,9 +35,10 @@ import { SensorUsageStat } from './sensor-usage-stat'
 import {
   GlycemiaStatisticsService
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
-import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
+import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
@@ -57,7 +58,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
 
-  const { sensorUsage, total: sensorUsageTotal } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  const {
+    sensorUsage,
+    total: sensorUsageTotal
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+
   const sensorUsageData = {
     sensorUsageTotal,
     usage: sensorUsage
@@ -65,9 +70,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
 
-  const {
-    glucoseManagementIndicator
-  } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
+  const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
