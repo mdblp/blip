@@ -104,9 +104,9 @@ export const PatientList: FunctionComponent = () => {
         selectedTab={selectedTab}
         inputSearch={inputSearch}
         numberOfPatientsDisplayed={rowsProps.length}
-          onChangingTab={onChangingTab}
-          setInputSearch={setInputSearch}
-        />
+        onChangingTab={onChangingTab}
+        setInputSearch={setInputSearch}
+      />
 
       <Box data-testid="patient-list-grid">
         <DataGrid
@@ -127,7 +127,10 @@ export const PatientList: FunctionComponent = () => {
           onPaginationModelChange={setPaginationModel}
           onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
           pageSizeOptions={[5, 10, 25]}
-          sx={{ borderRadius: 0, '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' } }}
+          sx={{
+            borderRadius: 0,
+            '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' }
+          }}
           slots={{
             noRowsOverlay: NoPatientMessage,
             footer: PatientListCustomFooter

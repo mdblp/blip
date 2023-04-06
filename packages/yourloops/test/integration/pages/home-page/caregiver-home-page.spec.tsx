@@ -42,8 +42,8 @@ import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { checkPatientListHeader } from '../../assert/patient-list-header'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
+import { checkPatientListHeader } from '../../assert/patient-list'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -104,34 +104,27 @@ describe('Caregiver home page', () => {
     renderPage('/')
 
     expect(await screen.findByTestId('patient-list-grid')).toBeVisible()
-    const patientTableBody = within(screen.getByTestId('patient-list-grid'))
 
     // Checking that all patients are displayed
-    expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
-    expect(patientTableBody.getByText(patient2.profile.fullName)).toBeVisible()
-    expect(patientTableBody.getByText(patient3.profile.fullName)).toBeVisible()
+    const dataGridRow = screen.getByTestId('patient-list-grid')
+    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
+    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1NaN%NaN%NaN%N/AFlag patient fake@patient.emailAlain ProvistDBLG1NaN%NaN%NaN%N/AFlag patient fake@patient.emailAnnie VersaireDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–3 of 3')
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
-    expect(patientTableBody.getByText(patient2.profile.fullName)).toBeVisible()
-    expect(patientTableBody.queryByText(patient3.profile.fullName)).not.toBeInTheDocument()
+    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1NaN%NaN%NaN%N/AFlag patient fake@patient.emailAlain ProvistDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–2 of 2')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(patientTableBody.getByText(patient1.profile.fullName)).toBeVisible()
-    expect(patientTableBody.queryByText(patient2.profile.fullName)).not.toBeInTheDocument()
-    expect(patientTableBody.queryByText(patient3.profile.fullName)).not.toBeInTheDocument()
+    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–1 of 1')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(patientTableBody.getByText(patient2.profile.fullName)).toBeVisible()
-    expect(patientTableBody.queryByText(patient1.profile.fullName)).not.toBeInTheDocument()
-    expect(patientTableBody.queryByText(patient3.profile.fullName)).not.toBeInTheDocument()
+    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAlain ProvistDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–1 of 1')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {

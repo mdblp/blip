@@ -28,6 +28,14 @@
 import { screen, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
+export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {
+  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
+  expect(screen.getByTestId('reset-filters-link')).toHaveTextContent('Reset')
+  const allRows = within(dataGridRow).getAllByRole('row')
+  expect(allRows).toHaveLength(2)
+  expect(allRows[1]).toHaveTextContent(rowContent)
+}
+
 export const checkPatientListHeader = (role: UserRole.Hcp | UserRole.Caregiver = UserRole.Hcp) => {
   const header = screen.getByTestId('patient-list-header')
   expect(header).toBeInTheDocument()

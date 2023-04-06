@@ -68,7 +68,7 @@ import {
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import { checkPatientListHeader } from '../../assert/patient-list-header'
+import { checkDataGridAfterSinglePatientFilter, checkPatientListHeader } from '../../assert/patient-list'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -130,14 +130,6 @@ describe('HCP home page', () => {
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${myThirdTeamName}`)
   })
-
-  const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {
-    expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
-    expect(screen.getByTestId('reset-filters-link')).toHaveTextContent('Reset')
-    const allRows = within(dataGridRow).getAllByRole('row')
-    expect(allRows).toHaveLength(2)
-    expect(allRows[1]).toHaveTextContent(rowContent)
-  }
 
   it('should display a list of patients and allow to filter them', async () => {
     const teams = [buildFiltersTeam(), buildPrivateTeam()]
