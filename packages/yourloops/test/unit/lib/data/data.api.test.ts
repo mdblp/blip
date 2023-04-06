@@ -35,9 +35,9 @@ import { type PatientData, type PatientDatum } from '../../../../lib/data/models
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { type MessageNote } from '../../../../lib/data/models/message-note.model'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
-import { UnitsType } from 'dumb'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../../../../lib/http/models/enums/http-header-values.enum'
+import { Unit } from 'medical-domain'
 
 describe('Data API', () => {
   const patientId = 'patientId'
@@ -133,7 +133,7 @@ describe('Data API', () => {
   describe('exportData', () => {
     it('should get a blob with data', async () => {
       const data = {} as Blob
-      const bgUnits = UnitsType.MGDL
+      const bgUnits = Unit.MilligramPerDeciliter
       const startDate = '2022-02-02'
       const endDate = '2022-02-05'
       jest.spyOn(HttpService, 'get').mockResolvedValue({ data } as AxiosResponse)

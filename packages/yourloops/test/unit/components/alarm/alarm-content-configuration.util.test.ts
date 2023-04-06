@@ -24,20 +24,19 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import { UnitsType } from 'dumb'
 import {
   buildBgValues,
   buildThresholds,
   getConvertedValue
 } from '../../../../components/alarm/alarm-content-configuration.util'
+import { Unit } from 'medical-domain'
 
 describe('AlarmsContentConfiguration util', function () {
   describe('buildThresholds', () => {
     const getDefaultMonitoring = () => ({
       enabled: true,
       parameters: {
-        bgUnit: UnitsType.MGDL,
+        bgUnit: Unit.MilligramPerDeciliter,
         lowBg: 50,
         highBg: 140,
         outOfRangeThreshold: 10,
@@ -50,7 +49,7 @@ describe('AlarmsContentConfiguration util', function () {
 
     it('should return default thresholds value in mmol/L if the parameters are in mmol/L', () => {
       const monitoring = getDefaultMonitoring()
-      monitoring.parameters.bgUnit = UnitsType.MMOLL
+      monitoring.parameters.bgUnit = Unit.MmolPerLiter
       const thresholdsInMmol = buildThresholds(monitoring.parameters.bgUnit)
 
       expect(thresholdsInMmol.minLowBg).toBe(2.8)
@@ -77,7 +76,7 @@ describe('AlarmsContentConfiguration util', function () {
     const defaultMonitoringBgValue = () => ({
       enabled: true,
       parameters: {
-        bgUnitDefault: UnitsType.MGDL,
+        bgUnitDefault: Unit.MilligramPerDeciliter,
         outOfRangeThresholdDefault: 50,
         nonDataTxThresholdDefault: 50,
         hypoThresholdDefault: 5,
@@ -98,7 +97,7 @@ describe('AlarmsContentConfiguration util', function () {
 
     it('should return default bg values in mg/dL if the parameters are in mg/dL ', () => {
       const monitoring = defaultMonitoringBgValue()
-      monitoring.parameters.bgUnitDefault = UnitsType.MMOLL
+      monitoring.parameters.bgUnitDefault = Unit.MmolPerLiter
       const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)
       expect(bgValuesInMmol.highBgDefault).toBe(10)
       expect(bgValuesInMmol.lowBgDefault).toBe(2.8)
@@ -110,13 +109,13 @@ describe('AlarmsContentConfiguration util', function () {
     it('should return the value if no conversion necessary', () => {
       const value = 1.1
 
-      expect(getConvertedValue(value, UnitsType.MGDL, UnitsType.MGDL)).toEqual(value)
-      expect(getConvertedValue(value, UnitsType.MMOLL, UnitsType.MMOLL)).toEqual(value)
+      expect(getConvertedValue(value, Unit.MilligramPerDeciliter, Unit.MilligramPerDeciliter)).toEqual(value)
+      expect(getConvertedValue(value, Unit.MmolPerLiter, Unit.MmolPerLiter)).toEqual(value)
     })
 
     it('should convert the value and format it', () => {
-      expect(getConvertedValue(179, UnitsType.MGDL, UnitsType.MMOLL)).toEqual(9.9)
-      expect(getConvertedValue(9.9, UnitsType.MMOLL, UnitsType.MGDL)).toEqual(178)
+      expect(getConvertedValue(179, Unit.MilligramPerDeciliter, Unit.MmolPerLiter)).toEqual(9.9)
+      expect(getConvertedValue(9.9, Unit.MmolPerLiter, Unit.MilligramPerDeciliter)).toEqual(178)
     })
   })
 })
