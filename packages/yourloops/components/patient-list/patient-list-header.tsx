@@ -225,7 +225,9 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               />
             }
           </Tabs>
-          <PatientListHeaderFiltersLabel numberOfPatientsDisplayed={numberOfPatientsDisplayed} />
+          {isUserHcp &&
+            <PatientListHeaderFiltersLabel numberOfPatientsDisplayed={numberOfPatientsDisplayed} />
+          }
         </Box>
       </Box>
       {showAddPatientDialog &&

@@ -33,27 +33,22 @@ interface PatientListHeaderFiltersLabelHookProps {
   hasAnyNonPendingFiltersEnabled: boolean
   numberOfPatientsDisplayed: number
   pendingFilterEnabled: boolean
-  user: User
 }
 
-interface PatientListHeaderFiltersLabelHookPropsReturn {
+interface PatientListHeaderFiltersLabelHookReturn {
   filtersLabel?: string
 }
 
-export const usePatientListHeaderFiltersLabelHook = (props: PatientListHeaderFiltersLabelHookProps): PatientListHeaderFiltersLabelHookPropsReturn => {
+export const usePatientListHeaderFiltersLabelHook = (props: PatientListHeaderFiltersLabelHookProps): PatientListHeaderFiltersLabelHookReturn => {
   const {
     allPatientsForSelectedTeamCount,
     hasAnyNonPendingFiltersEnabled,
     numberOfPatientsDisplayed,
-    pendingFilterEnabled,
-    user
+    pendingFilterEnabled
   } = props
   const { t } = useTranslation()
 
   const getFiltersLabel = (): string | undefined => {
-    if (!user.isUserHcp()) {
-      return null
-    }
     if (pendingFilterEnabled) {
       return t('filter-pending', { numberOfPatientsFiltered: numberOfPatientsDisplayed })
     }

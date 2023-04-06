@@ -35,7 +35,6 @@ import { makeStyles } from 'tss-react/mui'
 import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
 import Link from '@mui/material/Link'
 import { usePatientListHeaderFiltersLabelHook } from './patient-list-header-filters-label.hook'
-import { useAuth } from '../../lib/auth'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 
 interface PatientListHeaderFiltersLabelProps {
@@ -59,15 +58,13 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { filters, resetFilters, hasAnyNonPendingFiltersEnabled } = usePatientsFiltersContext()
-  const { user } = useAuth()
   const { allPatientsForSelectedTeamCount } = usePatientContext()
 
   const { filtersLabel } = usePatientListHeaderFiltersLabelHook({
     allPatientsForSelectedTeamCount,
     numberOfPatientsDisplayed,
     pendingFilterEnabled: filters.pendingEnabled,
-    hasAnyNonPendingFiltersEnabled,
-    user
+    hasAnyNonPendingFiltersEnabled
   })
 
   if (!filtersLabel) {

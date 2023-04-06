@@ -25,46 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext, useState } from 'react'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
 import { type PatientsFiltersContextResult } from './models/patients-filters-context-result.model'
-import { type PatientsFilters } from './models/patients-filters.model'
+import { usePatientsFiltersProviderHook } from './patients-filters.provider.hook'
 
 const PatientsFiltersContext = createContext<PatientsFiltersContextResult>({} as PatientsFiltersContextResult)
 
 export const PatientsFiltersProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const [filters, setFilters] = useState<PatientsFilters>({
-    pendingEnabled: false,
-    manualFlagEnabled: false,
-    telemonitoredEnabled: false,
-    timeOutOfTargetEnabled: false,
-    hypoglycemiaEnabled: false,
-    dataNotTransferredEnabled: false,
-    messagesEnabled: false
-  })
-
-  const updatePatientsFilters = (filters: PatientsFilters): void => {
-    setFilters(filters)
-  }
-
-  const updatePendingFilter = (pendingEnabled: boolean): void => {
-    setFilters({ ...filters, pendingEnabled })
-  }
-
-  const resetFilters = (): void => {
-    setFilters({
-      ...filters,
-      manualFlagEnabled: false,
-      telemonitoredEnabled: false,
-      timeOutOfTargetEnabled: false,
-      hypoglycemiaEnabled: false,
-      dataNotTransferredEnabled: false,
-      messagesEnabled: false
-    })
-  }
-
-  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.telemonitoredEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
-
-  const result = { filters, hasAnyNonPendingFiltersEnabled, updatePatientsFilters, updatePendingFilter, resetFilters }
+  const result = usePatientsFiltersProviderHook()
 
   return <PatientsFiltersContext.Provider value={result}>{children}</PatientsFiltersContext.Provider>
 }

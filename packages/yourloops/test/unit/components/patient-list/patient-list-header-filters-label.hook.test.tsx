@@ -26,44 +26,23 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks'
-import { type User } from '../../../../lib/auth'
 import {
   usePatientListHeaderFiltersLabelHook
 } from '../../../../components/patient-list/patient-list-header-filters-label.hook'
 
 describe('usePatientListHeaderFiltersLabelHook', () => {
   describe('filtersLabel', () => {
-    it('should return null when user is not an HCP', () => {
-      const allPatientsForSelectedTeamCount = 0
-      const pendingFilterEnabled = false
-      const hasAnyNonPendingFiltersEnabled = true
-      const numberOfPatientsDisplayed = 10
-      const user: User = { isUserHcp: () => false } as User
-
-      const { result } = renderHook(() => usePatientListHeaderFiltersLabelHook({
-        allPatientsForSelectedTeamCount,
-        pendingFilterEnabled,
-        hasAnyNonPendingFiltersEnabled,
-        numberOfPatientsDisplayed,
-        user
-      }))
-
-      expect(result.current.filtersLabel).toBeNull()
-    })
-
     it('should return correct filter when there is a pending filter enabled', () => {
       const allPatientsForSelectedTeamCount = 0
       const pendingFilterEnabled = true
       const hasAnyNonPendingFiltersEnabled = true
       const numberOfPatientsDisplayed = 10
-      const user: User = { isUserHcp: () => true } as User
 
       const { result } = renderHook(() => usePatientListHeaderFiltersLabelHook({
         allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
-        numberOfPatientsDisplayed,
-        user
+        numberOfPatientsDisplayed
       }))
 
       expect(result.current.filtersLabel).toEqual('filter-pending')
@@ -74,32 +53,28 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
       const pendingFilterEnabled = false
       const hasAnyNonPendingFiltersEnabled = true
       const numberOfPatientsDisplayed = 10
-      const user: User = { isUserHcp: () => true } as User
 
       const { result } = renderHook(() => usePatientListHeaderFiltersLabelHook({
         allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
-        numberOfPatientsDisplayed,
-        user
+        numberOfPatientsDisplayed
       }))
 
       expect(result.current.filtersLabel).toEqual('filters-activated')
     })
 
-    it('should return null when user is hcp with no filter', () => {
+    it('should return null when no filter', () => {
       const allPatientsForSelectedTeamCount = 0
       const pendingFilterEnabled = false
       const hasAnyNonPendingFiltersEnabled = false
       const numberOfPatientsDisplayed = 10
-      const user: User = { isUserHcp: () => true } as User
 
       const { result } = renderHook(() => usePatientListHeaderFiltersLabelHook({
         allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
-        numberOfPatientsDisplayed,
-        user
+        numberOfPatientsDisplayed
       }))
 
       expect(result.current.filtersLabel).toBeNull()
