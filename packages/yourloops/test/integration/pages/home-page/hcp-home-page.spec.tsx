@@ -215,8 +215,10 @@ describe('HCP home page', () => {
 
     const warningLine2 = within(addPatientDialog).getByTestId('modal-add-patient-warning-line2')
     expect(warningLine2).toHaveTextContent('Read our Terms of use and Privacy Policy.')
+
     const termsOfUseLink = within(addPatientDialog).getByRole('link', { name: 'Terms of use' })
     expect(termsOfUseLink).toBeVisible()
+
     const privacyPolicyLink = within(addPatientDialog).getByRole('link', { name: 'Privacy Policy' })
     expect(privacyPolicyLink).toBeVisible()
 
@@ -239,6 +241,13 @@ describe('HCP home page', () => {
 
     const pendingErrorMessage = within(addPatientDialog).getByText('This patient has already been invited and hasn\'t confirmed yet.')
     expect(pendingErrorMessage).toBeVisible()
+    expect(invitePatientButton).toBeDisabled()
+
+    await userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'invalid@emai.l')
+
+    const invalidEmailErrorMessage = within(addPatientDialog).getByText('Invalid email address (special characters are not allowed).')
+    expect(invalidEmailErrorMessage).toBeVisible()
     expect(invitePatientButton).toBeDisabled()
 
     await userEvent.clear(emailInput)

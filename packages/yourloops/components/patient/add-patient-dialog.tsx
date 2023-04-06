@@ -67,20 +67,18 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
 
   const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
 
-  const handleClickAdd = async (): Promise<void> => {
-    if (isValidEmail()) {
-      await addPatient()
-    } else {
-      setErrorMessage(t('invalid-email'))
-    }
-  }
-
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const inputEmail = event.target.value.trim()
-    if (errorMessage !== null && isValidEmail(inputEmail)) {
+    if (errorMessage !== null) {
       setErrorMessage(null)
     }
+
     setEmail(inputEmail)
+
+    if (!isValidEmail(inputEmail)) {
+      setErrorMessage(t('invalid-email'))
+      return
+    }
     checkPatientInTeam(inputEmail)
   }
 
@@ -208,7 +206,7 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
           variant="contained"
           color="primary"
           disableElevation
-          onClick={handleClickAdd}
+          onClick={addPatient}
         >
           {t('button-invite')}
         </LoadingButton>
