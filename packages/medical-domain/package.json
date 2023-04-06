@@ -1,6 +1,7 @@
 {
   "name": "medical-domain",
-  "version": "3.0.4-beta",
+  "type": "module",
+  "version": "1.0.0",
   "description": "Yourloops package for processing medical data",
   "author": {
     "name": "Diabeloop",
@@ -8,16 +9,15 @@
   },
   "homepage": "https://github.com/mdblp/blip#readme",
   "license": "ISC",
-  "main": "dist/src/index.js",
-  "typings": "dist/src/index.d.ts",
-  "directories": {
-    "lib": "dist",
-    "dist": "dist",
-    "test": "__tests__"
+  "main": "./dist/medical-domain.umd.cjs",
+  "module": "./dist/medical-domain.js",
+  "exports": {
+    ".": {
+      "import": "./dist/medical-domain.js",
+      "req  uire": "./dist/medical-domain.umd.cjs"
+    }
   },
-  "files": [
-    "dist"
-  ],
+  "typings": "./dist/types/index.d.ts",
   "publishConfig": {
     "registry": "https://nexus.ci.diabeloop.eu/repository/npm-diabeloop/"
   },
@@ -29,9 +29,8 @@
     "mrproper": "rm -rf node_modules dist",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "tsc": "tsc --project ./tsconfig.json",
-    "build": "npm run tsc",
-    "test": "jest --config=test/jest.config.js",
+    "build": "vite build && tsc --emitDeclarationOnly && mv dist/src dist/types",
+    "test": "jest --config=test/jest.config.cjs",
     "lint": "eslint .",
     "lint-fix": "npm run lint -- --fix"
   },

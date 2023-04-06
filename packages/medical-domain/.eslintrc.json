@@ -18,6 +18,7 @@
   "plugins": [
     "@typescript-eslint"
   ],
+  "ignorePatterns": ["vite.config.ts"],
   "overrides": [{
     "files": ["./test/**/*.*"],
     "parserOptions": {
