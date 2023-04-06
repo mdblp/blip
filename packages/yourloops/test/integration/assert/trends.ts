@@ -41,39 +41,38 @@ export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what y
 
 export const checkTrendsTidelineContainerTooltips = async () => {
   // Test tooltips when hovering a cbg slice
-  const cbgSlice = await screen.findAllByTestId('cbg-slice-rectangle-innerQuartiles')
-  const firstcbgSlice = cbgSlice[0]
-  await userEvent.hover(firstcbgSlice)
+  const cbgSlice = await screen.findByTestId('cbg-slice-rectangle-innerQuartiles')
+  await userEvent.hover(cbgSlice)
   const tooltipsOnCbgSlice = await screen.findAllByTestId('tooltip')
   expect(tooltipsOnCbgSlice).toHaveLength(3)
   const trendsTooltips = screen.getByTestId('trends-tooltips')
-  expect(trendsTooltips).toHaveTextContent('11:00 am - 11:30 am182164')
+  expect(trendsTooltips).toHaveTextContent('11:00 am - 11:30 am196177')
   const cbgSliceAnimated = screen.getByTestId('cbg-slice-animated')
   expect(cbgSliceAnimated).toBeVisible()
-  expect(cbgSliceAnimated).toHaveAttribute('y', '4.393085435524441')
-  expect(cbgSliceAnimated).toHaveAttribute('height', '-6.2427727622044')
+  expect(cbgSliceAnimated).toHaveAttribute('y', '9.248575361683429')
+  expect(cbgSliceAnimated).toHaveAttribute('height', '-6.5895934712157676')
 
   // Test tooltips when hovering a cbg circle (cbg slice must still be hovered)
   const cbgCircles = await screen.findAllByTestId('trends-cbg-circle')
-  const firstcbgCircle = cbgCircles[0]
-  await userEvent.hover(firstcbgCircle)
+  expect(cbgCircles).toHaveLength(4)
+  await userEvent.hover(cbgCircles[0])
   const tooltipsOnCbgCircle = await screen.findAllByTestId('tooltip')
   expect(tooltipsOnCbgCircle).toHaveLength(4)
-  expect(tooltipsOnCbgCircle[0]).toHaveTextContent('Monday, January 20')
+  expect(tooltipsOnCbgCircle[0]).toHaveTextContent('Saturday, January 18')
   expect(tooltipsOnCbgCircle[1]).toHaveTextContent('11:00 am - 11:30 am')
-  expect(tooltipsOnCbgCircle[2]).toHaveTextContent('182')
-  expect(tooltipsOnCbgCircle[3]).toHaveTextContent('164')
+  expect(tooltipsOnCbgCircle[2]).toHaveTextContent('196')
+  expect(tooltipsOnCbgCircle[3]).toHaveTextContent('177')
 
   // Test tooltips when unhovering cbg circle
   await userEvent.unhover(cbgCircles[0])
   const tooltipsOnCbgCircle2 = await screen.findAllByTestId('tooltip')
   expect(tooltipsOnCbgCircle2).toHaveLength(3)
   expect(tooltipsOnCbgCircle2[0]).toHaveTextContent('11:00 am - 11:30 am')
-  expect(tooltipsOnCbgCircle2[1]).toHaveTextContent('182')
-  expect(tooltipsOnCbgCircle2[2]).toHaveTextContent('164')
+  expect(tooltipsOnCbgCircle2[1]).toHaveTextContent('196')
+  expect(tooltipsOnCbgCircle2[2]).toHaveTextContent('177')
 
   // Test tooltips when unhovering cbg slice
-  await userEvent.unhover(firstcbgSlice)
+  await userEvent.unhover(cbgSlice)
   expect(screen.queryAllByTestId('tooltip')).toHaveLength(0)
   expect(screen.queryByTestId('cbg-slice-animated')).not.toBeInTheDocument()
 }
@@ -112,7 +111,7 @@ export const checkRangeSelection = async () => {
   expect(rangeSelection.getByLabelText('50% of readings')).toBeChecked()
   expect(rangeSelection.getByLabelText('Median')).toBeChecked()
 
-  expect(screen.getAllByTestId('cbg-slice-segments')).toHaveLength(2)
+  expect(screen.getAllByTestId('cbg-slice-segments')).toHaveLength(1)
 
   await checkMedian()
   await checkReadings100()
@@ -155,7 +154,7 @@ export const checkDaysSelection = async () => {
 
 export const checkMedian = async () => {
   const medianCheckBox = screen.getByRole('checkbox', { name: 'Median' })
-  expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(2)
+  expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)
 
   await act(async () => {
     await userEvent.click(medianCheckBox)
@@ -165,7 +164,7 @@ export const checkMedian = async () => {
   await act(async () => {
     await userEvent.click(medianCheckBox)
   })
-  expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(2)
+  expect(screen.getAllByTestId('cbgMedian-median')).toHaveLength(1)
 }
 
 export const checkTrendsLayout = () => {
@@ -188,8 +187,8 @@ export const checkTrendsLayout = () => {
 
 export const checkReadings100 = async () => {
   const reading100 = screen.getByRole('checkbox', { name: '100% of readings' })
-  expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(2)
-  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(2)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(1)
 
   await act(async () => {
     await userEvent.click(reading100)
@@ -200,14 +199,14 @@ export const checkReadings100 = async () => {
   await act(async () => {
     await userEvent.click(reading100)
   })
-  expect(await screen.findAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(2)
-  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(2)
+  expect(await screen.findAllByTestId('cbg-slice-rectangle-top10')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-bottom10')).toHaveLength(1)
 }
 
 export const checkReadings80 = async () => {
   const reading80 = screen.getByRole('checkbox', { name: '80% of readings' })
-  expect(screen.getAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(2)
-  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(2)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(1)
 
   await act(async () => {
     await userEvent.click(reading80)
@@ -218,13 +217,13 @@ export const checkReadings80 = async () => {
   await act(async () => {
     await userEvent.click(reading80)
   })
-  expect(await screen.findAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(2)
-  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(2)
+  expect(await screen.findAllByTestId('cbg-slice-rectangle-upper15')).toHaveLength(1)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-lower15')).toHaveLength(1)
 }
 
 export const checkReadings50 = async () => {
   const reading50 = screen.getByRole('checkbox', { name: '50% of readings' })
-  expect(screen.getAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(2)
+  expect(screen.getAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
 
   await act(async () => {
     await userEvent.click(reading50)
@@ -234,5 +233,5 @@ export const checkReadings50 = async () => {
   await act(async () => {
     await userEvent.click(reading50)
   })
-  expect(await screen.findAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(2)
+  expect(await screen.findAllByTestId('cbg-slice-rectangle-innerQuartiles')).toHaveLength(1)
 }
