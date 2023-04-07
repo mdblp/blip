@@ -26,7 +26,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
+import { type Dispatch, type SetStateAction, useState } from 'react'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type Team, useTeam } from '../../lib/team'
@@ -92,12 +92,6 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
       setProcessing(false)
     }
   }
-
-  useEffect(() => {
-    if (teams?.length === 1 && !selectedTeamId) {
-      setSelectedTeamId(teams[0].id)
-    }
-  }, [selectedTeamId, teams])
 
   return { sortedTeams, processing, selectedTeamId, patientName, handleOnClickRemove, setSelectedTeamId }
 }

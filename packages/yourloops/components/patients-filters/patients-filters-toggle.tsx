@@ -45,8 +45,7 @@ const useStyles = makeStyles()(() => ({
     maxWidth: '200px'
   },
   toggle: {
-    marginLeft: 'auto',
-    marginRight: 0
+    marginLeft: 'auto'
   }
 }))
 

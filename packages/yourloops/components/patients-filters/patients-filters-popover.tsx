@@ -60,7 +60,7 @@ const useStyles = makeStyles()((theme) => ({
 
 export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProps> = (props) => {
   const { anchorEl, onClose } = props
-  const { t } = useTranslation('yourloops')
+  const { t } = useTranslation()
   const { filters: patientsFiltersContext, updatePatientsFilters } = usePatientsFiltersContext()
   const theme = useTheme()
   const { classes } = useStyles()
@@ -83,7 +83,7 @@ export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProp
       }}
       transformOrigin={{ vertical: -10, horizontal: 0 }}
     >
-      <Box marginLeft={theme.spacing(3)} marginRight={theme.spacing(4)} marginTop={theme.spacing(3)}>
+      <Box marginX={theme.spacing(3)} marginTop={theme.spacing(3)}>
         <Typography variant="h6" className={classes.title}>{t('type-of-care')}</Typography>
         <PatientsFiltersToggle
           ariaLabel={t('filter-flagged')}
