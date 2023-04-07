@@ -127,12 +127,6 @@ const MainDrawer: FunctionComponent<MainDrawerProps> = ({ miniVariant }) => {
 
   const drawerCommonItems = [
     {
-      icon: <SupervisedUserCircleIcon />,
-      text: `${t('all-patients')} (${patientFiltersStats.all})`,
-      filter: PatientListFilters.All,
-      ariaLabel: t('all-patients-filter')
-    },
-    {
       icon: <FlagOutlinedIcon />,
       text: `${t('flagged')} (${numberOfFlaggedPatients})`,
       filter: PatientListFilters.Flagged,

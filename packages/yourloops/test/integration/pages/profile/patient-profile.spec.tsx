@@ -42,8 +42,8 @@ import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
-import { UnitsType } from 'dumb'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { Unit } from 'medical-domain'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
@@ -72,7 +72,7 @@ describe('Profile page for patient', () => {
       value: '7.5'
     },
     country: CountryCodes.France,
-    units: { bg: UnitsType.MMOLL }
+    units: { bg: Unit.MilligramPerDeciliter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
 

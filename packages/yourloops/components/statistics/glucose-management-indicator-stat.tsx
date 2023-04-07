@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,20 +24,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { type FunctionComponent } from 'react'
+import { t } from 'i18next'
+import { SimpleStat } from 'dumb'
+import Box from '@mui/material/Box'
+import { StatFormats } from 'dumb/src/models/stats.model'
 
-import { type Monitoring } from '../../team/models/monitoring.model'
-import { type PatientProfile } from './patient-profile.model'
-import { type PatientSettings } from './patient-settings.model'
-import { type PatientMetadata } from './patient-metadata.model'
-import { type PatientTeam } from './patient-team.model'
-import { type Alarms } from './alarms.model'
+interface GlucoseManagementIndicatorProps {
+  glucoseManagementIndicator: number
+}
 
-export interface Patient {
-  alarms: Alarms
-  profile: PatientProfile
-  settings: PatientSettings
-  metadata: PatientMetadata
-  monitoring?: Monitoring
-  teams: PatientTeam[]
-  readonly userid: string
+export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
+  const { glucoseManagementIndicator } = props
+  const annotations = glucoseManagementIndicator ? [t('glucose-management-indicator-tooltip')] : [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
+
+  return (
+    <Box data-testid="glucose-management-indicator-stat">
+      <SimpleStat
+        annotations={annotations}
+        title={t('glucose-management-indicator-title')}
+        value={glucoseManagementIndicator}
+        summaryFormat={StatFormats.Gmi}
+        total={0}
+      />
+    </Box>)
 }

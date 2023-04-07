@@ -214,6 +214,31 @@ const legend = {
       },
       type: 'text'
     },
+    // Umm Bolus
+    {
+      create: function(opts) {
+        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
+        return opts.selection.append('rect')
+          .attr({
+            class: 'd3-bolus d3-rect-bolus-legend d3-bolus-umm'
+          })
+      },
+      type: 'rect'
+    },
+    {
+      create: (opts) => {
+        return opts.selection.append('text')
+          .attr({
+            class: 'd3-pool-legend'
+          })
+          .text(t('Unannounced Meal Bolus'))
+          .each(function() {
+            opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
+            opts.textHeight = this.getBoundingClientRect().height
+          })
+      },
+      type: 'text'
+    },
     // Micro Bolus
     {
       create: function(opts) {
@@ -348,6 +373,30 @@ const legend = {
             class: 'd3-pool-legend'
           })
           .text(t('Carbs'))
+          .each(function() {
+            opts.widths.push(this.getBoundingClientRect().width)
+            opts.textHeight = this.getBoundingClientRect().height
+          })
+      },
+      type: 'text'
+    },
+    {
+      create: function(opts) {
+        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
+        return opts.selection.append('circle')
+          .attr({
+            class: 'd3-circle-carbs-legend d3-carbs-umm'
+          })
+      },
+      type: 'circle'
+    },
+    {
+      create: function(opts) {
+        return opts.selection.append('text')
+          .attr({
+            class: 'd3-pool-legend'
+          })
+          .text(t('Unannounced Carbs'))
           .each(function() {
             opts.widths.push(this.getBoundingClientRect().width)
             opts.textHeight = this.getBoundingClientRect().height

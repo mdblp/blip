@@ -33,6 +33,7 @@ import type MedicalDataOptions from '../../../models/medical/medical-data-option
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { type WizardInputMealFat } from '../../../models/medical/datum/enums/wizard-input-meal-fat.enum'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { WizardInputMealSource } from '../../../models/medical/datum/enums/wizard-input-meal-source.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Wizard => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -56,8 +57,13 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   }
   if (rawData?.inputMeal) {
     const inputMeal = rawData.inputMeal as Record<string, unknown>
+    const currentSource = inputMeal?.source as WizardInputMealSource
+    const inputMealSource = Object.values(WizardInputMealSource).includes(currentSource)
+      ? currentSource : WizardInputMealSource.Manual
+
     wizard.inputMeal = {
-      fat: inputMeal?.fat as WizardInputMealFat
+      fat: inputMeal?.fat as WizardInputMealFat,
+      source: inputMealSource
     }
   }
   return wizard

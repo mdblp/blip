@@ -6,12 +6,16 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-2140 As a HCP, I can only edit my medical records
+- YLP-2146 Adding groups in patient list
 - YLP-2160 Patient list new design
 - YLP-2175 Implement new design system
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
+- YLP-2215 Implement specific daily visualisation of UMM bolus
+- YLP-2216 Use selected team in Add patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
+- YLP-2265 Disable Add patient button when private practice is selected
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -48,6 +52,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2196 Removed the team selection drop-down menu on the care team definition page
 - YLP-2217 Bump react-router-dom to 6.8.2
 - YLP-2219 Migrate SensorUsage from stats.js to yourloops
+- YLP-2234 Migrate glucoseManagementIndicator from stats.js to yourloops
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
 - YLP-2256 Bump minor deps

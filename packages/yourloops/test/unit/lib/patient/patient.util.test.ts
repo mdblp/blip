@@ -31,7 +31,7 @@ import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
-import { UnitsType } from 'dumb'
+import { Unit } from 'medical-domain'
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
@@ -43,29 +43,6 @@ describe('Patient utils', () => {
       patientsUpdated.forEach(patient => {
         expect(patient.metadata.flagged).toBe(flaggedPatientIds.includes(patient.userid))
       })
-    })
-  })
-
-  describe('isInAtLeastATeam', () => {
-    it('should return false when team user does not have an accepted status in any team', () => {
-      const teams = [
-        createPatientTeam('team1Id', UserInvitationStatus.pending),
-        createPatientTeam('team2Id', UserInvitationStatus.pending)
-      ]
-      const teamUser = createPatient('id1', teams)
-      const res = PatientUtils.isInAtLeastATeam(teamUser)
-      expect(res).toBe(false)
-    })
-
-    it('should return true when team user does has an accepted status in a team', () => {
-      const teams = [
-        createPatientTeam('team1Id', UserInvitationStatus.pending),
-        createPatientTeam('team2Id', UserInvitationStatus.accepted)
-      ]
-      const teamUser = createPatient('id1', teams)
-
-      const res = PatientUtils.isInAtLeastATeam(teamUser)
-      expect(res).toBe(true)
     })
   })
 
@@ -89,7 +66,7 @@ describe('Patient utils', () => {
       status: MonitoringStatus.pending,
       monitoringEnd: new Date(),
       parameters: {
-        bgUnit: UnitsType.MGDL,
+        bgUnit: Unit.MilligramPerDeciliter,
         lowBg: 1,
         highBg: 2,
         outOfRangeThreshold: 3,
@@ -151,6 +128,25 @@ describe('Patient utils', () => {
       const actual = PatientUtils.removeDuplicates(allPatients)
 
       expect(JSON.stringify(actual)).toEqual(JSON.stringify(expected))
+    })
+  })
+
+  describe('getAllPatients and getPendingPatients', () => {
+    const acceptedPatientTeam = createPatientTeam('patientTeamAccepted', UserInvitationStatus.accepted)
+    const pendingPatientTeam = createPatientTeam('patientTeamAPending', UserInvitationStatus.pending)
+
+    const acceptedPatient1 = createPatient('acceptedPatient1', [acceptedPatientTeam])
+    const acceptedPatient2 = createPatient('acceptedPatient2', [acceptedPatientTeam])
+    const pendingPatient = createPatient('pendingPatient', [pendingPatientTeam])
+
+    it('should return all the patients of the selected team without pending patients', () => {
+      const result = PatientUtils.getNonPendingPatients([acceptedPatient1, acceptedPatient2, pendingPatient], 'patientTeamAccepted')
+      expect(result).toEqual([acceptedPatient1, acceptedPatient2])
+    })
+
+    it('should return pending patients of the selected team without other accepted patients', () => {
+      const result = PatientUtils.getPendingPatients([acceptedPatient1, acceptedPatient2, pendingPatient], 'patientTeamAPending')
+      expect(result).toEqual([pendingPatient])
     })
   })
 })

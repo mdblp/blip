@@ -30,8 +30,8 @@ import metrics from './metrics'
 import moment from 'moment-timezone'
 import { type IUser } from './data/models/i-user.model'
 import { type Settings } from './auth/models/settings.model'
-import { UnitsType } from 'dumb'
 import { CountryCodes } from './auth/models/country.model'
+import { Unit } from 'medical-domain'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
 export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/
@@ -122,13 +122,13 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
     return {
       country: CountryCodes.France,
       units: {
-        bg: UnitsType.MGDL
+        bg: Unit.MilligramPerDeciliter
       }
     }
   }
-  let bgUnit = settings.units?.bg ?? UnitsType.MGDL
-  if (![UnitsType.MGDL, UnitsType.MMOLL].includes(bgUnit)) {
-    bgUnit = UnitsType.MGDL
+  let bgUnit = settings.units?.bg ?? Unit.MilligramPerDeciliter
+  if (![Unit.MilligramPerDeciliter, Unit.MmolPerLiter].includes(bgUnit)) {
+    bgUnit = Unit.MilligramPerDeciliter
   }
   const newSettings: Settings = {
     country: settings.country ?? CountryCodes.France,

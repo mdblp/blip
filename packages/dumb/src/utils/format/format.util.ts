@@ -26,10 +26,9 @@
  */
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
-import { type TimePrefs, Unit } from 'medical-domain'
+import { type BgUnit, type TimePrefs, Unit } from 'medical-domain'
 import { format } from 'd3-format'
 import { min } from 'lodash'
-import { UnitsType } from '../../models/enums/units-type.enum'
 
 const NO_VALUE_STRING = '--'
 
@@ -68,9 +67,9 @@ export const formatParameterValue = (value: number | string, unit: Unit): string
   return valueNumber.toFixed(decimalsCount)
 }
 
-export const formatBgValue = (value: number, bgUnits?: UnitsType): string => {
-  const unit = bgUnits ?? UnitsType.MGDL
-  const isUnitMmolPerLiter = unit === UnitsType.MMOLL
+export const formatBgValue = (value: number, bgUnits?: BgUnit): string => {
+  const unit = bgUnits ?? Unit.MilligramPerDeciliter
+  const isUnitMmolPerLiter = unit === Unit.MmolPerLiter
 
   const valueFormat = isUnitMmolPerLiter ? ONE_DIGIT_STRING_FORMAT : NO_DIGIT_STRING_FORMAT
   return format(valueFormat)(value)

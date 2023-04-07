@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum UnitsType {
-  MGDL = 'mg/dL',
-  MMOLL = 'mmol/L',
+export enum WizardInputMealSource {
+  Umm = 'umm',
+  Manual = 'manual'
 }

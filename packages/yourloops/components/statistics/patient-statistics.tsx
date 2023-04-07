@@ -32,9 +32,9 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import {
-  GlycemiaStatisticsService
-} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlycemiaStatisticsService } from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
+import { useLocation } from 'react-router-dom'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -48,15 +48,23 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
-  const { sensorUsage, total } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
-  const sensorUsageData = {
-    total,
-    usage: sensorUsage
-  }
+  const theme = useTheme()
+  const location = useLocation()
+  const isTrendsPage = location.pathname.includes('trends')
+  const bgUnits = bgPrefs.bgUnits
+
+  const {
+    glucoseManagementIndicator
+  } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
+
+  const {
+    sensorUsage,
+    totalUsage
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-  const theme = useTheme()
 
   return (
     <Box data-testid="patient-statistics">
@@ -71,10 +79,16 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       {cbgSelected &&
         <>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <SensorUsageStat sensorUsageData={sensorUsageData} />
+          <SensorUsageStat totalUsage={totalUsage} usage={sensorUsage} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          {isTrendsPage &&
+            <>
+              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
+              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+            </>}
         </>
       }
+
       {children}
     </Box>
   )

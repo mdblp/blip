@@ -94,19 +94,12 @@ export default class PatientUtils {
     })
   }
 
-  static isInAtLeastATeam = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.accepted)
-    return !!tm
+  static getNonPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
+    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status !== UserInvitationStatus.pending))
   }
 
-  static isInvitationPending = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending)
-    return !!tm
-  }
-
-  static isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending)
-    return !tm
+  static getPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
+    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status === UserInvitationStatus.pending))
   }
 
   static isInTeam = (patient: Patient, teamId: string): boolean => {
@@ -114,13 +107,13 @@ export default class PatientUtils {
     return !!tm
   }
 
-  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[]): Patient[] => {
+  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[], selectedTeamId?: string): Patient[] => {
     const twoWeeksFromNow = new Date()
     switch (filterType) {
       case PatientListFilters.All:
-        return patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient))
+        return selectedTeamId ? PatientUtils.getNonPendingPatients(patients, selectedTeamId) : patients
       case PatientListFilters.Pending:
-        return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
+        return PatientUtils.getPendingPatients(patients, selectedTeamId)
       case PatientListFilters.Flagged:
         return patients.filter(patient => flaggedPatients.includes(patient.userid))
       case PatientListFilters.UnreadMessages:

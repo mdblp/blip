@@ -47,11 +47,13 @@ import { useTheme } from '@mui/material/styles'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type PatientListTabs } from './enums/patient-list.enum'
 import { makeStyles } from 'tss-react/mui'
-import { AddPatientDialog } from '../patient/add-dialog'
+import { AddPatientDialog } from '../patient/add-patient-dialog'
 import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -89,9 +91,11 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { user } = useAuth()
   const { selectedTab, inputSearch, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
-  const { patientsFilterStats } = usePatientContext()
+  const { pendingPatientsCount } = usePatientContext()
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
+  const { selectedTeam } = useSelectedTeamContext()
+  const isSelectedTeamPrivate = user.isUserHcp() ? TeamUtils.isPrivate(selectedTeam) : undefined
 
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
@@ -137,15 +141,23 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
           </Box>
           <Box>
             {user.isUserHcp() &&
-              <Button
-                startIcon={<PersonAddIcon />}
-                variant="contained"
-                size="large"
-                disableElevation
-                onClick={() => { setShowAddPatientDialog(true) }}
+              <Tooltip
+                title={isSelectedTeamPrivate ? t('add-new-patient-disabled-info') : ''}
+                placement="left"
               >
-                {t('button-add-new-patient')}
-              </Button>
+                <span data-testid="add-patient-button">
+                  <Button
+                    startIcon={<PersonAddIcon />}
+                    variant="contained"
+                    size="large"
+                    disableElevation
+                    disabled={isSelectedTeamPrivate}
+                    onClick={() => { setShowAddPatientDialog(true) }}
+                  >
+                    {t('button-add-new-patient')}
+                  </Button>
+                </span>
+              </Tooltip>
             }
             {/* TODO activate this button with columns choice YLP-2154 https://diabeloop.atlassian.net/browse/YLP-2154 */}
             <Button
@@ -177,16 +189,18 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            <Tab
-              data-testid="patient-list-pending-tab"
-              icon={<HourglassEmptyIcon />}
-              iconPosition="start"
-              label={<>
-                {t('pending')} <Badge badgeContent={patientsFilterStats.pending} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
-              </>}
-              aria-label={t('pending')}
-              classes={{ root: classes.tab }}
-            />
+            {user.isUserHcp() &&
+              <Tab
+                data-testid="patient-list-pending-tab"
+                icon={<HourglassEmptyIcon />}
+                iconPosition="start"
+                label={<>
+                  {t('pending')} <Badge badgeContent={pendingPatientsCount} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
+                </>}
+                aria-label={t('pending')}
+                classes={{ root: classes.tab }}
+              />
+            }
           </Tabs>
           <Box
             display="flex"

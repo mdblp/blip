@@ -24,15 +24,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { type BgUnit, Unit } from 'medical-domain'
 
-import { UnitsType } from '../../../models/enums/units-type.enum'
-
-export const formatBgValue = (value: number, units: UnitsType): string => {
+export const formatBgValue = (value: number, units: BgUnit): string => {
   const valueToString = Math.round(value).toString()
   switch (units) {
-    case UnitsType.MMOLL:
+    case Unit.MmolPerLiter:
       return parseFloat(valueToString).toFixed(1)
-    case UnitsType.MGDL:
+    case Unit.MilligramPerDeciliter:
     default:
       return parseInt(valueToString).toString()
   }

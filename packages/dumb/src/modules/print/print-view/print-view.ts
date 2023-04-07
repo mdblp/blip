@@ -34,11 +34,10 @@ import PdfTableFitColumn from 'voilab-pdf-table/plugins/fitcolumn'
 import { formatBirthdate, formatCurrentDate, formatDateRange } from '../../../utils/datetime/datetime.util'
 
 import { DPI, FOOTER_FONT_SIZE, HEIGHT, MARGIN, MARGINS } from '../../../models/constants/pdf.constants'
-import { type BgBounds, type TimePrefs } from 'medical-domain'
+import { type BgBounds, type TimePrefs, type BgUnit } from 'medical-domain'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
 import { getFonts, getTextData } from './print-view.util'
 import { getPatientFullName } from '../../../utils/patient/patient.util'
-import { type UnitsType } from '../../../models/enums/units-type.enum'
 import {
   type PdfDocumentOverridden,
   type PdfTableColumnOverridden,
@@ -98,7 +97,7 @@ const t = i18next.t.bind(i18next)
 export class PrintView<T> {
   bgBounds?: BgBounds
   bgPrefs: BgPrefs
-  bgUnits: UnitsType
+  bgUnits: BgUnit
   boldFont: string
   bottomEdge: number
   chartArea: ChartArea

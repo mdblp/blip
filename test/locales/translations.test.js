@@ -167,8 +167,10 @@ const ignoredTransKeyForYourLoops = [
   'compute-oneday-time-in-range',
   'remaining-time',
   'show-more',
+  'glucose-management-indicator-empty-stat',
   'created-by-unknown',
   'delete-medical-report-number'
+
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

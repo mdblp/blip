@@ -30,13 +30,14 @@ import { loggedInUserId } from './auth0.hook.mock'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { UnitsType } from 'dumb'
+
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { type Team } from '../../../lib/team'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms.default'
 import { type ITeam } from '../../../lib/team/models/i-team.model'
+import { Unit } from 'medical-domain'
 
 const {
   minVeryLowBg,
@@ -44,7 +45,7 @@ const {
   minHighBg
 } = DEFAULT_THRESHOLDS_IN_MGDL
 export const monitoringParameters = {
-  bgUnit: UnitsType.MGDL,
+  bgUnit: Unit.MilligramPerDeciliter,
   lowBg: minLowBg,
   highBg: minHighBg,
   outOfRangeThreshold: 5,
@@ -54,7 +55,7 @@ export const monitoringParameters = {
   reportingPeriod: 7
 }
 export const monitoringParametersBgUnitMmol = {
-  bgUnit: UnitsType.MMOLL,
+  bgUnit: Unit.MmolPerLiter,
   lowBg: 2.8,
   highBg: 7.8,
   outOfRangeThreshold: 5,

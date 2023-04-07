@@ -39,7 +39,7 @@ import {
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
-import { AVAILABLE_TEAMS, mockTeamAPI, teamOne, teamPrivate, teamThree, teamTwo } from '../../mock/team.api.mock'
+import { AVAILABLE_TEAMS, mockTeamAPI, teamPrivate, teamThree, teamTwo } from '../../mock/team.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
@@ -47,6 +47,7 @@ import { renderPage } from '../../utils/render'
 import TeamAPI from '../../../../lib/team/team.api'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { checkPatientList } from '../../assert/patient-list-header'
+import { mockDataAPI } from '../../mock/data.api.mock'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -59,9 +60,10 @@ describe('HCP home page', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockDirectShareApi()
+    mockDataAPI()
   })
 
-  it('should not display the Care team tab if the private practice is selected', async () => {
+  it('should not display the Care team tab and not allow to add patients if the private practice is selected', async () => {
     localStorage.setItem('selectedTeamId', 'private')
     const router = renderPage('/')
     await waitFor(() => {
@@ -69,9 +71,22 @@ describe('HCP home page', () => {
     })
 
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamPrivate.name, isPrivate: true }, AVAILABLE_TEAMS)
+
+    const patientListHeader = screen.getByTestId('patient-list-header')
+    const addPatientButton = within(patientListHeader).getByText('Add new patient')
+    expect(addPatientButton).toBeVisible()
+    expect(addPatientButton).toBeDisabled()
+
+    const addPatientHoverZone = within(patientListHeader).getByTestId('add-patient-button')
+    await userEvent.hover(addPatientHoverZone)
+    const informationTooltip = screen.getByText('To invite a patient, you must first select a care team from the dropdown menu. You can create you own care team if you need to. Alternatively, you can provide the patient with your YourLoops email address so they can enable private data sharing with you.')
+    expect(informationTooltip).toBeVisible()
+
+    await userEvent.unhover(addPatientHoverZone)
+    expect(informationTooltip).not.toBeVisible()
   })
 
-  it('should display a list of patients and allow to remove one of them', async () => {
+  it('should display a list of current patients and allow to remove one of them', async () => {
     localStorage.setItem('selectedTeamId', teamThree.id)
     const router = renderPage('/')
     await waitFor(() => {
@@ -81,9 +96,9 @@ describe('HCP home page', () => {
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
     checkPatientList()
 
-    const dataGridRow = screen.getByTestId('patient-list-grid')
-    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(5)
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+    const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
+    expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
+    expect(dataGridCurrentRows).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Monitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 
     const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
@@ -99,9 +114,33 @@ describe('HCP home page', () => {
       await userEvent.click(confirmRemoveButton)
     })
     expect(removePatientMock).toHaveBeenCalledWith(teamId, unmonitoredPatient.userid)
-    expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
+    expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(4)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${teamThree.name}`)
+  })
+
+  it('should display a list of pending patient and not be able to click on it, then redirect to patient dashboard when clicking on a current patient', async () => {
+    localStorage.setItem('selectedTeamId', teamThree.id)
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    })
+
+    const currentTab = screen.getByRole('tab', { name: 'Current' })
+    const pendingTab = screen.getByRole('tab', { name: 'Pending' })
+
+    await userEvent.click(pendingTab)
+    const dataGridPendingRows = screen.getByTestId('patient-list-grid')
+    expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
+    expect(dataGridPendingRows).toHaveTextContent('PatientSystemTime spent out of range from targetSevere hypoglycemiaData not transferredLast data updateActionsPending invitationPending PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+
+    await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
+    expect(router.state.location.pathname).toEqual('/home')
+
+    await userEvent.click(currentTab)
+    const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
+    await userEvent.click(within(dataGridCurrentRows).getAllByRole('row')[1])
+    expect(router.state.location.pathname).toEqual(`/patient/${monitoredPatientTwo.userid}/dashboard`)
   })
 
   it('should allow to remove a patient who is in multiple teams', async () => {
@@ -172,16 +211,21 @@ describe('HCP home page', () => {
     const addPatientDialog = screen.getByRole('dialog')
     expect(addPatientDialog).toBeVisible()
 
-    const title = within(addPatientDialog).getByText('New patient')
+    const title = within(addPatientDialog).getByText('Invite a patient to A - MyThirdTeam - to be deleted')
     expect(title).toBeVisible()
+
+    const infoAlert = within(addPatientDialog).getByText('To invite a patient to share their data with another care team, you must first select the care team in the dropdown menu at the top right of YourLoops.')
+    expect(infoAlert).toBeVisible()
 
     const warningLine1 = within(addPatientDialog).getByText('By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations.')
     expect(warningLine1).toBeVisible()
 
     const warningLine2 = within(addPatientDialog).getByTestId('modal-add-patient-warning-line2')
     expect(warningLine2).toHaveTextContent('Read our Terms of use and Privacy Policy.')
+
     const termsOfUseLink = within(addPatientDialog).getByRole('link', { name: 'Terms of use' })
     expect(termsOfUseLink).toBeVisible()
+
     const privacyPolicyLink = within(addPatientDialog).getByRole('link', { name: 'Privacy Policy' })
     expect(privacyPolicyLink).toBeVisible()
 
@@ -195,25 +239,26 @@ describe('HCP home page', () => {
     expect(emailInput).toBeVisible()
     await userEvent.type(emailInput, monitoredPatient.profile.email)
 
-    const select = within(addPatientDialog).getByTestId('patient-team-selector')
-    fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
-
     const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient is already sharing data with the team.')
     expect(alreadyInTeamErrorMessage).toBeVisible()
     expect(invitePatientButton).toBeDisabled()
 
     await userEvent.clear(emailInput)
     await userEvent.type(emailInput, pendingPatient.profile.email)
-    fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: teamThree.name }))
 
     const pendingErrorMessage = within(addPatientDialog).getByText('This patient has already been invited and hasn\'t confirmed yet.')
     expect(pendingErrorMessage).toBeVisible()
     expect(invitePatientButton).toBeDisabled()
 
-    fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: teamOne.name }))
+    await userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'invalid@emai.l')
+
+    const invalidEmailErrorMessage = within(addPatientDialog).getByText('Invalid email address (special characters are not allowed).')
+    expect(invalidEmailErrorMessage).toBeVisible()
+    expect(invitePatientButton).toBeDisabled()
+
+    await userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'new-patient@email.com')
 
     expect(invitePatientButton).toBeEnabled()
   })
