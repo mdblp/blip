@@ -67,7 +67,7 @@ describe('Remove patient dialog hook', () => {
     }));
     (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
       return { selectedTeam: team }
-    });
+    })
   })
 
   function createDataMock(invitationStatus: UserInvitationStatus, teamId = 'teamId') {
