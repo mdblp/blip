@@ -138,7 +138,7 @@ describe('HCP home page', () => {
     expect(question).toHaveTextContent(`Are you sure you want to remove ${unmonitoredPatient.profile.fullName} from ${teamThree.name}?`)
     const info = within(removeDialog).getByText('You and the care team will no longer have access to their data.')
     expect(info).toBeVisible()
-    const alertInfo = within(removeDialog).getByText('If you want to remove the patient from another a care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
+    const alertInfo = within(removeDialog).getByText('If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
     expect(alertInfo).toBeVisible()
     const cancelButton = within(removeDialog).getByText('Cancel')
     expect(cancelButton).toBeVisible()
