@@ -12,8 +12,10 @@ It is based on Tidepool Blip 1.27.
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
 - YLP-2215 Implement specific daily visualisation of UMM bolus
+- YLP-2216 Use selected team in Add patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
+- YLP-2265 Disable Add patient button when private practice is selected
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
