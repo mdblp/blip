@@ -57,6 +57,11 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
   const isSelectedTeamPrivate = TeamUtils.isPrivate(selectedTeam)
   const selectedTeamLabel = isSelectedTeamPrivate ? t('my-private-practice') : selectedTeam.name
 
+  const title = t('modal-remove-patient-title', {
+    patientName,
+    teamName: selectedTeamLabel
+  })
+
   return (
     <Dialog
       id="remove-hcp-patient-dialog"
@@ -65,7 +70,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       onClose={onClose}
     >
       <DialogTitle>
-        <strong>{t('modal-remove-patient-title', { patientName, teamName: selectedTeamLabel })}</strong>
+        <strong>{title}</strong>
       </DialogTitle>
 
       <DialogContent>
@@ -81,14 +86,15 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
         </DialogContentText>
 
         <DialogContentText>
-          { isSelectedTeamPrivate ? t('modal-remove-patient-from-private-practice-info') : t('modal-remove-patient-from-team-info') }
+          {isSelectedTeamPrivate ? t('modal-remove-patient-from-private-practice-info') : t('modal-remove-patient-from-team-info')}
         </DialogContentText>
 
-        <Box mt={2}>
-          <Alert severity="info">
-            If you want to remove the patient from another a care team, you must first select the care team from the dropdown menu at the top right of YourLoops.
-          </Alert>
-        </Box>
+          <Box mt={2}>
+            <Alert severity="info">
+              If you want to remove the patient from another a care team, you must first select the care team from the
+              dropdown menu at the top right of YourLoops.
+            </Alert>
+          </Box>
       </DialogContent>
 
       <DialogActions>

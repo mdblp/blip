@@ -247,6 +247,7 @@
   "modal-add-patient-warning-line2": "Read our <linkTerms>{{terms}}</linkTerms> and <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>.",
   "modal-caregiver-remove-patient-failure": "Impossible to remove patient. Please try again later.",
   "modal-caregiver-remove-patient-info-2": "You will no longer have access to their data.",
+  "modal-caregiver-remove-patient-question": "Are you sure you want to remove {{name}}?",
   "modal-caregiver-remove-patient-remove": "Remove patient",
   "modal-caregiver-remove-patient-success": "You no longer have access to your patient's data.",
   "modal-caregiver-remove-patient-title": "Remove a patient",
