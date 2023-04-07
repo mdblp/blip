@@ -180,8 +180,8 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                     disableElevation
                     disabled={isSelectedTeamPrivate}
                     onClick={() => {
-                  setShowAddPatientDialog(true)
-                }}
+                      setShowAddPatientDialog(true)
+                    }}
                   >
                     {t('button-add-new-patient')}
                   </Button>
