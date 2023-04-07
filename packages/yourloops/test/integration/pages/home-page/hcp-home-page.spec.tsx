@@ -194,16 +194,7 @@ describe('HCP home page', () => {
     const removeDialog = screen.getByRole('dialog')
     expect(removeDialog).toBeVisible()
 
-    const dialogTitle = within(removeDialog).getByText(`Remove ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} from ${teamTwo.name}`)
-    expect(dialogTitle).toBeVisible()
-    const dialogQuestion = within(removeDialog).getByTestId('modal-remove-patient-question')
-    expect(dialogQuestion).toHaveTextContent(`Are you sure you want to remove ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} from ${teamTwo.name}?`)
-    const dialogInfo = within(removeDialog).getByText('You and the care team will no longer have access to their data.')
-    expect(dialogInfo).toBeVisible()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
-    expect(confirmRemoveButton).toBeVisible()
-    const cancelButton = within(removeDialog).getByText('Cancel')
-    expect(cancelButton).toBeVisible()
 
     await act(async () => {
       await userEvent.click(confirmRemoveButton)

@@ -91,8 +91,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
 
           <Box mt={2}>
             <Alert severity="info">
-              If you want to remove the patient from another a care team, you must first select the care team from the
-              dropdown menu at the top right of YourLoops.
+              {t('modal-remove-patient-alert-info')}
             </Alert>
           </Box>
       </DialogContent>

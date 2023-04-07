@@ -265,6 +265,7 @@
   "modal-patient-team-privacy-2": "Read our <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy> for more information.",
   "modal-patient-team-warning": "Please verify that the above details match the information provided by your healthcare professional before accepting the invitation.",
   "modal-remove-caregiver-question": "Are you sure you want to remove caregiver {{name}}?",
+  "modal-remove-patient-alert-info": "If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.",
   "modal-remove-patient-from-private-practice-info": "You will no longer have access to their data.",
   "modal-remove-patient-from-team-info": "You and the care team will no longer have access to their data.",
   "modal-remove-patient-question": "Are you sure you want to remove <strong>{{patientName}}</strong> from <strong>{{selectedTeamName}}</strong>?",
