@@ -87,7 +87,7 @@ describe('HCP home page', () => {
     mockDataAPI()
   })
 
-  it('should not display the Care team tab if the private practice is selected', async () => {
+  it('should not display the Care team tab and not allow to add patients if the private practice is selected', async () => {
     localStorage.setItem('selectedTeamId', 'private')
     const router = renderPage('/')
     await waitFor(() => {
@@ -98,6 +98,19 @@ describe('HCP home page', () => {
       teamName: myFirstTeamName,
       isPrivate: true
     }, buildAvailableTeams())
+
+    const patientListHeader = screen.getByTestId('patient-list-header')
+    const addPatientButton = within(patientListHeader).getByText('Add new patient')
+    expect(addPatientButton).toBeVisible()
+    expect(addPatientButton).toBeDisabled()
+
+    const addPatientHoverZone = within(patientListHeader).getByTestId('add-patient-button')
+    await userEvent.hover(addPatientHoverZone)
+    const informationTooltip = screen.getByText('To invite a patient, you must first select a care team from the dropdown menu. You can create you own care team if you need to. Alternatively, you can provide the patient with your YourLoops email address so they can enable private data sharing with you.')
+    expect(informationTooltip).toBeVisible()
+
+    await userEvent.unhover(addPatientHoverZone)
+    expect(informationTooltip).not.toBeVisible()
   })
 
   it('should display a list of current patients and allow to remove one of them', async () => {
@@ -315,16 +328,21 @@ describe('HCP home page', () => {
     const addPatientDialog = screen.getByRole('dialog')
     expect(addPatientDialog).toBeVisible()
 
-    const title = within(addPatientDialog).getByText('New patient')
+    const title = within(addPatientDialog).getByText('Invite a patient to A - MyThirdTeam - to be deleted')
     expect(title).toBeVisible()
+
+    const infoAlert = within(addPatientDialog).getByText('To invite a patient to share their data with another care team, you must first select the care team in the dropdown menu at the top right of YourLoops.')
+    expect(infoAlert).toBeVisible()
 
     const warningLine1 = within(addPatientDialog).getByText('By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations.')
     expect(warningLine1).toBeVisible()
 
     const warningLine2 = within(addPatientDialog).getByTestId('modal-add-patient-warning-line2')
     expect(warningLine2).toHaveTextContent('Read our Terms of use and Privacy Policy.')
+
     const termsOfUseLink = within(addPatientDialog).getByRole('link', { name: 'Terms of use' })
     expect(termsOfUseLink).toBeVisible()
+
     const privacyPolicyLink = within(addPatientDialog).getByRole('link', { name: 'Privacy Policy' })
     expect(privacyPolicyLink).toBeVisible()
 
@@ -338,25 +356,26 @@ describe('HCP home page', () => {
     expect(emailInput).toBeVisible()
     await userEvent.type(emailInput, monitoredPatient.profile.email)
 
-    const select = within(addPatientDialog).getByTestId('patient-team-selector')
-    fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: myThirdTeamName }))
-
     const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient is already sharing data with the team.')
     expect(alreadyInTeamErrorMessage).toBeVisible()
     expect(invitePatientButton).toBeDisabled()
 
     await userEvent.clear(emailInput)
     await userEvent.type(emailInput, pendingPatient.profile.email)
-    fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: myThirdTeamName }))
 
     const pendingErrorMessage = within(addPatientDialog).getByText('This patient has already been invited and hasn\'t confirmed yet.')
     expect(pendingErrorMessage).toBeVisible()
     expect(invitePatientButton).toBeDisabled()
 
-    fireEvent.mouseDown(within(select).getByRole('button'))
-    fireEvent.click(screen.getByRole('option', { name: myFirstTeamName }))
+    await userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'invalid@emai.l')
+
+    const invalidEmailErrorMessage = within(addPatientDialog).getByText('Invalid email address (special characters are not allowed).')
+    expect(invalidEmailErrorMessage).toBeVisible()
+    expect(invitePatientButton).toBeDisabled()
+
+    await userEvent.clear(emailInput)
+    await userEvent.type(emailInput, 'new-patient@email.com')
 
     expect(invitePatientButton).toBeEnabled()
   })
