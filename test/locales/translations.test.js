@@ -172,7 +172,8 @@ const ignoredTransKeyForYourLoops = [
   'delete-medical-report-number',
   'delete-medical-report-number',
   'coefficient-of-variation-empty-stat',
-  'BGM'
+  'BGM',
+  'tooltip-empty-stat'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
