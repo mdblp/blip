@@ -54,6 +54,7 @@ export const PatientList: FunctionComponent = () => {
     selectedTab,
     gridApiRef,
     inputSearch,
+    patientsDisplayedCount,
     patientToRemoveForHcp,
     patientToRemoveForCaregiver,
     rowsProps,
@@ -103,6 +104,7 @@ export const PatientList: FunctionComponent = () => {
       <PatientListHeader
         selectedTab={selectedTab}
         inputSearch={inputSearch}
+        patientsDisplayedCount={patientsDisplayedCount}
         onChangingTab={onChangingTab}
         setInputSearch={setInputSearch}
       />
@@ -126,7 +128,10 @@ export const PatientList: FunctionComponent = () => {
           onPaginationModelChange={setPaginationModel}
           onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
           pageSizeOptions={[5, 10, 25]}
-          sx={{ borderRadius: 0, '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' } }}
+          sx={{
+            borderRadius: 0,
+            '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' }
+          }}
           slots={{
             noRowsOverlay: NoPatientMessage,
             footer: PatientListCustomFooter

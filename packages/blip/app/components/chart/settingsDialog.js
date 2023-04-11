@@ -82,7 +82,7 @@ const SettingsDialog = (props) => {
   const renderMissingSettingsMessage = () => {
     return (
       <Typography>
-        {t('message-from-current-settings-on-device')}
+        {t('no-settings-on-device-alert-message')}
       </Typography>
     )
   }

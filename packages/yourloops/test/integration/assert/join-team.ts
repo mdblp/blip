@@ -29,7 +29,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import TeamAPI from '../../../lib/team/team.api'
 import { iTeamOne } from '../mock/team.api.mock'
-import { monitoredPatientId } from '../mock/patient.api.mock'
+import { monitoredPatientId } from '../data/patient.api.data'
 
 export const checkJoinTeamDialogCancel = async (badgeTeamMenu) => {
   await userEvent.click(badgeTeamMenu)

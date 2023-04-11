@@ -138,7 +138,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
   const { user } = useAuth()
 
-  const userBgUnit = user.settings.units.bg
+  const userBgUnit = user.settings?.units?.bg
 
   const inputStep = userBgUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 

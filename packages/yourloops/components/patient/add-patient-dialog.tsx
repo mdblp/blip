@@ -35,23 +35,21 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
 import Link from '@mui/material/Link'
-import MenuItem from '@mui/material/MenuItem'
-import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
+import Alert from '@mui/material/Alert'
 
 import { REGEX_EMAIL } from '../../lib/utils'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type PatientTeam } from '../../lib/patient/models/patient-team.model'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
-import { type Team, useTeam } from '../../lib/team'
+import { type Team } from '../../lib/team'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../utils/snackbar'
 import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../lib/patient/patient.api'
 import { LoadingButton } from '@mui/lab'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 export interface AddDialogProps {
   onClose: () => void
@@ -62,46 +60,31 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
   const alert = useAlert()
   const patientHook = usePatientContext()
   const { t } = useTranslation()
-  const { teams, getTeam } = useTeam()
   const [email, setEmail] = useState<string>('')
-  const [teamId, setTeamId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [inProgress, setInProgress] = useState<boolean>(false)
+  const { selectedTeam } = useSelectedTeamContext()
 
   const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
 
-  const handleClickAdd = async (): Promise<void> => {
-    if (isValidEmail() && teamId.length > 0) {
-      await addPatient()
-    } else {
-      setErrorMessage(t('invalid-email'))
-    }
-  }
-
-  const handleVerifyEmail = (): void => {
-    if (email.length > 0 && !isValidEmail()) {
-      setErrorMessage(t('invalid-email'))
-    }
-  }
-
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const inputEmail = event.target.value.trim()
-    if (errorMessage !== null && isValidEmail(inputEmail)) {
+    if (errorMessage !== null) {
       setErrorMessage(null)
     }
+
     setEmail(inputEmail)
-    checkPatientInTeam(inputEmail, teamId)
+
+    if (!isValidEmail(inputEmail)) {
+      setErrorMessage(t('invalid-email'))
+      return
+    }
+    checkPatientInTeam(inputEmail)
   }
 
-  const handleChangeTeam = (event: SelectChangeEvent<unknown>): void => {
-    const inputTeamId = event.target.value as string
-    setTeamId(inputTeamId)
-    checkPatientInTeam(email, inputTeamId)
-  }
-
-  const checkPatientInTeam = (formEmail: string, formTeamId: string): void => {
+  const checkPatientInTeam = (formEmail: string): void => {
     const patient = patientHook.getPatientByEmail(formEmail)
-    const patientTeam = patient?.teams.find((team: PatientTeam) => team.teamId === formTeamId)
+    const patientTeam = patient?.teams.find((team: PatientTeam) => team.teamId === selectedTeam.id)
 
     if (patientTeam) {
       const isPatientPendingInTeam = patientTeam.status === UserInvitationStatus.pending
@@ -122,11 +105,10 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
   const addPatient = async (): Promise<void> => {
     try {
       setInProgress(true)
-      const team = getTeam(teamId)
-      await patientHook.invitePatient(team, email)
+      await patientHook.invitePatient(selectedTeam, email)
       alert.success(t('alert-invitation-sent-success'))
       metrics.send('invitation', 'send_invitation', 'patient')
-      onAddPatientSuccessful(team)
+      onAddPatientSuccessful(selectedTeam)
     } catch (err: unknown) {
       const error = err as Error
       if (error.message === PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE) {
@@ -172,11 +154,12 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
       onClose={onClose}
     >
       <DialogTitle id="patient-list-dialog-add-title">
-        <strong>{t('modal-add-patient')}</strong>
+        <strong>{t('modal-add-patient', { selectedCareTeam: selectedTeam.name })}</strong>
       </DialogTitle>
 
       <DialogContent>
         <Box display="flex" flexDirection="column">
+          <Alert severity="info">{t('modal-add-patient-info')}</Alert>
           <TextField
             id="patient-list-dialog-add-email"
             margin="normal"
@@ -184,50 +167,27 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
             value={email}
             required
             error={!!errorMessage}
-            onBlur={handleVerifyEmail}
             onChange={handleChangeEmail}
             helperText={errorMessage}
           />
-          <FormControl variant="standard">
-            <InputLabel id="patient-list-dialog-add-team-label" htmlFor="patient-list-dialog-add-team-input">
-              {t('team')}
-            </InputLabel>
-            <Select
-              id="patient-list-dialog-add-team-input"
-              data-testid="patient-team-selector"
-              name="teamid"
-              value={teamId}
-              onChange={handleChangeTeam}
-            >
-              <MenuItem aria-label={t('none')} value="" />
-              {teams.map((team) => (
-                <MenuItem
-                  id={`patient-list-dialog-add-team-option-${team.name}`}
-                  value={team.id}
-                  key={team.id}
-                  aria-label={team.name}
-                >
-                  {team.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <Box mt={2}>
             <DialogContentText id="patient-list-dialog-add-warning-line1">
               {t('modal-add-patient-warning-line1')}
             </DialogContentText>
           </Box>
-          <Trans
-            id="patient-list-dialog-add-warning-line2"
-            data-testid="modal-add-patient-warning-line2"
-            i18nKey="modal-add-patient-warning-line2"
-            t={t}
-            components={{ linkTerms, linkPrivacyPolicy }}
-            values={{ terms: termsOfUse, privacyPolicy }}
-            parent={DialogContentText}
-          >
-            Read our {linkTerms} and {linkPrivacyPolicy}.
-          </Trans>
+          <Box mt={1}>
+            <Trans
+              id="patient-list-dialog-add-warning-line2"
+              data-testid="modal-add-patient-warning-line2"
+              i18nKey="modal-add-patient-warning-line2"
+              t={t}
+              components={{ linkTerms, linkPrivacyPolicy }}
+              values={{ terms: termsOfUse, privacyPolicy }}
+              parent={DialogContentText}
+            >
+              Read our {linkTerms} and {linkPrivacyPolicy}.
+            </Trans>
+          </Box>
         </Box>
       </DialogContent>
 
@@ -241,12 +201,12 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
         </Button>
         <LoadingButton
           id="patient-list-dialog-add-button-add"
-          disabled={!!errorMessage || !isValidEmail() || teamId.length < 1}
+          disabled={!!errorMessage || !isValidEmail()}
           loading={inProgress}
           variant="contained"
           color="primary"
           disableElevation
-          onClick={handleClickAdd}
+          onClick={addPatient}
         >
           {t('button-invite')}
         </LoadingButton>
