@@ -39,7 +39,7 @@ export interface CoefficientOfVariationProps {
 
 export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
   const { coefficientOfVariation, bgSource } = props
-  const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('coefficient-of-variation-empty-stat')]
+  const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('tooltip-empty-stat')]
   const selectedLabel = bgSource === DatumType.Cbg ? t('CGM') : t('BGM')
   return (
     <Box data-testid="coefficient-of-variation-stat">
