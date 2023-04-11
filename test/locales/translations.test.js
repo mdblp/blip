@@ -172,7 +172,10 @@ const ignoredTransKeyForYourLoops = [
   'show-more',
   'glucose-management-indicator-empty-stat',
   'created-by-unknown',
-  'delete-medical-report-number'
+  'delete-medical-report-number',
+  'filters-activated',
+  'remote-monitoring',
+  'no-settings-on-device-alert-message'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

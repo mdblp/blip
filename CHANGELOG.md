@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-2140 As a HCP, I can only edit my medical records
 - YLP-2146 Adding groups in patient list
+- YLP-2151 As a HCP I want to be able to filter my patients via the new design
 - YLP-2160 Patient list new design
 - YLP-2175 Implement new design system
 - YLP-2192 Team scope dropdown for HCP
@@ -54,6 +55,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2217 Bump react-router-dom to 6.8.2
 - YLP-2219 Migrate SensorUsage from stats.js to yourloops
 - YLP-2234 Migrate glucoseManagementIndicator from stats.js to yourloops
+- YLP-2242 Fix the pop "current settings in case no data has been set"
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
 - YLP-2256 Bump minor deps

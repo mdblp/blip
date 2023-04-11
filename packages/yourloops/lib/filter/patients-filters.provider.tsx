@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface PatientFilterStats {
-  directShare: number
-  unread: number
-  outOfRange: number
-  severeHypoglycemia: number
-  dataNotTransferred: number
-  remoteMonitored: number
-  renew: number
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import { type PatientsFiltersContextResult } from './models/patients-filters-context-result.model'
+import { usePatientsFiltersProviderHook } from './patients-filters.provider.hook'
+
+const PatientsFiltersContext = createContext<PatientsFiltersContextResult>({} as PatientsFiltersContextResult)
+
+export const PatientsFiltersProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const result = usePatientsFiltersProviderHook()
+
+  return <PatientsFiltersContext.Provider value={result}>{children}</PatientsFiltersContext.Provider>
+}
+
+export function usePatientsFiltersContext(): PatientsFiltersContextResult {
+  return useContext(PatientsFiltersContext)
 }

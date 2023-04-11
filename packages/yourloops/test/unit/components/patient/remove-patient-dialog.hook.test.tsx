@@ -30,6 +30,7 @@ import useRemovePatientDialog from '../../../../components/patient/remove-patien
 import PatientAPI from '../../../../lib/patient/patient.api'
 import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../lib/team'
+import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import { type Team } from '../../../../lib/team'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { buildPrivateTeam, buildTeam } from '../../common/utils'
@@ -65,9 +66,9 @@ describe('Remove patient dialog hook', () => {
       success: onSuccessMock,
       error: jest.fn()
     }));
-    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-      return { selectedTeam: team }
-    })
+    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => ({
+      selectedTeam: team
+    }))
   })
 
   function createDataMock(invitationStatus: UserInvitationStatus, teamId = 'teamId') {

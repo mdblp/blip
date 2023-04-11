@@ -33,6 +33,42 @@ import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-inv
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 import { Unit } from 'medical-domain'
 
+const defaultAlarms = {
+  timeSpentAwayFromTargetRate: 10,
+  timeSpentAwayFromTargetActive: false,
+  frequencyOfSevereHypoglycemiaRate: 20,
+  frequencyOfSevereHypoglycemiaActive: false,
+  nonDataTransmissionRate: 30,
+  nonDataTransmissionActive: false
+}
+
+const defaultPatientFilters = {
+  pendingEnabled: false,
+  manualFlagEnabled: false,
+  telemonitoredEnabled: false,
+  timeOutOfTargetEnabled: false,
+  hypoglycemiaEnabled: false,
+  dataNotTransferredEnabled: false,
+  messagesEnabled: false
+}
+
+const acceptedPatientTeam = createPatientTeam('patientTeamAccepted', UserInvitationStatus.accepted)
+const pendingPatientTeam = createPatientTeam('patientTeamPending', UserInvitationStatus.pending)
+
+const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', [acceptedPatientTeam], undefined, undefined, undefined, undefined, {
+  ...defaultAlarms,
+  timeSpentAwayFromTargetActive: true
+})
+const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', [acceptedPatientTeam], undefined, undefined, undefined, undefined, {
+  ...defaultAlarms,
+  frequencyOfSevereHypoglycemiaActive: true
+})
+const patientWithNoDataAlert = createPatient('noData', [acceptedPatientTeam], undefined, undefined, undefined, undefined, {
+  ...defaultAlarms,
+  nonDataTransmissionActive: true
+})
+const noAlersPatient = createPatient('nothing', [acceptedPatientTeam], undefined, undefined, undefined, undefined, defaultAlarms)
+
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
     it('should return patients with the correct flagged attribute', () => {
@@ -146,6 +182,183 @@ describe('Patient utils', () => {
 
     it('should return pending patients of the selected team without other accepted patients', () => {
       const result = PatientUtils.getPendingPatients([acceptedPatient1, acceptedPatient2, pendingPatient], 'patientTeamAPending')
+      expect(result).toEqual([pendingPatient])
+    })
+  })
+
+  describe('isInvitationPending', () => {
+    const patient = createPatient('fakePatientId', [pendingPatientTeam, acceptedPatientTeam])
+
+    it('should return true when patient has a pending invitation for the selected team', () => {
+      const result = PatientUtils.isInvitationPending(patient, pendingPatientTeam.teamId)
+      expect(result).toBeTruthy()
+    })
+
+    it('should return false when patient has a pending invitation for another team than the one selected', () => {
+      const result = PatientUtils.isInvitationPending(patient, acceptedPatientTeam.teamId)
+      expect(result).toBeFalsy()
+    })
+
+    it('should return false when patient has no pending invitation for the team selected', () => {
+      const result = PatientUtils.isInvitationPending(patient, acceptedPatientTeam.teamId)
+      expect(result).toBeFalsy()
+    })
+  })
+
+  describe('filterPatientsOnMonitoringAlerts', () => {
+    const patients = [patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlersPatient]
+
+    it('should return all patient when no filter is selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, defaultPatientFilters)
+      expect(result).toEqual(patients)
+    })
+
+    it('should return only patients with alerts when all alerts are selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        dataNotTransferredEnabled: true,
+        timeOutOfTargetEnabled: true,
+        hypoglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert])
+    })
+
+    it('should return only patients with target and hypo alert when target and hypo are the filters selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        timeOutOfTargetEnabled: true,
+        hypoglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert])
+    })
+
+    it('should return only patients with no data and hypo alert when no data and hypo are the filters selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        dataNotTransferredEnabled: true,
+        hypoglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithHypoglycemiaAlert, patientWithNoDataAlert])
+    })
+
+    it('should return only patients with target and no data alert when target and no data are the filters selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        timeOutOfTargetEnabled: true,
+        dataNotTransferredEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithNoDataAlert])
+    })
+
+    it('should return patient with target alert when target filter is selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        timeOutOfTargetEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert])
+    })
+
+    it('should return patient with hypo alert when hypo filter is selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        hypoglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithHypoglycemiaAlert])
+    })
+
+    it('should return patient with no data alert when no data filter is selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        dataNotTransferredEnabled: true
+      })
+      expect(result).toEqual([patientWithNoDataAlert])
+    })
+  })
+
+  describe('extractPatients', () => {
+    const patientTeamPending = createPatientTeam(acceptedPatientTeam.teamId, UserInvitationStatus.pending)
+    const pendingPatient = createPatient('pendingPatient', [patientTeamPending], undefined, undefined, undefined, undefined, undefined)
+    const monitoredPatient = createPatient('monitoredPatient', [acceptedPatientTeam], { enabled: true }, undefined, undefined, undefined, undefined)
+    const flaggedPatient = createPatient('flaggedPatient', [acceptedPatientTeam], null, undefined, undefined, undefined, undefined)
+    const unreadMessagesPatient = createPatient('unreadMessagesPatient', [acceptedPatientTeam], null, undefined, undefined, { hasSentUnreadMessages: true }, undefined)
+    const patients = [noAlersPatient, pendingPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlersPatient, flaggedPatient]
+    const flaggedPatientsIds = [flaggedPatient.userid]
+
+    it('should return only patients with alerts when only alerts filters are selected', () => {
+      const result = PatientUtils.extractPatients(
+        patients,
+        {
+          ...defaultPatientFilters,
+          dataNotTransferredEnabled: true,
+          timeOutOfTargetEnabled: true,
+          hypoglycemiaEnabled: true
+        },
+        flaggedPatientsIds,
+        acceptedPatientTeam.teamId
+      )
+
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert])
+    })
+
+    it('should return all patients except the pending one when no filters are selected', () => {
+      const result = PatientUtils.extractPatients(patients, defaultPatientFilters, flaggedPatientsIds, acceptedPatientTeam.teamId)
+
+      expect(result).toEqual([noAlersPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlersPatient, flaggedPatient])
+    })
+
+    it('should return only monitored patient when only monitored filter is selected', () => {
+      const result = PatientUtils.extractPatients(
+        patients,
+        {
+          ...defaultPatientFilters,
+          telemonitoredEnabled: true
+        },
+        flaggedPatientsIds,
+        acceptedPatientTeam.teamId
+      )
+
+      expect(result).toEqual([monitoredPatient])
+    })
+
+    it('should return only flagged patient when only flagged filter is selected', () => {
+      const result = PatientUtils.extractPatients(
+        patients,
+        {
+          ...defaultPatientFilters,
+          manualFlagEnabled: true
+        },
+        flaggedPatientsIds,
+        acceptedPatientTeam.teamId
+      )
+
+      expect(result).toEqual([flaggedPatient])
+    })
+
+    it('should return only patient with unread messaged sent when only messages filter is selected', () => {
+      const result = PatientUtils.extractPatients(
+        patients,
+        {
+          ...defaultPatientFilters,
+          messagesEnabled: true
+        },
+        flaggedPatientsIds,
+        acceptedPatientTeam.teamId
+      )
+
+      expect(result).toEqual([unreadMessagesPatient])
+    })
+
+    it('should return only pending patient when only pending filter is selected', () => {
+      const result = PatientUtils.extractPatients(
+        patients,
+        {
+          ...defaultPatientFilters,
+          pendingEnabled: true
+        },
+        flaggedPatientsIds,
+        acceptedPatientTeam.teamId
+      )
+
       expect(result).toEqual([pendingPatient])
     })
   })

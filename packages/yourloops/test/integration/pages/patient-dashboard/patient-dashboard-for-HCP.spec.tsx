@@ -28,24 +28,23 @@
 import { act, type BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import {
-  AVAILABLE_TEAMS,
+  buildAvailableTeams,
   mockTeamAPI,
   mySecondTeamId,
+  mySecondTeamName,
   myThirdTeamId,
-  teamThree,
-  teamTwo
+  myThirdTeamName
 } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import {
-  mockPatientApiForHcp,
   monitoredPatient,
   monitoredPatientId,
   monitoredPatientWithMmol,
   monitoredPatientWithMmolId,
-  pendingPatient,
+  unmonitoredPatient,
   unmonitoredPatientId
-} from '../../mock/patient.api.mock'
+} from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { type queries } from '@testing-library/dom'
@@ -60,6 +59,8 @@ import { getTomorrowDate } from '../../utils/helpers'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { checkMedicalWidgetForHcp } from '../../assert/medical-widget'
 import { Unit } from 'medical-domain'
+import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
+import { type Settings } from '../../../../lib/auth/models/settings.model'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -67,8 +68,8 @@ describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRouteMmoL = `/patient/${monitoredPatientWithMmolId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
-  const mgdlSettings = { units: { bg: Unit.MilligramPerDeciliter } }
-  const mmolSettings = { units: { bg: Unit.MmolPerLiter } }
+  const mgdlSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter } }
+  const mmolSettings: Settings = { units: { bg: Unit.MmolPerLiter } }
 
   beforeAll(() => {
     mockAuth0Hook()
@@ -107,7 +108,7 @@ describe('Patient dashboard for HCP', () => {
     const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
     checkPatientNavBarAsHCP()
     testPatientDashboardCommonDisplay(dashboard)
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: myThirdTeamName }, buildAvailableTeams())
   })
 
   it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
@@ -117,7 +118,7 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamTwo.name }, AVAILABLE_TEAMS)
+    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: mySecondTeamName }, buildAvailableTeams())
 
     const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
@@ -154,15 +155,15 @@ describe('Patient dashboard for HCP', () => {
     expect(secondaryHeader).toHaveTextContent('PatientMonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsDownload report')
 
     fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))
-    fireEvent.click(screen.getByText(pendingPatient.profile.fullName))
+    fireEvent.click(within(screen.getByRole('listbox')).getByText(unmonitoredPatient.profile.fullName))
 
     const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientUnmonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report')
 
     await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
-    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.3 (12/16/2022)Email:pending-patient@diabeloop.frShow lessDashboardDailyTrendsDownload report')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientUnmonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.9 (11/21/2023)Email:unmonitored-patient@diabeloop.frShow lessDashboardDailyTrendsDownload report')
     await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show less'))
-    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientPending PatientDate of birth:01/01/1980Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report')
+    expect(secondaryHeaderRefreshed).toHaveTextContent('PatientUnmonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report')
   })
 
   describe('Alarms configuration dialog', () => {

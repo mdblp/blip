@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,14 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import MainHeader from '../components/header-bars/main-header'
-import MainDrawer from '../components/menus/drawer/main-drawer'
-import { useAuth } from '../lib/auth'
 
 const dashboardLayoutStyle = makeStyles()(() => ({
   container: {
@@ -43,18 +41,10 @@ const dashboardLayoutStyle = makeStyles()(() => ({
 function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
   const { classes } = dashboardLayoutStyle()
   const theme = useTheme()
-  const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true)
-  const authHook = useAuth()
-  const isUserPatient = authHook.user?.isUserPatient()
-
-  const onClickMainHeaderShrinkIcon = (): void => { setDrawerMiniVariant(!drawerMiniVariant) }
 
   return (
     <Box display="flex">
-      <MainHeader withShrinkIcon={!isUserPatient} onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
-      {!isUserPatient &&
-        <MainDrawer miniVariant={drawerMiniVariant} />
-      }
+      <MainHeader />
       <Container maxWidth={false} className={classes.container}>
         <Box sx={{ ...theme.mixins.toolbar }} />
         {children}

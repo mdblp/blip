@@ -92,7 +92,6 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, select
 
 export const checkHcpHeader = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[]) => {
   const header = within(screen.getByTestId('app-main-header'))
-  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
 
   expect(header.getByText('Patients')).toBeVisible()
   if (selectedTeamParams.isPrivate) {
@@ -108,7 +107,6 @@ export const checkHcpHeader = async (fullName: string, selectedTeamParams: { tea
 
 export const checkCaregiverHeader = async (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
-  expect(header.getByLabelText('Toggle left drawer')).toBeVisible()
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
 
   await checkUserMenu(header, fullName, UserRole.Caregiver)
@@ -117,7 +115,6 @@ export const checkCaregiverHeader = async (fullName: string) => {
 
 export const checkPatientHeader = async (fullName: string) => {
   const header = within(screen.getByTestId('app-main-header'))
-  expect(header.queryByLabelText('Toggle left drawer')).not.toBeInTheDocument()
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
   await checkUserMenu(header, fullName, UserRole.Patient)

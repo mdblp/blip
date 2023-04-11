@@ -26,7 +26,6 @@
  */
 
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
@@ -49,6 +48,7 @@ import * as constants from '../../../../../viz/src/modules/print/utils/constants
 import DataApi from '../../../../lib/data/data.api'
 import { User } from '../../../../lib/auth'
 import { when } from 'jest-when'
+import { unmonitoredPatientAsTeamMember } from '../../data/patient.api.data'
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {

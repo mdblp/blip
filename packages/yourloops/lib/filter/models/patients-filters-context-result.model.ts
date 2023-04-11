@@ -25,24 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import { type PatientsFilters } from './patients-filters.model'
 
-export const checkPatientList = (role: UserRole.Hcp | UserRole.Caregiver = UserRole.Hcp) => {
-  const header = screen.getByTestId('patient-list-header')
-  expect(header).toBeInTheDocument()
-  expect(screen.getByPlaceholderText('Search for a patient...')).toBeVisible()
-  expect(within(header).getByLabelText('Search by first name, last name or birthdate (dd/mm/yyyy)')).toBeVisible()
-  expect(within(header).getByRole('button', { name: 'Filters' })).toBeVisible()
-  expect(within(header).getByTestId('column-settings-button')).toBeVisible()
-  expect(screen.getByTestId('patient-list-grid')).toBeVisible()
-  expect(screen.getByText('Data calculated on the last 7 days')).toBeVisible()
-  expect(screen.getByRole('tab', { name: 'Current' })).toBeVisible()
-  if (role === UserRole.Hcp) {
-    expect(within(header).getByRole('button', { name: 'Add new patient' })).toBeVisible()
-    expect(screen.getByRole('tab', { name: 'Pending' })).toBeVisible()
-  } else {
-    expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
-  }
+export interface PatientsFiltersContextResult {
+  filters: PatientsFilters
+  hasAnyNonPendingFiltersEnabled: boolean
+  updatePatientsFilters: (filters: PatientsFilters) => void
+  updatePendingFilter: (pendingEnabled: boolean) => void
+  resetFilters: () => void
 }

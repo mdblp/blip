@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -39,9 +39,6 @@ import Tab from '@mui/material/Tab'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import Badge from '@mui/material/Badge'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import Link from '@mui/material/Link'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -52,12 +49,16 @@ import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
+import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
+import { PatientsFiltersPopover } from '../patients-filters/patients-filters-popover'
+import { PatientListHeaderFiltersLabel } from './patient-list-header-filters-label'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import TeamUtils from '../../lib/team/team.util'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
   inputSearch: string
+  patientsDisplayedCount: number
   onChangingTab: (newTab: PatientListTabs) => void
   setInputSearch: (value: string) => void
 }
@@ -86,20 +87,36 @@ const useStyles = makeStyles()((theme) => {
 })
 
 export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (props) => {
+  const { selectedTab, inputSearch, patientsDisplayedCount, onChangingTab, setInputSearch } = props
   const theme = useTheme()
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { selectedTab, inputSearch, onChangingTab, setInputSearch } = props
   const { classes } = useStyles()
   const { pendingPatientsCount } = usePatientContext()
+  const { filters } = usePatientsFiltersContext()
+  const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { selectedTeam } = useSelectedTeamContext()
   const isSelectedTeamPrivate = user.isUserHcp() ? TeamUtils.isPrivate(selectedTeam) : undefined
 
+  const filtersRef = useRef<HTMLButtonElement>(null)
+
+  const isUserHcp = user.isUserHcp()
+
+  const filterButtonTooltipTitle = isUserHcp && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
+
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
     setTeamCodeDialogSelectedTeam(team)
+  }
+
+  const openFiltersDialog = (): void => {
+    setFiltersDialogOpen(true)
+  }
+
+  const closeFiltersDialog = (): void => {
+    setFiltersDialogOpen(false)
   }
 
   return (
@@ -126,21 +143,31 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                   endAdornment: <InputAdornment position="end"><SearchIcon /></InputAdornment>,
                   sx: { height: '42px', borderRadius: '28px' }
                 }}
-                onChange={event => { setInputSearch(event.target.value) }}
+                onChange={event => {
+                  setInputSearch(event.target.value)
+                }}
               />
             </Tooltip>
-            {/* TODO activate this button with Filters YLP-2151 https://diabeloop.atlassian.net/browse/YLP-2151 */}
-            <Button
-              variant="outlined"
-              size="large"
-              color="inherit"
-              endIcon={<FilterList />}
-            >
-              {t('filters')}
-            </Button>
+            {isUserHcp &&
+              <Tooltip title={filterButtonTooltipTitle}>
+                <span>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    color="inherit"
+                    endIcon={<FilterList />}
+                    onClick={openFiltersDialog}
+                    disabled={filters.pendingEnabled}
+                    ref={filtersRef}
+                  >
+                    {t('filters')}
+                  </Button>
+                </span>
+              </Tooltip>
+            }
           </Box>
           <Box>
-            {user.isUserHcp() &&
+            {isUserHcp &&
               <Tooltip
                 title={isSelectedTeamPrivate ? t('add-new-patient-disabled-info') : ''}
                 placement="left"
@@ -152,7 +179,9 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                     size="large"
                     disableElevation
                     disabled={isSelectedTeamPrivate}
-                    onClick={() => { setShowAddPatientDialog(true) }}
+                    onClick={() => {
+                      setShowAddPatientDialog(true)
+                    }}
                   >
                     {t('button-add-new-patient')}
                   </Button>
@@ -189,57 +218,51 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            {user.isUserHcp() &&
+            {isUserHcp &&
               <Tab
                 data-testid="patient-list-pending-tab"
                 icon={<HourglassEmptyIcon />}
                 iconPosition="start"
-                label={<>
-                  {t('pending')} <Badge badgeContent={pendingPatientsCount} color="primary" sx={{ marginLeft: theme.spacing(2) }} />
-                </>}
+                label={
+                  <>
+                    {t('pending')}
+                    <Badge
+                      badgeContent={pendingPatientsCount}
+                      color="primary"
+                      sx={{ marginLeft: theme.spacing(2) }} />
+                  </>
+                }
                 aria-label={t('pending')}
                 classes={{ root: classes.tab }}
               />
             }
           </Tabs>
-          <Box
-            display="flex"
-            alignItems="center"
-          >
-            <Typography
-              variant="subtitle2"
-              color="text.secondary"
-            >
-              Filters activated: X patients out of Y
-            </Typography>
-            <Divider
-              orientation="vertical"
-              variant="middle"
-              flexItem
-              sx={{ marginInline: theme.spacing(2) }}
-            />
-            <Link
-              color="inherit"
-              variant="subtitle2"
-              underline="always"
-              className={classes.resetButton}
-            >
-              Reset
-            </Link>
-          </Box>
+          {isUserHcp &&
+            <PatientListHeaderFiltersLabel patientsDisplayedCount={patientsDisplayedCount} />
+          }
         </Box>
       </Box>
       {showAddPatientDialog &&
         <AddPatientDialog
           onAddPatientSuccessful={onAddPatientSuccessful}
-          onClose={() => { setShowAddPatientDialog(false) }}
+          onClose={() => {
+            setShowAddPatientDialog(false)
+          }}
         />
       }
       {teamCodeDialogSelectedTeam &&
         <TeamCodeDialog
           code={teamCodeDialogSelectedTeam.code}
           name={teamCodeDialogSelectedTeam.name}
-          onClose={() => { setTeamCodeDialogSelectedTeam(null) }}
+          onClose={() => {
+            setTeamCodeDialogSelectedTeam(null)
+          }}
+        />
+      }
+      {isFiltersDialogOpen &&
+        <PatientsFiltersPopover
+          anchorEl={filtersRef.current}
+          onClose={closeFiltersDialog}
         />
       }
     </React.Fragment>
