@@ -166,13 +166,13 @@ describe('Patient dashboard for HCP', () => {
     expect(secondaryHeaderRefreshed).toHaveTextContent('PatientUnmonitored PatientDate of birth:01/01/1980Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report')
   })
 
-  describe('Alarms configuration dialog', () => {
+  describe('monitoring-alerts configuration dialog', () => {
     it('should have units in mg/dL and cancel/default values buttons working', async () => {
       await act(async () => {
         renderPage(monitoredPatientDashboardRoute)
       })
-      const configureAlarmsButton = await screen.findByLabelText('Configure alarms')
-      await userEvent.click(configureAlarmsButton)
+      const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring-alerts')
+      await userEvent.click(configureMonitoringAlertsButton)
       const dialog = within(screen.getByRole('dialog'))
       const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
       const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
@@ -275,8 +275,8 @@ describe('Patient dashboard for HCP', () => {
       await act(async () => {
         renderPage(monitoredPatientDashboardRouteMmoL)
       })
-      const configureAlarmsButton = await screen.findByLabelText('Configure alarms')
-      await userEvent.click(configureAlarmsButton)
+      const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring-alerts')
+      await userEvent.click(configureMonitoringAlertsButton)
       const dialog = within(screen.getByRole('dialog'))
       const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
       const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
@@ -284,7 +284,7 @@ describe('Patient dashboard for HCP', () => {
       const outOfRangeThreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
       const hypoThreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
       const nonDataTxThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
-      const saveButton = dialog.getByTestId('alarm-config-save')
+      const saveButton = dialog.getByTestId('monitoring-alert-config-save')
 
       expect(dialog.getByText('Current trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)')).toBeVisible()
       expect(dialog.getByText('Current trigger setting: 10% of time below 2.2 mmol/L threshold')).toBeVisible()

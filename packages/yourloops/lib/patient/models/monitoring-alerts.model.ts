@@ -27,7 +27,7 @@
 
 import { type BgUnit } from 'medical-domain'
 
-export interface Alarms {
+export interface MonitoringAlerts {
   timeSpentAwayFromTargetRate: number
   timeSpentAwayFromTargetActive: boolean
   frequencyOfSevereHypoglycemiaRate: number

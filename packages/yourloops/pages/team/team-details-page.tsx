@@ -39,7 +39,7 @@ import TeamInformation from '../../components/team/team-information'
 import TeamMembers from '../../components/team/team-members'
 import { commonComponentStyles } from '../../components/common'
 import { useAuth } from '../../lib/auth'
-import TeamAlarmsConfiguration from '../../components/team/team-monitoring-alerts-configuration'
+import TeamMonitoringAlertsConfiguration from '../../components/team/team-monitoring-alerts-configuration'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useParams } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
@@ -113,7 +113,7 @@ function TeamDetailsPage(): JSX.Element {
 
   const teamInformation = useRef<HTMLDivElement>(null)
   const teamMembers = useRef<HTMLDivElement>(null)
-  const teamAlarms = useRef<HTMLDivElement>(null)
+  const teamMonitoringAlerts = useRef<HTMLDivElement>(null)
 
   const scrollTo = (ref: React.RefObject<HTMLDivElement>): void => {
     setActiveLink(ref.current?.dataset.link)
@@ -179,14 +179,13 @@ function TeamDetailsPage(): JSX.Element {
                 {isMonitoringEnabled() &&
                   <div
                     role="link"
-                    aria-label="alarms"
                     className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
                     tabIndex={0}
                     onClick={() => {
-                      scrollTo(teamAlarms)
+                      scrollTo(teamMonitoringAlerts)
                     }}
                     onKeyDown={() => {
-                      scrollTo(teamAlarms)
+                      scrollTo(teamMonitoringAlerts)
                     }}
                   >
                     <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
@@ -224,13 +223,12 @@ function TeamDetailsPage(): JSX.Element {
                       <div>
                         <div className={classes.separator} />
                         <div
-                          ref={teamAlarms}
+                          ref={teamMonitoringAlerts}
                           role="region"
-                          aria-label="alarms"
                           data-link="configuration"
                           className={classes.refElement}
                         >
-                          <TeamAlarmsConfiguration team={dropdownData.selectedTeam} />
+                          <TeamMonitoringAlertsConfiguration team={dropdownData.selectedTeam} />
                         </div>
                       </div>
                     }

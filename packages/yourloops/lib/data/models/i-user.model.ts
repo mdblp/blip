@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../patient/models/monitoring-alerts.model'
+import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
 import { type Monitoring } from '../../team/models/monitoring.model'
 import { type MedicalData } from './medical-data.model'
 import { type UserRole } from '../../auth/models/enums/user-role.enum'
@@ -49,7 +49,7 @@ export interface IUser {
   preferences?: Preferences | null
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null
-  alarms?: Alarms | null
+  monitoringAlerts?: MonitoringAlerts | null
   monitoring?: Monitoring
   unreadMessages?: number
 }

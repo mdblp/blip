@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../../lib/patient/models/monitoring-alerts.model'
+import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 import { type Team, type TeamMember } from '../../../lib/team'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
@@ -51,16 +51,16 @@ export const createPatient = (
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
-  alarms: Partial<Alarms> = undefined
+  monitoringAlerts: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
-    alarms: {
-      timeSpentAwayFromTargetRate: alarms?.timeSpentAwayFromTargetRate || 10,
-      timeSpentAwayFromTargetActive: alarms?.timeSpentAwayFromTargetActive || false,
-      frequencyOfSevereHypoglycemiaRate: alarms?.frequencyOfSevereHypoglycemiaRate || 20,
-      frequencyOfSevereHypoglycemiaActive: alarms?.frequencyOfSevereHypoglycemiaActive || false,
-      nonDataTransmissionRate: alarms?.nonDataTransmissionRate || 30,
-      nonDataTransmissionActive: alarms?.nonDataTransmissionActive || false
+    monitoringAlerts: {
+      timeSpentAwayFromTargetRate: monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
+      frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaActive: monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || false,
+      nonDataTransmissionRate: monitoringAlerts?.nonDataTransmissionRate || 30,
+      nonDataTransmissionActive: monitoringAlerts?.nonDataTransmissionActive || false
     },
     profile: {
       birthdate: profile?.birthdate || new Date(),
@@ -96,11 +96,11 @@ export const createPatientTeam = (
     monitoringStatus
   } as PatientTeam
 }
-export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarms => {
+export const createMonitoringAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): MonitoringAlerts => {
   return {
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate
-  } as Alarms
+  } as MonitoringAlerts
 }
 
 export function buildPrivateTeam(): Team {

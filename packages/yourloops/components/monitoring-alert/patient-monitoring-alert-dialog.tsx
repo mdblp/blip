@@ -36,7 +36,7 @@ import { makeStyles } from 'tss-react/mui'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
 import { commonComponentStyles } from '../common'
-import AlarmsContentConfiguration from './monitoring-alerts-content-configuration'
+import MonitoringAlertsContentConfiguration from './monitoring-alerts-content-configuration'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import DialogContent from '@mui/material/DialogContent'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -47,12 +47,12 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-interface PatientAlarmDialogProps {
+interface PatientMonitoringAlertDialogProps {
   patient: Patient
   onClose: () => void
 }
 
-function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
+function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps): JSX.Element {
   const { patient, onClose } = props
   const { classes: commonClasses } = commonComponentStyles()
   const { classes } = useStyles()
@@ -81,12 +81,12 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   }
   return (
     <Dialog
-      id="patient-alarm-dialog-id"
+      id="patient-monitoring-alert-dialog-id"
       fullWidth={true}
       maxWidth="lg"
       open={true}
       onClose={onClose}
-      data-testid="patient-alarm-dialog"
+      data-testid="patient-monitoring-alert-dialog"
     >
       <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
         <div className={commonClasses.categoryHeader}>
@@ -100,7 +100,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
       </DialogTitle>
 
       <DialogContent className={'no-padding'}>
-        <AlarmsContentConfiguration
+        <MonitoringAlertsContentConfiguration
           monitoring={patient.monitoring}
           patient={patient}
           onSave={save}
@@ -111,4 +111,4 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
   )
 }
 
-export default PatientAlarmDialog
+export default PatientMonitoringAlertDialog

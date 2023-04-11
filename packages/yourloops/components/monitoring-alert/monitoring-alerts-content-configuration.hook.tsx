@@ -42,14 +42,14 @@ import { DEFAULT_BG_VALUES } from './monitoring-alert.default'
 import { useAuth } from '../../lib/auth'
 import { type BgUnit, Unit } from 'medical-domain'
 
-export interface AlarmsContentConfigurationHookProps {
+export interface MonitoringAlertsContentConfigurationHookProps {
   monitoring: Monitoring
   saveInProgress?: boolean
   patient?: Patient
   onSave?: (monitoring: Monitoring) => void
 }
 
-interface AlarmsContentConfigurationHookReturn {
+interface MonitoringAlertsContentConfigurationHookReturn {
   lowBg: ValueErrorMessagePair
   setLowBg: React.Dispatch<ValueErrorMessagePair>
   veryLowBg: ValueErrorMessagePair
@@ -81,7 +81,7 @@ interface ValueErrorPair {
 
 const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
 
-const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: AlarmsContentConfigurationHookProps): AlarmsContentConfigurationHookReturn => {
+const useMonitoringAlertsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: MonitoringAlertsContentConfigurationHookProps): MonitoringAlertsContentConfigurationHookReturn => {
   const { user } = useAuth()
 
   const userBgUnit = user.settings?.units?.bg ?? DEFAULT_BG_UNIT
@@ -274,4 +274,4 @@ const useAlarmsContentConfiguration = ({ monitoring, saveInProgress, onSave, pat
     bgUnit: userBgUnit
   }
 }
-export default useAlarmsContentConfiguration
+export default useMonitoringAlertsContentConfiguration

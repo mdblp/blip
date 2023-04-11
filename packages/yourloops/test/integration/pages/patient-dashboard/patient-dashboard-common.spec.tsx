@@ -124,9 +124,9 @@ describe('Patient dashboard for anyone', () => {
     expect(medicalFilesCard).toBeVisible()
     expect(medicalFilesCard).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeamNew')
 
-    const alarmCard = screen.getByTestId('alarm-card')
-    expect(alarmCard).toBeVisible()
-    expect(alarmCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')
+    const monitoringAlertCard = screen.getByTestId('monitoring-alert-card')
+    expect(monitoringAlertCard).toBeVisible()
+    expect(monitoringAlertCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')
 
     const chartCard = screen.getByTestId('chat-card')
     expect(chartCard).toBeVisible()

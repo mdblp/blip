@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../../lib/patient/models/monitoring-alerts.model'
+import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
@@ -71,7 +71,7 @@ const defaultMetadata: PatientMetadata = {
   hasSentUnreadMessages: false
 }
 
-const defaultAlarm: Alarms = {
+const defaultMonitoringAlert: MonitoringAlerts = {
   timeSpentAwayFromTargetRate: 0,
   timeSpentAwayFromTargetActive: false,
   frequencyOfSevereHypoglycemiaRate: 0,
@@ -87,16 +87,16 @@ export const buildPatient = (
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
-  alarms: Partial<Alarms> = undefined
+  monitoringAlerts: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
-    alarms: {
-      timeSpentAwayFromTargetRate: alarms?.timeSpentAwayFromTargetRate || 10,
-      timeSpentAwayFromTargetActive: alarms?.timeSpentAwayFromTargetActive || false,
-      frequencyOfSevereHypoglycemiaRate: alarms?.frequencyOfSevereHypoglycemiaRate || 20,
-      frequencyOfSevereHypoglycemiaActive: alarms?.frequencyOfSevereHypoglycemiaActive || false,
-      nonDataTransmissionRate: alarms?.nonDataTransmissionRate || 30,
-      nonDataTransmissionActive: alarms?.nonDataTransmissionActive || false
+    monitoringAlerts: {
+      timeSpentAwayFromTargetRate: monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
+      frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaActive: monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || false,
+      nonDataTransmissionRate: monitoringAlerts?.nonDataTransmissionRate || 30,
+      nonDataTransmissionActive: monitoringAlerts?.nonDataTransmissionActive || false
     },
     profile: {
       birthdate: profile?.birthdate || new Date(),
@@ -151,7 +151,7 @@ export const monitoredPatient: Patient = buildPatient(
   },
   defaultSettings,
   defaultMetadata,
-  defaultAlarm
+  defaultMonitoringAlert
 )
 
 export const unreadMessagesPatient: Patient = buildPatient(
@@ -174,7 +174,7 @@ export const unreadMessagesPatient: Patient = buildPatient(
   },
   defaultSettings,
   { hasSentUnreadMessages: true },
-  defaultAlarm
+  defaultMonitoringAlert
 )
 
 export const timeSpentOutOfTargetRangePatient: Patient = buildPatient(
@@ -197,7 +197,7 @@ export const timeSpentOutOfTargetRangePatient: Patient = buildPatient(
   },
   defaultSettings,
   defaultMetadata,
-  { ...defaultAlarm, timeSpentAwayFromTargetActive: true }
+  { ...defaultMonitoringAlert, timeSpentAwayFromTargetActive: true }
 )
 
 export const hypoglycemiaPatient: Patient = buildPatient(
@@ -220,7 +220,7 @@ export const hypoglycemiaPatient: Patient = buildPatient(
   },
   defaultSettings,
   defaultMetadata,
-  { ...defaultAlarm, frequencyOfSevereHypoglycemiaActive: true }
+  { ...defaultMonitoringAlert, frequencyOfSevereHypoglycemiaActive: true }
 )
 
 export const noDataTransferredPatient: Patient = buildPatient(
@@ -243,7 +243,7 @@ export const noDataTransferredPatient: Patient = buildPatient(
   },
   defaultSettings,
   defaultMetadata,
-  { ...defaultAlarm, nonDataTransmissionActive: true }
+  { ...defaultMonitoringAlert, nonDataTransmissionActive: true }
 )
 
 export const flaggedPatient: Patient = buildPatient(
@@ -266,7 +266,7 @@ export const flaggedPatient: Patient = buildPatient(
   },
   defaultSettings,
   { ...defaultMetadata, flagged: true },
-  defaultAlarm
+  defaultMonitoringAlert
 )
 
 export const unmonitoredPatient: Patient = buildPatient(
@@ -288,7 +288,7 @@ export const unmonitoredPatient: Patient = buildPatient(
   },
   { ...defaultSettings, a1c: { value: '8.9', date: '2023-11-21T12:30:38.473Z' } },
   defaultMetadata,
-  defaultAlarm
+  defaultMonitoringAlert
 )
 
 export const monitoredPatientTwo: Patient = buildPatient(
@@ -311,7 +311,7 @@ export const monitoredPatientTwo: Patient = buildPatient(
   },
   defaultSettings,
   defaultMetadata,
-  defaultAlarm
+  defaultMonitoringAlert
 )
 
 export const monitoredPatientWithMmol: Patient = buildPatient(
@@ -334,7 +334,7 @@ export const monitoredPatientWithMmol: Patient = buildPatient(
   },
   defaultSettings,
   defaultMetadata,
-  defaultAlarm
+  defaultMonitoringAlert
 )
 
 export const pendingPatient: Patient = buildPatient(
@@ -361,7 +361,7 @@ export const pendingPatient: Patient = buildPatient(
   },
   { ...defaultSettings, a1c: { value: '8.3', date: '2022-12-16T08:18:38.473Z' } },
   defaultMetadata,
-  defaultAlarm
+  defaultMonitoringAlert
 )
 
 export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
@@ -385,7 +385,7 @@ export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
     email: patient.profile.email,
     idVerified: false,
     unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
-    alarms: patient.alarms,
+    monitoringAlerts: patient.monitoringAlerts,
     monitoring: patient.monitoring
   }
 }
@@ -428,7 +428,7 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     email: member.email ?? 'fake@patient.email',
     idVerified: member.idVerified ?? true,
     unreadMessages: member.unreadMessages ?? 0,
-    alarms: member.alarms,
+    monitoringAlerts: member.monitoringAlerts,
     monitoring: member.monitoring
   }
 }

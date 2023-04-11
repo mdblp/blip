@@ -36,13 +36,13 @@ import { commonComponentStyles } from '../common'
 import { type Team, useTeam } from '../../lib/team'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
-import AlarmsContentConfiguration from '../monitoring-alert/monitoring-alerts-content-configuration'
+import MonitoringAlertsContentConfiguration from '../monitoring-alert/monitoring-alerts-content-configuration'
 
-export interface TeamAlarmsConfigurationProps {
+export interface TeamMonitoringAlertsConfigurationProps {
   team: Team
 }
 
-function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Element {
+function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurationProps): JSX.Element {
   const { team } = props
   const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
@@ -73,17 +73,17 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
       <div className={commonTeamClasses.categoryHeader}>
         <div>
           <TuneIcon />
-          <Typography className={commonTeamClasses.title} data-testid="alarm-configuration-section">
+          <Typography className={commonTeamClasses.title} data-testid="monitoring-alert-configuration-section">
             {t('events-configuration')}
           </Typography>
         </div>
       </div>
 
       <Box paddingX={3}>
-        <AlarmsContentConfiguration monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
+        <MonitoringAlertsContentConfiguration monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
       </Box>
     </div>
   )
 }
 
-export default TeamAlarmsConfiguration
+export default TeamMonitoringAlertsConfiguration

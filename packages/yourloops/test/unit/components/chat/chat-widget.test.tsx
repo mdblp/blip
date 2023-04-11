@@ -46,7 +46,7 @@ describe('Chat widget', () => {
   const teamId = '777'
   const patientTeam = { teamId } as PatientTeam
   const patient: Patient = {
-    alarms: {},
+    monitoringAlerts: {},
     profile: {},
     settings: {},
     userid: '132',

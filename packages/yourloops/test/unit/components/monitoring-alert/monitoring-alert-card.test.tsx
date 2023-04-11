@@ -33,15 +33,15 @@ import { type RemoteMonitoringWidgetProps } from '../../../../components/dashboa
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import i18n from '../../../../lib/language'
 import * as authHookMock from '../../../../lib/auth'
-import AlarmCard from '../../../../components/monitoring-alert/monitoring-alert-card'
+import MonitoringAlertCard from '../../../../components/monitoring-alert/monitoring-alert-card'
 import type User from '../../../../lib/auth/models/user.model'
-import { type Alarms } from '../../../../lib/patient/models/monitoring-alerts.model'
+import { type MonitoringAlerts } from '../../../../lib/patient/models/monitoring-alerts.model'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import { getTheme } from '../../../../components/theme'
 import { Unit } from 'medical-domain'
 
 jest.mock('../../../../lib/auth')
-describe('AlarmCard', () => {
+describe('MonitoringAlertCard', () => {
   const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
 
@@ -76,7 +76,7 @@ describe('AlarmCard', () => {
     act(() => {
       render(
         <ThemeProvider theme={getTheme()}>
-          <AlarmCard
+          <MonitoringAlertCard
             patient={props.patient}
           />
         </ThemeProvider>, container)
@@ -101,13 +101,13 @@ describe('AlarmCard', () => {
     expect(document.getElementById('configure-icon-button-id')).toBeNull()
   })
 
-  it('should display correct title when patient has no alarms', () => {
+  it('should display correct title when patient has no monitoring alerts', () => {
     mountComponent()
-    expect(document.querySelector('[data-testid="alarm-card"] .MuiCardHeader-title').innerHTML).toEqual('events')
+    expect(document.querySelector('[data-testid="monitoring-alert-card"] .MuiCardHeader-title').innerHTML).toEqual('events')
   })
 
-  it('should display correct title patient has 2 alarms', () => {
-    const alarm: Alarms = {
+  it('should display correct title patient has 2 monitoring alerts', () => {
+    const monitoringAlert: MonitoringAlerts = {
       timeSpentAwayFromTargetRate: 0,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 5,
@@ -115,13 +115,13 @@ describe('AlarmCard', () => {
       nonDataTransmissionRate: 10,
       nonDataTransmissionActive: true
     }
-    const patientWithAlarms = createPatient('fakePatientId', [], undefined, undefined, undefined, undefined, alarm)
-    mountComponent({ patient: patientWithAlarms })
-    expect(document.querySelector('[data-testid="alarm-card"] .MuiCardHeader-title').innerHTML).toEqual('events (+2)')
+    const patientWithMonitoringAlerts = createPatient('fakePatientId', [], undefined, undefined, undefined, undefined, monitoringAlert)
+    mountComponent({ patient: patientWithMonitoringAlerts })
+    expect(document.querySelector('[data-testid="monitoring-alert-card"] .MuiCardHeader-title').innerHTML).toEqual('events (+2)')
   })
 
   it('should open dialog when clicking on configure button and close it when clicking on cancel', () => {
-    const alarm: Alarms = {
+    const monitoringAlert: MonitoringAlerts = {
       timeSpentAwayFromTargetRate: 10,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 20,
@@ -132,13 +132,13 @@ describe('AlarmCard', () => {
     const monitoring: Monitoring = {
       enabled: true
     }
-    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, undefined, alarm)
+    const patientWithMonitoring = createPatient('fakePatientId', [], monitoring, undefined, undefined, undefined, monitoringAlert)
     mountComponent({ patient: patientWithMonitoring })
     const configureButton = document.getElementById('configure-icon-button-id')
     triggerMouseEvent('click', configureButton)
-    expect(document.getElementById('patient-alarm-dialog-id')).not.toBeNull()
+    expect(document.getElementById('patient-monitoring-alert-dialog-id')).not.toBeNull()
     const cancelButton = document.getElementById('cancel-button-id')
     triggerMouseEvent('click', cancelButton)
-    expect(document.getElementById('patient-alarm-dialog-id')).toBeNull()
+    expect(document.getElementById('patient-monitoring-alert-dialog-id')).toBeNull()
   })
 })

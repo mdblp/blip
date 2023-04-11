@@ -50,7 +50,7 @@ describe('Patient utils', () => {
         userId: 'fakeTeamMember',
         email,
         profile,
-        alarms: {
+        monitoringAlerts: {
           timeSpentAwayFromTargetRate: 10,
           timeSpentAwayFromTargetActive: true,
           frequencyOfSevereHypoglycemiaRate: 10,
@@ -62,7 +62,7 @@ describe('Patient utils', () => {
       }
       teamMember.unreadMessages = 4
       const patient: Patient = {
-        alarms: teamMember.alarms,
+        monitoringAlerts: teamMember.monitoringAlerts,
         metadata: {
           flagged: undefined,
           medicalData: null,

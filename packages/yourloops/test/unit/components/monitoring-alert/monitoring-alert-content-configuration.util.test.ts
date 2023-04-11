@@ -31,7 +31,7 @@ import {
 } from '../../../../components/monitoring-alert/monitoring-alert-content-configuration.util'
 import { Unit } from 'medical-domain'
 
-describe('AlarmsContentConfiguration util', function () {
+describe('MonitoringAlertsContentConfiguration util', function () {
   describe('buildThresholds', () => {
     const getDefaultMonitoring = () => ({
       enabled: true,
