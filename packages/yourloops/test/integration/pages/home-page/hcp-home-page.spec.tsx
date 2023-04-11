@@ -27,7 +27,7 @@
 
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import {
@@ -39,7 +39,7 @@ import {
   pendingPatient,
   unmonitoredPatient
 } from '../../mock/patient.api.mock'
-import { AVAILABLE_TEAMS, mockTeamAPI, teamPrivate, teamThree, teamTwo } from '../../mock/team.api.mock'
+import { AVAILABLE_TEAMS, mockTeamAPI, teamPrivate, teamThree } from '../../mock/team.api.mock'
 import { checkHCPLayout } from '../../assert/layout'
 import userEvent from '@testing-library/user-event'
 import { PhonePrefixCode } from '../../../../lib/utils'
@@ -49,11 +49,13 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { checkPatientList } from '../../assert/patient-list-header'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import DirectShareApi from '../../../../lib/share/direct-share.api'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
   const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
+  const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
   beforeAll(() => {
     mockAuth0Hook()
     mockNotificationAPI()
@@ -108,6 +110,14 @@ describe('HCP home page', () => {
     expect(confirmRemoveButton).toBeVisible()
     const cancelButton = within(removeDialog).getByText('Cancel')
     expect(cancelButton).toBeVisible()
+
+    await act(async () => {
+      await userEvent.click(confirmRemoveButton)
+    })
+
+    expect(removeDirectShareMock).toHaveBeenCalledWith(monitoredPatient.userid, loggedInUserId)
+    expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`Direct data sharing with ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} has been removed`)
   })
 
   it('should display a list of current patients and allow to remove one of them', async () => {
@@ -180,30 +190,6 @@ describe('HCP home page', () => {
     expect(router.state.location.pathname).toEqual(`/patient/${monitoredPatientTwo.userid}/dashboard`)
   })
 
-  it('should allow to remove a patient who is in multiple teams', async () => {
-    localStorage.setItem('selectedTeamId', teamTwo.id)
-    const teamId = monitoredPatient.teams[0].teamId
-    await act(async () => {
-      renderPage('/')
-    })
-
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
-    expect(removeButton).toBeVisible()
-
-    await userEvent.click(removeButton)
-    const removeDialog = screen.getByRole('dialog')
-    expect(removeDialog).toBeVisible()
-
-    const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
-
-    await act(async () => {
-      await userEvent.click(confirmRemoveButton)
-    })
-    expect(removePatientMock).toHaveBeenCalledWith(teamId, monitoredPatient.userid)
-    expect(screen.queryByTestId('remove-hcp-patient-dialog')).not.toBeInTheDocument()
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} is no longer a member of ${teamTwo.name}`)
-  })
-
   it('should display an error message if patient removal failed', async () => {
     localStorage.setItem('selectedTeamId', teamThree.id)
     mockPatientApiForPatients()
@@ -220,7 +206,7 @@ describe('HCP home page', () => {
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(monitoredPatient.teams[0].teamId, monitoredPatient.userid)
+    expect(removePatientMock).toHaveBeenCalledWith(teamThree.id, monitoredPatient.userid)
     expect(screen.getByTestId('remove-hcp-patient-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })
