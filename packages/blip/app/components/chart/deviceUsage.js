@@ -104,7 +104,26 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily, medicalData, dateFilter } = props
+  const {
+    // eslint-disable-next-line react/prop-types
+    bgPrefs,
+    // eslint-disable-next-line react/prop-types
+    timePrefs,
+    // eslint-disable-next-line react/prop-types
+    patient,
+    // eslint-disable-next-line react/prop-types
+    dataUtil,
+    // eslint-disable-next-line react/prop-types
+    tidelineData,
+    // eslint-disable-next-line react/prop-types
+    medicalData,
+    // eslint-disable-next-line react/prop-types
+    dateFilter,
+    // eslint-disable-next-line react/prop-types
+    trackMetric,
+    // eslint-disable-next-line react/prop-types
+    onSwitchToDaily
+  } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
@@ -121,15 +140,11 @@ const DeviceUsage = (props) => {
   // eslint-disable-next-line react/prop-types
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const {
-    sensorUsage,
-    total: sensorUsageTotal
+    total: SensorUsageTotal,
+    sensorUsage
     // eslint-disable-next-line react/prop-types
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
-  const sensorUsageData = {
-    sensorUsageTotal,
-    usage: sensorUsage
-  }
   const deviceData = {
     cgm: {
       label: `${t('CGM')}:`,
@@ -216,7 +231,7 @@ const DeviceUsage = (props) => {
         <Divider variant="fullWidth" className={classes.divider} />
         {cbgSelected &&
           <>
-            <SensorUsageStat sensorUsageData={sensorUsageData} />
+            <SensorUsageStat sensorUsageTotal={SensorUsageTotal} usage={sensorUsage} />
             <Divider variant="fullWidth" className={classes.divider} />
           </>
         }

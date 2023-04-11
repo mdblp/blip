@@ -30,18 +30,13 @@ import { StatFormats } from 'dumb/src/models/stats.model'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
 
-export interface SensorUsageData {
+export interface SensorUsageStatProp {
   sensorUsageTotal: number
   usage: number
 }
 
-interface SensorUsageStatProp {
-  sensorUsageData: SensorUsageData
-}
-
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
-  const { sensorUsageData } = props
-  const { usage, sensorUsageTotal } = sensorUsageData
+  const { usage, sensorUsageTotal } = props
 
   return (
     <Box data-testid="sensor-usage-stat">

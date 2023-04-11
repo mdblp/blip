@@ -63,11 +63,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     total: sensorUsageTotal
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
-  const sensorUsageData = {
-    sensorUsageTotal,
-    usage: sensorUsage
-  }
-
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
 
   const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
@@ -89,7 +84,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       {cbgSelected &&
         <>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <SensorUsageStat sensorUsageData={sensorUsageData} />
+          <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage}/>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
