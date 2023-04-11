@@ -137,18 +137,11 @@ export default class PatientUtils {
       return patients.filter((patient) => PatientUtils.isInvitationPending(patient, selectedTeamId))
     }
     // We do not take the pending patients
-    let patientsExtracted = PatientUtils.getNonPendingPatients(patients, selectedTeamId)
-    patientsExtracted = PatientUtils.filterPatientsOnMonitoringAlerts(patientsExtracted, patientFilters)
-    if (patientFilters.telemonitoredEnabled) {
-      patientsExtracted = patientsExtracted.filter(patient => patient.monitoring?.enabled)
-    }
-    if (patientFilters.manualFlagEnabled) {
-      patientsExtracted = patientsExtracted.filter(patient => flaggedPatientsId?.includes(patient.userid))
-    }
-    if (patientFilters.messagesEnabled) {
-      return patientsExtracted.filter(patient => patient.metadata.hasSentUnreadMessages)
-    }
-    return patientsExtracted
+    const nonPendingPatients = PatientUtils.getNonPendingPatients(patients, selectedTeamId)
+    return PatientUtils.filterPatientsOnMonitoringAlerts(nonPendingPatients, patientFilters)
+      .filter(patient => patientFilters.telemonitoredEnabled ? patient.monitoring?.enabled : patient)
+      .filter(patient => patientFilters.manualFlagEnabled ? flaggedPatientsId?.includes(patient.userid) : patient)
+      .filter(patient => patientFilters.messagesEnabled ? patient.metadata.hasSentUnreadMessages : patient)
   }
 
   static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {

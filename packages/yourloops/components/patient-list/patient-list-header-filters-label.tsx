@@ -38,7 +38,7 @@ import { usePatientListHeaderFiltersLabelHook } from './patient-list-header-filt
 import { usePatientContext } from '../../lib/patient/patient.provider'
 
 interface PatientListHeaderFiltersLabelProps {
-  numberOfPatientsDisplayed: number
+  patientsDisplayedCount: number
 }
 
 const useStyles = makeStyles()((theme) => {
@@ -53,7 +53,7 @@ const useStyles = makeStyles()((theme) => {
 })
 
 export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderFiltersLabelProps> = (props) => {
-  const { numberOfPatientsDisplayed } = props
+  const { patientsDisplayedCount } = props
   const theme = useTheme()
   const { t } = useTranslation()
   const { classes } = useStyles()
@@ -62,7 +62,7 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
 
   const { filtersLabel } = usePatientListHeaderFiltersLabelHook({
     allPatientsForSelectedTeamCount,
-    numberOfPatientsDisplayed,
+    patientsDisplayedCount,
     pendingFilterEnabled: filters.pendingEnabled,
     hasAnyNonPendingFiltersEnabled
   })

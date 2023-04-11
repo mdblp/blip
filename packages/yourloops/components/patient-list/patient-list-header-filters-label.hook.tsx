@@ -30,7 +30,7 @@ import { useTranslation } from 'react-i18next'
 interface PatientListHeaderFiltersLabelHookProps {
   allPatientsForSelectedTeamCount: number
   hasAnyNonPendingFiltersEnabled: boolean
-  numberOfPatientsDisplayed: number
+  patientsDisplayedCount: number
   pendingFilterEnabled: boolean
 }
 
@@ -42,18 +42,18 @@ export const usePatientListHeaderFiltersLabelHook = (props: PatientListHeaderFil
   const {
     allPatientsForSelectedTeamCount,
     hasAnyNonPendingFiltersEnabled,
-    numberOfPatientsDisplayed,
+    patientsDisplayedCount,
     pendingFilterEnabled
   } = props
   const { t } = useTranslation()
 
   const getFiltersLabel = (): string | undefined => {
     if (pendingFilterEnabled) {
-      return t('filter-pending', { numberOfPatientsFiltered: numberOfPatientsDisplayed })
+      return t('filter-pending', { patientsFilteredCount: patientsDisplayedCount })
     }
     if (hasAnyNonPendingFiltersEnabled) {
       return t('filters-activated', {
-        numberOfPatientsFiltered: numberOfPatientsDisplayed,
+        patientsFilteredCount: patientsDisplayedCount,
         totalNumberOfPatients: allPatientsForSelectedTeamCount
       })
     }

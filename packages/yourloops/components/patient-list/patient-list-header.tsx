@@ -58,7 +58,7 @@ import TeamUtils from '../../lib/team/team.util'
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
   inputSearch: string
-  numberOfPatientsDisplayed: number
+  patientsDisplayedCount: number
   onChangingTab: (newTab: PatientListTabs) => void
   setInputSearch: (value: string) => void
 }
@@ -87,7 +87,7 @@ const useStyles = makeStyles()((theme) => {
 })
 
 export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (props) => {
-  const { selectedTab, inputSearch, numberOfPatientsDisplayed, onChangingTab, setInputSearch } = props
+  const { selectedTab, inputSearch, patientsDisplayedCount, onChangingTab, setInputSearch } = props
   const theme = useTheme()
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -238,7 +238,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
             }
           </Tabs>
           {isUserHcp &&
-            <PatientListHeaderFiltersLabel numberOfPatientsDisplayed={numberOfPatientsDisplayed} />
+            <PatientListHeaderFiltersLabel patientsDisplayedCount={patientsDisplayedCount} />
           }
         </Box>
       </Box>

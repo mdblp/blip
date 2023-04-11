@@ -42,7 +42,7 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
         allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
-        numberOfPatientsDisplayed
+        patientsDisplayedCount: numberOfPatientsDisplayed
       }))
 
       expect(result.current.filtersLabel).toEqual('filter-pending')
@@ -58,7 +58,7 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
         allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
-        numberOfPatientsDisplayed
+        patientsDisplayedCount: numberOfPatientsDisplayed
       }))
 
       expect(result.current.filtersLabel).toEqual('filters-activated')
@@ -74,7 +74,7 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
         allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
-        numberOfPatientsDisplayed
+        patientsDisplayedCount: numberOfPatientsDisplayed
       }))
 
       expect(result.current.filtersLabel).toBeNull()
