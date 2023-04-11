@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../patient/models/alarms.model'
+import { type Alarms } from '../../patient/models/monitoring-alerts.model'
 import { type Monitoring } from '../../team/models/monitoring.model'
 import { type MedicalData } from './medical-data.model'
 import { type UserRole } from '../../auth/models/enums/user-role.enum'

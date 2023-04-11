@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
+import { type BgValues, type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
 import { Unit } from 'medical-domain'
 
 export const DEFAULT_BG_VALUES: BgValues = {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import { commonComponentStyles } from '../common'
 import { type Team, useTeam } from '../../lib/team'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
-import AlarmsContentConfiguration from '../alarm/alarms-content-configuration'
+import AlarmsContentConfiguration from '../monitoring-alert/monitoring-alerts-content-configuration'
 
 export interface TeamAlarmsConfigurationProps {
   team: Team

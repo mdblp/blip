@@ -30,7 +30,7 @@ import { type PatientProfile } from './patient-profile.model'
 import { type PatientSettings } from './patient-settings.model'
 import { type PatientMetadata } from './patient-metadata.model'
 import { type PatientTeam } from './patient-team.model'
-import { type Alarms } from './alarms.model'
+import { type Alarms } from './monitoring-alerts.model'
 
 export interface Patient {
   alarms: Alarms

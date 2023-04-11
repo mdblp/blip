@@ -36,9 +36,9 @@ import {
   getConvertedValue,
   isInvalidPercentage,
   REGEX_VALUE_BG
-} from './alarm-content-configuration.util'
-import { type Thresholds } from '../../lib/patient/models/alarms.model'
-import { DEFAULT_BG_VALUES } from './alarms.default'
+} from './monitoring-alert-content-configuration.util'
+import { type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
+import { DEFAULT_BG_VALUES } from './monitoring-alert.default'
 import { useAuth } from '../../lib/auth'
 import { type BgUnit, Unit } from 'medical-domain'
 

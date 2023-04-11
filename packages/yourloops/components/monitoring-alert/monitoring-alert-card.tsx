@@ -33,7 +33,7 @@ import { Box, IconButton } from '@mui/material'
 import TuneIcon from '@mui/icons-material/Tune'
 import AnnouncementIcon from '@mui/icons-material/Announcement'
 
-import PatientAlarmDialog from './patient-alarm-dialog'
+import PatientAlarmDialog from './patient-monitoring-alert-dialog'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import CardContent from '@mui/material/CardContent'

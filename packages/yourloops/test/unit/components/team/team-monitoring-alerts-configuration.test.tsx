@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,8 +32,8 @@ import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import TeamAlarmsConfiguration, {
   type TeamAlarmsConfigurationProps
-} from '../../../../components/team/team-alarms-configuration'
-import { type AlarmsContentConfigurationProps } from '../../../../components/alarm/alarms-content-configuration'
+} from '../../../../components/team/team-monitoring-alerts-configuration'
+import { type AlarmsContentConfigurationProps } from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 
 // eslint-disable-next-line react/display-name

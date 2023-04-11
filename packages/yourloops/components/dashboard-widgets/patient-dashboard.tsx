@@ -51,7 +51,7 @@ import {
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
 import MedicalFilesWidget from './medical-files/medical-files-widget'
-import AlarmCard from '../alarm/alarm-card'
+import AlarmCard from '../monitoring-alert/monitoring-alert-card'
 import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 

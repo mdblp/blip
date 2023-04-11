@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import { makeStyles } from 'tss-react/mui'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
 import { commonComponentStyles } from '../common'
-import AlarmsContentConfiguration from './alarms-content-configuration'
+import AlarmsContentConfiguration from './monitoring-alerts-content-configuration'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import DialogContent from '@mui/material/DialogContent'
 import { type Patient } from '../../lib/patient/models/patient.model'
