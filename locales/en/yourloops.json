@@ -180,7 +180,7 @@
   "feedback-checkbox": "Feedback checkbox",
   "field-with-exactly-15-characters": "This field must be exactly 15 characters long",
   "file-uploaded-pdf-jpeg-png": "File uploaded (PDF, JPEG, PNG)",
-  "filter-cannot-apply-pending-tab": "Filters cannot be applied when on the pending tab",
+  "filter-cannot-apply-pending-tab": "Filters cannot be applied on pending tab",
   "filter-pending": "Pending filter activated: {{numberOfPatientsFiltered}} patients",
   "filters": "Filters",
   "filters-activated": "Filters activated: {{numberOfPatientsFiltered}} patient(s) out of {{totalNumberOfPatients}}",

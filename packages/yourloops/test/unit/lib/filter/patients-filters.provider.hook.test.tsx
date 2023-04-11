@@ -85,7 +85,7 @@ describe('usePatientsFiltersProviderHook', () => {
   })
 
   describe('resetFilters', () => {
-    it('should reset all filters except the pending one', () => {
+    it('should reset all filters', () => {
       const { result } = renderHook(() => usePatientsFiltersProviderHook())
       expect(result.current.filters).toEqual(defaultFilters)
 
@@ -93,11 +93,13 @@ describe('usePatientsFiltersProviderHook', () => {
         result.current.updatePatientsFilters(filtersUpdated)
       })
 
+      expect(result.current.filters).toBe(filtersUpdated)
+
       act(() => {
         result.current.resetFilters()
       })
 
-      expect(result.current.filters).toEqual({ ...defaultFilters, pendingEnabled: true })
+      expect(result.current.filters).toEqual(defaultFilters)
     })
   })
 })

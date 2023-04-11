@@ -36,16 +36,18 @@ interface PatientsFiltersProviderHookReturn {
   resetFilters: () => void
 }
 
+const DEFAULT_FILTERS = {
+  pendingEnabled: false,
+  manualFlagEnabled: false,
+  telemonitoredEnabled: false,
+  timeOutOfTargetEnabled: false,
+  hypoglycemiaEnabled: false,
+  dataNotTransferredEnabled: false,
+  messagesEnabled: false
+}
+
 export const usePatientsFiltersProviderHook = (): PatientsFiltersProviderHookReturn => {
-  const [filters, setFilters] = useState<PatientsFilters>({
-    pendingEnabled: false,
-    manualFlagEnabled: false,
-    telemonitoredEnabled: false,
-    timeOutOfTargetEnabled: false,
-    hypoglycemiaEnabled: false,
-    dataNotTransferredEnabled: false,
-    messagesEnabled: false
-  })
+  const [filters, setFilters] = useState<PatientsFilters>(DEFAULT_FILTERS)
 
   const updatePatientsFilters = (filters: PatientsFilters): void => {
     setFilters(filters)
@@ -56,15 +58,7 @@ export const usePatientsFiltersProviderHook = (): PatientsFiltersProviderHookRet
   }
 
   const resetFilters = (): void => {
-    setFilters({
-      ...filters,
-      manualFlagEnabled: false,
-      telemonitoredEnabled: false,
-      timeOutOfTargetEnabled: false,
-      hypoglycemiaEnabled: false,
-      dataNotTransferredEnabled: false,
-      messagesEnabled: false
-    })
+    setFilters(DEFAULT_FILTERS)
   }
 
   const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.telemonitoredEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled

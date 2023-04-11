@@ -58,6 +58,7 @@ interface PatientListHookReturns {
   selectedTab: PatientListTabs
   inputSearch: string
   gridApiRef: MutableRefObject<GridApiCommon>
+  numberOfPatientsDisplayed: number
   patientToRemoveForHcp: Patient | null
   patientToRemoveForCaregiver: UserToRemove | null
   rowsProps: GridRowsProp
@@ -259,6 +260,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
     selectedTab,
     gridApiRef,
     inputSearch,
+    numberOfPatientsDisplayed: rowsProps.length,
     patientToRemoveForHcp,
     patientToRemoveForCaregiver,
     rowsProps,

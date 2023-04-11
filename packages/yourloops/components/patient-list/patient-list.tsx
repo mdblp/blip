@@ -54,6 +54,7 @@ export const PatientList: FunctionComponent = () => {
     selectedTab,
     gridApiRef,
     inputSearch,
+    numberOfPatientsDisplayed,
     patientToRemoveForHcp,
     patientToRemoveForCaregiver,
     rowsProps,
@@ -103,7 +104,7 @@ export const PatientList: FunctionComponent = () => {
       <PatientListHeader
         selectedTab={selectedTab}
         inputSearch={inputSearch}
-        numberOfPatientsDisplayed={rowsProps.length}
+        numberOfPatientsDisplayed={numberOfPatientsDisplayed}
         onChangingTab={onChangingTab}
         setInputSearch={setInputSearch}
       />
