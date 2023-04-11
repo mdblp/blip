@@ -41,16 +41,3 @@ export enum PatientListColumns {
   System = 'system',
   TimeOutOfRange = 'time-out-of-range'
 }
-
-export enum PatientListFilters {
-  All = 'all',
-  DataNotTransferred = 'data-not-transferred',
-  Flagged = 'flagged',
-  RemoteMonitored = 'remote-monitored',
-  Pending = 'pending',
-  SevereHypoglycemia = 'severe-hypoglycemia',
-  OutOfRange = 'out-of-range',
-  Private = 'private',
-  Renew = 'renew',
-  UnreadMessages = 'unread-messages'
-}

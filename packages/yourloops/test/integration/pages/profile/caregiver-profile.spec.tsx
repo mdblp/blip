@@ -51,7 +51,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
 
-describe('Caregiver page for hcp', () => {
+describe('Profile page for caregiver', () => {
   const profile: Profile = {
     email: 'phil@defer.com',
     firstName: 'Phil',

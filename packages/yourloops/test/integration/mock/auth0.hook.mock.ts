@@ -29,7 +29,7 @@ import * as auth0Mock from '@auth0/auth0-react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 
-export const loggedInUserId = '919b1575bad58'
+export const loggedInUserId = 'loggedInUserId'
 export const loggedInUserEmail = 'john.doe@example.com'
 export const getAccessTokenWithPopupMock = jest.fn()
 export const logoutMock = jest.fn()

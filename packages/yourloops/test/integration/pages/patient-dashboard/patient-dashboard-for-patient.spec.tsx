@@ -28,18 +28,19 @@
 import { act, screen, waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import { mockPatientApiForPatients, monitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
+import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
-import { iTeamOne, teamOne, teamTwo } from '../../mock/team.api.mock'
+import { iTeamOne, buildTeamOne, buildTeamTwo } from '../../mock/team.api.mock'
 import {
   checkJoinTeamDialog,
   checkJoinTeamDialogCancel,
   checkJoinTeamDialogDisplayErrorMessage,
   checkJoinTeamDialogPrivacyCancel
 } from '../../assert/join-team'
+import { monitoredPatientAsTeamMember } from '../../data/patient.api.data'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = '/dashboard'
@@ -49,7 +50,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientApiForPatients()
     mockDataAPI()
     mockMedicalFilesAPI()
-    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([teamOne, teamTwo])
+    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
   })

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useMemo, useState, type MutableRefObject } from 'react'
+import React, { type MutableRefObject, useCallback, useMemo, useState } from 'react'
 import {
   type GridApiCommon,
   type GridColDef,
@@ -36,7 +36,7 @@ import {
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { usePatientListStyles } from './patient-list.styles'
-import { PatientListColumns, PatientListTabs, PatientListFilters } from './enums/patient-list.enum'
+import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { getMedicalValues } from '../patient/utils'
@@ -51,13 +51,14 @@ import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
-import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
+import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
 
 interface PatientListHookReturns {
   columns: GridColDef[]
   selectedTab: PatientListTabs
   inputSearch: string
   gridApiRef: MutableRefObject<GridApiCommon>
+  patientsDisplayedCount: number
   patientToRemoveForHcp: Patient | null
   patientToRemoveForCaregiver: UserToRemove | null
   rowsProps: GridRowsProp
@@ -71,16 +72,15 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { t } = useTranslation()
   const { classes } = usePatientListStyles()
   const { getFlagPatients, user } = useAuth()
-  const { getPatientById, filterPatients } = usePatientContext()
+  const { getPatientById, searchPatients } = usePatientContext()
   const { getUserName } = useUserName()
   const { sortByUserName } = useSortComparatorsHook()
+  const { updatePendingFilter } = usePatientsFiltersContext()
   const navigate = useNavigate()
   const gridApiRef = useGridApiRef()
-  const queryParams = useQueryParams()
   const trNA = t('N/A')
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)
-  const [selectedFilter, setSelectedFilter] = useState<PatientListFilters>(PatientListFilters.All)
   const [inputSearch, setInputSearch] = useState<string>('')
   const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
   const [patientToRemoveForCaregiver, setPatientToRemoveForCaregiver] = useState<UserToRemove | null>(null)
@@ -88,18 +88,18 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const flaggedPatients = getFlagPatients()
 
   const filteredPatients = useMemo(() => {
-    const filteredPatients = filterPatients(selectedFilter, inputSearch, flaggedPatients)
-    return PatientUtils.computeFlaggedPatients(filteredPatients, flaggedPatients).sort(sortByUserName)
-  }, [filterPatients, selectedFilter, inputSearch, flaggedPatients, sortByUserName])
+    const searchedPatients = searchPatients(inputSearch)
+    return PatientUtils.computeFlaggedPatients(searchedPatients, flaggedPatients).sort(sortByUserName)
+  }, [searchPatients, inputSearch, flaggedPatients, sortByUserName])
 
   const onChangingTab = (newTab: PatientListTabs): void => {
     setSelectedTab(newTab)
     switch (newTab) {
       case PatientListTabs.Current:
-        setSelectedFilter(PatientListFilters.All)
+        updatePendingFilter(false)
         return
       case PatientListTabs.Pending:
-        setSelectedFilter(PatientListFilters.Pending)
+        updatePendingFilter(true)
     }
   }
 
@@ -172,7 +172,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         sortable: false,
         renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
           const alarms = params.value
-          return <AlarmPercentageCell value={alarms.timeSpentAwayFromTargetRate} isAlarmActive={alarms.timeSpentAwayFromTargetActive} />
+          return <AlarmPercentageCell
+            value={alarms.timeSpentAwayFromTargetRate}
+            isAlarmActive={alarms.timeSpentAwayFromTargetActive}
+          />
         }
       },
       {
@@ -184,7 +187,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         flex: 0.5,
         renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
           const alarms = params.value
-          return <AlarmPercentageCell value={alarms.frequencyOfSevereHypoglycemiaRate} isAlarmActive={alarms.frequencyOfSevereHypoglycemiaActive} />
+          return <AlarmPercentageCell
+            value={alarms.frequencyOfSevereHypoglycemiaRate}
+            isAlarmActive={alarms.frequencyOfSevereHypoglycemiaActive}
+          />
         }
       },
       {
@@ -196,7 +202,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         flex: 0.5,
         renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
           const alarms = params.value
-          return <AlarmPercentageCell value={alarms.nonDataTransmissionRate} isAlarmActive={alarms.nonDataTransmissionActive} />
+          return <AlarmPercentageCell
+            value={alarms.nonDataTransmissionRate}
+            isAlarmActive={alarms.nonDataTransmissionActive}
+          />
         }
       },
       {
@@ -210,7 +219,9 @@ export const usePatientListHook = (): PatientListHookReturns => {
         field: PatientListColumns.Messages,
         headerName: '',
         width: 55,
-        renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => <MessageCell hasNewMessages={params.value} />
+        renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => {
+          return <MessageCell hasNewMessages={params.value} />
+        }
       },
       {
         type: 'actions',
@@ -218,7 +229,9 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: 'Actions',
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
+        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
+          return <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
+        }
       }
     ]
   }, [t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
@@ -242,18 +255,12 @@ export const usePatientListHook = (): PatientListHookReturns => {
     })
   }, [filteredPatients, trNA])
 
-  useEffect(() => {
-    const filter = queryParams.get('filter')
-    if (Object.values(PatientListFilters).includes(filter as PatientListFilters)) {
-      setSelectedFilter(filter as PatientListFilters)
-    }
-  }, [queryParams])
-
   return {
     columns,
     selectedTab,
     gridApiRef,
     inputSearch,
+    patientsDisplayedCount: rowsProps.length,
     patientToRemoveForHcp,
     patientToRemoveForCaregiver,
     rowsProps,

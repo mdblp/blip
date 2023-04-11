@@ -33,7 +33,7 @@ import {
   YESTERDAY_DATE
 } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockPatientApiForHcp, monitoredPatientId, unmonitoredPatientId } from '../../mock/patient.api.mock'
+import { monitoredPatientId, unmonitoredPatientId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -46,6 +46,7 @@ import moment from 'moment-timezone'
 import { getTomorrowDate } from '../../utils/helpers'
 import userEvent from '@testing-library/user-event'
 import { ConfigService } from '../../../../lib/config/config.service'
+import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {
@@ -126,7 +127,7 @@ describe('Patient dashboard for anyone', () => {
 
     const alarmCard = screen.getByTestId('alarm-card')
     expect(alarmCard).toBeVisible()
-    expect(alarmCard).toHaveTextContent('EventsCurrent eventsTime spent out of range from target10%Severe hypoglycemia20%Data not transferred30%')
+    expect(alarmCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')
 
     const chartCard = screen.getByTestId('chat-card')
     expect(chartCard).toBeVisible()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { useTranslation } from 'react-i18next'
 
-export const checkDrawer = () => {
-  const drawer = within(screen.getByTestId('main-left-drawer'))
-  expect(drawer.getByLabelText('Filter on flagged patients')).toBeVisible()
+interface PatientListHeaderFiltersLabelHookProps {
+  allPatientsForSelectedTeamCount: number
+  hasAnyNonPendingFiltersEnabled: boolean
+  patientsDisplayedCount: number
+  pendingFilterEnabled: boolean
 }
 
-export const checkDrawerNotVisible = () => {
-  expect(screen.queryByTestId('main-left-drawer')).not.toBeInTheDocument()
+interface PatientListHeaderFiltersLabelHookReturn {
+  filtersLabel?: string
+}
+
+export const usePatientListHeaderFiltersLabelHook = (props: PatientListHeaderFiltersLabelHookProps): PatientListHeaderFiltersLabelHookReturn => {
+  const {
+    allPatientsForSelectedTeamCount,
+    hasAnyNonPendingFiltersEnabled,
+    patientsDisplayedCount,
+    pendingFilterEnabled
+  } = props
+  const { t } = useTranslation()
+
+  const getFiltersLabel = (): string | undefined => {
+    if (pendingFilterEnabled) {
+      return t('filter-pending', { patientsFilteredCount: patientsDisplayedCount })
+    }
+    if (hasAnyNonPendingFiltersEnabled) {
+      return t('filters-activated', {
+        patientsFilteredCount: patientsDisplayedCount,
+        totalNumberOfPatients: allPatientsForSelectedTeamCount
+      })
+    }
+    return null
+  }
+
+  return { filtersLabel: getFiltersLabel() }
 }
