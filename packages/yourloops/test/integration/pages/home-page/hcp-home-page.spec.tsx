@@ -66,7 +66,7 @@ import {
   defaultToggles,
   updatePatientsFilters
 } from '../../assert/patient-filters'
-import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
+import { mockPatientApiForHcp, mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { checkDataGridAfterSinglePatientFilter, checkPatientListHeader } from '../../assert/patient-list'
@@ -168,10 +168,10 @@ describe('HCP home page', () => {
     const removeDialog = screen.getByRole('dialog')
     expect(removeDialog).toBeVisible()
 
-    const title = within(removeDialog).getByText(`Remove ${unmonitoredPatient.profile.fullName} from ${teamThree.name}`)
+    const title = within(removeDialog).getByText(`Remove ${unmonitoredPatient.profile.fullName} from ${myThirdTeamName}`)
     expect(title).toBeVisible()
     const question = within(removeDialog).getByTestId('modal-remove-patient-question')
-    expect(question).toHaveTextContent(`Are you sure you want to remove ${unmonitoredPatient.profile.fullName} from ${teamThree.name}?`)
+    expect(question).toHaveTextContent(`Are you sure you want to remove ${unmonitoredPatient.profile.fullName} from ${myThirdTeamName}?`)
     const info = within(removeDialog).getByText('You and the care team will no longer have access to their data.')
     expect(info).toBeVisible()
     const alertInfo = within(removeDialog).getByText('If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
@@ -315,7 +315,7 @@ describe('HCP home page', () => {
   })
 
   it('should display an error message if patient removal failed', async () => {
-    localStorage.setItem('selectedTeamId', teamThree.id)
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
     mockPatientApiForPatients()
     jest.spyOn(PatientApi, 'removePatient').mockRejectedValueOnce(Error('error'))
     await act(async () => {
