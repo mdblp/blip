@@ -26,7 +26,6 @@
  */
 
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { unmonitoredPatientAsTeamMember } from '../../mock/patient.api.mock'
 import {
   checkDaysSelection,
   checkRangeSelection,
@@ -51,6 +50,7 @@ import {
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor, within } from '@testing-library/react'
+import { unmonitoredPatientAsTeamMember } from '../../data/patient.api.data'
 import { buildHba1cData } from '../../data/data-api.data'
 
 describe('Trends view for anyone', () => {

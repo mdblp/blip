@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,46 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type ReactElement } from 'react'
-
-import { type Theme } from '@mui/material/styles'
+import React, { type FunctionComponent } from 'react'
+import Typography from '@mui/material/Typography'
+import Switch from '@mui/material/Switch'
 import { makeStyles } from 'tss-react/mui'
-import Box from '@mui/material/Box'
-import ListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
+import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 
-const classes = makeStyles()((theme: Theme) => ({
-  title: {
-    fontWeight: 700,
-    lineHeight: '20px',
-    textTransform: 'uppercase'
+interface PatientsFiltersToggleProps {
+  ariaLabel: string
+  checked: boolean
+  icon: JSX.Element
+  label: string
+  onToggleChange: () => void
+}
+
+const useStyles = makeStyles()(() => ({
+  label: {
+    maxWidth: '200px'
   },
-  icon: {
-    color: theme.palette.grey[600]
+  toggle: {
+    marginLeft: 'auto'
   }
 }))
 
-interface DrawerCategoryItemProps {
-  icon: ReactElement
-  text: string
-}
-
-const DrawerCategoryItem: FunctionComponent<DrawerCategoryItemProps> = (props) => {
-  const { classes: { title, icon } } = classes()
+export const PatientsFiltersToggle: FunctionComponent<PatientsFiltersToggleProps> = (props) => {
+  const { ariaLabel, checked, icon, label, onToggleChange } = props
+  const { classes } = useStyles()
+  const theme = useTheme()
 
   return (
-    <ListItem>
-      <ListItemIcon className={icon}>
-        {props.icon}
-      </ListItemIcon>
-      <ListItemText>
-        <Box className={title}>
-          {props.text}
-        </Box>
-      </ListItemText>
-    </ListItem>
+    <Stack direction="row" alignItems="center" gap={1} marginBottom={theme.spacing(1)}>
+      {icon}
+      <Typography variant="subtitle1" className={classes.label}>{label}</Typography>
+      <Switch
+        aria-label={ariaLabel}
+        className={classes.toggle}
+        checked={checked}
+        onChange={onToggleChange}
+      />
+    </Stack>
   )
 }
-
-export default DrawerCategoryItem

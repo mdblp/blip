@@ -34,12 +34,12 @@ import * as notificationHookMock from '../../../../lib/notifications/notificatio
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
+import * as patientFilterHookMock from '../../../../lib/filter/patients-filters.provider'
 import { act, waitFor } from '@testing-library/react'
 import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { PatientListFilters } from '../../../../components/patient-list/enums/patient-list.enum'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
@@ -49,6 +49,7 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/selected-team/selected-team.provider')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/notifications/notification.hook')
+jest.mock('../../../../lib/filter/patients-filters.provider')
 describe('Patient hook', () => {
   const basicTeam = createPatientTeam('basicTeam1Id', UserInvitationStatus.accepted)
   const basicTeam2 = createPatientTeam('basicTeam2Id', UserInvitationStatus.accepted)
@@ -68,7 +69,7 @@ describe('Patient hook', () => {
     computePatientsSpy.mockReset();
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { id: loggedInUserAsPatient.userid, isUserHcp: () => true },
+        user: { id: loggedInUserAsPatient.userid, isUserHcp: () => true, preferences: { patientsStarred: [] } },
         getFlagPatients: authHookGetFlagPatientMock,
         flagPatient: authHookFlagPatientMock
       }
@@ -87,6 +88,19 @@ describe('Patient hook', () => {
       return {
         refresh: refreshTeamsMock
       }
+    });
+    (patientFilterHookMock.usePatientsFiltersContext as jest.Mock).mockImplementation(() => {
+      return {
+        filters: {
+          pendingEnabled: false,
+          manualFlagEnabled: false,
+          telemonitoredEnabled: false,
+          timeOutOfTargetEnabled: false,
+          hypoglycemiaEnabled: false,
+          dataNotTransferredEnabled: false,
+          messagesEnabled: false
+        }
+      }
     })
   })
 
@@ -95,7 +109,9 @@ describe('Patient hook', () => {
     jest.spyOn(PatientUtils, 'computePatients').mockResolvedValue(patients)
     await act(async () => {
       hook = renderHook(() => usePatientProviderCustomHook())
-      await waitFor(() => { expect(hook.result.current.patients).toBeDefined() })
+      await waitFor(() => {
+        expect(hook.result.current.patients).toBeDefined()
+      })
     })
     return hook
   }
@@ -128,33 +144,23 @@ describe('Patient hook', () => {
       customHook = res.result.current
     })
 
-    it('should return correct patients when filter is pending', () => {
-      const patientsReceived = customHook.filterPatients(PatientListFilters.Pending, '', [])
-      expect(patientsReceived).toEqual([pendingPatient])
-    })
-
-    it('should return correct patients when provided a flag list', () => {
-      const patientsReceived = customHook.filterPatients(PatientListFilters.Flagged, '', [basicPatient.userid])
-      expect(patientsReceived).toEqual([basicPatient])
-    })
-
     it('should return correct patients when provided a first name search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientListFilters.All, 'big brain', [])
+      const patientsReceived = customHook.searchPatients('big brain')
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
 
     it('should return correct patients when provided a date search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientListFilters.All, '19/11/2001', [])
+      const patientsReceived = customHook.searchPatients('19/11/2001')
       expect(patientsReceived).toEqual([basicPatient2])
     })
 
     it('should return correct patients when provided a date and first name search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientListFilters.All, '05/06/2005 big', [])
+      const patientsReceived = customHook.searchPatients('05/06/2005 big')
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
 
     it('should return correct patients when provided a date and last name search filter', () => {
-      const patientsReceived = customHook.filterPatients(PatientListFilters.All, '05/06/2005smith', [])
+      const patientsReceived = customHook.searchPatients('05/06/2005smith')
       expect(patientsReceived).toEqual([bigBrainPatient])
     })
   })
@@ -352,7 +358,6 @@ describe('Patient hook', () => {
       const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(pendingPatient, pendingPatientTeam)
-        expect(customHook.getPatientById(pendingPatient.userid).teams.includes(pendingPatientTeam)).toBeFalsy()
       })
       expect(notificationHookCancelMock).toHaveBeenCalled()
       expect(removePatientMock).toHaveBeenCalled()
@@ -373,7 +378,9 @@ describe('Patient hook', () => {
       jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         await customHook.removePatient(patientToRemove, basicTeam)
-        await waitFor(() => { expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined() })
+        await waitFor(() => {
+          expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined()
+        })
         expect(authHookGetFlagPatientMock).toHaveBeenCalled()
         expect(authHookFlagPatientMock).toHaveBeenCalled()
       })

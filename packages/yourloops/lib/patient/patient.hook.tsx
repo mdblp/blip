@@ -38,19 +38,19 @@ import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
 import { type Patient } from './models/patient.model'
-import { PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
-import { type PatientFilterStats } from './models/patient-filter-stats.model'
+import { usePatientsFiltersContext } from '../filter/patients-filters.provider'
 import { useAlert } from '../../components/utils/snackbar'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
+  const { filters } = usePatientsFiltersContext()
   const { selectedTeam } = useSelectedTeamContext()
   const alert = useAlert()
 
@@ -83,38 +83,35 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     setPatients(patientsUpdated)
   }, [patients])
 
-  const patientsForSelectedTeam = user.isUserHcp() ? patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeam.id)) : []
-  const patientList = user.isUserHcp() ? patientsForSelectedTeam : patients
+  const patientsForSelectedTeam = useMemo(() => {
+    if (!user.isUserHcp()) {
+      return patients
+    }
+    return patients.filter((patient: Patient) => patient.teams.some((team: PatientTeam) => team.teamId === selectedTeam.id))
+  }, [patients, selectedTeam, user])
+
+  const patientList = useMemo(() => {
+    if (!user.isUserHcp()) {
+      return patients
+    }
+    const patientsStarred = user.preferences?.patientsStarred ?? []
+    return PatientUtils.extractPatients(patientsForSelectedTeam, filters, patientsStarred, selectedTeam.id)
+  }, [user, patientsForSelectedTeam, filters, selectedTeam, patients])
 
   const isPatientTeamPrivate = (patientTeam: PatientTeam): boolean => {
     return patientTeam.teamId === PRIVATE_TEAM_ID
   }
 
-  const buildPatientFiltersStats = useCallback((): PatientFilterStats => {
-    return {
-      directShare: patientList.filter((patient) => patient.teams.find(team => isPatientTeamPrivate(team))).length,
-      unread: patientList.filter(patient => patient.metadata.hasSentUnreadMessages).length,
-      outOfRange: patientList.filter(patient => patient.alarms.timeSpentAwayFromTargetActive).length,
-      severeHypoglycemia: patientList.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive).length,
-      dataNotTransferred: patientList.filter(patient => patient.alarms.nonDataTransmissionActive).length,
-      remoteMonitored: patientList.filter(patient => patient.monitoring?.enabled).length,
-      renew: patientList.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
-    }
-  }, [patientList])
+  const pendingPatientsCount = user.isUserHcp() ? patients.filter((patient) => PatientUtils.isInvitationPending(patient, selectedTeam.id)).length : undefined
+  const allPatientsForSelectedTeamCount = user.isUserHcp() ? patientsForSelectedTeam.filter((patient) => !PatientUtils.isInvitationPending(patient, selectedTeam.id)).length : undefined
 
-  const patientsFilterStats = useMemo<PatientFilterStats>(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
-
-  const getPatientByEmail = (email: string): Patient => patientList.find(patient => patient.profile.email === email)
+  const getPatientByEmail = (email: string): Patient => patientsForSelectedTeam.find(patient => patient.profile.email === email)
 
   const getPatientById = (userId: string): Patient => patientList.find(patient => patient.userid === userId)
 
-  const pendingPatientsCount = selectedTeam ? PatientUtils.extractPatients(patientList, PatientListFilters.Pending, [], selectedTeam.id).length : undefined
-
-  const filterPatients = (filterType: PatientListFilters, search: string, flaggedPatients: string[]): Patient[] => {
-    const filteredPatients = PatientUtils.extractPatients(patientList, filterType, flaggedPatients, user.isUserHcp() ? selectedTeam.id : undefined)
-
+  const searchPatients = (search: string): Patient[] => {
     if (search.length === 0) {
-      return filteredPatients
+      return patientList
     }
 
     const searchText = search.toLocaleLowerCase()
@@ -123,10 +120,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
     if (searchTextStartsWithBirthdate) {
       const firstNameOrLastName = searchText.slice(10).trimStart()
-      return PatientUtils.extractPatientsWithBirthdate(filteredPatients, birthdateAsString, firstNameOrLastName)
+      return PatientUtils.extractPatientsWithBirthdate(patientList, birthdateAsString, firstNameOrLastName)
     }
 
-    return filteredPatients.filter(patient => {
+    return patientList.filter(patient => {
       const firstName = patient.profile.firstName ?? ''
       const lastName = patient.profile.lastName ?? ''
       return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
@@ -210,13 +207,13 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   return {
     patients: patientList,
-    patientsFilterStats,
     pendingPatientsCount,
+    allPatientsForSelectedTeamCount,
     initialized,
     refreshInProgress,
     getPatientByEmail,
     getPatientById,
-    filterPatients,
+    searchPatients,
     invitePatient,
     editPatientRemoteMonitoring,
     markPatientMessagesAsRead,

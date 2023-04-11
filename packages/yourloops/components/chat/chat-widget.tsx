@@ -172,7 +172,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   return (
     <GenericDashboardCard
       avatar={<EmailOutlinedIcon />}
-      title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
+      title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       data-testid="chat-card"
     >
       <Box position="relative">

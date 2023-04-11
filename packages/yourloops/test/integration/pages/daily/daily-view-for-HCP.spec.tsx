@@ -27,10 +27,10 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { AVAILABLE_TEAMS, mockTeamAPI, teamThree } from '../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockPatientApiForHcp, unmonitoredPatientId } from '../../mock/patient.api.mock'
+import { unmonitoredPatientId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -38,6 +38,7 @@ import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { checkHCPLayout } from '../../assert/layout'
 import { mockUserApi } from '../../mock/user.api.mock'
+import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -63,6 +64,6 @@ describe('Daily view for HCP', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP()
-    checkHCPLayout(`${firstName} ${lastName}`, { teamName: teamThree.name }, AVAILABLE_TEAMS)
+    checkHCPLayout(`${firstName} ${lastName}`, { teamName: myThirdTeamName }, buildAvailableTeams())
   })
 })

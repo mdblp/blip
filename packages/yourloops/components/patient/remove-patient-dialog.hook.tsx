@@ -26,13 +26,14 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
+import { type Dispatch, type SetStateAction, useState } from 'react'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type Team, useTeam } from '../../lib/team'
 import TeamUtils from '../../lib/team/team.util'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void
@@ -53,8 +54,9 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const alert = useAlert()
   const { removePatient } = usePatientContext()
   const { getTeam } = useTeam()
+  const { selectedTeam } = useSelectedTeamContext()
 
-  const [selectedTeamId, setSelectedTeamId] = useState<string>('')
+  const [selectedTeamId, setSelectedTeamId] = useState<string>(selectedTeam.id)
   const [processing, setProcessing] = useState<boolean>(false)
 
   const userName = patient ? {
@@ -90,12 +92,6 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
       setProcessing(false)
     }
   }
-
-  useEffect(() => {
-    if (teams?.length === 1 && !selectedTeamId) {
-      setSelectedTeamId(teams[0].id)
-    }
-  }, [selectedTeamId, teams])
 
   return { sortedTeams, processing, selectedTeamId, patientName, handleOnClickRemove, setSelectedTeamId }
 }

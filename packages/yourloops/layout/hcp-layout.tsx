@@ -38,31 +38,34 @@ import NotificationsPage from '../pages/notifications'
 import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientList } from '../components/patient-list/patient-list'
+import { PatientsFiltersProvider } from '../lib/filter/patients-filters.provider'
 
 export const HcpLayout: FunctionComponent = () => {
   return (
     <TeamContextProvider>
       <SelectedTeamProvider>
-        <PatientProvider>
-          <DashboardLayout>
-            <Routes>
-              <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-              <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-              <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-              <Route path={AppUserRoute.Home} element={<PatientList />} />
-              <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
-              <Route path={AppUserRoute.Team} element={<TeamDetailsPage />} />
-              <Route
-                path="/"
-                element={<Navigate to={AppUserRoute.Home} replace />}
-              />
-              <Route
-                path="*"
-                element={<Navigate to={AppUserRoute.NotFound} replace />}
-              />
-            </Routes>
-          </DashboardLayout>
-        </PatientProvider>
+        <PatientsFiltersProvider>
+          <PatientProvider>
+            <DashboardLayout>
+              <Routes>
+                <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+                <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+                <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+                <Route path={AppUserRoute.Home} element={<PatientList />} />
+                <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
+                <Route path={AppUserRoute.Team} element={<TeamDetailsPage />} />
+                <Route
+                  path="/"
+                  element={<Navigate to={AppUserRoute.Home} replace />}
+                />
+                <Route
+                  path="*"
+                  element={<Navigate to={AppUserRoute.NotFound} replace />}
+                />
+              </Routes>
+            </DashboardLayout>
+          </PatientProvider>
+        </PatientsFiltersProvider>
       </SelectedTeamProvider>
     </TeamContextProvider>
   )
