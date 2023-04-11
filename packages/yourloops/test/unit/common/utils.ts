@@ -54,7 +54,7 @@ export const createPatient = (
   monitoringAlerts: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
-    monitoringAlerts: {
+    alarms: {
       timeSpentAwayFromTargetRate: monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
       timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
       frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,

@@ -90,7 +90,7 @@ export const buildPatient = (
   monitoringAlerts: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
-    monitoringAlerts: {
+    alarms: {
       timeSpentAwayFromTargetRate: monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
       timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
       frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
@@ -385,7 +385,7 @@ export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
     email: patient.profile.email,
     idVerified: false,
     unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
-    monitoringAlerts: patient.monitoringAlerts,
+    alarms: patient.alarms,
     monitoring: patient.monitoring
   }
 }
@@ -428,7 +428,7 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     email: member.email ?? 'fake@patient.email',
     idVerified: member.idVerified ?? true,
     unreadMessages: member.unreadMessages ?? 0,
-    monitoringAlerts: member.monitoringAlerts,
+    alarms: member.alarms,
     monitoring: member.monitoring
   }
 }

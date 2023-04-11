@@ -171,7 +171,7 @@ describe('Patient dashboard for HCP', () => {
       await act(async () => {
         renderPage(monitoredPatientDashboardRoute)
       })
-      const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring-alerts')
+      const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
       await userEvent.click(configureMonitoringAlertsButton)
       const dialog = within(screen.getByRole('dialog'))
       const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
@@ -275,7 +275,7 @@ describe('Patient dashboard for HCP', () => {
       await act(async () => {
         renderPage(monitoredPatientDashboardRouteMmoL)
       })
-      const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring-alerts')
+      const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
       await userEvent.click(configureMonitoringAlertsButton)
       const dialog = within(screen.getByRole('dialog'))
       const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })

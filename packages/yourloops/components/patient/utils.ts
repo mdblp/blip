@@ -79,7 +79,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
-    monitoringAlerts: iTeamMember.monitoringAlerts ?? {} as MonitoringAlerts,
+    alarms: iTeamMember.alarms ?? {} as MonitoringAlerts,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',

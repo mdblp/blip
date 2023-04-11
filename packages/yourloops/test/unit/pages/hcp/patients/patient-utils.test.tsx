@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,7 +50,7 @@ describe('Patient utils', () => {
         userId: 'fakeTeamMember',
         email,
         profile,
-        monitoringAlerts: {
+        alarms: {
           timeSpentAwayFromTargetRate: 10,
           timeSpentAwayFromTargetActive: true,
           frequencyOfSevereHypoglycemiaRate: 10,
@@ -62,7 +62,7 @@ describe('Patient utils', () => {
       }
       teamMember.unreadMessages = 4
       const patient: Patient = {
-        monitoringAlerts: teamMember.monitoringAlerts,
+        alarms: teamMember.alarms,
         metadata: {
           flagged: undefined,
           medicalData: null,

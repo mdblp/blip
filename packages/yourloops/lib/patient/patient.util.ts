@@ -50,7 +50,7 @@ export default class PatientUtils {
           }
         })
         const patientToAdd: Patient = {
-          monitoringAlerts: patient.monitoringAlerts,
+          alarms: patient.alarms,
           profile: patient.profile,
           settings: patient.settings,
           metadata: patient.metadata,
@@ -111,24 +111,24 @@ export default class PatientUtils {
       return patients
     }
     if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
-      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || patient.monitoringAlerts?.nonDataTransmissionActive)
+      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive || patient.alarms?.frequencyOfSevereHypoglycemiaActive || patient.alarms?.nonDataTransmissionActive)
     }
     if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled) {
-      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive)
+      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive || patient.alarms?.frequencyOfSevereHypoglycemiaActive)
     }
     if (patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
-      return patients.filter(patient => patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || patient.monitoringAlerts?.nonDataTransmissionActive)
+      return patients.filter(patient => patient.alarms?.frequencyOfSevereHypoglycemiaActive || patient.alarms?.nonDataTransmissionActive)
     }
     if (patientFilters.timeOutOfTargetEnabled && patientFilters.dataNotTransferredEnabled) {
-      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.nonDataTransmissionActive)
+      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive || patient.alarms?.nonDataTransmissionActive)
     }
     if (patientFilters.timeOutOfTargetEnabled) {
-      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive)
+      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive)
     }
     if (patientFilters.hypoglycemiaEnabled) {
-      return patients.filter(patient => patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive)
+      return patients.filter(patient => patient.alarms?.frequencyOfSevereHypoglycemiaActive)
     }
-    return patients.filter(patient => patient.monitoringAlerts?.nonDataTransmissionActive)
+    return patients.filter(patient => patient.alarms?.nonDataTransmissionActive)
   }
 
   static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined, selectedTeamId: string): Patient[] => {

@@ -239,7 +239,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const rowsProps: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
-      const monitoringAlerts = patient.monitoringAlerts
+      const monitoringAlerts = patient.alarms
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,

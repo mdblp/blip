@@ -46,7 +46,7 @@ export interface ITeamMember {
   settings?: Settings | null
   preferences?: Preferences | null
   idVerified: boolean
-  monitoringAlerts?: MonitoringAlerts
+  alarms?: MonitoringAlerts
   monitoring?: Monitoring
   unreadMessages?: number
 }

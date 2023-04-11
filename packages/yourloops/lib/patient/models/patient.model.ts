@@ -33,7 +33,7 @@ import { type PatientTeam } from './patient-team.model'
 import { type MonitoringAlerts } from './monitoring-alerts.model'
 
 export interface Patient {
-  monitoringAlerts: MonitoringAlerts
+  alarms: MonitoringAlerts
   profile: PatientProfile
   settings: PatientSettings
   metadata: PatientMetadata
