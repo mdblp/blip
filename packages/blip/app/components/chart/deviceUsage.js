@@ -105,24 +105,15 @@ const getLabel = (row, t) => {
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
   const {
-    // eslint-disable-next-line react/prop-types
     bgPrefs,
-    // eslint-disable-next-line react/prop-types
     timePrefs,
-    // eslint-disable-next-line react/prop-types
     patient,
-    // eslint-disable-next-line react/prop-types
-    dataUtil,
-    // eslint-disable-next-line react/prop-types
     tidelineData,
-    // eslint-disable-next-line react/prop-types
-    medicalData,
-    // eslint-disable-next-line react/prop-types
-    dateFilter,
-    // eslint-disable-next-line react/prop-types
     trackMetric,
-    // eslint-disable-next-line react/prop-types
-    onSwitchToDaily
+    dataUtil,
+    onSwitchToDaily,
+    medicalData,
+    dateFilter
   } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
