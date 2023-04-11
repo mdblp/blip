@@ -171,6 +171,7 @@ const ignoredTransKeyForYourLoops = [
   'delete-medical-report-number',
   'filters-activated',
   'remote-monitoring',
+  'no-settings-on-device-alert-message',
   'BGM',
   'tooltip-empty-stat'
 ]

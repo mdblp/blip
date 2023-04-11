@@ -16,13 +16,13 @@
  */
 
 /**
- * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
+ * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
  */
 
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import bows from 'bows'
 
 import { makeStyles } from 'tss-react/mui'
@@ -62,7 +62,7 @@ const SettingsDialog = (props) => {
     const mostRecentSettings = _.last(patientData.grouped.pumpSettings)
     log.debug('Settings.renderChart()', mostRecentSettings)
 
-    const handleCopySettings = (success, useClipboardAPI, error ) => {
+    const handleCopySettings = (success, useClipboardAPI, error) => {
       log.info('handleCopySettings', { success, useClipboardAPI, error })
       trackMetric('export_data', 'copy_as_text', 'settings')
     }
@@ -81,11 +81,9 @@ const SettingsDialog = (props) => {
 
   const renderMissingSettingsMessage = () => {
     return (
-      <Trans className="patient-data-message patient-data-message-loading" i18nKey="html.setting-no-uploaded-data" t={t}>
-        <p>
-          The System Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like your system hasn&apos;t sent data yet.
-        </p>
-      </Trans>
+      <Typography>
+        {t('no-settings-on-device-alert-message')}
+      </Typography>
     )
   }
 
@@ -98,7 +96,7 @@ const SettingsDialog = (props) => {
     <Dialog
       id="device-usage-details-dialog"
       open
-      onClose={()=>setOpen(false)}
+      onClose={() => setOpen(false)}
       maxWidth="xl"
       scroll="body"
     >
@@ -109,7 +107,7 @@ const SettingsDialog = (props) => {
         <IconButton
           data-testid="close-settings-dialog"
           className={classes.closeButton}
-          onClick={()=>setOpen(false)}
+          onClick={() => setOpen(false)}
           size="large">
           <CloseIcon />
         </IconButton>

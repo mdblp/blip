@@ -54,6 +54,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2217 Bump react-router-dom to 6.8.2
 - YLP-2219 Migrate SensorUsage from stats.js to yourloops
 - YLP-2234 Migrate glucoseManagementIndicator from stats.js to yourloops
+- YLP-2242 Fix the pop "current settings in case no data has been set"
 - YLP-2244 Migrate coefficientOfVariation from stats.js to yourloops
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
