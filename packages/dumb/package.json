@@ -1,6 +1,7 @@
 {
   "name": "dumb",
-  "version": "3.0.4-beta",
+  "type": "module",
+  "version": "2.0.0",
   "description": "Yourloops package for exposing dumb components",
   "author": {
     "name": "Diabeloop",
@@ -8,16 +9,15 @@
   },
   "homepage": "https://github.com/mdblp/blip#readme",
   "license": "ISC",
-  "main": "dist/src/index.js",
-  "typings": "dist/src/index.d.ts",
-  "directories": {
-    "lib": "dist",
-    "dist": "dist",
-    "test": "__tests__"
+  "main": "./dist/dumb.umd.cjs",
+  "module": "./dist/dumb.js",
+  "exports": {
+    ".": {
+      "import": "./dist/dumb.js",
+      "require": "./dist/dumb.umd.cjs"
+    }
   },
-  "files": [
-    "dist"
-  ],
+  "typings": "./dist/types/index.d.ts",
   "publishConfig": {
     "registry": "https://nexus.ci.diabeloop.eu/repository/npm-diabeloop/"
   },
@@ -29,13 +29,10 @@
     "mrproper": "rm -rf node_modules dist",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "tsc": "tsc --project ./tsconfig.build.json",
-    "build": "npm run tsc",
-    "test": "jest --config=src/jest.config.js",
+    "build": "vite build && tsc --emitDeclarationOnly && mv dist/src dist/types",
+    "test": "jest --config=src/jest.config.cjs",
     "lint": "eslint .",
-    "lint-fix": "npm run lint -- --fix",
-    "postbuild": "npm run copy-files",
-    "copy-files": "copyfiles 'src/**/*.css' 'src/**/*.svg' 'src/**/*.png' dist/"
+    "lint-fix": "npm run lint -- --fix"
   },
   "bugs": {
     "url": "https://github.com/mdblp/blip/issues"

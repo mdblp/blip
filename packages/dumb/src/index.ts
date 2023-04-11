@@ -35,10 +35,11 @@ import {
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './models/stats.model'
+import { CBGStatType, StatFormats } from './models/stats.model'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
+import { renderPageNumbers } from './utils/pdf/pdf.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
@@ -65,6 +66,7 @@ import { SettingsPrintView } from './modules/print/settings-print-view/settings-
 import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
+import { getPatientFullName } from './utils/patient/patient.util'
 
 export {
   AverageDailyDoseStat,
@@ -100,5 +102,8 @@ export {
   TotalInsulinStat,
   TotalCarbsStat,
   TrendsContainer,
-  TrendsProvider
+  TrendsProvider,
+  getPatientFullName,
+  renderPageNumbers,
+  StatFormats
 }

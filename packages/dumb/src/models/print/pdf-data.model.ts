@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BasicData from 'medical-domain/dist/src/domains/repositories/medical/basics-data.service'
+import type BasicData from 'medical-domain'
 import { type CgmConfig, type DeviceConfig, type ParameterConfig, type PumpConfig } from 'medical-domain'
 
 export interface PdfData {

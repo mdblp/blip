@@ -27,5 +27,4 @@
 
 declare module '*.css'
 declare module '*.svg'
-declare module '@serprex/react-motion'
 declare module '*.png'

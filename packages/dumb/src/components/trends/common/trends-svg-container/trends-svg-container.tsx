@@ -26,9 +26,8 @@
  */
 
 import React, { type FunctionComponent, useMemo } from 'react'
-import sizeMe from 'react-sizeme'
 import { scaleLinear } from 'd3-scale'
-import { type BgBounds, type WeekDaysFilter, TimeService } from 'medical-domain'
+import { type BgBounds, TimeService, type WeekDaysFilter } from 'medical-domain'
 import { NoDataLabel } from '../no-data-label/no-data-label'
 import { CbgDateTracesAnimationContainer } from '../../cbg/cbg-date-trace/cbg-date-traces-animation-container'
 import { type CbgDateTrace } from '../../../../models/cbg-date-trace.model'
@@ -44,6 +43,7 @@ import { FocusedCbgSliceSegmentMemoized as FocusedCbgSliceSegment } from '../../
 import { TargetRangeLines } from '../target-range-lines/target-range-lines'
 import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
+import { withResizeDetector } from 'react-resize-detector'
 
 const BUMPERS = {
   top: 50,
@@ -74,14 +74,15 @@ interface TrendsSvgContainerProps {
   dates: string[]
   onSelectDate: OnSelectDateFunction
   yScaleDomain: number[]
-  size: { width: number, height: number }
+  height: number
+  width: number
 }
 
 const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
-  size = { width: WIDTH, height: HEIGHT },
+  width = WIDTH,
+  height = HEIGHT,
   ...props
-}
-) => {
+}) => {
   const {
     yScaleDomain,
     cbgData,
@@ -90,7 +91,6 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
     onSelectDate
   } = props
 
-  const { height, width } = size
   const bgBounds = bgPrefs.bgBounds as BgBounds
 
   const { focusedCbgSlice, showCbgDateTraces } = useTrendsContext()
@@ -195,4 +195,4 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
   )
 }
 
-export const TrendsSvgContainerSized = sizeMe({ monitorHeight: true })(TrendsSvgContainer)
+export const TrendsSvgContainerSized = withResizeDetector(TrendsSvgContainer)

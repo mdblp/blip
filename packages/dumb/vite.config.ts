@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2023, Diabeloop
  *
@@ -26,26 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type RangeSegmentHeightKeys, type RangeSegmentSlice } from './enums/range-segment.enum'
+import { defineConfig } from 'vite'
+import { resolve } from 'path'
 
-export interface CbgMedianTransitionMotionStyle {
-  height: number
-  median: number
-  opacity: number
-}
-
-export interface CbgMedianTransitionMotionInterpolate {
-  key: string
-  style: CbgMedianTransitionMotionStyle
-}
-
-export type CbgSliceTransitionMotionStyle = {
-  [key in RangeSegmentSlice | RangeSegmentHeightKeys]: number
-} & {
-  opacity: number
-}
-
-export interface CbgSliceTransitionMotionInterpolate {
-  key: string
-  style: CbgSliceTransitionMotionStyle
-}
+// https://vitejs.dev/config/
+export default defineConfig({
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/index.ts'),
+      name: 'dumb'
+    }
+  }
+})
