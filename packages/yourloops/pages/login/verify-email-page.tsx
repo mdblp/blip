@@ -25,67 +25,167 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type MouseEventHandler } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Button from '@mui/material/Button'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useAuth0 } from '@auth0/auth0-react'
-import Divider from '@mui/material/Divider'
 import Container from '@mui/material/Container'
 import config from '../../lib/config/config'
 import { GlobalStyles } from 'tss-react'
-import { useTheme } from '@mui/material'
+import Link from '@mui/material/Link'
+import { useAuth } from '../../lib/auth'
+import { useAlert } from '../../components/utils/snackbar'
+import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../lib/auth/models/auth0-error.model'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Avatar from '@mui/material/Avatar'
+import { makeStyles } from 'tss-react/mui'
+import { Theme } from '@mui/material/styles'
+
+const classes = makeStyles()((theme: Theme) => ({
+  appBar: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    zIndex: theme.zIndex.drawer + 1,
+    backgroundColor: theme.palette.common.white,
+    color: 'var(--text-color-primary)'
+  },
+  desktopLogo: {
+    width: 140
+  }
+}))
 
 const VerifyEmailPage: FunctionComponent = () => {
-  const { loginWithRedirect, logout } = useAuth0()
+  const { classes: { appBar, desktopLogo } } = classes()
+  const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
-  const theme = useTheme()
+  const { logout: authLogout } = useAuth()
+  // const theme = useTheme()
+  const alert = useAlert()
 
-  const onClickLogout = (): void => {
-    logout({ logoutParams: { returnTo: window.location.origin } })
+  const sendConfirmationEmail = async (): Promise<void> => {
+    window.open(config.CONTACT_SUPPORT_WEB_URL, '_blank')
   }
 
+  const createNewAccount = async (): Promise<void> => {
+    console.log('Create new account')
+    await authLogout()
+    await loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
+  }
+
+  const logoutUser = async (): Promise<void> => {
+    console.log('Login')
+    await authLogout()
+  }
+
+  const goToAppHome = async (): Promise<void> => {
+    try {
+      await getAccessTokenSilently()
+      await loginWithRedirect()
+    } catch (error) {
+      if (error.error_description === AUTH0_ERROR_EMAIL_NOT_VERIFIED) {
+        alert.warning(t('alert-email-not-verified'))
+        return
+      }
+      throw error
+    }
+  }
+
+  const contactSupportLink = (
+    <Link component="button" underline="always" onClick={sendConfirmationEmail}></Link>
+  )
+
+  const createNewAccountLink = (
+    <Link component="button" underline="always" onClick={createNewAccount}></Link>
+  )
+
+  const logoutLink = (
+    <Link component="button" underline="always" onClick={logoutUser}></Link>
+  )
+
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="90vh"
-      textAlign="center"
-    >
-      <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
-      <Container maxWidth="sm">
-        <Box display="flex" justifyContent="center" marginBottom={4}>
-          <img
-            data-testid="header-main-logo"
+    <>
+      <AppBar
+        elevation={0}
+        className={appBar}
+        position="fixed"
+        data-testid="verify-email-header"
+      >
+        <Toolbar>
+          <Avatar
+            id="header-main-logo"
             aria-label={t('alt-img-logo')}
+            variant="square"
             src={`/branding_${config.BRANDING}_logo.svg`}
             alt={t('alt-img-logo')}
-            width="140"
+            className={desktopLogo}
           />
-        </Box>
-        <Typography variant="h5">{t('verify-email-title')}</Typography>
-        <Divider sx={{ marginBlock: theme.spacing(3) }} />
-        <Typography>{t('verify-email-details')}</Typography>
-        <Box marginTop={4}>
+          <Box sx={{ flexGrow: 1 }} />
           <Button
             variant="outlined"
             color="info"
-            sx={{ marginRight: theme.spacing(4) }}
-            onClick={onClickLogout}
+            onClick={logoutUser}
           >
             {t('button-logout')}
           </Button>
-          <Button
-            variant="outlined"
-            onClick={loginWithRedirect as MouseEventHandler}
-          >
-            {t('button-continue')}
-          </Button>
-        </Box>
-      </Container>
-    </Box>
+        </Toolbar>
+      </AppBar>
+
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="90vh"
+        textAlign="center"
+        data-testid="verify-email-content"
+      >
+        <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
+        <Container maxWidth="sm">
+          <Box display="flex" justifyContent="center">
+            <img
+              data-testid="header-main-logo"
+              aria-label={t('alt-img-logo')}
+              src={`/branding_${config.BRANDING}_logo.svg`}
+              alt={t('alt-img-logo')}
+              width="140" />
+          </Box>
+          <Box mt={4} mb={3}>
+            <Typography variant="h5">{t('verify-email-title')}</Typography>
+          </Box>
+          <Box textAlign="left">
+            <Typography>{t('verify-email-details-1')}</Typography>
+            <Box mt={3} mb={3} data-testid="verify-email-details-2">
+              <Trans
+                i18nKey="verify-email-details-2"
+                t={t}
+                components={{ underline: contactSupportLink }} />
+            </Box>
+            <Box data-testid="verify-email-details-3">
+              <Trans
+                i18nKey="verify-email-details-3"
+                t={t}
+                components={{ underline: createNewAccountLink }} />
+            </Box>
+            <br />
+            <Box data-testid="verify-email-details-4">
+              <Trans
+                i18nKey="verify-email-details-4"
+                t={t}
+                components={{ underline: logoutLink }} />
+            </Box>
+          </Box>
+          <Box marginTop={4}>
+            <Button
+              variant="contained"
+              onClick={goToAppHome}
+            >
+              {t('button-continue')}
+            </Button>
+          </Box>
+        </Container>
+      </Box>
+    </>
   )
 }
 

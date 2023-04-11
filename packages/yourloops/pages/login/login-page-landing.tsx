@@ -38,6 +38,7 @@ import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
 import { IDLE_USER_QUERY_PARAM } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { AppRoute } from '../../models/enums/routes.enum'
+import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../lib/auth/models/auth0-error.model'
 
 const LoginPageLanding: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -57,7 +58,7 @@ const LoginPageLanding: FunctionComponent = () => {
 
   useEffect(() => {
     if (error) {
-      if (error.message === 'Please verify your email before logging in.') {
+      if (error.message === AUTH0_ERROR_EMAIL_NOT_VERIFIED) {
         navigate(AppRoute.VerifyEmail)
         return
       }
