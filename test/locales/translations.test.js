@@ -171,7 +171,8 @@ const ignoredTransKeyForYourLoops = [
   'created-by-unknown',
   'delete-medical-report-number',
   'filters-activated',
-  'remote-monitoring'
+  'remote-monitoring',
+  'no-settings-on-device-alert-message'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
