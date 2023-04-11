@@ -43,7 +43,7 @@ import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
-import { usePatientsFiltersContext } from '../filter/patients-filters.provider'
+import { usePatientsFiltersContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {

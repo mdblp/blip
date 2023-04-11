@@ -25,12 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientsFilters } from './patients-filters.model'
+import { useState } from 'react'
+import { type PatientsFilters } from './models/patients-filters.model'
+import { type PatientListContextResult } from './models/patient-list-context-result.model'
 
-export interface PatientsFiltersContextResult {
-  filters: PatientsFilters
-  hasAnyNonPendingFiltersEnabled: boolean
-  updatePatientsFilters: (filters: PatientsFilters) => void
-  updatePendingFilter: (pendingEnabled: boolean) => void
-  resetFilters: () => void
+const DEFAULT_FILTERS = {
+  pendingEnabled: false,
+  manualFlagEnabled: false,
+  telemonitoredEnabled: false,
+  timeOutOfTargetEnabled: false,
+  hypoglycemiaEnabled: false,
+  dataNotTransferredEnabled: false,
+  messagesEnabled: false
+}
+
+export const usePatientListProviderHook = (): PatientListContextResult => {
+  const [filters, setFilters] = useState<PatientsFilters>(DEFAULT_FILTERS)
+
+  const updatePatientsFilters = (filters: PatientsFilters): void => {
+    setFilters(filters)
+  }
+
+  const updatePendingFilter = (pendingEnabled: boolean): void => {
+    setFilters({ ...filters, pendingEnabled })
+  }
+
+  const resetFilters = (): void => {
+    setFilters(DEFAULT_FILTERS)
+  }
+
+  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.telemonitoredEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
+
+  return { filters, hasAnyNonPendingFiltersEnabled, updatePatientsFilters, updatePendingFilter, resetFilters }
 }

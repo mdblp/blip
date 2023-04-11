@@ -51,7 +51,7 @@ import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
-import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
+import { usePatientsFiltersContext } from '../../lib/providers/patient-list.provider'
 
 interface PatientListHookReturns {
   columns: GridColDef[]

@@ -32,8 +32,8 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import Box from '@mui/material/Box'
-import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
-import { type PatientsFilters } from '../../lib/filter/models/patients-filters.model'
+import { usePatientsFiltersContext } from '../../lib/providers/patient-list.provider'
+import { type PatientsFilters } from '../../lib/providers/models/patients-filters.model'
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft'
@@ -42,7 +42,7 @@ import Popover from '@mui/material/Popover'
 import { useTheme } from '@mui/material/styles'
 import EmailIcon from '@mui/icons-material/Email'
 import { makeStyles } from 'tss-react/mui'
-import { PatientsFiltersToggle } from './patients-filters-toggle'
+import { PatientsListOptionToggle } from './patients-list-option-toggle'
 import Divider from '@mui/material/Divider'
 import DialogActions from '@mui/material/DialogActions'
 
@@ -85,7 +85,7 @@ export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProp
     >
       <Box marginX={theme.spacing(3)} marginTop={theme.spacing(3)}>
         <Typography variant="h6" className={classes.title}>{t('type-of-care')}</Typography>
-        <PatientsFiltersToggle
+        <PatientsListOptionToggle
           ariaLabel={t('filter-flagged')}
           checked={filters.manualFlagEnabled}
           icon={<FlagIcon />}
@@ -94,7 +94,7 @@ export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProp
             setFilters({ ...filters, manualFlagEnabled: !filters.manualFlagEnabled })
           }}
         />
-        <PatientsFiltersToggle
+        <PatientsListOptionToggle
           ariaLabel={t('filter-telemonitored')}
           checked={filters.telemonitoredEnabled}
           icon={<DesktopMacOutlinedIcon />}
@@ -104,7 +104,7 @@ export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProp
           }}
         />
         <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>
-        <PatientsFiltersToggle
+        <PatientsListOptionToggle
           ariaLabel={t('filter-out-of-range')}
           checked={filters.timeOutOfTargetEnabled}
           icon={<UnfoldMoreIcon />}
@@ -113,7 +113,7 @@ export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProp
             setFilters({ ...filters, timeOutOfTargetEnabled: !filters.timeOutOfTargetEnabled })
           }}
         />
-        <PatientsFiltersToggle
+        <PatientsListOptionToggle
           ariaLabel={t('filter-hypoglycemia')}
           checked={filters.hypoglycemiaEnabled}
           icon={<ArrowDownwardIcon />}
@@ -122,7 +122,7 @@ export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProp
             setFilters({ ...filters, hypoglycemiaEnabled: !filters.hypoglycemiaEnabled })
           }}
         />
-        <PatientsFiltersToggle
+        <PatientsListOptionToggle
           ariaLabel={t('filter-data-not-transferred')}
           checked={filters.dataNotTransferredEnabled}
           icon={<SubdirectoryArrowLeftIcon />}
@@ -132,7 +132,7 @@ export const PatientsFiltersPopover: FunctionComponent<PatientsFiltersDialogProp
           }}
         />
         <Typography variant="h6" className={classes.title}>{t('notification')}</Typography>
-        <PatientsFiltersToggle
+        <PatientsListOptionToggle
           ariaLabel={t('filter-unread-messages')}
           checked={filters.messagesEnabled}
           icon={<EmailIcon />}

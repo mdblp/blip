@@ -26,10 +26,10 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks'
-import { usePatientsFiltersProviderHook } from '../../../../lib/filter/patients-filters.provider.hook'
-import { type PatientsFilters } from '../../../../lib/filter/models/patients-filters.model'
+import { usePatientListProviderHook } from '../../../../lib/providers/patient-list.provider.hook'
+import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 
-describe('usePatientsFiltersProviderHook', () => {
+describe('usePatientListProviderHook', () => {
   const defaultFilters: PatientsFilters = {
     pendingEnabled: false,
     manualFlagEnabled: false,
@@ -52,7 +52,7 @@ describe('usePatientsFiltersProviderHook', () => {
 
   describe('filters', () => {
     it('should all be initialized at false', () => {
-      const { result } = renderHook(() => usePatientsFiltersProviderHook())
+      const { result } = renderHook(() => usePatientListProviderHook())
 
       expect(result.current.filters).toEqual(defaultFilters)
     })
@@ -60,7 +60,7 @@ describe('usePatientsFiltersProviderHook', () => {
 
   describe('updatePatientsFilters', () => {
     it('should update filters accordingly', () => {
-      const { result } = renderHook(() => usePatientsFiltersProviderHook())
+      const { result } = renderHook(() => usePatientListProviderHook())
       expect(result.current.filters).toEqual(defaultFilters)
 
       act(() => {
@@ -73,7 +73,7 @@ describe('usePatientsFiltersProviderHook', () => {
 
   describe('updatePendingFilter', () => {
     it('should update the pending filter', () => {
-      const { result } = renderHook(() => usePatientsFiltersProviderHook())
+      const { result } = renderHook(() => usePatientListProviderHook())
       expect(result.current.filters.pendingEnabled).toBeFalsy()
 
       act(() => {
@@ -86,7 +86,7 @@ describe('usePatientsFiltersProviderHook', () => {
 
   describe('resetFilters', () => {
     it('should reset all filters', () => {
-      const { result } = renderHook(() => usePatientsFiltersProviderHook())
+      const { result } = renderHook(() => usePatientListProviderHook())
       expect(result.current.filters).toEqual(defaultFilters)
 
       act(() => {

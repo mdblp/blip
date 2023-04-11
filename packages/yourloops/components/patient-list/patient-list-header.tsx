@@ -49,11 +49,12 @@ import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
-import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
-import { PatientsFiltersPopover } from '../patients-filters/patients-filters-popover'
+import { usePatientsFiltersContext } from '../../lib/providers/patient-list.provider'
+import { PatientsFiltersPopover } from './patients-filters-popover'
 import { PatientListHeaderFiltersLabel } from './patient-list-header-filters-label'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import TeamUtils from '../../lib/team/team.util'
+import { ColumnSelectorPopover } from './column-selector-popover'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -95,12 +96,14 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { pendingPatientsCount } = usePatientContext()
   const { filters } = usePatientsFiltersContext()
   const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
+  const [isColumnSelectorOpened, setIsColumnSelectorOpened] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { selectedTeam } = useSelectedTeamContext()
   const isSelectedTeamPrivate = user.isUserHcp() ? TeamUtils.isPrivate(selectedTeam) : undefined
 
   const filtersRef = useRef<HTMLButtonElement>(null)
+  const columnsRef = useRef<HTMLButtonElement>(null)
 
   const isUserHcp = user.isUserHcp()
 
@@ -188,12 +191,13 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                 </span>
               </Tooltip>
             }
-            {/* TODO activate this button with columns choice YLP-2154 https://diabeloop.atlassian.net/browse/YLP-2154 */}
             <Button
               data-testid="column-settings-button"
               variant="outlined"
               color="inherit"
               sx={{ marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
+              ref={columnsRef}
+              onClick={() => { setIsColumnSelectorOpened(true) }}
             >
               <Settings />
             </Button>
@@ -263,6 +267,12 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
         <PatientsFiltersPopover
           anchorEl={filtersRef.current}
           onClose={closeFiltersDialog}
+        />
+      }
+      {isColumnSelectorOpened &&
+        <ColumnSelectorPopover
+          anchorEl={columnsRef.current}
+          onClose={() => { setIsColumnSelectorOpened(false) }}
         />
       }
     </React.Fragment>

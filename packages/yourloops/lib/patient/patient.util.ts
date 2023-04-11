@@ -32,7 +32,7 @@ import { type Patient } from './models/patient.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type User } from '../auth'
-import { type PatientsFilters } from '../filter/models/patients-filters.model'
+import { type PatientsFilters } from '../providers/models/patients-filters.model'
 
 export default class PatientUtils {
   static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {

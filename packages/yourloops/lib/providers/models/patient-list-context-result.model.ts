@@ -25,18 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import { type PatientsFiltersContextResult } from './models/patients-filters-context-result.model'
-import { usePatientsFiltersProviderHook } from './patients-filters.provider.hook'
+import { type PatientsFilters } from './patients-filters.model'
 
-const PatientsFiltersContext = createContext<PatientsFiltersContextResult>({} as PatientsFiltersContextResult)
-
-export const PatientsFiltersProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const result = usePatientsFiltersProviderHook()
-
-  return <PatientsFiltersContext.Provider value={result}>{children}</PatientsFiltersContext.Provider>
-}
-
-export function usePatientsFiltersContext(): PatientsFiltersContextResult {
-  return useContext(PatientsFiltersContext)
+export interface PatientListContextResult {
+  filters: PatientsFilters
+  hasAnyNonPendingFiltersEnabled: boolean
+  updatePatientsFilters: (filters: PatientsFilters) => void
+  updatePendingFilter: (pendingEnabled: boolean) => void
+  resetFilters: () => void
 }
