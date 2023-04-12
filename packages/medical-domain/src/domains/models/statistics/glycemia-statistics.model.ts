@@ -43,7 +43,7 @@ export interface CbgRangeStatistics {
 
 export interface SensorUsageStatistics {
   sensorUsage: number
-  totalUsage: number
+  total: number
 }
 
 export interface AverageGlucoseStatistics {
