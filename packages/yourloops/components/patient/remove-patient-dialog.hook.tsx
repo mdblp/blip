@@ -26,10 +26,10 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { type Dispatch, type SetStateAction, useState } from 'react'
+import { useState } from 'react'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { type Team, useTeam } from '../../lib/team'
+import { useTeam } from '../../lib/team'
 import TeamUtils from '../../lib/team/team.util'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -44,9 +44,6 @@ interface RemovePatientDialogHookReturn {
   handleOnClickRemove: () => Promise<void>
   patientName: string
   processing: boolean
-  selectedTeamId: string
-  setSelectedTeamId: Dispatch<SetStateAction<string>>
-  sortedTeams: Team[]
 }
 
 const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookProps): RemovePatientDialogHookReturn => {
@@ -55,8 +52,8 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const { removePatient } = usePatientContext()
   const { getTeam } = useTeam()
   const { selectedTeam } = useSelectedTeamContext()
+  const selectedTeamId = selectedTeam.id
 
-  const [selectedTeamId, setSelectedTeamId] = useState<string>(selectedTeam.id)
   const [processing, setProcessing] = useState<boolean>(false)
 
   const userName = patient ? {
@@ -65,8 +62,6 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   } : { firstName: '', lastName: '' }
   const patientName = t('user-name', userName)
   const patientTeam = patient.teams.find(team => team.teamId === selectedTeamId)
-  const teams = patient.teams.map(team => getTeam(team.teamId))
-  const sortedTeams = TeamUtils.sortTeamsByName(teams)
 
   const getSuccessAlertMessage = (): void => {
     if (patientTeam.status === UserInvitationStatus.pending) {
@@ -93,7 +88,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
     }
   }
 
-  return { sortedTeams, processing, selectedTeamId, patientName, handleOnClickRemove, setSelectedTeamId }
+  return { processing, patientName, handleOnClickRemove }
 }
 
 export default useRemovePatientDialog
