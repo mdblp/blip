@@ -35,29 +35,39 @@ export interface StandartDeviationProps {
   bgsource: BgType
   averageGlucose: number
   standardDeviation: number
-  total: number
+  standardDeviationTotal: number
 }
 
 export const StandartDeviationStat: FunctionComponent<StandartDeviationProps> = (props) => {
-  const { standardDeviation, averageGlucose, total, bgpref, bgsource } = props
+  const { standardDeviation, averageGlucose, standardDeviationTotal, bgpref, bgsource } = props
 
   const dataFormat = (data: number): number => {
     return Math.round(data)
   }
-  const annotation = ()=> {
-    if (standardDeviation && averageGlucose && bgsource === DatumType.Cbg) {
-      return [t('standard-deviation-tooltip')]
-    } else if (standardDeviation && averageGlucose && bgsource === DatumType.Smbg){
-      return [t('standard-deviation-tooltip'), t('tooltip-empty-SMBG-data', { total: total, smbgLabel:t('')]
+
+  const selectedLabel = bgsource === DatumType.Cbg ? 'CBG' : 'BGM'
+
+  const tooltipDisplay = (selectedLabel: string): string[] => {
+    let annotation: string[]
+    switch (selectedLabel) {
+      case 'CBG':
+        annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip')] : [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
+        return annotation
+      case 'BGM':
+        annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip'), t('tooltip-empty-SMBG-data', {
+          total: standardDeviationTotal,
+          smbgLabel: t('BGM')
+        })] : [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
+        return annotation
+      default:
+        return [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
     }
   }
-
-  // const annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip')] : [t('standard-deviation-tooltip'), t('')]
 
   return (
     <Box data-test-id="standart-deviation-stat">
       <CBGStandardDeviation
-        annotations={[annotation]}
+        annotations={tooltipDisplay(selectedLabel)}
         averageGlucose={dataFormat(averageGlucose)}
         bgClasses={bgpref.bgClasses}
         standardDeviation={dataFormat(standardDeviation)}
