@@ -40,15 +40,15 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { formatAlarmSettingThreshold } from '../../lib/utils'
+import { formatMonitoringAlertSettingThreshold } from '../../lib/utils'
 
 interface FlagCellProps {
   isFlagged: boolean
   patient: Patient
 }
 
-interface AlarmPercentageCellProps {
-  isAlarmActive: boolean
+interface MonitoringAlertPercentageCellProps {
+  isMonitoringAlertActive: boolean
   value: number
 }
 
@@ -101,7 +101,7 @@ export const PendingIconCell: FunctionComponent = () => {
   )
 }
 
-export const AlarmPercentageCell: FunctionComponent<AlarmPercentageCellProps> = ({ isAlarmActive, value }) => {
+export const MonitoringAlertPercentageCell: FunctionComponent<MonitoringAlertPercentageCellProps> = ({ isMonitoringAlertActive, value }) => {
   const { user } = useAuth()
   const theme = useTheme()
 
@@ -109,10 +109,10 @@ export const AlarmPercentageCell: FunctionComponent<AlarmPercentageCellProps> = 
     <Box
       display="flex"
       alignItems="end"
-      sx={{ color: user.isUserHcp() && isAlarmActive ? theme.palette.warning.main : 'inherit' }}
+      sx={{ color: user.isUserHcp() && isMonitoringAlertActive ? theme.palette.warning.main : 'inherit' }}
     >
-      {formatAlarmSettingThreshold(value)}
-      {user.isUserHcp() && isAlarmActive &&
+      {formatMonitoringAlertSettingThreshold(value)}
+      {user.isUserHcp() && isMonitoringAlertActive &&
         <ReportProblemIcon sx={{ marginLeft: theme.spacing(1) }} color="warning" />
       }
     </Box>

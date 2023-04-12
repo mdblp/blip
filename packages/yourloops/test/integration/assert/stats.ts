@@ -97,3 +97,8 @@ export const checkGlucoseManagementIndicator = async (expectedTextContent: strin
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('glucose-management-indicator-stat')).toHaveTextContent(expectedTextContent)
 }
+
+export const checkCoefficientOfVariationStatWidget = async (expectedTextContent: string) => {
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  expect(patientStatistics.getByTestId('coefficient-of-variation-stat')).toHaveTextContent(expectedTextContent)
+}

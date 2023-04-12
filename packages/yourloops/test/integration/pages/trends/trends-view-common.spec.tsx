@@ -36,11 +36,17 @@ import {
   checkTrendsTimeInRangeStatsWidgets,
   GMI_TOOLTIP
 } from '../../assert/trends'
-import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
+import {
+  minimalTrendViewData,
+  mockDataAPI,
+  smbgData,
+  timeInRangeStatsTrendViewData
+} from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
   checkGlucoseManagementIndicator,
+  checkCoefficientOfVariationStatWidget,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
@@ -71,9 +77,10 @@ describe('Trends view for anyone', () => {
       await checkTrendsStatsWidgetsTooltips()
 
       // Check the widget
-      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL180')
-      await checkStandardDeviationStatWidget('Standard Deviation (167-193)mg/dL13')
+      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL183')
+      await checkStandardDeviationStatWidget('Standard Deviation (169-197)mg/dL14')
       await checkSensorUsage('Sensor Usage0.1%')
+      await checkCoefficientOfVariationStatWidget('CV (CGM)10%')
       await checkRangeSelection()
       await checkDaysSelection()
 
@@ -111,14 +118,13 @@ describe('Trends view for anyone', () => {
       mockDataAPI(smbgData)
       renderPage('/trends')
 
-      await checkReadingsInRangeStatsWidgets()
       await checkReadingsInRangeStats()
-
       await checkSMBGTrendsStatsWidgetsTooltips()
 
+      await checkReadingsInRangeStatsWidgets()
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
-
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+      await checkCoefficientOfVariationStatWidget('CV (BGM)78%')
     })
   })
 })

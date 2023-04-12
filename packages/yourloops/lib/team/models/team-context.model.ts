@@ -80,7 +80,7 @@ export interface TeamContext {
   editTeam: (team: Team) => Promise<void>
 
   /**
-   * Update team alarm configuration
+   * Update team alerts configuration
    * @param team The updated team
    */
   updateTeamAlerts: (team: Team) => Promise<void>

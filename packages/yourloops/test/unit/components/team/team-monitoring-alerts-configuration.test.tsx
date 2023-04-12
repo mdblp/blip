@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,14 +30,14 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
-import TeamAlarmsConfiguration, {
-  type TeamAlarmsConfigurationProps
-} from '../../../../components/team/team-alarms-configuration'
-import { type AlarmsContentConfigurationProps } from '../../../../components/alarm/alarms-content-configuration'
+import TeamMonitoringAlertsConfiguration, {
+  type TeamMonitoringAlertsConfigurationProps
+} from '../../../../components/team/team-monitoring-alerts-configuration'
+import { type MonitoringAlertsContentConfigurationProps } from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 
 // eslint-disable-next-line react/display-name
-jest.mock('../../../../components/alarm/alarms-content-configuration', () => (props: AlarmsContentConfigurationProps) => {
+jest.mock('../../../../components/monitoring-alert/monitoring-alerts-content-configuration', () => (props: MonitoringAlertsContentConfigurationProps) => {
   return <button onClick={() => { props.onSave({ enabled: true } as Monitoring) }}>save-mock</button>
 })
 jest.mock('../../../../components/utils/snackbar')
@@ -62,8 +62,8 @@ describe('TeamMembers', () => {
     })
   })
 
-  function getTeamAlarmConfigurationJSX(props: TeamAlarmsConfigurationProps = { team }) {
-    return <TeamAlarmsConfiguration
+  function getTeamMonitoringAlertConfigurationJSX(props: TeamMonitoringAlertsConfigurationProps = { team }) {
+    return <TeamMonitoringAlertsConfiguration
       team={props.team}
     />
   }
@@ -71,17 +71,17 @@ describe('TeamMembers', () => {
   it('should throw error when given team as no monitoring', () => {
     const teamNoMonitoring = buildTeam(teamId, members)
     teamNoMonitoring.monitoring = undefined
-    expect(() => render(getTeamAlarmConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
+    expect(() => render(getTeamMonitoringAlertConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
   })
 
   it('should throw error when given team monitoring is not enabled', () => {
     const teamNoMonitoring = buildTeam(teamId, members)
     teamNoMonitoring.monitoring.enabled = false
-    expect(() => render(getTeamAlarmConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
+    expect(() => render(getTeamMonitoringAlertConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
   })
 
   function clickOnSaveButton() {
-    render(getTeamAlarmConfigurationJSX({ team }))
+    render(getTeamMonitoringAlertConfigurationJSX({ team }))
     fireEvent.click(screen.getByRole('button'))
     expect(updateTeamAlertsMock).toHaveBeenCalled()
   }

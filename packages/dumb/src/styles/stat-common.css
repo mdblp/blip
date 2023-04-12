@@ -29,7 +29,6 @@
 
 .chartTitle {
   composes: largeSize from './typography.css';
-  font-weight: 500;
   line-height: 1;
   white-space: nowrap;
   margin-top: .25em;

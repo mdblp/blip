@@ -25,24 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-
-import Box from '@mui/material/Box'
+import { Trans, useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-
-import MedicalServiceIcon from '../icons/medical-service-icon'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { LoadingButton } from '@mui/lab'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import DialogContentText from '@mui/material/DialogContentText'
 import TeamUtils from '../../lib/team/team.util'
 
 interface RemovePatientDialogProps {
@@ -52,18 +47,20 @@ interface RemovePatientDialogProps {
 
 const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
   const { t } = useTranslation('yourloops')
+  const { selectedTeam } = useSelectedTeamContext()
   const {
-    selectedTeamId,
-    sortedTeams,
     processing,
     handleOnClickRemove,
-    setSelectedTeamId,
     patientName
   } = useRemovePatientDialog({ patient, onClose })
 
-  if (!!selectedTeamId && !sortedTeams.find(team => team.id === selectedTeamId)) {
-    setSelectedTeamId('')
-  }
+  const isSelectedTeamPrivate = TeamUtils.isPrivate(selectedTeam)
+  const selectedTeamLabel = isSelectedTeamPrivate ? t('my-private-practice') : selectedTeam.name
+
+  const title = t('modal-remove-patient-title', {
+    patientName,
+    teamName: selectedTeamLabel
+  })
 
   return (
     <Dialog
@@ -73,60 +70,31 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       onClose={onClose}
     >
       <DialogTitle>
-        <strong>{t('button-remove-patient')}</strong>
+        <strong>{title}</strong>
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText>
-          {t('team-modal-remove-patient-choice', { patientName })}
-        </DialogContentText>
-      </DialogContent>
-
-      <DialogContent>
-        <FormControl
-          fullWidth
-          required
-        >
-          <InputLabel>{t('select-team')}</InputLabel>
-          <Select
-            data-testid="patient-team-selector"
-            label={t('select-team')}
-            value={selectedTeamId}
-            onChange={(e) => {
-              setSelectedTeamId(e.target.value)
-            }}
+        <DialogContentText data-testid="modal-remove-patient-question">
+          <Trans
+            i18nKey="modal-remove-patient-question"
+            t={t}
+            components={{ strong: <strong /> }}
+            values={{ patientName, selectedTeamName: selectedTeamLabel }}
+            parent={React.Fragment}
           >
-            {sortedTeams.map((team, index) => (
-              <MenuItem
-                value={team.id}
-                key={index}
-                data-testid={`select-option-${team.name}`}
-              >
-                {TeamUtils.isPrivate(team)
-                  ? <Box display="flex" alignItems="center">
-                    <React.Fragment>
-                      <Box display="flex" ml={0} mr={1}>
-                        <MedicalServiceIcon color="primary" />
-                      </Box>
-                      {t('private-practice')}
-                    </React.Fragment>
-                  </Box>
-                  : team.name
-                }
-              </MenuItem>
-            ))
-            }
-          </Select>
-        </FormControl>
-      </DialogContent>
+          </Trans>
+        </DialogContentText>
 
-      {sortedTeams.length === 1 &&
-        <DialogContent>
-          <DialogContentText>
-            {t('modal-remove-patient-info-2')}
-          </DialogContentText>
-        </DialogContent>
-      }
+        <DialogContentText>
+          {isSelectedTeamPrivate ? t('modal-remove-patient-from-private-practice-info') : t('modal-remove-patient-from-team-info')}
+        </DialogContentText>
+
+          <Box mt={2}>
+            <Alert severity="info">
+              {t('modal-remove-patient-alert-info')}
+            </Alert>
+          </Box>
+      </DialogContent>
 
       <DialogActions>
         <Button
@@ -139,7 +107,6 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
           loading={processing}
           data-testid="remove-patient-dialog-validate-button"
           color="error"
-          disabled={!selectedTeamId}
           variant="contained"
           disableElevation
           onClick={handleOnClickRemove}

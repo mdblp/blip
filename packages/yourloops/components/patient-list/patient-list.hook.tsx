@@ -38,8 +38,8 @@ import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { getMedicalValues } from '../patient/utils'
-import { ActionsCell, AlarmPercentageCell, FlagIconCell, MessageCell, PendingIconCell } from './custom-cells'
-import { type Alarms } from '../../lib/patient/models/alarms.model'
+import { ActionsCell, MonitoringAlertPercentageCell, FlagIconCell, MessageCell, PendingIconCell } from './custom-cells'
+import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientUtils from '../../lib/patient/patient.util'
@@ -166,11 +166,11 @@ export const usePatientListHook = (): PatientListHookReturns => {
         description: t('time-out-of-range-target-tooltip'),
         flex: 0.5,
         sortable: false,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
-          const alarms = params.value
-          return <AlarmPercentageCell
-            value={alarms.timeSpentAwayFromTargetRate}
-            isAlarmActive={alarms.timeSpentAwayFromTargetActive}
+        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
+          const monitoringAlerts = params.value
+          return <MonitoringAlertPercentageCell
+            value={monitoringAlerts.timeSpentAwayFromTargetRate}
+            isMonitoringAlertActive={monitoringAlerts.timeSpentAwayFromTargetActive}
           />
         }
       },
@@ -181,11 +181,11 @@ export const usePatientListHook = (): PatientListHookReturns => {
         description: t('hypoglycemia-tooltip'),
         sortable: false,
         flex: 0.5,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
-          const alarms = params.value
-          return <AlarmPercentageCell
-            value={alarms.frequencyOfSevereHypoglycemiaRate}
-            isAlarmActive={alarms.frequencyOfSevereHypoglycemiaActive}
+        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
+          const monitoringAlerts = params.value
+          return <MonitoringAlertPercentageCell
+            value={monitoringAlerts.frequencyOfSevereHypoglycemiaRate}
+            isMonitoringAlertActive={monitoringAlerts.frequencyOfSevereHypoglycemiaActive}
           />
         }
       },
@@ -196,11 +196,11 @@ export const usePatientListHook = (): PatientListHookReturns => {
         description: t('data-not-transferred-tooltip'),
         sortable: false,
         flex: 0.5,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Alarms>) => {
-          const alarms = params.value
-          return <AlarmPercentageCell
-            value={alarms.nonDataTransmissionRate}
-            isAlarmActive={alarms.nonDataTransmissionActive}
+        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
+          const monitoringAlerts = params.value
+          return <MonitoringAlertPercentageCell
+            value={monitoringAlerts.nonDataTransmissionRate}
+            isMonitoringAlertActive={monitoringAlerts.nonDataTransmissionActive}
           />
         }
       },
@@ -235,15 +235,15 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const rowsProps: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
-      const alarms = patient.alarms
+      const monitoringAlerts = patient.alarms
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
-        [PatientListColumns.TimeOutOfRange]: alarms,
-        [PatientListColumns.SevereHypoglycemia]: alarms,
-        [PatientListColumns.DataNotTransferred]: alarms,
+        [PatientListColumns.TimeOutOfRange]: monitoringAlerts,
+        [PatientListColumns.SevereHypoglycemia]: monitoringAlerts,
+        [PatientListColumns.DataNotTransferred]: monitoringAlerts,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
         [PatientListColumns.Actions]: patient
