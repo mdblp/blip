@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { formatBgValue } from 'dumb/src/utils/format/format.util'
+import { formatBgValue } from 'dumb'
 import { convertBG } from '../../lib/units/units.util'
 import { DEFAULT_BG_VALUES, DEFAULT_THRESHOLDS_IN_MGDL } from './alarms.default'
 import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'

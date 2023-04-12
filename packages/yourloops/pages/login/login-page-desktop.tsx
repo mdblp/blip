@@ -31,8 +31,8 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import loginPageBackground from 'images/login-page-background-desktop.png'
-import loginPageLaptop from 'images/login-page-laptop.png'
+import loginPageBackground from '../../images/login-page-background-desktop.png'
+import loginPageLaptop from '../../images/login-page-laptop.png'
 
 import Toolbar from '@mui/material/Toolbar'
 import AppBar from '@mui/material/AppBar'

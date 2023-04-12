@@ -12,6 +12,8 @@
     "url": "https://www.diabeloop.com/"
   },
   "license": "BSD-2-Clause",
+  "main": "app/index.tsx",
+  "type": "module",
   "scripts": {
     "mrproper": "rm -rf node_modules dist",
     "clean": "rm -rf dist test/integration/coverage test/unit/coverage",
@@ -20,7 +22,7 @@
     "build-prod": "NODE_ENV=production webpack --mode=production",
     "prebuild-dev": "npm run clean",
     "build-dev": "NODE_ENV=development webpack --mode=development",
-    "start-dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' USE_WEBPACK_DEV_SERVER=true webpack serve --host 0.0.0.0",
+    "start-dev": "vite",
     "test": "npm run unit-test && npm run integration-test",
     "unit-test": "jest --config=test/unit/jest.config.js",
     "integration-test": "jest --config=test/integration/jest.config.js",
@@ -52,6 +54,7 @@
     "react-dom": "17.0.2",
     "react-i18next": "^12.2.0",
     "react-idle-timer": "^5.5.3",
+    "react-resize-detector": "^8.0.4",
     "react-router-dom": "^6.9.0",
     "tss-react": "^4.8.2",
     "uuid": "^9.0.0"

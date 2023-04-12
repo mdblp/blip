@@ -1,6 +1,6 @@
-import infusion from 'infusion.png'
-import cartridge from 'cartridge.png'
-import cartridgeVicentra from 'cartridge-vicentra.png'
+import infusion from '../../../../../../branding/sitechange/infusion.png'
+import cartridge from '../../../../../../branding/sitechange/cartridge.png'
+import cartridgeVicentra from '../../../../../../branding/sitechange/cartridge-vicentra.png'
 
 export const ROCHE = 'Roche'
 export const VICENTRA = 'Vicentra'

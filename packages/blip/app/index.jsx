@@ -29,7 +29,7 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import bows from 'bows'
 
-import '../../viz/src/styles/colors.css'
+import '../../viz/src/styles/colors.css?inline'
 import '../../tideline/css/tideline.less'
 import './style.less'
 

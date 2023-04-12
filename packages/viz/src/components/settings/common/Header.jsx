@@ -19,7 +19,7 @@ import PropTypes from 'prop-types'
 
 import React, { PureComponent } from 'react'
 
-import styles from './Header.css'
+import styles from './Header.css?inline'
 
 import i18next from 'i18next'
 const t = i18next.t.bind(i18next)

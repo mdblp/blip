@@ -29,7 +29,7 @@ import * as dblData from '../../utils/settings/diabeloopData'
 
 import { deviceName, getDeviceMeta } from '../../utils/settings/data'
 
-import styles from './Diabeloop.css'
+import styles from './Diabeloop.css?inline'
 import { CgmTable, PumpTable, Table, TerminalTable, HistoryParameterTable } from 'dumb'
 
 const t = i18next.t.bind(i18next)

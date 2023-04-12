@@ -31,7 +31,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import loginPageBackground from 'images/login-page-background-mobile.png'
+import loginPageBackground from '../../images/login-page-background-mobile.png'
 import config from '../../lib/config/config'
 import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'

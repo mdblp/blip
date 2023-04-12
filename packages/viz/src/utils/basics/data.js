@@ -17,7 +17,7 @@
 
 import _ from 'lodash'
 import moment from 'moment-timezone'
-import sundial from 'sundial'
+import { datetimeWrapper } from 'sundial'
 import crossfilter from 'crossfilter2'
 import i18next from 'i18next'
 
@@ -214,7 +214,7 @@ function buildCrossfilterUtils(dataObj, type, bgPrefs) {
   const classifiers = generateClassifiers(bgPrefs)
 
   const getLocalDate = (datum) => (
-    sundial.applyOffset(datum.normalTime, datum.displayOffset).toISOString().slice(0, 10)
+    datetimeWrapper().applyOffset(datum.normalTime, datum.displayOffset).toISOString().slice(0, 10)
   )
 
   const reduceAddMaker = (classifier) => {

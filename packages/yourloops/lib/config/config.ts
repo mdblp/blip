@@ -25,67 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
 import { type AppConfig } from './models/app-config.model'
-
-declare const BUILD_CONFIG: AppConfig | string
 
 const DUMMY_DOMAIN = 'example.com'
 const DUMMY_URL = `https://${DUMMY_DOMAIN}/`
 /** default to 30 min */
 const defaultSessionTimeout = 1800000
 
-const defaultConfig: AppConfig = {
-  VERSION: '0.0.0',
-  API_HOST: `${window.location.protocol}//${window.location.hostname}:3000`,
-  DOMAIN_NAME: window.location.hostname,
-  LATEST_TERMS: '1970-01-01',
-  LATEST_TRAINING: '1970-01-01',
-  LATEST_RELEASE: '2022-03-03',
-  SUPPORT_WEB_ADDRESS: DUMMY_URL,
-  ASSETS_URL: DUMMY_URL,
-  BRANDING: 'diabeloop_blue',
-  METRICS_SERVICE: 'disabled',
-  TERMS_PRIVACY_DATE: '',
-  STONLY_WID: 'disabled',
-  COOKIE_BANNER_CLIENT_ID: 'disabled',
-  YLP820_BASAL_TIME: 5000,
-  SESSION_TIMEOUT: defaultSessionTimeout,
-  DEV: true,
-  TEST: false,
-  CBG_BUCKETS_ENABLED: true,
-  ECPS_ENABLED: true,
-  AUTH0_DOMAIN: '',
-  AUTH0_ISSUER: '',
-  AUTH0_CLIENT_ID: '',
-  YLPZ_RA_LAD_001_FR_REV: '3',
-  YLPZ_RA_LAD_001_EN_REV: '3',
-  YLPZ_RA_LAD_001_NL_REV: '0',
-  YLPZ_RA_LAD_001_IT_REV: '0',
-  YLPZ_RA_LAD_001_ES_REV: '0',
-  YLPZ_RA_LAD_001_DE_REV: '0',
-  IDLE_TIMEOUT_MS: 1800000
-}
-const appConfig = _.assign({}, defaultConfig)
-if (_.has(window, 'config') && _.isObjectLike(_.get(window, 'config', null))) {
-  const runConfig = _.get(window, 'config', null)
-  _.assign(appConfig, runConfig)
-} else if (typeof BUILD_CONFIG === 'string') {
-  console.warn('Config not found, using build configuration')
-  const buildConfig = JSON.parse(BUILD_CONFIG) as AppConfig
-  _.assign(appConfig, buildConfig)
+let appConfig: AppConfig
+
+if (typeof window !== 'undefined') {
+  appConfig = {
+    VERSION: '0.0.0',
+    API_HOST: `${window.location.protocol}//${window.location.hostname}:3000`,
+    DOMAIN_NAME: window.location.hostname,
+    LATEST_TERMS: '1970-01-01',
+    LATEST_TRAINING: '1970-01-01',
+    LATEST_RELEASE: '2022-03-03',
+    SUPPORT_WEB_ADDRESS: DUMMY_URL,
+    ASSETS_URL: DUMMY_URL,
+    BRANDING: 'diabeloop_blue',
+    METRICS_SERVICE: 'disabled',
+    TERMS_PRIVACY_DATE: '',
+    STONLY_WID: 'disabled',
+    COOKIE_BANNER_CLIENT_ID: 'disabled',
+    YLP820_BASAL_TIME: 5000,
+    SESSION_TIMEOUT: defaultSessionTimeout,
+    DEV: true,
+    TEST: false,
+    CBG_BUCKETS_ENABLED: true,
+    ECPS_ENABLED: true,
+    AUTH0_DOMAIN: '',
+    AUTH0_ISSUER: '',
+    AUTH0_CLIENT_ID: '',
+    YLPZ_RA_LAD_001_FR_REV: '3',
+    YLPZ_RA_LAD_001_EN_REV: '3',
+    YLPZ_RA_LAD_001_NL_REV: '0',
+    YLPZ_RA_LAD_001_IT_REV: '0',
+    YLPZ_RA_LAD_001_ES_REV: '0',
+    YLPZ_RA_LAD_001_DE_REV: '0',
+    IDLE_TIMEOUT_MS: 1800000
+  }
 } else {
-  // This branch is used when testing
-  _.assign(appConfig, BUILD_CONFIG)
+  appConfig = undefined
 }
-
-_.defaults(appConfig, defaultConfig)
-
-if (!_.isString(appConfig.API_HOST)) {
-  appConfig.API_HOST = defaultConfig.API_HOST
-}
-
-_.set(window, 'config', appConfig)
 
 export { DUMMY_URL }
 export default appConfig

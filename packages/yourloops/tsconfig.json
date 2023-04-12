@@ -1,33 +1,37 @@
 {
   "compilerOptions": {
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+//    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "target": "ESNext",
     "module": "ESNext",
     "charset": "UTF-8",
     "sourceMap": true,
     "outDir": "./dist",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "diagnostics": true,
     "baseUrl": ".",
     "moduleResolution": "Node",
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "resolveJsonModule": true,
     "strict": false,
     "newLine": "lf",
     "alwaysStrict": true,
     "allowSyntheticDefaultImports": true,
+    "noEmit": true,
     "noEmitHelpers": true,
     "noEmitOnError": true,
     "noErrorTruncation": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
   },
   "exclude": ["node_modules", "test", "dist"],
   "include": ["**/*"],
   "references": [
-    {
-        "path": "../medical-domain"
-    },
-    {
-        "path": "../dumb"
-    }
+    { "path": "./tsconfig.node.json" },
+    { "path": "../medical-domain" },
+    { "path": "../dumb" }
   ]
 }

@@ -99,7 +99,7 @@ const resolve = {
 
 module.exports = {
   devtool: 'sourcemap',
-  entry: './js/index.js',
+  entry: './js/index.jsx',
   stats: 'minimal', // See https://webpack.js.org/configuration/stats/
   mode: 'development',
   module: {

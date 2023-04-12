@@ -157,7 +157,7 @@ class BasicsPrintView extends PrintView {
     this.renderCenterColumn()
   }
 
-  goToLayoutColumnPosition(index: number): void {
+  goToLayoutColumnPosition(index) {
     if (this.layoutColumns) {
       this.doc.x = this.layoutColumns.columns[index].x
       this.doc.y = this.layoutColumns.columns[index].y
@@ -165,14 +165,21 @@ class BasicsPrintView extends PrintView {
     }
   }
 
-  getActiveColumnWidth(): number {
+  getActiveColumnWidth() {
     if (!this.layoutColumns) {
       throw Error('this.layoutColumns must be defined')
     }
     return this.layoutColumns.columns[this.layoutColumns.activeIndex].width
   }
 
-  setLayoutColumns(width: number, gutter: number, type: LayoutColumnType, widths: number[]): void {
+  /**
+   * @param width {number}
+   * @param gutter {number}
+   * @param type {LayoutColumnType}
+   * @param widths {number[]}
+   * @return {void}
+   */
+  setLayoutColumns(width, gutter, type, widths) {
     const columns = buildLayoutColumns(widths, this.chartArea.width, type, this.chartArea.leftEdge, this.doc.y, gutter)
 
     this.layoutColumns = {

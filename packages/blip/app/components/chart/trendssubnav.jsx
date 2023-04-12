@@ -233,4 +233,4 @@ class TrendsSubNav extends React.Component {
   }
 }
 
-export default TrendsSubNav
+export default Trendssubnav

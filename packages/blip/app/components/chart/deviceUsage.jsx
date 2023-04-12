@@ -49,10 +49,7 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
-import {
-  GlycemiaStatisticsService
-} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
-import { TimeService } from 'medical-domain'
+import { TimeService, GlycemiaStatisticsService } from 'medical-domain'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {

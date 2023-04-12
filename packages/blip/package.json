@@ -16,8 +16,8 @@
     "prebuild-dev": "rm -rf dist",
     "build-dev": "NODE_ENV=development webpack"
   },
-  "browser": "app/index.js",
-  "main": "app/index.js",
+  "browser": "app/index.jsx",
+  "main": "app/index.jsx",
   "types": "app/index.d.ts",
   "dependencies": {
     "classnames": "^2.3.1",

@@ -28,7 +28,7 @@
 
 import _ from 'lodash'
 
-import warmUpDexcom from 'warmup-dexcom.svg'
+import warmUpDexcom from '../../../../branding/warmup/warmup-dexcom.svg'
 import utils from './util/utils'
 
 /**

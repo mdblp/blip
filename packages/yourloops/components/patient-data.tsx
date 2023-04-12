@@ -45,6 +45,7 @@ import DialogPDFOptions from './dialogs/pdf-print-options'
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { type Patient } from '../lib/patient/models/patient.model'
 import { useUserName } from '../lib/custom-hooks/user-name.hook'
+import BlipPatientData from '../../blip/app/components/patient-data.jsx'
 
 const patientDataStyles = makeStyles()(() => {
   return {
@@ -139,18 +140,27 @@ function PatientDataPage(): JSX.Element | null {
 
   return (
     <Container className={classes.container} maxWidth={false}>
-      <Blip
+      <BlipPatientData
+        key={patient.userid}
         api={blipApi}
-        config={appConfig}
-        navigate={navigate}
-        pathName={pathName}
         patient={patient}
         setPatient={setPatient}
+        pathName={pathName}
         prefixURL={prefixURL}
-        dialogDatePicker={DialogDatePicker}
-        dialogRangeDatePicker={DialogRangeDatePicker}
-        dialogPDFOptions={DialogPDFOptions}
+        navigate={navigate}
       />
+      {/*<Blip*/}
+      {/*  api={blipApi}*/}
+      {/*  config={appConfig}*/}
+      {/*  navigate={navigate}*/}
+      {/*  pathName={pathName}*/}
+      {/*  patient={patient}*/}
+      {/*  setPatient={setPatient}*/}
+      {/*  prefixURL={prefixURL}*/}
+      {/*  dialogDatePicker={DialogDatePicker}*/}
+      {/*  dialogRangeDatePicker={DialogRangeDatePicker}*/}
+      {/*  dialogPDFOptions={DialogPDFOptions}*/}
+      {/*/>*/}
     </Container>
   )
 }

@@ -18,7 +18,7 @@
 import _ from 'lodash'
 import crossfilter from 'crossfilter2'
 
-import sundial from 'sundial'
+import { datetimeWrapper } from 'sundial'
 
 import { MGDL_UNITS } from '../../../../js/data/util/constants'
 import { getLatestPumpUpload } from '../../../../js/data/util/device'
@@ -135,7 +135,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
     _buildCrossfilterUtils: function(dataObj, type) {
 
       function getLocalDate(d) {
-        return sundial.applyOffset(d.normalTime, d.displayOffset).toISOString().slice(0,10)
+        return datetimeWrapper().applyOffset(d.normalTime, d.displayOffset).toISOString().slice(0,10)
       }
 
       function reduceAddMaker(classifier) {

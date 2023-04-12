@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * API utils for ../components/patient-data.js
- * This code used to be directly in patient-data.js
+ * API utils for ../components/patient-data.jsx
+ * This code used to be directly in patient-data.jsx
  * But the scope of it feet better in a wrapper
  *
  * All rights reserved.

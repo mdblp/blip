@@ -24,27 +24,48 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { type FunctionComponent } from 'react'
-import { t } from 'i18next'
-import { SimpleStat, StatFormats } from 'dumb'
-import Box from '@mui/material/Box'
 
-interface GlucoseManagementIndicatorProps {
-  glucoseManagementIndicator: number
-}
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
+import cjs from '@rollup/plugin-commonjs'
+import { VitePluginNode } from 'vite-plugin-node'
+import * as path from 'path'
 
-export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
-  const { glucoseManagementIndicator } = props
-  const annotations = glucoseManagementIndicator ? [t('glucose-management-indicator-tooltip')] : [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
-
-  return (
-    <Box data-testid="glucose-management-indicator-stat">
-      <SimpleStat
-        annotations={annotations}
-        title={t('glucose-management-indicator-title')}
-        value={glucoseManagementIndicator}
-        summaryFormat={StatFormats.Gmi}
-        total={0}
-      />
-    </Box>)
-}
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react(), VitePluginNode({ adapter: 'express', appPath: '.' })],
+  build: {
+    // commonjsOptions: { transformMixedEsModules: true }
+  },
+  optimizeDeps: {
+    disabled: false,
+    esbuildOptions: {
+      // define: {
+      //   global: 'globalThis'
+      // },
+      plugins: [
+        // NodeGlobalsPolyfillPlugin({ buffer: true, process: true }),
+        // NodeModulesPolyfillPlugin()
+      ]
+    }
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './')
+    }
+  },
+  esbuild: {
+    jsxFactory: 'h',
+    jsxFragment: 'Fragment'
+  },
+  define: {
+    'process.env': process.env
+  },
+  server: {
+    host: 'localhost',
+    port: 3001
+  }
+})

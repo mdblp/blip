@@ -17,7 +17,7 @@
 import i18next from 'i18next'
 import _ from 'lodash'
 
-import lockIcon from 'lock.svg'
+import lockIcon from '../../../../branding/icons/lock.svg'
 import utils from './util/utils'
 
 /**

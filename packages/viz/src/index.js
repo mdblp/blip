@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-import './styles/colors.css'
+import './styles/colors.css?inline'
 
 import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'

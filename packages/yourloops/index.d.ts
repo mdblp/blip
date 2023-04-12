@@ -24,27 +24,5 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { type FunctionComponent } from 'react'
-import { t } from 'i18next'
-import { SimpleStat, StatFormats } from 'dumb'
-import Box from '@mui/material/Box'
 
-interface GlucoseManagementIndicatorProps {
-  glucoseManagementIndicator: number
-}
-
-export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
-  const { glucoseManagementIndicator } = props
-  const annotations = glucoseManagementIndicator ? [t('glucose-management-indicator-tooltip')] : [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
-
-  return (
-    <Box data-testid="glucose-management-indicator-stat">
-      <SimpleStat
-        annotations={annotations}
-        title={t('glucose-management-indicator-title')}
-        value={glucoseManagementIndicator}
-        summaryFormat={StatFormats.Gmi}
-        total={0}
-      />
-    </Box>)
-}
+declare module 'yourloops'

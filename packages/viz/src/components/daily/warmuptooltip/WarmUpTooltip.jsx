@@ -23,8 +23,8 @@ import moment from 'moment-timezone'
 
 import { getHourMinuteFormat } from '../../../utils/datetime'
 import { Tooltip } from 'dumb'
-import colors from '../../../styles/colors.css'
-import styles from './WarmUpTooltip.css'
+import colors from '../../../styles/colors.css?inline'
+import styles from './WarmUpTooltip.css?inline'
 
 function WarmUpTooltip(props) {
   const { datum, timePrefs, title } = props

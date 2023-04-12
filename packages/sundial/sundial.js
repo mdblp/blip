@@ -20,7 +20,7 @@
 
 const moment = require('moment-timezone')
 
-const datetimeWrapper = function() {
+export const datetimeWrapper = function() {
   const timezoneNames = {}
   moment.tz.names().forEach(function(name) {
     timezoneNames[name] = true
@@ -43,5 +43,3 @@ const datetimeWrapper = function() {
     }
   }
 }
-
-module.exports = datetimeWrapper()

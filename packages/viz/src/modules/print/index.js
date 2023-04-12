@@ -23,9 +23,8 @@ import blobStream from 'blob-stream'
 import BasicsPrintView from './BasicsPrintView'
 import DailyPrintView from './DailyPrintView'
 import { reshapeBgClassesToBgBounds } from '../../utils/bloodglucose'
-import { PrintView, SettingsPrintView } from 'dumb'
+import { PrintView, SettingsPrintView, renderPageNumbers } from 'dumb'
 
-import { renderPageNumbers } from 'dumb/src/utils/pdf/pdf.util'
 import { getPatientFullName } from '../../utils/misc'
 import * as constants from './utils/constants'
 import { arrayBufferToBase64 } from './utils/functions'
@@ -36,8 +35,8 @@ import siteChangeCannulaImage from './images/sitechange-cannula.png'
 import siteChangeReservoirImage from './images/sitechange-reservoir.png'
 import siteChangeTubingImage from './images/sitechange-tubing.png'
 import siteChangeReservoirDiabeloopImage from './images/diabeloop/sitechange-cartridge.png'
-import jaFontRegular from 'jaFont-Regular.ttf'
-import jaFontBold from 'jaFont-Bold.ttf'
+import jaFontRegular from '../../../../../branding/fonts/noto/NotoSerifJP-Regular.ttf'
+import jaFontBold from '../../../../../branding/fonts/noto/NotoSerifJP-Bold.ttf'
 
 const t = i18next.t.bind(i18next)
 

@@ -19,9 +19,9 @@ import _ from 'lodash'
 import moment from 'moment-timezone'
 import { extent } from 'd3-array'
 
-import { getBasalSequences, getGroupDurations } from '../../utils/basal'
-import { getLatestPumpUpload, isAutomatedBasalDevice } from '../../utils/device'
-import { commonStats, statFetchMethods, getStatDefinition } from '../../utils/stat'
+import { getBasalSequences, getGroupDurations } from '../basal'
+import { getLatestPumpUpload, isAutomatedBasalDevice } from '../device'
+import { commonStats, statFetchMethods, getStatDefinition } from '../stat'
 
 /**
  * @typedef { import("../data").default } DataUtil
@@ -142,7 +142,7 @@ export function selectDailyViewData(medicalData, startDate, endDate) {
   const dailyDataTypes = ['basal', 'bolus', 'cbg', 'meals', 'message', 'smbg', 'uploads', 'physicalActivities']
   const current = startDate.clone()
 
-  // Partially compute in patient-data.js in blip
+  // Partially compute in patient-data.jsx in blip
 
   const dataByDate = {}
   const lastDayPlusOne = endDate.clone().add(1, 'day').format('YYYY-MM-DD')

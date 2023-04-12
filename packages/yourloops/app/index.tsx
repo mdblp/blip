@@ -64,5 +64,5 @@ i18nInit().then(() => {
   initAxios()
   initTheme()
 
-  ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, div)
+  ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, document.getElementById('app'))
 })

@@ -27,11 +27,15 @@
 
 import { createTheme, type Theme } from '@mui/material/styles'
 import config from '../lib/config/config'
-import MuseoSlabRegular from 'Museo_Slab/Museo_Slab_Regular.otf'
-import MuseoSlabBold from 'Museo_Slab/Museo_Slab_Bold.otf'
+import MuseoSlabRegular from '../../../branding/fonts/museo-slab/Museo_Slab_Regular.otf'
+import MuseoSlabBold from '../../../branding/fonts/museo-slab/Museo_Slab_Bold.otf'
 
 const DEFAULT_COLOR = '#000'
-const appElement = document.getElementById('app')
+let appElement: HTMLElement
+
+if (typeof document !== 'undefined') {
+  appElement = document.getElementById('app')
+}
 
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
 const getColor = (variable: string): string => appElement ? cssVar(variable) : DEFAULT_COLOR

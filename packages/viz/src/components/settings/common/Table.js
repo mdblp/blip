@@ -19,7 +19,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 
-import styles from './Table.css'
+import styles from './Table.css?inline'
 
 class Table extends React.Component {
   getItemField(item, field) {

@@ -36,14 +36,18 @@ import { type Country } from './auth/models/country.model'
 import getLocale from './browser-locale'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
-import { type LanguageCodes } from './auth/models/enums/language-codes.enum'
+import { LanguageCodes } from './auth/models/enums/language-codes.enum'
 
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
   return { code: key, name: item.name } as Country
 })
 
-let language: LanguageCodes = (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
+let language: LanguageCodes = LanguageCodes.En
+
+if (typeof localStorage !== 'undefined') {
+  language = (localStorage.getItem('lang') || getLocale()) as LanguageCodes
+}
 
 function refreshLanguage(language: LanguageCodes): void {
   zendeskLocale(language)

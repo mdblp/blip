@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent } from 'react'
-import { SimpleStat } from 'dumb'
-import { StatFormats } from 'dumb/src/models/stats.model'
+import { SimpleStat, StatFormats } from 'dumb'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
 
