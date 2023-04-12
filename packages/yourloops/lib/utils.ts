@@ -157,7 +157,7 @@ export function formatDateWithMomentLongFormat(date?: Date): string {
   return moment.utc(date).format(moment.localeData().longDateFormat('ll')).toString()
 }
 
-export function formatAlarmSettingThreshold(value: number): string {
+export function formatMonitoringAlertSettingThreshold(value: number): string {
   return `${Math.round(value * 10) / 10}%`
 }
 

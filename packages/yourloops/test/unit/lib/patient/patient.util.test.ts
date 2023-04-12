@@ -33,7 +33,7 @@ import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-inv
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 import { Unit } from 'medical-domain'
 
-const defaultAlarms = {
+const defaultMonitoringAlerts = {
   timeSpentAwayFromTargetRate: 10,
   timeSpentAwayFromTargetActive: false,
   frequencyOfSevereHypoglycemiaRate: 20,
@@ -56,18 +56,18 @@ const acceptedPatientTeam = createPatientTeam('patientTeamAccepted', UserInvitat
 const pendingPatientTeam = createPatientTeam('patientTeamPending', UserInvitationStatus.pending)
 
 const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', [acceptedPatientTeam], undefined, undefined, undefined, undefined, {
-  ...defaultAlarms,
+  ...defaultMonitoringAlerts,
   timeSpentAwayFromTargetActive: true
 })
 const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', [acceptedPatientTeam], undefined, undefined, undefined, undefined, {
-  ...defaultAlarms,
+  ...defaultMonitoringAlerts,
   frequencyOfSevereHypoglycemiaActive: true
 })
 const patientWithNoDataAlert = createPatient('noData', [acceptedPatientTeam], undefined, undefined, undefined, undefined, {
-  ...defaultAlarms,
+  ...defaultMonitoringAlerts,
   nonDataTransmissionActive: true
 })
-const noAlersPatient = createPatient('nothing', [acceptedPatientTeam], undefined, undefined, undefined, undefined, defaultAlarms)
+const noAlersPatient = createPatient('nothing', [acceptedPatientTeam], undefined, undefined, undefined, undefined, defaultMonitoringAlerts)
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {

@@ -26,7 +26,7 @@
  */
 
 import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
-import { type Alarms } from '../../lib/patient/models/alarms.model'
+import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import { type MedicalData } from '../../lib/data/models/medical-data.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type MedicalTableValues } from './models/medical-table-values.model'
@@ -79,7 +79,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
-    alarms: iTeamMember.alarms ?? {} as Alarms,
+    alarms: iTeamMember.alarms ?? {} as MonitoringAlerts,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
