@@ -39,18 +39,18 @@ import { PatientListColumns } from './enums/patient-list.enum'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../../lib/auth'
+import Box from '@mui/material/Box'
 
 interface ColumnSelectorPopoverProps {
   anchorEl: Element
   onClose: () => void
 }
 
-interface ColumnTogglesDefinition {
+interface ColumnToggleDefinition {
   name: PatientListColumns
-  ariaLabel: string
   checked: boolean
   disabled?: boolean
-  label: string
+  hcpOnly?: true
   tooltip?: string
 }
 
@@ -61,56 +61,42 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
   const { displayedColumns, setDisplayedColumns } = usePatientListContext()
   const [updatedColumnsModel, setUpdatedColumnsModel] = useState<GridColumnVisibilityModel>({ ...displayedColumns })
 
-  const columnToggles: ColumnTogglesDefinition[] = [
+  const columnToggles: ColumnToggleDefinition[] = [
     {
       name: PatientListColumns.Patient,
-      ariaLabel: t(PatientListColumns.Patient),
       checked: true,
       disabled: true,
-      label: t(PatientListColumns.Patient),
       tooltip: t('un-removable-column')
     },
     {
       name: PatientListColumns.System,
-      ariaLabel: t(PatientListColumns.System),
-      checked: updatedColumnsModel[PatientListColumns.System],
-      label: t(PatientListColumns.System)
+      checked: updatedColumnsModel[PatientListColumns.System]
     },
     {
       name: PatientListColumns.TimeOutOfRange,
-      ariaLabel: t(PatientListColumns.TimeOutOfRange),
       checked: updatedColumnsModel[PatientListColumns.TimeOutOfRange],
-      label: t(PatientListColumns.TimeOutOfRange)
+      hcpOnly: true
     },
     {
       name: PatientListColumns.DataNotTransferred,
-      ariaLabel: t(PatientListColumns.DataNotTransferred),
       checked: updatedColumnsModel[PatientListColumns.DataNotTransferred],
-      label: t(PatientListColumns.DataNotTransferred)
+      hcpOnly: true
     },
     {
       name: PatientListColumns.SevereHypoglycemia,
-      ariaLabel: t(PatientListColumns.SevereHypoglycemia),
       checked: updatedColumnsModel[PatientListColumns.SevereHypoglycemia],
-      label: t(PatientListColumns.SevereHypoglycemia)
+      hcpOnly: true
     },
     {
       name: PatientListColumns.LastDataUpdate,
-      ariaLabel: t(PatientListColumns.LastDataUpdate),
-      checked: updatedColumnsModel[PatientListColumns.LastDataUpdate],
-      label: t(PatientListColumns.LastDataUpdate)
+      checked: updatedColumnsModel[PatientListColumns.LastDataUpdate]
+    },
+    {
+      name: PatientListColumns.Messages,
+      checked: updatedColumnsModel[PatientListColumns.Messages],
+      hcpOnly: true
     }
   ]
-
-  if (user.isUserHcp()) {
-    columnToggles.push(
-      {
-        name: PatientListColumns.Messages,
-        ariaLabel: t(PatientListColumns.Messages),
-        checked: updatedColumnsModel[PatientListColumns.Messages],
-        label: t(PatientListColumns.Messages)
-      })
-  }
 
   const updateColumnVisibility = (column: PatientListColumns): void => {
     setUpdatedColumnsModel(prevState => ({ ...prevState, [column]: !prevState[column] }))
@@ -135,17 +121,20 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       <CardContent>
         <Typography variant="h6">{t('show-column')}</Typography>
         {columnToggles.map((toggle, index) => (
-          <PatientListOptionToggle
-            key={index}
-            ariaLabel={toggle.ariaLabel}
-            checked={toggle.checked}
-            disabled={toggle.disabled}
-            label={toggle.label}
-            tooltip={toggle.tooltip}
-            onToggleChange={() => {
-              updateColumnVisibility(toggle.name)
-            }}
-          />
+          <Box key={index}>
+            {(user.isUserHcp() || (user.isUserCaregiver() && !toggle.hcpOnly)) &&
+              <PatientListOptionToggle
+                ariaLabel={t(toggle.name)}
+                checked={toggle.checked}
+                disabled={toggle.disabled}
+                label={t(toggle.name)}
+                tooltip={toggle.tooltip}
+                onToggleChange={() => {
+                  updateColumnVisibility(toggle.name)
+                }}
+              />
+            }
+          </Box>
         ))}
       </CardContent>
       <Divider variant="middle" />

@@ -90,34 +90,32 @@ export const PatientList: FunctionComponent = () => {
       />
 
       <Box data-testid="patient-list-grid">
-        {gridApiRef &&
-          <DataGrid
-            columns={columns}
-            rows={rowsProps}
-            apiRef={gridApiRef}
-            autoHeight
-            disableColumnMenu
-            disableColumnFilter
-            disableColumnSelector
-            disableRowSelectionOnClick
-            disableVirtualization={process.env.NODE_ENV === 'test'}
-            columnVisibilityModel={displayedColumns}
-            sortModel={sortModel}
-            onSortModelChange={setSortModel}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
-            pageSizeOptions={[5, 10, 25]}
-            sx={{
-              borderRadius: 0,
-              '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' }
-            }}
-            slots={{
-              noRowsOverlay: NoPatientMessage,
-              footer: PatientListCustomFooter
-            }}
-          />
-        }
+        <DataGrid
+          columns={columns}
+          rows={rowsProps}
+          apiRef={gridApiRef}
+          autoHeight
+          disableColumnMenu
+          disableColumnFilter
+          disableColumnSelector
+          disableRowSelectionOnClick
+          disableVirtualization={process.env.NODE_ENV === 'test'}
+          columnVisibilityModel={displayedColumns}
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
+          pageSizeOptions={[5, 10, 25]}
+          sx={{
+            borderRadius: 0,
+            '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' }
+          }}
+          slots={{
+            noRowsOverlay: NoPatientMessage,
+            footer: PatientListCustomFooter
+          }}
+        />
       </Box>
 
       {patientToRemoveForHcp &&

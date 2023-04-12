@@ -51,9 +51,9 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: true,
     [PatientListColumns.Patient]: true,
-    [PatientListColumns.TimeOutOfRange]: true,
-    [PatientListColumns.SevereHypoglycemia]: true,
-    [PatientListColumns.DataNotTransferred]: true,
+    [PatientListColumns.TimeOutOfRange]: user.isUserHcp() ?? false,
+    [PatientListColumns.SevereHypoglycemia]: user.isUserHcp() ?? false,
+    [PatientListColumns.DataNotTransferred]: user.isUserHcp() ?? false,
     [PatientListColumns.LastDataUpdate]: true,
     [PatientListColumns.Messages]: user.isUserHcp() ?? false,
     [PatientListColumns.Actions]: true
