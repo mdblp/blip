@@ -27,31 +27,12 @@
 
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
-import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
-import cjs from '@rollup/plugin-commonjs'
 import { VitePluginNode } from 'vite-plugin-node'
 import * as path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), VitePluginNode({ adapter: 'express', appPath: '.' })],
-  build: {
-    // commonjsOptions: { transformMixedEsModules: true }
-  },
-  optimizeDeps: {
-    disabled: false,
-    esbuildOptions: {
-      // define: {
-      //   global: 'globalThis'
-      // },
-      plugins: [
-        // NodeGlobalsPolyfillPlugin({ buffer: true, process: true }),
-        // NodeModulesPolyfillPlugin()
-      ]
-    }
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './')
