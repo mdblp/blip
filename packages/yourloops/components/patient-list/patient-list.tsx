@@ -30,7 +30,6 @@ import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
 import {
   DataGrid,
-  type GridColumnVisibilityModel,
   type GridPaginationModel,
   type GridSortModel
 } from '@mui/x-data-grid'
@@ -41,18 +40,16 @@ import RemovePatientDialog from '../patient/remove-patient-dialog'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
 import { PatientListCustomFooter } from './patient-list-custom-footer'
 import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
-import { useAuth } from '../../lib/auth'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
+import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 
 export const PatientList: FunctionComponent = () => {
   const { t } = useTranslation()
-  const { user } = useAuth()
   const theme = useTheme()
   const {
     columns,
     selectedTab,
-    gridApiRef,
     inputSearch,
     patientsDisplayedCount,
     patientToRemoveForHcp,
@@ -63,27 +60,10 @@ export const PatientList: FunctionComponent = () => {
     onRowClick,
     setInputSearch
   } = usePatientListHook()
+  const { gridApiRef, displayedColumns } = usePatientListContext()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
-  const [columnsVisibility, setColumnsVisibility] = useState<GridColumnVisibilityModel>({
-    [PatientListColumns.Flag]: true,
-    [PatientListColumns.System]: true,
-    [PatientListColumns.Patient]: true,
-    [PatientListColumns.TimeOutOfRange]: true,
-    [PatientListColumns.SevereHypoglycemia]: true,
-    [PatientListColumns.DataNotTransferred]: true,
-    [PatientListColumns.LastDataUpdate]: true,
-    [PatientListColumns.Messages]: user.isUserHcp() ?? false,
-    [PatientListColumns.Actions]: true
-  })
-
-  // TODO relates to YLP-2154 https://diabeloop.atlassian.net/browse/YLP-2154
-  //  This function handles the switch between column visibility.
-  //  Add it when a toggle will be switched for a column
-  // const toggleColumnVisibility = (columnName: PatientListColumns): void => {
-  //   gridApiRef.current.setColumnVisibility(columnName, !columnsVisibility[columnName])
-  // }
 
   const NoPatientMessage = (): JSX.Element => {
     return (
@@ -110,33 +90,34 @@ export const PatientList: FunctionComponent = () => {
       />
 
       <Box data-testid="patient-list-grid">
-        <DataGrid
-          columns={columns}
-          rows={rowsProps}
-          apiRef={gridApiRef}
-          autoHeight
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          disableRowSelectionOnClick
-          disableVirtualization={process.env.NODE_ENV === 'test'}
-          columnVisibilityModel={columnsVisibility}
-          onColumnVisibilityModelChange={setColumnsVisibility}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
-          pageSizeOptions={[5, 10, 25]}
-          sx={{
-            borderRadius: 0,
-            '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' }
-          }}
-          slots={{
-            noRowsOverlay: NoPatientMessage,
-            footer: PatientListCustomFooter
-          }}
-        />
+        {gridApiRef &&
+          <DataGrid
+            columns={columns}
+            rows={rowsProps}
+            apiRef={gridApiRef}
+            autoHeight
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
+            disableRowSelectionOnClick
+            disableVirtualization={process.env.NODE_ENV === 'test'}
+            columnVisibilityModel={displayedColumns}
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
+            pageSizeOptions={[5, 10, 25]}
+            sx={{
+              borderRadius: 0,
+              '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' }
+            }}
+            slots={{
+              noRowsOverlay: NoPatientMessage,
+              footer: PatientListCustomFooter
+            }}
+          />
+        }
       </Box>
 
       {patientToRemoveForHcp &&

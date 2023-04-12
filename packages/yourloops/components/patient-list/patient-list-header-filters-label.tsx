@@ -32,7 +32,7 @@ import Divider from '@mui/material/Divider'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import { usePatientsFiltersContext } from '../../lib/providers/patient-list.provider'
+import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import Link from '@mui/material/Link'
 import { usePatientListHeaderFiltersLabelHook } from './patient-list-header-filters-label.hook'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -57,7 +57,7 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
   const theme = useTheme()
   const { t } = useTranslation()
   const { classes } = useStyles()
-  const { filters, resetFilters, hasAnyNonPendingFiltersEnabled } = usePatientsFiltersContext()
+  const { filters, resetFilters, hasAnyNonPendingFiltersEnabled } = usePatientListContext()
   const { allPatientsForSelectedTeamCount } = usePatientContext()
 
   const { filtersLabel } = usePatientListHeaderFiltersLabelHook({

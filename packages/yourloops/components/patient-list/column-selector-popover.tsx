@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Button from '@mui/material/Button'
@@ -34,16 +34,92 @@ import Popover from '@mui/material/Popover'
 import Divider from '@mui/material/Divider'
 import DialogActions from '@mui/material/DialogActions'
 import CardContent from '@mui/material/CardContent'
-import { PatientsListOptionToggle } from './patients-list-option-toggle'
+import { PatientListOptionToggle } from './patient-list-option-toggle'
+import { PatientListColumns } from './enums/patient-list.enum'
+import { usePatientListContext } from '../../lib/providers/patient-list.provider'
+import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
+import { useAuth } from '../../lib/auth'
 
 interface ColumnSelectorPopoverProps {
   anchorEl: Element
   onClose: () => void
 }
 
+interface ColumnTogglesDefinition {
+  name: PatientListColumns
+  ariaLabel: string
+  checked: boolean
+  disabled?: boolean
+  label: string
+  tooltip?: string
+}
+
 export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps> = (props) => {
   const { anchorEl, onClose } = props
+  const { user } = useAuth()
   const { t } = useTranslation()
+  const { displayedColumns, setDisplayedColumns } = usePatientListContext()
+  const [updatedColumnsModel, setUpdatedColumnsModel] = useState<GridColumnVisibilityModel>({ ...displayedColumns })
+
+  const columnToggles: ColumnTogglesDefinition[] = [
+    {
+      name: PatientListColumns.Patient,
+      ariaLabel: t(PatientListColumns.Patient),
+      checked: true,
+      disabled: true,
+      label: t(PatientListColumns.Patient),
+      tooltip: t('un-removable-column')
+    },
+    {
+      name: PatientListColumns.System,
+      ariaLabel: t(PatientListColumns.System),
+      checked: updatedColumnsModel[PatientListColumns.System],
+      label: t(PatientListColumns.System)
+    },
+    {
+      name: PatientListColumns.TimeOutOfRange,
+      ariaLabel: t(PatientListColumns.TimeOutOfRange),
+      checked: updatedColumnsModel[PatientListColumns.TimeOutOfRange],
+      label: t(PatientListColumns.TimeOutOfRange)
+    },
+    {
+      name: PatientListColumns.DataNotTransferred,
+      ariaLabel: t(PatientListColumns.DataNotTransferred),
+      checked: updatedColumnsModel[PatientListColumns.DataNotTransferred],
+      label: t(PatientListColumns.DataNotTransferred)
+    },
+    {
+      name: PatientListColumns.SevereHypoglycemia,
+      ariaLabel: t(PatientListColumns.SevereHypoglycemia),
+      checked: updatedColumnsModel[PatientListColumns.SevereHypoglycemia],
+      label: t(PatientListColumns.SevereHypoglycemia)
+    },
+    {
+      name: PatientListColumns.LastDataUpdate,
+      ariaLabel: t(PatientListColumns.LastDataUpdate),
+      checked: updatedColumnsModel[PatientListColumns.LastDataUpdate],
+      label: t(PatientListColumns.LastDataUpdate)
+    }
+  ]
+
+  if (user.isUserHcp()) {
+    columnToggles.push(
+      {
+        name: PatientListColumns.Messages,
+        ariaLabel: t(PatientListColumns.Messages),
+        checked: updatedColumnsModel[PatientListColumns.Messages],
+        label: t(PatientListColumns.Messages)
+      })
+  }
+
+  const updateColumnVisibility = (column: PatientListColumns): void => {
+    setUpdatedColumnsModel(prevState => ({ ...prevState, [column]: !prevState[column] }))
+  }
+
+  const refreshDisplayedColumns = (): void => {
+    setDisplayedColumns(updatedColumnsModel)
+    onClose()
+  }
 
   return (
     <Popover
@@ -58,15 +134,19 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
     >
       <CardContent>
         <Typography variant="h6">{t('show-column')}</Typography>
-        <PatientsListOptionToggle
-          ariaLabel={t('patient')}
-          checked
-          disabled
-          label={t('patient')}
-          onToggleChange={() => {
-            console.log('coucou')
-          }}
-        />
+        {columnToggles.map((toggle, index) => (
+          <PatientListOptionToggle
+            key={index}
+            ariaLabel={toggle.ariaLabel}
+            checked={toggle.checked}
+            disabled={toggle.disabled}
+            label={toggle.label}
+            tooltip={toggle.tooltip}
+            onToggleChange={() => {
+              updateColumnVisibility(toggle.name)
+            }}
+          />
+        ))}
       </CardContent>
       <Divider variant="middle" />
       <DialogActions>
@@ -80,6 +160,7 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
           variant="contained"
           color="primary"
           disableElevation
+          onClick={refreshDisplayedColumns}
         >
           {t('button-apply')}
         </Button>

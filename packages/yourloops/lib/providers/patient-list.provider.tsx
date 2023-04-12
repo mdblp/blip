@@ -37,6 +37,6 @@ export const PatientListProvider: FunctionComponent<PropsWithChildren> = ({ chil
   return <PatientListContext.Provider value={result}>{children}</PatientListContext.Provider>
 }
 
-export function usePatientsFiltersContext(): PatientListContextResult {
+export function usePatientListContext(): PatientListContextResult {
   return useContext(PatientListContext)
 }

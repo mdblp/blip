@@ -31,6 +31,8 @@ import Switch from '@mui/material/Switch'
 import { makeStyles } from 'tss-react/mui'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
+import Tooltip from '@mui/material/Tooltip'
+import Box from '@mui/material/Box'
 
 interface PatientsFiltersToggleProps {
   ariaLabel: string
@@ -38,34 +40,48 @@ interface PatientsFiltersToggleProps {
   disabled?: boolean
   icon?: JSX.Element
   label: string
-  onToggleChange: () => void
+  onToggleChange?: () => void
+  tooltip?: string
 }
 
-const useStyles = makeStyles()(() => ({
+const useStyles = makeStyles()((theme) => ({
   label: {
-    maxWidth: '200px'
+    maxWidth: '200px',
+    marginLeft: theme.spacing(1)
   },
   toggle: {
     marginLeft: 'auto'
   }
 }))
 
-export const PatientsListOptionToggle: FunctionComponent<PatientsFiltersToggleProps> = (props) => {
-  const { ariaLabel, checked, disabled, icon, label, onToggleChange } = props
+export const PatientListOptionToggle: FunctionComponent<PatientsFiltersToggleProps> = (props) => {
+  const { ariaLabel, checked, disabled, icon, label, onToggleChange, tooltip } = props
   const { classes } = useStyles()
   const theme = useTheme()
 
   return (
-    <Stack direction="row" alignItems="center" gap={1} marginBottom={theme.spacing(1)}>
-      {icon}
-      <Typography variant="subtitle1" className={classes.label}>{label}</Typography>
-      <Switch
-        aria-label={ariaLabel}
-        className={classes.toggle}
-        checked={checked}
-        disabled={disabled}
-        onChange={onToggleChange}
-      />
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      gap={1}
+      marginBottom={theme.spacing(1)}
+    >
+        <Box display="flex" alignItems="center">
+          {icon}
+          <Typography variant="subtitle1" className={classes.label}>{label}</Typography>
+        </Box>
+        <Tooltip title={tooltip}>
+          <Box>
+            <Switch
+              aria-label={ariaLabel}
+              className={classes.toggle}
+              checked={checked}
+              disabled={disabled}
+              onChange={onToggleChange}
+            />
+          </Box>
+        </Tooltip>
     </Stack>
   )
 }

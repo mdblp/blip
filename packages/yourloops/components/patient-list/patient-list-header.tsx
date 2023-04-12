@@ -49,8 +49,8 @@ import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import Tooltip from '@mui/material/Tooltip'
-import { usePatientsFiltersContext } from '../../lib/providers/patient-list.provider'
-import { PatientsFiltersPopover } from './patients-filters-popover'
+import { usePatientListContext } from '../../lib/providers/patient-list.provider'
+import { PatientFiltersPopover } from './patient-filters-popover'
 import { PatientListHeaderFiltersLabel } from './patient-list-header-filters-label'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import TeamUtils from '../../lib/team/team.util'
@@ -94,7 +94,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { user } = useAuth()
   const { classes } = useStyles()
   const { pendingPatientsCount } = usePatientContext()
-  const { filters } = usePatientsFiltersContext()
+  const { filters } = usePatientListContext()
   const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [isColumnSelectorOpened, setIsColumnSelectorOpened] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
@@ -264,7 +264,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
         />
       }
       {isFiltersDialogOpen &&
-        <PatientsFiltersPopover
+        <PatientFiltersPopover
           anchorEl={filtersRef.current}
           onClose={closeFiltersDialog}
         />

@@ -89,7 +89,7 @@ describe('Patient hook', () => {
         refresh: refreshTeamsMock
       }
     });
-    (patientFilterHookMock.usePatientsFiltersContext as jest.Mock).mockImplementation(() => {
+    (patientFilterHookMock.usePatientListContext as jest.Mock).mockImplementation(() => {
       return {
         filters: {
           pendingEnabled: false,

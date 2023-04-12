@@ -25,10 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import * as authHookMock from '../../../../lib/auth'
 import { act, renderHook } from '@testing-library/react-hooks'
 import { usePatientListProviderHook } from '../../../../lib/providers/patient-list.provider.hook'
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
+import type User from '../../../../lib/auth/models/user.model'
 
+jest.mock('../../../../lib/auth')
 describe('usePatientListProviderHook', () => {
   const defaultFilters: PatientsFilters = {
     pendingEnabled: false,
@@ -49,6 +52,12 @@ describe('usePatientListProviderHook', () => {
     dataNotTransferredEnabled: true,
     messagesEnabled: true
   }
+
+  beforeAll(() => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { isUserHcp: () => true } as User }
+    })
+  })
 
   describe('filters', () => {
     it('should all be initialized at false', () => {
