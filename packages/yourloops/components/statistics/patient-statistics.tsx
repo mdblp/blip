@@ -61,7 +61,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const {
     standardDeviation,
-    averageGlucose
+    averageGlucose,
+    total
   } = GlycemiaStatisticsService.getStandardDevData(medicalData.cbg || medicalData.smbg, dateFilter)
 
   const {
@@ -84,7 +85,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <StandartDeviationStat bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
+      <StandartDeviationStat total={total} bgsource={bgSource} bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
       {cbgSelected &&
         <>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />

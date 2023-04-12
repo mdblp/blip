@@ -28,26 +28,36 @@ import React, { type FunctionComponent } from 'react'
 import { type BgPrefs, CBGStandardDeviation } from '../../../index'
 import Box from '@mui/material/Box'
 import { t } from 'i18next'
+import { type BgType, DatumType } from 'medical-domain'
 
 export interface StandartDeviationProps {
   bgpref: BgPrefs
+  bgsource: BgType
   averageGlucose: number
   standardDeviation: number
+  total: number
 }
 
 export const StandartDeviationStat: FunctionComponent<StandartDeviationProps> = (props) => {
-  const { standardDeviation, averageGlucose, bgpref } = props
+  const { standardDeviation, averageGlucose, total, bgpref, bgsource } = props
 
   const dataFormat = (data: number): number => {
     return Math.round(data)
   }
+  const annotation = ()=> {
+    if (standardDeviation && averageGlucose && bgsource === DatumType.Cbg) {
+      return [t('standard-deviation-tooltip')]
+    } else if (standardDeviation && averageGlucose && bgsource === DatumType.Smbg){
+      return [t('standard-deviation-tooltip'), t('tooltip-empty-SMBG-data', { total: total, smbgLabel:t('')]
+    }
+  }
 
-  const annotation = standardDeviation && averageGlucose ? [t('')] : [t(''), t('')]
+  // const annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip')] : [t('standard-deviation-tooltip'), t('')]
 
   return (
     <Box data-test-id="standart-deviation-stat">
       <CBGStandardDeviation
-        annotations={annotation}
+        annotations={[annotation]}
         averageGlucose={dataFormat(averageGlucose)}
         bgClasses={bgpref.bgClasses}
         standardDeviation={dataFormat(standardDeviation)}
