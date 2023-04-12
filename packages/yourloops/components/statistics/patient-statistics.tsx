@@ -26,13 +26,15 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType, StandartDeviationStat } from 'dumb'
 import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService } from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
+import {
+  GlycemiaStatisticsService
+} from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 
@@ -58,6 +60,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const {
+    standardDeviation,
+    averageGlucose
+  } = GlycemiaStatisticsService.getStandardDevData(medicalData.cbg || medicalData.smbg, dateFilter)
+
+  const {
     sensorUsage,
     totalUsage
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
@@ -76,11 +83,14 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgPrefs={bgPrefs}
         days={numberOfDays}
       />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <StandartDeviationStat bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
       {cbgSelected &&
         <>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat totalUsage={totalUsage} usage={sensorUsage} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+
           {isTrendsPage &&
             <>
               <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />

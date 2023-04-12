@@ -65,6 +65,7 @@ import { SettingsPrintView } from './modules/print/settings-print-view/settings-
 import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
+import { StandartDeviationStat } from './components/stats/cbg-standard-deviation/standart-deviation-stat'
 
 export {
   AverageDailyDoseStat,
@@ -93,6 +94,7 @@ export {
   ReservoirTooltip,
   SettingsPrintView,
   SimpleStat,
+  StandartDeviationStat,
   StatTooltip,
   Table,
   TerminalTable,
