@@ -59,12 +59,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const {
     standardDeviation,
     averageGlucose,
-    total
-  } = GlycemiaStatisticsService.getStandardDevData(medicalData.cbg || medicalData.smbg, dateFilter)
+    total: standardDeviationTotal
+  } = GlycemiaStatisticsService.getStandardDevData(selectedBgData, dateFilter)
 
   const {
     sensorUsage,
-    total
+    total: sensorUsageTotal
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
@@ -86,11 +86,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <StandartDeviationStat total={total} bgsource={bgSource} bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
+      <StandartDeviationStat standardDeviationTotal={standardDeviationTotal} bgsource={bgSource} bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
       {cbgSelected &&
         <>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage}/>
+          <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage}/>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
