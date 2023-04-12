@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../patient/models/alarms.model'
+import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
 import { type Monitoring } from './monitoring.model'
 import { type TeamMemberRole } from './enums/team-member-role.enum'
 import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
@@ -46,7 +46,7 @@ export interface ITeamMember {
   settings?: Settings | null
   preferences?: Preferences | null
   idVerified: boolean
-  alarms?: Alarms
+  alarms?: MonitoringAlerts
   monitoring?: Monitoring
   unreadMessages?: number
 }

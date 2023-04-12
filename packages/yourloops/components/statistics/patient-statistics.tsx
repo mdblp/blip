@@ -32,11 +32,10 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import {
-  GlycemiaStatisticsService
-} from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlycemiaStatisticsService } from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
+import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -47,17 +46,15 @@ export interface PatientStatisticsProps {
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
   const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
+  const theme = useTheme()
+  const location = useLocation()
+
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgSource === DatumType.Cbg
-  const theme = useTheme()
-  const location = useLocation()
-  const isTrendsPage = location.pathname.includes('trends')
   const bgUnits = bgPrefs.bgUnits
-
-  const {
-    glucoseManagementIndicator
-  } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
+  const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
+  const isTrendsPage = location.pathname.includes('trends')
 
   const {
     standardDeviation,
@@ -67,8 +64,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const {
     sensorUsage,
-    totalUsage
+    total
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+
+  const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
+
+  const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
@@ -89,18 +90,33 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       {cbgSelected &&
         <>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <SensorUsageStat totalUsage={totalUsage} usage={sensorUsage} />
+          <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage}/>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-
-          {isTrendsPage &&
-            <>
-              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
-              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-            </>}
         </>
       }
 
       {children}
+
+      {cbgSelected &&
+        <>
+          {isTrendsPage &&
+            <>
+              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
+              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+            </>
+          }
+          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
+
+      {isTrendsPage && !cbgSelected &&
+        <>
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+        </>
+      }
     </Box>
   )
 }

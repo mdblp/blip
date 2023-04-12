@@ -123,6 +123,7 @@ const ignoredTransKeyForYourLoops = [
   'modal-add-medical-team-code-no-invite',
   'modal-caregiver-remove-patient-failure',
   'modal-caregiver-remove-patient-info-2',
+  'modal-caregiver-remove-patient-question',
   'modal-caregiver-remove-patient-remove',
   'modal-caregiver-remove-patient-success',
   'modal-caregiver-remove-patient-title',
@@ -132,6 +133,8 @@ const ignoredTransKeyForYourLoops = [
   'modal-patient-remove-caregiver-title',
   'modal-remove-caregiver-question',
   'modal-remove-patient-question',
+  'modal-remove-patient-from-team-info',
+  'modal-remove-patient-title',
   'remove-caregiver',
   'severe-hypoglycemia-threshold',
   'team-leave-dialog-button-leave',
@@ -167,12 +170,13 @@ const ignoredTransKeyForYourLoops = [
   'compute-oneday-time-in-range',
   'remaining-time',
   'show-more',
-  'glucose-management-indicator-empty-stat',
   'created-by-unknown',
   'delete-medical-report-number',
   'filters-activated',
   'remote-monitoring',
-  'no-settings-on-device-alert-message'
+  'no-settings-on-device-alert-message',
+  'BGM',
+  'tooltip-empty-stat'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

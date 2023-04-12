@@ -51,7 +51,7 @@ import {
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
 import MedicalFilesWidget from './medical-files/medical-files-widget'
-import AlarmCard from '../alarm/alarm-card'
+import MonitoringAlertCard from '../monitoring-alert/monitoring-alert-card'
 import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 
@@ -180,7 +180,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       {isPatientMonitored &&
         <React.Fragment>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
-            <AlarmCard patient={patient} />
+            <MonitoringAlertCard patient={patient} />
             <MedicalFilesWidget patient={patient} />
           </Grid>
 

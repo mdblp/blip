@@ -26,7 +26,7 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks'
-import useAlarmsContentConfiguration from '../../../../components/alarm/alarms-content-configuration.hook'
+import useMonitoringAlertsContentConfiguration from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration.hook'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
@@ -37,7 +37,7 @@ import { Unit } from 'medical-domain'
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
 
-describe('AlarmsContentConfiguration hook', () => {
+describe('MonitoringAlertsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
   const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
@@ -78,7 +78,7 @@ describe('AlarmsContentConfiguration hook', () => {
     it('should return no error messages when monitoring values are correct', () => {
       const monitoring = getDefaultMonitoring()
 
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, patient }))
 
       expect(result.current.lowBg.errorMessage).toBeNull()
       expect(result.current.highBg.errorMessage).toBeNull()
@@ -92,7 +92,7 @@ describe('AlarmsContentConfiguration hook', () => {
       monitoring.parameters.highBg = 140.5
       monitoring.parameters.veryLowBg = 64.1
 
-      const { result: firstHook } = renderHook(() => useAlarmsContentConfiguration({
+      const { result: firstHook } = renderHook(() => useMonitoringAlertsContentConfiguration({
         monitoring,
         patient
       }))
@@ -112,7 +112,7 @@ describe('AlarmsContentConfiguration hook', () => {
       monitoring.parameters.veryLowBg = 3.55
       monitoring.parameters.bgUnit = Unit.MmolPerLiter
 
-      const { result: secondHook } = renderHook(() => useAlarmsContentConfiguration({
+      const { result: secondHook } = renderHook(() => useMonitoringAlertsContentConfiguration({
         monitoring,
         patient
       }))
@@ -128,7 +128,7 @@ describe('AlarmsContentConfiguration hook', () => {
       monitoring.parameters.highBg = 14230
       monitoring.parameters.veryLowBg = 123456789
 
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, patient }))
 
       expect(result.current.veryLowBg.errorMessage).toBe('mandatory-range')
       expect(result.current.lowBg.errorMessage).toBe('mandatory-range')
@@ -138,7 +138,7 @@ describe('AlarmsContentConfiguration hook', () => {
 
   describe('saveButtonDisabled', () => {
     it('should be enabled if monitoring is correct', () => {
-      const { result } = renderHook(() => useAlarmsContentConfiguration({
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
         monitoring: getDefaultMonitoring(),
         patient
       }))
@@ -150,7 +150,7 @@ describe('AlarmsContentConfiguration hook', () => {
       const monitoring = getDefaultMonitoring()
       monitoring.parameters.highBg = 260
 
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, patient }))
 
       expect(result.current.saveButtonDisabled).toBeTruthy()
     })
@@ -160,7 +160,7 @@ describe('AlarmsContentConfiguration hook', () => {
     const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
 
     it('should return an error message if patient is not created', () => {
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: getDefaultMonitoring() }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring: getDefaultMonitoring() }))
 
       expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError('This action cannot be done if the patient is undefined')
     })
@@ -171,7 +171,7 @@ describe('AlarmsContentConfiguration hook', () => {
         teamId
       })
 
-      const { result } = renderHook(() => useAlarmsContentConfiguration({
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
         monitoring: getDefaultMonitoring(),
         patient
       }))
@@ -193,7 +193,7 @@ describe('AlarmsContentConfiguration hook', () => {
         teamId
       })
 
-      const { result } = renderHook(() => useAlarmsContentConfiguration({
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
         patient,
         monitoring: getDefaultMonitoring()
       }))
@@ -231,7 +231,7 @@ describe('AlarmsContentConfiguration hook', () => {
         }
       }
 
-      const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring: updatedMonitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring: updatedMonitoring, patient }))
       act(() => {
         result.current.resetToTeamDefaultValues()
       })
@@ -254,7 +254,7 @@ describe('AlarmsContentConfiguration hook', () => {
     }
     const onSaveMock = jest.fn()
 
-    const { result } = renderHook(() => useAlarmsContentConfiguration({ monitoring, onSave: onSaveMock }))
+    const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, onSave: onSaveMock }))
     act(() => {
       result.current.save()
     })

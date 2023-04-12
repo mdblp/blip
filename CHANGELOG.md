@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
 - YLP-2215 Implement specific daily visualisation of UMM bolus
 - YLP-2216 Use selected team in Add patient dialog
+- YLP-2218 Use selected team in Remove patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
 - YLP-2265 Disable Add patient button when private practice is selected
@@ -55,10 +56,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-2219 Migrate SensorUsage from stats.js to yourloops
 - YLP-2234 Migrate glucoseManagementIndicator from stats.js to yourloops
 - YLP-2242 Fix the pop "current settings in case no data has been set"
+- YLP-2244 Migrate coefficientOfVariation from stats.js to yourloops
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
 - YLP-2256 Bump minor deps
 - YLP-2258 Bump react-markdown
+- YLP-2286 Rename the "alarm" concept to "monitored alert"
 - YLP-2289 Migrate Standard Deviation from stat.js to yourloops
 
 ### Fixed
