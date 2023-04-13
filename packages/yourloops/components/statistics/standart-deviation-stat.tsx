@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent } from 'react'
-import { type BgPrefs, CBGStandardDeviation } from '../../../index'
+import { type BgPrefs, CBGStandardDeviation } from 'dumb'
 import Box from '@mui/material/Box'
 import { t } from 'i18next'
 import { type BgType, DatumType } from 'medical-domain'
