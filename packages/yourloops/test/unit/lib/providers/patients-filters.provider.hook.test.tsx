@@ -30,6 +30,8 @@ import { act, renderHook } from '@testing-library/react-hooks'
 import { usePatientListProviderHook } from '../../../../lib/providers/patient-list.provider.hook'
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'
+import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
+import { PatientListColumns } from '../../../../components/patient-list/enums/patient-list.enum'
 
 jest.mock('../../../../lib/auth')
 describe('usePatientListProviderHook', () => {
@@ -51,6 +53,30 @@ describe('usePatientListProviderHook', () => {
     hypoglycemiaEnabled: true,
     dataNotTransferredEnabled: true,
     messagesEnabled: true
+  }
+
+  const defaultHcpColumns: GridColumnVisibilityModel = {
+    [PatientListColumns.Flag]: true,
+    [PatientListColumns.System]: true,
+    [PatientListColumns.Patient]: true,
+    [PatientListColumns.TimeOutOfRange]: true,
+    [PatientListColumns.SevereHypoglycemia]: true,
+    [PatientListColumns.DataNotTransferred]: true,
+    [PatientListColumns.LastDataUpdate]: true,
+    [PatientListColumns.Messages]: true,
+    [PatientListColumns.Actions]: true
+  }
+
+  const defaultCaregiverColumns: GridColumnVisibilityModel = {
+    [PatientListColumns.Flag]: true,
+    [PatientListColumns.System]: true,
+    [PatientListColumns.Patient]: true,
+    [PatientListColumns.TimeOutOfRange]: false,
+    [PatientListColumns.SevereHypoglycemia]: false,
+    [PatientListColumns.DataNotTransferred]: false,
+    [PatientListColumns.LastDataUpdate]: true,
+    [PatientListColumns.Messages]: false,
+    [PatientListColumns.Actions]: true
   }
 
   beforeAll(() => {
@@ -109,6 +135,21 @@ describe('usePatientListProviderHook', () => {
       })
 
       expect(result.current.filters).toEqual(defaultFilters)
+    })
+  })
+
+  describe('displayedColumns', () => {
+    it('should have the correct list of columns for hcp', () => {
+      const { result } = renderHook(() => usePatientListProviderHook())
+      expect(result.current.displayedColumns).toEqual(defaultHcpColumns)
+    })
+
+    it('should have the correct list of columns for caregivers', () => {
+      (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+        return { user: { isUserHcp: () => false } as User }
+      })
+      const { result } = renderHook(() => usePatientListProviderHook())
+      expect(result.current.displayedColumns).toEqual(defaultCaregiverColumns)
     })
   })
 })
