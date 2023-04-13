@@ -29,63 +29,28 @@ import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import moment from 'moment-timezone'
 import { type Patient } from './models/patient.model'
-import { type PatientTeam } from './models/patient-team.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type User } from '../auth'
 import { type PatientsFilters } from '../filter/models/patients-filters.model'
 
 export default class PatientUtils {
-  static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {
-    const patientsWithoutDuplicates = []
-    patientsWithDuplicates.forEach(patient => {
-      if (!patientsWithoutDuplicates.find(mergedPatient => mergedPatient.userid === patient.userid)) {
-        const patientDuplicates = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid)
-        const patientWithMonitoring = patientDuplicates.find(p => !!p.monitoring)
-        patient.monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
-        const monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
-        const teams = []
-        patientDuplicates.forEach(p => {
-          if (p.teams.length > 0) {
-            teams.push(p.teams[0])
-          }
-        })
-        const patientToAdd: Patient = {
-          alarms: patient.alarms,
-          profile: patient.profile,
-          settings: patient.settings,
-          metadata: patient.metadata,
-          monitoring,
-          teams,
-          userid: patient.userid
-        }
-        patientsWithoutDuplicates.push(patientToAdd)
-      }
-    })
-    return patientsWithoutDuplicates
-  }
-
   static async retrievePatients(): Promise<Patient[]> {
     const patientsAsITeamMembers = await PatientApi.getPatients()
     return patientsAsITeamMembers.map(patientAsITeamMember => mapITeamMemberToPatient(patientAsITeamMember))
   }
 
-  static async computePatients(user: User): Promise<Patient[]> {
+  static async computePatients(user: User, teamId?: string): Promise<Patient[]> {
     const userIsHcp = user.isUserHcp()
     if (!userIsHcp && !user.isUserPatient() && !user.isUserCaregiver()) {
       throw Error(`Cannot retrieve patients with user having role ${user.role}`)
     }
     if (userIsHcp) {
-      return await PatientApi.getPatientsForHcp(user.id)
+      if (!teamId) {
+        throw Error('Cannot retrieve scoped patients when no team id is given')
+      }
+      return await PatientApi.getScopedPatientsForHcp(user.id, teamId)
     }
-    return PatientUtils.removeDuplicates(await PatientUtils.retrievePatients())
-  }
-
-  static getRemoteMonitoringTeam(patient: Patient): PatientTeam {
-    const remoteMonitoredTeam = patient.teams.find(team => team.monitoringStatus !== undefined)
-    if (!remoteMonitoredTeam) {
-      throw Error(`Could not find a monitored team for patient ${patient.userid}`)
-    }
-    return remoteMonitoredTeam
+    return await PatientUtils.retrievePatients()
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
@@ -94,16 +59,16 @@ export default class PatientUtils {
     })
   }
 
-  static isInvitationPending = (patient: Patient, selectedTeamId: string): boolean => {
-    return patient.teams.some((team: PatientTeam) => team.teamId === selectedTeamId && team.status === UserInvitationStatus.pending)
+  static isInvitationPending = (patient: Patient): boolean => {
+    return patient.invitationStatus === UserInvitationStatus.pending
   }
 
-  static getNonPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
-    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status !== UserInvitationStatus.pending))
+  static getNonPendingPatients = (patients: Patient[]): Patient[] => {
+    return patients.filter(patient => patient.invitationStatus !== UserInvitationStatus.pending)
   }
 
-  static getPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
-    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status === UserInvitationStatus.pending))
+  static getPendingPatients = (patients: Patient[]): Patient[] => {
+    return patients.filter(patient => patient.invitationStatus === UserInvitationStatus.pending)
   }
 
   static filterPatientsOnMonitoringAlerts = (patients: Patient[], patientFilters: PatientsFilters): Patient[] => {
@@ -111,33 +76,33 @@ export default class PatientUtils {
       return patients
     }
     if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
-      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive || patient.alarms?.frequencyOfSevereHypoglycemiaActive || patient.alarms?.nonDataTransmissionActive)
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || patient.monitoringAlerts?.nonDataTransmissionActive)
     }
     if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled) {
-      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive || patient.alarms?.frequencyOfSevereHypoglycemiaActive)
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive)
     }
     if (patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
-      return patients.filter(patient => patient.alarms?.frequencyOfSevereHypoglycemiaActive || patient.alarms?.nonDataTransmissionActive)
+      return patients.filter(patient => patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || patient.monitoringAlerts?.nonDataTransmissionActive)
     }
     if (patientFilters.timeOutOfTargetEnabled && patientFilters.dataNotTransferredEnabled) {
-      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive || patient.alarms?.nonDataTransmissionActive)
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.nonDataTransmissionActive)
     }
     if (patientFilters.timeOutOfTargetEnabled) {
-      return patients.filter(patient => patient.alarms?.timeSpentAwayFromTargetActive)
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive)
     }
     if (patientFilters.hypoglycemiaEnabled) {
-      return patients.filter(patient => patient.alarms?.frequencyOfSevereHypoglycemiaActive)
+      return patients.filter(patient => patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive)
     }
-    return patients.filter(patient => patient.alarms?.nonDataTransmissionActive)
+    return patients.filter(patient => patient.monitoringAlerts?.nonDataTransmissionActive)
   }
 
-  static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined, selectedTeamId: string): Patient[] => {
+  static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined): Patient[] => {
     // When the filter is pending, we only get the pending patients and don't apply any filter on them
     if (patientFilters.pendingEnabled) {
-      return patients.filter((patient) => PatientUtils.isInvitationPending(patient, selectedTeamId))
+      return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
     }
     // We do not take the pending patients
-    const nonPendingPatients = PatientUtils.getNonPendingPatients(patients, selectedTeamId)
+    const nonPendingPatients = PatientUtils.getNonPendingPatients(patients)
     return PatientUtils.filterPatientsOnMonitoringAlerts(nonPendingPatients, patientFilters)
       .filter(patient => patientFilters.telemonitoredEnabled ? patient.monitoring?.enabled : patient)
       .filter(patient => patientFilters.manualFlagEnabled ? flaggedPatientsId?.includes(patient.userid) : patient)

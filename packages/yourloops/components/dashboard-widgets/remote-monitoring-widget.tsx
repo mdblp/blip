@@ -36,10 +36,8 @@ import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined'
 import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
 import { useAuth } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/notification.hook'
-import { useTeam } from '../../lib/team'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
@@ -48,6 +46,7 @@ import GenericDashboardCard from './generic-dashboard-card'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import moment from 'moment-timezone'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 export interface RemoteMonitoringWidgetProps {
   patient: Patient
@@ -57,8 +56,8 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   const { t } = useTranslation()
   const authHook = useAuth()
   const notificationHook = useNotification()
-  const teamHook = useTeam()
   const patientHook = usePatientContext()
+  const { selectedTeam } = useSelectedTeamContext()
   const [patient, setPatient] = useState(props.patient)
   const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false)
   const [showRenewRemoteMonitoringDialog, setShowRenewRemoteMonitoringDialog] = useState(false)
@@ -71,11 +70,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   const patientName = getUserName(firstName, lastName, fullName)
 
   const isLoggedInUserHcpAdmin = (): boolean => {
-    return authHook.user?.isUserHcp() &&
-      !!teamHook.getRemoteMonitoringTeams()
-        .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.userId === authHook.user?.id) &&
-          patient.teams.find(t => t.teamId === team.id)
-        )
+    return authHook.user?.isUserHcp() && selectedTeam.monitoring?.enabled && selectedTeam.members.some(member => member.role === TeamMemberRole.admin && member.userId === authHook.user?.id)
   }
 
   const showMonitoringButtonAction = isLoggedInUserHcpAdmin()
@@ -86,8 +81,6 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
     renewAndRemove: false
   }
 
-  const monitoredPatientTeam = patient.teams.find(team => team.monitoringStatus === MonitoringStatus.accepted)
-  const requestingTeam = monitoredPatientTeam ? teamHook.getTeam(monitoredPatientTeam.teamId) : undefined
   const endDate = patient?.monitoring?.monitoringEnd
     ? moment.utc(patient.monitoring.monitoringEnd).format(moment.localeData().longDateFormat('ll')).toString()
     : '-'
@@ -131,8 +124,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   const onConfirmCancelInviteDialog = async (): Promise<void> => {
     setConfirmCancelDialogActionInProgress(true)
     try {
-      const team = PatientUtils.getRemoteMonitoringTeam(patient)
-      await notificationHook.cancelRemoteMonitoringInvite(team.teamId, patient.userid)
+      await notificationHook.cancelRemoteMonitoringInvite(selectedTeam.id, patient.userid)
     } catch (e) {
       console.error(e)
       setConfirmCancelDialogActionInProgress(false)
@@ -161,7 +153,7 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
           </Box>
           <Box display="flex" gap={2} marginY={2}>
             <Typography className="bold">{t('colon', { label: t('requesting-team') })}</Typography>
-            <Typography>{requestingTeam?.name || '-'}</Typography>
+            <Typography>{selectedTeam?.name || '-'}</Typography>
           </Box>
           <Box display="flex" gap={2} marginY={2}>
             <Typography className="bold">{t('colon', { label: t('end-date') })}</Typography>
@@ -187,7 +179,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                   variant="contained"
                   color="primary"
                   disableElevation
-                  onClick={() => { setShowInviteRemoteMonitoringDialog(true) }}
+                  onClick={() => {
+                    setShowInviteRemoteMonitoringDialog(true)
+                  }}
                   data-testid="remote-monitoring-card-invite-button"
                 >
                   {t('button-invite')}
@@ -200,7 +194,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                   variant="contained"
                   color="primary"
                   disableElevation
-                  onClick={() => { setShowConfirmCancelDialog(true) }}
+                  onClick={() => {
+                    setShowConfirmCancelDialog(true)
+                  }}
                   data-testid="remote-monitoring-card-cancel-invite-button"
                 >
                   {t('button-cancel-invite')}
@@ -214,7 +210,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                     variant="contained"
                     color="primary"
                     disableElevation
-                    onClick={() => { setShowRenewRemoteMonitoringDialog(true) }}
+                    onClick={() => {
+                      setShowRenewRemoteMonitoringDialog(true)
+                    }}
                     data-testid="remote-monitoring-card-renew-button"
                   >
                     {t('renew')}
@@ -225,7 +223,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
                     variant="contained"
                     color="primary"
                     disableElevation
-                    onClick={() => { setShowConfirmDeleteDialog(true) }}
+                    onClick={() => {
+                      setShowConfirmDeleteDialog(true)
+                    }}
                     data-testid="remote-monitoring-card-remove-button"
                   >
                     {t('button-remove')}
@@ -241,14 +241,18 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
         <RemoteMonitoringPatientDialog
           patient={patient}
           action={RemoteMonitoringDialogAction.invite}
-          onClose={() => { setShowInviteRemoteMonitoringDialog(false) }}
+          onClose={() => {
+            setShowInviteRemoteMonitoringDialog(false)
+          }}
         />
       }
       {showRenewRemoteMonitoringDialog &&
         <RemoteMonitoringPatientDialog
           patient={patient}
           action={RemoteMonitoringDialogAction.renew}
-          onClose={() => { setShowRenewRemoteMonitoringDialog(false) }}
+          onClose={() => {
+            setShowRenewRemoteMonitoringDialog(false)
+          }}
         />
       }
       {showConfirmCancelDialog &&
@@ -256,7 +260,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
           title={t('cancel-remote-monitoring-invite')}
           label={t('cancel-remote-monitoring-invite-confirm', { fullName: patientName })}
           inProgress={confirmCancelDialogActionInProgress}
-          onClose={() => { setShowConfirmCancelDialog(false) }}
+          onClose={() => {
+            setShowConfirmCancelDialog(false)
+          }}
           onConfirm={onConfirmCancelInviteDialog}
         />
       }
@@ -265,7 +271,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
           title={t('remove-remote-monitoring')}
           label={t('remove-remote-monitoring-confirm', { fullName: patientName })}
           inProgress={confirmDeleteDialogActionInProgress}
-          onClose={() => { setShowConfirmDeleteDialog(false) }}
+          onClose={() => {
+            setShowConfirmDeleteDialog(false)
+          }}
           onConfirm={onConfirmDeleteDialog}
         />
       }

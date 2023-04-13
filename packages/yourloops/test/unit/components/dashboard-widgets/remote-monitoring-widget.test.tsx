@@ -38,14 +38,13 @@ import * as authHookMock from '../../../../lib/auth'
 import * as teamHookMock from '../../../../lib/team'
 import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as notificationsHookMock from '../../../../lib/notifications/notification.hook'
+import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import type User from '../../../../lib/auth/models/user.model'
 import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as RemoteMonitoringPatientDialogMock from '../../../../components/dialogs/remote-monitoring-dialog'
 import { type RemoteMonitoringPatientDialogProps } from '../../../../components/dialogs/remote-monitoring-dialog'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { type ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
-import PatientUtils from '../../../../lib/patient/patient.util'
-import { type PatientTeam } from '../../../../lib/patient/models/patient-team.model'
 import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 
 /* eslint-disable-next-line react/display-name */
@@ -60,13 +59,13 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../lib/notifications/notification.hook')
+jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('RemoteMonitoringWidget', () => {
   const patient = createPatient('fakePatientId')
   let container: HTMLElement | null = null
   const adminMember = buildTeamMember()
   const patientMember = buildTeamMember(patient.userid)
   const remoteMonitoringTeam = buildTeam('fakeTeamId', [adminMember, patientMember])
-  patient.teams = [{ teamId: remoteMonitoringTeam.id } as PatientTeam]
   const cancelRemoteMonitoringInviteMock = jest.fn()
   const updatePatientMonitoringMock = jest.fn()
   const getPatientByIdMock = jest.fn().mockReturnValue(patient)
@@ -75,8 +74,7 @@ describe('RemoteMonitoringWidget', () => {
     i18n.changeLanguage('en');
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserCaregiver: () => false, isUserHcp: () => true, id: adminMember.userId } as User }
-    })
-    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam);
+    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
         getRemoteMonitoringTeams: () => [remoteMonitoringTeam]
@@ -93,6 +91,9 @@ describe('RemoteMonitoringWidget', () => {
     });
     (notificationsHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return { cancelRemoteMonitoringInvite: cancelRemoteMonitoringInviteMock }
+    });
+    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
+      return { selectedTeam: remoteMonitoringTeam }
     })
   })
 

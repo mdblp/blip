@@ -62,7 +62,7 @@ describe('Patient utils', () => {
       }
       teamMember.unreadMessages = 4
       const patient: Patient = {
-        alarms: teamMember.alarms,
+        monitoringAlerts: teamMember.alarms,
         metadata: {
           flagged: undefined,
           medicalData: null,
@@ -82,11 +82,9 @@ describe('Patient utils', () => {
           a1c: undefined,
           system: 'DBLG1'
         },
-        teams: [{
-          teamId: teamMember.teamId,
-          status: teamMember.invitationStatus,
-          monitoringStatus: teamMember.monitoring?.status
-        }],
+        teamIds: [teamMember.teamId],
+        invitationStatus: teamMember.invitationStatus,
+        monitoringStatus: teamMember.monitoring?.status,
         userid: teamMember.userId
       }
       const res = mapITeamMemberToPatient(teamMember)

@@ -29,7 +29,6 @@ import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-al
 import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
-import { type PatientTeam } from '../../../lib/patient/models/patient-team.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
@@ -44,6 +43,7 @@ import {
   monitoringParameters,
   monitoringParametersBgUnitMmol,
   mySecondTeamId,
+  myTeamId,
   myThirdTeamId
 } from '../mock/team.api.mock'
 
@@ -82,7 +82,6 @@ const defaultMonitoringAlert: MonitoringAlerts = {
 
 export const buildPatient = (
   userid = 'fakePatientId',
-  teams: PatientTeam[] = [],
   monitoring: Monitoring | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
@@ -90,7 +89,7 @@ export const buildPatient = (
   monitoringAlerts: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
-    alarms: {
+    monitoringAlerts: {
       timeSpentAwayFromTargetRate: monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
       timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
       frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
@@ -116,30 +115,14 @@ export const buildPatient = (
       hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
     monitoring,
-    teams,
+    invitationStatus: UserInvitationStatus.unknown,
+    monitoringStatus: MonitoringStatus.unknown,
     userid
   }
 }
 
 export const monitoredPatient: Patient = buildPatient(
   monitoredPatientId,
-  [
-    {
-      teamId: mySecondTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    },
-    {
-      teamId: myThirdTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    },
-    {
-      teamId: filtersTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   defaultMonitoring,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -156,13 +139,6 @@ export const monitoredPatient: Patient = buildPatient(
 
 export const unreadMessagesPatient: Patient = buildPatient(
   unreadMessagesPatientId,
-  [
-    {
-      teamId: filtersTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   null,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -179,13 +155,6 @@ export const unreadMessagesPatient: Patient = buildPatient(
 
 export const timeSpentOutOfTargetRangePatient: Patient = buildPatient(
   timeSpentOutOfTargetRangePatientId,
-  [
-    {
-      teamId: filtersTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   null,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -202,13 +171,6 @@ export const timeSpentOutOfTargetRangePatient: Patient = buildPatient(
 
 export const hypoglycemiaPatient: Patient = buildPatient(
   hypoglycemiaPatientId,
-  [
-    {
-      teamId: filtersTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   null,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -225,13 +187,6 @@ export const hypoglycemiaPatient: Patient = buildPatient(
 
 export const noDataTransferredPatient: Patient = buildPatient(
   noDataTransferredPatientId,
-  [
-    {
-      teamId: filtersTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   null,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -248,13 +203,6 @@ export const noDataTransferredPatient: Patient = buildPatient(
 
 export const flaggedPatient: Patient = buildPatient(
   flaggedPatientId,
-  [
-    {
-      teamId: filtersTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   null,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -271,12 +219,6 @@ export const flaggedPatient: Patient = buildPatient(
 
 export const unmonitoredPatient: Patient = buildPatient(
   unmonitoredPatientId,
-  [
-    {
-      teamId: myThirdTeamId,
-      status: UserInvitationStatus.accepted
-    }
-  ],
   undefined,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -293,13 +235,6 @@ export const unmonitoredPatient: Patient = buildPatient(
 
 export const monitoredPatientTwo: Patient = buildPatient(
   'monitored-patient-two',
-  [
-    {
-      teamId: myThirdTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   defaultMonitoring,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -316,13 +251,6 @@ export const monitoredPatientTwo: Patient = buildPatient(
 
 export const monitoredPatientWithMmol: Patient = buildPatient(
   monitoredPatientWithMmolId,
-  [
-    {
-      teamId: myThirdTeamId,
-      status: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
-    }
-  ],
   { ...defaultMonitoring, parameters: monitoringParametersBgUnitMmol },
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -339,16 +267,6 @@ export const monitoredPatientWithMmol: Patient = buildPatient(
 
 export const pendingPatient: Patient = buildPatient(
   'pending-patient',
-  [
-    {
-      teamId: myThirdTeamId,
-      status: UserInvitationStatus.pending
-    },
-    {
-      teamId: filtersTeamId,
-      status: UserInvitationStatus.pending
-    }
-  ],
   undefined,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
@@ -364,10 +282,10 @@ export const pendingPatient: Patient = buildPatient(
   defaultMonitoringAlert
 )
 
-export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
+export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, invitationStatus: UserInvitationStatus): ITeamMember => {
   return {
     userId: patient.userid,
-    teamId: patient.teams[0].teamId,
+    teamId,
     role: TeamMemberRole.patient,
     profile: {
       email: patient.profile.email,
@@ -381,19 +299,94 @@ export const buildTeamMemberFromPatient = (patient: Patient): ITeamMember => {
     },
     settings: null,
     preferences: { displayLanguageCode: LanguageCodes.En },
-    invitationStatus: patient.teams[0].status,
+    invitationStatus,
     email: patient.profile.email,
     idVerified: false,
     unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
-    alarms: patient.alarms,
+    alarms: patient.monitoringAlerts,
     monitoring: patient.monitoring
   }
 }
 
-export const monitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatient)
-export const unmonitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(unmonitoredPatient)
-export const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatientTwo)
-export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient)
+export const monitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatient, mySecondTeamId, UserInvitationStatus.accepted)
+export const unmonitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(unmonitoredPatient, myThirdTeamId, UserInvitationStatus.accepted)
+export const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatientTwo, myThirdTeamId, UserInvitationStatus.accepted)
+export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInvitationStatus.pending)
+
+export const PATIENTS_MAP_TO_TEAMS: Record<string, Patient[]> = {
+  [myTeamId]: [],
+  [mySecondTeamId]: [
+    {
+      ...monitoredPatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    }, {
+      ...pendingPatient,
+      invitationStatus: UserInvitationStatus.pending
+    }
+  ],
+  [myThirdTeamId]: [
+    {
+      ...monitoredPatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...unmonitoredPatient,
+      invitationStatus: UserInvitationStatus.accepted
+    },
+    {
+      ...monitoredPatientTwo,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...monitoredPatientWithMmol,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...pendingPatient,
+      invitationStatus: UserInvitationStatus.pending
+    }
+  ],
+  [filtersTeamId]: [
+    {
+      ...monitoredPatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...unreadMessagesPatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...timeSpentOutOfTargetRangePatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...hypoglycemiaPatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...noDataTransferredPatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...flaggedPatient,
+      invitationStatus: UserInvitationStatus.accepted,
+      monitoringStatus: MonitoringStatus.accepted
+    },
+    {
+      ...pendingPatient,
+      invitationStatus: UserInvitationStatus.pending
+    }
+  ]
+}
 
 export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {
   return {

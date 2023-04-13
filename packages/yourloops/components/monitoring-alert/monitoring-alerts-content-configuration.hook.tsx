@@ -28,7 +28,6 @@ import { useTeam } from '../../lib/team'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import type React from 'react'
 import { useMemo, useState } from 'react'
-import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import {
@@ -41,6 +40,7 @@ import { type Thresholds } from '../../lib/patient/models/monitoring-alerts.mode
 import { DEFAULT_BG_VALUES } from './monitoring-alert.default'
 import { useAuth } from '../../lib/auth'
 import { type BgUnit, Unit } from 'medical-domain'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 export interface MonitoringAlertsContentConfigurationHookProps {
   monitoring: Monitoring
@@ -81,8 +81,14 @@ interface ValueErrorPair {
 
 const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
 
-const useMonitoringAlertsContentConfiguration = ({ monitoring, saveInProgress, onSave, patient }: MonitoringAlertsContentConfigurationHookProps): MonitoringAlertsContentConfigurationHookReturn => {
+const useMonitoringAlertsContentConfiguration = ({
+  monitoring,
+  saveInProgress,
+  onSave,
+  patient
+}: MonitoringAlertsContentConfigurationHookProps): MonitoringAlertsContentConfigurationHookReturn => {
   const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
 
   const userBgUnit = user.settings?.units?.bg ?? DEFAULT_BG_UNIT
   const monitoringBgUnit = monitoring.parameters?.bgUnit ?? DEFAULT_BG_UNIT
@@ -205,11 +211,9 @@ const useMonitoringAlertsContentConfiguration = ({ monitoring, saveInProgress, o
       throw Error('This action cannot be done if the patient is undefined')
     }
 
-    const monitoredTeam = PatientUtils.getRemoteMonitoringTeam(patient)
-
-    const team = teamHook.getTeam(monitoredTeam.teamId)
+    const team = teamHook.getTeam(selectedTeam.id)
     if (!team) {
-      throw Error(`Cannot find team with id ${monitoredTeam.teamId}`)
+      throw Error(`Cannot find team with id ${selectedTeam.id}`)
     }
 
     const defaultMonitoring = team.monitoring

@@ -168,6 +168,7 @@ describe('Patient dashboard for HCP', () => {
 
   describe('monitoring-alerts configuration dialog', () => {
     it('should have units in mg/dL and cancel/default values buttons working', async () => {
+      localStorage.setItem('selectedTeamId', mySecondTeamId)
       await act(async () => {
         renderPage(monitoredPatientDashboardRoute)
       })
@@ -270,6 +271,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     it('should have units in mmol/L and save button working', async () => {
+      localStorage.setItem('selectedTeamId', myThirdTeamId)
       mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
 
       await act(async () => {

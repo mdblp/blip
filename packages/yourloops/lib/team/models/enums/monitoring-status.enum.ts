@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,7 @@
  */
 
 export enum MonitoringStatus {
+  unknown = 'unknown',
   pending = 'pending',
   accepted = 'accepted',
 }

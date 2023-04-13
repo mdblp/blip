@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientAPI from '../../../../lib/patient/patient.api'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
@@ -44,12 +43,13 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { checkPatientListHeader } from '../../assert/patient-list'
+import PatientApi from '../../../../lib/patient/patient.api'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockTeamAPI()
@@ -99,7 +99,7 @@ describe('Caregiver home page', () => {
         patient: { birthday: '2015-05-25' }
       }
     })
-    jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([patient1, patient2, patient3])
+    jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1, patient2, patient3])
 
     renderPage('/')
 
@@ -170,14 +170,12 @@ describe('Caregiver home page', () => {
 
     const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
 
-    jest.spyOn(PatientAPI, 'getPatients').mockResolvedValueOnce([monitoredPatientAsTeamMember])
     await act(async () => {
       await userEvent.click(removePatientDialog2ConfirmButton)
     })
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
-    expect(within(patientTableBody).getAllByRole('row')).toHaveLength(2)
-    expect(patientTableBody).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember])).toHaveBeenCalledTimes(2)
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })

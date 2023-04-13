@@ -61,10 +61,9 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
     lastName: patient.profile.lastName
   } : { firstName: '', lastName: '' }
   const patientName = t('user-name', userName)
-  const patientTeam = patient.teams.find(team => team.teamId === selectedTeamId)
 
   const getSuccessAlertMessage = (): void => {
-    if (patientTeam.status === UserInvitationStatus.pending) {
+    if (patient.invitationStatus === UserInvitationStatus.pending) {
       alert.success(t('alert-remove-patient-pending-invitation-success'))
       return
     }
@@ -79,7 +78,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const handleOnClickRemove = async (): Promise<void> => {
     try {
       setProcessing(true)
-      await removePatient(patient, patientTeam)
+      await removePatient(patient)
       getSuccessAlertMessage()
       onClose()
     } catch (err) {

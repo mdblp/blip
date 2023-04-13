@@ -47,10 +47,10 @@ import { useNotification } from '../../lib/notifications/notification.hook'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { MonitoringStatus } from '../../lib/team/models/enums/monitoring-status.enum'
 import { LoadingButton } from '@mui/lab'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   categoryTitle: {
@@ -96,7 +96,8 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   const notificationHook = useNotification()
   const patientHook = usePatientContext()
   const alert = useAlert()
-  const [teamId] = useState<string | undefined>(action === RemoteMonitoringDialogAction.renew ? PatientUtils.getRemoteMonitoringTeam(patient).teamId : undefined)
+  const { selectedTeam } = useSelectedTeamContext()
+  const [teamId] = useState<string | undefined>(action === RemoteMonitoringDialogAction.renew ? selectedTeam.id : undefined)
   const [physician, setPhysician] = useState<string | undefined>(patient.profile?.referringDoctor)
   const [prescriptionInfo, setPrescriptionInfo] = useState<PrescriptionInfo>({
     teamId: undefined,
@@ -213,7 +214,9 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
                 <TextField
                   defaultValue={physician}
                   size="small"
-                  onChange={(e) => { setPhysician(e.target.value) }}
+                  onChange={(e) => {
+                    setPhysician(e.target.value)
+                  }}
                   data-testid="remote-monitoring-dialog-referring-doctor"
                 />
               </Box>

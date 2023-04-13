@@ -29,19 +29,7 @@ import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import {
-  flaggedPatient,
-  flaggedPatientId,
-  hypoglycemiaPatient,
-  monitoredPatient,
-  monitoredPatientTwo,
-  monitoredPatientWithMmol,
-  noDataTransferredPatient,
-  pendingPatient,
-  timeSpentOutOfTargetRangePatient,
-  unmonitoredPatient,
-  unreadMessagesPatient
-} from '../../data/patient.api.data'
+import { flaggedPatientId, monitoredPatient, pendingPatient, unmonitoredPatient } from '../../data/patient.api.data'
 import {
   buildAvailableTeams,
   buildFiltersTeam,
@@ -91,12 +79,9 @@ describe('HCP home page', () => {
 
   it('should not display the Care team tab and not allow to add patients if the private practice is selected', async () => {
     localStorage.setItem('selectedTeamId', 'private')
-    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValueOnce([{
+    jest.spyOn(PatientApi, 'getScopedPatientsForHcp').mockResolvedValue([{
       ...monitoredPatient,
-      teams: [{
-        teamId: 'private',
-        status: UserInvitationStatus.accepted
-      }]
+      invitationStatus: UserInvitationStatus.accepted
     }])
 
     const router = renderPage('/')
@@ -181,13 +166,10 @@ describe('HCP home page', () => {
     expect(cancelButton).toBeEnabled()
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValueOnce([monitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
-    const teamId = unmonitoredPatient.teams[0].teamId
     await act(async () => {
       await userEvent.click(confirmRemoveButton)
     })
-    expect(removePatientMock).toHaveBeenCalledWith(teamId, unmonitoredPatient.userid)
-    expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(4)
+    expect(removePatientMock).toHaveBeenCalledWith(myThirdTeamId, unmonitoredPatient.userid)
     expect(screen.queryByTestId('remove-hcp-patient-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${myThirdTeamName}`)
   })
@@ -196,7 +178,6 @@ describe('HCP home page', () => {
     localStorage.setItem('selectedTeamId', filtersTeamId)
     const teams = [buildFiltersTeam(), buildTeamThree(), buildPrivateTeam()]
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(teams)
-    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unreadMessagesPatient, timeSpentOutOfTargetRangePatient, hypoglycemiaPatient, noDataTransferredPatient, flaggedPatient, pendingPatient, monitoredPatientTwo])
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
