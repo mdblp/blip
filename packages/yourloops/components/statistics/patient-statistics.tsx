@@ -87,8 +87,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <StandartDeviationStat standardDeviationTotal={standardDeviationTotal} bgsource={bgSource} bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {cbgSelected &&
