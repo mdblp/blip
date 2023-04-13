@@ -28,51 +28,46 @@ import React, { type FunctionComponent } from 'react'
 import { type BgPrefs, CBGStandardDeviation } from 'dumb'
 import Box from '@mui/material/Box'
 import { t } from 'i18next'
-import { type BgType, DatumType } from 'medical-domain'
+import { type BgType } from 'medical-domain'
 
-export interface StandartDeviationProps {
-  bgpref: BgPrefs
-  bgsource: BgType
+export interface StandardDeviationProps {
+  bgPref: BgPrefs
+  bgType: BgType
   averageGlucose: number
   standardDeviation: number
   standardDeviationTotal: number
 }
 
-export const StandartDeviationStat: FunctionComponent<StandartDeviationProps> = (props) => {
-  const { standardDeviation, averageGlucose, standardDeviationTotal, bgpref, bgsource } = props
-  const selectedLabel = bgsource === DatumType.Cbg ? 'cbg' : 'smbg'
+export const StandardDeviationStat: FunctionComponent<StandardDeviationProps> = (props) => {
+  const { standardDeviation, averageGlucose, standardDeviationTotal, bgPref, bgType } = props
+  const defaultAnnotations = [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
+  const standardAnnotation = t('standard-deviation-tooltip')
 
-  const dataFormat = (data: number): number => {
+  const formatData = (data: number): number => {
     return Math.round(data)
   }
 
-  const tooltipDisplay = (selectedLabel: string): string[] => {
-    let annotation: string[]
+  const getAnnotations = (selectedLabel: string): string[] => {
+    const hasValidValue = standardDeviation | averageGlucose
     switch (selectedLabel) {
       case 'cbg':
-        annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip')] : [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
-        return annotation
+        return hasValidValue ? [standardAnnotation] : defaultAnnotations
       case 'smbg':
-        annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip'), t('tooltip-SMBG-data', {
-          total: standardDeviationTotal,
-          smbgLabel: t('BGM')
-        })] : [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
-        return annotation
+        return hasValidValue ? [standardAnnotation, t('tooltip-smbg-data', { total: standardDeviationTotal, smbgLabel: t('BGM') })] : defaultAnnotations
       default:
-        return [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
+        return defaultAnnotations
     }
   }
 
   return (
-    // data-testid="standard-deviation-stat"
     <Box>
       <CBGStandardDeviation
-        annotations={tooltipDisplay(selectedLabel)}
-        averageGlucose={dataFormat(averageGlucose)}
-        bgClasses={bgpref.bgClasses}
-        standardDeviation={dataFormat(standardDeviation)}
+        annotations={getAnnotations(bgType)}
+        averageGlucose={formatData(averageGlucose)}
+        bgClasses={bgPref.bgClasses}
+        standardDeviation={formatData(standardDeviation)}
         title={t('standard-deviation')}
-        units={bgpref.bgUnits}
+        units={bgPref.bgUnits}
       />
     </Box>
   )

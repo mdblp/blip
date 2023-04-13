@@ -36,7 +36,7 @@ import { GlycemiaStatisticsService } from 'medical-domain/src/domains/repositori
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
-import { StandartDeviationStat } from './standart-deviation-stat'
+import { StandardDeviationStat } from './standard-deviation-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -87,7 +87,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <StandartDeviationStat standardDeviationTotal={standardDeviationTotal} bgsource={bgSource} bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
+      <StandardDeviationStat standardDeviationTotal={standardDeviationTotal} bgType={bgSource} bgPref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {cbgSelected &&
         <>
