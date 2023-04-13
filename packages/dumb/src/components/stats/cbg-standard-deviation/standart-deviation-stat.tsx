@@ -40,21 +40,20 @@ export interface StandartDeviationProps {
 
 export const StandartDeviationStat: FunctionComponent<StandartDeviationProps> = (props) => {
   const { standardDeviation, averageGlucose, standardDeviationTotal, bgpref, bgsource } = props
+  const selectedLabel = bgsource === DatumType.Cbg ? 'cbg' : 'smbg'
 
   const dataFormat = (data: number): number => {
     return Math.round(data)
   }
 
-  const selectedLabel = bgsource === DatumType.Cbg ? 'CBG' : 'BGM'
-
   const tooltipDisplay = (selectedLabel: string): string[] => {
     let annotation: string[]
     switch (selectedLabel) {
-      case 'CBG':
+      case 'cbg':
         annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip')] : [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
         return annotation
-      case 'BGM':
-        annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip'), t('tooltip-empty-SMBG-data', {
+      case 'smbg':
+        annotation = standardDeviation && averageGlucose ? [t('standard-deviation-tooltip'), t('tooltip-SMBG-data', {
           total: standardDeviationTotal,
           smbgLabel: t('BGM')
         })] : [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
@@ -65,7 +64,7 @@ export const StandartDeviationStat: FunctionComponent<StandartDeviationProps> = 
   }
 
   return (
-    <Box data-test-id="standart-deviation-stat">
+    <Box data-testid="standard-deviation-stat">
       <CBGStandardDeviation
         annotations={tooltipDisplay(selectedLabel)}
         averageGlucose={dataFormat(averageGlucose)}

@@ -87,9 +87,9 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <StandartDeviationStat standardDeviationTotal={standardDeviationTotal} bgsource={bgSource} bgpref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {cbgSelected &&
         <>
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage}/>
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
@@ -112,7 +112,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       {isTrendsPage && !cbgSelected &&
         <>
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
           <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
