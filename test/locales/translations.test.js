@@ -176,7 +176,10 @@ const ignoredTransKeyForYourLoops = [
   'remote-monitoring',
   'no-settings-on-device-alert-message',
   'BGM',
-  'tooltip-empty-stat'
+  'tooltip-empty-stat',
+  'standard-deviation',
+  'standard-deviation-tooltip',
+  'tooltip-SMBG-data'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
