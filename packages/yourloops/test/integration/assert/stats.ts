@@ -87,7 +87,7 @@ export const checkAverageGlucoseStatWidget = async (expectedTextContent: string)
 
 export const checkStandardDeviationStatWidget = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent(expectedTextContent)
+  expect(patientStatistics.getByTestId('standard-deviation-stat')).toHaveTextContent(expectedTextContent)
 }
 export const checkSensorUsage = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
