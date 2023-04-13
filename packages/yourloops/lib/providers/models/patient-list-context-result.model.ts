@@ -27,7 +27,7 @@
 
 import { type PatientsFilters } from './patients-filters.model'
 import { type GridApiCommon, type GridColumnVisibilityModel } from '@mui/x-data-grid'
-import { type Dispatch, type MutableRefObject, type SetStateAction } from 'react'
+import { type MutableRefObject } from 'react'
 
 export interface PatientListContextResult {
   displayedColumns: GridColumnVisibilityModel
@@ -37,5 +37,5 @@ export interface PatientListContextResult {
   updatePatientsFilters: (filters: PatientsFilters) => void
   updatePendingFilter: (pendingEnabled: boolean) => void
   resetFilters: () => void
-  setDisplayedColumns: Dispatch<SetStateAction<GridColumnVisibilityModel>>
+  saveColumnsPreferences: (updatedColumnsModel: GridColumnVisibilityModel) => void
 }

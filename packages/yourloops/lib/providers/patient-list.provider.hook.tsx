@@ -43,21 +43,41 @@ const DEFAULT_FILTERS = {
 }
 
 export const usePatientListProviderHook = (): PatientListContextResult => {
-  const { user } = useAuth()
+  const { user, updatePreferences } = useAuth()
   const gridApiRef = useGridApiRef()
+
+  const getColumnPreference = (ColumnName: PatientListColumns): boolean => {
+    const userPreferredColumns = user.preferences?.patientsListSortedOptionalColumns
+    return userPreferredColumns ? userPreferredColumns.includes(ColumnName) : true
+  }
 
   const [filters, setFilters] = useState<PatientsFilters>(DEFAULT_FILTERS)
   const [displayedColumns, setDisplayedColumns] = useState<GridColumnVisibilityModel>({
     [PatientListColumns.Flag]: true,
-    [PatientListColumns.System]: true,
+    [PatientListColumns.System]: getColumnPreference(PatientListColumns.System),
     [PatientListColumns.Patient]: true,
-    [PatientListColumns.TimeOutOfRange]: user.isUserHcp() ?? false,
-    [PatientListColumns.SevereHypoglycemia]: user.isUserHcp() ?? false,
-    [PatientListColumns.DataNotTransferred]: user.isUserHcp() ?? false,
-    [PatientListColumns.LastDataUpdate]: true,
-    [PatientListColumns.Messages]: user.isUserHcp() ?? false,
+    [PatientListColumns.TimeOutOfRange]: user.isUserHcp() ? getColumnPreference(PatientListColumns.TimeOutOfRange) : false,
+    [PatientListColumns.SevereHypoglycemia]: user.isUserHcp() ? getColumnPreference(PatientListColumns.SevereHypoglycemia) : false,
+    [PatientListColumns.DataNotTransferred]: user.isUserHcp() ? getColumnPreference(PatientListColumns.DataNotTransferred) : false,
+    [PatientListColumns.LastDataUpdate]: getColumnPreference(PatientListColumns.LastDataUpdate),
+    [PatientListColumns.Messages]: user.isUserHcp() ? getColumnPreference(PatientListColumns.Messages) : false,
     [PatientListColumns.Actions]: true
   })
+
+  const buildColumnsPreferencesArray = (columnsVisibilityModel: GridColumnVisibilityModel): string[] => {
+    const columnsPreferences = []
+    for (const columnName in columnsVisibilityModel) {
+      if (columnsVisibilityModel[columnName]) {
+        columnsPreferences.push(columnName)
+      }
+    }
+    return columnsPreferences
+  }
+
+  const saveColumnsPreferences = (updatedColumnsVisibilityModel: GridColumnVisibilityModel): void => {
+    setDisplayedColumns(updatedColumnsVisibilityModel)
+    updatePreferences({ patientsListSortedOptionalColumns: buildColumnsPreferencesArray(updatedColumnsVisibilityModel) })
+  }
 
   const updatePatientsFilters = (filters: PatientsFilters): void => {
     setFilters(filters)
@@ -80,7 +100,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     updatePendingFilter,
     resetFilters,
     displayedColumns,
-    setDisplayedColumns,
+    saveColumnsPreferences,
     gridApiRef
   }
 }

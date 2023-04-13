@@ -58,7 +58,7 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
   const { anchorEl, onClose } = props
   const { user } = useAuth()
   const { t } = useTranslation()
-  const { displayedColumns, setDisplayedColumns } = usePatientListContext()
+  const { displayedColumns, saveColumnsPreferences } = usePatientListContext()
   const [updatedColumnsModel, setUpdatedColumnsModel] = useState<GridColumnVisibilityModel>({ ...displayedColumns })
 
   const columnToggles: ColumnToggleDefinition[] = [
@@ -103,7 +103,7 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
   }
 
   const refreshDisplayedColumns = (): void => {
-    setDisplayedColumns(updatedColumnsModel)
+    saveColumnsPreferences(updatedColumnsModel)
     onClose()
   }
 
