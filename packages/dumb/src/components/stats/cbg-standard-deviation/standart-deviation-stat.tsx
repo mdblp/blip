@@ -64,7 +64,8 @@ export const StandartDeviationStat: FunctionComponent<StandartDeviationProps> = 
   }
 
   return (
-    <Box data-testid="standard-deviation-stat">
+    // data-testid="standard-deviation-stat"
+    <Box>
       <CBGStandardDeviation
         annotations={tooltipDisplay(selectedLabel)}
         averageGlucose={dataFormat(averageGlucose)}
