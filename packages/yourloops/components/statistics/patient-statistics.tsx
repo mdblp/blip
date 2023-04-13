@@ -38,6 +38,7 @@ import {
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { AverageGlucoseStat } from './average-glucose-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -63,6 +64,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     total
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
+  const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
+
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
 
   const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
@@ -81,10 +84,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgPrefs={bgPrefs}
         days={numberOfDays}
       />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <AverageGlucoseStat averageGlucose={averageGlucose} bgPrefs={bgPrefs} bgSource={bgSource} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {cbgSelected &&
         <>
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage}/>
+          <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }

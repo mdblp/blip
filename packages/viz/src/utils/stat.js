@@ -98,7 +98,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
     case commonStats.averageGlucose:
       annotations.push(t('**Avg. Glucose ({{bgSourceLabel}}):** All {{bgSourceLabel}} glucose values added together, divided by the number of readings.', { bgSourceLabel: statBgSourceLabels[bgSource] }))
       break
-
     case commonStats.averageDailyDose:
       if (days > 1) {
         annotations.push(t('**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.'))

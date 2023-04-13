@@ -239,7 +239,6 @@ class Stats extends React.Component {
 
     switch (chartType) {
       case 'daily':
-        addStat(commonStats.averageGlucose)
         addStat(commonStats.totalInsulin)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         addStat(commonStats.carbs)
@@ -247,12 +246,10 @@ class Stats extends React.Component {
         break
 
       case 'trends':
-        addStat(commonStats.averageGlucose)
         addStat(commonStats.standardDev)
         break
 
       case 'patientStatistics':
-        addStat(commonStats.averageGlucose)
         addStat(commonStats.totalInsulin)
         addStat(commonStats.averageDailyDose)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
