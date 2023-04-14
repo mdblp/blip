@@ -26,7 +26,6 @@
  */
 
 export enum MonitoringStatus {
-  unknown = 'unknown',
   pending = 'pending',
   accepted = 'accepted',
 }

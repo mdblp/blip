@@ -331,7 +331,7 @@ describe('Patient hook', () => {
   })
 
   describe('removePatient', () => {
-    const pendingPatient = createPatient('pendingPatient', [], UserInvitationStatus.pending, MonitoringStatus.unknown, {} as Monitoring)
+    const pendingPatient = createPatient('pendingPatient', [], UserInvitationStatus.pending, undefined, {} as Monitoring)
     const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', [], UserInvitationStatus.accepted)
     const patientToRemove2 = createPatient('patientToRemove2', [], UserInvitationStatus.accepted)
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]

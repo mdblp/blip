@@ -115,8 +115,8 @@ export const buildPatient = (
       hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
     monitoring,
-    invitationStatus: UserInvitationStatus.unknown,
-    monitoringStatus: MonitoringStatus.unknown,
+    invitationStatus: UserInvitationStatus.accepted,
+    monitoringStatus: MonitoringStatus.accepted,
     userid
   }
 }

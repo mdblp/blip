@@ -44,6 +44,7 @@ import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
 import { useAuth } from '../../lib/auth'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 
 export const PatientList: FunctionComponent = () => {
   const { t } = useTranslation()
@@ -63,6 +64,7 @@ export const PatientList: FunctionComponent = () => {
     onRowClick,
     setInputSearch
   } = usePatientListHook()
+  const { refreshInProgress } = usePatientContext()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
@@ -119,6 +121,7 @@ export const PatientList: FunctionComponent = () => {
           disableColumnFilter
           disableColumnSelector
           disableRowSelectionOnClick
+          loading={refreshInProgress}
           disableVirtualization={process.env.NODE_ENV === 'test'}
           columnVisibilityModel={columnsVisibility}
           onColumnVisibilityModelChange={setColumnsVisibility}

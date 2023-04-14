@@ -36,12 +36,7 @@ export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children
   const patientProviderCustomHook = usePatientProviderCustomHook()
 
   return patientProviderCustomHook.initialized
-    ? patientProviderCustomHook.refreshInProgress
-      ? <>
-        <SpinningLoader className="centered-spinning-loader" /><PatientContext.Provider
-        value={patientProviderCustomHook}>{children}</PatientContext.Provider>
-      </>
-      : <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
+    ? <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
     : <SpinningLoader className="centered-spinning-loader" />
 }
 

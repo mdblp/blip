@@ -45,5 +45,5 @@ export interface PatientContextResult {
   removePatient: (patient: Patient) => Promise<void>
   leaveTeam: (team: string) => Promise<void>
   setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
-  refresh: () => void
+  refresh: (teamId?: string) => void
 }

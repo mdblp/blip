@@ -109,7 +109,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
       selectTeam(teamId)
-      refresh()
+      refresh(teamId)
 
       if (pathname !== AppUserRoute.Home) {
         navigate(AppUserRoute.Home)

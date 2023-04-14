@@ -57,8 +57,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
-  const fetchPatients = useCallback(() => {
-    PatientUtils.computePatients(user, selectedTeam?.id ?? null).then(computedPatients => {
+  const fetchPatients = useCallback((teamId: string = selectedTeam?.id) => {
+    PatientUtils.computePatients(user, teamId ?? null).then(computedPatients => {
       setPatients(computedPatients)
     }).catch((reason: unknown) => {
       const message = errorTextFromException(reason)
@@ -71,9 +71,9 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedTeam])
 
-  const refresh = (): void => {
+  const refresh = (teamId: string = selectedTeam?.id): void => {
     setRefreshInProgress(true)
-    fetchPatients()
+    fetchPatients(teamId)
   }
 
   const updatePatient = useCallback((patient: Patient) => {
