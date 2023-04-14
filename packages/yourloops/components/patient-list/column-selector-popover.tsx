@@ -146,6 +146,7 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
           {t('button-cancel')}
         </Button>
         <Button
+          data-testid="column-selector-save-button"
           variant="contained"
           color="primary"
           disableElevation
