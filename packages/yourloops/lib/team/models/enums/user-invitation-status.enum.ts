@@ -26,7 +26,6 @@
  */
 
 export enum UserInvitationStatus {
-  unknown = 'unknown',
   pending = 'pending',
   accepted = 'accepted',
   rejected = 'rejected',
