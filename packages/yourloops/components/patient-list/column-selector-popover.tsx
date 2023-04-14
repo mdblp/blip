@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -102,9 +102,9 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
     setUpdatedColumnsModel(prevState => ({ ...prevState, [column]: !prevState[column] }))
   }
 
-  const refreshDisplayedColumns = (): void => {
-    saveColumnsPreferences(updatedColumnsModel)
+  const refreshDisplayedColumns = async (): Promise<void> => {
     onClose()
+    await saveColumnsPreferences(updatedColumnsModel)
   }
 
   return (

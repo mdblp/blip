@@ -74,9 +74,9 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     return columnsPreferences
   }
 
-  const saveColumnsPreferences = (updatedColumnsVisibilityModel: GridColumnVisibilityModel): void => {
+  const saveColumnsPreferences = async (updatedColumnsVisibilityModel: GridColumnVisibilityModel): Promise<void> => {
     setDisplayedColumns(updatedColumnsVisibilityModel)
-    updatePreferences({ patientsListSortedOptionalColumns: buildColumnsPreferencesArray(updatedColumnsVisibilityModel) })
+    await updatePreferences({ patientsListSortedOptionalColumns: buildColumnsPreferencesArray(updatedColumnsVisibilityModel) })
   }
 
   const updatePatientsFilters = (filters: PatientsFilters): void => {
