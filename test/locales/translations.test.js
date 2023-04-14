@@ -179,7 +179,7 @@ const ignoredTransKeyForYourLoops = [
   'tooltip-empty-stat',
   'standard-deviation',
   'standard-deviation-tooltip',
-  'tooltip-SMBG-data'
+  'tooltip-smbg-data'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

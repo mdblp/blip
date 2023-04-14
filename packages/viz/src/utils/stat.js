@@ -132,10 +132,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       annotations.push(t('**Sensor Usage:** Time the {{cbgLabel}} collected data, divided by the total time represented in this view.', { cbgLabel: statBgSourceLabels.cbg }))
       break
 
-    case commonStats.standardDev:
-      annotations.push(t('**SD (Standard Deviation):** How far values are from the average.'))
-      break
-
     case commonStats.timeInAuto:
       if (days > 1) {
         annotations.push(t('**Time In Loop Mode:** Daily average of the time spent in automated basal delivery.'))
@@ -487,10 +483,6 @@ export const getStatTitle = (type, opts = {}) => {
 
     case commonStats.sensorUsage:
       title = t('Sensor Usage')
-      break
-
-    case commonStats.standardDev:
-      title = t('Std. Deviation ({{bgSourceLabel}})', { bgSourceLabel: statBgSourceLabels[bgSource] })
       break
 
     case commonStats.timeInAuto:
