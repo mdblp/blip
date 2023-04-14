@@ -26,49 +26,40 @@
  */
 import React, { type FunctionComponent } from 'react'
 import { type BgPrefs, CBGStandardDeviation } from 'dumb'
-import Box from '@mui/material/Box'
 import { t } from 'i18next'
-import { type BgType } from 'medical-domain'
+import { type BgType, DatumType } from 'medical-domain'
 
 export interface StandardDeviationProps {
-  bgPref: BgPrefs
+  bgPrefs: BgPrefs
   bgType: BgType
   averageGlucose: number
   standardDeviation: number
-  standardDeviationTotal: number
+  total: number
 }
 
 export const StandardDeviationStat: FunctionComponent<StandardDeviationProps> = (props) => {
-  const { standardDeviation, averageGlucose, standardDeviationTotal, bgPref, bgType } = props
-  const defaultAnnotations = [t('standard-deviation-tooltip'), t('tooltip-empty-stat')]
-  const standardAnnotation = t('standard-deviation-tooltip')
+  const { standardDeviation, averageGlucose, total, bgPrefs, bgType } = props
 
-  const formatData = (data: number): number => {
-    return Math.round(data)
-  }
-
-  const getAnnotations = (selectedLabel: string): string[] => {
-    const hasValidValue = standardDeviation | averageGlucose
-    switch (selectedLabel) {
-      case 'cbg':
-        return hasValidValue ? [standardAnnotation] : defaultAnnotations
-      case 'smbg':
-        return hasValidValue ? [standardAnnotation, t('tooltip-smbg-data', { total: standardDeviationTotal, smbgLabel: t('BGM') })] : defaultAnnotations
-      default:
-        return defaultAnnotations
+  const getAnnotations = (bgType: string): string[] => {
+    const annotations = [t('standard-deviation-tooltip')]
+    if (!standardDeviation || !averageGlucose) {
+      annotations.push(t('tooltip-empty-stat'))
+      return annotations
     }
+    if (bgType === DatumType.Smbg) {
+      annotations.push(t('tooltip-smbg-data', { total, smbgLabel: t('BGM') }))
+    }
+    return annotations
   }
 
   return (
-    <Box>
       <CBGStandardDeviation
         annotations={getAnnotations(bgType)}
-        averageGlucose={formatData(averageGlucose)}
-        bgClasses={bgPref.bgClasses}
-        standardDeviation={formatData(standardDeviation)}
+        averageGlucose={Math.round(averageGlucose)}
+        bgClasses={bgPrefs.bgClasses}
+        standardDeviation={Math.round(standardDeviation)}
         title={t('standard-deviation')}
-        units={bgPref.bgUnits}
+        units={bgPrefs.bgUnits}
       />
-    </Box>
   )
 }

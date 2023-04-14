@@ -32,7 +32,9 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService } from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
+import {
+  GlycemiaStatisticsService
+} from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
@@ -52,9 +54,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
-  const cbgSelected = bgSource === DatumType.Cbg
   const bgUnits = bgPrefs.bgUnits
-  const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
+  const selectedBgData = bgSource === DatumType.Cbg ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
 
   const {
@@ -87,36 +88,27 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <StandardDeviationStat standardDeviationTotal={standardDeviationTotal} bgType={bgSource} bgPref={bgPrefs} averageGlucose={averageGlucose} standardDeviation={standardDeviation} />
+      <StandardDeviationStat
+        total={standardDeviationTotal}
+        bgType={bgSource}
+        bgPrefs={bgPrefs}
+        averageGlucose={averageGlucose}
+        standardDeviation={standardDeviation}
+      />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {cbgSelected &&
+      <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      {isTrendsPage &&
         <>
-          <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage}/>
+          <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
 
       {children}
 
-      {cbgSelected &&
-        <>
-          {isTrendsPage &&
-            <>
-              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
-              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-            </>
-          }
-          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
-
-      {isTrendsPage && !cbgSelected &&
-        <>
-          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
     </Box>
   )
 }
