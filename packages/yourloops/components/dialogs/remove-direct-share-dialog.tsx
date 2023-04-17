@@ -56,7 +56,7 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
   const isCurrentUserCaregiver = currentUser.isUserCaregiver()
 
   const titleKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-title' : 'modal-patient-remove-caregiver-title'
-  const questionKey = isCurrentUserCaregiver ? 'modal-remove-patient-question' : 'modal-remove-caregiver-question'
+  const questionKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-question' : 'modal-remove-caregiver-question'
   const infoKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-info-2' : 'modal-patient-remove-caregiver-info-2'
   const removeButtonKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-remove' : 'remove-caregiver'
 

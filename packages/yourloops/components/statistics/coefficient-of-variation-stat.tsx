@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.simpleValue {
-  line-height: 1;
-  display: flex;
-  justify-content: space-between;
+import React, { type FunctionComponent } from 'react'
+import { SimpleStat } from 'dumb'
+import { StatFormats } from 'dumb/dist/src/models/stats.model'
+import { t } from 'i18next'
+import Box from '@mui/material/Box'
+import { type BgType, DatumType } from 'medical-domain'
+
+export interface CoefficientOfVariationProps {
+  coefficientOfVariation: number
+  bgSource: BgType
 }
 
-.data {
-  display: inline;
-  white-space: nowrap;
-}
-
-.value {
-  composes: extraLargeSize from '../../../styles/typography.css';
-  opacity: 1;
-  display: inline-block;
-}
-
-.suffix {
-  composes: smallSize from '../../../styles/typography.css';
-  color: var(--stat--default);
-  font-weight: normal;
-  position: relative;
-  bottom: 1px;
-  padding-left: 1px;
+export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
+  const { coefficientOfVariation, bgSource } = props
+  const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('tooltip-empty-stat')]
+  const selectedLabel = bgSource === DatumType.Cbg ? t('CGM') : t('BGM')
+  return (
+    <Box data-testid="coefficient-of-variation-stat">
+      <SimpleStat
+        annotations={annotation}
+        title={t('coefficient-of-variation', { cbgLabel: selectedLabel })}
+        value={coefficientOfVariation}
+        summaryFormat={StatFormats.Cv}
+        total={0}
+      />
+    </Box>
+  )
 }

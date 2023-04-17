@@ -35,7 +35,7 @@ import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invita
 import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { type Team } from '../../../lib/team'
 import { type Profile } from '../../../lib/auth/models/profile.model'
-import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/alarm/alarms.default'
+import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
 import { type ITeam } from '../../../lib/team/models/i-team.model'
 import { Unit } from 'medical-domain'
 

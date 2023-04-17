@@ -39,8 +39,8 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import useAlarmsContentConfiguration from './alarms-content-configuration.hook'
-import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './alarm-content-configuration.util'
+import useMonitoringAlertsContentConfiguration from './monitoring-alerts-content-configuration.hook'
+import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './monitoring-alert-content-configuration.util'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useAuth } from '../../lib/auth'
 import { LoadingButton } from '@mui/lab'
@@ -96,7 +96,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   }
 }))
 
-export interface AlarmsContentConfigurationProps {
+export interface MonitoringAlertsContentConfigurationProps {
   monitoring: Monitoring
   saveInProgress: boolean
   patient?: Patient
@@ -111,7 +111,7 @@ const TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT = 50
 const TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT = 5
 const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
 
-function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
+function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConfigurationProps): JSX.Element {
   const { monitoring, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
   const { t } = useTranslation()
@@ -133,7 +133,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     setHypoThreshold,
     setNonDataTxThreshold,
     bgUnit
-  } = useAlarmsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
+  } = useMonitoringAlertsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
   const { user } = useAuth()
@@ -367,7 +367,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               color="primary"
               disableElevation
               onClick={resetToTeamDefaultValues}
-              data-testid="alarm-config-reset"
+              data-testid="monitoring-alert-config-reset"
             >
               {t('button-default-values')}
             </Button>
@@ -380,7 +380,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               className={classes.cancelButton}
               variant="outlined"
               onClick={onClose}
-              data-testid="alarm-config-cancel"
+              data-testid="monitoring-alert-config-cancel"
             >
               {t('button-cancel')}
             </Button>
@@ -393,7 +393,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             disableElevation
             disabled={saveButtonDisabled}
             onClick={save}
-            data-testid="alarm-config-save"
+            data-testid="monitoring-alert-config-save"
           >
             {t('button-save')}
           </LoadingButton>
@@ -403,4 +403,4 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
   )
 }
 
-export default AlarmsContentConfiguration
+export default MonitoringAlertsContentConfiguration

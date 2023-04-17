@@ -26,8 +26,8 @@
  */
 import { formatBgValue } from 'dumb/src/utils/format/format.util'
 import { convertBG } from '../../lib/units/units.util'
-import { DEFAULT_BG_VALUES, DEFAULT_THRESHOLDS_IN_MGDL } from './alarms.default'
-import { type BgValues, type Thresholds } from '../../lib/patient/models/alarms.model'
+import { DEFAULT_BG_VALUES, DEFAULT_THRESHOLDS_IN_MGDL } from './monitoring-alert.default'
+import { type BgValues, type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
 import { type BgUnit, Unit } from 'medical-domain'
 
 export const PERCENTAGES = [...new Array(21)]

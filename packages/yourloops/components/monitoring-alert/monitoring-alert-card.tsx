@@ -33,14 +33,14 @@ import { Box, IconButton } from '@mui/material'
 import TuneIcon from '@mui/icons-material/Tune'
 import AnnouncementIcon from '@mui/icons-material/Announcement'
 
-import PatientAlarmDialog from './patient-alarm-dialog'
+import PatientMonitoringAlertDialog from './patient-monitoring-alert-dialog'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 
-const alarmCardStyles = makeStyles()((theme) => {
+const monitoringAlertCardStyles = makeStyles()((theme) => {
   return {
     alertColor: {
       color: theme.palette.warning.main
@@ -48,46 +48,46 @@ const alarmCardStyles = makeStyles()((theme) => {
   }
 })
 
-export interface AlarmCardProps {
+export interface MonitoringAlertCardProps {
   patient: Patient
 }
 
-function AlarmCard(props: AlarmCardProps): JSX.Element {
+function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { patient } = props
   const { user } = useAuth()
-  const { classes } = alarmCardStyles()
-  const [showPatientAlarmDialog, setShowPatientAlarmDialog] = useState(false)
+  const { classes } = monitoringAlertCardStyles()
+  const [showPatientMonitoringAlertDialog, setShowPatientMonitoringAlertDialog] = useState(false)
   const timeSpentAwayFromTargetActive = patient.alarms.timeSpentAwayFromTargetActive
   const frequencyOfSevereHypoglycemiaActive = patient.alarms.frequencyOfSevereHypoglycemiaActive
   const nonDataTransmissionActive = patient.alarms.nonDataTransmissionActive
-  const noActiveAlarm = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive
+  const noActiveMonitoringAlert = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive
 
-  const buildNumberOfAlarmsLabel = (): string => {
-    if (noActiveAlarm) {
+  const buildNumberOfMonitoringAlertsLabel = (): string => {
+    if (noActiveMonitoringAlert) {
       return ''
     }
     const number = [timeSpentAwayFromTargetActive, frequencyOfSevereHypoglycemiaActive, nonDataTransmissionActive].filter(value => value).length
     return ` (+${number})`
   }
 
-  const numberOfAlarmsLabel = buildNumberOfAlarmsLabel()
+  const numberOfMonitoringAlertsLabel = buildNumberOfMonitoringAlertsLabel()
 
-  const onClosePatientAlarmDialog = (): void => {
-    setShowPatientAlarmDialog(false)
+  const onClosePatientMonitoringAlertDialog = (): void => {
+    setShowPatientMonitoringAlertDialog(false)
   }
 
   return (
     <GenericDashboardCard
-      avatar={<AnnouncementIcon className={noActiveAlarm ? '' : classes.alertColor} />}
-      title={`${t('events')}${numberOfAlarmsLabel}`}
-      data-testid="alarm-card"
+      avatar={<AnnouncementIcon className={noActiveMonitoringAlert ? '' : classes.alertColor} />}
+      title={`${t('events')}${numberOfMonitoringAlertsLabel}`}
+      data-testid="monitoring-alert-card"
       action={user.isUserHcp() &&
         <IconButton
           id="configure-icon-button-id"
-          aria-label={t('configure-alarms')}
-          data-testid="alarm-card-configure-button"
-          onClick={() => { setShowPatientAlarmDialog(true) }}
+          aria-label={t('configure-monitoring-alerts')}
+          data-testid="monitoring-alert-card-configure-button"
+          onClick={() => { setShowPatientMonitoringAlertDialog(true) }}
           size="small"
         >
           <TuneIcon />
@@ -95,11 +95,11 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
       }
     >
       <CardContent>
-        <Typography className={`${noActiveAlarm ? '' : classes.alertColor} bold`}>
+        <Typography className={`${noActiveMonitoringAlert ? '' : classes.alertColor} bold`}>
           {t('current-events')}
         </Typography>
         <Box
-          id="time-away-target-alarm-id"
+          id="time-away-target-monitoring-alert-id"
           display="flex"
           justifyContent="space-between"
           fontSize="13px"
@@ -111,7 +111,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
           </Box>
         </Box>
         <Box
-          id="severe-hypo-alarm-id"
+          id="severe-hypo-monitoring-alert-id"
           display="flex"
           fontSize="13px"
           justifyContent="space-between"
@@ -123,7 +123,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
           </Box>
         </Box>
         <Box
-          id="non-data-transmission-alarm-id"
+          id="non-data-transmission-monitoring-alert-id"
           display="flex"
           justifyContent="space-between"
           fontSize="13px"
@@ -133,11 +133,11 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
           <Box>{`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}</Box>
         </Box>
       </CardContent>
-      {showPatientAlarmDialog &&
-        <PatientAlarmDialog patient={patient} onClose={onClosePatientAlarmDialog} />
+      {showPatientMonitoringAlertDialog &&
+        <PatientMonitoringAlertDialog patient={patient} onClose={onClosePatientMonitoringAlertDialog} />
       }
     </GenericDashboardCard>
   )
 }
 
-export default AlarmCard
+export default MonitoringAlertCard
