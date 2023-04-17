@@ -47,11 +47,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (
-    <Box
-      data-testid="cbg-mean-stat"
-      marginLeft="4px"
-      marginRight="4px"
-    >
+    <Box data-testid="cbg-mean-stat">
       <Box display="flex" justifyContent="space-between" marginTop="4px">
         <div>
           {title}
@@ -65,7 +61,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
         {Number.isNaN(value)
           ? <>
             <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
               --
             </Box>
           </>
@@ -87,7 +83,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
                 style={{ left: valueBasedStyles.left }}
               />
             </div>
-            <Box className={valueBasedStyles.color} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <Box className={valueBasedStyles.color} fontSize="24px" marginLeft="auto">
               {value}
             </Box>
           </>

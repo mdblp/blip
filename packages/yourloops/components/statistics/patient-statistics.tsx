@@ -85,35 +85,19 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <AverageGlucoseStat averageGlucose={averageGlucose} bgPrefs={bgPrefs} bgSource={bgSource} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {cbgSelected &&
-        <>
-          <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage} />
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
+      <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       {children}
 
-      {cbgSelected &&
+      {isTrendsPage &&
         <>
-          {isTrendsPage &&
-            <>
-              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
-              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-            </>
-          }
-          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+          <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
-
-      {isTrendsPage && !cbgSelected &&
-        <>
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
+      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
     </Box>
   )
 }
