@@ -51,6 +51,5 @@ export const mockPatientApiForHcp = () => {
     }
     return Promise.resolve(PATIENTS_MAP_TO_TEAMS[teamId])
   })
-  // jest.spyOn(PatientApi, 'getScopedPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
