@@ -36,7 +36,7 @@ import { type BgBounds, type BgType, type BgUnit, DatumType } from 'medical-doma
 
 export interface CBGPercentageBarChartHookProps {
   bgBounds: BgBounds
-  bgSource: BgType
+  bgType: BgType
   data: TimeInRangeData
   days: number
   type: CBGStatType
@@ -61,7 +61,7 @@ const TITLE_TYPE_READINGS = 'Readings'
 const TITLE_TYPE_TIME = 'Time'
 
 export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, units, days, data, bgBounds, bgSource } = props
+  const { type, units, days, data, bgBounds, bgType } = props
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
@@ -99,7 +99,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
         break
     }
 
-    if (bgSource === DatumType.Smbg) {
+    if (bgType === DatumType.Smbg) {
       annotations.push(t('Derived from _**{{total}}**_ {{smbgLabel}} readings.', {
         total: data.total,
         smbgLabel: t('BGM')
@@ -107,7 +107,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     }
 
     return annotations
-  }, [bgSource, data.total, days, t, type])
+  }, [bgType, data.total, days, t, type])
 
   const onStatMouseover = (id: StatLevel, title: string, legendTitle: string, hasValues: boolean): void => {
     if (hasValues) {
