@@ -32,9 +32,7 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import {
-  GlycemiaStatisticsService
-} from 'medical-domain/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlycemiaStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
@@ -55,7 +53,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const bgUnits = bgPrefs.bgUnits
-  const selectedBgData = bgSource === DatumType.Cbg ? medicalData.cbg : medicalData.smbg
+  const cbgSelected = bgSource === DatumType.Cbg
+  const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
 
   const {
@@ -100,6 +99,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+
       {isTrendsPage &&
         <>
           <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
