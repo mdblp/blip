@@ -29,28 +29,25 @@ import { type BgPrefs, CBGMeanStat } from 'dumb'
 import React, { type FunctionComponent } from 'react'
 import { type BgType, DatumType } from 'medical-domain'
 import { t } from 'i18next'
-import Box from '@mui/material/Box'
 
 interface AverageGlucoseStatProps {
   averageGlucose: number
   bgPrefs: BgPrefs
-  bgSource: BgType
+  bgType: BgType
 
 }
 
 export const AverageGlucoseStat: FunctionComponent<AverageGlucoseStatProps> = (props) => {
-  const { bgPrefs, averageGlucose, bgSource } = props
-  const selectLabel = bgSource === DatumType.Cbg ? t('CGM') : t('BGM')
+  const { bgPrefs, averageGlucose, bgType } = props
+  const bgSourceLabel = bgType === DatumType.Cbg ? t('CGM') : t('BGM')
 
   return (
-    <Box>
       <CBGMeanStat
         bgClasses={bgPrefs.bgClasses}
-        title={t('average-glucose', { bgSourceLabel: selectLabel })}
-        tooltipValue={t('average-glucose-tooltip', { bgSourceLabel: selectLabel })}
+        title={t('average-glucose', { bgSourceLabel })}
+        tooltipValue={t('average-glucose-tooltip', { bgSourceLabel })}
         units={bgPrefs.bgUnits}
         value={Math.round(averageGlucose)}
       />
-    </Box>
   )
 }
