@@ -108,23 +108,23 @@ describe('Caregiver home page', () => {
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1NaN%NaN%NaN%N/AFlag patient fake@patient.emailAlain ProvistDBLG1NaN%NaN%NaN%N/AFlag patient fake@patient.emailAnnie VersaireDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–3 of 3')
+    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1N/AFlag patient fake@patient.emailAlain ProvistDBLG1N/AFlag patient fake@patient.emailAnnie VersaireDBLG1N/AData calculated on the last 7 daysRows per page:101–3 of 3')
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1NaN%NaN%NaN%N/AFlag patient fake@patient.emailAlain ProvistDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–2 of 2')
+    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1N/AFlag patient fake@patient.emailAlain ProvistDBLG1N/AData calculated on the last 7 daysRows per page:101–2 of 2')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1N/AData calculated on the last 7 daysRows per page:101–1 of 1')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient fake@patient.emailAlain ProvistDBLG1NaN%NaN%NaN%N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAlain ProvistDBLG1N/AData calculated on the last 7 daysRows per page:101–1 of 1')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
@@ -137,7 +137,7 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG110%20%30%N/AFlag patient pending-patient@diabeloop.frPending PatientDBLG110%20%30%N/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/AData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(patientTableBody).toHaveTextContent('PatientSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/AFlag patient pending-patient@diabeloop.frPending PatientDBLG1N/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/AData calculated on the last 7 daysRows per page:101–4 of 4')
 
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
@@ -177,7 +177,7 @@ describe('Caregiver home page', () => {
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(2)
-    expect(patientTableBody).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(patientTableBody).toHaveTextContent('PatientSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/AData calculated on the last 7 daysRows per page:101–1 of 1')
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })
@@ -204,5 +204,52 @@ describe('Caregiver home page', () => {
     expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
+  })
+
+  it('should display the right columns for caregivers and be able to change them', async () => {
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    })
+
+    const columnSettingsButton = screen.getByTestId('column-settings-button')
+
+    checkPatientListHeader(UserRole.Caregiver)
+    expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+
+    await userEvent.click(columnSettingsButton)
+
+    const columnSettingsPopover = screen.getByRole('presentation')
+    const applyButton = within(columnSettingsPopover).getByRole('button', { name: 'Apply' })
+    expect(columnSettingsPopover).toBeVisible()
+    expect(within(columnSettingsPopover).getByText('Show column')).toBeVisible()
+
+    const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('checkbox')
+    const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('checkbox')
+    const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('checkbox')
+    expect(patientToggle).toHaveProperty('checked', true)
+    expect(patientToggle).toHaveProperty('disabled', true)
+    expect(systemToggle).toHaveProperty('checked', true)
+    expect(lastUpdateToggle).toHaveProperty('checked', true)
+
+    const disabledToggle = screen.getByLabelText('This column cannot be removed')
+    await userEvent.hover(disabledToggle)
+    expect(await screen.findByText('This column cannot be removed'))
+
+    await userEvent.click(systemToggle)
+    await userEvent.click(lastUpdateToggle)
+    expect(systemToggle).toHaveProperty('checked', false)
+    expect(lastUpdateToggle).toHaveProperty('checked', false)
+
+    await userEvent.click(applyButton)
+
+    expect(columnSettingsPopover).not.toBeVisible()
+    expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+    expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
   })
 })

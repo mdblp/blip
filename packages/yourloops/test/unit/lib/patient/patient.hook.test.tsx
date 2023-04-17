@@ -34,7 +34,7 @@ import * as notificationHookMock from '../../../../lib/notifications/notificatio
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
-import * as patientFilterHookMock from '../../../../lib/filter/patients-filters.provider'
+import * as patientFilterHookMock from '../../../../lib/providers/patient-list.provider'
 import { act, waitFor } from '@testing-library/react'
 import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
@@ -49,7 +49,7 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/selected-team/selected-team.provider')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/notifications/notification.hook')
-jest.mock('../../../../lib/filter/patients-filters.provider')
+jest.mock('../../../../lib/providers/patient-list.provider')
 describe('Patient hook', () => {
   const basicTeam = createPatientTeam('basicTeam1Id', UserInvitationStatus.accepted)
   const basicTeam2 = createPatientTeam('basicTeam2Id', UserInvitationStatus.accepted)
@@ -89,7 +89,7 @@ describe('Patient hook', () => {
         refresh: refreshTeamsMock
       }
     });
-    (patientFilterHookMock.usePatientsFiltersContext as jest.Mock).mockImplementation(() => {
+    (patientFilterHookMock.usePatientListContext as jest.Mock).mockImplementation(() => {
       return {
         filters: {
           pendingEnabled: false,
