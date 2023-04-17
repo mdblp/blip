@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2140 As a HCP, I can only edit my medical records
 - YLP-2146 Adding groups in patient list
 - YLP-2151 As a HCP I want to be able to filter my patients via the new design
+- YLP-2154 Displayed columns choice in the patient list
 - YLP-2160 Patient list new design
 - YLP-2175 Implement new design system
 - YLP-2192 Team scope dropdown for HCP

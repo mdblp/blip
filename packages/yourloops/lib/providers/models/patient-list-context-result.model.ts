@@ -26,11 +26,16 @@
  */
 
 import { type PatientsFilters } from './patients-filters.model'
+import { type GridApiCommon, type GridColumnVisibilityModel } from '@mui/x-data-grid'
+import { type MutableRefObject } from 'react'
 
-export interface PatientsFiltersContextResult {
+export interface PatientListContextResult {
+  displayedColumns: GridColumnVisibilityModel
   filters: PatientsFilters
+  gridApiRef: MutableRefObject<GridApiCommon>
   hasAnyNonPendingFiltersEnabled: boolean
   updatePatientsFilters: (filters: PatientsFilters) => void
   updatePendingFilter: (pendingEnabled: boolean) => void
   resetFilters: () => void
+  saveColumnsPreferences: (updatedColumnsModel: GridColumnVisibilityModel) => Promise<void>
 }
