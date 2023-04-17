@@ -42,7 +42,7 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Avatar from '@mui/material/Avatar'
 import { makeStyles } from 'tss-react/mui'
-import { Theme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -61,7 +61,6 @@ const VerifyEmailPage: FunctionComponent = () => {
   const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
   const { logout: authLogout } = useAuth()
-  // const theme = useTheme()
   const alert = useAlert()
 
   const sendConfirmationEmail = async (): Promise<void> => {
@@ -69,13 +68,11 @@ const VerifyEmailPage: FunctionComponent = () => {
   }
 
   const createNewAccount = async (): Promise<void> => {
-    console.log('Create new account')
     await authLogout()
     await loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
   }
 
   const logoutUser = async (): Promise<void> => {
-    console.log('Login')
     await authLogout()
   }
 
@@ -141,6 +138,7 @@ const VerifyEmailPage: FunctionComponent = () => {
         data-testid="verify-email-content"
       >
         <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
+
         <Container maxWidth="sm">
           <Box display="flex" justifyContent="center">
             <img
@@ -150,24 +148,30 @@ const VerifyEmailPage: FunctionComponent = () => {
               alt={t('alt-img-logo')}
               width="140" />
           </Box>
+
           <Box mt={4} mb={3}>
             <Typography variant="h5">{t('verify-email-title')}</Typography>
           </Box>
+
           <Box textAlign="left">
             <Typography>{t('verify-email-details-1')}</Typography>
+
             <Box mt={3} mb={3} data-testid="verify-email-details-2">
               <Trans
                 i18nKey="verify-email-details-2"
                 t={t}
                 components={{ underline: contactSupportLink }} />
             </Box>
+
             <Box data-testid="verify-email-details-3">
               <Trans
                 i18nKey="verify-email-details-3"
                 t={t}
                 components={{ underline: createNewAccountLink }} />
             </Box>
+
             <br />
+
             <Box data-testid="verify-email-details-4">
               <Trans
                 i18nKey="verify-email-details-4"
@@ -175,6 +179,7 @@ const VerifyEmailPage: FunctionComponent = () => {
                 components={{ underline: logoutLink }} />
             </Box>
           </Box>
+
           <Box marginTop={4}>
             <Button
               variant="contained"

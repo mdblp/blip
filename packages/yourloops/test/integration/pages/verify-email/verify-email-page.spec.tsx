@@ -30,6 +30,8 @@ import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.m
 import { renderPage } from '../../utils/render'
 import { screen, waitFor, within } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
+import userEvent from '@testing-library/user-event'
+import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
 
 describe('Verify email page', () => {
   it('should display a description of the email verification process with options', async () => {
@@ -38,7 +40,8 @@ describe('Verify email page', () => {
       isLoading: false,
       user: null,
       getAccessTokenWithPopup: getAccessTokenWithPopupMock,
-      logout: logoutMock
+      logout: logoutMock,
+      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
     })
 
     const router = renderPage('/verify-email')
@@ -71,5 +74,8 @@ describe('Verify email page', () => {
 
     const continueButton = pageContent.getByText('Continue')
     expect(continueButton).toBeEnabled()
+
+    await userEvent.click(continueButton)
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You have not verified your email.')
   })
 })
