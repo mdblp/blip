@@ -48,7 +48,7 @@ export default class MedicalFilesApi {
     return data
   }
 
-  static async getMedicalReports(patientId: string, teamId: string): Promise<MedicalReport[]> {
+  static async getMedicalReports(patientId: string, teamId?: string): Promise<MedicalReport[]> {
     const { data } = await HttpService.get<MedicalReport[]>({
       url: '/cargo/v0/medical-records',
       config: { params: { teamId, patientId } }

@@ -41,7 +41,7 @@ export interface MedicalFilesWidgetProps {
 }
 
 export interface CategoryProps {
-  teamId: string
+  teamId?: string
   patientId: string
 }
 
@@ -51,7 +51,7 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
   const { selectedTeam } = useSelectedTeamContext()
   const { user } = useAuth()
 
-  const teamId = user.isUserHcp() ? selectedTeam.id : patient.teamIds[0]
+  const teamId = user.isUserHcp() ? selectedTeam.id : undefined
 
   return (
     <GenericDashboardCard

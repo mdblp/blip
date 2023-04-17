@@ -40,7 +40,8 @@ import {
   checkJoinTeamDialogDisplayErrorMessage,
   checkJoinTeamDialogPrivacyCancel
 } from '../../assert/join-team'
-import { monitoredPatientAsTeamMember } from '../../data/patient.api.data'
+import { monitoredPatientAsTeamMember, monitoredPatientId } from '../../data/patient.api.data'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = '/dashboard'
@@ -62,6 +63,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+    expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, undefined)
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
     await checkMedicalWidgetForPatient()
   })
