@@ -42,18 +42,18 @@ export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
   dateFilter: DateFilter
-  bgSource: BgType
+  bgType: BgType
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { medicalData, bgPrefs, bgSource, dateFilter, children } = props
+  const { medicalData, bgPrefs, bgType, dateFilter, children } = props
   const theme = useTheme()
   const location = useLocation()
 
-  const cbgStatType: CBGStatType = bgSource === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const cbgStatType: CBGStatType = bgType === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const bgUnits = bgPrefs.bgUnits
-  const cbgSelected = bgSource === DatumType.Cbg
+  const cbgSelected = bgType === DatumType.Cbg
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
 
@@ -80,7 +80,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
         bgBounds={bgPrefs.bgBounds}
-        bgSource={bgSource}
+        bgType={bgType}
         cbgStatType={cbgStatType}
         data={cbgPercentageBarChartData}
         bgPrefs={bgPrefs}
@@ -89,7 +89,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <StandardDeviationStat
         total={standardDeviationTotal}
-        bgType={bgSource}
+        bgType={bgType}
         bgPrefs={bgPrefs}
         averageGlucose={averageGlucose}
         standardDeviation={standardDeviation}
@@ -97,7 +97,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       {isTrendsPage &&

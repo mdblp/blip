@@ -34,13 +34,13 @@ import { type BgType, DatumType } from 'medical-domain'
 
 export interface CoefficientOfVariationProps {
   coefficientOfVariation: number
-  bgSource: BgType
+  bgType: BgType
 }
 
 export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
-  const { coefficientOfVariation, bgSource } = props
+  const { coefficientOfVariation, bgType } = props
   const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('tooltip-empty-stat')]
-  const selectedLabel = bgSource === DatumType.Cbg ? t('CGM') : t('BGM')
+  const selectedLabel = bgType === DatumType.Cbg ? t('CGM') : t('BGM')
   return (
     <Box data-testid="coefficient-of-variation-stat">
       <SimpleStat
