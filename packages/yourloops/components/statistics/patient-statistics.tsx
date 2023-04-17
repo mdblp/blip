@@ -87,9 +87,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-
-      {children}
-
       {isTrendsPage &&
         <>
           <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
@@ -98,6 +95,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       }
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+
+      {children}
     </Box>
   )
 }
