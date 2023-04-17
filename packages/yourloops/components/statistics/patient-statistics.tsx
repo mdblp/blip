@@ -32,12 +32,11 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import {
-  GlycemiaStatisticsService
-} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlycemiaStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { TotalCarbsStatWrapper } from './total-carbs-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -81,36 +80,21 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgPrefs={bgPrefs}
         days={numberOfDays}
       />
-      {cbgSelected &&
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <TotalCarbsStatWrapper />
+      {isTrendsPage &&
         <>
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage}/>
+          <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
+      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       {children}
 
-      {cbgSelected &&
-        <>
-          {isTrendsPage &&
-            <>
-              <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
-              <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-            </>
-          }
-          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
-
-      {isTrendsPage && !cbgSelected &&
-        <>
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-          <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgSource={bgSource} />
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
     </Box>
   )
 }

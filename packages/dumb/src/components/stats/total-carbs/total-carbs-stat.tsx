@@ -32,7 +32,7 @@ import { useTranslation } from 'react-i18next'
 import { Unit } from 'medical-domain'
 
 export interface TotalInsulinStatProps {
-  annotations: []
+  annotations: string[]
   foodCarbs: number
   title: string
   totalCarbs: number
