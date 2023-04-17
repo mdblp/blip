@@ -32,9 +32,7 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import {
-  GlycemiaStatisticsService
-} from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
+import { GlycemiaStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
