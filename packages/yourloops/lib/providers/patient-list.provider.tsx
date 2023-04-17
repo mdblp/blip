@@ -26,17 +26,17 @@
  */
 
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import { type PatientsFiltersContextResult } from './models/patients-filters-context-result.model'
-import { usePatientsFiltersProviderHook } from './patients-filters.provider.hook'
+import { type PatientListContextResult } from './models/patient-list-context-result.model'
+import { usePatientListProviderHook } from './patient-list.provider.hook'
 
-const PatientsFiltersContext = createContext<PatientsFiltersContextResult>({} as PatientsFiltersContextResult)
+const PatientListContext = createContext<PatientListContextResult>({} as PatientListContextResult)
 
-export const PatientsFiltersProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const result = usePatientsFiltersProviderHook()
+export const PatientListProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const result = usePatientListProviderHook()
 
-  return <PatientsFiltersContext.Provider value={result}>{children}</PatientsFiltersContext.Provider>
+  return <PatientListContext.Provider value={result}>{children}</PatientListContext.Provider>
 }
 
-export function usePatientsFiltersContext(): PatientsFiltersContextResult {
-  return useContext(PatientsFiltersContext)
+export function usePatientListContext(): PatientListContextResult {
+  return useContext(PatientListContext)
 }

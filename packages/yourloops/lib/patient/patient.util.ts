@@ -31,7 +31,7 @@ import moment from 'moment-timezone'
 import { type Patient } from './models/patient.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type User } from '../auth'
-import { type PatientsFilters } from '../filter/models/patients-filters.model'
+import { type PatientsFilters } from '../providers/models/patients-filters.model'
 
 export default class PatientUtils {
   static async retrievePatients(): Promise<Patient[]> {

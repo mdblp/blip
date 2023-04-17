@@ -25,14 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type MutableRefObject, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
-  type GridApiCommon,
   type GridColDef,
   type GridRenderCellParams,
   type GridRowParams,
-  type GridRowsProp,
-  useGridApiRef
+  type GridRowsProp
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { usePatientListStyles } from './patient-list.styles'
@@ -51,13 +49,12 @@ import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
-import { usePatientsFiltersContext } from '../../lib/filter/patients-filters.provider'
+import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 
 interface PatientListHookReturns {
   columns: GridColDef[]
   selectedTab: PatientListTabs
   inputSearch: string
-  gridApiRef: MutableRefObject<GridApiCommon>
   patientsDisplayedCount: number
   patientToRemoveForHcp: Patient | null
   patientToRemoveForCaregiver: UserToRemove | null
@@ -75,9 +72,8 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { getPatientById, searchPatients } = usePatientContext()
   const { getUserName } = useUserName()
   const { sortByUserName } = useSortComparatorsHook()
-  const { updatePendingFilter } = usePatientsFiltersContext()
+  const { updatePendingFilter } = usePatientListContext()
   const navigate = useNavigate()
-  const gridApiRef = useGridApiRef()
   const trNA = t('N/A')
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)
@@ -258,7 +254,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
   return {
     columns,
     selectedTab,
-    gridApiRef,
     inputSearch,
     patientsDisplayedCount: rowsProps.length,
     patientToRemoveForHcp,

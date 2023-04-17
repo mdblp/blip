@@ -30,4 +30,5 @@ import { type LanguageCodes } from './enums/language-codes.enum'
 export interface Preferences {
   displayLanguageCode?: LanguageCodes
   patientsStarred?: string[]
+  patientsListSortedOptionalColumns?: string[]
 }
