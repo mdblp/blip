@@ -78,6 +78,7 @@ describe('Patient dashboard for anyone', () => {
     checkTooltip(patientStatistics, 'Avg. Daily Insulin')
     checkTooltip(patientStatistics, 'Avg. Daily Time In Loop Mode')
     checkTooltip(patientStatistics, 'Avg. Daily Carbs')
+    checkTooltip(patientStatistics, 'CV (CGM)')
 
     const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
     checkTooltip(deviceUsageWidget, 'Sensor Usage')

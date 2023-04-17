@@ -54,7 +54,7 @@ export const checkTrendsTidelineContainerTooltips = async () => {
 
   // Test tooltips when hovering a cbg circle (cbg slice must still be hovered)
   const cbgCircles = await screen.findAllByTestId('trends-cbg-circle')
-  expect(cbgCircles).toHaveLength(4)
+  expect(cbgCircles).toHaveLength(5)
   await userEvent.hover(cbgCircles[0])
   const tooltipsOnCbgCircle = await screen.findAllByTestId('tooltip')
   expect(tooltipsOnCbgCircle).toHaveLength(4)
