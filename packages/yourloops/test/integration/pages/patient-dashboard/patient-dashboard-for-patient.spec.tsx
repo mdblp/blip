@@ -58,7 +58,7 @@ describe('Patient dashboard for HCP', () => {
     localStorage.setItem('selectedTeamId', mySecondTeamId)
   })
 
-  it('should display correct components', async () => {
+  it('should display correct components when patient is in some medical teams', async () => {
     const router = renderPage(monitoredPatientDashboardRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(monitoredPatientDashboardRoute)
