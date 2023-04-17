@@ -177,6 +177,8 @@ const ignoredTransKeyForYourLoops = [
   'no-settings-on-device-alert-message',
   'BGM',
   'tooltip-empty-stat',
+  'time-out-of-range',
+  'tooltip-empty-stat',
   'remote-monitoring',
   'verify-email-details-2',
   'verify-email-details-3',

@@ -43,14 +43,14 @@ import { type MedicalData } from '../data/models/medical-data.model'
 import { type PatientTeam } from './models/patient-team.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
-import { usePatientsFiltersContext } from '../filter/patients-filters.provider'
+import { usePatientListContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user, getFlagPatients, flagPatient } = useAuth()
-  const { filters } = usePatientsFiltersContext()
+  const { filters } = usePatientListContext()
   const { selectedTeam } = useSelectedTeamContext()
   const alert = useAlert()
 
