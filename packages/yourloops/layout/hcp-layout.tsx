@@ -38,13 +38,13 @@ import NotificationsPage from '../pages/notifications'
 import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientList } from '../components/patient-list/patient-list'
-import { PatientsFiltersProvider } from '../lib/filter/patients-filters.provider'
+import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
 export const HcpLayout: FunctionComponent = () => {
   return (
     <TeamContextProvider>
       <SelectedTeamProvider>
-        <PatientsFiltersProvider>
+        <PatientListProvider>
           <PatientProvider>
             <DashboardLayout>
               <Routes>
@@ -65,7 +65,7 @@ export const HcpLayout: FunctionComponent = () => {
               </Routes>
             </DashboardLayout>
           </PatientProvider>
-        </PatientsFiltersProvider>
+        </PatientListProvider>
       </SelectedTeamProvider>
     </TeamContextProvider>
   )
