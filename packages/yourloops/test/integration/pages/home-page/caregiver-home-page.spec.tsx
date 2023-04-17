@@ -181,7 +181,7 @@ describe('Caregiver home page', () => {
   })
 
   it('should display an error message if patient removal failed', async () => {
-    jest.spyOn(DirectShareApi, 'removeDirectShare').mockRejectedValueOnce('Error')
+    jest.spyOn(DirectShareApi, 'removeDirectShare').mockRejectedValueOnce('This error was thrown by a mock on purpose')
 
     await act(async () => {
       renderPage('/')
