@@ -171,7 +171,10 @@ const ignoredTransKeyForYourLoops = [
   'created-by-unknown',
   'delete-medical-report-number',
   'filters-activated',
-  'remote-monitoring'
+  'remote-monitoring',
+  'verify-email-details-2',
+  'verify-email-details-3',
+  'verify-email-details-4'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
