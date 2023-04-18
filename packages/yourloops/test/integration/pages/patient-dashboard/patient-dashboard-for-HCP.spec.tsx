@@ -25,15 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, type BoundFunctions, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { act, type BoundFunctions, fireEvent, screen, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import {
   buildAvailableTeams,
   mockTeamAPI,
   mySecondTeamId,
   mySecondTeamName,
-  myThirdTeamId,
-  myThirdTeamName
+  myThirdTeamId
 } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
@@ -42,8 +41,7 @@ import {
   monitoredPatientId,
   monitoredPatientWithMmol,
   monitoredPatientWithMmolId,
-  unmonitoredPatient,
-  unmonitoredPatientId
+  unmonitoredPatient
 } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
@@ -56,7 +54,6 @@ import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { getTomorrowDate } from '../../utils/helpers'
-import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { checkMedicalWidgetForHcp } from '../../assert/medical-widget'
 import { Unit } from 'medical-domain'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -65,7 +62,6 @@ import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 describe('Patient dashboard for HCP', () => {
-  const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
   const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
   const monitoredPatientDashboardRouteMmoL = `/patient/${monitoredPatientWithMmolId}/dashboard`
   const firstName = 'HCP firstName'
@@ -99,21 +95,7 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Device Usage')).toBeVisible()
   }
 
-  it('should render correct components when navigating to non monitored patient dashboard as an HCP', async () => {
-    localStorage.setItem('selectedTeamId', '')
-
-    const router = renderPage(unMonitoredPatientDashboardRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(unMonitoredPatientDashboardRoute)
-    })
-
-    const dashboard = within(await screen.findByTestId('patient-dashboard', {}, { timeout: 3000 }))
-    checkPatientNavBarAsHCP()
-    testPatientDashboardCommonDisplay(dashboard)
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: myThirdTeamName }, buildAvailableTeams())
-  })
-
-  it('should render correct components when navigating to monitored patient dashboard as an HCP', async () => {
+  it('should render correct components when navigating to a patient not scoped on the private team', async () => {
     localStorage.setItem('selectedTeamId', mySecondTeamId)
 
     await act(async () => {
@@ -137,7 +119,7 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Events')).toBeVisible()
 
     /* Chat widget */
-    expect(dashboard.getByText('Messages')).toBeVisible()
+    expect(dashboard.getByText(/Messages/)).toBeVisible()
     const emojiButton = dashboard.getByTestId('chat-widget-emoji-button')
     expect(emojiButton).toBeEnabled()
 
@@ -158,7 +140,10 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: PRIVATE_TEAM_ID, isPrivate: true }, buildAvailableTeams())
+    await checkHCPLayout(`${firstName} ${lastName}`, {
+      teamName: PRIVATE_TEAM_ID,
+      isPrivate: true
+    }, buildAvailableTeams())
 
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()

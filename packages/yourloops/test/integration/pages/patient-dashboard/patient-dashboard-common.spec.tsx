@@ -99,7 +99,7 @@ describe('Patient dashboard for anyone', () => {
     expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}9:40 pm`)
   })
 
-  it('monitored patient should have correct cards', async () => {
+  it('patient should in various teams should have correct cards', async () => {
     localStorage.setItem('selectedTeamId', mySecondTeamId)
     const router = renderPage(`/patient/${monitoredPatientId}/dashboard`)
     await waitFor(() => {
@@ -128,7 +128,7 @@ describe('Patient dashboard for anyone', () => {
 
     const chartCard = screen.getByTestId('chat-card')
     expect(chartCard).toBeVisible()
-    expect(chartCard).toHaveTextContent('Messages ReplyPrivate')
+    expect(chartCard).toHaveTextContent('Messages (+1)This is a message sent from the team MySecondTeam21/03/2023 16:32NewReplyPrivate')
   })
 
   it('should automatically log out an idle user', async () => {

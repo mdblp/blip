@@ -46,8 +46,12 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
-import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import Box from '@mui/material/Box'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import MenuItem from '@mui/material/MenuItem'
+import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
+import FormGroup from '@mui/material/FormGroup'
 
 const CHAT_CONTENT_HEIGHT = '280px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
@@ -93,6 +97,9 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       alignItems: 'center',
       background: theme.palette.common.white,
       paddingBlock: theme.spacing(1)
+    },
+    teamDropdown: {
+      textTransform: 'capitalize'
     }
   }
 })
@@ -113,7 +120,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { patient, userId, userRole } = props
   const { classes } = chatWidgetStyles()
   const authHook = useAuth()
-  const teamHook = useTeam()
+  const { getMedicalTeams } = useTeam()
   const theme = useTheme()
   const patientHook = usePatientContext()
   const { selectedTeam } = useSelectedTeamContext()
@@ -127,7 +134,9 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
   const { getUserName } = useUserName()
-  const teamId = user.isUserHcp() ? selectedTeam.id : patient.teamIds[0]
+  const teams = getMedicalTeams()
+  const teamId = user.isUserHcp() ? selectedTeam.id : teams[0].id
+  const [selectedTeamId, setSelectedTeamId] = useState(teamId)
 
   const handleChange = (_event: React.ChangeEvent, newValue: number): void => {
     setInputTab(newValue)
@@ -139,7 +148,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages(): Promise<void> {
-      const messages = await ChatApi.getChatMessages(teamId, patient.userid)
+      const messages = await ChatApi.getChatMessages(selectedTeamId, patient.userid)
       if (patient.metadata.hasSentUnreadMessages) {
         patientHook.markPatientMessagesAsRead(patient)
       }
@@ -148,7 +157,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     }
 
     fetchMessages()
-  }, [userId, authHook, patient.userid, teamId, patient, teamHook, patientHook])
+  }, [userId, authHook, patient.userid, selectedTeamId, patient, patientHook])
 
   const onEmojiClick = (emoji: EmojiClickData): void => {
     setShowPicker(false)
@@ -156,8 +165,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }
 
   const sendMessage = async (): Promise<void> => {
-    await ChatApi.sendChatMessage(teamId, patient.userid, inputText, privateMessage)
-    const messages = await ChatApi.getChatMessages(teamId, patient.userid)
+    await ChatApi.sendChatMessage(selectedTeamId, patient.userid, inputText, privateMessage)
+    const messages = await ChatApi.getChatMessages(selectedTeamId, patient.userid)
     setMessages(messages)
     setInputText('')
   }
@@ -168,11 +177,38 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     }
   }
 
+  const onPatientSelected = (event: SelectChangeEvent<string>): void => {
+    setSelectedTeamId(event.target.value)
+  }
+
   return (
     <GenericDashboardCard
       avatar={<EmailOutlinedIcon />}
       title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       data-testid="chat-card"
+      action={user.isUserPatient() &&
+        <FormGroup>
+          <Select
+            defaultValue={teamId}
+            IconComponent={KeyboardArrowDownIcon}
+            onChange={onPatientSelected}
+            variant="standard"
+            disableUnderline
+            className={classes.teamDropdown}
+          >
+            {
+              teams.map((team, index) =>
+                <MenuItem
+                  key={index}
+                  value={team.id}
+                >
+                  {team.name}
+                </MenuItem>
+              )
+            }
+          </Select>
+        </FormGroup>
+      }
     >
       <Box position="relative">
         <Box
@@ -265,6 +301,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               disabled={inputText.length < 1}
               className={classes.iconButton}
               arial-label={t('send')}
+              title={t('send')}
               data-testid="chat-card-send"
               onClick={sendMessage}
             >

@@ -55,6 +55,7 @@ const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboard
   return (
     <Card data-testid={props['data-testid']}>
       <CardHeader
+        data-testid="card-header"
         className={classes.header}
         classes={{ title: classes.headerTitle }}
         avatar={props.avatar}
