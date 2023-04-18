@@ -66,6 +66,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2286 Rename the "alarm" concept to "monitored alert"
 - YLP-2291 Get the patients from the scope route when logged in as HCP
 - YLP-2293 Migrate Average Glucose from stat.js to yourloops
+- YLP-2300 Remove the remote monitoring invitation flow
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

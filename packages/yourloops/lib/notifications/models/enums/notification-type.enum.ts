@@ -26,7 +26,6 @@
  */
 
 export enum NotificationType {
-  careTeamMonitoringInvitation,
   careTeamPatientInvitation,
   careTeamProInvitation,
   directInvitation,

@@ -25,29 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import HttpService from '../http/http.service'
-import { type Prescription } from './models/prescription.model'
 import { type MedicalReport, type NewMedicalReport } from './models/medical-report.model'
 
 export default class MedicalFilesApi {
-  static async uploadPrescription(teamId: string, patientId: string, prescriptorId: string, initialPeriod: number, file: File): Promise<Prescription> {
-    const formData = new FormData()
-    formData.append('patientId', patientId)
-    formData.append('prescriptorId', prescriptorId)
-    formData.append('initialPeriod', initialPeriod.toString())
-    formData.append('teamId', teamId)
-    formData.append('upload', file)
-    const { data } = await HttpService.post<Prescription, FormData>({
-      url: 'cargo/v0/prescriptions',
-      payload: formData,
-      config: {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    })
-    return data
-  }
-
   static async getMedicalReports(patientId: string, teamId?: string): Promise<MedicalReport[]> {
     const { data } = await HttpService.get<MedicalReport[]>({
       url: '/cargo/v0/medical-records',

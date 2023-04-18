@@ -53,9 +53,7 @@ import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
-import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { getTomorrowDate } from '../../utils/helpers'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { checkMedicalWidgetForHcp } from '../../assert/medical-widget'
 import { Unit } from 'medical-domain'
@@ -88,10 +86,6 @@ describe('Patient dashboard for HCP', () => {
   function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>) {
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
 
-    /* Patient info widget */
-    const patientInfoCard = within(dashboard.getByTestId('remote-monitoring-card'))
-    expect(patientInfoCard.getByText('Remote monitoring program')).toBeVisible()
-
     /* Patient stats widget */
     expect(dashboard.getByText('Patient statistics')).toBeVisible()
 
@@ -122,13 +116,8 @@ describe('Patient dashboard for HCP', () => {
 
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: mySecondTeamName }, buildAvailableTeams())
 
-    const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard)
-
-    /* Patient info widget */
-    expect(dashboard.getByText('Renew')).toBeVisible()
-    expect(dashboard.getByText('Remove')).toBeVisible()
 
     /* Medical files widget */
     await checkMedicalWidgetForHcp(firstName, lastName)
@@ -140,11 +129,6 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Messages')).toBeVisible()
     const emojiButton = dashboard.getByTestId('chat-widget-emoji-button')
     expect(emojiButton).toBeEnabled()
-
-    /* Remote Monitoring widget */
-    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a dayRenewRemove`)
-    expect(dashboard.getByText('Renew')).toBeVisible()
-    expect(dashboard.getByText('Remove')).toBeVisible()
   })
 
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
@@ -158,7 +142,10 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: PRIVATE_TEAM_ID, isPrivate: true }, buildAvailableTeams())
+    await checkHCPLayout(`${firstName} ${lastName}`, {
+      teamName: PRIVATE_TEAM_ID,
+      isPrivate: true
+    }, buildAvailableTeams())
 
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
