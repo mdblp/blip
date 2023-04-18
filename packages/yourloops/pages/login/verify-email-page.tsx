@@ -37,7 +37,11 @@ import { GlobalStyles } from 'tss-react'
 import Link from '@mui/material/Link'
 import { useAuth } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
-import { AUTH0_ERROR_EMAIL_NOT_VERIFIED, AUTH0_ERROR_LOGIN_REQUIRED } from '../../lib/auth/models/auth0-error.model'
+import {
+  AUTH0_ERROR_CONSENT_REQUIRED,
+  AUTH0_ERROR_EMAIL_NOT_VERIFIED,
+  AUTH0_ERROR_LOGIN_REQUIRED
+} from '../../lib/auth/models/auth0-error.model'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Avatar from '@mui/material/Avatar'
@@ -83,8 +87,13 @@ const VerifyEmailPage: FunctionComponent = () => {
       await getAccessTokenSilently()
       await loginWithRedirect()
     } catch (error) {
-      if (error.error_description === AUTH0_ERROR_EMAIL_NOT_VERIFIED) {
+      const errorDescription = error.error_description
+      if (errorDescription === AUTH0_ERROR_EMAIL_NOT_VERIFIED) {
         alert.warning(t('alert-email-not-verified'))
+        return
+      }
+      if (errorDescription === AUTH0_ERROR_CONSENT_REQUIRED) {
+        await loginWithRedirect()
         return
       }
       throw error
@@ -159,14 +168,14 @@ const VerifyEmailPage: FunctionComponent = () => {
               <Trans
                 i18nKey="verify-email-details-2"
                 t={t}
-                components={{ underline: <Link component="button" underline="always" onClick={contactSupport}></Link> }} />
+                components={{ underline: <Link component="button" underline="always" onClick={contactSupport} /> }} />
             </Box>
 
             <Box data-testid="verify-email-details-3">
               <Trans
                 i18nKey="verify-email-details-3"
                 t={t}
-                components={{ underline: <Link component="button" underline="always" onClick={logoutUser}></Link> }} />
+                components={{ underline: <Link component="button" underline="always" onClick={logoutUser} /> }} />
             </Box>
 
             <br />
@@ -175,7 +184,7 @@ const VerifyEmailPage: FunctionComponent = () => {
               <Trans
                 i18nKey="verify-email-details-4"
                 t={t}
-                components={{ underline: <Link component="button" underline="always" onClick={logoutUser}></Link> }} />
+                components={{ underline: <Link component="button" underline="always" onClick={logoutUser} /> }} />
             </Box>
           </Box>
 
@@ -183,6 +192,7 @@ const VerifyEmailPage: FunctionComponent = () => {
             <Button
               variant="contained"
               onClick={goToAppHome}
+              disableElevation
             >
               {t('button-continue')}
             </Button>

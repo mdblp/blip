@@ -25,5 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+export const AUTH0_ERROR_CONSENT_REQUIRED = 'Consent required'
 export const AUTH0_ERROR_EMAIL_NOT_VERIFIED = 'Please verify your email before logging in.'
 export const AUTH0_ERROR_LOGIN_REQUIRED = 'Login required'
