@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.4-beta - 2023-02-10
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
+- YLP-2125 Allow users to ask support to resend the verification email
 - YLP-2140 As a HCP, I can only edit my medical records
 - YLP-2146 Adding groups in patient list
 - YLP-2151 As a HCP I want to be able to filter my patients via the new design

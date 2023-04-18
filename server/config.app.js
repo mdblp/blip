@@ -67,6 +67,7 @@ const config = {
   LATEST_TRAINING: stringOption(process.env.LATEST_TRAINING, '1970-01-01'),
   LATEST_RELEASE: stringOption(process.env.LATEST_RELEASE, '2022-03-03'),
   SUPPORT_WEB_ADDRESS: stringOption(process.env.SUPPORT_WEB_ADDRESS, 'https://example.com/'),
+  CONTACT_SUPPORT_WEB_URL: stringOption(process.env.CONTACT_SUPPORT_WEB_URL, 'https://example.com/'),
   HELP_SCRIPT_URL: stringOption(process.env.HELP_SCRIPT_URL, null),
   HELP_PAGE_URL: stringOption(process.env.HELP_PAGE_URL, null),
   ASSETS_URL: stringOption(process.env.ASSETS_URL, 'https://example.com/'),

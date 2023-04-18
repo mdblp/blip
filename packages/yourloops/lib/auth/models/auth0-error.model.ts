@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,27 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type User from './user.model'
-import { type HcpProfession } from './enums/hcp-profession.enum'
-import { type SignupForm } from './signup-form.model'
-import { type Preferences } from './preferences.model'
-import { type Profile } from './profile.model'
-import { type Settings } from './settings.model'
-
-/**
- * The auth provider hook return values.
- */
-export interface AuthContext {
-  fetchingUser: boolean
-  flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
-  getFlagPatients: () => string[]
-  isLoggedIn: boolean
-  logout: (isIdle?: boolean) => void
-  setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
-  completeSignup: (signupForm: SignupForm) => Promise<void>
-  switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp
-  updatePreferences: (preferences: Preferences) => Promise<void>
-  updateProfile: (profile: Profile) => Promise<void>
-  updateSettings: (settings: Settings) => Promise<void>
-  user: User | null
-}
+export const AUTH0_ERROR_CONSENT_REQUIRED = 'Consent required'
+export const AUTH0_ERROR_EMAIL_NOT_VERIFIED = 'Please verify your email before logging in.'
+export const AUTH0_ERROR_LOGIN_REQUIRED = 'Login required'
