@@ -65,7 +65,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, undefined)
+    expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, null)
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
     await checkMedicalWidgetForPatient()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
