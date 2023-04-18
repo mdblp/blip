@@ -99,9 +99,9 @@ export function MainLobby(): JSX.Element {
   const theme = getTheme()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
 
-  const onIdle = async (): Promise<void> => {
+  const onIdle = (): void => {
     if (isLoggedIn) {
-      await logout(true)
+      logout(true)
     }
   }
 

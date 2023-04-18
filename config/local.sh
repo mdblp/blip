@@ -31,6 +31,7 @@ export METRICS_FORCED='false'
 export MATOMO_TRACKER_URL='disabled'
 export MATOMO_TRACKER_SITEID='0'
 export SUPPORT_WEB_ADDRESS='https://example.com/'
+export CONTACT_SUPPORT_WEB_URL='https://example.com/'
 # Crowdin translation service (enabled / disabled):
 export CROWDIN='disabled'
 # Stonly service https://stonly.com/ (Stonly ID / disabled):
