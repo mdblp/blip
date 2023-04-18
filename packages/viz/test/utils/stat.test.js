@@ -150,21 +150,6 @@ describe('stat', () => {
 
     const data = { total: 10 }
 
-    describe('averageGlucose', () => {
-      it('should return annotations for `averageGlucose` stat when bgSource is `smgb`', () => {
-        expect(stat.getStatAnnotations(data, commonStats.averageGlucose, smbgOpts)).to.have.ordered.members([
-          '**Avg. Glucose (BGM):** All BGM glucose values added together, divided by the number of readings.',
-          'Derived from _**10**_ BGM readings.'
-        ])
-      })
-
-      it('should return annotations for `averageGlucose` stat when bgSource is `cbg`', () => {
-        expect(stat.getStatAnnotations(data, commonStats.averageGlucose, cbgOpts)).to.have.ordered.members([
-          '**Avg. Glucose (CGM):** All CGM glucose values added together, divided by the number of readings.'
-        ])
-      })
-    })
-
     describe('averageDailyDose', () => {
       it('should return annotations for `averageDailyDose` stat when viewing a single day of data', () => {
         expect(stat.getStatAnnotations(data, commonStats.averageDailyDose, singleDayOpts)).to.have.ordered.members([
@@ -195,51 +180,6 @@ describe('stat', () => {
       })
     })
 
-    describe('coefficientOfVariation', () => {
-      it('should return annotations for `coefficientOfVariation` stat when bgSource is `smgb`', () => {
-        expect(stat.getStatAnnotations(data, commonStats.coefficientOfVariation, smbgOpts)).to.have.ordered.members([
-          '**CV (Coefficient of Variation):** How far apart (wide) glucose values are; research suggests a target of 36% or lower.',
-          'Derived from _**10**_ BGM readings.'
-        ])
-      })
-
-      it('should return annotations for `coefficientOfVariation` stat when bgSource is `cbg`', () => {
-        expect(stat.getStatAnnotations(data, commonStats.coefficientOfVariation, cbgOpts)).to.have.ordered.members([
-          '**CV (Coefficient of Variation):** How far apart (wide) glucose values are; research suggests a target of 36% or lower.'
-        ])
-      })
-
-      it('should return insufficient dataannotation for `standardDev` stat when not enough data was present for a calculation', () => {
-        const insufficientData = {
-          ...data,
-          insufficientData: true
-        }
-
-        expect(stat.getStatAnnotations(insufficientData, commonStats.coefficientOfVariation, cbgOpts)).to.have.include.members([
-          'insufficient-data'
-        ])
-      })
-    })
-
-    describe('glucoseManagementIndicator', () => {
-      it('should return annotations for `glucoseManagementIndicator` stat when bgSource is `cbg`', () => {
-        expect(stat.getStatAnnotations(data, commonStats.glucoseManagementIndicator, cbgOpts)).to.have.ordered.members([
-          '**GMI (Glucose Management Indicator):** Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.'
-        ])
-      })
-
-      it('should return insufficient dataannotation for `standardDev` stat when not enough data was present for a calculation', () => {
-        const insufficientData = {
-          ...data,
-          insufficientData: true
-        }
-
-        expect(stat.getStatAnnotations(insufficientData, commonStats.glucoseManagementIndicator, cbgOpts)).to.have.include.members([
-          'insufficient-data'
-        ])
-      })
-    })
-
     describe('readingsInRange', () => {
       it('should return annotations for `readingsInRange` stat', () => {
         expect(stat.getStatAnnotations(data, commonStats.readingsInRange, smbgOpts)).to.have.ordered.members([
@@ -248,15 +188,6 @@ describe('stat', () => {
         ])
       })
     })
-
-    describe('sensorUsage', () => {
-      it('should return annotations for `sensorUsage` stat', () => {
-        expect(stat.getStatAnnotations(data, commonStats.sensorUsage)).to.have.ordered.members([
-          '**Sensor Usage:** Time the CGM collected data, divided by the total time represented in this view.'
-        ])
-      })
-    })
-
     describe('standardDev', () => {
       it('should return annotations for `standardDev` stat when bgSource is `smgb`', () => {
         expect(stat.getStatAnnotations(data, commonStats.standardDev, smbgOpts)).to.have.ordered.members([
@@ -779,7 +710,10 @@ describe('stat', () => {
           title: 'Basal'
         }
       ]
-      expect(statData.data, JSON.stringify({having: statData.data, expected: expectStatDataData})).to.eql(expectStatDataData)
+      expect(statData.data, JSON.stringify({
+        having: statData.data,
+        expected: expectStatDataData
+      })).to.eql(expectStatDataData)
 
       expect(statData.total).to.eql({ id: 'insulin', value: 16.015 })
 
