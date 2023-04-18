@@ -32,6 +32,7 @@ import { screen, waitFor, within } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import userEvent from '@testing-library/user-event'
 import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
+import { AppRoute } from '../../../../models/enums/routes.enum'
 
 describe('Verify email page', () => {
   it('should display a description of the email verification process with options', async () => {
@@ -43,17 +44,22 @@ describe('Verify email page', () => {
       logout: logoutMock,
       getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
     })
+    window.open = jest.fn()
 
-    const router = renderPage('/verify-email')
+    const router = renderPage(AppRoute.VerifyEmail)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/verify-email')
+      expect(router.state.location.pathname).toEqual(AppRoute.VerifyEmail)
     })
 
     checkFooter({ needFooterLanguageSelector: true })
 
     const pageHeader = within(screen.getByTestId('verify-email-header'))
-    expect(pageHeader.getByText('Logout')).toBeEnabled()
     expect(pageHeader.getByLabelText('YourLoops Logo')).toBeVisible()
+    const headerLogoutButton = pageHeader.getByText('Logout')
+    expect(headerLogoutButton).toBeEnabled()
+
+    await userEvent.click(headerLogoutButton)
+    expect(logoutMock).toHaveBeenCalledTimes(1)
 
     const pageContent = within(screen.getByTestId('verify-email-content'))
     expect(pageContent.getByLabelText('YourLoops Logo')).toBeVisible()
@@ -62,15 +68,27 @@ describe('Verify email page', () => {
 
     const contactSupportSection = pageContent.getByTestId('verify-email-details-2')
     expect(contactSupportSection).toHaveTextContent('No mail in your inbox or spam folder? Contact the customer support.')
-    expect(within(contactSupportSection).getByRole('button', { name: 'Contact the customer support' })).toBeVisible()
+    const contactSupportButton = within(contactSupportSection).getByRole('button', { name: 'Contact the customer support' })
+    expect(contactSupportButton).toBeVisible()
+
+    await userEvent.click(contactSupportButton)
+    expect(window.open).toHaveBeenCalledTimes(1)
 
     const createNewAccountSection = pageContent.getByTestId('verify-email-details-3')
-    expect(createNewAccountSection).toHaveTextContent('Wrong address? If you mistyped your email when signing up, create a new account.')
-    expect(within(createNewAccountSection).getByRole('button', { name: 'create a new account' })).toBeVisible()
+    expect(createNewAccountSection).toHaveTextContent('Wrong address? If you mistyped your email when signing up, logout and create a new account.')
+    const logoutAndCreateNewAccountButton = within(createNewAccountSection).getByRole('button', { name: 'logout and create a new account' })
+    expect(logoutAndCreateNewAccountButton).toBeVisible()
+
+    await userEvent.click(logoutAndCreateNewAccountButton)
+    expect(logoutMock).toHaveBeenCalledTimes(2)
 
     const logoutSection = pageContent.getByTestId('verify-email-details-4')
     expect(logoutSection).toHaveTextContent('Do you want to login with another address? Try to login again.')
-    expect(within(logoutSection).getByRole('button', { name: 'Try to login again' })).toBeVisible()
+    const tryToLoginAgainButton = within(logoutSection).getByRole('button', { name: 'Try to login again' })
+    expect(tryToLoginAgainButton).toBeVisible()
+
+    await userEvent.click(tryToLoginAgainButton)
+    expect(logoutMock).toHaveBeenCalledTimes(3)
 
     const continueButton = pageContent.getByText('Continue')
     expect(continueButton).toBeEnabled()

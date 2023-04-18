@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import { Trans, useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
@@ -37,12 +37,13 @@ import { GlobalStyles } from 'tss-react'
 import Link from '@mui/material/Link'
 import { useAuth } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
-import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../lib/auth/models/auth0-error.model'
+import { AUTH0_ERROR_EMAIL_NOT_VERIFIED, AUTH0_ERROR_LOGIN_REQUIRED } from '../../lib/auth/models/auth0-error.model'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Avatar from '@mui/material/Avatar'
 import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
+import { useNavigate } from 'react-router-dom'
 
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -60,24 +61,25 @@ const VerifyEmailPage: FunctionComponent = () => {
   const { classes: { appBar, desktopLogo } } = classes()
   const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
-  const { logout: authLogout } = useAuth()
+  const { logout } = useAuth()
   const alert = useAlert()
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true)
+  const navigate = useNavigate()
 
-  const sendConfirmationEmail = async (): Promise<void> => {
+  const contactSupport = async (): Promise<void> => {
     window.open(config.CONTACT_SUPPORT_WEB_URL, '_blank')
   }
 
-  const createNewAccount = async (): Promise<void> => {
-    await authLogout()
-    await loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
-  }
-
-  const logoutUser = async (): Promise<void> => {
-    await authLogout()
+  const logoutUser = (): void => {
+    logout()
   }
 
   const goToAppHome = async (): Promise<void> => {
     try {
+      if (!isUserLoggedIn) {
+        navigate('/')
+        return
+      }
       await getAccessTokenSilently()
       await loginWithRedirect()
     } catch (error) {
@@ -89,17 +91,14 @@ const VerifyEmailPage: FunctionComponent = () => {
     }
   }
 
-  const contactSupportLink = (
-    <Link component="button" underline="always" onClick={sendConfirmationEmail}></Link>
-  )
-
-  const createNewAccountLink = (
-    <Link component="button" underline="always" onClick={createNewAccount}></Link>
-  )
-
-  const logoutLink = (
-    <Link component="button" underline="always" onClick={logoutUser}></Link>
-  )
+  useEffect(() => {
+    getAccessTokenSilently()
+      .catch((error: Error) => {
+        if (error.message === AUTH0_ERROR_LOGIN_REQUIRED) {
+          setIsUserLoggedIn(false)
+        }
+      })
+  }, [getAccessTokenSilently])
 
   return (
     <>
@@ -160,14 +159,14 @@ const VerifyEmailPage: FunctionComponent = () => {
               <Trans
                 i18nKey="verify-email-details-2"
                 t={t}
-                components={{ underline: contactSupportLink }} />
+                components={{ underline: <Link component="button" underline="always" onClick={contactSupport}></Link> }} />
             </Box>
 
             <Box data-testid="verify-email-details-3">
               <Trans
                 i18nKey="verify-email-details-3"
                 t={t}
-                components={{ underline: createNewAccountLink }} />
+                components={{ underline: <Link component="button" underline="always" onClick={logoutUser}></Link> }} />
             </Box>
 
             <br />
@@ -176,7 +175,7 @@ const VerifyEmailPage: FunctionComponent = () => {
               <Trans
                 i18nKey="verify-email-details-4"
                 t={t}
-                components={{ underline: logoutLink }} />
+                components={{ underline: <Link component="button" underline="always" onClick={logoutUser}></Link> }} />
             </Box>
           </Box>
 
