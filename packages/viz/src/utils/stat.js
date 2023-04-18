@@ -29,8 +29,12 @@ export const statTypes = {
 }
 
 export const statBgSourceLabels = {
-  get cbg() { return t('CGM') },
-  get smbg() { return t('BGM') }
+  get cbg() {
+    return t('CGM')
+  },
+  get smbg() {
+    return t('BGM')
+  }
 }
 
 export const statFormats = {
@@ -95,9 +99,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
   ]
 
   switch (type) {
-    case commonStats.averageGlucose:
-      annotations.push(t('**Avg. Glucose ({{bgSourceLabel}}):** All {{bgSourceLabel}} glucose values added together, divided by the number of readings.', { bgSourceLabel: statBgSourceLabels[bgSource] }))
-      break
 
     case commonStats.averageDailyDose:
       if (days > 1) {
@@ -116,21 +117,10 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       annotations.push(t('Derived from _**{{total}}**_ carb entries.', { total: data.total }))
       break
 
-    case commonStats.coefficientOfVariation:
-      annotations.push(t('**CV (Coefficient of Variation):** How far apart (wide) glucose values are; research suggests a target of 36% or lower.'))
-      break
-
-    case commonStats.glucoseManagementIndicator:
-      annotations.push(t('**GMI (Glucose Management Indicator):** Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.'))
-      break
-
     case commonStats.readingsInRange:
       annotations.push(t('**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.', { smbgLabel: statBgSourceLabels.smbg }))
       break
 
-    case commonStats.sensorUsage:
-      annotations.push(t('**Sensor Usage:** Time the {{cbgLabel}} collected data, divided by the total time represented in this view.', { cbgLabel: statBgSourceLabels.cbg }))
-      break
 
     case commonStats.timeInAuto:
       if (days > 1) {
@@ -452,15 +442,11 @@ export const getStatData = (data, type, opts = {}) => {
 }
 
 export const getStatTitle = (type, opts = {}) => {
-  const { bgSource, days } = opts
+  const { days } = opts
 
   let title
 
   switch (type) {
-    case commonStats.averageGlucose:
-      title = t('Avg. Glucose ({{bgSourceLabel}})', { bgSourceLabel: statBgSourceLabels[bgSource] })
-      break
-
     case commonStats.averageDailyDose:
       title = (days > 1) ? t('Avg. Daily Insulin') : t('Total Insulin')
       break
@@ -469,20 +455,8 @@ export const getStatTitle = (type, opts = {}) => {
       title = (days > 1) ? t('Avg. Daily Carbs') : t('Total Carbs')
       break
 
-    case commonStats.coefficientOfVariation:
-      title = t('CV ({{bgSourceLabel}})', { bgSourceLabel: statBgSourceLabels[bgSource] })
-      break
-
-    case commonStats.glucoseManagementIndicator:
-      title = t('GMI ({{bgSourceLabel}})', { bgSourceLabel: statBgSourceLabels[bgSource] })
-      break
-
     case commonStats.readingsInRange:
       title = (days > 1) ? t('Avg. Daily Readings In Range') : t('Readings In Range')
-      break
-
-    case commonStats.sensorUsage:
-      title = t('Sensor Usage')
       break
 
     case commonStats.timeInAuto:

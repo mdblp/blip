@@ -25,32 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
-import GenericDashboardCard from './generic-dashboard-card'
-import { useTranslation } from 'react-i18next'
-import CardContent from '@mui/material/CardContent'
-import { PatientStatistics, type PatientStatisticsProps } from '../statistics/patient-statistics'
+import { type BgPrefs, CBGMeanStat } from 'dumb'
+import React, { type FunctionComponent } from 'react'
+import { type BgType, DatumType } from 'medical-domain'
+import { t } from 'i18next'
 
-export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { t } = useTranslation()
-  const { medicalData, bgPrefs, bgType, dateFilter, children } = props
+interface AverageGlucoseStatProps {
+  averageGlucose: number
+  bgPrefs: BgPrefs
+  bgType: BgType
+
+}
+
+export const AverageGlucoseStat: FunctionComponent<AverageGlucoseStatProps> = (props) => {
+  const { bgPrefs, averageGlucose, bgType } = props
+  const bgSourceLabel = bgType === DatumType.Cbg ? t('CGM') : t('BGM')
 
   return (
-    <GenericDashboardCard
-      avatar={<InsertChartOutlinedIcon />}
-      title={t('patient-statistics')}
-    >
-      <CardContent>
-        <PatientStatistics
-          medicalData={medicalData}
-          bgPrefs={bgPrefs}
-          dateFilter={dateFilter}
-          bgType={bgType}
-        >
-          {children}
-        </PatientStatistics>
-      </CardContent>
-    </GenericDashboardCard>
+      <CBGMeanStat
+        bgClasses={bgPrefs.bgClasses}
+        title={t('average-glucose', { bgSourceLabel })}
+        tooltipValue={t('average-glucose-tooltip', { bgSourceLabel })}
+        units={bgPrefs.bgUnits}
+        value={Math.round(averageGlucose)}
+      />
   )
 }

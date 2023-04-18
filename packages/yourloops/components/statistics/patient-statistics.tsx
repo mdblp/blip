@@ -37,6 +37,7 @@ import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
+import { AverageGlucoseStat } from './average-glucose-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -59,7 +60,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const {
     standardDeviation,
-    averageGlucose,
     total: standardDeviationTotal
   } = GlycemiaStatisticsService.getStandardDevData(selectedBgData, dateFilter)
 
@@ -67,6 +67,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     sensorUsage,
     total: sensorUsageTotal
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+
+  const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
 
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
 
@@ -95,9 +97,13 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         standardDeviation={standardDeviation}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
+      <AverageGlucoseStat
+        averageGlucose={averageGlucose}
+        bgPrefs={bgPrefs}
+        bgType={bgType}
+      />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
+      <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       {isTrendsPage &&
@@ -107,8 +113,10 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         </>
       }
 
-      {children}
+      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
+      {children}
     </Box>
   )
 }
