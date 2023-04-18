@@ -41,7 +41,6 @@ import { ClassificationType } from '../../models/statistics/enum/bg-classificati
 import CbgService, { convertBG } from '../medical/datum/cbg.service'
 import SmbgService from '../medical/datum/smbg.service'
 import type DateFilter from '../../models/time/date-filter.model'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../models/time/date-filter.model'
 import type Bg from '../../models/medical/datum/bg.model'
 import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum/bg.model'
 import { getWeekDaysFilter, sumValues } from './statistics.utils'

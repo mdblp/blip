@@ -25,62 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
-import Meal from '../../models/medical/datum/meal.model'
-import Wizard from '../../models/medical/datum/wizard.model'
-import DateFilter from '../../models/time/date-filter.model'
-import { CarbsStatistics } from 'src/domains/models/statistics/carbs-statistics.model'
+import type Meal from '../../models/medical/datum/meal.model'
+import type Wizard from '../../models/medical/datum/wizard.model'
+import type DateFilter from '../../models/time/date-filter.model'
 import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
-import { getWeekDaysFilter } from './statistics.utils'
+import { getWeekDaysFilter, sumValues } from './statistics.utils'
+import { type CarbsStatistics } from '../../models/statistics/carbs-statistics.model'
 
-getCarbsData = () => {
-  this.applyDateFilters()
-
-  const wizardData = this.filter.byType('wizard').top(Infinity)
-  const foodData = this.filter.byType('food').top(Infinity)
-
-  const wizardCarbs = _.reduce(
-    wizardData,
-    (result, datum) => result + _.get(datum, 'carbInput', 0),
-    0
-  )
-
-  const foodCarbs = _.reduce(
-    foodData,
-    (result, datum) => result + _.get(datum, 'nutrition.carbohydrate.net', 0),
-    0
-  )
-
-  const totalCarbs = wizardCarbs + foodCarbs
+function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
+  const filterMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const filterWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const foodCarbsData = filterMeal.map(meal => meal.nutrition.carbohydrate.net)
+  const wizardData = filterWizard.map(wizard => wizard.carbInput)
 
   return {
-    nDays: this.days,
-    wizardCarbs,
-    foodCarbs,
-    totalCarbs,
-    totalCarbsPerDay: totalCarbs / this.days,
-    foodCarbsPerDay: foodCarbs / this.days,
-    wizardCarbsPerDay: wizardCarbs / this.days,
-    total: wizardData.length + foodData.length
+    foodCarbs: sumValues(foodCarbsData) / numDays,
+    total: (sumValues(foodCarbsData) + sumValues(wizardData)) / numDays
   }
 }
-const getCarbsData = (meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter):CarbsStatistics => {
-const filterMeal = MealService.filterOnDate(meal as Meal[], dateFilter.start,dateFilter.end, getWeekDaysFilter(dateFilter))
-const filterWizard = WizardService.filterOnDate(wizard as Wizard[], dateFilter.start,dateFilter.end, getWeekDaysFilter(dateFilter))
-const foodCarbs = filterMeal.map(meal => meal.nutrition.carbohydrate.net){
 
-  }
-  return {
-    foodCarbs,
-    total
-  }
-}
 export interface CarbsStatisticsAdapter {
-  getCarbsData:(meal: Meal, wizard: Wizard, numDays: number, dateFilter: DateFilter) => CarbsStatistics
+  getCarbsData: (meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter) => CarbsStatistics
 }
+
 export const CarbsStatisticsService: CarbsStatisticsAdapter = {
   getCarbsData
 }
-
-

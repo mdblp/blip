@@ -27,12 +27,18 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
+import {
+  type BgType,
+  type DateFilter,
+  DatumType,
+  type MedicalData,
+  TimeService
+} from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService } from 'medical-domain'
+import { GlycemiaStatisticsService, CarbsStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
@@ -63,6 +69,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     total: sensorUsageTotal
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
+  const {
+    total: carbsTotal,
+    foodCarbs
+  } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
+
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
 
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
@@ -92,7 +103,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <TotalCarbsStatWrapper />
       {isTrendsPage &&
         <>
           <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
@@ -103,6 +113,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       {children}
+
+      <TotalCarbsStatWrapper total={carbsTotal} foodCarbs={foodCarbs} bgType={bgType} />
     </Box>
   )
 }

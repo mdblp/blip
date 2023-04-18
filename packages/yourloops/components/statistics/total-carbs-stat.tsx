@@ -27,24 +27,46 @@
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { TotalCarbsStat } from 'dumb'
+import { type BgType, DatumType } from 'medical-domain'
 
-// interface TotalCarbsStatProps {
-//   foodCarbs: number
-//   total: number
-// }
+interface TotalCarbsStatProps {
+  foodCarbs: number
+  total: number
+  bgType: BgType
+}
 
-export const TotalCarbsStatWrapper: FunctionComponent = () => {
-  // const { foodCarbs, total } = props
+export const TotalCarbsStatWrapper: FunctionComponent<TotalCarbsStatProps> = (props) => {
+  const { foodCarbs, total, bgType } = props
   const isDailay = location.pathname.includes('daily')
-  const annotations = [t('tooltip-total-carbs-week'), t('tooltip-total-carbs')]
+  const formatTotal = Math.round(total)
   const title = isDailay ? t('title-total-carbs-day') : t('title-total-carbs-week')
+
+  const getAnnotations = (): string[] => {
+    if (isDailay) {
+      if (bgType === DatumType.Smbg) {
+        return [t('tooltip-total-carbs-day'), t('tooltip-total-carbs-smbg-derived', {
+          total: formatTotal,
+          smbgLabel: t('BGM')
+        })]
+      }
+      return [t('tooltip-total-carbs-day'), t('tooltip-total-carbs-derived', { total: formatTotal })]
+    }
+
+    if (bgType === DatumType.Smbg) {
+      return [t('tooltip-total-carbs-week'), t('tooltip-total-carbs-smbg-derived', {
+        total: formatTotal,
+        smbgLabel: t('BGM')
+      })]
+    }
+    return [t('tooltip-total-carbs-week'), t('tooltip-total-carbs-derived', { total: formatTotal })]
+  }
 
   return (
     <TotalCarbsStat
-      annotations={annotations}
-      foodCarbs={15}
+      annotations={getAnnotations()}
+      foodCarbs={Math.round(foodCarbs)}
       title={title}
-      totalCarbs={20}
+      totalCarbs={formatTotal}
     />
   )
 }
