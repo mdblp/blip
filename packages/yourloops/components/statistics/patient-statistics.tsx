@@ -36,6 +36,7 @@ import { GlycemiaStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalCarbsStatWrapper } from './total-carbs-stat'
 
 export interface PatientStatisticsProps {
@@ -59,8 +60,10 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const {
     sensorUsage,
-    total
+    total: sensorUsageTotal
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+
+  const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
 
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
 
@@ -81,7 +84,13 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage} />
+      <AverageGlucoseStat
+        averageGlucose={averageGlucose}
+        bgPrefs={bgPrefs}
+        bgType={bgType}
+      />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <TotalCarbsStatWrapper />
       {isTrendsPage &&
@@ -94,7 +103,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       {children}
-
     </Box>
   )
 }
