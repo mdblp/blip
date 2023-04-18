@@ -38,12 +38,11 @@ import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
 import { type Patient } from './models/patient.model'
-import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
-import { PRIVATE_TEAM_ID } from '../team/team.hook'
 import { usePatientListContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
+import TeamUtils from '../team/team.util'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
@@ -53,11 +52,14 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const { selectedTeam } = useSelectedTeamContext()
   const alert = useAlert()
 
+  const selectedTeamId = selectedTeam?.id
+  const isUserHcp = user.isUserHcp()
+
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
-  const fetchPatients = useCallback((teamId: string = selectedTeam?.id) => {
+  const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
     PatientUtils.computePatients(user, teamId ?? null).then(computedPatients => {
       setPatients(computedPatients)
     }).catch((reason: unknown) => {
@@ -71,7 +73,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedTeam])
 
-  const refresh = (teamId: string = selectedTeam?.id): void => {
+  const refresh = (teamId: string = selectedTeamId): void => {
     setRefreshInProgress(true)
     fetchPatients(teamId)
   }
@@ -83,7 +85,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [patients])
 
   const getPatientList = (): Patient[] => {
-    if (!user.isUserHcp()) {
+    if (!isUserHcp) {
       return patients
     }
     const patientsStarred = user.preferences?.patientsStarred ?? []
@@ -92,8 +94,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const patientList = getPatientList()
 
-  const pendingPatientsCount = user.isUserHcp() ? patients.filter((patient) => PatientUtils.isInvitationPending(patient)).length : undefined
-  const allPatientsForSelectedTeamCount = user.isUserHcp() ? patients.filter((patient) => !PatientUtils.isInvitationPending(patient)).length : undefined
+  const pendingPatientsCount = isUserHcp ? PatientUtils.getPendingPatients(patients).length : undefined
+  const allNonPendingPatientsForSelectedTeamCount = isUserHcp ? PatientUtils.getNonPendingPatients(patients).length : undefined
 
   const getPatientByEmail = (email: string): Patient => patients.find(patient => patient.profile.email === email)
 
@@ -154,14 +156,14 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }
 
   const removePatient = async (patient: Patient): Promise<void> => {
-    if (patient.invitationStatus === UserInvitationStatus.pending) {
-      const invitation = getInvitation(selectedTeam.id)
+    if (PatientUtils.isInvitationPending(patient)) {
+      const invitation = getInvitation(selectedTeamId)
       await cancelInvitation(invitation.id, undefined, invitation.email)
     }
-    if (selectedTeam.id === PRIVATE_TEAM_ID) {
+    if (TeamUtils.isPrivate(selectedTeam)) {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
     } else {
-      await PatientApi.removePatient(selectedTeam.id, patient.userid)
+      await PatientApi.removePatient(selectedTeamId, patient.userid)
     }
     refresh()
   }
@@ -191,7 +193,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   return {
     patients: patientList,
     pendingPatientsCount,
-    allPatientsForSelectedTeamCount,
+    allNonPendingPatientsForSelectedTeamCount,
     initialized,
     refreshInProgress,
     getPatientByEmail,

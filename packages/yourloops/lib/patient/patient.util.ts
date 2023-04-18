@@ -64,7 +64,7 @@ export default class PatientUtils {
   }
 
   static getNonPendingPatients = (patients: Patient[]): Patient[] => {
-    return patients.filter(patient => patient.invitationStatus !== UserInvitationStatus.pending)
+    return patients.filter(patient => !PatientUtils.isInvitationPending(patient))
   }
 
   static getPendingPatients = (patients: Patient[]): Patient[] => {

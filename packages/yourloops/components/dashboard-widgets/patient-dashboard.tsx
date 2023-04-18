@@ -107,7 +107,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     start: epochDate - msRange,
     end: epochDate
   }
-  const selectedTeamIsPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
+  const isSelectedTeamPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
   const isCaregiver = user.isUserCaregiver()
   const isPatientWithNoTeams = user.isUserPatient() && getMedicalTeams().length === 0
 
@@ -115,7 +115,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     if (isMobileBreakpoint) {
       return RESPONSIVE_GRID_FULL_WIDTH
     }
-    if (isCaregiver || selectedTeamIsPrivate || isPatientWithNoTeams) {
+    if (isCaregiver || isSelectedTeamPrivate || isPatientWithNoTeams) {
       return RESPONSIVE_GRID_HALF_WIDTH
     }
     return RESPONSIVE_GRID_FOUR_COLUMNS
@@ -179,7 +179,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         />
       </Grid>
 
-      {!isCaregiver && !isPatientWithNoTeams && !selectedTeamIsPrivate &&
+      {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
         <>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
             <MonitoringAlertCard patient={patient} />

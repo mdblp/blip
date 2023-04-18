@@ -70,7 +70,9 @@ function RemoteMonitoringWidget(props: RemoteMonitoringWidgetProps): JSX.Element
   const patientName = getUserName(firstName, lastName, fullName)
 
   const isLoggedInUserHcpAdmin = (): boolean => {
-    return authHook.user?.isUserHcp() && selectedTeam.monitoring?.enabled && selectedTeam.members.some(member => member.role === TeamMemberRole.admin && member.userId === authHook.user?.id)
+    const user = authHook.user
+    const isUserAdminOfSelectedTeam = selectedTeam?.members.some(member => member.role === TeamMemberRole.admin && member.userId === user?.id)
+    return user?.isUserHcp() && selectedTeam.monitoring?.enabled && isUserAdminOfSelectedTeam
   }
 
   const showMonitoringButtonAction = isLoggedInUserHcpAdmin()

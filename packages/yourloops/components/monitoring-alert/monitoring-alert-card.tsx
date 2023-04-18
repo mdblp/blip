@@ -58,9 +58,10 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
   const { user } = useAuth()
   const { classes } = monitoringAlertCardStyles()
   const [showPatientMonitoringAlertDialog, setShowPatientMonitoringAlertDialog] = useState(false)
-  const timeSpentAwayFromTargetActive = patient.monitoringAlerts.timeSpentAwayFromTargetActive
-  const frequencyOfSevereHypoglycemiaActive = patient.monitoringAlerts.frequencyOfSevereHypoglycemiaActive
-  const nonDataTransmissionActive = patient.monitoringAlerts.nonDataTransmissionActive
+  const monitoringAlerts = patient.monitoringAlerts
+  const timeSpentAwayFromTargetActive = monitoringAlerts.timeSpentAwayFromTargetActive
+  const frequencyOfSevereHypoglycemiaActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
+  const nonDataTransmissionActive = monitoringAlerts.nonDataTransmissionActive
   const noActiveMonitoringAlert = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive
 
   const buildNumberOfMonitoringAlertsLabel = (): string => {

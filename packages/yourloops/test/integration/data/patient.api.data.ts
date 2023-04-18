@@ -313,7 +313,7 @@ export const unmonitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPa
 export const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatientTwo, myThirdTeamId, UserInvitationStatus.accepted)
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInvitationStatus.pending)
 
-export const PATIENTS_MAPPED_TO_TEAMS: Record<string, Patient[]> = {
+export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   [myTeamId]: [],
   [mySecondTeamId]: [
     {

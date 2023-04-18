@@ -51,7 +51,7 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
   const { selectedTeam } = useSelectedTeamContext()
   const { user } = useAuth()
 
-  const teamId = user.isUserHcp() ? selectedTeam.id : undefined
+  const teamId = user.isUserHcp() ? selectedTeam.id : null
 
   return (
     <GenericDashboardCard

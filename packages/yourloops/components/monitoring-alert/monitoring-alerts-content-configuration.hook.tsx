@@ -211,9 +211,10 @@ const useMonitoringAlertsContentConfiguration = ({
       throw Error('This action cannot be done if the patient is undefined')
     }
 
-    const team = teamHook.getTeam(selectedTeam.id)
+    const selectedTeamId = selectedTeam.id
+    const team = teamHook.getTeam(selectedTeamId)
     if (!team) {
-      throw Error(`Cannot find team with id ${selectedTeam.id}`)
+      throw Error(`Cannot find team with id ${selectedTeamId}`)
     }
 
     const defaultMonitoring = team.monitoring

@@ -28,21 +28,19 @@
 import { act, screen, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { monitoredPatient, monitoredPatientId } from '../../data/patient.api.data'
+import { monitoredPatientId } from '../../data/patient.api.data'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
-import PatientApi from '../../../../lib/patient/patient.api'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 
 describe('Patient dashboard for caregiver', () => {
   const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
-  const firstName = 'HCP firstName'
-  const lastName = 'HCP lastName'
+  const firstName = 'Caregiver firstName'
+  const lastName = 'Caregiver lastName'
 
   beforeEach(() => {
     mockAuth0Hook(UserRole.Caregiver)
@@ -54,11 +52,6 @@ describe('Patient dashboard for caregiver', () => {
   })
 
   it('should render correct components', async () => {
-    jest.spyOn(PatientApi, 'getScopedPatientsForHcp').mockResolvedValue([{
-      ...monitoredPatient,
-      invitationStatus: UserInvitationStatus.accepted
-    }])
-
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })

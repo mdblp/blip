@@ -65,7 +65,7 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
 
       onClose(!invitation)
     } catch (reason) {
-      console.error(reason)
+      console.error(`Remove direct share failed, reason: ${reason}`)
       const errorAlertKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-failure' : 'modal-patient-remove-caregiver-failure'
       alert.error(t(errorAlertKey))
     }
