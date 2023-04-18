@@ -71,7 +71,7 @@ describe('CBGPercentageBarChart hook', () => {
 
   const defaultProps: CBGPercentageBarChartHookProps = {
     bgBounds,
-    bgSource: DatumType.Cbg,
+    bgType: DatumType.Cbg,
     data,
     days: 2,
     type: CBGStatType.TimeInRange,
@@ -142,7 +142,7 @@ describe('CBGPercentageBarChart hook', () => {
 
     const { result: fifthHook } = renderHook(() => useCBGPercentageBarChartHook({
       ...defaultProps,
-      bgSource: DatumType.Smbg
+      bgType: DatumType.Smbg
     }))
     expect(fifthHook.current.titleProps).toEqual({ legendTitle: '', title: 'Avg. Daily Time In Range' })
   })
@@ -163,7 +163,7 @@ describe('CBGPercentageBarChart hook', () => {
 
     const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({
       ...defaultProps,
-      bgSource: DatumType.Smbg
+      bgType: DatumType.Smbg
     }))
     expect(fourthHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.', 'Derived from _**1000**_ BGM readings.'])
   })
