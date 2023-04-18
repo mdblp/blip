@@ -64,7 +64,6 @@ export interface PrintPDFOptions {
 }
 
 interface DialogPDFOptionsProps {
-  open: boolean
   /** Oldest available date date (ISO day ex: 2022-02-10) */
   minDate: string
   /** Newest available date date (ISO day ex: 2022-02-10) */
@@ -131,7 +130,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, for
 }
 
 function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
-  const { open, defaultPreset, onResult } = props
+  const { defaultPreset, onResult } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
   const matchLandscape = useMediaQuery(theme.breakpoints.up('sm'))
@@ -169,14 +168,14 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
     // The openState is used to prevent to reset the selected dates, after a custom date selection
     // Side effect of the useMemo for min/max dates.
     // It's a workaround to mimic the prevProps param of React.Component.componentDidUpdate(prevProps)
-    if (open && !openState) {
+    if (!openState) {
       setOpenState(true)
       setPDFOptions(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, pdfOptions.format))
     }
-    if (!open && openState) {
+    if (openState) {
       setOpenState(false)
     }
-  }, [defaultPreset, open, openState, minDate, maxDate, pdfOptions.format])
+  }, [defaultPreset, openState, minDate, maxDate, pdfOptions.format])
 
   const handleClickPreset = (preset: Presets): void => {
     setPDFOptions(getDatesFromPreset(preset, minDate, maxDate, pdfOptions.format))
@@ -202,7 +201,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
     <Dialog
       id="dialog-pdf-options"
       fullScreen={fullScreen}
-      open={open}
+      open
       onClose={() => { onResult() }}
       data-start={pdfOptions.start}
       data-end={pdfOptions.end}

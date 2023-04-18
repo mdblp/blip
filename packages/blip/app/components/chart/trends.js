@@ -27,7 +27,7 @@ import Stats from './stats'
 import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
-import ChartType from 'yourloops/enum/chart-type.enum'
+import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
@@ -109,7 +109,7 @@ class Trends extends React.Component {
     super(props)
 
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs)
-    this.chartType = ChartType.Trends
+    this.chartType = ChartTypes.Trends
 
     this.log = bows('Trends')
 

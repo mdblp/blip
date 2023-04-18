@@ -36,15 +36,17 @@ import { PatientNavBarInfoList } from './patient-nav-bar-info-list'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useNavigate } from 'react-router-dom'
+import { type ChartTypes } from '../../enum/chart-type.enum'
 
 interface PatientNavBarProps {
-  chartType: string
+  currentChart: string
+  currentPatient: Patient
+  onChangeChart: (chart: ChartTypes) => void
   onClickDashboard?: () => void
   onClickDaily?: () => void
-  onSwitchPatient: (patient: Patient) => void
   onClickPrint?: () => void
   onClickTrends?: () => void
-  currentPatient: Patient
+  onSwitchPatient: (patient: Patient) => void
 }
 
 const styles = makeStyles()((theme: Theme) => {
@@ -66,11 +68,9 @@ const styles = makeStyles()((theme: Theme) => {
 
 const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
+    currentChart,
     currentPatient,
-    chartType,
-    onClickDashboard,
-    onClickTrends,
-    onClickDaily,
+    onChangeChart,
     onClickPrint,
     onSwitchPatient
   } = props
@@ -88,17 +88,22 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
       {!user.isUserPatient() &&
         <Box className={classes.topContainer}>
           <Box display="flex" paddingTop={2}>
-            <ArrowBackIcon data-testid="subnav-arrow-back" className={classes.backIcon} onClick={goBackHome} />
-            <PatientNavBarSelect currentPatient={currentPatient} onSwitchPatient={onSwitchPatient} />
+            <ArrowBackIcon
+              data-testid="subnav-arrow-back"
+              className={classes.backIcon}
+              onClick={goBackHome}
+            />
+            <PatientNavBarSelect
+              currentPatient={currentPatient}
+              onSwitchPatient={onSwitchPatient}
+            />
             <PatientNavBarInfoList patient={currentPatient} />
           </Box>
         </Box>
       }
       <PatientNavBarTabs
-        chartType={chartType}
-        onClickDashboard={onClickDashboard}
-        onClickTrends={onClickTrends}
-        onClickDaily={onClickDaily}
+        currentChart={currentChart}
+        onChangeChart={onChangeChart}
         onClickPrint={onClickPrint}
       />
     </Box>

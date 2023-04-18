@@ -40,7 +40,7 @@ import {
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
-import ChartType from 'yourloops/enum/chart-type.enum'
+import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import Stats from './stats'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
@@ -272,7 +272,7 @@ class Daily extends React.Component {
 
     /** @type {React.RefObject<DailyChart>} */
     this.chartRef = React.createRef()
-    this.chartType = ChartType.Daily
+    this.chartType = ChartTypes.Daily
     this.log = bows('DailyView')
     this.state = {
       atMostRecent: this.isAtMostRecent(),

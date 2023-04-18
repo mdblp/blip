@@ -35,7 +35,7 @@ import ApiUtils from '../core/api-utils'
 import { Daily, Trends } from './chart'
 import Messages from './messages'
 import { PatientNavBarMemoized as PatientNavBar } from 'yourloops/components/header-bars/patient-nav-bar'
-import ChartType from 'yourloops/enum/chart-type.enum'
+import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { PatientDashboard } from 'yourloops/components/dashboard-widgets/patient-dashboard'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 
@@ -238,9 +238,8 @@ class PatientDataPage extends React.Component {
           {messages}
           {patientData}
           {errorDisplay}
-          {canPrint &&
+          {canPrint && showPDFPrintOptions &&
             <DialogPDFOptions
-              open={showPDFPrintOptions}
               minDate={start}
               maxDate={end}
               onResult={this.handlePrint}
@@ -314,9 +313,9 @@ class PatientDataPage extends React.Component {
         <PatientNavBar
           chartType={this.getChartType()}
           currentPatient={patient}
-          onClickDashboard={() => this.navigateToChart(ChartType.Dashboard)}
-          onClickDaily={() => this.navigateToChart(ChartType.Daily)}
-          onClickTrends={() => this.navigateToChart(ChartType.Trends)}
+          onClickDashboard={() => this.navigateToChart(ChartTypes.Dashboard)}
+          onClickDaily={() => this.navigateToChart(ChartTypes.Daily)}
+          onClickTrends={() => this.navigateToChart(ChartTypes.Trends)}
           onClickPrint={this.handleClickPrint}
           onSwitchPatient={this.handleSwitchPatient}
         />
@@ -429,11 +428,11 @@ class PatientDataPage extends React.Component {
 
     switch (pathName) {
       case `${prefixURL}/daily`:
-        return ChartType.Daily
+        return ChartTypes.Daily
       case `${prefixURL}/trends`:
-        return ChartType.Trends
+        return ChartTypes.Trends
       case `${prefixURL}/dashboard`:
-        return ChartType.Dashboard
+        return ChartTypes.Dashboard
     }
     return null
   }
@@ -560,7 +559,7 @@ class PatientDataPage extends React.Component {
 
   /**
    * Handles navigation between patient navbar tabs
-   * @param chart {ChartType} the chart we are going to
+   * @param chart {ChartTypes} the chart we are going to
    * @Returns {void}
    */
   navigateToChart(chart) {
@@ -569,13 +568,13 @@ class PatientDataPage extends React.Component {
       return
     }
     switch (chart) {
-      case ChartType.Dashboard:
+      case ChartTypes.Dashboard:
         this.handleSwitchToDashboard()
         break
-      case ChartType.Daily:
+      case ChartTypes.Daily:
         this.handleSwitchToDaily(this.state.epochLocation)
         break
-      case ChartType.Trends:
+      case ChartTypes.Trends:
         this.handleSwitchToTrends()
         break
     }
