@@ -28,36 +28,27 @@
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { TotalCarbsStat } from 'dumb'
-import { type BgType, DatumType } from 'medical-domain'
 import { ensureNumeric } from 'dumb/dist/src/components/stats/stats.util'
+import { useLocation } from 'react-router-dom'
 
 interface TotalCarbsStatProps {
   foodCarbs: number
-  bgType: BgType
   total: number
-  carbsEntries: number
+  entriesCarbs: number
 }
 
 export const TotalCarbsStatWrapper: FunctionComponent<TotalCarbsStatProps> = (props) => {
-  const { foodCarbs, carbsEntries, bgType, total } = props
-  const isDailay = location.pathname.includes('daily')
-  const title = isDailay ? t('title-total-carbs-day') : t('title-total-carbs-week')
-  const isSmbg = bgType === DatumType.Smbg ? t('tooltip-total-carbs-smbg-derived', {
-    total: carbsEntries,
-    smbgLabel: t('BGM')
-  }) : t('tooltip-total-carbs-derived', { total: carbsEntries })
+  const { foodCarbs, entriesCarbs, total } = props
+  const location = useLocation()
+  const isDaily = location.pathname.includes('daily')
+  const title = isDaily ? t('title-total-day-carbs') : t('title-total-week-carbs')
+  const isDerivedCarbs = foodCarbs && total ? t('tooltip-total-derived-carbs', { total: entriesCarbs }) : t('tooltip-empty-stat')
 
   const getAnnotations = (): string[] => {
-    if (isDailay) {
-      if (!foodCarbs && !total) {
-        return [t('tooltip-total-carbs-day'), t('tooltip-empty-stat')]
-      }
-      return [t('tooltip-total-carbs-day'), isSmbg]
+    if (isDaily) {
+      return [t('tooltip-total-day-carbs'), isDerivedCarbs]
     }
-    if (!foodCarbs && !total) {
-      return [t('tooltip-total-carbs-day'), t('tooltip-empty-stat')]
-    }
-    return [t('tooltip-total-carbs-week'), isSmbg]
+    return [t('tooltip-total-week-carbs'), isDerivedCarbs]
   }
 
   return (

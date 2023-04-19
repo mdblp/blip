@@ -28,5 +28,5 @@
 export interface CarbsStatistics {
   foodCarbs: number
   total: number
-  carbsEntries: number
+  entriesCarbs: number
 }

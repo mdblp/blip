@@ -70,8 +70,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const {
-    total: carbsTotal,
-    carbsEntries,
+    total: totalCarbs,
+    entriesCarbs,
     foodCarbs
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
@@ -115,7 +115,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       {children}
 
-      <TotalCarbsStatWrapper carbsEntries={carbsEntries} total={carbsTotal} foodCarbs={foodCarbs} bgType={bgType} />
+      <TotalCarbsStatWrapper entriesCarbs={entriesCarbs} total={totalCarbs} foodCarbs={foodCarbs} />
     </Box>
   )
 }
