@@ -71,9 +71,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    await waitFor(() => {
-      expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, null)
-    })
+    expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, null)
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()

@@ -48,7 +48,7 @@ export default class PatientUtils {
       if (!teamId) {
         throw Error('Cannot retrieve scoped patients when no team id is given')
       }
-      return await PatientApi.getScopedPatientsForHcp(user.id, teamId)
+      return await PatientApi.getPatientsForHcp(user.id, teamId)
     }
     return await PatientUtils.retrievePatients()
   }

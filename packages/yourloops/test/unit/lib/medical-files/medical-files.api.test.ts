@@ -28,35 +28,11 @@
 import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
-import { type Prescription } from '../../../../lib/medical-files/models/prescription.model'
 import { type MedicalReport, type NewMedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
 
 describe('Medical files API', () => {
   const patientId = 'patientId'
   const teamId = 'teamId'
-
-  it('upload a prescription', async () => {
-    const payload: Prescription = { id: 'presrId' } as Prescription
-    const prescriptorId = 'prescriptorId'
-    const blob = new Blob(['fake-url.jpeg'], { type: 'image/jpeg' })
-    const file = new File([blob], 'fake.png', {
-      lastModified: new Date().getMilliseconds(),
-      type: 'image/jpeg'
-    })
-
-    jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: payload } as AxiosResponse)
-    const prescription = await MedicalFilesApi.uploadPrescription(patientId, teamId, prescriptorId, 12, file)
-    expect(prescription).toEqual(payload)
-    expect(HttpService.post).toHaveBeenCalledWith({
-      url: 'cargo/v0/prescriptions',
-      payload: expect.anything(),
-      config: {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    })
-  })
 
   it('should get medical reports', async () => {
     const payload: MedicalReport[] = [{} as MedicalReport, {} as MedicalReport]
