@@ -47,25 +47,49 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
       <Box className={`${styles.title} ${styles.row}`}>
         {title}
         <StatTooltip annotations={annotations} />
-        <div className={styles.total}>
-          <span className={styles.value}>
-            {totalCarbs}
-          </span>
-          <span className={styles.suffix}>
-            {Unit.Gram}
-          </span>
-        </div>
+        {Number.isNaN(totalCarbs)
+          ? (
+            <>
+              <div className={styles['disabled-line']} />
+              <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+                --
+              </Box>
+            </>
+            ) : (
+            <>
+              <div className={styles.total}>
+              <span className={styles.value}>
+                {totalCarbs}
+              </span>
+                <span className={styles.suffix}>
+                {Unit.Gram}
+              </span>
+              </div>
+            </>
+            )
+        }
       </Box>
+
       <Box className={`${styles.rescueCarb} ${styles.row}`}>
         {t('Rescuecarbs')}
-        <div className={styles.total}>
+        {!foodCarbs
+          ? (<>
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+              --
+            </Box>
+          </>)
+          : (<>
+            <div className={styles.total}>
           <span className={styles.value}>
             {foodCarbs}
           </span>
-          <span className={styles.suffix}>
+              <span className={styles.suffix}>
             {Unit.Gram}
           </span>
-        </div>
+            </div>
+          </>)
+        }
       </Box>
     </div>
   )

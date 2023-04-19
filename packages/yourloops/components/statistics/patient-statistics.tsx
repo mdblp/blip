@@ -57,9 +57,9 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const theme = useTheme()
   const location = useLocation()
 
-  const cbgStatType: CBGStatType = bgType === DatumType.Cbg ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const cbgSelected = bgType === DatumType.Cbg
+  const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
+  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
