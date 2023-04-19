@@ -108,15 +108,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       }
       break
 
-    case commonStats.carbs:
-      if (days > 1) {
-        annotations.push(t('**Avg. Daily Carbs**: All carb entries added together, then divided by the number of days in this view. Note, these entries come from either bolus wizard events, or Apple Health records.'))
-      } else {
-        annotations.push(t('**Total Carbs**: All carb entries from bolus wizard events or Apple Health records added together.'))
-      }
-      annotations.push(t('Derived from _**{{total}}**_ carb entries.', { total: data.total }))
-      break
-
     case commonStats.readingsInRange:
       annotations.push(t('**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.', { smbgLabel: statBgSourceLabels.smbg }))
       break
