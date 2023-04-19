@@ -57,7 +57,7 @@ export const usePatientListHeaderFiltersLabelHook = (props: PatientListHeaderFil
         totalNumberOfPatients: allNonPendingPatientsForSelectedTeamCount
       })
     }
-    return null
+    return t('filters-deactivated', { totalNumberOfPatients: patientsDisplayedCount })
   }
 
   return { filtersLabel: getFiltersLabel() }
