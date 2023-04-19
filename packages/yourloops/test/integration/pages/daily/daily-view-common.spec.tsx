@@ -38,7 +38,8 @@ import {
   checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget,
-  checkTimeInRangeStatsTitle
+  checkTimeInRangeStatsTitle,
+  checkTotalCarbsStatWidget
 } from '../../assert/stats'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -73,6 +74,7 @@ describe('Daily view for anyone', () => {
 
       await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+      await checkTotalCarbsStatWidget('Total Carbs110gRescue carbs15g')
     })
   })
 
