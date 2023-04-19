@@ -133,7 +133,7 @@ describe('Patient dashboard for HCP', () => {
 
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
-    jest.spyOn(PatientApi, 'getScopedPatientsForHcp').mockResolvedValue([{
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...monitoredPatient,
       invitationStatus: UserInvitationStatus.accepted
     }])

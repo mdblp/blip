@@ -64,7 +64,7 @@ export default class PatientApi {
     }
   }
 
-  static async getScopedPatientsForHcp(userId: string, teamId: string): Promise<Patient[]> {
+  static async getPatientsForHcp(userId: string, teamId: string): Promise<Patient[]> {
     const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients` })
     return data
   }
