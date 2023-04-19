@@ -67,10 +67,6 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
     hasAnyNonPendingFiltersEnabled
   })
 
-  if (!filtersLabel) {
-    return null
-  }
-
   return (
     <Box
       display="flex"
@@ -83,7 +79,7 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
       >
         {filtersLabel}
       </Typography>
-      {!filters.pendingEnabled &&
+      {!filters.pendingEnabled && hasAnyNonPendingFiltersEnabled &&
         <>
           <Divider
             orientation="vertical"
