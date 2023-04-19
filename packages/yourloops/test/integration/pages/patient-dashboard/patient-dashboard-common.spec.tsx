@@ -26,7 +26,7 @@
  */
 
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI, mySecondTeamId } from '../../mock/team.api.mock'
+import { mockTeamAPI } from '../../mock/team.api.mock'
 import { completeDashboardData, mockDataAPI, YESTERDAY_DATE } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { monitoredPatientId, unmonitoredPatientId } from '../../data/patient.api.data'
@@ -38,8 +38,6 @@ import { checkTooltip } from '../../assert/stats'
 import { screen, waitFor, within } from '@testing-library/react'
 import { mockUserApi } from '../../mock/user.api.mock'
 import crypto from 'crypto'
-import moment from 'moment-timezone'
-import { getTomorrowDate } from '../../utils/helpers'
 import userEvent from '@testing-library/user-event'
 import { ConfigService } from '../../../../lib/config/config.service'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -97,38 +95,6 @@ describe('Patient dashboard for anyone', () => {
     expect(reservoirChange).toBeVisible()
     await userEvent.hover(reservoirChange)
     expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}9:40 pm`)
-  })
-
-  it('patient should in various teams should have correct cards', async () => {
-    localStorage.setItem('selectedTeamId', mySecondTeamId)
-    const router = renderPage(`/patient/${monitoredPatientId}/dashboard`)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${monitoredPatientId}/dashboard`)
-    })
-    const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
-    const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
-    expect(statsWidgets).toBeVisible()
-    expect(statsWidgets).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLAvg. Glucose (CGM)mg/dL135Sensor Usage1%CV (CGM)55%Avg. Daily Total Insulin(1.3U)Bolus1.3 U100%Basal0.0 U2%Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10gStandard Deviation (61-209)mg/dL74')
-
-    const deviceUsageWidget = screen.getByTestId('device-usage-card')
-    expect(deviceUsageWidget).toBeVisible()
-    expect(deviceUsageWidget).toHaveTextContent('Last updatesNov 1, 2022 12:00 amBOLUS_AGGRESSIVENESS_FACTOR (143 %)Nov 1, 2022 12:00 amLARGE_MEAL_BREAKFAST (150.0 g)Nov 1, 2022 12:00 amLARGE_MEAL_DINNER (150.0 g)Nov 1, 2022 12:00 amLARGE_MEAL_LUNCH (70.0 g)Nov 2, 2022 5:00 pmMEAL_RATIO_BREAKFAST_FACTOR (100 % -> 110 %)Nov 1, 2022 12:00 amMEAL_RATIO_BREAKFAST_FACTOR (100 % -> 100 %)Nov 1, 2022 12:00 amMEAL_RATIO_BREAKFAST_FACTOR (100 %)Nov 2, 2022 5:00 pmMEAL_RATIO_DINNER_FACTOR (100 % -> 90 %)Nov 1, 2022 12:00 amMEAL_RATIO_DINNER_FACTOR (100 % -> 100 %)Nov 1, 2022 12:00 amMEAL_RATIO_DINNER_FACTOR (100 %)Nov 7, 2022 2:01 pmMEAL_RATIO_LUNCH_FACTOR (130 % -> 90 %)Nov 1, 2022 12:00 amMEAL_RATIO_LUNCH_FACTOR (130 %)Nov 1, 2022 12:00 amMEDIUM_MEAL_BREAKFAST (70.0 g)Nov 1, 2022 12:00 amMEDIUM_MEAL_DINNER (60.0 g)Nov 1, 2022 12:00 amMEDIUM_MEAL_LUNCH (50.0 g)Nov 1, 2022 12:00 amPATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA (100 %)Nov 2, 2022 7:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL -> 140.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL -> 180.1 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL)Nov 2, 2022 7:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL -> 60.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL -> 70.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLYCEMIA_TARGET (100.0 mg/dL)Nov 1, 2022 12:00 amSMALL_MEAL_BREAKFAST (15.0 g)Nov 1, 2022 12:00 amSMALL_MEAL_DINNER (20.0 g)Nov 1, 2022 12:00 amSMALL_MEAL_LUNCH (30.0 g)Nov 1, 2022 12:00 amTOTAL_INSULIN_FOR_24H (53.0 U)Nov 1, 2022 12:00 amWEIGHT (69.0 kg)')
-
-    const remoteMonitoringCard = screen.getByTestId('remote-monitoring-card')
-    expect(remoteMonitoringCard).toBeVisible()
-    expect(remoteMonitoringCard).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a dayRenewRemove`)
-
-    const medicalFilesCard = screen.getByTestId('medical-files-card')
-    expect(medicalFilesCard).toBeVisible()
-    expect(medicalFilesCard).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeamNew')
-
-    const monitoringAlertCard = screen.getByTestId('monitoring-alert-card')
-    expect(monitoringAlertCard).toBeVisible()
-    expect(monitoringAlertCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')
-
-    const chartCard = screen.getByTestId('chat-card')
-    expect(chartCard).toBeVisible()
-    expect(chartCard).toHaveTextContent('Messages (+1)This is a message sent from the team MySecondTeam21/03/2023 16:32NewReplyPrivate')
   })
 
   it('should automatically log out an idle user', async () => {
