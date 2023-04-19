@@ -30,6 +30,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkFooter } from '../../assert/footer'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
+import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
 
 describe('Login page desktop view', () => {
   const loginWithRedirectMock = jest.fn()
@@ -90,7 +91,8 @@ describe('Login page desktop view', () => {
 
   it('should redirect to verify-email page if the user has not yet confirmed his email', async () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      error: Error('Please verify your email before logging in.')
+      error: Error('Please verify your email before logging in.'),
+      getAccessTokenSilently: jest.fn().mockRejectedValue(AUTH0_ERROR_EMAIL_NOT_VERIFIED)
     })
     const router = renderPage('/')
     await waitFor(() => {
