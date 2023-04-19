@@ -65,7 +65,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    await waitFor(() => { expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, null) })
+    expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, null)
     expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
     await checkMedicalWidgetForPatient()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
@@ -73,7 +73,6 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Patient statistics')).toBeVisible()
     expect(dashboard.getByText('Device Usage')).toBeVisible()
 
-    expect(dashboard.queryByTestId('remote-monitoring-card')).toBeVisible()
     expect(dashboard.queryByTestId('medical-files-card')).toBeVisible()
     expect(dashboard.queryByTestId('monitoring-alert-card')).toBeVisible()
     expect(dashboard.queryByTestId('chat-card')).toBeVisible()

@@ -37,10 +37,9 @@ import FormGroup from '@mui/material/FormGroup'
 import Link from '@mui/material/Link'
 
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { type BaseConsentCheck, type ConsentCheck } from './models/consent-check.model'
+import { type ConsentCheck } from './models/consent-check.model'
 import { type ConsentFormProps } from './models/consent-form-props.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
-import { type MonitoringConsentFormProps } from './models/monitoring-consent-form-props.model'
 
 const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
   return {
@@ -146,47 +145,6 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
   )
 }
 
-export const ConsentMonitoringTerms: FunctionComponent<BaseConsentCheck> = ({ id, checked, onChange }) => {
-  const { t } = useTranslation('yourloops')
-  const { classes } = formStyles()
-
-  const checkboxTerms = (
-    <Checkbox
-      id={`${id}-checkbox-terms`}
-      className={classes.checkbox}
-      checked={checked}
-      onChange={onChange}
-      name="terms"
-      data-testid={`${id}-checkbox-terms`}
-    />
-  )
-  const terms = t('terms-of-use')
-  const linkTerms = (
-    <Link aria-label={terms} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
-      {terms}
-    </Link>
-  )
-  const labelTerms = (
-    <Trans
-      i18nKey={'consent-monitoring-terms-of-use'}
-      t={t}
-      components={{ linkTerms }}
-      values={{ terms }}
-      parent={React.Fragment}>
-      I have read and accepted YourLoops {terms}.
-    </Trans>
-  )
-
-  return (
-    <FormControlLabel
-      data-testid={`${id}-label-terms`}
-      control={checkboxTerms}
-      label={labelTerms}
-      className={classes.formControlLabel}
-    />
-  )
-}
-
 export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole, checked, onChange }) => {
   const { t } = useTranslation('yourloops')
   const { classes } = formStyles()
@@ -277,30 +235,6 @@ const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
             onChange={handleChange}
           />
         }
-      </FormGroup>
-    </FormControl>
-  )
-}
-
-export const MonitoringConsentForm: FunctionComponent<MonitoringConsentFormProps> = (props) => {
-  const {
-    id,
-    className,
-    group,
-    termsAccepted,
-    setTermsAccepted
-  } = props
-
-  const { classes } = formStyles()
-
-  const handleChange = (): void => {
-    setTermsAccepted(!termsAccepted)
-  }
-
-  return (
-    <FormControl id={`${id}-form`} className={className}>
-      <FormGroup className={`${classes.formGroup} ${group ?? ''}`}>
-        <ConsentMonitoringTerms id={id} checked={termsAccepted} onChange={handleChange} />
       </FormGroup>
     </FormControl>
   )

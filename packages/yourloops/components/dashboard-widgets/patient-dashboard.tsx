@@ -40,7 +40,6 @@ import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
-import RemoteMonitoringWidget from './remote-monitoring-widget'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {
   RESPONSIVE_GRID_FOUR_COLUMNS,
@@ -192,7 +191,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
               userId={user.id}
               userRole={user.role}
             />
-            <RemoteMonitoringWidget patient={patient} />
           </Grid>
         </>
       }
