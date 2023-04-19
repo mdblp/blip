@@ -58,9 +58,10 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
   const { user } = useAuth()
   const { classes } = monitoringAlertCardStyles()
   const [showPatientMonitoringAlertDialog, setShowPatientMonitoringAlertDialog] = useState(false)
-  const timeSpentAwayFromTargetActive = patient.alarms.timeSpentAwayFromTargetActive
-  const frequencyOfSevereHypoglycemiaActive = patient.alarms.frequencyOfSevereHypoglycemiaActive
-  const nonDataTransmissionActive = patient.alarms.nonDataTransmissionActive
+  const monitoringAlerts = patient.monitoringAlerts
+  const timeSpentAwayFromTargetActive = monitoringAlerts.timeSpentAwayFromTargetActive
+  const frequencyOfSevereHypoglycemiaActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
+  const nonDataTransmissionActive = monitoringAlerts.nonDataTransmissionActive
   const noActiveMonitoringAlert = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive
 
   const buildNumberOfMonitoringAlertsLabel = (): string => {
@@ -107,7 +108,7 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
         >
           {t('time-out-of-range-target')}
           <Box>
-            {`${Math.round(patient.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
+            {`${Math.round(patient.monitoringAlerts.timeSpentAwayFromTargetRate * 10) / 10}%`}
           </Box>
         </Box>
         <Box
@@ -119,7 +120,7 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
         >
           {t('alert-hypoglycemic')}
           <Box>
-            {`${Math.round(patient.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+            {`${Math.round(patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           </Box>
         </Box>
         <Box
@@ -130,7 +131,7 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
           className={nonDataTransmissionActive ? classes.alertColor : ''}
         >
           {t('data-not-transferred')}
-          <Box>{`${Math.round(patient.alarms.nonDataTransmissionRate * 10) / 10}%`}</Box>
+          <Box>{`${Math.round(patient.monitoringAlerts.nonDataTransmissionRate * 10) / 10}%`}</Box>
         </Box>
       </CardContent>
       {showPatientMonitoringAlertDialog &&

@@ -26,12 +26,8 @@
  */
 
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
-import {
-  completeDashboardData,
-  mockDataAPI,
-  YESTERDAY_DATE
-} from '../../mock/data.api.mock'
+import { mockTeamAPI, mySecondTeamId } from '../../mock/team.api.mock'
+import { completeDashboardData, mockDataAPI, YESTERDAY_DATE } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { monitoredPatientId, unmonitoredPatientId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
@@ -106,6 +102,7 @@ describe('Patient dashboard for anyone', () => {
   })
 
   it('monitored patient should have correct cards', async () => {
+    localStorage.setItem('selectedTeamId', mySecondTeamId)
     const router = renderPage(`/patient/${monitoredPatientId}/dashboard`)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(`/patient/${monitoredPatientId}/dashboard`)

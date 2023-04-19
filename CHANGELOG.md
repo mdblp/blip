@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.4-beta - 2023-02-10
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
+- YLP-2125 Allow users to ask support to resend the verification email
 - YLP-2140 As a HCP, I can only edit my medical records
 - YLP-2146 Adding groups in patient list
 - YLP-2151 As a HCP I want to be able to filter my patients via the new design
@@ -64,6 +65,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2258 Bump react-markdown
 - YLP-2286 Rename the "alarm" concept to "monitored alert"
 - YLP-2289 Migrate Standard Deviation from stat.js to yourloops
+- YLP-2291 Get the patients from the scope route when logged in as HCP
 - YLP-2293 Migrate Average Glucose from stat.js to yourloops
 
 ### Fixed

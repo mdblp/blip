@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
-import { type MonitoringStatus } from '../../team/models/enums/monitoring-status.enum'
-
-export interface PatientTeam {
-  status: UserInvitationStatus
-  teamId: string
-  monitoringStatus?: MonitoringStatus
-}
+export const AUTH0_ERROR_CONSENT_REQUIRED = 'Consent required'
+export const AUTH0_ERROR_EMAIL_NOT_VERIFIED = 'Please verify your email before logging in.'
+export const AUTH0_ERROR_LOGIN_REQUIRED = 'Login required'
