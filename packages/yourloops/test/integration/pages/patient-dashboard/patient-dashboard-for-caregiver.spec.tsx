@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
-import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
+import { monitoredPatientId } from '../../data/patient.api.data'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
-import { renderPage } from '../../utils/render'
 import { checkCaregiverLayout } from '../../assert/layout'
-import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
+import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { unmonitoredPatientId } from '../../data/patient.api.data'
+import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
+import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 
-describe('Trends view for caregiver', () => {
-  const firstName = 'HCP firstName'
-  const lastName = 'HCP lastName'
+describe('Patient dashboard for caregiver', () => {
+  const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
+  const firstName = 'Caregiver firstName'
+  const lastName = 'Caregiver lastName'
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
-    mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
-    mockMedicalFilesAPI()
+    mockDataAPI(completeDashboardData)
   })
 
-  it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    const router = renderPage(`/patient/${unmonitoredPatientId}/trends`)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/trends`)
+  it('should render correct components', async () => {
+    await act(async () => {
+      renderPage(monitoredPatientDashboardRoute)
     })
-    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
-    checkPatientNavBarAsCaregiver()
+
     await checkCaregiverLayout(`${firstName} ${lastName}`)
+
+    const dashboard = within(await screen.findByTestId('patient-dashboard'))
+    expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
+    expect(dashboard.getByText('Patient statistics')).toBeVisible()
+    expect(dashboard.getByText('Device Usage')).toBeVisible()
+
+    expect(dashboard.queryByTestId('remote-monitoring-card')).not.toBeInTheDocument()
+    expect(dashboard.queryByTestId('medical-files-card')).not.toBeInTheDocument()
+    expect(dashboard.queryByTestId('monitoring-alert-card')).not.toBeInTheDocument()
+    expect(dashboard.queryByTestId('chat-card')).not.toBeInTheDocument()
   })
 })

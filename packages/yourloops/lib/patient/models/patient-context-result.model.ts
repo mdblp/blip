@@ -28,12 +28,11 @@
 import { type Team } from '../../team'
 import { type MedicalData } from '../../data/models/medical-data.model'
 import { type Patient } from './patient.model'
-import { type PatientTeam } from './patient-team.model'
 
 export interface PatientContextResult {
   patients: Patient[]
   pendingPatientsCount?: number
-  allPatientsForSelectedTeamCount?: number
+  allNonPendingPatientsForSelectedTeamCount?: number
   initialized: boolean
   refreshInProgress: boolean
   getPatientByEmail: (email: string) => Patient
@@ -43,8 +42,8 @@ export interface PatientContextResult {
   editPatientRemoteMonitoring: (patient: Patient) => void
   markPatientMessagesAsRead: (patient: Patient) => void
   updatePatientMonitoring: (patient: Patient) => Promise<void>
-  removePatient: (patient: Patient, patientTeam: PatientTeam) => Promise<void>
+  removePatient: (patient: Patient) => Promise<void>
   leaveTeam: (team: string) => Promise<void>
   setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
-  refresh: () => void
+  refresh: (teamId?: string) => void
 }

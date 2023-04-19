@@ -27,12 +27,9 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { unmonitoredPatientId } from '../../data/patient.api.data'
-import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
@@ -49,11 +46,8 @@ describe('Daily view for caregiver', () => {
     mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
-    mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
-    mockChatAPI()
-    mockMedicalFilesAPI()
   })
 
   it('should render correct layout', async () => {

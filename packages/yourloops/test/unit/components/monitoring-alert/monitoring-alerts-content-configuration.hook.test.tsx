@@ -26,24 +26,26 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks'
-import useMonitoringAlertsContentConfiguration from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration.hook'
+import useMonitoringAlertsContentConfiguration
+  from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration.hook'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import PatientUtils from '../../../../lib/patient/patient.util'
 import { Unit } from 'medical-domain'
+import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
+import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
-
+jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('MonitoringAlertsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
-  const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
+  const patient = createPatient('patientId', [teamId], UserInvitationStatus.accepted)
   const user = { id: 'id', settings: { units: { bg: Unit.MilligramPerDeciliter } } }
 
-  const getDefaultMonitoring = () => ({
+  const getDefaultMonitoring = (): Monitoring => ({
     enabled: true,
     parameters: {
       bgUnit: Unit.MilligramPerDeciliter,
@@ -67,6 +69,9 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
       return {
         user
       }
+    });
+    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
+      return { selectedTeam: { id: teamId } }
     })
   })
 
@@ -157,26 +162,25 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
   })
 
   describe('resetToTeamDefaultValues', () => {
-    const patient = createPatient('patientId', [{ status: UserInvitationStatus.accepted, teamId }])
+    const patient = createPatient('patientId', [teamId], UserInvitationStatus.accepted)
 
     it('should return an error message if patient is not created', () => {
       const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring: getDefaultMonitoring() }))
 
-      expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError('This action cannot be done if the patient is undefined')
+      expect(() => {
+        result.current.resetToTeamDefaultValues()
+      }).toThrowError('This action cannot be done if the patient is undefined')
     })
 
     it('should return a error message if patient team is not found', () => {
-      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({
-        status: UserInvitationStatus.accepted,
-        teamId
-      })
-
       const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
         monitoring: getDefaultMonitoring(),
         patient
       }))
 
-      expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError(`Cannot find team with id ${teamId}`)
+      expect(() => {
+        result.current.resetToTeamDefaultValues()
+      }).toThrowError(`Cannot find team with id ${teamId}`)
     })
 
     it('should return an error message if the team has no monitoring parameters', () => {
@@ -188,25 +192,17 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
         }
       })
 
-      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({
-        status: UserInvitationStatus.accepted,
-        teamId
-      })
-
       const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
         patient,
         monitoring: getDefaultMonitoring()
       }))
 
-      expect(() => { result.current.resetToTeamDefaultValues() }).toThrowError('The given team has no monitoring values')
+      expect(() => {
+        result.current.resetToTeamDefaultValues()
+      }).toThrowError('The given team has no monitoring values')
     })
 
     it('should set default values if there is no error', () => {
-      jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue({
-        status: UserInvitationStatus.accepted,
-        teamId
-      })
-
       const defaultMonitoring = getDefaultMonitoring()
 
       team.monitoring = getDefaultMonitoring();
@@ -217,7 +213,7 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
         }
       })
 
-      const updatedMonitoring = {
+      const updatedMonitoring: Monitoring = {
         enabled: true,
         parameters: {
           bgUnit: Unit.MilligramPerDeciliter,
@@ -231,7 +227,10 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
         }
       }
 
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring: updatedMonitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
+        monitoring: updatedMonitoring,
+        patient
+      }))
       act(() => {
         result.current.resetToTeamDefaultValues()
       })

@@ -11,6 +11,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2151 As a HCP I want to be able to filter my patients via the new design
 - YLP-2154 Displayed columns choice in the patient list
 - YLP-2160 Patient list new design
+- YLP-2172 Display patients count on patients list
 - YLP-2175 Implement new design system
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
@@ -64,6 +65,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2256 Bump minor deps
 - YLP-2258 Bump react-markdown
 - YLP-2286 Rename the "alarm" concept to "monitored alert"
+- YLP-2291 Get the patients from the scope route when logged in as HCP
 - YLP-2293 Migrate Average Glucose from stat.js to yourloops
 
 ### Fixed
