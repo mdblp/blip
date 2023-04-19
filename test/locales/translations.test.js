@@ -177,7 +177,9 @@ const ignoredTransKeyForYourLoops = [
   'no-settings-on-device-alert-message',
   'BGM',
   'tooltip-empty-stat',
-  'time-out-of-range'
+  'time-out-of-range',
+  'title-total-carbs-week',
+  'tooltip-total-carbs-smbg-derived'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
