@@ -39,7 +39,7 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
       const numberOfPatientsDisplayed = 10
 
       const { result } = renderHook(() => usePatientListHeaderFiltersLabelHook({
-        allPatientsForSelectedTeamCount,
+        allNonPendingPatientsForSelectedTeamCount: allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
         patientsDisplayedCount: numberOfPatientsDisplayed
@@ -55,7 +55,7 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
       const numberOfPatientsDisplayed = 10
 
       const { result } = renderHook(() => usePatientListHeaderFiltersLabelHook({
-        allPatientsForSelectedTeamCount,
+        allNonPendingPatientsForSelectedTeamCount: allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
         patientsDisplayedCount: numberOfPatientsDisplayed
@@ -71,7 +71,7 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
       const numberOfPatientsDisplayed = 10
 
       const { result } = renderHook(() => usePatientListHeaderFiltersLabelHook({
-        allPatientsForSelectedTeamCount,
+        allNonPendingPatientsForSelectedTeamCount: allPatientsForSelectedTeamCount,
         pendingFilterEnabled,
         hasAnyNonPendingFiltersEnabled,
         patientsDisplayedCount: numberOfPatientsDisplayed

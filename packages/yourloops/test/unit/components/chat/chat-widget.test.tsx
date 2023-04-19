@@ -33,10 +33,8 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import { type IMessage } from '../../../../lib/chat/models/i-message.model'
 import type User from '../../../../lib/auth/models/user.model'
 import ChatApi from '../../../../lib/chat/chat.api'
-import PatientUtils from '../../../../lib/patient/patient.util'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import * as authHookMock from '../../../../lib/auth/auth.hook'
-import { type PatientTeam } from '../../../../lib/patient/models/patient-team.model'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 
 jest.mock('../../../../lib/team')
@@ -44,13 +42,11 @@ jest.mock('../../../../lib/selected-team/selected-team.provider')
 jest.mock('../../../../lib/auth/auth.hook')
 describe('Chat widget', () => {
   const teamId = '777'
-  const patientTeam = { teamId } as PatientTeam
   const patient: Patient = {
-    alarms: {},
+    monitoringAlerts: {},
     profile: {},
     settings: {},
     userid: '132',
-    teams: [patientTeam],
     metadata: { hasSentUnreadMessages: false }
   } as Patient
 
@@ -59,14 +55,13 @@ describe('Chat widget', () => {
   async function mountComponent(): Promise<void> {
     await act(() => {
       return new Promise((resolve) => {
-        render(<ChatWidget patient={patient} userRole={'patient'} userId={'254'} />, container, resolve)
+        render(<ChatWidget patient={patient} userRole="patient" userId="254" />, container, resolve)
       })
     })
   }
 
   beforeAll(() => {
-    Element.prototype.scroll = jest.fn()
-    jest.spyOn(PatientUtils, 'getRemoteMonitoringTeam').mockReturnValue(patientTeam);
+    Element.prototype.scroll = jest.fn();
 
     (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
       return { selectedTeam: { id: teamId } }

@@ -58,10 +58,10 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { filters, resetFilters, hasAnyNonPendingFiltersEnabled } = usePatientListContext()
-  const { allPatientsForSelectedTeamCount } = usePatientContext()
+  const { allNonPendingPatientsForSelectedTeamCount } = usePatientContext()
 
   const { filtersLabel } = usePatientListHeaderFiltersLabelHook({
-    allPatientsForSelectedTeamCount,
+    allNonPendingPatientsForSelectedTeamCount,
     patientsDisplayedCount,
     pendingFilterEnabled: filters.pendingEnabled,
     hasAnyNonPendingFiltersEnabled

@@ -79,7 +79,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
-    alarms: iTeamMember.alarms ?? {} as MonitoringAlerts,
+    monitoringAlerts: iTeamMember.alarms ?? {} as MonitoringAlerts,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
@@ -99,15 +99,9 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       hasSentUnreadMessages: iTeamMember.unreadMessages > 0
     },
     monitoring: iTeamMember.monitoring,
-    teams: iTeamMember.teamId === ''
-      ? []
-      : [
-          {
-            teamId: iTeamMember.teamId,
-            status: iTeamMember.invitationStatus,
-            monitoringStatus: iTeamMember.monitoring?.status
-          }
-        ],
+    teamIds: [iTeamMember.teamId],
+    invitationStatus: iTeamMember.invitationStatus,
+    monitoringStatus: iTeamMember.monitoring?.status,
     userid: iTeamMember.userId
   }
 }
