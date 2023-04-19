@@ -34,7 +34,7 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
-import { checkTooltip } from '../../assert/stats'
+import { checkStandardDeviationStatWidget, checkTooltip } from '../../assert/stats'
 import { screen, waitFor, within } from '@testing-library/react'
 import { mockUserApi } from '../../mock/user.api.mock'
 import crypto from 'crypto'
@@ -72,6 +72,7 @@ describe('Patient dashboard for anyone', () => {
     })
     const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
     checkTooltip(patientStatistics, 'Time In Range')
+    checkTooltip(patientStatistics, 'Standard Deviation')
     checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')
     checkTooltip(patientStatistics, 'Avg. Daily Insulin')
     checkTooltip(patientStatistics, 'Avg. Daily Time In Loop Mode')
@@ -82,6 +83,7 @@ describe('Patient dashboard for anyone', () => {
     checkTooltip(deviceUsageWidget, 'Sensor Usage')
 
     expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dL')
+    checkStandardDeviationStatWidget('Standard Deviation')
     expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL135')
     expect(patientStatistics.getByTestId('stat-averageDailyDose')).toHaveTextContent('Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kg')
     expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Avg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11m')
@@ -105,7 +107,7 @@ describe('Patient dashboard for anyone', () => {
     })
     const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
     expect(statsWidgets).toBeVisible()
-    expect(statsWidgets).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLAvg. Glucose (CGM)mg/dL135Sensor Usage1%CV (CGM)55%Avg. Daily Total Insulin(1.3U)Bolus1.3 U100%Basal0.0 U2%Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10gStandard Deviation (61-209)mg/dL74')
+    expect(statsWidgets).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLStandard Deviation (61-209)mg/dL74Avg. Glucose (CGM)mg/dL135Sensor Usage1%CV (CGM)55%Avg. Daily Total Insulin(1.3U)Bolus1.3 U100%Basal0.0 U2%Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10g')
 
     const deviceUsageWidget = screen.getByTestId('device-usage-card')
     expect(deviceUsageWidget).toBeVisible()

@@ -25,27 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent } from 'react'
-import { SimpleStat } from 'dumb'
-import { StatFormats } from 'dumb/src/models/stats.model'
+import { type BgPrefs, CBGStandardDeviation } from 'dumb'
 import { t } from 'i18next'
-import Box from '@mui/material/Box'
+import { type BgType, DatumType } from 'medical-domain'
 
-export interface SensorUsageStatProp {
+export interface StandardDeviationProps {
+  bgPrefs: BgPrefs
+  bgType: BgType
+  averageGlucose: number
+  standardDeviation: number
   total: number
-  usage: number
 }
 
-export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
-  const { usage, total } = props
+export const StandardDeviationStat: FunctionComponent<StandardDeviationProps> = (props) => {
+  const { standardDeviation, averageGlucose, total, bgPrefs, bgType } = props
+
+  const getAnnotations = (bgType: string): string[] => {
+    const annotations = [t('standard-deviation-tooltip')]
+    if (!standardDeviation || !averageGlucose) {
+      annotations.push(t('tooltip-empty-stat'))
+      return annotations
+    }
+    if (bgType === DatumType.Smbg) {
+      annotations.push(t('tooltip-smbg-data', { total, smbgLabel: t('BGM') }))
+    }
+    return annotations
+  }
 
   return (
-    <Box data-testid="sensor-usage-stat">
-      <SimpleStat
-        annotations={[t('sensor-usage-tooltip', { cbgLabel: t('CGM') })]}
-        title={t('sensor-usage')}
-        value={usage}
-        summaryFormat={StatFormats.Percentage}
-        total={total} />
-    </Box>
+      <CBGStandardDeviation
+        annotations={getAnnotations(bgType)}
+        averageGlucose={Math.round(averageGlucose)}
+        bgClasses={bgPrefs.bgClasses}
+        standardDeviation={Math.round(standardDeviation)}
+        title={t('standard-deviation')}
+        units={bgPrefs.bgUnits}
+      />
   )
 }

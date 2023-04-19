@@ -235,18 +235,12 @@ class Stats extends React.Component {
       stats.push(stat)
     }
 
-    const cbgSelected = bgSource === 'cbg'
 
     switch (chartType) {
       case 'daily':
         addStat(commonStats.totalInsulin)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         addStat(commonStats.carbs)
-        cbgSelected && addStat(commonStats.standardDev)
-        break
-
-      case 'trends':
-        addStat(commonStats.standardDev)
         break
 
       case 'patientStatistics':
@@ -254,7 +248,6 @@ class Stats extends React.Component {
         addStat(commonStats.averageDailyDose)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         addStat(commonStats.carbs)
-        cbgSelected && addStat(commonStats.standardDev)
         break
     }
 

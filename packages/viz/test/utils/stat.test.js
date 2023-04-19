@@ -189,19 +189,6 @@ describe('stat', () => {
       })
     })
     describe('standardDev', () => {
-      it('should return annotations for `standardDev` stat when bgSource is `smgb`', () => {
-        expect(stat.getStatAnnotations(data, commonStats.standardDev, smbgOpts)).to.have.ordered.members([
-          '**SD (Standard Deviation):** How far values are from the average.',
-          'Derived from _**10**_ BGM readings.'
-        ])
-      })
-
-      it('should return annotations for `standardDev` stat when bgSource is `cbg`', () => {
-        expect(stat.getStatAnnotations(data, commonStats.standardDev, cbgOpts)).to.have.ordered.members([
-          '**SD (Standard Deviation):** How far values are from the average.'
-        ])
-      })
-
       it('should return insufficient dataannotation for `standardDev` stat when not enough data was present for a calculation', () => {
         const insufficientData = {
           ...data,
