@@ -181,6 +181,10 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     setSelectedTeamId(event.target.value)
   }
 
+  const formatTeamName = (teamName: string): string => {
+    return teamName.replaceAll(' ', '-')
+  }
+
   return (
     <GenericDashboardCard
       avatar={<EmailOutlinedIcon />}
@@ -189,6 +193,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       action={user.isUserPatient() &&
         <FormGroup>
           <Select
+            data-testid="chat-widget-team-scope"
             defaultValue={teamId}
             IconComponent={KeyboardArrowDownIcon}
             onChange={onPatientSelected}
@@ -200,6 +205,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               teams.map((team, index) =>
                 <MenuItem
                   key={index}
+                  data-testid={`chat-widget-team-scope-menu-${formatTeamName(team.name)}-option`}
                   value={team.id}
                 >
                   {team.name}

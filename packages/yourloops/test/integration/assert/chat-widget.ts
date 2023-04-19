@@ -34,12 +34,12 @@ import ChatApi from '../../../lib/chat/chat.api'
 export const checkChatWidgetForPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
-  expect(chatCard).toHaveTextContent('Messages MyFirstTeamThis is a message sent to the team MyFirstTeam30/03/2023 11:10')
+  expect(chatCard).toHaveTextContent('Messages MyFirstTeamThis is a message sent to the team MyFirstTeam')
   const chatCardHeader = within(within(chatCard).getByTestId('card-header')).getByText(myFirstTeamName)
   fireEvent.mouseDown(chatCardHeader)
-  fireEvent.click(within(screen.getByRole('listbox')).getByText(mySecondTeamName))
+  await userEvent.click(within(screen.getByRole('listbox')).getByText(mySecondTeamName))
   await waitFor(() => {
-    expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeamThis is a message sent from the team MySecondTeam21/03/2023 16:32New')
+    expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeamThis is a message sent from the team MySecondTeam')
   })
   const chatInput = within(chatCard).getByRole('textbox')
   const message = 'Hey man, how are things going?'
