@@ -29,6 +29,7 @@ import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { TotalCarbsStat } from 'dumb'
 import { type BgType, DatumType } from 'medical-domain'
+import { ensureNumeric } from 'dumb/dist/src/components/stats/stats.util'
 
 interface TotalCarbsStatProps {
   foodCarbs: number
@@ -40,7 +41,6 @@ interface TotalCarbsStatProps {
 export const TotalCarbsStatWrapper: FunctionComponent<TotalCarbsStatProps> = (props) => {
   const { foodCarbs, carbsEntries, bgType, total } = props
   const isDailay = location.pathname.includes('daily')
-  const formatTotal = Math.round(total)
   const title = isDailay ? t('title-total-carbs-day') : t('title-total-carbs-week')
   const isSmbg = bgType === DatumType.Smbg ? t('tooltip-total-carbs-smbg-derived', {
     total: carbsEntries,
@@ -65,7 +65,7 @@ export const TotalCarbsStatWrapper: FunctionComponent<TotalCarbsStatProps> = (pr
       annotations={getAnnotations()}
       foodCarbs={Math.round(foodCarbs)}
       title={title}
-      totalCarbs={formatTotal}
+      totalCarbs={ensureNumeric(Math.round(total))}
     />
   )
 }
