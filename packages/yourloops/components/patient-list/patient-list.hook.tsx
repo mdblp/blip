@@ -26,19 +26,14 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import {
-  type GridColDef,
-  type GridRenderCellParams,
-  type GridRowParams,
-  type GridRowsProp
-} from '@mui/x-data-grid'
+import { type GridColDef, type GridRenderCellParams, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { usePatientListStyles } from './patient-list.styles'
-import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
+import { PatientListColumns, PatientListTabs } from './models/enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { getMedicalValues } from '../patient/utils'
-import { ActionsCell, MonitoringAlertPercentageCell, FlagIconCell, MessageCell, PendingIconCell } from './custom-cells'
+import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell, PendingIconCell } from './custom-cells'
 import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -160,51 +155,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: t('system')
       },
       {
-        field: PatientListColumns.TimeOutOfRange,
-        type: 'number',
-        headerName: t('time-out-of-range-target'),
-        description: t('time-out-of-range-target-tooltip'),
-        flex: 0.5,
-        sortable: false,
-        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
-          const monitoringAlerts = params.value
-          return <MonitoringAlertPercentageCell
-            value={monitoringAlerts.timeSpentAwayFromTargetRate}
-            isMonitoringAlertActive={monitoringAlerts.timeSpentAwayFromTargetActive}
-          />
-        }
-      },
-      {
-        field: PatientListColumns.SevereHypoglycemia,
-        type: 'number',
-        headerName: t('alert-hypoglycemic'),
-        description: t('hypoglycemia-tooltip'),
-        sortable: false,
-        flex: 0.5,
-        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
-          const monitoringAlerts = params.value
-          return <MonitoringAlertPercentageCell
-            value={monitoringAlerts.frequencyOfSevereHypoglycemiaRate}
-            isMonitoringAlertActive={monitoringAlerts.frequencyOfSevereHypoglycemiaActive}
-          />
-        }
-      },
-      {
-        field: PatientListColumns.DataNotTransferred,
-        type: 'number',
-        headerName: t('data-not-transferred'),
-        description: t('data-not-transferred-tooltip'),
-        sortable: false,
-        flex: 0.5,
-        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
-          const monitoringAlerts = params.value
-          return <MonitoringAlertPercentageCell
-            value={monitoringAlerts.nonDataTransmissionRate}
-            isMonitoringAlertActive={monitoringAlerts.nonDataTransmissionActive}
-          />
-        }
-      },
-      {
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
         headerName: t('last-data-update'),
@@ -222,7 +172,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
       {
         type: 'actions',
         field: PatientListColumns.Actions,
-        headerName: 'Actions',
+        headerName: t('actions'),
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
@@ -232,24 +182,44 @@ export const usePatientListHook = (): PatientListHookReturns => {
     ]
   }, [t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
 
+  if (user.isUserHcp()) {
+    const monitoringAlertsColumn: GridColDef = {
+      field: PatientListColumns.MonitoringAlerts,
+      headerName: t('monitoring-alerts'),
+      flex: 0.3,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
+        const monitoringAlerts = params.value
+        return <MonitoringAlertsCell monitoringAlerts={monitoringAlerts} />
+      }
+    }
+    const patientColumnIndex = columns.findIndex((column: GridColDef) => column.field === PatientListColumns.Patient)
+
+    columns.splice(patientColumnIndex + 1, 0, monitoringAlertsColumn)
+  }
+
   const rowsProps: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const monitoringAlerts = patient.monitoringAlerts
-      return {
+
+      const columnsProps = {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
-        [PatientListColumns.TimeOutOfRange]: monitoringAlerts,
-        [PatientListColumns.SevereHypoglycemia]: monitoringAlerts,
-        [PatientListColumns.DataNotTransferred]: monitoringAlerts,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
         [PatientListColumns.Actions]: patient
       }
+
+      if (user.isUserHcp()) {
+        columnsProps[PatientListColumns.MonitoringAlerts] = monitoringAlerts
+      }
+
+      return columnsProps
     })
-  }, [filteredPatients, trNA])
+  }, [filteredPatients, trNA, user])
 
   return {
     columns,

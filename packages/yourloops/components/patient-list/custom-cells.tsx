@@ -27,11 +27,8 @@
 
 import React, { type FunctionComponent } from 'react'
 import Box from '@mui/material/Box'
-import ReportProblemIcon from '@mui/icons-material/ReportProblem'
 import { useAuth } from '../../lib/auth'
 import { useTheme } from '@mui/material/styles'
-import EmailIcon from '@mui/icons-material/Email'
-import EmailOpenIcon from '../icons/email-open-icon'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
 import IconActionButton from '../buttons/icon-action'
@@ -40,15 +37,22 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
+import { MonitoringAlertType } from './models/enums/monitoring-alert-type.enum'
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
+import RunningWithErrorsIcon from '@mui/icons-material/RunningWithErrors'
+import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt'
+import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
+import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined'
+import Badge from '@mui/material/Badge'
 
 interface FlagCellProps {
   isFlagged: boolean
   patient: Patient
 }
 
-interface MonitoringAlertPercentageCellProps {
-  isMonitoringAlertActive: boolean
-  value: number
+interface MonitoringAlertsCellProps {
+  monitoringAlerts: MonitoringAlerts
 }
 
 interface MessageCellProps {
@@ -102,22 +106,46 @@ export const PendingIconCell: FunctionComponent = () => {
   )
 }
 
-export const MonitoringAlertPercentageCell: FunctionComponent<MonitoringAlertPercentageCellProps> = ({ isMonitoringAlertActive, value }) => {
-  const { user } = useAuth()
+const getMonitoringAlertActiveValueByType = (monitoringAlerts: MonitoringAlerts, monitoringAlertType: MonitoringAlertType): boolean => {
+  switch (monitoringAlertType) {
+    case MonitoringAlertType.FrequencyOfSevereHypoglycemia:
+      return monitoringAlerts.frequencyOfSevereHypoglycemiaActive
+    case MonitoringAlertType.NonDataTransmission:
+      return monitoringAlerts.nonDataTransmissionActive
+    case MonitoringAlertType.TimeSpentAwayFromTarget:
+      return monitoringAlerts.timeSpentAwayFromTargetActive
+  }
+}
+
+export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ monitoringAlerts }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
-  const iconColor = isMonitoringAlertActive ? 'warning' : 'disabled'
+
+  const isTimeSpentAwayFromTargetAlertActive = getMonitoringAlertActiveValueByType(monitoringAlerts, MonitoringAlertType.TimeSpentAwayFromTarget)
+  const isFrequencyOfSevereHypoglycemiaAlertActive = getMonitoringAlertActiveValueByType(monitoringAlerts, MonitoringAlertType.FrequencyOfSevereHypoglycemia)
+  const isNonDataTransmissionAlertActive = getMonitoringAlertActiveValueByType(monitoringAlerts, MonitoringAlertType.NonDataTransmission)
 
   return (
-    <Box
-      display="flex"
-      alignItems="end"
-      sx={{ color: user.isUserHcp() && isMonitoringAlertActive ? theme.palette.warning.main : 'inherit' }}
-    >
-      {/*{formatMonitoringAlertSettingThreshold(value)}*/}
-      {user.isUserHcp() &&
-        <ReportProblemIcon sx={{ marginLeft: theme.spacing(1) }} color={iconColor} />
-      }
-    </Box>
+    <>
+      <Tooltip title={t('time-out-of-range-target-tooltip')}>
+        <RunningWithErrorsIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
+        />
+      </Tooltip>
+      <Tooltip title={t('hypoglycemia-tooltip')}>
+        <ArrowDownwardIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
+        />
+      </Tooltip>
+      <Tooltip title={t('data-not-transferred-tooltip')}>
+        <DoNotDisturbAltIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
+        />
+      </Tooltip>
+    </>
   )
 }
 
@@ -134,14 +162,17 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
     >
       <Box display="flex" justifyContent="center">
         {hasNewMessages
-          ? <EmailIcon
-            titleAccess={newUnreadMessagesLabel}
-            aria-label={newUnreadMessagesLabel}
-            color="primary"
-          />
-          : <EmailOpenIcon
+          ? <Badge color="warning" variant="dot">
+            <EmailOutlinedIcon
+              titleAccess={newUnreadMessagesLabel}
+              aria-label={newUnreadMessagesLabel}
+              color="inherit"
+            />
+          </Badge>
+          : <DraftsOutlinedIcon
             titleAccess={noNewMessagesLabel}
             aria-label={noNewMessagesLabel}
+            color="disabled"
           />
         }
       </Box>

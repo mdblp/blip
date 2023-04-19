@@ -31,7 +31,7 @@ import { usePatientListProviderHook } from '../../../../lib/providers/patient-li
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
-import { PatientListColumns } from '../../../../components/patient-list/enums/patient-list.enum'
+import { PatientListColumns } from '../../../../components/patient-list/models/enums/patient-list.enum'
 
 jest.mock('../../../../lib/auth')
 describe('usePatientListProviderHook', () => {

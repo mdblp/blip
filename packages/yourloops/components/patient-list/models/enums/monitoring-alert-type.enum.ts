@@ -25,19 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientListTabs {
-  Current,
-  Pending
-}
-
-export enum PatientListColumns {
-  Actions = 'actions',
-  DataNotTransferred = 'data-not-transferred',
-  Flag = 'flag',
-  LastDataUpdate = 'last-data-update',
-  Messages = 'messages',
-  Patient = 'patient',
-  SevereHypoglycemia = 'severe-hypoglycemia',
-  System = 'system',
-  TimeOutOfRange = 'time-out-of-range'
+export enum MonitoringAlertType {
+  FrequencyOfSevereHypoglycemia = 'FrequencyOfSevereHypoglycemia',
+  NonDataTransmission = 'NonDataTransmission',
+  TimeSpentAwayFromTarget = 'TimeSpentAwayFromTarget'
 }

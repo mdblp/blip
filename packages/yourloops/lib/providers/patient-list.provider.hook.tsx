@@ -28,7 +28,7 @@
 import { useState } from 'react'
 import { type PatientsFilters } from './models/patients-filters.model'
 import { type PatientListContextResult } from './models/patient-list-context-result.model'
-import { PatientListColumns } from '../../components/patient-list/enums/patient-list.enum'
+import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
 import { type GridColumnVisibilityModel, useGridApiRef } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
 
