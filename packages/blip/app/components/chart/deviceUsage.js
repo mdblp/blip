@@ -212,7 +212,7 @@ const DeviceUsage = (props) => {
         <Divider variant="fullWidth" className={classes.divider} />
         {cbgSelected &&
           <>
-            <SensorUsageStat sensorUsageTotal={total} usage={sensorUsage} />
+            <SensorUsageStat total={total} usage={sensorUsage} />
             <Divider variant="fullWidth" className={classes.divider} />
           </>
         }
