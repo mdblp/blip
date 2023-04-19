@@ -40,7 +40,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { formatMonitoringAlertSettingThreshold } from '../../lib/utils'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -64,6 +63,8 @@ interface ActionsCellProps {
 export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patient }) => {
   const { flagPatient } = useAuth()
   const { t } = useTranslation()
+  const flagPatientLabel = t('flag-patient', { patientEmail: patient.profile.email })
+  const unflagPatientLabel = t('unflag-patient', { patientEmail: patient.profile.email })
 
   const onClickFlag = async (): Promise<void> => {
     await flagPatient(patient.userid)
@@ -73,12 +74,12 @@ export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, pati
     <IconActionButton
       icon={isFlagged
         ? <FlagIcon
-          titleAccess={t('unflag-patient', { patientEmail: patient.profile.email }) }
-          aria-label={t('unflag-patient', { patientEmail: patient.profile.email }) }
+          titleAccess={unflagPatientLabel}
+          aria-label={unflagPatientLabel}
         />
         : <FlagOutlineIcon
-          titleAccess={t('flag-patient', { patientEmail: patient.profile.email }) }
-          aria-label={t('flag-patient', { patientEmail: patient.profile.email }) }
+          titleAccess={flagPatientLabel}
+          aria-label={flagPatientLabel}
         />}
       color="inherit"
       onClick={onClickFlag}
@@ -104,6 +105,7 @@ export const PendingIconCell: FunctionComponent = () => {
 export const MonitoringAlertPercentageCell: FunctionComponent<MonitoringAlertPercentageCellProps> = ({ isMonitoringAlertActive, value }) => {
   const { user } = useAuth()
   const theme = useTheme()
+  const iconColor = isMonitoringAlertActive ? 'warning' : 'disabled'
 
   return (
     <Box
@@ -111,9 +113,9 @@ export const MonitoringAlertPercentageCell: FunctionComponent<MonitoringAlertPer
       alignItems="end"
       sx={{ color: user.isUserHcp() && isMonitoringAlertActive ? theme.palette.warning.main : 'inherit' }}
     >
-      {formatMonitoringAlertSettingThreshold(value)}
-      {user.isUserHcp() && isMonitoringAlertActive &&
-        <ReportProblemIcon sx={{ marginLeft: theme.spacing(1) }} color="warning" />
+      {/*{formatMonitoringAlertSettingThreshold(value)}*/}
+      {user.isUserHcp() &&
+        <ReportProblemIcon sx={{ marginLeft: theme.spacing(1) }} color={iconColor} />
       }
     </Box>
   )
@@ -121,22 +123,25 @@ export const MonitoringAlertPercentageCell: FunctionComponent<MonitoringAlertPer
 
 export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessages }) => {
   const { t } = useTranslation()
+  const newUnreadMessagesLabel = t('new-unread-messages')
+  const noNewMessagesLabel = t('no-new-messages')
+  const title = hasNewMessages ? newUnreadMessagesLabel : noNewMessagesLabel
 
   return (
     <Tooltip
-      title={t(hasNewMessages ? 'new-unread-messages' : 'no-new-messages')}
-      aria-label={t(hasNewMessages ? 'new-unread-messages' : 'no-new-messages')}
+      title={title}
+      aria-label={title}
     >
       <Box display="flex" justifyContent="center">
         {hasNewMessages
           ? <EmailIcon
-            titleAccess={t('new-unread-messages')}
-            aria-label={t('new-unread-messages')}
+            titleAccess={newUnreadMessagesLabel}
+            aria-label={newUnreadMessagesLabel}
             color="primary"
           />
           : <EmailOpenIcon
-            titleAccess={t('no-new-messages')}
-            aria-label={t('no-new-messages')}
+            titleAccess={noNewMessagesLabel}
+            aria-label={noNewMessagesLabel}
           />
         }
       </Box>
@@ -146,17 +151,18 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
 
 export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onClickRemove }) => {
   const { t } = useTranslation()
+  const removePatientLabel = t('button-remove-patient')
 
   return (
     <Tooltip
-      title={t('button-remove-patient')}
-      aria-label={t('button-remove-patient')}
+      title={removePatientLabel}
+      aria-label={removePatientLabel}
     >
       <Box display="flex" justifyContent="end">
         <IconActionButton
           data-action="remove-patient"
-          data-testid={`${t('button-remove-patient')} ${patient.profile.email}`}
-          aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
+          data-testid={`${removePatientLabel} ${patient.profile.email}`}
+          aria-label={`${removePatientLabel} ${patient.profile.email}`}
           icon={<PersonRemoveIcon />}
           color="inherit"
           onClick={() => { onClickRemove(patient.userid) }}
