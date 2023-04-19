@@ -77,7 +77,7 @@ describe('usePatientListHeaderFiltersLabelHook', () => {
         patientsDisplayedCount: numberOfPatientsDisplayed
       }))
 
-      expect(result.current.filtersLabel).toBeNull()
+      expect(result.current.filtersLabel).toEqual('filters-deactivated')
     })
   })
 })
