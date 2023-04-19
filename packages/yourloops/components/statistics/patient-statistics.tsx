@@ -116,7 +116,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         bgType={bgType}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage} />
+      <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       {isTrendsPage &&

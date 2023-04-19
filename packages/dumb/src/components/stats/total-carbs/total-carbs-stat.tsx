@@ -47,7 +47,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
       <Box className={`${styles.title} ${styles.row}`}>
         {title}
         <StatTooltip annotations={annotations} />
-        {Number.isNaN(totalCarbs)
+        {!totalCarbs
           ? (
             <>
               <div className={styles['disabled-line']} />

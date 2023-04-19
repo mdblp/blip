@@ -423,6 +423,7 @@
   "today": "Today",
   "tooltip-empty-stat": "**Why is this stat empty?**\n\nThere is not enough data present in this view to calculate it.",
   "tooltip-release-notes": "Release notes",
+  "tooltip-smbg-data": "Derived from _**{{total}}**_ {{smbgLabel}} readings.",
   "tooltip-total-day-carbs": "**Total Carbs**: All carb entries from meals or rescue carbs added together.",
   "tooltip-total-derived-carbs": "Derived from {{total}} carb entries, including rescue carbs.",
   "tooltip-total-week-carbs": "**Avg. Daily Carbs**: All carb entries added together (including rescue carbs), then divided by the number of days in this view.",
