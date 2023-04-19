@@ -24,6 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { TotalCarbsStat } from 'dumb'
@@ -31,34 +32,32 @@ import { type BgType, DatumType } from 'medical-domain'
 
 interface TotalCarbsStatProps {
   foodCarbs: number
-  total: number
   bgType: BgType
+  total: number
+  carbsEntries: number
 }
 
 export const TotalCarbsStatWrapper: FunctionComponent<TotalCarbsStatProps> = (props) => {
-  const { foodCarbs, total, bgType } = props
+  const { foodCarbs, carbsEntries, bgType, total } = props
   const isDailay = location.pathname.includes('daily')
   const formatTotal = Math.round(total)
   const title = isDailay ? t('title-total-carbs-day') : t('title-total-carbs-week')
+  const isSmbg = bgType === DatumType.Smbg ? t('tooltip-total-carbs-smbg-derived', {
+    total: carbsEntries,
+    smbgLabel: t('BGM')
+  }) : t('tooltip-total-carbs-derived', { total: carbsEntries })
 
   const getAnnotations = (): string[] => {
     if (isDailay) {
-      if (bgType === DatumType.Smbg) {
-        return [t('tooltip-total-carbs-day'), t('tooltip-total-carbs-smbg-derived', {
-          total: formatTotal,
-          smbgLabel: t('BGM')
-        })]
+      if (!foodCarbs && !total) {
+        return [t('tooltip-total-carbs-day'), t('tooltip-empty-stat')]
       }
-      return [t('tooltip-total-carbs-day'), t('tooltip-total-carbs-derived', { total: formatTotal })]
+      return [t('tooltip-total-carbs-day'), isSmbg]
     }
-
-    if (bgType === DatumType.Smbg) {
-      return [t('tooltip-total-carbs-week'), t('tooltip-total-carbs-smbg-derived', {
-        total: formatTotal,
-        smbgLabel: t('BGM')
-      })]
+    if (!foodCarbs && !total) {
+      return [t('tooltip-total-carbs-day'), t('tooltip-empty-stat')]
     }
-    return [t('tooltip-total-carbs-week'), t('tooltip-total-carbs-derived', { total: formatTotal })]
+    return [t('tooltip-total-carbs-week'), isSmbg]
   }
 
   return (

@@ -71,6 +71,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const {
     total: carbsTotal,
+    carbsEntries,
     foodCarbs
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
@@ -114,7 +115,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       {children}
 
-      <TotalCarbsStatWrapper total={carbsTotal} foodCarbs={foodCarbs} bgType={bgType} />
+      <TotalCarbsStatWrapper carbsEntries={carbsEntries} total={carbsTotal} foodCarbs={foodCarbs} bgType={bgType} />
     </Box>
   )
 }

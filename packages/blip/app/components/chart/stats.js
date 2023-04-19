@@ -241,7 +241,6 @@ class Stats extends React.Component {
       case 'daily':
         addStat(commonStats.totalInsulin)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        addStat(commonStats.carbs)
         cbgSelected && addStat(commonStats.standardDev)
         break
 
@@ -253,7 +252,6 @@ class Stats extends React.Component {
         addStat(commonStats.totalInsulin)
         addStat(commonStats.averageDailyDose)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        addStat(commonStats.carbs)
         cbgSelected && addStat(commonStats.standardDev)
         break
     }

@@ -41,7 +41,8 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
 
   return {
     foodCarbs: sumValues(foodCarbsData) / numDays,
-    total: (sumValues(foodCarbsData) + sumValues(wizardData)) / numDays
+    total: (sumValues(foodCarbsData) + sumValues(wizardData)) / numDays,
+    carbsEntries: foodCarbsData.length + wizardData.length
   }
 }
 
