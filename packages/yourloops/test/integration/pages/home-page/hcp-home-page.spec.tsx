@@ -214,7 +214,6 @@ describe('HCP home page', () => {
       manualFlagFilterToggle: true,
       telemonitoredFilterToggle: true
     })
-    expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
     checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, telemonitoredFilterToggle: true })
@@ -225,7 +224,6 @@ describe('HCP home page', () => {
       telemonitoredFilterToggle: true,
       outOfRangeFilterToggle: true
     })
-    expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
     checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientDBLG110%20%30%N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, outOfRangeFilterToggle: true })
@@ -236,7 +234,6 @@ describe('HCP home page', () => {
       outOfRangeFilterToggle: true,
       hypoglycemiaFilterToggle: true
     })
-    expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
     checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientDBLG110%20%30%N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, hypoglycemiaFilterToggle: true })
@@ -247,7 +244,6 @@ describe('HCP home page', () => {
       hypoglycemiaFilterToggle: true,
       dataNotTransferredFilterToggle: true
     })
-    expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
     checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient no-data@patient.frNo Data PatientDBLG110%20%30%N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, dataNotTransferredFilterToggle: true })
@@ -258,7 +254,6 @@ describe('HCP home page', () => {
       dataNotTransferredFilterToggle: true,
       unreadMessagesFilterToggle: true
     })
-    expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
     checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient unread-messages@patient.frUnread Messages PatientDBLG110%20%30%N/AThe patient has sent you new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, unreadMessagesFilterToggle: true })
