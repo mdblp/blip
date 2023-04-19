@@ -27,14 +27,10 @@
 
 import PatientApi from '../../../lib/patient/patient.api'
 import {
-  monitoredPatient,
   monitoredPatientAsTeamMember,
-  monitoredPatientTwo,
   monitoredPatientTwoAsTeamMember,
-  monitoredPatientWithMmol,
-  pendingPatient,
+  PATIENTS_BY_TEAMID,
   pendingPatientAsTeamMember,
-  unmonitoredPatient,
   unmonitoredPatientAsTeamMember
 } from '../data/patient.api.data'
 
@@ -48,6 +44,12 @@ export const mockPatientApiForCaregivers = () => {
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 export const mockPatientApiForHcp = () => {
-  jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([monitoredPatient, unmonitoredPatient, monitoredPatientTwo, monitoredPatientWithMmol, pendingPatient])
+  jest.spyOn(PatientApi, 'getPatientsForHcp').mockImplementation((userId: string, teamId: string) => {
+    const patientsToReturn = PATIENTS_BY_TEAMID[teamId]
+    if (!patientsToReturn) {
+      console.warn('Your mocked patients return is undefined, make sure that this is a wanted behaviour.')
+    }
+    return Promise.resolve(patientsToReturn)
+  })
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }

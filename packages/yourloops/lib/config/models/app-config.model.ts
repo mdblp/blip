@@ -36,6 +36,7 @@ export interface AppConfig {
   LATEST_TRAINING?: string
   LATEST_RELEASE?: string
   SUPPORT_WEB_ADDRESS?: string
+  CONTACT_SUPPORT_WEB_URL: string
   ASSETS_URL?: string | null
   METRICS_SERVICE?: string | null
   TERMS_PRIVACY_DATE?: string

@@ -113,10 +113,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       break
 
 
-    case commonStats.standardDev:
-      annotations.push(t('**SD (Standard Deviation):** How far values are from the average.'))
-      break
-
     case commonStats.timeInAuto:
       if (days > 1) {
         annotations.push(t('**Time In Loop Mode:** Daily average of the time spent in automated basal delivery.'))
@@ -437,7 +433,7 @@ export const getStatData = (data, type, opts = {}) => {
 }
 
 export const getStatTitle = (type, opts = {}) => {
-  const { bgSource, days } = opts
+  const { days } = opts
 
   let title
 
@@ -452,10 +448,6 @@ export const getStatTitle = (type, opts = {}) => {
 
     case commonStats.readingsInRange:
       title = (days > 1) ? t('Avg. Daily Readings In Range') : t('Readings In Range')
-      break
-
-    case commonStats.standardDev:
-      title = t('Std. Deviation ({{bgSourceLabel}})', { bgSourceLabel: statBgSourceLabels[bgSource] })
       break
 
     case commonStats.timeInAuto:

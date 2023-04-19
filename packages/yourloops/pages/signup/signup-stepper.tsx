@@ -73,11 +73,11 @@ const SignUpStepper: FunctionComponent = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
   }
 
-  const handleBack = async (): Promise<void> => {
+  const handleBack = (): void => {
     if (activeStep > 0) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1)
     } else {
-      await logout()
+      logout()
     }
   }
 

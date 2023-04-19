@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { NotificationSpan, type NotificationSpanProps } from '../../../../pages/notifications/notification'
-import { render, screen } from '@testing-library/react'
-import { type Notification } from '../../../../lib/notifications/models/notification.model'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
-import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
-
-describe('NotificationSpan', () => {
-  const careTeamMonitoringNotification: Notification = {
-    id: 'fakeId',
-    metricsType: 'share_data',
-    date: '2021-02-18T10:00:00',
-    creator: {
-      userid: '1',
-      profile: {
-        fullName: 'Yvan Tendu'
-      } as Profile
-    },
-    creatorId: 'fakeCreatorId',
-    email: 'fake@email.com',
-    type: NotificationType.careTeamMonitoringInvitation
-  }
-
-  const getNotificationSpan = (notificationSpanProps: NotificationSpanProps): JSX.Element => (
-    <NotificationSpan {...notificationSpanProps} />
-  )
-
-  it('should display the correct label when given a care team monitoring invite', () => {
-    render(getNotificationSpan({ notification: careTeamMonitoringNotification, id: 'fakeId1' }))
-    expect(screen.getByText(/invite-join-monitoring-team/)).toBeInTheDocument()
-  })
-})
+export const AUTH0_ERROR_CONSENT_REQUIRED = 'Consent required'
+export const AUTH0_ERROR_EMAIL_NOT_VERIFIED = 'Please verify your email before logging in.'
+export const AUTH0_ERROR_LOGIN_REQUIRED = 'Login required'

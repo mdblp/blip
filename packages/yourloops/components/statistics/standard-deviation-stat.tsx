@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,15 +24,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { type FunctionComponent } from 'react'
+import { type BgPrefs, CBGStandardDeviation } from 'dumb'
+import { t } from 'i18next'
+import { type BgType, DatumType } from 'medical-domain'
 
-import type * as React from 'react'
+export interface StandardDeviationProps {
+  bgPrefs: BgPrefs
+  bgType: BgType
+  averageGlucose: number
+  standardDeviation: number
+  total: number
+}
 
-export interface MonitoringConsentFormProps {
-  id: string
-  /** className for the FormControl */
-  className?: string
-  /** className for the FormGroup */
-  group?: string
-  termsAccepted: boolean
-  setTermsAccepted: React.Dispatch<boolean>
+export const StandardDeviationStat: FunctionComponent<StandardDeviationProps> = (props) => {
+  const { standardDeviation, averageGlucose, total, bgPrefs, bgType } = props
+
+  const getAnnotations = (bgType: string): string[] => {
+    const annotations = [t('standard-deviation-tooltip')]
+    if (!standardDeviation || !averageGlucose) {
+      annotations.push(t('tooltip-empty-stat'))
+      return annotations
+    }
+    if (bgType === DatumType.Smbg) {
+      annotations.push(t('tooltip-smbg-data', { total, smbgLabel: t('BGM') }))
+    }
+    return annotations
+  }
+
+  return (
+      <CBGStandardDeviation
+        annotations={getAnnotations(bgType)}
+        averageGlucose={Math.round(averageGlucose)}
+        bgClasses={bgPrefs.bgClasses}
+        standardDeviation={Math.round(standardDeviation)}
+        title={t('standard-deviation')}
+        units={bgPrefs.bgUnits}
+      />
+  )
 }

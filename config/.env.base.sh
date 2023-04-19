@@ -30,6 +30,7 @@ export METRICS_SERVICE='disabled'
 export MATOMO_TRACKER_URL='disabled'
 export MATOMO_TRACKER_SITEID='0'
 export SUPPORT_WEB_ADDRESS='https://example.com/'
+export CONTACT_SUPPORT_WEB_URL='https://example.com/'
 # Stonly service https://stonly.com/ (enabled / disabled):
 export STONLY_WID='disabled'
 # axeptio.eu cookie banner

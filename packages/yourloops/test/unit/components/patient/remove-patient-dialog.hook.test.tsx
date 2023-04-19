@@ -34,7 +34,6 @@ import { type Team } from '../../../../lib/team'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { buildPrivateTeam, buildTeam } from '../../common/utils'
-import { type PatientTeam } from '../../../../lib/patient/models/patient-team.model'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
@@ -44,11 +43,11 @@ jest.mock('../../../../lib/team')
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('Remove patient dialog hook', () => {
-  let patientTeam: PatientTeam
   let patient: Patient
   let team: Team
+  jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
 
-  const removePatientMock = jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
+  const removePatientMock = jest.fn()
   const onClose = jest.fn()
   const onSuccessMock = jest.fn()
   const isPrivateMock = jest.fn()
@@ -72,10 +71,9 @@ describe('Remove patient dialog hook', () => {
 
   function createDataMock(invitationStatus: UserInvitationStatus, teamId = 'teamId') {
     team = teamId === 'private' ? buildPrivateTeam() : buildTeam(teamId)
-    patientTeam = { status: invitationStatus, teamId }
     patient = {
-      teams: [patientTeam],
-      profile: { firstName: 'alain', lastName: 'tolerant' }
+      profile: { firstName: 'alain', lastName: 'tolerant' },
+      invitationStatus
     } as Patient
   }
 
@@ -88,7 +86,7 @@ describe('Remove patient dialog hook', () => {
         await result.current.handleOnClickRemove()
       })
 
-      expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
+      expect(removePatientMock).toHaveBeenCalledWith(patient)
       expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-pending-invitation-success')
     })
 
@@ -99,7 +97,7 @@ describe('Remove patient dialog hook', () => {
       const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
       await result.current.handleOnClickRemove()
 
-      expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
+      expect(removePatientMock).toHaveBeenCalledWith(patient)
       expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-from-team-success')
     })
 
@@ -111,7 +109,7 @@ describe('Remove patient dialog hook', () => {
       const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
       await result.current.handleOnClickRemove()
 
-      expect(removePatientMock).toHaveBeenCalledWith(patient, patientTeam)
+      expect(removePatientMock).toHaveBeenCalledWith(patient)
       expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-private-practice-success')
     })
   })

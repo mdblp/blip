@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,9 +47,6 @@ export function notificationConversion(apin: INotification): Notification | null
       break
     case INotificationType.medicalTeamProInvitation:
       type = NotificationType.careTeamProInvitation
-      break
-    case INotificationType.medicalTeamMonitoringInvitation:
-      type = NotificationType.careTeamMonitoringInvitation
       break
     case INotificationType.medicalTeamDoAdmin:
     case INotificationType.medicalTeamRemoveMember:

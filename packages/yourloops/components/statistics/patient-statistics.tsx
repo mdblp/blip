@@ -42,6 +42,7 @@ import { GlycemiaStatisticsService, CarbsStatisticsService } from 'medical-domai
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
+import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalCarbsStatWrapper } from './total-carbs-stat'
 
@@ -63,6 +64,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
+
+  const {
+    standardDeviation,
+    total: standardDeviationTotal
+  } = GlycemiaStatisticsService.getStandardDevData(selectedBgData, dateFilter)
 
   const {
     sensorUsage,
@@ -96,6 +102,14 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         days={numberOfDays}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <StandardDeviationStat
+        total={standardDeviationTotal}
+        bgType={bgType}
+        bgPrefs={bgPrefs}
+        averageGlucose={averageGlucose}
+        standardDeviation={standardDeviation}
+      />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <AverageGlucoseStat
         averageGlucose={averageGlucose}
         bgPrefs={bgPrefs}
@@ -104,12 +118,14 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <SensorUsageStat sensorUsageTotal={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+
       {isTrendsPage &&
         <>
           <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
+
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 

@@ -53,14 +53,14 @@ import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
-import moment from 'moment-timezone'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { getTomorrowDate } from '../../utils/helpers'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { checkMedicalWidgetForHcp } from '../../assert/medical-widget'
 import { Unit } from 'medical-domain'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
+import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
 describe('Patient dashboard for HCP', () => {
   const unMonitoredPatientDashboardRoute = `/patient/${unmonitoredPatientId}/dashboard`
@@ -71,7 +71,7 @@ describe('Patient dashboard for HCP', () => {
   const mgdlSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter } }
   const mmolSettings: Settings = { units: { bg: Unit.MmolPerLiter } }
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
@@ -85,10 +85,6 @@ describe('Patient dashboard for HCP', () => {
 
   function testPatientDashboardCommonDisplay(dashboard: BoundFunctions<typeof queries>) {
     expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
-
-    /* Patient info widget */
-    const patientInfoCard = within(dashboard.getByTestId('remote-monitoring-card'))
-    expect(patientInfoCard.getByText('Remote monitoring program')).toBeVisible()
 
     /* Patient stats widget */
     expect(dashboard.getByText('Patient statistics')).toBeVisible()
@@ -120,13 +116,8 @@ describe('Patient dashboard for HCP', () => {
 
     await checkHCPLayout(`${firstName} ${lastName}`, { teamName: mySecondTeamName }, buildAvailableTeams())
 
-    const expectedMonitoringEndDate = moment.utc(getTomorrowDate()).format(moment.localeData().longDateFormat('ll')).toString()
     const dashboard = within(await screen.findByTestId('patient-dashboard'))
     testPatientDashboardCommonDisplay(dashboard)
-
-    /* Patient info widget */
-    expect(dashboard.getByText('Renew')).toBeVisible()
-    expect(dashboard.getByText('Remove')).toBeVisible()
 
     /* Medical files widget */
     await checkMedicalWidgetForHcp(firstName, lastName)
@@ -138,11 +129,33 @@ describe('Patient dashboard for HCP', () => {
     expect(dashboard.getByText('Messages')).toBeVisible()
     const emojiButton = dashboard.getByTestId('chat-widget-emoji-button')
     expect(emojiButton).toBeEnabled()
+  })
 
-    /* Remote Monitoring widget */
-    expect(dashboard.getByTestId('remote-monitoring-card')).toHaveTextContent(`Remote monitoring programRemote monitoring:YesRequesting team:MySecondTeamEnd date:${expectedMonitoringEndDate}Remaining time:a dayRenewRemove`)
-    expect(dashboard.getByText('Renew')).toBeVisible()
-    expect(dashboard.getByText('Remove')).toBeVisible()
+  it('should render correct components when navigating to a patient scoped on the private team', async () => {
+    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
+      ...monitoredPatient,
+      invitationStatus: UserInvitationStatus.accepted
+    }])
+
+    await act(async () => {
+      renderPage(monitoredPatientDashboardRoute)
+    })
+
+    await checkHCPLayout(`${firstName} ${lastName}`, {
+      teamName: PRIVATE_TEAM_ID,
+      isPrivate: true
+    }, buildAvailableTeams())
+
+    const dashboard = within(await screen.findByTestId('patient-dashboard'))
+    expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
+    expect(dashboard.getByText('Patient statistics')).toBeVisible()
+    expect(dashboard.getByText('Device Usage')).toBeVisible()
+
+    expect(dashboard.queryByTestId('remote-monitoring-card')).not.toBeInTheDocument()
+    expect(dashboard.queryByTestId('medical-files-card')).not.toBeInTheDocument()
+    expect(dashboard.queryByTestId('monitoring-alert-card')).not.toBeInTheDocument()
+    expect(dashboard.queryByTestId('chat-card')).not.toBeInTheDocument()
   })
 
   it('should switch between patients by using the dropdown', async () => {
@@ -168,6 +181,7 @@ describe('Patient dashboard for HCP', () => {
 
   describe('monitoring-alerts configuration dialog', () => {
     it('should have units in mg/dL and cancel/default values buttons working', async () => {
+      localStorage.setItem('selectedTeamId', mySecondTeamId)
       await act(async () => {
         renderPage(monitoredPatientDashboardRoute)
       })
@@ -270,6 +284,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     it('should have units in mmol/L and save button working', async () => {
+      localStorage.setItem('selectedTeamId', myThirdTeamId)
       mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
 
       await act(async () => {

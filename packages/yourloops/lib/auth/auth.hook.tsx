@@ -196,7 +196,7 @@ export function AuthContextImpl(): AuthContext {
     return defaultUrl
   }
 
-  const logout = async (isIdle = false): Promise<void> => {
+  const logout = (isIdle = false): void => {
     try {
       if (window.cleanBlipReduxStore) {
         window.cleanBlipReduxStore()

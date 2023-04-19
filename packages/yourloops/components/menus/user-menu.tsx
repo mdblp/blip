@@ -113,8 +113,8 @@ function UserMenu(): JSX.Element {
     closeMenu()
   }
 
-  const onClickLogout = async (): Promise<void> => {
-    await logout()
+  const onClickLogout = (): void => {
+    logout()
     closeMenu()
   }
 

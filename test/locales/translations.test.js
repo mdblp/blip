@@ -177,6 +177,13 @@ const ignoredTransKeyForYourLoops = [
   'no-settings-on-device-alert-message',
   'BGM',
   'tooltip-empty-stat',
+  'remote-monitoring',
+  'verify-email-details-2',
+  'verify-email-details-3',
+  'verify-email-details-4',
+  'standard-deviation',
+  'standard-deviation-tooltip',
+  'tooltip-smbg-data',
   'time-out-of-range',
   'title-total-carbs-week',
   'tooltip-total-carbs-smbg-derived'

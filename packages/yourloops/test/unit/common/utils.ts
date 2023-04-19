@@ -32,7 +32,6 @@ import { type PatientSettings } from '../../../lib/patient/models/patient-settin
 import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { type Monitoring } from '../../../lib/team/models/monitoring.model'
-import { type PatientTeam } from '../../../lib/patient/models/patient-team.model'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { type MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
@@ -46,7 +45,9 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 
 export const createPatient = (
   id = 'fakePatientId',
-  teams: PatientTeam[] = [],
+  teamIds: string[] = [],
+  invitationStatus: UserInvitationStatus = UserInvitationStatus.accepted,
+  monitoringStatus: MonitoringStatus | undefined = undefined,
   monitoring: Monitoring | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
@@ -54,7 +55,7 @@ export const createPatient = (
   monitoringAlerts: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
-    alarms: {
+    monitoringAlerts: {
       timeSpentAwayFromTargetRate: monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
       timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
       frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
@@ -80,27 +81,11 @@ export const createPatient = (
       hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
     monitoring,
-    teams,
+    teamIds,
+    invitationStatus,
+    monitoringStatus,
     userid: id
   }
-}
-
-export const createPatientTeam = (
-  id: string,
-  status: UserInvitationStatus,
-  monitoringStatus: MonitoringStatus | undefined = undefined
-): PatientTeam => {
-  return {
-    teamId: id,
-    status,
-    monitoringStatus
-  } as PatientTeam
-}
-export const createMonitoringAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): MonitoringAlerts => {
-  return {
-    timeSpentAwayFromTargetRate,
-    frequencyOfSevereHypoglycemiaRate
-  } as MonitoringAlerts
 }
 
 export function buildPrivateTeam(): Team {

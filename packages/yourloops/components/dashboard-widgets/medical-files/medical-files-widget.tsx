@@ -31,24 +31,27 @@ import { useTranslation } from 'react-i18next'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import CardContent from '@mui/material/CardContent'
 import MedicalReportList from './medical-report-list'
-import PatientUtils from '../../../lib/patient/patient.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../generic-dashboard-card'
+import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
+import { useAuth } from '../../../lib/auth'
 
 export interface MedicalFilesWidgetProps {
   patient: Patient
 }
 
 export interface CategoryProps {
-  teamId: string
+  teamId?: string
   patientId: string
 }
 
 const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) => {
   const { t } = useTranslation()
   const { patient } = props
+  const { selectedTeam } = useSelectedTeamContext()
+  const { user } = useAuth()
 
-  const team = PatientUtils.getRemoteMonitoringTeam(patient)
+  const teamId = user.isUserHcp() ? selectedTeam.id : null
 
   return (
     <GenericDashboardCard
@@ -57,7 +60,7 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
       data-testid="medical-files-card"
     >
       <CardContent>
-        <MedicalReportList teamId={team.teamId} patientId={patient.userid} />
+        <MedicalReportList teamId={teamId} patientId={patient.userid} />
       </CardContent>
     </GenericDashboardCard>
   )

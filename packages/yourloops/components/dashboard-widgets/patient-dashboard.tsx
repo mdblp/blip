@@ -28,8 +28,8 @@
 import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
-import { type TimePrefs } from 'medical-domain'
 import type MedicalDataService from 'medical-domain'
+import { type TimePrefs } from 'medical-domain'
 import { type ChartPrefs } from './models/chart-prefs.model'
 import { type BgPrefs } from 'dumb'
 import type DataUtil from 'tidepool-viz/src/utils/data'
@@ -40,13 +40,11 @@ import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
-import RemoteMonitoringWidget from './remote-monitoring-widget'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {
   RESPONSIVE_GRID_FOUR_COLUMNS,
   RESPONSIVE_GRID_FULL_WIDTH,
-  RESPONSIVE_GRID_HALF_WIDTH,
-  RESPONSIVE_GRID_THREE_COLUMNS
+  RESPONSIVE_GRID_HALF_WIDTH
 } from '../../css/css-utils'
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
@@ -54,6 +52,8 @@ import MedicalFilesWidget from './medical-files/medical-files-widget'
 import MonitoringAlertCard from '../monitoring-alert/monitoring-alert-card'
 import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -92,6 +92,8 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     onSwitchToDaily
   } = props
   const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
+  const { getMedicalTeams } = useTeam()
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
   const { classes, theme } = useStyle()
@@ -104,19 +106,18 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     start: epochDate - msRange,
     end: epochDate
   }
-  const isPatientMonitored = !!patient?.monitoring?.enabled
+  const isSelectedTeamPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
+  const isCaregiver = user.isUserCaregiver()
+  const isPatientWithNoTeams = user.isUserPatient() && getMedicalTeams().length === 0
 
   const getGridWidgetSize = (): number => {
     if (isMobileBreakpoint) {
       return RESPONSIVE_GRID_FULL_WIDTH
     }
-    if (isPatientMonitored) {
-      return RESPONSIVE_GRID_FOUR_COLUMNS
+    if (isCaregiver || isSelectedTeamPrivate || isPatientWithNoTeams) {
+      return RESPONSIVE_GRID_HALF_WIDTH
     }
-    if (user.isUserHcp() && !isPatientMonitored) {
-      return RESPONSIVE_GRID_THREE_COLUMNS
-    }
-    return RESPONSIVE_GRID_HALF_WIDTH
+    return RESPONSIVE_GRID_FOUR_COLUMNS
   }
 
   const gridWidgetSize = getGridWidgetSize()
@@ -177,8 +178,8 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         />
       </Grid>
 
-      {isPatientMonitored &&
-        <React.Fragment>
+      {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
+        <>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
             <MonitoringAlertCard patient={patient} />
             <MedicalFilesWidget patient={patient} />
@@ -190,15 +191,8 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
               userId={user.id}
               userRole={user.role}
             />
-            <RemoteMonitoringWidget patient={patient} />
           </Grid>
-        </React.Fragment>
-      }
-
-      {user.isUserHcp() && !isPatientMonitored &&
-        <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
-          <RemoteMonitoringWidget patient={patient} />
-        </Grid>
+        </>
       }
     </Grid>
   )

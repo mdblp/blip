@@ -166,7 +166,7 @@ describe('Daily view for anyone', () => {
       await checkReadingsInRangeStatsWidgets()
 
       await checkAverageGlucoseStatWidget('Avg. Glucose (BGM)mg/dL101')
-      expect(screen.queryByTestId('cbg-standard-deviation-stat')).not.toBeInTheDocument()
+      await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
 
       await checkSMBGDailyStatsWidgetsTooltips()
     })
