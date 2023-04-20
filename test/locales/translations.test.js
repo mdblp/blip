@@ -185,9 +185,8 @@ const ignoredTransKeyForYourLoops = [
   'standard-deviation-tooltip',
   'tooltip-smbg-data',
   'time-out-of-range',
-  'title-total-carbs-week',
   'tooltip-total-carbs-smbg-derived',
-  'title-total-week-carbs'
+  'avg-daily-carbs'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
