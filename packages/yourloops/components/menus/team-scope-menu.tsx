@@ -191,7 +191,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
               {sortedMedicalTeams.map((team: Team) =>
                 <MenuItem
                   key={team.id}
-                  data-testid={`team-scope-menu-team-${TeamUtils.formatTeamName(team.name)}-option`}
+                  data-testid={`team-scope-menu-team-${TeamUtils.formatTeamNameForTestId(team.name)}-option`}
                   onClick={() => {
                     onSelectTeam(team.id)
                   }}>

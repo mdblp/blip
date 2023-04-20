@@ -202,7 +202,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               teams.map((team, index) =>
                 <MenuItem
                   key={index}
-                  data-testid={`chat-widget-team-scope-menu-${TeamUtils.formatTeamName(team.name)}-option`}
+                  data-testid={`chat-widget-team-scope-menu-${TeamUtils.formatTeamNameForTestId(team.name)}-option`}
                   value={team.id}
                 >
                   {team.name}
