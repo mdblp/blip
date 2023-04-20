@@ -151,10 +151,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
         sortComparator: sortByUserName
       },
       {
-        field: PatientListColumns.System,
-        headerName: t('system')
-      },
-      {
         field: PatientListColumns.MonitoringAlerts,
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
@@ -163,6 +159,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
           return <MonitoringAlertsCell monitoringAlerts={params.value} />
         }
+      },
+      {
+        field: PatientListColumns.System,
+        headerName: t('system')
       },
       {
         type: 'string',

@@ -48,7 +48,7 @@ export const defaultToggles: FilterPatientsPresentationToggles = {
 
 export const checkPatientsFilters = (toggles: FilterPatientsPresentationToggles = defaultToggles): void => {
   const filtersPresentation = screen.getByRole('presentation')
-  expect(filtersPresentation).toHaveTextContent('Type of careManual flagTelemonitoredMonitoring alertsTime spent out of the target rangeHypoglycemiaData not transferredNotificationMessagesCancelApply')
+  expect(filtersPresentation).toHaveTextContent('Type of careManual flagTelemonitoredMonitoring alerts.time-spent-out-of-range-icon-no-fill { fill: none }Time spent out of the target rangeHypoglycemiaData not transferredNotificationMessagesCancelApply')
   const manualFlagFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients being flagged')).getByRole('checkbox')
   const telemonitoredFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients being telemonitored')).getByRole('checkbox')
   const outOfRangeFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a time out of range from the target')).getByRole('checkbox')
