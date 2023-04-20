@@ -32,19 +32,19 @@ import { useTheme } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
 import IconActionButton from '../buttons/icon-action'
-import PersonRemoveIcon from '../icons/person-remove-icon'
+import PersonRemoveIcon from '../icons/mui/person-remove-icon'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { MonitoringAlertType } from './models/enums/monitoring-alert-type.enum'
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import RunningWithErrorsIcon from '@mui/icons-material/RunningWithErrors'
-import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt'
 import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
-import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined'
 import Badge from '@mui/material/Badge'
+import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-range-icon'
+import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
+import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
+import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
+import { MessageIcon } from '../icons/diabeloop/message-icon'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -128,19 +128,18 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   return (
     <>
       <Tooltip title={t('time-out-of-range-target-tooltip')}>
-        <RunningWithErrorsIcon
-          sx={{ marginLeft: theme.spacing(1) }}
+        <TimeSpentOufOfRangeIcon
           color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
         />
       </Tooltip>
       <Tooltip title={t('hypoglycemia-tooltip')}>
-        <ArrowDownwardIcon
+        <HypoglycemiaIcon
           sx={{ marginLeft: theme.spacing(1) }}
           color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
         />
       </Tooltip>
       <Tooltip title={t('data-not-transferred-tooltip')}>
-        <DoNotDisturbAltIcon
+        <NoDataIcon
           sx={{ marginLeft: theme.spacing(1) }}
           color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
         />
@@ -163,13 +162,13 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
       <Box display="flex" justifyContent="center">
         {hasNewMessages
           ? <Badge color="warning" variant="dot">
-            <EmailOutlinedIcon
+            <MessageIcon
               titleAccess={newUnreadMessagesLabel}
               aria-label={newUnreadMessagesLabel}
               color="inherit"
             />
           </Badge>
-          : <DraftsOutlinedIcon
+          : <NoMessageIcon
             titleAccess={noNewMessagesLabel}
             aria-label={noNewMessagesLabel}
             color="disabled"
@@ -196,7 +195,9 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onCl
           aria-label={`${removePatientLabel} ${patient.profile.email}`}
           icon={<PersonRemoveIcon />}
           color="inherit"
-          onClick={() => { onClickRemove(patient.userid) }}
+          onClick={() => {
+            onClickRemove(patient.userid)
+          }}
         />
       </Box>
     </Tooltip>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +39,7 @@ import { useAuth } from '../../lib/auth'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
 import { errorTextFromException } from '../../lib/utils'
 import { useAlert } from '../utils/snackbar'
-import PersonRemoveIcon from '../icons/person-remove-icon'
+import PersonRemoveIcon from '../icons/mui/person-remove-icon'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import TeamUtils from '../../lib/team/team.util'
 import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
