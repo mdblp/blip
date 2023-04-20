@@ -45,6 +45,7 @@ import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
+import { getMonitoringAlertActiveValueByType } from './utils/patient-list.util'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -104,17 +105,6 @@ export const PendingIconCell: FunctionComponent = () => {
       </Box>
     </Tooltip>
   )
-}
-
-const getMonitoringAlertActiveValueByType = (monitoringAlerts: MonitoringAlerts, monitoringAlertType: MonitoringAlertType): boolean => {
-  switch (monitoringAlertType) {
-    case MonitoringAlertType.FrequencyOfSevereHypoglycemia:
-      return monitoringAlerts.frequencyOfSevereHypoglycemiaActive
-    case MonitoringAlertType.NonDataTransmission:
-      return monitoringAlerts.nonDataTransmissionActive
-    case MonitoringAlertType.TimeSpentAwayFromTarget:
-      return monitoringAlerts.timeSpentAwayFromTargetActive
-  }
 }
 
 export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ monitoringAlerts }) => {
