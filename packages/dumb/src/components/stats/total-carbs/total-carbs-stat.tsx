@@ -55,7 +55,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 --
               </Box>
             </>
-          ) : (
+            ) : (
             <>
               <div className={styles.total}>
                 <span className={styles.value}>
@@ -66,7 +66,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 </span>
               </div>
             </>
-          )
+            )
         }
       </Box>
 
