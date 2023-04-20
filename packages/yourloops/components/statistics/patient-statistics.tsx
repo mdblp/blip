@@ -44,7 +44,6 @@ import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
-import { TotalCarbsStatWrapper } from './total-carbs-stat'
 import { t } from 'i18next'
 
 export interface PatientStatisticsProps {
@@ -80,11 +79,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const {
     total: totalCarbs,
-    entriesCarbs,
+    TotalCarbsAndWizard,
     foodCarbs
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
-  const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: entriesCarbs }) : t('tooltip-empty-stat')
+  const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: TotalCarbsAndWizard }) : t('tooltip-empty-stat')
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
 
@@ -143,7 +142,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       {children}
 
-      <TotalCarbsStat annotations={getAnnotations()} totalCarbs={totalCarbs} foodCarbs={foodCarbs} title={title} />
+      <TotalCarbsStat
+        annotations={getAnnotations()}
+        totalCarbs={Math.round(totalCarbs)}
+        foodCarbs={Math.round(foodCarbs)}
+        title={title} />
     </Box>
   )
 }

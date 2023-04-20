@@ -65,3 +65,6 @@
   bottom: 1px;
   padding-left: 1px;
 }
+.disabled-label {
+  color: var(--muted);
+}

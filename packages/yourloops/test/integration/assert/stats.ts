@@ -35,18 +35,7 @@ export const checkStatTooltip = async (patientStatistics: BoundFunctions<typeof 
   const tooltip = await screen.findByTestId('stat-tooltip-content')
   expect(tooltip).toHaveTextContent(expectedTextContent)
   await userEvent.unhover(infoIcon)
-  await waitFor(() => {
-    expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument()
-  }, { timeout: 3000 })
-}
 
-export const checkStatTooltipTotalCarbs = async (patientStatistics: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
-  const element = patientStatistics.getByTestId(infoIconLabel)
-  const infoIcon = within(element).getByTestId('info-icon')
-  await userEvent.hover(infoIcon)
-  const tooltip = await screen.findByTestId('stat-tooltip-content')
-  expect(tooltip).toHaveTextContent(expectedTextContent)
-  await userEvent.unhover(infoIcon)
   await waitFor(() => {
     expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument()
   }, { timeout: 3000 })
