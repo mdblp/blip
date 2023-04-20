@@ -32,13 +32,10 @@ export enum PatientListTabs {
 
 export enum PatientListColumns {
   Actions = 'actions',
-  DataNotTransferred = 'data-not-transferred',
   Flag = 'flag',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',
   MonitoringAlerts = 'monitoring-alerts',
   Patient = 'patient',
-  SevereHypoglycemia = 'severe-hypoglycemia',
   System = 'system',
-  TimeOutOfRange = 'time-out-of-range'
 }

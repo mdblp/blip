@@ -155,6 +155,16 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: t('system')
       },
       {
+        field: PatientListColumns.MonitoringAlerts,
+        headerName: t('monitoring-alerts'),
+        description: t('monitoring-alerts-tooltip'),
+        flex: 0.3,
+        sortable: false,
+        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
+          return <MonitoringAlertsCell monitoringAlerts={params.value} />
+        }
+      },
+      {
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
         headerName: t('last-data-update'),
@@ -181,22 +191,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
       }
     ]
   }, [t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
-
-  if (user.isUserHcp()) {
-    const monitoringAlertsColumn: GridColDef = {
-      field: PatientListColumns.MonitoringAlerts,
-      headerName: t('monitoring-alerts'),
-      flex: 0.3,
-      sortable: false,
-      renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
-        const monitoringAlerts = params.value
-        return <MonitoringAlertsCell monitoringAlerts={monitoringAlerts} />
-      }
-    }
-    const patientColumnIndex = columns.findIndex((column: GridColDef) => column.field === PatientListColumns.Patient)
-
-    columns.splice(patientColumnIndex + 1, 0, monitoringAlertsColumn)
-  }
 
   const rowsProps: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {
