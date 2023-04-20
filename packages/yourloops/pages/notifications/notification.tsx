@@ -40,7 +40,6 @@ import { errorTextFromException, getUserFirstName, getUserLastName } from '../..
 import { useNotification } from '../../lib/notifications/notification.hook'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
-import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
 import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
@@ -147,18 +146,6 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
         </Trans>
       )
       break
-    case NotificationType.careTeamMonitoringInvitation:
-      notificationText = (
-        <Trans
-          t={t}
-          i18nKey="notification-patient-remote-monitoring"
-          components={{ strong: <strong /> }}
-          values={values} parent={React.Fragment}
-        >
-          {t('invite-join-monitoring-team')} <strong>{careTeam}</strong>.
-        </Trans>
-      )
-      break
     default:
       notificationText = <i>Invalid invitation type</i>
   }
@@ -231,9 +218,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
-  const isAMonitoringInvitation = notification.type === NotificationType.careTeamMonitoringInvitation
   const isADirectInvitation = notification.type === NotificationType.directInvitation
-  const [displayMonitoringTerms, setDisplayMonitoringTerms] = useState(false)
 
   if (isACareTeamPatientInvitation && !notification.target) {
     throw Error('Cannot accept team invite because notification is missing the team id info')
@@ -261,16 +246,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const onOpenInvitationDialog = async (): Promise<void> => {
     if (isACareTeamPatientInvitation) {
       setAddTeamDialogVisible(true)
-    } else if (isAMonitoringInvitation) {
-      setDisplayMonitoringTerms(true)
     } else {
       await acceptInvitation()
     }
-  }
-
-  const acceptTerms = async (): Promise<void> => {
-    setDisplayMonitoringTerms(false)
-    await acceptInvitation()
   }
 
   const onDecline = async (): Promise<void> => {
@@ -316,14 +294,6 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       }
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
-        {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog
-            onAccept={acceptTerms}
-            teamName={notification.target.name}
-            onCancel={() => {
-              setDisplayMonitoringTerms(false)
-            }}
-          />}
         <Button
           data-testid="notification-button-accept"
           color="primary"

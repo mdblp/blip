@@ -45,9 +45,6 @@ export default class NotificationApi {
       case NotificationType.careTeamPatientInvitation:
         url = '/confirm/accept/team/invite'
         break
-      case NotificationType.careTeamMonitoringInvitation:
-        url = `/confirm/accept/team/monitoring/${notification.target?.id}/${userId}`
-        break
       default:
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
@@ -82,12 +79,6 @@ export default class NotificationApi {
         url = `/confirm/dismiss/team/invite/${notification.target?.id}`
         break
       }
-      case NotificationType.careTeamMonitoringInvitation:
-        if (!notification.target) {
-          throw Error('Cannot decline notification as team id is not specified')
-        }
-        await NotificationApi.cancelRemoteMonitoringInvite(notification.target?.id, userId)
-        return
       default:
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')

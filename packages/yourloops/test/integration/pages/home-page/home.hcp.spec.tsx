@@ -79,7 +79,7 @@ describe('HCP home page', () => {
 
   it('should not display the Care team tab and not allow to add patients if the private practice is selected', async () => {
     localStorage.setItem('selectedTeamId', 'private')
-    jest.spyOn(PatientApi, 'getScopedPatientsForHcp').mockResolvedValue([{
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...monitoredPatient,
       invitationStatus: UserInvitationStatus.accepted
     }])

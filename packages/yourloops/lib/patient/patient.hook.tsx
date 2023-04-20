@@ -60,7 +60,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
   const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
-    PatientUtils.computePatients(user, teamId ?? null).then(computedPatients => {
+    PatientUtils.computePatients(user, teamId).then(computedPatients => {
       setPatients(computedPatients)
     }).catch((reason: unknown) => {
       const message = errorTextFromException(reason)

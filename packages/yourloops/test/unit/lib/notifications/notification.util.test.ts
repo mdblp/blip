@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -103,14 +103,6 @@ describe('Notification utils', () => {
     it("should transform 'medicalteam_invitation' to 'careTeamProInvitation'", () => {
       baseAPINotification.type = INotificationType.medicalTeamProInvitation
       expectedNotification.type = NotificationType.careTeamProInvitation
-      expectedNotification.metricsType = 'join_team'
-      const actualNotification = notificationConversion(baseAPINotification)
-      expect(actualNotification).toEqual(expectedNotification)
-    })
-
-    it("should transform 'medicalteam_monitoring_invitation' to 'careTeamProInvitation'", () => {
-      baseAPINotification.type = INotificationType.medicalTeamMonitoringInvitation
-      expectedNotification.type = NotificationType.careTeamMonitoringInvitation
       expectedNotification.metricsType = 'join_team'
       const actualNotification = notificationConversion(baseAPINotification)
       expect(actualNotification).toEqual(expectedNotification)
