@@ -91,14 +91,12 @@ interface BasalBolusStatistics {
 
 function getDuration(basal: Basal[], start: number, end: number): Basal[] {
   const epoch = basal.map(basal => basal.epoch)
-  const epochStart = basal.map(basal => basal.)
+  const epochStart = basal.map(basal => basal.epochEnd)
 }
 
 function getBasalBolusData(basal: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
-  const basalData = BasalService.filterOnDate(basal as Basal[], dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const bolusData = BolusService.filterOnDate(bolus as Bolus[], dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  return {
-
-  }
+  const basalData = BasalService.filterOnDate(basal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const bolusData = BolusService.filterOnDate(bolus, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  return {}
 }
 
