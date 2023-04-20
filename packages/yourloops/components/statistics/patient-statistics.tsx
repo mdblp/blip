@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
 import {
   type BgType,
   type DateFilter,
@@ -45,6 +45,7 @@ import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalCarbsStatWrapper } from './total-carbs-stat'
+import { t } from 'i18next'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -64,6 +65,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
+  const isDaily = location.pathname.includes('daily')
+  const title = isDaily ? t('total-carbs') : t('avg-daily-carbs')
 
   const {
     standardDeviation,
@@ -81,6 +84,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     foodCarbs
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
+  const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: entriesCarbs }) : t('tooltip-empty-stat')
+
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
 
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
@@ -90,6 +95,13 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+
+  const getAnnotations = (): string[] => {
+    if (isDaily) {
+      return [t('tooltip-total-day-carbs'), isDerivedCarbs]
+    }
+    return [t('tooltip-total-week-carbs'), isDerivedCarbs]
+  }
 
   return (
     <Box data-testid="patient-statistics">
@@ -131,7 +143,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       {children}
 
-      <TotalCarbsStatWrapper entriesCarbs={entriesCarbs} total={totalCarbs} foodCarbs={foodCarbs} />
+      <TotalCarbsStat annotations={getAnnotations()} totalCarbs={totalCarbs} foodCarbs={foodCarbs} title={title} />
     </Box>
   )
 }

@@ -46,7 +46,7 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   }
 }
 
-export interface CarbsStatisticsAdapter {
+interface CarbsStatisticsAdapter {
   getCarbsData: (meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter) => CarbsStatistics
 }
 
