@@ -52,6 +52,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import MenuItem from '@mui/material/MenuItem'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import FormGroup from '@mui/material/FormGroup'
+import TeamUtils from '../../lib/team/team.util'
 
 const CHAT_CONTENT_HEIGHT = '280px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
@@ -99,7 +100,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       paddingBlock: theme.spacing(1)
     },
     teamDropdown: {
-      textTransform: 'capitalize'
+      textTransform: 'none'
     }
   }
 })
@@ -136,7 +137,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { getUserName } = useUserName()
   const teams = getMedicalTeams()
   const teamId = user.isUserHcp() ? selectedTeam.id : teams[0].id
-  const [selectedTeamId, setSelectedTeamId] = useState(teamId)
+  const [dropdownTeamId, setDropdownTeamId] = useState(teamId)
 
   const handleChange = (_event: React.ChangeEvent, newValue: number): void => {
     setInputTab(newValue)
@@ -148,7 +149,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages(): Promise<void> {
-      const messages = await ChatApi.getChatMessages(selectedTeamId, patient.userid)
+      const messages = await ChatApi.getChatMessages(dropdownTeamId, patient.userid)
       if (patient.metadata.hasSentUnreadMessages) {
         patientHook.markPatientMessagesAsRead(patient)
       }
@@ -157,7 +158,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     }
 
     fetchMessages()
-  }, [userId, authHook, patient.userid, selectedTeamId, patient, patientHook])
+  }, [userId, authHook, patient.userid, dropdownTeamId, patient, patientHook])
 
   const onEmojiClick = (emoji: EmojiClickData): void => {
     setShowPicker(false)
@@ -165,8 +166,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }
 
   const sendMessage = async (): Promise<void> => {
-    await ChatApi.sendChatMessage(selectedTeamId, patient.userid, inputText, privateMessage)
-    const messages = await ChatApi.getChatMessages(selectedTeamId, patient.userid)
+    await ChatApi.sendChatMessage(dropdownTeamId, patient.userid, inputText, privateMessage)
+    const messages = await ChatApi.getChatMessages(dropdownTeamId, patient.userid)
     setMessages(messages)
     setInputText('')
   }
@@ -178,11 +179,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }
 
   const onPatientSelected = (event: SelectChangeEvent<string>): void => {
-    setSelectedTeamId(event.target.value)
-  }
-
-  const formatTeamName = (teamName: string): string => {
-    return teamName.replaceAll(' ', '-')
+    setDropdownTeamId(event.target.value)
   }
 
   return (
@@ -205,7 +202,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               teams.map((team, index) =>
                 <MenuItem
                   key={index}
-                  data-testid={`chat-widget-team-scope-menu-${formatTeamName(team.name)}-option`}
+                  data-testid={`chat-widget-team-scope-menu-${TeamUtils.formatTeamName(team.name)}-option`}
                   value={team.id}
                 >
                   {team.name}

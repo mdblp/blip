@@ -188,22 +188,20 @@ export const TeamScopeMenu: FunctionComponent = () => {
               <Typography className={sectionTitle}
                           data-testid="team-scope-menu-care-teams-section">{t('care-teams')}</Typography>
 
-              {sortedMedicalTeams.map((team: Team) => {
-                const teamNameForTestId = team.name.replaceAll(' ', '-')
-                return <MenuItem
-                    key={team.id}
-                    data-testid={`team-scope-menu-team-${teamNameForTestId}-option`}
-                    onClick={() => {
-                      onSelectTeam(team.id)
-                    }}>
-                    <ListItemIcon>
-                      {medicalTeamIcon}
-                    </ListItemIcon>
-                    <ListItemText>
-                      {team.name}
-                    </ListItemText>
-                  </MenuItem>
-              }
+              {sortedMedicalTeams.map((team: Team) =>
+                <MenuItem
+                  key={team.id}
+                  data-testid={`team-scope-menu-team-${TeamUtils.formatTeamName(team.name)}-option`}
+                  onClick={() => {
+                    onSelectTeam(team.id)
+                  }}>
+                  <ListItemIcon>
+                    {medicalTeamIcon}
+                  </ListItemIcon>
+                  <ListItemText>
+                    {team.name}
+                  </ListItemText>
+                </MenuItem>
               )}
             </>
           }
