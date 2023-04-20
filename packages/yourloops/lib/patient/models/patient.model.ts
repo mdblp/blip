@@ -39,7 +39,6 @@ export interface Patient {
   settings: PatientSettings
   metadata: PatientMetadata
   monitoring?: Monitoring
-  teamIds?: string[]
   invitationStatus: UserInvitationStatus
   monitoringStatus?: MonitoringStatus
   readonly userid: string
