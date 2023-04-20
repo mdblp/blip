@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,36 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { monitoredPatientId } from '../data/patient.api.data'
+import {
+  testMonitoringAlertsDialogContentMgdl, testMonitoringAlertsDialogContentMmol,
+  testMonitoringAlertsDialogDefaultButtonMgdl, testMonitoringAlertsDialogSaveButtonMmol
+} from '../assert/monitoring-alerts-parameters'
 
-export const mockMedicalFilesAPI = (teamId: string, teamName: string) => {
-  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
-    id: 'medicalReportId',
-    authorId: 'authorId',
-    creationDate: '2022-01-10T08:34:06.898Z',
-    patientId: monitoredPatientId,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis',
-    progressionProposal: 'whatever proposal',
-    trainingSubject: 'here is the subject',
-    number: 1,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  },
-  {
-    id: 'medicalReportId2',
-    authorId: 'authorId',
-    creationDate: '2022-01-02T10:30:00.000Z',
-    patientId: monitoredPatientId,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis 2 ',
-    progressionProposal: 'whatever proposal 2',
-    trainingSubject: 'here is the subject 2',
-    number: 2,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  }])
+export const testMonitoringAlertsParametersConfigurationDialogMgdl = async (): Promise<void> => {
+  await testMonitoringAlertsDialogContentMgdl()
+  await testMonitoringAlertsDialogDefaultButtonMgdl()
+}
+
+export const testMonitoringAlertsParametersConfigurationDialogMmol = async (): Promise<void> => {
+  await testMonitoringAlertsDialogContentMmol()
+  await testMonitoringAlertsDialogSaveButtonMmol()
 }

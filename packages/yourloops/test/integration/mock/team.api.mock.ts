@@ -173,7 +173,13 @@ export const buildTeamThree = (): Team => {
       } as Profile,
       status: UserInvitationStatus.accepted,
       email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
-    }]
+    }],
+    monitoring: {
+      enabled: true,
+      monitoringEnd: null,
+      status: MonitoringStatus.accepted,
+      parameters: monitoringParameters
+    }
   }
 }
 

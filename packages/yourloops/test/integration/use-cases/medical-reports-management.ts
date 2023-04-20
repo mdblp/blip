@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,36 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { monitoredPatientId } from '../data/patient.api.data'
+import { screen, within } from '@testing-library/react'
+import {
+  type MedicalFileWidgetParams,
+  testMedicalReportCancel,
+  testMedicalReportConsult,
+  testMedicalReportCreate,
+  testMedicalReportDelete,
+  testMedicalReportUpdate
+} from '../assert/medical-widget'
 
-export const mockMedicalFilesAPI = (teamId: string, teamName: string) => {
-  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
-    id: 'medicalReportId',
-    authorId: 'authorId',
-    creationDate: '2022-01-10T08:34:06.898Z',
-    patientId: monitoredPatientId,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis',
-    progressionProposal: 'whatever proposal',
-    trainingSubject: 'here is the subject',
-    number: 1,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  },
-  {
-    id: 'medicalReportId2',
-    authorId: 'authorId',
-    creationDate: '2022-01-02T10:30:00.000Z',
-    patientId: monitoredPatientId,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis 2 ',
-    progressionProposal: 'whatever proposal 2',
-    trainingSubject: 'here is the subject 2',
-    number: 2,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  }])
+export const testMedicalWidgetForHcp = async (medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
+  const dashboard = within(await screen.findByTestId('patient-dashboard'))
+  const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
+  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}New`)
+  await testMedicalReportCancel(medicalFilesWidget)
+  await testMedicalReportCreate(medicalFilesWidget, medicalFileWidgetParams)
+  await testMedicalReportUpdate(medicalFilesWidget, medicalFileWidgetParams)
+  await testMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
+  await testMedicalReportDelete(medicalFilesWidget, medicalFileWidgetParams)
 }

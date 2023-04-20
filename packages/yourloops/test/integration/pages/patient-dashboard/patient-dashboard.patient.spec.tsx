@@ -30,17 +30,24 @@ import { renderPage } from '../../utils/render'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
+import { checkMedicalWidgetForPatient, type MedicalFileWidgetParams } from '../../assert/medical-widget'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
-import { buildPrivateTeam, buildTeamOne, buildTeamTwo, iTeamOne, mySecondTeamId } from '../../mock/team.api.mock'
+import {
+  buildPrivateTeam,
+  buildTeamOne,
+  buildTeamTwo,
+  iTeamOne,
+  mySecondTeamId,
+  mySecondTeamName
+} from '../../mock/team.api.mock'
 import {
   checkJoinTeamDialog,
   checkJoinTeamDialogCancel,
   checkJoinTeamDialogDisplayErrorMessage,
   checkJoinTeamDialogPrivacyCancel
 } from '../../assert/join-team'
-import { monitoredPatientAsTeamMember, monitoredPatientId } from '../../data/patient.api.data'
+import { monitoredPatient, monitoredPatientAsTeamMember, monitoredPatientId } from '../../data/patient.api.data'
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { mockChatAPI } from '../../mock/chat.api.mock'
@@ -54,7 +61,7 @@ describe('Patient dashboard for HCP', () => {
     mockPatientLogin(monitoredPatientAsTeamMember)
     mockPatientApiForPatients()
     mockDataAPI()
-    mockMedicalFilesAPI()
+    mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
@@ -89,7 +96,13 @@ describe('Patient dashboard for HCP', () => {
     expect(monitoringAlertCard).toBeVisible()
     expect(monitoringAlertCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')
 
-    await checkMedicalWidgetForPatient()
+    const medicalWidgetParams: MedicalFileWidgetParams = {
+      loggedInUserFirstName: monitoredPatient.profile.firstName,
+      loggedInUserLastName: monitoredPatient.profile.lastName,
+      selectedTeamId: mySecondTeamId,
+      selectedTeamName: mySecondTeamName
+    }
+    await checkMedicalWidgetForPatient(medicalWidgetParams)
     await checkChatWidgetForPatient()
   })
 

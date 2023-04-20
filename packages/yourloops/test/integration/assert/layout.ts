@@ -26,21 +26,55 @@
  */
 
 import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader } from './header'
-import { checkFooter } from './footer'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
+import { screen, within } from '@testing-library/react'
+import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from './footer'
 
-export const checkHCPLayout = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[], needFooterLanguageSelector: boolean = false) => {
+export interface PatientDashboardLayout {
+  isChartCardVisible: boolean
+  isMedicalFilesCardVisible: boolean
+  isMonitoringAlertCardVisible: boolean
+}
+
+export const checkHCPLayout = async (fullName: string, selectedTeamParams: {
+  teamName: string
+  isPrivate?: boolean
+}, availableTeams: Team[], needFooterLanguageSelector: boolean = false) => {
   await checkHcpHeader(fullName, selectedTeamParams, availableTeams)
-  checkFooter({ role: UserRole.Hcp, needFooterLanguageSelector })
+  checkFooterForHcp(needFooterLanguageSelector)
 }
 
 export const checkCaregiverLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkCaregiverHeader(fullName)
-  checkFooter({ role: UserRole.Caregiver, needFooterLanguageSelector })
+  checkFooterForCaregiver(needFooterLanguageSelector)
 }
 
 export const checkPatientLayout = async (fullName: string, needFooterLanguageSelector?: true) => {
   await checkPatientHeader(fullName)
-  checkFooter({ role: UserRole.Patient, needFooterLanguageSelector })
+  checkFooterForPatient(needFooterLanguageSelector)
+}
+
+export const testPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayout) => {
+  const dashboard = within(await screen.findByTestId('patient-dashboard'))
+  expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
+  expect(dashboard.getByText('Patient statistics')).toBeVisible()
+  expect(dashboard.getByText('Device Usage')).toBeVisible()
+
+  if (patientDashboardLayout.isChartCardVisible) {
+    expect(dashboard.queryByTestId('chat-card')).toBeVisible()
+  } else {
+    expect(dashboard.queryByTestId('chat-card')).not.toBeInTheDocument()
+  }
+
+  if (patientDashboardLayout.isMedicalFilesCardVisible) {
+    expect(dashboard.queryByTestId('medical-files-card')).toBeVisible()
+  } else {
+    expect(dashboard.queryByTestId('medical-files-card')).not.toBeInTheDocument()
+  }
+
+  if (patientDashboardLayout.isMonitoringAlertCardVisible) {
+    expect(dashboard.queryByTestId('monitoring-alert-card')).toBeVisible()
+  } else {
+    expect(dashboard.queryByTestId('monitoring-alert-card')).not.toBeInTheDocument()
+  }
 }

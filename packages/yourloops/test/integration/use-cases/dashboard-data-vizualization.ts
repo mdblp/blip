@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,36 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { monitoredPatientId } from '../data/patient.api.data'
+import { testPatientStatistics, testPatientStatisticsNoData } from '../assert/patient-statistics'
+import { type PatientDashboardLayout, testPatientDashboardLayout } from '../assert/layout'
+import { testDeviceUsageWidget, testDeviceUsageWidgetNoData } from '../assert/device-usage'
+import { monitoredPatient, unmonitoredPatient } from '../data/patient.api.data'
+import { testPatientDropdown } from '../assert/patient-nav-bar'
 
-export const mockMedicalFilesAPI = (teamId: string, teamName: string) => {
-  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
-    id: 'medicalReportId',
-    authorId: 'authorId',
-    creationDate: '2022-01-10T08:34:06.898Z',
-    patientId: monitoredPatientId,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis',
-    progressionProposal: 'whatever proposal',
-    trainingSubject: 'here is the subject',
-    number: 1,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  },
-  {
-    id: 'medicalReportId2',
-    authorId: 'authorId',
-    creationDate: '2022-01-02T10:30:00.000Z',
-    patientId: monitoredPatientId,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis 2 ',
-    progressionProposal: 'whatever proposal 2',
-    trainingSubject: 'here is the subject 2',
-    number: 2,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  }])
+export const testDashboardDataVisualisationForHcp = async (patientDashboardLayout: PatientDashboardLayout) => {
+  await testPatientDashboardLayout(patientDashboardLayout)
+  await testPatientStatistics()
+  await testDeviceUsageWidget()
+}
+
+export const testDashboardDataVisualisationForHcpPrivate = async (patientDashboardLayout: PatientDashboardLayout) => {
+  await testPatientDashboardLayout(patientDashboardLayout)
+  await testPatientStatisticsNoData()
+  await testDeviceUsageWidgetNoData()
+}
+
+export const testPatientNavBar = async () => {
+  await testPatientDropdown(monitoredPatient, unmonitoredPatient)
 }

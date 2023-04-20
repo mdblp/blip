@@ -83,7 +83,7 @@ describe('Patient dashboard for anyone', () => {
     checkTooltip(deviceUsageWidget, 'Sensor Usage')
 
     expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dL')
-    checkStandardDeviationStatWidget('Standard Deviation')
+    await checkStandardDeviationStatWidget('Standard Deviation')
     expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL135')
     expect(patientStatistics.getByTestId('stat-averageDailyDose')).toHaveTextContent('Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kg')
     expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Avg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11m')

@@ -30,6 +30,17 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 
+interface TeamMenuInfo {
+  selectedTeamName: string
+  isSelectedTeamPrivate?: boolean
+  availableTeams: Team[]
+}
+
+export interface HeaderInfo {
+  loggedInUserFullName: string
+  teamMenuInfo: TeamMenuInfo
+}
+
 const PRIVATE_TEAM_NAME = 'private'
 
 const checkHeader = (header: BoundFunctions<typeof queries>) => {
@@ -90,6 +101,31 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, select
   expect(screen.queryByTestId('team-scope-menu')).not.toBeInTheDocument()
 }
 
+const checkTeamScopeMenu2 = async (header: BoundFunctions<typeof queries>, teamMenuInfo: TeamMenuInfo) => {
+  const teamScopeMenuIcon = teamMenuInfo.isSelectedTeamPrivate ? 'private-practice-icon' : 'medical-team-icon'
+  const teamScopeMenuText = teamMenuInfo.isSelectedTeamPrivate ? 'My private practice' : teamMenuInfo.selectedTeamName
+
+  expect(header.getByLabelText('Open team selection menu')).toBeVisible()
+  expect(header.getByTestId(teamScopeMenuIcon)).toBeVisible()
+  expect(header.getByText(teamScopeMenuText)).toBeVisible()
+
+  await userEvent.click(header.getByText(teamScopeMenuText))
+
+  const teamScopeMenu = within(screen.getByTestId('team-scope-menu'))
+  expect(teamScopeMenu.getByText('My private practice')).toBeVisible()
+  expect(teamScopeMenu.getByText('Care teams')).toBeVisible()
+  teamMenuInfo.availableTeams.forEach((team: Team) => {
+    if (team.name === PRIVATE_TEAM_NAME) {
+      return
+    }
+    expect(teamScopeMenu.getByText(team.name)).toBeVisible()
+  })
+  expect(teamScopeMenu.getByText('Create a new care team')).toBeVisible()
+
+  await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
+  expect(screen.queryByTestId('team-scope-menu')).not.toBeInTheDocument()
+}
+
 export const checkHcpHeader = async (fullName: string, selectedTeamParams: { teamName: string, isPrivate?: boolean }, availableTeams: Team[]) => {
   const header = within(screen.getByTestId('app-main-header'))
 
@@ -102,6 +138,21 @@ export const checkHcpHeader = async (fullName: string, selectedTeamParams: { tea
 
   await checkTeamScopeMenu(header, selectedTeamParams, availableTeams)
   await checkUserMenu(header, fullName, UserRole.Hcp)
+  checkHeader(header)
+}
+
+export const checkHcpHeader2 = async (headerInfo: HeaderInfo) => {
+  const header = within(screen.getByTestId('app-main-header'))
+
+  expect(header.getByText('Patients')).toBeVisible()
+  if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
+    expect(header.queryByText('Care team')).not.toBeInTheDocument()
+  } else {
+    expect(header.getByText('Care team')).toBeVisible()
+  }
+
+  await checkTeamScopeMenu2(header, headerInfo.teamMenuInfo)
+  await checkUserMenu(header, headerInfo.loggedInUserFullName, UserRole.Hcp)
   checkHeader(header)
 }
 
