@@ -57,7 +57,11 @@ import {
 import { mockPatientApiForHcp, mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import { checkDataGridAfterSinglePatientFilter, checkPatientListHeader } from '../../assert/patient-list'
+import {
+  checkDataGridAfterSinglePatientFilter,
+  checkPatientListHeader,
+  checkPatientListTooltips
+} from '../../assert/patient-list'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 
@@ -145,24 +149,7 @@ describe('HCP home page', () => {
     expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
     expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmol.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 
-    const monitoringAlertsColumnHeader = within(dataGridCurrentRows).getByText('Monitoring alerts')
-    const tooltipText = 'Hover over the icons to learn more'
-    expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
-    await userEvent.hover(monitoringAlertsColumnHeader)
-    expect(screen.getByText(tooltipText)).toBeVisible()
-    await userEvent.unhover(monitoringAlertsColumnHeader)
-    expect(screen.queryByText(tooltipText)).not.toBeVisible()
-
-    const firstRowTimeSpentOutOfRangeIcon = within(dataGridCurrentRows).getAllByTestId('time-spent-out-of-range-icon')[0]
-    expect(screen.queryByRole('tooltip')).not.toBeVisible()
-    await userEvent.hover(firstRowTimeSpentOutOfRangeIcon)
-    const tooltip = await screen.findByRole('tooltip')
-    expect(tooltip).toBeVisible()
-    expect(tooltip).toHaveTextContent('By default, this alert threshold is set to:')
-    expect(tooltip).toHaveTextContent('>25% time spent away from target over the given period.')
-    expect(tooltip).toHaveTextContent('This value can be modified either at the level of all remotely monitored patients, or patient by patient.')
-    await userEvent.unhover(firstRowTimeSpentOutOfRangeIcon)
-    expect(screen.queryByRole('tooltip')).not.toBeVisible()
+    await checkPatientListTooltips(dataGridCurrentRows, false)
 
     const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
@@ -528,14 +515,10 @@ describe('HCP home page', () => {
 
     await userEvent.click(monitoringAlertsToggle)
     await userEvent.click(systemToggle)
-    // await userEvent.click(dataToggle)
-    // await userEvent.click(hypoToggle)
     await userEvent.click(lastUpdateToggle)
     await userEvent.click(messagesToggle)
     expect(systemToggle).toHaveProperty('checked', false)
     expect(monitoringAlertsToggle).toHaveProperty('checked', false)
-    // expect(dataToggle).toHaveProperty('checked', false)
-    // expect(hypoToggle).toHaveProperty('checked', false)
     expect(lastUpdateToggle).toHaveProperty('checked', false)
     expect(messagesToggle).toHaveProperty('checked', false)
 

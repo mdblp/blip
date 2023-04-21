@@ -152,7 +152,7 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
       title={title}
       aria-label={title}
     >
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" data-testid="message-icon">
         {hasNewMessages
           ? <Badge color="warning" variant="dot">
             <MessageIcon
