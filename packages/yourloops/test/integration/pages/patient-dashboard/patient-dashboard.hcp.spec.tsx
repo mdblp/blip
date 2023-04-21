@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { act, waitFor } from '@testing-library/react'
+import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
@@ -56,6 +56,7 @@ import {
   testMonitoringAlertsParametersConfigurationDialogMmol
 } from '../../use-cases/monitoring-alerts-parameters-management'
 import { testChatWidgetForHcp } from '../../use-cases/communication-system'
+import { ConfigService } from '../../../../lib/config/config.service'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
@@ -159,5 +160,15 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testMonitoringAlertsParametersConfigurationDialogMmol()
+  })
+
+  it('should automatically log out an idle user', async () => {
+    jest.spyOn(ConfigService, 'getIdleTimeout').mockReturnValue(1000)
+
+    renderPage(`/patient/${monitoredPatientId}/dashboard`)
+
+    await waitFor(() => {
+      expect(logoutMock).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })
+    }, { timeout: 3000 })
   })
 })

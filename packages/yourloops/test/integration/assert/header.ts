@@ -142,7 +142,7 @@ export const checkHcpHeader = async (fullName: string, selectedTeamParams: { tea
 }
 
 export const checkHcpHeader2 = async (headerInfo: HeaderInfo) => {
-  const header = within(screen.getByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header'))
 
   expect(header.getByText('Patients')).toBeVisible()
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
