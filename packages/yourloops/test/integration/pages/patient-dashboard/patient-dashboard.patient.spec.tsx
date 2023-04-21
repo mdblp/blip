@@ -63,6 +63,7 @@ describe('Patient dashboard for HCP', () => {
     mockDataAPI()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
+    mockChatAPI()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
