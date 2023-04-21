@@ -45,13 +45,13 @@ import { monitoredPatient, monitoredPatientAsTeamMember, monitoredPatientId } fr
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import {
-  type AppMainLayoutParamsPatient,
+  type AppMainLayoutParams,
   testAppMainLayoutForPatient
 } from '../../use-cases/app-main-layout-vizualization'
 import { type PatientDashboardLayoutParams } from '../../assert/layout'
 import {
   testDashboardDataVisualisation,
-  testDashboardDataVisualisationForPrivateTeam,
+  testDashboardDataVisualisationPrivateTeamNoData,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-vizualization'
 import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
@@ -78,7 +78,7 @@ describe('Patient dashboard for HCP', () => {
   it('should display correct components when patient is in some medical teams', async () => {
     mockDataAPI(completeDashboardData)
 
-    const appMainLayoutParams: AppMainLayoutParamsPatient = {
+    const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       loggedInUserFullName: `${firstName} ${lastName}`
     }
@@ -125,6 +125,6 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationForPrivateTeam(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
   })
 })

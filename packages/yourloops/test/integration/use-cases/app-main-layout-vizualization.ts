@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkHcpHeader2, checkPatientHeader, type HeaderInfo } from '../assert/header'
-import { checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
+import { checkCaregiverHeader, checkHcpHeader2, checkPatientHeader, type HeaderInfo } from '../assert/header'
+import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
 
 export interface AppMainLayoutParamsHcp {
   footerHasLanguageSelector?: boolean
   headerInfo: HeaderInfo
 }
 
-export interface AppMainLayoutParamsPatient {
+export interface AppMainLayoutParams {
   footerHasLanguageSelector?: boolean
   loggedInUserFullName: string
 }
@@ -43,7 +43,12 @@ export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayout
   checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 
-export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParamsPatient) => {
+export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
+  await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
+  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
+}
+
+export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {
   await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
   checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }

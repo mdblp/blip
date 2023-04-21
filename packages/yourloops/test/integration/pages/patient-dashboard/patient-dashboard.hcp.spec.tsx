@@ -46,7 +46,7 @@ import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-inv
 import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
 import {
   testDashboardDataVisualisation,
-  testDashboardDataVisualisationForPrivateTeam,
+  testDashboardDataVisualisationPrivateTeamNoData,
   testPatientNavBarForHcp
 } from '../../use-cases/patient-data-vizualization'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
@@ -149,7 +149,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
-    await testDashboardDataVisualisationForPrivateTeam(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
   })
 
   it('should be possible to edit monitoring alerts parameters in mmol/L', async () => {
