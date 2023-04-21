@@ -27,7 +27,14 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
+import {
+  BasalBolusStatisticsService,
+  type BgType,
+  type DateFilter,
+  DatumType,
+  type MedicalData,
+  TimeService
+} from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
@@ -77,6 +84,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+
+  const {bolus, basal} = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter)
 
   return (
     <Box data-testid="patient-statistics">

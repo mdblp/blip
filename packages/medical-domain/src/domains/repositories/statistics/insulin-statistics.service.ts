@@ -31,7 +31,7 @@ import type Basal from '../../models/medical/datum/basal.model'
 import BasalService from '../medical/datum/basal.service'
 import BolusService from '../medical/datum/bolus.service'
 import { type BasalBolusStatistics } from '../../models/statistics/basal-bolus-statistics.model'
-import { getWeekDaysFilter } from '../../../../dist/src/domains/repositories/statistics/statistics.utils'
+import { getWeekDaysFilter } from './statistics.utils'
 
 // getBasalBolusData()
 // {
@@ -56,7 +56,7 @@ import { getWeekDaysFilter } from '../../../../dist/src/domains/repositories/sta
 //
 //   return basalBolusData
 // }
-//
+
 function resempleDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
     if (basal.epoch < start) {
