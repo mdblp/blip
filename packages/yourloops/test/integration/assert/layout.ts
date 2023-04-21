@@ -30,7 +30,7 @@ import { type Team } from '../../../lib/team'
 import { screen, within } from '@testing-library/react'
 import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from './footer'
 
-export interface PatientDashboardLayout {
+export interface PatientDashboardLayoutParams {
   isChartCardVisible: boolean
   isMedicalFilesCardVisible: boolean
   isMonitoringAlertCardVisible: boolean
@@ -54,7 +54,7 @@ export const checkPatientLayout = async (fullName: string, needFooterLanguageSel
   checkFooterForPatient(needFooterLanguageSelector)
 }
 
-export const testPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayout) => {
+export const testPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayoutParams) => {
   const dashboard = within(await screen.findByTestId('patient-dashboard'))
   expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
   expect(dashboard.getByText('Patient statistics')).toBeVisible()

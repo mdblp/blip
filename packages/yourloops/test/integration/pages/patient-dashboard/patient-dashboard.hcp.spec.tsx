@@ -34,7 +34,7 @@ import { monitoredPatient, monitoredPatientId, monitoredPatientWithMmolId } from
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { type PatientDashboardLayout } from '../../assert/layout'
+import { type PatientDashboardLayoutParams } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
@@ -43,12 +43,12 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { type AppMainLayout, testAppMainLayoutForHcp } from '../../use-cases/app-layout'
+import { type AppMainLayoutParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationForHcpPrivate,
   testPatientNavBar
-} from '../../use-cases/dashboard-data-vizualization'
+} from '../../use-cases/patient-data-vizualization'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
 import { type MedicalFileWidgetParams } from '../../assert/medical-widget'
 import {
@@ -81,7 +81,7 @@ describe('Patient dashboard for HCP', () => {
     const selectedTeamName = myThirdTeamName
     mockDataAPI(completeDashboardData)
 
-    const appMainLayout: AppMainLayout = {
+    const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,
@@ -92,13 +92,13 @@ describe('Patient dashboard for HCP', () => {
         }
       }
     }
-    const patientDashboardLayout: PatientDashboardLayout = {
+    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChartCardVisible: true,
       isMedicalFilesCardVisible: true,
       isMonitoringAlertCardVisible: true
     }
 
-    const medicalWidgetParams: MedicalFileWidgetParams = {
+    const medicalFileWidgetParams: MedicalFileWidgetParams = {
       loggedInUserFirstName: firstName,
       loggedInUserLastName: lastName,
       selectedTeamId: myThirdTeamId,
@@ -109,10 +109,10 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    await testAppMainLayoutForHcp(appMainLayout)
-    await testDashboardDataVisualisationForHcp(patientDashboardLayout)
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
     await testPatientNavBar()
-    await testMedicalWidgetForHcp(medicalWidgetParams)
+    await testMedicalWidgetForHcp(medicalFileWidgetParams)
     await testMonitoringAlertsParametersConfigurationDialogMgdl()
   })
 
@@ -123,7 +123,7 @@ describe('Patient dashboard for HCP', () => {
       invitationStatus: UserInvitationStatus.accepted
     }])
 
-    const appMainLayout: AppMainLayout = {
+    const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,
@@ -134,7 +134,7 @@ describe('Patient dashboard for HCP', () => {
         }
       }
     }
-    const patientDashboardLayout: PatientDashboardLayout = {
+    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChartCardVisible: false,
       isMedicalFilesCardVisible: false,
       isMonitoringAlertCardVisible: false
@@ -144,8 +144,8 @@ describe('Patient dashboard for HCP', () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    await testAppMainLayoutForHcp(appMainLayout)
-    await testDashboardDataVisualisationForHcpPrivate(patientDashboardLayout)
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testDashboardDataVisualisationForHcpPrivate(patientDashboardLayoutParams)
   })
 
   it('should be possible to edit monitoring alerts parameters in mmol/L', async () => {

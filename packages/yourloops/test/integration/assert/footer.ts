@@ -58,6 +58,14 @@ const checkFooter = (hasLanguageSelector: boolean = false) => {
   expect(contactLink).toBeVisible()
 }
 
+export const checkFooterForUserNotLoggedIn = (hasLanguageSelector: boolean = false) => {
+  const footer = within(screen.getByTestId('footer'))
+  const trainingLink = footer.getByText('Training')
+  expect(trainingLink).toBeVisible()
+  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training())
+  checkFooter(hasLanguageSelector)
+}
+
 export const checkFooterForHcp = (hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')

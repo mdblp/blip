@@ -28,12 +28,12 @@
 import { checkHcpHeader2, type HeaderInfo } from '../assert/header'
 import { checkFooterForHcp } from '../assert/footer'
 
-export interface AppMainLayout {
+export interface AppMainLayoutParams {
   footerHasLanguageSelector?: boolean
   headerInfo: HeaderInfo
 }
 
-export const testAppMainLayoutForHcp = async (appMainLayout: AppMainLayout) => {
-  await checkHcpHeader2(appMainLayout.headerInfo)
-  checkFooterForHcp(appMainLayout.footerHasLanguageSelector ?? false)
+export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutParams) => {
+  await checkHcpHeader2(appMainLayoutParams.headerInfo)
+  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
