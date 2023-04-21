@@ -25,25 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkHcpHeader2, checkPatientHeader, type HeaderInfo } from '../assert/header'
-import { checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
+import {
+  testChatWidgetMessageReadingHcp,
+  testChatWidgetMessageReadingPatient,
+  testChatWidgetMessageSending
+} from '../assert/chat-widget'
+import { mySecondTeamId, myThirdTeamId } from '../mock/team.api.mock'
 
-export interface AppMainLayoutParamsHcp {
-  footerHasLanguageSelector?: boolean
-  headerInfo: HeaderInfo
+export const testChatWidgetForHcp = async (): Promise<void> => {
+  await testChatWidgetMessageReadingHcp()
+  await testChatWidgetMessageSending(myThirdTeamId)
 }
-
-export interface AppMainLayoutParamsPatient {
-  footerHasLanguageSelector?: boolean
-  loggedInUserFullName: string
-}
-
-export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutParamsHcp) => {
-  await checkHcpHeader2(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParamsPatient) => {
-  await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
+export const testChatWidgetForPatient = async (): Promise<void> => {
+  await testChatWidgetMessageReadingPatient()
+  await testChatWidgetMessageSending(mySecondTeamId)
 }

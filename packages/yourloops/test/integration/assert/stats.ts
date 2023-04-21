@@ -102,3 +102,15 @@ export const checkCoefficientOfVariationStatWidget = async (expectedTextContent:
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('coefficient-of-variation-stat')).toHaveTextContent(expectedTextContent)
 }
+
+export const testTimeInRangeStatWidget = async () => {
+  const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
+  expect(statsWidgets).toBeVisible()
+  expect(statsWidgets).toHaveTextContent('Time In Range2h8%10h42%6h25%4h17%2h8%<5454-7070-180180-250>250mg/dLStandard Deviation (61-209)mg/dL74Avg. Glucose (CGM)mg/dL135Sensor Usage1%CV (CGM)55%Avg. Daily Total Insulin(1.3U)Bolus1.3 U100%Basal0.0 U2%Avg. Daily Insulin1.3UWeight72kgDaily Dose ÷ Weight0.02U/kgAvg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11mAvg. Daily Carbs55gRescue carbs10g')
+}
+
+export const testTimeInRangeStatWidgetNoData = async () => {
+  const statsWidgets = await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })
+  expect(statsWidgets).toBeVisible()
+  expect(statsWidgets).toHaveTextContent('Time In Range0m--0m--0m--0m--0m--<5454-7070-180180-250>250mg/dLStandard Deviationmg/dL--Avg. Glucose (CGM)mg/dL--Sensor Usage0%CV (CGM)--Avg. Daily Total Insulin(0U)Bolus0 U--%Basal0 U--%Avg. Daily Insulin0.0UWeight72kgDaily Dose ÷ Weight--U/kgAvg. Daily Time In Loop ModeONOFFN/AN/AAvg. Daily Carbs--Rescue carbs--')
+}

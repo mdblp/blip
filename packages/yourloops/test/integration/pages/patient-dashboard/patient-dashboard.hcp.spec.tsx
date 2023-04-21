@@ -43,11 +43,11 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { type AppMainLayoutParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
+import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
 import {
-  testDashboardDataVisualisationForHcp,
-  testDashboardDataVisualisationForHcpPrivate,
-  testPatientNavBar
+  testDashboardDataVisualisation,
+  testDashboardDataVisualisationForPrivateTeam,
+  testPatientNavBarForHcp
 } from '../../use-cases/patient-data-vizualization'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
 import { type MedicalFileWidgetParams } from '../../assert/medical-widget'
@@ -55,6 +55,7 @@ import {
   testMonitoringAlertsParametersConfigurationDialogMgdl,
   testMonitoringAlertsParametersConfigurationDialogMmol
 } from '../../use-cases/monitoring-alerts-parameters-management'
+import { testChatWidgetForHcp } from '../../use-cases/communication-system'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
@@ -81,7 +82,7 @@ describe('Patient dashboard for HCP', () => {
     const selectedTeamName = myThirdTeamName
     mockDataAPI(completeDashboardData)
 
-    const appMainLayoutParams: AppMainLayoutParams = {
+    const appMainLayoutParams: AppMainLayoutParamsHcp = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,
@@ -99,6 +100,7 @@ describe('Patient dashboard for HCP', () => {
     }
 
     const medicalFileWidgetParams: MedicalFileWidgetParams = {
+      selectedPatientId: monitoredPatientId,
       loggedInUserFirstName: firstName,
       loggedInUserLastName: lastName,
       selectedTeamId: myThirdTeamId,
@@ -110,10 +112,11 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
-    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
-    await testPatientNavBar()
+    await testDashboardDataVisualisation(patientDashboardLayoutParams)
+    await testPatientNavBarForHcp()
     await testMedicalWidgetForHcp(medicalFileWidgetParams)
     await testMonitoringAlertsParametersConfigurationDialogMgdl()
+    await testChatWidgetForHcp()
   })
 
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
@@ -123,7 +126,7 @@ describe('Patient dashboard for HCP', () => {
       invitationStatus: UserInvitationStatus.accepted
     }])
 
-    const appMainLayoutParams: AppMainLayoutParams = {
+    const appMainLayoutParams: AppMainLayoutParamsHcp = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,
@@ -145,7 +148,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
-    await testDashboardDataVisualisationForHcpPrivate(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForPrivateTeam(patientDashboardLayoutParams)
   })
 
   it('should be possible to edit monitoring alerts parameters in mmol/L', async () => {

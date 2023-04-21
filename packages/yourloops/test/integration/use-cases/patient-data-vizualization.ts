@@ -29,20 +29,29 @@ import { testPatientStatistics, testPatientStatisticsNoData } from '../assert/pa
 import { type PatientDashboardLayoutParams, testPatientDashboardLayout } from '../assert/layout'
 import { testDeviceUsageWidget, testDeviceUsageWidgetNoData } from '../assert/device-usage'
 import { monitoredPatient, unmonitoredPatient } from '../data/patient.api.data'
-import { testPatientDropdown } from '../assert/patient-nav-bar'
+import { testPatientDropdown, testPatientNavBar } from '../assert/patient-nav-bar'
+import { testTimeInRangeStatWidget, testTimeInRangeStatWidgetNoData } from '../assert/stats'
+import { testMonitoringAlertCard } from '../assert/monitoring-alert'
 
-export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
+export const testDashboardDataVisualisation = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await testPatientDashboardLayout(patientDashboardLayoutParams)
   await testPatientStatistics()
   await testDeviceUsageWidget()
+  await testTimeInRangeStatWidget()
+  await testMonitoringAlertCard()
 }
 
-export const testDashboardDataVisualisationForHcpPrivate = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
+export const testDashboardDataVisualisationForPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await testPatientDashboardLayout(patientDashboardLayoutParams)
   await testPatientStatisticsNoData()
   await testDeviceUsageWidgetNoData()
+  await testTimeInRangeStatWidgetNoData()
 }
 
-export const testPatientNavBar = async () => {
+export const testPatientNavBarForHcp = async () => {
   await testPatientDropdown(monitoredPatient, unmonitoredPatient)
+}
+
+export const testPatientNavBarForPatient = async () => {
+  await testPatientNavBar()
 }

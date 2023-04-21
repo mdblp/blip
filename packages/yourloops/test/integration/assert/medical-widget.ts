@@ -33,6 +33,7 @@ import userEvent from '@testing-library/user-event'
 import { monitoredPatientId } from '../data/patient.api.data'
 
 export interface MedicalFileWidgetParams {
+  selectedPatientId: string
   loggedInUserFirstName: string
   loggedInUserLastName: string
   selectedTeamId: string
@@ -158,12 +159,4 @@ export const testMedicalReportDelete = async (medicalFilesWidget: HTMLElement, m
   expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully deleted'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}New`)
-}
-
-export const checkMedicalWidgetForPatient = async (medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
-  const dashboard = within(screen.getByTestId('patient-dashboard'))
-  const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeam')
-  expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical report 2022-01-02' })).not.toBeInTheDocument()
-  await testMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
 }

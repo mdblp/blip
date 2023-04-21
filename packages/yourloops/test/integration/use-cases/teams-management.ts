@@ -25,25 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkHcpHeader2, checkPatientHeader, type HeaderInfo } from '../assert/header'
-import { checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
+import {
+  checkJoinTeamDialog,
+  checkJoinTeamDialogCancel,
+  checkJoinTeamDialogDisplayErrorMessage,
+  checkJoinTeamDialogPrivacyCancel
+} from '../assert/join-team'
 
-export interface AppMainLayoutParamsHcp {
-  footerHasLanguageSelector?: boolean
-  headerInfo: HeaderInfo
-}
-
-export interface AppMainLayoutParamsPatient {
-  footerHasLanguageSelector?: boolean
-  loggedInUserFullName: string
-}
-
-export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutParamsHcp) => {
-  await checkHcpHeader2(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParamsPatient) => {
-  await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
+export const testJoinTeamDialog = async () => {
+  await checkJoinTeamDialog()
+  await checkJoinTeamDialogCancel()
+  await checkJoinTeamDialogPrivacyCancel()
+  await checkJoinTeamDialogDisplayErrorMessage()
 }

@@ -25,25 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkHcpHeader2, checkPatientHeader, type HeaderInfo } from '../assert/header'
-import { checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
+import { screen } from '@testing-library/react'
 
-export interface AppMainLayoutParamsHcp {
-  footerHasLanguageSelector?: boolean
-  headerInfo: HeaderInfo
-}
-
-export interface AppMainLayoutParamsPatient {
-  footerHasLanguageSelector?: boolean
-  loggedInUserFullName: string
-}
-
-export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutParamsHcp) => {
-  await checkHcpHeader2(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParamsPatient) => {
-  await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
+export const testMonitoringAlertCard = async () => {
+  const monitoringAlertCard = screen.getByTestId('monitoring-alert-card')
+  expect(monitoringAlertCard).toBeVisible()
+  expect(monitoringAlertCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')
 }

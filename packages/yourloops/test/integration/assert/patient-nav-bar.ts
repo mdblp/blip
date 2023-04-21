@@ -85,3 +85,8 @@ export const testPatientDropdown = async (initialPatient: Patient, patientToSwit
 
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 }
+
+export const testPatientNavBar = async () => {
+  const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+  expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
+}

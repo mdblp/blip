@@ -31,7 +31,9 @@ import TeamAPI from '../../../lib/team/team.api'
 import { iTeamOne } from '../mock/team.api.mock'
 import { monitoredPatientId } from '../data/patient.api.data'
 
-export const checkJoinTeamDialogCancel = async (badgeTeamMenu) => {
+export const checkJoinTeamDialogCancel = async () => {
+  const badgeTeamMenu = screen.getByLabelText('Open team menu')
+  expect(badgeTeamMenu).toHaveTextContent('2')
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
   await userEvent.click(buttonJoinTeam)
@@ -42,7 +44,9 @@ export const checkJoinTeamDialogCancel = async (badgeTeamMenu) => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const checkJoinTeamDialogPrivacyCancel = async (badgeTeamMenu) => {
+export const checkJoinTeamDialogPrivacyCancel = async () => {
+  const badgeTeamMenu = screen.getByLabelText('Open team menu')
+  expect(badgeTeamMenu).toHaveTextContent('2')
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
   await userEvent.click(buttonJoinTeam)
@@ -59,8 +63,8 @@ export const checkJoinTeamDialogPrivacyCancel = async (badgeTeamMenu) => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const checkJoinTeamDialogDisplayErrorMessage = async (badgeTeamMenu) => {
-  // jest.spyOn(TeamAPI, 'joinTeam').mockRejectedValue(undefined)
+export const checkJoinTeamDialogDisplayErrorMessage = async () => {
+  const badgeTeamMenu = screen.getByLabelText('Open team menu')
   jest.spyOn(TeamAPI, 'getTeamFromCode').mockRejectedValue(undefined)
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
@@ -73,7 +77,8 @@ export const checkJoinTeamDialogDisplayErrorMessage = async (badgeTeamMenu) => {
   expect(screen.getByTestId('alert-snackbar'))
   expect(screen.queryByRole('dialog')).toBeInTheDocument()
 }
-export const checkJoinTeamDialog = async (badgeTeamMenu) => {
+export const checkJoinTeamDialog = async () => {
+  const badgeTeamMenu = screen.getByLabelText('Open team menu')
   expect(badgeTeamMenu).toHaveTextContent('2')
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
