@@ -117,21 +117,24 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
 
   return (
     <>
-      <Tooltip title={t('time-out-of-range-target-tooltip')}>
-        <TimeSpentOufOfRangeIcon
-          color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
-        />
+      <Tooltip title={t('time-out-of-range-target-tooltip')} data-testid="time-spent-out-of-range-icon-tooltip">
+          <TimeSpentOufOfRangeIcon
+            color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
+            data-testid="time-spent-out-of-range-icon"
+          />
       </Tooltip>
       <Tooltip title={t('hypoglycemia-tooltip')}>
         <HypoglycemiaIcon
           sx={{ marginLeft: theme.spacing(1) }}
           color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
+          data-testid="hypoglycemia-icon"
         />
       </Tooltip>
       <Tooltip title={t('data-not-transferred-tooltip')}>
         <NoDataIcon
           sx={{ marginLeft: theme.spacing(1) }}
           color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
+          data-testid="no-data-icon"
         />
       </Tooltip>
     </>

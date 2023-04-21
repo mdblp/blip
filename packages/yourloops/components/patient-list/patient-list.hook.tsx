@@ -197,23 +197,18 @@ export const usePatientListHook = (): PatientListHookReturns => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const monitoringAlerts = patient.monitoringAlerts
 
-      const columnsProps = {
+      return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient,
+        [PatientListColumns.MonitoringAlerts]: monitoringAlerts,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
         [PatientListColumns.Actions]: patient
       }
-
-      if (user.isUserHcp()) {
-        columnsProps[PatientListColumns.MonitoringAlerts] = monitoringAlerts
-      }
-
-      return columnsProps
     })
-  }, [filteredPatients, trNA, user])
+  }, [filteredPatients, trNA])
 
   return {
     columns,
