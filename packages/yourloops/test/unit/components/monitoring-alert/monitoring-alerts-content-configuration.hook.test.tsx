@@ -42,7 +42,7 @@ jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('MonitoringAlertsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
-  const patient = createPatient('patientId', [teamId], UserInvitationStatus.accepted)
+  const patient = createPatient('patientId', UserInvitationStatus.accepted)
   const user = { id: 'id', settings: { units: { bg: Unit.MilligramPerDeciliter } } }
 
   const getDefaultMonitoring = (): Monitoring => ({
@@ -162,7 +162,7 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
   })
 
   describe('resetToTeamDefaultValues', () => {
-    const patient = createPatient('patientId', [teamId], UserInvitationStatus.accepted)
+    const patient = createPatient('patientId', UserInvitationStatus.accepted)
 
     it('should return an error message if patient is not created', () => {
       const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring: getDefaultMonitoring() }))

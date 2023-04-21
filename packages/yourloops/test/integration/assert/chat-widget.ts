@@ -25,46 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import { makeStyles } from 'tss-react/mui'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { myFirstTeamName, mySecondTeamId, mySecondTeamName } from '../mock/team.api.mock'
+import userEvent from '@testing-library/user-event'
+import { monitoredPatientId } from '../data/patient.api.data'
+import ChatApi from '../../../lib/chat/chat.api'
 
-interface GenericDashboardCardProps {
-  action?: JSX.Element
-  avatar: JSX.Element
-  title: string
-  width?: string
-  ['data-testid']?: string
+export const checkChatWidgetForPatient = async (): Promise<void> => {
+  const dashboard = within(screen.getByTestId('patient-dashboard'))
+  const chatCard = dashboard.queryByTestId('chat-card')
+  expect(chatCard).toHaveTextContent('Messages MyFirstTeamThis is a message sent to the team MyFirstTeam')
+  const chatCardHeader = within(within(chatCard).getByTestId('card-header')).getByText(myFirstTeamName)
+  fireEvent.mouseDown(chatCardHeader)
+  await userEvent.click(within(screen.getByRole('listbox')).getByText(mySecondTeamName))
+  await waitFor(() => {
+    expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeamThis is a message sent from the team MySecondTeam')
+  })
+  const chatInput = within(chatCard).getByRole('textbox')
+  const message = 'Hey man, how are things going?'
+  await userEvent.type(chatInput, message)
+  await userEvent.click(within(chatCard).getByRole('button', { name: 'Send' }))
+  expect(jest.spyOn(ChatApi, 'sendChatMessage')).toHaveBeenCalledWith(mySecondTeamId, monitoredPatientId, message, false)
 }
-
-const useStyles = makeStyles()(() => ({
-  header: {
-    backgroundColor: 'var(--card-header-background-color)',
-    height: 58,
-    textTransform: 'uppercase'
-  },
-  headerTitle: {
-    fontWeight: 600
-  }
-}))
-
-const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboardCardProps>> = (props) => {
-  const { classes } = useStyles()
-
-  return (
-    <Card data-testid={props['data-testid']}>
-      <CardHeader
-        data-testid="card-header"
-        className={classes.header}
-        classes={{ title: classes.headerTitle }}
-        avatar={props.avatar}
-        title={props.title}
-        action={props.action}
-      />
-      {props.children}
-    </Card>
-  )
-}
-
-export default GenericDashboardCard

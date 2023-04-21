@@ -45,7 +45,6 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 
 export const createPatient = (
   id = 'fakePatientId',
-  teamIds: string[] = [],
   invitationStatus: UserInvitationStatus = UserInvitationStatus.accepted,
   monitoringStatus: MonitoringStatus | undefined = undefined,
   monitoring: Monitoring | undefined = undefined,
@@ -81,7 +80,6 @@ export const createPatient = (
       hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
     monitoring,
-    teamIds,
     invitationStatus,
     monitoringStatus,
     userid: id
