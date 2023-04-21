@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import {
+  testAddPatientMedicalTeamDialogContent,
+  testAddPatientMedicalTeamDialogInvite,
+  testAddPatientPrivateButtonTooltip,
+  testRemovePatientMedicalTeamConfirm,
+  testRemovePatientMedicalTeamDialogContent,
+  testRemovePatientMedicalTeamError,
+  testRemovePatientPrivateConfirm,
+  testRemovePatientPrivateDialogContent
+} from '../assert/patient-list'
 
-  bail: true,
+export const testPatientManagementPrivateTeam = async () => {
+  await testAddPatientPrivateButtonTooltip()
+  await testRemovePatientPrivateDialogContent()
+  await testRemovePatientPrivateConfirm()
+}
 
-  displayName: 'yourloops integration',
-
-  maxWorkers: '30%',
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 100000
+export const testPatientManagementMedicalTeam = async () => {
+  await testRemovePatientMedicalTeamDialogContent()
+  await testRemovePatientMedicalTeamConfirm()
+  await testRemovePatientMedicalTeamError()
+  await testAddPatientMedicalTeamDialogContent()
+  await testAddPatientMedicalTeamDialogInvite()
 }
