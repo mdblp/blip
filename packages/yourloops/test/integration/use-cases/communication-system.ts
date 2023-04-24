@@ -36,6 +36,7 @@ export const testChatWidgetForHcp = async (): Promise<void> => {
   await checkChatWidgetMessageReadingForHcp()
   await checkChatWidgetMessageSending(myThirdTeamId)
 }
+
 export const testChatWidgetForPatient = async (): Promise<void> => {
   await checkChatWidgetMessageReadingForPatient()
   await checkChatWidgetMessageSending(mySecondTeamId)
