@@ -29,6 +29,7 @@ import { type BoundFunctions, type queries, screen, within } from '@testing-libr
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
+import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.hook'
 
 interface TeamMenuInfo {
   selectedTeamName?: string
@@ -40,8 +41,6 @@ export interface HeaderInfo {
   loggedInUserFullName: string
   teamMenuInfo: TeamMenuInfo
 }
-
-const PRIVATE_TEAM_NAME = 'private'
 
 const checkHeader = (header: BoundFunctions<typeof queries>) => {
   expect(header.getByLabelText('YourLoops Logo')).toBeVisible()

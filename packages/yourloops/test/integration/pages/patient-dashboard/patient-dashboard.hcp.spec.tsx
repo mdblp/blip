@@ -43,7 +43,7 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisation,
   testDashboardDataVisualisationPrivateTeamNoData,
@@ -83,7 +83,7 @@ describe('Patient dashboard for HCP', () => {
     const selectedTeamName = myThirdTeamName
     mockDataAPI(completeDashboardData)
 
-    const appMainLayoutParams: AppMainLayoutParamsHcp = {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,
@@ -127,7 +127,7 @@ describe('Patient dashboard for HCP', () => {
       invitationStatus: UserInvitationStatus.accepted
     }])
 
-    const appMainLayoutParams: AppMainLayoutParamsHcp = {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,

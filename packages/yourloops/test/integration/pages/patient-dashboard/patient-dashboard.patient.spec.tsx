@@ -56,7 +56,7 @@ import {
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
 import { testChatWidgetForPatient } from '../../use-cases/communication-system'
-import { testJoinTeamDialog } from '../../use-cases/teams-management'
+import { testJoinTeam } from '../../use-cases/teams-management'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = '/dashboard'
@@ -108,7 +108,7 @@ describe('Patient dashboard for HCP', () => {
     await testPatientNavBarForPatient()
     await testMedicalWidgetForPatient(medicalFilesWidgetParams)
     await testChatWidgetForPatient()
-    await testJoinTeamDialog()
+    await testJoinTeam()
   })
 
   it('should render correct components when patient is in no medical teams', async () => {

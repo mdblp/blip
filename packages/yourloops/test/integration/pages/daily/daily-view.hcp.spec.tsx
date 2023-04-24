@@ -37,7 +37,7 @@ import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -55,7 +55,7 @@ describe('Daily view for HCP', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI()
-    const appMainLayoutParams: AppMainLayoutParamsHcp = {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,

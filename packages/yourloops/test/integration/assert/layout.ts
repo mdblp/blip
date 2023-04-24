@@ -64,8 +64,8 @@ export const checkPatientDashboardLayout = async (patientDashboardLayout: Patien
   }
 
   if (patientDashboardLayout.isMonitoringAlertCardVisible) {
-    expect(dashboard.queryByTestId('monitoring-alert-card')).toBeVisible()
+    expect(dashboard.queryByTestId('monitoring-alerts-card')).toBeVisible()
   } else {
-    expect(dashboard.queryByTestId('monitoring-alert-card')).not.toBeInTheDocument()
+    expect(dashboard.queryByTestId('monitoring-alerts-card')).not.toBeInTheDocument()
   }
 }

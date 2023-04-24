@@ -28,7 +28,7 @@
 import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader, type HeaderInfo } from '../assert/header'
 import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
 
-export interface AppMainLayoutParamsHcp {
+export interface AppMainLayoutHcpParams {
   footerHasLanguageSelector?: boolean
   headerInfo: HeaderInfo
 }
@@ -38,7 +38,7 @@ export interface AppMainLayoutParams {
   loggedInUserFullName: string
 }
 
-export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutParamsHcp) => {
+export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
   await checkHcpHeader(appMainLayoutParams.headerInfo)
   checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }

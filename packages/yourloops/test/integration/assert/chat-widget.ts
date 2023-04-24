@@ -31,14 +31,14 @@ import userEvent from '@testing-library/user-event'
 import { monitoredPatientId } from '../data/patient.api.data'
 import ChatApi from '../../../lib/chat/chat.api'
 
-export const checkChatWidgetMessageReadingHcp = async (): Promise<void> => {
+export const checkChatWidgetMessageReadingForHcp = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
   expect(chatCard).toHaveTextContent('Messages (+1)This messages is in the team A - MyThirdTeam - to be deleted which is the best')
   expect(chatCard).toHaveTextContent('NewReplyPrivate')
 }
 
-export const checkChatWidgetMessageReadingPatient = async (): Promise<void> => {
+export const checkChatWidgetMessageReadingForPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
   expect(chatCard).toHaveTextContent('Messages MyFirstTeamThis is a message sent to the team MyFirstTeam')

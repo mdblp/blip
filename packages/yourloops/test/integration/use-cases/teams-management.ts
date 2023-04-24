@@ -33,7 +33,7 @@ import {
 } from '../assert/join-team'
 import { checkCreateCareTeamDialog } from '../assert/team-dialog'
 
-export const testJoinTeamDialog = async () => {
+export const testJoinTeam = async () => {
   await checkJoinTeamDialog()
   await checkJoinTeamDialogCancel()
   await checkJoinTeamDialogPrivacyCancel()

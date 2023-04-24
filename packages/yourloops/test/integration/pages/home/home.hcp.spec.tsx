@@ -37,7 +37,7 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { testPatientListForHcp } from '../../use-cases/patients-visualisation-management'
 import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
@@ -65,7 +65,7 @@ describe('HCP home page', () => {
       invitationStatus: UserInvitationStatus.accepted
     }])
 
-    const appMainLayoutParams: AppMainLayoutParamsHcp = {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,
@@ -88,7 +88,7 @@ describe('HCP home page', () => {
   it('should render correctly and allow many features when scoped on a medical team', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
 
-    const appMainLayoutParams: AppMainLayoutParamsHcp = {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
         loggedInUserFullName: `${firstName} ${lastName}`,
