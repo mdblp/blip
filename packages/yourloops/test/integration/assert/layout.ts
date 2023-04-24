@@ -45,7 +45,7 @@ export const checkPatientLayout = async (fullName: string, needFooterLanguageSel
   checkFooterForPatient(needFooterLanguageSelector)
 }
 
-export const testPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayoutParams) => {
+export const checkPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayoutParams) => {
   const dashboard = within(await screen.findByTestId('patient-dashboard'))
   expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
   expect(dashboard.getByText('Patient statistics')).toBeVisible()

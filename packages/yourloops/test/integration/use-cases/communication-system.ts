@@ -26,17 +26,17 @@
  */
 
 import {
-  testChatWidgetMessageReadingHcp,
-  testChatWidgetMessageReadingPatient,
-  testChatWidgetMessageSending
+  checkChatWidgetMessageReadingHcp,
+  checkChatWidgetMessageReadingPatient,
+  checkChatWidgetMessageSending
 } from '../assert/chat-widget'
 import { mySecondTeamId, myThirdTeamId } from '../mock/team.api.mock'
 
 export const testChatWidgetForHcp = async (): Promise<void> => {
-  await testChatWidgetMessageReadingHcp()
-  await testChatWidgetMessageSending(myThirdTeamId)
+  await checkChatWidgetMessageReadingHcp()
+  await checkChatWidgetMessageSending(myThirdTeamId)
 }
 export const testChatWidgetForPatient = async (): Promise<void> => {
-  await testChatWidgetMessageReadingPatient()
-  await testChatWidgetMessageSending(mySecondTeamId)
+  await checkChatWidgetMessageReadingPatient()
+  await checkChatWidgetMessageSending(mySecondTeamId)
 }

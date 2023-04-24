@@ -76,7 +76,7 @@ export const testPatientListContentHcp = () => {
   expect(dataGridCurrentRows).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 }
 
-export const testAddPatientPrivateButtonTooltip = async () => {
+export const checkAddPatientPrivateButtonTooltip = async () => {
   const patientListHeader = screen.getByTestId('patient-list-header')
   const addPatientButton = within(patientListHeader).getByText('Add new patient')
   expect(addPatientButton).toBeVisible()
@@ -107,7 +107,7 @@ export const testPatientListHeaderCaregiver = () => {
   expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
 }
 
-export const testRemovePatientPrivateDialogContent = async () => {
+export const checkRemovePatientPrivateDialogContent = async () => {
   const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
   await userEvent.click(removeButton)
   const removeDialog = screen.getByRole('dialog')
@@ -126,7 +126,7 @@ export const testRemovePatientPrivateDialogContent = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testAddPatientMedicalTeamDialogContent = async () => {
+export const checkAddPatientMedicalTeamDialogContent = async () => {
   const patientListHeader = screen.getByTestId('patient-list-header')
   const addPatientButton = within(patientListHeader).getByText('Add new patient')
   expect(addPatientButton).toBeVisible()
@@ -152,7 +152,7 @@ export const testAddPatientMedicalTeamDialogContent = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testAddPatientMedicalTeamDialogInvite = async () => {
+export const checkAddPatientMedicalTeamDialogInvite = async () => {
   jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(null)
   const patientListHeader = screen.getByTestId('patient-list-header')
   const addPatientButton = within(patientListHeader).getByText('Add new patient')
@@ -206,7 +206,7 @@ export const testAddPatientMedicalTeamDialogInvite = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testRemovePatientMedicalTeamDialogContent = async () => {
+export const checkRemovePatientMedicalTeamDialogContent = async () => {
   const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
   expect(removeButton).toBeVisible()
 
@@ -229,7 +229,7 @@ export const testRemovePatientMedicalTeamDialogContent = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testRemovePatientMedicalTeamConfirm = async () => {
+export const checkRemovePatientMedicalTeamConfirm = async () => {
   const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
   expect(removeButton).toBeVisible()
 
@@ -247,7 +247,7 @@ export const testRemovePatientMedicalTeamConfirm = async () => {
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${myThirdTeamName}`)
 }
 
-export const testRemovePatientMedicalTeamError = async () => {
+export const checkRemovePatientMedicalTeamError = async () => {
   jest.spyOn(PatientApi, 'removePatient').mockRejectedValueOnce(Error('Remove patient error: This error was thrown by a mock on purpose'))
   const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
   await userEvent.click(removeButton)
@@ -266,7 +266,7 @@ export const testRemovePatientMedicalTeamError = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testRemovePatientPrivateConfirm = async () => {
+export const checkRemovePatientPrivateConfirm = async () => {
   const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
   await userEvent.click(removeButton)
   const removeDialog = screen.getByRole('dialog')
@@ -281,7 +281,7 @@ export const testRemovePatientPrivateConfirm = async () => {
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`Direct data sharing with ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} has been removed`)
 }
 
-export const testPatientListPendingTab = async (router: Router) => {
+export const checkPatientListPendingTab = async (router: Router) => {
   const pendingTab = screen.getByRole('tab', { name: 'Pending' })
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('patient-list-grid')
@@ -292,14 +292,14 @@ export const testPatientListPendingTab = async (router: Router) => {
   expect(router.state.location.pathname).toEqual('/home')
 }
 
-export const testPatientListCurrentTab = async () => {
+export const checkPatientListCurrentTab = async () => {
   const currentTab = screen.getByRole('tab', { name: 'Current' })
   await userEvent.click(currentTab)
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
 }
 
-export const testPatientListFilters = async () => {
+export const checkPatientListFilters = async () => {
   await changeTeamScope(myThirdTeamName, filtersTeamName)
 
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters deactivated: 6 patient(s) out of 6')
@@ -403,7 +403,7 @@ export const testPatientListFilters = async () => {
   expect(within(dataGridRow).getAllByRole('row')).toHaveLength(5)
 }
 
-export const testPatientColumnsFiltersContent = async () => {
+export const checkPatientColumnsFiltersContent = async () => {
   const columnSettingsButton = screen.getByTestId('column-settings-button')
 
   await userEvent.click(columnSettingsButton)
@@ -421,7 +421,7 @@ export const testPatientColumnsFiltersContent = async () => {
   expect(screen.queryByRole('presentation')).not.toBeInTheDocument()
 }
 
-export const testPatientColumnsFiltersHideColumns = async () => {
+export const checkPatientColumnsFiltersHideColumns = async () => {
   const columnSettingsButton = screen.getByTestId('column-settings-button')
 
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
@@ -491,7 +491,7 @@ export const testPatientColumnsFiltersHideColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 }
 
-export const testPatientColumnsFiltersShowColumns = async () => {
+export const checkPatientColumnsFiltersShowColumns = async () => {
   const columnSettingsButton = screen.getByTestId('column-settings-button')
 
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()

@@ -26,24 +26,24 @@
  */
 
 import {
+  checkPatientColumnsFiltersContent,
+  checkPatientColumnsFiltersHideColumns,
+  checkPatientColumnsFiltersShowColumns,
+  checkPatientListCurrentTab,
+  checkPatientListFilters,
+  checkPatientListPendingTab,
   type Router,
-  testPatientColumnsFiltersContent,
-  testPatientColumnsFiltersHideColumns,
-  testPatientColumnsFiltersShowColumns,
   testPatientListContentHcp,
-  testPatientListCurrentTab,
-  testPatientListFilters,
-  testPatientListHeaderHcp,
-  testPatientListPendingTab
+  testPatientListHeaderHcp
 } from '../assert/patient-list'
 
 export const testPatientsListForHcp = async (router: Router) => {
   testPatientListHeaderHcp()
   testPatientListContentHcp()
-  await testPatientListFilters()
-  await testPatientColumnsFiltersContent()
-  await testPatientColumnsFiltersHideColumns()
-  await testPatientColumnsFiltersShowColumns()
-  await testPatientListPendingTab(router)
-  await testPatientListCurrentTab()
+  await checkPatientListFilters()
+  await checkPatientColumnsFiltersContent()
+  await checkPatientColumnsFiltersHideColumns()
+  await checkPatientColumnsFiltersShowColumns()
+  await checkPatientListPendingTab(router)
+  await checkPatientListCurrentTab()
 }

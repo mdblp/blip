@@ -30,7 +30,7 @@ import { act, fireEvent, screen, within } from '@testing-library/react'
 import { PhonePrefixCode } from '../../../lib/utils'
 import userEvent from '@testing-library/user-event'
 
-export const testCreateCareTeamDialog = async () => {
+export const checkCreateCareTeamDialog = async () => {
   jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)

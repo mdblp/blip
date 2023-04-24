@@ -60,7 +60,7 @@ export const checkPatientNavBarAsPatient = () => {
   checkPatientNavBar(patientNavBar)
 }
 
-export const testPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
+export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   const initialPatientHeaderContent = `${initialPatient.profile.lastName}${initialPatient.profile.firstName} PatientDate of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)

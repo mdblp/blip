@@ -25,36 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { testPatientStatistics, testPatientStatisticsNoData } from '../assert/patient-statistics'
-import { type PatientDashboardLayoutParams, testPatientDashboardLayout } from '../assert/layout'
-import { testDeviceUsageWidget, testDeviceUsageWidgetNoData } from '../assert/device-usage'
+import { checkPatientStatistics, checkPatientStatisticsNoData } from '../assert/patient-statistics'
+import { type PatientDashboardLayoutParams, checkPatientDashboardLayout } from '../assert/layout'
+import { checkDeviceUsageWidget, checkDeviceUsageWidgetNoData } from '../assert/device-usage'
 import { monitoredPatient, unmonitoredPatient } from '../data/patient.api.data'
-import { testPatientDropdown, testPatientNavBar } from '../assert/patient-nav-bar'
-import { testMonitoringAlertCard } from '../assert/monitoring-alert'
+import { checkPatientDropdown, testPatientNavBar } from '../assert/patient-nav-bar'
+import { checkMonitoringAlertCard } from '../assert/monitoring-alert'
 
 export const testDashboardDataVisualisation = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
-  await testPatientDashboardLayout(patientDashboardLayoutParams)
-  await testPatientStatistics()
-  await testDeviceUsageWidget()
-  await testMonitoringAlertCard()
+  await checkPatientDashboardLayout(patientDashboardLayoutParams)
+  await checkPatientStatistics()
+  await checkDeviceUsageWidget()
+  await checkMonitoringAlertCard()
 }
 
 export const testDashboardDataVisualisationPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
-  await testPatientDashboardLayout(patientDashboardLayoutParams)
-  await testPatientStatistics()
-  await testDeviceUsageWidget()
+  await checkPatientDashboardLayout(patientDashboardLayoutParams)
+  await checkPatientStatistics()
+  await checkDeviceUsageWidget()
 }
 
 export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
-  await testPatientDashboardLayout(patientDashboardLayoutParams)
-  await testPatientStatisticsNoData()
-  await testDeviceUsageWidgetNoData()
+  await checkPatientDashboardLayout(patientDashboardLayoutParams)
+  await checkPatientStatisticsNoData()
+  await checkDeviceUsageWidgetNoData()
 }
 
 export const testPatientNavBarForHcp = async () => {
-  await testPatientDropdown(monitoredPatient, unmonitoredPatient)
+  await checkPatientDropdown(monitoredPatient, unmonitoredPatient)
 }
 
 export const testPatientNavBarForPatient = async () => {
-  await testPatientNavBar()
+  await testPatientNavBar() // To be renamed to "checkPatientNavBar" when the daily and trends page will be reorganized
 }

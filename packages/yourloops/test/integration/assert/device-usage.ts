@@ -30,7 +30,7 @@ import { checkTooltip } from './stats'
 import { YESTERDAY_DATE } from '../mock/data.api.mock'
 import userEvent from '@testing-library/user-event'
 
-export const testDeviceUsageWidget = async () => {
+export const checkDeviceUsageWidget = async () => {
   const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
   checkTooltip(deviceUsageWidget, 'Sensor Usage')
   expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage1%')
@@ -42,7 +42,7 @@ export const testDeviceUsageWidget = async () => {
   expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}9:40 pm`)
 }
 
-export const testDeviceUsageWidgetNoData = async () => {
+export const checkDeviceUsageWidgetNoData = async () => {
   const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
   checkTooltip(deviceUsageWidget, 'Sensor Usage')
   expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage0%')

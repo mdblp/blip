@@ -26,26 +26,26 @@
  */
 
 import {
-  testAddPatientMedicalTeamDialogContent,
-  testAddPatientMedicalTeamDialogInvite,
-  testAddPatientPrivateButtonTooltip,
-  testRemovePatientMedicalTeamConfirm,
-  testRemovePatientMedicalTeamDialogContent,
-  testRemovePatientMedicalTeamError,
-  testRemovePatientPrivateConfirm,
-  testRemovePatientPrivateDialogContent
+  checkAddPatientMedicalTeamDialogContent,
+  checkAddPatientMedicalTeamDialogInvite,
+  checkAddPatientPrivateButtonTooltip,
+  checkRemovePatientMedicalTeamConfirm,
+  checkRemovePatientMedicalTeamDialogContent,
+  checkRemovePatientMedicalTeamError,
+  checkRemovePatientPrivateConfirm,
+  checkRemovePatientPrivateDialogContent
 } from '../assert/patient-list'
 
 export const testPatientManagementPrivateTeam = async () => {
-  await testAddPatientPrivateButtonTooltip()
-  await testRemovePatientPrivateDialogContent()
-  await testRemovePatientPrivateConfirm()
+  await checkAddPatientPrivateButtonTooltip()
+  await checkRemovePatientPrivateDialogContent()
+  await checkRemovePatientPrivateConfirm()
 }
 
 export const testPatientManagementMedicalTeam = async () => {
-  await testRemovePatientMedicalTeamDialogContent()
-  await testRemovePatientMedicalTeamConfirm()
-  await testRemovePatientMedicalTeamError()
-  await testAddPatientMedicalTeamDialogContent()
-  await testAddPatientMedicalTeamDialogInvite()
+  await checkRemovePatientMedicalTeamDialogContent()
+  await checkRemovePatientMedicalTeamConfirm()
+  await checkRemovePatientMedicalTeamError()
+  await checkAddPatientMedicalTeamDialogContent()
+  await checkAddPatientMedicalTeamDialogInvite()
 }

@@ -27,7 +27,7 @@
 
 import { screen } from '@testing-library/react'
 
-export const testMonitoringAlertCard = async () => {
+export const checkMonitoringAlertCard = async () => {
   const monitoringAlertCard = screen.getByTestId('monitoring-alert-card')
   expect(monitoringAlertCard).toBeVisible()
   expect(monitoringAlertCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')

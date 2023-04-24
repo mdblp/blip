@@ -43,7 +43,7 @@ export interface MedicalFileWidgetParams {
 const MEDICAL_REPORT_TO_CREATE_ID = 'fakeMedicalReportId'
 const MEDICAL_REPORT_TO_CREATE_DATE = '01-01-2023'
 
-export const testMedicalReportCancel = async (medicalFilesWidget: HTMLElement): Promise<void> => {
+export const checkMedicalReportCancel = async (medicalFilesWidget: HTMLElement): Promise<void> => {
   const createMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'New' })
   await userEvent.click(createMedicalReportButton)
   const medicalReportDialog = screen.getByRole('dialog')
@@ -53,7 +53,7 @@ export const testMedicalReportCancel = async (medicalFilesWidget: HTMLElement): 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testMedicalReportCreate = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
+export const checkMedicalReportCreate = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
   const createMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: 'New' })
   await userEvent.click(createMedicalReportButton)
   const createdMedicalReportDialog = within(screen.getByRole('dialog'))
@@ -95,7 +95,7 @@ export const testMedicalReportCreate = async (medicalFilesWidget: HTMLElement, m
   expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-3 01-01-2023Created by HCP firstName HCP lastName${medicalFileWidgetParams.selectedTeamName}New`)
 }
 
-export const testMedicalReportUpdate = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
+export const checkMedicalReportUpdate = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
   const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Medical report-3 01-01-2023 Created by HCP firstName HCP lastName ${medicalFileWidgetParams.selectedTeamName}` })
   await userEvent.click(medicalReportButton)
   const createdMedicalReportDialogEdit = screen.getByRole('dialog')
@@ -129,7 +129,7 @@ export const testMedicalReportUpdate = async (medicalFilesWidget: HTMLElement, m
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testMedicalReportConsult = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
+export const checkMedicalReportConsult = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
   const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Medical report-2 2022-01-02 Created by Vishnou Lapaix ${medicalFileWidgetParams.selectedTeamName}` })
   await userEvent.click(medicalReportButton)
   const medicalReportDialog = screen.getByRole('dialog')
@@ -143,7 +143,7 @@ export const testMedicalReportConsult = async (medicalFilesWidget: HTMLElement, 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testMedicalReportDelete = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
+export const checkMedicalReportDelete = async (medicalFilesWidget: HTMLElement, medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
   const deleteMedicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Delete medical report 3 created by team ${medicalFileWidgetParams.selectedTeamName}` })
   await userEvent.click(deleteMedicalReportButton)
   const deleteDialog = screen.getByRole('dialog')

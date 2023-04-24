@@ -32,7 +32,7 @@ import { Unit } from 'medical-domain'
 import PatientApi from '../../../lib/patient/patient.api'
 import { myThirdTeamId } from '../mock/team.api.mock'
 
-export const testMonitoringAlertsDialogContentMgdl = async (): Promise<void> => {
+export const checkMonitoringAlertsDialogContentMgdl = async (): Promise<void> => {
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
   const dialog = screen.getByRole('dialog')
@@ -46,7 +46,7 @@ export const testMonitoringAlertsDialogContentMgdl = async (): Promise<void> => 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testMonitoringAlertsDialogContentMmol = async (): Promise<void> => {
+export const checkMonitoringAlertsDialogContentMmol = async (): Promise<void> => {
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
   const dialog = screen.getByRole('dialog')
@@ -59,7 +59,7 @@ export const testMonitoringAlertsDialogContentMmol = async (): Promise<void> => 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const testMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void> => {
+export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void> => {
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
   const dialog = within(screen.getByRole('dialog'))
@@ -139,7 +139,7 @@ export const testMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void> 
   expect(screen.getByText('Patient update succeeded')).toBeVisible()
 }
 
-export const testMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<void> => {
+export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<void> => {
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
   const dialog = within(screen.getByRole('dialog'))

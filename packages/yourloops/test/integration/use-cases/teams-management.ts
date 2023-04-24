@@ -31,7 +31,7 @@ import {
   checkJoinTeamDialogDisplayErrorMessage,
   checkJoinTeamDialogPrivacyCancel
 } from '../assert/join-team'
-import { testCreateCareTeamDialog } from '../assert/team-dialog'
+import { checkCreateCareTeamDialog } from '../assert/team-dialog'
 
 export const testJoinTeamDialog = async () => {
   await checkJoinTeamDialog()
@@ -41,5 +41,5 @@ export const testJoinTeamDialog = async () => {
 }
 
 export const testTeamCreation = async () => {
-  await testCreateCareTeamDialog()
+  await checkCreateCareTeamDialog()
 }

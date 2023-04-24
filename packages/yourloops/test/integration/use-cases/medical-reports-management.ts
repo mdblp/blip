@@ -28,11 +28,11 @@
 import { screen, within } from '@testing-library/react'
 import {
   type MedicalFileWidgetParams,
-  testMedicalReportCancel,
-  testMedicalReportConsult,
-  testMedicalReportCreate,
-  testMedicalReportDelete,
-  testMedicalReportUpdate
+  checkMedicalReportCancel,
+  checkMedicalReportConsult,
+  checkMedicalReportCreate,
+  checkMedicalReportDelete,
+  checkMedicalReportUpdate
 } from '../assert/medical-widget'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 
@@ -40,11 +40,11 @@ export const testMedicalWidgetForHcp = async (medicalFileWidgetParams: MedicalFi
   const dashboard = within(await screen.findByTestId('patient-dashboard'))
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
   expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}New`)
-  await testMedicalReportCancel(medicalFilesWidget)
-  await testMedicalReportCreate(medicalFilesWidget, medicalFileWidgetParams)
-  await testMedicalReportUpdate(medicalFilesWidget, medicalFileWidgetParams)
-  await testMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
-  await testMedicalReportDelete(medicalFilesWidget, medicalFileWidgetParams)
+  await checkMedicalReportCancel(medicalFilesWidget)
+  await checkMedicalReportCreate(medicalFilesWidget, medicalFileWidgetParams)
+  await checkMedicalReportUpdate(medicalFilesWidget, medicalFileWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
+  await checkMedicalReportDelete(medicalFilesWidget, medicalFileWidgetParams)
 }
 
 export const testMedicalWidgetForPatient = async (medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
@@ -53,5 +53,5 @@ export const testMedicalWidgetForPatient = async (medicalFileWidgetParams: Medic
   const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
   expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeam')
   expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical report 2022-01-02' })).not.toBeInTheDocument()
-  await testMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
 }

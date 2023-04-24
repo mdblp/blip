@@ -31,14 +31,14 @@ import userEvent from '@testing-library/user-event'
 import { monitoredPatientId } from '../data/patient.api.data'
 import ChatApi from '../../../lib/chat/chat.api'
 
-export const testChatWidgetMessageReadingHcp = async (): Promise<void> => {
+export const checkChatWidgetMessageReadingHcp = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
   expect(chatCard).toHaveTextContent('Messages (+1)This messages is in the team A - MyThirdTeam - to be deleted which is the best')
   expect(chatCard).toHaveTextContent('NewReplyPrivate')
 }
 
-export const testChatWidgetMessageReadingPatient = async (): Promise<void> => {
+export const checkChatWidgetMessageReadingPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
   expect(chatCard).toHaveTextContent('Messages MyFirstTeamThis is a message sent to the team MyFirstTeam')
@@ -48,7 +48,7 @@ export const testChatWidgetMessageReadingPatient = async (): Promise<void> => {
   expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeamThis is a message sent from the team MySecondTeam')
 }
 
-export const testChatWidgetMessageSending = async (teamId): Promise<void> => {
+export const checkChatWidgetMessageSending = async (teamId): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
   const chatInput = within(chatCard).getByRole('textbox')

@@ -28,7 +28,7 @@
 import { screen, within } from '@testing-library/react'
 import { checkTooltip } from './stats'
 
-export const testPatientStatistics = async () => {
+export const checkPatientStatistics = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   checkTooltip(patientStatistics, 'Time In Range')
   checkTooltip(patientStatistics, 'Standard Deviation')
@@ -47,7 +47,7 @@ export const testPatientStatistics = async () => {
   expect(patientStatistics.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage1%')
 }
 
-export const testPatientStatisticsNoData = async () => {
+export const checkPatientStatisticsNoData = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   checkTooltip(patientStatistics, 'Time In Range')
   checkTooltip(patientStatistics, 'Standard Deviation')

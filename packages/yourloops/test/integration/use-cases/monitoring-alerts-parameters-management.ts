@@ -26,16 +26,16 @@
  */
 
 import {
-  testMonitoringAlertsDialogContentMgdl, testMonitoringAlertsDialogContentMmol,
-  testMonitoringAlertsDialogDefaultButtonMgdl, testMonitoringAlertsDialogSaveButtonMmol
+  checkMonitoringAlertsDialogContentMgdl, checkMonitoringAlertsDialogContentMmol,
+  checkMonitoringAlertsDialogDefaultButtonMgdl, checkMonitoringAlertsDialogSaveButtonMmol
 } from '../assert/monitoring-alerts-parameters'
 
 export const testMonitoringAlertsParametersConfigurationDialogMgdl = async (): Promise<void> => {
-  await testMonitoringAlertsDialogContentMgdl()
-  await testMonitoringAlertsDialogDefaultButtonMgdl()
+  await checkMonitoringAlertsDialogContentMgdl()
+  await checkMonitoringAlertsDialogDefaultButtonMgdl()
 }
 
 export const testMonitoringAlertsParametersConfigurationDialogMmol = async (): Promise<void> => {
-  await testMonitoringAlertsDialogContentMmol()
-  await testMonitoringAlertsDialogSaveButtonMmol()
+  await checkMonitoringAlertsDialogContentMmol()
+  await checkMonitoringAlertsDialogSaveButtonMmol()
 }
