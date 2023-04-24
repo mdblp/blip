@@ -31,7 +31,7 @@ import { usePatientListProviderHook } from '../../../../lib/providers/patient-li
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
-import { PatientListColumns } from '../../../../components/patient-list/enums/patient-list.enum'
+import { PatientListColumns } from '../../../../components/patient-list/models/enums/patient-list.enum'
 
 jest.mock('../../../../lib/auth')
 describe('usePatientListProviderHook', () => {
@@ -61,7 +61,7 @@ describe('usePatientListProviderHook', () => {
       return {
         user: {
           isUserHcp: () => true,
-          preferences: { patientsListSortedOptionalColumns: ['system', 'severe-hypoglycemia', 'last-data-update', 'messages'] }
+          preferences: { patientsListSortedOptionalColumns: ['system', 'last-data-update', 'messages'] }
         } as User,
         updatePreferences: updatePreferencesMock
       }
@@ -128,9 +128,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: false,
-        [PatientListColumns.SevereHypoglycemia]: false,
-        [PatientListColumns.DataNotTransferred]: false,
+        [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.LastDataUpdate]: false,
         [PatientListColumns.Messages]: false,
         [PatientListColumns.Actions]: true
@@ -152,9 +150,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: false,
-        [PatientListColumns.SevereHypoglycemia]: true,
-        [PatientListColumns.DataNotTransferred]: false,
+        [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Messages]: true,
         [PatientListColumns.Actions]: true
@@ -177,9 +173,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: false,
-        [PatientListColumns.SevereHypoglycemia]: false,
-        [PatientListColumns.DataNotTransferred]: false,
+        [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Messages]: false,
         [PatientListColumns.Actions]: true
@@ -201,9 +195,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: true,
-        [PatientListColumns.SevereHypoglycemia]: true,
-        [PatientListColumns.DataNotTransferred]: true,
+        [PatientListColumns.MonitoringAlerts]: true,
         [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Messages]: true,
         [PatientListColumns.Actions]: true

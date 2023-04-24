@@ -34,9 +34,6 @@ import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import Box from '@mui/material/Box'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { type PatientsFilters } from '../../lib/providers/models/patients-filters.model'
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import SubdirectoryArrowLeftIcon from '@mui/icons-material/SubdirectoryArrowLeft'
 import FlagIcon from '@mui/icons-material/Flag'
 import Popover from '@mui/material/Popover'
 import { useTheme } from '@mui/material/styles'
@@ -45,6 +42,9 @@ import { makeStyles } from 'tss-react/mui'
 import { PatientListOptionToggle } from './patient-list-option-toggle'
 import Divider from '@mui/material/Divider'
 import DialogActions from '@mui/material/DialogActions'
+import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-range-icon'
+import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
+import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 
 interface PatientsFiltersDialogProps {
   anchorEl: Element
@@ -107,7 +107,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
         <PatientListOptionToggle
           ariaLabel={t('filter-out-of-range')}
           checked={filters.timeOutOfTargetEnabled}
-          icon={<UnfoldMoreIcon />}
+          icon={<TimeSpentOufOfRangeIcon />}
           label={t('time-out-of-range-target')}
           onToggleChange={() => {
             setFilters({ ...filters, timeOutOfTargetEnabled: !filters.timeOutOfTargetEnabled })
@@ -116,7 +116,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
         <PatientListOptionToggle
           ariaLabel={t('filter-hypoglycemia')}
           checked={filters.hypoglycemiaEnabled}
-          icon={<ArrowDownwardIcon />}
+          icon={<HypoglycemiaIcon />}
           label={t('hypoglycemia')}
           onToggleChange={() => {
             setFilters({ ...filters, hypoglycemiaEnabled: !filters.hypoglycemiaEnabled })
@@ -125,7 +125,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
         <PatientListOptionToggle
           ariaLabel={t('filter-data-not-transferred')}
           checked={filters.dataNotTransferredEnabled}
-          icon={<SubdirectoryArrowLeftIcon />}
+          icon={<NoDataIcon />}
           label={t('data-not-transferred')}
           onToggleChange={() => {
             setFilters({ ...filters, dataNotTransferredEnabled: !filters.dataNotTransferredEnabled })

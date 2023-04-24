@@ -25,26 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkPatientColumnsFiltersContent,
-  checkPatientColumnsFiltersHideColumns,
-  checkPatientColumnsFiltersShowColumns,
-  checkPatientListCurrentTab,
-  checkPatientListFilters,
-  checkPatientListPendingTab, checkPatientListTooltips,
-  type Router,
-  testPatientListContentHcp,
-  testPatientListHeaderHcp
-} from '../assert/patient-list'
+export enum PatientListTabs {
+  Current,
+  Pending
+}
 
-export const testPatientListForHcp = async (router: Router) => {
-  testPatientListHeaderHcp()
-  testPatientListContentHcp()
-  await checkPatientListTooltips()
-  await checkPatientListFilters()
-  await checkPatientColumnsFiltersContent()
-  await checkPatientColumnsFiltersHideColumns()
-  await checkPatientColumnsFiltersShowColumns()
-  await checkPatientListPendingTab(router)
-  await checkPatientListCurrentTab()
+export enum PatientListColumns {
+  Actions = 'actions',
+  Flag = 'flag',
+  LastDataUpdate = 'last-data-update',
+  Messages = 'messages',
+  MonitoringAlerts = 'monitoring-alerts',
+  Patient = 'patient',
+  System = 'system',
 }

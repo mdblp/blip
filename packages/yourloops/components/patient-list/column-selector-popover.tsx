@@ -35,7 +35,7 @@ import Divider from '@mui/material/Divider'
 import DialogActions from '@mui/material/DialogActions'
 import CardContent from '@mui/material/CardContent'
 import { PatientListOptionToggle } from './patient-list-option-toggle'
-import { PatientListColumns } from './enums/patient-list.enum'
+import { PatientListColumns } from './models/enums/patient-list.enum'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../../lib/auth'
@@ -69,23 +69,13 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       tooltip: t('un-removable-column')
     },
     {
+      name: PatientListColumns.MonitoringAlerts,
+      checked: updatedColumnsModel[PatientListColumns.MonitoringAlerts],
+      hcpOnly: true
+    },
+    {
       name: PatientListColumns.System,
       checked: updatedColumnsModel[PatientListColumns.System]
-    },
-    {
-      name: PatientListColumns.TimeOutOfRange,
-      checked: updatedColumnsModel[PatientListColumns.TimeOutOfRange],
-      hcpOnly: true
-    },
-    {
-      name: PatientListColumns.DataNotTransferred,
-      checked: updatedColumnsModel[PatientListColumns.DataNotTransferred],
-      hcpOnly: true
-    },
-    {
-      name: PatientListColumns.SevereHypoglycemia,
-      checked: updatedColumnsModel[PatientListColumns.SevereHypoglycemia],
-      hcpOnly: true
     },
     {
       name: PatientListColumns.LastDataUpdate,

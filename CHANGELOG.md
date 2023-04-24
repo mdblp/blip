@@ -14,6 +14,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2160 Patient list new design
 - YLP-2172 Display patients count on patients list
 - YLP-2175 Implement new design system
+- YLP-2183 Merging monitoring alerts into 1 column in the patient list (step 1)
+- YLP-2184 Merging monitoring alerts into 1 column in the patient list (step 2)
+- YLP-2185 Merging monitoring alerts into 1 column in the patient list (step 3)
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
 - YLP-2215 Implement specific daily visualisation of UMM bolus

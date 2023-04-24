@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { monitoredPatient, pendingPatient, unmonitoredPatient } from '../data/patient.api.data'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
@@ -73,7 +73,7 @@ export const checkPatientListHeaderCaregiver = () => {
 export const testPatientListContentHcp = () => {
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-  expect(dataGridCurrentRows).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 }
 
 export const checkAddPatientPrivateButtonTooltip = async () => {
@@ -286,7 +286,7 @@ export const checkPatientListPendingTab = async (router: Router) => {
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridPendingRows).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsPending invitationPending PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+  expect(dataGridPendingRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
   expect(router.state.location.pathname).toEqual('/home')
@@ -306,7 +306,7 @@ export const checkPatientListFilters = async () => {
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
   const dataGridRow = screen.getByTestId('patient-list-grid')
   expect(within(dataGridRow).getAllByRole('row')).toHaveLength(7)
-  expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG110%20%30%N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG110%20%30%N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG110%20%30%N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG110%20%30%N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
+  expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
 
   // Check the default values
   const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -320,7 +320,7 @@ export const checkPatientListFilters = async () => {
   // check the manual flag toggle
   await updatePatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
-  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Unflag patient flagged@patient.frFlagged PatientDBLG110%20%30%N/ANo new messages')
+  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Unflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messages')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
 
@@ -330,7 +330,7 @@ export const checkPatientListFilters = async () => {
     manualFlagFilterToggle: true,
     telemonitoredFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messages')
+  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messages')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, telemonitoredFilterToggle: true })
 
@@ -340,7 +340,7 @@ export const checkPatientListFilters = async () => {
     telemonitoredFilterToggle: true,
     outOfRangeFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientDBLG110%20%30%N/ANo new messages')
+  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messages')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, outOfRangeFilterToggle: true })
 
@@ -350,7 +350,7 @@ export const checkPatientListFilters = async () => {
     outOfRangeFilterToggle: true,
     hypoglycemiaFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientDBLG110%20%30%N/ANo new messages')
+  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messages')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, hypoglycemiaFilterToggle: true })
 
@@ -360,7 +360,7 @@ export const checkPatientListFilters = async () => {
     hypoglycemiaFilterToggle: true,
     dataNotTransferredFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient no-data@patient.frNo Data PatientDBLG110%20%30%N/ANo new messages')
+  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messages')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, dataNotTransferredFilterToggle: true })
 
@@ -370,7 +370,7 @@ export const checkPatientListFilters = async () => {
     dataNotTransferredFilterToggle: true,
     unreadMessagesFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient unread-messages@patient.frUnread Messages PatientDBLG110%20%30%N/AThe patient has sent you new messages')
+  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messages')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, unreadMessagesFilterToggle: true })
 
@@ -386,7 +386,7 @@ export const checkPatientListFilters = async () => {
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
 
   expect(within(dataGridRow).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsPending invitationPending PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+  expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
 
   await changeTeamScope(filtersTeamName, myThirdTeamName)
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, myThirdTeamId)
@@ -409,7 +409,7 @@ export const checkPatientColumnsFiltersContent = async () => {
   await userEvent.click(columnSettingsButton)
 
   const columnSettingsPopover = screen.getByRole('presentation')
-  expect(columnSettingsPopover).toHaveTextContent('Show columnPatientSystemTime spent out of rangeData not transferredSevere hypoglycemiaLast data updateMessagesCancelApply')
+  expect(columnSettingsPopover).toHaveTextContent('Show columnPatientMonitoring alertsSystemLast data updateMessagesCancelApply')
 
   const disabledToggle = screen.getByLabelText('This column cannot be removed')
   await userEvent.hover(disabledToggle)
@@ -425,10 +425,8 @@ export const checkPatientColumnsFiltersHideColumns = async () => {
   const columnSettingsButton = screen.getByTestId('column-settings-button')
 
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Time spent out of the target range' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Severe hypoglycemia' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Data not transferred' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
@@ -449,32 +447,24 @@ export const checkPatientColumnsFiltersHideColumns = async () => {
   expect(columnSettingsPopover).toBeVisible()
 
   const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('checkbox')
+  const monitoringAlertsToggle = within(within(columnSettingsPopover).getByLabelText('Monitoring alerts')).getByRole('checkbox')
   const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('checkbox')
-  const outOfRangeToggle = within(within(columnSettingsPopover).getByLabelText('Time spent out of range')).getByRole('checkbox')
-  const dataToggle = within(within(columnSettingsPopover).getByLabelText('Data not transferred')).getByRole('checkbox')
-  const hypoToggle = within(within(columnSettingsPopover).getByLabelText('Severe hypoglycemia')).getByRole('checkbox')
   const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('checkbox')
   const messagesToggle = within(within(columnSettingsPopover).getByLabelText('Messages')).getByRole('checkbox')
 
   expect(patientToggle).toHaveProperty('checked', true)
   expect(patientToggle).toHaveProperty('disabled', true)
   expect(systemToggle).toHaveProperty('checked', true)
-  expect(outOfRangeToggle).toHaveProperty('checked', true)
-  expect(dataToggle).toHaveProperty('checked', true)
-  expect(hypoToggle).toHaveProperty('checked', true)
+  expect(monitoringAlertsToggle).toHaveProperty('checked', true)
   expect(lastUpdateToggle).toHaveProperty('checked', true)
   expect(messagesToggle).toHaveProperty('checked', true)
 
   await userEvent.click(systemToggle)
-  await userEvent.click(outOfRangeToggle)
-  await userEvent.click(dataToggle)
-  await userEvent.click(hypoToggle)
+  await userEvent.click(monitoringAlertsToggle)
   await userEvent.click(lastUpdateToggle)
   await userEvent.click(messagesToggle)
   expect(systemToggle).toHaveProperty('checked', false)
-  expect(outOfRangeToggle).toHaveProperty('checked', false)
-  expect(dataToggle).toHaveProperty('checked', false)
-  expect(hypoToggle).toHaveProperty('checked', false)
+  expect(monitoringAlertsToggle).toHaveProperty('checked', false)
   expect(lastUpdateToggle).toHaveProperty('checked', false)
   expect(messagesToggle).toHaveProperty('checked', false)
 
@@ -482,10 +472,8 @@ export const checkPatientColumnsFiltersHideColumns = async () => {
 
   expect(columnSettingsPopover).not.toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Monitoring alerts' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Time spent out of the target range' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Severe hypoglycemia' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Data not transferred' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Messages' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
@@ -495,10 +483,8 @@ export const checkPatientColumnsFiltersShowColumns = async () => {
   const columnSettingsButton = screen.getByTestId('column-settings-button')
 
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Monitoring alerts' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Time spent out of the target range' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Severe hypoglycemia' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Data not transferred' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Messages' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
@@ -509,32 +495,24 @@ export const checkPatientColumnsFiltersShowColumns = async () => {
   expect(columnSettingsPopover).toBeVisible()
 
   const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('checkbox')
+  const monitoringAlertsToggle = within(within(columnSettingsPopover).getByLabelText('Monitoring alerts')).getByRole('checkbox')
   const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('checkbox')
-  const outOfRangeToggle = within(within(columnSettingsPopover).getByLabelText('Time spent out of range')).getByRole('checkbox')
-  const dataToggle = within(within(columnSettingsPopover).getByLabelText('Data not transferred')).getByRole('checkbox')
-  const hypoToggle = within(within(columnSettingsPopover).getByLabelText('Severe hypoglycemia')).getByRole('checkbox')
   const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('checkbox')
   const messagesToggle = within(within(columnSettingsPopover).getByLabelText('Messages')).getByRole('checkbox')
 
   expect(patientToggle).toHaveProperty('checked', true)
   expect(patientToggle).toHaveProperty('disabled', true)
   expect(systemToggle).toHaveProperty('checked', false)
-  expect(outOfRangeToggle).toHaveProperty('checked', false)
-  expect(dataToggle).toHaveProperty('checked', false)
-  expect(hypoToggle).toHaveProperty('checked', false)
+  expect(monitoringAlertsToggle).toHaveProperty('checked', false)
   expect(lastUpdateToggle).toHaveProperty('checked', false)
   expect(messagesToggle).toHaveProperty('checked', false)
 
   await userEvent.click(systemToggle)
-  await userEvent.click(outOfRangeToggle)
-  await userEvent.click(dataToggle)
-  await userEvent.click(hypoToggle)
+  await userEvent.click(monitoringAlertsToggle)
   await userEvent.click(lastUpdateToggle)
   await userEvent.click(messagesToggle)
   expect(systemToggle).toHaveProperty('checked', true)
-  expect(outOfRangeToggle).toHaveProperty('checked', true)
-  expect(dataToggle).toHaveProperty('checked', true)
-  expect(hypoToggle).toHaveProperty('checked', true)
+  expect(monitoringAlertsToggle).toHaveProperty('checked', true)
   expect(lastUpdateToggle).toHaveProperty('checked', true)
   expect(messagesToggle).toHaveProperty('checked', true)
 
@@ -544,10 +522,69 @@ export const checkPatientColumnsFiltersShowColumns = async () => {
   expect(screen.queryByRole('presentation')).not.toBeInTheDocument()
 
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Time spent out of the target range' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Severe hypoglycemia' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Data not transferred' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+}
+
+export const checkPatientListTooltips = async (): Promise<void> => {
+  const dataGridRows = screen.getByTestId('patient-list-grid')
+  expect(dataGridRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+  const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
+  const tooltipText = 'Hover over the icons to learn more'
+  expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
+  await userEvent.hover(monitoringAlertsColumnHeader)
+  expect(await screen.findByText(tooltipText)).toBeVisible()
+  await userEvent.unhover(monitoringAlertsColumnHeader)
+  expect(screen.queryByText(tooltipText)).not.toBeVisible()
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowTimeSpentOutOfRangeIcon = within(dataGridRows).getAllByTestId('time-spent-out-of-range-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowTimeSpentOutOfRangeIcon)
+  const timeSpentOutOfRangeTooltip = await screen.findByRole('tooltip')
+  expect(timeSpentOutOfRangeTooltip).toBeVisible()
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('By default, this alert threshold is set to:')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('>25% time spent away from target over the given period.')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('This value can be modified either at the level of all remotely monitored patients, or patient by patient.')
+  await userEvent.unhover(firstRowTimeSpentOutOfRangeIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowHypoglycemiaIcon = within(dataGridRows).getAllByTestId('hypoglycemia-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowHypoglycemiaIcon)
+  const hypoglycemiaTooltip = await screen.findByRole('tooltip')
+  expect(hypoglycemiaTooltip).toBeVisible()
+  expect(hypoglycemiaTooltip).toHaveTextContent('By default, this alert threshold is set to: >5% of severe hypoglycemia over the given period. This value can be modified either at the level of all remotely monitored patients, or patient by patient.')
+  await userEvent.unhover(firstRowHypoglycemiaIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowNoDataIcon = within(dataGridRows).getAllByTestId('no-data-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowNoDataIcon)
+  const noDataTooltip = await screen.findByRole('tooltip')
+  expect(noDataTooltip).toBeVisible()
+  expect(noDataTooltip).toHaveTextContent('By default, this alert threshold is set to: >50% of non transmission data over the given period. This value can be modified either at the level of all remotely monitored patients, or patient by patient.')
+  await userEvent.unhover(firstRowNoDataIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowMessageIcon = within(dataGridRows).getAllByTestId('message-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowMessageIcon)
+  const messageTooltip = await screen.findByRole('tooltip')
+  expect(messageTooltip).toBeVisible()
+  expect(messageTooltip).toHaveTextContent('No new messages')
+  await userEvent.unhover(firstRowMessageIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 }
