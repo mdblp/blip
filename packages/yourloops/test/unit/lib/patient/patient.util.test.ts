@@ -49,25 +49,25 @@ const defaultPatientFilters = {
   messagesEnabled: false
 }
 
-const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', [], UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
+const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   timeSpentAwayFromTargetActive: true
 })
-const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', [], UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
+const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   frequencyOfSevereHypoglycemiaActive: true
 })
-const patientWithNoDataAlert = createPatient('noData', [], UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
+const patientWithNoDataAlert = createPatient('noData', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   nonDataTransmissionActive: true
 })
-const noAlersPatient = createPatient('nothing', [], UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, defaultMonitoringAlerts)
+const noAlersPatient = createPatient('nothing', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, defaultMonitoringAlerts)
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
     it('should return patients with the correct flagged attribute', () => {
       const patientFlaggedId = 'flaggedPatient'
-      const patients: Patient[] = [createPatient(patientFlaggedId, [], UserInvitationStatus.accepted), createPatient('fakePatient1', [], UserInvitationStatus.accepted), createPatient('fakePatient2', [], UserInvitationStatus.accepted)]
+      const patients: Patient[] = [createPatient(patientFlaggedId, UserInvitationStatus.accepted), createPatient('fakePatient1', UserInvitationStatus.accepted), createPatient('fakePatient2', UserInvitationStatus.accepted)]
       const flaggedPatientIds = [patientFlaggedId]
       const patientsUpdated = PatientUtils.computeFlaggedPatients(patients, flaggedPatientIds)
       patientsUpdated.forEach(patient => {
@@ -77,9 +77,9 @@ describe('Patient utils', () => {
   })
 
   describe('getAllPatients and getPendingPatients', () => {
-    const acceptedPatient1 = createPatient('acceptedPatient1', [], UserInvitationStatus.accepted)
-    const acceptedPatient2 = createPatient('acceptedPatient2', [], UserInvitationStatus.accepted)
-    const pendingPatient = createPatient('pendingPatient', [], UserInvitationStatus.pending)
+    const acceptedPatient1 = createPatient('acceptedPatient1', UserInvitationStatus.accepted)
+    const acceptedPatient2 = createPatient('acceptedPatient2', UserInvitationStatus.accepted)
+    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending)
 
     it('should return all the patients of the selected team without pending patients', () => {
       const result = PatientUtils.getNonPendingPatients([acceptedPatient1, acceptedPatient2, pendingPatient])
@@ -94,13 +94,13 @@ describe('Patient utils', () => {
 
   describe('isInvitationPending', () => {
     it('should return true when patient invitation is pending', () => {
-      const patient = createPatient('fakePatientId', [], UserInvitationStatus.pending)
+      const patient = createPatient('fakePatientId', UserInvitationStatus.pending)
       const result = PatientUtils.isInvitationPending(patient)
       expect(result).toBeTruthy()
     })
 
     it('should return false when patient invitation is accepted', () => {
-      const patient = createPatient('fakePatientId', [], UserInvitationStatus.accepted)
+      const patient = createPatient('fakePatientId', UserInvitationStatus.accepted)
       const result = PatientUtils.isInvitationPending(patient)
       expect(result).toBeFalsy()
     })
@@ -177,10 +177,10 @@ describe('Patient utils', () => {
   })
 
   describe('extractPatients', () => {
-    const pendingPatient = createPatient('pendingPatient', [], UserInvitationStatus.pending, undefined, undefined, undefined, undefined, undefined, undefined)
-    const monitoredPatient = createPatient('monitoredPatient', [], UserInvitationStatus.accepted, undefined, { enabled: true }, undefined, undefined, undefined, undefined)
-    const flaggedPatient = createPatient('flaggedPatient', [], UserInvitationStatus.accepted, undefined, null, undefined, undefined, undefined, undefined)
-    const unreadMessagesPatient = createPatient('unreadMessagesPatient', [], UserInvitationStatus.accepted, undefined, null, undefined, undefined, { hasSentUnreadMessages: true }, undefined)
+    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, undefined, undefined, undefined, undefined, undefined)
+    const monitoredPatient = createPatient('monitoredPatient', UserInvitationStatus.accepted, undefined, { enabled: true }, undefined, undefined, undefined, undefined)
+    const flaggedPatient = createPatient('flaggedPatient', UserInvitationStatus.accepted, undefined, null, undefined, undefined, undefined, undefined)
+    const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInvitationStatus.accepted, undefined, null, undefined, undefined, { hasSentUnreadMessages: true }, undefined)
     const patients = [noAlersPatient, pendingPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlersPatient, flaggedPatient]
     const flaggedPatientsIds = [flaggedPatient.userid]
 

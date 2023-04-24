@@ -99,7 +99,6 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       hasSentUnreadMessages: iTeamMember.unreadMessages > 0
     },
     monitoring: iTeamMember.monitoring,
-    teamIds: [iTeamMember.teamId],
     invitationStatus: iTeamMember.invitationStatus,
     monitoringStatus: iTeamMember.monitoring?.status,
     userid: iTeamMember.userId
