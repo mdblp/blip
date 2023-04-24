@@ -147,7 +147,7 @@ describe('HCP home page', () => {
 
     const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
     expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-    expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmol.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 
     await checkPatientListTooltips(dataGridCurrentRows)
 
@@ -196,7 +196,7 @@ describe('HCP home page', () => {
     expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(7)
-    expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsUnflag patient flagged@patient.frFlagged Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient no-data@patient.frNo Data Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
+    expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
 
     // Check the default values
     const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -210,7 +210,7 @@ describe('HCP home page', () => {
     // check the manual flag toggle
     await updatePatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
     expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Unflag patient flagged@patient.frFlagged Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Unflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
 
@@ -220,7 +220,7 @@ describe('HCP home page', () => {
       manualFlagFilterToggle: true,
       telemonitoredFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, telemonitoredFilterToggle: true })
 
@@ -230,7 +230,7 @@ describe('HCP home page', () => {
       telemonitoredFilterToggle: true,
       outOfRangeFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, outOfRangeFilterToggle: true })
 
@@ -240,7 +240,7 @@ describe('HCP home page', () => {
       outOfRangeFilterToggle: true,
       hypoglycemiaFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient hypoglycemia@patient.frHypoglycemia Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, hypoglycemiaFilterToggle: true })
 
@@ -250,7 +250,7 @@ describe('HCP home page', () => {
       hypoglycemiaFilterToggle: true,
       dataNotTransferredFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient no-data@patient.frNo Data Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, dataNotTransferredFilterToggle: true })
 
@@ -260,7 +260,7 @@ describe('HCP home page', () => {
       dataNotTransferredFilterToggle: true,
       unreadMessagesFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient unread-messages@patient.frUnread Messages Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/AThe patient has sent you new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, unreadMessagesFilterToggle: true })
 
@@ -276,7 +276,7 @@ describe('HCP home page', () => {
     expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
 
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(2)
-    expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
   })
 
   it('should display a list of pending patient and not be able to click on it, then redirect to patient dashboard when clicking on a current patient', async () => {
@@ -292,7 +292,7 @@ describe('HCP home page', () => {
     await userEvent.click(pendingTab)
     const dataGridPendingRows = screen.getByTestId('patient-list-grid')
     expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
-    expect(dataGridPendingRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridPendingRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
 
     await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
     expect(router.state.location.pathname).toEqual('/home')
