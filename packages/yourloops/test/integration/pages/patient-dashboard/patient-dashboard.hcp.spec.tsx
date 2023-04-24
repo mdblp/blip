@@ -50,7 +50,7 @@ import {
   testPatientNavBarForHcp
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
-import { type MedicalFileWidgetParams } from '../../assert/medical-widget'
+import { type MedicalFilesWidgetParams } from '../../assert/medical-widget'
 import {
   testMonitoringAlertsParametersConfigurationDialogMgdl,
   testMonitoringAlertsParametersConfigurationDialogMmol
@@ -100,7 +100,7 @@ describe('Patient dashboard for HCP', () => {
       isMonitoringAlertCardVisible: true
     }
 
-    const medicalFileWidgetParams: MedicalFileWidgetParams = {
+    const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: monitoredPatientId,
       loggedInUserFirstName: firstName,
       loggedInUserLastName: lastName,
@@ -115,7 +115,7 @@ describe('Patient dashboard for HCP', () => {
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testDashboardDataVisualisation(patientDashboardLayoutParams)
     await testPatientNavBarForHcp()
-    await testMedicalWidgetForHcp(medicalFileWidgetParams)
+    await testMedicalWidgetForHcp(medicalFilesWidgetParams)
     await testMonitoringAlertsParametersConfigurationDialogMgdl()
     await testChatWidgetForHcp()
   })

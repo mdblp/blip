@@ -26,10 +26,10 @@
  */
 
 import { checkPatientStatistics, checkPatientStatisticsNoData } from '../assert/patient-statistics'
-import { type PatientDashboardLayoutParams, checkPatientDashboardLayout } from '../assert/layout'
+import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout'
 import { checkDeviceUsageWidget, checkDeviceUsageWidgetNoData } from '../assert/device-usage'
 import { monitoredPatient, unmonitoredPatient } from '../data/patient.api.data'
-import { checkPatientDropdown, testPatientNavBar } from '../assert/patient-nav-bar'
+import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar'
 import { checkMonitoringAlertCard } from '../assert/monitoring-alert'
 
 export const testDashboardDataVisualisation = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
@@ -56,5 +56,5 @@ export const testPatientNavBarForHcp = async () => {
 }
 
 export const testPatientNavBarForPatient = async () => {
-  await testPatientNavBar() // To be renamed to "checkPatientNavBar" when the daily and trends page will be reorganized
+  await checkPatientNavBarForPatient()
 }

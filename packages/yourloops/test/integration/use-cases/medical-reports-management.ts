@@ -25,33 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
 import {
-  type MedicalFileWidgetParams,
   checkMedicalReportCancel,
   checkMedicalReportConsult,
+  checkMedicalReportContentHcp,
+  checkMedicalReportContentPatient,
   checkMedicalReportCreate,
   checkMedicalReportDelete,
-  checkMedicalReportUpdate
+  checkMedicalReportUpdate,
+  type MedicalFilesWidgetParams
 } from '../assert/medical-widget'
-import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 
-export const testMedicalWidgetForHcp = async (medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
-  const dashboard = within(await screen.findByTestId('patient-dashboard'))
-  const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}New`)
-  await checkMedicalReportCancel(medicalFilesWidget)
-  await checkMedicalReportCreate(medicalFilesWidget, medicalFileWidgetParams)
-  await checkMedicalReportUpdate(medicalFilesWidget, medicalFileWidgetParams)
-  await checkMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
-  await checkMedicalReportDelete(medicalFilesWidget, medicalFileWidgetParams)
+export const testMedicalWidgetForHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+  await checkMedicalReportContentHcp(medicalFilesWidgetParams)
+  await checkMedicalReportCancel()
+  await checkMedicalReportCreate(medicalFilesWidgetParams)
+  await checkMedicalReportUpdate(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams)
+  await checkMedicalReportDelete(medicalFilesWidgetParams)
 }
 
-export const testMedicalWidgetForPatient = async (medicalFileWidgetParams: MedicalFileWidgetParams): Promise<void> => {
-  expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(medicalFileWidgetParams.selectedPatientId, null)
-  const dashboard = within(screen.getByTestId('patient-dashboard'))
-  const medicalFilesWidget = dashboard.getByTestId('medical-files-card')
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeam')
-  expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical report 2022-01-02' })).not.toBeInTheDocument()
-  await checkMedicalReportConsult(medicalFilesWidget, medicalFileWidgetParams)
+export const testMedicalWidgetForPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+  await checkMedicalReportContentPatient(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams)
 }

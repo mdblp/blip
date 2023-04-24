@@ -30,7 +30,7 @@ import { renderPage } from '../../utils/render'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { type MedicalFileWidgetParams } from '../../assert/medical-widget'
+import { type MedicalFilesWidgetParams } from '../../assert/medical-widget'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import {
@@ -89,7 +89,7 @@ describe('Patient dashboard for HCP', () => {
       isMonitoringAlertCardVisible: true
     }
 
-    const medicalWidgetParams: MedicalFileWidgetParams = {
+    const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: monitoredPatientId,
       loggedInUserFirstName: monitoredPatient.profile.firstName,
       loggedInUserLastName: monitoredPatient.profile.lastName,
@@ -106,7 +106,7 @@ describe('Patient dashboard for HCP', () => {
     await testAppMainLayoutForPatient(appMainLayoutParams)
     await testDashboardDataVisualisation(patientDashboardLayoutParams)
     await testPatientNavBarForPatient()
-    await testMedicalWidgetForPatient(medicalWidgetParams)
+    await testMedicalWidgetForPatient(medicalFilesWidgetParams)
     await testChatWidgetForPatient()
     await testJoinTeamDialog()
   })
