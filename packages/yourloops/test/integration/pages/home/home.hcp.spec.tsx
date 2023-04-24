@@ -85,7 +85,7 @@ describe('HCP home page', () => {
     await testPatientManagementPrivateTeam()
   })
 
-  it('should display a list of current patients and allow to remove one of them', async () => {
+  it('should render correctly and allow many features when scoped on a medical team', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
 
     const appMainLayoutParams: AppMainLayoutParamsHcp = {
