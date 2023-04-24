@@ -37,7 +37,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { MonitoringAlertType } from './models/enums/monitoring-alert-type.enum'
 import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import Badge from '@mui/material/Badge'
 import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-range-icon'
@@ -45,7 +44,6 @@ import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
-import { getMonitoringAlertActiveValueByType } from './utils/patient-list.util'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -111,9 +109,9 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const { t } = useTranslation()
   const theme = useTheme()
 
-  const isTimeSpentAwayFromTargetAlertActive = getMonitoringAlertActiveValueByType(monitoringAlerts, MonitoringAlertType.TimeSpentAwayFromTarget)
-  const isFrequencyOfSevereHypoglycemiaAlertActive = getMonitoringAlertActiveValueByType(monitoringAlerts, MonitoringAlertType.FrequencyOfSevereHypoglycemia)
-  const isNonDataTransmissionAlertActive = getMonitoringAlertActiveValueByType(monitoringAlerts, MonitoringAlertType.NonDataTransmission)
+  const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts.timeSpentAwayFromTargetActive
+  const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
+  const isNonDataTransmissionAlertActive = monitoringAlerts.nonDataTransmissionActive
 
   return (
     <>

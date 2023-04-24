@@ -58,7 +58,7 @@ export const checkPatientListHeader = (role: UserRole.Hcp | UserRole.Caregiver =
   }
 }
 
-export const checkPatientListTooltips = async (dataGridRows: HTMLElement, hasNewMessages: boolean): Promise<void> => {
+export const checkPatientListTooltips = async (dataGridRows: HTMLElement): Promise<void> => {
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
   const tooltipText = 'Hover over the icons to learn more'
   expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
@@ -110,7 +110,7 @@ export const checkPatientListTooltips = async (dataGridRows: HTMLElement, hasNew
   await userEvent.hover(firstRowMessageIcon)
   const messageTooltip = await screen.findByRole('tooltip')
   expect(messageTooltip).toBeVisible()
-  expect(messageTooltip).toHaveTextContent(hasNewMessages ? 'The patient has sent you new messages' : 'No new messages')
+  expect(messageTooltip).toHaveTextContent('No new messages')
   await userEvent.unhover(firstRowMessageIcon)
   await waitFor(() => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()

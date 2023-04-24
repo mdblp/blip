@@ -149,7 +149,7 @@ describe('HCP home page', () => {
     expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
     expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmol.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored Patient.time-spent-out-of-range-icon-no-fill { fill: none }DBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 
-    await checkPatientListTooltips(dataGridCurrentRows, false)
+    await checkPatientListTooltips(dataGridCurrentRows)
 
     const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
