@@ -108,7 +108,6 @@ describe('HCP home page', () => {
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testPatientManagementMedicalTeam()
     await testTeamCreation()
-    // This must be done at the end as this test ends up on the patient dashboard
     await testPatientsListForHcp(router)
   })
 })

@@ -25,23 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader } from './header'
-import { type Team } from '../../../lib/team'
+import { checkCaregiverHeader, checkPatientHeader } from './header'
 import { screen, within } from '@testing-library/react'
-import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from './footer'
+import { checkFooterForCaregiver, checkFooterForPatient } from './footer'
 
 export interface PatientDashboardLayoutParams {
   isChartCardVisible: boolean
   isMedicalFilesCardVisible: boolean
   isMonitoringAlertCardVisible: boolean
-}
-
-export const checkHCPLayout = async (fullName: string, selectedTeamParams: {
-  teamName: string
-  isPrivate?: boolean
-}, availableTeams: Team[], needFooterLanguageSelector: boolean = false) => {
-  await checkHcpHeader(fullName, selectedTeamParams, availableTeams)
-  checkFooterForHcp(needFooterLanguageSelector)
 }
 
 export const checkCaregiverLayout = async (fullName: string, needFooterLanguageSelector?: true) => {

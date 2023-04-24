@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCaregiverHeader, checkHcpHeader2, checkPatientHeader, type HeaderInfo } from '../assert/header'
+import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader, type HeaderInfo } from '../assert/header'
 import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
 
 export interface AppMainLayoutParamsHcp {
@@ -39,7 +39,7 @@ export interface AppMainLayoutParams {
 }
 
 export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutParamsHcp) => {
-  await checkHcpHeader2(appMainLayoutParams.headerInfo)
+  await checkHcpHeader(appMainLayoutParams.headerInfo)
   checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
 

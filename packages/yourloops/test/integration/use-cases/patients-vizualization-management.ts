@@ -45,6 +45,5 @@ export const testPatientsListForHcp = async (router: Router) => {
   await testPatientColumnsFiltersHideColumns()
   await testPatientColumnsFiltersShowColumns()
   await testPatientListPendingTab(router)
-  // Must be kept at the end as this function redirects to the patient dashboard
-  await testPatientListCurrentTab(router)
+  await testPatientListCurrentTab()
 }

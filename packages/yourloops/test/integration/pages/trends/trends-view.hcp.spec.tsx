@@ -32,13 +32,12 @@ import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
-import { checkHCPLayout } from '../../assert/layout'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { unmonitoredPatientId } from '../../data/patient.api.data'
+import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
 
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -52,11 +51,22 @@ describe('Trends view for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
-    mockMedicalFilesAPI()
   })
 
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
+
+    const appMainLayoutParams: AppMainLayoutParamsHcp = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
     const router = renderPage(`/patient/${unmonitoredPatientId}/trends`)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/trends`)
@@ -64,6 +74,6 @@ describe('Trends view for HCP', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHCP()
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: myThirdTeamName }, buildAvailableTeams())
+    await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 })

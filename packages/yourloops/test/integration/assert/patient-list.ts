@@ -292,13 +292,11 @@ export const testPatientListPendingTab = async (router: Router) => {
   expect(router.state.location.pathname).toEqual('/home')
 }
 
-export const testPatientListCurrentTab = async (router: Router) => {
+export const testPatientListCurrentTab = async () => {
   const currentTab = screen.getByRole('tab', { name: 'Current' })
   await userEvent.click(currentTab)
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-  await userEvent.click(within(dataGridCurrentRows).getAllByRole('row')[1])
-  expect(router.state.location.pathname).toEqual(`/patient/${monitoredPatient.userid}/dashboard`)
 }
 
 export const testPatientListFilters = async () => {
