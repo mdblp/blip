@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import userEvent from '@testing-library/user-event'
 
 export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
@@ -55,4 +56,63 @@ export const checkPatientListHeader = (role: UserRole.Hcp | UserRole.Caregiver =
     expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
     expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
   }
+}
+
+export const checkPatientListTooltips = async (dataGridRows: HTMLElement): Promise<void> => {
+  const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
+  const tooltipText = 'Hover over the icons to learn more'
+  expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
+  await userEvent.hover(monitoringAlertsColumnHeader)
+  expect(screen.getByText(tooltipText)).toBeVisible()
+  await userEvent.unhover(monitoringAlertsColumnHeader)
+  expect(screen.queryByText(tooltipText)).not.toBeVisible()
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowTimeSpentOutOfRangeIcon = within(dataGridRows).getAllByTestId('time-spent-out-of-range-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowTimeSpentOutOfRangeIcon)
+  const timeSpentOutOfRangeTooltip = await screen.findByRole('tooltip')
+  expect(timeSpentOutOfRangeTooltip).toBeVisible()
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('By default, this alert threshold is set to:')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('>25% time spent away from target over the given period.')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('This value can be modified either at the level of all remotely monitored patients, or patient by patient.')
+  await userEvent.unhover(firstRowTimeSpentOutOfRangeIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowHypoglycemiaIcon = within(dataGridRows).getAllByTestId('hypoglycemia-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowHypoglycemiaIcon)
+  const hypoglycemiaTooltip = await screen.findByRole('tooltip')
+  expect(hypoglycemiaTooltip).toBeVisible()
+  expect(hypoglycemiaTooltip).toHaveTextContent('By default, this alert threshold is set to: >5% of severe hypoglycemia over the given period. This value can be modified either at the level of all remotely monitored patients, or patient by patient.')
+  await userEvent.unhover(firstRowHypoglycemiaIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowNoDataIcon = within(dataGridRows).getAllByTestId('no-data-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowNoDataIcon)
+  const noDataTooltip = await screen.findByRole('tooltip')
+  expect(noDataTooltip).toBeVisible()
+  expect(noDataTooltip).toHaveTextContent('By default, this alert threshold is set to: >50% of non transmission data over the given period. This value can be modified either at the level of all remotely monitored patients, or patient by patient.')
+  await userEvent.unhover(firstRowNoDataIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const firstRowMessageIcon = within(dataGridRows).getAllByTestId('message-icon')[0]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowMessageIcon)
+  const messageTooltip = await screen.findByRole('tooltip')
+  expect(messageTooltip).toBeVisible()
+  expect(messageTooltip).toHaveTextContent('No new messages')
+  await userEvent.unhover(firstRowMessageIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
 }

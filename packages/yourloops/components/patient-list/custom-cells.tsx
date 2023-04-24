@@ -27,29 +27,31 @@
 
 import React, { type FunctionComponent } from 'react'
 import Box from '@mui/material/Box'
-import ReportProblemIcon from '@mui/icons-material/ReportProblem'
 import { useAuth } from '../../lib/auth'
 import { useTheme } from '@mui/material/styles'
-import EmailIcon from '@mui/icons-material/Email'
-import EmailOpenIcon from '../icons/email-open-icon'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
 import IconActionButton from '../buttons/icon-action'
-import PersonRemoveIcon from '../icons/person-remove-icon'
+import PersonRemoveIcon from '../icons/mui/person-remove-icon'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { formatMonitoringAlertSettingThreshold } from '../../lib/utils'
+import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
+import Badge from '@mui/material/Badge'
+import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-range-icon'
+import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
+import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
+import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
+import { MessageIcon } from '../icons/diabeloop/message-icon'
 
 interface FlagCellProps {
   isFlagged: boolean
   patient: Patient
 }
 
-interface MonitoringAlertPercentageCellProps {
-  isMonitoringAlertActive: boolean
-  value: number
+interface MonitoringAlertsCellProps {
+  monitoringAlerts: MonitoringAlerts
 }
 
 interface MessageCellProps {
@@ -64,6 +66,8 @@ interface ActionsCellProps {
 export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patient }) => {
   const { flagPatient } = useAuth()
   const { t } = useTranslation()
+  const flagPatientLabel = t('flag-patient', { patientEmail: patient.profile.email })
+  const unflagPatientLabel = t('unflag-patient', { patientEmail: patient.profile.email })
 
   const onClickFlag = async (): Promise<void> => {
     await flagPatient(patient.userid)
@@ -73,12 +77,12 @@ export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, pati
     <IconActionButton
       icon={isFlagged
         ? <FlagIcon
-          titleAccess={t('unflag-patient', { patientEmail: patient.profile.email }) }
-          aria-label={t('unflag-patient', { patientEmail: patient.profile.email }) }
+          titleAccess={unflagPatientLabel}
+          aria-label={unflagPatientLabel}
         />
         : <FlagOutlineIcon
-          titleAccess={t('flag-patient', { patientEmail: patient.profile.email }) }
-          aria-label={t('flag-patient', { patientEmail: patient.profile.email }) }
+          titleAccess={flagPatientLabel}
+          aria-label={flagPatientLabel}
         />}
       color="inherit"
       onClick={onClickFlag}
@@ -101,42 +105,64 @@ export const PendingIconCell: FunctionComponent = () => {
   )
 }
 
-export const MonitoringAlertPercentageCell: FunctionComponent<MonitoringAlertPercentageCellProps> = ({ isMonitoringAlertActive, value }) => {
-  const { user } = useAuth()
+export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ monitoringAlerts }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
 
+  const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts.timeSpentAwayFromTargetActive
+  const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
+  const isNonDataTransmissionAlertActive = monitoringAlerts.nonDataTransmissionActive
+
   return (
-    <Box
-      display="flex"
-      alignItems="end"
-      sx={{ color: user.isUserHcp() && isMonitoringAlertActive ? theme.palette.warning.main : 'inherit' }}
-    >
-      {formatMonitoringAlertSettingThreshold(value)}
-      {user.isUserHcp() && isMonitoringAlertActive &&
-        <ReportProblemIcon sx={{ marginLeft: theme.spacing(1) }} color="warning" />
-      }
-    </Box>
+    <>
+      <Tooltip title={t('time-out-of-range-target-tooltip')} data-testid="time-spent-out-of-range-icon-tooltip">
+          <TimeSpentOufOfRangeIcon
+            color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
+            data-testid="time-spent-out-of-range-icon"
+          />
+      </Tooltip>
+      <Tooltip title={t('hypoglycemia-tooltip')}>
+        <HypoglycemiaIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
+          data-testid="hypoglycemia-icon"
+        />
+      </Tooltip>
+      <Tooltip title={t('data-not-transferred-tooltip')}>
+        <NoDataIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
+          data-testid="no-data-icon"
+        />
+      </Tooltip>
+    </>
   )
 }
 
 export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessages }) => {
   const { t } = useTranslation()
+  const newUnreadMessagesLabel = t('new-unread-messages')
+  const noNewMessagesLabel = t('no-new-messages')
+  const title = hasNewMessages ? newUnreadMessagesLabel : noNewMessagesLabel
 
   return (
     <Tooltip
-      title={t(hasNewMessages ? 'new-unread-messages' : 'no-new-messages')}
-      aria-label={t(hasNewMessages ? 'new-unread-messages' : 'no-new-messages')}
+      title={title}
+      aria-label={title}
     >
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" data-testid="message-icon">
         {hasNewMessages
-          ? <EmailIcon
-            titleAccess={t('new-unread-messages')}
-            aria-label={t('new-unread-messages')}
-            color="primary"
-          />
-          : <EmailOpenIcon
-            titleAccess={t('no-new-messages')}
-            aria-label={t('no-new-messages')}
+          ? <Badge color="warning" variant="dot">
+            <MessageIcon
+              titleAccess={newUnreadMessagesLabel}
+              aria-label={newUnreadMessagesLabel}
+              color="inherit"
+            />
+          </Badge>
+          : <NoMessageIcon
+            titleAccess={noNewMessagesLabel}
+            aria-label={noNewMessagesLabel}
+            color="disabled"
           />
         }
       </Box>
@@ -146,20 +172,23 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
 
 export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onClickRemove }) => {
   const { t } = useTranslation()
+  const removePatientLabel = t('button-remove-patient')
 
   return (
     <Tooltip
-      title={t('button-remove-patient')}
-      aria-label={t('button-remove-patient')}
+      title={removePatientLabel}
+      aria-label={removePatientLabel}
     >
       <Box display="flex" justifyContent="end">
         <IconActionButton
           data-action="remove-patient"
-          data-testid={`${t('button-remove-patient')} ${patient.profile.email}`}
-          aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
+          data-testid={`${removePatientLabel} ${patient.profile.email}`}
+          aria-label={`${removePatientLabel} ${patient.profile.email}`}
           icon={<PersonRemoveIcon />}
           color="inherit"
-          onClick={() => { onClickRemove(patient.userid) }}
+          onClick={() => {
+            onClickRemove(patient.userid)
+          }}
         />
       </Box>
     </Tooltip>

@@ -57,7 +57,11 @@ import {
 import { mockPatientApiForHcp, mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import { checkDataGridAfterSinglePatientFilter, checkPatientListHeader } from '../../assert/patient-list'
+import {
+  checkDataGridAfterSinglePatientFilter,
+  checkPatientListHeader,
+  checkPatientListTooltips
+} from '../../assert/patient-list'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 
@@ -143,7 +147,9 @@ describe('HCP home page', () => {
 
     const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
     expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-    expect(dataGridCurrentRows).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG110%20%30%N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG110%20%30%N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+
+    await checkPatientListTooltips(dataGridCurrentRows)
 
     const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
@@ -190,7 +196,7 @@ describe('HCP home page', () => {
     expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(7)
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG110%20%30%N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG110%20%30%N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG110%20%30%N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG110%20%30%N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG110%20%30%N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
+    expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
 
     // Check the default values
     const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -204,7 +210,7 @@ describe('HCP home page', () => {
     // check the manual flag toggle
     await updatePatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
     expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Unflag patient flagged@patient.frFlagged PatientDBLG110%20%30%N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Unflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
 
@@ -214,7 +220,7 @@ describe('HCP home page', () => {
       manualFlagFilterToggle: true,
       telemonitoredFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored PatientDBLG110%20%30%N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, telemonitoredFilterToggle: true })
 
@@ -224,7 +230,7 @@ describe('HCP home page', () => {
       telemonitoredFilterToggle: true,
       outOfRangeFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientDBLG110%20%30%N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, outOfRangeFilterToggle: true })
 
@@ -234,7 +240,7 @@ describe('HCP home page', () => {
       outOfRangeFilterToggle: true,
       hypoglycemiaFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientDBLG110%20%30%N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, hypoglycemiaFilterToggle: true })
 
@@ -244,7 +250,7 @@ describe('HCP home page', () => {
       hypoglycemiaFilterToggle: true,
       dataNotTransferredFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient no-data@patient.frNo Data PatientDBLG110%20%30%N/ANo new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, dataNotTransferredFilterToggle: true })
 
@@ -254,7 +260,7 @@ describe('HCP home page', () => {
       dataNotTransferredFilterToggle: true,
       unreadMessagesFilterToggle: true
     })
-    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient unread-messages@patient.frUnread Messages PatientDBLG110%20%30%N/AThe patient has sent you new messages')
+    checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messages')
     await userEvent.click(filtersButton)
     checkPatientsFilters({ ...defaultToggles, unreadMessagesFilterToggle: true })
 
@@ -270,7 +276,7 @@ describe('HCP home page', () => {
     expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
 
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(2)
-    expect(dataGridRow).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsPending invitationPending PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
   })
 
   it('should display a list of pending patient and not be able to click on it, then redirect to patient dashboard when clicking on a current patient', async () => {
@@ -286,7 +292,7 @@ describe('HCP home page', () => {
     await userEvent.click(pendingTab)
     const dataGridPendingRows = screen.getByTestId('patient-list-grid')
     expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
-    expect(dataGridPendingRows).toHaveTextContent('PatientSystemTime spent out of the target rangeSevere hypoglycemiaData not transferredLast data updateActionsPending invitationPending PatientDBLG110%20%30%N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridPendingRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
 
     await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
     expect(router.state.location.pathname).toEqual('/home')
@@ -472,10 +478,8 @@ describe('HCP home page', () => {
 
     checkPatientListHeader()
     expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
-    expect(screen.getByRole('columnheader', { name: 'Time spent out of the target range' })).toBeVisible()
-    expect(screen.getByRole('columnheader', { name: 'Severe hypoglycemia' })).toBeVisible()
-    expect(screen.getByRole('columnheader', { name: 'Data not transferred' })).toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
@@ -494,18 +498,14 @@ describe('HCP home page', () => {
     expect(within(columnSettingsPopover).getByText('Show column')).toBeVisible()
 
     const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('checkbox')
+    const monitoringAlertsToggle = within(within(columnSettingsPopover).getByLabelText('Monitoring alerts')).getByRole('checkbox')
     const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('checkbox')
-    const outOfRangeToggle = within(within(columnSettingsPopover).getByLabelText('Time spent out of range')).getByRole('checkbox')
-    const dataToggle = within(within(columnSettingsPopover).getByLabelText('Data not transferred')).getByRole('checkbox')
-    const hypoToggle = within(within(columnSettingsPopover).getByLabelText('Severe hypoglycemia')).getByRole('checkbox')
     const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('checkbox')
     const messagesToggle = within(within(columnSettingsPopover).getByLabelText('Messages')).getByRole('checkbox')
     expect(patientToggle).toHaveProperty('checked', true)
     expect(patientToggle).toHaveProperty('disabled', true)
+    expect(monitoringAlertsToggle).toHaveProperty('checked', true)
     expect(systemToggle).toHaveProperty('checked', true)
-    expect(outOfRangeToggle).toHaveProperty('checked', true)
-    expect(dataToggle).toHaveProperty('checked', true)
-    expect(hypoToggle).toHaveProperty('checked', true)
     expect(lastUpdateToggle).toHaveProperty('checked', true)
     expect(messagesToggle).toHaveProperty('checked', true)
 
@@ -513,16 +513,12 @@ describe('HCP home page', () => {
     await userEvent.hover(disabledToggle)
     expect(await screen.findByText('This column cannot be removed'))
 
+    await userEvent.click(monitoringAlertsToggle)
     await userEvent.click(systemToggle)
-    await userEvent.click(outOfRangeToggle)
-    await userEvent.click(dataToggle)
-    await userEvent.click(hypoToggle)
     await userEvent.click(lastUpdateToggle)
     await userEvent.click(messagesToggle)
     expect(systemToggle).toHaveProperty('checked', false)
-    expect(outOfRangeToggle).toHaveProperty('checked', false)
-    expect(dataToggle).toHaveProperty('checked', false)
-    expect(hypoToggle).toHaveProperty('checked', false)
+    expect(monitoringAlertsToggle).toHaveProperty('checked', false)
     expect(lastUpdateToggle).toHaveProperty('checked', false)
     expect(messagesToggle).toHaveProperty('checked', false)
 
@@ -530,10 +526,8 @@ describe('HCP home page', () => {
 
     expect(columnSettingsPopover).not.toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+    expect(screen.queryByRole('columnheader', { name: 'Monitoring alerts' })).not.toBeInTheDocument()
     expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('columnheader', { name: 'Time spent out of the target range' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('columnheader', { name: 'Severe hypoglycemia' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('columnheader', { name: 'Data not transferred' })).not.toBeInTheDocument()
     expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
     expect(screen.queryByRole('columnheader', { name: 'Messages' })).not.toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()

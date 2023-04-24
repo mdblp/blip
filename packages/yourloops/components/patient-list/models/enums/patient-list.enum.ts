@@ -25,17 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientListColumns } from './enums/patient-list.enum'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
+export enum PatientListTabs {
+  Current,
+  Pending
+}
 
-export interface GridRowModel {
-  id: string
-  [PatientListColumns.Flag]: Patient
-  [PatientListColumns.Patient]: Patient
-  [PatientListColumns.System]: string
-  [PatientListColumns.MonitoringAlerts]?: MonitoringAlerts
-  [PatientListColumns.LastDataUpdate]: string
-  [PatientListColumns.Messages]: boolean
-  [PatientListColumns.Actions]: Patient
+export enum PatientListColumns {
+  Actions = 'actions',
+  Flag = 'flag',
+  LastDataUpdate = 'last-data-update',
+  Messages = 'messages',
+  MonitoringAlerts = 'monitoring-alerts',
+  Patient = 'patient',
+  System = 'system',
 }
