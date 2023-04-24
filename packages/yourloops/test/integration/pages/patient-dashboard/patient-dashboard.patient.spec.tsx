@@ -47,13 +47,13 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import {
   type AppMainLayoutParams,
   testAppMainLayoutForPatient
-} from '../../use-cases/app-main-layout-vizualization'
+} from '../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../assert/layout'
 import {
   testDashboardDataVisualisation,
   testDashboardDataVisualisationPrivateTeamNoData,
   testPatientNavBarForPatient
-} from '../../use-cases/patient-data-vizualization'
+} from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
 import { testChatWidgetForPatient } from '../../use-cases/communication-system'
 import { testJoinTeamDialog } from '../../use-cases/teams-management'

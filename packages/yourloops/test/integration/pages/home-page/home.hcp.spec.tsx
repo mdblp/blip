@@ -37,9 +37,9 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
+import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { testPatientsListForHcp } from '../../use-cases/patients-vizualization-management'
+import { testPatientListForHcp } from '../../use-cases/patients-visualisation-management'
 import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
 import { testTeamCreation } from '../../use-cases/teams-management'
 
@@ -108,6 +108,6 @@ describe('HCP home page', () => {
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testPatientManagementMedicalTeam()
     await testTeamCreation()
-    await testPatientsListForHcp(router)
+    await testPatientListForHcp(router)
   })
 })

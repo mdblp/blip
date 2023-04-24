@@ -37,7 +37,7 @@ import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { unmonitoredPatientId } from '../../data/patient.api.data'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
+import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'

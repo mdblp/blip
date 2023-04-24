@@ -43,12 +43,12 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
+import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisation,
   testDashboardDataVisualisationPrivateTeamNoData,
   testPatientNavBarForHcp
-} from '../../use-cases/patient-data-vizualization'
+} from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
 import { type MedicalFileWidgetParams } from '../../assert/medical-widget'
 import {

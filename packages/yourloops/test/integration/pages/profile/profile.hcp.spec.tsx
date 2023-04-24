@@ -44,7 +44,7 @@ import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
+import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {

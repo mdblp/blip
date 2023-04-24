@@ -33,7 +33,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-vizualization'
+import { type AppMainLayoutParamsHcp, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'

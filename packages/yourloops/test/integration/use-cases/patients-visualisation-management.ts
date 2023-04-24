@@ -37,7 +37,7 @@ import {
   testPatientListHeaderHcp
 } from '../assert/patient-list'
 
-export const testPatientsListForHcp = async (router: Router) => {
+export const testPatientListForHcp = async (router: Router) => {
   testPatientListHeaderHcp()
   testPatientListContentHcp()
   await checkPatientListFilters()
