@@ -65,6 +65,7 @@ import { SettingsPrintView } from './modules/print/settings-print-view/settings-
 import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
+import { getPatientFullName } from './utils/patient/patient.util'
 
 export {
   AverageDailyDoseStat,
@@ -81,6 +82,7 @@ export {
   ConfidentialTooltip,
   FocusedRangeLabels,
   FoodTooltip,
+  getPatientFullName,
   HistoryParameterTable,
   formatBgValue,
   LayoutColumnType,

@@ -286,7 +286,7 @@ export const checkPatientListPendingTab = async (router: Router) => {
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridPendingRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+  expect(dataGridPendingRows).toHaveTextContent('PatientActionsPending invitationpending-patient@diabeloop.frData calculated on the last 7 daysRows per page:101–1 of 1')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
   expect(router.state.location.pathname).toEqual('/home')
@@ -386,7 +386,7 @@ export const checkPatientListFilters = async () => {
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
 
   expect(within(dataGridRow).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsPending invitationPending PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–1 of 1')
+  expect(dataGridRow).toHaveTextContent('PatientActionsPending invitationpending-patient@diabeloop.frData calculated on the last 7 daysRows per page:101–1 of 1')
 
   await changeTeamScope(filtersTeamName, myThirdTeamName)
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, myThirdTeamId)
