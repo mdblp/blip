@@ -30,7 +30,7 @@ import { useSortComparatorsHook } from '../../../../components/patient-list/sort
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
-describe('Sort comparators hook', () => {
+describe('useSortComparatorsHook', () => {
   describe('sortByUserName', () => {
     const smallerPatientName = 'aaron'
     const biggerPatientName = 'zacchaeus'

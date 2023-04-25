@@ -178,7 +178,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: '',
         width: 55,
         hideable: false,
-        sortable: false,
+        sortable: true,
         sortComparator: sortByFlag,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
           const patient = params.value
