@@ -36,7 +36,7 @@ import { checkAccountSelectorStep, checkConsentStep, checkProfileStep, checkStep
 import { mockUserApi } from '../../mock/user.api.mock'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
-import { checkFooter } from '../../assert/footer'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 
@@ -62,7 +62,7 @@ describe('Signup stepper as caregiver', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/complete-signup')
     })
-    checkFooter({ needFooterLanguageSelector: true })
+    checkFooterForUserNotLoggedIn(true)
     checkStepper()
 
     // Step one

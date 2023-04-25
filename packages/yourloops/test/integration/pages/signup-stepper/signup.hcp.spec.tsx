@@ -37,9 +37,9 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
-import { checkFooter } from '../../assert/footer'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer'
 
 describe('Signup stepper as hcp', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
@@ -65,7 +65,7 @@ describe('Signup stepper as hcp', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/complete-signup')
     })
-    checkFooter({ needFooterLanguageSelector: true })
+    checkFooterForUserNotLoggedIn(true)
     checkStepper()
 
     // Step one

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import {
+  checkMedicalReportCancel,
+  checkMedicalReportConsult,
+  checkMedicalReportContentForHcp,
+  checkMedicalReportContentForPatient,
+  checkMedicalReportCreate,
+  checkMedicalReportDelete,
+  checkMedicalReportUpdate,
+  type MedicalFilesWidgetParams
+} from '../assert/medical-widget'
 
-  bail: true,
+export const testMedicalWidgetForHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+  await checkMedicalReportContentForHcp(medicalFilesWidgetParams)
+  await checkMedicalReportCancel()
+  await checkMedicalReportCreate(medicalFilesWidgetParams)
+  await checkMedicalReportUpdate(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams)
+  await checkMedicalReportDelete(medicalFilesWidgetParams)
+}
 
-  displayName: 'yourloops integration',
-
-  maxWorkers: 4,
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 150000
+export const testMedicalWidgetForPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+  await checkMedicalReportContentForPatient(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams)
 }

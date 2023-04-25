@@ -25,25 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
-import { myFirstTeamName, mySecondTeamId, mySecondTeamName } from '../mock/team.api.mock'
+import { fireEvent, screen, within } from '@testing-library/react'
+import { myFirstTeamName, mySecondTeamName } from '../mock/team.api.mock'
 import userEvent from '@testing-library/user-event'
 import { monitoredPatientId } from '../data/patient.api.data'
 import ChatApi from '../../../lib/chat/chat.api'
 
-export const checkChatWidgetForPatient = async (): Promise<void> => {
+export const checkChatWidgetMessageReadingForHcp = async (): Promise<void> => {
+  const dashboard = within(screen.getByTestId('patient-dashboard'))
+  const chatCard = dashboard.queryByTestId('chat-card')
+  expect(chatCard).toHaveTextContent('Messages (+1)This messages is in the team A - MyThirdTeam - to be deleted which is the best')
+  expect(chatCard).toHaveTextContent('NewReplyPrivate')
+}
+
+export const checkChatWidgetMessageReadingForPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
   expect(chatCard).toHaveTextContent('Messages MyFirstTeamThis is a message sent to the team MyFirstTeam')
-  const chatCardHeader = within(within(chatCard).getByTestId('card-header')).getByText(myFirstTeamName)
-  fireEvent.mouseDown(chatCardHeader)
+  const chatCardHeaderTeamDropdown = within(within(chatCard).getByTestId('card-header')).getByText(myFirstTeamName)
+  fireEvent.mouseDown(chatCardHeaderTeamDropdown)
   await userEvent.click(within(screen.getByRole('listbox')).getByText(mySecondTeamName))
-  await waitFor(() => {
-    expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeamThis is a message sent from the team MySecondTeam')
-  })
+  expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeamThis is a message sent from the team MySecondTeam')
+}
+
+export const checkChatWidgetMessageSending = async (teamId): Promise<void> => {
+  const dashboard = within(screen.getByTestId('patient-dashboard'))
+  const chatCard = dashboard.queryByTestId('chat-card')
   const chatInput = within(chatCard).getByRole('textbox')
   const message = 'Hey man, how are things going?'
   await userEvent.type(chatInput, message)
   await userEvent.click(within(chatCard).getByRole('button', { name: 'Send' }))
-  expect(jest.spyOn(ChatApi, 'sendChatMessage')).toHaveBeenCalledWith(mySecondTeamId, monitoredPatientId, message, false)
+  expect(ChatApi.sendChatMessage).toHaveBeenCalledWith(teamId, monitoredPatientId, message, false)
 }

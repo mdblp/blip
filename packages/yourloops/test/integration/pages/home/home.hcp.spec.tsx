@@ -25,36 +25,69 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
-import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { unmonitoredPatientId } from '../../data/patient.api.data'
-import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
+import { flaggedPatientId, monitoredPatient } from '../../data/patient.api.data'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
+import PatientApi from '../../../../lib/patient/patient.api'
+import { mockDataAPI } from '../../mock/data.api.mock'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
+import { testPatientListForHcp } from '../../use-cases/patient-list-management'
+import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
+import { testTeamCreation } from '../../use-cases/teams-management'
 
-describe('Daily view for HCP', () => {
-  const firstName = 'HCP firstName'
-  const lastName = 'HCP lastName'
+describe('HCP home page', () => {
+  const firstName = 'Eric'
+  const lastName = 'Ard'
+  jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockAuth0Hook()
     mockNotificationAPI()
-    mockDirectShareApi()
     mockTeamAPI()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
+    mockUserApi().mockUserDataFetch({ firstName, lastName, preferences: { patientsStarred: [flaggedPatientId] } })
     mockPatientApiForHcp()
-    mockChatAPI()
+    mockDirectShareApi()
+    mockDataAPI()
   })
 
-  it('should render correct layout', async () => {
-    mockDataAPI()
+  it('should render correctly when the private practice team is selected', async () => {
+    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
+      ...monitoredPatient,
+      invitationStatus: UserInvitationStatus.accepted
+    }])
+
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          isSelectedTeamPrivate: true,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    })
+
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testPatientManagementPrivateTeam()
+  })
+
+  it('should render correctly and allow many features when scoped on a medical team', async () => {
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
+
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
@@ -66,13 +99,15 @@ describe('Daily view for HCP', () => {
         }
       }
     }
-    const router = renderPage(`/patient/${unmonitoredPatientId}/daily`)
+
+    const router = renderPage('/')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/daily`)
+      expect(router.state.location.pathname).toEqual('/home')
     })
 
-    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP()
     await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testPatientManagementMedicalTeam()
+    await testTeamCreation()
+    await testPatientListForHcp(router)
   })
 })
