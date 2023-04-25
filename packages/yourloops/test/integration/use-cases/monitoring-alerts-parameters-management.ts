@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import {
+  checkMonitoringAlertsDialogContentMgdl, checkMonitoringAlertsDialogContentMmol,
+  checkMonitoringAlertsDialogDefaultButtonMgdl, checkMonitoringAlertsDialogSaveButtonMmol
+} from '../assert/monitoring-alerts-parameters'
 
-  bail: true,
+export const testMonitoringAlertsParametersConfigurationDialogMgdl = async (): Promise<void> => {
+  await checkMonitoringAlertsDialogContentMgdl()
+  await checkMonitoringAlertsDialogDefaultButtonMgdl()
+}
 
-  displayName: 'yourloops integration',
-
-  maxWorkers: 4,
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 150000
+export const testMonitoringAlertsParametersConfigurationDialogMmol = async (): Promise<void> => {
+  await checkMonitoringAlertsDialogContentMmol()
+  await checkMonitoringAlertsDialogSaveButtonMmol()
 }

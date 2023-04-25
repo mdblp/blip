@@ -27,19 +27,11 @@
 
 import { screen, within } from '@testing-library/react'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
-import { type UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
-interface CheckFooterProps {
-  role?: UserRole
-  needFooterLanguageSelector: boolean
-}
-
-const defaultArgs = { needFooterLanguageSelector: false }
-
-export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterProps = defaultArgs) => {
+const checkFooter = (hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const productLabellingLink = footer.getByText('Product Labelling')
-  const trainingLink = footer.getByText('Training')
   const termsOfUseLink = footer.getByText('Terms of use')
   const privacyPolicyLink = footer.getByText('Privacy Policy')
   const cookiesManagementLink = footer.getByText('Cookies management')
@@ -48,14 +40,12 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
   const releaseNotesLink = footer.getByTestId('footer-link-url-release-notes')
   const languageSelector = footer.queryByTestId('language-selector')
 
-  needFooterLanguageSelector
+  hasLanguageSelector
     ? expect(languageSelector).toBeInTheDocument()
     : expect(languageSelector).not.toBeInTheDocument()
 
   expect(productLabellingLink).toBeVisible()
   expect(productLabellingLink).toHaveAttribute('href', '/product-labelling')
-  expect(trainingLink).toBeVisible()
-  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(role))
   expect(termsOfUseLink).toBeVisible()
   expect(termsOfUseLink).toHaveAttribute('href', diabeloopExternalUrls.terms)
   expect(privacyPolicyLink).toBeVisible()
@@ -66,4 +56,36 @@ export const checkFooter = ({ role, needFooterLanguageSelector }: CheckFooterPro
   expect(releaseNotesLink).toBeVisible()
   expect(releaseNotesLink).toHaveAttribute('href', 'fake-urlyourloops-release-notes.pdf')
   expect(contactLink).toBeVisible()
+}
+
+export const checkFooterForUserNotLoggedIn = (hasLanguageSelector: boolean = false) => {
+  const footer = within(screen.getByTestId('footer'))
+  const trainingLink = footer.getByText('Training')
+  expect(trainingLink).toBeVisible()
+  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training())
+  checkFooter(hasLanguageSelector)
+}
+
+export const checkFooterForHcp = (hasLanguageSelector: boolean = false) => {
+  const footer = within(screen.getByTestId('footer'))
+  const trainingLink = footer.getByText('Training')
+  expect(trainingLink).toBeVisible()
+  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(UserRole.Hcp))
+  checkFooter(hasLanguageSelector)
+}
+
+export const checkFooterForPatient = (hasLanguageSelector: boolean = false) => {
+  const footer = within(screen.getByTestId('footer'))
+  const trainingLink = footer.getByText('Training')
+  expect(trainingLink).toBeVisible()
+  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(UserRole.Patient))
+  checkFooter(hasLanguageSelector)
+}
+
+export const checkFooterForCaregiver = (hasLanguageSelector: boolean = false) => {
+  const footer = within(screen.getByTestId('footer'))
+  const trainingLink = footer.getByText('Training')
+  expect(trainingLink).toBeVisible()
+  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(UserRole.Caregiver))
+  checkFooter(hasLanguageSelector)
 }

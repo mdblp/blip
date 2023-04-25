@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import {
+  checkChatWidgetMessageReadingForHcp,
+  checkChatWidgetMessageReadingForPatient,
+  checkChatWidgetMessageSending
+} from '../assert/chat-widget'
+import { mySecondTeamId, myThirdTeamId } from '../mock/team.api.mock'
 
-  bail: true,
+export const testChatWidgetForHcp = async (): Promise<void> => {
+  await checkChatWidgetMessageReadingForHcp()
+  await checkChatWidgetMessageSending(myThirdTeamId)
+}
 
-  displayName: 'yourloops integration',
-
-  maxWorkers: 4,
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 150000
+export const testChatWidgetForPatient = async (): Promise<void> => {
+  await checkChatWidgetMessageReadingForPatient()
+  await checkChatWidgetMessageSending(mySecondTeamId)
 }

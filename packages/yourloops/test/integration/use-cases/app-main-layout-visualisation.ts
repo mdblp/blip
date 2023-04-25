@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader, type HeaderInfo } from '../assert/header'
+import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
 
-  bail: true,
+export interface AppMainLayoutHcpParams {
+  footerHasLanguageSelector?: boolean
+  headerInfo: HeaderInfo
+}
 
-  displayName: 'yourloops integration',
+export interface AppMainLayoutParams {
+  footerHasLanguageSelector?: boolean
+  loggedInUserFullName: string
+}
 
-  maxWorkers: 4,
+export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
+  await checkHcpHeader(appMainLayoutParams.headerInfo)
+  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
+}
 
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
+export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
+  await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
+  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
+}
 
-  testTimeout: 150000
+export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {
+  await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
+  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
 }
