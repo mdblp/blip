@@ -26,6 +26,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
 - YLP-2265 Disable Add patient button when private practice is selected
+- YLP-2322 Pending patients should not display glycemia specific data
 
 ### Engineering use
 - YLP-2044 Remove redux settings store

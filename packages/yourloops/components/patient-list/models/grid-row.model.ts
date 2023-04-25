@@ -31,11 +31,11 @@ import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-al
 
 export interface GridRowModel {
   id: string
-  [PatientListColumns.Flag]: Patient
+  [PatientListColumns.Flag]?: Patient
   [PatientListColumns.Patient]: Patient
-  [PatientListColumns.System]: string
+  [PatientListColumns.System]?: string
   [PatientListColumns.MonitoringAlerts]?: MonitoringAlerts
-  [PatientListColumns.LastDataUpdate]: string
-  [PatientListColumns.Messages]: boolean
+  [PatientListColumns.LastDataUpdate]?: string
+  [PatientListColumns.Messages]?: boolean
   [PatientListColumns.Actions]: Patient
 }

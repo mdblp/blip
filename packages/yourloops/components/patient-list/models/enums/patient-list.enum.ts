@@ -33,6 +33,7 @@ export enum PatientListTabs {
 export enum PatientListColumns {
   Actions = 'actions',
   Flag = 'flag',
+  Icon = 'icon',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',
   MonitoringAlerts = 'monitoring-alerts',
