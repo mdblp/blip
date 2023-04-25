@@ -33,13 +33,13 @@ import {
   checkPatientListFilters,
   checkPatientListPendingTab, checkPatientListTooltips,
   type Router,
-  testPatientListContentHcp,
-  testPatientListHeaderHcp
+  checkPatientListContentHcp,
+  checkPatientListHeaderHcp
 } from '../assert/patient-list'
 
 export const testPatientListForHcp = async (router: Router) => {
-  testPatientListHeaderHcp()
-  testPatientListContentHcp()
+  checkPatientListHeaderHcp()
+  checkPatientListContentHcp()
   await checkPatientListTooltips()
   await checkPatientListFilters()
   await checkPatientColumnsFiltersContent()

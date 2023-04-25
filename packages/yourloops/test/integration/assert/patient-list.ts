@@ -70,7 +70,7 @@ export const checkPatientListHeaderCaregiver = () => {
   expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
 }
 
-export const testPatientListContentHcp = () => {
+export const checkPatientListContentHcp = () => {
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
   expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
@@ -91,7 +91,7 @@ export const checkAddPatientPrivateButtonTooltip = async () => {
   expect(informationTooltip).not.toBeVisible()
 }
 
-export const testPatientListHeaderHcp = () => {
+export const checkPatientListHeaderHcp = () => {
   const header = screen.getByTestId('patient-list-header')
   checkPatientListHeader(header)
   expect(within(header).getByRole('button', { name: 'Filters' })).toBeVisible()
