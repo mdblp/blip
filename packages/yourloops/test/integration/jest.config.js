@@ -33,7 +33,7 @@ module.exports = {
 
   displayName: 'yourloops integration',
 
-  maxWorkers: '30%',
+  maxWorkers: 4,
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
