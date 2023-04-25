@@ -45,6 +45,8 @@ import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
+import { formatBirthdate } from 'dumb/dist/src/utils/datetime/datetime.util'
+import { Gender } from '../../lib/auth/models/enums/gender.enum'
 
 interface SharedColumns {
   patientColumn: GridColDef
@@ -185,6 +187,19 @@ export const usePatientListHook = (): PatientListHookReturns => {
       },
       sharedColumns.patientColumn,
       {
+        field: PatientListColumns.DateOfBirth,
+        headerName: t('date-of-birth')
+      },
+      {
+        field: PatientListColumns.Age,
+        type: 'number',
+        headerName: t('age')
+      },
+      {
+        field: PatientListColumns.Gender,
+        headerName: t('gender')
+      },
+      {
         field: PatientListColumns.MonitoringAlerts,
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
@@ -232,11 +247,15 @@ export const usePatientListHook = (): PatientListHookReturns => {
       }
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const monitoringAlerts = patient.monitoringAlerts
+      const birthdate = patient.profile.birthdate
 
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient,
+        [PatientListColumns.DateOfBirth]: formatBirthdate(birthdate),
+        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
+        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex as Gender),
         [PatientListColumns.MonitoringAlerts]: monitoringAlerts,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,

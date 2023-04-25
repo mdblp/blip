@@ -32,7 +32,10 @@ export enum PatientListTabs {
 
 export enum PatientListColumns {
   Actions = 'actions',
+  Age = 'age',
+  DateOfBirth = 'date-of-birth',
   Flag = 'flag',
+  Gender = 'Gender',
   Icon = 'icon',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',

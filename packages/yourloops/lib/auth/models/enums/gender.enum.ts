@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,14 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Gender } from '../../auth/models/enums/gender.enum'
-
-export interface PatientProfile {
-  birthdate?: string
-  firstName?: string
-  fullName: string
-  lastName?: string
-  email: string
-  sex: Gender | string
-  referringDoctor?: string
+export enum Gender {
+  Female = 'F',
+  Indeterminate = 'I',
+  Male = 'M'
 }

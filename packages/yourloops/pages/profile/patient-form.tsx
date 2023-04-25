@@ -42,6 +42,8 @@ import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
 import { CountryCodes } from '../../lib/auth/models/country.model'
 import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { Gender } from '../../lib/auth/models/enums/gender.enum'
+import PatientUtils from '../../lib/patient/patient.util'
 
 const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -54,6 +56,10 @@ const PatientProfileForm: FunctionComponent = () => {
   const a1cDate = user.settings?.a1c?.rawdate
   const a1cValue = user.settings?.a1c?.value
   const country = user.settings?.country ?? CountryCodes.Unknown
+
+  const genderIndeterminateLabel = PatientUtils.getGenderLabel(Gender.Indeterminate)
+  const genderMaleLabel = PatientUtils.getGenderLabel(Gender.Male)
+  const genderFemaleLabel = PatientUtils.getGenderLabel(Gender.Female)
 
   return (
     <React.Fragment>
@@ -127,9 +133,9 @@ const PatientProfileForm: FunctionComponent = () => {
             error={errors.sex}
             onChange={event => { updateProfileForm(ProfileFormKey.sex, event.target.value) }}
           >
-            <MenuItem value="I" aria-label={t('gender-i')}>{t('gender-i')}</MenuItem>
-            <MenuItem value="M" aria-label={t('gender-m')}>{t('gender-m')}</MenuItem>
-            <MenuItem value="F" aria-label={t('gender-f')}>{t('gender-f')}</MenuItem>
+            <MenuItem value={Gender.Indeterminate} aria-label={genderIndeterminateLabel}>{genderIndeterminateLabel}</MenuItem>
+            <MenuItem value={Gender.Male} aria-label={genderMaleLabel}>{genderMaleLabel}</MenuItem>
+            <MenuItem value={Gender.Female} aria-label={genderFemaleLabel}>{genderFemaleLabel}</MenuItem>
           </Select>
           <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
         </FormControl>
