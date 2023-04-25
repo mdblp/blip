@@ -587,7 +587,9 @@ export const checkPatientListTooltips = async (): Promise<void> => {
   })
 }
 
-export const checkPatientListColumnSort = async (dataGridRows: HTMLElement): Promise<void> => {
+export const checkPatientListColumnSort = async (): Promise<void> => {
+  const dataGridRows = screen.getByTestId('patient-list-grid')
+
   const patientColumnHeader = within(dataGridRows).getByRole('columnheader', { name: 'Patient' })
   const allRowsBeforeSort = within(dataGridRows).getAllByRole('row')
   expect(allRowsBeforeSort[1]).toHaveTextContent(monitoredPatient.profile.fullName)
@@ -613,7 +615,8 @@ export const checkPatientListColumnSort = async (dataGridRows: HTMLElement): Pro
   expect(allRowsAfterSecondSort[4]).toHaveTextContent(unmonitoredPatient.profile.fullName)
 }
 
-export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (dataGridRows: HTMLElement): Promise<void> => {
+export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promise<void> => {
+  const dataGridRows = screen.getByTestId('patient-list-grid')
   const disabledColorAsRgba = 'rgba(0, 0, 0, 0.26)'
 
   const firstRowTimeSpentOutOfRangeIcon = within(dataGridRows).getAllByTestId('time-spent-out-of-range-icon')[0]
