@@ -46,6 +46,11 @@ import Box from '@mui/material/Box'
 import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 
+interface SharedColumns {
+  patientColumn: GridColDef
+  actionColumn: GridColDef
+}
+
 interface PatientListHookReturns {
   columns: GridColDef[]
   selectedTab: PatientListTabs
@@ -116,7 +121,54 @@ export const usePatientListHook = (): PatientListHookReturns => {
     navigate(`/patient/${params.id}/dashboard`)
   }
 
-  const columns: GridColDef[] = useMemo(() => {
+  const sharedColumns = useMemo((): SharedColumns => {
+    const patientColumn = {
+      field: PatientListColumns.Patient,
+      headerName: t('patient'),
+      hideable: false,
+      flex: 1,
+      headerClassName: classes.mandatoryCellBorder,
+      cellClassName: classes.mandatoryCellBorder,
+      renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
+        const { firstName, fullName, lastName, email } = params.value.profile
+        return <Box data-email={email}>{getUserName(firstName, lastName, fullName)}</Box>
+      },
+      sortComparator: sortByUserName
+    }
+
+    const actionColumn = {
+      type: 'actions',
+      field: PatientListColumns.Actions,
+      headerName: t('actions'),
+      headerClassName: classes.mandatoryCellBorder,
+      cellClassName: classes.mandatoryCellBorder,
+      renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
+        return <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
+      }
+    }
+
+    return { patientColumn, actionColumn }
+  }, [classes.mandatoryCellBorder, getUserName, onClickRemovePatient, sortByUserName, t])
+
+  const buildPendingColumns = useCallback((): GridColDef[] => {
+    return [
+      {
+        field: PatientListColumns.Icon,
+        type: 'actions',
+        headerName: '',
+        width: 55,
+        hideable: false,
+        sortable: false,
+        renderCell: (): JSX.Element => {
+          return <PendingIconCell />
+        }
+      },
+      sharedColumns.patientColumn,
+      sharedColumns.actionColumn
+    ]
+  }, [sharedColumns.actionColumn, sharedColumns.patientColumn])
+
+  const buildCurrentColumns = useCallback((): GridColDef[] => {
     return [
       {
         field: PatientListColumns.Flag,
@@ -127,29 +179,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         sortable: false,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
           const patient = params.value
-          return (
-            <React.Fragment>
-              {selectedTab === PatientListTabs.Pending
-                ? <PendingIconCell />
-                : <FlagIconCell isFlagged={patient.metadata.flagged} patient={patient} />
-              }
-            </React.Fragment>
-          )
+          return <FlagIconCell isFlagged={patient.metadata.flagged} patient={patient} />
         }
       },
-      {
-        field: PatientListColumns.Patient,
-        headerName: t('patient'),
-        hideable: false,
-        flex: 1,
-        headerClassName: classes.mandatoryCellBorder,
-        cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
-          const { firstName, fullName, lastName, email } = params.value.profile
-          return <Box data-email={email}>{getUserName(firstName, lastName, fullName)}</Box>
-        },
-        sortComparator: sortByUserName
-      },
+      sharedColumns.patientColumn,
       {
         field: PatientListColumns.MonitoringAlerts,
         headerName: t('monitoring-alerts'),
@@ -179,21 +212,23 @@ export const usePatientListHook = (): PatientListHookReturns => {
           return <MessageCell hasNewMessages={params.value} />
         }
       },
-      {
-        type: 'actions',
-        field: PatientListColumns.Actions,
-        headerName: t('actions'),
-        headerClassName: classes.mandatoryCellBorder,
-        cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
-          return <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
-        }
-      }
+      sharedColumns.actionColumn
     ]
-  }, [t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
+  }, [sharedColumns.actionColumn, sharedColumns.patientColumn, t])
+
+  const columns: GridColDef[] = useMemo(() => {
+    return selectedTab === PatientListTabs.Current ? buildCurrentColumns() : buildPendingColumns()
+  }, [selectedTab, buildCurrentColumns, buildPendingColumns])
 
   const rowsProps: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {
+      if (selectedTab === PatientListTabs.Pending) {
+        return {
+          id: patient.userid,
+          [PatientListColumns.Patient]: patient,
+          [PatientListColumns.Actions]: patient
+        }
+      }
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const monitoringAlerts = patient.monitoringAlerts
 
@@ -208,7 +243,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         [PatientListColumns.Actions]: patient
       }
     })
-  }, [filteredPatients, trNA])
+  }, [filteredPatients, selectedTab, trNA])
 
   return {
     columns,
