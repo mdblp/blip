@@ -131,7 +131,8 @@ export const usePatientListHook = (): PatientListHookReturns => {
       cellClassName: classes.mandatoryCellBorder,
       renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
         const { firstName, fullName, lastName, email } = params.value.profile
-        return <Box data-email={email}>{getUserName(firstName, lastName, fullName)}</Box>
+        const name = selectedTab === PatientListTabs.Current ? getUserName(firstName, lastName, fullName) : email
+        return <Box data-email={email}>{name}</Box>
       },
       sortComparator: sortByUserName
     }
@@ -148,7 +149,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
     }
 
     return { patientColumn, actionColumn }
-  }, [classes.mandatoryCellBorder, getUserName, onClickRemovePatient, sortByUserName, t])
+  }, [classes.mandatoryCellBorder, getUserName, onClickRemovePatient, selectedTab, sortByUserName, t])
 
   const buildPendingColumns = useCallback((): GridColDef[] => {
     return [
