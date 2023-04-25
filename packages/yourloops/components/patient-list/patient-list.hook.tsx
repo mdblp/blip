@@ -43,8 +43,9 @@ import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
 import { getPatientFullName } from 'dumb/dist/src/utils/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
+import { useSortComparatorsHook } from './sort-comparators.hook'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface PatientListHookReturns {
   columns: GridColDef[]
@@ -66,7 +67,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { getFlagPatients, user } = useAuth()
   const { getPatientById, searchPatients } = usePatientContext()
   const { getUserName } = useUserName()
-  const { sortByUserName } = useSortComparatorsHook()
+  const { sortByUserName, sortByFlag } = useSortComparatorsHook()
   const { updatePendingFilter } = usePatientListContext()
   const navigate = useNavigate()
   const trNA = t('N/A')
@@ -113,7 +114,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   }
 
   const onRowClick = (params: GridRowParams): void => {
-    navigate(`/patient/${params.id}/dashboard`)
+    navigate(`${AppUserRoute.Patient}/${params.id}/dashboard`)
   }
 
   const columns: GridColDef[] = useMemo(() => {
@@ -124,7 +125,8 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: '',
         width: 55,
         hideable: false,
-        sortable: false,
+        sortable: true,
+        sortComparator: sortByFlag,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
           const patient = params.value
           return (
@@ -190,7 +192,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         }
       }
     ]
-  }, [t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
+  }, [sortByFlag, t, classes.mandatoryCellBorder, sortByUserName, selectedTab, getUserName, onClickRemovePatient])
 
   const rowsProps: GridRowsProp = useMemo(() => {
     return filteredPatients.map((patient): GridRowModel => {

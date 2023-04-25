@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,10 +26,11 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks'
-import { useSortComparatorsHook } from '../../../../lib/custom-hooks/sort-comparators.hook'
+import { useSortComparatorsHook } from '../../../../components/patient-list/sort-comparators.hook'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 
-describe('useSortComparatorsHook', () => {
+describe('Sort comparators hook', () => {
   describe('sortByUserName', () => {
     const smallerPatientName = 'aaron'
     const biggerPatientName = 'zacchaeus'
@@ -62,6 +63,47 @@ describe('useSortComparatorsHook', () => {
       const res = sortByUserName(patient1, patient2)
 
       expect(res).toBe(0)
+    })
+  })
+
+  describe('sortByFlag', () => {
+    it('should sort the patients by whether they are flagged', () => {
+      const patientA = {
+        id: 'idA',
+        profile: { fullName: 'A Patient', email: undefined, sex: undefined },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { flagged: false, hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      } as Patient
+
+      const patientB = {
+        id: 'idB',
+        profile: { fullName: 'B Patient', email: undefined, sex: undefined },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { flagged: true, hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      } as Patient
+
+      const patientC = {
+        id: 'idC',
+        profile: { fullName: 'C Patient', email: undefined, sex: undefined },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { flagged: true, hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      } as Patient
+
+      const { result } = renderHook(() => useSortComparatorsHook())
+
+      expect(result.current.sortByFlag(patientA, patientB)).toEqual(1)
+      expect(result.current.sortByFlag(patientB, patientA)).toEqual(-1)
+      expect(result.current.sortByFlag(patientB, patientC)).toEqual(0)
+      expect(result.current.sortByFlag(patientC, patientB)).toEqual(0)
     })
   })
 })

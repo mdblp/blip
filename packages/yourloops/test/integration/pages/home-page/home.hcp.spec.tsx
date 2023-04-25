@@ -59,6 +59,8 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import {
   checkDataGridAfterSinglePatientFilter,
+  checkMonitoringAlertsIconsInactiveForFirstPatient,
+  checkPatientListColumnSort,
   checkPatientListHeader,
   checkPatientListTooltips
 } from '../../assert/patient-list'
@@ -150,6 +152,8 @@ describe('HCP home page', () => {
     expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 
     await checkPatientListTooltips(dataGridCurrentRows)
+    await checkPatientListColumnSort(dataGridCurrentRows)
+    await checkMonitoringAlertsIconsInactiveForFirstPatient(dataGridCurrentRows)
 
     const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
     expect(removeButton).toBeVisible()
