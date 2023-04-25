@@ -91,20 +91,12 @@ export const checkAddPatientPrivateButtonTooltip = async () => {
   expect(informationTooltip).not.toBeVisible()
 }
 
-export const checkPatientListHeaderHcp = () => {
+export const checkPatientListHeaderForHcp = () => {
   const header = screen.getByTestId('patient-list-header')
   checkPatientListHeader(header)
   expect(within(header).getByRole('button', { name: 'Filters' })).toBeVisible()
   expect(within(header).getByRole('button', { name: 'Add new patient' })).toBeVisible()
   expect(screen.getByRole('tab', { name: 'Pending' })).toBeVisible()
-}
-
-export const testPatientListHeaderCaregiver = () => {
-  const header = screen.getByTestId('patient-list-header')
-  checkPatientListHeader(header)
-  expect(within(header).queryByRole('button', { name: 'Filters' })).not.toBeInTheDocument()
-  expect(screen.queryByTestId('filters-label')).not.toBeInTheDocument()
-  expect(within(header).queryByRole('button', { name: 'Add new patient' })).not.toBeInTheDocument()
 }
 
 export const checkRemovePatientPrivateDialogContent = async () => {

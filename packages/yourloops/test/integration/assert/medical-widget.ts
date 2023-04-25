@@ -48,12 +48,12 @@ export const getMedicalFilesWidget = async (): Promise<HTMLElement> => {
   return dashboard.getByTestId('medical-files-card')
 }
 
-export const checkMedicalReportContentHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+export const checkMedicalReportContentForHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
   expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFilesWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFilesWidgetParams.selectedTeamName}New`)
 }
 
-export const checkMedicalReportContentPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+export const checkMedicalReportContentForPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
   expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(medicalFilesWidgetParams.selectedPatientId, null)
   expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeam')

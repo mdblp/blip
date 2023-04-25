@@ -28,8 +28,8 @@
 import {
   checkMedicalReportCancel,
   checkMedicalReportConsult,
-  checkMedicalReportContentHcp,
-  checkMedicalReportContentPatient,
+  checkMedicalReportContentForHcp,
+  checkMedicalReportContentForPatient,
   checkMedicalReportCreate,
   checkMedicalReportDelete,
   checkMedicalReportUpdate,
@@ -37,7 +37,7 @@ import {
 } from '../assert/medical-widget'
 
 export const testMedicalWidgetForHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
-  await checkMedicalReportContentHcp(medicalFilesWidgetParams)
+  await checkMedicalReportContentForHcp(medicalFilesWidgetParams)
   await checkMedicalReportCancel()
   await checkMedicalReportCreate(medicalFilesWidgetParams)
   await checkMedicalReportUpdate(medicalFilesWidgetParams)
@@ -46,6 +46,6 @@ export const testMedicalWidgetForHcp = async (medicalFilesWidgetParams: MedicalF
 }
 
 export const testMedicalWidgetForPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
-  await checkMedicalReportContentPatient(medicalFilesWidgetParams)
+  await checkMedicalReportContentForPatient(medicalFilesWidgetParams)
   await checkMedicalReportConsult(medicalFilesWidgetParams)
 }

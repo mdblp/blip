@@ -60,7 +60,7 @@ describe('Patient dashboard for caregiver', () => {
     }
 
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
-      isChartCardVisible: false,
+      isChatCardVisible: false,
       isMedicalFilesCardVisible: false,
       isMonitoringAlertCardVisible: false
     }

@@ -95,7 +95,7 @@ describe('Patient dashboard for HCP', () => {
       }
     }
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
-      isChartCardVisible: true,
+      isChatCardVisible: true,
       isMedicalFilesCardVisible: true,
       isMonitoringAlertCardVisible: true
     }
@@ -139,7 +139,7 @@ describe('Patient dashboard for HCP', () => {
       }
     }
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
-      isChartCardVisible: false,
+      isChatCardVisible: false,
       isMedicalFilesCardVisible: false,
       isMonitoringAlertCardVisible: false
     }

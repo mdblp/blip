@@ -30,7 +30,7 @@ import { screen, within } from '@testing-library/react'
 import { checkFooterForCaregiver, checkFooterForPatient } from './footer'
 
 export interface PatientDashboardLayoutParams {
-  isChartCardVisible: boolean
+  isChatCardVisible: boolean
   isMedicalFilesCardVisible: boolean
   isMonitoringAlertCardVisible: boolean
 }
@@ -51,7 +51,7 @@ export const checkPatientDashboardLayout = async (patientDashboardLayout: Patien
   expect(dashboard.getByText('Patient statistics')).toBeVisible()
   expect(dashboard.getByText('Device Usage')).toBeVisible()
 
-  if (patientDashboardLayout.isChartCardVisible) {
+  if (patientDashboardLayout.isChatCardVisible) {
     expect(dashboard.queryByTestId('chat-card')).toBeVisible()
   } else {
     expect(dashboard.queryByTestId('chat-card')).not.toBeInTheDocument()

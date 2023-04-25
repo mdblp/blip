@@ -43,7 +43,7 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { testPatientListHeaderCaregiver } from '../../assert/patient-list'
+import { checkPatientListHeaderCaregiver } from '../../assert/patient-list'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -65,7 +65,7 @@ describe('Caregiver home page', () => {
     })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
-    testPatientListHeaderCaregiver()
+    checkPatientListHeaderCaregiver()
   })
 
   it('should filter patients correctly depending on the search value', async () => {
@@ -133,7 +133,7 @@ describe('Caregiver home page', () => {
     })
 
     await checkCaregiverLayout(`${firstName} ${lastName}`)
-    testPatientListHeaderCaregiver()
+    checkPatientListHeaderCaregiver()
 
     const patientTableBody = screen.getByTestId('patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
@@ -212,7 +212,7 @@ describe('Caregiver home page', () => {
 
     const columnSettingsButton = screen.getByTestId('column-settings-button')
 
-    testPatientListHeaderCaregiver()
+    checkPatientListHeaderCaregiver()
     expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
