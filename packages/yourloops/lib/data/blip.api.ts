@@ -86,7 +86,7 @@ class BlipApi {
     return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public async getMessages(patient: IUser, options?: GetPatientDataOptions): Promise<MessageNote[]> {
+  public async getMessages(patient: Patient, options?: GetPatientDataOptions): Promise<MessageNote[]> {
     this.log.debug('getMessages', { userId: patient.userid, options })
     const user = this.authHook.user
     if (user) {

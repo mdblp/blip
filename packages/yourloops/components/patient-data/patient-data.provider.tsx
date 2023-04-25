@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2021, Diabeloop
- * Blip typescript definitions
+/*
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,41 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AppConfig } from 'yourloops/lib/config/models/app-config.model'
-import { Patient } from 'yourloops/lib/patient/models/patient.model'
-import BlipApi from 'yourloops/lib/data/blip.api'
-import DialogPDFOptions from 'yourloops/components/dialogs/pdf-print-options'
-import { IUser } from 'yourloops/lib/data/models/i-user.model'
-import { PatientData, PatientDatum } from 'yourloops/lib/data/models/patient-datum.model'
-import { MessageNote } from 'yourloops/lib/data/models/message-note.model'
-import {
-  GetPatientDataOptions,
-  GetPatientDataOptionsV0
-} from 'yourloops/lib/data/models/get-patient-data-options.model'
-import { NavigateFunction } from 'react-router-dom'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import { type PatientDataContextResult, usePatientDataProviderHook } from './patient-data.provider.hook'
 
-interface BlipProperties {
-  config: AppConfig;
-  api: BlipApi;
-  navigate: NavigateFunction;
-  pathName: string;
-  patient: Patient;
-  prefixURL: string;
-  dialogPDFOptions: typeof DialogPDFOptions;
+const PatientDataContext = createContext<PatientDataContextResult>({} as PatientDataContextResult)
+
+export const PatientDataProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const result = usePatientDataProviderHook()
+
+  return <PatientDataContext.Provider value={result}>{children}</PatientDataContext.Provider>
 }
 
-export {
-  BlipProperties,
-  BlipApi,
-  DialogPDFOptions,
-  IUser,
-  PatientDatum,
-  PatientData,
-  MessageNote,
-  GetPatientDataOptions,
-  GetPatientDataOptionsV0
+export function usePatientDataContext(): PatientDataContextResult {
+  return useContext(PatientDataContext)
 }
-
-declare function Blip(props: BlipProperties): JSX.Element;
-
-export default Blip

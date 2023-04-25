@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { type BgType, type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
+import { type DateFilter, DatumType, type MedicalData, TimeService } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
@@ -43,14 +43,14 @@ export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
   dateFilter: DateFilter
-  bgType: BgType
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { medicalData, bgPrefs, bgType, dateFilter, children } = props
+  const { medicalData, bgPrefs, dateFilter, children } = props
   const theme = useTheme()
   const location = useLocation()
 
+  const bgType = DatumType.Cbg // TODO Remove SMBG, we now only work with CBG !!!
   const cbgSelected = bgType === DatumType.Cbg
   const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)

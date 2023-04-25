@@ -96,7 +96,7 @@ class MedicalDataService {
 
   timezoneList: TimeZoneItem[] = []
 
-  endpoints: string[] = []
+  endpoints: [string, string] = ['', '']
 
   fills: Fill[] = []
 

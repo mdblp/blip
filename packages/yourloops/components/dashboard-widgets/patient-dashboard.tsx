@@ -29,12 +29,10 @@ import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import type MedicalDataService from 'medical-domain'
-import { type TimePrefs } from 'medical-domain'
-import { type ChartPrefs } from './models/chart-prefs.model'
+import { DatumType, type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
 import type DataUtil from 'tidepool-viz/src/utils/data'
 import moment, { type Moment } from 'moment-timezone'
-import type metrics from '../../lib/metrics'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -57,7 +55,6 @@ import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  chartPrefs: ChartPrefs
   dataUtil: typeof DataUtil
   epochDate: number
   loading: boolean
@@ -65,7 +62,6 @@ interface PatientDashboardProps {
   msRange: number
   patient: Patient
   timePrefs: TimePrefs
-  trackMetric: typeof metrics.send
   onSwitchToDaily: (dateTime: Moment | Date | number | null) => void
 }
 
@@ -80,7 +76,6 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
-    chartPrefs,
     dataUtil,
     epochDate,
     loading,
@@ -88,7 +83,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     msRange,
     patient,
     timePrefs,
-    trackMetric,
     onSwitchToDaily
   } = props
   const { user } = useAuth()
@@ -149,16 +143,14 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           medicalData={medicalData}
           bgPrefs={bgPrefs}
           dateFilter={dateFilter}
-          bgType={dataUtil.bgSource}
         >
           <Stats
             bgPrefs={bgPrefs}
-            bgSource={dataUtil.bgSource}
-            chartPrefs={chartPrefs}
+            bgSource={DatumType.Cbg}
             chartType="patientStatistics"
+            loading={loading}
             dataUtil={dataUtil}
             endpoints={endpoints}
-            loading={loading}
             parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}
           />
         </PatientStatisticsWidget>
@@ -170,8 +162,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           timePrefs={timePrefs}
           patient={patient}
           tidelineData={medicalDataService}
-          trackMetric={trackMetric}
-          dataUtil={dataUtil}
           onSwitchToDaily={onSwitchToDaily}
           medicalData={medicalData}
           dateFilter={dateFilter}

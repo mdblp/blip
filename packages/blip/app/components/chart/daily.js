@@ -23,7 +23,7 @@ import WindowSizeListener from 'react-window-size-listener'
 import i18next from 'i18next'
 
 import { chartDailyFactory } from 'tideline'
-import { TimeService } from 'medical-domain'
+import { DatumType, TimeService } from 'medical-domain'
 
 import { components as vizComponents } from 'tidepool-viz'
 
@@ -44,6 +44,7 @@ import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import Stats from './stats'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
+import metrics from 'yourloops/lib/metrics'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -240,7 +241,7 @@ class DailyChart extends React.Component {
 }
 
 /**
- * @typedef {{tidelineData: MedicalDataService; epochLocation: number; bgPrefs: any; msRange: number; loading: boolean; trackMetric: ()=>void; datePicker?: DatePicker}} DailyProps
+ * @typedef {{tidelineData: MedicalDataService; epochLocation: number; bgPrefs: any; msRange: number; loading: boolean; datePicker?: DatePicker}} DailyProps
  */
 
 /** @augments React.Component<DailyProps> */
@@ -249,7 +250,6 @@ class Daily extends React.Component {
     patient: PropTypes.object.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
-    chartPrefs: PropTypes.object.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
@@ -262,9 +262,7 @@ class Daily extends React.Component {
     onCreateMessage: PropTypes.func.isRequired,
     onShowMessageThread: PropTypes.func.isRequired,
     // navigation handlers
-    onDatetimeLocationChange: PropTypes.func.isRequired,
-    updateChartPrefs: PropTypes.func.isRequired,
-    trackMetric: PropTypes.func.isRequired
+    onDatetimeLocationChange: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -272,7 +270,6 @@ class Daily extends React.Component {
 
     /** @type {React.RefObject<DailyChart>} */
     this.chartRef = React.createRef()
-    this.chartType = ChartTypes.Daily
     this.log = bows('DailyView')
     this.state = {
       atMostRecent: this.isAtMostRecent(),
@@ -306,8 +303,9 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading, timePrefs } = this.props
+    const { tidelineData, epochLocation, msRange, loading, timePrefs } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
+    const trackMetric = metrics.send
     const endpoints = this.getEndpoints()
     const dateFilter = {
       start: Date.parse(endpoints[0]).valueOf(),
@@ -379,13 +377,12 @@ class Daily extends React.Component {
                   medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
                   dateFilter={dateFilter}
-                  bgType={this.props.dataUtil.bgSource}
                 >
                   <Stats
                     bgPrefs={this.props.bgPrefs}
-                    bgSource={this.props.dataUtil.bgSource}
-                    chartPrefs={this.props.chartPrefs}
-                    chartType={this.chartType}
+                    bgSource={DatumType.Cbg}
+                    chartPrefs={{}}
+                    chartType={ChartTypes.Daily}
                     dataUtil={this.props.dataUtil}
                     endpoints={endpoints}
                     loading={loading}
@@ -395,9 +392,7 @@ class Daily extends React.Component {
             </div>
           </Box>
         </Box>
-        <Footer
-          chartType={this.chartType}
-          onClickRefresh={this.props.onClickRefresh} />
+        <Footer onClickRefresh={this.props.onClickRefresh} />
         {tooltip}
       </div>
     )

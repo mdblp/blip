@@ -25,54 +25,163 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
-import { usePatientData } from './patient-data.hook'
 import { Route, Routes } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import SpinningLoader from '../loaders/spinning-loader'
 import DialogPDFOptions from '../dialogs/pdf-print-options'
+import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
+import Daily from 'blip/app/components/chart/daily'
+import Trends from 'blip/app/components/chart/trends'
+import { usePatientDataContext } from './patient-data.provider'
+import SpinningLoader from '../loaders/spinning-loader'
+import { useAlert } from '../utils/snackbar'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import { useTranslation } from 'react-i18next'
+import { useTheme } from '@mui/material/styles'
 
 export const PatientData: FunctionComponent = () => {
-  const { currentChart, selectedPatient, changeChart, changePatient } = usePatientData()
+  const alert = useAlert()
+  const { t } = useTranslation()
+  const theme = useTheme()
+  const {
+    bgPrefs,
+    chartPrefs,
+    changeChart,
+    changePatient,
+    currentChart,
+    dataUtil,
+    epochLocation,
+    fetchPatientData,
+    handleDatetimeLocationChange,
+    loadingData,
+    medicalData,
+    msRange,
+    refreshData,
+    refreshingData,
+    patient,
+    timePrefs,
+    updateChartPrefs
+  } = usePatientDataContext()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
+
+  useEffect(() => {
+    fetchPatientData()
+      .catch((err) => {
+        console.log(err)
+        alert.error(err.toString())
+      })
+  }, [patient])
 
   return (
     <React.Fragment>
       <PatientNavBar
         currentChart={currentChart}
-        currentPatient={selectedPatient}
+        currentPatient={patient}
         onChangeChart={changeChart}
-        onClickPrint={() => { setShowPdfDialog(true) }}
+        onClickPrint={() => {
+          setShowPdfDialog(true)
+        }}
         onSwitchPatient={changePatient}
       />
-      <Routes>
-        <Route
-          path={AppUserRoute.Dashboard}
-          element={
-            <SpinningLoader />
-          }
-        />
-        <Route
-          path={AppUserRoute.Daily}
-          element={
-            <h1>daily</h1>
-          }
-        />
-        <Route
-          path={AppUserRoute.Trends}
-          element={
-            <h1>Trends</h1>
-          }
-        />
-      </Routes>
+      <React.Fragment>
+        {loadingData
+          ? <SpinningLoader className="centered-spinning-loader" />
+          : <React.Fragment>
+            {!medicalData?.hasDiabetesData() &&
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                height="100%"
+              >
+                <Typography>No data for patient {patient.profile.fullName}</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disableElevation
+                  onClick={refreshData}
+                  sx={{ marginTop: theme.spacing(1) }}
+                >
+                  {t('refresh')}
+                </Button>
+              </Box>
+            }
+            {medicalData?.hasDiabetesData() && dataUtil &&
+              <Routes>
+                <Route
+                  path={AppUserRoute.Dashboard}
+                  element={
+                    <PatientDashboard
+                      bgPrefs={bgPrefs}
+                      dataUtil={dataUtil}
+                      epochDate={epochLocation}
+                      medicalDataService={medicalData}
+                      msRange={msRange}
+                      patient={patient}
+                      timePrefs={timePrefs}
+                      loading={refreshingData}
+                      // onSwitchToDaily={this.handleSwitchToDaily}
+                      onSwitchToDaily={() => {
+                        console.log('switch')
+                      }}
+                    />
+                  }
+                />
+                <Route
+                  path={AppUserRoute.Daily}
+                  element={
+                    <Daily
+                      bgPrefs={bgPrefs}
+                      dataUtil={dataUtil}
+                      timePrefs={timePrefs}
+                      patient={patient}
+                      tidelineData={medicalData}
+                      epochLocation={epochLocation}
+                      msRange={msRange}
+                      loading={refreshingData}
+                      onClickRefresh={refreshData}
+                      onCreateMessage={() => {}}
+                      onShowMessageThread={() => {}}
+                      onDatetimeLocationChange={handleDatetimeLocationChange}
+                    />
+                  }
+                />
+                <Route
+                  path={AppUserRoute.Trends}
+                  element={
+                    <Trends
+                      bgPrefs={bgPrefs}
+                      chartPrefs={chartPrefs}
+                      dataUtil={dataUtil}
+                      timePrefs={timePrefs}
+                      epochLocation={epochLocation}
+                      msRange={msRange}
+                      patient={patient}
+                      tidelineData={medicalData}
+                      loading={refreshingData}
+                      onClickRefresh={refreshData}
+                      // onSwitchToDaily={this.handleSwitchToDaily}
+                      onSwitchToDaily={() => {}}
+                      onDatetimeLocationChange={handleDatetimeLocationChange}
+                      updateChartPrefs={updateChartPrefs}
+                    />
+                  }
+                />
+              </Routes>
+            }
+          </React.Fragment>
+        }
+      </React.Fragment>
       {showPdfDialog &&
         <DialogPDFOptions
           minDate={'2021'}
           maxDate={'2022'}
           onResult={() => {
-            console.log('coucou')
             setShowPdfDialog(false)
           }}
           defaultPreset={'1week'}
