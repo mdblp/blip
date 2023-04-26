@@ -35,7 +35,7 @@ export enum PatientListColumns {
   Age = 'age',
   DateOfBirth = 'date-of-birth',
   Flag = 'flag',
-  Gender = 'Gender',
+  Gender = 'gender',
   Icon = 'icon',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',

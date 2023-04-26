@@ -37,6 +37,8 @@ import { Gender } from '../auth/models/enums/gender.enum'
 
 const t = i18next.t.bind(i18next)
 
+const NO_GENDER_LABEL = '-'
+
 export default class PatientUtils {
   static async retrievePatients(): Promise<Patient[]> {
     const patientsAsITeamMembers = await PatientApi.getPatients()
@@ -137,7 +139,7 @@ export default class PatientUtils {
       case Gender.Male:
         return t('gender-m')
       default:
-        return '-'
+        return NO_GENDER_LABEL
     }
   }
 }
