@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import i18next from 'i18next'
 
-  bail: true,
+const t = i18next.t.bind(i18next)
 
-  displayName: 'yourloops integration',
-
-  maxWorkers: 4,
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 150000
+export const getUserName = (firstName: string, lastName: string, fullName: string): string => {
+  return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
 }

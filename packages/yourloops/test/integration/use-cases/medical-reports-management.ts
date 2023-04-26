@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { t } from '../language'
+import {
+  checkMedicalReportCancel,
+  checkMedicalReportConsult,
+  checkMedicalReportContentForHcp,
+  checkMedicalReportContentForPatient,
+  checkMedicalReportCreate,
+  checkMedicalReportDelete,
+  checkMedicalReportUpdate,
+  type MedicalFilesWidgetParams
+} from '../assert/medical-widget'
 
-export const genderLabels = (): Record<string, string> => ({
-  M: t('gender-m'),
-  F: t('gender-f'),
-  '': ''
-})
+export const testMedicalWidgetForHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+  await checkMedicalReportContentForHcp(medicalFilesWidgetParams)
+  await checkMedicalReportCancel()
+  await checkMedicalReportCreate(medicalFilesWidgetParams)
+  await checkMedicalReportUpdate(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams)
+  await checkMedicalReportDelete(medicalFilesWidgetParams)
+}
+
+export const testMedicalWidgetForPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
+  await checkMedicalReportContentForPatient(medicalFilesWidgetParams)
+  await checkMedicalReportConsult(medicalFilesWidgetParams)
+}

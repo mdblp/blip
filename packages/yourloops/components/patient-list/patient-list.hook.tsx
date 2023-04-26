@@ -31,7 +31,6 @@ import { useTranslation } from 'react-i18next'
 import { usePatientListStyles } from './patient-list.styles'
 import { PatientListColumns, PatientListTabs } from './models/enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { getMedicalValues } from '../patient/utils'
 import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell, PendingIconCell } from './custom-cells'
 import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
@@ -43,8 +42,10 @@ import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
 import { getPatientFullName } from 'dumb'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import { useSortComparatorsHook } from '../../lib/custom-hooks/sort-comparators.hook'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+import { sortByFlag, sortByUserName } from './sort-comparators.util'
+import { getUserName } from '../../lib/auth/user.util'
 import { formatBirthdate } from 'dumb/dist/src/utils/datetime/datetime.util'
 import { Gender } from '../../lib/auth/models/enums/gender.enum'
 
@@ -72,8 +73,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { classes } = usePatientListStyles()
   const { getFlagPatients, user } = useAuth()
   const { getPatientById, searchPatients } = usePatientContext()
-  const { getUserName } = useUserName()
-  const { sortByUserName } = useSortComparatorsHook()
   const { updatePendingFilter } = usePatientListContext()
   const navigate = useNavigate()
   const trNA = t('N/A')
@@ -88,7 +87,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const filteredPatients = useMemo(() => {
     const searchedPatients = searchPatients(inputSearch)
     return PatientUtils.computeFlaggedPatients(searchedPatients, flaggedPatients).sort(sortByUserName)
-  }, [searchPatients, inputSearch, flaggedPatients, sortByUserName])
+  }, [searchPatients, inputSearch, flaggedPatients])
 
   const onChangingTab = (newTab: PatientListTabs): void => {
     setSelectedTab(newTab)
@@ -120,7 +119,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   }
 
   const onRowClick = (params: GridRowParams): void => {
-    navigate(`/patient/${params.id}/dashboard`)
+    navigate(`${AppUserRoute.Patient}/${params.id}/dashboard`)
   }
 
   const sharedColumns = useMemo((): SharedColumns => {
@@ -151,7 +150,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
     }
 
     return { patientColumn, actionColumn }
-  }, [classes.mandatoryCellBorder, getUserName, onClickRemovePatient, selectedTab, sortByUserName, t])
+  }, [classes.mandatoryCellBorder, onClickRemovePatient, selectedTab, t])
 
   const buildPendingColumns = useCallback((): GridColDef[] => {
     return [
@@ -179,7 +178,8 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: '',
         width: 55,
         hideable: false,
-        sortable: false,
+        sortable: true,
+        sortComparator: sortByFlag,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
           const patient = params.value
           return <FlagIconCell isFlagged={patient.metadata.flagged} patient={patient} />

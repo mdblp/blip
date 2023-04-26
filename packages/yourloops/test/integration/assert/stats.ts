@@ -46,8 +46,8 @@ const hoverOnCBGPercentageStat = async (patientStatistics: BoundFunctions<typeof
   await userEvent.unhover(patientStatistics.getByTestId(statId))
 }
 
-export const checkTooltip = (patientStatistics: BoundFunctions<typeof queries>, labelToQuery: string) => {
-  const stat = patientStatistics.getByText(labelToQuery)
+export const checkTooltip = (element: BoundFunctions<typeof queries>, labelToQuery: string) => {
+  const stat = element.getByText(labelToQuery)
   expect(stat).toBeVisible()
   expect(within(stat).queryByTestId('info-icon')).toBeInTheDocument()
 }

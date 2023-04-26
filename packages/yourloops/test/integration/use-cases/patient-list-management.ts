@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import {
+  checkMonitoringAlertsIconsInactiveForFirstPatient,
+  checkPatientColumnsFiltersContent,
+  checkPatientColumnsFiltersHideColumns,
+  checkPatientColumnsFiltersShowColumns,
+  checkPatientListColumnSort,
+  checkPatientListContentHcp,
+  checkPatientListCurrentTab,
+  checkPatientListFilters,
+  checkPatientListHeaderForHcp,
+  checkPatientListPendingTab,
+  checkPatientListTooltips,
+  type Router
+} from '../assert/patient-list'
 
-  bail: true,
-
-  displayName: 'yourloops integration',
-
-  maxWorkers: 4,
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 150000
+export const testPatientListForHcp = async (router: Router) => {
+  checkPatientListHeaderForHcp()
+  checkPatientListContentHcp()
+  await checkPatientListTooltips()
+  await checkPatientListColumnSort()
+  await checkMonitoringAlertsIconsInactiveForFirstPatient()
+  await checkPatientListFilters()
+  await checkPatientColumnsFiltersContent()
+  await checkPatientColumnsFiltersHideColumns()
+  await checkPatientColumnsFiltersShowColumns()
+  await checkPatientListPendingTab(router)
+  await checkPatientListCurrentTab()
 }

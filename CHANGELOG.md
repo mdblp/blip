@@ -17,6 +17,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2183 Merging monitoring alerts into 1 column in the patient list (step 1)
 - YLP-2184 Merging monitoring alerts into 1 column in the patient list (step 2)
 - YLP-2185 Merging monitoring alerts into 1 column in the patient list (step 3)
+- YLP-2188 Sort patients by column on patient list
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
 - YLP-2215 Implement specific daily visualisation of UMM bolus
@@ -75,6 +76,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2293 Migrate Average Glucose from stat.js to yourloops
 - YLP-2300 Remove the remote monitoring invitation flow
 - YLP-2301 Split ITs jobs by roles
+- YLP-2311 Reorganize ITs
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

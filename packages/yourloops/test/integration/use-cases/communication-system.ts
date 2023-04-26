@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
-import { useUserName } from '../../../../lib/custom-hooks/user-name.hook'
+import {
+  checkChatWidgetMessageReadingForHcp,
+  checkChatWidgetMessageReadingForPatient,
+  checkChatWidgetMessageSending
+} from '../assert/chat-widget'
+import { mySecondTeamId, myThirdTeamId } from '../mock/team.api.mock'
 
-describe('User name hook', () => {
-  describe('getUserName', () => {
-    it('should return the translated value if first and last name are present, else the fullname', () => {
-      const firstName = 'Ali'
-      const lastName = 'Gator'
-      const fullName = 'Ali Gator'
+export const testChatWidgetForHcp = async (): Promise<void> => {
+  await checkChatWidgetMessageReadingForHcp()
+  await checkChatWidgetMessageSending(myThirdTeamId)
+}
 
-      const { result } = renderHook(() => useUserName())
-      const onlyFullNameCaseName = result.current.getUserName('', '', fullName)
-      const firstNameCaseName = result.current.getUserName(firstName, '', fullName)
-      const lastNameCaseName = result.current.getUserName('', lastName, fullName)
-      const bothNamesCaseName = result.current.getUserName(firstName, lastName, fullName)
-
-      expect(onlyFullNameCaseName).toEqual(fullName)
-      expect(firstNameCaseName).toEqual(fullName)
-      expect(lastNameCaseName).toEqual(fullName)
-      expect(bothNamesCaseName).toEqual('user-name')
-    })
-  })
-})
+export const testChatWidgetForPatient = async (): Promise<void> => {
+  await checkChatWidgetMessageReadingForPatient()
+  await checkChatWidgetMessageSending(mySecondTeamId)
+}

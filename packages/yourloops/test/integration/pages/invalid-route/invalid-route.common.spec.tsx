@@ -28,12 +28,12 @@
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { checkHCPLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'
@@ -49,6 +49,17 @@ describe('Invalid Route', () => {
   })
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
     const router = renderPage('/wrongRoute')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/not-found')
@@ -58,6 +69,6 @@ describe('Invalid Route', () => {
     expect(homeLink).toBeVisible()
     expect(homeLink).toHaveAttribute('href', '/')
 
-    await checkHCPLayout(`${firstName} ${lastName}`, { teamName: myThirdTeamName }, buildAvailableTeams())
+    await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 })

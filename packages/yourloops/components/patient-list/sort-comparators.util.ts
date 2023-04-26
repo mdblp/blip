@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,32 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { type GridComparatorFn } from '@mui/x-data-grid'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import { getUserName } from '../../lib/auth/user.util'
 
-import PatientInfo, { type PatientInfoProps } from '../../../../components/patient/patient-info'
-import { createPatient } from '../../common/utils'
-import { genderLabels } from '../../../../lib/auth/auth.helper'
-import moment from 'moment-timezone'
+interface SortComparator extends GridComparatorFn<Patient> {
+  (patient1: Patient, patient2: Patient): number
+}
 
-describe('PatientInfo', () => {
-  const patient = createPatient()
+export const sortByUserName: SortComparator = (patient1, patient2): number => {
+  const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
+  const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
+  return patient1FullName.localeCompare(patient2FullName)
+}
 
-  function getPatientInfoJSX(props: PatientInfoProps = { patient }) {
-    return <PatientInfo {...props} />
+export const sortByFlag: SortComparator = (patient1: Patient, patient2: Patient): number => {
+  const isPatient1Flagged = patient1.metadata.flagged
+  const isPatient2Flagged = patient2.metadata.flagged
+
+  if (isPatient1Flagged && !isPatient2Flagged) {
+    return -1
   }
-
-  it('should display correct information', () => {
-    render(getPatientInfoJSX())
-    expect(screen.getByText('patient')).not.toBeNull()
-    expect(screen.getByText(patient.profile.fullName)).not.toBeNull()
-    expect(screen.getByText('email')).not.toBeNull()
-    expect(screen.getByText(patient.profile.email)).not.toBeNull()
-    expect(screen.getByText('gender')).not.toBeNull()
-    expect(screen.getByText(genderLabels()[patient.profile.sex])).not.toBeNull()
-    expect(screen.getByText('birthdate')).not.toBeNull()
-    expect(screen.getByText(moment.utc(patient.profile.birthdate).format('L'))).not.toBeNull()
-    expect(screen.getByText('initial-hba1c')).not.toBeNull()
-    expect(screen.getByText(patient.settings.a1c?.value)).not.toBeNull()
-  })
-})
+  if (!isPatient1Flagged && isPatient2Flagged) {
+    return 1
+  }
+  return 0
+}

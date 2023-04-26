@@ -25,20 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import { getUserName } from '../../../../lib/auth/user.util'
 
-  bail: true,
+describe('User util', () => {
+  describe('getUserName', () => {
+    it('should return the translated value if first and last name are present, else the fullname', () => {
+      const firstName = 'Ali'
+      const lastName = 'Gator'
+      const fullName = 'Ali Gator'
 
-  displayName: 'yourloops integration',
+      const onlyFullNameCaseName = getUserName('', '', fullName)
+      const firstNameCaseName = getUserName(firstName, '', fullName)
+      const lastNameCaseName = getUserName('', lastName, fullName)
+      const bothNamesCaseName = getUserName(firstName, lastName, fullName)
 
-  maxWorkers: 4,
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 150000
-}
+      expect(onlyFullNameCaseName).toEqual(fullName)
+      expect(firstNameCaseName).toEqual(fullName)
+      expect(lastNameCaseName).toEqual(fullName)
+      expect(bothNamesCaseName).toEqual('user-name')
+    })
+  })
+})
