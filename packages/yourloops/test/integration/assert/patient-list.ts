@@ -27,7 +27,6 @@
 
 import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { monitoredPatient, pendingPatient, unmonitoredPatient } from '../data/patient.api.data'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import DirectShareApi from '../../../lib/share/direct-share.api'
 import { filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
@@ -40,6 +39,13 @@ import {
 } from './patient-filters'
 import { changeTeamScope } from './header'
 import { type createBrowserRouter } from 'react-router-dom'
+import {
+  monitoredPatient,
+  monitoredPatientTwo,
+  monitoredPatientWithMmol,
+  pendingPatient,
+  unmonitoredPatient
+} from '../data/patient.api.data'
 
 export type Router = ReturnType<typeof createBrowserRouter>
 
@@ -579,4 +585,46 @@ export const checkPatientListTooltips = async (): Promise<void> => {
   await waitFor(() => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
+}
+
+export const checkPatientListColumnSort = async (): Promise<void> => {
+  const dataGridRows = screen.getByTestId('patient-list-grid')
+
+  const patientColumnHeader = within(dataGridRows).getByRole('columnheader', { name: 'Patient' })
+  const allRowsBeforeSort = within(dataGridRows).getAllByRole('row')
+  expect(allRowsBeforeSort[1]).toHaveTextContent(monitoredPatient.profile.fullName)
+  expect(allRowsBeforeSort[2]).toHaveTextContent(monitoredPatientTwo.profile.fullName)
+  expect(allRowsBeforeSort[3]).toHaveTextContent(monitoredPatientWithMmol.profile.fullName)
+  expect(allRowsBeforeSort[4]).toHaveTextContent(unmonitoredPatient.profile.fullName)
+
+  const sortButton = within(patientColumnHeader).getByRole('button', { hidden: true })
+  await userEvent.click(sortButton)
+
+  const allRowsAfterFirstSort = within(dataGridRows).getAllByRole('row')
+  expect(allRowsAfterFirstSort[1]).toHaveTextContent(unmonitoredPatient.profile.fullName)
+  expect(allRowsAfterFirstSort[2]).toHaveTextContent(monitoredPatientWithMmol.profile.fullName)
+  expect(allRowsAfterFirstSort[3]).toHaveTextContent(monitoredPatientTwo.profile.fullName)
+  expect(allRowsAfterFirstSort[4]).toHaveTextContent(monitoredPatient.profile.fullName)
+
+  await userEvent.click(sortButton)
+
+  const allRowsAfterSecondSort = within(dataGridRows).getAllByRole('row')
+  expect(allRowsAfterSecondSort[1]).toHaveTextContent(monitoredPatient.profile.fullName)
+  expect(allRowsAfterSecondSort[2]).toHaveTextContent(monitoredPatientTwo.profile.fullName)
+  expect(allRowsAfterSecondSort[3]).toHaveTextContent(monitoredPatientWithMmol.profile.fullName)
+  expect(allRowsAfterSecondSort[4]).toHaveTextContent(unmonitoredPatient.profile.fullName)
+}
+
+export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promise<void> => {
+  const dataGridRows = screen.getByTestId('patient-list-grid')
+  const disabledColorAsRgba = 'rgba(0, 0, 0, 0.26)'
+
+  const firstRowTimeSpentOutOfRangeIcon = within(dataGridRows).getAllByTestId('time-spent-out-of-range-icon')[0]
+  expect(firstRowTimeSpentOutOfRangeIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)
+
+  const firstRowHypoglycemiaIcon = within(dataGridRows).getAllByTestId('hypoglycemia-icon')[0]
+  expect(firstRowHypoglycemiaIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)
+
+  const firstRowNoDataIcon = within(dataGridRows).getAllByTestId('no-data-icon')[0]
+  expect(firstRowNoDataIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)
 }

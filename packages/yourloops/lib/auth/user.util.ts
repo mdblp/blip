@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
-import { useUserName } from '../../../../lib/custom-hooks/user-name.hook'
+import i18next from 'i18next'
 
-describe('User name hook', () => {
-  describe('getUserName', () => {
-    it('should return the translated value if first and last name are present, else the fullname', () => {
-      const firstName = 'Ali'
-      const lastName = 'Gator'
-      const fullName = 'Ali Gator'
+const t = i18next.t.bind(i18next)
 
-      const { result } = renderHook(() => useUserName())
-      const onlyFullNameCaseName = result.current.getUserName('', '', fullName)
-      const firstNameCaseName = result.current.getUserName(firstName, '', fullName)
-      const lastNameCaseName = result.current.getUserName('', lastName, fullName)
-      const bothNamesCaseName = result.current.getUserName(firstName, lastName, fullName)
-
-      expect(onlyFullNameCaseName).toEqual(fullName)
-      expect(firstNameCaseName).toEqual(fullName)
-      expect(lastNameCaseName).toEqual(fullName)
-      expect(bothNamesCaseName).toEqual('user-name')
-    })
-  })
-})
+export const getUserName = (firstName: string, lastName: string, fullName: string): string => {
+  return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
+}

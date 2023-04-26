@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useTranslation } from 'react-i18next'
+import { getUserName } from '../../../../lib/auth/user.util'
 
-interface UserNameHookReturn {
-  getUserName: (firstName: string, lastName: string, fullName: string) => string
-}
+describe('User util', () => {
+  describe('getUserName', () => {
+    it('should return the translated value if first and last name are present, else the fullname', () => {
+      const firstName = 'Ali'
+      const lastName = 'Gator'
+      const fullName = 'Ali Gator'
 
-export const useUserName = (): UserNameHookReturn => {
-  const { t } = useTranslation('yourloops')
+      const onlyFullNameCaseName = getUserName('', '', fullName)
+      const firstNameCaseName = getUserName(firstName, '', fullName)
+      const lastNameCaseName = getUserName('', lastName, fullName)
+      const bothNamesCaseName = getUserName(firstName, lastName, fullName)
 
-  const getUserName = (firstName: string, lastName: string, fullName: string): string => {
-    return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
-  }
-
-  return { getUserName }
-}
+      expect(onlyFullNameCaseName).toEqual(fullName)
+      expect(firstNameCaseName).toEqual(fullName)
+      expect(lastNameCaseName).toEqual(fullName)
+      expect(bothNamesCaseName).toEqual('user-name')
+    })
+  })
+})

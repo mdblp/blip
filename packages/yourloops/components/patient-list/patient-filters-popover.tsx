@@ -37,7 +37,6 @@ import { type PatientsFilters } from '../../lib/providers/models/patients-filter
 import FlagIcon from '@mui/icons-material/Flag'
 import Popover from '@mui/material/Popover'
 import { useTheme } from '@mui/material/styles'
-import EmailIcon from '@mui/icons-material/Email'
 import { makeStyles } from 'tss-react/mui'
 import { PatientListOptionToggle } from './patient-list-option-toggle'
 import Divider from '@mui/material/Divider'
@@ -45,6 +44,7 @@ import DialogActions from '@mui/material/DialogActions'
 import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-range-icon'
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
+import { MessageIcon } from '../icons/diabeloop/message-icon'
 
 interface PatientsFiltersDialogProps {
   anchorEl: Element
@@ -135,7 +135,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
         <PatientListOptionToggle
           ariaLabel={t('filter-unread-messages')}
           checked={filters.messagesEnabled}
-          icon={<EmailIcon />}
+          icon={<MessageIcon />}
           label={t('messages')}
           onToggleChange={() => {
             setFilters({ ...filters, messagesEnabled: !filters.messagesEnabled })
