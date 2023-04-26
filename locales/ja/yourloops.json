@@ -310,7 +310,6 @@
   "optional": "任意",
   "page-not-found": "ページが見つかりません。",
   "patient": "患者",
-  "patient-info-reminder": "患者情報通知",
   "patient-list-search-placeholder": "Search for a patient...",
   "patient-list-search-tooltip": "Search by first name, last name or birthdate (dd/mm/yyyy)",
   "patient-profile-hba1c": "初期HbA1c {{hba1cDate}}",
