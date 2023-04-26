@@ -310,7 +310,6 @@
   "optional": "Optionnel",
   "page-not-found": "Page introuvable",
   "patient": "Patient",
-  "patient-info-reminder": "Rappel des informations du patient",
   "patient-list-search-placeholder": "Search for a patient...",
   "patient-list-search-tooltip": "Search by first name, last name or birthdate (dd/mm/yyyy)",
   "patient-profile-hba1c": "HbA1c initiale {{hba1cDate}}",
