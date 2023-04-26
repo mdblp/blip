@@ -50,11 +50,9 @@ describe('Team hook', () => {
   const team2 = buildTeam('team2Id', [])
   const team3 = buildTeam('team3Id', [memberHcp2])
   const team4 = buildTeam('team4Id', [])
-  team4.monitoring.enabled = false
   const unmonitoredTeam = buildTeam('team4Id', [], 'fakeTeamName')
-  unmonitoredTeam.monitoring = undefined
-  const privateTeam = buildTeam('private', undefined, undefined, TeamType.private, false)
-  const caregiverTeam = buildTeam('caregiverId', undefined, undefined, TeamType.caregiver, false)
+  const privateTeam = buildTeam('private', undefined, undefined, TeamType.private)
+  const caregiverTeam = buildTeam('caregiverId', undefined, undefined, TeamType.caregiver)
   const teams: Team[] = [team1, team2, team3, team4, unmonitoredTeam, privateTeam, caregiverTeam]
 
   const notificationHookCancelMock = jest.fn()
@@ -73,7 +71,9 @@ describe('Team hook', () => {
           <DummyComponent />
         </TeamContextProvider>
       )
-      await waitFor(() => { expect(teamHook.teams.length).toBeGreaterThan(0) })
+      await waitFor(() => {
+        expect(teamHook.teams.length).toBeGreaterThan(0)
+      })
     })
   }
 
@@ -134,17 +134,10 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.updateTeamAlerts(team1)
         expect(updateTeamAlertsSpy).toHaveBeenCalled()
-        await waitFor(() => { expect(getTeamsSpy).toHaveBeenCalledTimes(3) })
+        await waitFor(() => {
+          expect(getTeamsSpy).toHaveBeenCalledTimes(3)
+        })
       })
-    })
-  })
-
-  describe('getRemoteMonitoringTeams', () => {
-    it('should only return teams with monitoring enabled', async () => {
-      const expectedResult = [team1, team2, team3]
-      await mountComponent()
-      const monitoredTeams = teamHook.getRemoteMonitoringTeams()
-      expect(monitoredTeams).toEqual(expectedResult)
     })
   })
 

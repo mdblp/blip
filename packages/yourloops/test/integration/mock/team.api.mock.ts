@@ -39,13 +39,14 @@ import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert
 import { type ITeam } from '../../../lib/team/models/i-team.model'
 import { Unit } from 'medical-domain'
 import { PRIVATE_TEAM_ID, PRIVATE_TEAM_NAME } from '../../../lib/team/team.hook'
+import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 
 const {
   minVeryLowBg,
   minLowBg,
   minHighBg
 } = DEFAULT_THRESHOLDS_IN_MGDL
-export const monitoringParameters = {
+export const monitoringParameters: MonitoringAlertsParameters = {
   bgUnit: Unit.MilligramPerDeciliter,
   lowBg: minLowBg,
   highBg: minHighBg,

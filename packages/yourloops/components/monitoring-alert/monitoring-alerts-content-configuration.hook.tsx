@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { useTeam } from '../../lib/team'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import type React from 'react'
 import { useMemo, useState } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -37,16 +36,16 @@ import {
   REGEX_VALUE_BG
 } from './monitoring-alert-content-configuration.util'
 import { type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
-import { DEFAULT_BG_VALUES } from './monitoring-alert.default'
-import { useAuth } from '../../lib/auth'
 import { type BgUnit, Unit } from 'medical-domain'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 
 export interface MonitoringAlertsContentConfigurationHookProps {
-  monitoring: Monitoring
-  saveInProgress?: boolean
+  monitoringAlertsParameters: MonitoringAlertsParameters
   patient?: Patient
-  onSave?: (monitoring: Monitoring) => void
+  saveInProgress?: boolean
+  userBgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter
+  onSave?: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
 }
 
 interface MonitoringAlertsContentConfigurationHookReturn {
@@ -82,40 +81,15 @@ interface ValueErrorPair {
 const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
 
 const useMonitoringAlertsContentConfiguration = ({
-  monitoring,
+  monitoringAlertsParameters,
   saveInProgress,
+  userBgUnit,
   onSave,
   patient
 }: MonitoringAlertsContentConfigurationHookProps): MonitoringAlertsContentConfigurationHookReturn => {
-  const { user } = useAuth()
   const { selectedTeam } = useSelectedTeamContext()
 
-  const userBgUnit = user.settings?.units?.bg ?? DEFAULT_BG_UNIT
-  const monitoringBgUnit = monitoring.parameters?.bgUnit ?? DEFAULT_BG_UNIT
-
-  const {
-    highBgDefault,
-    hypoThresholdDefault,
-    nonDataTxThresholdDefault,
-    outOfRangeThresholdDefault,
-    lowBgDefault,
-    veryLowBgDefault,
-    reportingPeriodDefault,
-    bgUnitDefault
-  } = DEFAULT_BG_VALUES
-
-  if (!monitoring.parameters) {
-    monitoring.parameters = {
-      bgUnit: bgUnitDefault,
-      lowBg: lowBgDefault,
-      highBg: highBgDefault,
-      outOfRangeThreshold: outOfRangeThresholdDefault,
-      veryLowBg: veryLowBgDefault,
-      hypoThreshold: hypoThresholdDefault,
-      nonDataTxThreshold: nonDataTxThresholdDefault,
-      reportingPeriod: reportingPeriodDefault
-    }
-  }
+  const monitoringBgUnit = monitoringAlertsParameters?.bgUnit ?? DEFAULT_BG_UNIT
 
   const { t } = useTranslation('yourloops')
 
@@ -124,6 +98,7 @@ const useMonitoringAlertsContentConfiguration = ({
   const thresholds = useMemo<Thresholds>(() => buildThresholds(userBgUnit), [userBgUnit])
 
   const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
+    console.log(userBgUnit)
     if (userBgUnit === Unit.MilligramPerDeciliter && !(Number.isInteger(value))) {
       return t('mandatory-integer')
     }
@@ -139,7 +114,7 @@ const useMonitoringAlertsContentConfiguration = ({
     return null
   }
 
-  const highBgValue = getConvertedValue(monitoring.parameters.highBg, monitoringBgUnit, userBgUnit)
+  const highBgValue = getConvertedValue(monitoringAlertsParameters.highBg, monitoringBgUnit, userBgUnit)
   const [highBg, setHighBg] = useState<ValueErrorMessagePair>(() => {
     return {
       value: highBgValue,
@@ -147,7 +122,7 @@ const useMonitoringAlertsContentConfiguration = ({
     }
   })
 
-  const veryLowBgValue = getConvertedValue(monitoring.parameters.veryLowBg, monitoringBgUnit, userBgUnit)
+  const veryLowBgValue = getConvertedValue(monitoringAlertsParameters.veryLowBg, monitoringBgUnit, userBgUnit)
   const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>(() => {
     return {
       value: veryLowBgValue,
@@ -155,7 +130,7 @@ const useMonitoringAlertsContentConfiguration = ({
     }
   })
 
-  const lowBgValue = getConvertedValue(monitoring.parameters.lowBg, monitoringBgUnit, userBgUnit)
+  const lowBgValue = getConvertedValue(monitoringAlertsParameters.lowBg, monitoringBgUnit, userBgUnit)
   const [lowBg, setLowBg] = useState<ValueErrorMessagePair>(() => {
     return {
       value: lowBgValue,
@@ -165,22 +140,22 @@ const useMonitoringAlertsContentConfiguration = ({
 
   const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(() => {
     return {
-      value: monitoring.parameters.nonDataTxThreshold,
-      error: isInvalidPercentage(monitoring.parameters.nonDataTxThreshold)
+      value: monitoringAlertsParameters.nonDataTxThreshold,
+      error: isInvalidPercentage(monitoringAlertsParameters.nonDataTxThreshold)
     }
   })
 
   const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(() => {
     return {
-      value: monitoring.parameters.outOfRangeThreshold,
-      error: isInvalidPercentage(monitoring.parameters.outOfRangeThreshold)
+      value: monitoringAlertsParameters.outOfRangeThreshold,
+      error: isInvalidPercentage(monitoringAlertsParameters.outOfRangeThreshold)
     }
   })
 
   const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(() => {
     return {
-      value: monitoring.parameters.hypoThreshold,
-      error: isInvalidPercentage(monitoring.parameters.hypoThreshold)
+      value: monitoringAlertsParameters.hypoThreshold,
+      error: isInvalidPercentage(monitoringAlertsParameters.hypoThreshold)
     }
   })
 
@@ -217,46 +192,40 @@ const useMonitoringAlertsContentConfiguration = ({
       throw Error(`Cannot find team with id ${selectedTeamId}`)
     }
 
-    const defaultMonitoring = team.monitoring
-    if (!defaultMonitoring?.parameters) {
+    const defaultMonitoringAlertsParameters = team.monitoringAlertsParameters
+    if (!defaultMonitoringAlertsParameters) {
       throw Error('The given team has no monitoring values')
     }
 
-    const defaultParameters = defaultMonitoring.parameters
-    const teamBgUnit = defaultParameters.bgUnit
+    const teamBgUnit = defaultMonitoringAlertsParameters.bgUnit
 
-    const defaultHighBgValue = getConvertedValue(defaultParameters.highBg, teamBgUnit, userBgUnit)
+    const defaultHighBgValue = getConvertedValue(defaultMonitoringAlertsParameters.highBg, teamBgUnit, userBgUnit)
     setHighBg({ ...highBg, value: defaultHighBgValue })
 
-    const defaultVeryLowBgValue = getConvertedValue(defaultParameters.veryLowBg, teamBgUnit, userBgUnit)
+    const defaultVeryLowBgValue = getConvertedValue(defaultMonitoringAlertsParameters.veryLowBg, teamBgUnit, userBgUnit)
     setVeryLowBg({ ...veryLowBg, value: defaultVeryLowBgValue })
 
-    const defaultLowBgValue = getConvertedValue(defaultParameters.lowBg, teamBgUnit, userBgUnit)
+    const defaultLowBgValue = getConvertedValue(defaultMonitoringAlertsParameters.lowBg, teamBgUnit, userBgUnit)
     setLowBg({ ...lowBg, value: defaultLowBgValue })
 
-    setNonDataTxThreshold({ ...nonDataTxThreshold, value: defaultMonitoring.parameters.nonDataTxThreshold })
-    setOutOfRangeThreshold({ ...outOfRangeThreshold, value: defaultMonitoring.parameters.outOfRangeThreshold })
-    setHypoThreshold({ ...hypoThreshold, value: defaultMonitoring.parameters.hypoThreshold })
+    setNonDataTxThreshold({ ...nonDataTxThreshold, value: defaultMonitoringAlertsParameters.nonDataTxThreshold })
+    setOutOfRangeThreshold({ ...outOfRangeThreshold, value: defaultMonitoringAlertsParameters.outOfRangeThreshold })
+    setHypoThreshold({ ...hypoThreshold, value: defaultMonitoringAlertsParameters.hypoThreshold })
   }
 
   const save = (): void => {
-    const reportingPeriod = (monitoring.parameters.reportingPeriod && monitoring.parameters.reportingPeriod > 0) ? monitoring.parameters.reportingPeriod : 55
-    const monitoringUpdated: Monitoring = {
-      enabled: monitoring.enabled,
-      status: monitoring.status,
-      monitoringEnd: monitoring.monitoringEnd,
-      parameters: {
-        bgUnit: userBgUnit,
-        lowBg: lowBg.value,
-        highBg: highBg.value,
-        outOfRangeThreshold: outOfRangeThreshold.value,
-        veryLowBg: veryLowBg.value,
-        hypoThreshold: hypoThreshold.value,
-        nonDataTxThreshold: nonDataTxThreshold.value,
-        reportingPeriod
-      }
+    const reportingPeriod = (monitoringAlertsParameters.reportingPeriod && monitoringAlertsParameters.reportingPeriod > 0) ? monitoringAlertsParameters.reportingPeriod : 55
+    const monitoringAlertsParametersUpdated: MonitoringAlertsParameters = {
+      bgUnit: userBgUnit,
+      lowBg: lowBg.value,
+      highBg: highBg.value,
+      outOfRangeThreshold: outOfRangeThreshold.value,
+      veryLowBg: veryLowBg.value,
+      hypoThreshold: hypoThreshold.value,
+      nonDataTxThreshold: nonDataTxThreshold.value,
+      reportingPeriod
     }
-    onSave(monitoringUpdated)
+    onSave(monitoringAlertsParametersUpdated)
   }
 
   return {

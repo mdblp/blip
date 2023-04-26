@@ -34,10 +34,8 @@ import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-stat
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
-import { type Monitoring } from '../../../lib/team/models/monitoring.model'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { getTomorrowDate } from '../utils/helpers'
 import {
   filtersTeamId,
   monitoringParameters,
@@ -46,6 +44,7 @@ import {
   myTeamId,
   myThirdTeamId
 } from '../mock/team.api.mock'
+import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 
 export const unmonitoredPatientId = 'unmonitoredPatientId'
 export const monitoredPatientId = 'monitoredPatientId'
@@ -56,12 +55,7 @@ export const hypoglycemiaPatientId = 'hypoglycemiaPatientId'
 export const noDataTransferredPatientId = 'noDataTransferredPatientId'
 export const flaggedPatientId = 'flaggedPatientId'
 
-const defaultMonitoring: Monitoring = {
-  enabled: true,
-  monitoringEnd: getTomorrowDate(),
-  status: MonitoringStatus.accepted,
-  parameters: monitoringParameters
-}
+const defaultMonitoringAlertsParameters = monitoringParameters
 
 const defaultSettings: PatientSettings = {
   system: 'DBLG1'
@@ -82,7 +76,7 @@ const defaultMonitoringAlert: MonitoringAlerts = {
 
 export const buildPatient = (
   userid = 'fakePatientId',
-  monitoring: Monitoring | undefined = undefined,
+  monitoringAlertsParameters: MonitoringAlertsParameters | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
@@ -114,7 +108,7 @@ export const buildPatient = (
       medicalData: metadata?.medicalData || null,
       hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
-    monitoring,
+    monitoringAlertsParameters,
     invitationStatus: UserInvitationStatus.accepted,
     monitoringStatus: MonitoringStatus.accepted,
     userid
@@ -123,7 +117,7 @@ export const buildPatient = (
 
 export const monitoredPatient: Patient = buildPatient(
   monitoredPatientId,
-  defaultMonitoring,
+  defaultMonitoringAlertsParameters,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
     email: 'monitored-patient@diabeloop.fr',
@@ -235,7 +229,7 @@ export const unmonitoredPatient: Patient = buildPatient(
 
 export const monitoredPatientTwo: Patient = buildPatient(
   'monitored-patient-two',
-  defaultMonitoring,
+  defaultMonitoringAlertsParameters,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
     email: 'monitored-patient2@diabeloop.fr',
@@ -251,7 +245,7 @@ export const monitoredPatientTwo: Patient = buildPatient(
 
 export const monitoredPatientWithMmol: Patient = buildPatient(
   monitoredPatientWithMmolId,
-  { ...defaultMonitoring, parameters: monitoringParametersBgUnitMmol },
+  { ...defaultMonitoringAlertsParameters, parameters: monitoringParametersBgUnitMmol },
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
     email: 'monitored-patient-mmol@diabeloop.fr',

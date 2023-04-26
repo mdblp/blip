@@ -24,8 +24,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { type BgUnit } from 'medical-domain'
 
-export enum MonitoringStatus {
-  pending = 'pending',
-  accepted = 'accepted',
+export interface MonitoringAlertsParameters {
+  bgUnit: BgUnit
+  lowBg: number
+  highBg: number
+  outOfRangeThreshold: number
+  veryLowBg: number
+  hypoThreshold: number
+  nonDataTxThreshold: number
+  reportingPeriod: number
 }

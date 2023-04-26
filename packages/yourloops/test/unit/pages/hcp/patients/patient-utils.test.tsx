@@ -68,7 +68,6 @@ describe('Patient utils', () => {
           medicalData: null,
           hasSentUnreadMessages: teamMember.unreadMessages > 0
         },
-        monitoring: undefined,
         profile: {
           birthdate: undefined,
           firstName: profile.firstName,
@@ -83,11 +82,9 @@ describe('Patient utils', () => {
           system: 'DBLG1'
         },
         invitationStatus: teamMember.invitationStatus,
-        monitoringStatus: teamMember.monitoring?.status,
         userid: teamMember.userId
       }
       const res = mapITeamMemberToPatient(teamMember)
-      patient.monitoring = res.monitoring
       expect(res).toStrictEqual(patient)
     })
   })

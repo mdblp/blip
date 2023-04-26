@@ -29,7 +29,6 @@ import usePatientProviderCustomHook from '../../../../lib/patient/patient.hook'
 import { act, renderHook } from '@testing-library/react-hooks/dom'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { buildTeam, createPatient } from '../../common/utils'
-import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
@@ -40,11 +39,11 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { MonitoringStatus } from '../../../../lib/team/models/enums/monitoring-status.enum'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { Unit } from 'medical-domain'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
+import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/selected-team/selected-team.provider')
@@ -112,19 +111,19 @@ describe('Patient hook', () => {
   }
 
   describe('filterPatients', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, undefined, { birthdate: new Date(2001, 10, 19) })
-    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted, undefined, undefined, {
+    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, { birthdate: new Date(2001, 10, 19) })
+    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted, undefined, {
       birthdate: new Date(2005, 5, 5),
       firstName: 'small brain',
       lastName: 'dupont'
     })
-    const basicPatient2 = createPatient('basicPatient2', UserInvitationStatus.accepted, undefined, undefined, { birthdate: new Date(2001, 10, 19) })
-    const bigBrainPatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, undefined, {
+    const basicPatient2 = createPatient('basicPatient2', UserInvitationStatus.accepted, undefined, { birthdate: new Date(2001, 10, 19) })
+    const bigBrainPatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, {
       birthdate: new Date(2005, 5, 5),
       firstName: 'big brain',
       lastName: 'smith'
     })
-    const noNamePatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, undefined, {
+    const noNamePatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, {
       birthdate: new Date(2006, 6, 6)
     })
     noNamePatient.profile.firstName = undefined
@@ -175,33 +174,28 @@ describe('Patient hook', () => {
     })
 
     it('should update patient monitoring', () => {
-      const monitoring: Monitoring = {
-        enabled: true,
-        status: MonitoringStatus.pending,
-        monitoringEnd: new Date(),
-        parameters: {
-          bgUnit: Unit.MilligramPerDeciliter,
-          lowBg: 1,
-          highBg: 2,
-          outOfRangeThreshold: 3,
-          veryLowBg: 4,
-          hypoThreshold: 5,
-          nonDataTxThreshold: 6,
-          reportingPeriod: 7
-        }
+      const monitoringAlertsParameters: MonitoringAlertsParameters = {
+        bgUnit: Unit.MilligramPerDeciliter,
+        lowBg: 1,
+        highBg: 2,
+        outOfRangeThreshold: 3,
+        veryLowBg: 4,
+        hypoThreshold: 5,
+        nonDataTxThreshold: 6,
+        reportingPeriod: 7
       }
-      expect(unmonitoredPatient.monitoring).toBeUndefined()
-      unmonitoredPatient.monitoring = monitoring
+      expect(unmonitoredPatient.monitoringAlertsParameters).toBeUndefined()
+      unmonitoredPatient.monitoringAlertsParameters = monitoringAlertsParameters
       act(() => {
-        customHook.editPatientRemoteMonitoring(unmonitoredPatient)
+        customHook.updatePatientMonitoringAlertsParameters(unmonitoredPatient)
       })
-      expect(customHook.getPatientById(unmonitoredPatient.userid).monitoring).toEqual(monitoring)
+      expect(customHook.getPatientById(unmonitoredPatient.userid).monitoringAlertsParameters).toEqual(monitoringAlertsParameters)
     })
   })
 
   describe('getPatientByEmail', () => {
     const unknownPatient = createPatient('unknownPatient')
-    const existingPatient = createPatient('existingPatient', UserInvitationStatus.accepted, undefined, undefined, { email: 'test@test.com' })
+    const existingPatient = createPatient('existingPatient', UserInvitationStatus.accepted, undefined, { email: 'test@test.com' })
     const allPatients = [existingPatient]
     let customHook
 
@@ -294,44 +288,8 @@ describe('Patient hook', () => {
     })
   })
 
-  describe('updatePatientMonitoring', () => {
-    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted)
-    const monitoredPatient = createPatient('monitoredPatient', UserInvitationStatus.accepted, MonitoringStatus.pending)
-    monitoredPatient.monitoring = { status: MonitoringStatus.accepted } as Monitoring
-    const allPatients = [basicPatient, monitoredPatient]
-    let customHook
-
-    beforeAll(async () => {
-      const res = await renderPatientHook(allPatients)
-      customHook = res.result.current
-    })
-
-    it('should throw an error if patient is not monitored', async () => {
-      await expect(async () => {
-        await customHook.updatePatientMonitoring(basicPatient)
-      }).rejects.toThrowError('Cannot update patient monitoring with "undefined"')
-    })
-
-    it('should update patient alerts', async () => {
-      const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
-      await act(async () => {
-        await customHook.updatePatientMonitoring(monitoredPatient)
-        expect(updatePatientAlertsMock).toHaveBeenCalled()
-        expect(computePatientsSpy).toBeCalledTimes(1)
-      })
-    })
-
-    it('should throw error when could not updated patient alerts', async () => {
-      const updatePatientAlertsMock = jest.spyOn(PatientApi, 'updatePatientAlerts').mockRejectedValue(Error('This error was thrown by a mock on purpose'))
-      await expect(async () => {
-        await customHook.updatePatientMonitoring(monitoredPatient)
-      }).rejects.toThrowError(`Failed to update patient with id ${monitoredPatient.userid}`)
-      expect(updatePatientAlertsMock).toHaveBeenCalled()
-    })
-  })
-
   describe('removePatient', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, {} as Monitoring)
+    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, {} as MonitoringAlertsParameters)
     const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', UserInvitationStatus.accepted)
     const patientToRemove2 = createPatient('patientToRemove2', UserInvitationStatus.accepted)
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]

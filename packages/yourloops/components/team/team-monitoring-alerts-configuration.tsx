@@ -34,9 +34,9 @@ import TuneIcon from '@mui/icons-material/Tune'
 
 import { commonComponentStyles } from '../common'
 import { type Team, useTeam } from '../../lib/team'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
 import MonitoringAlertsContentConfiguration from '../monitoring-alert/monitoring-alerts-content-configuration'
+import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 
 export interface TeamMonitoringAlertsConfigurationProps {
   team: Team
@@ -50,12 +50,8 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
   const alert = useAlert()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
-  if (!team.monitoring?.enabled) {
-    throw Error(`Cannot show monitoring info of team ${team.id} as its monitoring is not enabled`)
-  }
-
-  const save = async (monitoring: Monitoring): Promise<void> => {
-    team.monitoring = monitoring
+  const save = async (monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> => {
+    team.monitoringAlertsParameters = monitoringAlertsParameters
     setSaveInProgress(true)
     try {
       await teamHook.updateTeamAlerts(team)
@@ -80,7 +76,11 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
       </div>
 
       <Box paddingX={3}>
-        <MonitoringAlertsContentConfiguration monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
+        <MonitoringAlertsContentConfiguration
+          monitoringAlertsParameters={team.monitoringAlertsParameters}
+          onSave={save}
+          saveInProgress={saveInProgress}
+        />
       </Box>
     </div>
   )

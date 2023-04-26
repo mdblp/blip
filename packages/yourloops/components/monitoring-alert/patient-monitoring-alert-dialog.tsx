@@ -33,13 +33,14 @@ import TuneIcon from '@mui/icons-material/Tune'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import { makeStyles } from 'tss-react/mui'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { useAlert } from '../utils/snackbar'
 import { commonComponentStyles } from '../common'
 import MonitoringAlertsContentConfiguration from './monitoring-alerts-content-configuration'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import DialogContent from '@mui/material/DialogContent'
 import { type Patient } from '../../lib/patient/models/patient.model'
+import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
 const useStyles = makeStyles()(() => ({
   title: {
@@ -59,14 +60,12 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
   const { t } = useTranslation('yourloops')
   const patientHook = usePatientContext()
   const alert = useAlert()
+  const { selectedTeam } = useSelectedTeamContext()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
+  const monitoringAlertsParameters = patient.monitoringAlertsParameters ?? selectedTeam.monitoringAlertsParameters
 
-  if (!patient?.monitoring?.enabled) {
-    throw Error(`Cannot show monitoring info of team ${patient.userid} as its monitoring is not enabled`)
-  }
-
-  const save = async (monitoring: Monitoring): Promise<void> => {
-    patient.monitoring = monitoring
+  const save = async (monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> => {
+    patient.monitoringAlertsParameters = monitoringAlertsParameters
     setSaveInProgress(true)
     try {
       await patientHook.updatePatientMonitoring(patient)
@@ -101,7 +100,7 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
 
       <DialogContent className={'no-padding'}>
         <MonitoringAlertsContentConfiguration
-          monitoring={patient.monitoring}
+          monitoringAlertsParameters={monitoringAlertsParameters}
           patient={patient}
           onSave={save}
           saveInProgress={saveInProgress}

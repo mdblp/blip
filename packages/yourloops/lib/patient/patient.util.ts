@@ -104,7 +104,6 @@ export default class PatientUtils {
     // We do not take the pending patients
     const nonPendingPatients = PatientUtils.getNonPendingPatients(patients)
     return PatientUtils.filterPatientsOnMonitoringAlerts(nonPendingPatients, patientFilters)
-      .filter(patient => patientFilters.telemonitoredEnabled ? patient.monitoring?.enabled : patient)
       .filter(patient => patientFilters.manualFlagEnabled ? flaggedPatientsId?.includes(patient.userid) : patient)
       .filter(patient => patientFilters.messagesEnabled ? patient.metadata.hasSentUnreadMessages : patient)
   }

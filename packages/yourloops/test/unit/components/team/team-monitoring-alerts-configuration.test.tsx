@@ -68,18 +68,6 @@ describe('TeamMembers', () => {
     />
   }
 
-  it('should throw error when given team as no monitoring', () => {
-    const teamNoMonitoring = buildTeam(teamId, members)
-    teamNoMonitoring.monitoring = undefined
-    expect(() => render(getTeamMonitoringAlertConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
-  })
-
-  it('should throw error when given team monitoring is not enabled', () => {
-    const teamNoMonitoring = buildTeam(teamId, members)
-    teamNoMonitoring.monitoring.enabled = false
-    expect(() => render(getTeamMonitoringAlertConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
-  })
-
   function clickOnSaveButton() {
     render(getTeamMonitoringAlertConfigurationJSX({ team }))
     fireEvent.click(screen.getByRole('button'))

@@ -49,19 +49,19 @@ const defaultPatientFilters = {
   messagesEnabled: false
 }
 
-const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
+const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   timeSpentAwayFromTargetActive: true
 })
-const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
+const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   frequencyOfSevereHypoglycemiaActive: true
 })
-const patientWithNoDataAlert = createPatient('noData', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, {
+const patientWithNoDataAlert = createPatient('noData', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   nonDataTransmissionActive: true
 })
-const noAlersPatient = createPatient('nothing', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, undefined, defaultMonitoringAlerts)
+const noAlersPatient = createPatient('nothing', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined, defaultMonitoringAlerts)
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
@@ -177,10 +177,10 @@ describe('Patient utils', () => {
   })
 
   describe('extractPatients', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, undefined, undefined, undefined, undefined, undefined)
-    const monitoredPatient = createPatient('monitoredPatient', UserInvitationStatus.accepted, undefined, { enabled: true }, undefined, undefined, undefined, undefined)
-    const flaggedPatient = createPatient('flaggedPatient', UserInvitationStatus.accepted, undefined, null, undefined, undefined, undefined, undefined)
-    const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInvitationStatus.accepted, undefined, null, undefined, undefined, { hasSentUnreadMessages: true }, undefined)
+    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, undefined, undefined, undefined, undefined)
+    const monitoredPatient = createPatient('monitoredPatient', UserInvitationStatus.accepted, undefined, undefined, undefined, undefined)
+    const flaggedPatient = createPatient('flaggedPatient', UserInvitationStatus.accepted, null, undefined, undefined, undefined, undefined)
+    const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInvitationStatus.accepted, null, undefined, undefined, { hasSentUnreadMessages: true }, undefined)
     const patients = [noAlersPatient, pendingPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlersPatient, flaggedPatient]
     const flaggedPatientsIds = [flaggedPatient.userid]
 
@@ -203,19 +203,6 @@ describe('Patient utils', () => {
       const result = PatientUtils.extractPatients(patients, defaultPatientFilters, flaggedPatientsIds)
 
       expect(result).toEqual([noAlersPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlersPatient, flaggedPatient])
-    })
-
-    it('should return only monitored patient when only monitored filter is selected', () => {
-      const result = PatientUtils.extractPatients(
-        patients,
-        {
-          ...defaultPatientFilters,
-          telemonitoredEnabled: true
-        },
-        flaggedPatientsIds
-      )
-
-      expect(result).toEqual([monitoredPatient])
     })
 
     it('should return only flagged patient when only flagged filter is selected', () => {

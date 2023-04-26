@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import { type ITeam } from '../../../../lib/team/models/i-team.model'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { type PostalAddress } from '../../../../lib/team/models/postal-address.model'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
+import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
 describe('TeamApi', () => {
   const userId = 'userId'
@@ -150,14 +151,14 @@ describe('TeamApi', () => {
   describe('updateTeamAlerts', () => {
     it('should make correct http call', () => {
       const teamId = 'fakeTeamId'
-      const monitoring: Monitoring = {} as Monitoring
+      const monitoringAlertsParameters: MonitoringAlertsParameters = {} as MonitoringAlertsParameters
       const httpServiceSpy = jest.spyOn(HttpService, 'put').mockResolvedValue(null)
       const expectedParams = {
-        url: `/crew/v0/teams/${teamId}/remote-monitoring`,
-        payload: monitoring
+        url: `/crew/v0/teams/${teamId}/alert-parameters`,
+        payload: monitoringAlertsParameters
       }
 
-      TeamApi.updateTeamAlerts(teamId, monitoring)
+      TeamApi.updateTeamAlerts(teamId, monitoringAlertsParameters)
 
       expect(httpServiceSpy).toHaveBeenCalledWith(expectedParams)
     })
