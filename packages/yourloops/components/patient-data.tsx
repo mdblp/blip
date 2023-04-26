@@ -44,7 +44,7 @@ import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
 import DialogPDFOptions from './dialogs/pdf-print-options'
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { type Patient } from '../lib/patient/models/patient.model'
-import { useUserName } from '../lib/custom-hooks/user-name.hook'
+import { getUserName } from '../lib/auth/user.util'
 
 const patientDataStyles = makeStyles()(() => {
   return {
@@ -92,7 +92,6 @@ function PatientDataPage(): JSX.Element | null {
   const userId = user?.id ?? null
   const userIsPatient = user?.isUserPatient()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
-  const { getUserName } = useUserName()
 
   const initialized = isLoggedIn && blipApi
 
@@ -127,7 +126,7 @@ function PatientDataPage(): JSX.Element | null {
     } else {
       setPageTitle()
     }
-  }, [getUserName, patient, t, userId])
+  }, [patient, t, userId])
 
   if (error) {
     return <PatientDataPageError msg={error} />

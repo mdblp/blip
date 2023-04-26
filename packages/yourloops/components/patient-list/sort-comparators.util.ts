@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
-import { useUserName } from '../../../../lib/custom-hooks/user-name.hook'
+import { type GridComparatorFn } from '@mui/x-data-grid'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import { getUserName } from '../../lib/auth/user.util'
 
-describe('User name hook', () => {
-  describe('getUserName', () => {
-    it('should return the translated value if first and last name are present, else the fullname', () => {
-      const firstName = 'Ali'
-      const lastName = 'Gator'
-      const fullName = 'Ali Gator'
+interface SortComparator extends GridComparatorFn<Patient> {
+  (patient1: Patient, patient2: Patient): number
+}
 
-      const { result } = renderHook(() => useUserName())
-      const onlyFullNameCaseName = result.current.getUserName('', '', fullName)
-      const firstNameCaseName = result.current.getUserName(firstName, '', fullName)
-      const lastNameCaseName = result.current.getUserName('', lastName, fullName)
-      const bothNamesCaseName = result.current.getUserName(firstName, lastName, fullName)
+export const sortByUserName: SortComparator = (patient1, patient2): number => {
+  const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
+  const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
+  return patient1FullName.localeCompare(patient2FullName)
+}
 
-      expect(onlyFullNameCaseName).toEqual(fullName)
-      expect(firstNameCaseName).toEqual(fullName)
-      expect(lastNameCaseName).toEqual(fullName)
-      expect(bothNamesCaseName).toEqual('user-name')
-    })
-  })
-})
+export const sortByFlag: SortComparator = (patient1: Patient, patient2: Patient): number => {
+  const isPatient1Flagged = patient1.metadata.flagged
+  const isPatient2Flagged = patient2.metadata.flagged
+
+  if (isPatient1Flagged && !isPatient2Flagged) {
+    return -1
+  }
+  if (!isPatient1Flagged && isPatient2Flagged) {
+    return 1
+  }
+  return 0
+}

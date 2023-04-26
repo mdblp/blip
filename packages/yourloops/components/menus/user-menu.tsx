@@ -53,10 +53,10 @@ import metrics from '../../lib/metrics'
 import MenuLayout from '../../layout/menu-layout'
 import { isEllipsisActive } from '../../lib/utils'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
-import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { getUserName } from '../../lib/auth/user.util'
 
 const classes = makeStyles()((theme: Theme) => ({
   typography: {
@@ -83,7 +83,6 @@ function UserMenu(): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const opened = !!anchorEl
   const { firstName, fullName, lastName } = user
-  const { getUserName } = useUserName()
   const userName = getUserName(firstName, lastName, fullName)
 
   const getRoleIcon = (): JSX.Element | null => {

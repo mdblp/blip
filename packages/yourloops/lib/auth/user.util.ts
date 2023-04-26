@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
-interface UserNameHookReturn {
-  getUserName: (firstName: string, lastName: string, fullName: string) => string
-}
+const t = i18next.t.bind(i18next)
 
-export const useUserName = (): UserNameHookReturn => {
-  const { t } = useTranslation('yourloops')
-
-  const getUserName = (firstName: string, lastName: string, fullName: string): string => {
-    return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
-  }
-
-  return { getUserName }
+export const getUserName = (firstName: string, lastName: string, fullName: string): string => {
+  return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
 }

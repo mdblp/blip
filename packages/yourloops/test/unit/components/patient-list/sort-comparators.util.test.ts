@@ -25,10 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
-import { useSortComparatorsHook } from '../../../../components/patient-list/sort-comparators.hook'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { sortByFlag, sortByUserName } from '../../../../components/patient-list/sort-comparators.util'
 
 describe('useSortComparatorsHook', () => {
   describe('sortByUserName', () => {
@@ -39,7 +38,6 @@ describe('useSortComparatorsHook', () => {
       const patient1 = { profile: { fullName: smallerPatientName } } as Patient
       const patient2 = { profile: { fullName: biggerPatientName } } as Patient
 
-      const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
 
       expect(res).toBeLessThan(0)
@@ -49,7 +47,6 @@ describe('useSortComparatorsHook', () => {
       const patient1 = { profile: { fullName: biggerPatientName } } as Patient
       const patient2 = { profile: { fullName: smallerPatientName } } as Patient
 
-      const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
 
       expect(res).toBeGreaterThan(0)
@@ -59,7 +56,6 @@ describe('useSortComparatorsHook', () => {
       const patient1 = { profile: { fullName: biggerPatientName } } as Patient
       const patient2 = { profile: { fullName: biggerPatientName } } as Patient
 
-      const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
 
       expect(res).toBe(0)
@@ -98,12 +94,10 @@ describe('useSortComparatorsHook', () => {
         userid: ''
       } as Patient
 
-      const { result } = renderHook(() => useSortComparatorsHook())
-
-      expect(result.current.sortByFlag(patientA, patientB)).toEqual(1)
-      expect(result.current.sortByFlag(patientB, patientA)).toEqual(-1)
-      expect(result.current.sortByFlag(patientB, patientC)).toEqual(0)
-      expect(result.current.sortByFlag(patientC, patientB)).toEqual(0)
+      expect(sortByFlag(patientA, patientB)).toEqual(1)
+      expect(sortByFlag(patientB, patientA)).toEqual(-1)
+      expect(sortByFlag(patientB, patientC)).toEqual(0)
+      expect(sortByFlag(patientC, patientB)).toEqual(0)
     })
   })
 })

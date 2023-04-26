@@ -46,7 +46,7 @@ import { type MedicalReport } from '../../../lib/medical-files/models/medical-re
 import ListItemButton from '@mui/material/ListItemButton'
 import { getMedicalReportDate } from './medical-report-list.util'
 import { useTeam } from '../../../lib/team'
-import { useUserName } from '../../../lib/custom-hooks/user-name.hook'
+import { getUserName } from '../../../lib/auth/user.util'
 
 interface MedicalReportItemProps {
   displayDivider: boolean
@@ -72,7 +72,6 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
   const { classes } = useStyle()
   const { user } = useAuth()
   const { getTeam } = useTeam()
-  const { getUserName } = useUserName()
 
   const medicalReportDate = getMedicalReportDate(medicalReport)
   const medicalReportNumber = medicalReport.number

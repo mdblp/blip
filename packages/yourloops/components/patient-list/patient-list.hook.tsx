@@ -31,7 +31,6 @@ import { useTranslation } from 'react-i18next'
 import { usePatientListStyles } from './patient-list.styles'
 import { PatientListColumns, PatientListTabs } from './models/enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { getMedicalValues } from '../patient/utils'
 import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell, PendingIconCell } from './custom-cells'
 import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
@@ -43,9 +42,10 @@ import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
 import { getPatientFullName } from 'dumb'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import { useSortComparatorsHook } from './sort-comparators.hook'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { sortByFlag, sortByUserName } from './sort-comparators.util'
+import { getUserName } from '../../lib/auth/user.util'
 
 interface SharedColumns {
   patientColumn: GridColDef
@@ -71,8 +71,6 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { classes } = usePatientListStyles()
   const { getFlagPatients, user } = useAuth()
   const { getPatientById, searchPatients } = usePatientContext()
-  const { getUserName } = useUserName()
-  const { sortByUserName, sortByFlag } = useSortComparatorsHook()
   const { updatePendingFilter } = usePatientListContext()
   const navigate = useNavigate()
   const trNA = t('N/A')

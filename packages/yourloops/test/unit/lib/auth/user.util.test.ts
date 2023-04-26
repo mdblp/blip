@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,32 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { getUserName } from '../../../../lib/auth/user.util'
 
-import PatientInfo, { type PatientInfoProps } from '../../../../components/patient/patient-info'
-import { createPatient } from '../../common/utils'
-import { genderLabels } from '../../../../lib/auth/auth.helper'
-import moment from 'moment-timezone'
+describe('User util', () => {
+  describe('getUserName', () => {
+    it('should return the translated value if first and last name are present, else the fullname', () => {
+      const firstName = 'Ali'
+      const lastName = 'Gator'
+      const fullName = 'Ali Gator'
 
-describe('PatientInfo', () => {
-  const patient = createPatient()
+      const onlyFullNameCaseName = getUserName('', '', fullName)
+      const firstNameCaseName = getUserName(firstName, '', fullName)
+      const lastNameCaseName = getUserName('', lastName, fullName)
+      const bothNamesCaseName = getUserName(firstName, lastName, fullName)
 
-  function getPatientInfoJSX(props: PatientInfoProps = { patient }) {
-    return <PatientInfo {...props} />
-  }
-
-  it('should display correct information', () => {
-    render(getPatientInfoJSX())
-    expect(screen.getByText('patient')).not.toBeNull()
-    expect(screen.getByText(patient.profile.fullName)).not.toBeNull()
-    expect(screen.getByText('email')).not.toBeNull()
-    expect(screen.getByText(patient.profile.email)).not.toBeNull()
-    expect(screen.getByText('gender')).not.toBeNull()
-    expect(screen.getByText(genderLabels()[patient.profile.sex])).not.toBeNull()
-    expect(screen.getByText('birthdate')).not.toBeNull()
-    expect(screen.getByText(moment.utc(patient.profile.birthdate).format('L'))).not.toBeNull()
-    expect(screen.getByText('initial-hba1c')).not.toBeNull()
-    expect(screen.getByText(patient.settings.a1c?.value)).not.toBeNull()
+      expect(onlyFullNameCaseName).toEqual(fullName)
+      expect(firstNameCaseName).toEqual(fullName)
+      expect(lastNameCaseName).toEqual(fullName)
+      expect(bothNamesCaseName).toEqual('user-name')
+    })
   })
 })
