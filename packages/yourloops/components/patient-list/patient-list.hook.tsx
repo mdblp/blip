@@ -85,7 +85,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const filteredPatients = useMemo(() => {
     const searchedPatients = searchPatients(inputSearch)
     return PatientUtils.computeFlaggedPatients(searchedPatients, flaggedPatients).sort(sortByUserName)
-  }, [searchPatients, inputSearch, flaggedPatients, sortByUserName])
+  }, [searchPatients, inputSearch, flaggedPatients])
 
   const onChangingTab = (newTab: PatientListTabs): void => {
     setSelectedTab(newTab)
@@ -148,7 +148,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
     }
 
     return { patientColumn, actionColumn }
-  }, [classes.mandatoryCellBorder, getUserName, onClickRemovePatient, selectedTab, sortByUserName, t])
+  }, [classes.mandatoryCellBorder, onClickRemovePatient, selectedTab, t])
 
   const buildPendingColumns = useCallback((): GridColDef[] => {
     return [
@@ -215,7 +215,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
       },
       sharedColumns.actionColumn
     ]
-  }, [sharedColumns.actionColumn, sharedColumns.patientColumn, sortByFlag, t])
+  }, [sharedColumns.actionColumn, sharedColumns.patientColumn, t])
 
   const columns: GridColDef[] = useMemo(() => {
     return selectedTab === PatientListTabs.Current ? buildCurrentColumns() : buildPendingColumns()
