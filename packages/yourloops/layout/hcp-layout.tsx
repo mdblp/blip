@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import PatientDataPage from '../components/patient-data'
 import { PatientData } from '../components/patient-data/patient-data'
 import TeamDetailsPage from '../pages/team/team-details-page'
 import { PatientProvider } from '../lib/patient/patient.provider'
@@ -40,6 +39,7 @@ import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provide
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientList } from '../components/patient-list/patient-list'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
+import { PatientDataProvider } from '../components/patient-data/patient-data.provider'
 
 export const HcpLayout: FunctionComponent = () => {
   return (
@@ -53,8 +53,14 @@ export const HcpLayout: FunctionComponent = () => {
                 <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
                 <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
                 <Route path={AppUserRoute.Home} element={<PatientList />} />
-                {/*<Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />*/}
-                <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
+                <Route
+                  path={`${AppUserRoute.Patient}/:patientId/*`}
+                  element={
+                    <PatientDataProvider>
+                      <PatientData />
+                    </PatientDataProvider>
+                  }
+                />
                 <Route path={AppUserRoute.Team} element={<TeamDetailsPage />} />
                 <Route
                   path="/"

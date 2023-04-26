@@ -34,9 +34,8 @@ import { useAuth } from '../../lib/auth'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
-import { useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { PatientDataUtils } from './patient-data.utils'
-import metrics from '../../lib/metrics'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import moment from 'moment-timezone'
 
@@ -47,8 +46,10 @@ export interface PatientDataContextResult {
   chartPrefs: ChartPrefs
   currentChart: ChartTypes
   dataUtil: DataUtil
-  epochLocation: number
+  dailyDate: number
+  dashboardDate: number
   fetchPatientData: () => Promise<void>
+  goToDailySpecificDate: (date: number | Date) => void
   handleDatetimeLocationChange: (epochLocation: number, msRange: number) => Promise<boolean>
   loadingData: boolean
   medicalData: MedicalDataService | null
@@ -58,6 +59,7 @@ export interface PatientDataContextResult {
   refreshData: () => Promise<void>
   refreshingData: boolean
   timePrefs: TimePrefs
+  trendsDate: number
 }
 
 export const usePatientDataProviderHook = (): PatientDataContextResult => {
@@ -105,9 +107,11 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
   const [refreshingData, setRefreshingData] = useState<boolean>(false)
   const [medicalData, setMedicalData] = useState<MedicalDataService | null>(null)
   const [dataUtil, setDataUtil] = useState<DataUtil | null>(null)
-  const [epochLocation, setEpochLocation] = useState<number | null>(null)
-  const [msRange, setMsRange] = useState<number | null>(null)
+  const [msRange, setMsRange] = useState<number>(TimeService.MS_IN_DAY)
   const [chartPrefs, setChartPrefs] = useState<ChartPrefs>(defaultChartPrefs)
+  const [dashboardDate, setDashboardDate] = useState<number>(new Date().valueOf())
+  const [dailyDate, setDailyDate] = useState<number>(0)
+  const [trendsDate, setTrendsDate] = useState<number>(0)
 
   const patientDataUtils = useRef(new PatientDataUtils({
     patient,
@@ -115,7 +119,7 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
     bgUnits
   }))
 
-  const getCurrentChart = (): ChartTypes => {
+  const currentChart = useMemo<ChartTypes>(() => {
     switch (pathname) {
       case `${urlPrefix}/daily`:
         return ChartTypes.Daily
@@ -124,23 +128,15 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
       case `${urlPrefix}/dashboard`:
         return ChartTypes.Dashboard
     }
-  }
+  }, [pathname, urlPrefix])
 
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
-    navigate(`/patient/${patient.userid}/${getCurrentChart()}`)
+    navigate(`/patient/${patient.userid}/${currentChart}`)
   }
 
   const changeChart = (chart: ChartTypes): void => {
     navigate(`${urlPrefix}/${chart}`)
-    switch (chart) {
-      case ChartTypes.Dashboard:
-        setEpochLocation(new Date().valueOf())
-        setMsRange(TimeService.MS_IN_DAY * 7)
-        break
-      case ChartTypes.Daily:
-        setMsRange(TimeService.MS_IN_DAY)
-    }
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
@@ -148,10 +144,15 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
     setChartPrefs(chartPrefs)
   }
 
+  const goToDailySpecificDate = (date: number | Date): void => {
+    setDailyDate(date instanceof Date ? date.valueOf() : date)
+    setMsRange(TimeService.MS_IN_DAY)
+    navigate(`${urlPrefix}/${ChartTypes.Daily}`)
+  }
+
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {
     try {
       setRefreshingData(true)
-      const currentChart = getCurrentChart()
       const dateRange = patientDataUtils.current.getDateRange({ currentChart, epochLocation, msRange })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
@@ -163,14 +164,14 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
     } catch (err) {
       console.log(err)
     } finally {
-      setEpochLocation(epochLocation)
+      currentChart === ChartTypes.Daily ? setDailyDate(epochLocation) : setTrendsDate(epochLocation)
       setMsRange(msRange)
       setRefreshingData(false)
     }
   }
 
   const refreshData = async (): Promise<void> => {
-    setRefreshingData(true)
+    setLoadingData(true)
     const patientData = await patientDataUtils.current.retrievePatientData()
     const medicalData = patientDataUtils.current.buildMedicalData(patientData)
     const dataUtil = new DataUtil(medicalData.data, {
@@ -180,7 +181,7 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
     })
     setMedicalData(medicalData)
     setDataUtil(dataUtil)
-    setRefreshingData(false)
+    setLoadingData(false)
   }
 
   const fetchPatientData = async (): Promise<void> => {
@@ -191,32 +192,48 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
       if (!patientData) {
         return
       }
-      // metrics.startTimer('process_data')
       const medicalData = patientDataUtils.current.buildMedicalData(patientData)
       const dataUtil = new DataUtil(medicalData.data, {
         bgPrefs,
         timePrefs,
         endpoints: medicalData.endpoints
       })
-      // metrics.endTimer('process_data')
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
-      setEpochLocation(moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2)
-      setMsRange(TimeService.MS_IN_DAY)
     } finally {
       setLoadingData(false)
     }
   }
 
+  useEffect(() => {
+    if (medicalData) {
+      switch (currentChart) {
+        case ChartTypes.Dashboard:
+          setDashboardDate(new Date().valueOf())
+          setMsRange(TimeService.MS_IN_DAY * 7)
+          break
+        case ChartTypes.Daily:
+          setDailyDate(dailyDate !== 0 ? dailyDate : moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2)
+          setMsRange(TimeService.MS_IN_DAY)
+          break
+        case ChartTypes.Trends:
+          setTrendsDate(trendsDate !== 0 ? trendsDate : moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2)
+          setMsRange(TimeService.MS_IN_DAY)
+      }
+    }
+  }, [currentChart, medicalData, dailyDate, trendsDate])
+
   return {
     bgPrefs,
     changeChart,
     changePatient,
-    currentChart: getCurrentChart(),
+    currentChart,
     chartPrefs,
     dataUtil,
-    epochLocation,
+    dailyDate,
+    dashboardDate,
     fetchPatientData,
+    goToDailySpecificDate,
     handleDatetimeLocationChange,
     loadingData,
     medicalData,
@@ -225,6 +242,7 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
     refreshData,
     refreshingData,
     timePrefs,
+    trendsDate,
     updateChartPrefs
   }
 }

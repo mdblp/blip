@@ -32,7 +32,7 @@ import type MedicalDataService from 'medical-domain'
 import { DatumType, type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
 import type DataUtil from 'tidepool-viz/src/utils/data'
-import moment, { type Moment } from 'moment-timezone'
+import moment from 'moment-timezone'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -52,17 +52,16 @@ import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
+import { usePatientDataProviderHook } from '../patient-data/patient-data.provider.hook'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
   dataUtil: typeof DataUtil
-  epochDate: number
   loading: boolean
   medicalDataService: MedicalDataService
   msRange: number
   patient: Patient
   timePrefs: TimePrefs
-  onSwitchToDaily: (dateTime: Moment | Date | number | null) => void
 }
 
 const useStyle = makeStyles()((theme) => ({
@@ -77,14 +76,13 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const {
     bgPrefs,
     dataUtil,
-    epochDate,
     loading,
     medicalDataService,
     msRange,
     patient,
-    timePrefs,
-    onSwitchToDaily
+    timePrefs
   } = props
+  const { goToDailySpecificDate, dashboardDate } = usePatientDataProviderHook()
   const { user } = useAuth()
   const { selectedTeam } = useSelectedTeamContext()
   const { getMedicalTeams } = useTeam()
@@ -93,12 +91,12 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const { classes, theme } = useStyle()
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const endpoints = [
-    moment.utc(epochDate - msRange).toISOString(), // start
-    moment.utc(epochDate).toISOString() // end
+    moment.utc(dashboardDate - msRange).toISOString(), // start
+    moment.utc(dashboardDate).toISOString() // end
   ]
   const dateFilter = {
-    start: epochDate - msRange,
-    end: epochDate
+    start: dashboardDate - msRange,
+    end: dashboardDate
   }
   const isSelectedTeamPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
   const isCaregiver = user.isUserCaregiver()
@@ -162,7 +160,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           timePrefs={timePrefs}
           patient={patient}
           tidelineData={medicalDataService}
-          onSwitchToDaily={onSwitchToDaily}
+          onSwitchToDaily={goToDailySpecificDate}
           medicalData={medicalData}
           dateFilter={dateFilter}
         />

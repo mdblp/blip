@@ -53,14 +53,16 @@ export const PatientData: FunctionComponent = () => {
     changePatient,
     currentChart,
     dataUtil,
-    epochLocation,
+    dailyDate,
     fetchPatientData,
+    goToDailySpecificDate,
     handleDatetimeLocationChange,
     loadingData,
     medicalData,
     msRange,
     refreshData,
     refreshingData,
+    trendsDate,
     patient,
     timePrefs,
     updateChartPrefs
@@ -74,6 +76,7 @@ export const PatientData: FunctionComponent = () => {
         console.log(err)
         alert.error(err.toString())
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient])
 
   return (
@@ -119,16 +122,11 @@ export const PatientData: FunctionComponent = () => {
                     <PatientDashboard
                       bgPrefs={bgPrefs}
                       dataUtil={dataUtil}
-                      epochDate={epochLocation}
                       medicalDataService={medicalData}
                       msRange={msRange}
                       patient={patient}
                       timePrefs={timePrefs}
                       loading={refreshingData}
-                      // onSwitchToDaily={this.handleSwitchToDaily}
-                      onSwitchToDaily={() => {
-                        console.log('switch')
-                      }}
                     />
                   }
                 />
@@ -141,7 +139,7 @@ export const PatientData: FunctionComponent = () => {
                       timePrefs={timePrefs}
                       patient={patient}
                       tidelineData={medicalData}
-                      epochLocation={epochLocation}
+                      epochLocation={dailyDate}
                       msRange={msRange}
                       loading={refreshingData}
                       onClickRefresh={refreshData}
@@ -159,14 +157,13 @@ export const PatientData: FunctionComponent = () => {
                       chartPrefs={chartPrefs}
                       dataUtil={dataUtil}
                       timePrefs={timePrefs}
-                      epochLocation={epochLocation}
+                      epochLocation={trendsDate}
                       msRange={msRange}
                       patient={patient}
                       tidelineData={medicalData}
                       loading={refreshingData}
                       onClickRefresh={refreshData}
-                      // onSwitchToDaily={this.handleSwitchToDaily}
-                      onSwitchToDaily={() => {}}
+                      onSwitchToDaily={goToDailySpecificDate}
                       onDatetimeLocationChange={handleDatetimeLocationChange}
                       updateChartPrefs={updateChartPrefs}
                     />
