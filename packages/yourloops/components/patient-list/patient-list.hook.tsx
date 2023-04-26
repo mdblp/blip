@@ -26,7 +26,13 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { type GridColDef, type GridRenderCellParams, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
+import {
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridRowParams,
+  type GridRowsProp,
+  type GridValueFormatterParams
+} from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { usePatientListStyles } from './patient-list.styles'
 import { PatientListColumns, PatientListTabs } from './models/enums/patient-list.enum'
@@ -44,10 +50,10 @@ import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { sortByFlag, sortByUserName } from './sort-comparators.util'
+import { sortByDateOfBirth, sortByFlag, sortByUserName } from './sort-comparators.util'
 import { getUserName } from '../../lib/auth/user.util'
+import { type Gender } from '../../lib/auth/models/enums/gender.enum'
 import { formatBirthdate } from 'dumb/dist/src/utils/datetime/datetime.util'
-import { Gender } from '../../lib/auth/models/enums/gender.enum'
 
 interface SharedColumns {
   patientColumn: GridColDef
@@ -187,17 +193,30 @@ export const usePatientListHook = (): PatientListHookReturns => {
       },
       sharedColumns.patientColumn,
       {
-        field: PatientListColumns.DateOfBirth,
-        headerName: t('date-of-birth')
-      },
-      {
         field: PatientListColumns.Age,
         type: 'number',
-        headerName: t('age')
+        headerName: t('age'),
+        flex: 0.2
+      },
+      {
+        field: PatientListColumns.DateOfBirth,
+        headerName: t('date-of-birth'),
+        flex: 0.3,
+        sortComparator: sortByDateOfBirth,
+        valueFormatter: (params: GridValueFormatterParams<Patient>): string => {
+          const patient = params.value
+          return formatBirthdate(patient.profile.birthdate)
+        }
       },
       {
         field: PatientListColumns.Gender,
-        headerName: t('gender')
+        headerName: t('gender'),
+        flex: 0.3
+      },
+      {
+        field: PatientListColumns.System,
+        headerName: t('system'),
+        flex: 0.3
       },
       {
         field: PatientListColumns.MonitoringAlerts,
@@ -210,23 +229,20 @@ export const usePatientListHook = (): PatientListHookReturns => {
         }
       },
       {
-        field: PatientListColumns.System,
-        headerName: t('system')
+        type: 'boolean',
+        field: PatientListColumns.Messages,
+        headerName: t('messages'),
+        flex: 0.3,
+        width: 55,
+        renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => {
+          return <MessageCell hasNewMessages={params.value} />
+        }
       },
       {
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
         headerName: t('last-data-update'),
         flex: 0.8
-      },
-      {
-        type: 'boolean',
-        field: PatientListColumns.Messages,
-        headerName: '',
-        width: 55,
-        renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => {
-          return <MessageCell hasNewMessages={params.value} />
-        }
       },
       sharedColumns.actionColumn
     ]
@@ -253,7 +269,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient,
-        [PatientListColumns.DateOfBirth]: formatBirthdate(birthdate),
+        [PatientListColumns.DateOfBirth]: patient,
         [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex as Gender),
         [PatientListColumns.MonitoringAlerts]: monitoringAlerts,

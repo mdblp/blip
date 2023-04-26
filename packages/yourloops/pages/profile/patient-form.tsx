@@ -66,7 +66,7 @@ const PatientProfileForm: FunctionComponent = () => {
       <Box className={classes.inputContainer}>
         <TextField
           id="profile-textfield-birthdate"
-          label={t('birthdate')}
+          label={t('date-of-birth')}
           variant="standard"
           value={profileForm.birthday}
           onChange={event => { updateProfileForm(ProfileFormKey.birthday, event.target.value) }}

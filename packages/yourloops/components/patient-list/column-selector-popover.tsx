@@ -69,16 +69,20 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       tooltip: t('un-removable-column')
     },
     {
-      name: PatientListColumns.DateOfBirth,
-      checked: updatedColumnsModel[PatientListColumns.DateOfBirth]
-    },
-    {
       name: PatientListColumns.Age,
       checked: updatedColumnsModel[PatientListColumns.Age]
     },
     {
+      name: PatientListColumns.DateOfBirth,
+      checked: updatedColumnsModel[PatientListColumns.DateOfBirth]
+    },
+    {
       name: PatientListColumns.Gender,
       checked: updatedColumnsModel[PatientListColumns.Gender]
+    },
+    {
+      name: PatientListColumns.System,
+      checked: updatedColumnsModel[PatientListColumns.System]
     },
     {
       name: PatientListColumns.MonitoringAlerts,
@@ -86,17 +90,13 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       hcpOnly: true
     },
     {
-      name: PatientListColumns.System,
-      checked: updatedColumnsModel[PatientListColumns.System]
+      name: PatientListColumns.Messages,
+      checked: updatedColumnsModel[PatientListColumns.Messages],
+      hcpOnly: true
     },
     {
       name: PatientListColumns.LastDataUpdate,
       checked: updatedColumnsModel[PatientListColumns.LastDataUpdate]
-    },
-    {
-      name: PatientListColumns.Messages,
-      checked: updatedColumnsModel[PatientListColumns.Messages],
-      hcpOnly: true
     }
   ]
 

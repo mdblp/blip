@@ -28,6 +28,7 @@
 import { type GridComparatorFn } from '@mui/x-data-grid'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { getUserName } from '../../lib/auth/user.util'
+import moment from 'moment-timezone'
 
 interface SortComparator extends GridComparatorFn<Patient> {
   (patient1: Patient, patient2: Patient): number
@@ -47,6 +48,19 @@ export const sortByFlag: SortComparator = (patient1: Patient, patient2: Patient)
     return -1
   }
   if (!isPatient1Flagged && isPatient2Flagged) {
+    return 1
+  }
+  return 0
+}
+
+export const sortByDateOfBirth: SortComparator = (patient1: Patient, patient2: Patient): number => {
+  const patient1DateOfBirth = moment.utc(patient1.profile.birthdate)
+  const patient2DateOfBirth = moment.utc(patient2.profile.birthdate)
+
+  if (patient1DateOfBirth.isBefore(patient2DateOfBirth)) {
+    return -1
+  }
+  if (patient1DateOfBirth.isAfter(patient2DateOfBirth)) {
     return 1
   }
   return 0
