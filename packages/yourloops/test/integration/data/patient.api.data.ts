@@ -45,10 +45,11 @@ import {
 } from '../mock/team.api.mock'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 
-export const unmonitoredPatientId = 'unmonitoredPatientId'
-export const monitoredPatientId = 'monitoredPatientId'
+export const patient1Id = 'patient1Id'
+export const patient2Id = 'patient2Id'
+export const patient3Id = 'patient3Id'
 export const unreadMessagesPatientId = 'unreadMessagesPatientId'
-export const monitoredPatientWithMmolId = 'monitoredPatientWithMmolId'
+export const patientWithMmolId = 'patientWithMmolId'
 export const timeSpentOutOfTargetRangePatientId = 'timeSpentOutOfTargetRangePatientId'
 export const hypoglycemiaPatientId = 'hypoglycemiaPatientId'
 export const noDataTransferredPatientId = 'noDataTransferredPatientId'
@@ -113,15 +114,15 @@ export const buildPatient = (params: {
   }
 }
 
-export const monitoredPatient: Patient = buildPatient({
-  userid: monitoredPatientId,
+export const patient1: Patient = buildPatient({
+  userid: patient1Id,
   monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
-    email: 'monitored-patient@diabeloop.fr',
-    firstName: 'Monitored',
-    fullName: 'Monitored Patient',
-    lastName: 'Patient',
+    email: 'patient1@diabeloop.fr',
+    firstName: 'Patient1',
+    fullName: 'Patient1 Groby',
+    lastName: 'Groby',
     sex: 'M'
   },
   settings: defaultSettings,
@@ -209,31 +210,31 @@ export const flaggedPatient: Patient = buildPatient({
   monitoringAlerts: defaultMonitoringAlert
 })
 
-export const unmonitoredPatient: Patient = buildPatient({
-  userid: unmonitoredPatientId,
+export const patient2: Patient = buildPatient({
+  userid: patient2Id,
   monitoringAlertsParameters: undefined,
   profile: {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
-    email: 'unmonitored-patient@diabeloop.fr',
-    firstName: 'Unmonitored',
-    fullName: 'Unmonitored Patient',
-    lastName: 'Patient',
-    sex: 'M'
+    email: 'patient2@diabeloop.fr',
+    firstName: 'Patient2',
+    fullName: 'Patient2 Rouis',
+    lastName: 'Rouis',
+    sex: 'F'
   },
   settings: { ...defaultSettings, a1c: { value: '8.9', date: '2023-11-21T12:30:38.473Z' } },
   metadata: defaultMetadata,
   monitoringAlerts: defaultMonitoringAlert
 })
 
-export const monitoredPatientTwo: Patient = buildPatient({
-  userid: 'monitored-patient-two',
+export const patient3: Patient = buildPatient({
+  userid: patient3Id,
   monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
-    email: 'monitored-patient2@diabeloop.fr',
-    firstName: 'Monitored',
-    lastName: 'Patient 2',
-    fullName: 'Monitored Patient 2',
+    email: 'patient3@diabeloop.fr',
+    firstName: 'Patient3',
+    lastName: 'Srairi',
+    fullName: 'Patient3 Srairi',
     sex: 'M'
   },
   settings: defaultSettings,
@@ -241,16 +242,16 @@ export const monitoredPatientTwo: Patient = buildPatient({
   monitoringAlerts: defaultMonitoringAlert
 })
 
-export const monitoredPatientWithMmol: Patient = buildPatient({
-  userid: monitoredPatientWithMmolId,
+export const patientWithMmol: Patient = buildPatient({
+  userid: patientWithMmolId,
   monitoringAlertsParameters: monitoringAlertsParametersBgUnitMmol,
   profile: {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
-    email: 'monitored-patient-mmol@diabeloop.fr',
-    firstName: 'Monitored',
-    lastName: 'Patient mmol',
-    fullName: 'Monitored Patient mmol',
-    sex: 'F'
+    email: 'patient-mmol@diabeloop.fr',
+    firstName: 'PatientMmol',
+    lastName: 'Perotto',
+    fullName: 'PatientMmol Perotto',
+    sex: 'M'
   },
   settings: defaultSettings,
   metadata: defaultMetadata,
@@ -299,16 +300,16 @@ export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, inv
   }
 }
 
-export const monitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatient, mySecondTeamId, UserInvitationStatus.accepted)
-export const unmonitoredPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(unmonitoredPatient, myThirdTeamId, UserInvitationStatus.accepted)
-export const monitoredPatientTwoAsTeamMember: ITeamMember = buildTeamMemberFromPatient(monitoredPatientTwo, myThirdTeamId, UserInvitationStatus.accepted)
+export const patient1AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient1, mySecondTeamId, UserInvitationStatus.accepted)
+export const patient2AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient2, myThirdTeamId, UserInvitationStatus.accepted)
+export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient3, myThirdTeamId, UserInvitationStatus.accepted)
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInvitationStatus.pending)
 
 export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   [myTeamId]: [],
   [mySecondTeamId]: [
     {
-      ...monitoredPatient,
+      ...patient1,
       invitationStatus: UserInvitationStatus.accepted
     }, {
       ...pendingPatient,
@@ -317,19 +318,19 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   ],
   [myThirdTeamId]: [
     {
-      ...monitoredPatient,
+      ...patient1,
       invitationStatus: UserInvitationStatus.accepted
     },
     {
-      ...unmonitoredPatient,
+      ...patient2,
       invitationStatus: UserInvitationStatus.accepted
     },
     {
-      ...monitoredPatientTwo,
+      ...patient3,
       invitationStatus: UserInvitationStatus.accepted
     },
     {
-      ...monitoredPatientWithMmol,
+      ...patientWithMmol,
       invitationStatus: UserInvitationStatus.accepted
     },
     {
@@ -339,7 +340,7 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   ],
   [filtersTeamId]: [
     {
-      ...monitoredPatient,
+      ...patient1,
       invitationStatus: UserInvitationStatus.accepted
     },
     {

@@ -27,7 +27,7 @@
 
 import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { monitoredPatientWithMmolId } from '../data/patient.api.data'
+import { patientWithMmolId } from '../data/patient.api.data'
 import { Unit } from 'medical-domain'
 import PatientApi from '../../../lib/patient/patient.api'
 import { myThirdTeamId } from '../mock/team.api.mock'
@@ -131,7 +131,7 @@ export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void>
     nonDataTxThreshold: 40,
     reportingPeriod: 7
   }
-  expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, monitoredPatientWithMmolId, expectedMonitoringAlertsParameters)
+  expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patientWithMmolId, expectedMonitoringAlertsParameters)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByText('Patient update succeeded')).toBeVisible()
 }

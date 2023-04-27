@@ -30,7 +30,7 @@ import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { unmonitoredPatientId } from '../../data/patient.api.data'
+import { patient2Id } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
@@ -66,9 +66,9 @@ describe('Daily view for HCP', () => {
         }
       }
     }
-    const router = renderPage(`/patient/${unmonitoredPatientId}/daily`)
+    const router = renderPage(`/patient/${patient2Id}/daily`)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/daily`)
+      expect(router.state.location.pathname).toEqual(`/patient/${patient2Id}/daily`)
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()

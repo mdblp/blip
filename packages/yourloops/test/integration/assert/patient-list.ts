@@ -40,11 +40,11 @@ import {
 import { changeTeamScope } from './header'
 import { type createBrowserRouter } from 'react-router-dom'
 import {
-  monitoredPatient,
-  monitoredPatientTwo,
-  monitoredPatientWithMmol,
+  patient1,
+  patient3,
+  patientWithMmol,
   pendingPatient,
-  unmonitoredPatient
+  patient2
 } from '../data/patient.api.data'
 
 export type Router = ReturnType<typeof createBrowserRouter>
@@ -79,7 +79,7 @@ export const checkPatientListHeaderCaregiver = () => {
 export const checkPatientListContentHcp = () => {
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-  expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyDBLG1N/ANo new messagesFlag patient patient2@diabeloop.frPatient2 RouisDBLG1N/ANo new messagesFlag patient patient3@diabeloop.frPatient3 SrairiDBLG1N/ANo new messagesFlag patient patient-mmol@diabeloop.frPatientMmol PerottoDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
 }
 
 export const checkAddPatientPrivateButtonTooltip = async () => {
@@ -106,14 +106,14 @@ export const checkPatientListHeaderForHcp = () => {
 }
 
 export const checkRemovePatientPrivateDialogContent = async () => {
-  const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
+  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient1.profile.email}` })
   await userEvent.click(removeButton)
   const removeDialog = screen.getByRole('dialog')
 
-  const dialogTitle = within(removeDialog).getByText(`Remove ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} from My private practice`)
+  const dialogTitle = within(removeDialog).getByText(`Remove ${patient1.profile.firstName} ${patient1.profile.lastName} from My private practice`)
   expect(dialogTitle).toBeVisible()
   const dialogQuestion = within(removeDialog).getByTestId('modal-remove-patient-question')
-  expect(dialogQuestion).toHaveTextContent(`Are you sure you want to remove ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} from My private practice?`)
+  expect(dialogQuestion).toHaveTextContent(`Are you sure you want to remove ${patient1.profile.firstName} ${patient1.profile.lastName} from My private practice?`)
   const dialogInfo = within(removeDialog).getByText('You will no longer have access to their data.')
   expect(dialogInfo).toBeVisible()
   const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
@@ -166,7 +166,7 @@ export const checkAddPatientMedicalTeamDialogInvite = async () => {
 
   const emailInput = within(addPatientDialog).getByRole('textbox', { name: 'Email' })
   expect(emailInput).toBeVisible()
-  await userEvent.type(emailInput, monitoredPatient.profile.email)
+  await userEvent.type(emailInput, patient1.profile.email)
 
   const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient is already sharing data with the team.')
   expect(alreadyInTeamErrorMessage).toBeVisible()
@@ -205,7 +205,7 @@ export const checkAddPatientMedicalTeamDialogInvite = async () => {
 }
 
 export const checkRemovePatientMedicalTeamDialogContent = async () => {
-  const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
+  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2.profile.email}` })
   expect(removeButton).toBeVisible()
 
   await userEvent.click(removeButton)
@@ -213,10 +213,10 @@ export const checkRemovePatientMedicalTeamDialogContent = async () => {
   const removeDialog = screen.getByRole('dialog')
   expect(removeDialog).toBeVisible()
 
-  const title = within(removeDialog).getByText(`Remove ${unmonitoredPatient.profile.fullName} from ${myThirdTeamName}`)
+  const title = within(removeDialog).getByText(`Remove ${patient2.profile.fullName} from ${myThirdTeamName}`)
   expect(title).toBeVisible()
   const question = within(removeDialog).getByTestId('modal-remove-patient-question')
-  expect(question).toHaveTextContent(`Are you sure you want to remove ${unmonitoredPatient.profile.fullName} from ${myThirdTeamName}?`)
+  expect(question).toHaveTextContent(`Are you sure you want to remove ${patient2.profile.fullName} from ${myThirdTeamName}?`)
   const info = within(removeDialog).getByText('You and the care team will no longer have access to their data.')
   expect(info).toBeVisible()
   const alertInfo = within(removeDialog).getByText('If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
@@ -228,7 +228,7 @@ export const checkRemovePatientMedicalTeamDialogContent = async () => {
 }
 
 export const checkRemovePatientMedicalTeamConfirm = async () => {
-  const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatient.profile.email}` })
+  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2.profile.email}` })
   expect(removeButton).toBeVisible()
 
   await userEvent.click(removeButton)
@@ -240,14 +240,14 @@ export const checkRemovePatientMedicalTeamConfirm = async () => {
 
   await userEvent.click(confirmRemoveButton)
 
-  expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, unmonitoredPatient.userid)
+  expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, patient2.userid)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${unmonitoredPatient.profile.firstName} ${unmonitoredPatient.profile.lastName} is no longer a member of ${myThirdTeamName}`)
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`${patient2.profile.firstName} ${patient2.profile.lastName} is no longer a member of ${myThirdTeamName}`)
 }
 
 export const checkRemovePatientMedicalTeamError = async () => {
   jest.spyOn(PatientApi, 'removePatient').mockRejectedValueOnce(Error('Remove patient error: This error was thrown by a mock on purpose'))
-  const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
+  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient1.profile.email}` })
   await userEvent.click(removeButton)
   const removeDialog = screen.getByRole('dialog')
   const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
@@ -255,7 +255,7 @@ export const checkRemovePatientMedicalTeamError = async () => {
   await act(async () => {
     await userEvent.click(confirmRemoveButton)
   })
-  expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, monitoredPatient.userid)
+  expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, patient1.userid)
   expect(screen.getByRole('dialog')).toBeVisible()
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   const cancelButton = within(removeDialog).getByRole('button', { name: 'Cancel' })
@@ -265,7 +265,7 @@ export const checkRemovePatientMedicalTeamError = async () => {
 }
 
 export const checkRemovePatientPrivateConfirm = async () => {
-  const removeButton = screen.getByRole('button', { name: `Remove patient ${monitoredPatient.profile.email}` })
+  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient1.profile.email}` })
   await userEvent.click(removeButton)
   const removeDialog = screen.getByRole('dialog')
 
@@ -274,9 +274,9 @@ export const checkRemovePatientPrivateConfirm = async () => {
 
   await userEvent.click(confirmRemoveButton)
 
-  expect(DirectShareApi.removeDirectShare).toHaveBeenCalledWith(monitoredPatient.userid, loggedInUserId)
+  expect(DirectShareApi.removeDirectShare).toHaveBeenCalledWith(patient1.userid, loggedInUserId)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`Direct data sharing with ${monitoredPatient.profile.firstName} ${monitoredPatient.profile.lastName} has been removed`)
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent(`Direct data sharing with ${patient1.profile.firstName} ${patient1.profile.lastName} has been removed`)
 }
 
 export const checkPatientListPendingTab = async (router: Router) => {
@@ -304,7 +304,7 @@ export const checkPatientListFilters = async () => {
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
   const dataGridRow = screen.getByTestId('patient-list-grid')
   expect(within(dataGridRow).getAllByRole('row')).toHaveLength(7)
-  expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messagesFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
+  expect(dataGridRow).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsUnflag patient flagged@patient.frFlagged PatientDBLG1N/ANo new messagesFlag patient hypoglycemia@patient.frHypoglycemia PatientDBLG1N/ANo new messagesFlag patient no-data@patient.frNo Data PatientDBLG1N/ANo new messagesFlag patient patient1@diabeloop.frPatient1 GrobyDBLG1N/ANo new messagesFlag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messagesFlag patient unread-messages@patient.frUnread Messages PatientDBLG1N/AThe patient has sent you new messagesData calculated on the last 7 daysRows per page:101–6 of 6')
 
   // Check the default values
   const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -518,7 +518,7 @@ export const checkPatientColumnsFiltersShowColumns = async () => {
 
 export const checkPatientListTooltips = async (): Promise<void> => {
   const dataGridRows = screen.getByTestId('patient-list-grid')
-  expect(dataGridRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messagesFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/ANo new messagesFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolDBLG1N/ANo new messagesFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
+  expect(dataGridRows).toHaveTextContent('PatientMonitoring alertsSystemLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyDBLG1N/ANo new messagesFlag patient patient2@diabeloop.frPatient2 RouisDBLG1N/ANo new messagesFlag patient patient3@diabeloop.frPatient3 SrairiDBLG1N/ANo new messagesFlag patient patient-mmol@diabeloop.frPatientMmol PerottoDBLG1N/ANo new messagesData calculated on the last 7 daysRows per page:101–4 of 4')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
   const tooltipText = 'Hover over the icons to learn more'
   expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
@@ -582,27 +582,27 @@ export const checkPatientListColumnSort = async (): Promise<void> => {
 
   const patientColumnHeader = within(dataGridRows).getByRole('columnheader', { name: 'Patient' })
   const allRowsBeforeSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsBeforeSort[1]).toHaveTextContent(monitoredPatient.profile.fullName)
-  expect(allRowsBeforeSort[2]).toHaveTextContent(monitoredPatientTwo.profile.fullName)
-  expect(allRowsBeforeSort[3]).toHaveTextContent(monitoredPatientWithMmol.profile.fullName)
-  expect(allRowsBeforeSort[4]).toHaveTextContent(unmonitoredPatient.profile.fullName)
+  expect(allRowsBeforeSort[1]).toHaveTextContent(patient1.profile.fullName)
+  expect(allRowsBeforeSort[2]).toHaveTextContent(patient2.profile.fullName)
+  expect(allRowsBeforeSort[3]).toHaveTextContent(patient3.profile.fullName)
+  expect(allRowsBeforeSort[4]).toHaveTextContent(patientWithMmol.profile.fullName)
 
   const sortButton = within(patientColumnHeader).getByRole('button', { hidden: true })
   await userEvent.click(sortButton)
 
   const allRowsAfterFirstSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterFirstSort[1]).toHaveTextContent(unmonitoredPatient.profile.fullName)
-  expect(allRowsAfterFirstSort[2]).toHaveTextContent(monitoredPatientWithMmol.profile.fullName)
-  expect(allRowsAfterFirstSort[3]).toHaveTextContent(monitoredPatientTwo.profile.fullName)
-  expect(allRowsAfterFirstSort[4]).toHaveTextContent(monitoredPatient.profile.fullName)
+  expect(allRowsAfterFirstSort[1]).toHaveTextContent(patientWithMmol.profile.fullName)
+  expect(allRowsAfterFirstSort[2]).toHaveTextContent(patient3.profile.fullName)
+  expect(allRowsAfterFirstSort[3]).toHaveTextContent(patient2.profile.fullName)
+  expect(allRowsAfterFirstSort[4]).toHaveTextContent(patient1.profile.fullName)
 
   await userEvent.click(sortButton)
 
   const allRowsAfterSecondSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterSecondSort[1]).toHaveTextContent(monitoredPatient.profile.fullName)
-  expect(allRowsAfterSecondSort[2]).toHaveTextContent(monitoredPatientTwo.profile.fullName)
-  expect(allRowsAfterSecondSort[3]).toHaveTextContent(monitoredPatientWithMmol.profile.fullName)
-  expect(allRowsAfterSecondSort[4]).toHaveTextContent(unmonitoredPatient.profile.fullName)
+  expect(allRowsAfterSecondSort[1]).toHaveTextContent(patient1.profile.fullName)
+  expect(allRowsAfterSecondSort[2]).toHaveTextContent(patient2.profile.fullName)
+  expect(allRowsAfterSecondSort[3]).toHaveTextContent(patient3.profile.fullName)
+  expect(allRowsAfterSecondSort[4]).toHaveTextContent(patientWithMmol.profile.fullName)
 }
 
 export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promise<void> => {

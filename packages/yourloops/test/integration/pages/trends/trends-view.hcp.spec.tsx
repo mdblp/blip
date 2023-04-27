@@ -36,7 +36,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { unmonitoredPatientId } from '../../data/patient.api.data'
+import { patient2Id } from '../../data/patient.api.data'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Trends view for HCP', () => {
@@ -67,9 +67,9 @@ describe('Trends view for HCP', () => {
         }
       }
     }
-    const router = renderPage(`/patient/${unmonitoredPatientId}/trends`)
+    const router = renderPage(`/patient/${patient2Id}/trends`)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/trends`)
+      expect(router.state.location.pathname).toEqual(`/patient/${patient2Id}/trends`)
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()

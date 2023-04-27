@@ -56,12 +56,12 @@ import {
 } from '../../assert/stats'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor, within } from '@testing-library/react'
-import { unmonitoredPatientAsTeamMember } from '../../data/patient.api.data'
+import { patient2AsTeamMember } from '../../data/patient.api.data'
 import { buildHba1cData } from '../../data/data-api.data'
 
 describe('Trends view for anyone', () => {
   beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
+    mockPatientLogin(patient2AsTeamMember)
   })
 
   describe('with all kind of data', () => {

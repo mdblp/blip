@@ -30,8 +30,8 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
 import {
   buildPatientAsTeamMember,
-  monitoredPatientAsTeamMember,
-  unmonitoredPatientAsTeamMember
+  patient1AsTeamMember,
+  patient2AsTeamMember
 } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout'
@@ -137,9 +137,9 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientSystemLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2DBLG1N/AFlag patient pending-patient@diabeloop.frPending PatientDBLG1N/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientDBLG1N/AData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(patientTableBody).toHaveTextContent('PatientSystemLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyDBLG1N/AFlag patient patient2@diabeloop.frPatient2 RouisDBLG1N/AFlag patient patient3@diabeloop.frPatient3 SrairiDBLG1N/AFlag patient pending-patient@diabeloop.frPending PatientDBLG1N/AData calculated on the last 7 daysRows per page:101–4 of 4')
 
-    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
+    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -150,7 +150,7 @@ describe('Caregiver home page', () => {
     const removePatientDialogTitle = within(removePatientDialog).getByText('Remove a patient')
     expect(removePatientDialogTitle).toBeVisible()
 
-    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove Unmonitored Patient?')
+    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove Patient2 Rouis?')
     expect(removePatientDialogQuestion).toBeVisible()
 
     const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
@@ -174,8 +174,8 @@ describe('Caregiver home page', () => {
       await userEvent.click(removePatientDialog2ConfirmButton)
     })
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
-    expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember])).toHaveBeenCalledTimes(2)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
+    expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])).toHaveBeenCalledTimes(2)
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })
@@ -187,7 +187,7 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
 
     await userEvent.click(removeButton)
 
@@ -199,7 +199,7 @@ describe('Caregiver home page', () => {
       await userEvent.click(confirmRemoveButton)
     })
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })
