@@ -40,7 +40,6 @@ import {
 
 export const testPatientListForHcp = async (router: Router) => {
   checkPatientListHeaderForHcp()
-  // checkPatientListContentForHcp()
   await checkPatientListTooltips()
   await checkPatientListColumnSort()
   await checkMonitoringAlertsIconsInactiveForFirstPatient()

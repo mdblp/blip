@@ -74,12 +74,6 @@ export const checkPatientListHeaderCaregiver = () => {
   expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
 }
 
-// export const checkPatientListContentForHcp = () => {
-//   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
-//   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-//   expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientJan 1, 1980No new messagesN/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2Jan 1, 1980No new messagesN/AFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolJan 1, 1980No new messagesN/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientJan 1, 1980No new messagesN/AData calculated on the last 7 daysRows per page:101–4 of 4')
-// }
-
 export const checkPatientListHeaderForHcp = () => {
   const header = screen.getByTestId('patient-list-header')
   checkPatientListHeader(header)
@@ -231,7 +225,6 @@ export const checkPatientColumnsFiltersContent = async () => {
 export const checkPatientColumnsFiltersHideShowColumns = async () => {
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-  // expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientJan 1, 1980No new messagesN/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2Jan 1, 1980No new messagesN/AFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolJan 1, 1980No new messagesN/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientJan 1, 1980No new messagesN/AData calculated on the last 7 daysRows per page:101–4 of 4')
 
   const columnSettingsButton = screen.getByTestId('column-settings-button')
 
