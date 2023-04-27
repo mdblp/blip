@@ -33,7 +33,6 @@ import DialogPDFOptions from '../dialogs/pdf-print-options'
 import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
 import Daily from 'blip/app/components/chart/daily'
 import Trends from 'blip/app/components/chart/trends'
-import { usePatientDataContext } from './patient-data.provider'
 import SpinningLoader from '../loaders/spinning-loader'
 import { useAlert } from '../utils/snackbar'
 import Typography from '@mui/material/Typography'
@@ -41,6 +40,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
+import { usePatientData } from './patient-data.hook'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -52,6 +52,7 @@ export const PatientData: FunctionComponent = () => {
     changeChart,
     changePatient,
     currentChart,
+    dashboardDate,
     dataUtil,
     dailyDate,
     fetchPatientData,
@@ -66,7 +67,7 @@ export const PatientData: FunctionComponent = () => {
     patient,
     timePrefs,
     updateChartPrefs
-  } = usePatientDataContext()
+  } = usePatientData()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
@@ -122,6 +123,8 @@ export const PatientData: FunctionComponent = () => {
                     <PatientDashboard
                       bgPrefs={bgPrefs}
                       dataUtil={dataUtil}
+                      dashboardDate={dashboardDate}
+                      goToDailySpecificDate={goToDailySpecificDate}
                       medicalDataService={medicalData}
                       msRange={msRange}
                       patient={patient}

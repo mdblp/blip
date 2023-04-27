@@ -34,7 +34,7 @@ import { useAuth } from '../../lib/auth'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 
@@ -63,7 +63,7 @@ export interface PatientDataContextResult {
 
 const DATE_QUERY_PARAM_KEY = 'date'
 
-export const usePatientDataProviderHook = (): PatientDataContextResult => {
+export const usePatientData = (): PatientDataContextResult => {
   const navigate = useNavigate()
   const paramHook = useParams()
   const { patientId } = paramHook
@@ -113,8 +113,8 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
   const [msRange, setMsRange] = useState<number>(TimeService.MS_IN_DAY)
   const [chartPrefs, setChartPrefs] = useState<ChartPrefs>(defaultChartPrefs)
   const [dashboardDate, setDashboardDate] = useState<number>(new Date().valueOf())
-  const [dailyDate, setDailyDate] = useState<number>(0)
-  const [trendsDate, setTrendsDate] = useState<number>(0)
+  const [dailyDate, setDailyDate] = useState<number | null>(null)
+  const [trendsDate, setTrendsDate] = useState<number | null>(null)
 
   const patientDataUtils = useRef(new PatientDataUtils({
     patient,
@@ -139,6 +139,21 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
   }
 
   const changeChart = (chart: ChartTypes): void => {
+    switch (chart) {
+      case ChartTypes.Dashboard:
+        setDashboardDate(new Date().valueOf())
+        setMsRange(TimeService.MS_IN_DAY * 7)
+        break
+      case ChartTypes.Daily:
+        if (dateQueryParam) {
+          setDailyDate(parseInt(dateQueryParam))
+        }
+        setMsRange(TimeService.MS_IN_DAY)
+        break
+      case ChartTypes.Trends:
+        setMsRange(TimeService.MS_IN_DAY)
+        break
+    }
     navigate(`${urlPrefix}/${chart}`)
   }
 
@@ -148,7 +163,8 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
   }
 
   const goToDailySpecificDate = (date: number | Date): void => {
-    navigate(`${urlPrefix}/${ChartTypes.Daily}?date=${date instanceof Date ? date.valueOf() : date}`)
+    setDailyDate(date instanceof Date ? date.valueOf() : date)
+    navigate(`${urlPrefix}/${ChartTypes.Daily}?date=${new Date(date).toISOString()}`)
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {
@@ -165,9 +181,13 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
     } catch (err) {
       console.log(err)
     } finally {
-      currentChart === ChartTypes.Daily
-        ? setSearchParams({ [DATE_QUERY_PARAM_KEY]: epochLocation.toString() })
-        : setTrendsDate(epochLocation)
+      if (currentChart === ChartTypes.Daily) {
+        setDailyDate(epochLocation)
+        setSearchParams({ [DATE_QUERY_PARAM_KEY]: new Date(epochLocation).toISOString() })
+      }
+      if (currentChart === ChartTypes.Trends) {
+        setTrendsDate(epochLocation)
+      }
       setMsRange(msRange)
       setRefreshingData(false)
     }
@@ -201,34 +221,17 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
         timePrefs,
         endpoints: medicalData.endpoints
       })
+      const initialDate = patientDataUtils.current.getInitialDate(medicalData)
+
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
+      // TODO check if dateQueryParam is a valid date
+      setDailyDate(dateQueryParam ? new Date(dateQueryParam).valueOf() : initialDate)
+      setTrendsDate(initialDate)
     } finally {
       setLoadingData(false)
     }
   }
-
-  useEffect(() => {
-    if (medicalData) {
-      switch (currentChart) {
-        case ChartTypes.Dashboard:
-          setDashboardDate(new Date().valueOf())
-          setMsRange(TimeService.MS_IN_DAY * 7)
-          break
-        case ChartTypes.Daily:
-          if (dateQueryParam) {
-            setDailyDate(parseInt(dateQueryParam))
-          } else {
-            setDailyDate(dailyDate !== 0 ? dailyDate : patientDataUtils.current.getInitialDate(medicalData))
-          }
-          setMsRange(TimeService.MS_IN_DAY)
-          break
-        case ChartTypes.Trends:
-          setTrendsDate(trendsDate !== 0 ? trendsDate : patientDataUtils.current.getInitialDate(medicalData))
-          setMsRange(TimeService.MS_IN_DAY)
-      }
-    }
-  }, [currentChart, medicalData, dailyDate, trendsDate, dateQueryParam])
 
   return {
     bgPrefs,

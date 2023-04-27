@@ -52,11 +52,12 @@ import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
-import { usePatientDataProviderHook } from '../patient-data/patient-data.provider.hook'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
+  dashboardDate: number
   dataUtil: typeof DataUtil
+  goToDailySpecificDate: (date: number | Date) => void
   loading: boolean
   medicalDataService: MedicalDataService
   msRange: number
@@ -75,20 +76,22 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
+    dashboardDate,
     dataUtil,
+    goToDailySpecificDate,
     loading,
     medicalDataService,
     msRange,
     patient,
     timePrefs
   } = props
-  const { goToDailySpecificDate, dashboardDate } = usePatientDataProviderHook()
   const { user } = useAuth()
   const { selectedTeam } = useSelectedTeamContext()
   const { getMedicalTeams } = useTeam()
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
   const { classes, theme } = useStyle()
+
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const endpoints = [
     moment.utc(dashboardDate - msRange).toISOString(), // start
