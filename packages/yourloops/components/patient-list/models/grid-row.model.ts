@@ -27,14 +27,13 @@
 
 import { type PatientListColumns } from './enums/patient-list.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 
 export interface GridRowModel {
   id: string
   [PatientListColumns.Flag]?: Patient
   [PatientListColumns.Patient]: Patient
   [PatientListColumns.System]?: string
-  [PatientListColumns.MonitoringAlerts]?: MonitoringAlerts
+  [PatientListColumns.MonitoringAlerts]?: Patient
   [PatientListColumns.LastDataUpdate]?: string
   [PatientListColumns.Messages]?: boolean
   [PatientListColumns.Actions]: Patient

@@ -51,3 +51,25 @@ export const sortByFlag: SortComparator = (patient1: Patient, patient2: Patient)
   }
   return 0
 }
+
+const getMonitoringAlertsCount = (patient: Patient): number => {
+  const monitoringAlerts = patient.monitoringAlerts
+  const timeOutOfRangeCount = monitoringAlerts.timeSpentAwayFromTargetActive ? 1 : 0
+  const hypoglycemiaCount = monitoringAlerts.frequencyOfSevereHypoglycemiaActive ? 1 : 0
+  const noDataCount = monitoringAlerts.nonDataTransmissionActive ? 1 : 0
+
+  return timeOutOfRangeCount + hypoglycemiaCount + noDataCount
+}
+
+export const sortByMonitoringAlertsCount: SortComparator = (patient1: Patient, patient2: Patient): number => {
+  const patient1MonitoringAlertsCount = getMonitoringAlertsCount(patient1)
+  const patient2MonitoringAlertsCount = getMonitoringAlertsCount(patient2)
+
+  if (patient1MonitoringAlertsCount > patient2MonitoringAlertsCount) {
+    return -1
+  }
+  if (patient1MonitoringAlertsCount < patient2MonitoringAlertsCount) {
+    return 1
+  }
+  return 0
+}

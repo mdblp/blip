@@ -33,7 +33,6 @@ import { PatientListColumns, PatientListTabs } from './models/enums/patient-list
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { getMedicalValues } from '../patient/utils'
 import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell, PendingIconCell } from './custom-cells'
-import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientUtils from '../../lib/patient/patient.util'
@@ -44,7 +43,7 @@ import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { sortByFlag, sortByUserName } from './sort-comparators.util'
+import { sortByFlag, sortByMonitoringAlertsCount, sortByUserName } from './sort-comparators.util'
 import { getUserName } from '../../lib/auth/user.util'
 
 interface SharedColumns {
@@ -189,9 +188,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
         flex: 0.3,
-        sortable: false,
-        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
-          return <MonitoringAlertsCell monitoringAlerts={params.value} />
+        sortComparator: sortByMonitoringAlertsCount,
+        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
+          const patient = params.value
+          return <MonitoringAlertsCell monitoringAlerts={patient.monitoringAlerts} />
         }
       },
       {
@@ -231,13 +231,12 @@ export const usePatientListHook = (): PatientListHookReturns => {
         }
       }
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
-      const monitoringAlerts = patient.monitoringAlerts
 
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient,
-        [PatientListColumns.MonitoringAlerts]: monitoringAlerts,
+        [PatientListColumns.MonitoringAlerts]: patient,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
