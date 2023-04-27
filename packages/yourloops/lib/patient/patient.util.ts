@@ -138,6 +138,7 @@ export default class PatientUtils {
         return t('gender-f')
       case Gender.Male:
         return t('gender-m')
+      case Gender.NotDefined:
       default:
         return NO_GENDER_LABEL
     }

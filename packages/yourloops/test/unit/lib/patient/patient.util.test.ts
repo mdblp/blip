@@ -280,7 +280,7 @@ describe('Patient utils', () => {
       expect(PatientUtils.getGenderLabel(Gender.Indeterminate)).toEqual('gender-i')
       expect(PatientUtils.getGenderLabel(Gender.Female)).toEqual('gender-f')
       expect(PatientUtils.getGenderLabel(Gender.Male)).toEqual('gender-m')
-      expect(PatientUtils.getGenderLabel('' as Gender)).toEqual('-')
+      expect(PatientUtils.getGenderLabel(Gender.NotDefined)).toEqual('-')
     })
   })
 })

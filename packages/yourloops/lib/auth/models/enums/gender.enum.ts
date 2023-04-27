@@ -28,5 +28,6 @@
 export enum Gender {
   Female = 'F',
   Indeterminate = 'I',
-  Male = 'M'
+  Male = 'M',
+  NotDefined = ''
 }

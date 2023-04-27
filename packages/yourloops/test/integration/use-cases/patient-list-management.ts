@@ -28,11 +28,11 @@
 import {
   checkMonitoringAlertsIconsInactiveForFirstPatient,
   checkPatientColumnsFiltersContent,
-  checkPatientColumnsFiltersHideShowColumns,
   checkPatientListColumnSort,
   checkPatientListCurrentTab,
   checkPatientListFilters,
   checkPatientListHeaderForHcp,
+  checkPatientListHideShowColumns,
   checkPatientListPendingTab,
   checkPatientListTooltips,
   type Router
@@ -45,7 +45,7 @@ export const testPatientListForHcp = async (router: Router) => {
   await checkMonitoringAlertsIconsInactiveForFirstPatient()
   await checkPatientListFilters()
   await checkPatientColumnsFiltersContent()
-  await checkPatientColumnsFiltersHideShowColumns()
+  await checkPatientListHideShowColumns()
   await checkPatientListPendingTab(router)
   await checkPatientListCurrentTab()
 }

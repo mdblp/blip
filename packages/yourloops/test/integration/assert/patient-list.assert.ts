@@ -222,7 +222,7 @@ export const checkPatientColumnsFiltersContent = async () => {
   expect(screen.queryByRole('presentation')).not.toBeInTheDocument()
 }
 
-export const checkPatientColumnsFiltersHideShowColumns = async () => {
+export const checkPatientListHideShowColumns = async () => {
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
 
@@ -268,7 +268,7 @@ export const checkPatientColumnsFiltersHideShowColumns = async () => {
 
   // Assert default columns are checked
   expect(patientToggleForHide).toHaveProperty('checked', true)
-  expect(patientToggleForHide).toHaveProperty('disabled', true)
+  expect(patientToggleForHide).toBeDisabled()
   expect(ageToggleForHide).toHaveProperty('checked', false)
   expect(dateOfBirthToggleForHide).toHaveProperty('checked', true)
   expect(genderToggleForHide).toHaveProperty('checked', false)
@@ -321,7 +321,7 @@ export const checkPatientColumnsFiltersHideShowColumns = async () => {
 
   // Assert only mandatory columns are checked
   expect(patientToggleForShow).toHaveProperty('checked', true)
-  expect(patientToggleForShow).toHaveProperty('disabled', true)
+  expect(patientToggleForShow).toBeDisabled()
   expect(ageToggleForShow).toHaveProperty('checked', false)
   expect(dateOfBirthToggleForShow).toHaveProperty('checked', false)
   expect(genderToggleForShow).toHaveProperty('checked', false)
@@ -380,7 +380,7 @@ export const checkPatientColumnsFiltersHideShowColumns = async () => {
 
   // Assert all columns are checked
   expect(patientToggleForReset).toHaveProperty('checked', true)
-  expect(patientToggleForReset).toHaveProperty('disabled', true)
+  expect(patientToggleForReset).toBeDisabled()
   expect(ageToggleForReset).toHaveProperty('checked', true)
   expect(dateOfBirthToggleForReset).toHaveProperty('checked', true)
   expect(genderToggleForReset).toHaveProperty('checked', true)

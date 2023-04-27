@@ -45,15 +45,13 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientUtils from '../../lib/patient/patient.util'
 import { type GridRowModel } from './models/grid-row.model'
 import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
-import { getPatientFullName } from 'dumb'
+import { formatBirthdate, getPatientFullName } from 'dumb'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { sortByDateOfBirth, sortByFlag, sortByUserName } from './sort-comparators.util'
 import { getUserName } from '../../lib/auth/user.util'
-import { type Gender } from '../../lib/auth/models/enums/gender.enum'
-import { formatBirthdate } from 'dumb/dist/src/utils/datetime/datetime.util'
 
 interface SharedColumns {
   patientColumn: GridColDef
@@ -271,7 +269,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         [PatientListColumns.Patient]: patient,
         [PatientListColumns.DateOfBirth]: patient,
         [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
-        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex as Gender),
+        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
         [PatientListColumns.MonitoringAlerts]: monitoringAlerts,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,

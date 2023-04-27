@@ -33,6 +33,6 @@ export interface PatientProfile {
   fullName: string
   lastName?: string
   email: string
-  sex: Gender | string
+  sex: Gender
   referringDoctor?: string
 }
