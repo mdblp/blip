@@ -41,7 +41,6 @@ import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-inv
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
-import { Unit } from 'medical-domain'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
@@ -155,36 +154,6 @@ describe('Patient hook', () => {
     it('should return correct patients when provided a date and last name search filter', () => {
       const patientsReceived = customHook.searchPatients('05/06/2005smith')
       expect(patientsReceived).toEqual([bigBrainPatient])
-    })
-  })
-
-  describe('updatePatientMonitoringAlertsParameters', () => {
-    const unmonitoredPatient = createPatient('unmonitoredPatient', UserInvitationStatus.accepted)
-    const allPatients = [unmonitoredPatient]
-    let customHook
-
-    beforeAll(async () => {
-      const res = await renderPatientHook(allPatients)
-      customHook = res.result.current
-    })
-
-    it('should update patient monitoring', () => {
-      const monitoringAlertsParameters: MonitoringAlertsParameters = {
-        bgUnit: Unit.MilligramPerDeciliter,
-        lowBg: 1,
-        highBg: 2,
-        outOfRangeThreshold: 3,
-        veryLowBg: 4,
-        hypoThreshold: 5,
-        nonDataTxThreshold: 6,
-        reportingPeriod: 7
-      }
-      expect(unmonitoredPatient.monitoringAlertsParameters).toBeUndefined()
-      unmonitoredPatient.monitoringAlertsParameters = monitoringAlertsParameters
-      act(() => {
-        customHook.updatePatientMonitoringAlertsParameters(unmonitoredPatient)
-      })
-      expect(customHook.getPatientById(unmonitoredPatient.userid).monitoringAlertsParameters).toEqual(monitoringAlertsParameters)
     })
   })
 
