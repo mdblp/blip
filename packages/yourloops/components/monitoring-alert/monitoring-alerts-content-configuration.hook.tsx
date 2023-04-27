@@ -24,7 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { useTeam } from '../../lib/team'
 import type React from 'react'
 import { useMemo, useState } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -79,8 +78,9 @@ interface ValueErrorPair {
 }
 
 const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
+const DEFAULT_REPORTING_PERIOD = 55
 
-const useMonitoringAlertsContentConfiguration = ({
+export const useMonitoringAlertsContentConfiguration = ({
   monitoringAlertsParameters,
   saveInProgress,
   userBgUnit,
@@ -92,8 +92,6 @@ const useMonitoringAlertsContentConfiguration = ({
   const monitoringBgUnit = monitoringAlertsParameters?.bgUnit ?? DEFAULT_BG_UNIT
 
   const { t } = useTranslation('yourloops')
-
-  const teamHook = useTeam()
 
   const thresholds = useMemo<Thresholds>(() => buildThresholds(userBgUnit), [userBgUnit])
 
@@ -185,17 +183,7 @@ const useMonitoringAlertsContentConfiguration = ({
       throw Error('This action cannot be done if the patient is undefined')
     }
 
-    const selectedTeamId = selectedTeam.id
-    const team = teamHook.getTeam(selectedTeamId)
-    if (!team) {
-      throw Error(`Cannot find team with id ${selectedTeamId}`)
-    }
-
-    const defaultMonitoringAlertsParameters = team.monitoringAlertsParameters
-    if (!defaultMonitoringAlertsParameters) {
-      throw Error('The given team has no monitoring values')
-    }
-
+    const defaultMonitoringAlertsParameters = selectedTeam.monitoringAlertsParameters
     const teamBgUnit = defaultMonitoringAlertsParameters.bgUnit
 
     const defaultHighBgValue = getConvertedValue(defaultMonitoringAlertsParameters.highBg, teamBgUnit, userBgUnit)
@@ -213,7 +201,7 @@ const useMonitoringAlertsContentConfiguration = ({
   }
 
   const save = (): void => {
-    const reportingPeriod = (monitoringAlertsParameters.reportingPeriod && monitoringAlertsParameters.reportingPeriod > 0) ? monitoringAlertsParameters.reportingPeriod : 55
+    const reportingPeriod = (monitoringAlertsParameters.reportingPeriod && monitoringAlertsParameters.reportingPeriod > 0) ? monitoringAlertsParameters.reportingPeriod : DEFAULT_REPORTING_PERIOD
     const monitoringAlertsParametersUpdated: MonitoringAlertsParameters = {
       bgUnit: userBgUnit,
       lowBg: lowBg.value,
@@ -247,4 +235,3 @@ const useMonitoringAlertsContentConfiguration = ({
     bgUnit: userBgUnit
   }
 }
-export default useMonitoringAlertsContentConfiguration

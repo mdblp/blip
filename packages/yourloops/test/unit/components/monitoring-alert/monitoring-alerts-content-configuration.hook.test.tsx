@@ -26,7 +26,7 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks'
-import useMonitoringAlertsContentConfiguration
+import { useMonitoringAlertsContentConfiguration }
   from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration.hook'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'

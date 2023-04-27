@@ -98,7 +98,6 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
           ariaLabel={t('filter-telemonitored')}
           checked={filters.telemonitoredEnabled}
           disabled={true}
-          tooltip={t('remote-monitoring-not-implemented')}
           icon={<DesktopMacOutlinedIcon />}
           label={t('telemonitored')}
           onToggleChange={() => {

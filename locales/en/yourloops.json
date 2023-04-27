@@ -339,7 +339,6 @@
   "refresh": "Refresh",
   "remaining-time": "Remaining time",
   "remote-monitoring": "Remote monitoring",
-  "remote-monitoring-not-implemented": "Remote monitoring is not implemented yet",
   "remove-caregiver": "Remove caregiver",
   "remove-member-confirm": "Remove the member {{fullName}} from the team {{teamName}}?",
   "remove-member-failed": "Impossible to remove member. Please try again later.",
