@@ -28,13 +28,15 @@
 import {
   checkAddPatientMedicalTeamDialogContent,
   checkAddPatientMedicalTeamDialogInvite,
-  checkAddPatientPrivateButtonTooltip,
+  checkAddPatientPrivateButtonTooltip
+} from '../assert/add-patient.assert'
+import {
   checkRemovePatientMedicalTeamConfirm,
   checkRemovePatientMedicalTeamDialogContent,
   checkRemovePatientMedicalTeamError,
   checkRemovePatientPrivateConfirm,
   checkRemovePatientPrivateDialogContent
-} from '../assert/patient-list'
+} from '../assert/remove-patient.assert'
 
 export const testPatientManagementPrivateTeam = async () => {
   await checkAddPatientPrivateButtonTooltip()

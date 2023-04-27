@@ -31,7 +31,6 @@ import { type MedicalData } from '../../lib/data/models/medical-data.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type MedicalTableValues } from './models/medical-table-values.model'
 import { type ITeamMember } from '../../lib/team/models/i-team-member.model'
-import { Gender } from '../../lib/auth/models/enums/gender.enum'
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
   let tir = '-'
@@ -82,7 +81,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   return {
     monitoringAlerts: iTeamMember.alarms ?? {} as MonitoringAlerts,
     profile: {
-      birthdate: birthdate ? new Date(birthdate).toString() : undefined,
+      birthdate,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
       firstName: iTeamMember.profile?.firstName,
       fullName: iTeamMember.profile?.fullName ?? iTeamMember.email,

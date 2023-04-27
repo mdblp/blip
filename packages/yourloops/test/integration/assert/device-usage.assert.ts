@@ -26,7 +26,7 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { checkTooltip } from './stats'
+import { checkTooltip } from './stats.assert'
 import { YESTERDAY_DATE } from '../mock/data.api.mock'
 import userEvent from '@testing-library/user-event'
 

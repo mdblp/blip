@@ -36,7 +36,7 @@ import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../use-cases/app-main-layout-visualisation'
-import { type PatientDashboardLayoutParams } from '../../assert/layout'
+import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import { testDashboardDataVisualisationPrivateTeam } from '../../use-cases/patient-data-visualisation'
 
 describe('Patient dashboard for caregiver', () => {

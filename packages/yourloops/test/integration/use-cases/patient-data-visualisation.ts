@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkPatientStatistics, checkPatientStatisticsNoData } from '../assert/patient-statistics'
-import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout'
-import { checkDeviceUsageWidget, checkDeviceUsageWidgetNoData } from '../assert/device-usage'
+import { checkPatientStatistics, checkPatientStatisticsNoData } from '../assert/patient-statistics.assert'
+import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
+import { checkDeviceUsageWidget, checkDeviceUsageWidgetNoData } from '../assert/device-usage.assert'
 import { monitoredPatient, unmonitoredPatient } from '../data/patient.api.data'
-import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar'
-import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts'
+import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
+import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
 
 export const testDashboardDataVisualisation = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
