@@ -339,6 +339,7 @@
   "refresh": "Refresh",
   "remaining-time": "Remaining time",
   "remote-monitoring": "Remote monitoring",
+  "remote-monitoring-not-implemented": "Remote monitoring is not implemented yet",
   "remove-caregiver": "Remove caregiver",
   "remove-member-confirm": "Remove the member {{fullName}} from the team {{teamName}}?",
   "remove-member-failed": "Impossible to remove member. Please try again later.",
@@ -440,6 +441,5 @@
   "verify-email-details-4": "Do you want to login with another address? <underline>Try to login again</underline>.",
   "verify-email-title": "Verify your email address",
   "very-low-bg-input": "Very low blood glucose input",
-  "yes": "Yes",
   "yesterday": "Yesterday"
 }

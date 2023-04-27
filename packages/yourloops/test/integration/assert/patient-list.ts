@@ -322,20 +322,10 @@ export const checkPatientListFilters = async () => {
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
 
-  // check the telemonitored toggle
-  await updatePatientsFilters({
-    ...defaultToggles,
-    manualFlagFilterToggle: true,
-    telemonitoredFilterToggle: true
-  })
-  checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient monitored-patient@diabeloop.frMonitored PatientDBLG1N/ANo new messages')
-  await userEvent.click(filtersButton)
-  checkPatientsFilters({ ...defaultToggles, telemonitoredFilterToggle: true })
-
   // check the time spent out of target toggle
   await updatePatientsFilters({
     ...defaultToggles,
-    telemonitoredFilterToggle: true,
+    manualFlagFilterToggle: true,
     outOfRangeFilterToggle: true
   })
   checkDataGridAfterSinglePatientFilter(dataGridRow, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientDBLG1N/ANo new messages')

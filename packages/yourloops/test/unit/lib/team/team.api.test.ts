@@ -26,7 +26,6 @@
  */
 
 import TeamApi from '../../../../lib/team/team.api'
-import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
 import { type INotification } from '../../../../lib/notifications/models/i-notification.model'

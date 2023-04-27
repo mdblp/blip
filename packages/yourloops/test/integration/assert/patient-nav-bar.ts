@@ -62,7 +62,7 @@ export const checkPatientNavBarAsPatient = () => {
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `${initialPatient.profile.lastName}${initialPatient.profile.firstName} PatientDate of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsDownload report`
+  const initialPatientHeaderContent = `${initialPatient.profile.lastName}${initialPatient.profile.firstName} PatientDate of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))

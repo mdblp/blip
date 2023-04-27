@@ -68,7 +68,7 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
     patient.monitoringAlertsParameters = monitoringAlertsParameters
     setSaveInProgress(true)
     try {
-      await patientHook.updatePatientMonitoring(patient)
+      await patientHook.updatePatientMonitoringAlertsParameters(patient)
       alert.success(t('patient-update-success'))
       setSaveInProgress(false)
       onClose()

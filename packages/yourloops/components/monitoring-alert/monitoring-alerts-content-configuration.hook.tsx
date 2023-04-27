@@ -98,7 +98,6 @@ const useMonitoringAlertsContentConfiguration = ({
   const thresholds = useMemo<Thresholds>(() => buildThresholds(userBgUnit), [userBgUnit])
 
   const getErrorMessage = (value: number, lowValue: number, highValue: number): string => {
-    console.log(userBgUnit)
     if (userBgUnit === Unit.MilligramPerDeciliter && !(Number.isInteger(value))) {
       return t('mandatory-integer')
     }

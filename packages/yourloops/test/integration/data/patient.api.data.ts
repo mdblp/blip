@@ -30,7 +30,6 @@ import { type PatientMetadata } from '../../../lib/patient/models/patient-metada
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
@@ -38,8 +37,8 @@ import { type Profile } from '../../../lib/auth/models/profile.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import {
   filtersTeamId,
-  monitoringParameters,
-  monitoringParametersBgUnitMmol,
+  monitoringAlertsParameters,
+  monitoringAlertsParametersBgUnitMmol,
   mySecondTeamId,
   myTeamId,
   myThirdTeamId
@@ -55,7 +54,7 @@ export const hypoglycemiaPatientId = 'hypoglycemiaPatientId'
 export const noDataTransferredPatientId = 'noDataTransferredPatientId'
 export const flaggedPatientId = 'flaggedPatientId'
 
-const defaultMonitoringAlertsParameters = monitoringParameters
+const defaultMonitoringAlertsParameters = monitoringAlertsParameters
 
 const defaultSettings: PatientSettings = {
   system: 'DBLG1'
@@ -110,7 +109,6 @@ export const buildPatient = (
     },
     monitoringAlertsParameters,
     invitationStatus: UserInvitationStatus.accepted,
-    monitoringStatus: MonitoringStatus.accepted,
     userid
   }
 }
@@ -245,7 +243,7 @@ export const monitoredPatientTwo: Patient = buildPatient(
 
 export const monitoredPatientWithMmol: Patient = buildPatient(
   monitoredPatientWithMmolId,
-  { ...defaultMonitoringAlertsParameters, parameters: monitoringParametersBgUnitMmol },
+  monitoringAlertsParametersBgUnitMmol,
   {
     birthdate: new Date('1980-01-01T10:44:34+01:00'),
     email: 'monitored-patient-mmol@diabeloop.fr',
@@ -297,8 +295,7 @@ export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, inv
     email: patient.profile.email,
     idVerified: false,
     unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
-    alarms: patient.monitoringAlerts,
-    monitoring: patient.monitoring
+    alarms: patient.monitoringAlerts
   }
 }
 
@@ -312,8 +309,7 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   [mySecondTeamId]: [
     {
       ...monitoredPatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     }, {
       ...pendingPatient,
       invitationStatus: UserInvitationStatus.pending
@@ -322,8 +318,7 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   [myThirdTeamId]: [
     {
       ...monitoredPatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...unmonitoredPatient,
@@ -331,13 +326,11 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
     },
     {
       ...monitoredPatientTwo,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...monitoredPatientWithMmol,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...pendingPatient,
@@ -347,33 +340,27 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   [filtersTeamId]: [
     {
       ...monitoredPatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...unreadMessagesPatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...timeSpentOutOfTargetRangePatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...hypoglycemiaPatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...noDataTransferredPatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...flaggedPatient,
-      invitationStatus: UserInvitationStatus.accepted,
-      monitoringStatus: MonitoringStatus.accepted
+      invitationStatus: UserInvitationStatus.accepted
     },
     {
       ...pendingPatient,
@@ -415,7 +402,6 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     email: member.email ?? 'fake@patient.email',
     idVerified: member.idVerified ?? true,
     unreadMessages: member.unreadMessages ?? 0,
-    alarms: member.alarms,
-    monitoring: member.monitoring
+    alarms: member.alarms
   }
 }
