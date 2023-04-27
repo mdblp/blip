@@ -113,6 +113,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   }
 
   const gridWidgetSize = getGridWidgetSize()
+
   return (
     <Grid
       data-testid="patient-dashboard"

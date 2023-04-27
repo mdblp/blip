@@ -29,7 +29,7 @@ import { type BgPrefs } from 'dumb'
 import { ChartTypes } from '../../enum/chart-type.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import type MedicalDataService from 'medical-domain'
@@ -37,7 +37,6 @@ import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-dom
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
-import moment from 'moment-timezone'
 
 export interface PatientDataContextResult {
   bgPrefs: BgPrefs
@@ -62,6 +61,8 @@ export interface PatientDataContextResult {
   trendsDate: number
 }
 
+const DATE_QUERY_PARAM_KEY = 'date'
+
 export const usePatientDataProviderHook = (): PatientDataContextResult => {
   const navigate = useNavigate()
   const paramHook = useParams()
@@ -69,7 +70,9 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
   const { user } = useAuth()
   const { pathname } = useLocation()
   const { getPatientById } = usePatientContext()
+  const [searchParams, setSearchParams] = useSearchParams()
 
+  const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const urlPrefix = user.isUserPatient() ? '' : `/patient/${patientId}`
   const patient = getPatientById(patientId ?? user.id)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
@@ -145,9 +148,7 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
   }
 
   const goToDailySpecificDate = (date: number | Date): void => {
-    setDailyDate(date instanceof Date ? date.valueOf() : date)
-    setMsRange(TimeService.MS_IN_DAY)
-    navigate(`${urlPrefix}/${ChartTypes.Daily}`)
+    navigate(`${urlPrefix}/${ChartTypes.Daily}?date=${date instanceof Date ? date.valueOf() : date}`)
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {
@@ -164,7 +165,9 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
     } catch (err) {
       console.log(err)
     } finally {
-      currentChart === ChartTypes.Daily ? setDailyDate(epochLocation) : setTrendsDate(epochLocation)
+      currentChart === ChartTypes.Daily
+        ? setSearchParams({ [DATE_QUERY_PARAM_KEY]: epochLocation.toString() })
+        : setTrendsDate(epochLocation)
       setMsRange(msRange)
       setRefreshingData(false)
     }
@@ -213,15 +216,19 @@ export const usePatientDataProviderHook = (): PatientDataContextResult => {
           setMsRange(TimeService.MS_IN_DAY * 7)
           break
         case ChartTypes.Daily:
-          setDailyDate(dailyDate !== 0 ? dailyDate : moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2)
+          if (dateQueryParam) {
+            setDailyDate(parseInt(dateQueryParam))
+          } else {
+            setDailyDate(dailyDate !== 0 ? dailyDate : patientDataUtils.current.getInitialDate(medicalData))
+          }
           setMsRange(TimeService.MS_IN_DAY)
           break
         case ChartTypes.Trends:
-          setTrendsDate(trendsDate !== 0 ? trendsDate : moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2)
+          setTrendsDate(trendsDate !== 0 ? trendsDate : patientDataUtils.current.getInitialDate(medicalData))
           setMsRange(TimeService.MS_IN_DAY)
       }
     }
-  }, [currentChart, medicalData, dailyDate, trendsDate])
+  }, [currentChart, medicalData, dailyDate, trendsDate, dateQueryParam])
 
   return {
     bgPrefs,

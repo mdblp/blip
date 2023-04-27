@@ -97,6 +97,10 @@ export class PatientDataUtils {
     return { start, end }
   }
 
+  getInitialDate(medicalData: MedicalDataService): number {
+    return moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2
+  }
+
   async loadDataRange({ start, end }: DateRange): Promise<PatientData | null> {
     const rangeDisplay = {
       start: moment.utc(start.valueOf()).startOf('day'),
