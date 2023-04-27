@@ -310,7 +310,6 @@
   "optional": "Optioneel",
   "page-not-found": "Pagina niet gevonden",
   "patient": "Patiënt",
-  "patient-info-reminder": "Herinnering patiëntinformatie",
   "patient-list-search-placeholder": "Search for a patient...",
   "patient-list-search-tooltip": "Search by first name, last name or birthdate (dd/mm/yyyy)",
   "patient-profile-hba1c": "Initiële HbA1c waarde {{hba1cDate}}",

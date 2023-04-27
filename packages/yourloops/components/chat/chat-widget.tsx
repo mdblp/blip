@@ -45,7 +45,6 @@ import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import Box from '@mui/material/Box'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -53,6 +52,7 @@ import MenuItem from '@mui/material/MenuItem'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import FormGroup from '@mui/material/FormGroup'
 import TeamUtils from '../../lib/team/team.util'
+import { getUserName } from '../../lib/auth/user.util'
 
 const CHAT_CONTENT_HEIGHT = '280px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
@@ -134,7 +134,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
-  const { getUserName } = useUserName()
   const teams = getMedicalTeams()
   const teamId = user.isUserHcp() ? selectedTeam.id : teams[0].id
   const [dropdownTeamId, setDropdownTeamId] = useState(teamId)

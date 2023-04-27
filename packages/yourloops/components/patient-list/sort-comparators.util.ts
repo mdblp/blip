@@ -25,26 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useUserName } from './user-name.hook'
 import { type GridComparatorFn } from '@mui/x-data-grid'
-import { type Patient } from '../patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import { getUserName } from '../../lib/auth/user.util'
 
-interface SortComparatorsHookReturn {
-  sortByUserName: SortByUserNameComparator
-}
-
-interface SortByUserNameComparator extends GridComparatorFn<Patient> {
+interface SortComparator extends GridComparatorFn<Patient> {
   (patient1: Patient, patient2: Patient): number
 }
 
-export const useSortComparatorsHook = (): SortComparatorsHookReturn => {
-  const { getUserName } = useUserName()
+export const sortByUserName: SortComparator = (patient1, patient2): number => {
+  const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
+  const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
+  return patient1FullName.localeCompare(patient2FullName)
+}
 
-  const sortByUserName: SortByUserNameComparator = (patient1, patient2): number => {
-    const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
-    const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
-    return patient1FullName.localeCompare(patient2FullName)
+export const sortByFlag: SortComparator = (patient1: Patient, patient2: Patient): number => {
+  const isPatient1Flagged = patient1.metadata.flagged
+  const isPatient2Flagged = patient2.metadata.flagged
+
+  if (isPatient1Flagged && !isPatient2Flagged) {
+    return -1
   }
-
-  return { sortByUserName }
+  if (!isPatient1Flagged && isPatient2Flagged) {
+    return 1
+  }
+  return 0
 }

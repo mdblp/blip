@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
-import { useSortComparatorsHook } from '../../../../lib/custom-hooks/sort-comparators.hook'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
+import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { sortByFlag, sortByUserName } from '../../../../components/patient-list/sort-comparators.util'
 
 describe('useSortComparatorsHook', () => {
   describe('sortByUserName', () => {
@@ -38,7 +38,6 @@ describe('useSortComparatorsHook', () => {
       const patient1 = { profile: { fullName: smallerPatientName } } as Patient
       const patient2 = { profile: { fullName: biggerPatientName } } as Patient
 
-      const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
 
       expect(res).toBeLessThan(0)
@@ -48,7 +47,6 @@ describe('useSortComparatorsHook', () => {
       const patient1 = { profile: { fullName: biggerPatientName } } as Patient
       const patient2 = { profile: { fullName: smallerPatientName } } as Patient
 
-      const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
 
       expect(res).toBeGreaterThan(0)
@@ -58,10 +56,48 @@ describe('useSortComparatorsHook', () => {
       const patient1 = { profile: { fullName: biggerPatientName } } as Patient
       const patient2 = { profile: { fullName: biggerPatientName } } as Patient
 
-      const { result: { current: { sortByUserName } } } = renderHook(() => useSortComparatorsHook())
       const res = sortByUserName(patient1, patient2)
 
       expect(res).toBe(0)
+    })
+  })
+
+  describe('sortByFlag', () => {
+    it('should sort the patients by whether they are flagged', () => {
+      const patientA = {
+        id: 'idA',
+        profile: { fullName: 'A Patient', email: undefined, sex: undefined },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { flagged: false, hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      } as Patient
+
+      const patientB = {
+        id: 'idB',
+        profile: { fullName: 'B Patient', email: undefined, sex: undefined },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { flagged: true, hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      } as Patient
+
+      const patientC = {
+        id: 'idC',
+        profile: { fullName: 'C Patient', email: undefined, sex: undefined },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { flagged: true, hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      } as Patient
+
+      expect(sortByFlag(patientA, patientB)).toEqual(1)
+      expect(sortByFlag(patientB, patientA)).toEqual(-1)
+      expect(sortByFlag(patientB, patientC)).toEqual(0)
+      expect(sortByFlag(patientC, patientB)).toEqual(0)
     })
   })
 })
