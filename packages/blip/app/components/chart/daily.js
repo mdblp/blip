@@ -431,13 +431,6 @@ class Daily extends React.Component {
     return moment.tz(datetime, tidelineData.getTimezoneAt(datetime)).format(i18next.t('ddd, MMM D, YYYY'))
   }
 
-  handleClickOneDay = (e) => {
-    if (e) {
-      e.preventDefault()
-    }
-    return false
-  }
-
   handlePanBack = (e) => {
     const { loading } = this.props
     if (e) {
