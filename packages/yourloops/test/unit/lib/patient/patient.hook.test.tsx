@@ -158,8 +158,7 @@ describe('Patient hook', () => {
     })
   })
 
-  describe('editPatientRemoteMonitoring', () => {
-    const unknownPatient = createPatient('unknownPatient')
+  describe('updatePatientMonitoringAlertsParameters', () => {
     const unmonitoredPatient = createPatient('unmonitoredPatient', UserInvitationStatus.accepted)
     const allPatients = [unmonitoredPatient]
     let customHook
@@ -167,10 +166,6 @@ describe('Patient hook', () => {
     beforeAll(async () => {
       const res = await renderPatientHook(allPatients)
       customHook = res.result.current
-    })
-
-    it('should throw an error if patient is not found', () => {
-      expect(() => customHook.editPatientRemoteMonitoring(unknownPatient)).toThrowError()
     })
 
     it('should update patient monitoring', () => {
