@@ -26,7 +26,7 @@
  */
 
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import useProfilePageContextHook from './profil-page-context.hook'
+import useProfilePageContextHook from './profile-page-context.hook'
 import { type ProfileErrors, type ProfileForm } from './models/profile-form.model'
 import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
 import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'

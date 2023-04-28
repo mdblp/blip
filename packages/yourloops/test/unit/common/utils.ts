@@ -63,7 +63,7 @@ export const createPatient = (
       nonDataTransmissionActive: monitoringAlerts?.nonDataTransmissionActive || false
     },
     profile: {
-      birthdate: profile?.birthdate || new Date(),
+      birthdate: profile?.birthdate || new Date().toString(),
       firstName: profile?.firstName || 'fakeFirstname',
       fullName: profile?.fullName || 'fakePatientFullName',
       lastName: profile?.lastName || 'fakeLastname',

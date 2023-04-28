@@ -28,6 +28,7 @@
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import {
+  sortByDateOfBirth,
   sortByFlag,
   sortByMonitoringAlertsCount,
   sortByUserName
@@ -76,7 +77,7 @@ describe('useSortComparatorsHook', () => {
         metadata: { flagged: false, hasSentUnreadMessages: undefined },
         invitationStatus: UserInvitationStatus.accepted,
         userid: ''
-      } as Patient
+      }
 
       const patientB = {
         id: 'idB',
@@ -86,7 +87,7 @@ describe('useSortComparatorsHook', () => {
         metadata: { flagged: true, hasSentUnreadMessages: undefined },
         invitationStatus: UserInvitationStatus.accepted,
         userid: ''
-      } as Patient
+      }
 
       const patientC = {
         id: 'idC',
@@ -96,12 +97,51 @@ describe('useSortComparatorsHook', () => {
         metadata: { flagged: true, hasSentUnreadMessages: undefined },
         invitationStatus: UserInvitationStatus.accepted,
         userid: ''
-      } as Patient
+      }
 
       expect(sortByFlag(patientA, patientB)).toEqual(1)
       expect(sortByFlag(patientB, patientA)).toEqual(-1)
       expect(sortByFlag(patientB, patientC)).toEqual(0)
       expect(sortByFlag(patientC, patientB)).toEqual(0)
+    })
+  })
+
+  describe('sortByDateOfBirth', () => {
+    it('should sort the patients by date of birth', () => {
+      const patientA = {
+        id: 'idA',
+        profile: { fullName: 'A Patient', email: undefined, sex: undefined, birthdate: '2000-03-12T10:44:34+01:00' },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      }
+
+      const patientB = {
+        id: 'idB',
+        profile: { fullName: 'B Patient', email: undefined, sex: undefined, birthdate: '1980-01-01T10:44:34+01:00' },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      }
+
+      const patientC = {
+        id: 'idC',
+        profile: { fullName: 'C Patient', email: undefined, sex: undefined, birthdate: '1980-01-01T10:44:34+01:00' },
+        monitoringAlerts: undefined,
+        settings: undefined,
+        metadata: { hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      }
+
+      expect(sortByDateOfBirth(patientA, patientB)).toEqual(1)
+      expect(sortByDateOfBirth(patientB, patientA)).toEqual(-1)
+      expect(sortByDateOfBirth(patientB, patientC)).toEqual(0)
+      expect(sortByDateOfBirth(patientC, patientB)).toEqual(0)
     })
   })
 
@@ -122,7 +162,7 @@ describe('useSortComparatorsHook', () => {
         metadata: { hasSentUnreadMessages: undefined },
         invitationStatus: UserInvitationStatus.accepted,
         userid: ''
-      } as Patient
+      }
 
       const patientB = {
         id: 'idB',
@@ -139,7 +179,7 @@ describe('useSortComparatorsHook', () => {
         metadata: { hasSentUnreadMessages: undefined },
         invitationStatus: UserInvitationStatus.accepted,
         userid: ''
-      } as Patient
+      }
 
       const patientC = {
         id: 'idC',
@@ -156,7 +196,7 @@ describe('useSortComparatorsHook', () => {
         metadata: { hasSentUnreadMessages: undefined },
         invitationStatus: UserInvitationStatus.accepted,
         userid: ''
-      } as Patient
+      }
 
       const patientD = {
         id: 'idD',
@@ -173,7 +213,7 @@ describe('useSortComparatorsHook', () => {
         metadata: { hasSentUnreadMessages: undefined },
         invitationStatus: UserInvitationStatus.accepted,
         userid: ''
-      } as Patient
+      }
 
       expect(sortByMonitoringAlertsCount(patientA, patientB)).toEqual(1)
       expect(sortByMonitoringAlertsCount(patientB, patientA)).toEqual(-1)

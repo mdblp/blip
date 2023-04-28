@@ -28,6 +28,7 @@
 import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { type BgUnit } from 'medical-domain'
+import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
 
 export interface ProfileForm {
   birthday: string | undefined
@@ -39,7 +40,7 @@ export interface ProfileForm {
   lang: LanguageCodes
   lastName: string
   referringDoctor: string | undefined
-  sex: string | undefined
+  sex: Gender | undefined
   ssn: string | undefined
   units: BgUnit
 }

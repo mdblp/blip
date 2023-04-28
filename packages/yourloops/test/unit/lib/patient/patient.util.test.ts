@@ -29,6 +29,7 @@ import { createPatient } from '../../common/utils'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 
 const defaultMonitoringAlerts = {
   timeSpentAwayFromTargetRate: 10,
@@ -255,6 +256,31 @@ describe('Patient utils', () => {
       )
 
       expect(result).toEqual([pendingPatient])
+    })
+  })
+
+  describe('computeAge', () => {
+    it('should return the age of the patient based on their birthdate', () => {
+      const realDateNow = Date.now.bind(global.Date)
+      // Mocking the current date as Wednesday, 26 April 2023 13:03:05
+      global.Date.now = jest.fn(() => 1682514185000)
+
+      expect(PatientUtils.computeAge('2000-03-12T10:44:34+01:00')).toEqual(23)
+      expect(PatientUtils.computeAge('2023-04-26T13:03:05+01:00')).toEqual(0)
+      expect(PatientUtils.computeAge('2021-04-26T13:03:05+01:00')).toEqual(2)
+      expect(PatientUtils.computeAge('2021-04-27T13:03:05+01:00')).toEqual(1)
+      expect(PatientUtils.computeAge('2025-01-01T10:44:34+01:00')).toEqual(-1)
+
+      global.Date.now = realDateNow
+    })
+  })
+
+  describe('getGenderLabel', () => {
+    it('should return the appropriate label based on the given gender', () => {
+      expect(PatientUtils.getGenderLabel(Gender.Indeterminate)).toEqual('gender-i')
+      expect(PatientUtils.getGenderLabel(Gender.Female)).toEqual('gender-f')
+      expect(PatientUtils.getGenderLabel(Gender.Male)).toEqual('gender-m')
+      expect(PatientUtils.getGenderLabel(Gender.NotDefined)).toEqual('-')
     })
   })
 })

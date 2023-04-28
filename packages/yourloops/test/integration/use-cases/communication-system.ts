@@ -29,7 +29,7 @@ import {
   checkChatWidgetMessageReadingForHcp,
   checkChatWidgetMessageReadingForPatient,
   checkChatWidgetMessageSending
-} from '../assert/chat-widget'
+} from '../assert/chat-widget.assert'
 import { mySecondTeamId, myThirdTeamId } from '../mock/team.api.mock'
 
 export const testChatWidgetForHcp = async (): Promise<void> => {

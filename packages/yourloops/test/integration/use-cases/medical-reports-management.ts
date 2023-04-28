@@ -34,7 +34,7 @@ import {
   checkMedicalReportDelete,
   checkMedicalReportUpdate,
   type MedicalFilesWidgetParams
-} from '../assert/medical-widget'
+} from '../assert/medical-widget.assert'
 
 export const testMedicalWidgetForHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   await checkMedicalReportContentForHcp(medicalFilesWidgetParams)
