@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader, type HeaderInfo } from '../assert/header'
-import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer'
+import { checkCaregiverHeader, checkHcpHeader, checkPatientHeader, type HeaderInfo } from '../assert/header.assert'
+import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
 
 export interface AppMainLayoutHcpParams {
   footerHasLanguageSelector?: boolean

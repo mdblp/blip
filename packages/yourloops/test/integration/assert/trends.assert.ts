@@ -27,7 +27,7 @@
 
 import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { checkStatTooltip } from './stats'
+import { checkStatTooltip } from './stats.assert'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Daily average of the time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is number of readings in range multiplied by the CGM sample frequency.'
 const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'

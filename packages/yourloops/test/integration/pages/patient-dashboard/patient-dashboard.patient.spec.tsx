@@ -30,7 +30,7 @@ import { renderPage } from '../../utils/render'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { type MedicalFilesWidgetParams } from '../../assert/medical-widget'
+import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import {
@@ -44,11 +44,8 @@ import {
 import { monitoredPatient, monitoredPatientAsTeamMember, monitoredPatientId } from '../../data/patient.api.data'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { mockChatAPI } from '../../mock/chat.api.mock'
-import {
-  type AppMainLayoutParams,
-  testAppMainLayoutForPatient
-} from '../../use-cases/app-main-layout-visualisation'
-import { type PatientDashboardLayoutParams } from '../../assert/layout'
+import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
+import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisation,
   testDashboardDataVisualisationPrivateTeamNoData,

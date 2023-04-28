@@ -33,7 +33,6 @@ import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
 import ChatMessage from './chat-message'
 import ChatApi from '../../lib/chat/chat.api'
 import { useAuth } from '../../lib/auth'
@@ -53,6 +52,7 @@ import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import FormGroup from '@mui/material/FormGroup'
 import TeamUtils from '../../lib/team/team.util'
 import { getUserName } from '../../lib/auth/user.util'
+import { MessageIcon } from '../icons/diabeloop/message-icon'
 
 const CHAT_CONTENT_HEIGHT = '280px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
@@ -183,7 +183,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   return (
     <GenericDashboardCard
-      avatar={<EmailOutlinedIcon />}
+      avatar={<MessageIcon />}
       title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       data-testid="chat-card"
       action={user.isUserPatient() &&

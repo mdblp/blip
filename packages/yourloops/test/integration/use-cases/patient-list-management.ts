@@ -28,28 +28,24 @@
 import {
   checkMonitoringAlertsIconsInactiveForFirstPatient,
   checkPatientColumnsFiltersContent,
-  checkPatientColumnsFiltersHideColumns,
-  checkPatientColumnsFiltersShowColumns,
   checkPatientListColumnSort,
-  checkPatientListContentHcp,
   checkPatientListCurrentTab,
   checkPatientListFilters,
   checkPatientListHeaderForHcp,
+  checkPatientListHideShowColumns,
   checkPatientListPendingTab,
   checkPatientListTooltips,
   type Router
-} from '../assert/patient-list'
+} from '../assert/patient-list.assert'
 
 export const testPatientListForHcp = async (router: Router) => {
   checkPatientListHeaderForHcp()
-  checkPatientListContentHcp()
   await checkPatientListTooltips()
   await checkPatientListColumnSort()
   await checkMonitoringAlertsIconsInactiveForFirstPatient()
   await checkPatientListFilters()
   await checkPatientColumnsFiltersContent()
-  await checkPatientColumnsFiltersHideColumns()
-  await checkPatientColumnsFiltersShowColumns()
+  await checkPatientListHideShowColumns()
   await checkPatientListPendingTab(router)
   await checkPatientListCurrentTab()
 }

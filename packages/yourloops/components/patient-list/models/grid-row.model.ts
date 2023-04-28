@@ -33,6 +33,9 @@ export interface GridRowModel {
   id: string
   [PatientListColumns.Flag]?: Patient
   [PatientListColumns.Patient]: Patient
+  [PatientListColumns.DateOfBirth]?: Patient
+  [PatientListColumns.Age]?: number
+  [PatientListColumns.Gender]?: string
   [PatientListColumns.System]?: string
   [PatientListColumns.MonitoringAlerts]?: MonitoringAlerts
   [PatientListColumns.LastDataUpdate]?: string

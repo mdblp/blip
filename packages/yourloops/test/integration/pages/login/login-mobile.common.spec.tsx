@@ -29,7 +29,7 @@ import * as auth0Mock from '@auth0/auth0-react'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
-import { checkFooterForUserNotLoggedIn } from '../../assert/footer'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 
 jest.mock('@mui/material/useMediaQuery', () => {
   return () => true

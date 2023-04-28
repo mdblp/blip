@@ -31,7 +31,7 @@ import { act, screen, waitFor } from '@testing-library/react'
 import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
-import { checkFooterForUserNotLoggedIn } from '../../assert/footer'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 
 describe('Product labelling page', () => {
   beforeAll(() => {

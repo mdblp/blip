@@ -30,7 +30,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
-import { checkFooterForUserNotLoggedIn } from '../../assert/footer'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 
 describe('Login page desktop view', () => {
   const loginWithRedirectMock = jest.fn()

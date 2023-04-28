@@ -26,7 +26,7 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { checkTooltip } from './stats'
+import { checkTooltip } from './stats.assert'
 
 export const checkPatientStatistics = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))

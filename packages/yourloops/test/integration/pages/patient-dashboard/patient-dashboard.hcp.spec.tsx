@@ -34,7 +34,7 @@ import { monitoredPatient, monitoredPatientId, monitoredPatientWithMmolId } from
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { type PatientDashboardLayoutParams } from '../../assert/layout'
+import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
@@ -50,7 +50,7 @@ import {
   testPatientNavBarForHcp
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
-import { type MedicalFilesWidgetParams } from '../../assert/medical-widget'
+import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
 import {
   testMonitoringAlertsParametersConfigurationDialogMgdl,
   testMonitoringAlertsParametersConfigurationDialogMmol
