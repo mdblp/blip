@@ -27,10 +27,10 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
+import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar.assert'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+import { checkPatientLayout } from '../../assert/layout.assert'
 import { patient2AsTeamMember } from '../../data/patient.api.data'
 
 describe('Trends view for patient', () => {

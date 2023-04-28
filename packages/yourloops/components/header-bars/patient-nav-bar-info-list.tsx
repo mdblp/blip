@@ -76,7 +76,7 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
       <Box display="flex" flexDirection="column" flexGrow="1" paddingTop={1}>
         <Box display="flex">
           <PatientNavBarInfo
-            fieldName={t('colon', { label: t('birthdate') })}
+            fieldName={t('colon', { label: t('date-of-birth') })}
             fieldValue={moment(patient.profile.birthdate).format('L')}
           />
           <PatientNavBarInfo

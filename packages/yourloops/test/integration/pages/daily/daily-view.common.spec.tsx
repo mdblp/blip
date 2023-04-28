@@ -31,7 +31,7 @@ import {
   checkDailyTidelineContainerTooltips,
   checkDailyTimeInRangeStatsWidgets,
   checkSMBGDailyStatsWidgetsTooltips
-} from '../../assert/daily'
+} from '../../assert/daily.assert'
 import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
@@ -39,7 +39,7 @@ import {
   checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
-} from '../../assert/stats'
+} from '../../assert/stats.assert'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'

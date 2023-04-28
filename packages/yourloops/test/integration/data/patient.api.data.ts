@@ -92,7 +92,7 @@ export const buildPatient = (params: {
       nonDataTransmissionActive: params.monitoringAlerts?.nonDataTransmissionActive || false
     },
     profile: {
-      birthdate: params.profile?.birthdate || new Date(),
+      birthdate: params.profile?.birthdate || new Date().toString(),
       firstName: params.profile?.firstName || 'fakeFirstname',
       fullName: params.profile?.fullName || 'fakePatientFullName',
       lastName: params.profile?.lastName || 'fakeLastname',
@@ -118,7 +118,7 @@ export const patient1: Patient = buildPatient({
   userid: patient1Id,
   monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'patient1@diabeloop.fr',
     firstName: 'Patient1',
     fullName: 'Patient1 Groby',
@@ -134,7 +134,7 @@ export const unreadMessagesPatient: Patient = buildPatient({
   userid: unreadMessagesPatientId,
   monitoringAlertsParameters: null,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'unread-messages@patient.fr',
     firstName: 'Unread',
     lastName: 'Messages Patient',
@@ -150,7 +150,7 @@ export const timeSpentOutOfTargetRangePatient: Patient = buildPatient({
   userid: timeSpentOutOfTargetRangePatientId,
   monitoringAlertsParameters: null,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'time-out-of-range@patient.fr',
     firstName: 'Time',
     lastName: 'Out of Range Patient',
@@ -166,7 +166,7 @@ export const hypoglycemiaPatient: Patient = buildPatient({
   userid: hypoglycemiaPatientId,
   monitoringAlertsParameters: null,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'hypoglycemia@patient.fr',
     firstName: 'Hypoglycemia',
     lastName: 'Patient',
@@ -182,7 +182,7 @@ export const noDataTransferredPatient: Patient = buildPatient({
   userid: noDataTransferredPatientId,
   monitoringAlertsParameters: null,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'no-data@patient.fr',
     firstName: 'No Data',
     lastName: 'Patient',
@@ -198,7 +198,7 @@ export const flaggedPatient: Patient = buildPatient({
   userid: flaggedPatientId,
   monitoringAlertsParameters: null,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'flagged@patient.fr',
     firstName: 'Flagged',
     lastName: 'Patient',
@@ -214,7 +214,7 @@ export const patient2: Patient = buildPatient({
   userid: patient2Id,
   monitoringAlertsParameters: undefined,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'patient2@diabeloop.fr',
     firstName: 'Patient2',
     fullName: 'Patient2 Rouis',
@@ -246,7 +246,7 @@ export const patientWithMmol: Patient = buildPatient({
   userid: patientWithMmolId,
   monitoringAlertsParameters: monitoringAlertsParametersBgUnitMmol,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'patient-mmol@diabeloop.fr',
     firstName: 'PatientMmol',
     lastName: 'Perotto',

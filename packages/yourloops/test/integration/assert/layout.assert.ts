@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCaregiverHeader, checkPatientHeader } from './header'
+import { checkCaregiverHeader, checkPatientHeader } from './header.assert'
 import { screen, within } from '@testing-library/react'
-import { checkFooterForCaregiver, checkFooterForPatient } from './footer'
+import { checkFooterForCaregiver, checkFooterForPatient } from './footer.assert'
 
 export interface PatientDashboardLayoutParams {
   isChatCardVisible: boolean

@@ -148,11 +148,14 @@ describe('usePatientListProviderHook', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
-        [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: false,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: true,
         [PatientListColumns.MonitoringAlerts]: false,
-        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Messages]: true,
+        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Actions]: true
       }
 
@@ -171,17 +174,20 @@ describe('usePatientListProviderHook', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
-        [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: false,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: true,
         [PatientListColumns.MonitoringAlerts]: false,
-        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Messages]: false,
+        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Actions]: true
       }
       expect(result.current.displayedColumns).toEqual(expectedColumns)
     })
 
-    it('should render all columns by default if the user has no preferences set yet', () => {
+    it('should render the default columns if the HCP user has no preferences set yet', () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
         return {
           user: {
@@ -193,11 +199,39 @@ describe('usePatientListProviderHook', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
-        [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: true,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: false,
         [PatientListColumns.MonitoringAlerts]: true,
-        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Messages]: true,
+        [PatientListColumns.LastDataUpdate]: true,
+        [PatientListColumns.Actions]: true
+      }
+      expect(result.current.displayedColumns).toEqual(expectedColumns)
+    })
+
+    it('should render the default columns if the caregiver user has no preferences set yet', () => {
+      (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+        return {
+          user: {
+            isUserHcp: () => false,
+            preferences: {}
+          } as User
+        }
+      })
+      const { result } = renderHook(() => usePatientListProviderHook())
+      const expectedColumns: GridColumnVisibilityModel = {
+        [PatientListColumns.Flag]: true,
+        [PatientListColumns.Patient]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: true,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: false,
+        [PatientListColumns.MonitoringAlerts]: false,
+        [PatientListColumns.Messages]: false,
+        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Actions]: true
       }
       expect(result.current.displayedColumns).toEqual(expectedColumns)

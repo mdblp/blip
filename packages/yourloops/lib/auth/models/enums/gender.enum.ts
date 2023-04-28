@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar.assert'
-import { mockDataAPI } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout.assert'
-import { patient2AsTeamMember } from '../../data/patient.api.data'
-
-describe('Daily view for patient', () => {
-  beforeAll(() => {
-    mockPatientLogin(patient2AsTeamMember)
-  })
-
-  it('should render correct layout', async () => {
-    mockDataAPI()
-    const router = renderPage('/daily')
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/daily')
-    })
-
-    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsPatient()
-    await checkPatientLayout(`${patient2AsTeamMember.profile.firstName} ${patient2AsTeamMember.profile.lastName}`)
-  })
-})
+export enum Gender {
+  Female = 'F',
+  Indeterminate = 'I',
+  Male = 'M',
+  NotDefined = ''
+}

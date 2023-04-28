@@ -26,9 +26,11 @@
  */
 
 import {
-  checkMonitoringAlertsDialogContentMgdl, checkMonitoringAlertsDialogContentMmol,
-  checkMonitoringAlertsDialogDefaultButtonMgdl, checkMonitoringAlertsDialogSaveButtonMmol
-} from '../assert/monitoring-alerts-parameters'
+  checkMonitoringAlertsDialogContentMgdl,
+  checkMonitoringAlertsDialogContentMmol,
+  checkMonitoringAlertsDialogDefaultButtonMgdl,
+  checkMonitoringAlertsDialogSaveButtonMmol
+} from '../assert/monitoring-alerts-parameters.assert'
 
 export const testMonitoringAlertsParametersConfigurationDialogMgdl = async (): Promise<void> => {
   await checkMonitoringAlertsDialogContentMgdl()

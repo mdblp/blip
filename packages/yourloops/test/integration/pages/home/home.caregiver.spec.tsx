@@ -34,7 +34,7 @@ import {
   patient2AsTeamMember
 } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
-import { checkCaregiverLayout } from '../../assert/layout'
+import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
 import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -43,7 +43,7 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { checkPatientListHeaderCaregiver } from '../../assert/patient-list'
+import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -76,7 +76,7 @@ describe('Caregiver home page', () => {
         firstName: 'Akim',
         lastName: 'Embett',
         fullName: 'Akim Embett',
-        patient: { birthday: '2010-01-20' }
+        patient: { birthday: '2010-01-20T10:44:34+01:00' }
       }
     })
     const patient2 = buildPatientAsTeamMember({
@@ -86,7 +86,7 @@ describe('Caregiver home page', () => {
         firstName: 'Alain',
         lastName: 'Provist',
         fullName: 'Alain Provist',
-        patient: { birthday: '2010-01-20' }
+        patient: { birthday: '2010-01-20T10:44:34+01:00' }
       }
     })
     const patient3 = buildPatientAsTeamMember({
@@ -96,7 +96,7 @@ describe('Caregiver home page', () => {
         firstName: 'Annie',
         lastName: 'Versaire',
         fullName: 'Annie Versaire',
-        patient: { birthday: '2015-05-25' }
+        patient: { birthday: '2015-05-25T10:44:34+01:00' }
       }
     })
     jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1, patient2, patient3])
@@ -108,23 +108,23 @@ describe('Caregiver home page', () => {
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1N/AFlag patient fake@patient.emailAlain ProvistDBLG1N/AFlag patient fake@patient.emailAnnie VersaireDBLG1N/AData calculated on the last 7 daysRows per page:101–3 of 3')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 2015N/AData calculated on the last 7 daysRows per page:101–3 of 3')
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1N/AFlag patient fake@patient.emailAlain ProvistDBLG1N/AData calculated on the last 7 daysRows per page:101–2 of 2')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–2 of 2')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAkim EmbettDBLG1N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–1 of 1')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(dataGridRow).toHaveTextContent('PatientSystemLast data updateActionsFlag patient fake@patient.emailAlain ProvistDBLG1N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–1 of 1')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
@@ -137,7 +137,7 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientSystemLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyDBLG1N/AFlag patient patient2@diabeloop.frPatient2 RouisDBLG1N/AFlag patient patient3@diabeloop.frPatient3 SrairiDBLG1N/AFlag patient pending-patient@diabeloop.frPending PatientDBLG1N/AData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(patientTableBody).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 1980N/AData calculated on the last 7 daysRows per page:101–4 of 4')
 
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
@@ -214,7 +214,10 @@ describe('Caregiver home page', () => {
 
     checkPatientListHeaderCaregiver()
     expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
-    expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
+    expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
+    expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
@@ -226,26 +229,35 @@ describe('Caregiver home page', () => {
     expect(within(columnSettingsPopover).getByText('Show column')).toBeVisible()
 
     const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('checkbox')
+    const ageToggle = within(within(columnSettingsPopover).getByLabelText('Age')).getByRole('checkbox')
+    const dateOfBirthToggle = within(within(columnSettingsPopover).getByLabelText('Date of birth')).getByRole('checkbox')
+    const genderToggle = within(within(columnSettingsPopover).getByLabelText('Gender')).getByRole('checkbox')
     const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('checkbox')
     const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('checkbox')
     expect(patientToggle).toHaveProperty('checked', true)
     expect(patientToggle).toHaveProperty('disabled', true)
-    expect(systemToggle).toHaveProperty('checked', true)
+    expect(ageToggle).toHaveProperty('checked', false)
+    expect(dateOfBirthToggle).toHaveProperty('checked', true)
+    expect(genderToggle).toHaveProperty('checked', false)
+    expect(systemToggle).toHaveProperty('checked', false)
     expect(lastUpdateToggle).toHaveProperty('checked', true)
 
     const disabledToggle = screen.getByLabelText('This column cannot be removed')
     await userEvent.hover(disabledToggle)
     expect(await screen.findByText('This column cannot be removed'))
 
-    await userEvent.click(systemToggle)
+    await userEvent.click(ageToggle)
     await userEvent.click(lastUpdateToggle)
-    expect(systemToggle).toHaveProperty('checked', false)
+    expect(ageToggle).toHaveProperty('checked', true)
     expect(lastUpdateToggle).toHaveProperty('checked', false)
 
     await userEvent.click(applyButton)
 
     expect(columnSettingsPopover).not.toBeVisible()
     expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: 'Age' })).toBeVisible()
+    expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
+    expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
     expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
     expect(screen.queryByRole('columnheader', { name: 'Last data update' })).not.toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()

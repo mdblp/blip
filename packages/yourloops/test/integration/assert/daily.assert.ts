@@ -28,8 +28,6 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
-  WIZARD_ID1,
-  WIZARD_ID2,
   CARB_ID,
   CBG_ID,
   PARAMETER_ID,
@@ -37,11 +35,13 @@ import {
   PHYSICAL_ACTIVITY_TIME,
   RESERVOIR_CHANGE_ID,
   SMBG_ID,
+  WIZARD_ID1,
+  WIZARD_ID2,
   WIZARD_INPUT_TIME,
   WIZARD_INPUT_TIME2
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
-import { checkStatTooltip } from './stats'
+import { checkStatTooltip } from './stats.assert'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
 const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'

@@ -32,6 +32,12 @@ import { type Patient } from './models/patient.model'
 import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
 import { type User } from '../auth'
 import { type PatientsFilters } from '../providers/models/patients-filters.model'
+import i18next from 'i18next'
+import { Gender } from '../auth/models/enums/gender.enum'
+
+const t = i18next.t.bind(i18next)
+
+const NO_GENDER_LABEL = '-'
 
 export default class PatientUtils {
   static async retrievePatients(): Promise<Patient[]> {
@@ -117,5 +123,23 @@ export default class PatientUtils {
       return dateString === birthdate &&
         (firstNameOrLastName.length === 0 || firstName.toLocaleLowerCase().startsWith(firstNameOrLastName) || lastName.toLocaleLowerCase().startsWith(firstNameOrLastName))
     })
+  }
+
+  static computeAge = (birthdate: string): number => {
+    return moment().diff(birthdate, 'years')
+  }
+
+  static getGenderLabel = (gender: Gender): string => {
+    switch (gender) {
+      case Gender.Indeterminate:
+        return t('gender-i')
+      case Gender.Female:
+        return t('gender-f')
+      case Gender.Male:
+        return t('gender-m')
+      case Gender.NotDefined:
+      default:
+        return NO_GENDER_LABEL
+    }
   }
 }
