@@ -69,7 +69,7 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
       }
     });
     (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-      return { selectedTeam: { id: teamId } }
+      return { selectedTeam: { id: teamId, monitoringAlertsParameters: getDefaultMonitoringAlertsParameters() } }
     })
   })
 
@@ -186,38 +186,6 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
       expect(() => {
         result.current.resetToTeamDefaultValues()
       }).toThrowError('This action cannot be done if the patient is undefined')
-    })
-
-    it('should return a error message if patient team is not found', () => {
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        monitoringAlertsParameters: getDefaultMonitoringAlertsParameters(),
-        patient,
-        userBgUnit: Unit.MilligramPerDeciliter
-      }))
-
-      expect(() => {
-        result.current.resetToTeamDefaultValues()
-      }).toThrowError(`Cannot find team with id ${teamId}`)
-    })
-
-    it('should return an error message if the team has no monitoring parameters', () => {
-      delete team.monitoringAlertsParameters;
-
-      (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-        return {
-          getTeam: () => team
-        }
-      })
-
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        patient,
-        monitoringAlertsParameters: getDefaultMonitoringAlertsParameters(),
-        userBgUnit: Unit.MilligramPerDeciliter
-      }))
-
-      expect(() => {
-        result.current.resetToTeamDefaultValues()
-      }).toThrowError('The given team has no monitoring values')
     })
 
     it('should set default values if there is no error', () => {
