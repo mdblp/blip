@@ -30,6 +30,7 @@ import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-inv
 import {
   sortByDateOfBirth,
   sortByFlag,
+  sortByMonitoringAlertsCount,
   sortByUserName
 } from '../../../../components/patient-list/sort-comparators.util'
 
@@ -141,6 +142,85 @@ describe('useSortComparatorsHook', () => {
       expect(sortByDateOfBirth(patientB, patientA)).toEqual(-1)
       expect(sortByDateOfBirth(patientB, patientC)).toEqual(0)
       expect(sortByDateOfBirth(patientC, patientB)).toEqual(0)
+    })
+  })
+
+  describe('sortByMonitoringAlertsCount', () => {
+    it('should sort the patients by their number of active monitoring alerts', () => {
+      const patientA = {
+        id: 'idA',
+        profile: { fullName: 'A Patient', email: undefined, sex: undefined },
+        monitoringAlerts: {
+          timeSpentAwayFromTargetActive: true,
+          timeSpentAwayFromTargetRate: undefined,
+          frequencyOfSevereHypoglycemiaActive: true,
+          frequencyOfSevereHypoglycemiaRate: undefined,
+          nonDataTransmissionActive: false,
+          nonDataTransmissionRate: undefined
+        },
+        settings: undefined,
+        metadata: { hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      }
+
+      const patientB = {
+        id: 'idB',
+        profile: { fullName: 'B Patient', email: undefined, sex: undefined },
+        monitoringAlerts: {
+          timeSpentAwayFromTargetActive: true,
+          timeSpentAwayFromTargetRate: undefined,
+          frequencyOfSevereHypoglycemiaActive: true,
+          frequencyOfSevereHypoglycemiaRate: undefined,
+          nonDataTransmissionActive: true,
+          nonDataTransmissionRate: undefined
+        },
+        settings: undefined,
+        metadata: { hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      }
+
+      const patientC = {
+        id: 'idC',
+        profile: { fullName: 'C Patient', email: undefined, sex: undefined },
+        monitoringAlerts: {
+          timeSpentAwayFromTargetActive: true,
+          timeSpentAwayFromTargetRate: undefined,
+          frequencyOfSevereHypoglycemiaActive: true,
+          frequencyOfSevereHypoglycemiaRate: undefined,
+          nonDataTransmissionActive: true,
+          nonDataTransmissionRate: undefined
+        },
+        settings: undefined,
+        metadata: { hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      }
+
+      const patientD = {
+        id: 'idD',
+        profile: { fullName: 'D Patient', email: undefined, sex: undefined },
+        monitoringAlerts: {
+          timeSpentAwayFromTargetActive: false,
+          timeSpentAwayFromTargetRate: undefined,
+          frequencyOfSevereHypoglycemiaActive: false,
+          frequencyOfSevereHypoglycemiaRate: undefined,
+          nonDataTransmissionActive: false,
+          nonDataTransmissionRate: undefined
+        },
+        settings: undefined,
+        metadata: { hasSentUnreadMessages: undefined },
+        invitationStatus: UserInvitationStatus.accepted,
+        userid: ''
+      }
+
+      expect(sortByMonitoringAlertsCount(patientA, patientB)).toEqual(1)
+      expect(sortByMonitoringAlertsCount(patientB, patientA)).toEqual(-1)
+      expect(sortByMonitoringAlertsCount(patientB, patientC)).toEqual(0)
+      expect(sortByMonitoringAlertsCount(patientC, patientB)).toEqual(0)
+      expect(sortByMonitoringAlertsCount(patientA, patientD)).toEqual(-1)
+      expect(sortByMonitoringAlertsCount(patientD, patientA)).toEqual(1)
     })
   })
 })
