@@ -249,14 +249,14 @@ export const usePatientListHook = (): PatientListHookReturns => {
     ]
   }, [sharedColumns.actionColumn, sharedColumns.patientColumn, t])
 
-  const buildCurrentPrivateTeamColumns = useCallback((): GridColDef[] => {
+  const buildPrivateTeamCurrentColumns = useCallback((): GridColDef[] => {
     const fieldsNotWanted = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
     return medicalTeamsCurrentColumns.filter(column => !fieldsNotWanted.includes(column.field as PatientListColumns))
   }, [medicalTeamsCurrentColumns])
 
   const buildCurrentColumns = useCallback((): GridColDef[] => {
-    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildCurrentPrivateTeamColumns() : medicalTeamsCurrentColumns
-  }, [user, selectedTeam, buildCurrentPrivateTeamColumns, medicalTeamsCurrentColumns])
+    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildPrivateTeamCurrentColumns() : medicalTeamsCurrentColumns
+  }, [user, selectedTeam, buildPrivateTeamCurrentColumns, medicalTeamsCurrentColumns])
 
   const columns: GridColDef[] = useMemo(() => {
     return selectedTab === PatientListTabs.Current ? buildCurrentColumns() : buildPendingColumns()
