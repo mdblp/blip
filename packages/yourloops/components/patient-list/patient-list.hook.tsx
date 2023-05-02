@@ -51,6 +51,8 @@ import { usePatientListContext } from '../../lib/providers/patient-list.provider
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { sortByDateOfBirth, sortByFlag, sortByMonitoringAlertsCount, sortByUserName } from './sort-comparators.util'
 import { getUserName } from '../../lib/auth/user.util'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { TeamType } from '../../lib/team/models/enums/team-type.enum'
 
 interface SharedColumns {
   patientColumn: GridColDef
@@ -77,6 +79,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { getFlagPatients, user } = useAuth()
   const { getPatientById, searchPatients } = usePatientContext()
   const { updatePendingFilter } = usePatientListContext()
+  const { selectedTeam } = useSelectedTeamContext()
   const navigate = useNavigate()
   const trNA = t('N/A')
 
@@ -173,7 +176,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
     ]
   }, [sharedColumns.actionColumn, sharedColumns.patientColumn])
 
-  const buildCurrentColumns = useCallback((): GridColDef[] => {
+  const medicalTeamsCurrentColumns = useMemo((): GridColDef[] => {
     return [
       {
         field: PatientListColumns.Flag,
@@ -246,22 +249,23 @@ export const usePatientListHook = (): PatientListHookReturns => {
     ]
   }, [sharedColumns.actionColumn, sharedColumns.patientColumn, t])
 
+  const buildCurrentPrivateTeamColumns = useCallback((): GridColDef[] => {
+    const fieldsNotWanted = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
+    return medicalTeamsCurrentColumns.filter(column => !fieldsNotWanted.includes(column.field as PatientListColumns))
+  }, [medicalTeamsCurrentColumns])
+
+  const buildCurrentColumns = useCallback((): GridColDef[] => {
+    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildCurrentPrivateTeamColumns() : medicalTeamsCurrentColumns
+  }, [user, selectedTeam, buildCurrentPrivateTeamColumns, medicalTeamsCurrentColumns])
+
   const columns: GridColDef[] = useMemo(() => {
     return selectedTab === PatientListTabs.Current ? buildCurrentColumns() : buildPendingColumns()
   }, [selectedTab, buildCurrentColumns, buildPendingColumns])
 
-  const rowsProps: GridRowsProp = useMemo(() => {
+  const buildMedicalTeamCurrentRows = useCallback((): GridRowsProp => {
     return filteredPatients.map((patient): GridRowModel => {
-      if (selectedTab === PatientListTabs.Pending) {
-        return {
-          id: patient.userid,
-          [PatientListColumns.Patient]: patient,
-          [PatientListColumns.Actions]: patient
-        }
-      }
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const birthdate = patient.profile.birthdate
-
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
@@ -276,7 +280,45 @@ export const usePatientListHook = (): PatientListHookReturns => {
         [PatientListColumns.Actions]: patient
       }
     })
-  }, [filteredPatients, selectedTab, trNA])
+  }, [filteredPatients, trNA])
+
+  const buildPrivateTeamCurrentRows = useCallback((): GridRowsProp => {
+    return filteredPatients.map((patient): GridRowModel => {
+      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
+      const birthdate = patient.profile.birthdate
+      return {
+        id: patient.userid,
+        [PatientListColumns.Flag]: patient,
+        [PatientListColumns.Patient]: patient,
+        [PatientListColumns.DateOfBirth]: patient,
+        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
+        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
+        [PatientListColumns.System]: patient.settings.system ?? trNA,
+        [PatientListColumns.LastDataUpdate]: lastUpload,
+        [PatientListColumns.Actions]: patient
+      }
+    })
+  }, [filteredPatients, trNA])
+
+  const buildPendingRows = useCallback((): GridRowsProp => {
+    return filteredPatients.map((patient): GridRowModel => {
+      return {
+        id: patient.userid,
+        [PatientListColumns.Patient]: patient,
+        [PatientListColumns.Actions]: patient
+      }
+    })
+  }, [filteredPatients])
+
+  const rowsProps: GridRowsProp = useMemo(() => {
+    if (selectedTab === PatientListTabs.Pending) {
+      return buildPendingRows()
+    }
+    if (user.isUserCaregiver() || selectedTeam.type === TeamType.private) {
+      return buildPrivateTeamCurrentRows()
+    }
+    return buildMedicalTeamCurrentRows()
+  }, [buildMedicalTeamCurrentRows, buildPendingRows, buildPrivateTeamCurrentRows, selectedTab, selectedTeam, user])
 
   return {
     columns,

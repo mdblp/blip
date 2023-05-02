@@ -29,7 +29,7 @@ import {
   checkMonitoringAlertsIconsInactiveForFirstPatient,
   checkPatientColumnsFiltersContent,
   checkPatientListColumnSort,
-  checkPatientListCurrentTab,
+  checkPatientListCurrentTab, checkPatientListCurrentTabForPrivateTeam,
   checkPatientListFilters,
   checkPatientListHeaderForHcp,
   checkPatientListHideShowColumns,
@@ -48,4 +48,8 @@ export const testPatientListForHcp = async (router: Router) => {
   await checkPatientListHideShowColumns()
   await checkPatientListPendingTab(router)
   await checkPatientListCurrentTab()
+}
+
+export const testPatientListForHcpPrivateTeam = async () => {
+  await checkPatientListCurrentTabForPrivateTeam()
 }
