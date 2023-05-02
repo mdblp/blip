@@ -28,6 +28,9 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './total-insulin-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
+// import { formatDecimalNumber } from '../../../utils/format/format.util'
+// import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
+// import { t } from 'i18next'
 
 interface TotalInsulinPropsData {
   id: string
@@ -38,10 +41,13 @@ interface TotalInsulinPropsData {
 }
 
 export interface TotalInsulinStatProps {
-  annotations: []
+  annotations: string[]
   data: TotalInsulinPropsData[]
   title: string
   total: number
+  // dailyDose: number
+  // weight: number
+  // footerLabel: string
 }
 
 const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
@@ -52,19 +58,27 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
     return res > 0 ? res.toString(10) : '--'
   }
 
+  // const computedOutputValue = useMemo(() => {
+  //   const value = dailyDose / weight
+  //   return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
+  // }, [dailyDose, weight])
+  //
+  // const outputValueClasses = useMemo(() => {
+  //   const isDisabled = computedOutputValue === EMPTY_DATA_PLACEHOLDER
+  //   return `${styles.outputValue}${isDisabled ? ` ${styles.outputValueDisabled}` : ''}`
+  // }, [computedOutputValue])
+
   return (
     <div data-testid="total-insulin-stat">
       <Box className={styles.title}>
         {title}
         <span className={styles.titleData}>
-          (
           <span className={styles.titleTotal}>
             {total}
           </span>
           <span className={styles.titleSuffix}>
             U
           </span>
-          )
         </span>
         <StatTooltip annotations={annotations} />
       </Box>
@@ -85,6 +99,17 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             </React.Fragment>
           )
         })}
+        {/*<div className={`${styles.commonDisplay} ${styles.outputWrapper}`}>*/}
+        {/*  {footerLabel && <div className={styles.outputLabel}>{footerLabel}</div>}*/}
+        {/*  <div>*/}
+        {/*  <span className={outputValueClasses}>*/}
+        {/*  {computedOutputValue}*/}
+        {/*  </span>*/}
+        {/*    <span className={styles.outputSuffix}>*/}
+        {/*       {t('U/kg')}*/}
+        {/*      </span>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </div>
     </div>
   )

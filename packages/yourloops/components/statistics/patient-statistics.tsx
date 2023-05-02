@@ -45,6 +45,7 @@ import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
+import { TotalInsulinStatWrapper } from './total-insulin-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -85,7 +86,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
-  const {bolus, basal} = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter)
+  const {
+    bolus,
+    basal,
+    total: basalBolusTotal
+  } = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter)
 
   return (
     <Box data-testid="patient-statistics">
@@ -124,7 +129,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-
+      <TotalInsulinStatWrapper basal={basal} bolus={bolus} total={basalBolusTotal} />
       {children}
     </Box>
   )
