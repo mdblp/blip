@@ -40,11 +40,12 @@ export interface TotalInsulinStatProps {
 }
 
 const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { title, totalCarbs, foodCarbs,TotalCarbsAndWizard } = props
+  const { title, totalCarbs, foodCarbs, TotalCarbsAndWizard } = props
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDaily = location.pathname.includes('daily')
   const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: TotalCarbsAndWizard }) : t('tooltip-empty-stat')
+
   const getAnnotations = (): string[] => {
     if (isDaily) {
       return [t('tooltip-total-day-carbs'), isDerivedCarbs]
