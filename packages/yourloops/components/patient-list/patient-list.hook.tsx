@@ -223,7 +223,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         sortComparator: sortByMonitoringAlertsCount,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
-          return <MonitoringAlertsCell monitoringAlerts={patient.monitoringAlerts} />
+          return <MonitoringAlertsCell patient={patient} />
         }
       },
       {
