@@ -44,6 +44,7 @@ import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
 import { Unit } from 'medical-domain'
+import { convertBG } from '../../lib/units/units.util'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -61,6 +62,15 @@ interface MessageCellProps {
 interface ActionsCellProps {
   patient: Patient
   onClickRemove: (patientId: string) => void
+}
+
+interface MonitoringAlertsTooltips {
+  timeSpentAwayFromTargetRate: number
+  frequencyOfSevereHypoglycemiaRate: number
+  nonDataTransmissionRate: number
+  min: number
+  max: number
+  veryLowBg: number
 }
 
 export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patient }) => {
@@ -108,6 +118,7 @@ export const PendingIconCell: FunctionComponent = () => {
 export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ patient }) => {
   const { t } = useTranslation()
   const theme = useTheme()
+  const { user } = useAuth()
   const monitoringAlerts = patient.monitoringAlerts
 
   // This default value assignment will be removed in YLP-2324
@@ -122,13 +133,41 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     nonDataTxThreshold: 15,
     reportingPeriod: 55
   }
-  const unit = monitoringParameters.bgUnit
+  const unit = user.settings.units?.bg ?? monitoringParameters.bgUnit
+
+  const buildTooltipValues = (): MonitoringAlertsTooltips => {
+    if (unit === monitoringParameters.bgUnit) {
+      return {
+        timeSpentAwayFromTargetRate: Math.round(monitoringAlerts.timeSpentAwayFromTargetRate * 10) / 10,
+        frequencyOfSevereHypoglycemiaRate: Math.round(monitoringAlerts.frequencyOfSevereHypoglycemiaRate * 10) / 10,
+        nonDataTransmissionRate: Math.round(monitoringAlerts.nonDataTransmissionRate * 10) / 10,
+        min: Math.round(monitoringParameters.lowBg * 10) / 10,
+        max: Math.round(monitoringParameters.highBg * 10) / 10,
+        veryLowBg: Math.round(monitoringParameters.veryLowBg * 10) / 10
+      }
+    }
+    return {
+      timeSpentAwayFromTargetRate: Math.round(monitoringAlerts.timeSpentAwayFromTargetRate * 10) / 10,
+      frequencyOfSevereHypoglycemiaRate: Math.round(monitoringAlerts.frequencyOfSevereHypoglycemiaRate * 10) / 10,
+      nonDataTransmissionRate: Math.round(monitoringAlerts.nonDataTransmissionRate * 10) / 10,
+      min: Math.round(convertBG(monitoringParameters.lowBg, monitoringParameters.bgUnit) * 10) / 10,
+      max: Math.round(convertBG(monitoringParameters.highBg, monitoringParameters.bgUnit) * 10) / 10,
+      veryLowBg: Math.round(convertBG(monitoringParameters.veryLowBg, monitoringParameters.bgUnit) * 10) / 10
+    }
+  }
+
+  const {
+    timeSpentAwayFromTargetRate,
+    frequencyOfSevereHypoglycemiaRate,
+    nonDataTransmissionRate,
+    min,
+    max,
+    veryLowBg
+  } = buildTooltipValues()
+
   const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts.timeSpentAwayFromTargetActive
   const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
   const isNonDataTransmissionAlertActive = monitoringAlerts.nonDataTransmissionActive
-  const timeSpentAwayFromTargetRate = Math.round(monitoringAlerts.timeSpentAwayFromTargetRate * 10) / 10
-  const frequencyOfSevereHypoglycemiaRate = Math.round(monitoringAlerts.frequencyOfSevereHypoglycemiaRate * 10) / 10
-  const nonDataTransmissionRate = Math.round(monitoringAlerts.nonDataTransmissionRate * 10) / 10
   const sharedTooltip = t('monitoring-alerts-shared-tooltip')
 
   return (
@@ -139,8 +178,8 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             <Box>{t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate })}</Box>
             <Box>
               {t('time-out-of-range-target-tooltip2', {
-                min: monitoringParameters.lowBg,
-                max: monitoringParameters.highBg,
+                min,
+                max,
                 threshold: monitoringParameters.outOfRangeThreshold,
                 unit
               })}
@@ -161,7 +200,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             <Box>{t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate })}</Box>
             <Box>
               {t('hypoglycemia-tooltip2', {
-                veryLowBg: monitoringParameters.veryLowBg,
+                veryLowBg,
                 threshold: monitoringParameters.hypoThreshold,
                 unit
               })}
