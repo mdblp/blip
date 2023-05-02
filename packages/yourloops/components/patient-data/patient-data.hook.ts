@@ -62,6 +62,8 @@ export interface PatientDataContextResult {
 }
 
 const DATE_QUERY_PARAM_KEY = 'date'
+const DASHBOARD_MS_RANGE = TimeService.MS_IN_DAY * 7
+const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export const usePatientData = (): PatientDataContextResult => {
   const navigate = useNavigate()
@@ -110,7 +112,6 @@ export const usePatientData = (): PatientDataContextResult => {
   const [refreshingData, setRefreshingData] = useState<boolean>(false)
   const [medicalData, setMedicalData] = useState<MedicalDataService | null>(null)
   const [dataUtil, setDataUtil] = useState<DataUtil | null>(null)
-  const [msRange, setMsRange] = useState<number>(TimeService.MS_IN_DAY)
   const [chartPrefs, setChartPrefs] = useState<ChartPrefs>(defaultChartPrefs)
   const [dashboardDate, setDashboardDate] = useState<number>(new Date().valueOf())
   const [dailyDate, setDailyDate] = useState<number | null>(null)
@@ -133,6 +134,8 @@ export const usePatientData = (): PatientDataContextResult => {
     }
   }, [pathname, urlPrefix])
 
+  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard ? DASHBOARD_MS_RANGE : DEFAULT_MS_RANGE)
+
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     navigate(`/patient/${patient.userid}/${currentChart}`)
@@ -142,16 +145,16 @@ export const usePatientData = (): PatientDataContextResult => {
     switch (chart) {
       case ChartTypes.Dashboard:
         setDashboardDate(new Date().valueOf())
-        setMsRange(TimeService.MS_IN_DAY * 7)
+        setMsRange(DASHBOARD_MS_RANGE)
         break
       case ChartTypes.Daily:
         if (dateQueryParam) {
           setDailyDate(parseInt(dateQueryParam))
         }
-        setMsRange(TimeService.MS_IN_DAY)
+        setMsRange(DEFAULT_MS_RANGE)
         break
       case ChartTypes.Trends:
-        setMsRange(TimeService.MS_IN_DAY)
+        setMsRange(DEFAULT_MS_RANGE)
         break
     }
     navigate(`${urlPrefix}/${chart}`)

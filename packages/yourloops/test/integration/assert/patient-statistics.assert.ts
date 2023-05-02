@@ -30,7 +30,7 @@ import { checkTooltip } from './stats.assert'
 
 export const checkPatientStatistics = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  checkTooltip(patientStatistics, 'Time In Range')
+  checkTooltip(patientStatistics, 'Avg. Daily Time In Range')
   checkTooltip(patientStatistics, 'Standard Deviation')
   checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')
   checkTooltip(patientStatistics, 'Avg. Daily Insulin')
@@ -49,7 +49,7 @@ export const checkPatientStatistics = async () => {
 
 export const checkPatientStatisticsNoData = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  checkTooltip(patientStatistics, 'Time In Range')
+  checkTooltip(patientStatistics, 'Avg. Daily Time In Range')
   checkTooltip(patientStatistics, 'Standard Deviation')
   checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')
   checkTooltip(patientStatistics, 'Avg. Daily Insulin')
