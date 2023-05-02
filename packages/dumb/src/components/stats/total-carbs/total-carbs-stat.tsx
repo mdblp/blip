@@ -30,23 +30,33 @@ import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { Unit } from 'medical-domain'
+import { useLocation } from 'react-router-dom'
 
 export interface TotalInsulinStatProps {
-  annotations: string[]
   foodCarbs: number
   title: string
   totalCarbs: number
+  TotalCarbsAndWizard: number
 }
 
 const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { annotations, title, totalCarbs, foodCarbs } = props
+  const { title, totalCarbs, foodCarbs,TotalCarbsAndWizard } = props
   const { t } = useTranslation('main')
+  const location = useLocation()
+  const isDaily = location.pathname.includes('daily')
+  const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: TotalCarbsAndWizard }) : t('tooltip-empty-stat')
+  const getAnnotations = (): string[] => {
+    if (isDaily) {
+      return [t('tooltip-total-day-carbs'), isDerivedCarbs]
+    }
+    return [t('tooltip-total-week-carbs'), isDerivedCarbs]
+  }
 
   return (
     <div data-testid="total-carbs-stat">
       <Box className={`${styles.title} ${styles.row}`}>
         {title}
-        <StatTooltip annotations={annotations} />
+        <StatTooltip annotations={getAnnotations()} />
         {!totalCarbs
           ? (
             <>

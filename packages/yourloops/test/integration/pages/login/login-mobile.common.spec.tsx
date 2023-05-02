@@ -27,9 +27,9 @@
 
 import * as auth0Mock from '@auth0/auth0-react'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
-import { checkFooter } from '../../assert/footer'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 
 jest.mock('@mui/material/useMediaQuery', () => {
   return () => true
@@ -64,7 +64,7 @@ describe('Login page mobile view', () => {
     expect(screen.getByRole('button', { name: 'Connect' })).toBeVisible()
     expect(screen.queryByTestId('language-selector')).toBeVisible()
 
-    checkFooter({ needFooterLanguageSelector: false })
+    checkFooterForUserNotLoggedIn(false)
 
     // More info link should disappear if language is french
     fireEvent.mouseDown(within(languageSelector).getByRole('button', { hidden: true }))

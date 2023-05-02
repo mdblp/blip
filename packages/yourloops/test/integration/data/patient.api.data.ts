@@ -98,7 +98,7 @@ export const buildPatient = (
       nonDataTransmissionActive: monitoringAlerts?.nonDataTransmissionActive || false
     },
     profile: {
-      birthdate: profile?.birthdate || new Date(),
+      birthdate: profile?.birthdate || new Date().toString(),
       firstName: profile?.firstName || 'fakeFirstname',
       fullName: profile?.fullName || 'fakePatientFullName',
       lastName: profile?.lastName || 'fakeLastname',
@@ -125,7 +125,7 @@ export const monitoredPatient: Patient = buildPatient(
   monitoredPatientId,
   defaultMonitoring,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'monitored-patient@diabeloop.fr',
     firstName: 'Monitored',
     fullName: 'Monitored Patient',
@@ -141,7 +141,7 @@ export const unreadMessagesPatient: Patient = buildPatient(
   unreadMessagesPatientId,
   null,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'unread-messages@patient.fr',
     firstName: 'Unread',
     lastName: 'Messages Patient',
@@ -157,7 +157,7 @@ export const timeSpentOutOfTargetRangePatient: Patient = buildPatient(
   timeSpentOutOfTargetRangePatientId,
   null,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'time-out-of-range@patient.fr',
     firstName: 'Time',
     lastName: 'Out of Range Patient',
@@ -173,7 +173,7 @@ export const hypoglycemiaPatient: Patient = buildPatient(
   hypoglycemiaPatientId,
   null,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'hypoglycemia@patient.fr',
     firstName: 'Hypoglycemia',
     lastName: 'Patient',
@@ -189,7 +189,7 @@ export const noDataTransferredPatient: Patient = buildPatient(
   noDataTransferredPatientId,
   null,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'no-data@patient.fr',
     firstName: 'No Data',
     lastName: 'Patient',
@@ -205,7 +205,7 @@ export const flaggedPatient: Patient = buildPatient(
   flaggedPatientId,
   null,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'flagged@patient.fr',
     firstName: 'Flagged',
     lastName: 'Patient',
@@ -221,7 +221,7 @@ export const unmonitoredPatient: Patient = buildPatient(
   unmonitoredPatientId,
   undefined,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'unmonitored-patient@diabeloop.fr',
     firstName: 'Unmonitored',
     fullName: 'Unmonitored Patient',
@@ -237,7 +237,7 @@ export const monitoredPatientTwo: Patient = buildPatient(
   'monitored-patient-two',
   defaultMonitoring,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'monitored-patient2@diabeloop.fr',
     firstName: 'Monitored',
     lastName: 'Patient 2',
@@ -253,7 +253,7 @@ export const monitoredPatientWithMmol: Patient = buildPatient(
   monitoredPatientWithMmolId,
   { ...defaultMonitoring, parameters: monitoringParametersBgUnitMmol },
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'monitored-patient-mmol@diabeloop.fr',
     firstName: 'Monitored',
     lastName: 'Patient mmol',
@@ -269,7 +269,7 @@ export const pendingPatient: Patient = buildPatient(
   'pending-patient',
   undefined,
   {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'pending-patient@diabeloop.fr',
     firstName: 'Pending',
     fullName: 'Pending Patient',

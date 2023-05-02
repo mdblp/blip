@@ -82,7 +82,6 @@ describe('Patient utils', () => {
           a1c: undefined,
           system: 'DBLG1'
         },
-        teamIds: [teamMember.teamId],
         invitationStatus: teamMember.invitationStatus,
         monitoringStatus: teamMember.monitoring?.status,
         userid: teamMember.userId

@@ -35,18 +35,13 @@ import {
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets,
   GMI_TOOLTIP
-} from '../../assert/trends'
-import {
-  minimalTrendViewData,
-  mockDataAPI,
-  smbgData,
-  timeInRangeStatsTrendViewData
-} from '../../mock/data.api.mock'
+} from '../../assert/trends.assert'
+import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
-  checkGlucoseManagementIndicator,
   checkCoefficientOfVariationStatWidget,
+  checkGlucoseManagementIndicator,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
   checkSensorUsage,
@@ -54,7 +49,7 @@ import {
   checkStatTooltip,
   checkTimeInRangeStatsTitle,
   checkTotalCarbsStatWidget
-} from '../../assert/stats'
+} from '../../assert/stats.assert'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor, within } from '@testing-library/react'
 import { unmonitoredPatientAsTeamMember } from '../../data/patient.api.data'

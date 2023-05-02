@@ -25,33 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, waitFor, within } from '@testing-library/react'
+import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
-import { mockDataAPI } from '../../mock/data.api.mock'
+import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { checkMedicalWidgetForPatient } from '../../assert/medical-widget'
+import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
-import { buildPrivateTeam, buildTeamOne, buildTeamTwo, iTeamOne, mySecondTeamId } from '../../mock/team.api.mock'
 import {
-  checkJoinTeamDialog,
-  checkJoinTeamDialogCancel,
-  checkJoinTeamDialogDisplayErrorMessage,
-  checkJoinTeamDialogPrivacyCancel
-} from '../../assert/join-team'
-import { monitoredPatientAsTeamMember, monitoredPatientId } from '../../data/patient.api.data'
-import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
+  buildPrivateTeam,
+  buildTeamOne,
+  buildTeamTwo,
+  iTeamOne,
+  mySecondTeamId,
+  mySecondTeamName
+} from '../../mock/team.api.mock'
+import { monitoredPatient, monitoredPatientAsTeamMember, monitoredPatientId } from '../../data/patient.api.data'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
+import { mockChatAPI } from '../../mock/chat.api.mock'
+import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
+import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
+import {
+  testDashboardDataVisualisation,
+  testDashboardDataVisualisationPrivateTeamNoData,
+  testPatientNavBarForPatient
+} from '../../use-cases/patient-data-visualisation'
+import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
+import { testChatWidgetForPatient } from '../../use-cases/communication-system'
+import { testJoinTeam } from '../../use-cases/teams-management'
 
 describe('Patient dashboard for HCP', () => {
   const monitoredPatientDashboardRoute = '/dashboard'
+  const firstName = 'Monitored'
+  const lastName = 'Patient'
 
   beforeEach(() => {
     mockPatientLogin(monitoredPatientAsTeamMember)
     mockPatientApiForPatients()
     mockDataAPI()
-    mockMedicalFilesAPI()
+    mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
+    mockChatAPI()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
@@ -59,53 +73,55 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should display correct components when patient is in some medical teams', async () => {
+    mockDataAPI(completeDashboardData)
+
+    const appMainLayoutParams: AppMainLayoutParams = {
+      footerHasLanguageSelector: false,
+      loggedInUserFullName: `${firstName} ${lastName}`
+    }
+
+    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
+      isChatCardVisible: true,
+      isMedicalFilesCardVisible: true,
+      isMonitoringAlertCardVisible: true
+    }
+
+    const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
+      selectedPatientId: monitoredPatientId,
+      loggedInUserFirstName: monitoredPatient.profile.firstName,
+      loggedInUserLastName: monitoredPatient.profile.lastName,
+      selectedTeamId: mySecondTeamId,
+      selectedTeamName: mySecondTeamName
+    }
+
     const router = renderPage(monitoredPatientDashboardRoute)
+
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(monitoredPatientDashboardRoute)
     })
 
-    const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-    expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(monitoredPatientId, null)
-    expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
-    await checkMedicalWidgetForPatient()
-    const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
-    expect(dashboard.getByText('Patient statistics')).toBeVisible()
-    expect(dashboard.getByText('Device Usage')).toBeVisible()
-
-    expect(dashboard.queryByTestId('medical-files-card')).toBeVisible()
-    expect(dashboard.queryByTestId('monitoring-alert-card')).toBeVisible()
-    expect(dashboard.queryByTestId('chat-card')).toBeVisible()
+    await testAppMainLayoutForPatient(appMainLayoutParams)
+    await testDashboardDataVisualisation(patientDashboardLayoutParams)
+    await testPatientNavBarForPatient()
+    await testMedicalWidgetForPatient(medicalFilesWidgetParams)
+    await testChatWidgetForPatient()
+    await testJoinTeam()
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
 
+    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
+      isChatCardVisible: false,
+      isMedicalFilesCardVisible: false,
+      isMonitoringAlertCardVisible: false
+    }
+
     await act(async () => {
       renderPage(monitoredPatientDashboardRoute)
     })
 
-    const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
-    expect(dashboard.getByText('Patient statistics')).toBeVisible()
-    expect(dashboard.getByText('Device Usage')).toBeVisible()
-
-    expect(dashboard.queryByTestId('remote-monitoring-card')).not.toBeInTheDocument()
-    expect(dashboard.queryByTestId('medical-files-card')).not.toBeInTheDocument()
-    expect(dashboard.queryByTestId('monitoring-alert-card')).not.toBeInTheDocument()
-    expect(dashboard.queryByTestId('chat-card')).not.toBeInTheDocument()
-  })
-
-  it('should close the dialog after clicking the join care team button with success message', async () => {
-    await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
-    })
-
-    const badgeTeamMenu = screen.getByLabelText('Open team menu')
-    await checkJoinTeamDialog(badgeTeamMenu)
-    await checkJoinTeamDialogCancel(badgeTeamMenu)
-    await checkJoinTeamDialogPrivacyCancel(badgeTeamMenu)
-    await checkJoinTeamDialogDisplayErrorMessage(badgeTeamMenu)
+    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
   })
 })

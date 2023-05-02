@@ -28,7 +28,7 @@
 import { useState } from 'react'
 import { type PatientsFilters } from './models/patients-filters.model'
 import { type PatientListContextResult } from './models/patient-list-context-result.model'
-import { PatientListColumns } from '../../components/patient-list/enums/patient-list.enum'
+import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
 import { type GridColumnVisibilityModel, useGridApiRef } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
 
@@ -42,13 +42,34 @@ const DEFAULT_FILTERS = {
   messagesEnabled: false
 }
 
+const DEFAULT_COLUMNS_HCP = [
+  PatientListColumns.Flag,
+  PatientListColumns.Patient,
+  PatientListColumns.DateOfBirth,
+  PatientListColumns.MonitoringAlerts,
+  PatientListColumns.LastDataUpdate,
+  PatientListColumns.Messages,
+  PatientListColumns.Actions
+]
+
+const DEFAULT_COLUMNS_CAREGIVER = [
+  PatientListColumns.Flag,
+  PatientListColumns.Patient,
+  PatientListColumns.DateOfBirth,
+  PatientListColumns.LastDataUpdate,
+  PatientListColumns.Actions
+]
+
 export const usePatientListProviderHook = (): PatientListContextResult => {
   const { user, updatePreferences } = useAuth()
   const gridApiRef = useGridApiRef()
+  const isUserHcp = user.isUserHcp()
 
-  const getColumnPreference = (ColumnName: PatientListColumns): boolean => {
+  const getColumnPreference = (columnName: PatientListColumns): boolean => {
     const userPreferredColumns = user.preferences?.patientsListSortedOptionalColumns
-    return userPreferredColumns ? userPreferredColumns.includes(ColumnName) : true
+    const defaultColumns = isUserHcp ? DEFAULT_COLUMNS_HCP : DEFAULT_COLUMNS_CAREGIVER
+
+    return userPreferredColumns ? userPreferredColumns.includes(columnName) : defaultColumns.includes(columnName)
   }
 
   const [filters, setFilters] = useState<PatientsFilters>(DEFAULT_FILTERS)
@@ -56,11 +77,12 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: getColumnPreference(PatientListColumns.System),
     [PatientListColumns.Patient]: true,
-    [PatientListColumns.TimeOutOfRange]: user.isUserHcp() ? getColumnPreference(PatientListColumns.TimeOutOfRange) : false,
-    [PatientListColumns.SevereHypoglycemia]: user.isUserHcp() ? getColumnPreference(PatientListColumns.SevereHypoglycemia) : false,
-    [PatientListColumns.DataNotTransferred]: user.isUserHcp() ? getColumnPreference(PatientListColumns.DataNotTransferred) : false,
+    [PatientListColumns.DateOfBirth]: getColumnPreference(PatientListColumns.DateOfBirth),
+    [PatientListColumns.Age]: getColumnPreference(PatientListColumns.Age),
+    [PatientListColumns.Gender]: getColumnPreference(PatientListColumns.Gender),
+    [PatientListColumns.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumns.MonitoringAlerts) : false,
     [PatientListColumns.LastDataUpdate]: getColumnPreference(PatientListColumns.LastDataUpdate),
-    [PatientListColumns.Messages]: user.isUserHcp() ? getColumnPreference(PatientListColumns.Messages) : false,
+    [PatientListColumns.Messages]: isUserHcp ? getColumnPreference(PatientListColumns.Messages) : false,
     [PatientListColumns.Actions]: true
   })
 

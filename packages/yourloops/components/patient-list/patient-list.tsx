@@ -28,18 +28,14 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
-import {
-  DataGrid,
-  type GridPaginationModel,
-  type GridSortModel
-} from '@mui/x-data-grid'
+import { DataGrid, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import RemovePatientDialog from '../patient/remove-patient-dialog'
 import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
 import { PatientListCustomFooter } from './patient-list-custom-footer'
-import { PatientListColumns, PatientListTabs } from './enums/patient-list.enum'
+import { PatientListColumns, PatientListTabs } from './models/enums/patient-list.enum'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'

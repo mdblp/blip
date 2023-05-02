@@ -41,7 +41,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import Tooltip from '@mui/material/Tooltip'
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import PersonRemoveIcon from '../../../components/icons/person-remove-icon'
+import PersonRemoveIcon from '../../../components/icons/mui/person-remove-icon'
 import IconActionButton from '../../../components/buttons/icon-action'
 import CertifiedProfessionalIcon from '../../../components/icons/certified-professional-icon'
 

@@ -28,10 +28,10 @@
 import * as auth0Mock from '@auth0/auth0-react'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor } from '@testing-library/react'
-import { checkFooter } from '../../assert/footer'
 import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 
 describe('Product labelling page', () => {
   beforeAll(() => {
@@ -47,7 +47,7 @@ describe('Product labelling page', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/login')
     })
-    checkFooter({ needFooterLanguageSelector: false })
+    checkFooterForUserNotLoggedIn(false)
 
     await userEvent.click(screen.getByText('Product Labelling'))
 

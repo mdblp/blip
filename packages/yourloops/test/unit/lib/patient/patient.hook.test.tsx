@@ -52,8 +52,8 @@ jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/providers/patient-list.provider')
 describe('Patient hook', () => {
-  const loggedInUserAsPatient = createPatient('loggedInUserAsPatient', [], UserInvitationStatus.accepted)
-  const patientToRemove = createPatient('patientToRemove', [], UserInvitationStatus.accepted)
+  const loggedInUserAsPatient = createPatient('loggedInUserAsPatient', UserInvitationStatus.accepted)
+  const patientToRemove = createPatient('patientToRemove', UserInvitationStatus.accepted)
   const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue([patientToRemove.userid])
   const authHookFlagPatientMock = jest.fn()
@@ -112,19 +112,19 @@ describe('Patient hook', () => {
   }
 
   describe('filterPatients', () => {
-    const pendingPatient = createPatient('pendingPatient', [], UserInvitationStatus.pending, undefined, undefined, { birthdate: new Date(2001, 10, 19) })
-    const basicPatient = createPatient('basicPatient1', [], UserInvitationStatus.accepted, undefined, undefined, {
+    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, undefined, { birthdate: new Date(2001, 10, 19) })
+    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted, undefined, undefined, {
       birthdate: new Date(2005, 5, 5),
       firstName: 'small brain',
       lastName: 'dupont'
     })
-    const basicPatient2 = createPatient('basicPatient2', [], UserInvitationStatus.accepted, undefined, undefined, { birthdate: new Date(2001, 10, 19) })
-    const bigBrainPatient = createPatient('big brain', [], UserInvitationStatus.accepted, undefined, undefined, {
+    const basicPatient2 = createPatient('basicPatient2', UserInvitationStatus.accepted, undefined, undefined, { birthdate: new Date(2001, 10, 19) })
+    const bigBrainPatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, undefined, {
       birthdate: new Date(2005, 5, 5),
       firstName: 'big brain',
       lastName: 'smith'
     })
-    const noNamePatient = createPatient('big brain', [], UserInvitationStatus.accepted, undefined, undefined, {
+    const noNamePatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, undefined, {
       birthdate: new Date(2006, 6, 6)
     })
     noNamePatient.profile.firstName = undefined
@@ -161,7 +161,7 @@ describe('Patient hook', () => {
 
   describe('editPatientRemoteMonitoring', () => {
     const unknownPatient = createPatient('unknownPatient')
-    const unmonitoredPatient = createPatient('unmonitoredPatient', [], UserInvitationStatus.accepted)
+    const unmonitoredPatient = createPatient('unmonitoredPatient', UserInvitationStatus.accepted)
     const allPatients = [unmonitoredPatient]
     let customHook
 
@@ -201,7 +201,7 @@ describe('Patient hook', () => {
 
   describe('getPatientByEmail', () => {
     const unknownPatient = createPatient('unknownPatient')
-    const existingPatient = createPatient('existingPatient', [], UserInvitationStatus.accepted, undefined, undefined, { email: 'test@test.com' })
+    const existingPatient = createPatient('existingPatient', UserInvitationStatus.accepted, undefined, undefined, { email: 'test@test.com' })
     const allPatients = [existingPatient]
     let customHook
 
@@ -223,7 +223,7 @@ describe('Patient hook', () => {
 
   describe('getPatientById', () => {
     const unknownPatient = createPatient('unknownPatient')
-    const existingPatient = createPatient('existingPatient', [], UserInvitationStatus.accepted)
+    const existingPatient = createPatient('existingPatient', UserInvitationStatus.accepted)
     const allPatients = [existingPatient]
     let customHook
 
@@ -244,7 +244,7 @@ describe('Patient hook', () => {
   })
 
   describe('invitePatient', () => {
-    const basicPatient = createPatient('basicPatient1', [], UserInvitationStatus.accepted)
+    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted)
     basicPatient.profile.email = 'simple@basic.com'
     const allPatients = [basicPatient]
     const team1 = buildTeam('team1Id')
@@ -295,8 +295,8 @@ describe('Patient hook', () => {
   })
 
   describe('updatePatientMonitoring', () => {
-    const basicPatient = createPatient('basicPatient1', [], UserInvitationStatus.accepted)
-    const monitoredPatient = createPatient('monitoredPatient', [], UserInvitationStatus.accepted, MonitoringStatus.pending)
+    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted)
+    const monitoredPatient = createPatient('monitoredPatient', UserInvitationStatus.accepted, MonitoringStatus.pending)
     monitoredPatient.monitoring = { status: MonitoringStatus.accepted } as Monitoring
     const allPatients = [basicPatient, monitoredPatient]
     let customHook
@@ -331,9 +331,9 @@ describe('Patient hook', () => {
   })
 
   describe('removePatient', () => {
-    const pendingPatient = createPatient('pendingPatient', [], UserInvitationStatus.pending, undefined, {} as Monitoring)
-    const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', [], UserInvitationStatus.accepted)
-    const patientToRemove2 = createPatient('patientToRemove2', [], UserInvitationStatus.accepted)
+    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, {} as Monitoring)
+    const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', UserInvitationStatus.accepted)
+    const patientToRemove2 = createPatient('patientToRemove2', UserInvitationStatus.accepted)
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]
 
     it('should call notification hook cancel method if invitation is pending and call removePatient method', async () => {
@@ -402,7 +402,7 @@ describe('Patient hook', () => {
     let basicPatient
 
     beforeAll(async () => {
-      basicPatient = createPatient('basicPatient1', [], UserInvitationStatus.accepted)
+      basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted)
       basicPatient.metadata.hasSentUnreadMessages = true
       const allPatients = [basicPatient]
 

@@ -83,8 +83,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     foodCarbs
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
-  const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: TotalCarbsAndWizard }) : t('tooltip-empty-stat')
-
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
 
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
@@ -94,13 +92,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
-
-  const getAnnotations = (): string[] => {
-    if (isDaily) {
-      return [t('tooltip-total-day-carbs'), isDerivedCarbs]
-    }
-    return [t('tooltip-total-week-carbs'), isDerivedCarbs]
-  }
 
   return (
     <Box data-testid="patient-statistics">
@@ -143,7 +134,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       {children}
 
       <TotalCarbsStat
-        annotations={getAnnotations()}
+        TotalCarbsAndWizard={TotalCarbsAndWizard}
         totalCarbs={Math.round(totalCarbs)}
         foodCarbs={Math.round(foodCarbs)}
         title={title} />

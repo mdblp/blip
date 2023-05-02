@@ -33,12 +33,12 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import { useUserName } from '../../lib/custom-hooks/user-name.hook'
 import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { usePatientContext } from '../../lib/patient/patient.provider'
+import { getUserName } from '../../lib/auth/user.util'
 
 interface PatientNavBarSelectProps {
   currentPatient?: Patient
@@ -56,7 +56,6 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
   } = props
 
   const { t } = useTranslation('yourloops')
-  const { getUserName } = useUserName()
 
   const { classes, theme } = styles()
   const { patients } = usePatientContext()

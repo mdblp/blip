@@ -31,7 +31,7 @@ import { mockTeamAPI } from '../../mock/team.api.mock'
 import { addDirectShareMock, mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { act, screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
+import { checkPatientLayout } from '../../assert/layout.assert'
 import userEvent from '@testing-library/user-event'
 import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE

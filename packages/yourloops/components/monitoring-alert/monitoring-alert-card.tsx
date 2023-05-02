@@ -82,7 +82,7 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
     <GenericDashboardCard
       avatar={<AnnouncementIcon className={noActiveMonitoringAlert ? '' : classes.alertColor} />}
       title={`${t('events')}${numberOfMonitoringAlertsLabel}`}
-      data-testid="monitoring-alert-card"
+      data-testid="monitoring-alerts-card"
       action={user.isUserHcp() &&
         <IconButton
           id="configure-icon-button-id"

@@ -38,6 +38,7 @@ import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
 import { type ITeam } from '../../../lib/team/models/i-team.model'
 import { Unit } from 'medical-domain'
+import { PRIVATE_TEAM_ID, PRIVATE_TEAM_NAME } from '../../../lib/team/team.hook'
 
 const {
   minVeryLowBg,
@@ -73,8 +74,6 @@ export const myFirstTeamName = 'MyFirstTeam'
 export const mySecondTeamName = 'MySecondTeam'
 export const myThirdTeamName = 'A - MyThirdTeam - to be deleted'
 export const filtersTeamName = 'Team used to test the patients filters'
-
-const privateTeamId = 'private'
 
 export const buildTeamOne = (): Team => {
   return {
@@ -173,7 +172,13 @@ export const buildTeamThree = (): Team => {
       } as Profile,
       status: UserInvitationStatus.accepted,
       email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
-    }]
+    }],
+    monitoring: {
+      enabled: true,
+      monitoringEnd: null,
+      status: MonitoringStatus.accepted,
+      parameters: monitoringParameters
+    }
   }
 }
 
@@ -206,8 +211,8 @@ export const buildFiltersTeam = (): Team => {
 
 export const buildPrivateTeam = (): Team => {
   return {
-    name: 'private',
-    id: privateTeamId,
+    name: PRIVATE_TEAM_NAME,
+    id: PRIVATE_TEAM_ID,
     code: 'private',
     type: TeamType.private,
     phone: '',
