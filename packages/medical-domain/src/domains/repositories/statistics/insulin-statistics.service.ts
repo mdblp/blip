@@ -74,12 +74,21 @@ function getBasalBolusData(basals: Basal[], bolus: Bolus[], numDays: number, dat
   const filterBasal = BasalService.filterOnDate(basals, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const filterBolus = BolusService.filterOnDate(bolus, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const basalData = resempleDuration(filterBasal, dateFilter.start, dateFilter.end)
-  const bolusData = filterBolus.reduce((accumulator, bolus) => accumulator + bolus.normal, 0)
-  const formatBasalPerHour = basalData.map(basal => (basal.duration * 3600) * basal.duration)
-  const basal = formatBasalPerHour.reduce((accumulateur, basal) => accumulateur + basal)
+  const bolusTotal = filterBolus.reduce((accumulator, bolus) => accumulator + bolus.normal, 0)
+  const basalTotal = basalData.reduce((accumulator, basal) => accumulator + (basal.duration / 3600_000 * basal.rate), 0)
+
+  if (numDays > 1) {
+    return {
+      bolus: bolusTotal / numDays,
+      basal: basalTotal / numDays,
+      total: bolusTotal / numDays + basalTotal / numDays
+    }
+  }
+
   return {
-    basal,
-    bolus: bolusData
+    basal: basalTotal,
+    bolus: bolusTotal,
+    total: basalTotal + bolusTotal
   }
 }
 

@@ -199,7 +199,7 @@ export const isEpochBetweenBounds = (epoch: number, start: number, end: number):
 )
 
 export function diffDays(start: number, end: number): number {
-  return moment.utc(end).diff(moment.utc(start)) / MS_IN_DAY
+  return Math.round(moment.utc(end).diff(moment.utc(start)) / MS_IN_DAY)
 }
 
 export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDaysFilter): number {
@@ -208,6 +208,7 @@ export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDay
     return totalDays
   }
   const firstDay = moment.utc(start)
+  console.log(totalDays)
   return [...Array(totalDays).keys()].reduce((count, dayOffset) => {
     const currentDay = moment(firstDay).add(dayOffset, 'days')
     const weekDay = getWeekDay(currentDay)

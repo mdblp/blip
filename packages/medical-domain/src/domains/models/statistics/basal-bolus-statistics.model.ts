@@ -28,4 +28,5 @@
 export interface BasalBolusStatistics {
   bolus: number
   basal: number
+  total: number
 }
