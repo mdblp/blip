@@ -113,34 +113,6 @@ describe('Team hook', () => {
     })
   })
 
-  describe('updateTeamAlerts', () => {
-    it('should throw an error when the team is not monitored', async () => {
-      await expect(async () => {
-        await teamHook.updateTeamAlerts(unmonitoredTeam)
-      }).rejects.toThrow()
-    })
-
-    it('should throw an error when api called failed', async () => {
-      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamAlerts').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
-      await expect(async () => {
-        await teamHook.updateTeamAlerts(team1)
-      }).rejects.toThrow()
-      expect(updateTeamAlertsSpy).toHaveBeenCalled()
-    })
-
-    it('should refresh team hook when api called succeeded', async () => {
-      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamAlerts').mockResolvedValue(null)
-      await mountComponent()
-      await act(async () => {
-        await teamHook.updateTeamAlerts(team1)
-        expect(updateTeamAlertsSpy).toHaveBeenCalled()
-        await waitFor(() => {
-          expect(getTeamsSpy).toHaveBeenCalledTimes(3)
-        })
-      })
-    })
-  })
-
   describe('getTeam', () => {
     it('should return a team if exists or null', () => {
       const teamWithKnownId = teamHook.getTeam('team1Id')

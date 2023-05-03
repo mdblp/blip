@@ -54,7 +54,7 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
     team.monitoringAlertsParameters = monitoringAlertsParameters
     setSaveInProgress(true)
     try {
-      await teamHook.updateTeamAlerts(team)
+      await teamHook.updateTeam(team)
       alert.success(t('team-update-success'))
     } catch (error) {
       console.error(error)

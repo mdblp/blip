@@ -34,7 +34,6 @@ import { type Team } from './models/team.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ITeam } from './models/i-team.model'
 import { TeamType } from './models/enums/team-type.enum'
-import { type MonitoringAlertsParameters } from './models/monitoring-alerts-parameters.model'
 
 const log = bows('Team API')
 
@@ -113,13 +112,6 @@ export default class TeamApi {
     await HttpService.put<void, ITeam>({
       url: `/crew/v0/teams/${team.id}`,
       payload: team
-    })
-  }
-
-  static async updateTeamAlerts(teamId: string, monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> {
-    await HttpService.put<void, MonitoringAlertsParameters>({
-      url: `/crew/v0/teams/${teamId}/alert-parameters`,
-      payload: monitoringAlertsParameters
     })
   }
 

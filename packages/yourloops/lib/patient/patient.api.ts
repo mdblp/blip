@@ -87,7 +87,7 @@ export default class PatientApi {
 
   static async updatePatientAlerts(teamId: string, patientId: string, monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> {
     await HttpService.put<void, MonitoringAlertsParameters>({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/alert-parameters`,
+      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
       payload: monitoringAlertsParameters
     })
   }

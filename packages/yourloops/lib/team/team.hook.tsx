@@ -124,27 +124,19 @@ function TeamContextImpl(): TeamContext {
     metrics.send('team_management', 'create_care_team', _.isEmpty(team.email) ? 'email_not_filled' : 'email_filled')
   }
 
-  const editTeam = async (team: Team): Promise<void> => {
+  const updateTeam = async (team: Team): Promise<void> => {
     const apiTeam: ITeam = {
-      ...team,
-      members: []
-    }
+      id: team.id,
+      name: team.name,
+      phone: team.phone,
+      email: team.email,
+      address: team.address,
+      members: [],
+      monitoringAlertsParameters: team.monitoringAlertsParameters
+    } as ITeam
     await TeamApi.editTeam(apiTeam)
     refresh()
     metrics.send('team_management', 'edit_care_team')
-  }
-
-  const updateTeamAlerts = async (team: Team): Promise<void> => {
-    if (!team.monitoringAlertsParameters) {
-      throw Error('Cannot update team monitoring alerts parameters with undefined')
-    }
-    try {
-      await TeamApi.updateTeamAlerts(team.id, team.monitoringAlertsParameters)
-    } catch (error) {
-      console.error(error)
-      throw Error(`Failed to update team with id ${team.id}`)
-    }
-    refresh()
   }
 
   const leaveTeam = async (team: Team): Promise<void> => {
@@ -216,8 +208,7 @@ function TeamContextImpl(): TeamContext {
     getPrivateTeam,
     inviteMember,
     createTeam,
-    editTeam,
-    updateTeamAlerts,
+    updateTeam,
     leaveTeam,
     removeMember,
     changeMemberRole,

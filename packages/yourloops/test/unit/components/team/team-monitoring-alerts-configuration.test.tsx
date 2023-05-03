@@ -33,17 +33,21 @@ import * as alertHookMock from '../../../../components/utils/snackbar'
 import TeamMonitoringAlertsConfiguration, {
   type TeamMonitoringAlertsConfigurationProps
 } from '../../../../components/team/team-monitoring-alerts-configuration'
-import { type MonitoringAlertsContentConfigurationProps } from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration'
-import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
+import {
+  type MonitoringAlertsContentConfigurationProps
+} from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration'
+import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../components/monitoring-alert/monitoring-alerts-content-configuration', () => (props: MonitoringAlertsContentConfigurationProps) => {
-  return <button onClick={() => { props.onSave({ enabled: true } as Monitoring) }}>save-mock</button>
+  return <button onClick={() => {
+    props.onSave({} as MonitoringAlertsParameters)
+  }}>save-mock</button>
 })
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
 describe('TeamMembers', () => {
-  const updateTeamAlertsMock = jest.fn()
+  const updateTeamMock = jest.fn()
   const successMock = jest.fn()
   const errorMock = jest.fn()
   const teamId = 'teamId'
@@ -55,7 +59,7 @@ describe('TeamMembers', () => {
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { updateTeamAlerts: updateTeamAlertsMock }
+      return { updateTeam: updateTeamMock }
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successMock, error: errorMock }
@@ -71,17 +75,21 @@ describe('TeamMembers', () => {
   function clickOnSaveButton() {
     render(getTeamMonitoringAlertConfigurationJSX({ team }))
     fireEvent.click(screen.getByRole('button'))
-    expect(updateTeamAlertsMock).toHaveBeenCalled()
+    expect(updateTeamMock).toHaveBeenCalled()
   }
 
   it('should update team alerts when saving', async () => {
     clickOnSaveButton()
-    await waitFor(() => { expect(successMock).toHaveBeenCalledWith('team-update-success') })
+    await waitFor(() => {
+      expect(successMock).toHaveBeenCalledWith('team-update-success')
+    })
   })
 
   it('should not update team alerts when an error happen when saving', async () => {
-    updateTeamAlertsMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+    updateTeamMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
     clickOnSaveButton()
-    await waitFor(() => { expect(errorMock).toHaveBeenCalledWith('team-update-error') })
+    await waitFor(() => {
+      expect(errorMock).toHaveBeenCalledWith('team-update-error')
+    })
   })
 })

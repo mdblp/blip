@@ -73,13 +73,7 @@ export interface TeamContext {
    * Change some team infos (name, address...)
    * @param team The updated team
    */
-  editTeam: (team: Team) => Promise<void>
-
-  /**
-   * Update team alerts configuration
-   * @param team The updated team
-   */
-  updateTeamAlerts: (team: Team) => Promise<void>
+  updateTeam: (team: Team) => Promise<void>
 
   /**
    * Leave a team

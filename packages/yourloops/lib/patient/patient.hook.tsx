@@ -134,9 +134,6 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }, [updatePatient])
 
   const updatePatientMonitoringAlertsParameters = async (patient: Patient): Promise<void> => {
-    if (!patient.monitoringAlertsParameters) {
-      throw Error('Cannot update patient monitoring alerts parameters with "undefined"')
-    }
     try {
       await PatientApi.updatePatientAlerts(selectedTeam.id, patient.userid, patient.monitoringAlertsParameters)
       refresh()
