@@ -133,7 +133,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     nonDataTxThreshold: 15,
     reportingPeriod: 55
   }
-  const unit = user.settings.units?.bg ?? monitoringParameters.bgUnit
+  const unit = user.settings?.units?.bg ?? monitoringParameters.bgUnit
 
   const roundUpToOneDecimal = (value: number): number => {
     return Math.round(value * 10) / 10
