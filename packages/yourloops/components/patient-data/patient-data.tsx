@@ -42,6 +42,10 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { usePatientData } from './patient-data.hook'
 
+import 'tidepool-viz/src/styles/colors.css'
+import 'tideline/css/tideline.less'
+import 'blip/app/style.less'
+
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
   const { t } = useTranslation()
@@ -116,77 +120,82 @@ export const PatientData: FunctionComponent = () => {
               </Box>
             }
             {medicalData?.hasDiabetesData() && dataUtil &&
-              <Routes>
-                <Route
-                  path={AppUserRoute.Dashboard}
-                  element={
-                    <PatientDashboard
-                      bgPrefs={bgPrefs}
-                      dataUtil={dataUtil}
-                      dashboardDate={dashboardDate}
-                      goToDailySpecificDate={goToDailySpecificDate}
-                      medicalDataService={medicalData}
-                      msRange={msRange}
-                      patient={patient}
-                      timePrefs={timePrefs}
-                      loading={refreshingData}
-                    />
-                  }
-                />
-                <Route
-                  path={AppUserRoute.Daily}
-                  element={
-                    <Daily
-                      bgPrefs={bgPrefs}
-                      dataUtil={dataUtil}
-                      timePrefs={timePrefs}
-                      patient={patient}
-                      tidelineData={medicalData}
-                      epochLocation={dailyDate}
-                      msRange={msRange}
-                      loading={refreshingData}
-                      onClickRefresh={refreshData}
-                      onCreateMessage={() => {}}
-                      onShowMessageThread={() => {}}
-                      onDatetimeLocationChange={handleDatetimeLocationChange}
-                    />
-                  }
-                />
-                <Route
-                  path={AppUserRoute.Trends}
-                  element={
-                    <Trends
-                      bgPrefs={bgPrefs}
-                      chartPrefs={chartPrefs}
-                      dataUtil={dataUtil}
-                      timePrefs={timePrefs}
-                      epochLocation={trendsDate}
-                      msRange={msRange}
-                      patient={patient}
-                      tidelineData={medicalData}
-                      loading={refreshingData}
-                      onClickRefresh={refreshData}
-                      onSwitchToDaily={goToDailySpecificDate}
-                      onDatetimeLocationChange={handleDatetimeLocationChange}
-                      updateChartPrefs={updateChartPrefs}
-                    />
-                  }
-                />
-              </Routes>
+              <React.Fragment>
+                <Routes>
+                  <Route
+                    path={AppUserRoute.Dashboard}
+                    element={
+                      <PatientDashboard
+                        bgPrefs={bgPrefs}
+                        dataUtil={dataUtil}
+                        dashboardDate={dashboardDate}
+                        goToDailySpecificDate={goToDailySpecificDate}
+                        medicalDataService={medicalData}
+                        msRange={msRange}
+                        patient={patient}
+                        timePrefs={timePrefs}
+                        loading={refreshingData}
+                      />
+                    }
+                  />
+                  <Route
+                    path={AppUserRoute.Daily}
+                    element={
+                      <Daily
+                        bgPrefs={bgPrefs}
+                        dataUtil={dataUtil}
+                        timePrefs={timePrefs}
+                        patient={patient}
+                        tidelineData={medicalData}
+                        epochLocation={dailyDate}
+                        msRange={msRange}
+                        loading={refreshingData}
+                        onClickRefresh={refreshData}
+                        onCreateMessage={() => {
+                        }}
+                        onShowMessageThread={() => {
+                        }}
+                        onDatetimeLocationChange={handleDatetimeLocationChange}
+                      />
+                    }
+                  />
+                  <Route
+                    path={AppUserRoute.Trends}
+                    element={
+                      <Trends
+                        bgPrefs={bgPrefs}
+                        chartPrefs={chartPrefs}
+                        dataUtil={dataUtil}
+                        timePrefs={timePrefs}
+                        epochLocation={trendsDate}
+                        msRange={msRange}
+                        patient={patient}
+                        tidelineData={medicalData}
+                        loading={refreshingData}
+                        onClickRefresh={refreshData}
+                        onSwitchToDaily={goToDailySpecificDate}
+                        onDatetimeLocationChange={handleDatetimeLocationChange}
+                        updateChartPrefs={updateChartPrefs}
+                      />
+                    }
+                  />
+                </Routes>
+                {showPdfDialog &&
+                  <DialogPDFOptions
+                    minDate={medicalData.getLocaleTimeEndpoints().startDate}
+                    maxDate={medicalData.getLocaleTimeEndpoints().endDate}
+                    onResult={(result) => {
+                      console.log(result)
+                      setShowPdfDialog(false)
+                    }}
+                    defaultPreset={'1week'}
+                  />
+                }
+              </React.Fragment>
             }
           </React.Fragment>
         }
       </React.Fragment>
-      {showPdfDialog &&
-        <DialogPDFOptions
-          minDate={'2021'}
-          maxDate={'2022'}
-          onResult={() => {
-            setShowPdfDialog(false)
-          }}
-          defaultPreset={'1week'}
-        />
-      }
     </React.Fragment>
   )
 }
