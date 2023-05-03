@@ -42,7 +42,7 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   return {
     foodCarbs: sumValues(foodCarbsData),
     total: sumValues(foodCarbsData) + sumValues(wizardData),
-    TotalCarbsAndWizard: foodCarbsData.length + wizardData.length
+    totalEntriesCarbWithRescueCarbs: foodCarbsData.length + wizardData.length
   }
 }
 
