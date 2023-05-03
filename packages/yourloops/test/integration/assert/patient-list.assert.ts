@@ -98,6 +98,15 @@ export const checkPatientListCurrentTab = async () => {
   await userEvent.click(currentTab)
   const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
+  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientJan 1, 1980No new messagesN/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2Jan 1, 1980No new messagesN/AFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolJan 1, 1980No new messagesN/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientJan 1, 1980No new messagesN/AData calculated on the last 7 daysRows per page:101–4 of 4')
+}
+
+export const checkPatientListCurrentTabForPrivateTeam = async () => {
+  const currentTab = screen.getByRole('tab', { name: 'Current' })
+  await userEvent.click(currentTab)
+  const dataGridCurrentRows = screen.getByTestId('patient-list-grid')
+  expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(2)
+  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientJan 1, 1980N/AData calculated on the last 7 daysRows per page:101–1 of 1')
 }
 
 export const checkPatientListFilters = async () => {
