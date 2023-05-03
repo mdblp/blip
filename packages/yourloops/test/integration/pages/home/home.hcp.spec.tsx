@@ -39,7 +39,7 @@ import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { testPatientListForHcp } from '../../use-cases/patient-list-management'
+import { testPatientListForHcp, testPatientListForHcpPrivateTeam } from '../../use-cases/patient-list-management'
 import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
 import { testTeamCreation } from '../../use-cases/teams-management'
 
@@ -83,6 +83,7 @@ describe('HCP home page', () => {
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testPatientManagementPrivateTeam()
+    await testPatientListForHcpPrivateTeam()
   })
 
   it('should render correctly and allow many features when scoped on a medical team', async () => {
