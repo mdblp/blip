@@ -103,8 +103,3 @@ export const checkCoefficientOfVariationStatWidget = async (expectedTextContent:
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('coefficient-of-variation-stat')).toHaveTextContent(expectedTextContent)
 }
-
-export const checkTotalCarbsStatWidget = async (expectedTextContent: string) => {
-  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent(expectedTextContent)
-}

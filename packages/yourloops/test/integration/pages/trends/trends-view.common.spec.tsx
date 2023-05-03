@@ -47,8 +47,7 @@ import {
   checkSensorUsage,
   checkStandardDeviationStatWidget,
   checkStatTooltip,
-  checkTimeInRangeStatsTitle,
-  checkTotalCarbsStatWidget
+  checkTimeInRangeStatsTitle
 } from '../../assert/stats.assert'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor, within } from '@testing-library/react'
@@ -67,6 +66,8 @@ describe('Trends view for anyone', () => {
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual('/trends')
       })
+      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs10g')
 
       // Check the tooltips
       await checkTrendsTidelineContainerTooltips()
@@ -77,7 +78,6 @@ describe('Trends view for anyone', () => {
       await checkStandardDeviationStatWidget('Standard Deviation (169-197)mg/dL14')
       await checkSensorUsage('Sensor Usage0.1%')
       await checkCoefficientOfVariationStatWidget('CV (CGM)10%')
-      await checkTotalCarbsStatWidget('Avg. Daily Carbs55gRescue carbs10g')
       await checkRangeSelection()
       await checkDaysSelection()
 

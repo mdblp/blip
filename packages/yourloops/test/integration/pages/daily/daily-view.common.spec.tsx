@@ -38,8 +38,7 @@ import {
   checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget,
-  checkTimeInRangeStatsTitle,
-  checkTotalCarbsStatWidget
+  checkTimeInRangeStatsTitle
 } from '../../assert/stats.assert'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -63,6 +62,8 @@ describe('Daily view for anyone', () => {
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual('/daily')
       })
+      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs110gRescue carbs15g')
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()
@@ -74,7 +75,6 @@ describe('Daily view for anyone', () => {
 
       await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-      await checkTotalCarbsStatWidget('Total Carbs110gRescue carbs15g')
     })
   })
 
