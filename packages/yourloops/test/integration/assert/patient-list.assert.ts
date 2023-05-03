@@ -424,7 +424,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientJan 1, 1980No new messagesN/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2Jan 1, 1980No new messagesN/AFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolJan 1, 1980No new messagesN/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientJan 1, 1980No new messagesN/AData calculated on the last 7 daysRows per page:101–4 of 4')
 }
 
-export const checkPatientListTooltips = async (): Promise<void> => {
+const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
   const dataGridRows = screen.getByTestId('patient-list-grid')
   expect(dataGridRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientJan 1, 1980No new messagesN/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2Jan 1, 1980No new messagesN/AFlag patient monitored-patient-mmol@diabeloop.frMonitored Patient mmolJan 1, 1980No new messagesN/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientJan 1, 1980No new messagesN/AData calculated on the last 7 daysRows per page:101–4 of 4')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
@@ -444,7 +444,7 @@ export const checkPatientListTooltips = async (): Promise<void> => {
   const timeSpentOutOfRangeTooltip = await screen.findByRole('tooltip')
   expect(timeSpentOutOfRangeTooltip).toBeVisible()
   expect(timeSpentOutOfRangeTooltip).toHaveTextContent('Out of the range: 10%.')
-  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('Alert triggered when more than 5% of time over the period considered are off target (50-140mg/dL).')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent(outOfRangeTooltipValue)
   expect(timeSpentOutOfRangeTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
   await userEvent.unhover(firstRowTimeSpentOutOfRangeIcon)
   await waitFor(() => {
@@ -457,7 +457,7 @@ export const checkPatientListTooltips = async (): Promise<void> => {
   const hypoglycemiaTooltip = await screen.findByRole('tooltip')
   expect(hypoglycemiaTooltip).toBeVisible()
   expect(hypoglycemiaTooltip).toHaveTextContent('Hypoglycemia: 20%.')
-  expect(hypoglycemiaTooltip).toHaveTextContent('Alert triggered when 10% of time below 40mg/dL threshold over the period considered.')
+  expect(hypoglycemiaTooltip).toHaveTextContent(hypoglycemiaTooltipValue)
   expect(hypoglycemiaTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
   await userEvent.unhover(firstRowHypoglycemiaIcon)
   await waitFor(() => {
@@ -487,6 +487,18 @@ export const checkPatientListTooltips = async (): Promise<void> => {
   await waitFor(() => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
+}
+
+export const checkPatientListTooltipsMgDL = async (): Promise<void> => {
+  const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (50-140mg/dL).'
+  const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 40mg/dL threshold over the period considered.'
+  await checkPatientListTooltips(outOfRangeTooltip, hypoglycemiaTooltip)
+}
+
+export const checkPatientListTooltipsMmolL = async (): Promise<void> => {
+  const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (2.8-7.8mmol/L).'
+  const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 2.2mmol/L threshold over the period considered.'
+  await checkPatientListTooltips(outOfRangeTooltip, hypoglycemiaTooltip)
 }
 
 export const checkPatientListColumnSort = async (): Promise<void> => {

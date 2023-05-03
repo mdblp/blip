@@ -135,24 +135,28 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   }
   const unit = user.settings.units?.bg ?? monitoringParameters.bgUnit
 
+  const roundUpToOneDecimal = (value: number): number => {
+    return Math.round(value * 10) / 10
+  }
+
   const buildTooltipValues = (): MonitoringAlertsTooltips => {
     if (unit === monitoringParameters.bgUnit) {
       return {
-        timeSpentAwayFromTargetRate: Math.round(monitoringAlerts.timeSpentAwayFromTargetRate * 10) / 10,
-        frequencyOfSevereHypoglycemiaRate: Math.round(monitoringAlerts.frequencyOfSevereHypoglycemiaRate * 10) / 10,
-        nonDataTransmissionRate: Math.round(monitoringAlerts.nonDataTransmissionRate * 10) / 10,
-        min: Math.round(monitoringParameters.lowBg * 10) / 10,
-        max: Math.round(monitoringParameters.highBg * 10) / 10,
-        veryLowBg: Math.round(monitoringParameters.veryLowBg * 10) / 10
+        timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
+        frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+        nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
+        min: roundUpToOneDecimal(monitoringParameters.lowBg),
+        max: roundUpToOneDecimal(monitoringParameters.highBg),
+        veryLowBg: roundUpToOneDecimal(monitoringParameters.veryLowBg)
       }
     }
     return {
-      timeSpentAwayFromTargetRate: Math.round(monitoringAlerts.timeSpentAwayFromTargetRate * 10) / 10,
-      frequencyOfSevereHypoglycemiaRate: Math.round(monitoringAlerts.frequencyOfSevereHypoglycemiaRate * 10) / 10,
-      nonDataTransmissionRate: Math.round(monitoringAlerts.nonDataTransmissionRate * 10) / 10,
-      min: Math.round(convertBG(monitoringParameters.lowBg, monitoringParameters.bgUnit) * 10) / 10,
-      max: Math.round(convertBG(monitoringParameters.highBg, monitoringParameters.bgUnit) * 10) / 10,
-      veryLowBg: Math.round(convertBG(monitoringParameters.veryLowBg, monitoringParameters.bgUnit) * 10) / 10
+      timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
+      frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+      nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
+      min: roundUpToOneDecimal(convertBG(monitoringParameters.lowBg, monitoringParameters.bgUnit)),
+      max: roundUpToOneDecimal(convertBG(monitoringParameters.highBg, monitoringParameters.bgUnit)),
+      veryLowBg: roundUpToOneDecimal(convertBG(monitoringParameters.veryLowBg, monitoringParameters.bgUnit))
     }
   }
 

@@ -39,9 +39,14 @@ import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { testPatientListForHcp, testPatientListForHcpPrivateTeam } from '../../use-cases/patient-list-management'
+import {
+  testPatientListForHcp,
+  testPatientListForHcpPrivateTeam,
+  testPatientListForHcpWithMmolL
+} from '../../use-cases/patient-list-management'
 import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
 import { testTeamCreation } from '../../use-cases/teams-management'
+import { Unit } from 'medical-domain'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -110,5 +115,22 @@ describe('HCP home page', () => {
     await testPatientManagementMedicalTeam()
     await testTeamCreation()
     await testPatientListForHcp(router)
+  })
+
+  it('should show correct alerts tooltips when logged in with a user with units in mmol/L', async () => {
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
+    mockUserApi().mockUserDataFetch({
+      firstName,
+      lastName,
+      preferences: { patientsStarred: [flaggedPatientId] },
+      settings: { units: { bg: Unit.MmolPerLiter } }
+    })
+
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    })
+
+    await testPatientListForHcpWithMmolL()
   })
 })
