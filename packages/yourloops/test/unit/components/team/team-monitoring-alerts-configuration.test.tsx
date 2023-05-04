@@ -28,6 +28,7 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
+import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import TeamMonitoringAlertsConfiguration, {
@@ -46,8 +47,10 @@ jest.mock('../../../../components/monitoring-alert/monitoring-alerts-content-con
 })
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/patient/patient.provider')
 describe('TeamMembers', () => {
   const updateTeamMock = jest.fn()
+  const refreshPatientsMock = jest.fn()
   const successMock = jest.fn()
   const errorMock = jest.fn()
   const teamId = 'teamId'
@@ -60,6 +63,9 @@ describe('TeamMembers', () => {
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { updateTeam: updateTeamMock }
+    });
+    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
+      return { refresh: refreshPatientsMock }
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successMock, error: errorMock }
@@ -81,6 +87,7 @@ describe('TeamMembers', () => {
   it('should update team alerts when saving', async () => {
     clickOnSaveButton()
     await waitFor(() => {
+      expect(refreshPatientsMock).toHaveBeenCalled()
       expect(successMock).toHaveBeenCalledWith('team-update-success')
     })
   })

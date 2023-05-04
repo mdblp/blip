@@ -185,6 +185,8 @@ const ignoredTransKeyForYourLoops = [
   'standard-deviation-tooltip',
   'tooltip-smbg-data',
   'time-out-of-range',
+  'hypoglycemia-tooltip2',
+  'time-out-of-range-target-tooltip2',
   'tooltip-total-carbs-smbg-derived',
   'avg-daily-carbs',
   'tooltip-total-day-carbs',
