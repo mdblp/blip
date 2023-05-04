@@ -24,6 +24,7 @@
   "add-patient": "Ajouter un patient",
   "address": "Adresse",
   "admin": "Admin",
+  "age": "Age",
   "alert-change-password-email-failed": "Impossible d'envoyer l'e-mail de changement de mot de passe. Veuillez réessayer plus tard.",
   "alert-change-password-email-success": "E-mail envoyé avec succès",
   "alert-email-not-verified": "You have not verified your email.",
@@ -58,7 +59,6 @@
   "aria-team-leave-dialog-title": "Quitter l'équipe de soins",
   "average-glucose": "Glycémie moyenne ({{bgSourceLabel}})",
   "average-glucose-tooltip": "**Glycémie moyenne ({{bgSourceLabel}}) :** Moyenne de toutes les données {{bgSourceLabel}}.",
-  "birthdate": "Date de naissance",
   "birthplace": "Lieu de naissance",
   "brand-name": "YourLoops",
   "breadcrumb-home": "Accueil",
@@ -146,6 +146,7 @@
   "data-not-transferred-tooltip": "Par défaut, ce seuil d'alerte est défini à :\n>50% des données non transmises sur la période donnée.\n\nCette valeur peut être modifiée soit au niveau de tous les patients surveillés à distance, soit patient par patient.",
   "data-not-transmitted": "Données non transmises",
   "data-period-text": "Données calculées sur les 7 derniers jours",
+  "date-of-birth": "Date de naissance",
   "date-picker-days-range": "{{numDays}} jours sélectionnés",
   "date-picker-header-date-format": "MMMM YYYY",
   "date-picker-max-range": "({{numDays}} jours maximum)",
@@ -440,6 +441,5 @@
   "verify-email-details-4": "Do you want to login with another address? <underline>Try to login again</underline>.",
   "verify-email-title": "Confirmez votre adresse e-mail",
   "very-low-bg-input": "Entrée de glycémie très basse",
-  "yes": "Oui",
   "yesterday": "Hier"
 }
