@@ -34,63 +34,54 @@ import { useLocation } from 'react-router-dom'
 
 export interface TotalInsulinStatProps {
   foodCarbs: number
-  title: string
   totalCarbs: number
   totalEntriesCarbWithRescueCarbs: number
 }
 
 const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { title, totalCarbs, foodCarbs, totalEntriesCarbWithRescueCarbs } = props
+  const { totalCarbs, foodCarbs, totalEntriesCarbWithRescueCarbs } = props
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDaily = location.pathname.includes('daily')
   const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: totalEntriesCarbWithRescueCarbs }) : t('tooltip-empty-stat')
 
-  const getAnnotations = (): string[] => {
-    if (isDaily) {
-      return [t('tooltip-total-day-carbs'), isDerivedCarbs]
-    }
-    return [t('tooltip-total-week-carbs'), isDerivedCarbs]
-  }
-
   return (
     <div data-testid="total-carbs-stat">
-      <Box className={`${styles.title} ${styles.row}`}>
-        {title}
-        <StatTooltip annotations={getAnnotations()} />
+      <Box className={styles.row}>
+        {t(isDaily ? 'total-carbs' : 'avg-daily-carbs')}
+        <StatTooltip
+          annotations={[t(isDaily ? 'tooltip-total-day-carbs' : 'tooltip-total-week-carbs'), isDerivedCarbs]}
+        />
         {!totalCarbs
-          ? (
-            <>
-              <div className={styles['disabled-line']} />
-              <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
-                --
-              </Box>
-            </>
-            ) : (
-            <>
-              <div className={styles.total}>
+          ? <>
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+              --
+            </Box>
+          </>
+          : <>
+            <div className={styles.total}>
                 <span className={styles.value}>
                   {totalCarbs}
                 </span>
-                <span className={styles.suffix}>
+              <span className={styles.suffix}>
                   {Unit.Gram}
                 </span>
-              </div>
-            </>
-            )
+            </div>
+          </>
         }
       </Box>
 
       <Box className={`${styles.rescueCarb} ${styles.row}`}>
         {t('Rescuecarbs')}
         {!foodCarbs
-          ? (<>
+          ? <>
             <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
               --
             </Box>
-          </>)
-          : (<>
+          </>
+          : <>
             <div className={styles.total}>
               <span className={styles.value}>
                 {foodCarbs}
@@ -99,7 +90,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 {Unit.Gram}
               </span>
             </div>
-          </>)
+          </>
         }
       </Box>
     </div>

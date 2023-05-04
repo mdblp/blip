@@ -29,10 +29,6 @@ import { type WeekDaysFilter } from '../../models/time/date-filter.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import { defaultWeekDaysFilter } from '../../models/time/date-filter.model'
 
-export const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => (
-  dateFilter.weekDays ? dateFilter.weekDays : defaultWeekDaysFilter
-)
+export const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => dateFilter.weekDays ?? defaultWeekDaysFilter
 
-export const sumValues = (values: number[]): number => (
-  values.reduce((total, current) => total + current, 0)
-)
+export const sumValues = (values: number[]): number => values.reduce((total, current) => total + current, 0)

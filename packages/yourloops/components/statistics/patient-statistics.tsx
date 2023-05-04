@@ -44,7 +44,6 @@ import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
-import { t } from 'i18next'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -64,8 +63,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
-  const isDaily = location.pathname.includes('daily')
-  const title = isDaily ? t('total-carbs') : t('avg-daily-carbs')
 
   const {
     standardDeviation,
@@ -84,9 +81,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
-
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
-
   const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
@@ -137,7 +132,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
         totalCarbs={Math.round(totalCarbs)}
         foodCarbs={Math.round(foodCarbs)}
-        title={title} />
+      />
     </Box>
   )
 }
