@@ -30,7 +30,7 @@ import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { monitoredPatient, monitoredPatientId, monitoredPatientWithMmolId } from '../../data/patient.api.data'
+import { patient1, patient1Id, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -59,8 +59,8 @@ import { testChatWidgetForHcp } from '../../use-cases/communication-system'
 import { ConfigService } from '../../../../lib/config/config.service'
 
 describe('Patient dashboard for HCP', () => {
-  const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
-  const monitoredPatientDashboardRouteMmoL = `/patient/${monitoredPatientWithMmolId}/dashboard`
+  const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
+  const patientDashboardRouteMmoL = `/patient/${patientWithMmolId}/dashboard`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
   const mgdlSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter } }
@@ -101,7 +101,7 @@ describe('Patient dashboard for HCP', () => {
     }
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
-      selectedPatientId: monitoredPatientId,
+      selectedPatientId: patient1Id,
       loggedInUserFirstName: firstName,
       loggedInUserLastName: lastName,
       selectedTeamId: myThirdTeamId,
@@ -109,7 +109,7 @@ describe('Patient dashboard for HCP', () => {
     }
 
     await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
+      renderPage(patientDashboardRoute)
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
@@ -123,7 +123,7 @@ describe('Patient dashboard for HCP', () => {
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
-      ...monitoredPatient,
+      ...patient1,
       invitationStatus: UserInvitationStatus.accepted
     }])
 
@@ -145,7 +145,7 @@ describe('Patient dashboard for HCP', () => {
     }
 
     await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
+      renderPage(patientDashboardRoute)
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
@@ -156,7 +156,7 @@ describe('Patient dashboard for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
 
     await act(async () => {
-      renderPage(monitoredPatientDashboardRouteMmoL)
+      renderPage(patientDashboardRouteMmoL)
     })
 
     await testMonitoringAlertsParametersConfigurationDialogMmol()
@@ -165,7 +165,7 @@ describe('Patient dashboard for HCP', () => {
   it('should automatically log out an idle user', async () => {
     jest.spyOn(ConfigService, 'getIdleTimeout').mockReturnValue(1000)
 
-    renderPage(`/patient/${monitoredPatientId}/dashboard`)
+    renderPage(`/patient/${patient1Id}/dashboard`)
 
     await waitFor(() => {
       expect(logoutMock).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })

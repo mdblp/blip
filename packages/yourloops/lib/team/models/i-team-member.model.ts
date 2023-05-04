@@ -26,7 +26,6 @@
  */
 
 import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
-import { type Monitoring } from './monitoring.model'
 import { type TeamMemberRole } from './enums/team-member-role.enum'
 import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
 import { type Profile } from '../../auth/models/profile.model'
@@ -47,6 +46,5 @@ export interface ITeamMember {
   preferences?: Preferences | null
   idVerified: boolean
   alarms?: MonitoringAlerts
-  monitoring?: Monitoring
   unreadMessages?: number
 }

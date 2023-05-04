@@ -48,11 +48,8 @@ describe('Training page when new training available', () => {
         isAccepted: null
       }
     }
-    const notAckTrainingPatient = buildPatient('id', [{
-      status: UserInvitationStatus.accepted,
-      teamId: 'team-id'
-    }], undefined, profile)
-    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient)
+    const notAckTrainingPatient = buildPatient({ userid: 'id', profile })
+    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient, 'team-id', UserInvitationStatus.accepted)
     mockPatientLogin(patientAsTeamMember)
     mockAuth0Hook(UserRole.Patient)
     mockUserApi()

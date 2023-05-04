@@ -50,10 +50,6 @@ export interface TeamContext {
    */
   getPrivateTeam: () => Readonly<Team>
   /**
-   * Return the remote monitoring teams only
-   */
-  getRemoteMonitoringTeams: () => Array<Readonly<Team>>
-  /**
    * Return the team for a teamId or null of not found
    * @param teamId The technical team id
    */
@@ -77,13 +73,7 @@ export interface TeamContext {
    * Change some team infos (name, address...)
    * @param team The updated team
    */
-  editTeam: (team: Team) => Promise<void>
-
-  /**
-   * Update team alerts configuration
-   * @param team The updated team
-   */
-  updateTeamAlerts: (team: Team) => Promise<void>
+  updateTeam: (team: Team) => Promise<void>
 
   /**
    * Leave a team

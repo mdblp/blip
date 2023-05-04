@@ -56,6 +56,7 @@ export const checkPatientsFilters = (toggles: FilterPatientsPresentationToggles 
   const dataNotTransferredFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having data not transferred')).getByRole('checkbox')
   const unreadMessagesFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having sent unread messages')).getByRole('checkbox')
   expect(manualFlagFilterToggle).toHaveProperty('checked', toggles.manualFlagFilterToggle)
+  expect(telemonitoredFilterToggle).toBeDisabled()
   expect(telemonitoredFilterToggle).toHaveProperty('checked', toggles.telemonitoredFilterToggle)
   expect(outOfRangeFilterToggle).toHaveProperty('checked', toggles.outOfRangeFilterToggle)
   expect(hypoglycemiaFilterToggle).toHaveProperty('checked', toggles.hypoglycemiaFilterToggle)

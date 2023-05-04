@@ -35,31 +35,31 @@ import {
   myThirdTeamId,
   myThirdTeamName
 } from './team.api.mock'
-import { monitoredPatientAsTeamMember, monitoredPatientId } from '../data/patient.api.data'
+import { patient1AsTeamMember, patient1Id } from '../data/patient.api.data'
 import type User from '../../../lib/auth/models/user.model'
 
 export const mockChatAPI = () => {
   jest.spyOn(ChatApi, 'sendChatMessage').mockResolvedValue(true)
   jest.spyOn(ChatApi, 'getChatMessages').mockImplementation((teamId, patientId): Promise<IMessage[]> => {
-    if (teamId === myTeamId && patientId === monitoredPatientId) {
+    if (teamId === myTeamId && patientId === patient1Id) {
       const message: IMessage = {
         id: 'fakeMessageId',
-        patientId: monitoredPatientId,
+        patientId: patient1Id,
         teamId: myTeamId,
-        authorId: monitoredPatientId,
+        authorId: patient1Id,
         destAck: true,
         private: false,
         text: `This is a message sent to the team ${myFirstTeamName}`,
         timezone: 'timezone not used',
         timestamp: '2023-03-30T09:10:06Z',
-        user: { profile: monitoredPatientAsTeamMember.profile } as User
+        user: { profile: patient1AsTeamMember.profile } as User
       }
       return Promise.resolve([message])
     }
-    if (teamId === mySecondTeamId && patientId === monitoredPatientId) {
+    if (teamId === mySecondTeamId && patientId === patient1Id) {
       const message: IMessage = {
         id: 'fakeMessageId',
-        patientId: monitoredPatientId,
+        patientId: patient1Id,
         teamId: mySecondTeamId,
         authorId: 'someoneElse',
         destAck: false,
@@ -71,10 +71,10 @@ export const mockChatAPI = () => {
       }
       return Promise.resolve([message])
     }
-    if (teamId === myThirdTeamId && patientId === monitoredPatientId) {
+    if (teamId === myThirdTeamId && patientId === patient1Id) {
       const message: IMessage = {
         id: 'fakeMessageId',
-        patientId: monitoredPatientId,
+        patientId: patient1Id,
         teamId: myThirdTeamId,
         authorId: 'someoneElse',
         destAck: false,

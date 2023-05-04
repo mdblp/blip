@@ -100,7 +100,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const onSaveTeam = async (editedTeam: Partial<Team> | null): Promise<void> => {
     if (editedTeam) {
       try {
-        await teamHook.editTeam(editedTeam as Team)
+        await teamHook.updateTeam(editedTeam as Team)
         alert.success(t('team-page-success-edit'))
         refreshParent()
       } catch (reason: unknown) {
@@ -137,7 +137,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               {t('button-edit-information')}
             </Button>
           }
-          {isUserPatient && !team.monitoring &&
+          {isUserPatient &&
             <div id="leave-team-button">
               <LeaveTeamButton team={team} />
             </div>

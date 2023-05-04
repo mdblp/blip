@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,6 @@
  */
 
 import TeamApi from '../../../../lib/team/team.api'
-import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
 import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
@@ -144,22 +143,6 @@ describe('TeamApi', () => {
         url: `/crew/v0/teams/${editedTeam.id}`,
         payload: editedTeam
       })
-    })
-  })
-
-  describe('updateTeamAlerts', () => {
-    it('should make correct http call', () => {
-      const teamId = 'fakeTeamId'
-      const monitoring: Monitoring = {} as Monitoring
-      const httpServiceSpy = jest.spyOn(HttpService, 'put').mockResolvedValue(null)
-      const expectedParams = {
-        url: `/crew/v0/teams/${teamId}/remote-monitoring`,
-        payload: monitoring
-      }
-
-      TeamApi.updateTeamAlerts(teamId, monitoring)
-
-      expect(httpServiceSpy).toHaveBeenCalledWith(expectedParams)
     })
   })
 
