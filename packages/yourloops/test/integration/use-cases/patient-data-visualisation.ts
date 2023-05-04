@@ -28,7 +28,7 @@
 import { checkPatientStatistics, checkPatientStatisticsNoData } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
 import { checkDeviceUsageWidget, checkDeviceUsageWidgetNoData } from '../assert/device-usage.assert'
-import { monitoredPatient, unmonitoredPatient } from '../data/patient.api.data'
+import { patient1, patient2 } from '../data/patient.api.data'
 import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
 import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
 
@@ -52,7 +52,7 @@ export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDas
 }
 
 export const testPatientNavBarForHcp = async () => {
-  await checkPatientDropdown(monitoredPatient, unmonitoredPatient)
+  await checkPatientDropdown(patient1, patient2)
 }
 
 export const testPatientNavBarForPatient = async () => {

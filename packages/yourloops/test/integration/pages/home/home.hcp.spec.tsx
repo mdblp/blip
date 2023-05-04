@@ -29,7 +29,7 @@ import { waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { flaggedPatientId, monitoredPatient } from '../../data/patient.api.data'
+import { flaggedPatientId, patient1 } from '../../data/patient.api.data'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
@@ -66,7 +66,7 @@ describe('HCP home page', () => {
   it('should render correctly when the private practice team is selected', async () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
-      ...monitoredPatient,
+      ...patient1,
       invitationStatus: UserInvitationStatus.accepted
     }])
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Monitoring } from './monitoring.model'
 import { type TeamMember } from './team-member.model'
 import { type TeamType } from './enums/team-type.enum'
 import { type PostalAddress } from './postal-address.model'
+import { type MonitoringAlertsParameters } from './monitoring-alerts-parameters.model'
 
 export const TEAM_CODE_LENGTH = 9
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/
@@ -43,5 +43,5 @@ export interface Team {
   email?: string
   address?: PostalAddress
   members: TeamMember[] // Members are only set when the current logged user has the HCP role
-  monitoring?: Monitoring
+  monitoringAlertsParameters?: MonitoringAlertsParameters
 }

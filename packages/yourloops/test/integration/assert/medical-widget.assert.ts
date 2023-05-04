@@ -30,7 +30,7 @@ import { type MedicalReport } from '../../../lib/medical-files/models/medical-re
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import userEvent from '@testing-library/user-event'
-import { monitoredPatientId } from '../data/patient.api.data'
+import { patient1Id } from '../data/patient.api.data'
 
 export interface MedicalFilesWidgetParams {
   selectedPatientId: string
@@ -88,7 +88,7 @@ export const checkMedicalReportCreate = async (medicalFileWidgetParams: MedicalF
     creationDate: MEDICAL_REPORT_TO_CREATE_DATE,
     teamId: medicalFileWidgetParams.selectedTeamId,
     teamName: medicalFileWidgetParams.selectedTeamName,
-    patientId: monitoredPatientId,
+    patientId: patient1Id,
     diagnosis,
     progressionProposal,
     trainingSubject,
@@ -100,7 +100,7 @@ export const checkMedicalReportCreate = async (medicalFileWidgetParams: MedicalF
   await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Save' }))
   expect(MedicalFilesApi.createMedicalReport).toHaveBeenCalledWith({
     teamId: medicalFileWidgetParams.selectedTeamId,
-    patientId: monitoredPatientId,
+    patientId: patient1Id,
     diagnosis,
     progressionProposal,
     trainingSubject,
@@ -133,7 +133,7 @@ export const checkMedicalReportUpdate = async (medicalFileWidgetParams: MedicalF
     creationDate: MEDICAL_REPORT_TO_CREATE_DATE,
     teamId: medicalFileWidgetParams.selectedTeamId,
     teamName: medicalFileWidgetParams.selectedTeamName,
-    patientId: monitoredPatientId,
+    patientId: patient1Id,
     diagnosis: diagnosisEdited,
     progressionProposal: progressionProposalEdited,
     trainingSubject: trainingSubjectEdited,
