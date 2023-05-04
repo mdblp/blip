@@ -30,34 +30,15 @@ import type Bolus from '../../models/medical/datum/bolus.model'
 import type Basal from '../../models/medical/datum/basal.model'
 import BasalService from '../medical/datum/basal.service'
 import BolusService from '../medical/datum/bolus.service'
-import { type BasalBolusStatistics } from '../../models/statistics/basal-bolus-statistics.model'
+import {
+  type BasalBolusStatistics,
+  type TotalInsulinAndWeightStatistics
+} from '../../models/statistics/basal-bolus-statistics.model'
 import { getWeekDaysFilter } from './statistics.utils'
+import type PumpSettings from '../../models/medical/datum/pump-settings.model'
+import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
 
-// getBasalBolusData()
-// {
-//   this.applyDateFilters()
-//
-//   const bolusData = this.filter.byType('bolus').top(Infinity)
-//   let basalData = this.sort.byDate(this.filter.byType('basal').top(Infinity).reverse())
-//   basalData = this.addBasalOverlappingStart(basalData)
-//
-//   const basalBolusData = {
-//     basal: basalData.length
-//       ? Number.parseFloat(getTotalBasalFromEndpoints(basalData, this._endpoints))
-//       : Number.NaN,
-//     bolus: bolusData.length ? getTotalBolus(bolusData) : Number.NaN
-//   }
-//
-//   if (this.days > 1) {
-//     const nDays = this.getNumDaysWithInsulin(bolusData, basalData)
-//     basalBolusData.basal = basalBolusData.basal / nDays
-//     basalBolusData.bolus = basalBolusData.bolus / nDays
-//   }
-//
-//   return basalBolusData
-// }
-
-function resempleDuration(basals: Basal[], start: number, end: number): Basal[] {
+function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
     if (basal.epoch < start) {
       basal.epoch = start
@@ -70,12 +51,23 @@ function resempleDuration(basals: Basal[], start: number, end: number): Basal[] 
   })
 }
 
-function getBasalBolusData(basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
-  const filterBasal = BasalService.filterOnDate(basals, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filterBolus = BolusService.filterOnDate(bolus, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const basalData = resempleDuration(filterBasal, dateFilter.start, dateFilter.end)
-  const bolusTotal = filterBolus.reduce((accumulator, bolus) => accumulator + bolus.normal, 0)
-  const basalTotal = basalData.reduce((accumulator, basal) => accumulator + (basal.duration / 3600_000 * basal.rate), 0)
+function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | null {
+  const lastPumpSettings = allPumpSettings.pop()
+
+  if (!lastPumpSettings) {
+    return null
+  }
+  const weight = lastPumpSettings.payload.parameters.find(parameter => parameter.name === 'WEIGHT')
+
+  return weight ?? null
+}
+
+function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
+  const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const filteredBolus = BolusService.filterOnDate(bolus, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const basalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
+  const bolusTotal = filteredBolus.reduce((accumulator, bolus) => accumulator + bolus.normal, 0)
+  const basalTotal = basalData.reduce((accumulator, basal) => accumulator + (basal.duration / 3_600_000 * basal.rate), 0)
 
   if (numDays > 1) {
     return {
@@ -92,10 +84,21 @@ function getBasalBolusData(basals: Basal[], bolus: Bolus[], numDays: number, dat
   }
 }
 
+function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[]): TotalInsulinAndWeightStatistics {
+  const weight = getWeight(pumpSettings)
+  const { basal, bolus } = getBasalBolusData(basalsData, bolusData, numDays, dateFilter)
+  return {
+    totalInsulin: basal + bolus,
+    weight
+  }
+}
+
 interface BasalBolusStatisticsAdapter {
   getBasalBolusData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter) => BasalBolusStatistics
+  getTotalInsulinAndWeightData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[]) => TotalInsulinAndWeightStatistics
 }
 
 export const BasalBolusStatisticsService: BasalBolusStatisticsAdapter = {
-  getBasalBolusData
+  getBasalBolusData,
+  getTotalInsulinAndWeightData
 }

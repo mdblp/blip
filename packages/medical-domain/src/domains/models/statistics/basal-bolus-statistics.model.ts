@@ -25,8 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { type ParameterConfig } from '../medical/datum/pump-settings.model'
+
 export interface BasalBolusStatistics {
   bolus: number
   basal: number
   total: number
+}
+
+export interface TotalInsulinAndWeightStatistics {
+  totalInsulin: number
+  weight: ParameterConfig | null
 }
