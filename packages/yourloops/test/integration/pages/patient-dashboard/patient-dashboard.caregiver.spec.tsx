@@ -28,7 +28,7 @@
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { monitoredPatientId } from '../../data/patient.api.data'
+import { patient1Id } from '../../data/patient.api.data'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
@@ -40,7 +40,7 @@ import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import { testDashboardDataVisualisationPrivateTeam } from '../../use-cases/patient-data-visualisation'
 
 describe('Patient dashboard for caregiver', () => {
-  const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
+  const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
@@ -66,7 +66,7 @@ describe('Patient dashboard for caregiver', () => {
     }
 
     await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
+      renderPage(patientDashboardRoute)
     })
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)

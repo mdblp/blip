@@ -28,7 +28,7 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import PatientApi from '../../../lib/patient/patient.api'
-import { monitoredPatient, pendingPatient } from '../data/patient.api.data'
+import { patient1, pendingPatient } from '../data/patient.api.data'
 import { myThirdTeamId } from '../mock/team.api.mock'
 
 export const checkAddPatientPrivateButtonTooltip = async () => {
@@ -88,7 +88,7 @@ export const checkAddPatientMedicalTeamDialogInvite = async () => {
 
   const emailInput = within(addPatientDialog).getByRole('textbox', { name: 'Email' })
   expect(emailInput).toBeVisible()
-  await userEvent.type(emailInput, monitoredPatient.profile.email)
+  await userEvent.type(emailInput, patient1.profile.email)
 
   const alreadyInTeamErrorMessage = within(addPatientDialog).getByText('This patient is already sharing data with the team.')
   expect(alreadyInTeamErrorMessage).toBeVisible()

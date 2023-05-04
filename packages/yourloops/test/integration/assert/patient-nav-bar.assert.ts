@@ -26,7 +26,7 @@
  */
 
 import { type BoundFunctions, fireEvent, type queries, screen, waitFor, within } from '@testing-library/react'
-import { monitoredPatient, unmonitoredPatient } from '../data/patient.api.data'
+import { patient1, patient2 } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
@@ -62,20 +62,20 @@ export const checkPatientNavBarAsPatient = () => {
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `${initialPatient.profile.lastName}${initialPatient.profile.firstName} PatientDate of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabete type:Type 1Gender:MaleRemote monitoring:YesShow moreDashboardDailyTrendsDownload report`
+  const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
-  fireEvent.mouseDown(within(secondaryHeader).getByText(monitoredPatient.profile.fullName))
-  fireEvent.click(within(screen.getByRole('listbox')).getByText(unmonitoredPatient.profile.fullName))
+  fireEvent.mouseDown(within(secondaryHeader).getByText(patient1.profile.fullName))
+  fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2.profile.fullName))
 
   const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
-  const secondPatientName = `${patientToSwitchTo.profile.lastName}${patientToSwitchTo.profile.firstName}`
+  const secondPatientName = `${patientToSwitchTo.profile.firstName} ${patientToSwitchTo.profile.lastName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `${secondPatientName} PatientDate of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
+  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
   await waitFor(() => { expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent) })
 
   await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
-  const secondPatientHeaderContentExtended = `${secondPatientName} PatientDate of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:MaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.9 (11/21/2023)Email:${patientToSwitchTo.profile.email}Show lessDashboardDailyTrendsDownload report`
+  const secondPatientHeaderContentExtended = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.9 (11/21/2023)Email:${patientToSwitchTo.profile.email}Show lessDashboardDailyTrendsDownload report`
   expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContentExtended)
   await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show less'))
   expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)

@@ -128,26 +128,14 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     refresh()
   }
 
-  const editPatientRemoteMonitoring = (patient: Patient): void => {
-    const patientUpdated = getPatientById(patient.userid)
-    if (!patientUpdated) {
-      throw Error(`Cannot update monitoring of patient with id ${patient.userid} as patient was not found`)
-    }
-    patientUpdated.monitoring = patient.monitoring
-    updatePatient(patientUpdated)
-  }
-
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
     patient.metadata.hasSentUnreadMessages = false
     updatePatient(patient)
   }, [updatePatient])
 
-  const updatePatientMonitoring = async (patient: Patient): Promise<void> => {
-    if (!patient.monitoring) {
-      throw Error('Cannot update patient monitoring with "undefined"')
-    }
+  const updatePatientMonitoringAlertsParameters = async (patient: Patient): Promise<void> => {
     try {
-      await PatientApi.updatePatientAlerts(selectedTeam.id, patient.userid, patient.monitoring)
+      await PatientApi.updatePatientAlerts(selectedTeam.id, patient.userid, patient.monitoringAlertsParameters)
       refresh()
     } catch (error) {
       console.error(error)
@@ -200,9 +188,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
     getPatientById,
     searchPatients,
     invitePatient,
-    editPatientRemoteMonitoring,
     markPatientMessagesAsRead,
-    updatePatientMonitoring,
+    updatePatientMonitoringAlertsParameters,
     removePatient,
     leaveTeam,
     setPatientMedicalData,
