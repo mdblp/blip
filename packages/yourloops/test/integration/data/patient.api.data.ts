@@ -44,6 +44,7 @@ import {
   myThirdTeamId
 } from '../mock/team.api.mock'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
+import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
@@ -66,17 +67,17 @@ const defaultMetadata: PatientMetadata = {
 }
 
 const defaultMonitoringAlert: MonitoringAlerts = {
-  timeSpentAwayFromTargetRate: 0,
+  timeSpentAwayFromTargetRate: 10,
   timeSpentAwayFromTargetActive: false,
-  frequencyOfSevereHypoglycemiaRate: 0,
+  frequencyOfSevereHypoglycemiaRate: 20,
   frequencyOfSevereHypoglycemiaActive: false,
-  nonDataTransmissionRate: 0,
+  nonDataTransmissionRate: 30,
   nonDataTransmissionActive: false
 }
 
 export const buildPatient = (params: {
   userid: string
-  monitoringAlertsParameters?: MonitoringAlertsParameters
+  monitoringAlertsParameters: MonitoringAlertsParameters
   profile?: Partial<PatientProfile>
   settings?: Partial<PatientSettings>
   metadata?: Partial<PatientMetadata>
@@ -97,7 +98,7 @@ export const buildPatient = (params: {
       fullName: params.profile?.fullName || 'fakePatientFullName',
       lastName: params.profile?.lastName || 'fakeLastname',
       email: params.profile?.email || 'fake@email.com',
-      sex: params.profile?.sex || 'M'
+      sex: params.profile?.sex || Gender.Male
     },
     settings: {
       a1c: params.settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },
@@ -123,7 +124,7 @@ export const patient1: Patient = buildPatient({
     firstName: 'Patient1',
     fullName: 'Patient1 Groby',
     lastName: 'Groby',
-    sex: 'M'
+    sex: Gender.Male
   },
   settings: defaultSettings,
   metadata: defaultMetadata,
@@ -132,14 +133,14 @@ export const patient1: Patient = buildPatient({
 
 export const unreadMessagesPatient: Patient = buildPatient({
   userid: unreadMessagesPatientId,
-  monitoringAlertsParameters: null,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
     email: 'unread-messages@patient.fr',
     firstName: 'Unread',
     lastName: 'Messages Patient',
     fullName: 'Unread Messages Patient',
-    sex: 'M'
+    sex: Gender.Male
   },
   settings: defaultSettings,
   metadata: { hasSentUnreadMessages: true },
@@ -148,14 +149,14 @@ export const unreadMessagesPatient: Patient = buildPatient({
 
 export const timeSpentOutOfTargetRangePatient: Patient = buildPatient({
   userid: timeSpentOutOfTargetRangePatientId,
-  monitoringAlertsParameters: null,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
     email: 'time-out-of-range@patient.fr',
     firstName: 'Time',
     lastName: 'Out of Range Patient',
     fullName: 'Time Out of Range Patient',
-    sex: 'M'
+    sex: Gender.Male
   },
   settings: defaultSettings,
   metadata: defaultMetadata,
@@ -164,14 +165,14 @@ export const timeSpentOutOfTargetRangePatient: Patient = buildPatient({
 
 export const hypoglycemiaPatient: Patient = buildPatient({
   userid: hypoglycemiaPatientId,
-  monitoringAlertsParameters: null,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
     email: 'hypoglycemia@patient.fr',
     firstName: 'Hypoglycemia',
     lastName: 'Patient',
     fullName: 'Hypoglycemia Patient',
-    sex: 'F'
+    sex: Gender.Female
   },
   settings: defaultSettings,
   metadata: defaultMetadata,
@@ -180,14 +181,14 @@ export const hypoglycemiaPatient: Patient = buildPatient({
 
 export const noDataTransferredPatient: Patient = buildPatient({
   userid: noDataTransferredPatientId,
-  monitoringAlertsParameters: null,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
     email: 'no-data@patient.fr',
     firstName: 'No Data',
     lastName: 'Patient',
     fullName: 'No Data Patient',
-    sex: 'F'
+    sex: Gender.Female
   },
   settings: defaultSettings,
   metadata: defaultMetadata,
@@ -196,14 +197,14 @@ export const noDataTransferredPatient: Patient = buildPatient({
 
 export const flaggedPatient: Patient = buildPatient({
   userid: flaggedPatientId,
-  monitoringAlertsParameters: null,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
     email: 'flagged@patient.fr',
     firstName: 'Flagged',
     lastName: 'Patient',
     fullName: 'Flagged Patient',
-    sex: 'F'
+    sex: Gender.Female
   },
   settings: defaultSettings,
   metadata: { ...defaultMetadata, flagged: true },
@@ -212,14 +213,14 @@ export const flaggedPatient: Patient = buildPatient({
 
 export const patient2: Patient = buildPatient({
   userid: patient2Id,
-  monitoringAlertsParameters: undefined,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
     email: 'patient2@diabeloop.fr',
     firstName: 'Patient2',
     fullName: 'Patient2 Rouis',
     lastName: 'Rouis',
-    sex: 'F'
+    sex: Gender.Female
   },
   settings: { ...defaultSettings, a1c: { value: '8.9', date: '2023-11-21T12:30:38.473Z' } },
   metadata: defaultMetadata,
@@ -230,12 +231,12 @@ export const patient3: Patient = buildPatient({
   userid: patient3Id,
   monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'patient3@diabeloop.fr',
     firstName: 'Patient3',
     lastName: 'Srairi',
     fullName: 'Patient3 Srairi',
-    sex: 'M'
+    sex: Gender.Male
   },
   settings: defaultSettings,
   metadata: defaultMetadata,
@@ -251,7 +252,7 @@ export const patientWithMmol: Patient = buildPatient({
     firstName: 'PatientMmol',
     lastName: 'Perotto',
     fullName: 'PatientMmol Perotto',
-    sex: 'M'
+    sex: Gender.Male
   },
   settings: defaultSettings,
   metadata: defaultMetadata,
@@ -262,12 +263,12 @@ export const pendingPatient: Patient = buildPatient({
   userid: 'pending-patient',
   monitoringAlertsParameters: undefined,
   profile: {
-    birthdate: new Date('1980-01-01T10:44:34+01:00'),
+    birthdate: '1980-01-01T10:44:34+01:00',
     email: 'pending-patient@diabeloop.fr',
     firstName: 'Pending',
     fullName: 'Pending Patient',
     lastName: 'Patient',
-    sex: 'F',
+    sex: Gender.Female,
     referringDoctor: 'Doc Eur'
   },
   settings: { ...defaultSettings, a1c: { value: '8.3', date: '2022-12-16T08:18:38.473Z' } },
