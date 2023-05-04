@@ -43,7 +43,6 @@ import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
-import { Unit } from 'medical-domain'
 import { convertBG } from '../../lib/units/units.util'
 
 interface FlagCellProps {
@@ -121,42 +120,31 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const { user } = useAuth()
   const monitoringAlerts = patient.monitoringAlerts
 
-  // This default value assignment will be removed in YLP-2324
-  // (it is only necessary because monitoring features have not yet been enabled for every patient)
-  const monitoringParameters = patient.monitoring?.parameters ?? {
-    bgUnit: Unit.MilligramPerDeciliter,
-    lowBg: 70,
-    highBg: 100,
-    outOfRangeThreshold: 10,
-    veryLowBg: 65,
-    hypoThreshold: 5,
-    nonDataTxThreshold: 15,
-    reportingPeriod: 55
-  }
-  const unit = user.settings?.units?.bg ?? monitoringParameters.bgUnit
+  const monitoringAlertsParameters = patient.monitoringAlertsParameters
+  const unit = user.settings?.units?.bg ?? monitoringAlertsParameters.bgUnit
 
   const roundUpToOneDecimal = (value: number): number => {
     return Math.round(value * 10) / 10
   }
 
   const buildTooltipValues = (): MonitoringAlertsTooltips => {
-    if (unit === monitoringParameters.bgUnit) {
+    if (unit === monitoringAlertsParameters.bgUnit) {
       return {
         timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
         frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
         nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
-        min: roundUpToOneDecimal(monitoringParameters.lowBg),
-        max: roundUpToOneDecimal(monitoringParameters.highBg),
-        veryLowBg: roundUpToOneDecimal(monitoringParameters.veryLowBg)
+        min: roundUpToOneDecimal(monitoringAlertsParameters.lowBg),
+        max: roundUpToOneDecimal(monitoringAlertsParameters.highBg),
+        veryLowBg: roundUpToOneDecimal(monitoringAlertsParameters.veryLowBg)
       }
     }
     return {
       timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
       frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
       nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
-      min: roundUpToOneDecimal(convertBG(monitoringParameters.lowBg, monitoringParameters.bgUnit)),
-      max: roundUpToOneDecimal(convertBG(monitoringParameters.highBg, monitoringParameters.bgUnit)),
-      veryLowBg: roundUpToOneDecimal(convertBG(monitoringParameters.veryLowBg, monitoringParameters.bgUnit))
+      min: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit)),
+      max: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit)),
+      veryLowBg: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit))
     }
   }
 
@@ -184,7 +172,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
               {t('time-out-of-range-target-tooltip2', {
                 min,
                 max,
-                threshold: monitoringParameters.outOfRangeThreshold,
+                threshold: monitoringAlertsParameters.outOfRangeThreshold,
                 unit
               })}
             </Box>
@@ -205,7 +193,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
             <Box>
               {t('hypoglycemia-tooltip2', {
                 veryLowBg,
-                threshold: monitoringParameters.hypoThreshold,
+                threshold: monitoringAlertsParameters.hypoThreshold,
                 unit
               })}
             </Box>
@@ -223,7 +211,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         title={
           <>
             <Box>{t('data-not-transferred-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
-            <Box>{t('data-not-transferred-tooltip2', { threshold: monitoringParameters.nonDataTxThreshold })}</Box>
+            <Box>{t('data-not-transferred-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
             <Box>{sharedTooltip}</Box>
           </>
         }
