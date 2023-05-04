@@ -118,9 +118,8 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const { t } = useTranslation()
   const theme = useTheme()
   const { user } = useAuth()
-  const monitoringAlerts = patient.monitoringAlerts
 
-  const monitoringAlertsParameters = patient.monitoringAlertsParameters
+  const { monitoringAlerts, monitoringAlertsParameters } = patient
   const unit = user.settings?.units?.bg ?? monitoringAlertsParameters.bgUnit
 
   const roundUpToOneDecimal = (value: number): number => {

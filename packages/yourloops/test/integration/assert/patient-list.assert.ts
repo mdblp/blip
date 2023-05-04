@@ -475,14 +475,14 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
 }
 
 export const checkPatientListTooltipsMgDL = async (): Promise<void> => {
-  const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (50-140mg/dL).'
-  const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 40mg/dL threshold over the period considered.'
+  const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (50-140 mg/dL).'
+  const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 40 mg/dL threshold over the period considered.'
   await checkPatientListTooltips(outOfRangeTooltip, hypoglycemiaTooltip)
 }
 
 export const checkPatientListTooltipsMmolL = async (): Promise<void> => {
-  const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (2.8-7.8mmol/L).'
-  const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 2.2mmol/L threshold over the period considered.'
+  const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (2.8-7.8 mmol/L).'
+  const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 2.2 mmol/L threshold over the period considered.'
   await checkPatientListTooltips(outOfRangeTooltip, hypoglycemiaTooltip)
 }
 
