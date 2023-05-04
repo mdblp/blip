@@ -52,16 +52,14 @@ function resamplingDuration(basals: Basal[], start: number, end: number): Basal[
 }
 
 function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | null {
-  console.log('allPump', allPumpSettings)
-
   const lastPumpSettings = allPumpSettings[allPumpSettings.length - 1]
-  console.log('lastPump', lastPumpSettings)
 
   if (!lastPumpSettings) {
     return null
   }
+
   const weight = lastPumpSettings.payload.parameters.find(parameter => parameter.name === 'WEIGHT')
-  console.log('weight', weight)
+
   return weight ?? null
 }
 

@@ -31,6 +31,7 @@ import Box from '@mui/material/Box'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 import { t } from 'i18next'
+import { useLocation } from 'react-router-dom'
 
 interface TotalInsulinPropsData {
   id: string
@@ -41,25 +42,23 @@ interface TotalInsulinPropsData {
 }
 
 export interface TotalInsulinStatProps {
-  annotations: string[]
   data: TotalInsulinPropsData[]
-  title: string
   total: number
-  levelWeight: number
+  weight: number
   dailyDose: number
-  footerLabel: string
 }
 
 const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const {
-    annotations,
     data,
-    title,
     total,
-    levelWeight,
     dailyDose,
-    footerLabel
+    weight
   } = props
+
+  const location = useLocation()
+  const isDailyPage = location.pathname.includes('daily')
+  const isTotalInsulinTooltip = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
 
   const percent = (value: number): string => {
     const res = Math.round(100 * value / total)
@@ -67,9 +66,9 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   }
 
   const computedOutputValue = useMemo(() => {
-    const value = dailyDose / levelWeight
+    const value = dailyDose / weight
     return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
-  }, [dailyDose, levelWeight])
+  }, [dailyDose, weight])
 
   const outputValueClasses = useMemo(() => {
     const isDisabled = computedOutputValue === EMPTY_DATA_PLACEHOLDER
@@ -79,7 +78,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   return (
     <div data-testid="total-insulin-stat">
       <Box className={styles.title}>
-        {title}
+        {isDailyPage ? t('total-insulin') : t('average-daily-insulin')}
         <span className={styles.titleData}>
           <span className={styles.titleTotal}>
             {total}
@@ -88,7 +87,8 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             U
           </span>
         </span>
-        <StatTooltip annotations={annotations} />
+        <StatTooltip
+          annotations={!data ? [isTotalInsulinTooltip, t('total-insulin-how-calculate-tooltip')] : [isTotalInsulinTooltip, t('total-insulin-how-calculate-tooltip', 'tooltip-empty-stat')]} />
       </Box>
       <div className={`${styles.rows} ${styles.rowsTotalInsulin}`}>
         {data.map(entry => {
@@ -107,9 +107,10 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             </React.Fragment>
           )
         })}
+        {!isDailyPage &&
         <div className={`${styles.commonDisplay} ${styles.statFooter}`}>
           <div className={`${styles.commonDisplay} ${styles.outputWrapper}`}>
-            {footerLabel && <div className={styles.outputLabel}>{footerLabel}</div>}
+            <div className={styles.outputLabel}>{t('daily-dose-per-weight')} ({weight} {t('kg')})</div>
             <div>
               <span className={outputValueClasses}>
                 {computedOutputValue}
@@ -119,7 +120,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
               </span>
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   )

@@ -28,7 +28,6 @@
 import { TotalInsulinStat } from 'dumb'
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
-import { useLocation } from 'react-router-dom'
 import { type ParameterConfig } from 'medical-domain'
 
 interface TotalInsulinStatWrapperProps {
@@ -41,10 +40,6 @@ interface TotalInsulinStatWrapperProps {
 
 export const TotalInsulinStatWrapper: FunctionComponent<TotalInsulinStatWrapperProps> = (props) => {
   const { bolus, basal, total, totalInsulin, weight } = props
-  const location = useLocation()
-  const isDailyPage = location.pathname.includes('daily')
-  const title = isDailyPage ? t('total-insulin') : t('average-daily-insulin')
-  const isTotalInsulinTooltip = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
 
   const data = [
     {
@@ -62,25 +57,13 @@ export const TotalInsulinStatWrapper: FunctionComponent<TotalInsulinStatWrapperP
       title: t('Basal')
     }
   ]
-
-  const annotations = (): string[] => {
-    const annotation = [isTotalInsulinTooltip, t('total-insulin-how-calculate-tooltip')]
-    if (!data) {
-      annotation.push(t('tooltip-empty-stat'))
-    }
-    return annotation
-  }
-  console.log(weight)
-
+  console.log('totalInsulin', totalInsulin)
   return (
     <TotalInsulinStat
-      annotations={annotations()}
       data={data}
-      title={title}
       total={Math.round(total * 10) / 10}
-      levelWeight={weight.level}
+      weight={+weight.value}
       dailyDose={totalInsulin}
-      footerLabel={weight.value}
     />
   )
 }
