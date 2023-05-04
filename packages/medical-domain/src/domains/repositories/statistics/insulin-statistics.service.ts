@@ -52,13 +52,16 @@ function resamplingDuration(basals: Basal[], start: number, end: number): Basal[
 }
 
 function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | null {
-  const lastPumpSettings = allPumpSettings.pop()
+  console.log('allPump', allPumpSettings)
+
+  const lastPumpSettings = allPumpSettings[allPumpSettings.length - 1]
+  console.log('lastPump', lastPumpSettings)
 
   if (!lastPumpSettings) {
     return null
   }
   const weight = lastPumpSettings.payload.parameters.find(parameter => parameter.name === 'WEIGHT')
-
+  console.log('weight', weight)
   return weight ?? null
 }
 
@@ -87,6 +90,7 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number,
 function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[]): TotalInsulinAndWeightStatistics {
   const weight = getWeight(pumpSettings)
   const { basal, bolus } = getBasalBolusData(basalsData, bolusData, numDays, dateFilter)
+
   return {
     totalInsulin: basal + bolus,
     weight

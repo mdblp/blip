@@ -29,18 +29,22 @@ import { TotalInsulinStat } from 'dumb'
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { useLocation } from 'react-router-dom'
+import { type ParameterConfig } from 'medical-domain'
 
 interface TotalInsulinStatWrapperProps {
   basal: number
   bolus: number
   total: number
+  totalInsulin: number
+  weight: ParameterConfig
 }
 
 export const TotalInsulinStatWrapper: FunctionComponent<TotalInsulinStatWrapperProps> = (props) => {
-  const { bolus, basal, total } = props
+  const { bolus, basal, total, totalInsulin, weight } = props
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
   const title = isDailyPage ? t('total-insulin') : t('average-daily-insulin')
+  const isTotalInsulinTooltip = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
 
   const data = [
     {
@@ -60,17 +64,13 @@ export const TotalInsulinStatWrapper: FunctionComponent<TotalInsulinStatWrapperP
   ]
 
   const annotations = (): string[] => {
-    if (!data && isDailyPage) {
-      return [t('total-insulin-days-tooltip'), t('total-insulin-how-calculate-tooltip'), t('tooltip-empty-stat')]
-    }
-    if (isDailyPage) {
-      return [t('total-insulin-days-tooltip'), t('total-insulin-how-calculate-tooltip')]
-    }
+    const annotation = [isTotalInsulinTooltip, t('total-insulin-how-calculate-tooltip')]
     if (!data) {
-      return [t('total-insulin-tooltip'), t('total-insulin-how-calculate-tooltip'), t('tooltip-empty-stat')]
+      annotation.push(t('tooltip-empty-stat'))
     }
-    return [t('average-daily-insulin-tooltip'), t('total-insulin-how-calculate-tooltip')]
+    return annotation
   }
+  console.log(weight)
 
   return (
     <TotalInsulinStat
@@ -78,6 +78,9 @@ export const TotalInsulinStatWrapper: FunctionComponent<TotalInsulinStatWrapperP
       data={data}
       title={title}
       total={Math.round(total * 10) / 10}
+      levelWeight={weight.level}
+      dailyDose={totalInsulin}
+      footerLabel={weight.value}
     />
   )
 }

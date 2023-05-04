@@ -24,13 +24,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { type FunctionComponent, memo } from 'react'
+import React, { type FunctionComponent, memo, useMemo } from 'react'
 import styles from './total-insulin-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
-// import { formatDecimalNumber } from '../../../utils/format/format.util'
-// import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
-// import { t } from 'i18next'
+import { formatDecimalNumber } from '../../../utils/format/format.util'
+import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
+import { t } from 'i18next'
 
 interface TotalInsulinPropsData {
   id: string
@@ -45,28 +45,36 @@ export interface TotalInsulinStatProps {
   data: TotalInsulinPropsData[]
   title: string
   total: number
-  // dailyDose: number
-  // weight: number
-  // footerLabel: string
+  levelWeight: number
+  dailyDose: number
+  footerLabel: string
 }
 
 const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { annotations, data, title, total } = props
+  const {
+    annotations,
+    data,
+    title,
+    total,
+    levelWeight,
+    dailyDose,
+    footerLabel
+  } = props
 
   const percent = (value: number): string => {
     const res = Math.round(100 * value / total)
     return res > 0 ? res.toString(10) : '--'
   }
 
-  // const computedOutputValue = useMemo(() => {
-  //   const value = dailyDose / weight
-  //   return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
-  // }, [dailyDose, weight])
-  //
-  // const outputValueClasses = useMemo(() => {
-  //   const isDisabled = computedOutputValue === EMPTY_DATA_PLACEHOLDER
-  //   return `${styles.outputValue}${isDisabled ? ` ${styles.outputValueDisabled}` : ''}`
-  // }, [computedOutputValue])
+  const computedOutputValue = useMemo(() => {
+    const value = dailyDose / levelWeight
+    return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
+  }, [dailyDose, levelWeight])
+
+  const outputValueClasses = useMemo(() => {
+    const isDisabled = computedOutputValue === EMPTY_DATA_PLACEHOLDER
+    return `${styles.outputValue}${isDisabled ? ` ${styles.outputValueDisabled}` : ''}`
+  }, [computedOutputValue])
 
   return (
     <div data-testid="total-insulin-stat">
@@ -99,17 +107,19 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             </React.Fragment>
           )
         })}
-        {/*<div className={`${styles.commonDisplay} ${styles.outputWrapper}`}>*/}
-        {/*  {footerLabel && <div className={styles.outputLabel}>{footerLabel}</div>}*/}
-        {/*  <div>*/}
-        {/*  <span className={outputValueClasses}>*/}
-        {/*  {computedOutputValue}*/}
-        {/*  </span>*/}
-        {/*    <span className={styles.outputSuffix}>*/}
-        {/*       {t('U/kg')}*/}
-        {/*      </span>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+        <div className={`${styles.commonDisplay} ${styles.statFooter}`}>
+          <div className={`${styles.commonDisplay} ${styles.outputWrapper}`}>
+            {footerLabel && <div className={styles.outputLabel}>{footerLabel}</div>}
+            <div>
+              <span className={outputValueClasses}>
+                {computedOutputValue}
+              </span>
+              <span className={styles.outputSuffix}>
+              {t('U/kg')}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

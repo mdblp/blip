@@ -92,6 +92,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     total: basalBolusTotal
   } = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter)
 
+  const {
+    weight,
+    totalInsulin
+  } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
+
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
@@ -129,7 +134,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <TotalInsulinStatWrapper basal={basal} bolus={bolus} total={basalBolusTotal} />
+      <TotalInsulinStatWrapper basal={basal} bolus={bolus} total={basalBolusTotal} weight={weight} totalInsulin={totalInsulin}/>
       {children}
     </Box>
   )
